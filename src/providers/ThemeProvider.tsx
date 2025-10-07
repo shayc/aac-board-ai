@@ -10,8 +10,8 @@ export interface ThemeProviderProps {
 }
 
 const theme = createTheme({
-  palette: {
-    primary: { main: "#1976d2" },
+  colorSchemes: {
+    dark: true,
   },
 });
 
