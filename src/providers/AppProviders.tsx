@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { BoardProvider } from "./BoardProvider";
+import { LanguageProvider } from "./LanguageProvider";
 import { SpeechProvider } from "./SpeechProvider";
 import { ThemeProvider } from "./ThemeProvider";
 
@@ -11,7 +12,9 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider>
       <SpeechProvider>
-        <BoardProvider>{children}</BoardProvider>
+        <LanguageProvider>
+          <BoardProvider>{children}</BoardProvider>
+        </LanguageProvider>
       </SpeechProvider>
     </ThemeProvider>
   );

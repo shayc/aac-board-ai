@@ -9,3 +9,7 @@ export type { ThemeProviderProps } from "./ThemeProvider";
 
 export { SpeechProvider } from "./SpeechProvider";
 export type { SpeechProviderProps } from "./SpeechProvider";
+
+export { LanguageProvider } from "./LanguageProvider";
+export type { LanguageProviderProps } from "./LanguageProvider";
+
