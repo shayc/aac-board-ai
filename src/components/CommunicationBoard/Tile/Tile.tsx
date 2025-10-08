@@ -30,6 +30,7 @@ export function Tile({
         height: "100%",
         alignItems: "stretch",
         textTransform: "none",
+        padding: 0,
         borderRadius: 4,
       }}
     >

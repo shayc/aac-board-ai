@@ -1,14 +1,21 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { ToneSelect } from "./ToneSelect/ToneSelect";
 
 interface SuggestionBarProps {
   suggestions: string[];
+  proofreaderStatus: string;
+  onInitializeProofreader: () => Promise<void>;
 }
 
-export function SuggestionBar({ suggestions }: SuggestionBarProps) {
+export function SuggestionBar({
+  suggestions,
+  proofreaderStatus,
+  onInitializeProofreader
+}: SuggestionBarProps) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", paddingInline: 1 }}>
+    <Box sx={{ display: "flex", alignItems: "center", paddingInline: 1, gap: 1 }}>
       <Box sx={{ display: "flex", gap: 1, marginInlineEnd: "auto" }}>
         {suggestions.map((suggestion, index) => (
           <Chip
@@ -18,6 +25,20 @@ export function SuggestionBar({ suggestions }: SuggestionBarProps) {
           />
         ))}
       </Box>
+
+      {/* Debug button to activate proofreader session */}
+      <Button
+        variant="outlined"
+        size="small"
+        onClick={() => void onInitializeProofreader()}
+        disabled={proofreaderStatus === "ready" || proofreaderStatus === "downloading"}
+      >
+        {proofreaderStatus === "ready" ? "✓ Ready" :
+         proofreaderStatus === "downloading" ? "Downloading..." :
+         proofreaderStatus === "downloadable" ? "Enable AI" :
+         proofreaderStatus === "unsupported" ? "Not Supported" :
+         proofreaderStatus}
+      </Button>
 
       <ToneSelect />
     </Box>

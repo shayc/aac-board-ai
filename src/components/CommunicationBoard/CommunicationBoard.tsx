@@ -30,7 +30,11 @@ export function CommunicationBoard() {
         }
       />
 
-      <SuggestionBar suggestions={board.suggestions} />
+      <SuggestionBar
+        suggestions={board.suggestions}
+        proofreaderStatus={board.proofreaderStatus}
+        onInitializeProofreader={board.requestProofreaderSession}
+      />
 
       <Grid<BoardButton>
         grid={grid.grid}

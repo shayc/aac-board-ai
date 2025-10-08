@@ -70,6 +70,7 @@ export interface SuggestionsState {
   items: string[];
   tone: 'normal' | 'formal' | 'casual';
   isGenerating: boolean;
+  proofreaderStatus?: string;
 }
 
 // Context value type
@@ -95,6 +96,8 @@ export interface BoardContextValue {
   isGenerating: boolean;
   changeTone: (tone: "normal" | "formal" | "casual") => void;
   regenerateSuggestions: () => void;
+  requestProofreaderSession: () => Promise<void>;
+  proofreaderStatus: string;
 
   // Boards
   boards: Map<string, Board>;

@@ -1,7 +1,7 @@
 import camelcaseKeys from "camelcase-keys";
 import { useState } from "react";
 import type { Board, BoardContextValue } from "../types";
-import lotsOfStuff from "../../../open-board-format/examples/lots_of_stuff.json";
+import projectCore from "../../../open-board-format/examples/project-core.json";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
@@ -24,7 +24,7 @@ export function useCommunicationBoard(
   const { initialBoardId = "lots_of_stuff" } = options;
 
   const [boards, setBoards] = useState<Map<string, Board>>(() => {
-    const board = camelcaseKeys(lotsOfStuff, { deep: true }) as unknown as Board;
+    const board = camelcaseKeys(projectCore, { deep: true }) as unknown as Board;
     return new Map([[initialBoardId, board]]);
   });
 
@@ -83,6 +83,8 @@ export function useCommunicationBoard(
     isGenerating: suggestions.isGenerating,
     changeTone: suggestions.changeTone,
     regenerateSuggestions: suggestions.regenerate,
+    requestProofreaderSession: suggestions.requestSession,
+    proofreaderStatus: suggestions.proofreaderStatus,
 
     // Boards
     boards,
