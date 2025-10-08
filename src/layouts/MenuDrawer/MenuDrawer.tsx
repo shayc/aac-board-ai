@@ -37,7 +37,7 @@ export function MenuDrawer({ open, onClose }: NavigationDrawerProps) {
 
           <ListItem key={"Contribute"} disablePadding>
             <ListItemButton
-              href="https://github.com/shayc/ai-communication-board"
+              href="https://github.com/shayc/aac-board-ai"
               target="_blank"
               rel="noopener"
             >
