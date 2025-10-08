@@ -1,10 +1,16 @@
+import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import TranslateIcon from "@mui/icons-material/Translate";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Typography from "@mui/material/Typography";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 
 interface WelcomeDialogProps {
   open: boolean;
@@ -16,39 +22,58 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
+      keepMounted
+      fullWidth
+      maxWidth="sm"
+      scroll="paper"
       aria-labelledby="welcome-dialog-title"
       aria-describedby="welcome-dialog-description"
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          p: 1,
+        },
+      }}
     >
-      <DialogTitle id="welcome-dialog-title">
+      <DialogTitle id="welcome-dialog-title" sx={{ fontWeight: 600 }}>
         Welcome to AAC Board AI
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText id="welcome-dialog-description">
-          Turn symbols into speech, naturally with built-in AI.
+        <DialogContentText
+          id="welcome-dialog-description"
+          sx={{ mb: 1.5, fontSize: "1.05rem" }}
+        >
+          Turn symbols into speech naturally using Chrome's built-in AI.
         </DialogContentText>
 
-        <ul>
-          <li>Smart suggestions as you build messages</li>
-          <li>Translate and speak instantly</li>
-          <li>
-            Works offline, private by design<sup>1</sup>
-          </li>
-        </ul>
+        <List dense sx={{ pt: 0.5 }}>
+          <ListItem disableGutters>
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <AutoAwesomeOutlinedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Smart suggestions as you build messages" />
+          </ListItem>
 
-        <Typography
-          variant="caption"
-          color="text.secondary"
-          display="block"
-          gutterBottom
-        >
-          <sup>1</sup> Supports Open Board Format
-        </Typography>
+          <ListItem disableGutters>
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <TranslateIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Translate and speak instantly" />
+          </ListItem>
+
+          <ListItem disableGutters>
+            <ListItemIcon sx={{ minWidth: 40 }}>
+              <LockOutlinedIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText primary="Works offline — private by design" />
+          </ListItem>
+        </List>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} autoFocus>
-          Get Started
+        <Button onClick={onClose} autoFocus variant="contained" size="large">
+          Get started
         </Button>
       </DialogActions>
     </Dialog>
