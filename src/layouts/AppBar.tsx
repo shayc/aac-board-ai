@@ -1,4 +1,5 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { default as MUIAppBar } from "@mui/material/AppBar";
@@ -10,14 +11,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
 interface AppBarProps {
-  setIsNavigationOpen: (open: boolean) => void;
-  setIsSettingsOpen: (open: boolean) => void;
+  onMenuClick: () => void;
+  onSettingsClick: () => void;
 }
 
-export function AppBar({
-  setIsNavigationOpen,
-  setIsSettingsOpen,
-}: AppBarProps) {
+export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
   return (
     <MUIAppBar position="static">
       <Toolbar>
@@ -26,7 +24,7 @@ export function AppBar({
           size="large"
           edge="start"
           color="inherit"
-          onClick={() => setIsNavigationOpen(true)}
+          onClick={onMenuClick}
         >
           <MenuIcon />
         </IconButton>
@@ -53,7 +51,7 @@ export function AppBar({
             alert("Not implemented");
           }}
         >
-          <ArrowBackIcon style={{ transform: "rotate(180deg)" }} />
+          <ArrowForwardIcon />
         </IconButton>
 
         <FormControl sx={{ m: 1, minWidth: 80 }}>
@@ -71,6 +69,7 @@ export function AppBar({
             <MenuItem value={"Core 60"}>Core 60</MenuItem>
           </Select>
         </FormControl>
+
         <Typography component="div" sx={{ flexGrow: 1 }}></Typography>
 
         <IconButton
@@ -78,7 +77,7 @@ export function AppBar({
           size="large"
           edge="end"
           color="inherit"
-          onClick={() => setIsSettingsOpen(true)}
+          onClick={onSettingsClick}
         >
           <SettingsIcon />
         </IconButton>

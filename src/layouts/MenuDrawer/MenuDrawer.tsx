@@ -17,7 +17,7 @@ interface NavigationDrawerProps {
   onClose: () => void;
 }
 
-export function NavigationDrawer({ open, onClose }: NavigationDrawerProps) {
+export function MenuDrawer({ open, onClose }: NavigationDrawerProps) {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>
@@ -34,6 +34,7 @@ export function NavigationDrawer({ open, onClose }: NavigationDrawerProps) {
               <ListItemText primary={"Open file"} />
             </ListItemButton>
           </ListItem>
+
           <ListItem key={"Contribute"} disablePadding>
             <ListItemButton
               href="https://github.com/shayc/ai-communication-board"
@@ -49,6 +50,7 @@ export function NavigationDrawer({ open, onClose }: NavigationDrawerProps) {
         </List>
 
         <Divider />
+
         <Typography
           variant="body2"
           color="text.secondary"

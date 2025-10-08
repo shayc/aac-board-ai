@@ -1,24 +1,21 @@
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppBar } from "./AppBar";
-import { NavigationDrawer } from "./NavigationDrawer/NavigationDrawer";
+import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
 
 export function AppLayout() {
-  const [isNavigationOpen, setIsNavigationOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
     <div>
       <AppBar
-        setIsNavigationOpen={setIsNavigationOpen}
-        setIsSettingsOpen={setIsSettingsOpen}
+        onMenuClick={() => setIsMenuOpen(true)}
+        onSettingsClick={() => setIsSettingsOpen(true)}
       />
 
-      <NavigationDrawer
-        open={isNavigationOpen}
-        onClose={() => setIsNavigationOpen(false)}
-      />
+      <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       <SettingsDrawer
         open={isSettingsOpen}
