@@ -9,7 +9,14 @@ export function Pictogram(props: PictogramProps) {
   const { src, label } = props;
 
   return (
-    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Box sx={{ flexGrow: 1, position: "relative" }}>
         {src && (
           <Box

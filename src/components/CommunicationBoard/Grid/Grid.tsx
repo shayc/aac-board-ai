@@ -2,12 +2,13 @@ import Box from "@mui/material/Box";
 
 export interface GridProps<TItem> {
   grid: TItem[][];
+  gap?: number;
   renderCell: (item: TItem) => React.ReactNode;
   renderEmptyCell?: () => React.ReactNode;
 }
 
 export function Grid<TItem>(props: GridProps<TItem>) {
-  const { grid, renderCell, renderEmptyCell } = props;
+  const { grid, gap = 2, renderCell, renderEmptyCell } = props;
 
   return (
     <Box
@@ -15,7 +16,8 @@ export function Grid<TItem>(props: GridProps<TItem>) {
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        gap: 1,
+        padding: gap,
+        gap,
         flexGrow: 1,
       }}
     >
@@ -23,10 +25,10 @@ export function Grid<TItem>(props: GridProps<TItem>) {
         <Box
           key={rowIndex}
           sx={{
-            height: "100px",
+            height: "100%",
             display: "flex",
             flexDirection: "row",
-            gap: 1,
+            gap,
             flexGrow: 1,
           }}
         >
