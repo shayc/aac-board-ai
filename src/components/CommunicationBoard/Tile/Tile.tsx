@@ -24,11 +24,12 @@ export function Tile({
       disabled={disabled}
       onClick={onClick}
       sx={{
-        width: "100%",
-        height: "100%",
-        borderRadius: 4,
         backgroundColor,
         borderColor,
+        width: "100%",
+        height: "100%",
+        textTransform: "none",
+        borderRadius: 4,
       }}
     >
       <Pictogram label={label} src={imageSrc} />
