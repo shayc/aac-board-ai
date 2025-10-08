@@ -42,10 +42,9 @@ export {
   SymbolInfoSchema,
 } from "./schema";
 
-export { createOBF, loadOBF, parseOBF, stringifyOBF, validateOBF } from "./obf";
+export { loadOBF, parseOBF, stringifyOBF, validateOBF } from "./obf";
 
 export {
-  createManifest,
   createOBZ,
   extractOBZ,
   loadOBZ,

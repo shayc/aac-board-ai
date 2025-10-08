@@ -38,15 +38,3 @@ export function validateOBF(data: unknown): Board {
 export function stringifyOBF(board: Board): string {
   return JSON.stringify(board, null, 2);
 }
-
-export function createOBF(partial: Partial<Board> = {}): Board {
-  const base: Board = {
-    format: "open-board-0.1",
-    id: crypto.randomUUID(),
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    ...partial,
-  };
-
-  return { ...base, format: "open-board-0.1" };
-}

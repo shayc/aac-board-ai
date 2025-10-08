@@ -72,30 +72,6 @@ export function parseManifest(json: string): Manifest {
 }
 
 /**
- * Create manifest from boards
- * @param boards - Array of Board objects
- * @param rootBoardId - ID of the root board
- * @returns Manifest object
- */
-export function createManifest(boards: Board[], rootBoardId: string): Manifest {
-  const manifest: Manifest = {
-    format: "open-board-0.1",
-    root: `boards/${rootBoardId}.obf`,
-    paths: {
-      boards: {},
-      images: {},
-      sounds: {},
-    },
-  };
-
-  for (const board of boards) {
-    manifest.paths.boards[board.id] = `boards/${board.id}.obf`;
-  }
-
-  return manifest;
-}
-
-/**
  * Create OBZ package from boards and resources
  * @param boards - Array of Board objects
  * @param rootBoardId - ID of the root board
@@ -109,8 +85,20 @@ export async function createOBZ(
 ): Promise<Blob> {
   const files = new Map<string, Uint8Array | ArrayBuffer>();
 
+  // Create and validate manifest
+  const manifest = ManifestSchema.parse({
+    format: "open-board-0.1",
+    root: `boards/${rootBoardId}.obf`,
+    paths: {
+      boards: Object.fromEntries(
+        boards.map((board) => [board.id, `boards/${board.id}.obf`])
+      ),
+      images: {},
+      sounds: {},
+    },
+  });
+
   // Add manifest.json
-  const manifest = createManifest(boards, rootBoardId);
   const manifestJSON = JSON.stringify(manifest, null, 2);
   files.set("manifest.json", new TextEncoder().encode(manifestJSON).buffer);
 
