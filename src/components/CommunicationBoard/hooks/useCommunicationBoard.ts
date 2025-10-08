@@ -1,9 +1,94 @@
 import camelcaseKeys from "camelcase-keys";
+import { useState } from "react";
+import type { Board, BoardContextValue } from "../types";
 import lotsOfStuff from "../../../open-board-format/examples/lots_of_stuff.json";
-import type { Board } from "../types";
+import { useNavigation } from "./useNavigation";
+import { useOutput } from "./useOutput";
+import { useSuggestions } from "./useSuggestions";
 
-export function useCommunicationBoard() {
-  const board = lotsOfStuff as unknown as Board;
-  const camelCasedBoard = camelcaseKeys(board, { deep: true });
-  return camelCasedBoard;
+export interface UseCommunicationBoardOptions {
+  initialBoardId?: string;
+}
+
+/**
+ * Orchestrator hook that composes all communication board functionality.
+ * Initializes and coordinates useNavigation, useOutput, and useSuggestions.
+ * 
+ * @param options - Configuration options
+ * @param options.initialBoardId - ID of the initial board to load
+ * @returns {BoardContextValue} Complete board context value
+ */
+export function useCommunicationBoard(
+  options: UseCommunicationBoardOptions = {}
+): BoardContextValue {
+  const { initialBoardId = "lots_of_stuff" } = options;
+
+  const [boards, setBoards] = useState<Map<string, Board>>(() => {
+    const board = camelcaseKeys(lotsOfStuff, { deep: true }) as unknown as Board;
+    return new Map([[initialBoardId, board]]);
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+
+  const nav = useNavigation({ initialBoardId, boards });
+  const output = useOutput();
+  const suggestions = useSuggestions({ words: output.words });
+
+  const loadBoard = async (boardId: string) => {
+    if (boards.has(boardId)) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await Promise.resolve();
+      throw new Error(`Board loading not implemented: ${boardId}`);
+    } catch (err) {
+      setError(err instanceof Error ? err : new Error("Failed to load board"));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const reloadBoard = async () => {
+    const id = nav.currentBoardId;
+    setBoards((prev) => {
+      const updated = new Map(prev);
+      updated.delete(id);
+      return updated;
+    });
+    await loadBoard(id);
+  };
+
+  return {
+    // Navigation
+    currentBoardId: nav.currentBoardId,
+    currentBoard: nav.currentBoard,
+    history: nav.history,
+    canGoBack: nav.canGoBack,
+    goToBoard: nav.goToBoard,
+    goBack: nav.goBack,
+    goHome: nav.goHome,
+
+    // Output
+    words: output.words,
+    addWord: output.addWord,
+    removeWord: output.removeWord,
+    clearWords: output.clear,
+
+    // Suggestions
+    suggestions: suggestions.items,
+    tone: suggestions.tone,
+    isGenerating: suggestions.isGenerating,
+    changeTone: suggestions.changeTone,
+    regenerateSuggestions: suggestions.regenerate,
+
+    // Boards
+    boards,
+    isLoading,
+    error,
+    loadBoard,
+    reloadBoard,
+  };
 }

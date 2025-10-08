@@ -1,20 +1,18 @@
 import { useState } from "react";
+import type { SentenceContent } from "../types";
 
-interface SentenceContent {
-  id: string;
-  label: string;
-  image?: string;
-  vocalization?: string;
-}
-
+/**
+ * Standalone hook for managing sentence/output state.
+ * Contains its own state and provides output actions.
+ */
 export function useOutput() {
   const [words, setWords] = useState<SentenceContent[]>([]);
 
-  const addWord = (content: SentenceContent) => {
-    setWords((prev) => [...prev, content]);
+  const addWord = (word: SentenceContent) => {
+    setWords((prev) => [...prev, word]);
   };
 
-  const removeLastWord = () => {
+  const removeWord = () => {
     setWords((prev) => prev.slice(0, -1));
   };
 
@@ -25,7 +23,7 @@ export function useOutput() {
   return {
     words,
     addWord,
-    removeLastWord,
+    removeWord,
     clear,
   };
 }

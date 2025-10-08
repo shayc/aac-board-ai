@@ -1,10 +1,8 @@
 import Box from "@mui/material/Box";
 import { useSpeech } from "../../providers/SpeechProvider/SpeechProvider";
+import { useBoard } from "../../providers/BoardProvider/useBoard";
 import { Grid } from "./Grid/Grid";
-import { useCommunicationBoard } from "./hooks/useCommunicationBoard";
 import { useGrid } from "./hooks/useGrid";
-import { useOutput } from "./hooks/useOutput";
-import { useSuggestions } from "./hooks/useSuggestions";
 import { OutputBar } from "./OutputBar/OutputBar";
 import { SuggestionBar } from "./SuggestionBar/SuggestionBar";
 import { Tile } from "./Tile/Tile";
@@ -12,26 +10,27 @@ import type { BoardButton } from "./types";
 
 export function CommunicationBoard() {
   const speech = useSpeech();
-  const board = useCommunicationBoard();
-  const output = useOutput();
-  const grid = useGrid(board.buttons, board.grid);
-  const suggestions = useSuggestions();
+  const board = useBoard();
+  const grid = useGrid(
+    board.currentBoard?.buttons ?? [],
+    board.currentBoard?.grid ?? { rows: 0, columns: 0 }
+  );
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <OutputBar
-        words={output.words}
-        onClearClick={() => output.clear()}
+        words={board.words}
+        onClearClick={() => board.clearWords()}
         onPlayClick={() =>
           speech.speak(
-            output.words
+            board.words
               .map((word) => word.vocalization ?? word.label)
               .join(" ")
           )
         }
       />
 
-      <SuggestionBar suggestions={suggestions.suggestions} />
+      <SuggestionBar suggestions={board.suggestions} />
 
       <Grid<BoardButton>
         grid={grid.grid}
@@ -42,7 +41,7 @@ export function CommunicationBoard() {
             borderColor={button.borderColor}
             imageSrc={
               button.imageId
-                ? board.images?.find((img) => img.id === button.imageId)?.data
+                ? board.currentBoard?.images?.find((img) => img.id === button.imageId)?.data
                 : undefined
             }
             onClick={() => {
@@ -53,7 +52,7 @@ export function CommunicationBoard() {
                 return;
               }
 
-              output.addWord(button);
+              board.addWord(button);
               speech.speak(button.vocalization ?? button.label);
             }}
           />
