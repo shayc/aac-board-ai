@@ -8,7 +8,7 @@ export function ToneSelect() {
   const [tone, setTone] = useState("neutral");
 
   return (
-    <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+    <FormControl sx={{ minWidth: 120 }} size="small">
       <InputLabel id="tone-select-label">Tone</InputLabel>
       <Select
         labelId="tone-select-label"
