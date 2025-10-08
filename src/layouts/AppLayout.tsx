@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppBar } from "./AppBar";
@@ -11,13 +12,15 @@ export function AppLayout() {
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
 
   return (
-    <div>
+    <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       <AppBar
         onMenuClick={() => setIsMenuOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
       />
-
-      <Outlet />
+      
+      <Box sx={{ flexGrow: 1 }}>
+        <Outlet />
+      </Box>
 
       <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
@@ -30,6 +33,6 @@ export function AppLayout() {
         open={isWelcomeOpen}
         onClose={() => setIsWelcomeOpen(false)}
       />
-    </div>
+    </Box>
   );
 }

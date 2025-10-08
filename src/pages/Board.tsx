@@ -1,12 +1,8 @@
-import Button from "@mui/material/Button";
-import { useParams } from "react-router";
+// import { useParams } from "react-router";
+import { CommunicationBoard } from "../components/CommunicationBoard/CommunicationBoard";
 
 export function Board() {
-  const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
+  // const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
 
-  return (
-    <Button variant="contained">
-      Board {boardId} in Set {setId}
-    </Button>
-  );
+  return <CommunicationBoard />;
 }
