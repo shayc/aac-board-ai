@@ -1,15 +1,15 @@
 export { AppProviders } from "./AppProviders";
 export type { AppProvidersProps } from "./AppProviders";
 
-export { BoardProvider } from "./BoardProvider";
-export type { BoardProviderProps } from "./BoardProvider";
+export { BoardProvider } from "./BoardProvider/BoardProvider";
+export type { BoardProviderProps } from "./BoardProvider/BoardProvider";
 
-export { ThemeProvider } from "./ThemeProvider";
-export type { ThemeProviderProps } from "./ThemeProvider";
+export { ThemeProvider } from "./ThemeProvider/ThemeProvider";
+export type { ThemeProviderProps } from "./ThemeProvider/ThemeProvider";
 
-export { SpeechProvider } from "./SpeechProvider";
-export type { SpeechProviderProps } from "./SpeechProvider";
+export { SpeechProvider, useSpeech } from "./SpeechProvider/SpeechProvider";
+export type { SpeechProviderProps } from "./SpeechProvider/SpeechProvider";
 
-export { LanguageProvider } from "./LanguageProvider";
-export type { LanguageProviderProps } from "./LanguageProvider";
+export { LanguageProvider } from "./LanguageProvider/LanguageProvider";
+export type { LanguageProviderProps } from "./LanguageProvider/LanguageProvider";
 

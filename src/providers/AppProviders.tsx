@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { BoardProvider } from "./BoardProvider";
-import { LanguageProvider } from "./LanguageProvider";
-import { SpeechProvider } from "./SpeechProvider";
-import { ThemeProvider } from "./ThemeProvider";
+import { BoardProvider } from "./BoardProvider/BoardProvider";
+import { LanguageProvider } from "./LanguageProvider/LanguageProvider";
+import { SpeechProvider } from "./SpeechProvider/SpeechProvider";
+import { ThemeProvider } from "./ThemeProvider/ThemeProvider";
 
 export interface AppProvidersProps {
   children: ReactNode;
