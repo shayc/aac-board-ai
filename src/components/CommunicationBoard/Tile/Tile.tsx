@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import { getReadableTextColor } from "../../../utils/colors";
 import { Pictogram } from "../Pictogram/Pictogram";
 
 export interface TileProps {
@@ -31,7 +32,9 @@ export function Tile({
         alignItems: "stretch",
         textTransform: "none",
         padding: 0,
+        border: `2px solid ${borderColor ?? "transparent"}`,
         borderRadius: 4,
+        color: getReadableTextColor(backgroundColor ?? "#fff"),
       }}
     >
       <Pictogram label={label} src={imageSrc} />
