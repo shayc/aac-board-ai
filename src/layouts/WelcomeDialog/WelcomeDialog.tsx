@@ -11,6 +11,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Typography from "@mui/material/Typography";
 
 interface WelcomeDialogProps {
   open: boolean;
@@ -69,6 +70,10 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
             <ListItemText primary="Works offline — private by design" />
           </ListItem>
         </List>
+
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          Supports Open Board Format (.obf, .obz) files.
+        </Typography>
       </DialogContent>
 
       <DialogActions>
