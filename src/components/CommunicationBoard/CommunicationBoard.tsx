@@ -3,9 +3,9 @@ import { useSpeech } from "../../providers/SpeechProvider/SpeechProvider";
 import { Grid } from "./Grid/Grid";
 import { useCommunicationBoard } from "./hooks/useCommunicationBoard";
 import { useGrid } from "./hooks/useGrid";
-import { useSentence } from "./hooks/useSentence";
+import { useOutput } from "./hooks/useOutput";
 import { useSuggestions } from "./hooks/useSuggestions";
-import { SentenceBar } from "./SentenceBar/SentenceBar";
+import { OutputBar } from "./OutputBar/OutputBar";
 import { SuggestionBar } from "./SuggestionBar/SuggestionBar";
 import { Tile } from "./Tile/Tile";
 import type { BoardButton } from "./types";
@@ -13,17 +13,17 @@ import type { BoardButton } from "./types";
 export function CommunicationBoard() {
   const speech = useSpeech();
   const board = useCommunicationBoard();
-  const sentence = useSentence();
+  const output = useOutput();
   const grid = useGrid(board.buttons, board.grid);
   const suggestions = useSuggestions();
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <SentenceBar
-        words={sentence.words}
-        onClearClick={() => sentence.clear()}
+      <OutputBar
+        words={output.words}
+        onClearClick={() => output.clear()}
         onPlayClick={() =>
-          speech.speak(sentence.words.map((word) => word.label).join(" "))
+          speech.speak(output.words.map((word) => word.label).join(" "))
         }
       />
 
@@ -42,7 +42,7 @@ export function CommunicationBoard() {
                 return;
               }
 
-              sentence.addWord(button);
+              output.addWord(button);
               speech.speak(button.vocalization ?? button.label);
             }}
           />

@@ -7,7 +7,7 @@ interface SentenceContent {
   vocalization?: string;
 }
 
-export function useSentence() {
+export function useOutput() {
   const [words, setWords] = useState<SentenceContent[]>([]);
 
   const addWord = (content: SentenceContent) => {

@@ -10,13 +10,13 @@ interface Word {
   image?: string;
 }
 
-export interface SentenceBarProps {
+export interface OutputBarProps {
   words: Word[];
   onClearClick: () => void;
   onPlayClick: () => void;
 }
 
-export function SentenceBar(props: SentenceBarProps) {
+export function OutputBar(props: OutputBarProps) {
   const { words, onClearClick, onPlayClick } = props;
   const hasWords = words.length > 0;
 
