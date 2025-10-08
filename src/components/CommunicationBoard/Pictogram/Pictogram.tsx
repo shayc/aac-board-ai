@@ -13,7 +13,6 @@ export function Pictogram(props: PictogramProps) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        width: "100%",
       }}
     >
       <Box sx={{ flexGrow: 1, position: "relative" }}>
@@ -33,6 +32,7 @@ export function Pictogram(props: PictogramProps) {
           />
         )}
       </Box>
+
       {label && <Box>{label}</Box>}
     </Box>
   );

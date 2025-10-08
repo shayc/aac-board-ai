@@ -4,12 +4,12 @@ import { Outlet } from "react-router";
 import { AppBar } from "./AppBar";
 import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
-import { WelcomeDialog } from "./WelcomeDialog/WelcomeDialog";
+// import { WelcomeDialog } from "./WelcomeDialog/WelcomeDialog";
 
 export function AppLayout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
+  // const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
@@ -29,10 +29,10 @@ export function AppLayout() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      <WelcomeDialog
+      {/* <WelcomeDialog
         open={isWelcomeOpen}
         onClose={() => setIsWelcomeOpen(false)}
-      />
+      /> */}
     </Box>
   );
 }
