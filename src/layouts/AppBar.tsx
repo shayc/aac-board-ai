@@ -61,7 +61,7 @@ export function AppBar({
             displayEmpty
             sx={{ color: "inherit" }}
             size="small"
-            value={"AI Communication Board"}
+            value={"Core 36"}
             onChange={() => {
               alert("Not implemented");
             }}
