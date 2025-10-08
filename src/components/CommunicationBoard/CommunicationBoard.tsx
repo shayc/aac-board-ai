@@ -23,7 +23,11 @@ export function CommunicationBoard() {
         words={output.words}
         onClearClick={() => output.clear()}
         onPlayClick={() =>
-          speech.speak(output.words.map((word) => word.label).join(" "))
+          speech.speak(
+            output.words
+              .map((word) => word.vocalization ?? word.label)
+              .join(" ")
+          )
         }
       />
 

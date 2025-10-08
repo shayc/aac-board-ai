@@ -28,6 +28,7 @@ export function Tile({
         borderColor,
         width: "100%",
         height: "100%",
+        alignItems: "stretch",
         textTransform: "none",
         borderRadius: 4,
       }}

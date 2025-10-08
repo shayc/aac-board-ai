@@ -27,45 +27,51 @@ export function OutputBar({
   return (
     <Box
       sx={{
+        height: "250px",
         display: "flex",
-        alignItems: "center",
         justifyContent: "space-between",
         gap: 1,
-        px: 2,
-        py: 1,
       }}
     >
-      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", flexGrow: 1 }}>
-        {words.map((word, index) => (
-          <Pictogram key={index} label={word.label} src={word.image} />
-        ))}
-      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 1,
+          flexGrow: 1,
+        }}
+      >
+        <Box sx={{ display: "flex", gap: 1, flexGrow: 1 }}>
+          {words.map((word, index) => (
+            <Pictogram key={index} label={word.label} src={word.image} />
+          ))}
+        </Box>
 
-      <Box sx={{ display: "flex", gap: 1 }}>
         {hasWords && (
           <Tooltip title="Clear message">
             <IconButton
               aria-label="Clear"
               size="large"
               color="inherit"
+              sx={{ alignSelf: "center" }}
               onClick={onClearClick}
             >
               <ClearIcon />
             </IconButton>
           </Tooltip>
         )}
-
-        <Tooltip title="Speak message">
-          <IconButton
-            aria-label="Play"
-            size="large"
-            color="inherit"
-            onClick={onPlayClick}
-          >
-            <PlayArrowIcon />
-          </IconButton>
-        </Tooltip>
       </Box>
+
+      <Tooltip title="Speak message">
+        <IconButton
+          aria-label="Play"
+          size="large"
+          color="inherit"
+          sx={{ alignSelf: "center" }}
+          onClick={onPlayClick}
+        >
+          <PlayArrowIcon />
+        </IconButton>
+      </Tooltip>
     </Box>
   );
 }
