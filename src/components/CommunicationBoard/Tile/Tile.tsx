@@ -16,10 +16,15 @@ export function Tile(props: TileProps) {
 
   return (
     <Button
-      type="button"
+      disableRipple
       disabled={disabled}
       onClick={onClick}
-      sx={{ backgroundColor, borderColor }}
+      sx={{
+        width: "100%",
+        height: "100%",
+        backgroundColor,
+        borderColor,
+      }}
     >
       <Pictogram label={label} src={imageSrc} />
     </Button>
