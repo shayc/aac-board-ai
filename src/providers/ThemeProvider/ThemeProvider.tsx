@@ -17,7 +17,7 @@ const theme = createTheme({
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   return (
-    <MUIThemeProvider theme={theme}>
+    <MUIThemeProvider theme={theme} noSsr>
       <CssBaseline />
       {children}
     </MUIThemeProvider>
