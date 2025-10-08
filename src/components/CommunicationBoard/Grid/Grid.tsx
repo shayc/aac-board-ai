@@ -10,9 +10,26 @@ export function Grid<TItem>(props: GridProps<TItem>) {
   const { grid, renderCell, renderEmptyCell } = props;
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+    <Box
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
+        flexGrow: 1,
+      }}
+    >
       {grid.map((row, rowIndex) => (
-        <Box key={rowIndex} sx={{ display: "flex", flexGrow: 1 }}>
+        <Box
+          key={rowIndex}
+          sx={{
+            height: "100px",
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+            flexGrow: 1,
+          }}
+        >
           {row.map((item, cellIndex) => (
             <Box key={cellIndex} sx={{ flex: 1 }}>
               {item ? renderCell(item) : renderEmptyCell?.()}

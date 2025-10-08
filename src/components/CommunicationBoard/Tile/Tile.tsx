@@ -10,10 +10,14 @@ export interface TileProps {
   onClick: () => void;
 }
 
-export function Tile(props: TileProps) {
-  const { label, imageSrc, backgroundColor, borderColor, disabled, onClick } =
-    props;
-
+export function Tile({
+  label,
+  imageSrc,
+  backgroundColor,
+  borderColor,
+  disabled,
+  onClick,
+}: TileProps) {
   return (
     <Button
       disableRipple
@@ -22,6 +26,7 @@ export function Tile(props: TileProps) {
       sx={{
         width: "100%",
         height: "100%",
+        borderRadius: 4,
         backgroundColor,
         borderColor,
       }}

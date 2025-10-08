@@ -8,6 +8,8 @@ export interface BoardButton {
   id: string;
   label: string;
   vocalization?: string;
+  backgroundColor?: string;
+  borderColor?: string;
   action?: string;
   actions?: string[];
 }

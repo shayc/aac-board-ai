@@ -34,6 +34,13 @@ export function CommunicationBoard() {
         renderCell={(button) => (
           <Tile
             label={button.label}
+            backgroundColor={button.backgroundColor}
+            borderColor={button.borderColor}
+            imageSrc={
+              button.imageId
+                ? board.images?.find((img) => img.id === button.imageId)?.data
+                : undefined
+            }
             onClick={() => {
               const hasActions =
                 button.action ?? (button.actions && button.actions.length > 0);

@@ -5,5 +5,6 @@ import type { Board } from "../types";
 export function useCommunicationBoard() {
   const board = lotsOfStuff as unknown as Board;
   const camelCasedBoard = camelcaseKeys(board, { deep: true });
+  console.log(camelCasedBoard);
   return camelCasedBoard;
 }
