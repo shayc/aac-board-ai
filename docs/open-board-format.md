@@ -420,7 +420,7 @@ You can define licenses for boards, images and sounds, including proper attribut
 
 ### **Extensions** {#extensions}
 
-If there are additional parameters you need that aren’t available, you are free to add them to the file, just make sure to prefix them with `ext_` to prevent any collisions ion the future. It is recommended that you include the name of your app in the attribute name (i.e. for an app called “speakify” you could define `ext_speakify_name`, `ext_speakify_animation`, etc.)
+If there are additional parameters you need that aren’t available, you are free to add them to the file, just make sure to prefix them with `ext_` to prevent any collisions in the future. It is recommended that you include the name of your app in the attribute name (i.e. for an app called “speakify” you could define `ext_speakify_name`, `ext_speakify_animation`, etc.)
 
 ```json
 {
