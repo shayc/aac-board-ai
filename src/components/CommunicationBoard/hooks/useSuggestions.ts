@@ -31,7 +31,7 @@ export function useSuggestions(options: UseSuggestionsOptions) {
     try {
       const result = await proofreader.proofread(sentence);
       console.log("Proofreader result:", result);
-      setItems([result.correctedInput]);
+      setItems([result.corrected]);
     } catch {
       setItems([]);
     } finally {
