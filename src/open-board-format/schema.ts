@@ -13,7 +13,7 @@
 import { z } from "zod";
 
 /** Unique identifier as a string. */
-export const IDSchema = z.string();
+export const IDSchema = z.coerce.string();
 export type ID = z.infer<typeof IDSchema>;
 
 /**
@@ -29,7 +29,7 @@ export type FormatVersion = z.infer<typeof FormatVersionSchema>;
  */
 export const ExtensionsSchema = z.record(
   z.string().regex(/^ext_.+/),
-  z.unknown(),
+  z.unknown()
 );
 export type Extensions = z.infer<typeof ExtensionsSchema>;
 
@@ -155,7 +155,7 @@ export const ImageSchema = MediaSchema.and(
     width: z.number().optional(),
     /** Height of the image in pixels. */
     height: z.number().optional(),
-  }),
+  })
 );
 export type Image = z.infer<typeof ImageSchema>;
 
@@ -281,11 +281,11 @@ export const ManifestSchema = z.object({
   /** Mapping of IDs to paths for boards, images, and sounds. */
   paths: z.object({
     /** Mapping of board IDs to their file paths. */
-    boards: z.record(IDSchema, z.string()),
+    boards: z.record(z.string(), z.string()),
     /** Mapping of image IDs to their file paths. */
-    images: z.record(IDSchema, z.string()),
+    images: z.record(z.string(), z.string()),
     /** Mapping of sound IDs to their file paths. */
-    sounds: z.record(IDSchema, z.string()),
+    sounds: z.record(z.string(), z.string()),
   }),
 });
 export type Manifest = z.infer<typeof ManifestSchema>;
