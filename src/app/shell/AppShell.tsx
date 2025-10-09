@@ -6,7 +6,7 @@ import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
 // import { WelcomeDialog } from "./WelcomeDialog/WelcomeDialog";
 
-export function AppLayout() {
+export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   // const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
@@ -17,7 +17,7 @@ export function AppLayout() {
         onMenuClick={() => setIsMenuOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
       />
-      
+
       <Box sx={{ flexGrow: 1 }}>
         <Outlet />
       </Box>
