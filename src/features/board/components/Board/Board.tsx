@@ -8,7 +8,7 @@ import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
 import { Tile } from "../Tile/Tile";
 import type { BoardButton } from "../../types";
 
-export function CommunicationBoard() {
+export function Board() {
   const speech = useSpeech();
   const board = useBoard();
   const grid = useGrid(
