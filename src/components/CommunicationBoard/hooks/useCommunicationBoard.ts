@@ -78,13 +78,12 @@ export function useCommunicationBoard(
     clearWords: output.clear,
 
     // Suggestions
-    suggestions: suggestions.items,
+    suggestions: suggestions.suggestions,
     tone: suggestions.tone,
     isGenerating: suggestions.isGenerating,
     changeTone: suggestions.changeTone,
     regenerateSuggestions: suggestions.regenerate,
     requestProofreaderSession: suggestions.requestSession,
-    proofreaderStatus: suggestions.proofreaderStatus,
 
     // Boards
     boards,

@@ -18,8 +18,8 @@ export function ToneSelect() {
         onChange={(event) => setTone(event.target.value)}
       >
         <MenuItem value="neutral">🙂 Neutral</MenuItem>
-        <MenuItem value="happy">😀 Happy</MenuItem>
-        <MenuItem value="angry">😠 Angry</MenuItem>
+        <MenuItem value="formal">🎩 Formal</MenuItem>
+        <MenuItem value="casual">😎 Casual</MenuItem>
       </Select>
     </FormControl>
   );

@@ -1,64 +1,110 @@
 import { useEffect, useState } from "react";
 import { useProofreader } from "../../../hooks/ai/useProofreader";
+import { useRewriter } from "../../../hooks/ai/useRewriter";
 import type { SentenceContent } from "../types";
 
 export interface UseSuggestionsOptions {
   words: SentenceContent[];
 }
 
+export type ToneOption = "neutral" | "formal" | "casual";
+
 /**
  * Standalone hook for managing AI-powered suggestions.
- * Uses the proofreader API to generate suggestions from user's output.
+ * Uses the proofreader API to correct text and rewriter API to adjust tone.
  */
 export function useSuggestions(options: UseSuggestionsOptions) {
   const { words } = options;
   const proofreader = useProofreader();
+  const rewriter = useRewriter();
 
-  const [items, setItems] = useState<string[]>([]);
-  const [tone, setTone] = useState<"normal" | "formal" | "casual">("normal");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [tone, setTone] = useState<ToneOption>("neutral");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [proofreaderInstance, setProofreaderInstance] =
+    useState<ProofreaderInstance | null>(null);
+  const [rewriterInstance, setRewriterInstance] =
+    useState<RewriterInstance | null>(null);
+  const [status, setStatus] = useState<"idle" | "ready" | "error">("idle");
 
-  const generate = async () => {
-    // Join labels with space to create sentence
-    const sentence = words.map((w) => w.label).join(" ");
+  const initializeInstances = async () => {
+    try {
+      const [proofreaderSession, rewriterSession] = await Promise.all([
+        proofreader.create({ expectedInputLanguages: ["en"] }),
+        rewriter.create(),
+      ]);
 
-    if (!sentence || !proofreader.isReady) {
-      setItems([]);
+      setProofreaderInstance(proofreaderSession);
+      setRewriterInstance(rewriterSession);
+      setStatus(proofreaderSession && rewriterSession ? "ready" : "error");
+    } catch (error) {
+      console.error("Failed to initialize AI instances:", error);
+      setStatus("error");
+    }
+  };
+
+  const requestSession = async () => {
+    await initializeInstances();
+  };
+
+  const generateSuggestions = async () => {
+    const sentence = words.map((word) => word.label).join(" ");
+
+    if (!sentence || !proofreaderInstance || !rewriterInstance) {
+      setSuggestions([]);
       return;
     }
 
     setIsGenerating(true);
+
     try {
-      const result = await proofreader.proofread(sentence);
-      console.log("Proofreader result:", result);
-      setItems([result.corrected]);
-    } catch {
-      setItems([]);
+      const proofreadResult = await proofreaderInstance.proofread(sentence);
+      const correctedText = proofreadResult.correctedInput;
+
+      const toneMapping: Record<
+        ToneOption,
+        "as-is" | "more-formal" | "more-casual"
+      > = {
+        neutral: "as-is",
+        formal: "more-formal",
+        casual: "more-casual",
+      };
+
+      const rewrittenText = await rewriterInstance.rewrite(correctedText, {
+        tone: toneMapping[tone],
+      });
+      console.log("Proofread result:", proofreadResult);
+      console.log("Rewritten text:", rewrittenText);
+      setSuggestions([rewrittenText]);
+    } catch (error) {
+      console.error("Failed to generate suggestions:", error);
+      setSuggestions([]);
     } finally {
       setIsGenerating(false);
     }
   };
 
   const regenerate = () => {
-    void generate();
+    void generateSuggestions();
   };
 
-  const changeTone = (newTone: "normal" | "formal" | "casual") => {
+  const changeTone = (newTone: ToneOption) => {
     setTone(newTone);
-    // Tone doesn't affect output yet (future enhancement)
   };
 
   useEffect(() => {
-    void generate();
-  }, [words, proofreader.isReady]);
+    if (status === "ready") {
+      void generateSuggestions();
+    }
+  }, [words, tone, status]);
 
   return {
-    items,
+    suggestions,
     tone,
     isGenerating,
+    status,
     changeTone,
     regenerate,
-    requestSession: proofreader.requestSession,
-    proofreaderStatus: proofreader.status,
+    requestSession,
   };
 }

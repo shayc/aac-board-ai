@@ -67,8 +67,8 @@ export interface OutputState {
 }
 
 export interface SuggestionsState {
-  items: string[];
-  tone: 'normal' | 'formal' | 'casual';
+  suggestions: string[];
+  tone: "neutral" | "formal" | "casual";
   isGenerating: boolean;
   proofreaderStatus?: string;
 }
@@ -92,9 +92,9 @@ export interface BoardContextValue {
 
   // Suggestions
   suggestions: string[];
-  tone: "normal" | "formal" | "casual";
+  tone: "neutral" | "formal" | "casual";
   isGenerating: boolean;
-  changeTone: (tone: "normal" | "formal" | "casual") => void;
+  changeTone: (tone: "neutral" | "formal" | "casual") => void;
   regenerateSuggestions: () => void;
   requestProofreaderSession: () => Promise<void>;
   proofreaderStatus: string;

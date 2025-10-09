@@ -16,7 +16,7 @@ export interface ProofreadCorrection {
 }
 
 export interface ProofreadResult {
-  corrected: string;
+  correctedInput: string;
   corrections: ProofreadCorrection[];
 }
 
