@@ -1,5 +1,5 @@
 import Button from "@mui/material/Button";
-import { getReadableTextColor } from "../../../utils/colors";
+import { getReadableTextColor } from "@shared/utils/colors";
 import { Pictogram } from "../Pictogram/Pictogram";
 
 export interface TileProps {

@@ -1,8 +1,8 @@
+import { AppShell } from "@app/shell/AppShell";
+import { AboutPage } from "@pages/AboutPage";
+import { BoardPage } from "@pages/BoardPage";
+import { HomePage } from "@pages/HomePage";
 import { Route, Routes } from "react-router";
-import { AppShell } from "./app/shell/AppShell";
-import { AboutPage } from "./pages/AboutPage";
-import { BoardPage } from "./pages/BoardPage";
-import { HomePage } from "./pages/HomePage";
 
 export function App() {
   return (

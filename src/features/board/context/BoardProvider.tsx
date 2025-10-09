@@ -1,5 +1,5 @@
+import { useCommunicationBoard } from "@features/board/hooks/useCommunicationBoard";
 import type { ReactNode } from "react";
-import { useCommunicationBoard } from "../../components/CommunicationBoard/hooks/useCommunicationBoard";
 import { BoardContext } from "./BoardContext";
 
 export interface BoardProviderProps {

@@ -1,5 +1,5 @@
-import { createContext } from 'react';
-import type { BoardContextValue } from '../../components/CommunicationBoard/types';
+import type { BoardContextValue } from "@features/board/types";
+import { createContext } from "react";
 
 export const BoardContext = createContext<BoardContextValue | undefined>(
   undefined

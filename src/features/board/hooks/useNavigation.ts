@@ -1,5 +1,5 @@
+import type { Board } from "@features/board/types";
 import { useState } from "react";
-import type { Board } from "../CommunicationBoard/types";
 
 export interface UseNavigationOptions {
   initialBoardId: string;
@@ -23,7 +23,7 @@ export function useNavigation(options: UseNavigationOptions) {
 
   const goBack = () => {
     if (history.length === 0) return;
-    
+
     const prevId = history[history.length - 1];
     setHistory((prev) => prev.slice(0, -1));
     setCurrentBoardId(prevId);

@@ -1,7 +1,7 @@
+import type { SentenceContent } from "@features/board/types";
+import { useProofreader } from "@shared/ai/hooks/useProofreader";
+import { useRewriter } from "@shared/ai/hooks/useRewriter";
 import { useEffect, useState } from "react";
-import { useProofreader } from "../../../ai/hooks/useProofreader";
-import { useRewriter } from "../../../ai/hooks/useRewriter";
-import type { SentenceContent } from "../types";
 
 export interface UseSuggestionsOptions {
   words: SentenceContent[];

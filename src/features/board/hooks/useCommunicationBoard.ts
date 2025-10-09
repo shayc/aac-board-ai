@@ -1,7 +1,7 @@
+import projectCore from "@lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
 import { useState } from "react";
 import type { Board, BoardContextValue } from "../types";
-import projectCore from "../../../lib/open-board-format/examples/project-core.json";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
@@ -13,7 +13,7 @@ export interface UseCommunicationBoardOptions {
 /**
  * Orchestrator hook that composes all communication board functionality.
  * Initializes and coordinates useNavigation, useOutput, and useSuggestions.
- * 
+ *
  * @param options - Configuration options
  * @param options.initialBoardId - ID of the initial board to load
  * @returns {BoardContextValue} Complete board context value
@@ -24,7 +24,9 @@ export function useCommunicationBoard(
   const { initialBoardId = "lots_of_stuff" } = options;
 
   const [boards, setBoards] = useState<Map<string, Board>>(() => {
-    const board = camelcaseKeys(projectCore, { deep: true }) as unknown as Board;
+    const board = camelcaseKeys(projectCore, {
+      deep: true,
+    }) as unknown as Board;
     return new Map([[initialBoardId, board]]);
   });
 

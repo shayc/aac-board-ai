@@ -1,12 +1,12 @@
+import { Grid } from "@features/board/components/Grid/Grid";
+import { OutputBar } from "@features/board/components/OutputBar/OutputBar";
+import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
+import { Tile } from "@features/board/components/Tile/Tile";
+import { useBoard } from "@features/board/context/useBoard";
+import { useGrid } from "@features/board/hooks/useGrid";
+import type { BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
-import { useSpeech } from "../../providers/SpeechProvider/SpeechProvider";
-import { useBoard } from "../../providers/BoardProvider/useBoard";
-import { Grid } from "../Grid/Grid";
-import { useGrid } from "../hooks/useGrid";
-import { OutputBar } from "../OutputBar/OutputBar";
-import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
-import { Tile } from "../Tile/Tile";
-import type { BoardButton } from "../../types";
+import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
 
 export function Board() {
   const speech = useSpeech();
@@ -23,9 +23,7 @@ export function Board() {
         onClearClick={() => board.clearWords()}
         onPlayClick={() =>
           speech.speak(
-            board.words
-              .map((word) => word.vocalization ?? word.label)
-              .join(" ")
+            board.words.map((word) => word.vocalization ?? word.label).join(" ")
           )
         }
       />
@@ -46,7 +44,9 @@ export function Board() {
             borderColor={button.borderColor}
             imageSrc={
               button.imageId
-                ? board.currentBoard?.images?.find((img) => img.id === button.imageId)?.data
+                ? board.currentBoard?.images?.find(
+                    (img) => img.id === button.imageId
+                  )?.data
                 : undefined
             }
             onClick={() => {
