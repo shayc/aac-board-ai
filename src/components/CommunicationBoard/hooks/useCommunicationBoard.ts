@@ -1,7 +1,7 @@
 import camelcaseKeys from "camelcase-keys";
 import { useState } from "react";
 import type { Board, BoardContextValue } from "../types";
-import projectCore from "../../../open-board-format/examples/project-core.json";
+import projectCore from "../../../lib/open-board-format/examples/project-core.json";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
