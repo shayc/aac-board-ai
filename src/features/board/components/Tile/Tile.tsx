@@ -1,4 +1,5 @@
 import Button from "@mui/material/Button";
+import { darken } from "@mui/material/styles";
 import { getReadableTextColor } from "@shared/utils/colors";
 import { Pictogram } from "../Pictogram/Pictogram";
 
@@ -24,7 +25,7 @@ export function Tile({
       disableRipple
       disabled={disabled}
       onClick={onClick}
-      sx={{
+      sx={(theme) => ({
         backgroundColor,
         borderColor,
         width: "100%",
@@ -35,7 +36,20 @@ export function Tile({
         border: `2px solid ${borderColor ?? "transparent"}`,
         borderRadius: 4,
         color: getReadableTextColor(backgroundColor ?? "#fff"),
-      }}
+        transition: theme.transitions.create("background-color", {
+          duration: theme.transitions.duration.short,
+        }),
+        "&:hover": {
+          backgroundColor: backgroundColor
+            ? darken(backgroundColor, 0.2)
+            : undefined,
+        },
+        "&:active": {
+          backgroundColor: backgroundColor
+            ? darken(backgroundColor, 0.3)
+            : undefined,
+        },
+      })}
     >
       <Pictogram label={label} src={imageSrc} />
     </Button>
