@@ -6,7 +6,7 @@ import { useGrid } from "../hooks/useGrid";
 import { OutputBar } from "../OutputBar/OutputBar";
 import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
 import { Tile } from "../Tile/Tile";
-import type { BoardButton } from "./types";
+import type { BoardButton } from "../../types";
 
 export function CommunicationBoard() {
   const speech = useSpeech();
