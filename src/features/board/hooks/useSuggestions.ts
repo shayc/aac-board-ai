@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useProofreader } from "../../../ai/hooks/useProofreader";
-import { useRewriter } from "../../../ai/hooks/useRewriter";
+import { useProofreader } from "../../../shared/ai/hooks/useProofreader";
+import { useRewriter } from "../../../shared/ai/hooks/useRewriter";
 import type { SentenceContent } from "../CommunicationBoard/types";
 
 export interface UseSuggestionsOptions {
