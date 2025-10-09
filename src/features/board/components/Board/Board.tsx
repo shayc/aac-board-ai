@@ -57,7 +57,9 @@ export function Board() {
               }
 
               board.addWord(button);
-              speech.speak(button.vocalization ?? button.label);
+              speech.speak(
+                (button.vocalization ?? button.label)?.toLowerCase()
+              );
             }}
           />
         )}
