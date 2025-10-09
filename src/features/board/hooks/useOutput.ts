@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { SentenceContent } from "../types";
+import type { SentenceContent } from "../CommunicationBoard/types";
 
 /**
  * Standalone hook for managing sentence/output state.

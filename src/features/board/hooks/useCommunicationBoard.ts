@@ -1,6 +1,6 @@
 import camelcaseKeys from "camelcase-keys";
 import { useState } from "react";
-import type { Board, BoardContextValue } from "../types";
+import type { Board, BoardContextValue } from "../CommunicationBoard/types";
 import projectCore from "../../../lib/open-board-format/examples/project-core.json";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";

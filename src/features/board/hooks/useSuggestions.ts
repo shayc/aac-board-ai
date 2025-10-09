@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useProofreader } from "../../../ai/hooks/useProofreader";
 import { useRewriter } from "../../../ai/hooks/useRewriter";
-import type { SentenceContent } from "../types";
+import type { SentenceContent } from "../CommunicationBoard/types";
 
 export interface UseSuggestionsOptions {
   words: SentenceContent[];

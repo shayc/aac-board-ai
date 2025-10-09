@@ -1,11 +1,11 @@
 import Box from "@mui/material/Box";
 import { useSpeech } from "../../providers/SpeechProvider/SpeechProvider";
 import { useBoard } from "../../providers/BoardProvider/useBoard";
-import { Grid } from "./Grid/Grid";
-import { useGrid } from "./hooks/useGrid";
-import { OutputBar } from "./OutputBar/OutputBar";
-import { SuggestionBar } from "./SuggestionBar/SuggestionBar";
-import { Tile } from "./Tile/Tile";
+import { Grid } from "../Grid/Grid";
+import { useGrid } from "../hooks/useGrid";
+import { OutputBar } from "../OutputBar/OutputBar";
+import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
+import { Tile } from "../Tile/Tile";
 import type { BoardButton } from "./types";
 
 export function CommunicationBoard() {

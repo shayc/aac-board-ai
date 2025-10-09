@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Board } from "../types";
+import type { Board } from "../CommunicationBoard/types";
 
 export interface UseNavigationOptions {
   initialBoardId: string;
