@@ -97,7 +97,6 @@ export interface BoardContextValue {
   changeTone: (tone: "neutral" | "formal" | "casual") => void;
   regenerateSuggestions: () => void;
   requestProofreaderSession: () => Promise<void>;
-  proofreaderStatus: string;
 
   // Boards
   boards: Map<string, Board>;

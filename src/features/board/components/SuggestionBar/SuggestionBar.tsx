@@ -5,14 +5,12 @@ import { ToneSelect } from "./ToneSelect/ToneSelect";
 
 interface SuggestionBarProps {
   suggestions: string[];
-  proofreaderStatus: string;
   onInitializeProofreader: () => Promise<void>;
   onToneChange: (tone: "neutral" | "formal" | "casual") => void;
 }
 
 export function SuggestionBar({
   suggestions,
-  proofreaderStatus,
   onInitializeProofreader,
   onToneChange,
 }: SuggestionBarProps) {
@@ -35,19 +33,8 @@ export function SuggestionBar({
         variant="outlined"
         size="small"
         onClick={() => void onInitializeProofreader()}
-        disabled={
-          proofreaderStatus === "ready" || proofreaderStatus === "downloading"
-        }
       >
-        {proofreaderStatus === "ready"
-          ? "✓ Ready"
-          : proofreaderStatus === "downloading"
-          ? "Downloading..."
-          : proofreaderStatus === "downloadable"
-          ? "Enable AI"
-          : proofreaderStatus === "unsupported"
-          ? "Not Supported"
-          : proofreaderStatus}
+        Init AI
       </Button>
 
       <ToneSelect onChange={onToneChange} />

@@ -239,7 +239,7 @@ declare global {
   /** Result returned by `proofread()`. */
   interface ProofreadResult {
     /** Fully corrected version of the input. */
-    corrected: string;
+    correctedInput: string;
     /** List of corrections anchored to original indices. */
     corrections: ProofreadCorrection[];
   }

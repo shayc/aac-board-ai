@@ -1,3 +1,4 @@
+import type { ToneOption } from "@/features/board/hooks/useSuggestions";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -5,17 +6,11 @@ import Select from "@mui/material/Select";
 import { useState } from "react";
 
 interface ToneSelectProps {
-  onChange?: (tone: string) => void;
+  onChange?: (tone: ToneOption) => void;
 }
 
 export function ToneSelect({ onChange }: ToneSelectProps) {
-  const [tone, setTone] = useState("neutral");
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const newTone = event.target.value as string;
-    setTone(newTone);
-    onChange?.(newTone);
-  };
+  const [tone, setTone] = useState<ToneOption>("neutral");
 
   return (
     <FormControl sx={{ minWidth: 120 }} size="small">
@@ -25,7 +20,11 @@ export function ToneSelect({ onChange }: ToneSelectProps) {
         id="tone-select"
         value={tone}
         label="Tone"
-        onChange={handleChange}
+        onChange={(event) => {
+          const newTone = event.target.value;
+          setTone(newTone);
+          onChange?.(newTone);
+        }}
       >
         <MenuItem value="neutral">🙂 Neutral</MenuItem>
         <MenuItem value="formal">🎩 Formal</MenuItem>

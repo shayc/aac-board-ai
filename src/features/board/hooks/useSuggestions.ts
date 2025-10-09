@@ -22,9 +22,10 @@ export function useSuggestions(options: UseSuggestionsOptions) {
   const [tone, setTone] = useState<ToneOption>("neutral");
   const [isGenerating, setIsGenerating] = useState(false);
   const [proofreaderInstance, setProofreaderInstance] =
-    useState<ProofreaderInstance | null>(null);
-  const [rewriterInstance, setRewriterInstance] =
-    useState<RewriterInstance | null>(null);
+    useState<Proofreader | null>(null);
+  const [rewriterInstance, setRewriterInstance] = useState<Rewriter | null>(
+    null
+  );
   const [status, setStatus] = useState<"idle" | "ready" | "error">("idle");
 
   const initializeInstances = async () => {

@@ -30,7 +30,6 @@ export function Board() {
 
       <SuggestionBar
         suggestions={board.suggestions}
-        proofreaderStatus={board.proofreaderStatus}
         onInitializeProofreader={board.requestProofreaderSession}
         onToneChange={board.changeTone}
       />
