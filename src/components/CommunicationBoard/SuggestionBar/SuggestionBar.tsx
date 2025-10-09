@@ -7,15 +7,19 @@ interface SuggestionBarProps {
   suggestions: string[];
   proofreaderStatus: string;
   onInitializeProofreader: () => Promise<void>;
+  onToneChange: (tone: "neutral" | "formal" | "casual") => void;
 }
 
 export function SuggestionBar({
   suggestions,
   proofreaderStatus,
-  onInitializeProofreader
+  onInitializeProofreader,
+  onToneChange,
 }: SuggestionBarProps) {
   return (
-    <Box sx={{ display: "flex", alignItems: "center", paddingInline: 1, gap: 1 }}>
+    <Box
+      sx={{ display: "flex", alignItems: "center", paddingInline: 1, gap: 1 }}
+    >
       <Box sx={{ display: "flex", gap: 1, marginInlineEnd: "auto" }}>
         {suggestions.map((suggestion, index) => (
           <Chip
@@ -31,16 +35,22 @@ export function SuggestionBar({
         variant="outlined"
         size="small"
         onClick={() => void onInitializeProofreader()}
-        disabled={proofreaderStatus === "ready" || proofreaderStatus === "downloading"}
+        disabled={
+          proofreaderStatus === "ready" || proofreaderStatus === "downloading"
+        }
       >
-        {proofreaderStatus === "ready" ? "✓ Ready" :
-         proofreaderStatus === "downloading" ? "Downloading..." :
-         proofreaderStatus === "downloadable" ? "Enable AI" :
-         proofreaderStatus === "unsupported" ? "Not Supported" :
-         proofreaderStatus}
+        {proofreaderStatus === "ready"
+          ? "✓ Ready"
+          : proofreaderStatus === "downloading"
+          ? "Downloading..."
+          : proofreaderStatus === "downloadable"
+          ? "Enable AI"
+          : proofreaderStatus === "unsupported"
+          ? "Not Supported"
+          : proofreaderStatus}
       </Button>
 
-      <ToneSelect />
+      <ToneSelect onChange={onToneChange} />
     </Box>
   );
 }

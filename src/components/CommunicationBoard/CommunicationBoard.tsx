@@ -34,6 +34,7 @@ export function CommunicationBoard() {
         suggestions={board.suggestions}
         proofreaderStatus={board.proofreaderStatus}
         onInitializeProofreader={board.requestProofreaderSession}
+        onToneChange={board.changeTone}
       />
 
       <Grid<BoardButton>
