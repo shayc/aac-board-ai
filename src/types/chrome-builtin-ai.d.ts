@@ -2,34 +2,31 @@
 // Ambient TypeScript declarations for Chrome’s Built-in AI task APIs.
 //
 // Sources (Chrome official):
-// • Translator API — https://developer.chrome.com/docs/ai/translator-api  (Updated 2025-05-20)
-// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection  (Updated 2025-05-20)
-// • Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api  (Updated 2025-05-20)
-// • Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api  (Updated 2025-09-12)
+// • Translator API — https://developer.chrome.com/docs/ai/translator-api  (Last updated 2025-05-20)
+// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection  (Last updated 2025-05-20)
+// • Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api  (Last updated 2025-05-20)
+// • Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api  (Last updated 2025-09-12)
 //
 // Notes:
 // • All classes are exposed as globals (no import required).
 // • Call `.availability()` first to check model state, then `.create()` inside a user gesture if a download is needed.
-// • Pass `monitor(m => m.addEventListener('downloadprogress', …))` to observe download progress.
-// • Default availability: top-level window or same-origin iframe; delegate to cross-origin iframes with
-//     <iframe allow="translator; language-detector; rewriter; proofreader">
-// • Not available in Web Workers (explicitly noted in Chrome docs).
+// • To observe download progress, either pass `monitor(m => m.addEventListener('downloadprogress', …))` to `create()`,
+//   or (where documented) add a `'downloadprogress'` listener on the created instance.
+// • Default availability: top-level window or same-origin iframe; delegate to cross-origin iframes via
+//   <iframe allow="translator; language-detector; rewriter; proofreader"> (Permissions Policy).
+// • Not available in Web Workers (per docs).
 // • This file intentionally excludes explainer-only or MDN-only fields (e.g. quotas, toggles).
+// • Translator availability note: Chrome intentionally hides per-language-pair download status; many pairs
+//   appear “downloadable” until a site actually creates that pair.
 
 // -------------------------------------------------------------------------------------------------
 // Shared primitives
 // -------------------------------------------------------------------------------------------------
 
-/**
- * Availability states returned by `.availability()`.
- * Chrome pages show: "available" | "downloadable" | "unavailable".
- */
+/** Availability states returned by `.availability()`. */
 type AIAvailability = "available" | "downloadable" | "unavailable";
 
-/**
- * Progress event fired while an on-device model or language pack downloads.
- * Chrome examples read `e.loaded` and occasionally `e.total`.
- */
+/** Progress event fired while an on-device model or language pack downloads. */
 interface AIDownloadProgressEvent extends Event {
   /** Fraction 0 … 1 downloaded. */
   readonly loaded: number;
@@ -41,7 +38,7 @@ interface AIDownloadProgressEvent extends Event {
 interface EventTarget {
   addEventListener(
     type: "downloadprogress",
-    listener: (ev: AIDownloadProgressEvent) => any,
+    listener: (ev: AIDownloadProgressEvent) => void,
     options?: boolean | AddEventListenerOptions
   ): void;
 }
@@ -50,12 +47,17 @@ interface EventTarget {
 interface AIBaseCreateOptions {
   /** Abort creation (and any pending download). */
   signal?: AbortSignal;
-  /** Observe download progress before the instance becomes ready. */
+  /**
+   * Observe download progress before the instance becomes ready.
+   * Chrome examples pass a monitor that exposes `addEventListener('downloadprogress', ...)`.
+   */
   monitor?(monitor: EventTarget): void;
 }
 
 // -------------------------------------------------------------------------------------------------
 // Translator API — https://developer.chrome.com/docs/ai/translator-api
+// Permission-Policy: `allow="translator"`; not available in Web Workers.
+// Note: per Chrome docs, per-language-pair download status is intentionally hidden.
 // -------------------------------------------------------------------------------------------------
 
 interface TranslatorCreateOptions extends AIBaseCreateOptions {
@@ -72,9 +74,7 @@ interface TranslatorTranslateOptions {
 
 /**
  * Translator: performs client-side translation using on-device models.
- * Chrome examples show both `translate()` and streaming `translateStreaming()`.
- * Permission-Policy: `allow="translator"`.
- * Not available in Web Workers.
+ * Chrome docs show both `translate()` and streaming `translateStreaming()`.
  */
 interface Translator {
   /** Translate the full input string. */
@@ -85,7 +85,7 @@ interface Translator {
 
   /**
    * Translate long text as a stream of chunks.
-   * Chrome docs: `for await (const chunk of translator.translateStreaming(text)) { … }`
+   * Example: `for await (const chunk of translator.translateStreaming(text)) { … }`
    */
   translateStreaming(
     input: string,
@@ -104,13 +104,14 @@ interface TranslatorConstructor {
 }
 
 /** Global Translator constructor. */
-declare var Translator: TranslatorConstructor;
+declare const Translator: TranslatorConstructor;
 
 // -------------------------------------------------------------------------------------------------
 // Language Detector API — https://developer.chrome.com/docs/ai/language-detection
+// Permission-Policy: `allow="language-detector"`; not available in Web Workers.
 // -------------------------------------------------------------------------------------------------
 
-interface LanguageDetectorCreateOptions extends AIBaseCreateOptions {}
+type LanguageDetectorCreateOptions = AIBaseCreateOptions;
 
 interface LanguageDetectorDetectOptions {
   /** Abort an ongoing detection. */
@@ -125,11 +126,7 @@ interface LanguageDetectionCandidate {
   confidence: number;
 }
 
-/**
- * LanguageDetector: ranks likely languages for input text.
- * Permission-Policy: `allow="language-detector"`.
- * Not available in Web Workers.
- */
+/** LanguageDetector ranks likely languages for input text. */
 interface LanguageDetector {
   /** Detect likely languages for `input`. */
   detect(
@@ -151,10 +148,11 @@ interface LanguageDetectorConstructor {
 }
 
 /** Global LanguageDetector constructor. */
-declare var LanguageDetector: LanguageDetectorConstructor;
+declare const LanguageDetector: LanguageDetectorConstructor;
 
 // -------------------------------------------------------------------------------------------------
 // Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api
+// Permission-Policy: `allow="rewriter"`; not available in Web Workers.
 // -------------------------------------------------------------------------------------------------
 
 type RewriterTone = "more-formal" | "as-is" | "more-casual";
@@ -175,7 +173,7 @@ interface RewriterCreateOptions extends AIBaseCreateOptions {
 interface RewriterRewriteOptions {
   /** Per-call context to steer rewriting. */
   context?: string;
-  /** Optional per-call tone override (shown in Chrome example). */
+  /** Optional per-call tone override. */
   tone?: RewriterTone;
   /** Abort an ongoing rewrite or streaming rewrite. */
   signal?: AbortSignal;
@@ -183,11 +181,10 @@ interface RewriterRewriteOptions {
 
 /**
  * Rewriter: revises text according to tone/format/length.
- * Chrome shows both `rewrite()` and `rewriteStreaming()`.
- * Permission-Policy: `allow="rewriter"`.
- * Not available in Web Workers.
+ * Supports both non-streaming `rewrite()` and streaming `rewriteStreaming()`.
+ * Instances are EventTargets and fire `'downloadprogress'` during model fetch.
  */
-interface Rewriter {
+interface Rewriter extends EventTarget {
   /** Rewrite text and return the full result. */
   rewrite(input: string, options?: RewriterRewriteOptions): Promise<string>;
 
@@ -209,10 +206,13 @@ interface RewriterConstructor {
 }
 
 /** Global Rewriter constructor. */
-declare var Rewriter: RewriterConstructor;
+declare const Rewriter: RewriterConstructor;
 
 // -------------------------------------------------------------------------------------------------
 // Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api
+// Permission-Policy: `allow="proofreader"`; not available in Web Workers.
+// Notes: Explainer toggles `includeCorrectionTypes` and `includeCorrectionExplanation`
+//        are not supported per Chrome docs (localized pages call this out).
 // -------------------------------------------------------------------------------------------------
 
 interface ProofreaderCreateOptions extends AIBaseCreateOptions {
@@ -234,22 +234,13 @@ interface ProofreadCorrection {
 
 /** Result returned by `proofread()`. */
 interface ProofreadResult {
-  /**
-   * Fully corrected version of the input.
-   * Chrome docs call this property `corrected`.
-   */
+  /** Fully corrected version of the input. */
   corrected: string;
   /** List of corrections anchored to original indices. */
   corrections: ProofreadCorrection[];
 }
 
-/**
- * Proofreader: corrects grammar, spelling, and punctuation.
- * Explainer toggles (`includeCorrectionTypes`, `includeCorrectionExplanation`)
- * are NOT supported per Chrome docs.
- * Permission-Policy: `allow="proofreader"`.
- * Not available in Web Workers.
- */
+/** Proofreader: corrects grammar, spelling, and punctuation. */
 interface Proofreader {
   /** Proofread text and return corrections. */
   proofread(
@@ -262,14 +253,12 @@ interface Proofreader {
 
 interface ProofreaderConstructor {
   /** Check whether proofreading is ready, downloadable, or unavailable. */
-  availability(options?: {
-    expectedInputLanguages?: string[];
-  }): Promise<AIAvailability>;
+  availability(options?: ProofreaderCreateOptions): Promise<AIAvailability>;
   /** Create a Proofreader; call from a user gesture if download is required. */
   create(options?: ProofreaderCreateOptions): Promise<Proofreader>;
 }
 
 /** Global Proofreader constructor. */
-declare var Proofreader: ProofreaderConstructor;
+declare const Proofreader: ProofreaderConstructor;
 
 export {};

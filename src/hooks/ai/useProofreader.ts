@@ -1,45 +1,7 @@
 import { useState } from "react";
 
-type ProofreaderAvailability =
-  | "available"
-  | "downloadable"
-  | "downloading"
-  | "unavailable";
-
 export interface ProofreaderOptions {
   expectedInputLanguages?: string[];
-}
-
-export interface ProofreadCorrection {
-  startIndex: number;
-  endIndex: number;
-}
-
-export interface ProofreadResult {
-  correctedInput: string;
-  corrections: ProofreadCorrection[];
-}
-
-declare global {
-  interface ProofreaderInstance {
-    proofread(text: string): Promise<ProofreadResult>;
-  }
-
-  interface ProofreaderConstructor {
-    availability(): Promise<ProofreaderAvailability>;
-    create(
-      options: ProofreaderOptions & {
-        monitor?: (monitor: {
-          addEventListener: (
-            event: "downloadprogress",
-            callback: (e: { loaded: number }) => void
-          ) => void;
-        }) => void;
-      }
-    ): Promise<ProofreaderInstance>;
-  }
-
-  const Proofreader: ProofreaderConstructor;
 }
 
 export function useProofreader() {
