@@ -10,21 +10,25 @@ export function NavigationBar() {
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Tooltip title="Go back">
-        <IconButton disabled aria-label="Back" size="large" color="inherit">
-          <ArrowBackIcon />
-        </IconButton>
+        <span>
+          <IconButton disabled aria-label="Back" size="large" color="inherit">
+            <ArrowBackIcon />
+          </IconButton>
+        </span>
       </Tooltip>
 
       <Tooltip title="Go forward">
-        <IconButton
-          disabled
-          aria-label="Forward"
-          size="large"
-          color="inherit"
-          sx={{ mr: 2 }}
-        >
-          <ArrowForwardIcon />
-        </IconButton>
+        <span>
+          <IconButton
+            disabled
+            aria-label="Forward"
+            size="large"
+            color="inherit"
+            sx={{ mr: 2 }}
+          >
+            <ArrowForwardIcon />
+          </IconButton>
+        </span>
       </Tooltip>
 
       <Select

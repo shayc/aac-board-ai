@@ -48,29 +48,33 @@ export function OutputBar({
 
         {hasWords && (
           <Tooltip title="Clear message">
-            <IconButton
-              aria-label="Clear"
-              size="large"
-              color="inherit"
-              sx={{ alignSelf: "center" }}
-              onClick={onClearClick}
-            >
-              <ClearIcon />
-            </IconButton>
+            <span>
+              <IconButton
+                aria-label="Clear"
+                size="large"
+                color="inherit"
+                sx={{ alignSelf: "center" }}
+                onClick={onClearClick}
+              >
+                <ClearIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         )}
       </Box>
 
       <Tooltip title="Speak message">
-        <IconButton
-          aria-label="Play"
-          size="large"
-          color="inherit"
-          sx={{ alignSelf: "center" }}
-          onClick={onPlayClick}
-        >
-          <PlayArrowIcon />
-        </IconButton>
+        <span>
+          <IconButton
+            aria-label="Play"
+            size="large"
+            color="inherit"
+            sx={{ alignSelf: "center" }}
+            onClick={onPlayClick}
+          >
+            <PlayArrowIcon />
+          </IconButton>
+        </span>
       </Tooltip>
     </Box>
   );

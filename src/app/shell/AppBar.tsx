@@ -17,15 +17,17 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
     <MUIAppBar position="static">
       <Toolbar>
         <Tooltip title="Open menu">
-          <IconButton
-            aria-label="Menu"
-            size="large"
-            edge="start"
-            color="inherit"
-            onClick={onMenuClick}
-          >
-            <MenuIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              aria-label="Menu"
+              size="large"
+              edge="start"
+              color="inherit"
+              onClick={onMenuClick}
+            >
+              <MenuIcon />
+            </IconButton>
+          </span>
         </Tooltip>
 
         <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
@@ -33,15 +35,17 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
         </Box>
 
         <Tooltip title="Open settings">
-          <IconButton
-            aria-label="Settings"
-            size="large"
-            edge="end"
-            color="inherit"
-            onClick={onSettingsClick}
-          >
-            <SettingsIcon />
-          </IconButton>
+          <span>
+            <IconButton
+              aria-label="Settings"
+              size="large"
+              edge="end"
+              color="inherit"
+              onClick={onSettingsClick}
+            >
+              <SettingsIcon />
+            </IconButton>
+          </span>
         </Tooltip>
       </Toolbar>
     </MUIAppBar>
