@@ -15,9 +15,7 @@ export function SuggestionBar({
   onToneChange,
 }: SuggestionBarProps) {
   return (
-    <Box
-      sx={{ display: "flex", alignItems: "center", paddingInline: 1, gap: 1 }}
-    >
+    <Box sx={{ display: "flex", alignItems: "center", px: 1, gap: 1 }}>
       <Box sx={{ display: "flex", gap: 1, marginInlineEnd: "auto" }}>
         {suggestions.map((suggestion, index) => (
           <Chip

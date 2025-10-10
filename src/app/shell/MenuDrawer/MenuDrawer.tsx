@@ -12,12 +12,12 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 
-interface NavigationDrawerProps {
+interface MenuDrawerProps {
   open: boolean;
   onClose: () => void;
 }
 
-export function MenuDrawer({ open, onClose }: NavigationDrawerProps) {
+export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>

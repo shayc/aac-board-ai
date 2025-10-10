@@ -32,7 +32,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </IconButton>
       </Toolbar>
 
-      <Box sx={{ width: 360, paddingInline: 3 }}>
+      <Box sx={{ width: 360, px: 3 }}>
         <AppearanceSettings />
         <LanguageSettings />
         <SpeechSettings />
