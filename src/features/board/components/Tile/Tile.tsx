@@ -30,10 +30,12 @@ export function Tile({
         borderColor,
         width: "100%",
         height: "100%",
+        display: "grid",
         alignItems: "stretch",
+        justifyContent: "stretch",
         textTransform: "none",
         padding: 0,
-        border: `2px solid ${borderColor ?? "transparent"}`,
+        border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         color: getReadableTextColor(backgroundColor ?? "#fff"),
         transition: theme.transitions.create("background-color", {

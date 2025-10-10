@@ -14,6 +14,7 @@ export function Pictogram(props: PictogramProps) {
       sx={{
         display: "flex",
         flexDirection: "column",
+        textAlign: "center",
       }}
     >
       <Box sx={{ flexGrow: 1, position: "relative" }}>
@@ -23,8 +24,8 @@ export function Pictogram(props: PictogramProps) {
             src={src}
             alt=""
             sx={{
-              width: "100%",
-              height: "100%",
+              minWidth: "100%",
+              maxHeight: "100%",
               objectFit: "contain",
               position: "absolute",
               top: 0,

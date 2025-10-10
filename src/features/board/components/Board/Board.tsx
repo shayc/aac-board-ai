@@ -56,7 +56,14 @@ export function Board() {
                 return;
               }
 
-              board.addWord(button);
+              board.addWord({
+                ...button,
+                image: button.imageId
+                  ? board.currentBoard?.images?.find(
+                      (img) => img.id === button.imageId
+                    )?.data
+                  : undefined,
+              });
               speech.speak(
                 (button.vocalization ?? button.label)?.toLowerCase()
               );
