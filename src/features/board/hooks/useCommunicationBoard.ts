@@ -1,5 +1,5 @@
 import type { Board, BoardContextValue } from "@features/board/types";
-import projectCore from "@lib/open-board-format/examples/project-core.json";
+import projectCore from "@shared/lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
 import { useState } from "react";
 import { useNavigation } from "./useNavigation";

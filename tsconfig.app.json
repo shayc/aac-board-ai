@@ -14,8 +14,7 @@
       "@app/*": ["src/app/*"],
       "@features/*": ["src/features/*"],
       "@shared/*": ["src/shared/*"],
-      "@pages/*": ["src/pages/*"],
-      "@lib/*": ["src/shared/lib/*"]
+      "@pages/*": ["src/pages/*"]
     },
 
     /* Bundler mode */
