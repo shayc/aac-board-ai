@@ -30,22 +30,22 @@ export function ToneSelector({ onChange }: ToneSelectorProps) {
       exclusive
       aria-label="Tone selection"
       value={tone}
-      size="small"
+      size="medium"
       onChange={handleChange}
     >
       <Tooltip title="Neutral tone">
         <ToggleButton value="neutral" aria-label="neutral tone">
-          <DragHandleIcon fontSize="small" />
+          <DragHandleIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
       <Tooltip title="Formal tone">
         <ToggleButton value="formal" aria-label="formal tone">
-          <BusinessCenterIcon fontSize="small" />
+          <BusinessCenterIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
       <Tooltip title="Casual tone">
         <ToggleButton value="casual" aria-label="casual tone">
-          <SentimentSatisfiedAltIcon fontSize="small" />
+          <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
     </ToggleButtonGroup>
