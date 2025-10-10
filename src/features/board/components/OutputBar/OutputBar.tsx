@@ -1,9 +1,9 @@
+import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { Pictogram } from "../Pictogram/Pictogram";
 
 interface Word {
   id: string;

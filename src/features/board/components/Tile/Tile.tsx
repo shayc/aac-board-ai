@@ -1,7 +1,7 @@
+import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import Button from "@mui/material/Button";
 import { darken } from "@mui/material/styles";
 import { getReadableTextColor } from "@shared/utils/colors";
-import { Pictogram } from "../Pictogram/Pictogram";
 
 export interface TileProps {
   label?: string;
