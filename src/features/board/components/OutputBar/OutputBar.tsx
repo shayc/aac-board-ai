@@ -42,8 +42,11 @@ export function OutputBar({
           flexGrow: 1,
           padding: 2,
           overflow: "hidden",
-          backgroundColor: (theme) => theme.palette.grey[800],
           borderRadius: 12,
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark"
+              ? theme.palette.grey[800]
+              : theme.palette.grey[200],
         }}
       >
         <Box sx={{ display: "flex", gap: 2, flexGrow: 1, overflowX: "auto" }}>
@@ -53,7 +56,7 @@ export function OutputBar({
         </Box>
 
         {hasWords && (
-          <Tooltip title="Clear message">
+          <Tooltip title="Clear message" enterDelay={1000}>
             <Box sx={{ alignSelf: "center" }}>
               <IconButton
                 aria-label="Clear"
@@ -72,7 +75,7 @@ export function OutputBar({
         )}
       </Box>
 
-      <Tooltip title="Speak message">
+      <Tooltip title="Speak message" enterDelay={1000}>
         <Box sx={{ alignSelf: "center" }}>
           <IconButton
             aria-label="Play"

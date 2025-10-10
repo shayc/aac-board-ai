@@ -16,7 +16,7 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
   return (
     <MUIAppBar position="static">
       <Toolbar>
-        <Tooltip title="Open menu">
+        <Tooltip title="Open menu" enterDelay={1000}>
           <span>
             <IconButton
               aria-label="Menu"
@@ -34,7 +34,7 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
           <NavigationBar />
         </Box>
 
-        <Tooltip title="Open settings">
+        <Tooltip title="Open settings" enterDelay={1000}>
           <span>
             <IconButton
               aria-label="Settings"
