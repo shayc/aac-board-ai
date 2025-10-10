@@ -27,7 +27,8 @@ export function OutputBar({
   return (
     <Box
       sx={{
-        height: { xs: 150, sm: 200 },
+        flexShrink: 0,
+        height: 128,
         display: "flex",
         justifyContent: "space-between",
         padding: 2,
@@ -40,11 +41,12 @@ export function OutputBar({
           gap: 2,
           flexGrow: 1,
           padding: 2,
+          overflow: "hidden",
           backgroundColor: (theme) => theme.palette.grey[800],
-          borderRadius: 10,
+          borderRadius: 12,
         }}
       >
-        <Box sx={{ display: "flex", gap: 2, flexGrow: 1 }}>
+        <Box sx={{ display: "flex", gap: 2, flexGrow: 1, overflowX: "auto" }}>
           {words.map((word, index) => (
             <Pictogram key={index} label={word.label} src={word.image} />
           ))}
@@ -58,6 +60,10 @@ export function OutputBar({
                 size="large"
                 color="inherit"
                 onClick={onClearClick}
+                sx={{
+                  width: 64,
+                  height: 64,
+                }}
               >
                 <ClearIcon />
               </IconButton>
@@ -71,8 +77,16 @@ export function OutputBar({
           <IconButton
             aria-label="Play"
             size="large"
-            color="inherit"
             onClick={onPlayClick}
+            sx={{
+              width: 64,
+              height: 64,
+              backgroundColor: (theme) => theme.palette.primary.main,
+              color: (theme) => theme.palette.primary.contrastText,
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.primary.dark,
+              },
+            }}
           >
             <PlayArrowIcon />
           </IconButton>
