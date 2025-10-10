@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
-import { ToneSelect } from "./ToneSelect/ToneSelect";
+import { ToneSelector } from "./ToneSelector/ToneSelector";
 
 interface SuggestionBarProps {
   suggestions: string[];
@@ -35,7 +35,7 @@ export function SuggestionBar({
         Init AI
       </Button>
 
-      <ToneSelect onChange={onToneChange} />
+      <ToneSelector onChange={onToneChange} />
     </Box>
   );
 }
