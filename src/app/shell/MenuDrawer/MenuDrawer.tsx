@@ -1,5 +1,6 @@
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -32,6 +33,15 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
                 <FileOpenIcon />
               </ListItemIcon>
               <ListItemText primary={"Open file"} />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem key={"About"} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <InfoOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={"About"} />
             </ListItemButton>
           </ListItem>
 
