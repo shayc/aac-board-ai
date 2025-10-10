@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 export interface PictogramProps {
   src?: string;
@@ -33,7 +34,7 @@ export function Pictogram(props: PictogramProps) {
         )}
       </Box>
 
-      {label && <Box>{label}</Box>}
+      {label && <Typography component="span">{label}</Typography>}
     </Box>
   );
 }

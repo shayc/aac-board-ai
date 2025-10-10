@@ -1,5 +1,6 @@
 import VolumeDownIcon from "@mui/icons-material/VolumeDown";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -26,16 +27,16 @@ export function SpeechSettings() {
   } = useSpeech();
 
   return (
-    <div>
+    <Box>
       <Typography gutterBottom>Voice</Typography>
       <FormControl size="small" fullWidth>
-        <InputLabel id="demo-simple-select-label">Voice</InputLabel>
+        <InputLabel id="voice-select-label">Voice</InputLabel>
         <Select
-          disabled={!isSupported}
           label="Voice"
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
+          labelId="voice-select-label"
+          id="voice-select"
           value={voiceURI}
+          disabled={!isSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
           {voices.map((voice) => (
@@ -48,25 +49,25 @@ export function SpeechSettings() {
 
       <Typography gutterBottom>Pitch</Typography>
       <Slider
-        disabled={!isSupported}
         aria-label="Pitch"
         valueLabelDisplay="auto"
         value={pitch}
         min={0.1}
         max={2}
         step={0.1}
+        disabled={!isSupported}
         onChange={(_event, value) => setPitch(value)}
       />
 
       <Typography gutterBottom>Rate</Typography>
       <Slider
-        disabled={!isSupported}
         aria-label="Rate"
         valueLabelDisplay="auto"
         value={rate}
         min={0.1}
         max={2}
         step={0.1}
+        disabled={!isSupported}
         onChange={(_event, value) => setRate(value)}
       />
 
@@ -74,13 +75,13 @@ export function SpeechSettings() {
       <Stack spacing={2} direction="row" sx={{ alignItems: "center", mb: 1 }}>
         <VolumeDownIcon />
         <Slider
-          disabled={!isSupported}
           aria-label="Volume"
           valueLabelDisplay="auto"
           value={volume}
           min={0}
           max={1}
           step={0.1}
+          disabled={!isSupported}
           onChange={(_event, value) => setVolume(value)}
         />
         <VolumeUpIcon />
@@ -94,6 +95,6 @@ export function SpeechSettings() {
       >
         Preview
       </Button>
-    </div>
+    </Box>
   );
 }

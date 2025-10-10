@@ -28,9 +28,7 @@ export function NavigationBar() {
       </Tooltip>
 
       <Select
-        sx={{
-          color: "inherit",
-        }}
+        sx={{ color: "inherit" }}
         size="small"
         value="Core 36"
         onChange={() => alert("Not implemented")}

@@ -4,9 +4,9 @@ import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { AppearanceSettings } from "./AppearanceSettings/AppearanceSettings";
 import { LanguageSettings } from "./LanguageSettings/LanguageSettings";
 import { SpeechSettings } from "./SpeechSettings/SpeechSettings";
-import { ThemeSettings } from "./ThemeSettings/ThemeSettings";
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -33,7 +33,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       </Toolbar>
 
       <Box sx={{ width: 360, paddingInline: 3 }}>
-        <ThemeSettings />
+        <AppearanceSettings />
         <LanguageSettings />
         <SpeechSettings />
       </Box>

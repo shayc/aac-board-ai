@@ -27,7 +27,7 @@ export function OutputBar({
   return (
     <Box
       sx={{
-        height: "250px",
+        height: { xs: 150, sm: 200, md: 250 },
         display: "flex",
         justifyContent: "space-between",
         gap: 1,

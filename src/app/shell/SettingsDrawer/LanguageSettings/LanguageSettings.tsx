@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,7 +16,7 @@ export function LanguageSettings() {
   const [languageCode, setLanguageCode] = useState("en");
 
   return (
-    <div>
+    <Box>
       <Typography gutterBottom>Language</Typography>
       <FormControl size="small" fullWidth>
         <InputLabel id="demo-simple-select-label">Language</InputLabel>
@@ -33,6 +34,6 @@ export function LanguageSettings() {
           ))}
         </Select>
       </FormControl>
-    </div>
+    </Box>
   );
 }
