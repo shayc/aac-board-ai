@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 export function NavigationBar() {
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Tooltip title="Go back" enterDelay={1000}>
+      <Tooltip title="Go back" enterDelay={800}>
         <span>
           <IconButton disabled aria-label="Back" size="large" color="inherit">
             <ArrowBackIcon />
@@ -17,7 +17,7 @@ export function NavigationBar() {
         </span>
       </Tooltip>
 
-      <Tooltip title="Go forward" enterDelay={1000}>
+      <Tooltip title="Go forward" enterDelay={800}>
         <span>
           <IconButton
             disabled

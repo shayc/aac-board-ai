@@ -56,7 +56,7 @@ export function OutputBar({
         </Box>
 
         {hasWords && (
-          <Tooltip title="Clear message" enterDelay={1000}>
+          <Tooltip title="Clear message" enterDelay={800}>
             <Box sx={{ alignSelf: "center" }}>
               <IconButton
                 aria-label="Clear"
@@ -75,7 +75,7 @@ export function OutputBar({
         )}
       </Box>
 
-      <Tooltip title="Speak message" enterDelay={1000}>
+      <Tooltip title="Speak message" enterDelay={800}>
         <Box sx={{ alignSelf: "center" }}>
           <IconButton
             aria-label="Play"

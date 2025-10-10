@@ -33,17 +33,17 @@ export function ToneSelector({ onChange }: ToneSelectorProps) {
       size="medium"
       onChange={handleChange}
     >
-      <Tooltip title="Neutral tone" enterDelay={1000}>
+      <Tooltip title="Neutral tone" enterDelay={800}>
         <ToggleButton value="neutral" aria-label="neutral tone">
           <DragHandleIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
-      <Tooltip title="Formal tone" enterDelay={1000}>
+      <Tooltip title="Formal tone" enterDelay={800}>
         <ToggleButton value="formal" aria-label="formal tone">
           <BusinessCenterIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
-      <Tooltip title="Casual tone" enterDelay={1000}>
+      <Tooltip title="Casual tone" enterDelay={800}>
         <ToggleButton value="casual" aria-label="casual tone">
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
