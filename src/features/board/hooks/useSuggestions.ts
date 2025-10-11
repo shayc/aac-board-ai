@@ -71,12 +71,49 @@ export function useSuggestions(options: UseSuggestionsOptions) {
         casual: "more-casual",
       };
 
-      const rewrittenText = await rewriterInstance.rewrite(correctedText, {
+      const CONTEXT_REQUEST =
+        "You are rewriting a short AAC-style message into a clear, polite REQUEST. " +
+        "Preserve the user’s meaning and key content words without adding new information. " +
+        "Fix only essential grammar (articles, 'to', 'am', 'is'). " +
+        "Keep it short (max 10 words) and natural for spoken English. " +
+        "Prefer patterns like 'I want …', 'Please …', or 'Can I …, please?'. " +
+        "No emojis, no translation, no extra details.";
+
+      const CONTEXT_DESCRIBE =
+        "Rewrite the AAC-style message as a natural DESCRIPTION or COMMENT. " +
+        "Keep the same meaning and key content words, but correct grammar and flow. " +
+        "Do not ask for anything or give commands. " +
+        "Use simple, present-tense phrasing such as 'I am …', 'I like …', or 'It is …'. " +
+        "One sentence, under 10 words. No emojis, no translation.";
+
+      const CONTEXT_SOCIAL =
+        "Rewrite the AAC-style message as a friendly SOCIAL remark. " +
+        "Keep the user’s meaning and content words, but add warmth or courtesy. " +
+        "Do not turn it into a request. " +
+        "Use natural human tone such as 'That sounds nice', 'Thank you', or 'That’s good.'. " +
+        "One short sentence, under 10 words. No emojis, no translation.";
+
+      const rewrittenRequest = await rewriterInstance.rewrite(correctedText, {
+        context: CONTEXT_REQUEST,
         tone: toneMapping[tone],
       });
-      console.log("Proofread result:", proofreadResult);
-      console.log("Rewritten text:", rewrittenText);
-      setSuggestions([rewrittenText]);
+
+      const rewrittenDescribe = await rewriterInstance.rewrite(correctedText, {
+        context: CONTEXT_DESCRIBE,
+        tone: toneMapping[tone],
+      });
+
+      const rewrittenSocial = await rewriterInstance.rewrite(correctedText, {
+        context: CONTEXT_SOCIAL,
+        tone: toneMapping[tone],
+      });
+
+      console.log("Proofread result:", correctedText);
+      console.log("Rewritten text (request):", rewrittenRequest);
+      console.log("Rewritten text (describe):", rewrittenDescribe);
+      console.log("Rewritten text (social):", rewrittenSocial);
+
+      setSuggestions([rewrittenRequest, rewrittenDescribe, rewrittenSocial]);
     } catch (error) {
       console.error("Failed to generate suggestions:", error);
       setSuggestions([]);
