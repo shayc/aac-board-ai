@@ -1,3 +1,4 @@
+import { useTranslator } from "@/shared/ai/hooks/useTranslator";
 import type { SentenceContent } from "@features/board/types";
 import { useProofreader } from "@shared/ai/hooks/useProofreader";
 import { useRewriter } from "@shared/ai/hooks/useRewriter";
@@ -17,27 +18,38 @@ export function useSuggestions(options: UseSuggestionsOptions) {
   const { words } = options;
   const proofreader = useProofreader();
   const rewriter = useRewriter();
+  const translator = useTranslator();
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [tone, setTone] = useState<ToneOption>("neutral");
   const [isGenerating, setIsGenerating] = useState(false);
+
   const [proofreaderInstance, setProofreaderInstance] =
     useState<Proofreader | null>(null);
   const [rewriterInstance, setRewriterInstance] = useState<Rewriter | null>(
     null
   );
+  const [translatorInstance, setTranslatorInstance] =
+    useState<Translator | null>(null);
   const [status, setStatus] = useState<"idle" | "ready" | "error">("idle");
 
   const initializeInstances = async () => {
     try {
-      const [proofreaderSession, rewriterSession] = await Promise.all([
-        proofreader.create({ expectedInputLanguages: ["en"] }),
-        rewriter.create(),
-      ]);
+      const [proofreaderSession, rewriterSession, translatorSession] =
+        await Promise.all([
+          proofreader.create({ expectedInputLanguages: ["en"] }),
+          rewriter.create(),
+          translator.create({ sourceLanguage: "en", targetLanguage: "he" }),
+        ]);
 
       setProofreaderInstance(proofreaderSession);
       setRewriterInstance(rewriterSession);
-      setStatus(proofreaderSession && rewriterSession ? "ready" : "error");
+      setTranslatorInstance(translatorSession);
+      setStatus(
+        proofreaderSession && rewriterSession && translatorSession
+          ? "ready"
+          : "error"
+      );
     } catch (error) {
       console.error("Failed to initialize AI instances:", error);
       setStatus("error");
@@ -51,7 +63,12 @@ export function useSuggestions(options: UseSuggestionsOptions) {
   const generateSuggestions = async () => {
     const sentence = words.map((word) => word.label).join(" ");
 
-    if (!sentence || !proofreaderInstance || !rewriterInstance) {
+    if (
+      !sentence ||
+      !proofreaderInstance ||
+      !rewriterInstance ||
+      !translatorInstance
+    ) {
       setSuggestions([]);
       return;
     }
@@ -113,7 +130,18 @@ export function useSuggestions(options: UseSuggestionsOptions) {
       console.log("Rewritten text (describe):", rewrittenDescribe);
       console.log("Rewritten text (social):", rewrittenSocial);
 
-      setSuggestions([rewrittenRequest, rewrittenDescribe, rewrittenSocial]);
+      const translatedRequest = await translatorInstance.translate(
+        rewrittenRequest
+      );
+
+      const translatedDescribe = await translatorInstance.translate(
+        rewrittenDescribe
+      );
+
+      const translatedSocial = await translatorInstance.translate(
+        rewrittenSocial
+      );
+      setSuggestions([translatedRequest, translatedDescribe, translatedSocial]);
     } catch (error) {
       console.error("Failed to generate suggestions:", error);
       setSuggestions([]);
