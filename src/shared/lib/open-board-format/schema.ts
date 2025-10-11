@@ -23,17 +23,6 @@ export const FormatVersionSchema = z.string().regex(/^open-board-.+$/);
 export type FormatVersion = z.infer<typeof FormatVersionSchema>;
 
 /**
- * Custom extension properties. Keys must start with 'ext_'.
- *
- * Note: We intersect this with object schemas to allow only `ext_*` passthrough keys.
- */
-export const ExtensionsSchema = z.record(
-  z.string().regex(/^ext_.+/),
-  z.unknown()
-);
-export type Extensions = z.infer<typeof ExtensionsSchema>;
-
-/**
  * Locale code as per BCP 47 language tags, e.g., 'en', 'en-US', 'fr-CA'.
  */
 export const LocaleCodeSchema = z.string();
@@ -81,22 +70,21 @@ export type ButtonAction = z.infer<typeof ButtonActionSchema>;
 /**
  * Licensing information for a resource.
  */
-export const LicenseSchema = z
-  .object({
-    /** Type of the license, e.g., 'CC-BY-SA'. */
-    type: z.string(),
-    /** URL to the license terms. */
-    copyright_notice_url: z.url().optional(),
-    /** Source URL of the resource. */
-    source_url: z.url().optional(),
-    /** Name of the author. */
-    author_name: z.string().optional(),
-    /** URL of the author's webpage. */
-    author_url: z.url().optional(),
-    /** Email address of the author. */
-    author_email: z.email().optional(),
-  })
-  .and(ExtensionsSchema);
+export const LicenseSchema = z.object({
+  /** Type of the license, e.g., 'CC-BY-SA'. */
+  type: z.string(),
+  /** URL to the license terms. */
+  copyright_notice_url: z.url().optional(),
+  /** Source URL of the resource. */
+  source_url: z.url().optional(),
+  /** Name of the author. */
+  author_name: z.string().optional(),
+  /** URL of the author's webpage. */
+  author_url: z.url().optional(),
+  /** Email address of the author. */
+  author_email: z.email().optional(),
+});
+
 export type License = z.infer<typeof LicenseSchema>;
 
 /**
@@ -107,24 +95,23 @@ export type License = z.infer<typeof LicenseSchema>;
  * 2. path
  * 3. url
  */
-export const MediaSchema = z
-  .object({
-    /** Unique identifier for the media resource. */
-    id: IDSchema,
-    /** Data URI containing the media data. */
-    data: z.string().optional(),
-    /** Path to the media file within an .obz package. */
-    path: z.string().optional(),
-    /** Data URL to fetch the media programmatically. */
-    data_url: z.url().optional(),
-    /** URL to the media resource. */
-    url: z.url().optional(),
-    /** MIME type of the media, e.g., 'image/png', 'audio/mpeg'. */
-    content_type: z.string().optional(),
-    /** Licensing information for the media. */
-    license: LicenseSchema.optional(),
-  })
-  .and(ExtensionsSchema);
+export const MediaSchema = z.object({
+  /** Unique identifier for the media resource. */
+  id: IDSchema,
+  /** Data URI containing the media data. */
+  data: z.string().optional(),
+  /** Path to the media file within an .obz package. */
+  path: z.string().optional(),
+  /** Data URL to fetch the media programmatically. */
+  data_url: z.url().optional(),
+  /** URL to the media resource. */
+  url: z.url().optional(),
+  /** MIME type of the media, e.g., 'image/png', 'audio/mpeg'. */
+  content_type: z.string().optional(),
+  /** Licensing information for the media. */
+  license: LicenseSchema.optional(),
+});
+
 export type Media = z.infer<typeof MediaSchema>;
 
 /**
@@ -168,57 +155,55 @@ export type Sound = z.infer<typeof SoundSchema>;
 /**
  * Information needed to load another board.
  */
-export const LoadBoardSchema = z
-  .object({
-    /** Unique identifier of the board to load. */
-    id: IDSchema.optional(),
-    /** Name of the board to load. */
-    name: z.string().optional(),
-    /** Data URL to fetch the board programmatically. */
-    data_url: z.url().optional(),
-    /** URL to access the board via a web browser. */
-    url: z.url().optional(),
-    /** Path to the board within an .obz package. */
-    path: z.string().optional(),
-  })
-  .and(ExtensionsSchema);
+export const LoadBoardSchema = z.object({
+  /** Unique identifier of the board to load. */
+  id: IDSchema.optional(),
+  /** Name of the board to load. */
+  name: z.string().optional(),
+  /** Data URL to fetch the board programmatically. */
+  data_url: z.url().optional(),
+  /** URL to access the board via a web browser. */
+  url: z.url().optional(),
+  /** Path to the board within an .obz package. */
+  path: z.string().optional(),
+});
+
 export type LoadBoard = z.infer<typeof LoadBoardSchema>;
 
 /**
  * Represents a button on the board.
  */
-export const ButtonSchema = z
-  .object({
-    /** Unique identifier for the button. */
-    id: IDSchema,
-    /** Label text displayed on the button. */
-    label: z.string().optional(),
-    /** Alternative text for vocalization when the button is activated. */
-    vocalization: z.string().optional(),
-    /** Identifier of the image associated with the button. */
-    image_id: IDSchema.optional(),
-    /** Identifier of the sound associated with the button. */
-    sound_id: IDSchema.optional(),
-    /** Action associated with the button. */
-    action: ButtonActionSchema.optional(),
-    /** List of multiple actions for the button, executed in order. */
-    actions: z.array(ButtonActionSchema).optional(),
-    /** Information to load another board when this button is activated. */
-    load_board: LoadBoardSchema.optional(),
-    /** Background color of the button in 'rgb' or 'rgba' format. */
-    background_color: z.string().optional(),
-    /** Border color of the button in 'rgb' or 'rgba' format. */
-    border_color: z.string().optional(),
-    /** Vertical position for absolute positioning (0.0 to 1.0). */
-    top: z.number().min(0).max(1).optional(),
-    /** Horizontal position for absolute positioning (0.0 to 1.0). */
-    left: z.number().min(0).max(1).optional(),
-    /** Width of the button for absolute positioning (0.0 to 1.0). */
-    width: z.number().min(0).max(1).optional(),
-    /** Height of the button for absolute positioning (0.0 to 1.0). */
-    height: z.number().min(0).max(1).optional(),
-  })
-  .and(ExtensionsSchema);
+export const ButtonSchema = z.object({
+  /** Unique identifier for the button. */
+  id: IDSchema,
+  /** Label text displayed on the button. */
+  label: z.string().optional(),
+  /** Alternative text for vocalization when the button is activated. */
+  vocalization: z.string().optional(),
+  /** Identifier of the image associated with the button. */
+  image_id: IDSchema.optional(),
+  /** Identifier of the sound associated with the button. */
+  sound_id: IDSchema.optional(),
+  /** Action associated with the button. */
+  action: ButtonActionSchema.optional(),
+  /** List of multiple actions for the button, executed in order. */
+  actions: z.array(ButtonActionSchema).optional(),
+  /** Information to load another board when this button is activated. */
+  load_board: LoadBoardSchema.optional(),
+  /** Background color of the button in 'rgb' or 'rgba' format. */
+  background_color: z.string().optional(),
+  /** Border color of the button in 'rgb' or 'rgba' format. */
+  border_color: z.string().optional(),
+  /** Vertical position for absolute positioning (0.0 to 1.0). */
+  top: z.number().min(0).max(1).optional(),
+  /** Horizontal position for absolute positioning (0.0 to 1.0). */
+  left: z.number().min(0).max(1).optional(),
+  /** Width of the button for absolute positioning (0.0 to 1.0). */
+  width: z.number().min(0).max(1).optional(),
+  /** Height of the button for absolute positioning (0.0 to 1.0). */
+  height: z.number().min(0).max(1).optional(),
+});
+
 export type Button = z.infer<typeof ButtonSchema>;
 
 /**
@@ -240,34 +225,33 @@ export type Grid = z.infer<typeof GridSchema>;
 /**
  * Represents the root object of an OBF file, defining the structure and layout of a board.
  */
-export const BoardSchema = z
-  .object({
-    /** Format version of the Open Board Format, e.g., 'open-board-0.1'. */
-    format: FormatVersionSchema,
-    /** Unique identifier for the board. */
-    id: IDSchema,
-    /** Locale of the board as a BCP 47 language tag, e.g., 'en', 'en-US'. */
-    locale: LocaleCodeSchema.optional(),
-    /** List of buttons on the board. */
-    buttons: z.array(ButtonSchema),
-    /** URL where the board can be accessed or downloaded. */
-    url: z.url().optional(),
-    /** Name of the board. */
-    name: z.string().optional(),
-    /** Description of the board in HTML format. */
-    description_html: z.string().optional(),
-    /** Grid layout information for arranging buttons. */
-    grid: GridSchema,
-    /** List of images used in the board. */
-    images: z.array(ImageSchema).optional(),
-    /** List of sounds used in the board. */
-    sounds: z.array(SoundSchema).optional(),
-    /** Licensing information for the board. */
-    license: LicenseSchema.optional(),
-    /** String translations for multiple locales. */
-    strings: StringsSchema.optional(),
-  })
-  .and(ExtensionsSchema);
+export const BoardSchema = z.object({
+  /** Format version of the Open Board Format, e.g., 'open-board-0.1'. */
+  format: FormatVersionSchema,
+  /** Unique identifier for the board. */
+  id: IDSchema,
+  /** Locale of the board as a BCP 47 language tag, e.g., 'en', 'en-US'. */
+  locale: LocaleCodeSchema.optional(),
+  /** List of buttons on the board. */
+  buttons: z.array(ButtonSchema),
+  /** URL where the board can be accessed or downloaded. */
+  url: z.url().optional(),
+  /** Name of the board. */
+  name: z.string().optional(),
+  /** Description of the board in HTML format. */
+  description_html: z.string().optional(),
+  /** Grid layout information for arranging buttons. */
+  grid: GridSchema,
+  /** List of images used in the board. */
+  images: z.array(ImageSchema).optional(),
+  /** List of sounds used in the board. */
+  sounds: z.array(SoundSchema).optional(),
+  /** Licensing information for the board. */
+  license: LicenseSchema.optional(),
+  /** String translations for multiple locales. */
+  strings: StringsSchema.optional(),
+});
+
 export type Board = z.infer<typeof BoardSchema>;
 
 /**
@@ -285,7 +269,7 @@ export const ManifestSchema = z.object({
     /** Mapping of image IDs to their file paths. */
     images: z.record(z.string(), z.string()),
     /** Mapping of sound IDs to their file paths. */
-    sounds: z.record(z.string(), z.string()),
+    sounds: z.record(z.string(), z.string()).optional(),
   }),
 });
 export type Manifest = z.infer<typeof ManifestSchema>;

@@ -5,8 +5,8 @@ const UTF8_BOM = "\uFEFF";
 
 export function parseOBF(json: string): Board {
   const trimmed = json.startsWith(UTF8_BOM) ? json.slice(1) : json;
-
   let data: unknown;
+
   try {
     data = JSON.parse(trimmed) as unknown;
   } catch (error) {

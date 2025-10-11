@@ -1,3 +1,5 @@
+import { loadOBZ } from "@/shared/lib/open-board-format";
+import { openFile } from "@/shared/utils/files";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -28,7 +30,18 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
 
         <List>
           <ListItem key={"Open file"} disablePadding>
-            <ListItemButton>
+            <ListItemButton
+              onClick={async () => {
+                const file = await openFile();
+                console.log("file", file);
+                const obz = await loadOBZ(file);
+                console.log("obz", obz);
+
+                // const obf = await loadOBF(file);
+                // console.log("obf", obf);
+                debugger;
+              }}
+            >
               <ListItemIcon>
                 <FileOpenIcon />
               </ListItemIcon>

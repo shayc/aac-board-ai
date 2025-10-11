@@ -2,7 +2,6 @@ export type {
   Board,
   Button,
   ButtonAction,
-  Extensions,
   FormatVersion,
   Grid,
   ID,
@@ -24,7 +23,6 @@ export {
   BoardSchema,
   ButtonActionSchema,
   ButtonSchema,
-  ExtensionsSchema,
   FormatVersionSchema,
   GridSchema,
   IDSchema,
@@ -44,12 +42,7 @@ export {
 
 export { loadOBF, parseOBF, stringifyOBF, validateOBF } from "./obf";
 
-export {
-  createOBZ,
-  extractOBZ,
-  loadOBZ,
-  parseManifest,
-} from "./obz";
+export { createOBZ, extractOBZ, loadOBZ, parseManifest } from "./obz";
 
 export type { ParsedOBZ } from "./obz";
 
