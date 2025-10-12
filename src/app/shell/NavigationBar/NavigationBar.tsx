@@ -1,7 +1,12 @@
 import type { Boardset } from "@features/board/db/boards-db";
-import { listBoardsets, openBoardsDb } from "@features/board/db/boards-db";
+import {
+  getBoardset,
+  listBoardsets,
+  openBoardsDb,
+} from "@features/board/db/boards-db";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import HomeIcon from "@mui/icons-material/Home";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
@@ -12,8 +17,9 @@ import { useNavigate, useParams } from "react-router";
 
 export function NavigationBar() {
   const navigate = useNavigate();
-  const { setId } = useParams<{ setId: string }>();
+  const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);
+  const [coverBoardId, setCoverBoardId] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadBoardsets() {
@@ -28,6 +34,39 @@ export function NavigationBar() {
     loadBoardsets();
   }, []);
 
+  useEffect(() => {
+    async function loadCoverBoard() {
+      if (!setId) {
+        setCoverBoardId(null);
+        return;
+      }
+
+      const db = await openBoardsDb();
+      try {
+        const boardset = await getBoardset(db, setId);
+        if (boardset?.coverBoardId) {
+          setCoverBoardId(boardset.coverBoardId);
+        } else {
+          setCoverBoardId(null);
+        }
+      } catch (err) {
+        console.error("Error loading cover board:", err);
+        setCoverBoardId(null);
+      } finally {
+        db.close();
+      }
+    }
+    loadCoverBoard();
+  }, [setId]);
+
+  const handleHomeClick = () => {
+    if (setId && coverBoardId) {
+      navigate(`/sets/${setId}/boards/${coverBoardId}`);
+    }
+  };
+
+  const isOnHomePage = coverBoardId && boardId === coverBoardId;
+
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Tooltip title="Go back" enterDelay={800}>
@@ -37,17 +76,17 @@ export function NavigationBar() {
           </IconButton>
         </span>
       </Tooltip>
-
-      <Tooltip title="Go forward" enterDelay={800}>
+      
+      <Tooltip title="Home" enterDelay={800}>
         <span>
           <IconButton
-            disabled
-            aria-label="Forward"
+            onClick={handleHomeClick}
+            disabled={!coverBoardId || !!isOnHomePage}
+            aria-label="Home"
             size="large"
             color="inherit"
-            sx={{ mr: 2 }}
           >
-            <ArrowForwardIcon />
+            <HomeIcon />
           </IconButton>
         </span>
       </Tooltip>
