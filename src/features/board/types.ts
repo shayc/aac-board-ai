@@ -19,6 +19,7 @@ export interface BoardSound {
 }
 
 export interface LoadBoard {
+  id?: string;
   name: string;
   url?: string;
   data_url?: string;

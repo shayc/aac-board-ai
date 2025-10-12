@@ -30,7 +30,7 @@ export function useCommunicationBoard(
   const { setId, boardId } = options;
   const initialBoardId = boardId || "lots_of_stuff";
 
-  const [board, setBoard] = useState<Board>();
+  const [board, setBoard] = useState<Board | null>(null);
   const [isLoading, setIsLoading] = useState(!!setId);
   const [error, setError] = useState<Error | null>(null);
 
@@ -117,17 +117,84 @@ export function useCommunicationBoard(
   const output = useOutput();
   const suggestions = useSuggestions({ words: output.words });
 
-  const loadBoard = async (boardId: string) => {
+  const loadBoard = async (newBoardId: string) => {
+    if (!setId) {
+      console.error("Cannot load board: setId is not defined");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
-      await Promise.resolve();
-      throw new Error(`Board loading not implemented: ${boardId}`);
+      console.log("Loading new board from IndexedDB:", { setId, boardId: newBoardId });
+      const db = await openBoardsDb();
+      
+      try {
+        const [boardData] = await getBoardsBatch(db, setId, [newBoardId]);
+        console.log("Board data from DB:", boardData);
+        
+        if (!boardData) {
+          throw new Error(`Board not found: ${newBoardId}`);
+        }
+
+        // Resolve asset URLs from IndexedDB before converting
+        const obfBoard = boardData.json;
+        console.log("OBF Board:", obfBoard);
+
+        if (obfBoard.images) {
+          for (const img of obfBoard.images) {
+            if (img.path) {
+              try {
+                const url = await getAssetUrlByPath(db, setId, img.path);
+                if (url) img.data = url;
+              } catch (err) {
+                console.warn(
+                  `Failed to load image ${img.id} from path ${img.path}:`,
+                  err
+                );
+              }
+            }
+          }
+        }
+
+        if (obfBoard.sounds) {
+          for (const sound of obfBoard.sounds) {
+            if (sound.path) {
+              try {
+                const url = await getAssetUrlByPath(db, setId, sound.path);
+                if (url) sound.data = url;
+              } catch (err) {
+                console.warn(
+                  `Failed to load sound ${sound.id} from path ${sound.path}:`,
+                  err
+                );
+              }
+            }
+          }
+        }
+
+        // Convert to internal format
+        const newBoard = camelcaseKeys(obfBoard, { deep: true }) as Board;
+        console.log("Converted board:", newBoard);
+        setBoard(newBoard);
+        console.log("Board loaded successfully!");
+      } finally {
+        db.close();
+      }
     } catch (err) {
-      setError(err instanceof Error ? err : new Error("Failed to load board"));
+      console.error("Error loading board:", err);
+      setError(
+        err instanceof Error ? err : new Error("Failed to load board")
+      );
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const reloadBoard = async () => {
+    if (boardId) {
+      await loadBoard(boardId);
     }
   };
 
@@ -155,8 +222,10 @@ export function useCommunicationBoard(
     requestProofreaderSession: suggestions.requestSession,
 
     board,
+    boards: new Map<string, Board>(),
     isLoading,
     error,
     loadBoard,
+    reloadBoard,
   };
 }
