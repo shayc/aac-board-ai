@@ -157,6 +157,14 @@ export async function listBoardsets(
   return out;
 }
 
+export async function getBoardset(
+  db: IDBPDatabase<Schema>,
+  setId: string
+): Promise<Boardset | null> {
+  validateId(setId, "setId");
+  return (await db.get("boardsets", setId)) ?? null;
+}
+
 /** Boards */
 export async function bulkPutBoards(
   db: IDBPDatabase<Schema>,

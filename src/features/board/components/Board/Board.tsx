@@ -24,11 +24,15 @@ export function Board() {
   const resolveBoardId = async (
     loadBoard: { id?: string; path?: string }
   ): Promise<string | null> => {
+    console.log("🔍 DEBUG - resolveBoardId called with:", loadBoard);
+    
     if (loadBoard.id) {
+      console.log("🔍 DEBUG - Using direct board ID:", loadBoard.id);
       return loadBoard.id;
     }
 
     if (loadBoard.path && setId) {
+      console.log("🔍 DEBUG - Resolving board path:", loadBoard.path);
       try {
         const { getManifestJson, openBoardsDb } = await import(
           "@features/board/db/boards-db"
@@ -39,10 +43,14 @@ export function Board() {
             paths: { boards: Record<string, string> };
           }>(db, setId);
 
+          console.log("🔍 DEBUG - Manifest paths.boards:", manifest?.paths?.boards);
+
           if (manifest?.paths?.boards) {
             // Create reverse mapping: path → id
             for (const [id, path] of Object.entries(manifest.paths.boards)) {
+              console.log(`🔍 DEBUG - Checking: "${path}" === "${loadBoard.path}" ? id="${id}"`);
               if (path === loadBoard.path) {
+                console.log("🔍 DEBUG - Match found! Returning board ID:", id);
                 return id;
               }
             }
@@ -55,6 +63,7 @@ export function Board() {
       }
     }
 
+    console.log("🔍 DEBUG - No board ID resolved, returning null");
     return null;
   };
 
@@ -115,10 +124,13 @@ export function Board() {
             onClick={async () => {
               // Handle loadBoard action - navigate to new board URL
               if (button.loadBoard && setId) {
+                console.log("🔍 DEBUG - Button loadBoard action:", button.loadBoard);
                 const boardId = await resolveBoardId(button.loadBoard);
+                console.log("🔍 DEBUG - Resolved board ID:", boardId);
                 if (boardId) {
-                  console.log("Navigating to board:", boardId);
-                  navigate(`/sets/${setId}/boards/${boardId}`);
+                  const url = `/sets/${setId}/boards/${boardId}`;
+                  console.log("🔍 DEBUG - Navigating to URL:", url);
+                  navigate(url);
                   return;
                 } else {
                   console.error(
