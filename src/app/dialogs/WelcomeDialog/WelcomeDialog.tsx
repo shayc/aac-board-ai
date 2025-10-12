@@ -29,12 +29,6 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
       scroll="paper"
       aria-labelledby="welcome-dialog-title"
       aria-describedby="welcome-dialog-description"
-      PaperProps={{
-        sx: {
-          borderRadius: 3,
-          p: 1,
-        },
-      }}
     >
       <DialogTitle id="welcome-dialog-title" sx={{ fontWeight: 600 }}>
         Welcome to AAC Board AI
