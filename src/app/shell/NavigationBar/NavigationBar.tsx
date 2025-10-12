@@ -86,7 +86,7 @@ export function NavigationBar() {
         </span>
       </Tooltip>
 
-      <Tooltip title="Home" enterDelay={800}>
+      <Tooltip title="Go home" enterDelay={800}>
         <span>
           <IconButton
             onClick={handleHomeClick}
