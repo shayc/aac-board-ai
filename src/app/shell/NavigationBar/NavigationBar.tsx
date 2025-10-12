@@ -20,12 +20,7 @@ export function NavigationBar() {
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);
   const [coverBoardId, setCoverBoardId] = useState<string | null>(null);
-
-  // Access board context for navigation
-  const { goBack, canGoBack } = useBoard();
-
-  // Debug logging
-  console.log("[NavigationBar] canGoBack:", canGoBack);
+  const { navigation } = useBoard();
 
   useEffect(() => {
     async function loadBoardsets() {
@@ -82,11 +77,11 @@ export function NavigationBar() {
             onClick={() => {
               console.log(
                 "[NavigationBar] Back button clicked, canGoBack:",
-                canGoBack
+                navigation.canGoBack
               );
-              goBack();
+              navigation.goBack();
             }}
-            disabled={!canGoBack}
+            disabled={!navigation.canGoBack}
             aria-label="Back"
             size="large"
             color="inherit"

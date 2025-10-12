@@ -9,6 +9,7 @@ export interface TileProps {
   backgroundColor?: string;
   borderColor?: string;
   disabled?: boolean;
+  variant?: "folder";
   onClick: () => void;
 }
 
@@ -18,6 +19,7 @@ export function Tile({
   backgroundColor,
   borderColor,
   disabled,
+  variant,
   onClick,
 }: TileProps) {
   return (
@@ -35,6 +37,7 @@ export function Tile({
         justifyContent: "stretch",
         textTransform: "none",
         padding: 0,
+        position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         color: getReadableTextColor(backgroundColor ?? "#fff"),
@@ -50,6 +53,19 @@ export function Tile({
           backgroundColor: backgroundColor
             ? darken(backgroundColor, 0.3)
             : undefined,
+        },
+        "&::before": {
+          content: '""',
+          display: variant === "folder" ? "block" : "none",
+          position: "absolute",
+          top: -2,
+          right: -2,
+          width: 16,
+          height: 16,
+          zIndex: 1,
+          backgroundColor: "#000",
+          border: `2px solid "#000"`,
+          borderBottom: "none",
         },
       })}
     >

@@ -7,6 +7,7 @@ import type { Board, BoardContextValue } from "@features/board/types";
 import projectCore from "@shared/lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
 import { useEffect, useState } from "react";
+import { useGrid } from "./useGrid";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
@@ -119,6 +120,10 @@ export function useCommunicationBoard(
     words: output.words,
     boardButtons: board?.buttons,
   });
+  const gridLayout = useGrid(
+    board?.buttons ?? [],
+    board?.grid ?? { rows: 0, columns: 0 }
+  );
 
   const loadBoard = async (newBoardId: string) => {
     if (!setId) {
@@ -202,33 +207,41 @@ export function useCommunicationBoard(
   };
 
   return {
-    // Navigation
-    currentBoardId: nav.currentBoardId,
-    history: nav.history,
-    canGoBack: nav.canGoBack,
-    goToBoard: nav.goToBoard,
-    goBack: nav.goBack,
-    goHome: nav.goHome,
-
-    // Output
-    words: output.words,
-    addWord: output.addWord,
-    removeWord: output.removeWord,
-    clearWords: output.clear,
-
-    // Suggestions
-    suggestions: suggestions.suggestions,
-    tone: suggestions.tone,
-    isGenerating: suggestions.isGenerating,
-    changeTone: suggestions.changeTone,
-    regenerateSuggestions: suggestions.regenerate,
-    requestProofreaderSession: suggestions.requestSession,
-
-    board,
-    boards: new Map<string, Board>(),
-    isLoading,
-    error,
-    loadBoard,
-    reloadBoard,
+    output: {
+      words: output.words,
+      addWord: output.addWord,
+      removeWord: output.removeWord,
+      clear: output.clear,
+    },
+    suggestions: {
+      items: suggestions.suggestions,
+      tone: suggestions.tone,
+      isGenerating: suggestions.isGenerating,
+      changeTone: suggestions.changeTone,
+      regenerate: suggestions.regenerate,
+      requestSession: suggestions.requestSession,
+    },
+    grid: {
+      cells: gridLayout.grid,
+      rows: gridLayout.rows,
+      columns: gridLayout.columns,
+      setRows: gridLayout.setRows,
+      setColumns: gridLayout.setColumns,
+    },
+    navigation: {
+      currentBoardId: nav.currentBoardId,
+      history: nav.history,
+      canGoBack: nav.canGoBack,
+      goToBoard: nav.goToBoard,
+      goBack: nav.goBack,
+      goHome: nav.goHome,
+    },
+    board: {
+      current: board,
+      isLoading,
+      error,
+      load: loadBoard,
+      reload: reloadBoard,
+    },
   };
 }

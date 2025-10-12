@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 
 export interface GridProps<TItem> {
-  grid: TItem[][];
+  grid: (TItem | null)[][];
   gap?: number;
   renderCell: (item: TItem) => React.ReactNode;
   renderEmptyCell?: () => React.ReactNode;

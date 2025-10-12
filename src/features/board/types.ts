@@ -74,35 +74,46 @@ export interface SuggestionsState {
   proofreaderStatus?: string;
 }
 
-// Context value type
+// Context value type - Grouped structure
 export interface BoardContextValue {
-  // Navigation
-  currentBoardId: string;
-  board: Board | null;
-  history: string[];
-  canGoBack: boolean;
-  goToBoard: (boardId: string) => void;
-  goBack: () => void;
-  goHome: () => void;
+  output: {
+    words: SentenceContent[];
+    addWord: (word: SentenceContent) => void;
+    removeWord: () => void;
+    clear: () => void;
+  };
 
-  // Output
-  words: SentenceContent[];
-  addWord: (word: SentenceContent) => void;
-  removeWord: () => void;
-  clearWords: () => void;
+  suggestions: {
+    items: string[];
+    tone: "neutral" | "formal" | "casual";
+    isGenerating: boolean;
+    changeTone: (tone: "neutral" | "formal" | "casual") => void;
+    regenerate: () => void;
+    requestSession: () => Promise<void>;
+  };
 
-  // Suggestions
-  suggestions: string[];
-  tone: "neutral" | "formal" | "casual";
-  isGenerating: boolean;
-  changeTone: (tone: "neutral" | "formal" | "casual") => void;
-  regenerateSuggestions: () => void;
-  requestProofreaderSession: () => Promise<void>;
+  grid: {
+    cells: (BoardButton | null)[][];
+    rows: number;
+    columns: number;
+    setRows: (rows: number) => void;
+    setColumns: (columns: number) => void;
+  };
 
-  // Boards
-  boards: Map<string, Board>;
-  isLoading: boolean;
-  error: Error | null;
-  loadBoard: (boardId: string) => Promise<void>;
-  reloadBoard: () => Promise<void>;
+  navigation: {
+    currentBoardId: string;
+    history: string[];
+    canGoBack: boolean;
+    goToBoard: (boardId: string) => void;
+    goBack: () => void;
+    goHome: () => void;
+  };
+
+  board: {
+    current: Board | null;
+    isLoading: boolean;
+    error: Error | null;
+    load: (boardId: string) => Promise<void>;
+    reload: () => Promise<void>;
+  };
 }
