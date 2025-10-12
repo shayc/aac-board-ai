@@ -44,7 +44,7 @@ export type Strings = z.infer<typeof StringsSchema>;
  * Represents custom actions for spelling.
  * Prefixed with '+' followed by the text to append.
  */
-export const SpellingActionSchema = z.string().regex(/^\+.+$/);
+export const SpellingActionSchema = z.string();
 export type SpellingAction = z.infer<typeof SpellingActionSchema>;
 
 /**
