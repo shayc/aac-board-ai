@@ -1,22 +1,14 @@
 import { useCommunicationBoard } from "@features/board/hooks/useCommunicationBoard";
 import type { ReactNode } from "react";
+import { useParams } from "react-router";
 import { BoardContext } from "./BoardContext";
 
 export interface BoardProviderProps {
   children: ReactNode;
-  setId?: string;
-  boardId?: string;
 }
 
-/**
- * Provider component that initializes and provides board context.
- * All logic is delegated to useCommunicationBoard hook.
- */
-export function BoardProvider({
-  children,
-  setId,
-  boardId,
-}: BoardProviderProps) {
+export function BoardProvider({ children }: BoardProviderProps) {
+  const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const value = useCommunicationBoard({ setId, boardId });
 
   return <BoardContext value={value}>{children}</BoardContext>;

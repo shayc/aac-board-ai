@@ -1,3 +1,4 @@
+import { useBoard } from "@features/board/context/useBoard";
 import type { Boardset } from "@features/board/db/boards-db";
 import {
   getBoardset,
@@ -5,7 +6,6 @@ import {
   openBoardsDb,
 } from "@features/board/db/boards-db";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -21,9 +21,16 @@ export function NavigationBar() {
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);
   const [coverBoardId, setCoverBoardId] = useState<string | null>(null);
 
+  // Access board context for navigation
+  const { goBack, canGoBack } = useBoard();
+
+  // Debug logging
+  console.log("[NavigationBar] canGoBack:", canGoBack);
+
   useEffect(() => {
     async function loadBoardsets() {
       const db = await openBoardsDb();
+
       try {
         const sets = await listBoardsets(db);
         setBoardsets(sets);
@@ -71,12 +78,24 @@ export function NavigationBar() {
     <Box sx={{ display: "flex", alignItems: "center" }}>
       <Tooltip title="Go back" enterDelay={800}>
         <span>
-          <IconButton disabled aria-label="Back" size="large" color="inherit">
+          <IconButton
+            onClick={() => {
+              console.log(
+                "[NavigationBar] Back button clicked, canGoBack:",
+                canGoBack
+              );
+              goBack();
+            }}
+            disabled={!canGoBack}
+            aria-label="Back"
+            size="large"
+            color="inherit"
+          >
             <ArrowBackIcon />
           </IconButton>
         </span>
       </Tooltip>
-      
+
       <Tooltip title="Home" enterDelay={800}>
         <span>
           <IconButton
@@ -85,6 +104,7 @@ export function NavigationBar() {
             aria-label="Home"
             size="large"
             color="inherit"
+            sx={{ mr: 2 }}
           >
             <HomeIcon />
           </IconButton>

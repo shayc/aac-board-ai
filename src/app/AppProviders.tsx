@@ -1,3 +1,4 @@
+import { BoardProvider } from "@features/board/context/BoardProvider";
 import { LanguageProvider } from "@shared/contexts/LanguageProvider/LanguageProvider";
 import { SpeechProvider } from "@shared/contexts/SpeechProvider/SpeechProvider";
 import { ThemeProvider } from "@shared/contexts/ThemeProvider/ThemeProvider";
@@ -11,7 +12,9 @@ export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider>
       <SpeechProvider>
-        <LanguageProvider>{children}</LanguageProvider>
+        <LanguageProvider>
+          <BoardProvider>{children}</BoardProvider>
+        </LanguageProvider>
       </SpeechProvider>
     </ThemeProvider>
   );
