@@ -1,11 +1,13 @@
 import { useTranslator } from "@/shared/ai/hooks/useTranslator";
-import type { SentenceContent } from "@features/board/types";
+import type { BoardButton, SentenceContent } from "@features/board/types";
 import { useProofreader } from "@shared/ai/hooks/useProofreader";
 import { useRewriter } from "@shared/ai/hooks/useRewriter";
+import { useWriter } from "@shared/ai/hooks/useWriter";
 import { useEffect, useState } from "react";
 
 export interface UseSuggestionsOptions {
   words: SentenceContent[];
+  boardButtons?: BoardButton[];
 }
 
 export type ToneOption = "neutral" | "formal" | "casual";
@@ -15,8 +17,9 @@ export type ToneOption = "neutral" | "formal" | "casual";
  * Uses the proofreader API to correct text and rewriter API to adjust tone.
  */
 export function useSuggestions(options: UseSuggestionsOptions) {
-  const { words } = options;
+  const { words, boardButtons = [] } = options;
   const proofreader = useProofreader();
+  const writer = useWriter();
   const rewriter = useRewriter();
   const translator = useTranslator();
 
@@ -26,6 +29,7 @@ export function useSuggestions(options: UseSuggestionsOptions) {
 
   const [proofreaderInstance, setProofreaderInstance] =
     useState<Proofreader | null>(null);
+  const [writerInstance, setWriterInstance] = useState<Writer | null>(null);
   const [rewriterInstance, setRewriterInstance] = useState<Rewriter | null>(
     null
   );
@@ -33,20 +37,43 @@ export function useSuggestions(options: UseSuggestionsOptions) {
     useState<Translator | null>(null);
   const [status, setStatus] = useState<"idle" | "ready" | "error">("idle");
 
+  // Build board vocabulary context for Writer
+  const boardVocabulary = boardButtons
+    .map((btn) => btn.label)
+    .filter(Boolean)
+    .join(", ");
+  console.log("Board vocabulary for context:", boardVocabulary);
+  const boardContextString = boardVocabulary
+    ? `You are helping with AAC communication. Available vocabulary: ${boardVocabulary}. When given a partial sentence, add ONLY the next word to complete it naturally. Do not rewrite or expand the sentence - just add the missing words.`
+    : "You are helping with AAC communication. When given a partial sentence, add ONLY the next word to complete it naturally. Do not rewrite or expand - just add the missing words.";
+
   const initializeInstances = async () => {
     try {
-      const [proofreaderSession, rewriterSession, translatorSession] =
-        await Promise.all([
-          proofreader.create({ expectedInputLanguages: ["en"] }),
-          rewriter.create(),
-          translator.create({ sourceLanguage: "en", targetLanguage: "he" }),
-        ]);
+      const [
+        proofreaderSession,
+        writerSession,
+        rewriterSession,
+        translatorSession,
+      ] = await Promise.all([
+        proofreader.create({ expectedInputLanguages: ["en"] }),
+        writer.create({
+          sharedContext: boardContextString,
+          tone: "neutral",
+          length: "short",
+        }),
+        rewriter.create(),
+        translator.create({ sourceLanguage: "en", targetLanguage: "he" }),
+      ]);
 
       setProofreaderInstance(proofreaderSession);
+      setWriterInstance(writerSession);
       setRewriterInstance(rewriterSession);
       setTranslatorInstance(translatorSession);
       setStatus(
-        proofreaderSession && rewriterSession && translatorSession
+        proofreaderSession &&
+          writerSession &&
+          rewriterSession &&
+          translatorSession
           ? "ready"
           : "error"
       );
@@ -66,6 +93,7 @@ export function useSuggestions(options: UseSuggestionsOptions) {
     if (
       !sentence ||
       !proofreaderInstance ||
+      !writerInstance ||
       !rewriterInstance ||
       !translatorInstance
     ) {
@@ -76,9 +104,59 @@ export function useSuggestions(options: UseSuggestionsOptions) {
     setIsGenerating(true);
 
     try {
+      // STEP 1: Proofreading - Fix grammar and spelling
       const proofreadResult = await proofreaderInstance.proofread(sentence);
       const correctedText = proofreadResult.correctedInput;
+      console.log("Step 1 - Proofread:", correctedText);
 
+      // STEP 2: Writer - Suggest 1-2 word completion using board context
+      console.log("Step 2 INPUT - Original sentence:", correctedText);
+
+      // Get Writer output
+      const writerOutput = await writerInstance.write(correctedText);
+      console.log("Step 2 RAW OUTPUT - Writer result:", writerOutput);
+
+      // Extract only the new words added (max 2 words)
+      // If Writer rewrote the entire sentence, extract what was added after the original
+      let completedText = correctedText;
+
+      if (writerOutput.toLowerCase().startsWith(correctedText.toLowerCase())) {
+        // Writer appended to the sentence - extract the addition
+        const addition = writerOutput.slice(correctedText.length).trim();
+        const addedWords = addition.split(/\s+/).slice(0, 2); // Take max 2 words
+        completedText =
+          correctedText +
+          (addedWords.length > 0 ? " " + addedWords.join(" ") : "");
+      } else {
+        // Writer rewrote the sentence - try to find common ending and extract new words
+        const writerWords = writerOutput.split(/\s+/);
+        const originalWords = correctedText.split(/\s+/);
+
+        // Take last 1-2 words from writer output that weren't in original
+        const newWords = writerWords
+          .slice(-2)
+          .filter(
+            (word) =>
+              !originalWords.some(
+                (origWord) => origWord.toLowerCase() === word.toLowerCase()
+              )
+          );
+
+        if (newWords.length > 0) {
+          completedText = correctedText + " " + newWords.join(" ");
+        }
+      }
+
+      console.log(
+        "Step 2 FINAL OUTPUT - Completion with 1-2 words:",
+        completedText
+      );
+      console.log(
+        "Step 2 ANALYSIS - Added:",
+        completedText.replace(correctedText, "").trim()
+      );
+
+      // STEP 3: Rewriter - Generate tone variations
       const toneMapping: Record<
         ToneOption,
         "as-is" | "more-formal" | "more-casual"
@@ -90,7 +168,7 @@ export function useSuggestions(options: UseSuggestionsOptions) {
 
       const CONTEXT_REQUEST =
         "You are rewriting a short AAC-style message into a clear, polite REQUEST. " +
-        "Preserve the user’s meaning and key content words without adding new information. " +
+        "Preserve the user's meaning and key content words without adding new information. " +
         "Fix only essential grammar (articles, 'to', 'am', 'is'). " +
         "Keep it short (max 10 words) and natural for spoken English. " +
         "Prefer patterns like 'I want …', 'Please …', or 'Can I …, please?'. " +
@@ -105,43 +183,48 @@ export function useSuggestions(options: UseSuggestionsOptions) {
 
       const CONTEXT_SOCIAL =
         "Rewrite the AAC-style message as a friendly SOCIAL remark. " +
-        "Keep the user’s meaning and content words, but add warmth or courtesy. " +
+        "Keep the user's meaning and content words, but add warmth or courtesy. " +
         "Do not turn it into a request. " +
-        "Use natural human tone such as 'That sounds nice', 'Thank you', or 'That’s good.'. " +
+        "Use natural human tone such as 'That sounds nice', 'Thank you', or 'That's good.'. " +
         "One short sentence, under 10 words. No emojis, no translation.";
 
-      const rewrittenRequest = await rewriterInstance.rewrite(correctedText, {
-        context: CONTEXT_REQUEST,
-        tone: toneMapping[tone],
+      const [rewrittenRequest, rewrittenDescribe, rewrittenSocial] =
+        await Promise.all([
+          rewriterInstance.rewrite(completedText, {
+            context: CONTEXT_REQUEST,
+            tone: toneMapping[tone],
+          }),
+          rewriterInstance.rewrite(completedText, {
+            context: CONTEXT_DESCRIBE,
+            tone: toneMapping[tone],
+          }),
+          rewriterInstance.rewrite(completedText, {
+            context: CONTEXT_SOCIAL,
+            tone: toneMapping[tone],
+          }),
+        ]);
+
+      console.log("Step 3 - Rewritten variants:", {
+        request: rewrittenRequest,
+        describe: rewrittenDescribe,
+        social: rewrittenSocial,
       });
 
-      const rewrittenDescribe = await rewriterInstance.rewrite(correctedText, {
-        context: CONTEXT_DESCRIBE,
-        tone: toneMapping[tone],
-      });
+      // // STEP 4: Translation - Apply only to final outputs
+      // const [translatedRequest, translatedDescribe, translatedSocial] =
+      //   await Promise.all([
+      //     translatorInstance.translate(rewrittenRequest),
+      //     translatorInstance.translate(rewrittenDescribe),
+      //     translatorInstance.translate(rewrittenSocial),
+      //   ]);
 
-      const rewrittenSocial = await rewriterInstance.rewrite(correctedText, {
-        context: CONTEXT_SOCIAL,
-        tone: toneMapping[tone],
-      });
+      // console.log("Step 4 - Translated:", {
+      //   request: translatedRequest,
+      //   describe: translatedDescribe,
+      //   social: translatedSocial,
+      // });
 
-      console.log("Proofread result:", correctedText);
-      console.log("Rewritten text (request):", rewrittenRequest);
-      console.log("Rewritten text (describe):", rewrittenDescribe);
-      console.log("Rewritten text (social):", rewrittenSocial);
-
-      const translatedRequest = await translatorInstance.translate(
-        rewrittenRequest
-      );
-
-      const translatedDescribe = await translatorInstance.translate(
-        rewrittenDescribe
-      );
-
-      const translatedSocial = await translatorInstance.translate(
-        rewrittenSocial
-      );
-      setSuggestions([translatedRequest, translatedDescribe, translatedSocial]);
+      setSuggestions([rewrittenRequest, rewrittenDescribe, rewrittenSocial]);
     } catch (error) {
       console.error("Failed to generate suggestions:", error);
       setSuggestions([]);
@@ -157,6 +240,27 @@ export function useSuggestions(options: UseSuggestionsOptions) {
   const changeTone = (newTone: ToneOption) => {
     setTone(newTone);
   };
+
+  // Reinitialize Writer when board context changes
+  useEffect(() => {
+    const updateWriterContext = async () => {
+      if (status === "ready" && boardButtons.length > 0) {
+        try {
+          const newWriter = await writer.create({
+            sharedContext: boardContextString,
+            tone: "neutral",
+            length: "short",
+          });
+          console.log("Writer context updated with new board vocabulary");
+          setWriterInstance(newWriter);
+        } catch (error) {
+          console.error("Failed to update Writer context:", error);
+        }
+      }
+    };
+
+    void updateWriterContext();
+  }, [boardButtons]);
 
   useEffect(() => {
     if (status === "ready") {

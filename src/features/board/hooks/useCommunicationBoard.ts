@@ -115,7 +115,10 @@ export function useCommunicationBoard(
 
   const nav = useNavigation({ initialBoardId });
   const output = useOutput();
-  const suggestions = useSuggestions({ words: output.words });
+  const suggestions = useSuggestions({
+    words: output.words,
+    boardButtons: board?.buttons,
+  });
 
   const loadBoard = async (newBoardId: string) => {
     if (!setId) {
