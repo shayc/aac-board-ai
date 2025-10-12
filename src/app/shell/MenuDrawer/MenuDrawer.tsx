@@ -1,4 +1,4 @@
-import { loadOBZ } from "@/shared/lib/open-board-format";
+import { importFile } from "@features/board/db/import-board";
 import { openFile } from "@/shared/utils/files";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -32,14 +32,15 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           <ListItem key={"Open file"} disablePadding>
             <ListItemButton
               onClick={async () => {
-                const file = await openFile();
-                console.log("file", file);
-                const obz = await loadOBZ(file);
-                console.log("obz", obz);
-
-                // const obf = await loadOBF(file);
-                // console.log("obf", obf);
-                debugger;
+                try {
+                  const file = await openFile();
+                  if (!file) return;
+                  const result = await importFile(file);
+                  console.log("Imported board:", result);
+                  onClose();
+                } catch (error) {
+                  console.error("Import failed:", error);
+                }
               }}
             >
               <ListItemIcon>

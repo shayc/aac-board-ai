@@ -11,10 +11,34 @@ import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
 export function Board() {
   const speech = useSpeech();
   const board = useBoard();
+
   const grid = useGrid(
-    board.currentBoard?.buttons ?? [],
-    board.currentBoard?.grid ?? { rows: 0, columns: 0 }
+    board.board?.buttons ?? [],
+    board.board?.grid ?? { rows: 0, columns: 0 }
   );
+
+  console.log("Board component render:", {
+    board: board.board,
+    grid: grid.grid,
+  });
+
+  if (board.isLoading) {
+    return <Box sx={{ p: 4, textAlign: "center" }}>Loading board...</Box>;
+  }
+
+  if (board.error) {
+    return (
+      <Box sx={{ p: 4, textAlign: "center", color: "error.main" }}>
+        Error: {board.error.message}
+      </Box>
+    );
+  }
+
+  if (!board.board) {
+    return <Box sx={{ p: 4, textAlign: "center" }}>No board loaded</Box>;
+  }
+
+  console.log("Rendering grid with:", grid.grid.length, "rows");
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
@@ -43,9 +67,8 @@ export function Board() {
             borderColor={button.borderColor}
             imageSrc={
               button.imageId
-                ? board.currentBoard?.images?.find(
-                    (img) => img.id === button.imageId
-                  )?.data
+                ? board.board?.images?.find((img) => img.id === button.imageId)
+                    ?.data
                 : undefined
             }
             onClick={() => {
@@ -59,7 +82,7 @@ export function Board() {
               board.addWord({
                 ...button,
                 image: button.imageId
-                  ? board.currentBoard?.images?.find(
+                  ? board.board?.images?.find(
                       (img) => img.id === button.imageId
                     )?.data
                   : undefined,

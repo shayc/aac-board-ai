@@ -27,7 +27,7 @@ export interface Asset {
 }
 
 /** Schema */
-interface Schema extends DBSchema {
+export interface Schema extends DBSchema {
   boardsets: {
     key: string;
     value: Boardset;
@@ -62,10 +62,6 @@ export function normalizePath(p: string): string {
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
-
-  if (cleaned.includes("..")) {
-    throw new Error("Path cannot contain '..'");
-  }
 
   return cleaned;
 }

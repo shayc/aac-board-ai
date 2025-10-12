@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function useGrid<TItem>(
   items: TItem[],
@@ -15,8 +15,16 @@ export function useGrid<TItem>(
   items.forEach((item, index) => {
     const row = Math.floor(index / columns);
     const col = index % columns;
-    grid[row][col] = item;
+    // Only add item if it fits in the grid
+    if (row < rows && col < columns && grid[row]) {
+      grid[row][col] = item;
+    }
   });
+
+  useEffect(() => {
+    setRows(options.rows);
+    setColumns(options.columns);
+  }, [options.rows, options.columns]);
 
   return { grid, rows, columns, setRows, setColumns };
 }

@@ -1,9 +1,7 @@
-import type { Board } from "@features/board/types";
 import { useState } from "react";
 
 export interface UseNavigationOptions {
   initialBoardId: string;
-  boards: Map<string, Board>;
 }
 
 /**
@@ -11,7 +9,7 @@ export interface UseNavigationOptions {
  * Contains its own state and provides navigation actions.
  */
 export function useNavigation(options: UseNavigationOptions) {
-  const { initialBoardId, boards } = options;
+  const { initialBoardId } = options;
 
   const [currentBoardId, setCurrentBoardId] = useState(initialBoardId);
   const [history, setHistory] = useState<string[]>([]);
@@ -36,7 +34,6 @@ export function useNavigation(options: UseNavigationOptions) {
 
   return {
     currentBoardId,
-    currentBoard: boards.get(currentBoardId) ?? null,
     history,
     canGoBack: history.length > 0,
     goToBoard,

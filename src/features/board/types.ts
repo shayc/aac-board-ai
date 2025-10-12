@@ -77,7 +77,7 @@ export interface SuggestionsState {
 export interface BoardContextValue {
   // Navigation
   currentBoardId: string;
-  currentBoard: Board | null;
+  board: Board | null;
   history: string[];
   canGoBack: boolean;
   goToBoard: (boardId: string) => void;

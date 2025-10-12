@@ -52,9 +52,12 @@ export type SpellingAction = z.infer<typeof SpellingActionSchema>;
  * Standard actions are prefixed with ':'.
  * Custom actions start with ':ext_'.
  */
-export const SpecialtyActionSchema = z.union([
-  z.enum([":space", ":clear", ":home", ":speak", ":backspace"]),
-  z.string().regex(/^:ext_.+$/),
+export const SpecialtyActionSchema = z.enum([
+  ":space",
+  ":clear",
+  ":home",
+  ":speak",
+  ":backspace",
 ]);
 export type SpecialtyAction = z.infer<typeof SpecialtyActionSchema>;
 

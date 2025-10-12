@@ -1,13 +1,19 @@
+import {
+  getAssetUrlByPath,
+  getBoardsBatch,
+  openBoardsDb,
+} from "@features/board/db/boards-db";
 import type { Board, BoardContextValue } from "@features/board/types";
 import projectCore from "@shared/lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "./useNavigation";
 import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
 
 export interface UseCommunicationBoardOptions {
-  initialBoardId?: string;
+  setId?: string;
+  boardId?: string;
 }
 
 /**
@@ -21,25 +27,97 @@ export interface UseCommunicationBoardOptions {
 export function useCommunicationBoard(
   options: UseCommunicationBoardOptions = {}
 ): BoardContextValue {
-  const { initialBoardId = "lots_of_stuff" } = options;
+  const { setId, boardId } = options;
+  const initialBoardId = boardId || "lots_of_stuff";
 
-  const [boards, setBoards] = useState<Map<string, Board>>(() => {
-    const board = camelcaseKeys(projectCore, {
-      deep: true,
-    }) as unknown as Board;
-    return new Map([[initialBoardId, board]]);
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
+  const [board, setBoard] = useState<Board>();
+  const [isLoading, setIsLoading] = useState(!!setId);
   const [error, setError] = useState<Error | null>(null);
 
-  const nav = useNavigation({ initialBoardId, boards });
+  // Load board from IndexedDB
+  useEffect(() => {
+    if (!setId || !boardId) {
+      // Load default example board
+      const board = camelcaseKeys(projectCore, {
+        deep: true,
+      }) as unknown as Board;
+      setBoard(board);
+      setIsLoading(false);
+      return;
+    }
+
+    async function loadFromDb() {
+      console.log("Loading board from IndexedDB:", { setId, boardId });
+      const db = await openBoardsDb();
+      try {
+        const [boardData] = await getBoardsBatch(db, setId!, [boardId!]);
+        console.log("Board data from DB:", boardData);
+        if (!boardData) {
+          throw new Error(`Board not found: ${boardId}`);
+        }
+
+        // Resolve asset URLs from IndexedDB before converting
+        const obfBoard = boardData.json;
+        console.log("OBF Board:", obfBoard);
+
+        if (obfBoard.images) {
+          for (const img of obfBoard.images) {
+            if (img.path) {
+              try {
+                const url = await getAssetUrlByPath(db, setId!, img.path);
+                if (url) img.data = url;
+              } catch (err) {
+                console.warn(
+                  `Failed to load image ${img.id} from path ${img.path}:`,
+                  err
+                );
+                // Skip this image if path is invalid
+              }
+            }
+          }
+        }
+
+        if (obfBoard.sounds) {
+          for (const sound of obfBoard.sounds) {
+            if (sound.path) {
+              try {
+                const url = await getAssetUrlByPath(db, setId!, sound.path);
+                if (url) sound.data = url;
+              } catch (err) {
+                console.warn(
+                  `Failed to load sound ${sound.id} from path ${sound.path}:`,
+                  err
+                );
+                // Skip this sound if path is invalid
+              }
+            }
+          }
+        }
+
+        // Now convert to internal format
+        const board = camelcaseKeys(obfBoard, { deep: true }) as Board;
+        console.log("Converted board:", board);
+        setBoard(board);
+        console.log("Board loaded successfully!");
+      } catch (err) {
+        console.error("Error loading board:", err);
+        setError(
+          err instanceof Error ? err : new Error("Failed to load board")
+        );
+      } finally {
+        setIsLoading(false);
+        db.close();
+      }
+    }
+
+    loadFromDb();
+  }, [setId, boardId, initialBoardId]);
+
+  const nav = useNavigation({ initialBoardId });
   const output = useOutput();
   const suggestions = useSuggestions({ words: output.words });
 
   const loadBoard = async (boardId: string) => {
-    if (boards.has(boardId)) return;
-
     setIsLoading(true);
     setError(null);
 
@@ -53,20 +131,9 @@ export function useCommunicationBoard(
     }
   };
 
-  const reloadBoard = async () => {
-    const id = nav.currentBoardId;
-    setBoards((prev) => {
-      const updated = new Map(prev);
-      updated.delete(id);
-      return updated;
-    });
-    await loadBoard(id);
-  };
-
   return {
     // Navigation
     currentBoardId: nav.currentBoardId,
-    currentBoard: nav.currentBoard,
     history: nav.history,
     canGoBack: nav.canGoBack,
     goToBoard: nav.goToBoard,
@@ -87,11 +154,9 @@ export function useCommunicationBoard(
     regenerateSuggestions: suggestions.regenerate,
     requestProofreaderSession: suggestions.requestSession,
 
-    // Boards
-    boards,
+    board,
     isLoading,
     error,
     loadBoard,
-    reloadBoard,
   };
 }

@@ -4,7 +4,8 @@ import { BoardContext } from "./BoardContext";
 
 export interface BoardProviderProps {
   children: ReactNode;
-  initialBoardId?: string;
+  setId?: string;
+  boardId?: string;
 }
 
 /**
@@ -13,9 +14,10 @@ export interface BoardProviderProps {
  */
 export function BoardProvider({
   children,
-  initialBoardId = "lots_of_stuff",
+  setId,
+  boardId,
 }: BoardProviderProps) {
-  const value = useCommunicationBoard({ initialBoardId });
+  const value = useCommunicationBoard({ setId, boardId });
 
   return <BoardContext value={value}>{children}</BoardContext>;
 }
