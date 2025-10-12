@@ -3,8 +3,9 @@
 //
 // Sources (Chrome official):
 // • Translator API — https://developer.chrome.com/docs/ai/translator-api  (Last updated 2025-05-20)
-// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection  (Last updated 2025-05-20)
+// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection  (Last updated 2024-09-24)
 // • Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api  (Last updated 2025-05-20)
+// • Writer API — https://developer.chrome.com/docs/ai/writer-api  (Last updated 2025-05-20)
 // • Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api  (Last updated 2025-09-12)
 //
 // Notes:
@@ -13,13 +14,13 @@
 // • To observe download progress, either pass `monitor(m => m.addEventListener('downloadprogress', …))` to `create()`,
 //   or (where documented) add a `'downloadprogress'` listener on the created instance.
 // • Default availability: top-level window or same-origin iframe; delegate to cross-origin iframes via
-//   <iframe allow="translator; language-detector; rewriter; proofreader"> (Permissions Policy).
+//   <iframe allow="translator; language-detector; rewriter; writer; proofreader"> (Permissions Policy).
 // • Not available in Web Workers (per docs).
 // • This file intentionally excludes explainer-only or MDN-only fields (e.g. quotas, toggles).
 // • Translator availability note: Chrome intentionally hides per-language-pair download status; many pairs
 //   appear “downloadable” until a site actually creates that pair.
 
-export {};
+export { };
 
 declare global {
   // -------------------------------------------------------------------------------------------------
@@ -211,6 +212,74 @@ declare global {
 
   /** Global Rewriter constructor. */
   const Rewriter: RewriterConstructor;
+
+  // -------------------------------------------------------------------------------------------------
+  // Writer API — https://developer.chrome.com/docs/ai/writer-api
+  // Permission-Policy: `allow="writer"`; not available in Web Workers.
+  // -------------------------------------------------------------------------------------------------
+
+  /** Writing tone for generated content. Default is "neutral". */
+  type WriterTone = "formal" | "neutral" | "casual";
+
+  /** Output format for generated content. Default is "markdown". */
+  type WriterFormat = "markdown" | "plain-text";
+
+  /** Target length of generated content. Default is "medium". */
+  type WriterLength = "short" | "medium" | "long";
+
+  interface WriterCreateOptions extends AIBaseCreateOptions {
+    /**
+     * Shared context applied to all writes from this instance,
+     * e.g. “This is an email to acquaintances about an upcoming event.”
+     */
+    sharedContext?: string;
+    /** Overall tone for outputs ("neutral" by default). */
+    tone?: WriterTone;
+    /** Output formatting ("markdown" by default). */
+    format?: WriterFormat;
+    /** Desired length ("medium" by default). */
+    length?: WriterLength;
+  }
+
+  interface WriterWriteOptions {
+    /** Per-call background information to steer the output. */
+    context?: string;
+    /** Abort an ongoing write or streaming write. */
+    signal?: AbortSignal;
+  }
+
+  /**
+   * Writer: generates new content from a prompt, optionally guided by shared/per-call context.
+   * Supports both non-streaming `write()` and streaming `writeStreaming()`.
+   * Progress for initial model download is observed via `create({ monitor(...) })`.
+   */
+  interface Writer {
+    /** Generate the full output in one result. */
+    write(input: string, options?: WriterWriteOptions): Promise<string>;
+
+    /** Generate output as a stream of text chunks. */
+    writeStreaming(
+      input: string,
+      options?: WriterWriteOptions
+    ): AsyncIterable<string>;
+
+    /** Free resources for this instance. */
+    destroy(): void;
+  }
+
+  interface WriterConstructor {
+    /** Check whether the writer model is ready, downloadable, or unavailable. */
+    availability(): Promise<AIAvailability>;
+
+    /**
+     * Create a Writer instance; if the model must be downloaded, call from a user gesture
+     * and pass `monitor(m => m.addEventListener('downloadprogress', ...))` to show progress.
+     */
+    create(options?: WriterCreateOptions): Promise<Writer>;
+  }
+
+  /** Global Writer constructor. */
+  const Writer: WriterConstructor;
 
   // -------------------------------------------------------------------------------------------------
   // Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api
