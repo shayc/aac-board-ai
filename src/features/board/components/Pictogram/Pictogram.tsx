@@ -15,6 +15,7 @@ export function Pictogram(props: PictogramProps) {
         display: "flex",
         flexDirection: "column",
         textAlign: "center",
+        overflow: "hidden",
       }}
     >
       <Box sx={{ flexGrow: 1, position: "relative" }}>
@@ -35,7 +36,19 @@ export function Pictogram(props: PictogramProps) {
         )}
       </Box>
 
-      {label && <Typography component="span">{label}</Typography>}
+      {label && (
+        <Typography
+          component="span"
+          sx={{
+            px: 1,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+        >
+          {label}
+        </Typography>
+      )}
     </Box>
   );
 }

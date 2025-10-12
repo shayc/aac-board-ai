@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -20,7 +21,7 @@ export function NavigationBar() {
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);
   const [coverBoardId, setCoverBoardId] = useState<string | null>(null);
-  const { navigation } = useBoard();
+  const { navigation, board } = useBoard();
 
   useEffect(() => {
     async function loadBoardsets() {
@@ -74,13 +75,7 @@ export function NavigationBar() {
       <Tooltip title="Go back" enterDelay={800}>
         <span>
           <IconButton
-            onClick={() => {
-              console.log(
-                "[NavigationBar] Back button clicked, canGoBack:",
-                navigation.canGoBack
-              );
-              navigation.goBack();
-            }}
+            onClick={() => navigation.goBack()}
             disabled={!navigation.canGoBack}
             aria-label="Back"
             size="large"
@@ -123,12 +118,16 @@ export function NavigationBar() {
         {boardsets.length === 0 && (
           <MenuItem value="">No boards imported</MenuItem>
         )}
+
         {boardsets.map((set) => (
           <MenuItem key={set.setId} value={set.setId}>
             {set.name}
           </MenuItem>
         ))}
       </Select>
+      {boardId !== coverBoardId && (
+        <Typography sx={{ ml: 2 }}>{board.current?.name}</Typography>
+      )}
     </Box>
   );
 }
