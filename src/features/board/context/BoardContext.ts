@@ -8,6 +8,7 @@ export interface BoardContextValue {
     appendToken: (token: UtteranceToken) => void;
     popToken: () => void;
     clear: () => void;
+    play: () => void;
   };
 
   suggestions: {

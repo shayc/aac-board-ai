@@ -11,7 +11,7 @@ import { useParams } from "react-router";
 
 export function Board() {
   const speech = useSpeech();
-  const { utterance, suggestions, board, navigation } = useBoard();
+  const { board, navigation, suggestions, utterance } = useBoard();
   const { setId } = useParams<{ setId: string; boardId: string }>();
 
   const resolveBoardId = async (
@@ -72,11 +72,7 @@ export function Board() {
       <OutputBar
         tokens={utterance.tokens}
         onClearClick={() => utterance.clear()}
-        onPlayClick={() =>
-          speech.speak(
-            utterance.tokens.map((t) => t.vocalization ?? t.label).join(" ")
-          )
-        }
+        onPlayClick={() => utterance.play()}
       />
 
       <SuggestionBar

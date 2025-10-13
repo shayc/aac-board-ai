@@ -1,3 +1,4 @@
+import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useState } from "react";
 
 export interface UtteranceToken {
@@ -9,6 +10,7 @@ export interface UtteranceToken {
 
 export function useUtterance() {
   const [tokens, setTokens] = useState<UtteranceToken[]>([]);
+  const speech = useSpeech();
 
   const appendToken = (token: UtteranceToken) => {
     setTokens((prev) => [...prev, token]);
@@ -22,10 +24,15 @@ export function useUtterance() {
     setTokens([]);
   };
 
+  const play = () => {
+    speech.speak(tokens.map((t) => t.vocalization ?? t.label).join(" "));
+  };
+
   return {
     tokens,
     appendToken,
     popToken,
     clear,
+    play,
   };
 }

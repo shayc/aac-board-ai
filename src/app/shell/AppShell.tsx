@@ -5,6 +5,7 @@ import { AppProviders } from "../AppProviders";
 import { AppBar } from "./AppBar";
 import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
+import Snackbar from "@mui/material/Snackbar";
 // import { WelcomeDialog } from "./WelcomeDialog/WelcomeDialog";
 
 export function AppShell() {
@@ -29,6 +30,15 @@ export function AppShell() {
         <SettingsDrawer
           open={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
+        />
+
+        <Snackbar
+          open={false}
+          message="Board imported successfully"
+          action={<></>}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+          onClose={() => {}}
         />
 
         {/* <WelcomeDialog

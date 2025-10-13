@@ -29,7 +29,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
         <Divider />
 
         <List>
-          <ListItem key={"Import file"} disablePadding>
+          <ListItem key={"Import board"} disablePadding>
             <ListItemButton
               onClick={async () => {
                 try {
@@ -46,7 +46,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
               <ListItemIcon>
                 <FileOpenIcon />
               </ListItemIcon>
-              <ListItemText primary={"Import file"} />
+              <ListItemText primary={"Import board..."} />
             </ListItemButton>
           </ListItem>
 
