@@ -1,22 +1,22 @@
 import Box from "@mui/material/Box";
+import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppProviders } from "../AppProviders";
-import { AppBar } from "./AppBar";
+import { WelcomeDialog } from "../dialogs/WelcomeDialog/WelcomeDialog";
+import { AppHeader } from "./AppHeader";
 import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
-import Snackbar from "@mui/material/Snackbar";
-// import { WelcomeDialog } from "./WelcomeDialog/WelcomeDialog";
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  // const [isWelcomeOpen, setIsWelcomeOpen] = useState(true);
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
 
   return (
     <AppProviders>
       <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
-        <AppBar
+        <AppHeader
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
         />
@@ -41,10 +41,10 @@ export function AppShell() {
           onClose={() => {}}
         />
 
-        {/* <WelcomeDialog
-        open={isWelcomeOpen}
-        onClose={() => setIsWelcomeOpen(false)}
-      /> */}
+        <WelcomeDialog
+          open={isWelcomeOpen}
+          onClose={() => setIsWelcomeOpen(false)}
+        />
       </Box>
     </AppProviders>
   );
