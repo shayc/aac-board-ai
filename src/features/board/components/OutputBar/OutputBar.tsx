@@ -4,15 +4,10 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-
-interface Token {
-  id: string;
-  label: string;
-  image?: string;
-}
+import type { UtteranceToken } from "../../hooks/useUtterance";
 
 export interface OutputBarProps {
-  tokens: Token[];
+  tokens: UtteranceToken[];
   onClearClick: () => void;
   onPlayClick: () => void;
 }
