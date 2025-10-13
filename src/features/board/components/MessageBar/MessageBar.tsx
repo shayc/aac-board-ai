@@ -6,17 +6,17 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import type { MessagePart } from "../../hooks/useMessage";
 
-export interface OutputBarProps {
-  tokens: MessagePart[];
+export interface MessageBarProps {
+  parts: MessagePart[];
   onClearClick: () => void;
   onPlayClick: () => void;
 }
 
-export function OutputBar({
-  tokens,
+export function MessageBar({
+  parts: tokens,
   onClearClick,
   onPlayClick,
-}: OutputBarProps) {
+}: MessageBarProps) {
   const hasTokens = tokens.length > 0;
 
   return (

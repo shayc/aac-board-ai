@@ -4,10 +4,10 @@ import { useProofreader } from "@shared/ai/hooks/useProofreader";
 import { useRewriter } from "@shared/ai/hooks/useRewriter";
 import { useWriter } from "@shared/ai/hooks/useWriter";
 import { useEffect, useState } from "react";
-import type { UtteranceToken } from "./useUtterance";
+import type { MessagePart } from "./useMessage";
 
-export interface UseSuggestionsOptions {
-  words: UtteranceToken[];
+export interface UseAISuggestionsOptions {
+  words: MessagePart[];
   boardButtons?: BoardButton[];
 }
 
@@ -17,7 +17,7 @@ export type ToneOption = "neutral" | "formal" | "casual";
  * Standalone hook for managing AI-powered suggestions.
  * Uses the proofreader API to correct text and rewriter API to adjust tone.
  */
-export function useSuggestions(options: UseSuggestionsOptions) {
+export function useAISuggestions(options: UseAISuggestionsOptions) {
   const { words, boardButtons = [] } = options;
   const proofreader = useProofreader();
   const writer = useWriter();

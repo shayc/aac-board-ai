@@ -1,6 +1,6 @@
 import type { LoadBoard, Manifest } from "@/shared/lib/open-board-format";
 import { Grid } from "@features/board/components/Grid/Grid";
-import { OutputBar } from "@features/board/components/OutputBar/OutputBar";
+import { MessageBar } from "@/features/board/components/MessageBar/MessageBar";
 import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
 import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
@@ -11,7 +11,7 @@ import { useParams } from "react-router";
 
 export function Board() {
   const speech = useSpeech();
-  const { board, navigation, suggestions, utterance } = useBoard();
+  const { board, navigation, suggestions, message } = useBoard();
   const { setId } = useParams<{ setId: string; boardId: string }>();
 
   const resolveBoardId = async (
@@ -69,14 +69,14 @@ export function Board() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <OutputBar
-        tokens={utterance.tokens}
-        onClearClick={() => utterance.clear()}
-        onPlayClick={() => utterance.play()}
+      <MessageBar
+        parts={message.parts}
+        onClearClick={() => message.clear()}
+        onPlayClick={() => message.play()}
       />
 
       <SuggestionBar
-        suggestions={suggestions.items}
+        suggestions={suggestions.suggestions}
         onToneChange={suggestions.changeTone}
       />
 
@@ -119,7 +119,7 @@ export function Board() {
                 return;
               }
 
-              utterance.appendToken({
+              message.appendPart({
                 ...button,
                 image: button.imageId
                   ? board.current?.images?.find(

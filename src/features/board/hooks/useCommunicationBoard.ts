@@ -4,12 +4,11 @@ import {
   openBoardsDb,
 } from "@features/board/db/boards-db";
 import type { Board } from "@features/board/types";
-import projectCore from "@shared/lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
 import { useEffect, useState } from "react";
+import { useAISuggestions } from "./useAISuggestions";
 import { useNavigation } from "./useNavigation";
-import { useSuggestions } from "./useSuggestions";
-import { useUtterance } from "./useUtterance";
+import { useMessage } from "./useMessage";
 
 export interface UseCommunicationBoardOptions {
   setId?: string;
@@ -17,8 +16,8 @@ export interface UseCommunicationBoardOptions {
 }
 
 export interface UseCommunicationBoardResult {
-  utterance: ReturnType<typeof useUtterance>;
-  suggestions: ReturnType<typeof useSuggestions>;
+  message: ReturnType<typeof useMessage>;
+  suggestions: ReturnType<typeof useAISuggestions>;
   navigation: ReturnType<typeof useNavigation>;
   board: {
     current: Board | null;
@@ -40,9 +39,9 @@ export function useCommunicationBoard(
   const [error, setError] = useState<Error | null>(null);
 
   const navigation = useNavigation({ rootBoardId: initialBoardId });
-  const utterance = useUtterance();
-  const suggestions = useSuggestions({
-    words: utterance.tokens,
+  const message = useMessage();
+  const suggestions = useAISuggestions({
+    words: message.parts,
     boardButtons: board?.buttons,
   });
 
@@ -197,7 +196,7 @@ export function useCommunicationBoard(
   }, [setId, boardId, initialBoardId]);
 
   return {
-    utterance,
+    message,
     suggestions,
     navigation,
     board: {
