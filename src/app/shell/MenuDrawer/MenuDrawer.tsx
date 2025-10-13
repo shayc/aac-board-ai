@@ -25,6 +25,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const { showSnackbar } = useSnackbar();
 
   async function handleImportBoard() {
+    onClose();
     const file = await openFile();
 
     if (!file) {
@@ -32,7 +33,6 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     }
 
     showSnackbar({ message: "Importing board...", severity: "info" });
-    onClose();
 
     try {
       await importFile(file);
