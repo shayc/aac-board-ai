@@ -54,18 +54,16 @@ export function Tile({
             ? darken(backgroundColor, 0.3)
             : undefined,
         },
-        "&::before": {
+        "&::after": {
           content: '""',
           display: variant === "folder" ? "block" : "none",
           position: "absolute",
           top: -2,
           right: -2,
-          width: 16,
-          height: 16,
-          zIndex: 1,
-          backgroundColor: "#000",
-          border: `2px solid "#000"`,
-          borderBottom: "none",
+          width: 0,
+          height: 0,
+          borderRight: `24px solid ${borderColor ?? "#000"}`,
+          borderBottom: "24px solid transparent",
         },
       })}
     >

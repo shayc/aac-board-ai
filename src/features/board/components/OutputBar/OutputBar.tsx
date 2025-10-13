@@ -63,10 +63,6 @@ export function OutputBar({
                 size="large"
                 color="inherit"
                 onClick={onClearClick}
-                sx={{
-                  width: 64,
-                  height: 64,
-                }}
               >
                 <ClearIcon />
               </IconButton>
@@ -82,8 +78,8 @@ export function OutputBar({
             size="large"
             onClick={onPlayClick}
             sx={{
-              width: 64,
-              height: 64,
+              width: 96,
+              height: 96,
               backgroundColor: (theme) => theme.palette.primary.main,
               color: (theme) => theme.palette.primary.contrastText,
               "&:hover": {
@@ -91,7 +87,7 @@ export function OutputBar({
               },
             }}
           >
-            <PlayArrowIcon />
+            <PlayArrowIcon sx={{ width: 48, height: 48 }} />
           </IconButton>
         </Box>
       </Tooltip>

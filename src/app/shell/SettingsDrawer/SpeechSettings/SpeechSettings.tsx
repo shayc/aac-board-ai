@@ -72,20 +72,16 @@ export function SpeechSettings() {
       />
 
       <Typography gutterBottom>Volume</Typography>
-      <Stack spacing={2} direction="row" sx={{ alignItems: "center", mb: 1 }}>
-        <VolumeDownIcon />
-        <Slider
-          aria-label="Volume"
-          valueLabelDisplay="auto"
-          value={volume}
-          min={0}
-          max={1}
-          step={0.1}
-          disabled={!isSupported}
-          onChange={(_event, value) => setVolume(value)}
-        />
-        <VolumeUpIcon />
-      </Stack>
+      <Slider
+        aria-label="Volume"
+        valueLabelDisplay="auto"
+        value={volume}
+        min={0}
+        max={1}
+        step={0.1}
+        disabled={!isSupported}
+        onChange={(_event, value) => setVolume(value)}
+      />
 
       <Button
         variant="contained"
