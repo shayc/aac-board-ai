@@ -1,5 +1,6 @@
 import { BoardProvider } from "@features/board/context/BoardProvider";
 import { LanguageProvider } from "@shared/contexts/LanguageProvider/LanguageProvider";
+import { SnackbarProvider } from "@shared/contexts/SnackbarProvider/SnackbarProvider";
 import { SpeechProvider } from "@shared/contexts/SpeechProvider/SpeechProvider";
 import { ThemeProvider } from "@shared/contexts/ThemeProvider/ThemeProvider";
 import type { ReactNode } from "react";
@@ -11,11 +12,13 @@ export interface AppProvidersProps {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <ThemeProvider>
-      <SpeechProvider>
-        <LanguageProvider>
-          <BoardProvider>{children}</BoardProvider>
-        </LanguageProvider>
-      </SpeechProvider>
+      <SnackbarProvider>
+        <SpeechProvider>
+          <LanguageProvider>
+            <BoardProvider>{children}</BoardProvider>
+          </LanguageProvider>
+        </SpeechProvider>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }

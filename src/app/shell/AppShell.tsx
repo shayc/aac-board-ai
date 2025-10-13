@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Snackbar from "@mui/material/Snackbar";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppProviders } from "../AppProviders";
@@ -30,15 +29,6 @@ export function AppShell() {
         <SettingsDrawer
           open={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
-        />
-
-        <Snackbar
-          open={false}
-          message="Board imported successfully"
-          action={<></>}
-          autoHideDuration={6000}
-          anchorOrigin={{ vertical: "top", horizontal: "center" }}
-          onClose={() => {}}
         />
 
         <WelcomeDialog

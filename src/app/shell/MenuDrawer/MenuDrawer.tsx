@@ -14,6 +14,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useSnackbar } from "@/shared/contexts/SnackbarProvider/useSnackbar";
 
 interface MenuDrawerProps {
   open: boolean;
@@ -21,6 +22,8 @@ interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
+  const { showSnackbar } = useSnackbar();
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>
@@ -36,6 +39,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
                   const file = await openFile();
                   if (!file) return;
                   const result = await importFile(file);
+                  showSnackbar("Board imported successfully");
                   console.log("Imported board:", result);
                   onClose();
                 } catch (error) {
