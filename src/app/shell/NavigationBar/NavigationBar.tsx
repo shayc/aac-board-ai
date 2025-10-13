@@ -5,13 +5,9 @@ import {
   listBoardsets,
   openBoardsDb,
 } from "@features/board/db/boards-db";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HomeIcon from "@mui/icons-material/Home";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -21,7 +17,7 @@ export function NavigationBar() {
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);
   const [coverBoardId, setCoverBoardId] = useState<string | null>(null);
-  const { navigation, board } = useBoard();
+  const { board } = useBoard();
 
   useEffect(() => {
     async function loadBoardsets() {
@@ -62,45 +58,8 @@ export function NavigationBar() {
     loadCoverBoard();
   }, [setId]);
 
-  const handleHomeClick = () => {
-    if (setId && coverBoardId) {
-      navigate(`/sets/${setId}/boards/${coverBoardId}`);
-    }
-  };
-
-  const isOnHomePage = coverBoardId && boardId === coverBoardId;
-
   return (
     <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Tooltip title="Go back" enterDelay={800}>
-        <span>
-          <IconButton
-            onClick={() => navigation.goBack()}
-            disabled={!navigation.canGoBack}
-            aria-label="Back"
-            size="large"
-            color="inherit"
-          >
-            <ArrowBackIcon />
-          </IconButton>
-        </span>
-      </Tooltip>
-
-      <Tooltip title="Go home" enterDelay={800}>
-        <span>
-          <IconButton
-            onClick={handleHomeClick}
-            disabled={!coverBoardId || !!isOnHomePage}
-            aria-label="Home"
-            size="large"
-            color="inherit"
-            sx={{ mr: 2 }}
-          >
-            <HomeIcon />
-          </IconButton>
-        </span>
-      </Tooltip>
-
       <Select
         sx={{ color: "inherit" }}
         size="small"
