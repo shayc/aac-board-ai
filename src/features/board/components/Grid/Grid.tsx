@@ -1,14 +1,34 @@
 import Box from "@mui/material/Box";
 
 export interface GridProps<TItem> {
-  grid: (TItem | null)[][];
+  rows: number;
+  columns: number;
+  items: TItem[];
+  order?: (string | null)[][];
   gap?: number;
   renderCell: (item: TItem) => React.ReactNode;
   renderEmptyCell?: () => React.ReactNode;
 }
 
-export function Grid<TItem>(props: GridProps<TItem>) {
-  const { grid, gap = 2, renderCell, renderEmptyCell } = props;
+export function Grid<TItem>({
+  rows,
+  columns,
+  items,
+  order: _order,
+  gap = 2,
+  renderCell,
+  renderEmptyCell,
+}: GridProps<TItem>) {
+  const grid = Array.from({ length: rows }, () => Array(columns).fill(null));
+
+  items.forEach((item, index) => {
+    const row = Math.floor(index / columns);
+    const col = index % columns;
+
+    if (row < rows && col < columns && grid[row]) {
+      grid[row][col] = item;
+    }
+  });
 
   return (
     <Box

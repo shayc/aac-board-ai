@@ -92,14 +92,6 @@ export interface BoardContextValue {
     requestSession: () => Promise<void>;
   };
 
-  grid: {
-    cells: (BoardButton | null)[][];
-    rows: number;
-    columns: number;
-    setRows: (rows: number) => void;
-    setColumns: (columns: number) => void;
-  };
-
   navigation: {
     currentBoardId: string;
     history: string[];
