@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import { ToneSelector } from "./ToneSelector/ToneSelector";
+import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 
 interface SuggestionBarProps {
   suggestions: string[];
@@ -16,6 +17,7 @@ export function SuggestionBar({
 }: SuggestionBarProps) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", px: 2, gap: 2 }}>
+      <NavigationButtons />
       <Box sx={{ display: "flex", gap: 2, marginInlineEnd: "auto" }}>
         {suggestions.map((suggestion, index) => (
           <Chip
