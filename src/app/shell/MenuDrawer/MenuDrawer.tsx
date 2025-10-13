@@ -1,5 +1,6 @@
-import { importFile } from "@features/board/db/import-board";
+import { useSnackbar } from "@/shared/contexts/SnackbarProvider/useSnackbar";
 import { openFile } from "@/shared/utils/files";
+import { importFile } from "@features/board/db/import-board";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -14,7 +15,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useSnackbar } from "@/shared/contexts/SnackbarProvider/useSnackbar";
+import { Link as RouterLink } from "react-router";
 
 interface MenuDrawerProps {
   open: boolean;
@@ -63,7 +64,11 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           </ListItem>
 
           <ListItem key={"About"} disablePadding>
-            <ListItemButton>
+            <ListItemButton
+              component={RouterLink}
+              to="/about"
+              onClick={onClose}
+            >
               <ListItemIcon>
                 <InfoOutlinedIcon />
               </ListItemIcon>
