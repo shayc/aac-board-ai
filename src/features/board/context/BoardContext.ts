@@ -5,7 +5,7 @@ import type { Board } from "../types";
 export interface BoardContextValue {
   utterance: {
     tokens: UtteranceToken[];
-    pushToken: (token: UtteranceToken) => void;
+    appendToken: (token: UtteranceToken) => void;
     popToken: () => void;
     clear: () => void;
   };

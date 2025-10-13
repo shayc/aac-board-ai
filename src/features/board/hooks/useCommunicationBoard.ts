@@ -130,27 +130,16 @@ export function useCommunicationBoard(
 
   // Load board from IndexedDB
   useEffect(() => {
-    if (!setId || !boardId) {
-      // Load default example board
-      const board = camelcaseKeys(projectCore, {
-        deep: true,
-      }) as unknown as Board;
-      setBoard(board);
-      setIsLoading(false);
-      return;
-    }
-
     async function loadFromDb() {
       console.log("Loading board from IndexedDB:", { setId, boardId });
       const db = await openBoardsDb();
       try {
         const [boardData] = await getBoardsBatch(db, setId!, [boardId!]);
-        console.log("Board data from DB:", boardData);
+
         if (!boardData) {
           throw new Error(`Board not found: ${boardId}`);
         }
 
-        // Resolve asset URLs from IndexedDB before converting
         const obfBoard = boardData.json;
         console.log("OBF Board:", obfBoard);
 

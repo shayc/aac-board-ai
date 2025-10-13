@@ -123,7 +123,7 @@ export function Board() {
                 return;
               }
 
-              utterance.pushToken({
+              utterance.appendToken({
                 ...button,
                 image: button.imageId
                   ? board.current?.images?.find(
