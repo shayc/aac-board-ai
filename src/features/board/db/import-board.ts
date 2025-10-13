@@ -4,7 +4,7 @@ import type { Schema } from "./boards-db";
 import {
   bulkPutAssets,
   bulkPutBoards,
-  openBoardsDb,
+  openBoardsDB,
   upsertBoardset,
 } from "./boards-db";
 
@@ -17,7 +17,7 @@ export interface ImportResult {
  * Import OBZ or OBF file into IndexedDB
  */
 export async function importFile(file: File): Promise<ImportResult> {
-  const db = await openBoardsDb();
+  const db = await openBoardsDB();
   const setId = file.name.replace(/\.(obz|obf)$/i, "").toLowerCase();
 
   try {

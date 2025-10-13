@@ -3,7 +3,7 @@ import type { Boardset } from "@features/board/db/boards-db";
 import {
   getBoardset,
   listBoardsets,
-  openBoardsDb,
+  openBoardsDB,
 } from "@features/board/db/boards-db";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,7 +21,7 @@ export function BoardSetSelector() {
 
   useEffect(() => {
     async function loadBoardsets() {
-      const db = await openBoardsDb();
+      const db = await openBoardsDB();
 
       try {
         const sets = await listBoardsets(db);
@@ -40,7 +40,7 @@ export function BoardSetSelector() {
         return;
       }
 
-      const db = await openBoardsDb();
+      const db = await openBoardsDB();
       try {
         const boardset = await getBoardset(db, setId);
         if (boardset?.coverBoardId) {

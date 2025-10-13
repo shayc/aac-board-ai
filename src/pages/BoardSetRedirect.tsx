@@ -1,4 +1,4 @@
-import { getBoardset, openBoardsDb } from "@features/board/db/boards-db";
+import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
@@ -17,7 +17,7 @@ export function BoardSetRedirect() {
 
     async function fetchRootBoard() {
       try {
-        const db = await openBoardsDb();
+        const db = await openBoardsDB();
         try {
           const boardset = await getBoardset(db, setId!);
 

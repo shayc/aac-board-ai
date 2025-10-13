@@ -23,7 +23,7 @@ export function Board() {
 
     if (loadBoard.path && setId) {
       try {
-        const { getManifestJson, openBoardsDb } = await import(
+        const { getManifestJson, openBoardsDB: openBoardsDb } = await import(
           "@features/board/db/boards-db"
         );
 

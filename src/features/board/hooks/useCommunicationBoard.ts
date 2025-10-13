@@ -1,7 +1,7 @@
 import {
   getAssetUrlByPath,
   getBoardsBatch,
-  openBoardsDb,
+  openBoardsDB,
 } from "@features/board/db/boards-db";
 import type { Board } from "@features/board/types";
 import camelcaseKeys from "camelcase-keys";
@@ -24,7 +24,6 @@ export interface UseCommunicationBoardResult {
     isLoading: boolean;
     error: Error | null;
     load: (boardId: string) => Promise<void>;
-    reload: () => Promise<void>;
   };
 }
 
@@ -55,23 +54,16 @@ export function useCommunicationBoard(
     setError(null);
 
     try {
-      console.log("Loading new board from IndexedDB:", {
-        setId,
-        boardId: newBoardId,
-      });
-      const db = await openBoardsDb();
+      const db = await openBoardsDB();
 
       try {
         const [boardData] = await getBoardsBatch(db, setId, [newBoardId]);
-        console.log("Board data from DB:", boardData);
 
         if (!boardData) {
           throw new Error(`Board not found: ${newBoardId}`);
         }
 
-        // Resolve asset URLs from IndexedDB before converting
         const obfBoard = boardData.json;
-        console.log("OBF Board:", obfBoard);
 
         if (obfBoard.images) {
           for (const img of obfBoard.images) {
@@ -105,11 +97,8 @@ export function useCommunicationBoard(
           }
         }
 
-        // Convert to internal format
         const newBoard = camelcaseKeys(obfBoard, { deep: true }) as Board;
-        console.log("Converted board:", newBoard);
         setBoard(newBoard);
-        console.log("Board loaded successfully!");
       } finally {
         db.close();
       }
@@ -121,17 +110,11 @@ export function useCommunicationBoard(
     }
   };
 
-  const reloadBoard = async () => {
-    if (boardId) {
-      await loadBoard(boardId);
-    }
-  };
-
   // Load board from IndexedDB
   useEffect(() => {
-    async function loadFromDb() {
-      console.log("Loading board from IndexedDB:", { setId, boardId });
-      const db = await openBoardsDb();
+    async function loadFromDB() {
+      const db = await openBoardsDB();
+
       try {
         const [boardData] = await getBoardsBatch(db, setId!, [boardId!]);
 
@@ -140,20 +123,20 @@ export function useCommunicationBoard(
         }
 
         const obfBoard = boardData.json;
-        console.log("OBF Board:", obfBoard);
 
         if (obfBoard.images) {
           for (const img of obfBoard.images) {
             if (img.path) {
               try {
                 const url = await getAssetUrlByPath(db, setId!, img.path);
-                if (url) img.data = url;
+                if (url) {
+                  img.data = url;
+                }
               } catch (err) {
                 console.warn(
                   `Failed to load image ${img.id} from path ${img.path}:`,
                   err
                 );
-                // Skip this image if path is invalid
               }
             }
           }
@@ -192,7 +175,7 @@ export function useCommunicationBoard(
       }
     }
 
-    loadFromDb();
+    loadFromDB();
   }, [setId, boardId, initialBoardId]);
 
   return {
@@ -204,7 +187,6 @@ export function useCommunicationBoard(
       isLoading,
       error,
       load: loadBoard,
-      reload: reloadBoard,
     },
   };
 }

@@ -91,7 +91,7 @@ function localeFor(db: IDBPDatabase<Schema>) {
 }
 
 /** Open/Close */
-export async function openBoardsDb(
+export async function openBoardsDB(
   opts: OpenOptions = {}
 ): Promise<IDBPDatabase<Schema>> {
   const db = await openDB<Schema>(DB_NAME, DB_VERSION, {
@@ -116,7 +116,7 @@ export async function openBoardsDb(
   meta.set(db, { locale: opts.nameKeyLocale });
   return db;
 }
-export function closeBoardsDb(db: IDBPDatabase<Schema>): void {
+export function closeBoardsDB(db: IDBPDatabase<Schema>): void {
   db.close();
 }
 
