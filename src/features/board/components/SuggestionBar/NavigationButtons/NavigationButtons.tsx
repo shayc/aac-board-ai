@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-export function NavigationBar() {
+export function NavigationButtons() {
   const { navigation } = useBoard();
 
   return (
