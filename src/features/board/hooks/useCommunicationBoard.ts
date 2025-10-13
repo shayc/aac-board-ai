@@ -39,7 +39,7 @@ export function useCommunicationBoard(
   const [isLoading, setIsLoading] = useState(!!setId);
   const [error, setError] = useState<Error | null>(null);
 
-  const navigation = useNavigation({ initialBoardId });
+  const navigation = useNavigation({ rootBoardId: initialBoardId });
   const utterance = useUtterance();
   const suggestions = useSuggestions({
     words: utterance.tokens,

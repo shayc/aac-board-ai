@@ -1,22 +1,25 @@
 import { useState } from "react";
 
 export interface UseNavigationOptions {
-  initialBoardId: string;
+  rootBoardId: string;
 }
 
 export function useNavigation(options: UseNavigationOptions) {
-  const { initialBoardId } = options;
+  const { rootBoardId } = options;
 
-  const [currentBoardId, setCurrentBoardId] = useState(initialBoardId);
+  const [currentBoardId, setCurrentBoardId] = useState(rootBoardId);
   const [history, setHistory] = useState<string[]>([]);
+  const canGoBack = history.length > 0;
 
   const goToBoard = (boardId: string) => {
-    setHistory((prev) => [...prev, currentBoardId]);
+    setHistory((prev) => [...prev, boardId]);
     setCurrentBoardId(boardId);
   };
 
   const goBack = () => {
-    if (history.length === 0) return;
+    if (!canGoBack) {
+      return;
+    }
 
     const prevId = history[history.length - 1];
     setHistory((prev) => prev.slice(0, -1));
@@ -25,7 +28,7 @@ export function useNavigation(options: UseNavigationOptions) {
 
   const goHome = () => {
     setHistory([]);
-    setCurrentBoardId(initialBoardId);
+    setCurrentBoardId(rootBoardId);
   };
 
   return {
