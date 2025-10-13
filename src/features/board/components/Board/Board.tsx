@@ -11,7 +11,7 @@ import { useNavigate, useParams } from "react-router";
 
 export function Board() {
   const speech = useSpeech();
-  const { output, suggestions, board } = useBoard();
+  const { utterance, suggestions, board } = useBoard();
   const navigate = useNavigate();
   const { setId } = useParams<{ setId: string; boardId: string }>();
 
@@ -71,13 +71,11 @@ export function Board() {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <OutputBar
-        words={output.words}
-        onClearClick={() => output.clear()}
+        tokens={utterance.tokens}
+        onClearClick={() => utterance.clear()}
         onPlayClick={() =>
           speech.speak(
-            output.words
-              .map((word) => word.vocalization ?? word.label)
-              .join(" ")
+            utterance.tokens.map((t) => t.vocalization ?? t.label).join(" ")
           )
         }
       />
@@ -128,7 +126,7 @@ export function Board() {
                 return;
               }
 
-              output.addWord({
+              utterance.pushToken({
                 ...button,
                 image: button.imageId
                   ? board.current?.images?.find(

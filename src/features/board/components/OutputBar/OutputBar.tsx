@@ -5,24 +5,24 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-interface Word {
+interface Token {
   id: string;
   label: string;
   image?: string;
 }
 
 export interface OutputBarProps {
-  words: Word[];
+  tokens: Token[];
   onClearClick: () => void;
   onPlayClick: () => void;
 }
 
 export function OutputBar({
-  words,
+  tokens,
   onClearClick,
   onPlayClick,
 }: OutputBarProps) {
-  const hasWords = words.length > 0;
+  const hasTokens = tokens.length > 0;
 
   return (
     <Box
@@ -50,12 +50,12 @@ export function OutputBar({
         }}
       >
         <Box sx={{ display: "flex", gap: 2, flexGrow: 1, overflowX: "auto" }}>
-          {words.map((word, index) => (
-            <Pictogram key={index} label={word.label} src={word.image} />
+          {tokens.map((t, index) => (
+            <Pictogram key={index} label={t.label} src={t.image} />
           ))}
         </Box>
 
-        {hasWords && (
+        {hasTokens && (
           <Tooltip title="Clear message" enterDelay={800}>
             <Box sx={{ alignSelf: "center" }}>
               <IconButton

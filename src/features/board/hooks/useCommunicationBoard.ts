@@ -3,22 +3,35 @@ import {
   getBoardsBatch,
   openBoardsDb,
 } from "@features/board/db/boards-db";
-import type { Board, BoardContextValue } from "@features/board/types";
+import type { Board } from "@features/board/types";
 import projectCore from "@shared/lib/open-board-format/examples/project-core.json";
 import camelcaseKeys from "camelcase-keys";
 import { useEffect, useState } from "react";
 import { useNavigation } from "./useNavigation";
-import { useOutput } from "./useOutput";
 import { useSuggestions } from "./useSuggestions";
+import { useUtterance } from "./useUtterance";
 
 export interface UseCommunicationBoardOptions {
   setId?: string;
   boardId?: string;
 }
 
+export interface UseCommunicationBoardResult {
+  utterance: ReturnType<typeof useUtterance>;
+  suggestions: ReturnType<typeof useSuggestions>;
+  navigation: ReturnType<typeof useNavigation>;
+  board: {
+    current: Board | null;
+    isLoading: boolean;
+    error: Error | null;
+    load: (boardId: string) => Promise<void>;
+    reload: () => Promise<void>;
+  };
+}
+
 export function useCommunicationBoard(
   options: UseCommunicationBoardOptions = {}
-): BoardContextValue {
+): UseCommunicationBoardResult {
   const { setId, boardId } = options;
   const initialBoardId = boardId || "lots_of_stuff";
 
@@ -27,9 +40,9 @@ export function useCommunicationBoard(
   const [error, setError] = useState<Error | null>(null);
 
   const navigation = useNavigation({ initialBoardId });
-  const output = useOutput();
+  const utterance = useUtterance();
   const suggestions = useSuggestions({
-    words: output.words,
+    words: utterance.tokens,
     boardButtons: board?.buttons,
   });
 
@@ -195,15 +208,8 @@ export function useCommunicationBoard(
   }, [setId, boardId, initialBoardId]);
 
   return {
-    output,
-    suggestions: {
-      items: suggestions.suggestions,
-      tone: suggestions.tone,
-      isGenerating: suggestions.isGenerating,
-      changeTone: suggestions.changeTone,
-      regenerate: suggestions.regenerate,
-      requestSession: suggestions.requestSession,
-    },
+    utterance,
+    suggestions,
     navigation,
     board: {
       current: board,
