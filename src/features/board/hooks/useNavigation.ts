@@ -4,10 +4,6 @@ export interface UseNavigationOptions {
   initialBoardId: string;
 }
 
-/**
- * Standalone hook for managing board navigation.
- * Contains its own state and provides navigation actions.
- */
 export function useNavigation(options: UseNavigationOptions) {
   const { initialBoardId } = options;
 

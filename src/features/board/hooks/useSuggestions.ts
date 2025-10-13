@@ -1,12 +1,13 @@
 import { useTranslator } from "@/shared/ai/hooks/useTranslator";
-import type { BoardButton, SentenceContent } from "@features/board/types";
+import type { BoardButton } from "@features/board/types";
 import { useProofreader } from "@shared/ai/hooks/useProofreader";
 import { useRewriter } from "@shared/ai/hooks/useRewriter";
 import { useWriter } from "@shared/ai/hooks/useWriter";
 import { useEffect, useState } from "react";
+import type { UtteranceToken } from "./useUtterance";
 
 export interface UseSuggestionsOptions {
-  words: SentenceContent[];
+  words: UtteranceToken[];
   boardButtons?: BoardButton[];
 }
 

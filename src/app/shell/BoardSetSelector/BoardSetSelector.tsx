@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
-export function NavigationBar() {
+export function BoardSetSelector() {
   const navigate = useNavigate();
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<Boardset[]>([]);

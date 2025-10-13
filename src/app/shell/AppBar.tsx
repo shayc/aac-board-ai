@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { NavigationBar } from "./NavigationBar/NavigationBar";
+import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
 
 interface AppBarProps {
   onMenuClick: () => void;
@@ -24,6 +24,7 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
               edge="start"
               color="inherit"
               onClick={onMenuClick}
+              sx={{ mr: 2 }}
             >
               <MenuIcon />
             </IconButton>
@@ -31,7 +32,7 @@ export function AppBar({ onMenuClick, onSettingsClick }: AppBarProps) {
         </Tooltip>
 
         <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-          <NavigationBar />
+          <BoardSetSelector />
         </Box>
 
         <Tooltip title="Open settings" enterDelay={800}>

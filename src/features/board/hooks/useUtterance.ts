@@ -10,7 +10,7 @@ export interface UtteranceToken {
 export function useUtterance() {
   const [tokens, setTokens] = useState<UtteranceToken[]>([]);
 
-  const pushToken = (token: UtteranceToken) => {
+  const appendToken = (token: UtteranceToken) => {
     setTokens((prev) => [...prev, token]);
   };
 
@@ -24,7 +24,7 @@ export function useUtterance() {
 
   return {
     tokens,
-    pushToken,
+    appendToken,
     popToken,
     clear,
   };

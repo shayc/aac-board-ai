@@ -7,12 +7,11 @@ import { useBoard } from "@features/board/context/useBoard";
 import type { BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
 import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 
 export function Board() {
   const speech = useSpeech();
-  const { utterance, suggestions, board } = useBoard();
-  const navigate = useNavigate();
+  const { utterance, suggestions, board, navigation } = useBoard();
   const { setId } = useParams<{ setId: string; boardId: string }>();
 
   const resolveBoardId = async (
@@ -82,7 +81,6 @@ export function Board() {
 
       <SuggestionBar
         suggestions={suggestions.items}
-        onInitializeProofreader={suggestions.requestSession}
         onToneChange={suggestions.changeTone}
       />
 
@@ -108,8 +106,7 @@ export function Board() {
                 const boardId = await resolveBoardId(button.loadBoard);
 
                 if (boardId) {
-                  const url = `/sets/${setId}/boards/${boardId}`;
-                  navigate(url);
+                  navigation.goToBoard(boardId);
                   return;
                 } else {
                   console.error(
