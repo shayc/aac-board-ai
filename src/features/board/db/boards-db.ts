@@ -1,4 +1,4 @@
-import type { Board as OBFBoard } from "@/shared/lib/open-board-format/schema";
+import type { Board as OBFBoard } from "@/shared/open-board-format/schema";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 

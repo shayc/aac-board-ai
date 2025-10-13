@@ -1,4 +1,4 @@
-import type { LoadBoard, Manifest } from "@/shared/lib/open-board-format";
+import type { LoadBoard, Manifest } from "@/shared/open-board-format";
 import { Grid } from "@features/board/components/Grid/Grid";
 import { MessageBar } from "@/features/board/components/MessageBar/MessageBar";
 import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
