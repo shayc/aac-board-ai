@@ -24,6 +24,27 @@ interface MenuDrawerProps {
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const { showSnackbar } = useSnackbar();
 
+  async function handleImportBoard() {
+    const file = await openFile();
+
+    if (!file) {
+      return;
+    }
+
+    showSnackbar({ message: "Importing board...", severity: "info" });
+    onClose();
+
+    try {
+      await importFile(file);
+      showSnackbar({
+        message: "Board imported successfully",
+        severity: "success",
+      });
+    } catch (error) {
+      showSnackbar({ message: "Failed to import board", severity: "error" });
+    }
+  }
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>
@@ -33,20 +54,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
 
         <List>
           <ListItem key={"Import board"} disablePadding>
-            <ListItemButton
-              onClick={async () => {
-                try {
-                  const file = await openFile();
-                  if (!file) return;
-                  const result = await importFile(file);
-                  showSnackbar("Board imported successfully");
-                  console.log("Imported board:", result);
-                  onClose();
-                } catch (error) {
-                  console.error("Import failed:", error);
-                }
-              }}
-            >
+            <ListItemButton onClick={handleImportBoard}>
               <ListItemIcon>
                 <FileOpenIcon />
               </ListItemIcon>

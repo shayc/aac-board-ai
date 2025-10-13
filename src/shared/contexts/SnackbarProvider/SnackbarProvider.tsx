@@ -31,7 +31,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [snackbarState, setSnackbarState] = useState<SnackbarState>({
     open: false,
     message: "",
-    duration: 6000,
+    duration: 4000,
   });
 
   const [queue, setQueue] = useState<SnackbarOptions[]>([]);
@@ -50,7 +50,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open: true,
         message: nextSnackbar.message,
         severity: nextSnackbar.severity,
-        duration: nextSnackbar.duration ?? 6000,
+        duration: nextSnackbar.duration ?? 4000,
         action: nextSnackbar.action,
       });
       setQueue((prev) => prev.slice(1));
