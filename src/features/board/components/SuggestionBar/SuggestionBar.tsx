@@ -1,11 +1,11 @@
+import { NavigationButtons } from "@features/board/components/NavigationButtons/NavigationButtons";
 import { useBoard } from "@features/board/context/useBoard";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
 import { ToneSelector } from "./ToneSelector/ToneSelector";
 
 export function SuggestionBar() {
-  const { suggestions } = useBoard();
+  const { suggestions, message } = useBoard();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", px: 2, gap: 2 }}>
@@ -16,7 +16,9 @@ export function SuggestionBar() {
           <Chip
             key={index}
             label={suggestion}
-            onClick={() => alert(suggestion)}
+            onClick={() =>
+              message.appendPart({ id: suggestion, label: suggestion })
+            }
           />
         ))}
       </Box>

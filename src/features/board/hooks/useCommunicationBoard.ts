@@ -50,6 +50,8 @@ export function useCommunicationBoard(
   });
 
   const onButtonClick = async (button: BoardButton) => {
+    suggestions.requestSession();
+
     if (button.loadBoard && setId) {
       if (button.loadBoard.id) {
         navigation.goToBoard(button.loadBoard.id);

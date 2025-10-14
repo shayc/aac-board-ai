@@ -55,7 +55,6 @@ export function MessageBar() {
           <IconButton
             aria-label="Play"
             size="large"
-            disableRipple={!hasParts}
             onClick={() => message.play()}
             sx={{
               width: 96,

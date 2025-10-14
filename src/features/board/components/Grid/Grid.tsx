@@ -20,9 +20,15 @@ export function Grid<TItem extends { id: string }>({
   const grid = buildItemGrid(items, rows, columns, order);
 
   return (
-    <Stack height="100%" direction="column" padding={gap} gap={gap}>
+    <Stack
+      height="100%"
+      direction="column"
+      flexGrow={1}
+      padding={gap}
+      gap={gap}
+    >
       {grid.map((row, rowIndex) => (
-        <Stack key={rowIndex} direction="row" flex={1} gap={gap}>
+        <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
           {row.map((item, cellIndex) => (
             <Stack key={cellIndex} flex={1}>
               {item && renderItem(item)}
