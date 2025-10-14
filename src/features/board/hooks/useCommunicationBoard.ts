@@ -3,12 +3,12 @@ import {
   getBoardsBatch,
   openBoardsDB,
 } from "@features/board/db/boards-db";
+import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board } from "@features/board/types";
-import { obfToBoard } from "../mappers";
 import { useEffect, useState } from "react";
 import { useAISuggestions } from "./useAISuggestions";
-import { useNavigation } from "./useNavigation";
 import { useMessage } from "./useMessage";
+import { useNavigation } from "./useNavigation";
 
 export interface UseCommunicationBoardOptions {
   setId?: string;
