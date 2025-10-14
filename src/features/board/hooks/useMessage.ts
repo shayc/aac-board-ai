@@ -3,8 +3,8 @@ import { useAudio } from "@/shared/hooks/useAudio";
 import { useState } from "react";
 
 export type Segment = {
-  data: string;
   type: "text" | "sound";
+  data: string;
 };
 
 export interface MessagePart {
@@ -16,30 +16,80 @@ export interface MessagePart {
 }
 
 export function useMessage() {
-  const [parts, setParts] = useState<MessagePart[]>([]);
+  const [messageParts, setMessageParts] = useState<MessagePart[]>([]);
   const speech = useSpeech();
   const audio = useAudio();
 
   const isPlaying = speech.isSpeaking || audio.isPlaying;
-  
-  const appendPart = (part: MessagePart) => {
-    setParts((prev) => [...prev, part]);
-  };
 
-  const popPart = () => {
-    setParts((prev) => prev.slice(0, -1));
-  };
+  function appendPart(part: MessagePart) {
+    setMessageParts((previousParts) => [...previousParts, part]);
+  }
 
-  const clear = () => {
-    setParts([]);
-  };
+  function popPart() {
+    setMessageParts((previousParts) => previousParts.slice(0, -1));
+  }
 
-  const play = () => {
-    console.log("parts to play:", parts);
-  };
+  function clear() {
+    setMessageParts([]);
+  }
+
+  function convertPartsToSegments(parts: MessagePart[]): Segment[] {
+    return parts
+      .map((part) => {
+        if (part.soundSrc) {
+          return { type: "sound", data: part.soundSrc };
+        }
+
+        const text = part.vocalization ?? part.label;
+        if (text) {
+          return { type: "text", data: text };
+        }
+
+        return null;
+      })
+      .filter((segment): segment is Segment => segment !== null);
+  }
+
+  function mergeTextSegments(segments: Segment[]): Segment[] {
+    const mergedSegments: Segment[] = [];
+
+    for (const currentSegment of segments) {
+      const previousSegment = mergedSegments.at(-1);
+
+      if (
+        previousSegment &&
+        previousSegment.type === "text" &&
+        currentSegment.type === "text"
+      ) {
+        previousSegment.data =
+          `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
+            /\s+/g,
+            " "
+          );
+      } else {
+        mergedSegments.push({ ...currentSegment });
+      }
+    }
+
+    return mergedSegments;
+  }
+
+  async function play() {
+    const segments = convertPartsToSegments(messageParts);
+    const mergedSegments = mergeTextSegments(segments);
+
+    for (const segment of mergedSegments) {
+      if (segment.type === "sound") {
+        await audio.play(segment.data);
+      } else {
+        await speech.speak(segment.data);
+      }
+    }
+  }
 
   return {
-    parts,
+    parts: messageParts,
     appendPart,
     popPart,
     clear,
