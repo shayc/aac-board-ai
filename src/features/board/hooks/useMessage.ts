@@ -3,8 +3,9 @@ import { useState } from "react";
 
 export interface MessagePart {
   id: string;
-  label: string;
+  label?: string;
   image?: string;
+  sound?: string;
   vocalization?: string;
 }
 

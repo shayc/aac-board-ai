@@ -4,7 +4,7 @@ import {
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import type { Board } from "@features/board/types";
-import camelcaseKeys from "camelcase-keys";
+import { obfToBoard } from "../mappers";
 import { useEffect, useState } from "react";
 import { useAISuggestions } from "./useAISuggestions";
 import { useNavigation } from "./useNavigation";
@@ -97,7 +97,7 @@ export function useCommunicationBoard(
           }
         }
 
-        const newBoard = camelcaseKeys(obfBoard, { deep: true }) as Board;
+        const newBoard = obfToBoard(obfBoard);
         setBoard(newBoard);
       } finally {
         db.close();
@@ -160,7 +160,7 @@ export function useCommunicationBoard(
         }
 
         // Now convert to internal format
-        const board = camelcaseKeys(obfBoard, { deep: true }) as Board;
+        const board = obfToBoard(obfBoard);
         console.log("Converted board:", board);
         setBoard(board);
         console.log("Board loaded successfully!");

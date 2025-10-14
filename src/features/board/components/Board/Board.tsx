@@ -1,6 +1,6 @@
+import { MessageBar } from "@/features/board/components/MessageBar/MessageBar";
 import type { LoadBoard, Manifest } from "@/shared/open-board-format";
 import { Grid } from "@features/board/components/Grid/Grid";
-import { MessageBar } from "@/features/board/components/MessageBar/MessageBar";
 import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
 import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
@@ -90,13 +90,7 @@ export function Board() {
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
-            imageSrc={
-              button.imageId
-                ? board.current?.images?.find(
-                    (img) => img.id === button.imageId
-                  )?.data
-                : undefined
-            }
+            imageSrc={button.imageSrc}
             onClick={async () => {
               if (button.loadBoard && setId) {
                 const boardId = await resolveBoardId(button.loadBoard);
@@ -112,25 +106,21 @@ export function Board() {
                 }
               }
 
-              const hasActions =
-                button.action ?? (button.actions && button.actions.length > 0);
+              const hasActions = button.actions && button.actions.length > 0;
 
               if (hasActions) {
                 return;
               }
 
               message.appendPart({
-                ...button,
-                image: button.imageId
-                  ? board.current?.images?.find(
-                      (img) => img.id === button.imageId
-                    )?.data
-                  : undefined,
+                id: button.id,
+                label: button.label,
+                image: button.imageSrc,
+                vocalization: button.vocalization,
               });
 
-              speech.speak(
-                (button.vocalization ?? button.label)?.toLowerCase()
-              );
+              const text = button.vocalization ?? button.label;
+              text && speech.speak(text?.toLowerCase());
             }}
           />
         )}

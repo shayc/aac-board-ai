@@ -1,5 +1,3 @@
-import VolumeDownIcon from "@mui/icons-material/VolumeDown";
-import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -7,7 +5,6 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
 

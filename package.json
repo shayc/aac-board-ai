@@ -16,7 +16,6 @@
     "@fontsource/roboto": "^5.2.8",
     "@mui/icons-material": "^7.3.4",
     "@mui/material": "^7.3.4",
-    "camelcase-keys": "^10.0.0",
     "fflate": "^0.8.2",
     "idb": "^8.0.3",
     "react": "^19.2.0",

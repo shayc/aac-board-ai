@@ -4,23 +4,9 @@ export interface BoardGrid {
   order?: (string | null)[][];
 }
 
-export interface BoardImage {
-  id: string;
-  data?: string;
-  url?: string;
-  contentType?: string;
-}
-
-export interface BoardSound {
-  id: string;
-  data?: string;
-  url?: string;
-  contentType?: string;
-}
-
 export interface LoadBoard {
   id?: string;
-  name: string;
+  name?: string;
   url?: string;
   dataUrl?: string;
   path?: string;
@@ -28,22 +14,19 @@ export interface LoadBoard {
 
 export interface BoardButton {
   id: string;
-  label: string;
+  label?: string;
   vocalization?: string;
   backgroundColor?: string;
   borderColor?: string;
-  imageId?: string;
-  soundId?: string;
-  action?: string;
+  imageSrc?: string;
+  soundSrc?: string;
   actions?: string[];
   loadBoard?: LoadBoard;
 }
 
 export interface Board {
   id: string;
-  name: string;
+  name?: string;
   buttons: BoardButton[];
   grid: BoardGrid;
-  images?: BoardImage[];
-  sounds?: BoardSound[];
 }
