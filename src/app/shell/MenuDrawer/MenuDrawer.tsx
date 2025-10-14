@@ -52,7 +52,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       label: "Import board...",
       onClick: handleImportBoard,
     },
-    { icon: InfoOutlinedIcon, label: "About", to: "/about" },
+    { icon: InfoOutlinedIcon, label: "About", to: "/about", onClick: onClose },
     {
       icon: GitHubIcon,
       label: "Contribute",
