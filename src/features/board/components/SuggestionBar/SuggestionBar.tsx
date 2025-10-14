@@ -1,22 +1,18 @@
+import { useBoard } from "@features/board/context/useBoard";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
-import { ToneSelector } from "./ToneSelector/ToneSelector";
 import { NavigationButtons } from "./NavigationButtons/NavigationButtons";
+import { ToneSelector } from "./ToneSelector/ToneSelector";
 
-interface SuggestionBarProps {
-  suggestions: string[];
-  onToneChange: (tone: "neutral" | "formal" | "casual") => void;
-}
+export function SuggestionBar() {
+  const { suggestions } = useBoard();
 
-export function SuggestionBar({
-  suggestions,
-  onToneChange,
-}: SuggestionBarProps) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", px: 2, gap: 2 }}>
       <NavigationButtons />
+
       <Box sx={{ display: "flex", gap: 2, marginInlineEnd: "auto" }}>
-        {suggestions?.map((suggestion, index) => (
+        {suggestions.suggestions?.map((suggestion, index) => (
           <Chip
             key={index}
             label={suggestion}
@@ -25,7 +21,7 @@ export function SuggestionBar({
         ))}
       </Box>
 
-      <ToneSelector onChange={onToneChange} />
+      <ToneSelector onChange={suggestions.changeTone} />
     </Box>
   );
 }

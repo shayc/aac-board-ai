@@ -2,6 +2,11 @@ import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useAudio } from "@/shared/hooks/useAudio";
 import { useState } from "react";
 
+export type Segment = {
+  data: string;
+  type: "text" | "sound";
+};
+
 export interface MessagePart {
   id: string;
   label?: string;
@@ -28,8 +33,8 @@ export function useMessage() {
   };
 
   const play = () => {
-    audio.play();
-    speech.speak();
+    console.log("parts to play:", parts);
+   
   };
 
   return {

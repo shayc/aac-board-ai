@@ -1,23 +1,14 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
-import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { useBoard } from "../../context/useBoard";
 
-export interface MessageBarProps {
-  parts: MessagePart[];
-  onClearClick: () => void;
-  onPlayClick: () => void;
-}
-
-export function MessageBar({
-  parts: tokens,
-  onClearClick,
-  onPlayClick,
-}: MessageBarProps) {
-  const hasTokens = tokens.length > 0;
+export function MessageBar() {
+  const { message } = useBoard();
+  const hasParts = message.parts.length > 0;
 
   return (
     <Box
@@ -45,19 +36,19 @@ export function MessageBar({
         }}
       >
         <Box sx={{ display: "flex", gap: 2, flexGrow: 1, overflowX: "auto" }}>
-          {tokens.map((t, index) => (
-            <Pictogram key={index} label={t.label} src={t.image} />
+          {message.parts.map((p, index) => (
+            <Pictogram key={index} label={p.label} src={p.imageSrc} />
           ))}
         </Box>
 
-        {hasTokens && (
+        {hasParts && (
           <Tooltip title="Clear message" enterDelay={800}>
             <Box sx={{ alignSelf: "center" }}>
               <IconButton
                 aria-label="Clear"
                 size="large"
                 color="inherit"
-                onClick={onClearClick}
+                onClick={() => message.clear()}
               >
                 <ClearIcon />
               </IconButton>
@@ -71,7 +62,7 @@ export function MessageBar({
           <IconButton
             aria-label="Play"
             size="large"
-            onClick={onPlayClick}
+            onClick={() => message.play()}
             sx={{
               width: 96,
               height: 96,

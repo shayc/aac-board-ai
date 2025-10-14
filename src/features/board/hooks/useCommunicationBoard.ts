@@ -1,10 +1,12 @@
+import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
+import { useAudio } from "@/shared/hooks/useAudio";
 import {
   getAssetUrlByPath,
   getBoardsBatch,
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Board } from "@features/board/types";
+import type { Board, BoardButton } from "@features/board/types";
 import { useEffect, useState } from "react";
 import { useAISuggestions } from "./useAISuggestions";
 import { useMessage } from "./useMessage";
@@ -24,6 +26,7 @@ export interface UseCommunicationBoardResult {
     isLoading: boolean;
     error: Error | null;
     load: (boardId: string) => Promise<void>;
+    onButtonClick: (button: BoardButton) => Promise<void>;
   };
 }
 
@@ -39,10 +42,46 @@ export function useCommunicationBoard(
 
   const navigation = useNavigation({ rootBoardId: initialBoardId });
   const message = useMessage();
+  const speech = useSpeech();
+  const audio = useAudio();
   const suggestions = useAISuggestions({
     words: message.parts,
     boardButtons: board?.buttons,
   });
+
+  const onButtonClick = async (button: BoardButton) => {
+    if (button.loadBoard && setId) {
+      if (button.loadBoard.id) {
+        navigation.goToBoard(button.loadBoard.id);
+        return;
+      }
+    }
+
+    const hasActions = button.actions && button.actions.length > 0;
+
+    if (hasActions) {
+      return;
+    }
+
+    message.appendPart({
+      id: button.id,
+      label: button.label,
+      imageSrc: button.imageSrc,
+      soundSrc: button.soundSrc,
+      vocalization: button.vocalization,
+    });
+
+    if (button.soundSrc) {
+      audio.play(button.soundSrc);
+      return;
+    }
+
+    const text = button.vocalization ?? button.label;
+
+    if (text) {
+      speech.speak(text?.toLowerCase());
+    }
+  };
 
   const loadBoard = async (newBoardId: string) => {
     if (!setId) {
@@ -186,6 +225,7 @@ export function useCommunicationBoard(
       current: board,
       isLoading,
       error,
+      onButtonClick,
       load: loadBoard,
     },
   };
