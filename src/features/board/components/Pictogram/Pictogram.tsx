@@ -38,12 +38,10 @@ export function Pictogram(props: PictogramProps) {
 
       {label && (
         <Typography
+          noWrap
           component="span"
           sx={{
             px: 1,
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
           }}
         >
           {label}

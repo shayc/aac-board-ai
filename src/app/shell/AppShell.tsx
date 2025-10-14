@@ -1,8 +1,8 @@
+import { AppProviders } from "@app/AppProviders";
+import { WelcomeDialog } from "@app/dialogs/WelcomeDialog/WelcomeDialog";
 import Box from "@mui/material/Box";
 import { useState } from "react";
 import { Outlet } from "react-router";
-import { AppProviders } from "../AppProviders";
-import { WelcomeDialog } from "../dialogs/WelcomeDialog/WelcomeDialog";
 import { AppHeader } from "./AppHeader";
 import { MenuDrawer } from "./MenuDrawer/MenuDrawer";
 import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";

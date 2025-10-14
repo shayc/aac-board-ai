@@ -1,10 +1,10 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
+import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import type { MessagePart } from "../../hooks/useMessage";
 
 export interface MessageBarProps {
   parts: MessagePart[];

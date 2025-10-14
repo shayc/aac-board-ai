@@ -49,21 +49,25 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>
-        <Toolbar />
+        <Toolbar>
+          <Typography variant="h6" component="div" noWrap>
+            AAC Board AI
+          </Typography>
+        </Toolbar>
 
         <Divider />
 
         <List>
-          <ListItem key={"Import board"} disablePadding>
+          <ListItem disablePadding>
             <ListItemButton onClick={handleImportBoard}>
               <ListItemIcon>
                 <FileOpenIcon />
               </ListItemIcon>
-              <ListItemText primary={"Import board..."} />
+              <ListItemText primary="Import board..." />
             </ListItemButton>
           </ListItem>
 
-          <ListItem key={"About"} disablePadding>
+          <ListItem disablePadding>
             <ListItemButton
               component={RouterLink}
               to="/about"
@@ -72,11 +76,11 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
               <ListItemIcon>
                 <InfoOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary={"About"} />
+              <ListItemText primary="About" />
             </ListItemButton>
           </ListItem>
 
-          <ListItem key={"Contribute"} disablePadding>
+          <ListItem disablePadding>
             <ListItemButton
               href="https://github.com/shayc/aac-board-ai"
               target="_blank"
@@ -85,7 +89,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
               <ListItemIcon>
                 <GitHubIcon />
               </ListItemIcon>
-              <ListItemText primary={"Contribute"} />
+              <ListItemText primary="Contribute" />
             </ListItemButton>
           </ListItem>
         </List>
