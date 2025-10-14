@@ -67,7 +67,9 @@ function transformButton(
     soundSrc: obfButton.sound_id
       ? soundSources.get(obfButton.sound_id)
       : undefined,
-    actions: obfButton.actions,
+    actions: [obfButton.action || "", ...(obfButton.actions || [])].filter(
+      Boolean
+    ),
     loadBoard: obfButton.load_board
       ? transformLoadBoard(obfButton.load_board)
       : undefined,

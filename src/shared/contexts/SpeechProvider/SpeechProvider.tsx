@@ -14,6 +14,8 @@ export interface SpeechContextType {
   speak: (text: string) => void;
   cancel: () => void;
   isSupported: boolean;
+  isSpeaking: boolean;
+  isPaused: boolean;
 }
 
 export interface SpeechProviderProps {

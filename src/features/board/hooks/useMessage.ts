@@ -20,6 +20,8 @@ export function useMessage() {
   const speech = useSpeech();
   const audio = useAudio();
 
+  const isPlaying = speech.isSpeaking || audio.isPlaying;
+  
   const appendPart = (part: MessagePart) => {
     setParts((prev) => [...prev, part]);
   };
@@ -34,7 +36,6 @@ export function useMessage() {
 
   const play = () => {
     console.log("parts to play:", parts);
-   
   };
 
   return {
@@ -43,5 +44,6 @@ export function useMessage() {
     popPart,
     clear,
     play,
+    isPlaying,
   };
 }

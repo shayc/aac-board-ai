@@ -57,7 +57,7 @@ export function useCommunicationBoard(
       }
     }
 
-    const hasActions = button.actions && button.actions.length > 0;
+    const hasActions = Boolean(button.actions?.length);
 
     if (hasActions) {
       return;

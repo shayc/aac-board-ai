@@ -28,8 +28,6 @@ export function Tile({
       disabled={disabled}
       onClick={onClick}
       sx={(theme) => ({
-        backgroundColor,
-        borderColor,
         width: "100%",
         height: "100%",
         display: "grid",
@@ -40,7 +38,9 @@ export function Tile({
         position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
-        color: getReadableTextColor(backgroundColor ?? "#fff"),
+        color: backgroundColor ? getReadableTextColor(backgroundColor) : "inherit",
+        backgroundColor,
+        borderColor,
         transition: theme.transitions.create("background-color", {
           duration: theme.transitions.duration.short,
         }),
