@@ -4,18 +4,18 @@ import { SuggestionBar } from "@features/board/components/SuggestionBar/Suggesti
 import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
 import type { BoardButton } from "@features/board/types";
-import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
   const { board } = useBoard();
 
   if (!board.current) {
-    return <Box sx={{ p: 4, textAlign: "center" }}>No board loaded</Box>;
+    return null;
   }
 
   return (
-    <Stack direction="column" sx={{ height: "100%" }}>
+    <Stack direction="column" height="100%">
       <MessageBar />
 
       <SuggestionBar />
@@ -23,8 +23,9 @@ export function Board() {
       <Grid<BoardButton>
         rows={board.current.grid.rows}
         columns={board.current.grid.columns}
+        order={board.current.grid.order}
         items={board.current.buttons}
-        renderCell={(button) => (
+        renderItem={(button) => (
           <Tile
             label={button.label}
             imageSrc={button.imageSrc}

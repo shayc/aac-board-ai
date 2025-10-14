@@ -26,13 +26,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const { showSnackbar } = useSnackbar();
 
   async function handleImportBoard() {
-    onClose();
     const file = await openFile();
-
+    
     if (!file) {
       return;
     }
-
+    
+    onClose();
     showSnackbar({ message: "Importing board...", severity: "info" });
 
     try {
