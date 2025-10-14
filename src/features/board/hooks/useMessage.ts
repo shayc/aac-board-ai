@@ -35,7 +35,7 @@ export function useMessage() {
   }
 
   function convertPartsToSegments(parts: MessagePart[]): Segment[] {
-    return parts
+    const segments = parts
       .map((part) => {
         if (part.soundSrc) {
           return { type: "sound", data: part.soundSrc };
@@ -49,6 +49,9 @@ export function useMessage() {
         return null;
       })
       .filter((segment): segment is Segment => segment !== null);
+
+    const mergedSegments = mergeTextSegments(segments);
+    return mergedSegments;
   }
 
   function mergeTextSegments(segments: Segment[]): Segment[] {
@@ -77,13 +80,14 @@ export function useMessage() {
 
   async function play() {
     const segments = convertPartsToSegments(messageParts);
-    const mergedSegments = mergeTextSegments(segments);
 
-    for (const segment of mergedSegments) {
-      if (segment.type === "sound") {
-        await audio.play(segment.data);
-      } else {
-        await speech.speak(segment.data);
+    for (const seg of segments) {
+      if (seg.type === "sound") {
+        await audio.play(seg.data);
+      }
+
+      if (seg.type === "text") {
+        await speech.speak(seg.data);
       }
     }
   }
