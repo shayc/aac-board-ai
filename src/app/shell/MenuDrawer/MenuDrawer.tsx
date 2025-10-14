@@ -46,6 +46,19 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     }
   }
 
+  const menuItems = [
+    {
+      icon: FileOpenIcon,
+      label: "Import board...",
+      onClick: handleImportBoard,
+    },
+    { icon: InfoOutlinedIcon, label: "About", to: "/about" },
+    {
+      icon: GitHubIcon,
+      label: "Contribute",
+      href: "http://github.com/shayc/aac-board-ai",
+    },
+  ];
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 360 }}>
@@ -58,40 +71,23 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
         <Divider />
 
         <List>
-          <ListItem disablePadding>
-            <ListItemButton onClick={handleImportBoard}>
-              <ListItemIcon>
-                <FileOpenIcon />
-              </ListItemIcon>
-              <ListItemText primary="Import board..." />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton
-              component={RouterLink}
-              to="/about"
-              onClick={onClose}
-            >
-              <ListItemIcon>
-                <InfoOutlinedIcon />
-              </ListItemIcon>
-              <ListItemText primary="About" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding>
-            <ListItemButton
-              href="https://github.com/shayc/aac-board-ai"
-              target="_blank"
-              rel="noopener"
-            >
-              <ListItemIcon>
-                <GitHubIcon />
-              </ListItemIcon>
-              <ListItemText primary="Contribute" />
-            </ListItemButton>
-          </ListItem>
+          {menuItems.map((item, index) => (
+            <ListItem key={index} disablePadding>
+              <ListItemButton
+                onClick={item.onClick}
+                component={item.to ? RouterLink : item.href ? "a" : "button"}
+                to={item.to}
+                href={item.href}
+                target={item.href ? "_blank" : undefined}
+                rel={item.href ? "noopener" : undefined}
+              >
+                <ListItemIcon>
+                  <item.icon />
+                </ListItemIcon>
+                <ListItemText primary={item.label} />
+              </ListItemButton>
+            </ListItem>
+          ))}
         </List>
 
         <Divider />
