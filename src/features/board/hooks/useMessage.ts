@@ -1,17 +1,19 @@
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
+import { useAudio } from "@/shared/hooks/useAudio";
 import { useState } from "react";
 
 export interface MessagePart {
   id: string;
   label?: string;
-  image?: string;
-  sound?: string;
+  imageSrc?: string;
+  soundSrc?: string;
   vocalization?: string;
 }
 
 export function useMessage() {
   const [parts, setParts] = useState<MessagePart[]>([]);
   const speech = useSpeech();
+  const audio = useAudio();
 
   const appendPart = (part: MessagePart) => {
     setParts((prev) => [...prev, part]);
@@ -26,7 +28,8 @@ export function useMessage() {
   };
 
   const play = () => {
-    speech.speak(parts.map((t) => t.vocalization ?? t.label).join(" "));
+    audio.play();
+    speech.speak();
   };
 
   return {
@@ -36,17 +39,4 @@ export function useMessage() {
     clear,
     play,
   };
-}
-
-export function useAudio() {
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  const play = (url: string) => {
-    const audio = new Audio(url);
-    audio.play().catch((err) => {
-      console.error("Failed to play audio:", err);
-    });
-  };
-
-  return { play, isPlaying };
 }

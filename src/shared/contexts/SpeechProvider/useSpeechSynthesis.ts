@@ -1,71 +1,118 @@
 import { useEffect, useState } from "react";
 
 export function useSpeechSynthesis() {
+  const isSupported = "speechSynthesis" in window;
+  const synth = window.speechSynthesis;
+
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+
   const [voiceURI, setVoiceURI] = useState("");
   const [pitch, setPitch] = useState(1);
   const [rate, setRate] = useState(1);
   const [volume, setVolume] = useState(1);
 
-  const isSupported = "speechSynthesis" in window;
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const speak = (text: string) => {
-    if (!isSupported) {
-      console.warn("Speech synthesis is not supported in this browser");
-      return;
-    }
+    return new Promise<void>((resolve, reject) => {
+      if (!isSupported) {
+        reject(new Error("Speech Synthesis is not supported in this browser."));
+        return;
+      }
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const selectedVoice = voices.find((v) => v.voiceURI === voiceURI);
+      const utterance = new SpeechSynthesisUtterance(text);
+      const selectedVoice = voices.find((v) => v.voiceURI === voiceURI);
 
-    utterance.voice = selectedVoice || null;
-    utterance.pitch = pitch;
-    utterance.rate = rate;
-    utterance.volume = volume;
+      utterance.voice = selectedVoice || null;
+      utterance.pitch = pitch;
+      utterance.rate = rate;
+      utterance.volume = volume;
 
-    window.speechSynthesis.speak(utterance);
+      utterance.onstart = () => {
+        setIsSpeaking(true);
+        setIsPaused(false);
+      };
+
+      utterance.onend = () => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+
+        resolve();
+      };
+
+      utterance.onresume = () => {
+        setIsPaused(false);
+        setIsSpeaking(true);
+      };
+
+      utterance.onpause = () => {
+        setIsPaused(true);
+        setIsSpeaking(false);
+      };
+
+      utterance.onerror = (event) => {
+        setIsSpeaking(false);
+        setIsPaused(false);
+
+        reject(new Error(event.error));
+      };
+
+      synth.cancel();
+      synth.speak(utterance);
+    });
   };
 
   const cancel = () => {
-    if (isSupported) {
-      window.speechSynthesis.cancel();
-    }
+    synth.cancel();
   };
 
-  const getVoices = () => {
-    if (isSupported) {
-      const availableVoices = window.speechSynthesis.getVoices();
-      setVoices(availableVoices);
+  const pause = () => {
+    synth.pause();
+    setIsPaused(true);
+  };
 
-      if (!voiceURI && availableVoices.length > 0) {
-        const defaultVoice =
-          availableVoices.find((voice) => voice.default) || availableVoices[0];
-
-        const newVoiceURI = defaultVoice.voiceURI;
-        setVoiceURI(newVoiceURI);
-      }
-    }
+  const resume = () => {
+    synth.resume();
+    setIsPaused(false);
   };
 
   useEffect(() => {
-    if (isSupported) {
-      getVoices();
-      window.speechSynthesis.onvoiceschanged = getVoices;
-    }
+    const getVoices = () => {
+      const voices = synth.getVoices();
+      setVoices(voices);
+
+      if (!voiceURI && voices.length > 0) {
+        const defaultVoice = voices.find((v) => v.default) || voices[0];
+
+        setVoiceURI(defaultVoice.voiceURI);
+      }
+    };
+
+    getVoices();
+    synth.addEventListener?.("voiceschanged", getVoices);
+
+    return () => {
+      synth.removeEventListener?.("voiceschanged", getVoices);
+    };
   }, []);
 
   return {
     voices,
     voiceURI,
-    setVoiceURI,
     pitch,
-    setPitch,
     rate,
-    setRate,
     volume,
+    setVoiceURI,
+    setPitch,
+    setRate,
     setVolume,
     speak,
     cancel,
+    pause,
+    resume,
     isSupported,
+    isSpeaking,
+    isPaused,
   };
 }

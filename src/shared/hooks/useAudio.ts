@@ -2,19 +2,16 @@ import { useState } from "react";
 
 export function useAudio() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
-  function play(url: string) {
+  const play = (url: string) => {
     const audio = new Audio(url);
-    setIsPlaying(true);
-
+    audio.onplay = () => setIsPlaying(true);
     audio.onended = () => setIsPlaying(false);
-    audio.onerror = () => setIsPlaying(false);
+    audio.onpause = () => setIsPaused(false);
 
-    audio.play().catch((err) => {
-      console.error("Failed to play audio:", err);
-      setIsPlaying(false);
-    });
-  }
+    audio.play();
+  };
 
-  return { play, isPlaying };
+  return { play, isPlaying, isPaused };
 }

@@ -1,8 +1,8 @@
-import { useTranslator } from "@/shared/ai/hooks/useTranslator";
+import { useProofreader } from "@/shared/hooks/ai/useProofreader";
+import { useRewriter } from "@/shared/hooks/ai/useRewriter";
+import { useTranslator } from "@/shared/hooks/ai/useTranslator";
+import { useWriter } from "@/shared/hooks/ai/useWriter";
 import type { BoardButton } from "@features/board/types";
-import { useProofreader } from "@shared/ai/hooks/useProofreader";
-import { useRewriter } from "@shared/ai/hooks/useRewriter";
-import { useWriter } from "@shared/ai/hooks/useWriter";
 import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
