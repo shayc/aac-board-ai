@@ -37,3 +37,16 @@ export function useMessage() {
     play,
   };
 }
+
+export function useAudio() {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const play = (url: string) => {
+    const audio = new Audio(url);
+    audio.play().catch((err) => {
+      console.error("Failed to play audio:", err);
+    });
+  };
+
+  return { play, isPlaying };
+}
