@@ -30,7 +30,6 @@ export function SpeechProvider({ children }: SpeechProviderProps) {
   return <SpeechContext value={speech}>{children}</SpeechContext>;
 }
 
-// eslint-disable-next-line
 export function useSpeech(): SpeechContextType {
   const speech = use(SpeechContext);
 
