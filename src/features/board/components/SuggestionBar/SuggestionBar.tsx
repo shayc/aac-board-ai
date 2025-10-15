@@ -1,4 +1,3 @@
-import { NavigationButtons } from "@features/board/components/NavigationButtons/NavigationButtons";
 import { useBoard } from "@features/board/context/useBoard";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -9,8 +8,6 @@ export function SuggestionBar() {
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", px: 2, gap: 2 }}>
-      <NavigationButtons />
-
       <Box sx={{ display: "flex", gap: 2, marginInlineEnd: "auto" }}>
         {suggestions.suggestions?.map((suggestion, index) => (
           <Chip

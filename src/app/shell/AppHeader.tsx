@@ -1,3 +1,6 @@
+import { useBoard } from "@/features/board/context/useBoard";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
@@ -13,6 +16,8 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
+  const { navigation } = useBoard();
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -27,6 +32,34 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           >
             <MenuIcon />
           </IconButton>
+        </Tooltip>
+
+        <Tooltip title="Go back" enterDelay={800}>
+          <span>
+            <IconButton
+              aria-label="Back"
+              size="large"
+              color="inherit"
+              disabled={!navigation.canGoBack}
+              onClick={() => navigation.goBack()}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+
+        <Tooltip title="Go home" enterDelay={800}>
+          <span>
+            <IconButton
+              aria-label="Home"
+              size="large"
+              color="inherit"
+              onClick={() => navigation.goHome()}
+              sx={{ mr: 2 }}
+            >
+              <HomeIcon />
+            </IconButton>
+          </span>
         </Tooltip>
 
         <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>

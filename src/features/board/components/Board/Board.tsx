@@ -4,7 +4,6 @@ import { SuggestionBar } from "@features/board/components/SuggestionBar/Suggesti
 import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
 import type { BoardButton } from "@features/board/types";
-import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
@@ -15,7 +14,7 @@ export function Board() {
   }
 
   return (
-    <Stack direction="column" height="100%">
+    <Stack height="100%" direction="column">
       <MessageBar />
 
       <SuggestionBar />
