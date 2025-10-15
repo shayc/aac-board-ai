@@ -28,8 +28,8 @@ export function useWriter() {
 
     const writer = await Writer.create({
       ...options,
-      monitor(m: any) {
-        m.addEventListener("downloadprogress", (event: any) => {
+      monitor(m) {
+        m.addEventListener("downloadprogress", (event) => {
           setDownloadProgress(event.loaded);
         });
       },

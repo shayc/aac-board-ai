@@ -13,10 +13,6 @@ export interface UseAISuggestionsOptions {
 
 export type ToneOption = "neutral" | "formal" | "casual";
 
-/**
- * Standalone hook for managing AI-powered suggestions.
- * Uses the proofreader API to correct text and rewriter API to adjust tone.
- */
 export function useAISuggestions(options: UseAISuggestionsOptions) {
   const { words, boardButtons = [] } = options;
   const proofreader = useProofreader();

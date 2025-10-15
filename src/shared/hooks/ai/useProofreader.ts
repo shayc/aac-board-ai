@@ -18,7 +18,6 @@ export function useProofreader() {
     }
 
     const availability = await Proofreader.availability();
-
     if (availability === "unavailable") {
       return null;
     }

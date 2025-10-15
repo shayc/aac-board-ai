@@ -7,13 +7,9 @@ export interface TranslatorOptions {
   targetLanguage: string;
 }
 
-/**
- * Hook for Chrome’s on-device Translator API.
- * Exposes support flag, model download progress, and a create() helper.
- */
 export function useTranslator() {
   const isSupported = "Translator" in self;
-  const [downloadProgress, setDownloadProgress] = useState(0); // 0..1
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
   async function create(options: TranslatorOptions) {
     if (!isSupported) {
@@ -33,7 +29,7 @@ export function useTranslator() {
       ...options,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded ?? 0);
+          setDownloadProgress(event.loaded);
         });
       },
     });

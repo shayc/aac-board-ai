@@ -21,7 +21,6 @@ export function useRewriter() {
     }
 
     const availability = await Rewriter.availability();
-
     if (availability === "unavailable") {
       return null;
     }
