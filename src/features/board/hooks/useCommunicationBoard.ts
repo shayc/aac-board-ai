@@ -200,11 +200,8 @@ export function useCommunicationBoard(
           }
         }
 
-        // Now convert to internal format
         const board = obfToBoard(obfBoard);
-        console.log("Converted board:", board);
         setBoard(board);
-        console.log("Board loaded successfully!");
       } catch (err) {
         console.error("Error loading board:", err);
         setError(

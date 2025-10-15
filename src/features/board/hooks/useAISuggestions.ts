@@ -43,7 +43,7 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
     .map((btn) => btn.label)
     .filter(Boolean)
     .join(", ");
-  console.log("Board vocabulary for context:", boardVocabulary);
+
   const boardContextString = boardVocabulary
     ? `You are helping with AAC communication. Available vocabulary: ${boardVocabulary}. When given a partial sentence, add ONLY the next word to complete it naturally. Do not rewrite or expand the sentence - just add the missing words.`
     : "You are helping with AAC communication. When given a partial sentence, add ONLY the next word to complete it naturally. Do not rewrite or expand - just add the missing words.";
@@ -108,14 +108,11 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
       // STEP 1: Proofreading - Fix grammar and spelling
       const proofreadResult = await proofreaderInstance.proofread(sentence);
       const correctedText = proofreadResult.correctedInput;
-      console.log("Step 1 - Proofread:", correctedText);
 
       // STEP 2: Writer - Suggest 1-2 word completion using board context
-      console.log("Step 2 INPUT - Original sentence:", correctedText);
 
       // Get Writer output
       const writerOutput = await writerInstance.write(correctedText);
-      console.log("Step 2 RAW OUTPUT - Writer result:", writerOutput);
 
       // Extract only the new words added (max 2 words)
       // If Writer rewrote the entire sentence, extract what was added after the original
@@ -147,15 +144,6 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
           completedText = correctedText + " " + newWords.join(" ");
         }
       }
-
-      console.log(
-        "Step 2 FINAL OUTPUT - Completion with 1-2 words:",
-        completedText
-      );
-      console.log(
-        "Step 2 ANALYSIS - Added:",
-        completedText.replace(correctedText, "").trim()
-      );
 
       // STEP 3: Rewriter - Generate tone variations
       // const toneMapping: Record<
@@ -205,12 +193,6 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
       //     }),
       //   ]);
 
-      // console.log("Step 3 - Rewritten variants:", {
-      //   request: rewrittenRequest,
-      //   describe: rewrittenDescribe,
-      //   social: rewrittenSocial,
-      // });
-
       // // STEP 4: Translation - Apply only to final outputs
       // const [translatedRequest, translatedDescribe, translatedSocial] =
       //   await Promise.all([
@@ -218,12 +200,6 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
       //     translatorInstance.translate(rewrittenDescribe),
       //     translatorInstance.translate(rewrittenSocial),
       //   ]);
-
-      // console.log("Step 4 - Translated:", {
-      //   request: translatedRequest,
-      //   describe: translatedDescribe,
-      //   social: translatedSocial,
-      // });
 
       setSuggestions([writerOutput]);
     } catch (error) {
@@ -252,7 +228,7 @@ export function useAISuggestions(options: UseAISuggestionsOptions) {
             tone: "neutral",
             length: "short",
           });
-          console.log("Writer context updated with new board vocabulary");
+
           setWriterInstance(newWriter);
         } catch (error) {
           console.error("Failed to update Writer context:", error);

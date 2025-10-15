@@ -49,9 +49,7 @@ export async function extractOBZ(buffer: ArrayBuffer): Promise<ParsedOBZ> {
 
     const boardText = new TextDecoder().decode(boardBuffer);
     const board = parseOBF(boardText);
-    
-    console.log(`🔍 DEBUG - OBZ extraction: manifest key="${id}", board.id="${board.id}", path="${path}"`);
-    
+
     boards.set(id, board);
   }
 
