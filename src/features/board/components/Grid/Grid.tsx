@@ -17,7 +17,7 @@ export function Grid<TItem extends { id: string }>({
   gap = 2,
   renderItem,
 }: GridProps<TItem>) {
-  const grid = buildItemGrid(items, rows, columns, order);
+  const grid = buildGrid(items, rows, columns, order);
 
   return (
     <Stack
@@ -40,14 +40,15 @@ export function Grid<TItem extends { id: string }>({
   );
 }
 
-function buildItemGrid<T extends { id: string }>(
+function buildGrid<T extends { id: string }>(
   items: readonly T[],
   rows: number,
   columns: number,
-  order?: readonly (readonly (string | null | undefined)[])[]
+  order?: (string | null)[][]
 ): (T | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
+
     return Array.from({ length: rows }, (_, r) => {
       const orderRow = order[r] ?? [];
 
