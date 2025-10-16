@@ -38,19 +38,19 @@ export function ToneSelector({
       onChange={handleChange}
     >
       <Tooltip title="Neutral tone" enterDelay={800}>
-        <ToggleButton value="neutral" aria-label="neutral tone">
+        <ToggleButton value="as-is" aria-label="neutral tone">
           <DragHandleIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title="Formal tone" enterDelay={800}>
-        <ToggleButton value="formal" aria-label="formal tone">
+        <ToggleButton value="more-formal" aria-label="formal tone">
           <BusinessCenterIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title="Casual tone" enterDelay={800}>
-        <ToggleButton value="casual" aria-label="casual tone">
+        <ToggleButton value="more-casual" aria-label="casual tone">
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
