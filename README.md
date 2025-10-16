@@ -3,7 +3,7 @@
 ## Overview
 
 **AAC Board AI** helps people with speech or language challenges communicate more naturally and confidently.  
-It combines board-based Augmentative and Alternative Communication (AAC) with Google Chrome’s [**Built-in AI**](https://developer.chrome.com/docs/ai/built-in) — delivering real-time corrections, tone adjustments, and translations directly in the browser.
+It combines board-based Augmentative and Alternative Communication (AAC) with Google Chrome’s **Built-in AI** — delivering real-time corrections, tone adjustments, and translations directly in the browser.
 
 All processing runs locally through **Gemini Nano**, ensuring instant responses, strong privacy, and reliable offline use.
 
@@ -11,7 +11,7 @@ Developed for the [Google Chrome Built-in AI Challenge 2025](https://www.youtube
 
 ## Google Chrome’s Built-in AI
 
-AAC Board AI integrates Google Chrome’s Built-in AI APIs to refine and personalize messages directly in the browser:
+AAC Board AI integrates Google Chrome’s [**Built-in AI**](https://developer.chrome.com/docs/ai/built-in) APIs to refine and personalize messages directly in the browser:
 
 - [`Proofreader`](https://developer.chrome.com/docs/ai/proofreader-api) – Corrects phrasing and grammar
 - [`Rewriter`](https://developer.chrome.com/docs/ai/rewriter-api) – Adjusts tone (neutral, formal, casual)
