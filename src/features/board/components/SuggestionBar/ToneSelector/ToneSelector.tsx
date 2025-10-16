@@ -6,22 +6,26 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 
-type ToneOption = "neutral" | "formal" | "casual";
+type ToneOption = "as-is" | "more-formal" | "more-casual";
 
 interface ToneSelectorProps {
+  tone?: ToneOption;
   onChange?: (tone: ToneOption) => void;
 }
 
-export function ToneSelector({ onChange }: ToneSelectorProps) {
-  const [tone, setTone] = useState<ToneOption>("neutral");
+export function ToneSelector({
+  tone: initialTone = "as-is",
+  onChange,
+}: ToneSelectorProps) {
+  const [tone, setTone] = useState<ToneOption>(initialTone);
 
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    newTone: ToneOption | null
+    tone: ToneOption | null
   ) => {
-    if (newTone) {
-      setTone(newTone);
-      onChange?.(newTone);
+    if (tone) {
+      setTone(tone);
+      onChange?.(tone);
     }
   };
 
@@ -38,11 +42,13 @@ export function ToneSelector({ onChange }: ToneSelectorProps) {
           <DragHandleIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
+
       <Tooltip title="Formal tone" enterDelay={800}>
         <ToggleButton value="formal" aria-label="formal tone">
           <BusinessCenterIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
+
       <Tooltip title="Casual tone" enterDelay={800}>
         <ToggleButton value="casual" aria-label="casual tone">
           <SentimentSatisfiedAltIcon fontSize="medium" />

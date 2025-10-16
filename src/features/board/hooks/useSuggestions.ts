@@ -8,16 +8,15 @@ export interface UseSuggestionsInput {
   expectedInputLanguages?: string[];
   messageParts: MessagePart[];
   context?: BoardButton[];
-  tone?: RewriterTone;
 }
 
 export function useSuggestions({
   expectedInputLanguages,
   messageParts,
   context,
-  tone = "as-is",
 }: UseSuggestionsInput) {
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [tone, setTone] = useState<RewriterTone>("as-is");
   const proofreader = useProofreader();
   const rewriter = useRewriter();
 
@@ -60,5 +59,7 @@ export function useSuggestions({
 
   return {
     suggestions,
+    tone,
+    setTone,
   };
 }

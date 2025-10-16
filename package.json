@@ -28,6 +28,7 @@
     "@types/node": "^24.7.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
+    "@types/wicg-file-system-access": "^2023.10.7",
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.37.0",

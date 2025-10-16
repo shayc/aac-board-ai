@@ -20,7 +20,10 @@ export function SuggestionBar() {
         ))}
       </Box>
 
-      <ToneSelector onChange={suggestions.changeTone} />
+      <ToneSelector
+        tone={suggestions.tone}
+        onChange={(tone) => suggestions.setTone(tone)}
+      />
     </Box>
   );
 }

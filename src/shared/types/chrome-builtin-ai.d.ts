@@ -20,7 +20,7 @@
 // • Translator availability note: Chrome intentionally hides per-language-pair download status; many pairs
 //   appear “downloadable” until a site actually creates that pair.
 
-export { };
+export {};
 
 declare global {
   // -------------------------------------------------------------------------------------------------
