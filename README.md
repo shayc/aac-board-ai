@@ -9,7 +9,7 @@ All processing runs locally through **Gemini Nano**, ensuring instant responses,
 
 Developed for the [Google Chrome Built-in AI Challenge 2025](https://www.youtube.com/watch?v=9X-ZXQasW2Q) to showcase real-world accessibility applications of Chrome’s on-device language models.
 
-![AAC Board AI screenshot](screenshot.png)
+![AAC Board AI interface](screenshot.png)
 
 ## Google Chrome’s Built-in AI
 
