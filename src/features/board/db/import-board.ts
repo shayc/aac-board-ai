@@ -66,10 +66,34 @@ async function importOBZFile(
 
   const assetItems = Array.from(files.entries())
     .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
-    .map(([path, buffer]) => ({
-      path,
-      blob: new Blob([buffer.buffer as ArrayBuffer]),
-    }));
+    .map(([path, buffer]) => {
+      const mime = path.endsWith(".png")
+        ? "image/png"
+        : path.endsWith(".jpg") || path.endsWith(".jpeg")
+        ? "image/jpeg"
+        : path.endsWith(".gif")
+        ? "image/gif"
+        : path.endsWith(".svg")
+        ? "image/svg+xml"
+        : path.endsWith(".mp3")
+        ? "audio/mpeg"
+        : path.endsWith(".wav")
+        ? "audio/wav"
+        : "application/octet-stream";
+
+      // DEBUG: Log blob creation
+      console.log("[DEBUG importOBZFile] Creating blob for:", {
+        path,
+        mime,
+        bufferSize: buffer.byteLength,
+      });
+
+      return {
+        path,
+        blob: new Blob([buffer.buffer as ArrayBuffer], { type: mime }),
+        mime,
+      };
+    });
 
   if (assetItems.length > 0) {
     await bulkPutAssets(db, setId, assetItems);

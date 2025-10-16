@@ -38,9 +38,9 @@ export function Tile({
         position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
+        overflow: "hidden",
         color: backgroundColor ? getReadableTextColor(backgroundColor) : "inherit",
         backgroundColor,
-        borderColor,
         transition: theme.transitions.create("background-color", {
           duration: theme.transitions.duration.short,
         }),

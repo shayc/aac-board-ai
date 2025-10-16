@@ -287,7 +287,17 @@ export async function getAssetUrlByPath(
   validateId(setId, "setId");
   const p = normalizePath(path);
   const row = await db.get("assets", [setId, p]);
-  return row ? URL.createObjectURL(row.blob) : null;
+  if (!row) return null;
+  
+  // DEBUG: Log blob and mime type info
+  console.log('[DEBUG getAssetUrlByPath]', {
+    path: p,
+    blobType: row.blob.type,
+    storedMime: row.mime,
+    blobSize: row.blob.size
+  });
+  
+  return URL.createObjectURL(row.blob);
 }
 
 export async function getAssetUrlByMediaId(
@@ -301,7 +311,17 @@ export async function getAssetUrlByMediaId(
     setId,
     mediaId,
   ]);
-  return row ? URL.createObjectURL(row.blob) : null;
+  if (!row) return null;
+  
+  // DEBUG: Log blob and mime type info
+  console.log('[DEBUG getAssetUrlByMediaId]', {
+    mediaId,
+    blobType: row.blob.type,
+    storedMime: row.mime,
+    blobSize: row.blob.size
+  });
+  
+  return URL.createObjectURL(row.blob);
 }
 export async function getManifestJson<T = unknown>(
   db: IDBPDatabase<Schema>,
