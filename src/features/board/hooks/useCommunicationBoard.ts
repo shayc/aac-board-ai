@@ -8,9 +8,9 @@ import {
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board, BoardButton } from "@features/board/types";
 import { useEffect, useState } from "react";
-import { useAISuggestions } from "./useAISuggestions";
 import { useMessage } from "./useMessage";
 import { useNavigation } from "./useNavigation";
+import { useSuggestions } from "./useSuggestions";
 
 export interface UseCommunicationBoardOptions {
   setId?: string;
@@ -19,7 +19,7 @@ export interface UseCommunicationBoardOptions {
 
 export interface UseCommunicationBoardResult {
   message: ReturnType<typeof useMessage>;
-  suggestions: ReturnType<typeof useAISuggestions>;
+  suggestions: ReturnType<typeof useSuggestions>;
   navigation: ReturnType<typeof useNavigation>;
   board: {
     current: Board | null;
@@ -44,14 +44,14 @@ export function useCommunicationBoard(
   const message = useMessage();
   const speech = useSpeech();
   const audio = useAudio();
-  const suggestions = useAISuggestions({
-    words: message.parts,
-    boardButtons: board?.buttons,
+
+  const suggestions = useSuggestions({
+    expectedInputLanguages: ["en"],
+    messageParts: message.parts,
+    context: board?.buttons,
   });
 
   const onButtonClick = async (button: BoardButton) => {
-    suggestions.requestSession();
-
     if (button.loadBoard && setId) {
       if (button.loadBoard.id) {
         navigation.goToBoard(button.loadBoard.id);
