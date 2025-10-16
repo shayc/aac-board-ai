@@ -333,4 +333,81 @@ declare global {
 
   /** Global Proofreader constructor. */
   const Proofreader: ProofreaderConstructor;
+  // -------------------------------------------------------------------------------------------------
+  // Prompt API (Language Model) — https://developer.chrome.com/docs/ai/prompt-api
+  // Permission-Policy: `allow="language-model"`; not available in Web Workers.
+  // -------------------------------------------------------------------------------------------------
+
+  /** Availability states for the Language Model API. */
+  type LanguageModelAvailability =
+    | "available"
+    | "downloadable"
+    | "downloading"
+    | "unavailable";
+
+  /** Model parameters returned by LanguageModel.params(). */
+  interface LanguageModelParams {
+    /** Default top-K value. */
+    defaultTopK: number;
+    /** Maximum top-K value. */
+    maxTopK: number;
+    /** Default temperature. */
+    defaultTemperature: number;
+    /** Maximum temperature. */
+    maxTemperature: number;
+  }
+
+  /** Options for creating a language model session. */
+  interface LanguageModelCreateOptions extends AIBaseCreateOptions {
+    /** Temperature parameter for response randomness (0-2). */
+    temperature?: number;
+    /** Top-K parameter for response diversity. */
+    topK?: number;
+    /** System prompt to set context for the session. */
+    systemPrompt?: string;
+  }
+
+  /** Options for prompting the model. */
+  interface LanguageModelPromptOptions {
+    /** Abort an ongoing prompt. */
+    signal?: AbortSignal;
+  }
+
+  /** A language model session for prompting. */
+  interface LanguageModelSession {
+    /** Send a prompt and get the full response. */
+    prompt(
+      input: string,
+      options?: LanguageModelPromptOptions
+    ): Promise<string>;
+
+    /** Send a prompt and stream the response. */
+    promptStreaming(
+      input: string,
+      options?: LanguageModelPromptOptions
+    ): ReadableStream;
+
+    /** Current token usage in this session. */
+    readonly inputUsage: number;
+
+    /** Maximum tokens allowed for this session. */
+    readonly inputQuota: number;
+
+    /** Free resources for this session. */
+    destroy(): void;
+  }
+
+  interface LanguageModelConstructor {
+    /** Get model parameters (topK and temperature ranges). */
+    params(): Promise<LanguageModelParams>;
+
+    /** Check whether the language model is available. */
+    availability(): Promise<LanguageModelAvailability>;
+
+    /** Create a new language model session. */
+    create(options?: LanguageModelCreateOptions): Promise<LanguageModelSession>;
+  }
+
+  /** Global LanguageModel constructor. */
+  const LanguageModel: LanguageModelConstructor;
 }
