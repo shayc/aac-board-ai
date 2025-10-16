@@ -9,6 +9,8 @@ All processing runs locally through **Gemini Nano**, ensuring instant responses,
 
 Developed for the [Google Chrome Built-in AI Challenge 2025](https://www.youtube.com/watch?v=9X-ZXQasW2Q) to showcase real-world accessibility applications of Chrome’s on-device language models.
 
+![AAC Board AI screenshot](screenshot.png)
+
 ## Google Chrome’s Built-in AI
 
 AAC Board AI integrates Google Chrome’s [**Built-in AI**](https://developer.chrome.com/docs/ai/built-in) APIs to refine and personalize messages directly in the browser:
@@ -44,6 +46,8 @@ npm run dev
 Open [http://localhost:5173](http://localhost:5173) in Chrome.
 
 ## Tech Stack
+
+Built with modern web technologies optimized for performance and accessibility:
 
 - **React 19**, **TypeScript**, **Vite** – modern, reactive front end
 - **IndexedDB** (`idb`) + **Zod** – validated offline data schema
