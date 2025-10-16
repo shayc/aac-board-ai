@@ -7,6 +7,8 @@ It combines board-based Augmentative and Alternative Communication (AAC) with Go
 
 All processing runs locally through **Gemini Nano**, ensuring instant responses, strong privacy, and reliable offline use.
 
+Developed for the [Google Chrome Built-in AI Challenge 2025](https://www.youtube.com/watch?v=9X-ZXQasW2Q) to showcase real-world accessibility applications of Chrome’s on-device language models.
+
 ## Google Chrome’s Built-in AI
 
 AAC Board AI integrates Google Chrome’s Built-in AI APIs to refine and personalize messages directly in the browser:
