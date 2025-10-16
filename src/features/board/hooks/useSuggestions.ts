@@ -15,25 +15,18 @@ export function useSuggestions({
   messageParts,
   context,
 }: UseSuggestionsInput) {
-  const [suggestions, setSuggestions] = useState<string[]>([]);
   const [tone, setTone] = useState<RewriterTone>("as-is");
-  const proofreader = useProofreader();
-  const rewriter = useRewriter();
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { proofreader } = useProofreader({ expectedInputLanguages });
+  const { rewriter } = useRewriter({
+    tone,
+    format: "as-is",
+    length: "shorter",
+  });
 
   useEffect(() => {
     async function generateSuggestions() {
-      const proofreaderInstance = await proofreader.create({
-        expectedInputLanguages,
-      });
-
-      const rewriterInstance = await rewriter.create({
-        tone,
-        format: "as-is",
-        length: "shorter",
-        sharedContext: context?.map((b) => b.label).join(", ") || "",
-      });
-
-      if (!proofreaderInstance || !rewriterInstance) {
+      if (!proofreader || !rewriter) {
         return;
       }
 
@@ -41,21 +34,22 @@ export function useSuggestions({
       console.log("Text to proofread:", text);
 
       try {
-        const suggestions = await proofreaderInstance.proofread(text);
-        const rewritten = await rewriterInstance.rewrite(
-          suggestions.correctedInput,
-          {
-            context: "",
-          }
-        );
-        setSuggestions([suggestions.correctedInput, rewritten]);
+        const { correctedInput } = await proofreader.proofread(text);
+        const rewritten = await rewriter.rewrite(correctedInput, {
+          context: "",
+        });
+
+        console.log("Corrected Input:", correctedInput);
+        console.log("Rewritten:", rewritten);
+
+        setSuggestions([correctedInput, rewritten].filter(Boolean));
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       }
     }
 
     generateSuggestions();
-  }, [messageParts, context]);
+  }, [messageParts, context, tone, rewriter]);
 
   return {
     suggestions,
