@@ -1,5 +1,7 @@
 import { useProofreader } from "@/shared/hooks/ai/useProofreader";
 import { useRewriter, type RewriterTone } from "@/shared/hooks/ai/useRewriter";
+import { useTranslator } from "@/shared/hooks/ai/useTranslator";
+import { useWriter } from "@/shared/hooks/ai/useWriter";
 import type { BoardButton } from "@features/board/types";
 import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
@@ -16,6 +18,7 @@ export function useSuggestions({
   context,
 }: UseSuggestionsInput) {
   const [tone, setTone] = useState<RewriterTone>("as-is");
+
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const { proofreader } = useProofreader({ expectedInputLanguages });
   const { rewriter } = useRewriter({
@@ -24,25 +27,32 @@ export function useSuggestions({
     length: "shorter",
   });
 
+  const { translator } = useTranslator({
+    sourceLanguage: "en",
+    targetLanguage: "he",
+  });
+
   useEffect(() => {
     async function generateSuggestions() {
-      if (!proofreader || !rewriter) {
+      if (!proofreader || !rewriter || !translator) {
         return;
       }
 
       const text = messageParts.map((part) => part.label).join(" ");
-      console.log("Text to proofread:", text);
 
       try {
         const { correctedInput } = await proofreader.proofread(text);
         const rewritten = await rewriter.rewrite(correctedInput, {
           context: "",
         });
+        const translated = await translator.translate(correctedInput);
 
-        console.log("Corrected Input:", correctedInput);
+        console.log("Original:", text);
+        console.log("Proofread:", correctedInput);
         console.log("Rewritten:", rewritten);
+        console.log("Translated:", translated);
 
-        setSuggestions([correctedInput, rewritten].filter(Boolean));
+        setSuggestions([correctedInput, rewritten, translated].filter(Boolean));
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       }

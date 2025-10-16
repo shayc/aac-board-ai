@@ -17,13 +17,12 @@ export function useRewriter(options: RewriterOptions) {
   const [rewriter, setRewriter] = useState<any>(null); // Adjust type as needed
 
   useEffect(() => {
-    async function initialize() {
-      const instance = await create(options);
-      console.log("Rewriter tone:", options.tone);
-      setRewriter(instance);
+    async function init() {
+      const rw = await create(options);
+      setRewriter(rw);
     }
 
-    initialize();
+    init();
   }, [options]);
 
   async function create(options: RewriterOptions) {

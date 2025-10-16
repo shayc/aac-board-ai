@@ -10,15 +10,15 @@ export function useProofreader({ expectedInputLanguages }: ProofreaderOptions) {
   const [proofreader, setProofreader] = useState<any>(null); // Adjust type as needed
 
   useEffect(() => {
-    async function initialize() {
-      const instance = await create({
+    async function init() {
+      const pr = await create({
         expectedInputLanguages,
       });
 
-      setProofreader(instance);
+      setProofreader(pr);
     }
 
-    initialize();
+    init();
   }, [expectedInputLanguages]);
 
   async function create(

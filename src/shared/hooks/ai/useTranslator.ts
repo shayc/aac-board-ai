@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface TranslatorOptions {
   /** BCP-47 code for the source language, e.g., 'en', 'es-419'. */
@@ -7,9 +7,19 @@ export interface TranslatorOptions {
   targetLanguage: string;
 }
 
-export function useTranslator() {
+export function useTranslator(options: TranslatorOptions) {
   const isSupported = "Translator" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [translator, setTranslator] = useState<any>(null); // Adjust type as needed
+
+  useEffect(() => {
+    async function init() {
+      const t = await create(options);
+      setTranslator(t);
+    }
+
+    init();
+  }, [options]);
 
   async function create(options: TranslatorOptions) {
     if (!isSupported) {
@@ -40,6 +50,6 @@ export function useTranslator() {
   return {
     isSupported,
     downloadProgress,
-    create,
+    translator,
   };
 }

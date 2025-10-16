@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export type WriterTone = "formal" | "neutral" | "casual";
 export type WriterFormat = "markdown" | "plain-text";
@@ -12,9 +12,19 @@ export interface WriterOptions {
   signal?: AbortSignal;
 }
 
-export function useWriter() {
+export function useWriter(options: WriterOptions) {
   const isSupported = "Writer" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const [writer, setWriter] = useState<Writer | null>(null);
+
+  useEffect(() => {
+    async function init() {
+      const w = await create(options);
+      setWriter(w);
+    }
+
+    init();
+  }, [options]);
 
   async function create(options: WriterOptions = {}) {
     if (!isSupported) {
@@ -41,6 +51,6 @@ export function useWriter() {
   return {
     isSupported,
     downloadProgress,
-    create,
+    writer,
   };
 }
