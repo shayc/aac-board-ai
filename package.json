@@ -29,7 +29,7 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "@vitejs/plugin-react": "^5.0.4",
-    "babel-plugin-react-compiler": "^19.1.0-rc.3",
+    "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.37.0",
     "eslint-plugin-react-dom": "^2.0.6",
     "eslint-plugin-react-hooks": "^7.0.0",
