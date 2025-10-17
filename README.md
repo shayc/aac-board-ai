@@ -80,8 +80,6 @@ npm run build    # Production build
 npm run lint     # Code quality
 ```
 
-**Structure:** Feature-based architecture with AI hooks in [`src/shared/hooks/ai/`](src/shared/hooks/ai/)
-
 ## References
 
 - [Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai/built-in)
