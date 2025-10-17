@@ -4,7 +4,7 @@ _Google Chrome Built-in AI Challenge 2025_
 
 ## Overview
 
-AAC Board AI helps people with speech challenges express themselves more naturally by combining traditional symbol-based boards with Chrome’s Built-in AI. It offers context-aware suggestions, tone control, and instant corrections — all running locally on-device through Gemini Nano for private, reliable, offline communication.
+AAC Board AI helps people with speech challenges express themselves more naturally by combining traditional symbol-based boards with [Chrome’s Built-in AI](https://developer.chrome.com/docs/ai/built-in). It offers context-aware suggestions, tone control, and instant corrections — all running locally on-device through Gemini Nano for private, reliable, offline communication.
 
 ![AAC Board AI interface](screenshot.png)
 
