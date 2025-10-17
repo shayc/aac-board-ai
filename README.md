@@ -24,10 +24,10 @@ Five on-device APIs working together for expressive, private communication:
 
 ## Technical Stack
 
-**Frontend:** React 19 • TypeScript • Vite (with React Compiler)  
+**Frontend:** React 19 • TypeScript • Vite (with [React Compiler](https://react.dev/learn/react-compiler))  
 **UI:** Material UI 7  
 **AI:** Chrome Built-in AI (Gemini Nano)  
-**Data:** IndexedDB • Zod validation  
+**Data:** IndexedDB • Zod schema validation  
 **Standards:** Open Board Format (OBF/OBZ) support  
 **Voice:** Web Speech API
 
@@ -35,11 +35,11 @@ Five on-device APIs working together for expressive, private communication:
 
 ## Quick Start
 
-**Requirements:** Chrome 138+ with AI flags enabled
+**Requirements:** Chrome 138+ with Built-in AI flags enabled
 
-### 1. Enable Chrome AI
+### 1. Enable Chrome’s Built-in AI
 
-Paste each link in the address bar, enable the feature, then restart Chrome.
+Paste each link below into Chrome’s address bar, enable the feature, then restart the browser.
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
@@ -70,7 +70,7 @@ Open [http://localhost:5173](http://localhost:5173)
 
 - Grid-based boards
 - Text-to-speech output
-- OBF/OBZ import
+- Open Board Format import (OBF/OBZ files)
 
 ## Development
 
