@@ -8,7 +8,7 @@ export function useAudio() {
     const audio = new Audio(url);
     audio.onplay = () => setIsPlaying(true);
     audio.onended = () => setIsPlaying(false);
-    audio.onpause = () => setIsPaused(false);
+    audio.onpause = () => setIsPaused(true);
 
     audio.play();
   };
