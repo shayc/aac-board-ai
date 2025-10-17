@@ -62,8 +62,8 @@ export function Tile({
           right: -2,
           width: 0,
           height: 0,
-          borderRight: `24px solid ${borderColor ?? "#000"}`,
-          borderBottom: "24px solid transparent",
+          borderRight: `32px solid ${borderColor ?? "#000"}`,
+          borderBottom: "32px solid transparent",
         },
       })}
     >

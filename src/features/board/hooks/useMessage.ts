@@ -16,72 +16,42 @@ export interface MessagePart {
 }
 
 export function useMessage() {
-  const [messageParts, setMessageParts] = useState<MessagePart[]>([]);
-  const [messageStatus, setMessageStatus] = useState<'idle' | 'playing' | 'error'>('idle');
   const speech = useSpeech();
   const audio = useAudio();
 
+  const [message, setMessage] = useState<MessagePart[]>([]);
+
   function addMessage(part: MessagePart) {
-    setMessageParts((previousParts) => [...previousParts, part]);
+    setMessage((prev) => [...prev, part]);
   }
 
   function removeLastMessage() {
-    setMessageParts((previousParts) => previousParts.slice(0, -1));
+    setMessage((prev) => prev.slice(0, -1));
   }
 
-  function clearMessages() {
-    setMessageParts([]);
-  }
-
-  function convertPartsToSegments(parts: MessagePart[]): Segment[] {
-    const segments = parts
-      .map((part) => {
-        if (part.soundSrc) {
-          return { type: "sound", data: part.soundSrc };
-        }
-
-        const text = part.vocalization ?? part.label;
-        if (text) {
-          return { type: "text", data: text };
-        }
-
-        return null;
-      })
-      .filter((segment): segment is Segment => segment !== null);
-
-    const mergedSegments = mergeTextSegments(segments);
-    return mergedSegments;
-  }
-
-  function mergeTextSegments(segments: Segment[]): Segment[] {
-    const mergedSegments: Segment[] = [];
-
-    for (const currentSegment of segments) {
-      const previousSegment = mergedSegments.at(-1);
-
-      if (
-        previousSegment &&
-        previousSegment.type === "text" &&
-        currentSegment.type === "text"
-      ) {
-        previousSegment.data =
-          `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
-            /\s+/g,
-            " "
-          );
-      } else {
-        mergedSegments.push({ ...currentSegment });
+  function updateLastMessage(part: Partial<MessagePart>) {
+    setMessage((prev) => {
+      if (prev.length === 0) {
+        return prev;
       }
-    }
 
-    return mergedSegments;
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        ...updated[updated.length - 1],
+        ...part,
+      };
+
+      return updated;
+    });
+  }
+
+  function clearMessage() {
+    setMessage([]);
   }
 
   async function playMessage() {
-    setMessageStatus('playing');
-    
     try {
-      const segments = convertPartsToSegments(messageParts);
+      const segments = convertPartsToSegments(message);
 
       for (const seg of segments) {
         if (seg.type === "sound") {
@@ -92,22 +62,61 @@ export function useMessage() {
           await speech.speak(seg.data);
         }
       }
-      
-      setMessageStatus('idle');
     } catch (error) {
-      console.error('Error playing message:', error);
-      setMessageStatus('error');
-      // Reset to idle after a short delay
-      setTimeout(() => setMessageStatus('idle'), 2000);
+      console.error("Error playing message:", error);
     }
   }
 
   return {
-    message: messageParts,
-    messageStatus,
+    message,
     addMessage,
     removeLastMessage,
-    clearMessages,
+    updateLastMessage,
+    clearMessage,
     playMessage,
   };
+}
+
+function convertPartsToSegments(parts: MessagePart[]): Segment[] {
+  const segments = parts
+    .map((part) => {
+      if (part.soundSrc) {
+        return { type: "sound", data: part.soundSrc };
+      }
+
+      const text = part.vocalization ?? part.label;
+      if (text) {
+        return { type: "text", data: text };
+      }
+
+      return null;
+    })
+    .filter((segment): segment is Segment => segment !== null);
+
+  const mergedSegments = mergeTextSegments(segments);
+  return mergedSegments;
+}
+
+function mergeTextSegments(segments: Segment[]): Segment[] {
+  const mergedSegments: Segment[] = [];
+
+  for (const currentSegment of segments) {
+    const previousSegment = mergedSegments.at(-1);
+
+    if (
+      previousSegment &&
+      previousSegment.type === "text" &&
+      currentSegment.type === "text"
+    ) {
+      previousSegment.data =
+        `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
+          /\s+/g,
+          " "
+        );
+    } else {
+      mergedSegments.push({ ...currentSegment });
+    }
+  }
+
+  return mergedSegments;
 }

@@ -7,11 +7,7 @@ import type { BoardButton } from "@features/board/types";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
-  const { board, boardStatus, handleButtonClick } = useBoard();
-
-  if (boardStatus === 'loading') {
-    return null; // TODO: Add proper loading spinner
-  }
+  const { board, playBoardButton } = useBoard();
 
   if (!board) {
     return null;
@@ -35,7 +31,7 @@ export function Board() {
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
-            onClick={() => handleButtonClick(button)}
+            onClick={() => playBoardButton(button)}
           />
         )}
       />

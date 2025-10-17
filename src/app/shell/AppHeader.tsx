@@ -1,5 +1,6 @@
 import { useBoard } from "@/features/board/context/useBoard";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -16,7 +17,13 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { canGoBack, navigateBack, navigateHome } = useBoard();
+  const {
+    canGoBack,
+    canGoForward,
+    navigateBack,
+    navigateForward,
+    navigateHome,
+  } = useBoard();
 
   return (
     <AppBar position="static">
@@ -44,6 +51,20 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
               onClick={() => navigateBack()}
             >
               <ArrowBackIcon />
+            </IconButton>
+          </span>
+        </Tooltip>
+
+        <Tooltip title="Go forward" enterDelay={800}>
+          <span>
+            <IconButton
+              aria-label="Forward"
+              size="large"
+              color="inherit"
+              disabled={!canGoForward}
+              onClick={() => navigateForward()}
+            >
+              <ArrowForwardIcon />
             </IconButton>
           </span>
         </Tooltip>

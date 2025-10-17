@@ -16,7 +16,7 @@ export function BoardSetSelector() {
   const navigate = useNavigate();
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
-  const [rootBoardId, setCoverBoardId] = useState<string | null>(null);
+  const [rootBoardId, setRootBoardId] = useState<string | null>(null);
   const { board } = useBoard();
 
   useEffect(() => {
@@ -30,32 +30,36 @@ export function BoardSetSelector() {
         db.close();
       }
     }
+    
     loadBoardsets();
   }, []);
 
   useEffect(() => {
-    async function loadCoverBoard() {
+    async function loadRootBoard() {
       if (!setId) {
-        setCoverBoardId(null);
+        setRootBoardId(null);
         return;
       }
 
       const db = await openBoardsDB();
+
       try {
         const boardset = await getBoardset(db, setId);
+
         if (boardset?.rootBoardId) {
-          setCoverBoardId(boardset.rootBoardId);
+          setRootBoardId(boardset.rootBoardId);
         } else {
-          setCoverBoardId(null);
+          setRootBoardId(null);
         }
       } catch (err) {
         console.error("Error loading cover board:", err);
-        setCoverBoardId(null);
+        setRootBoardId(null);
       } finally {
         db.close();
       }
     }
-    loadCoverBoard();
+
+    loadRootBoard();
   }, [setId]);
 
   return (
@@ -84,6 +88,7 @@ export function BoardSetSelector() {
           </MenuItem>
         ))}
       </Select>
+
       {boardId !== rootBoardId && (
         <Typography sx={{ ml: 2 }}>{board?.name}</Typography>
       )}
