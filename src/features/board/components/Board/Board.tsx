@@ -26,6 +26,7 @@ export function Board() {
         items={board.buttons}
         renderItem={(button) => (
           <Tile
+            key={button.id}
             label={button.label}
             imageSrc={button.imageSrc}
             backgroundColor={button.backgroundColor}

@@ -3,20 +3,19 @@ import { useNavigate, useParams } from "react-router";
 import { getBoardset, openBoardsDB } from "../db/boards-db";
 
 export function useNavigation() {
-  const { setId } = useParams();
-  const [rootBoardId, setRootBoardId] = useState("");
   const navigate = useNavigate();
 
-  const [history, setHistory] = useState<string[]>([]);
-  const [index, setIndex] = useState(0);
+  const { setId, boardId } = useParams();
+  const [rootBoardId, setRootBoardId] = useState("");
 
-  const currentId = history[index];
+  const [history, setHistory] = useState<string[]>([boardId!]);
+  const [index, setIndex] = useState(0);
 
   const canGoBack = index > 0;
   const canGoForward = index < history.length - 1;
 
   function navigateToBoard(id: string) {
-    if (!id || id === currentId) {
+    if (!id || id === history[index]) {
       return;
     }
 
