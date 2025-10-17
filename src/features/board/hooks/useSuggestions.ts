@@ -5,6 +5,7 @@ import { useTranslator } from "@/shared/hooks/ai/useTranslator";
 import type { BoardButton } from "@features/board/types";
 import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
+import { useLanguageDetector } from "@/shared/hooks/ai/useLanguageDetector";
 
 export interface UseSuggestionsInput {
   expectedInputLanguages?: string[];
@@ -17,9 +18,12 @@ export function useSuggestions({
   messageParts,
   context,
 }: UseSuggestionsInput) {
+  const [sourceLanguage, setSourceLanguage] = useState<
+    { confidence: number; detectedLanguage: string }[]
+  >([]);
   const [tone, setTone] = useState<RewriterTone>("as-is");
-
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const { languageDetector } = useLanguageDetector();
   const { proofreader } = useProofreader({ expectedInputLanguages });
   const { rewriter } = useRewriter({
     tone,
@@ -28,7 +32,7 @@ export function useSuggestions({
   });
 
   const { translator } = useTranslator({
-    sourceLanguage: "en",
+    sourceLanguage: sourceLanguage[0]?.detectedLanguage || "en",
     targetLanguage: "he",
   });
 
@@ -43,6 +47,9 @@ export function useSuggestions({
       const text = messageParts.map((part) => part.label).join(" ");
 
       try {
+        const sourceLanguage = await languageDetector?.detect(
+          messageParts.map((part) => part.label).join(" ")
+        );
         const { correctedInput } = await proofreader.proofread(text);
         const rewritten = await rewriter.rewrite(correctedInput);
         const promptSuggestion = await session?.prompt(
@@ -52,7 +59,7 @@ export function useSuggestions({
               ", "
             )}. Output only the completed sentence without any additional text. If you cannot complete the sentence using the provided words, respond with "GIVEN_TEXT".`
         );
-
+        setSourceLanguage(sourceLanguage || "en");
         setSuggestions(
           [correctedInput, rewritten, promptSuggestion].filter(
             (s): s is string => !s.includes("GIV  EN_TEXT") && !!s
