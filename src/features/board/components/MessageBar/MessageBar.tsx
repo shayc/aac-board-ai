@@ -2,7 +2,6 @@ import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -57,7 +56,6 @@ export function MessageBar() {
             aria-label="Play"
             size="large"
             onClick={playMessage}
-            disabled={messageStatus === "playing"}
             sx={{
               width: 96,
               height: 96,
@@ -68,11 +66,7 @@ export function MessageBar() {
               },
             }}
           >
-            {messageStatus === "playing" ? (
-              <StopIcon sx={{ width: 48, height: 48 }} />
-            ) : (
-              <PlayArrowIcon sx={{ width: 48, height: 48 }} />
-            )}
+            <PlayArrowIcon sx={{ width: 48, height: 48 }} />
           </IconButton>
         </Box>
       </Tooltip>
