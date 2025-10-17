@@ -4,7 +4,12 @@ import type {
   Grid as OBFGrid,
   LoadBoard as OBFLoadBoard,
 } from "@/shared/open-board-format/schema";
-import type { Board, BoardButton, BoardGrid, LoadBoard } from "../types";
+import type {
+  Board,
+  BoardButton,
+  BoardGrid,
+  LoadBoard,
+} from "@features/board/types";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSources = buildImageMap(obfBoard);

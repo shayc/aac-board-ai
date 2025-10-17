@@ -1,28 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export interface ProofreaderOptions {
-  expectedInputLanguages?: string[];
-}
-
-export function useProofreader({ expectedInputLanguages }: ProofreaderOptions) {
+export function useProofreader() {
   const isSupported = "Proofreader" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [proofreader, setProofreader] = useState<any>(null); // Adjust type as needed
-
-  useEffect(() => {
-    async function init() {
-      const pr = await create({
-        expectedInputLanguages,
-      });
-
-      setProofreader(pr);
-    }
-
-    init();
-  }, [expectedInputLanguages]);
 
   async function create(
-    options: ProofreaderOptions = {
+    options: ProofreaderCreateOptions = {
       expectedInputLanguages: ["en"],
     }
   ) {
@@ -50,6 +33,6 @@ export function useProofreader({ expectedInputLanguages }: ProofreaderOptions) {
   return {
     isSupported,
     downloadProgress,
-    proofreader,
+    createProofreader: create,
   };
 }

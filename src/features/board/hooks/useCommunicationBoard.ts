@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
 import { useMessage } from "./useMessage";
 import { useNavigation } from "./useNavigation";
+import { useSuggestions } from "./useSuggestions";
 
 export interface UseCommunicationBoardOptions {
   setId: string;
@@ -25,6 +26,7 @@ export interface UseCommunicationBoardReturn {
   // Message
   message: MessagePart[];
   addMessage: (part: MessagePart) => void;
+  replaceMessage: (parts: MessagePart[]) => void;
   removeLastMessage: () => void;
   updateLastMessage: (part: Partial<MessagePart>) => void;
   clearMessage: () => void;
@@ -38,12 +40,18 @@ export interface UseCommunicationBoardReturn {
   navigateBack: () => void;
   navigateForward: () => void;
   navigateHome: () => void;
+
+  // Suggestions
+  suggestions: string[];
 }
 
 export function useCommunicationBoard({
   setId,
   boardId,
 }: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
+  const speech = useSpeech();
+  const audio = useAudio();
+
   const [board, setBoard] = useState<Board | null>(null);
 
   const {
@@ -59,14 +67,14 @@ export function useCommunicationBoard({
   const {
     message,
     addMessage,
+    replaceMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,
     playMessage,
   } = useMessage();
 
-  const speech = useSpeech();
-  const audio = useAudio();
+  const { suggestions, generateSuggestions } = useSuggestions();
 
   const playBoardButton = (button: BoardButton) => {
     if (button.loadBoard?.id) {
@@ -112,13 +120,19 @@ export function useCommunicationBoard({
       return;
     }
 
-    addMessage({
+    const messagePart = {
       id: button.id,
       label: button.label,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
       vocalization: button.vocalization,
-    });
+    };
+
+    addMessage(messagePart);
+
+    if (message.length > 0) {
+      generateSuggestions([...message, messagePart]);
+    }
 
     if (button.soundSrc) {
       audio.play(button.soundSrc);
@@ -199,6 +213,7 @@ export function useCommunicationBoard({
     // Message
     message,
     addMessage,
+    replaceMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,
@@ -212,5 +227,8 @@ export function useCommunicationBoard({
     navigateBack,
     navigateForward,
     navigateHome,
+
+    // Suggestions
+    suggestions,
   };
 }

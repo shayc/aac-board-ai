@@ -25,6 +25,10 @@ export function useMessage() {
     setMessage((prev) => [...prev, part]);
   }
 
+  function replaceMessage(parts: MessagePart[]) {
+    setMessage(parts);
+  }
+
   function removeLastMessage() {
     setMessage((prev) => prev.slice(0, -1));
   }
@@ -70,6 +74,7 @@ export function useMessage() {
   return {
     message,
     addMessage,
+    replaceMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,

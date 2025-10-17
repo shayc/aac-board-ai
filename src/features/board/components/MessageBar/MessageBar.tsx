@@ -1,4 +1,5 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
+import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
@@ -6,7 +7,6 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
-import { useBoard } from "../../context/useBoard";
 
 export function MessageBar() {
   const { message, clearMessage, playMessage } = useBoard();
