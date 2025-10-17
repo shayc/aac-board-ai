@@ -50,7 +50,7 @@ async function importOBZFile(
   await upsertBoardset(db, {
     setId,
     name: file.name,
-    coverBoardId: rootBoardId,
+    rootBoardId: rootBoardId,
     boardCount: boards.size,
   });
 
@@ -112,7 +112,7 @@ async function importOBFFile(
   await upsertBoardset(db, {
     setId,
     name: file.name,
-    coverBoardId: board.id,
+    rootBoardId: board.id,
     boardCount: 1,
   });
 

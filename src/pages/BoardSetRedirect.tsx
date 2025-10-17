@@ -26,12 +26,12 @@ export function BoardSetRedirect() {
             return;
           }
 
-          if (!boardset.coverBoardId) {
+          if (!boardset.rootBoardId) {
             setError(`Board set "${setId}" has no root board`);
             return;
           }
 
-          setRootBoardId(boardset.coverBoardId);
+          setRootBoardId(boardset.rootBoardId);
         } finally {
           db.close();
         }

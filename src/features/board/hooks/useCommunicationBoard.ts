@@ -4,6 +4,7 @@ import type { RewriterTone } from "@/shared/hooks/ai/useRewriter";
 import {
   getAssetUrlByPath,
   getBoardsBatch,
+  getBoardset,
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
@@ -150,8 +151,9 @@ export function useCommunicationBoard(
   const [board, setBoard] = useState<Board | null>(null);
   const [boardStatus, setBoardStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [boardError, setBoardError] = useState<string | null>(null);
+  const [rootBoardId, setRootBoardId] = useState<string>(boardId);
 
-  const navigationHook = useNavigation({ rootBoardId: boardId });
+  const navigationHook = useNavigation({ rootBoardId });
   const messageHook = useMessage();
   const speech = useSpeech();
   const audio = useAudio();
@@ -257,7 +259,7 @@ export function useCommunicationBoard(
     }
   };
 
-  // Load board from IndexedDB on mount
+  // Load board from IndexedDB on mount and fetch root board ID
   useEffect(() => {
     async function loadFromDB() {
       setBoardStatus('loading');
@@ -267,6 +269,12 @@ export function useCommunicationBoard(
         const db = await openBoardsDB();
 
         try {
+          // Fetch the board set to get the actual root board ID
+          const boardset = await getBoardset(db, setId);
+          if (boardset?.rootBoardId) {
+            setRootBoardId(boardset.rootBoardId);
+          }
+
           const [boardData] = await getBoardsBatch(db, setId, [boardId]);
 
           if (!boardData) {

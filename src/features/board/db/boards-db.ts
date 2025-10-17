@@ -6,7 +6,7 @@ export interface Boardset {
   setId: string;
   name: string;
   nameKey: string;
-  coverBoardId?: string;
+  rootBoardId?: string;
   updatedAt: number;
   boardCount: number;
 }
@@ -51,7 +51,7 @@ export interface OpenOptions {
 }
 
 /** Constants */
-export const DB_NAME = "aac-obf";
+export const DB_NAME = "aac-board-db";
 export const DB_VERSION = 1;
 
 /** Utils */
@@ -126,7 +126,7 @@ export async function upsertBoardset(
   input: {
     setId: string;
     name: string;
-    coverBoardId?: string;
+    rootBoardId?: string;
     boardCount?: number;
   }
 ): Promise<void> {
@@ -136,7 +136,7 @@ export async function upsertBoardset(
     setId: input.setId,
     name: input.name,
     nameKey: toNameKey(input.name, localeFor(db)),
-    coverBoardId: input.coverBoardId ?? prev?.coverBoardId,
+    rootBoardId: input.rootBoardId ?? prev?.rootBoardId,
     updatedAt: Date.now(),
     boardCount: input.boardCount ?? prev?.boardCount ?? 0,
   };
