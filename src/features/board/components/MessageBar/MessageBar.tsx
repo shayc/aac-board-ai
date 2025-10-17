@@ -10,7 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useBoard } from "../../context/useBoard";
 
 export function MessageBar() {
-  const { message, messageStatus, clearMessages, playMessage } = useBoard();
+  const { message, clearMessage, playMessage } = useBoard();
   const hasParts = message.length > 0;
 
   return (
@@ -42,7 +42,7 @@ export function MessageBar() {
                 aria-label="Clear"
                 size="large"
                 color="inherit"
-                onClick={clearMessages}
+                onClick={clearMessage}
               >
                 <ClearIcon />
               </IconButton>
@@ -57,7 +57,7 @@ export function MessageBar() {
             aria-label="Play"
             size="large"
             onClick={playMessage}
-            disabled={messageStatus === 'playing'}
+            disabled={messageStatus === "playing"}
             sx={{
               width: 96,
               height: 96,
@@ -68,7 +68,7 @@ export function MessageBar() {
               },
             }}
           >
-            {messageStatus === 'playing' ? (
+            {messageStatus === "playing" ? (
               <StopIcon sx={{ width: 48, height: 48 }} />
             ) : (
               <PlayArrowIcon sx={{ width: 48, height: 48 }} />
