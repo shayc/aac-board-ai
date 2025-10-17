@@ -85,7 +85,7 @@ export function BoardSetSelector() {
         ))}
       </Select>
       {boardId !== coverBoardId && (
-        <Typography sx={{ ml: 2 }}>{board.current?.name}</Typography>
+        <Typography sx={{ ml: 2 }}>{board?.name}</Typography>
       )}
     </Box>
   );
