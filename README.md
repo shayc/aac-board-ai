@@ -87,4 +87,4 @@ npm run lint     # Code quality
 
 ## License
 
-[MIT](./LICENSE) — built with ❤️ for open AAC interoperability through [Open Board Format](https://www.openboardformat.org/)
+[MIT](./LICENSE) — built with ❤️
