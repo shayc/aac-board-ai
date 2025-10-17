@@ -70,7 +70,6 @@ export function useCommunicationBoard({
 
   const playBoardButton = (button: BoardButton) => {
     if (button.loadBoard?.id) {
-      console.log("Loading board:", button.loadBoard.id);
       navigateToBoard(button.loadBoard.id);
       return;
     }
