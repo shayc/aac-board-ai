@@ -11,37 +11,36 @@ export function useNavigation(options: UseNavigationOptions) {
   const navigate = useNavigate();
 
   const [currentBoardId, setCurrentBoardId] = useState(rootBoardId);
-  const [history, setHistory] = useState<string[]>([]);
+  const [navigationHistory, setNavigationHistory] = useState<string[]>([]);
 
-  const canGoBack = history.length > 0;
+  const canGoBack = navigationHistory.length > 0;
 
-  const goToBoard = (boardId: string) => {
-    setHistory((prev) => [...prev, currentBoardId]); // store current before moving
+  const navigateToBoard = (boardId: string) => {
+    setNavigationHistory((prev) => [...prev, currentBoardId]); // store current before moving
     setCurrentBoardId(boardId);
     navigate(`/sets/${setId}/boards/${boardId}`);
   };
 
-  const goBack = () => {
+  const navigateBack = () => {
     if (!canGoBack) return;
 
-    const prevId = history[history.length - 1];
-    setHistory((prev) => prev.slice(0, -1));
+    const prevId = navigationHistory[navigationHistory.length - 1];
+    setNavigationHistory((prev) => prev.slice(0, -1));
     setCurrentBoardId(prevId);
     navigate(`/sets/${setId}/boards/${prevId}`);
   };
 
-  const goHome = () => {
-    setHistory([]);
+  const navigateHome = () => {
+    setNavigationHistory([]);
     setCurrentBoardId(rootBoardId);
     navigate(`/sets/${setId}/boards/${rootBoardId}`);
   };
 
   return {
-    currentBoardId,
-    history,
+    navigationHistory,
     canGoBack,
-    goToBoard,
-    goBack,
-    goHome,
+    navigateToBoard,
+    navigateBack,
+    navigateHome,
   };
 }

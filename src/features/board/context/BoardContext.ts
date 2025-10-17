@@ -1,7 +1,7 @@
-import type { UseCommunicationBoardResult } from "@features/board/hooks/useCommunicationBoard";
+import type { UseCommunicationBoardReturn } from "@features/board/hooks/useCommunicationBoard";
 import { createContext } from "react";
 
-export type BoardContextValue = UseCommunicationBoardResult;
+export type BoardContextValue = UseCommunicationBoardReturn;
 
 export const BoardContext = createContext<BoardContextValue | undefined>(
   undefined

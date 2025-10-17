@@ -16,7 +16,7 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { navigation } = useBoard();
+  const { canGoBack, navigateBack, navigateHome } = useBoard();
 
   return (
     <AppBar position="static">
@@ -40,8 +40,8 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
               aria-label="Back"
               size="large"
               color="inherit"
-              disabled={!navigation.canGoBack}
-              onClick={() => navigation.goBack()}
+              disabled={!canGoBack}
+              onClick={() => navigateBack()}
             >
               <ArrowBackIcon />
             </IconButton>
@@ -54,7 +54,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
               aria-label="Home"
               size="large"
               color="inherit"
-              onClick={() => navigation.goHome()}
+              onClick={() => navigateHome()}
               sx={{ mr: 2 }}
             >
               <HomeIcon />

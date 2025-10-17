@@ -21,12 +21,14 @@ export function useSuggestions({
   const [sourceLanguage, setSourceLanguage] = useState<
     { confidence: number; detectedLanguage: string }[]
   >([]);
-  const [tone, setTone] = useState<RewriterTone>("as-is");
+  const [suggestionTone, setSuggestionTone] = useState<RewriterTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestionsStatus, setSuggestionsStatus] = useState<'idle' | 'generating' | 'ready' | 'error'>('idle');
+  const [suggestionsError, setSuggestionsError] = useState<string | null>(null);
   const { languageDetector } = useLanguageDetector();
   const { proofreader } = useProofreader({ expectedInputLanguages });
   const { rewriter } = useRewriter({
-    tone,
+    tone: suggestionTone,
     format: "as-is",
     length: "shorter",
   });
@@ -41,10 +43,21 @@ export function useSuggestions({
   useEffect(() => {
     async function generateSuggestions() {
       if (!proofreader || !rewriter || !translator) {
+        setSuggestionsStatus('idle');
         return;
       }
 
       const text = messageParts.map((part) => part.label).join(" ");
+      
+      // Don't generate if no message
+      if (!text.trim()) {
+        setSuggestionsStatus('idle');
+        setSuggestions([]);
+        return;
+      }
+
+      setSuggestionsStatus('generating');
+      setSuggestionsError(null);
 
       try {
         const sourceLanguage = await languageDetector?.detect(
@@ -65,17 +78,22 @@ export function useSuggestions({
             (s): s is string => !s.includes("GIV  EN_TEXT") && !!s
           )
         );
+        setSuggestionsStatus('ready');
       } catch (error) {
         console.error("Error fetching suggestions:", error);
+        setSuggestionsError(error instanceof Error ? error.message : 'Failed to generate suggestions');
+        setSuggestionsStatus('error');
       }
     }
 
     generateSuggestions();
-  }, [messageParts, context, tone]);
+  }, [messageParts, context, suggestionTone]);
 
   return {
     suggestions,
-    tone,
-    setTone,
+    suggestionsStatus,
+    suggestionsError,
+    suggestionTone,
+    setSuggestionTone,
   };
 }

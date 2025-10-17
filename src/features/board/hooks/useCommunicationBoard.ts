@@ -1,5 +1,6 @@
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useAudio } from "@/shared/hooks/useAudio";
+import type { RewriterTone } from "@/shared/hooks/ai/useRewriter";
 import {
   getAssetUrlByPath,
   getBoardsBatch,
@@ -8,53 +9,163 @@ import {
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board, BoardButton } from "@features/board/types";
 import { useEffect, useState } from "react";
+import type { MessagePart } from "./useMessage";
 import { useMessage } from "./useMessage";
 import { useNavigation } from "./useNavigation";
 import { useSuggestions } from "./useSuggestions";
 
+/**
+ * Options for configuring the communication board hook.
+ */
 export interface UseCommunicationBoardOptions {
-  setId?: string;
-  boardId?: string;
+  /** The board set identifier */
+  setId: string;
+  /** The initial board identifier to load */
+  boardId: string;
 }
 
-export interface UseCommunicationBoardResult {
-  message: ReturnType<typeof useMessage>;
-  suggestions: ReturnType<typeof useSuggestions>;
-  navigation: ReturnType<typeof useNavigation>;
-  board: {
-    current: Board | null;
-    isLoading: boolean;
-    error: Error | null;
-    load: (boardId: string) => Promise<void>;
-    onButtonClick: (button: BoardButton) => Promise<void>;
-  };
+/**
+ * Return value of the useCommunicationBoard hook.
+ * Provides a flat, modern API for managing communication board state and interactions.
+ */
+export interface UseCommunicationBoardReturn {
+  // Board
+  board: Board | null;
+  boardStatus: 'idle' | 'loading' | 'success' | 'error';
+  boardError: string | null;
+  loadBoard: (boardId: string) => Promise<void>;
+  
+  // Message
+  message: MessagePart[];
+  messageStatus: 'idle' | 'playing' | 'error';
+  addMessage: (part: MessagePart) => void;
+  removeLastMessage: () => void;
+  clearMessages: () => void;
+  playMessage: () => Promise<void>;
+  
+  // Navigation
+  navigationHistory: string[];
+  canGoBack: boolean;
+  navigateToBoard: (id: string) => void;
+  navigateBack: () => void;
+  navigateHome: () => void;
+  
+  // Suggestions
+  suggestions: string[];
+  suggestionsStatus: 'idle' | 'generating' | 'ready' | 'error';
+  suggestionsError: string | null;
+  suggestionTone: RewriterTone;
+  setSuggestionTone: (tone: RewriterTone) => void;
+  
+  // Interaction
+  handleButtonClick: (button: BoardButton) => void;
 }
 
+/**
+ * Hook for managing communication board state and interactions.
+ *
+ * Provides a flat, modern API following React best practices (2024) for:
+ * - Loading and displaying boards from IndexedDB
+ * - Building messages from board button selections
+ * - Generating AI-powered suggestions with configurable tone
+ * - Navigation between boards with history tracking
+ * - Playing messages with speech synthesis and audio
+ *
+ * @example
+ * Basic usage with flat destructuring:
+ * ```tsx
+ * function CommunicationBoard() {
+ *   const {
+ *     board,
+ *     boardStatus,
+ *     message,
+ *     addMessage,
+ *     handleButtonClick
+ *   } = useCommunicationBoard({ setId: 'my-set', boardId: 'main' });
+ *
+ *   if (boardStatus === 'loading') return <Spinner />;
+ *   if (!board) return null;
+ *
+ *   return (
+ *     <Grid items={board.buttons} onClick={handleButtonClick} />
+ *   );
+ * }
+ * ```
+ *
+ * @example
+ * Using message features:
+ * ```tsx
+ * const { message, messageStatus, clearMessages, playMessage } = useCommunicationBoard(options);
+ *
+ * return (
+ *   <div>
+ *     {message.map(part => <Chip label={part.label} />)}
+ *     <Button onClick={clearMessages}>Clear</Button>
+ *     <Button onClick={playMessage} disabled={messageStatus === 'playing'}>
+ *       Play
+ *     </Button>
+ *   </div>
+ * );
+ * ```
+ *
+ * @example
+ * Working with suggestions:
+ * ```tsx
+ * const {
+ *   suggestions,
+ *   suggestionsStatus,
+ *   suggestionTone,
+ *   setSuggestionTone
+ * } = useCommunicationBoard(options);
+ *
+ * return (
+ *   <div>
+ *     <ToneSelector value={suggestionTone} onChange={setSuggestionTone} />
+ *     {suggestionsStatus === 'generating' && <Spinner />}
+ *     {suggestions.map(s => <Chip label={s} />)}
+ *   </div>
+ * );
+ * ```
+ *
+ * @param options - Configuration options
+ * @param options.setId - Board set identifier (required)
+ * @param options.boardId - Initial board identifier to load (required)
+ * @returns Flat object with all board state and actions
+ *
+ * @remarks
+ * This hook follows modern React patterns:
+ * - Minimal state (no derived data)
+ * - Consistent naming (action verbs, status suffixes)
+ * - Flat structure (easy destructuring)
+ * - Predictable async patterns (*Status, *Error)
+ * - Co-located state with actions
+ *
+ * The board loads automatically on mount and can be manually reloaded using `loadBoard()`.
+ */
 export function useCommunicationBoard(
-  options: UseCommunicationBoardOptions = {}
-): UseCommunicationBoardResult {
+  options: UseCommunicationBoardOptions
+): UseCommunicationBoardReturn {
   const { setId, boardId } = options;
-  const initialBoardId = boardId || "lots_of_stuff";
 
   const [board, setBoard] = useState<Board | null>(null);
-  const [isLoading, setIsLoading] = useState(!!setId);
-  const [error, setError] = useState<Error | null>(null);
+  const [boardStatus, setBoardStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [boardError, setBoardError] = useState<string | null>(null);
 
-  const navigation = useNavigation({ rootBoardId: initialBoardId });
-  const message = useMessage();
+  const navigationHook = useNavigation({ rootBoardId: boardId });
+  const messageHook = useMessage();
   const speech = useSpeech();
   const audio = useAudio();
 
-  const suggestions = useSuggestions({
+  const suggestionsHook = useSuggestions({
     expectedInputLanguages: ["en"],
-    messageParts: message.parts,
+    messageParts: messageHook.message,
     context: board?.buttons,
   });
 
-  const onButtonClick = async (button: BoardButton) => {
+  const handleButtonClick = (button: BoardButton) => {
     if (button.loadBoard && setId) {
       if (button.loadBoard.id) {
-        navigation.goToBoard(button.loadBoard.id);
+        navigationHook.navigateToBoard(button.loadBoard.id);
         return;
       }
     }
@@ -65,7 +176,7 @@ export function useCommunicationBoard(
       return;
     }
 
-    message.appendPart({
+    messageHook.addMessage({
       id: button.id,
       label: button.label,
       imageSrc: button.imageSrc,
@@ -86,13 +197,8 @@ export function useCommunicationBoard(
   };
 
   const loadBoard = async (newBoardId: string) => {
-    if (!setId) {
-      console.error("Cannot load board: setId is not defined");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
+    setBoardStatus('loading');
+    setBoardError(null);
 
     try {
       const db = await openBoardsDB();
@@ -140,92 +246,117 @@ export function useCommunicationBoard(
 
         const newBoard = obfToBoard(obfBoard);
         setBoard(newBoard);
+        setBoardStatus('success');
       } finally {
         db.close();
       }
     } catch (err) {
       console.error("Error loading board:", err);
-      setError(err instanceof Error ? err : new Error("Failed to load board"));
-    } finally {
-      setIsLoading(false);
+      setBoardError(err instanceof Error ? err.message : "Failed to load board");
+      setBoardStatus('error');
     }
   };
 
-  // Load board from IndexedDB
+  // Load board from IndexedDB on mount
   useEffect(() => {
     async function loadFromDB() {
-      const db = await openBoardsDB();
+      setBoardStatus('loading');
+      setBoardError(null);
 
       try {
-        const [boardData] = await getBoardsBatch(db, setId!, [boardId!]);
+        const db = await openBoardsDB();
 
-        if (!boardData) {
-          throw new Error(`Board not found: ${boardId}`);
-        }
+        try {
+          const [boardData] = await getBoardsBatch(db, setId, [boardId]);
 
-        const obfBoard = boardData.json;
+          if (!boardData) {
+            throw new Error(`Board not found: ${boardId}`);
+          }
 
-        if (obfBoard.images) {
-          for (const img of obfBoard.images) {
-            if (img.path) {
-              try {
-                const url = await getAssetUrlByPath(db, setId!, img.path);
-                if (url) {
-                  img.data = url;
+          const obfBoard = boardData.json;
+
+          if (obfBoard.images) {
+            for (const img of obfBoard.images) {
+              if (img.path) {
+                try {
+                  const url = await getAssetUrlByPath(db, setId, img.path);
+                  if (url) {
+                    img.data = url;
+                  }
+                } catch (err) {
+                  console.warn(
+                    `Failed to load image ${img.id} from path ${img.path}:`,
+                    err
+                  );
                 }
-              } catch (err) {
-                console.warn(
-                  `Failed to load image ${img.id} from path ${img.path}:`,
-                  err
-                );
               }
             }
           }
-        }
 
-        if (obfBoard.sounds) {
-          for (const sound of obfBoard.sounds) {
-            if (sound.path) {
-              try {
-                const url = await getAssetUrlByPath(db, setId!, sound.path);
-                if (url) sound.data = url;
-              } catch (err) {
-                console.warn(
-                  `Failed to load sound ${sound.id} from path ${sound.path}:`,
-                  err
-                );
-                // Skip this sound if path is invalid
+          if (obfBoard.sounds) {
+            for (const sound of obfBoard.sounds) {
+              if (sound.path) {
+                try {
+                  const url = await getAssetUrlByPath(db, setId, sound.path);
+                  if (url) sound.data = url;
+                } catch (err) {
+                  console.warn(
+                    `Failed to load sound ${sound.id} from path ${sound.path}:`,
+                    err
+                  );
+                }
               }
             }
           }
-        }
 
-        const board = obfToBoard(obfBoard);
-        setBoard(board);
+          const board = obfToBoard(obfBoard);
+          setBoard(board);
+          setBoardStatus('success');
+        } finally {
+          db.close();
+        }
       } catch (err) {
         console.error("Error loading board:", err);
-        setError(
-          err instanceof Error ? err : new Error("Failed to load board")
+        setBoardError(
+          err instanceof Error ? err.message : "Failed to load board"
         );
-      } finally {
-        setIsLoading(false);
-        db.close();
+        setBoardStatus('error');
       }
     }
 
     loadFromDB();
-  }, [setId, boardId, initialBoardId]);
+  }, [setId, boardId]);
 
   return {
-    message,
-    suggestions,
-    navigation,
-    board: {
-      current: board,
-      isLoading,
-      error,
-      onButtonClick,
-      load: loadBoard,
-    },
+    // Board
+    board,
+    boardStatus,
+    boardError,
+    loadBoard,
+    
+    // Message
+    message: messageHook.message,
+    messageStatus: messageHook.messageStatus,
+    addMessage: messageHook.addMessage,
+    removeLastMessage: messageHook.removeLastMessage,
+    clearMessages: messageHook.clearMessages,
+    playMessage: messageHook.playMessage,
+    
+    // Navigation
+    navigationHistory: navigationHook.navigationHistory,
+    canGoBack: navigationHook.canGoBack,
+    navigateToBoard: navigationHook.navigateToBoard,
+    navigateBack: navigationHook.navigateBack,
+    navigateHome: navigationHook.navigateHome,
+    
+    // Suggestions
+    suggestions: suggestionsHook.suggestions,
+    suggestionsStatus: suggestionsHook.suggestionsStatus,
+    suggestionsError: suggestionsHook.suggestionsError,
+    suggestionTone: suggestionsHook.suggestionTone,
+    setSuggestionTone: suggestionsHook.setSuggestionTone,
+    
+    // Interaction
+    handleButtonClick,
   };
 }

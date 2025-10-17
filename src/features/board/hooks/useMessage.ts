@@ -17,20 +17,19 @@ export interface MessagePart {
 
 export function useMessage() {
   const [messageParts, setMessageParts] = useState<MessagePart[]>([]);
+  const [messageStatus, setMessageStatus] = useState<'idle' | 'playing' | 'error'>('idle');
   const speech = useSpeech();
   const audio = useAudio();
 
-  const isPlaying = speech.isSpeaking || audio.isPlaying;
-
-  function appendPart(part: MessagePart) {
+  function addMessage(part: MessagePart) {
     setMessageParts((previousParts) => [...previousParts, part]);
   }
 
-  function popPart() {
+  function removeLastMessage() {
     setMessageParts((previousParts) => previousParts.slice(0, -1));
   }
 
-  function clear() {
+  function clearMessages() {
     setMessageParts([]);
   }
 
@@ -78,26 +77,37 @@ export function useMessage() {
     return mergedSegments;
   }
 
-  async function play() {
-    const segments = convertPartsToSegments(messageParts);
+  async function playMessage() {
+    setMessageStatus('playing');
+    
+    try {
+      const segments = convertPartsToSegments(messageParts);
 
-    for (const seg of segments) {
-      if (seg.type === "sound") {
-        await audio.play(seg.data);
-      }
+      for (const seg of segments) {
+        if (seg.type === "sound") {
+          await audio.play(seg.data);
+        }
 
-      if (seg.type === "text") {
-        await speech.speak(seg.data);
+        if (seg.type === "text") {
+          await speech.speak(seg.data);
+        }
       }
+      
+      setMessageStatus('idle');
+    } catch (error) {
+      console.error('Error playing message:', error);
+      setMessageStatus('error');
+      // Reset to idle after a short delay
+      setTimeout(() => setMessageStatus('idle'), 2000);
     }
   }
 
   return {
-    parts: messageParts,
-    appendPart,
-    popPart,
-    clear,
-    play,
-    isPlaying,
+    message: messageParts,
+    messageStatus,
+    addMessage,
+    removeLastMessage,
+    clearMessages,
+    playMessage,
   };
 }

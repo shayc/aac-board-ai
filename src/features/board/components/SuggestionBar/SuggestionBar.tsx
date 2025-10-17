@@ -4,25 +4,25 @@ import Chip from "@mui/material/Chip";
 import { ToneSelector } from "./ToneSelector/ToneSelector";
 
 export function SuggestionBar() {
-  const { suggestions, message } = useBoard();
+  const { suggestions, suggestionTone, setSuggestionTone, addMessage } = useBoard();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", px: 2, gap: 2 }}>
       <Box sx={{ display: "flex", gap: 2, marginInlineEnd: "auto" }}>
-        {suggestions.suggestions?.map((suggestion, index) => (
+        {suggestions?.map((suggestion: string, index: number) => (
           <Chip
             key={index}
             label={suggestion}
             onClick={() =>
-              message.appendPart({ id: suggestion, label: suggestion })
+              addMessage({ id: suggestion, label: suggestion })
             }
           />
         ))}
       </Box>
 
       <ToneSelector
-        tone={suggestions.tone}
-        onChange={(tone) => suggestions.setTone(tone)}
+        tone={suggestionTone}
+        onChange={setSuggestionTone}
       />
     </Box>
   );

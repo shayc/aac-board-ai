@@ -1,4 +1,5 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
+import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
@@ -9,8 +10,8 @@ import Tooltip from "@mui/material/Tooltip";
 import { useBoard } from "../../context/useBoard";
 
 export function MessageBar() {
-  const { message } = useBoard();
-  const hasParts = message.parts.length > 0;
+  const { message, messageStatus, clearMessages, playMessage } = useBoard();
+  const hasParts = message.length > 0;
 
   return (
     <Stack direction="row" padding={2} gap={2}>
@@ -29,7 +30,7 @@ export function MessageBar() {
         }}
       >
         <Stack direction="row" gap={2} flexGrow={1}>
-          {message.parts.map((p, index) => (
+          {message.map((p: MessagePart, index: number) => (
             <Pictogram key={index} label={p.label} src={p.imageSrc} />
           ))}
         </Stack>
@@ -41,7 +42,7 @@ export function MessageBar() {
                 aria-label="Clear"
                 size="large"
                 color="inherit"
-                onClick={() => message.clear()}
+                onClick={clearMessages}
               >
                 <ClearIcon />
               </IconButton>
@@ -55,7 +56,8 @@ export function MessageBar() {
           <IconButton
             aria-label="Play"
             size="large"
-            onClick={() => message.play()}
+            onClick={playMessage}
+            disabled={messageStatus === 'playing'}
             sx={{
               width: 96,
               height: 96,
@@ -66,7 +68,7 @@ export function MessageBar() {
               },
             }}
           >
-            {message.isPlaying ? (
+            {messageStatus === 'playing' ? (
               <StopIcon sx={{ width: 48, height: 48 }} />
             ) : (
               <PlayArrowIcon sx={{ width: 48, height: 48 }} />

@@ -7,9 +7,13 @@ import type { BoardButton } from "@features/board/types";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
-  const { board } = useBoard();
+  const { board, boardStatus, handleButtonClick } = useBoard();
 
-  if (!board.current) {
+  if (boardStatus === 'loading') {
+    return null; // TODO: Add proper loading spinner
+  }
+
+  if (!board) {
     return null;
   }
 
@@ -20,10 +24,10 @@ export function Board() {
       <SuggestionBar />
 
       <Grid<BoardButton>
-        rows={board.current.grid.rows}
-        columns={board.current.grid.columns}
-        order={board.current.grid.order}
-        items={board.current.buttons}
+        rows={board.grid.rows}
+        columns={board.grid.columns}
+        order={board.grid.order}
+        items={board.buttons}
         renderItem={(button) => (
           <Tile
             label={button.label}
@@ -31,7 +35,7 @@ export function Board() {
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
-            onClick={() => board.onButtonClick(button)}
+            onClick={() => handleButtonClick(button)}
           />
         )}
       />
