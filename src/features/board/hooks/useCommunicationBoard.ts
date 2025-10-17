@@ -99,6 +99,15 @@ export function useCommunicationBoard({
         if (action === ":backspace") {
           removeLastMessage();
         }
+
+        if (action.startsWith("+")) {
+          const text = action.slice(1).trim();
+
+          updateLastMessage({
+            id: text,
+            label: `${message[message.length - 1].label}${text}`,
+          });
+        }
       }
 
       return;
