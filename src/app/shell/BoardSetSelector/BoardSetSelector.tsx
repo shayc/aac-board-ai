@@ -1,5 +1,5 @@
 import { useBoard } from "@features/board/context/useBoard";
-import type { Boardset } from "@features/board/db/boards-db";
+import type { BoardsetRecord } from "@features/board/db/boards-db";
 import {
   getBoardset,
   listBoardsets,
@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router";
 export function BoardSetSelector() {
   const navigate = useNavigate();
   const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
-  const [boardsets, setBoardsets] = useState<Boardset[]>([]);
+  const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
   const [rootBoardId, setCoverBoardId] = useState<string | null>(null);
   const { board } = useBoard();
 

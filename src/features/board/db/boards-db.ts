@@ -2,7 +2,7 @@ import type { Board as OBFBoard } from "@/shared/open-board-format/schema";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 
-export interface Boardset {
+export interface BoardsetRecord {
   setId: string;
   name: string;
   nameKey: string;
@@ -10,14 +10,14 @@ export interface Boardset {
   updatedAt: number;
   boardCount: number;
 }
-export interface Board {
+export interface BoardRecord {
   setId: string;
   boardId: string;
   name: string;
   nameKey: string;
   json: OBFBoard;
 }
-export interface Asset {
+export interface AssetRecord {
   setId: string;
   path: string; // normalized POSIX path
   mediaId?: string; // optional cross-ref
@@ -30,17 +30,17 @@ export interface Asset {
 export interface Schema extends DBSchema {
   boardsets: {
     key: string;
-    value: Boardset;
+    value: BoardsetRecord;
     indexes: { byNameKey: string; byUpdatedAt: number };
   };
   boards: {
     key: [string, string];
-    value: Board;
+    value: BoardRecord;
     indexes: { bySetId: string; bySetIdNameKey: [string, string] };
   };
   assets: {
     key: [string, string];
-    value: Asset;
+    value: AssetRecord;
     indexes: { bySetId: string; bySetIdMediaId: [string, string] };
   };
 }
@@ -132,7 +132,7 @@ export async function upsertBoardset(
 ): Promise<void> {
   validateId(input.setId, "setId");
   const prev = await db.get("boardsets", input.setId);
-  const row: Boardset = {
+  const row: BoardsetRecord = {
     setId: input.setId,
     name: input.name,
     nameKey: toNameKey(input.name, localeFor(db)),
@@ -144,10 +144,10 @@ export async function upsertBoardset(
 }
 export async function listBoardsets(
   db: IDBPDatabase<Schema>
-): Promise<Boardset[]> {
+): Promise<BoardsetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
-  const out: Boardset[] = [];
+  const out: BoardsetRecord[] = [];
   let cur = await idx.openCursor(undefined, "prev");
   while (cur) {
     out.push(cur.value);
@@ -160,7 +160,7 @@ export async function listBoardsets(
 export async function getBoardset(
   db: IDBPDatabase<Schema>,
   setId: string
-): Promise<Boardset | null> {
+): Promise<BoardsetRecord | null> {
   validateId(setId, "setId");
   return (await db.get("boardsets", setId)) ?? null;
 }
@@ -185,7 +185,7 @@ export async function bulkPutBoards(
         name: it.name,
         nameKey: toNameKey(it.name, localeFor(db)),
         json: it.json,
-      } as Board);
+      } as BoardRecord);
       if (!existed) delta++;
     }
 
@@ -209,7 +209,7 @@ export async function bulkPutBoards(
 export async function listBoards(
   db: IDBPDatabase<Schema>,
   setId: string
-): Promise<Board[]> {
+): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   const rows = await db.getAllFromIndex("boards", "bySetId", setId);
   rows.sort((a, b) => nameCollator.compare(a.name, b.name));
@@ -221,7 +221,7 @@ export async function searchBoards(
   setId: string,
   query: string,
   limit = 50
-): Promise<Board[]> {
+): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   const key = toNameKey(query, localeFor(db));
   const range = IDBKeyRange.bound([setId, key], [setId, key + "\uffff"]);
@@ -232,14 +232,14 @@ export async function getBoardsBatch(
   db: IDBPDatabase<Schema>,
   setId: string,
   boardIds: string[]
-): Promise<Board[]> {
+): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   if (boardIds.length === 0) return [];
 
   const rows = await Promise.all(
     boardIds.map((id) => db.get("boards", [setId, id]))
   );
-  return rows.filter((r): r is Board => r !== undefined);
+  return rows.filter((r): r is BoardRecord => r !== undefined);
 }
 
 /** Assets */
@@ -267,7 +267,7 @@ export async function bulkPutAssets(
         blob: it.blob,
         mime: it.mime,
         size: it.size ?? it.blob.size,
-      } as Asset);
+      } as AssetRecord);
     }
     const bs = await tx.objectStore("boardsets").get(setId);
     if (bs)
