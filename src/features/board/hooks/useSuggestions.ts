@@ -44,21 +44,18 @@ export function useSuggestions({
 
       try {
         const { correctedInput } = await proofreader.proofread(text);
-        const rewritten = await rewriter.rewrite(correctedInput, {
-          context: "",
-        });
-        const translated = await translator.translate(correctedInput);
-
-        // let promptSuggestion = "";
-        // if (session && context && context.length > 0) {
-        //   const contextWords = context.map((button) => button.label).join(", ");
-        //   const instruction = `complete the following text ${text} with only one word from the following words: ${contextWords}`;
-        //   promptSuggestion = await session.prompt(instruction);
-        // }
+        const rewritten = await rewriter.rewrite(correctedInput);
+        const promptSuggestion = await session?.prompt(
+          `Complete this sentence: "${correctedInput}", you may only use up to five words from the following list: ${context
+            ?.map((c) => `"${c.label}"`)
+            .join(
+              ", "
+            )}. Output only the completed sentence without any additional text. If you cannot complete the sentence using the provided words, respond with "GIVEN_TEXT".`
+        );
 
         setSuggestions(
-          [correctedInput, rewritten, translated].filter(
-            Boolean
+          [correctedInput, rewritten, promptSuggestion].filter(
+            (s): s is string => !s.includes("GIV  EN_TEXT") && !!s
           )
         );
       } catch (error) {
@@ -67,7 +64,7 @@ export function useSuggestions({
     }
 
     generateSuggestions();
-  }, [messageParts, context, tone, rewriter, session]);
+  }, [messageParts, context, tone]);
 
   return {
     suggestions,
