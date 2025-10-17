@@ -89,4 +89,4 @@ npm run lint     # Code quality
 
 ## License
 
-MIT ❤️ Implements [Open Board Format](https://www.openboardformat.org/) for AAC interoperability
+[MIT](./LICENSE) — built with ❤️ for open AAC interoperability through [Open Board Format](https://www.openboardformat.org/)
