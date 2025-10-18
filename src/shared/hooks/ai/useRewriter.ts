@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export type RewriterTone = "as-is" | "more-formal" | "more-casual";
 export type RewriterFormat = "as-is" | "markdown" | "plain-text";
@@ -11,21 +11,17 @@ export interface RewriterOptions {
   sharedContext?: string;
 }
 
-export function useRewriter(options: RewriterOptions) {
+export function useRewriter() {
   const isSupported = "Rewriter" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [rewriter, setRewriter] = useState<any>(null); // Adjust type as needed
 
-  useEffect(() => {
-    async function init() {
-      const rw = await create(options);
-      setRewriter(rw);
+  async function createRewriter(
+    options: RewriterOptions = {
+      length: "shorter",
+      tone: "as-is",
+      format: "as-is",
     }
-
-    init();
-  }, [options]);
-
-  async function create(options: RewriterOptions) {
+  ) {
     if (!isSupported) {
       return null;
     }
@@ -50,6 +46,6 @@ export function useRewriter(options: RewriterOptions) {
   return {
     isSupported,
     downloadProgress,
-    rewriter,
+    createRewriter,
   };
 }

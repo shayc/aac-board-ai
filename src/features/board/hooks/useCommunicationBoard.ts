@@ -43,6 +43,12 @@ export interface UseCommunicationBoardReturn {
 
   // Suggestions
   suggestions: string[];
+  suggestionTone: RewriterTone;
+  generateSuggestions: (
+    message: MessagePart[],
+    tone: RewriterTone
+  ) => Promise<void>;
+  setSuggestionTone: (tone: RewriterTone) => void;
 }
 
 export function useCommunicationBoard({
@@ -74,7 +80,12 @@ export function useCommunicationBoard({
     playMessage,
   } = useMessage();
 
-  const { suggestions, generateSuggestions } = useSuggestions();
+  const {
+    suggestions,
+    suggestionTone,
+    generateSuggestions,
+    setSuggestionTone,
+  } = useSuggestions();
 
   const playBoardButton = (button: BoardButton) => {
     if (button.loadBoard?.id) {
@@ -129,10 +140,6 @@ export function useCommunicationBoard({
     };
 
     addMessage(messagePart);
-
-    if (message.length > 0) {
-      generateSuggestions([...message, messagePart]);
-    }
 
     if (button.soundSrc) {
       audio.play(button.soundSrc);
@@ -205,6 +212,10 @@ export function useCommunicationBoard({
     loadBoard(boardId);
   }, [boardId]);
 
+  useEffect(() => {
+    generateSuggestions(message, suggestionTone);
+  }, [message, suggestionTone]);
+
   return {
     // Board
     board,
@@ -230,5 +241,8 @@ export function useCommunicationBoard({
 
     // Suggestions
     suggestions,
+    suggestionTone,
+    generateSuggestions,
+    setSuggestionTone,
   };
 }

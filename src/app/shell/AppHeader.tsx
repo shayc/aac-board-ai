@@ -83,11 +83,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </span>
         </Tooltip>
 
-        <Box sx={{ flexGrow: 1, display: "flex", alignItems: "center" }}>
-          <BoardSetSelector />
-        </Box>
+        <BoardSetSelector />
 
-        <Tooltip title="Open settings" enterDelay={800}>
+        <Tooltip title="Open settings" enterDelay={800} sx={{ ml: "auto" }}>
           <IconButton
             aria-label="Settings"
             size="large"

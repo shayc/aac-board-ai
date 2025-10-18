@@ -28,9 +28,11 @@ export function MessageBar() {
               : theme.palette.grey[200],
         }}
       >
-        <Stack direction="row" gap={2} flexGrow={1}>
+        <Stack direction="row" gap={2} flexGrow={1} overflow="auto">
           {message.map((p: MessagePart, index: number) => (
-            <Pictogram key={index} label={p.label} src={p.imageSrc} />
+            <Stack key={index} direction="row">
+              <Pictogram label={p.label} src={p.imageSrc} />
+            </Stack>
           ))}
         </Stack>
 

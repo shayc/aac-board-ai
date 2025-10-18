@@ -30,7 +30,7 @@ export function BoardSetSelector() {
         db.close();
       }
     }
-    
+
     loadBoardsets();
   }, []);
 
@@ -63,7 +63,7 @@ export function BoardSetSelector() {
   }, [setId]);
 
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
+    <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>
       <Select
         sx={{ color: "inherit" }}
         size="small"
@@ -90,7 +90,9 @@ export function BoardSetSelector() {
       </Select>
 
       {boardId !== rootBoardId && (
-        <Typography sx={{ ml: 2 }}>{board?.name}</Typography>
+        <Typography noWrap sx={{ ml: 2 }}>
+          {board?.name}
+        </Typography>
       )}
     </Box>
   );

@@ -1,15 +1,27 @@
 import { useProofreader } from "@/shared/hooks/ai/useProofreader";
+import { useRewriter } from "@/shared/hooks/ai/useRewriter";
 import { useState } from "react";
 import type { MessagePart } from "./useMessage";
 
 export function useSuggestions() {
+  const [tone, setTone] = useState<RewriterTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [tone, setTone] = useState<string>("");
 
   const { createProofreader } = useProofreader();
+  const { createRewriter } = useRewriter();
 
-  async function generateSuggestions(message: MessagePart[]) {
+  async function generateSuggestions(message: MessagePart[], tone: RewriterTone) {
+    console.time("create proofreader");
     const proofreader = await createProofreader();
+    console.timeEnd("create proofreader");
+
+    console.time("create rewriter");
+    const rewriter = await createRewriter({
+      tone,
+      length: "shorter",
+      format: "plain-text",
+    });
+    console.timeEnd("create rewriter");
 
     if (!proofreader) {
       return;
@@ -17,8 +29,11 @@ export function useSuggestions() {
 
     const text = message.map((part) => part.label).join(" ");
     const { correctedInput } = await proofreader.proofread(text);
+    const rewritten = await rewriter!.rewrite(correctedInput);
 
-    setSuggestions([correctedInput].filter((s) => !s.includes("GIVEN_TEXT")));
+    setSuggestions(
+      [correctedInput, rewritten].filter((s) => !s.includes("GIVEN_TEXT"))
+    );
   }
 
   return {
