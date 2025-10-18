@@ -10,7 +10,10 @@ export function useSuggestions() {
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
 
-  async function generateSuggestions(message: MessagePart[], tone: RewriterTone) {
+  async function generateSuggestions(
+    message: MessagePart[],
+    tone: RewriterTone
+  ) {
     console.time("create proofreader");
     const proofreader = await createProofreader();
     console.timeEnd("create proofreader");
@@ -23,17 +26,14 @@ export function useSuggestions() {
     });
     console.timeEnd("create rewriter");
 
-    if (!proofreader) {
-      return;
-    }
-
     const text = message.map((part) => part.label).join(" ");
-    const { correctedInput } = await proofreader.proofread(text);
-    const rewritten = await rewriter!.rewrite(correctedInput);
-
-    setSuggestions(
-      [correctedInput, rewritten].filter((s) => !s.includes("GIVEN_TEXT"))
+    const { correctedInput } = await proofreader!.proofread(text);
+    const rewritten = await rewriter!.rewrite(text);
+    const suggestions = [correctedInput, rewritten].filter(
+      (s) => s && !s.includes("GIVEN_TEXT")
     );
+
+    setSuggestions(suggestions);
   }
 
   return {
