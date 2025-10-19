@@ -3,13 +3,9 @@ import type {
   OBFButton,
   OBFGrid,
   OBFLoadBoard,
+  OBFSound
 } from "@/shared/open-board-format/schema";
-import type {
-  Board,
-  BoardButton,
-  BoardGrid,
-  LoadBoard,
-} from "@features/board/types";
+import type { Board, Button, Grid, LoadBoard } from "@features/board/types";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSources = buildImageMap(obfBoard);
@@ -25,13 +21,20 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   };
 }
 
+function pickMediaSource(sound: OBFSound): string | undefined {
+  if (sound.data) return sound.data;
+  if (sound.path) return sound.path;
+  if (sound.url) return sound.url;
+  return undefined;
+}
+
 function buildImageMap(obfBoard: OBFBoard): Map<string, string> {
   const imageMap = new Map<string, string>();
 
   if (!obfBoard.images) return imageMap;
 
   for (const image of obfBoard.images) {
-    const source = image.data || image.url;
+    const source = pickMediaSource(image);
     if (source) {
       imageMap.set(image.id, source);
     }
@@ -46,7 +49,7 @@ function buildSoundMap(obfBoard: OBFBoard): Map<string, string> {
   if (!obfBoard.sounds) return soundMap;
 
   for (const sound of obfBoard.sounds) {
-    const source = sound.data || sound.url;
+    const source = pickMediaSource(sound);
     if (source) {
       soundMap.set(sound.id, source);
     }
@@ -59,7 +62,7 @@ function transformButton(
   obfButton: OBFButton,
   imageSources: Map<string, string>,
   soundSources: Map<string, string>
-): BoardButton {
+): Button {
   return {
     id: obfButton.id,
     label: obfButton.label,
@@ -91,7 +94,7 @@ function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
   };
 }
 
-function transformGrid(obfGrid: OBFGrid): BoardGrid {
+function transformGrid(obfGrid: OBFGrid): Grid {
   return {
     rows: obfGrid.rows,
     columns: obfGrid.columns,

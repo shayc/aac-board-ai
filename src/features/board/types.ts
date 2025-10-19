@@ -1,4 +1,4 @@
-export interface BoardGrid {
+export interface Grid {
   rows: number;
   columns: number;
   order?: (string | null)[][];
@@ -12,7 +12,7 @@ export interface LoadBoard {
   path?: string;
 }
 
-export interface BoardButton {
+export interface Button {
   id: string;
   label?: string;
   vocalization?: string;
@@ -27,6 +27,6 @@ export interface BoardButton {
 export interface Board {
   id: string;
   name?: string;
-  buttons: BoardButton[];
-  grid: BoardGrid;
+  buttons: Button[];
+  grid: Grid;
 }

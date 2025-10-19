@@ -6,7 +6,7 @@ import {
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Board, BoardButton } from "@features/board/types";
+import type { Board, Button } from "@features/board/types";
 import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
 import { useMessage } from "./useMessage";
@@ -21,7 +21,7 @@ export interface UseCommunicationBoardOptions {
 export interface UseCommunicationBoardReturn {
   // Board
   board: Board | null;
-  playBoardButton: (button: BoardButton) => void;
+  activateButton: (button: Button) => void;
 
   // Message
   message: MessagePart[];
@@ -83,7 +83,7 @@ export function useCommunicationBoard({
     setSuggestionTone,
   } = useSuggestions();
 
-  const playBoardButton = (button: BoardButton) => {
+  const playBoardButton = (button: Button) => {
     if (button.loadBoard?.id) {
       navigateToBoard(button.loadBoard.id);
       return;
@@ -215,7 +215,7 @@ export function useCommunicationBoard({
   return {
     // Board
     board,
-    playBoardButton,
+    activateButton: playBoardButton,
 
     // Message
     message,
