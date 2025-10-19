@@ -4,7 +4,7 @@ export function useProofreader() {
   const isSupported = "Proofreader" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
 
-  async function create(
+  async function createProofreader(
     options: ProofreaderCreateOptions = {
       expectedInputLanguages: ["en"],
     }
@@ -33,6 +33,6 @@ export function useProofreader() {
   return {
     isSupported,
     downloadProgress,
-    createProofreader: create,
+    createProofreader,
   };
 }

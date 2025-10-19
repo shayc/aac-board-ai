@@ -1,20 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function useLanguageDetector() {
   const isSupported = "LanguageDetector" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [languageDetector, setLanguageDetector] = useState<any>(null); // Adjust type as needed
 
-  useEffect(() => {
-    async function init() {
-      const ld = await create();
-      setLanguageDetector(ld);
-    }
-
-    init();
-  }, []);
-
-  async function create() {
+  async function createLanguageDetector() {
     if (!isSupported) {
       return null;
     }
@@ -24,7 +14,7 @@ export function useLanguageDetector() {
       return null;
     }
 
-    const detector = await LanguageDetector.create({
+    const languageDetector = await LanguageDetector.create({
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
           setDownloadProgress(event.loaded);
@@ -32,12 +22,12 @@ export function useLanguageDetector() {
       },
     });
 
-    return detector;
+    return languageDetector;
   }
 
   return {
     isSupported,
     downloadProgress,
-    languageDetector,
+    createLanguageDetector,
   };
 }
