@@ -1,9 +1,9 @@
-import type { Board } from "./schema";
+import type { OBFBoard } from "./schema";
 import { BoardSchema } from "./schema";
 
 const UTF8_BOM = "\uFEFF";
 
-export function parseOBF(json: string): Board {
+export function parseOBF(json: string): OBFBoard {
   const trimmed = json.startsWith(UTF8_BOM) ? json.slice(1) : json;
   let data: unknown;
 
@@ -20,12 +20,12 @@ export function parseOBF(json: string): Board {
   return validateOBF(data);
 }
 
-export async function loadOBF(file: File): Promise<Board> {
+export async function loadOBF(file: File): Promise<OBFBoard> {
   const json = await file.text();
   return parseOBF(json);
 }
 
-export function validateOBF(data: unknown): Board {
+export function validateOBF(data: unknown): OBFBoard {
   const result = BoardSchema.safeParse(data);
 
   if (!result.success) {
@@ -35,6 +35,6 @@ export function validateOBF(data: unknown): Board {
   return result.data;
 }
 
-export function stringifyOBF(board: Board): string {
+export function stringifyOBF(board: OBFBoard): string {
   return JSON.stringify(board, null, 2);
 }

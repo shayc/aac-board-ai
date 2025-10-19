@@ -1,8 +1,8 @@
 import type {
-  Board as OBFBoard,
-  Button as OBFButton,
-  Grid as OBFGrid,
-  LoadBoard as OBFLoadBoard,
+  OBFBoard,
+  OBFButton,
+  OBFGrid,
+  OBFLoadBoard,
 } from "@/shared/open-board-format/schema";
 import type {
   Board,

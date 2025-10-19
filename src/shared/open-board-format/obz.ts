@@ -1,11 +1,11 @@
 import { parseOBF } from "./obf";
-import type { Board, Manifest } from "./schema";
+import type { OBFBoard, OBFManifest } from "./schema";
 import { ManifestSchema } from "./schema";
 import { isZip, unzip, zip } from "./zip";
 
 export interface ParsedOBZ {
-  manifest: Manifest;
-  boards: Map<string, Board>;
+  manifest: OBFManifest;
+  boards: Map<string, OBFBoard>;
   files: Map<string, Uint8Array>;
 }
 
@@ -39,7 +39,7 @@ export async function extractOBZ(buffer: ArrayBuffer): Promise<ParsedOBZ> {
   const manifestText = new TextDecoder().decode(manifestBuffer);
   const manifest = parseManifest(manifestText);
 
-  const boards = new Map<string, Board>();
+  const boards = new Map<string, OBFBoard>();
   for (const [id, path] of Object.entries(manifest.paths.boards)) {
     const boardBuffer = files.get(path);
     if (!boardBuffer) {
@@ -61,7 +61,7 @@ export async function extractOBZ(buffer: ArrayBuffer): Promise<ParsedOBZ> {
  * @param json - Manifest JSON string
  * @returns Validated Manifest object
  */
-export function parseManifest(json: string): Manifest {
+export function parseManifest(json: string): OBFManifest {
   const data = JSON.parse(json) as unknown;
   const result = ManifestSchema.safeParse(data);
 
@@ -80,7 +80,7 @@ export function parseManifest(json: string): Manifest {
  * @returns OBZ package as Blob
  */
 export async function createOBZ(
-  boards: Board[],
+  boards: OBFBoard[],
   rootBoardId: string,
   resources?: Map<string, Uint8Array | ArrayBuffer>
 ): Promise<Blob> {

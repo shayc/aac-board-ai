@@ -14,38 +14,38 @@ import { z } from "zod";
 
 /** Unique identifier as a string. */
 export const IDSchema = z.coerce.string();
-export type ID = z.infer<typeof IDSchema>;
+export type OBFID = z.infer<typeof IDSchema>;
 
 /**
  * Format version of the Open Board Format, e.g., 'open-board-0.1'.
  */
 export const FormatVersionSchema = z.string().regex(/^open-board-.+$/);
-export type FormatVersion = z.infer<typeof FormatVersionSchema>;
+export type OBFFormatVersion = z.infer<typeof FormatVersionSchema>;
 
 /**
  * Locale code as per BCP 47 language tags, e.g., 'en', 'en-US', 'fr-CA'.
  */
 export const LocaleCodeSchema = z.string();
-export type LocaleCode = z.infer<typeof LocaleCodeSchema>;
+export type OBFLocaleCode = z.infer<typeof LocaleCodeSchema>;
 
 /**
  * Mapping of string keys to localized string values.
  */
 export const LocalizedStringsSchema = z.record(z.string(), z.string());
-export type LocalizedStrings = z.infer<typeof LocalizedStringsSchema>;
+export type OBFLocalizedStrings = z.infer<typeof LocalizedStringsSchema>;
 
 /**
  * String translations for multiple locales.
  */
 export const StringsSchema = z.record(z.string(), LocalizedStringsSchema);
-export type Strings = z.infer<typeof StringsSchema>;
+export type OBFStrings = z.infer<typeof StringsSchema>;
 
 /**
  * Represents custom actions for spelling.
  * Prefixed with '+' followed by the text to append.
  */
 export const SpellingActionSchema = z.string();
-export type SpellingAction = z.infer<typeof SpellingActionSchema>;
+export type OBFSpellingAction = z.infer<typeof SpellingActionSchema>;
 
 /**
  * Represents specialty actions.
@@ -59,7 +59,7 @@ export const SpecialtyActionSchema = z.enum([
   ":speak",
   ":backspace",
 ]);
-export type SpecialtyAction = z.infer<typeof SpecialtyActionSchema>;
+export type OBFSpecialtyAction = z.infer<typeof SpecialtyActionSchema>;
 
 /**
  * Possible actions associated with a button.
@@ -68,7 +68,7 @@ export const ButtonActionSchema = z.union([
   SpellingActionSchema,
   SpecialtyActionSchema,
 ]);
-export type ButtonAction = z.infer<typeof ButtonActionSchema>;
+export type OBFButtonAction = z.infer<typeof ButtonActionSchema>;
 
 /**
  * Licensing information for a resource.
@@ -88,7 +88,7 @@ export const LicenseSchema = z.object({
   author_email: z.email().optional(),
 });
 
-export type License = z.infer<typeof LicenseSchema>;
+export type OBFLicense = z.infer<typeof LicenseSchema>;
 
 /**
  * Common properties for media resources (images and sounds).
@@ -115,7 +115,7 @@ export const MediaSchema = z.object({
   license: LicenseSchema.optional(),
 });
 
-export type Media = z.infer<typeof MediaSchema>;
+export type OBFMedia = z.infer<typeof MediaSchema>;
 
 /**
  * Information about a symbol from a proprietary symbol set.
@@ -126,7 +126,7 @@ export const SymbolInfoSchema = z.object({
   /** Filename of the symbol within the set. */
   filename: z.string(),
 });
-export type SymbolInfo = z.infer<typeof SymbolInfoSchema>;
+export type OBFSymbolInfo = z.infer<typeof SymbolInfoSchema>;
 
 /**
  * Represents an image resource.
@@ -147,13 +147,13 @@ export const ImageSchema = MediaSchema.and(
     height: z.number().optional(),
   })
 );
-export type Image = z.infer<typeof ImageSchema>;
+export type OBFImage = z.infer<typeof ImageSchema>;
 
 /**
  * Represents a sound resource.
  */
 export const SoundSchema = MediaSchema; // No additional properties.
-export type Sound = z.infer<typeof SoundSchema>;
+export type OBFSound = z.infer<typeof SoundSchema>;
 
 /**
  * Information needed to load another board.
@@ -171,7 +171,7 @@ export const LoadBoardSchema = z.object({
   path: z.string().optional(),
 });
 
-export type LoadBoard = z.infer<typeof LoadBoardSchema>;
+export type OBFLoadBoard = z.infer<typeof LoadBoardSchema>;
 
 /**
  * Represents a button on the board.
@@ -207,7 +207,7 @@ export const ButtonSchema = z.object({
   height: z.number().min(0).max(1).optional(),
 });
 
-export type Button = z.infer<typeof ButtonSchema>;
+export type OBFButton = z.infer<typeof ButtonSchema>;
 
 /**
  * Grid layout information for the board.
@@ -223,7 +223,7 @@ export const GridSchema = z.object({
    */
   order: z.array(z.array(z.union([IDSchema, z.null()]))),
 });
-export type Grid = z.infer<typeof GridSchema>;
+export type OBFGrid = z.infer<typeof GridSchema>;
 
 /**
  * Represents the root object of an OBF file, defining the structure and layout of a board.
@@ -255,7 +255,7 @@ export const BoardSchema = z.object({
   strings: StringsSchema.optional(),
 });
 
-export type Board = z.infer<typeof BoardSchema>;
+export type OBFBoard = z.infer<typeof BoardSchema>;
 
 /**
  * Manifest file in an .obz package.
@@ -275,4 +275,4 @@ export const ManifestSchema = z.object({
     sounds: z.record(z.string(), z.string()).optional(),
   }),
 });
-export type Manifest = z.infer<typeof ManifestSchema>;
+export type OBFManifest = z.infer<typeof ManifestSchema>;
