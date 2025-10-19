@@ -27,8 +27,10 @@ export function useSuggestions() {
     console.timeEnd("create rewriter");
 
     const text = message.map((part) => part.label).join(" ");
+
     const { correctedInput } = await proofreader!.proofread(text);
     const rewritten = await rewriter!.rewrite(text);
+
     const suggestions = [correctedInput, rewritten].filter(
       (s) => s && !s.includes("GIVEN_TEXT")
     );

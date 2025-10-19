@@ -83,7 +83,7 @@ export function useCommunicationBoard({
     setSuggestionTone,
   } = useSuggestions();
 
-  const playBoardButton = (button: Button) => {
+  const activateButton = (button: Button) => {
     if (button.loadBoard?.id) {
       navigateToBoard(button.loadBoard.id);
       return;
@@ -215,7 +215,7 @@ export function useCommunicationBoard({
   return {
     // Board
     board,
-    activateButton: playBoardButton,
+    activateButton,
 
     // Message
     message,

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export interface UsePromptOptions {
   /** Temperature parameter for response randomness (0-2). */
@@ -11,31 +11,11 @@ export interface UsePromptOptions {
   signal?: AbortSignal;
 }
 
-export function usePrompt(options: UsePromptOptions = {}) {
+export function usePrompt() {
   const isSupported = "LanguageModel" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const [session, setSession] = useState<LanguageModelSession | null>(null);
 
-  useEffect(() => {
-    async function init() {
-      if (!isSupported) {
-        return;
-      }
-
-      const newSession = await createSession(options);
-      setSession(newSession);
-    }
-
-    init();
-
-    return () => {
-      if (session) {
-        session.destroy();
-      }
-    };
-  }, [options.temperature, options.topK, options.systemPrompt]);
-
-  async function createSession(opts: UsePromptOptions) {
+  async function createSession(options: UsePromptOptions = {}) {
     if (!isSupported) {
       return null;
     }
@@ -47,12 +27,14 @@ export function usePrompt(options: UsePromptOptions = {}) {
       return null;
     }
 
-    const temperature = opts.temperature ?? modelParams?.defaultTemperature;
-    const topK = opts.topK ?? modelParams?.defaultTopK;
+    const temperature = options.temperature ?? modelParams?.defaultTemperature;
+    const topK = options.topK ?? modelParams?.defaultTopK;
 
     const session = await LanguageModel.create({
       temperature,
       topK,
+      systemPrompt: options.systemPrompt,
+      signal: options.signal,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
           setDownloadProgress(event.loaded);
@@ -66,6 +48,6 @@ export function usePrompt(options: UsePromptOptions = {}) {
   return {
     isSupported,
     downloadProgress,
-    session,
+    createSession,
   };
 }
