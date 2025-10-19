@@ -1,6 +1,6 @@
 import { loadOBF, loadOBZ } from "@/shared/open-board-format";
 import type { IDBPDatabase } from "idb";
-import type { Schema } from "./boards-db";
+import type { BoardsDBSchema } from "./boards-db";
 import {
   bulkPutAssets,
   bulkPutBoards,
@@ -29,7 +29,7 @@ export async function importFile(file: File): Promise<ImportResult> {
 }
 
 async function importOBZFile(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   file: File,
   setId: string
 ): Promise<ImportResult> {
@@ -103,7 +103,7 @@ async function importOBZFile(
 }
 
 async function importOBFFile(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   file: File,
   setId: string
 ): Promise<ImportResult> {

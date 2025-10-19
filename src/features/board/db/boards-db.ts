@@ -27,7 +27,7 @@ export interface AssetRecord {
 }
 
 /** Schema */
-export interface Schema extends DBSchema {
+export interface BoardsDBSchema extends DBSchema {
   boardsets: {
     key: string;
     value: BoardsetRecord;
@@ -83,18 +83,18 @@ const nameCollator = new Intl.Collator(undefined, {
 
 /** Per-DB metadata (locale) */
 const meta = new WeakMap<
-  IDBPDatabase<Schema>,
+  IDBPDatabase<BoardsDBSchema>,
   { locale?: string | string[] }
 >();
-function localeFor(db: IDBPDatabase<Schema>) {
+function localeFor(db: IDBPDatabase<BoardsDBSchema>) {
   return meta.get(db)?.locale;
 }
 
 /** Open/Close */
 export async function openBoardsDB(
   opts: OpenOptions = {}
-): Promise<IDBPDatabase<Schema>> {
-  const db = await openDB<Schema>(DB_NAME, DB_VERSION, {
+): Promise<IDBPDatabase<BoardsDBSchema>> {
+  const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       const boardsets = db.createObjectStore("boardsets", { keyPath: "setId" });
       boardsets.createIndex("byNameKey", "nameKey");
@@ -116,13 +116,13 @@ export async function openBoardsDB(
   meta.set(db, { locale: opts.nameKeyLocale });
   return db;
 }
-export function closeBoardsDB(db: IDBPDatabase<Schema>): void {
+export function closeBoardsDB(db: IDBPDatabase<BoardsDBSchema>): void {
   db.close();
 }
 
 /** Boardsets */
 export async function upsertBoardset(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   input: {
     setId: string;
     name: string;
@@ -143,7 +143,7 @@ export async function upsertBoardset(
   await db.put("boardsets", row);
 }
 export async function listBoardsets(
-  db: IDBPDatabase<Schema>
+  db: IDBPDatabase<BoardsDBSchema>
 ): Promise<BoardsetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
@@ -158,7 +158,7 @@ export async function listBoardsets(
 }
 
 export async function getBoardset(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string
 ): Promise<BoardsetRecord | null> {
   validateId(setId, "setId");
@@ -167,7 +167,7 @@ export async function getBoardset(
 
 /** Boards */
 export async function bulkPutBoards(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   items: { boardId: string; name: string; json: OBFBoard }[]
 ): Promise<void> {
@@ -207,7 +207,7 @@ export async function bulkPutBoards(
 }
 
 export async function listBoards(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string
 ): Promise<BoardRecord[]> {
   validateId(setId, "setId");
@@ -217,7 +217,7 @@ export async function listBoards(
 }
 
 export async function searchBoards(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   query: string,
   limit = 50
@@ -229,7 +229,7 @@ export async function searchBoards(
 }
 
 export async function getBoardsBatch(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   boardIds: string[]
 ): Promise<BoardRecord[]> {
@@ -244,7 +244,7 @@ export async function getBoardsBatch(
 
 /** Assets */
 export async function bulkPutAssets(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   items: {
     path: string;
@@ -280,7 +280,7 @@ export async function bulkPutAssets(
 }
 
 export async function getAssetUrlByPath(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   path: string
 ): Promise<string | null> {
@@ -288,20 +288,20 @@ export async function getAssetUrlByPath(
   const p = normalizePath(path);
   const row = await db.get("assets", [setId, p]);
   if (!row) return null;
-  
+
   // DEBUG: Log blob and mime type info
-  console.log('[DEBUG getAssetUrlByPath]', {
+  console.log("[DEBUG getAssetUrlByPath]", {
     path: p,
     blobType: row.blob.type,
     storedMime: row.mime,
-    blobSize: row.blob.size
+    blobSize: row.blob.size,
   });
-  
+
   return URL.createObjectURL(row.blob);
 }
 
 export async function getAssetUrlByMediaId(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   mediaId: string
 ): Promise<string | null> {
@@ -312,19 +312,19 @@ export async function getAssetUrlByMediaId(
     mediaId,
   ]);
   if (!row) return null;
-  
+
   // DEBUG: Log blob and mime type info
-  console.log('[DEBUG getAssetUrlByMediaId]', {
+  console.log("[DEBUG getAssetUrlByMediaId]", {
     mediaId,
     blobType: row.blob.type,
     storedMime: row.mime,
-    blobSize: row.blob.size
+    blobSize: row.blob.size,
   });
-  
+
   return URL.createObjectURL(row.blob);
 }
 export async function getManifestJson<T = unknown>(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string
 ): Promise<T | null> {
   validateId(setId, "setId");
@@ -339,7 +339,7 @@ export async function getManifestJson<T = unknown>(
 
 /** Deletes */
 export async function deleteBoardset(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string
 ): Promise<void> {
   validateId(setId, "setId");
@@ -370,7 +370,7 @@ export async function deleteBoardset(
 }
 
 export async function deleteBoard(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   boardId: string
 ): Promise<void> {
@@ -393,7 +393,7 @@ export async function deleteBoard(
 }
 
 export async function deleteAsset(
-  db: IDBPDatabase<Schema>,
+  db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   path: string
 ): Promise<void> {
