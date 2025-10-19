@@ -1,3 +1,4 @@
+import { useLanguage } from "@/shared/contexts/LanguageProvider/useLanguage";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -7,10 +8,11 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useEffect } from "react";
 
 export function SpeechSettings() {
   const {
-    voices,
+    voicesByLang,
     voiceURI,
     setVoiceURI,
     pitch,
@@ -23,6 +25,14 @@ export function SpeechSettings() {
     speak,
   } = useSpeech();
 
+  const { languageCode } = useLanguage();
+  const voices = voicesByLang[languageCode] || [];
+  const defaultVoice = voices.find((voice) => voice.default) || voices[0];
+
+  useEffect(() => {
+    setVoiceURI(defaultVoice?.voiceURI);
+  }, [languageCode]);
+
   return (
     <Box>
       <Typography gutterBottom>Voice</Typography>
@@ -32,7 +42,7 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI}
+          value={voiceURI || defaultVoice?.voiceURI}
           disabled={!isSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >

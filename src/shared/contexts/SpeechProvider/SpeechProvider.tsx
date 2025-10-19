@@ -2,6 +2,8 @@ import { createContext, use, type ReactNode } from "react";
 import { useSpeechSynthesis } from "./useSpeechSynthesis";
 
 export interface SpeechContextType {
+  langs: string[];
+  voicesByLang: Record<string, SpeechSynthesisVoice[]>;
   voices: SpeechSynthesisVoice[];
   voiceURI: string;
   setVoiceURI: (voiceURI: string) => void;

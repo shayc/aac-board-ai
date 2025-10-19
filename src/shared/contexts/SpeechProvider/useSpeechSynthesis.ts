@@ -14,6 +14,21 @@ export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
+  const langs = voices
+    .map((v) => v.lang)
+    .filter((lang, index, self) => self.indexOf(lang) === index);
+
+  const voicesByLang = voices.reduce<Record<string, SpeechSynthesisVoice[]>>(
+    (acc, voice) => {
+      if (!acc[voice.lang]) {
+        acc[voice.lang] = [];
+      }
+      acc[voice.lang].push(voice);
+      return acc;
+    },
+    {}
+  );
+
   const speak = (text: string) => {
     return new Promise<void>((resolve, reject) => {
       if (!isSupported) {
@@ -114,5 +129,7 @@ export function useSpeechSynthesis() {
     isSupported,
     isSpeaking,
     isPaused,
+    langs,
+    voicesByLang,
   };
 }
