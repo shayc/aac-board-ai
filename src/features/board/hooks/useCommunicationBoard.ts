@@ -35,10 +35,8 @@ export interface UseCommunicationBoardReturn {
   // Navigation
   navigationHistory: string[];
   canGoBack: boolean;
-  canGoForward: boolean;
   navigateToBoard: (id: string) => void;
   navigateBack: () => void;
-  navigateForward: () => void;
   navigateHome: () => void;
 
   // Suggestions
@@ -62,11 +60,9 @@ export function useCommunicationBoard({
 
   const {
     canGoBack,
-    canGoForward,
     navigationHistory,
     navigateToBoard,
     navigateBack,
-    navigateForward,
     navigateHome,
   } = useNavigation();
 
@@ -233,10 +229,8 @@ export function useCommunicationBoard({
     // Navigation
     navigationHistory,
     canGoBack,
-    canGoForward,
     navigateToBoard,
     navigateBack,
-    navigateForward,
     navigateHome,
 
     // Suggestions

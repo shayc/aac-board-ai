@@ -19,7 +19,6 @@ export function useNavigation() {
   });
 
   const canGoBack = navState.index > 0;
-  const canGoForward = navState.index < navState.history.length - 1;
 
   function navigateToBoard(id: string) {
     if (!id || id === navState.history[navState.index]) {
@@ -56,21 +55,6 @@ export function useNavigation() {
     });
 
     navigate(`/sets/${setId}/boards/${id}`);
-  }
-
-  function navigateForward() {
-    if (!canGoForward) {
-      return;
-    }
-
-    setNavState((prev) => {
-      return {
-        ...prev,
-        index: prev.index + 1,
-      };
-    });
-
-    navigate(`/sets/${setId}/boards/${navState.history[navState.index + 1]}`);
   }
 
   function navigateHome() {
@@ -113,10 +97,8 @@ export function useNavigation() {
     navigationHistory: navState.history,
     navigationIndex: navState.index,
     canGoBack,
-    canGoForward,
     navigateToBoard,
     navigateBack,
-    navigateForward,
     navigateHome,
   };
 }
