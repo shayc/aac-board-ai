@@ -1,6 +1,6 @@
 import { parseOBF } from "./obf";
 import type { OBFBoard, OBFManifest } from "./schema";
-import { ManifestSchema } from "./schema";
+import { OBFManifestSchema } from "./schema";
 import { isZip, unzip, zip } from "./zip";
 
 export interface ParsedOBZ {
@@ -63,7 +63,7 @@ export async function extractOBZ(buffer: ArrayBuffer): Promise<ParsedOBZ> {
  */
 export function parseManifest(json: string): OBFManifest {
   const data = JSON.parse(json) as unknown;
-  const result = ManifestSchema.safeParse(data);
+  const result = OBFManifestSchema.safeParse(data);
 
   if (!result.success) {
     throw new Error(`Invalid manifest: ${result.error.message}`);
@@ -87,7 +87,7 @@ export async function createOBZ(
   const files = new Map<string, Uint8Array | ArrayBuffer>();
 
   // Create and validate manifest
-  const manifest = ManifestSchema.parse({
+  const manifest = OBFManifestSchema.parse({
     format: "open-board-0.1",
     root: `boards/${rootBoardId}.obf`,
     paths: {

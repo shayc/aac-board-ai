@@ -1,5 +1,5 @@
 import type { OBFBoard } from "./schema";
-import { BoardSchema } from "./schema";
+import { OBFBoardSchema } from "./schema";
 
 const UTF8_BOM = "\uFEFF";
 
@@ -26,7 +26,7 @@ export async function loadOBF(file: File): Promise<OBFBoard> {
 }
 
 export function validateOBF(data: unknown): OBFBoard {
-  const result = BoardSchema.safeParse(data);
+  const result = OBFBoardSchema.safeParse(data);
 
   if (!result.success) {
     throw new Error(`Invalid OBF: ${result.error.message}`);
