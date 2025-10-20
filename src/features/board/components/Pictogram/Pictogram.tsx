@@ -26,7 +26,7 @@ export function Pictogram(props: PictogramProps) {
             alt=""
             sx={{
               width: "100%",
-              maxHeight: "100%",
+              height: "100%",
               objectFit: "contain",
               position: "absolute",
               top: 0,
@@ -39,8 +39,8 @@ export function Pictogram(props: PictogramProps) {
       {label && (
         <Typography
           noWrap
-          component="span"
           variant="body2"
+          component="span"
           sx={{
             px: 1,
           }}

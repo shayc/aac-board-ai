@@ -63,6 +63,7 @@ export function useCommunicationBoard({
   const audio = useAudio();
 
   const [board, setBoard] = useState<Board | null>(null);
+  const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 
   const {
     canGoBack,
@@ -203,22 +204,6 @@ export function useCommunicationBoard({
 
         const newBoard = obfToBoard(obfBoard);
 
-        if (!languageCode.includes("en")) {
-          const translator = await createTranslator({
-            sourceLanguage: "en",
-            targetLanguage: languageCode,
-          });
-
-          for (const button of newBoard.buttons) {
-            button.label = await translator?.translate(button.label || "");
-            if (button.vocalization) {
-              button.vocalization = await translator?.translate(
-                button.vocalization || ""
-              );
-            }
-          }
-        }
-
         setBoard(newBoard);
       } finally {
         db.close();
@@ -227,6 +212,52 @@ export function useCommunicationBoard({
       console.error("Error loading board:", err);
     }
   };
+
+  useEffect(() => {
+    const translatedBoard = async () => {
+      if (!board) {
+        return;
+      }
+
+      if (languageCode.includes("en")) {
+        setTranslatedBoard(null);
+        return;
+      }
+
+      const translator = await createTranslator({
+        sourceLanguage: "en",
+        targetLanguage: languageCode,
+      });
+
+      const translatedButtons = await Promise.all(
+        board.buttons.map(async (button) => {
+          console.log("Translating button:", button);
+          const translatedLabel = await translator?.translate(
+            button.label || ""
+          );
+          let translatedVocalization = button.vocalization;
+          if (button.vocalization) {
+            translatedVocalization = await translator?.translate(
+              button.vocalization || ""
+            );
+          }
+          return {
+            ...button,
+            label: translatedLabel,
+            vocalization: translatedVocalization,
+          };
+        })
+      );
+
+      setTranslatedBoard({
+        ...board,
+        name: (await translator?.translate(board.name || "")) || board.name,
+        buttons: translatedButtons,
+      });
+    };
+console.log("Language code changed:", languageCode);
+    translatedBoard();
+  }, [languageCode, board]);
 
   useEffect(() => {
     loadBoard(boardId);
@@ -238,7 +269,7 @@ export function useCommunicationBoard({
 
   return {
     // Board
-    board,
+    board: translatedBoard || board,
     activateButton,
 
     // Message

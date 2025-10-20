@@ -30,7 +30,7 @@ export function Grid<TItem extends { id: string }>({
       {grid.map((row, rowIndex) => (
         <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
           {row.map((item, cellIndex) => (
-            <Stack key={cellIndex} flex={1}>
+            <Stack key={cellIndex} flex={1} sx={{ minWidth: 64, minHeight: 64 }}>
               {item && renderItem(item)}
             </Stack>
           ))}
