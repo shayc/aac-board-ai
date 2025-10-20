@@ -27,6 +27,7 @@ export interface UseCommunicationBoardReturn {
 
   // Message
   message: MessagePart[];
+  isPlayingMessage: boolean;
   addMessage: (part: MessagePart) => void;
   replaceMessage: (parts: MessagePart[]) => void;
   removeLastMessage: () => void;
@@ -76,6 +77,7 @@ export function useCommunicationBoard({
 
   const {
     message,
+    isPlayingMessage,
     addMessage,
     replaceMessage,
     removeLastMessage,
@@ -273,6 +275,7 @@ export function useCommunicationBoard({
 
     // Message
     message,
+    isPlayingMessage,
     addMessage,
     replaceMessage,
     removeLastMessage,

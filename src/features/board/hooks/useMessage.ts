@@ -1,6 +1,7 @@
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useAudio } from "@/shared/hooks/useAudio";
 import { usePersistentState } from "@/shared/hooks/usePersistentState";
+import { useState } from "react";
 
 export type Segment = {
   type: "text" | "sound";
@@ -23,6 +24,8 @@ export function useMessage() {
     "message",
     []
   );
+
+  const [isPlayingMessage, setIsPlayingMessage] = useState(false);
 
   function addMessage(part: MessagePart) {
     setMessage((prev) => [...prev, part]);
@@ -58,6 +61,7 @@ export function useMessage() {
 
   async function playMessage() {
     try {
+      setIsPlayingMessage(true);
       const segments = convertPartsToSegments(message);
 
       for (const seg of segments) {
@@ -71,11 +75,15 @@ export function useMessage() {
       }
     } catch (error) {
       console.error("Error playing message:", error);
+      setIsPlayingMessage(false);
+    } finally {
+      setIsPlayingMessage(false);
     }
   }
 
   return {
     message,
+    isPlayingMessage,
     addMessage,
     replaceMessage,
     removeLastMessage,

@@ -3,13 +3,14 @@ import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 
 export function MessageBar() {
-  const { message, clearMessage, playMessage } = useBoard();
+  const { message, clearMessage, playMessage, isPlayingMessage } = useBoard();
   const hasParts = message.length > 0;
 
   return (
@@ -68,7 +69,11 @@ export function MessageBar() {
               },
             }}
           >
-            <PlayArrowIcon sx={{ width: 48, height: 48 }} />
+            {isPlayingMessage ? (
+              <StopIcon sx={{ width: 48, height: 48 }} />
+            ) : (
+              <PlayArrowIcon sx={{ width: 48, height: 48 }} />
+            )}
           </IconButton>
         </Box>
       </Tooltip>

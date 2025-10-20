@@ -5,12 +5,21 @@ export function useAudio() {
   const [isPaused, setIsPaused] = useState(false);
 
   const play = (url: string) => {
-    const audio = new Audio(url);
-    audio.onplay = () => setIsPlaying(true);
-    audio.onended = () => setIsPlaying(false);
-    audio.onpause = () => setIsPaused(true);
+    return new Promise<void>((resolve, reject) => {
+      try {
+        const audio = new Audio(url);
+        audio.onplay = () => setIsPlaying(true);
+        audio.onended = () => {
+          setIsPlaying(false);
+          resolve();
+        };
+        audio.onpause = () => setIsPaused(true);
 
-    audio.play();
+        audio.play();
+      } catch (error) {
+        reject(error);
+      }
+    });
   };
 
   return { play, isPlaying, isPaused };
