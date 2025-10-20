@@ -19,8 +19,8 @@ export interface BoardRecord {
 }
 export interface AssetRecord {
   setId: string;
-  path: string; // normalized POSIX path
-  mediaId?: string; // optional cross-ref
+  path: string;
+  mediaId?: string;
   blob: Blob;
   mime?: string;
   size?: number;
@@ -132,6 +132,7 @@ export async function upsertBoardset(
 ): Promise<void> {
   validateId(input.setId, "setId");
   const prev = await db.get("boardsets", input.setId);
+
   const row: BoardsetRecord = {
     setId: input.setId,
     name: input.name,
@@ -140,6 +141,7 @@ export async function upsertBoardset(
     updatedAt: Date.now(),
     boardCount: input.boardCount ?? prev?.boardCount ?? 0,
   };
+
   await db.put("boardsets", row);
 }
 export async function listBoardsets(
@@ -149,10 +151,12 @@ export async function listBoardsets(
   const idx = tx.store.index("byUpdatedAt");
   const out: BoardsetRecord[] = [];
   let cur = await idx.openCursor(undefined, "prev");
+
   while (cur) {
     out.push(cur.value);
     cur = await cur.continue();
   }
+
   await tx.done;
   return out;
 }
@@ -173,12 +177,15 @@ export async function bulkPutBoards(
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "boardsets"], "readwrite");
+
   try {
     const boards = tx.objectStore("boards");
     let delta = 0;
+
     for (const it of items) {
       const key = [setId, it.boardId] as [string, string];
       const existed = await boards.getKey(key);
+
       await boards.put({
         setId,
         boardId: it.boardId,
@@ -186,10 +193,14 @@ export async function bulkPutBoards(
         nameKey: toNameKey(it.name, localeFor(db)),
         json: it.json,
       } as BoardRecord);
-      if (!existed) delta++;
+
+      if (!existed) {
+        delta++;
+      }
     }
 
     const bs = await tx.objectStore("boardsets").get(setId);
+
     if (bs) {
       const count =
         delta > 0
@@ -199,6 +210,7 @@ export async function bulkPutBoards(
         .objectStore("boardsets")
         .put({ ...bs, boardCount: count, updatedAt: Date.now() });
     }
+
     await tx.done;
   } catch (e) {
     tx.abort();
@@ -239,6 +251,7 @@ export async function getBoardsBatch(
   const rows = await Promise.all(
     boardIds.map((id) => db.get("boards", [setId, id]))
   );
+
   return rows.filter((r): r is BoardRecord => r !== undefined);
 }
 
@@ -256,6 +269,7 @@ export async function bulkPutAssets(
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["assets", "boardsets"], "readwrite");
+
   try {
     const assets = tx.objectStore("assets");
     for (const it of items) {
@@ -269,9 +283,13 @@ export async function bulkPutAssets(
         size: it.size ?? it.blob.size,
       } as AssetRecord);
     }
+
     const bs = await tx.objectStore("boardsets").get(setId);
-    if (bs)
+
+    if (bs) {
       await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
+    }
+
     await tx.done;
   } catch (e) {
     tx.abort();
@@ -287,15 +305,10 @@ export async function getAssetUrlByPath(
   validateId(setId, "setId");
   const p = normalizePath(path);
   const row = await db.get("assets", [setId, p]);
-  if (!row) return null;
 
-  // DEBUG: Log blob and mime type info
-  console.log("[DEBUG getAssetUrlByPath]", {
-    path: p,
-    blobType: row.blob.type,
-    storedMime: row.mime,
-    blobSize: row.blob.size,
-  });
+  if (!row) {
+    return null;
+  }
 
   return URL.createObjectURL(row.blob);
 }
@@ -306,20 +319,18 @@ export async function getAssetUrlByMediaId(
   mediaId: string
 ): Promise<string | null> {
   validateId(setId, "setId");
-  if (!mediaId) return null;
+  if (!mediaId) {
+    return null;
+  }
+
   const row = await db.getFromIndex("assets", "bySetIdMediaId", [
     setId,
     mediaId,
   ]);
-  if (!row) return null;
 
-  // DEBUG: Log blob and mime type info
-  console.log("[DEBUG getAssetUrlByMediaId]", {
-    mediaId,
-    blobType: row.blob.type,
-    storedMime: row.mime,
-    blobSize: row.blob.size,
-  });
+  if (!row) {
+    return null;
+  }
 
   return URL.createObjectURL(row.blob);
 }
@@ -329,7 +340,11 @@ export async function getManifestJson<T = unknown>(
 ): Promise<T | null> {
   validateId(setId, "setId");
   const row = await db.get("assets", [setId, "manifest.json"]);
-  if (!row) return null;
+
+  if (!row) {
+    return null;
+  }
+
   try {
     return JSON.parse(await row.blob.text()) as T;
   } catch {
@@ -344,10 +359,12 @@ export async function deleteBoardset(
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
+
   try {
     {
       const idx = tx.objectStore("boards").index("bySetId");
       let c = await idx.openCursor(IDBKeyRange.only(setId));
+
       while (c) {
         await c.delete();
         c = await c.continue();
@@ -356,6 +373,7 @@ export async function deleteBoardset(
     {
       const idx = tx.objectStore("assets").index("bySetId");
       let c = await idx.openCursor(IDBKeyRange.only(setId));
+
       while (c) {
         await c.delete();
         c = await c.continue();
@@ -377,14 +395,18 @@ export async function deleteBoard(
   validateId(setId, "setId");
   validateId(boardId, "boardId");
   const tx = db.transaction(["boards", "boardsets"], "readwrite");
+
   try {
     await tx.objectStore("boards").delete([setId, boardId]);
     const cnt = await tx.objectStore("boards").index("bySetId").count(setId);
     const bs = await tx.objectStore("boardsets").get(setId);
-    if (bs)
+
+    if (bs) {
       await tx
         .objectStore("boardsets")
         .put({ ...bs, boardCount: cnt, updatedAt: Date.now() });
+    }
+
     await tx.done;
   } catch (e) {
     tx.abort();
@@ -400,11 +422,15 @@ export async function deleteAsset(
   validateId(setId, "setId");
   const p = normalizePath(path);
   const tx = db.transaction(["assets", "boardsets"], "readwrite");
+
   try {
     await tx.objectStore("assets").delete([setId, p]);
     const bs = await tx.objectStore("boardsets").get(setId);
-    if (bs)
+
+    if (bs) {
       await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
+    }
+
     await tx.done;
   } catch (e) {
     tx.abort();

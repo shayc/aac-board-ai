@@ -81,13 +81,6 @@ async function importOBZFile(
         ? "audio/wav"
         : "application/octet-stream";
 
-      // DEBUG: Log blob creation
-      console.log("[DEBUG importOBZFile] Creating blob for:", {
-        path,
-        mime,
-        bufferSize: buffer.byteLength,
-      });
-
       return {
         path,
         blob: new Blob([buffer.buffer as ArrayBuffer], { type: mime }),
