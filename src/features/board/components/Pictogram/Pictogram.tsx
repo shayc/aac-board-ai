@@ -18,7 +18,7 @@ export function Pictogram(props: PictogramProps) {
         overflow: "hidden",
       }}
     >
-      <Box sx={{ flexGrow: 1, position: "relative" }}>
+      <Box sx={{ flexGrow: 1, position: "relative", minWidth: "44px" }}>
         {src && (
           <Box
             component="img"
@@ -40,6 +40,7 @@ export function Pictogram(props: PictogramProps) {
         <Typography
           noWrap
           component="span"
+          variant="body2"
           sx={{
             px: 1,
           }}
