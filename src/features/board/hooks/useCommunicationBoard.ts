@@ -202,17 +202,20 @@ export function useCommunicationBoard({
         }
 
         const newBoard = obfToBoard(obfBoard);
-        const translator = await createTranslator({
-          sourceLanguage: "en",
-          targetLanguage: languageCode,
-        });
 
-        for (const button of newBoard.buttons) {
-          button.label = await translator?.translate(button.label || "");
-          if (button.vocalization) {
-            button.vocalization = await translator?.translate(
-              button.vocalization || ""
-            );
+        if (!languageCode.includes("en")) {
+          const translator = await createTranslator({
+            sourceLanguage: "en",
+            targetLanguage: languageCode,
+          });
+
+          for (const button of newBoard.buttons) {
+            button.label = await translator?.translate(button.label || "");
+            if (button.vocalization) {
+              button.vocalization = await translator?.translate(
+                button.vocalization || ""
+              );
+            }
           }
         }
 
