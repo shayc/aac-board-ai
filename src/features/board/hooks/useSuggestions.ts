@@ -30,13 +30,13 @@ export function useSuggestions() {
 
     const proofread = await proofreader?.proofread(text);
     const rewritten = await rewriter?.rewrite(text);
+    const suggestions = [proofread?.correctedInput || "", rewritten || ""];
 
-    const suggestions = [
-      proofread?.correctedInput || "",
-      rewritten || "",
-    ].filter((s) => s && !s.includes("GIVEN_TEXT"));
+    const uniqueSuggestions = Array.from(new Set(suggestions)).filter(
+      (s) => s && !s.includes("GIVEN_TEXT")
+    );
 
-    setSuggestions(suggestions);
+    setSuggestions(uniqueSuggestions);
   }
 
   return {

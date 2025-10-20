@@ -25,7 +25,7 @@ export function Pictogram(props: PictogramProps) {
             src={src}
             alt=""
             sx={{
-              minWidth: "100%",
+              width: "100%",
               maxHeight: "100%",
               objectFit: "contain",
               position: "absolute",
