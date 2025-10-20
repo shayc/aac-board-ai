@@ -1,5 +1,5 @@
 import { usePersistentState } from "@/shared/hooks/usePersistentState";
-import { createContext, type ReactNode, useEffect } from "react";
+import { createContext, type ReactNode } from "react";
 import { useSpeech } from "../SpeechProvider/SpeechProvider";
 
 export interface LanguageContextValue {

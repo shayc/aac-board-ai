@@ -1,7 +1,7 @@
 import { AppShell } from "@app/shell/AppShell";
 import { AboutPage } from "@pages/AboutPage";
 import { BoardPage } from "@pages/BoardPage";
-import { BoardSetRedirect } from "@pages/BoardSetRedirect";
+import { BoardSetEntry } from "@pages/BoardSetEntry";
 import { HomePage } from "@pages/HomePage";
 import { BrowserRouter, Route, Routes } from "react-router";
 
@@ -11,8 +11,10 @@ export function App() {
       <Routes>
         <Route element={<AppShell />}>
           <Route index element={<HomePage />} />
-          <Route path="sets/:setId" element={<BoardSetRedirect />} />
-          <Route path="sets/:setId/boards/:boardId" element={<BoardPage />} />
+          <Route path="sets/:setId">
+            <Route index element={<BoardSetEntry />} />
+            <Route path="boards/:boardId" element={<BoardPage />} />
+          </Route>
           <Route path="about" element={<AboutPage />} />
         </Route>
       </Routes>
