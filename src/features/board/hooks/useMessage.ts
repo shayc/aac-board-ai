@@ -1,6 +1,6 @@
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useAudio } from "@/shared/hooks/useAudio";
-import { useState } from "react";
+import { usePersistentState } from "@/shared/hooks/usePersistentState";
 
 export type Segment = {
   type: "text" | "sound";
@@ -19,7 +19,10 @@ export function useMessage() {
   const speech = useSpeech();
   const audio = useAudio();
 
-  const [message, setMessage] = useState<MessagePart[]>([]);
+  const [message, setMessage] = usePersistentState<MessagePart[]>(
+    "message",
+    []
+  );
 
   function addMessage(part: MessagePart) {
     setMessage((prev) => [...prev, part]);

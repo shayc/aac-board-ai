@@ -19,6 +19,7 @@ export function useNavigation() {
   });
 
   const canGoBack = navState.index > 0;
+  const canGoHome = navState.index > 0;
 
   function navigateToBoard(id: string) {
     if (!id || id === navState.history[navState.index]) {
@@ -97,6 +98,7 @@ export function useNavigation() {
     navigationHistory: navState.history,
     navigationIndex: navState.index,
     canGoBack,
+    canGoHome,
     navigateToBoard,
     navigateBack,
     navigateHome,

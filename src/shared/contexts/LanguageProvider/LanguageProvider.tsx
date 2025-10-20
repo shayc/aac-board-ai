@@ -1,8 +1,6 @@
-import { createContext, type ReactNode, useEffect, useState } from "react";
+import { usePersistentState } from "@/shared/hooks/usePersistentState";
+import { createContext, type ReactNode, useEffect } from "react";
 import { useSpeech } from "../SpeechProvider/SpeechProvider";
-
-const LANGUAGE_STORAGE_KEY = "aac-board-language";
-const DEFAULT_LANGUAGE = "en-US";
 
 export interface LanguageContextValue {
   languages: { code: string; name: string }[];
@@ -19,10 +17,10 @@ export interface LanguageProviderProps {
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const { langs } = useSpeech();
 
-  const [languageCode, setLanguageCodeState] = useState<string>(() => {
-    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return stored || DEFAULT_LANGUAGE;
-  });
+  const [languageCode, setLanguageCode] = usePersistentState<string>(
+    "languageCode",
+    "en-US"
+  );
 
   const languages = langs.map((lang) => {
     const displayName = new Intl.DisplayNames([lang], { type: "language" });
@@ -32,14 +30,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       name: displayName.of(lang) || lang,
     };
   });
-
-  useEffect(() => {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, languageCode);
-  }, [languageCode]);
-
-  const setLanguageCode = (code: string) => {
-    setLanguageCodeState(code);
-  };
 
   const contextValue: LanguageContextValue = {
     languages,

@@ -28,12 +28,13 @@ export function useSuggestions() {
 
     const text = message.map((part) => part.label).join(" ");
 
-    const { correctedInput } = await proofreader!.proofread(text);
-    const rewritten = await rewriter!.rewrite(text);
+    const proofread = await proofreader?.proofread(text);
+    const rewritten = await rewriter?.rewrite(text);
 
-    const suggestions = [correctedInput, rewritten].filter(
-      (s) => s && !s.includes("GIVEN_TEXT")
-    );
+    const suggestions = [
+      proofread?.correctedInput || "",
+      rewritten || "",
+    ].filter((s) => s && !s.includes("GIVEN_TEXT"));
 
     setSuggestions(suggestions);
   }

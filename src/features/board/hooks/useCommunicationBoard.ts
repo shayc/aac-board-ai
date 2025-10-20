@@ -1,4 +1,6 @@
+import { useLanguage } from "@/shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
+import { useTranslator } from "@/shared/hooks/ai/useTranslator";
 import { useAudio } from "@/shared/hooks/useAudio";
 import {
   getAssetUrlByPath,
@@ -35,6 +37,7 @@ export interface UseCommunicationBoardReturn {
   // Navigation
   navigationHistory: string[];
   canGoBack: boolean;
+  canGoHome: boolean;
   navigateToBoard: (id: string) => void;
   navigateBack: () => void;
   navigateHome: () => void;
@@ -53,6 +56,9 @@ export function useCommunicationBoard({
   setId,
   boardId,
 }: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
+  const { languageCode } = useLanguage();
+  const { createTranslator } = useTranslator();
+
   const speech = useSpeech();
   const audio = useAudio();
 
@@ -60,6 +66,7 @@ export function useCommunicationBoard({
 
   const {
     canGoBack,
+    canGoHome,
     navigationHistory,
     navigateToBoard,
     navigateBack,
@@ -195,6 +202,20 @@ export function useCommunicationBoard({
         }
 
         const newBoard = obfToBoard(obfBoard);
+        const translator = await createTranslator({
+          sourceLanguage: "en",
+          targetLanguage: languageCode,
+        });
+
+        for (const button of newBoard.buttons) {
+          button.label = await translator?.translate(button.label || "");
+          if (button.vocalization) {
+            button.vocalization = await translator?.translate(
+              button.vocalization || ""
+            );
+          }
+        }
+
         setBoard(newBoard);
       } finally {
         db.close();
@@ -229,6 +250,7 @@ export function useCommunicationBoard({
     // Navigation
     navigationHistory,
     canGoBack,
+    canGoHome,
     navigateToBoard,
     navigateBack,
     navigateHome,

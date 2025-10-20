@@ -15,7 +15,7 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { canGoBack, navigateBack, navigateHome } = useBoard();
+  const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
 
   return (
     <AppBar position="static">
@@ -50,6 +50,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
         <Tooltip title="Go home" enterDelay={800}>
           <span>
             <IconButton
+              disabled={!canGoHome}
               aria-label="Home"
               size="large"
               color="inherit"
