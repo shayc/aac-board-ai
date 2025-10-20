@@ -231,7 +231,6 @@ export function useCommunicationBoard({
 
       const translatedButtons = await Promise.all(
         board.buttons.map(async (button) => {
-          console.log("Translating button:", button);
           const translatedLabel = await translator?.translate(
             button.label || ""
           );
@@ -255,7 +254,7 @@ export function useCommunicationBoard({
         buttons: translatedButtons,
       });
     };
-console.log("Language code changed:", languageCode);
+
     translatedBoard();
   }, [languageCode, board]);
 

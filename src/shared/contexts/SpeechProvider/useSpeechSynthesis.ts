@@ -14,10 +14,9 @@ export function useSpeechSynthesis() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const langs = voices
-    .map((v) => v.lang)
-    .filter((lang, index, self) => self.indexOf(lang) === index);
-
+  const langs = Array.from(new Set(voices.map((v) => v.lang))).sort((a, b) =>
+    a.localeCompare(b)
+  );
   const voicesByLang = voices.reduce<Record<string, SpeechSynthesisVoice[]>>(
     (acc, voice) => {
       if (!acc[voice.lang]) {
