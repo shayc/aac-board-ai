@@ -25,6 +25,7 @@ export function Pictogram(props: PictogramProps) {
             src={src}
             alt=""
             sx={{
+              pointerEvents: "none",
               width: "100%",
               height: "100%",
               objectFit: "contain",

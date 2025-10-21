@@ -1,6 +1,7 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
+import BackspaceIcon from "@mui/icons-material/Backspace";
 import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
@@ -8,10 +9,35 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useRef } from "react";
 
 export function MessageBar() {
-  const { message, clearMessage, playMessage, isPlayingMessage } = useBoard();
+  const ref = useRef<HTMLDivElement>(null);
+  const {
+    message,
+    clearMessage,
+    removeLastMessage,
+    playMessage,
+    isPlayingMessage,
+  } = useBoard();
+
   const hasParts = message.length > 0;
+
+  useEffect(() => {
+    const scroller = ref.current;
+
+    if (!scroller || !scroller.lastElementChild) {
+      return;
+    }
+
+    requestAnimationFrame(() => {
+      (scroller.lastElementChild as HTMLElement).scrollIntoView({
+        block: "nearest",
+        inline: "end",
+        behavior: "instant",
+      });
+    });
+  }, [message]);
 
   return (
     <Stack direction="row" padding={2} gap={2}>
@@ -29,7 +55,7 @@ export function MessageBar() {
               : theme.palette.grey[200],
         }}
       >
-        <Stack direction="row" gap={2} flexGrow={1} overflow="auto">
+        <Stack ref={ref} direction="row" gap={2} flexGrow={1} overflow="auto">
           {message.map((p: MessagePart, index: number) => (
             <Stack key={index} direction="row">
               <Pictogram label={p.label} src={p.imageSrc} />
@@ -37,23 +63,24 @@ export function MessageBar() {
           ))}
         </Stack>
 
-        {hasParts && (
-          <Tooltip title="Clear message" enterDelay={800}>
-            <Box sx={{ alignSelf: "center" }}>
-              <IconButton
-                aria-label="Clear"
-                size="large"
-                color="inherit"
-                onClick={clearMessage}
-              >
-                <ClearIcon />
-              </IconButton>
-            </Box>
-          </Tooltip>
-        )}
+        <Tooltip title="Backspace" enterDelay={800}>
+          <Box sx={{ alignSelf: "center" }}>
+            <IconButton
+              aria-label="Backspace"
+              size="large"
+              color="inherit"
+              onClick={() => removeLastMessage()}
+            >
+              <BackspaceIcon />
+            </IconButton>
+          </Box>
+        </Tooltip>
       </Stack>
 
-      <Tooltip title="Speak message" enterDelay={800}>
+      <Tooltip
+        title={isPlayingMessage ? "Stop speaking" : "Speak message"}
+        enterDelay={800}
+      >
         <Box sx={{ alignSelf: "center" }}>
           <IconButton
             aria-label="Play"
