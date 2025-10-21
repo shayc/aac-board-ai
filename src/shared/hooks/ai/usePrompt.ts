@@ -1,28 +1,29 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface UsePromptOptions {
-  /** Temperature parameter for response randomness (0-2). */
   temperature?: number;
-  /** Top-K parameter for response diversity. */
   topK?: number;
-  /** System prompt to set context for the session. */
   systemPrompt?: string;
-  /** Abort signal to cancel session creation. */
   signal?: AbortSignal;
 }
 
 export function usePrompt() {
   const isSupported = "LanguageModel" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const sessionRef = useRef<LanguageModelSession | null>(null);
 
   async function createSession(options: UsePromptOptions = {}) {
     if (!isSupported) {
       return null;
     }
 
-    const modelParams = await LanguageModel.params();
+    if (sessionRef.current) {
+      return sessionRef.current;
+    }
 
+    const modelParams = await LanguageModel.params();
     const availability = await LanguageModel.availability();
+
     if (availability === "unavailable") {
       return null;
     }
@@ -42,8 +43,15 @@ export function usePrompt() {
       },
     });
 
+    sessionRef.current = session;
     return session;
   }
+
+  useEffect(() => {
+    return () => {
+      sessionRef.current = null;
+    };
+  }, []);
 
   return {
     isSupported,

@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function useProofreader() {
   const isSupported = "Proofreader" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
+  const proofreaderRef = useRef<Proofreader | null>(null);
 
   async function createProofreader(
-    options: ProofreaderCreateOptions = {
-      expectedInputLanguages: ["en"],
-    }
+    options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] }
   ) {
     if (!isSupported) {
       return null;
+    }
+
+    if (proofreaderRef.current) {
+      return proofreaderRef.current;
     }
 
     const availability = await Proofreader.availability();
@@ -27,8 +30,15 @@ export function useProofreader() {
       },
     });
 
+    proofreaderRef.current = proofreader;
     return proofreader;
   }
+
+  useEffect(() => {
+    return () => {
+      proofreaderRef.current = null;
+    };
+  }, []);
 
   return {
     isSupported,
