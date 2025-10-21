@@ -89,11 +89,9 @@ export function BoardSetSelector() {
         ))}
       </Select>
 
-      {boardId !== rootBoardId && (
-        <Typography noWrap sx={{ ml: 2 }}>
-          {board?.name}
-        </Typography>
-      )}
+      <Typography noWrap sx={{ ml: 2 }}>
+        {board?.name}
+      </Typography>
     </Box>
   );
 }
