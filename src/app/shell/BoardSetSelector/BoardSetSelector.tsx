@@ -1,10 +1,6 @@
 import { useBoard } from "@features/board/context/useBoard";
 import type { BoardsetRecord } from "@features/board/db/boards-db";
-import {
-  getBoardset,
-  listBoardsets,
-  openBoardsDB,
-} from "@features/board/db/boards-db";
+import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
@@ -14,9 +10,8 @@ import { useNavigate, useParams } from "react-router";
 
 export function BoardSetSelector() {
   const navigate = useNavigate();
-  const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
+  const { setId } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
-  const [rootBoardId, setRootBoardId] = useState<string | null>(null);
   const { board } = useBoard();
 
   useEffect(() => {
@@ -33,34 +28,6 @@ export function BoardSetSelector() {
 
     loadBoardsets();
   }, []);
-
-  useEffect(() => {
-    async function loadRootBoard() {
-      if (!setId) {
-        setRootBoardId(null);
-        return;
-      }
-
-      const db = await openBoardsDB();
-
-      try {
-        const boardset = await getBoardset(db, setId);
-
-        if (boardset?.rootBoardId) {
-          setRootBoardId(boardset.rootBoardId);
-        } else {
-          setRootBoardId(null);
-        }
-      } catch (err) {
-        console.error("Error loading cover board:", err);
-        setRootBoardId(null);
-      } finally {
-        db.close();
-      }
-    }
-
-    loadRootBoard();
-  }, [setId]);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>
