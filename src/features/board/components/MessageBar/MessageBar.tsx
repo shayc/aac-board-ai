@@ -2,7 +2,6 @@ import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
 import BackspaceIcon from "@mui/icons-material/Backspace";
-import ClearIcon from "@mui/icons-material/Clear";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
@@ -13,15 +12,8 @@ import { useEffect, useRef } from "react";
 
 export function MessageBar() {
   const ref = useRef<HTMLDivElement>(null);
-  const {
-    message,
-    clearMessage,
-    removeLastMessage,
-    playMessage,
-    isPlayingMessage,
-  } = useBoard();
-
-  const hasParts = message.length > 0;
+  const { message, removeLastMessage, playMessage, isPlayingMessage } =
+    useBoard();
 
   useEffect(() => {
     const scroller = ref.current;
@@ -53,6 +45,10 @@ export function MessageBar() {
             theme.palette.mode === "dark"
               ? theme.palette.grey[800]
               : theme.palette.grey[200],
+          border: (theme) =>
+            theme.palette.mode === "dark"
+              ? `1px solid ${theme.palette.grey[700]}`
+              : `1px solid ${theme.palette.grey[300]}`,
         }}
       >
         <Stack ref={ref} direction="row" gap={2} flexGrow={1} overflow="auto">

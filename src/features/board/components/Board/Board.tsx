@@ -14,7 +14,17 @@ export function Board() {
   }
 
   return (
-    <Stack height="100%" direction="column">
+    <Stack
+      height="100%"
+      direction="column"
+      sx={(theme) => ({
+        backgroundRepeat: "no-repeat",
+        backgroundImage:
+          theme.palette.mode === "dark"
+            ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
+            : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
+      })}
+    >
       <MessageBar />
 
       <SuggestionBar />
