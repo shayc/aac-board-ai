@@ -18,18 +18,18 @@ export function useSuggestions() {
 
     const traits = {
       sarcastic:
-        "Rewrite with clever, deadpan sarcasm. Keep meaning intact while expressing irony and humor.",
+        "Rewrite with dry, witty sarcasm that keeps the original meaning but adds subtle irony or mock seriousness.",
       polite:
-        "Rewrite with respectful, professional phrasing. Keep tone composed and considerate.",
+        "Rewrite with courteous, professional phrasing. Maintain clarity and kindness without sounding overly formal.",
       playful:
-        "Rewrite with a lighthearted, curious tone. Use humor and creative rhythm while staying clear.",
+        "Rewrite with a lighthearted, imaginative tone. Allow gentle humor and lively rhythm while keeping it easy to read.",
     };
 
     const rewriter = await createRewriter({
       tone,
       length: "shorter",
       format: "plain-text",
-      sharedContext: `${traits.polite}`,
+      sharedContext: `${traits.playful}`,
     });
 
     const text = message.map((part) => part.label).join(" ");
