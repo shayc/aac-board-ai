@@ -1,4 +1,3 @@
-import Alert from "@mui/material/Alert";
 import Snackbar from "@mui/material/Snackbar";
 import { createContext, type ReactNode, useState } from "react";
 
@@ -51,7 +50,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         message: nextSnackbar.message,
         severity: nextSnackbar.severity,
         duration: nextSnackbar.duration ?? 4000,
-        action: nextSnackbar.action,
       });
       setQueue((prev) => prev.slice(1));
     }
@@ -84,19 +82,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       <Snackbar
         open={snackbarState.open}
         autoHideDuration={snackbarState.duration}
+        message={snackbarState.message}
+        action={snackbarState.action}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
-      >
-        <Alert
-          severity={snackbarState.severity}
-          action={snackbarState.action}
-          variant="filled"
-          onClose={handleClose}
-          sx={{ width: "100%" }}
-        >
-          {snackbarState.message}
-        </Alert>
-      </Snackbar>
+      />
     </SnackbarContext.Provider>
   );
 }
