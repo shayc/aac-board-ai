@@ -201,6 +201,8 @@ declare global {
 
     /** Free resources for this instance. */
     destroy(): void;
+
+    tone: RewriterTone
   }
 
   interface RewriterConstructor {

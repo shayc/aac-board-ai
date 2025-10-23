@@ -265,8 +265,12 @@ export function useCommunicationBoard({
   }, [boardId]);
 
   useEffect(() => {
+    if (!board) {
+      return;
+    }
+
     generateSuggestions(message, suggestionTone);
-  }, [message, suggestionTone]);
+  }, [message, suggestionTone, board]);
 
   return {
     // Board

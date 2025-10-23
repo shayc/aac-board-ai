@@ -14,24 +14,32 @@ export function useSuggestions() {
     message: MessagePart[],
     tone: RewriterTone
   ) {
-    console.time("create proofreader");
     const proofreader = await createProofreader();
-    console.timeEnd("create proofreader");
 
-    console.time("create rewriter");
+    const traits = {
+      sarcastic:
+        "Rewrite with clever, deadpan sarcasm. Keep meaning intact while expressing irony and humor.",
+      polite:
+        "Rewrite with respectful, professional phrasing. Keep tone composed and considerate.",
+      playful:
+        "Rewrite with a lighthearted, curious tone. Use humor and creative rhythm while staying clear.",
+    };
+
     const rewriter = await createRewriter({
       tone,
       length: "shorter",
       format: "plain-text",
+      sharedContext: `${traits.polite}`,
     });
-    console.timeEnd("create rewriter");
 
     const text = message.map((part) => part.label).join(" ");
 
-    const proofread = await proofreader?.proofread(text);
-    const rewritten = await rewriter?.rewrite(text);
-    const suggestions = [proofread?.correctedInput || "", rewritten || ""];
+    const [proofread, rewritten] = await Promise.all([
+      proofreader?.proofread(text),
+      rewriter?.rewrite(text),
+    ]);
 
+    const suggestions = [proofread?.correctedInput || "", rewritten || ""];
     const uniqueSuggestions = Array.from(new Set(suggestions)).filter(
       (s) => s && !s.includes("GIVEN_TEXT")
     );

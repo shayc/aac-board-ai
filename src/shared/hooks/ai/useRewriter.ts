@@ -27,7 +27,7 @@ export function useRewriter() {
       return null;
     }
 
-    if (rewriterRef.current) {
+    if (rewriterRef.current && rewriterRef.current.tone === options.tone) {
       return rewriterRef.current;
     }
 
@@ -35,7 +35,6 @@ export function useRewriter() {
     if (availability === "unavailable") {
       return null;
     }
-
     const rewriter = await Rewriter.create({
       ...options,
       monitor(m) {
@@ -45,6 +44,7 @@ export function useRewriter() {
       },
     });
 
+    console.log("Creating rewriter with options:", options);
     rewriterRef.current = rewriter;
     return rewriter;
   }
