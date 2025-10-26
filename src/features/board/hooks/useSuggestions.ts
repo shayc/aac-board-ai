@@ -1,14 +1,17 @@
+import { usePrompt } from "@/shared/hooks/ai/usePrompt";
 import { useProofreader } from "@/shared/hooks/ai/useProofreader";
 import { useRewriter } from "@/shared/hooks/ai/useRewriter";
 import { useEffect, useState } from "react";
+import type { Board } from "../types";
 import type { MessagePart } from "./useMessage";
 
-export function useSuggestions(message: MessagePart[]) {
+export function useSuggestions(message: MessagePart[], board: Board | null) {
   const [tone, setTone] = useState<RewriterTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
+  const { createSession } = usePrompt(board?.buttons.map((b) => b.label || ""));
 
   async function generateSuggestions(
     text: string,
@@ -21,12 +24,20 @@ export function useSuggestions(message: MessagePart[]) {
       format: "plain-text",
     });
 
-    const [proofread, rewritten] = await Promise.all([
+    const promptSession = await createSession();
+
+    const [proofread, rewritten, completion] = await Promise.all([
       proofreader?.proofread(text),
       rewriter?.rewrite(text),
+      promptSession?.prompt(text),
     ]);
 
-    const suggestions = [proofread?.correctedInput || "", rewritten || ""];
+    const suggestions = [
+      proofread?.correctedInput || "",
+      rewritten || "",
+      completion || "",
+    ];
+
     const uniqueSuggestions = Array.from(new Set(suggestions)).filter(
       (s) => s && !s?.match(/\b[A-Z]+_[A-Z]+\b/)
     );
@@ -37,7 +48,7 @@ export function useSuggestions(message: MessagePart[]) {
   useEffect(() => {
     const text = message.map((part) => part.label).join(" ");
     generateSuggestions(text, tone);
-  }, [message, tone]);
+  }, [message, tone, board]);
 
   return {
     suggestions,

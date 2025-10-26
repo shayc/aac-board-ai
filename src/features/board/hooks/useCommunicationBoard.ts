@@ -85,7 +85,7 @@ export function useCommunicationBoard({
   } = useMessage();
 
   const { suggestions, suggestionTone, setSuggestionTone } =
-    useSuggestions(message);
+    useSuggestions(message, board);
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,
