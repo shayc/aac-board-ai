@@ -35,14 +35,6 @@ Try the live demo at [aacboard.app](https://aacboard.app) _(requires Chrome 138+
 **Standards:** Open Board Format (OBF/OBZ) support  
 **Voice:** Web Speech API
 
-**Highlights:**
-
-- Custom hooks for each AI API ([implementation](src/shared/hooks/ai/))
-- Session management with download progress monitoring
-- Graceful fallback when APIs are unavailable
-- Efficient prompt engineering tuned for AAC context
-- Accessible UI with MUI 7 components
-
 [Architecture →](src/)
 
 ## Quick Start
