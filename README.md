@@ -6,9 +6,9 @@ _Google Chrome Built-in AI Challenge 2025_
 
 ## Overview
 
-**AAC (Augmentative and Alternative Communication)** tools help people who cannot rely on speech communicate through symbols, text, or synthesized voice.
+AAC (Augmentative and Alternative Communication) tools help people who cannot rely on speech communicate through symbols, text, or synthesized voice. They often use **communication boards** — visual grids of pictures or words that users tap to form messages.
 
-**AAC Board AI** brings these boards to life with [Chrome's Built-in AI](https://developer.chrome.com/docs/ai/built-in), offering context-aware suggestions, tone control, and instant corrections — all powered locally by Gemini Nano for private, reliable, offline communication.
+**AAC Board AI** brings these boards to life with [Chrome's Built-in AI](https://developer.chrome.com/docs/ai/built-in). It adds context-aware suggestions, tone adjustment, and instant corrections — all powered locally by Gemini Nano for fast, private, and reliable offline communication.
 
 ![AAC Board AI interface](screenshot.png)
 
