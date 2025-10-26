@@ -2,10 +2,12 @@
 
 [![Introducing Google Chrome Built-in AI Challenge 2025](https://img.youtube.com/vi/9X-ZXQasW2Q/0.jpg)](https://www.youtube.com/watch?v=9X-ZXQasW2Q)
 
-Powerful AI is moving from the cloud to the client, and this is your chance to build with it!  
-Join the **Google Chrome Built-in AI Challenge 2025** to create new web applications or Chrome Extensions using a suite of built-in AI APIs and powerful models, including Gemini Nano.
+Powerful AI is moving from the cloud to the client — and this is your chance to build with it!  
+Join the **Google Chrome Built-in AI Challenge 2025** to create new web applications or Chrome Extensions using a suite of built-in AI APIs and powerful models, including **Gemini Nano**.
 
-Here’s how you can use our innovative suite of APIs to bring your ideas to life:
+### Build with Built-in AI APIs
+
+Here’s how you can use Chrome’s built-in APIs to bring your ideas to life:
 
 - 💭 **Prompt API:** Generate dynamic user prompts and structured outputs, now with multimodal support for **image** and **audio** input.
 - 🔤 **Proofreader API:** Correct grammar mistakes with ease.
@@ -14,26 +16,97 @@ Here’s how you can use our innovative suite of APIs to bring your ideas to lif
 - ✏️ **Writer API:** Create original and engaging text.
 - 🖊️ **Rewriter API:** Improve content with alternative options.
 
-These APIs work client-side, which means your AI features are delivered locally, with privacy, offline access, and cost-efficiency benefits.  
-For you and your users, this means:
+These APIs run **client-side**, meaning your AI features are delivered locally — with privacy, offline access, and cost-efficiency benefits.
 
-- ⚙️ **Creative freedom:** Build freely without having to worry about server costs or quotas, enabling new, proactive AI patterns.
-- 🔒 **Inherent privacy:** Deliver hyper-personalized experiences with the guarantee that user input or context never leaves the device.
-- ✅ **Network-resilient UX:** Create features with consistent availability and performance, including for users who are offline or on unstable connections.
+### Why Local AI Matters
 
-Are you hoping to extend your web application or extension’s reach to even more users, including those on mobile devices?  
-Implement a hybrid AI strategy with either [**Firebase AI Logic**](https://firebase.google.com/docs/ai-logic/hybrid-on-device-inference?api=dev) or the **Gemini Developer API**.
+- ⚙️ **Creative freedom:** Build freely without server costs or quotas, enabling proactive AI patterns.
+- 🔒 **Inherent privacy:** Deliver hyper-personalized experiences that never leave the user’s device.
+- ✅ **Network-resilient UX:** Ensure consistent performance, even offline or on unstable networks.
 
-Ready to get started?  
-To gain access to the latest documentation, stay up-to-date with new APIs, and join the community, be sure to sign up for the [**Chrome Built-in AI Early Preview Program**](https://developer.chrome.com/docs/ai/join-epp).  
-Whether you’re a seasoned developer or new to hackathons, this challenge is your opportunity to share your vision to define the future of client-side AI. We want to see how you’ll give the web a brain boost and a creative spark!
+### Hybrid AI Options
 
-> **Note:** All hackathon projects must be new and original for this year’s event.  
-> If you participated in the 2024 hackathon, you cannot reuse the same project or project concept.  
-> Your entry must use a new idea and a new application.
+Extend your web app or extension to reach mobile users with a hybrid AI approach using either:
+
+- [**Firebase AI Logic**](https://firebase.google.com/docs/ai-logic/hybrid-on-device-inference?api=dev)
+- **Gemini Developer API**
+
+### Get Started
+
+Join the [**Chrome Built-in AI Early Preview Program**](https://developer.chrome.com/docs/ai/join-epp) to gain access to documentation, stay up-to-date with new APIs, and connect with the Chrome community.  
+Whether you’re a seasoned developer or a first-time hacker, this challenge is your opportunity to shape the future of client-side AI.
+
+> **Note:** All hackathon projects must be new and original for 2025.  
+> Projects from the 2024 hackathon cannot be reused or re-submitted.
+
+---
 
 ## Why Join?
 
-- **Build your portfolio and skills:** Walk away with a brand-new project and hands-on experience with cutting-edge Web AI using Gemini Nano.
-- **Innovate and be recognized:** Showcase your ingenuity and get a chance to have your project featured on Google's social channels.
-- **Connect with experts:** Gain valuable feedback and unique insights directly from the Google Chrome team.
+- **Build your portfolio and skills:** Walk away with a brand-new project and hands-on experience with Gemini Nano.
+- **Innovate and be recognized:** Showcase your ingenuity and get a chance to be featured on Google’s social channels.
+- **Connect with experts:** Gain feedback and insights directly from the Chrome team.
+
+---
+
+## 🧩 Requirements
+
+### What to Build
+
+Develop a new web application or Chrome Extension that uses one or more built-in AI APIs (Prompt, Summarizer, Writer, Rewriter, Translator, Proofreader) to interact with Chrome’s built-in AI models like **Gemini Nano**.
+
+### What to Submit
+
+- A working web app or extension meeting the requirements above.
+- A **text description** explaining the app’s features, which APIs are used, and what problem it solves.
+- A **demo video** (max 3 minutes) showing the app running on its target device.
+  - Must be public on YouTube or Vimeo.
+  - Include the link in your submission.
+  - Must not violate any third-party rights.
+- A **public GitHub repository** with an open-source license, clear setup instructions, and everything judges need to test it.
+- **Working demo access** (public site or app link; private sites must include credentials).
+- **English-language** text and video submissions.
+
+**Optional:** Share your feedback on using the APIs. Submit both a project and a [feedback form](https://forms.gle/V3QzcVcNMotTiYdd9) to qualify for the **Most Valuable Feedback Prize**.
+
+---
+
+## 🏆 Prizes — $70,000 Total
+
+| Prize                                        | Description                              | Value       | Winners |
+| -------------------------------------------- | ---------------------------------------- | ----------- | ------- |
+| 🟡 Most Helpful – Chrome Extension           | Promotion + coffee chat with Chrome team | **$14,000** | 1       |
+| 🟢 Best Multimodal AI App – Chrome Extension | Promotion + coffee chat with Chrome team | **$9,000**  | 1       |
+| 🔵 Best Hybrid AI App – Chrome Extension     | Promotion + coffee chat with Chrome team | **$9,000**  | 1       |
+| 🟠 Most Helpful – Web Application            | Promotion + coffee chat with Chrome team | **$14,000** | 1       |
+| 🟣 Best Multimodal AI App – Web Application  | Promotion + coffee chat with Chrome team | **$9,000**  | 1       |
+| 🟤 Best Hybrid AI App – Web Application      | Promotion + coffee chat with Chrome team | **$9,000**  | 1       |
+| ⚪ Honorable Mention                         | Promotion + coffee chat with Chrome team | **$1,000**  | 5       |
+| 🧠 Most Valuable Feedback                    | –                                        | **$200**    | 5       |
+
+---
+
+## 🧑‍⚖️ Judges
+
+- **Bradford Lee** — Product Marketing Manager, Chrome
+- **François Beaufort** — Developer Relations Engineer, Chrome
+- **Alexandra Klepper** — Senior Technical Writer, Chrome
+- **Thomas Steiner** — Developer Relations Engineer, Chrome
+- **Andre Bandarra** — Developer Relations Engineer, Chrome
+- **Rob Kochman** — Group Product Manager, Chrome
+- **Kenji Baheux** — Senior Product Manager, Chrome
+- **Sebastian Benz** — Engineer Lead, Chrome Extensions
+
+---
+
+## 🧭 Judging Criteria
+
+- **Functionality** — Scalability, API usage, multi-audience potential.
+- **Purpose** — Impact and novelty in improving user tasks or enabling new capabilities.
+- **Content** — Creativity and visual design quality.
+- **User Experience** — Ease of use and clarity of interaction.
+- **Technological Execution** — Effective use of Chrome’s built-in AI APIs.
+
+---
+
+_© 2025 Google Chrome Built-in AI Challenge_
