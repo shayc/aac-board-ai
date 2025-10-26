@@ -5,12 +5,8 @@ import Stack from "@mui/material/Stack";
 import { ToneSelector } from "./ToneSelector/ToneSelector";
 
 export function SuggestionBar() {
-  const {
-    suggestions,
-    suggestionTone,
-    setSuggestionTone,
-    replaceMessage,
-  } = useBoard();
+  const { suggestions, suggestionTone, setSuggestionTone, setMessage } =
+    useBoard();
 
   return (
     <Stack direction="row" alignItems="center" px={2} gap={2}>
@@ -26,9 +22,7 @@ export function SuggestionBar() {
           <Chip
             key={index}
             label={suggestion}
-            onClick={() =>
-              replaceMessage([{ id: suggestion, label: suggestion }])
-            }
+            onClick={() => setMessage([{ id: suggestion, label: suggestion }])}
           />
         ))}
       </Box>

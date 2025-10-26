@@ -31,10 +31,6 @@ export function useMessage() {
     setMessage((prev) => [...prev, part]);
   }
 
-  function replaceMessage(parts: MessagePart[]) {
-    setMessage(parts);
-  }
-
   function removeLastMessage() {
     setMessage((prev) => prev.slice(0, -1));
   }
@@ -57,6 +53,13 @@ export function useMessage() {
 
   function clearMessage() {
     setMessage([]);
+  }
+
+  function addSpace() {
+    addMessage({
+      id: "space", // TODO: unique ID
+      label: "",
+    });
   }
 
   async function playMessage() {
@@ -85,7 +88,8 @@ export function useMessage() {
     message,
     isPlayingMessage,
     addMessage,
-    replaceMessage,
+    addSpace,
+    setMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,

@@ -8,55 +8,23 @@ import {
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Board, Button } from "@features/board/types";
+import type { Action, Board, Button } from "@features/board/types";
 import { useEffect, useState } from "react";
-import type { MessagePart } from "./useMessage";
 import { useMessage } from "./useMessage";
 import { useNavigation } from "./useNavigation";
 import { useSuggestions } from "./useSuggestions";
+
+type ActionHandler = () => void | Promise<void>;
 
 export interface UseCommunicationBoardOptions {
   setId: string;
   boardId: string;
 }
 
-export interface UseCommunicationBoardReturn {
-  // Board
-  board: Board | null;
-  activateButton: (button: Button) => void;
-
-  // Message
-  message: MessagePart[];
-  isPlayingMessage: boolean;
-  addMessage: (part: MessagePart) => void;
-  replaceMessage: (parts: MessagePart[]) => void;
-  removeLastMessage: () => void;
-  updateLastMessage: (part: Partial<MessagePart>) => void;
-  clearMessage: () => void;
-  playMessage: () => Promise<void>;
-
-  // Navigation
-  navigationHistory: string[];
-  canGoBack: boolean;
-  canGoHome: boolean;
-  navigateToBoard: (id: string) => void;
-  navigateBack: () => void;
-  navigateHome: () => void;
-
-  // Suggestions
-  suggestions: string[];
-  suggestionTone: RewriterTone;
-  generateSuggestions: (
-    message: MessagePart[],
-    tone: RewriterTone
-  ) => Promise<void>;
-  setSuggestionTone: (tone: RewriterTone) => void;
-}
-
 export function useCommunicationBoard({
   setId,
   boardId,
-}: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
+}: UseCommunicationBoardOptions) {
   const { languageCode } = useLanguage();
   const { createTranslator } = useTranslator();
 
@@ -79,21 +47,44 @@ export function useCommunicationBoard({
     message,
     isPlayingMessage,
     addMessage,
-    replaceMessage,
+    setMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,
+    addSpace,
     playMessage,
   } = useMessage();
 
-  const {
-    suggestions,
-    suggestionTone,
-    generateSuggestions,
-    setSuggestionTone,
-  } = useSuggestions();
+  const { suggestions, suggestionTone, setSuggestionTone } = useSuggestions(
+    message,
+    board
+  );
 
-  const activateButton = (button: Button) => {
+  const actionHandlers: Record<string, ActionHandler> = {
+    ":space": addSpace,
+    ":clear": clearMessage,
+    ":home": navigateHome,
+    ":speak": playMessage,
+    ":backspace": removeLastMessage,
+  };
+
+  function executeAction(action: Action) {
+    if (action.startsWith("+")) {
+      const text = action.slice(1).trim();
+
+      updateLastMessage({
+        id: text,
+        label: `${message[message.length - 1]?.label ?? ""}${text}`,
+      });
+
+      return;
+    }
+
+    const handler = actionHandlers[action];
+    handler?.();
+  }
+
+  const activateButton = async (button: Button) => {
     if (button.loadBoard?.id) {
       navigateToBoard(button.loadBoard.id);
       return;
@@ -101,37 +92,7 @@ export function useCommunicationBoard({
 
     if (button.actions?.length) {
       for (const action of button.actions) {
-        if (action === ":space") {
-          addMessage({
-            id: "space",
-            label: "",
-          });
-        }
-
-        if (action === ":clear") {
-          clearMessage();
-        }
-
-        if (action === ":home") {
-          navigateHome();
-        }
-
-        if (action === ":speak") {
-          playMessage();
-        }
-
-        if (action === ":backspace") {
-          removeLastMessage();
-        }
-
-        if (action.startsWith("+")) {
-          const text = action.slice(1).trim();
-
-          updateLastMessage({
-            id: text,
-            label: `${message[message.length - 1].label}${text}`,
-          });
-        }
+        await executeAction(action);
       }
 
       return;
@@ -231,17 +192,21 @@ export function useCommunicationBoard({
         targetLanguage: languageCode,
       });
 
+      const translatedName = await translator?.translate(board.name || "");
       const translatedButtons = await Promise.all(
         board.buttons.map(async (button) => {
-          const translatedLabel = await translator?.translate(
-            button.label || ""
-          );
+          let translatedLabel = button.label;
+          if (button.label) {
+            translatedLabel = await translator?.translate(button.label);
+          }
+
           let translatedVocalization = button.vocalization;
           if (button.vocalization) {
             translatedVocalization = await translator?.translate(
-              button.vocalization || ""
+              button.vocalization
             );
           }
+
           return {
             ...button,
             label: translatedLabel,
@@ -252,7 +217,7 @@ export function useCommunicationBoard({
 
       setTranslatedBoard({
         ...board,
-        name: (await translator?.translate(board.name || "")) || board.name,
+        name: translatedName,
         buttons: translatedButtons,
       });
     };
@@ -264,14 +229,6 @@ export function useCommunicationBoard({
     loadBoard(boardId);
   }, [boardId]);
 
-  useEffect(() => {
-    if (!board) {
-      return;
-    }
-
-    generateSuggestions(message, suggestionTone);
-  }, [message, suggestionTone, board]);
-
   return {
     // Board
     board: translatedBoard || board,
@@ -281,7 +238,7 @@ export function useCommunicationBoard({
     message,
     isPlayingMessage,
     addMessage,
-    replaceMessage,
+    setMessage,
     removeLastMessage,
     updateLastMessage,
     clearMessage,
@@ -298,7 +255,6 @@ export function useCommunicationBoard({
     // Suggestions
     suggestions,
     suggestionTone,
-    generateSuggestions,
     setSuggestionTone,
   };
 }

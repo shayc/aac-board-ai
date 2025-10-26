@@ -12,6 +12,11 @@ export interface LoadBoard {
   path?: string;
 }
 
+type SpecialtyAction = ":space" | ":clear" | ":home" | ":speak" | ":backspace";
+type SpellingAction = `+${string}`;
+
+export type Action = SpecialtyAction | SpellingAction;
+
 export interface Button {
   id: string;
   label?: string;
@@ -20,7 +25,7 @@ export interface Button {
   borderColor?: string;
   imageSrc?: string;
   soundSrc?: string;
-  actions?: string[];
+  actions?: Action[];
   loadBoard?: LoadBoard;
 }
 
