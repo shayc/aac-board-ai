@@ -1,10 +1,9 @@
 import { useProofreader } from "@/shared/hooks/ai/useProofreader";
 import { useRewriter } from "@/shared/hooks/ai/useRewriter";
-import type { Board } from "@features/board/types";
 import { useEffect, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
-export function useSuggestions(message: MessagePart[], board: Board | null) {
+export function useSuggestions(message: MessagePart[]) {
   const [tone, setTone] = useState<RewriterTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -12,7 +11,7 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
   const { createRewriter } = useRewriter();
 
   async function generateSuggestions(
-    message: MessagePart[],
+    text: string,
     tone: RewriterTone = "as-is"
   ) {
     const proofreader = await createProofreader();
@@ -21,8 +20,6 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
       length: "shorter",
       format: "plain-text",
     });
-
-    const text = message.map((part) => part.label).join(" ");
 
     const [proofread, rewritten] = await Promise.all([
       proofreader?.proofread(text),
@@ -38,7 +35,8 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
   }
 
   useEffect(() => {
-    generateSuggestions(message, tone);
+    const text = message.map((part) => part.label).join(" ");
+    generateSuggestions(text, tone);
   }, [message, tone]);
 
   return {

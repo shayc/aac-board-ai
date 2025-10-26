@@ -3,9 +3,15 @@ import type {
   OBFButton,
   OBFGrid,
   OBFLoadBoard,
-  OBFSound
+  OBFSound,
 } from "@/shared/open-board-format/schema";
-import type { Board, Button, Grid, LoadBoard } from "@features/board/types";
+import type {
+  Action,
+  Board,
+  Button,
+  Grid,
+  LoadBoard,
+} from "@features/board/types";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSources = buildImageMap(obfBoard);
@@ -75,8 +81,8 @@ function transformButton(
     soundSrc: obfButton.sound_id
       ? soundSources.get(obfButton.sound_id)
       : undefined,
-    actions: [obfButton.action || "", ...(obfButton.actions || [])].filter(
-      Boolean
+    actions: [obfButton.action, ...(obfButton.actions ?? [])].filter(
+      (a): a is Action => Boolean(a)
     ),
     loadBoard: obfButton.load_board
       ? transformLoadBoard(obfButton.load_board)

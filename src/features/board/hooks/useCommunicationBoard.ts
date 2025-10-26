@@ -10,7 +10,7 @@ import {
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Action, Board, Button } from "@features/board/types";
 import { useEffect, useState } from "react";
-import { useMessage } from "./useMessage";
+import { useMessage, type MessagePart } from "./useMessage";
 import { useNavigation } from "./useNavigation";
 import { useSuggestions } from "./useSuggestions";
 
@@ -21,10 +21,39 @@ export interface UseCommunicationBoardOptions {
   boardId: string;
 }
 
+export interface UseCommunicationBoardReturn {
+  // Board
+  board: Board | null;
+  activateButton: (button: Button) => void;
+
+  // Message
+  message: MessagePart[];
+  isPlayingMessage: boolean;
+  addMessage: (part: MessagePart) => void;
+  setMessage: (parts: MessagePart[]) => void;
+  removeLastMessage: () => void;
+  updateLastMessage: (part: Partial<MessagePart>) => void;
+  clearMessage: () => void;
+  playMessage: () => Promise<void>;
+
+  // Navigation
+  navigationHistory: string[];
+  canGoBack: boolean;
+  canGoHome: boolean;
+  navigateToBoard: (id: string) => void;
+  navigateBack: () => void;
+  navigateHome: () => void;
+
+  // Suggestions
+  suggestions: string[];
+  suggestionTone: RewriterTone;
+  setSuggestionTone: (tone: RewriterTone) => void;
+}
+
 export function useCommunicationBoard({
   setId,
   boardId,
-}: UseCommunicationBoardOptions) {
+}: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
   const { languageCode } = useLanguage();
   const { createTranslator } = useTranslator();
 
@@ -55,10 +84,8 @@ export function useCommunicationBoard({
     playMessage,
   } = useMessage();
 
-  const { suggestions, suggestionTone, setSuggestionTone } = useSuggestions(
-    message,
-    board
-  );
+  const { suggestions, suggestionTone, setSuggestionTone } =
+    useSuggestions(message);
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,
