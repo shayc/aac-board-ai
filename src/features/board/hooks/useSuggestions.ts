@@ -30,8 +30,8 @@ export function useSuggestions() {
     ]);
 
     const suggestions = [proofread?.correctedInput || "", rewritten || ""];
-    const uniqueSuggestions = Array.from(new Set(suggestions)).filter(
-      (s) => s && !s.includes("GIVEN_TEXT")
+    const uniqueSuggestions = Array.from(new Set(suggestions)).filter((s) =>
+      s && !s?.match(/\b[A-Z]+_[A-Z]+\b/)
     );
 
     setSuggestions(uniqueSuggestions);
