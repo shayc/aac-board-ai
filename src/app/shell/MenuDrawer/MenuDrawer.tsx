@@ -27,11 +27,11 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
 
   async function handleImportBoard() {
     const file = await openFile();
-    
+
     if (!file) {
       return;
     }
-    
+
     onClose();
     showSnackbar({ message: "Importing board...", severity: "info" });
 
@@ -98,7 +98,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           align="center"
           sx={{ m: 2 }}
         >
-          Powered by{" "}
+          Powered by Chrome's{" "}
           <Link
             href="https://developer.chrome.com/docs/ai/built-in"
             underline="hover"
