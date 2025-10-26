@@ -1,9 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 
-export type RewriterTone = "as-is" | "more-formal" | "more-casual";
-export type RewriterFormat = "as-is" | "markdown" | "plain-text";
-export type RewriterLength = "as-is" | "shorter" | "longer";
-
 export interface RewriterOptions {
   tone?: RewriterTone;
   format?: RewriterFormat;
@@ -44,7 +40,6 @@ export function useRewriter() {
       },
     });
 
-    console.log("Creating rewriter with options:", options);
     rewriterRef.current = rewriter;
     return rewriter;
   }
