@@ -26,17 +26,6 @@ Try the live demo at [aacboard.app](https://aacboard.app) _(requires Chrome 138+
 - **Multi-Language Support** – [Translator API](https://developer.chrome.com/docs/ai/translator-api) bridges communication across languages
 - **Open Format Support** – Imports Open Board Format (OBF/OBZ) boards for full interoperability
 
-## How It Works
-
-1. User taps symbols to compose a message
-2. Proofreader API corrects grammar instantly
-3. Rewriter API adjusts tone (casual / formal / neutral)
-4. Prompt API suggests completions based on board context
-5. The user selects a suggestion or speaks the message aloud
-
-Behind the scenes, AAC Board AI combines Chrome’s five on-device APIs — Language Detector, Proofreader, Rewriter, Prompt, and Translator — to create expressive, private, fully local communication.  
-All processing happens on-device via Gemini Nano — no data leaves the browser.
-
 ## Technical Stack
 
 **Frontend:** React 19 • TypeScript • Vite (with [React Compiler](https://react.dev/learn/react-compiler))  
