@@ -1,24 +1,18 @@
-import { usePrompt } from "@/shared/hooks/ai/usePrompt";
 import { useProofreader } from "@/shared/hooks/ai/useProofreader";
 import { useRewriter } from "@/shared/hooks/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
-import type { Board } from "../types";
 import type { MessagePart } from "./useMessage";
 
-export function useSuggestions(message: MessagePart[], board: Board | null) {
+export function useSuggestions(message: MessagePart[]) {
+  const { createProofreader } = useProofreader();
+  const { createRewriter } = useRewriter();
+
   const [tone, setTone] = useState<RewriterTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const { createProofreader } = useProofreader();
-  const { createRewriter } = useRewriter();
-  const { createSession } = usePrompt(board?.buttons.map((b) => b.label || ""));
-
   const abortRef = useRef<AbortController | null>(null);
 
-  async function generateSuggestions(
-    text: string,
-    tone: RewriterTone = "as-is"
-  ) {
+  async function generateSuggestions(text: string, tone: RewriterTone) {
     abortRef.current?.abort();
 
     const controller = new AbortController();
@@ -32,12 +26,10 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
         length: "shorter",
         format: "plain-text",
       });
-      const modelSession = await createSession();
 
-      const [proofread, rewritten, completion] = await Promise.all([
+      const [proofread, rewritten] = await Promise.all([
         proofreader?.proofread(text, { signal }),
         rewriter?.rewrite(text, { signal }),
-        modelSession?.prompt(text, { signal }),
       ]);
 
       if (signal.aborted) {
@@ -47,19 +39,17 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
       const suggestions = [
         proofread?.correctedInput || "",
         rewritten || "",
-        completion || "",
-      ];
+      ].filter((s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/));
 
-      const uniqueSuggestions = Array.from(new Set(suggestions)).filter(
-        (s) => s && !s.match(/\b[A-Z]+_[A-Z]+\b/)
-      );
+      const uniqueSuggestions = Array.from(new Set(suggestions));
 
       setSuggestions(uniqueSuggestions);
-    } catch (err) {
-      if ((err as DOMException).name === "AbortError") {
+    } catch (error) {
+      if ((error as DOMException).name === "AbortError") {
         return;
       }
-      console.error("generateSuggestions failed:", err);
+
+      console.error("generateSuggestions failed:", error);
     }
   }
 
@@ -68,7 +58,7 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
     generateSuggestions(text, tone);
 
     return () => abortRef.current?.abort();
-  }, [message, tone, board]);
+  }, [message, tone]);
 
   return {
     suggestions,
