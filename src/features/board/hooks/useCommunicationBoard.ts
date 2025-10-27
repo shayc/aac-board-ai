@@ -35,6 +35,7 @@ export interface UseCommunicationBoardReturn {
   updateLastMessage: (part: Partial<MessagePart>) => void;
   clearMessage: () => void;
   playMessage: () => Promise<void>;
+  stopMessage: () => void;
 
   // Navigation
   navigationHistory: string[];
@@ -82,6 +83,7 @@ export function useCommunicationBoard({
     clearMessage,
     addSpace,
     playMessage,
+    stopMessage,
   } = useMessage();
 
   const { suggestions, suggestionTone, setSuggestionTone } =
@@ -270,6 +272,7 @@ export function useCommunicationBoard({
     updateLastMessage,
     clearMessage,
     playMessage,
+    stopMessage,
 
     // Navigation
     navigationHistory,

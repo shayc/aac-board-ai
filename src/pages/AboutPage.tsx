@@ -19,18 +19,16 @@ export function AboutPage() {
             </Typography>
 
             <Typography variant="body1" component="p">
-              AAC Board AI helps people who can’t rely on speech communicate
-              faster and more naturally.
+              AAC Board AI helps people who can't rely on speech communicate
+              more easily and naturally. It uses on-device AI to correct
+              grammar, adjust tone, and translate messages — keeping every
+              interaction private, offline, and fast.
             </Typography>
 
             <Typography variant="body1" component="p">
-              AI corrects grammar, adjusts tone, and translates — all on your
-              device. Private. Offline. Free.
-            </Typography>
-
-            <Typography variant="body1" component="p">
-              Powered by Chrome’s built-in Gemini Nano for people with cerebral
-              palsy, autism, aphasia, and the therapists who support them.
+              Powered by Chrome's built-in Gemini Nano, it supports people with
+              cerebral palsy, autism, and aphasia, as well as the therapists who
+              work alongside them.
             </Typography>
 
             <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
@@ -69,7 +67,7 @@ export function AboutPage() {
               >
                 Open Board Format
               </Link>
-              , and featuring the <em>Quick Core 24</em> board by{" "}
+              , and featuring the <em>Quick Core 24</em> vocabulary set by{" "}
               <Link
                 href="https://www.openaac.org"
                 target="_blank"

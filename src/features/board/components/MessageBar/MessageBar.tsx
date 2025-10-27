@@ -12,8 +12,13 @@ import { useEffect, useRef } from "react";
 
 export function MessageBar() {
   const ref = useRef<HTMLDivElement>(null);
-  const { message, removeLastMessage, playMessage, isPlayingMessage } =
-    useBoard();
+  const {
+    message,
+    removeLastMessage,
+    playMessage,
+    stopMessage,
+    isPlayingMessage,
+  } = useBoard();
 
   useEffect(() => {
     const scroller = ref.current;
@@ -54,7 +59,11 @@ export function MessageBar() {
         <Stack ref={ref} direction="row" gap={2} flexGrow={1} overflow="auto">
           {message.map((p: MessagePart, index: number) => (
             <Stack key={index} direction="row">
-              <Pictogram label={p.label} src={p.imageSrc} />
+              <Pictogram
+                label={p.label}
+                labelTypographyVariant={p.imageSrc ? "body2" : "h6"}
+                src={p.imageSrc}
+              />
             </Stack>
           ))}
         </Stack>
@@ -81,7 +90,7 @@ export function MessageBar() {
           <IconButton
             aria-label="Play"
             size="large"
-            onClick={playMessage}
+            onClick={() => (isPlayingMessage ? stopMessage() : playMessage())}
             sx={{
               width: 96,
               height: 96,

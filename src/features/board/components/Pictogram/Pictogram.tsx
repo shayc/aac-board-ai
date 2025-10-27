@@ -1,13 +1,15 @@
+import type { TypographyVariant } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
 export interface PictogramProps {
   src?: string;
   label?: string;
+  labelTypographyVariant?: TypographyVariant;
 }
 
 export function Pictogram(props: PictogramProps) {
-  const { src, label } = props;
+  const { src, label, labelTypographyVariant = "body2" } = props;
 
   return (
     <Box
@@ -41,7 +43,7 @@ export function Pictogram(props: PictogramProps) {
       {label && (
         <Typography
           noWrap
-          variant="body2"
+          variant={labelTypographyVariant}
           component="span"
           sx={{
             px: 1,

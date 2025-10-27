@@ -61,6 +61,15 @@ export function useMessage() {
       label: "",
     });
   }
+  async function stopMessage() {
+    try {
+      speech.cancel();
+    } catch (error) {
+      console.error("Error stopping message:", error);
+    } finally {
+      setIsPlayingMessage(false);
+    }
+  }
 
   async function playMessage() {
     try {
@@ -94,6 +103,7 @@ export function useMessage() {
     updateLastMessage,
     clearMessage,
     playMessage,
+    stopMessage,
   };
 }
 
