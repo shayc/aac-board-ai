@@ -202,7 +202,7 @@ declare global {
     /** Free resources for this instance. */
     destroy(): void;
 
-    tone: RewriterTone
+    tone: RewriterTone;
   }
 
   interface RewriterConstructor {
@@ -335,9 +335,11 @@ declare global {
 
   /** Global Proofreader constructor. */
   const Proofreader: ProofreaderConstructor;
+
   // -------------------------------------------------------------------------------------------------
   // Prompt API (Language Model) — https://developer.chrome.com/docs/ai/prompt-api
-  // Permission-Policy: `allow="language-model"`; not available in Web Workers.
+  // Permission-Policy: <iframe allow="language-model">; not available in Web Workers.
+  // Last verified: 2025-09-21
   // -------------------------------------------------------------------------------------------------
 
   /** Availability states for the Language Model API. */
@@ -359,57 +361,153 @@ declare global {
     maxTemperature: number;
   }
 
+  /** Modalities and languages expected by the session or capability check. */
+  type LanguageModelModality = "text" | "image" | "audio";
+  interface LanguageModelExpected {
+    type: LanguageModelModality;
+    /** BCP-47 language tags (e.g., "en", "ja", "es"). */
+    languages?: string[];
+  }
+
+  /** A single content part in a multimodal message. */
+  type PromptContentPart =
+    | { type: "text"; value: string }
+    | {
+        type: "image";
+        value: Blob | ImageBitmap | OffscreenCanvas | HTMLImageElement;
+      }
+    | { type: "audio"; value: Blob };
+
+  /** Roles and message structure for conversational prompting. */
+  type PromptRole = "system" | "user" | "assistant";
+  interface PromptMessage {
+    role: PromptRole;
+    /** Either plain text or a multimodal bundle. */
+    content: string | PromptContentPart[];
+    /** If true on trailing assistant message, treat content as a prefix. */
+    prefix?: boolean;
+  }
+
+  /** Shared base for create/availability option shapes. */
+  interface LanguageModelBaseOptions {
+    /** Expected user/system input modalities and languages. */
+    expectedInputs?: LanguageModelExpected[];
+    /** Expected output modalities and languages (Prompt API outputs are text). */
+    expectedOutputs?: LanguageModelExpected[];
+  }
+
   /** Options for creating a language model session. */
-  interface LanguageModelCreateOptions extends AIBaseCreateOptions {
-    /** Temperature parameter for response randomness (0-2). */
+  interface LanguageModelCreateOptions extends LanguageModelBaseOptions {
+    /**
+     * Sampling temperature (0–2) and topK.
+     * Must specify both or neither (per docs).
+     */
     temperature?: number;
-    /** Top-K parameter for response diversity. */
     topK?: number;
-    /** System prompt to set context for the session. */
-    systemPrompt?: string;
+
+    /** Abort creating or auto-destroy the session on abort. */
+    signal?: AbortSignal;
+
+    /**
+     * Provide prior messages (including a 'system' message) to seed context.
+     * Prefer this over ad-hoc `systemPrompt` fields.
+     */
+    initialPrompts?: PromptMessage[];
+
+    /**
+     * Observe download progress for model/resources.
+     * Listener receives 'downloadprogress' events with { loaded: number } in [0,1].
+     */
+    monitor?(m: EventTarget): void;
   }
 
   /** Options for prompting the model. */
   interface LanguageModelPromptOptions {
-    /** Abort an ongoing prompt. */
+    /** Abort an ongoing prompt or stream. */
     signal?: AbortSignal;
+
+    /**
+     * Enforce structured output (JSON Schema or RegExp).
+     * When provided, the schema/regex may count toward input usage unless
+     * `omitResponseConstraintInput` is set.
+     */
+    responseConstraint?: object | RegExp;
+
+    /**
+     * If true, do not include the constraint in the model input.
+     * Pair with strong textual instructions.
+     */
+    omitResponseConstraintInput?: boolean;
   }
 
   /** A language model session for prompting. */
   interface LanguageModelSession {
-    /** Send a prompt and get the full response. */
+    /** Send a prompt (string or messages) and get the full response. */
     prompt(
-      input: string,
+      input: string | PromptMessage[],
       options?: LanguageModelPromptOptions
     ): Promise<string>;
 
-    /** Send a prompt and stream the response. */
+    /** Send a prompt and stream the response as text chunks. */
     promptStreaming(
-      input: string,
+      input: string | PromptMessage[],
       options?: LanguageModelPromptOptions
-    ): ReadableStream;
+    ): ReadableStream<string>;
 
-    /** Current token usage in this session. */
+    /**
+     * Append contextual messages without triggering generation.
+     * Useful to pre-warm multimodal inputs.
+     */
+    append(messages: PromptMessage[]): Promise<void>;
+
+    /**
+     * Clone this session (initial prompts retained, conversation context reset).
+     * Aborts the clone if `signal` is aborted.
+     */
+    clone(options?: { signal?: AbortSignal }): Promise<LanguageModelSession>;
+
+    /**
+     * Estimate how much of the input quota would be used by a prompt,
+     * optionally considering `responseConstraint`.
+     */
+    measureInputUsage?(
+      input: string | PromptMessage[],
+      options?: Pick<
+        LanguageModelPromptOptions,
+        "responseConstraint" | "omitResponseConstraintInput"
+      >
+    ): Promise<number>;
+
+    /** Current tokens/characters accounted for this session's context window. */
     readonly inputUsage: number;
 
-    /** Maximum tokens allowed for this session. */
+    /** Maximum tokens/characters available in this session. */
     readonly inputQuota: number;
 
-    /** Free resources for this session. */
+    /** Free resources for this session; further use will reject. */
     destroy(): void;
   }
 
+  /** Availability accepts the same expectation options you intend to use. */
+  interface LanguageModelAvailabilityOptions extends LanguageModelBaseOptions {}
+
+  /** Constructor/namespace for the Prompt API. */
   interface LanguageModelConstructor {
-    /** Get model parameters (topK and temperature ranges). */
+    /** Get model parameter bounds (topK/temperature). */
     params(): Promise<LanguageModelParams>;
 
-    /** Check whether the language model is available. */
-    availability(): Promise<LanguageModelAvailability>;
+    /**
+     * Check whether the language model is available.
+     * Pass the same expectations (modalities/languages) you'll use for prompting.
+     */
+    availability(
+      options?: LanguageModelAvailabilityOptions
+    ): Promise<LanguageModelAvailability>;
 
-    /** Create a new language model session. */
+    /** Create a new language model session (may download on first use). */
     create(options?: LanguageModelCreateOptions): Promise<LanguageModelSession>;
   }
 
   /** Global LanguageModel constructor. */
-  const LanguageModel: LanguageModelConstructor;
+  declare const LanguageModel: LanguageModelConstructor;
 }
