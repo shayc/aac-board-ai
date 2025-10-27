@@ -1,4 +1,5 @@
 import { BoardProvider } from "@features/board/context/BoardProvider";
+import { AIProvider } from "@shared/contexts/AIProvider/AIProvider";
 import { LanguageProvider } from "@shared/contexts/LanguageProvider/LanguageProvider";
 import { SnackbarProvider } from "@shared/contexts/SnackbarProvider/SnackbarProvider";
 import { SpeechProvider } from "@shared/contexts/SpeechProvider/SpeechProvider";
@@ -15,7 +16,9 @@ export function AppProviders({ children }: AppProvidersProps) {
       <SnackbarProvider>
         <SpeechProvider>
           <LanguageProvider>
-            <BoardProvider>{children}</BoardProvider>
+            <AIProvider>
+              <BoardProvider>{children}</BoardProvider>
+            </AIProvider>
           </LanguageProvider>
         </SpeechProvider>
       </SnackbarProvider>

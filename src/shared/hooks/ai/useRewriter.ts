@@ -11,6 +11,7 @@ export function useRewriter() {
   const isSupported = "Rewriter" in self;
   const [downloadProgress, setDownloadProgress] = useState(0);
   const rewriterRef = useRef<Rewriter | null>(null);
+  const optionsRef = useRef<RewriterOptions | null>(null);
 
   async function createRewriter(
     options: RewriterOptions = {
@@ -23,7 +24,11 @@ export function useRewriter() {
       return null;
     }
 
-    if (rewriterRef.current && rewriterRef.current.tone === options.tone) {
+    if (
+      rewriterRef.current &&
+      optionsRef.current?.tone === options.tone &&
+      optionsRef.current?.sharedContext === options.sharedContext
+    ) {
       return rewriterRef.current;
     }
 
@@ -41,12 +46,14 @@ export function useRewriter() {
     });
 
     rewriterRef.current = rewriter;
+    optionsRef.current = options;
     return rewriter;
   }
 
   useEffect(() => {
     return () => {
       rewriterRef.current = null;
+      optionsRef.current = null;
     };
   }, []);
 

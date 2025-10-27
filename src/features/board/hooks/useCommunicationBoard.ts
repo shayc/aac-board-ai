@@ -1,3 +1,4 @@
+import { useAI } from "@/shared/contexts/AIProvider/useAI";
 import { useLanguage } from "@/shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
 import { useTranslator } from "@/shared/hooks/ai/useTranslator";
@@ -57,6 +58,7 @@ export function useCommunicationBoard({
 }: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
   const { languageCode } = useLanguage();
   const { createTranslator } = useTranslator();
+  const { sharedContext } = useAI();
 
   const speech = useSpeech();
   const audio = useAudio();
@@ -87,7 +89,7 @@ export function useCommunicationBoard({
   } = useMessage();
 
   const { suggestions, suggestionTone, setSuggestionTone } =
-    useSuggestions(message);
+    useSuggestions(message, sharedContext);
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,

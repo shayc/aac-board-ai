@@ -3,7 +3,7 @@ import { useRewriter } from "@/shared/hooks/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
-export function useSuggestions(message: MessagePart[]) {
+export function useSuggestions(message: MessagePart[], sharedContext?: string) {
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
 
@@ -12,7 +12,11 @@ export function useSuggestions(message: MessagePart[]) {
 
   const abortRef = useRef<AbortController | null>(null);
 
-  async function generateSuggestions(text: string, tone: RewriterTone) {
+  async function generateSuggestions(
+    text: string,
+    tone: RewriterTone,
+    sharedContext?: string
+  ) {
     abortRef.current?.abort();
 
     const controller = new AbortController();
@@ -25,6 +29,7 @@ export function useSuggestions(message: MessagePart[]) {
         tone,
         length: "shorter",
         format: "plain-text",
+        sharedContext: sharedContext || undefined,
       });
 
       const [proofread, rewritten] = await Promise.all([
@@ -55,10 +60,10 @@ export function useSuggestions(message: MessagePart[]) {
 
   useEffect(() => {
     const text = message.map((part) => part.label).join(" ");
-    generateSuggestions(text, tone);
+    generateSuggestions(text, tone, sharedContext);
 
     return () => abortRef.current?.abort();
-  }, [message, tone]);
+  }, [message, tone, sharedContext]);
 
   return {
     suggestions,
