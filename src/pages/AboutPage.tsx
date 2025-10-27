@@ -26,7 +26,7 @@ export function AboutPage() {
             </Typography>
 
             <Typography variant="body1" component="p">
-              Powered by Chrome's Built-in AI (Gemini Nano), it supports people
+              Powered by Chrome's Built-in AI with Gemini Nano, it supports people
               with cerebral palsy, autism, and aphasia, as well as the
               therapists who work alongside them.
             </Typography>
