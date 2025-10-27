@@ -1,24 +1,12 @@
 // chrome-builtin-ai.d.ts
-// Ambient TypeScript declarations for Chrome’s Built-in AI task APIs.
+// Ambient TypeScript declarations for Chrome's Built-in AI task APIs.
 //
-// Sources (Chrome official):
-// • Translator API — https://developer.chrome.com/docs/ai/translator-api  (Last updated 2025-05-20)
-// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection  (Last updated 2024-09-24)
-// • Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api  (Last updated 2025-05-20)
-// • Writer API — https://developer.chrome.com/docs/ai/writer-api  (Last updated 2025-05-20)
-// • Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api  (Last updated 2025-09-12)
-//
-// Notes:
-// • All classes are exposed as globals (no import required).
-// • Call `.availability()` first to check model state, then `.create()` inside a user gesture if a download is needed.
-// • To observe download progress, either pass `monitor(m => m.addEventListener('downloadprogress', …))` to `create()`,
-//   or (where documented) add a `'downloadprogress'` listener on the created instance.
-// • Default availability: top-level window or same-origin iframe; delegate to cross-origin iframes via
-//   <iframe allow="translator; language-detector; rewriter; writer; proofreader"> (Permissions Policy).
-// • Not available in Web Workers (per docs).
-// • This file intentionally excludes explainer-only or MDN-only fields (e.g. quotas, toggles).
-// • Translator availability note: Chrome intentionally hides per-language-pair download status; many pairs
-//   appear “downloadable” until a site actually creates that pair.
+// Official sources:
+// • Translator API — https://developer.chrome.com/docs/ai/translator-api
+// • Language Detector API — https://developer.chrome.com/docs/ai/language-detection
+// • Rewriter API — https://developer.chrome.com/docs/ai/rewriter-api
+// • Writer API — https://developer.chrome.com/docs/ai/writer-api
+// • Proofreader API — https://developer.chrome.com/docs/ai/proofreader-api
 
 export {};
 
@@ -168,16 +156,18 @@ declare global {
     tone?: RewriterTone;
     format?: RewriterFormat;
     length?: RewriterLength;
-    /**
-     * Shared context applied to all rewrites from this instance,
-     * e.g. “Support replies should be polite and concise.”
-     */
     sharedContext?: string;
+
+    expectedInputLanguages?: string[];
+    expectedContextLanguages?: string[];
+    outputLanguage?: string;
   }
 
   interface RewriterRewriteOptions {
     /** Per-call context to steer rewriting. */
     context?: string;
+    /** Override overall tone for this rewrite. */
+    tone?: RewriterTone;
     /** Abort an ongoing rewrite or streaming rewrite. */
     signal?: AbortSignal;
   }
@@ -237,6 +227,10 @@ declare global {
     format?: WriterFormat;
     /** Desired length ("medium" by default). */
     length?: WriterLength;
+
+    expectedInputLanguages?: string[];
+    expectedContextLanguages?: string[];
+    outputLanguage?: string;
   }
 
   interface WriterWriteOptions {
