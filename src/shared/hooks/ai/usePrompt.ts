@@ -35,7 +35,7 @@ export function usePrompt(words: string[] | undefined) {
     const temperature = options.temperature ?? modelParams?.defaultTemperature;
     const topK = options.topK ?? modelParams?.defaultTopK;
 
-    const initialPrompts = [
+    const initialPrompts: PromptMessage[] = [
       {
         role: "system",
         content: `
@@ -56,21 +56,21 @@ export function usePrompt(words: string[] | undefined) {
           `,
       },
     ];
-    // TODO: fix any
-    const session = ((await LanguageModel.create) as any)({
+
+    const session = await LanguageModel.create({
       topK,
       temperature,
       initialPrompts,
       signal: options.signal,
       expectedInputs: [{ type: "text", languages: ["en"] }],
-      expectedOutputs: [{ type: "text", languages: ["en"] }] as any,
-      monitor(m: any) {
-        m.addEventListener("downloadprogress", (event: any) => {
+      expectedOutputs: [{ type: "text", languages: ["en"] }],
+      monitor(m) {
+        m.addEventListener("downloadprogress", (event) => {
           setDownloadProgress(event.loaded);
         });
       },
     });
-    
+
     sessionRef.current = session;
     return session;
   }

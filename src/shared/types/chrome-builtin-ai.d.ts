@@ -178,8 +178,6 @@ declare global {
   interface RewriterRewriteOptions {
     /** Per-call context to steer rewriting. */
     context?: string;
-    /** Optional per-call tone override. */
-    tone?: RewriterTone;
     /** Abort an ongoing rewrite or streaming rewrite. */
     signal?: AbortSignal;
   }
@@ -201,8 +199,6 @@ declare global {
 
     /** Free resources for this instance. */
     destroy(): void;
-
-    tone: RewriterTone;
   }
 
   interface RewriterConstructor {
@@ -328,7 +324,7 @@ declare global {
 
   interface ProofreaderConstructor {
     /** Check whether proofreading is ready, downloadable, or unavailable. */
-    availability(options?: ProofreaderCreateOptions): Promise<AIAvailability>;
+    availability(): Promise<AIAvailability>;
     /** Create a Proofreader; call from a user gesture if download is required. */
     create(options?: ProofreaderCreateOptions): Promise<Proofreader>;
   }
