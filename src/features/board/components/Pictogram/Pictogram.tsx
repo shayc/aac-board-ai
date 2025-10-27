@@ -15,11 +15,12 @@ export function Pictogram(props: PictogramProps) {
         display: "flex",
         flexDirection: "column",
         textAlign: "center",
+        justifyContent: "center",
         overflow: "hidden",
       }}
     >
-      <Box sx={{ flexGrow: 1, position: "relative", minWidth: "44px" }}>
-        {src && (
+      {src && (
+        <Box sx={{ flexGrow: 1, position: "relative", minWidth: "44px" }}>
           <Box
             component="img"
             src={src}
@@ -34,8 +35,8 @@ export function Pictogram(props: PictogramProps) {
               left: 0,
             }}
           />
-        )}
-      </Box>
+        </Box>
+      )}
 
       {label && (
         <Typography
