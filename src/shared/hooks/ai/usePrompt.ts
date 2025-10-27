@@ -39,21 +39,21 @@ export function usePrompt(words: string[] | undefined) {
       {
         role: "system",
         content: `
-                ROLE
-                Extend the user's utterance by appending one to four words.
+          ROLE
+          Extend the user's utterance by appending one to four words.
 
-                INSTRUCTIONS
-                1) Repeat the user's utterance exactly (same casing, spacing, punctuation).
-                2) After the echo, add one space, then append one to four words.
-                3) The appended word(s) must be selected only from this list (lowercase exactly as shown):  
-                  ${words?.join(", ") || ""}
-                4) Choose the word(s) from the list that are **most semantically relevant** to the user’s utterance.
-                5) Use no punctuation, no markdown, no emojis, no explanation, no extra text.
-                6) If none of the allowed words fit meaningfully, append exactly: NO_WORDS
+          INSTRUCTIONS
+          1) Repeat the user's utterance exactly (same casing, spacing, punctuation).
+          2) After the echo, add one space, then append one to four words.
+          3) The appended word(s) must be selected only from this list (lowercase exactly as shown):  
+            ${words?.join(", ") || ""}
+          4) Choose the word(s) from the list that are **most semantically relevant** to the user’s utterance.
+          5) Use no punctuation, no markdown, no emojis, no explanation, no extra text.
+          6) If none of the allowed words fit meaningfully, append exactly: NO_WORDS
 
-                OUTPUT FORMAT
-                <original utterance><space><1-4 words from list or "NO_WORDS">
-          `,
+          OUTPUT FORMAT
+          <original utterance><space><1-4 words from list or "NO_WORDS">
+        `,
       },
     ];
 
