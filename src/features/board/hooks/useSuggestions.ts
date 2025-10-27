@@ -24,12 +24,12 @@ export function useSuggestions(message: MessagePart[], board: Board | null) {
       format: "plain-text",
     });
 
-    const promptSession = await createSession();
+    const modelSession = await createSession();
 
     const [proofread, rewritten, completion] = await Promise.all([
       proofreader?.proofread(text),
       rewriter?.rewrite(text),
-      promptSession?.prompt(text),
+      modelSession?.prompt(text),
     ]);
 
     const suggestions = [
