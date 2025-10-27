@@ -49,10 +49,10 @@ export function usePrompt(words: string[] | undefined) {
                   ${words?.join(", ") || ""}
                 4) Choose the word(s) from the list that are **most semantically relevant** to the user’s utterance.
                 5) Use no punctuation, no markdown, no emojis, no explanation, no extra text.
-                6) If none of the allowed words fit meaningfully, append exactly: none
+                6) If none of the allowed words fit meaningfully, append exactly: NO_WORDS
 
                 OUTPUT FORMAT
-                <original utterance><space><1-4 words from list or "none">
+                <original utterance><space><1-4 words from list or "NO_WORDS">
           `,
       },
     ];
