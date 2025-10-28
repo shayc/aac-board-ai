@@ -17,12 +17,16 @@ export function useSpeechSynthesis() {
   const langs = Array.from(new Set(voices.map((v) => v.lang))).sort((a, b) =>
     a.localeCompare(b)
   );
+
   const voicesByLang = voices.reduce<Record<string, SpeechSynthesisVoice[]>>(
     (acc, voice) => {
-      if (!acc[voice.lang]) {
-        acc[voice.lang] = [];
+      const lang = voice.lang.split("-")[0];
+
+      if (!acc[lang]) {
+        acc[lang] = [];
       }
-      acc[voice.lang].push(voice);
+
+      acc[lang].push(voice);
       return acc;
     },
     {}

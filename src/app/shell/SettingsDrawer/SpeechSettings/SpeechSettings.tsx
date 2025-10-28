@@ -37,7 +37,7 @@ export function SpeechSettings() {
   }, [languageCode]);
 
   return (
-    <Box>
+    <Box sx={{ mb: 3 }}>
       <Typography gutterBottom>Voice</Typography>
       <FormControl size="small" fullWidth>
         <InputLabel id="voice-select-label">Voice</InputLabel>

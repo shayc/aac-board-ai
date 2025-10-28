@@ -10,7 +10,7 @@ export function LanguageSettings() {
   const { languages, languageCode, setLanguageCode } = useLanguage();
 
   return (
-    <Box>
+    <Box sx={{ mb: 3 }}>
       <Typography gutterBottom>Language</Typography>
       <FormControl size="small" fullWidth>
         <InputLabel id="language-select-label">Language</InputLabel>

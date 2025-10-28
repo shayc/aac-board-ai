@@ -61,7 +61,7 @@ export function MessageBar() {
             <Stack key={index} direction="row">
               <Pictogram
                 label={p.label}
-                labelTypographyVariant={p.imageSrc ? "body2" : "h6"}
+                labelTypographyVariant={p.imageSrc ? "body2" : "h5"}
                 src={p.imageSrc}
               />
             </Stack>

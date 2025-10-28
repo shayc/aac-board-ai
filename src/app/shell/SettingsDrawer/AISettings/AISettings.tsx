@@ -7,16 +7,16 @@ export function AISettings() {
   const { sharedContext, setSharedContext } = useAI();
 
   return (
-    <Box>
+    <Box sx={{ mb: 3 }}>
       <Typography variant="subtitle1" gutterBottom>
-        Shared Context
+        Custom Instructions
       </Typography>
       <TextField
+        fullWidth
         multiline
         rows={3}
-        placeholder="e.g., Sarcastic, Polite, Use simple words"
+        placeholder="e.g., Sarcastic, Polite."
         helperText="Personalize AI suggestions"
-        fullWidth
         value={sharedContext}
         onChange={(e) => setSharedContext(e.target.value)}
       />
