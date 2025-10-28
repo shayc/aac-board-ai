@@ -7,12 +7,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { useAICapabilities } from "@/shared/hooks/ai";
 
 const AI_FEATURES = [
-  { key: "languageModel" as const, label: "Language Model" },
-  { key: "translator" as const, label: "Translator" },
-  { key: "writer" as const, label: "Writer" },
-  { key: "rewriter" as const, label: "Rewriter" },
-  { key: "languageDetector" as const, label: "Language Detector" },
   { key: "proofreader" as const, label: "Proofreader" },
+  { key: "rewriter" as const, label: "Rewriter" },
+  { key: "translator" as const, label: "Translator" },
+  // { key: "languageDetector" as const, label: "Language Detector" },
+  // { key: "languageModel" as const, label: "Language Model" },
+  // { key: "writer" as const, label: "Writer" },
 ];
 
 export function AICapabilitiesList() {

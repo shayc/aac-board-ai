@@ -1,33 +1,19 @@
+import type { BoardsetRecord } from "@/features/board/db/boards-db";
 import { useBoard } from "@features/board/context/useBoard";
-import type { BoardsetRecord } from "@features/board/db/boards-db";
-import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 
-export function BoardSetSelector() {
-  const navigate = useNavigate();
-  const { setId = "" } = useParams<{ setId: string; boardId: string }>();
-  const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
+interface BoardSetSelectorProps {
+  boardsets: BoardsetRecord[];
+  setId: string;
+}
+
+export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
   const { board } = useBoard();
-
-  useEffect(() => {
-    async function loadBoardsets() {
-      const db = await openBoardsDB();
-
-      try {
-        const sets = await listBoardsets(db);
-        setBoardsets(sets);
-      } finally {
-        db.close();
-      }
-    }
-
-    loadBoardsets();
-  }, []);
+  const navigate = useNavigate();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>

@@ -8,7 +8,8 @@ import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 
 export function LanguageSettings() {
   const { languages, languageCode, setLanguageCode } = useLanguage();
-
+console.log(languages);
+console.log(languageCode);
   return (
     <Box sx={{ mb: 3 }}>
       <Typography gutterBottom>Language</Typography>

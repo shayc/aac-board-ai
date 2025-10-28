@@ -20,7 +20,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const [languageCode, setLanguageCode] = usePersistentState<string>(
     "languageCode",
-    "en-US"
+    "en"
   );
 
   const languages = uniqueLangs.map((lang) => {

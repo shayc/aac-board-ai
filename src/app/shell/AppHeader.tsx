@@ -1,4 +1,6 @@
 import { useBoard } from "@/features/board/context/useBoard";
+import type { BoardsetRecord } from "@/features/board/db/boards-db";
+import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -7,6 +9,8 @@ import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
 import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
 
 interface AppHeaderProps {
@@ -15,7 +19,24 @@ interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
+  const { setId = "" } = useParams<{ setId: string; boardId: string }>();
+  const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
   const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
+
+  useEffect(() => {
+    async function loadBoardsets() {
+      const db = await openBoardsDB();
+
+      try {
+        const sets = await listBoardsets(db);
+        setBoardsets(sets);
+      } finally {
+        db.close();
+      }
+    }
+
+    loadBoardsets();
+  }, []);
 
   return (
     <AppBar position="static">
@@ -62,7 +83,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </span>
         </Tooltip>
 
-        <BoardSetSelector />
+        {boardsets.length > 0 && (
+          <BoardSetSelector boardsets={boardsets} setId={setId} />
+        )}
 
         <Tooltip title="Open settings" enterDelay={800} sx={{ ml: "auto" }}>
           <IconButton
