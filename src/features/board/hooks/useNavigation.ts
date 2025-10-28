@@ -19,7 +19,7 @@ export function useNavigation() {
   });
 
   const canGoBack = navState.index > 0;
-  const canGoHome = navState.index > 0;
+  const canGoHome = rootBoardId !== "";
 
   function navigateToBoard(id: string) {
     if (!id || id === navState.history[navState.index]) {

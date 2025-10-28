@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router";
 
 export function BoardSetSelector() {
   const navigate = useNavigate();
-  const { setId } = useParams<{ setId: string; boardId: string }>();
+  const { setId = "" } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
   const { board } = useBoard();
 
@@ -34,7 +34,7 @@ export function BoardSetSelector() {
       <Select
         sx={{ color: "inherit" }}
         size="small"
-        value={setId || ""}
+        value={setId}
         onChange={(e) => {
           const selectedSet = boardsets.find((s) => s.setId === e.target.value);
           if (selectedSet?.rootBoardId) {
@@ -43,12 +43,7 @@ export function BoardSetSelector() {
             );
           }
         }}
-        displayEmpty
       >
-        {boardsets.length === 0 && (
-          <MenuItem value="">No boards imported</MenuItem>
-        )}
-
         {boardsets.map((set) => (
           <MenuItem key={set.setId} value={set.setId}>
             {set.name}
