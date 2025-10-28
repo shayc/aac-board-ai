@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useAICapabilities } from "./useAICapabilities";
 
 export function useProofreader() {
-  const isSupported = "Proofreader" in self;
+  const { proofreader: isSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const proofreaderRef = useRef<Proofreader | null>(null);
+  const isReady = isSupported && downloadProgress === 1;
 
   async function createProofreader(
     options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] }
@@ -42,6 +44,7 @@ export function useProofreader() {
 
   return {
     isSupported,
+    isReady,
     downloadProgress,
     createProofreader,
   };

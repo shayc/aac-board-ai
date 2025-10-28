@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useAICapabilities } from "./useAICapabilities";
 
 export function useLanguageDetector() {
-  const isSupported = "LanguageDetector" in self;
+  const { languageDetector: isSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const detectorRef = useRef<LanguageDetector | null>(null);
+  const isReady = isSupported && downloadProgress === 1;
 
   async function createLanguageDetector() {
     if (!isSupported) {
@@ -39,6 +41,7 @@ export function useLanguageDetector() {
 
   return {
     isSupported,
+    isReady,
     downloadProgress,
     createLanguageDetector,
   };

@@ -1,18 +1,20 @@
 import { useEffect, useRef, useState } from "react";
+import { useAICapabilities } from "./useAICapabilities";
 
-export interface UsePromptOptions {
+export interface UseLanguageModelOptions {
   temperature?: number;
   topK?: number;
   signal?: AbortSignal;
 }
 
-export function usePrompt(words: string[] | undefined) {
-  const isSupported = "LanguageModel" in self;
+export function useLanguageModel(words: string[] | undefined) {
+  const { languageModel: isSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const sessionRef = useRef<LanguageModelSession | null>(null);
+  const isReady = isSupported && downloadProgress === 1;
 
-  async function createSession(
-    options: UsePromptOptions = {
+  async function createLanguageModel(
+    options: UseLanguageModelOptions = {
       temperature: 0.1,
       topK: 1,
     }
@@ -21,9 +23,9 @@ export function usePrompt(words: string[] | undefined) {
       return null;
     }
 
-    // if (sessionRef.current) {
-    //   return sessionRef.current;
-    // }
+    if (sessionRef.current) {
+      return sessionRef.current;
+    }
 
     const modelParams = await LanguageModel.params();
     const availability = await LanguageModel.availability();
@@ -47,7 +49,7 @@ export function usePrompt(words: string[] | undefined) {
           2) After the echo, add one space, then append one to four words.
           3) The appended word(s) must be selected only from this list (lowercase exactly as shown):  
             ${words?.join(", ") || ""}
-          4) Choose the word(s) from the list that are **most semantically relevant** to the user’s utterance.
+          4) Choose the word(s) from the list that are **most semantically relevant** to the user's utterance.
           5) Use no punctuation, no markdown, no emojis, no explanation, no extra text.
           6) If none of the allowed words fit meaningfully, append exactly: NO_WORDS
 
@@ -83,7 +85,8 @@ export function usePrompt(words: string[] | undefined) {
 
   return {
     isSupported,
+    isReady,
     downloadProgress,
-    createSession,
+    createLanguageModel,
   };
 }

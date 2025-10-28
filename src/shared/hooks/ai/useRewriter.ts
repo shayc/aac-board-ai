@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAICapabilities } from "./useAICapabilities";
 
 export interface RewriterOptions {
   tone?: RewriterTone;
@@ -8,10 +9,11 @@ export interface RewriterOptions {
 }
 
 export function useRewriter() {
-  const isSupported = "Rewriter" in self;
+  const { rewriter: isSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterOptions | null>(null);
+  const isReady = isSupported && downloadProgress === 1;
 
   async function createRewriter(
     options: RewriterOptions = {
@@ -59,6 +61,7 @@ export function useRewriter() {
 
   return {
     isSupported,
+    isReady,
     downloadProgress,
     createRewriter,
   };
