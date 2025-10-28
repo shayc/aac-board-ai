@@ -17,7 +17,10 @@ export function HomePage() {
       const existingSets = await db.getAll("boardsets");
       db.close();
 
-      if (existingSets.length > 0) return;
+      if (existingSets.length > 0) {
+        navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
+        return;
+      }
 
       const obzUrl = `${import.meta.env.BASE_URL}quick-core-24.obz`;
       const response = await fetch(obzUrl, { cache: "no-store" });
