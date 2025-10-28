@@ -36,7 +36,8 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
     }
 
     loadBoardsets();
-  }, []);
+    // TODO: remove setId from dependencies
+  }, [setId]);
 
   return (
     <AppBar position="static">
