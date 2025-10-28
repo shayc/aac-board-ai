@@ -12,14 +12,28 @@ AAC (Augmentative and Alternative Communication) tools help people who cannot re
 
 ![AAC Board AI interface](screenshot.png)
 
-Try the live demo at [aacboard.app](https://aacboard.app), _(requires Chrome 138+ with Built-in AI enabled)_.
+Try the live demo at [aacboard.app](https://aacboard.app). _(requires Chrome 138+ with Built-in AI enabled)_.
 
-## Impact & Features
+## Impact & Motivation
 
-**Who it helps and how:** people with cerebral palsy, autism, or aphasia — and the therapists who support them. Built-in AI speeds message creation, adjusts tone for any situation, and works entirely offline for total privacy.
+**The Problem:**  
+Traditional AAC communication boards help people with speech disabilities express themselves through symbols, but they lack natural language processing. Users tap pictograms to form messages word-by-word, often resulting in grammatically incorrect or contextually inappropriate sentences like "me want drink water" instead of "I want to drink water."
 
-**Key Capabilities:**
+**The Solution:**  
+AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages into natural, grammatically correct sentences with adjustable tone — all processed locally on the user's device for privacy and offline reliability.
 
+**Who Benefits:**
+- 🧑 People with cerebral palsy, autism, aphasia, or other speech disabilities
+- 👨‍⚕️ Speech-language therapists and AAC specialists
+- 👪 Caregivers and family members
+
+**Why Built-in AI Matters:**
+- ✅ **Privacy:** All processing happens on-device
+- ✅ **Offline:** Works without internet after initial setup
+- ✅ **Free:** No API costs or usage limits
+- ✅ **Fast:** Real-time corrections with Gemini Nano
+
+**Key Features:**
 - **Grammar Correction** – Instantly fixes grammar using the [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)
 - **Tone Adjustment** – Rewrites phrases for casual, formal, or neutral delivery through the [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)
 - **Multi-Language Support** – Translates messages seamlessly between languages with the [Translator API](https://developer.chrome.com/docs/ai/translator-api)
