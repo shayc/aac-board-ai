@@ -14,7 +14,7 @@ export function AppearanceSettings() {
   }
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 2 }}>
       <FormControl>
         <FormLabel id="theme-toggle">Theme</FormLabel>
         <RadioGroup

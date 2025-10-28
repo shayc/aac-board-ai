@@ -88,8 +88,10 @@ export function useCommunicationBoard({
     stopMessage,
   } = useMessage();
 
-  const { suggestions, suggestionTone, setSuggestionTone } =
-    useSuggestions(message, sharedContext);
+  const { suggestions, suggestionTone, setSuggestionTone } = useSuggestions(
+    message,
+    sharedContext
+  );
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,

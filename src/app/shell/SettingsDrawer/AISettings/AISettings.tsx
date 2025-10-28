@@ -9,7 +9,7 @@ export function AISettings() {
 
   return (
     <>
-      <Box sx={{ mb: 3 }}>
+      <Box sx={{ mb: 2 }}>
         <Typography variant="subtitle1" gutterBottom>
           Custom Instructions
         </Typography>

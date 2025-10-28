@@ -17,10 +17,6 @@ export function useTranslator() {
       return null;
     }
 
-    if (translatorRef.current) {
-      return translatorRef.current;
-    }
-
     const availability = await Translator.availability({
       sourceLanguage: options.sourceLanguage || "en",
       targetLanguage: options.targetLanguage,

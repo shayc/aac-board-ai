@@ -1,6 +1,6 @@
 import { usePersistentState } from "@/shared/hooks/usePersistentState";
 import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
-import { createContext, type ReactNode } from "react";
+import { createContext, useEffect, type ReactNode } from "react";
 
 export interface LanguageContextValue {
   languages: { code: string; name: string }[];
@@ -15,7 +15,7 @@ export interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const { langs } = useSpeech();
+  const { langs, voicesByLang, setVoiceURI } = useSpeech();
   const uniqueLangs = Array.from(new Set(langs.map((l) => l.split("-")[0])));
 
   const [languageCode, setLanguageCode] = usePersistentState<string>(
@@ -37,6 +37,16 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     languageCode,
     setLanguageCode,
   };
+
+  useEffect(() => {
+    const defaultVoice =
+      voicesByLang[languageCode]?.find((voice) => voice.default) ||
+      voicesByLang[languageCode]?.[0];
+
+    if (defaultVoice) {
+      setVoiceURI(defaultVoice?.voiceURI);
+    }
+  }, [languageCode, voicesByLang]);
 
   return (
     <LanguageContext.Provider value={contextValue}>
