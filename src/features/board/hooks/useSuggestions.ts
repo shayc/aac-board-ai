@@ -44,7 +44,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
       const suggestions = [
         proofread?.correctedInput || "",
         rewritten || "",
-      ].filter((s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/));
+      ].filter((s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/) && !s.includes('"'));
 
       const uniqueSuggestions = Array.from(new Set(suggestions));
 
