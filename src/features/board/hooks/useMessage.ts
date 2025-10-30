@@ -1,6 +1,6 @@
-import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
-import { useAudio } from "@/shared/hooks/useAudio";
-import { usePersistentState } from "@/shared/hooks/usePersistentState";
+import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useAudio } from "@shared/hooks/useAudio";
+import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 
 export type Segment = {

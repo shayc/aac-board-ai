@@ -1,8 +1,3 @@
-import { useAI } from "@/shared/contexts/AIProvider/useAI";
-import { useLanguage } from "@/shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@/shared/contexts/SpeechProvider/SpeechProvider";
-import { useTranslator } from "@/shared/hooks/ai/useTranslator";
-import { useAudio } from "@/shared/hooks/useAudio";
 import {
   getAssetUrlByPath,
   getBoardsBatch,
@@ -10,6 +5,11 @@ import {
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Action, Board, Button } from "@features/board/types";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
+import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useTranslator } from "@shared/hooks/ai/useTranslator";
+import { useAudio } from "@shared/hooks/useAudio";
 import { useEffect, useState } from "react";
 import { useMessage, type MessagePart } from "./useMessage";
 import { useNavigation } from "./useNavigation";

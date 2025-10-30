@@ -1,4 +1,4 @@
-import { loadOBF, loadOBZ } from "@/shared/open-board-format";
+import { loadOBF, loadOBZ } from "@shared/open-board-format";
 import type { IDBPDatabase } from "idb";
 import type { BoardsDBSchema } from "./boards-db";
 import {

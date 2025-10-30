@@ -1,5 +1,5 @@
-import { openBoardsDB } from "@/features/board/db/boards-db";
-import { importFile } from "@/features/board/db/import-board";
+import { openBoardsDB } from "@features/board/db/boards-db";
+import { importFile } from "@features/board/db/import-board";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";

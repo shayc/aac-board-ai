@@ -1,13 +1,16 @@
-import { MessageBar } from "@/features/board/components/MessageBar/MessageBar";
 import { Grid } from "@features/board/components/Grid/Grid";
+import { MessageBar } from "@features/board/components/MessageBar/MessageBar";
 import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
 import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
 import type { Button } from "@features/board/types";
 import Stack from "@mui/material/Stack";
+import { useAICapabilities } from "@shared/hooks/ai";
 
 export function Board() {
   const { board, activateButton } = useBoard();
+  const { isProofreaderSupported, isRewriterSupported } = useAICapabilities();
+  const isSuggestionBarEnabled = isProofreaderSupported || isRewriterSupported;
 
   if (!board) {
     return null;
@@ -27,7 +30,7 @@ export function Board() {
     >
       <MessageBar />
 
-      <SuggestionBar />
+      {isSuggestionBarEnabled && <SuggestionBar />}
 
       <Grid<Button>
         rows={board.grid.rows}

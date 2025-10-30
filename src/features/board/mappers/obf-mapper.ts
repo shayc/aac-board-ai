@@ -1,17 +1,17 @@
 import type {
-  OBFBoard,
-  OBFButton,
-  OBFGrid,
-  OBFLoadBoard,
-  OBFSound,
-} from "@/shared/open-board-format/schema";
-import type {
   Action,
   Board,
   Button,
   Grid,
   LoadBoard,
 } from "@features/board/types";
+import type {
+  OBFBoard,
+  OBFButton,
+  OBFGrid,
+  OBFLoadBoard,
+  OBFSound,
+} from "@shared/open-board-format/schema";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSources = buildImageMap(obfBoard);

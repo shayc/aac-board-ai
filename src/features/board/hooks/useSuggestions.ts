@@ -1,5 +1,5 @@
-import { useProofreader } from "@/shared/hooks/ai/useProofreader";
-import { useRewriter } from "@/shared/hooks/ai/useRewriter";
+import { useProofreader } from "@shared/hooks/ai/useProofreader";
+import { useRewriter } from "@shared/hooks/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
@@ -44,7 +44,9 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
       const suggestions = [
         proofread?.correctedInput || "",
         rewritten || "",
-      ].filter((s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/) && !s.includes('"'));
+      ].filter(
+        (s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/) && !s.includes('"')
+      );
 
       const uniqueSuggestions = Array.from(new Set(suggestions));
 

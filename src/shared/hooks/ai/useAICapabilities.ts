@@ -1,19 +1,19 @@
 export interface AICapabilities {
-  languageModel: boolean;
-  translator: boolean;
-  writer: boolean;
-  rewriter: boolean;
-  languageDetector: boolean;
-  proofreader: boolean;
+  isLanguageModelSupported: boolean;
+  isTranslatorSupported: boolean;
+  isWriterSupported: boolean;
+  isRewriterSupported: boolean;
+  isLanguageDetectorSupported: boolean;
+  isProofreaderSupported: boolean;
 }
 
 export function useAICapabilities(): AICapabilities {
   return {
-    languageModel: "LanguageModel" in self,
-    translator: "Translator" in self,
-    writer: "Writer" in self,
-    rewriter: "Rewriter" in self,
-    languageDetector: "LanguageDetector" in self,
-    proofreader: "Proofreader" in self,
+    isLanguageModelSupported: "LanguageModel" in self,
+    isTranslatorSupported: "Translator" in self,
+    isWriterSupported: "Writer" in self,
+    isRewriterSupported: "Rewriter" in self,
+    isLanguageDetectorSupported: "LanguageDetector" in self,
+    isProofreaderSupported: "Proofreader" in self,
   };
 }

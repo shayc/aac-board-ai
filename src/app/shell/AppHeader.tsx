@@ -1,5 +1,5 @@
-import { useBoard } from "@/features/board/context/useBoard";
-import type { BoardsetRecord } from "@/features/board/db/boards-db";
+import { useBoard } from "@features/board/context/useBoard";
+import type { BoardsetRecord } from "@features/board/db/boards-db";
 import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import HomeIcon from "@mui/icons-material/Home";

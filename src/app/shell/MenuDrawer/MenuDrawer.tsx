@@ -1,5 +1,3 @@
-import { useSnackbar } from "@/shared/contexts/SnackbarProvider/useSnackbar";
-import { openFile } from "@/shared/utils/files";
 import { importFile } from "@features/board/db/import-board";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -15,6 +13,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
+import { openFile } from "@shared/utils/files";
 import { Link as RouterLink } from "react-router";
 
 interface MenuDrawerProps {

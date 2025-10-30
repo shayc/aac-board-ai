@@ -1,4 +1,4 @@
-import { usePersistentState } from "@/shared/hooks/usePersistentState";
+import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { createContext, type ReactNode } from "react";
 
 export interface AIContextValue {

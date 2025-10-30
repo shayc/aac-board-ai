@@ -1,5 +1,3 @@
-import { useLanguage } from "@/shared/contexts/LanguageProvider/useLanguage";
-import { useTranslator } from "@/shared/hooks/ai/useTranslator";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -8,7 +6,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect } from "react";
 
 export function SpeechSettings() {
