@@ -7,13 +7,13 @@ export interface TranslatorOptions {
 }
 
 export function useTranslator() {
-  const { translator: isSupported } = useAICapabilities();
+  const { isTranslatorSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const translatorRef = useRef<Translator | null>(null);
-  const isReady = isSupported && downloadProgress === 1;
+  const isReady = isTranslatorSupported && downloadProgress === 1;
 
   async function createTranslator(options: TranslatorOptions) {
-    if (!isSupported) {
+    if (!isTranslatorSupported) {
       return null;
     }
 
@@ -46,7 +46,7 @@ export function useTranslator() {
   }, []);
 
   return {
-    isSupported,
+    isTranslatorSupported,
     isReady,
     downloadProgress,
     createTranslator,

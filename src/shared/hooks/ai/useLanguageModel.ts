@@ -8,10 +8,10 @@ export interface UseLanguageModelOptions {
 }
 
 export function useLanguageModel(words: string[] | undefined) {
-  const { languageModel: isSupported } = useAICapabilities();
+  const { isLanguageModelSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const sessionRef = useRef<LanguageModelSession | null>(null);
-  const isReady = isSupported && downloadProgress === 1;
+  const isReady = isLanguageModelSupported && downloadProgress === 1;
 
   async function createLanguageModel(
     options: UseLanguageModelOptions = {
@@ -19,7 +19,7 @@ export function useLanguageModel(words: string[] | undefined) {
       topK: 1,
     }
   ) {
-    if (!isSupported) {
+    if (!isLanguageModelSupported) {
       return null;
     }
 
@@ -84,7 +84,7 @@ export function useLanguageModel(words: string[] | undefined) {
   }, []);
 
   return {
-    isSupported,
+    isLanguageModelSupported,
     isReady,
     downloadProgress,
     createLanguageModel,

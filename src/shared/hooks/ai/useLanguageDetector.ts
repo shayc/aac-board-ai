@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { useAICapabilities } from "./useAICapabilities";
 
 export function useLanguageDetector() {
-  const { languageDetector: isSupported } = useAICapabilities();
+  const { isLanguageDetectorSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const detectorRef = useRef<LanguageDetector | null>(null);
-  const isReady = isSupported && downloadProgress === 1;
+  const isReady = isLanguageDetectorSupported && downloadProgress === 1;
 
   async function createLanguageDetector() {
-    if (!isSupported) {
+    if (!isLanguageDetectorSupported) {
       return null;
     }
 
@@ -40,7 +40,7 @@ export function useLanguageDetector() {
   }, []);
 
   return {
-    isSupported,
+    isLanguageDetectorSupported,
     isReady,
     downloadProgress,
     createLanguageDetector,

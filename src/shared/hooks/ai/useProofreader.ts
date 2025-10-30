@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { useAICapabilities } from "./useAICapabilities";
 
 export function useProofreader() {
-  const { proofreader: isSupported } = useAICapabilities();
+  const { isProofreaderSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const proofreaderRef = useRef<Proofreader | null>(null);
-  const isReady = isSupported && downloadProgress === 1;
+  const isReady = isProofreaderSupported && downloadProgress === 1;
 
   async function createProofreader(
     options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] }
   ) {
-    if (!isSupported) {
+    if (!isProofreaderSupported) {
       return null;
     }
 
@@ -43,7 +43,7 @@ export function useProofreader() {
   }, []);
 
   return {
-    isSupported,
+    isProofreaderSupported,
     isReady,
     downloadProgress,
     createProofreader,

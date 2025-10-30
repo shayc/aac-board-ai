@@ -14,10 +14,10 @@ export interface WriterOptions {
 }
 
 export function useWriter() {
-  const { writer: isSupported } = useAICapabilities();
+  const { isWriterSupported } = useAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const writerRef = useRef<Writer | null>(null);
-  const isReady = isSupported && downloadProgress === 1;
+  const isReady = isWriterSupported && downloadProgress === 1;
 
   async function createWriter(
     options: WriterOptions = {
@@ -25,7 +25,7 @@ export function useWriter() {
       tone: "neutral",
     }
   ) {
-    if (!isSupported) {
+    if (!isWriterSupported) {
       return null;
     }
 
@@ -58,7 +58,7 @@ export function useWriter() {
   }, []);
 
   return {
-    isSupported,
+    isWriterSupported,
     isReady,
     downloadProgress,
     createWriter,
