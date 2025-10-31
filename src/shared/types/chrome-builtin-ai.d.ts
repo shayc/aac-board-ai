@@ -481,7 +481,7 @@ declare global {
   }
 
   /** Availability accepts the same expectation options you intend to use. */
-  interface LanguageModelAvailabilityOptions extends LanguageModelBaseOptions {}
+  type LanguageModelAvailabilityOptions = LanguageModelBaseOptions;
 
   /** Constructor/namespace for the Prompt API. */
   interface LanguageModelConstructor {
