@@ -1,5 +1,5 @@
-import type { TypographyVariant } from "@mui/material";
 import Box from "@mui/material/Box";
+import type { TypographyVariant } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 
 export interface PictogramProps {

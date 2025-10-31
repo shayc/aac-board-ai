@@ -7,7 +7,7 @@ export interface AICapabilities {
   isProofreaderSupported: boolean;
 }
 
-export function useAICapabilities(): AICapabilities {
+export function getAICapabilities(): AICapabilities {
   return {
     isLanguageModelSupported: "LanguageModel" in self,
     isTranslatorSupported: "Translator" in self,

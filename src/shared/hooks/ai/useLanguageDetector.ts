@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useAICapabilities } from "./useAICapabilities";
+import { getAICapabilities } from "./useAICapabilities";
 
 export function useLanguageDetector() {
-  const { isLanguageDetectorSupported } = useAICapabilities();
+  const { isLanguageDetectorSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const detectorRef = useRef<LanguageDetector | null>(null);
   const isReady = isLanguageDetectorSupported && downloadProgress === 1;

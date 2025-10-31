@@ -32,6 +32,18 @@ export function SpeechSettings() {
   const voices = voicesByLang[languageCode] ?? [];
   const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
 
+  async function handlePreviewClick() {
+    const translator = await createTranslator({
+      sourceLanguage: "en",
+      targetLanguage: languageCode,
+    });
+    
+    const text = "Hi, this is my voice!";
+    const previewText = (await translator?.translate(text)) ?? text;
+
+    void speak(previewText);
+  }
+
   useEffect(() => {
     setVoiceURI(defaultVoice?.voiceURI);
   }, [languageCode]);
@@ -97,15 +109,7 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         disabled={!isSupported}
-        onClick={async () => {
-          const translator = await createTranslator({
-            sourceLanguage: "en",
-            targetLanguage: languageCode,
-          });
-          const text = "Hi, this is my voice!";
-          const previewText = (await translator?.translate(text)) ?? text;
-          speak(previewText);
-        }}
+        onClick={handlePreviewClick}
       >
         Preview
       </Button>

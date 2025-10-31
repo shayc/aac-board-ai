@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useAICapabilities } from "./useAICapabilities";
+import { getAICapabilities } from "./useAICapabilities";
 
 export function useProofreader() {
-  const { isProofreaderSupported } = useAICapabilities();
+  const { isProofreaderSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const proofreaderRef = useRef<Proofreader | null>(null);
   const isReady = isProofreaderSupported && downloadProgress === 1;

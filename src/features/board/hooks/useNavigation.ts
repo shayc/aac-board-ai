@@ -22,7 +22,7 @@ export function useNavigation() {
   const canGoHome = rootBoardId !== "";
 
   function navigateToBoard(id: string) {
-    if (!id ?? id === navState.history[navState.index]) {
+    if (!id || id === navState.history[navState.index]) {
       return;
     }
 

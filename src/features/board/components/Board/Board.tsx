@@ -45,7 +45,7 @@ export function Board() {
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
-            onClick={() => activateButton(button)}
+            onClick={() => void activateButton(button)}
           />
         )}
       />

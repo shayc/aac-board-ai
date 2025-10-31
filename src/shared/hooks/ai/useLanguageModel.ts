@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAICapabilities } from "./useAICapabilities";
+import { getAICapabilities } from "./useAICapabilities";
 
 export interface UseLanguageModelOptions {
   temperature?: number;
@@ -8,7 +8,7 @@ export interface UseLanguageModelOptions {
 }
 
 export function useLanguageModel(words: string[] | undefined) {
-  const { isLanguageModelSupported } = useAICapabilities();
+  const { isLanguageModelSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const sessionRef = useRef<LanguageModelSession | null>(null);
   const isReady = isLanguageModelSupported && downloadProgress === 1;
