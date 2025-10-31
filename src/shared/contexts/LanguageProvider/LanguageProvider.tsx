@@ -9,14 +9,17 @@ export interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const { langs, voicesByLang, setVoiceURI } = useSpeech();
-  const uniqueLangs = Array.from(new Set(langs.map((l) => l.split("-")[0])));
-
   const [languageCode, setLanguageCode] = usePersistentState<string>(
     "languageCode",
     "en"
   );
 
-  const languages = uniqueLangs.map((lang) => {
+  const unsupportedLangs = ["ca", "ms", "nb", "yue"];
+  const supportedLanguages = Array.from(
+    new Set(langs.map((l) => l.split("-")[0]))
+  ).filter((l) => !unsupportedLangs.includes(l));
+
+  const languages = supportedLanguages.map((lang) => {
     const displayName = new Intl.DisplayNames([lang], { type: "language" });
 
     return {
