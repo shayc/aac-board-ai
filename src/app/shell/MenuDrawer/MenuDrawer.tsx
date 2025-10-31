@@ -81,7 +81,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           {menuItems.map((item) => (
             <ListItem key={item.id} disablePadding>
               <ListItemButton
-                onClick={item.onClick ? () => void item.onClick?.() : undefined}
+                onClick={void item.onClick}
                 component={item.to ? RouterLink : item.href ? "a" : "button"}
                 to={item.to}
                 href={item.href}
