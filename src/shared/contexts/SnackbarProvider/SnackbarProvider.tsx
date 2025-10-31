@@ -13,7 +13,6 @@ export interface SnackbarProviderProps {
 interface SnackbarState {
   open: boolean;
   message: string;
-  severity?: "success" | "error" | "warning" | "info";
   duration: number;
   action?: ReactNode;
 }
@@ -40,14 +39,12 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       setSnackbarState({
         open: true,
         message: nextSnackbar.message,
-        severity: nextSnackbar.severity,
         duration: nextSnackbar.duration ?? 4000,
       });
       setQueue((prev) => prev.slice(1));
     }
   };
 
-  // Process queue when it changes or when snackbar closes
   if (queue.length > 0 && !snackbarState.open) {
     processQueue();
   }

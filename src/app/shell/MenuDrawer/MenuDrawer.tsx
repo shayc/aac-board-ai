@@ -33,16 +33,15 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     }
 
     onClose();
-    showSnackbar({ message: "Importing board...", severity: "info" });
+    showSnackbar({ message: "Importing board..." });
 
     try {
       await importFile(file);
       showSnackbar({
         message: "Board imported successfully",
-        severity: "success",
       });
     } catch {
-      showSnackbar({ message: "Failed to import board", severity: "error" });
+      showSnackbar({ message: "Failed to import board" });
     }
   }
 
@@ -53,7 +52,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       label: "Import board...",
       onClick: handleImportBoard,
     },
-    { id: "about", icon: InfoOutlinedIcon, label: "About", to: "/about", onClick: onClose },
+    {
+      id: "about",
+      icon: InfoOutlinedIcon,
+      label: "About",
+      to: "/about",
+      onClick: onClose,
+    },
     {
       id: "contribute",
       icon: GitHubIcon,
