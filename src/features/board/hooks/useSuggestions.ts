@@ -1,6 +1,6 @@
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
 export function useSuggestions(message: MessagePart[], sharedContext?: string) {
@@ -12,7 +12,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
 
   const abortRef = useRef<AbortController | null>(null);
 
-  const generateSuggestions = useCallback(async (
+  const generateSuggestions = async (
     text: string,
     tone: RewriterTone,
     sharedContext?: string
@@ -45,7 +45,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
         proofread?.correctedInput ?? "",
         rewritten ?? "",
       ].filter(
-        (s) => s && !(/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s)) && !s.includes('"')
+        (s) => s && !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) && !s.includes('"')
       );
 
       const uniqueSuggestions = Array.from(new Set(suggestions));
@@ -58,7 +58,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
 
       console.error("generateSuggestions failed:", error);
     }
-  }, [createProofreader, createRewriter]);
+  };
 
   useEffect(() => {
     const text = message.map((part) => part.label).join(" ");

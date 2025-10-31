@@ -69,7 +69,7 @@ async function importOBZFile(
     .map(([path, buffer]) => {
       const mime = path.endsWith(".png")
         ? "image/png"
-        : path.endsWith(".jpg") ?? path.endsWith(".jpeg")
+        : path.endsWith(".jpg") || path.endsWith(".jpeg")
         ? "image/jpeg"
         : path.endsWith(".gif")
         ? "image/gif"
