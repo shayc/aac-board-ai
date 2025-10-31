@@ -1,4 +1,4 @@
-import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";

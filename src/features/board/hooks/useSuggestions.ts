@@ -1,6 +1,6 @@
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { MessagePart } from "./useMessage";
 
 export function useSuggestions(message: MessagePart[], sharedContext?: string) {
@@ -12,11 +12,11 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
 
   const abortRef = useRef<AbortController | null>(null);
 
-  async function generateSuggestions(
+  const generateSuggestions = useCallback(async (
     text: string,
     tone: RewriterTone,
     sharedContext?: string
-  ) {
+  ) => {
     abortRef.current?.abort();
 
     const controller = new AbortController();
@@ -58,14 +58,15 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
 
       console.error("generateSuggestions failed:", error);
     }
-  }
+  }, [createProofreader, createRewriter]);
 
   useEffect(() => {
     const text = message.map((part) => part.label).join(" ");
-    generateSuggestions(text, tone, sharedContext);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void generateSuggestions(text, tone, sharedContext);
 
     return () => abortRef.current?.abort();
-  }, [message, tone, sharedContext]);
+  }, [message, tone, sharedContext, generateSuggestions]);
 
   return {
     suggestions,

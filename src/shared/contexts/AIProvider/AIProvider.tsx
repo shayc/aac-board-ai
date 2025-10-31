@@ -1,12 +1,6 @@
 import { usePersistentState } from "@shared/hooks/usePersistentState";
-import { createContext, type ReactNode } from "react";
-
-export interface AIContextValue {
-  sharedContext: string;
-  setSharedContext: (value: string) => void;
-}
-
-export const AIContext = createContext<AIContextValue | null>(null);
+import { type ReactNode } from "react";
+import { AIContext, type AIContextValue } from "./AIContext";
 
 export interface AIProviderProps {
   children: ReactNode;

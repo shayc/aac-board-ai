@@ -1,18 +1,10 @@
 import Snackbar from "@mui/material/Snackbar";
-import { createContext, type ReactNode, useState } from "react";
-
-export interface SnackbarOptions {
-  message: string;
-  severity?: "success" | "error" | "warning" | "info";
-  duration?: number;
-  action?: ReactNode;
-}
-
-export interface SnackbarContextValue {
-  showSnackbar: (options: SnackbarOptions | string) => void;
-}
-
-export const SnackbarContext = createContext<SnackbarContextValue | null>(null);
+import { type ReactNode, useState } from "react";
+import {
+  SnackbarContext,
+  type SnackbarContextValue,
+  type SnackbarOptions,
+} from "./SnackbarContext";
 
 export interface SnackbarProviderProps {
   children: ReactNode;

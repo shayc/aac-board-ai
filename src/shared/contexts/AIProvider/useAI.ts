@@ -1,5 +1,5 @@
 import { use } from "react";
-import { AIContext, type AIContextValue } from "./AIProvider";
+import { AIContext, type AIContextValue } from "./AIContext";
 
 export function useAI(): AIContextValue {
   const context = use(AIContext);

@@ -35,7 +35,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
       }
     }
 
-    loadBoardsets();
+    void loadBoardsets();
     // TODO: remove setId from dependencies
   }, [setId]);
 

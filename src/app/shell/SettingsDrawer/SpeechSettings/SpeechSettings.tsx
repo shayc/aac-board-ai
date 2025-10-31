@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect } from "react";
 
@@ -109,7 +109,7 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         disabled={!isSupported}
-        onClick={handlePreviewClick}
+        onClick={() => void handlePreviewClick()}
       >
         Preview
       </Button>
