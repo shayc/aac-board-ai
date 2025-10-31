@@ -2,10 +2,10 @@ import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
-type NavigationState = {
+interface NavigationState {
   history: string[];
   index: number;
-};
+}
 
 export function useNavigation() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ export function useNavigation() {
       };
     });
 
-    navigate(`/sets/${setId}/boards/${id}`);
+    void navigate(`/sets/${setId}/boards/${id}`);
   }
 
   function navigateBack() {
@@ -85,13 +85,14 @@ export function useNavigation() {
           setRootBoardId("");
         }
       } catch (error) {
+        console.error("Failed to load board:", error);
         setRootBoardId("");
       } finally {
         db.close();
       }
     }
 
-    loadRootBoard();
+    void loadRootBoard();
   }, [setId]);
 
   return {

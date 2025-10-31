@@ -32,7 +32,7 @@ export function useSpeechSynthesis() {
     {}
   );
 
-  const speak = (text: string) => {
+  const speak = async (text: string) => {
     return new Promise<void>((resolve, reject) => {
       if (!isSupported) {
         reject(new Error("Speech Synthesis is not supported in this browser."));

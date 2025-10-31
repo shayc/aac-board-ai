@@ -23,7 +23,7 @@ export function MessageBar() {
   useEffect(() => {
     const scroller = ref.current;
 
-    if (!scroller || !scroller.lastElementChild) {
+    if (!scroller?.lastElementChild) {
       return;
     }
 
@@ -90,7 +90,9 @@ export function MessageBar() {
           <IconButton
             aria-label="Play"
             size="large"
-            onClick={() => (isPlayingMessage ? stopMessage() : playMessage())}
+            onClick={() =>
+              void (isPlayingMessage ? stopMessage() : playMessage())
+            }
             sx={{
               width: 96,
               height: 96,

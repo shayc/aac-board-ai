@@ -76,7 +76,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   return (
-    <SnackbarContext.Provider value={contextValue}>
+    <SnackbarContext value={contextValue}>
       {children}
 
       <Snackbar
@@ -87,6 +87,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
       />
-    </SnackbarContext.Provider>
+    </SnackbarContext>
   );
 }

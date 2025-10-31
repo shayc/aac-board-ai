@@ -13,7 +13,7 @@ export interface SpeechContextType {
   setRate: (rate: number) => void;
   volume: number;
   setVolume: (volume: number) => void;
-  speak: (text: string) => void;
+  speak: (text: string) => Promise<void>;
   cancel: () => void;
   isSupported: boolean;
   isSpeaking: boolean;

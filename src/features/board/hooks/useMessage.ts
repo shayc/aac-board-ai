@@ -3,10 +3,10 @@ import { useAudio } from "@shared/hooks/useAudio";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 
-export type Segment = {
+export interface Segment {
   type: "text" | "sound";
   data: string;
-};
+}
 
 export interface MessagePart {
   id: string;
@@ -61,7 +61,7 @@ export function useMessage() {
       label: "",
     });
   }
-  async function stopMessage() {
+  function stopMessage() {
     try {
       speech.cancel();
     } catch (error) {
@@ -133,11 +133,7 @@ function mergeTextSegments(segments: Segment[]): Segment[] {
   for (const currentSegment of segments) {
     const previousSegment = mergedSegments.at(-1);
 
-    if (
-      previousSegment &&
-      previousSegment.type === "text" &&
-      currentSegment.type === "text"
-    ) {
+    if (previousSegment?.type === "text" && currentSegment.type === "text") {
       previousSegment.data =
         `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
           /\s+/g,
