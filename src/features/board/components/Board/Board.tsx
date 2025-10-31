@@ -5,12 +5,12 @@ import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
 import type { Button } from "@features/board/types";
 import Stack from "@mui/material/Stack";
-import { useAICapabilities } from "@shared/hooks/ai";
+import { getAICapabilities } from "@shared/hooks/ai";
 
 export function Board() {
   const { board, activateButton } = useBoard();
-  const { isProofreaderSupported, isRewriterSupported } = useAICapabilities();
-  const isSuggestionBarEnabled = isProofreaderSupported ?? isRewriterSupported;
+  const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
+  const isSuggestionBarEnabled = isProofreaderSupported || isRewriterSupported;
 
   if (!board) {
     return null;

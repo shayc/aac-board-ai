@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getAICapabilities } from "./useAICapabilities";
+import { getAICapabilities } from "./getAICapabilities";
 
 export type WriterTone = "formal" | "neutral" | "casual";
 export type WriterFormat = "markdown" | "plain-text";
