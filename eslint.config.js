@@ -22,10 +22,10 @@ export default defineConfig([
     ],
     languageOptions: {
       parserOptions: {
-        project: ["./tsconfig.node.json", "./tsconfig.app.json"],
+        projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
-      ecmaVersion: 2020,
+      ecmaVersion: "latest",
       globals: globals.browser,
     },
     rules: {
