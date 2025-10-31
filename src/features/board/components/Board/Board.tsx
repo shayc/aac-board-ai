@@ -10,7 +10,7 @@ import { useAICapabilities } from "@shared/hooks/ai";
 export function Board() {
   const { board, activateButton } = useBoard();
   const { isProofreaderSupported, isRewriterSupported } = useAICapabilities();
-  const isSuggestionBarEnabled = isProofreaderSupported || isRewriterSupported;
+  const isSuggestionBarEnabled = isProofreaderSupported ?? isRewriterSupported;
 
   if (!board) {
     return null;

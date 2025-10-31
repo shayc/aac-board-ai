@@ -29,8 +29,8 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] || [];
-  const defaultVoice = voices.find((voice) => voice.default) || voices[0];
+  const voices = voicesByLang[languageCode] ?? [];
+  const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
 
   useEffect(() => {
     setVoiceURI(defaultVoice?.voiceURI);
@@ -45,7 +45,7 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI || defaultVoice?.voiceURI}
+          value={voiceURI ?? defaultVoice?.voiceURI}
           disabled={!isSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
@@ -103,7 +103,7 @@ export function SpeechSettings() {
             targetLanguage: languageCode,
           });
           const text = "Hi, this is my voice!";
-          const previewText = (await translator?.translate(text)) || text;
+          const previewText = (await translator?.translate(text)) ?? text;
           speak(previewText);
         }}
       >

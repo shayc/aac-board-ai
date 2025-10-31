@@ -48,7 +48,7 @@ export function useLanguageModel(words: string[] | undefined) {
           1) Repeat the user's utterance exactly (same casing, spacing, punctuation).
           2) After the echo, add one space, then append one to four words.
           3) The appended word(s) must be selected only from this list (lowercase exactly as shown):  
-            ${words?.join(", ") || ""}
+            ${words?.join(", ") ?? ""}
           4) Choose the word(s) from the list that are **most semantically relevant** to the user's utterance.
           5) Use no punctuation, no markdown, no emojis, no explanation, no extra text.
           6) If none of the allowed words fit meaningfully, append exactly: NO_WORDS

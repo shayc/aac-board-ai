@@ -11,8 +11,8 @@ export function BoardProvider({ children }: BoardProviderProps) {
   const params = useParams<{ setId: string; boardId: string }>();
 
   const communicationBoard = useCommunicationBoard({
-    setId: params.setId || "",
-    boardId: params.boardId || "",
+    setId: params.setId ?? "",
+    boardId: params.boardId ?? "",
   });
 
   return <BoardContext value={communicationBoard}>{children}</BoardContext>;

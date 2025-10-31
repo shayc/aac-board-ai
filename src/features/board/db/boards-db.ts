@@ -71,7 +71,7 @@ export function toNameKey(name: string, locale?: string | string[]): string {
 }
 
 function validateId(id: string, name: string): void {
-  if (!id || id.length > 255) {
+  if (!id ?? id.length > 255) {
     throw new Error(`Invalid ${name}: must be 1-255 characters`);
   }
 }

@@ -26,7 +26,7 @@ export function HomePage() {
       const response = await fetch(obzUrl, { cache: "no-store" });
       const blob = await response.blob();
       const file = new File([blob], "quick-core-24.obz", {
-        type: blob.type || "application/octet-stream",
+        type: blob.type ?? "application/octet-stream",
       });
 
       const { setId, boardId } = await importFile(file);

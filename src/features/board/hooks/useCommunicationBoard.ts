@@ -225,7 +225,7 @@ export function useCommunicationBoard({
         targetLanguage: languageCode,
       });
 
-      const translatedName = await translator?.translate(board.name || "");
+      const translatedName = await translator?.translate(board.name ?? "");
       const translatedButtons = await Promise.all(
         board.buttons.map(async (button) => {
           let translatedLabel = button.label;
@@ -264,7 +264,7 @@ export function useCommunicationBoard({
 
   return {
     // Board
-    board: translatedBoard || board,
+    board: translatedBoard ?? board,
     activateButton,
 
     // Message
