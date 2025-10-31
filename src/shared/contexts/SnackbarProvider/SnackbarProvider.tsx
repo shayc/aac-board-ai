@@ -1,18 +1,10 @@
 import Snackbar from "@mui/material/Snackbar";
-import { createContext, type ReactNode, useState } from "react";
-
-export interface SnackbarOptions {
-  message: string;
-  severity?: "success" | "error" | "warning" | "info";
-  duration?: number;
-  action?: ReactNode;
-}
-
-export interface SnackbarContextValue {
-  showSnackbar: (options: SnackbarOptions | string) => void;
-}
-
-export const SnackbarContext = createContext<SnackbarContextValue | null>(null);
+import { type ReactNode, useState } from "react";
+import {
+  SnackbarContext,
+  type SnackbarContextValue,
+  type SnackbarOptions,
+} from "./SnackbarContext";
 
 export interface SnackbarProviderProps {
   children: ReactNode;
@@ -21,7 +13,6 @@ export interface SnackbarProviderProps {
 interface SnackbarState {
   open: boolean;
   message: string;
-  severity?: "success" | "error" | "warning" | "info";
   duration: number;
   action?: ReactNode;
 }
@@ -48,14 +39,12 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       setSnackbarState({
         open: true,
         message: nextSnackbar.message,
-        severity: nextSnackbar.severity,
         duration: nextSnackbar.duration ?? 4000,
       });
       setQueue((prev) => prev.slice(1));
     }
   };
 
-  // Process queue when it changes or when snackbar closes
   if (queue.length > 0 && !snackbarState.open) {
     processQueue();
   }
@@ -76,7 +65,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   return (
-    <SnackbarContext.Provider value={contextValue}>
+    <SnackbarContext value={contextValue}>
       {children}
 
       <Snackbar
@@ -87,6 +76,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
       />
-    </SnackbarContext.Provider>
+    </SnackbarContext>
   );
 }

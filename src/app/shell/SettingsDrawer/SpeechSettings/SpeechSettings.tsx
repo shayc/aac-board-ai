@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect } from "react";
 
@@ -29,8 +29,20 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] || [];
-  const defaultVoice = voices.find((voice) => voice.default) || voices[0];
+  const voices = voicesByLang[languageCode] ?? [];
+  const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
+
+  async function handlePreviewClick() {
+    const translator = await createTranslator({
+      sourceLanguage: "en",
+      targetLanguage: languageCode,
+    });
+    
+    const text = "Hi, this is my voice!";
+    const previewText = (await translator?.translate(text)) ?? text;
+
+    void speak(previewText);
+  }
 
   useEffect(() => {
     setVoiceURI(defaultVoice?.voiceURI);
@@ -45,7 +57,7 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI || defaultVoice?.voiceURI}
+          value={voiceURI ?? defaultVoice?.voiceURI}
           disabled={!isSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
@@ -97,15 +109,7 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         disabled={!isSupported}
-        onClick={async () => {
-          const translator = await createTranslator({
-            sourceLanguage: "en",
-            targetLanguage: languageCode,
-          });
-          const text = "Hi, this is my voice!";
-          const previewText = (await translator?.translate(text)) || text;
-          speak(previewText);
-        }}
+        onClick={() => void handlePreviewClick()}
       >
         Preview
       </Button>

@@ -33,27 +33,34 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     }
 
     onClose();
-    showSnackbar({ message: "Importing board...", severity: "info" });
+    showSnackbar({ message: "Importing board..." });
 
     try {
       await importFile(file);
       showSnackbar({
         message: "Board imported successfully",
-        severity: "success",
       });
-    } catch (error) {
-      showSnackbar({ message: "Failed to import board", severity: "error" });
+    } catch {
+      showSnackbar({ message: "Failed to import board" });
     }
   }
 
   const menuItems = [
     {
+      id: "import-board",
       icon: FileOpenIcon,
       label: "Import board...",
       onClick: handleImportBoard,
     },
-    { icon: InfoOutlinedIcon, label: "About", to: "/about", onClick: onClose },
     {
+      id: "about",
+      icon: InfoOutlinedIcon,
+      label: "About",
+      to: "/about",
+      onClick: onClose,
+    },
+    {
+      id: "contribute",
       icon: GitHubIcon,
       label: "Contribute",
       href: "http://github.com/shayc/aac-board-ai",
@@ -71,10 +78,10 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
         <Divider />
 
         <List>
-          {menuItems.map((item, index) => (
-            <ListItem key={index} disablePadding>
+          {menuItems.map((item) => (
+            <ListItem key={item.id} disablePadding>
               <ListItemButton
-                onClick={item.onClick}
+                onClick={void item.onClick}
                 component={item.to ? RouterLink : item.href ? "a" : "button"}
                 to={item.to}
                 href={item.href}

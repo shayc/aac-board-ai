@@ -1,8 +1,8 @@
-import { useContext } from "react";
-import { AIContext, type AIContextValue } from "./AIProvider";
+import { use } from "react";
+import { AIContext, type AIContextValue } from "./AIContext";
 
 export function useAI(): AIContextValue {
-  const context = useContext(AIContext);
+  const context = use(AIContext);
 
   if (!context) {
     throw new Error("useAI must be used within AIProvider");

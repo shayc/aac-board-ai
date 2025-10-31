@@ -1,14 +1,7 @@
-import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
-import { createContext, useEffect, type ReactNode } from "react";
-
-export interface LanguageContextValue {
-  languages: { code: string; name: string }[];
-  languageCode: string;
-  setLanguageCode: (languageCode: string) => void;
-}
-
-export const LanguageContext = createContext<LanguageContextValue | null>(null);
+import { useEffect, type ReactNode } from "react";
+import { LanguageContext, type LanguageContextValue } from "./LanguageContext";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -28,7 +21,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
     return {
       code: lang,
-      name: displayName.of(lang) || lang,
+      name: displayName.of(lang) ?? lang,
     };
   });
 
@@ -40,17 +33,13 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   useEffect(() => {
     const defaultVoice =
-      voicesByLang[languageCode]?.find((voice) => voice.default) ||
+      voicesByLang[languageCode]?.find((voice) => voice.default) ??
       voicesByLang[languageCode]?.[0];
 
     if (defaultVoice) {
       setVoiceURI(defaultVoice?.voiceURI);
     }
-  }, [languageCode, voicesByLang]);
+  }, [languageCode, voicesByLang, setVoiceURI]);
 
-  return (
-    <LanguageContext.Provider value={contextValue}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }

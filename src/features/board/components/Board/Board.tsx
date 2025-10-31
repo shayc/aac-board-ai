@@ -5,11 +5,11 @@ import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoard } from "@features/board/context/useBoard";
 import type { Button } from "@features/board/types";
 import Stack from "@mui/material/Stack";
-import { useAICapabilities } from "@shared/hooks/ai";
+import { getAICapabilities } from "@shared/hooks/ai";
 
 export function Board() {
   const { board, activateButton } = useBoard();
-  const { isProofreaderSupported, isRewriterSupported } = useAICapabilities();
+  const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
   const isSuggestionBarEnabled = isProofreaderSupported || isRewriterSupported;
 
   if (!board) {
@@ -45,7 +45,7 @@ export function Board() {
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
-            onClick={() => activateButton(button)}
+            onClick={() => void activateButton(button)}
           />
         )}
       />

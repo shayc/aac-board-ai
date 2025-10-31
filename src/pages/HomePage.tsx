@@ -18,7 +18,7 @@ export function HomePage() {
       db.close();
 
       if (existingSets.length > 0) {
-        navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
+        void navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
         return;
       }
 
@@ -26,13 +26,13 @@ export function HomePage() {
       const response = await fetch(obzUrl, { cache: "no-store" });
       const blob = await response.blob();
       const file = new File([blob], "quick-core-24.obz", {
-        type: blob.type || "application/octet-stream",
+        type: blob.type ?? "application/octet-stream",
       });
 
       const { setId, boardId } = await importFile(file);
       if (cancelled) return;
 
-      navigate(
+      void navigate(
         `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(
           boardId
         )}`,

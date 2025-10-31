@@ -15,9 +15,9 @@ export function useAudio() {
         };
         audio.onpause = () => setIsPaused(true);
 
-        audio.play();
+        void audio.play();
       } catch (error) {
-        reject(error);
+        reject(error instanceof Error ? error : new Error(String(error)));
       }
     });
   };

@@ -7,7 +7,7 @@ import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Action, Board, Button } from "@features/board/types";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@shared/contexts/SpeechProvider/SpeechProvider";
+import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useAudio } from "@shared/hooks/useAudio";
 import { useEffect, useState } from "react";
@@ -25,7 +25,7 @@ export interface UseCommunicationBoardOptions {
 export interface UseCommunicationBoardReturn {
   // Board
   board: Board | null;
-  activateButton: (button: Button) => void;
+  activateButton: (button: Button) => Promise<void>;
 
   // Message
   message: MessagePart[];
@@ -101,7 +101,7 @@ export function useCommunicationBoard({
     ":backspace": removeLastMessage,
   };
 
-  function executeAction(action: Action) {
+  async function executeAction(action: Action) {
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
 
@@ -114,7 +114,7 @@ export function useCommunicationBoard({
     }
 
     const handler = actionHandlers[action];
-    handler?.();
+    await handler?.();
   }
 
   const activateButton = async (button: Button) => {
@@ -142,14 +142,14 @@ export function useCommunicationBoard({
     addMessage(messagePart);
 
     if (button.soundSrc) {
-      audio.play(button.soundSrc);
+      void audio.play(button.soundSrc);
       return;
     }
 
     const text = button.vocalization ?? button.label;
 
     if (text) {
-      speech.speak(text.toLowerCase());
+      void speech.speak(text.toLowerCase());
     }
   };
 
@@ -225,7 +225,7 @@ export function useCommunicationBoard({
         targetLanguage: languageCode,
       });
 
-      const translatedName = await translator?.translate(board.name || "");
+      const translatedName = await translator?.translate(board.name ?? "");
       const translatedButtons = await Promise.all(
         board.buttons.map(async (button) => {
           let translatedLabel = button.label;
@@ -255,16 +255,16 @@ export function useCommunicationBoard({
       });
     };
 
-    translatedBoard();
+    void translatedBoard();
   }, [languageCode, board]);
 
   useEffect(() => {
-    loadBoard(boardId);
+    void loadBoard(boardId);
   }, [boardId]);
 
   return {
     // Board
-    board: translatedBoard || board,
+    board: translatedBoard ?? board,
     activateButton,
 
     // Message

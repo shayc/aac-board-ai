@@ -45,7 +45,7 @@ export function BoardSetEntry() {
       }
     }
 
-    fetchRootBoard();
+    void fetchRootBoard();
   }, [setId]);
 
   if (loading) {

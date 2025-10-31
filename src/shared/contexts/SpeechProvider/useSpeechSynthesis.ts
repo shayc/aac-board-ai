@@ -32,7 +32,7 @@ export function useSpeechSynthesis() {
     {}
   );
 
-  const speak = (text: string) => {
+  const speak = async (text: string) => {
     return new Promise<void>((resolve, reject) => {
       if (!isSupported) {
         reject(new Error("Speech Synthesis is not supported in this browser."));
@@ -42,7 +42,7 @@ export function useSpeechSynthesis() {
       const utterance = new SpeechSynthesisUtterance(text);
       const selectedVoice = voices.find((v) => v.voiceURI === voiceURI);
 
-      utterance.voice = selectedVoice || null;
+      utterance.voice = selectedVoice ?? null;
       utterance.pitch = pitch;
       utterance.rate = rate;
       utterance.volume = volume;
@@ -101,7 +101,7 @@ export function useSpeechSynthesis() {
       setVoices(voices);
 
       if (!voiceURI && voices.length > 0) {
-        const defaultVoice = voices.find((v) => v.default) || voices[0];
+        const defaultVoice = voices.find((v) => v.default) ?? voices[0];
 
         setVoiceURI(defaultVoice.voiceURI);
       }

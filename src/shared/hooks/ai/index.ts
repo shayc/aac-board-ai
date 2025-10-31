@@ -1,5 +1,5 @@
-export { useAICapabilities } from "./useAICapabilities";
-export type { AICapabilities } from "./useAICapabilities";
+export { getAICapabilities } from "./getAICapabilities";
+export type { AICapabilities } from "./getAICapabilities";
 
 export { useLanguageModel } from "./useLanguageModel";
 export type { UseLanguageModelOptions } from "./useLanguageModel";

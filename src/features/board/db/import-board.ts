@@ -44,7 +44,7 @@ async function importOBZFile(
   }
 
   if (!rootBoardId) {
-    rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") || "";
+    rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
   }
 
   await upsertBoardset(db, {
@@ -57,7 +57,7 @@ async function importOBZFile(
   const boardItems = Array.from(boards.entries()).map(([id, board]) => {
     return {
       boardId: id,
-      name: board.name || id,
+      name: board.name ?? id,
       json: board,
     };
   });
@@ -112,7 +112,7 @@ async function importOBFFile(
   await bulkPutBoards(db, setId, [
     {
       boardId: board.id,
-      name: board.name || board.id,
+      name: board.name ?? board.id,
       json: board,
     },
   ]);

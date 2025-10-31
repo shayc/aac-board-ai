@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAICapabilities } from "./useAICapabilities";
+import { getAICapabilities } from "./getAICapabilities";
 
 export interface TranslatorOptions {
   sourceLanguage: string;
@@ -7,7 +7,7 @@ export interface TranslatorOptions {
 }
 
 export function useTranslator() {
-  const { isTranslatorSupported } = useAICapabilities();
+  const { isTranslatorSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const translatorRef = useRef<Translator | null>(null);
   const isReady = isTranslatorSupported && downloadProgress === 1;
@@ -18,7 +18,7 @@ export function useTranslator() {
     }
 
     const availability = await Translator.availability({
-      sourceLanguage: options.sourceLanguage || "en",
+      sourceLanguage: options.sourceLanguage ?? "en",
       targetLanguage: options.targetLanguage,
     });
 

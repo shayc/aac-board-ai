@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useAICapabilities } from "@shared/hooks/ai";
+import { getAICapabilities } from "@shared/hooks/ai";
 
 const AI_FEATURES = [
   { key: "isProofreaderSupported" as const, label: "Proofreader" },
@@ -16,7 +16,7 @@ const AI_FEATURES = [
 ];
 
 export function AICapabilitiesList() {
-  const capabilities = useAICapabilities();
+  const capabilities = getAICapabilities();
 
   return (
     <List dense>
