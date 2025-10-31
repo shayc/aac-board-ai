@@ -28,7 +28,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
     return {
       code: lang,
-      name: displayName.of(lang) || lang,
+      name: displayName.of(lang) ?? lang,
     };
   });
 
@@ -40,7 +40,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   useEffect(() => {
     const defaultVoice =
-      voicesByLang[languageCode]?.find((voice) => voice.default) ||
+      voicesByLang[languageCode]?.find((voice) => voice.default) ??
       voicesByLang[languageCode]?.[0];
 
     if (defaultVoice) {
@@ -48,9 +48,5 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
   }, [languageCode, voicesByLang]);
 
-  return (
-    <LanguageContext.Provider value={contextValue}>
-      {children}
-    </LanguageContext.Provider>
-  );
+  return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }

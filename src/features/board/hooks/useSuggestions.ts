@@ -27,9 +27,9 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
       const proofreader = await createProofreader();
       const rewriter = await createRewriter({
         tone,
+        sharedContext,
         length: "shorter",
         format: "plain-text",
-        sharedContext: sharedContext || undefined,
       });
 
       const [proofread, rewritten] = await Promise.all([
@@ -42,8 +42,8 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
       }
 
       const suggestions = [
-        proofread?.correctedInput || "",
-        rewritten || "",
+        proofread?.correctedInput ?? "",
+        rewritten ?? "",
       ].filter(
         (s) => s && !s.match(/\b[A-Za-z]+_[A-Za-z]+\b/) && !s.includes('"')
       );

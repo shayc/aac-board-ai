@@ -18,7 +18,7 @@ export function HomePage() {
       db.close();
 
       if (existingSets.length > 0) {
-        navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
+        void navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
         return;
       }
 
@@ -32,7 +32,7 @@ export function HomePage() {
       const { setId, boardId } = await importFile(file);
       if (cancelled) return;
 
-      navigate(
+      void navigate(
         `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(
           boardId
         )}`,

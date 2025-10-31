@@ -23,7 +23,5 @@ export function AIProvider({ children }: AIProviderProps) {
     setSharedContext,
   };
 
-  return (
-    <AIContext.Provider value={contextValue}>{children}</AIContext.Provider>
-  );
+  return <AIContext value={contextValue}>{children}</AIContext>;
 }
