@@ -1,16 +1,15 @@
-import { Grid } from "@features/board/components/Grid/Grid";
-import { MessageBar } from "@features/board/components/MessageBar/MessageBar";
-import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
-import { Tile } from "@features/board/components/Tile/Tile";
+import {
+  Grid,
+  MessageBar,
+  SuggestionBar,
+  Tile,
+} from "@features/board/components";
 import { useBoard } from "@features/board/context/useBoard";
 import type { Button } from "@features/board/types";
 import Stack from "@mui/material/Stack";
-import { getAICapabilities } from "@shared/hooks/ai";
 
 export function Board() {
-  const { board, activateButton } = useBoard();
-  const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
-  const isSuggestionBarEnabled = isProofreaderSupported || isRewriterSupported;
+  const { board, activateButton, isSuggestionsEnabled } = useBoard();
 
   if (!board) {
     return null;
@@ -30,7 +29,7 @@ export function Board() {
     >
       <MessageBar />
 
-      {isSuggestionBarEnabled && <SuggestionBar />}
+      {isSuggestionsEnabled && <SuggestionBar />}
 
       <Grid<Button>
         rows={board.grid.rows}

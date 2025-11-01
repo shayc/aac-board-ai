@@ -48,6 +48,7 @@ export interface UseCommunicationBoardReturn {
 
   // Suggestions
   suggestions: string[];
+  isSuggestionsEnabled: boolean;
   suggestionTone: RewriterTone;
   setSuggestionTone: (tone: RewriterTone) => void;
 }
@@ -88,7 +89,7 @@ export function useCommunicationBoard({
     stopMessage,
   } = useMessage();
 
-  const { suggestions, suggestionTone, setSuggestionTone } = useSuggestions(
+  const { suggestions, isSuggestionsEnabled, suggestionTone, setSuggestionTone } = useSuggestions(
     message,
     sharedContext
   );
@@ -288,6 +289,7 @@ export function useCommunicationBoard({
 
     // Suggestions
     suggestions,
+    isSuggestionsEnabled,
     suggestionTone,
     setSuggestionTone,
   };
