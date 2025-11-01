@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -30,6 +31,7 @@
     "@types/react-dom": "^19.2.2",
     "@types/wicg-file-system-access": "^2023.10.7",
     "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/coverage-v8": "^4.0.6",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.0",
     "eslint-plugin-react-dom": "^2.3.0",
