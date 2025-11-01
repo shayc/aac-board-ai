@@ -5,7 +5,7 @@ import {
   Tile,
 } from "@features/board/components";
 import { useBoard } from "@features/board/context/useBoard";
-import type { Button } from "@features/board/types";
+import type { BoardButton } from "@features/board/types";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
@@ -31,7 +31,7 @@ export function Board() {
 
       {isSuggestionsEnabled && <SuggestionBar />}
 
-      <Grid<Button>
+      <Grid<BoardButton>
         rows={board.grid.rows}
         columns={board.grid.columns}
         order={board.grid.order}

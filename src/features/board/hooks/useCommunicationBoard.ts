@@ -4,7 +4,7 @@ import {
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Action, Board, Button } from "@features/board/types";
+import type { Board, BoardAction, BoardButton } from "@features/board/types";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
@@ -25,7 +25,7 @@ export interface UseCommunicationBoardOptions {
 export interface UseCommunicationBoardReturn {
   // Board
   board: Board | null;
-  activateButton: (button: Button) => Promise<void>;
+  activateButton: (button: BoardButton) => Promise<void>;
 
   // Message
   message: MessagePart[];
@@ -89,10 +89,12 @@ export function useCommunicationBoard({
     stopMessage,
   } = useMessage();
 
-  const { suggestions, isSuggestionsEnabled, suggestionTone, setSuggestionTone } = useSuggestions(
-    message,
-    sharedContext
-  );
+  const {
+    suggestions,
+    isSuggestionsEnabled,
+    suggestionTone,
+    setSuggestionTone,
+  } = useSuggestions(message, sharedContext);
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,
@@ -102,7 +104,7 @@ export function useCommunicationBoard({
     ":backspace": removeLastMessage,
   };
 
-  async function executeAction(action: Action) {
+  async function executeAction(action: BoardAction) {
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
 
@@ -118,7 +120,7 @@ export function useCommunicationBoard({
     await handler?.();
   }
 
-  const activateButton = async (button: Button) => {
+  const activateButton = async (button: BoardButton) => {
     if (button.loadBoard?.id) {
       navigateToBoard(button.loadBoard.id);
       return;
