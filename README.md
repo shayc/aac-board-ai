@@ -31,7 +31,7 @@ AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages int
 - ✅ **Privacy:** All processing happens on-device
 - ✅ **Offline:** Works without internet after initial setup
 - ✅ **Free:** No API costs or usage limits
-- ✅ **Fast:** Real-time corrections with Gemini Nano
+- ✅ **Fast:** Real-time suggestions with Gemini Nano
 
 **Key Features:**
 - **Grammar Correction** – Instantly fixes grammar using the [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)
