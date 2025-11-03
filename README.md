@@ -40,14 +40,7 @@ AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages int
 
 ## Technical Stack
 
-**Frontend:** React 19 • TypeScript • Vite (with React Compiler)  
-**UI:** Material UI 7  
-**AI:** Chrome Built-in AI (Gemini Nano)  
-**Data:** IndexedDB • Zod schema validation  
-**Standards:** Open Board Format (OBF/OBZ) support  
-**Voice:** Web Speech API
-
-[Architecture →](src/)
+Built with React 19, TypeScript, and Material UI. All AI processing runs locally using Chrome's Built-in AI (Gemini Nano). For complete technical details and architecture, see [Architecture Documentation →](docs/architecture.md).
 
 ## Quick Start
 
