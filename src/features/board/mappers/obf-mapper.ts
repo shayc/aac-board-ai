@@ -1,7 +1,7 @@
 import type {
-  Action,
   Board,
-  Button,
+  BoardAction,
+  BoardButton,
   Grid,
   LoadBoard,
 } from "@features/board/types";
@@ -68,7 +68,7 @@ function transformButton(
   obfButton: OBFButton,
   imageSources: Map<string, string>,
   soundSources: Map<string, string>
-): Button {
+): BoardButton {
   return {
     id: obfButton.id,
     label: obfButton.label,
@@ -82,7 +82,7 @@ function transformButton(
       ? soundSources.get(obfButton.sound_id)
       : undefined,
     actions: [obfButton.action, ...(obfButton.actions ?? [])].filter(
-      (a): a is Action => Boolean(a)
+      (a): a is BoardAction => Boolean(a)
     ),
     loadBoard: obfButton.load_board
       ? transformLoadBoard(obfButton.load_board)
