@@ -24,7 +24,7 @@ AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages int
 
 **Who Benefits:**
 - 🧑 People with cerebral palsy, autism, aphasia, or other speech disabilities
-- 👨‍⚕️ Speech-language therapists and AAC specialists
+- 🗣️ Speech-language therapists and AAC specialists
 - 👪 Caregivers and family members
 
 **Why Built-in AI Matters:**
