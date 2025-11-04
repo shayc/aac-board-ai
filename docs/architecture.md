@@ -1,0 +1,166 @@
+# Architecture
+
+## Overview
+
+**AAC Board AI** is a client-side React app powered by **Chrome’s Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
+
+The architecture follows **feature-sliced design** principles, keeping UI, logic, and data layers isolated and easy to maintain.
+
+---
+
+## AI Integration
+
+Chrome's Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
+Each hook wraps a browser API and manages model downloading and session lifecycle.
+
+### AI Hooks
+
+| Hook                  | Chrome API            | Status       | Purpose                                   |
+| --------------------- | --------------------- | ------------ | ----------------------------------------- |
+| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction           |
+| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (casual, formal, neutral) |
+| `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                     |
+| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion            |
+| `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions       |
+| `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection              |
+
+**Status Key:**
+
+- ✅ **Active** - Currently used in the application
+- 🔧 **Available** - Implemented but not yet integrated into UI
+
+### Example
+
+```typescript
+// Creating a translator
+const { createTranslator, isTranslatorSupported, downloadProgress } =
+  useTranslator();
+
+if (isTranslatorSupported) {
+  const translator = await createTranslator({
+    sourceLanguage: "en",
+    targetLanguage: "he",
+  });
+
+  const translated = await translator.translate("Hello world");
+}
+```
+
+**Shared Context**
+
+The `AIProvider` context manages shared context across AI sessions, allowing you to provide background information that enhances AI responses across different features.
+
+---
+
+## Tech Stack
+
+**Core:** React 19 • TypeScript 5.9 • Vite 7  
+**UI:** Material UI 7 • Emotion  
+**Routing:** React Router 7  
+**Storage:** IndexedDB (`idb`) — board data, assets, and settings  
+**Compression:** fflate — OBZ file handling
+**AI:** Chrome Built-in AI (Gemini Nano)  
+**Validation:** Zod 4  
+**Testing:** Vitest 4 + Playwright browser mode
+
+**Highlights**
+
+- React Compiler for automatic optimization
+- State managed via React Context (`ThemeProvider`, `SpeechProvider`, `LanguageProvider`, `AIProvider`, `BoardProvider`, `SnackbarProvider`)
+- 100% client-side — no backend or network dependencies
+
+---
+
+## Design Principles
+
+### 1. Feature-Sliced Design
+
+Each feature (e.g. `features/board/`) is a self-contained module with its own UI, logic, data access, and types.  
+This modular structure supports scalability and independent development.
+
+### 2. Path Aliases
+
+Simplified imports for clean structure:
+
+```typescript
+import { useBoard } from "@features/board/context/useBoard";
+import { useTranslator } from "@shared/hooks/ai/useTranslator";
+```
+
+Aliases defined in `tsconfig.app.json` and `vite.config.ts`:
+
+- `@app` → `src/app`
+- `@features` → `src/features`
+- `@shared` → `src/shared`
+- `@pages` → `src/pages`
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/                   # App shell and global layout
+│   ├── AppProviders.tsx   # Composed context providers
+│   ├── dialogs/           # Global dialogs
+│   └── shell/             # Header, drawers, layout
+├── features/
+│   └── board/             # AAC board feature
+│       ├── components/    # UI components
+│       ├── context/       # Board state
+│       ├── db/            # IndexedDB operations
+│       ├── hooks/         # Feature-specific hooks
+│       ├── mappers/       # OBF format mapping
+│       └── types.ts
+├── pages/                 # Routed pages
+│   ├── HomePage.tsx
+│   ├── BoardPage.tsx
+│   └── AboutPage.tsx
+└── shared/                # Reusable utilities
+    ├── components/        # Shared UI
+    ├── contexts/          # Global contexts
+    ├── hooks/
+    │   └── ai/            # Chrome AI hooks
+    ├── open-board-format/ # OBF/OBZ parsing
+    ├── types/
+    └── utils/
+```
+
+---
+
+## Data Storage
+
+**IndexedDB** (via `idb`) stores:
+
+- **Boardsets** - Metadata for collections of boards
+- **Boards** - Individual board configurations (parsed from OBF files)
+- **Assets** - Images, sounds, and other media resources (extracted from OBZ packages)
+
+All data is stored locally — no sync or cloud dependency.
+
+---
+
+## Browser Compatibility
+
+**Requirements**
+
+- Chrome 138+
+- Manual flag enablement for AI features:
+
+```
+chrome://flags/#proofreader-api-for-gemini-nano
+chrome://flags/#rewriter-api-for-gemini-nano
+```
+
+Once enabled, Chrome downloads the Gemini Nano model for local inference.
+
+---
+
+## Progressive Enhancement
+
+AAC Board AI adapts gracefully to the browser's capabilities:
+
+- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API.
+- **Enhanced mode:** When Chrome AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
+
+This approach ensures the application remains functional even if AI features are unavailable, while providing enhanced capabilities when possible.
