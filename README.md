@@ -12,7 +12,7 @@ AAC (Augmentative and Alternative Communication) tools help people who can’t r
 
 ![AAC Board AI interface](screenshot.png)
 
-Try the live demo at [aacboard.app](https://aacboard.app). _(requires Chrome 138+ with Built-in AI enabled)_.
+Try the live demo at [aacboard.app](https://aacboard.app). _(requires Chrome 138+ with [Built-in AI enabled](#prerequisites))_.
 
 ## Impact & Motivation
 
@@ -45,18 +45,20 @@ AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages int
 
 Built with React 19, TypeScript, and Material UI. Powered entirely by Chrome’s on-device Gemini Nano for local AI processing. For complete technical details and architecture, see [Architecture Documentation →](docs/architecture.md).
 
-## Quick Start
+## Prerequisites
 
 **Requirements:** Chrome 138+ with Built-in AI flags enabled
 
-Paste each link below into Chrome's address bar, enable the feature, and restart Chrome:
+Paste each URL below into Chrome's address bar, enable the feature, and restart Chrome:
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
-Then run locally:
+## Quick Start
+
+Run locally:
 
 ```bash
 git clone https://github.com/shayc/aac-board-ai.git
