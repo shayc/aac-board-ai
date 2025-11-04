@@ -2,48 +2,37 @@
 
 ## Overview
 
-**AAC Board AI** is a fully client-side React application powered by **Chrome’s Built-in AI (Gemini Nano)**.  
-It provides private, on-device communication assistance for people with speech disabilities — running entirely in the browser without servers or cloud dependencies.
+**AAC Board AI** is a client-side React app powered by **Chrome’s Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
 
-The architecture follows **feature-sliced design** principles to keep UI, logic, and data isolated and independently maintainable.
+The architecture follows **feature-sliced design** principles, keeping UI, logic, and data layers isolated and easy to maintain.
 
 ---
 
 ## AI Integration
 
-Chrome’s Built-in AI APIs are accessed through stateless React hooks in `shared/hooks/ai/`.  
-Each hook wraps a browser API directly — no providers, global state, or network calls required.
+Chrome's Built-in AI capabilities are accessed through **standalone React hooks** in `shared/hooks/ai/`.  
+Each hook directly wraps a browser API — no global state or providers required.
 
-### Available Capabilities
+### Available AI Hooks
 
-- **Proofreader API** — Grammar and spelling correction
-- **Rewriter API** — Tone adjustment (casual, formal, neutral)
-- **Translator API** — Real-time translation between languages
-- **Writer API** — Text generation and completion
-- **Language Model API** — Custom prompts and advanced use cases
-- **Language Detector API** — Automatic language detection
+| Hook                  | Chrome API            | Purpose                                   |
+| --------------------- | --------------------- | ----------------------------------------- |
+| `useProofreader`      | Proofreader API       | Grammar and spelling correction           |
+| `useRewriter`         | Rewriter API          | Tone adjustment (casual, formal, neutral) |
+| `useTranslator`       | Translator API        | Real-time translation                     |
+| `useWriter`           | Writer API            | Text generation and completion            |
+| `useLanguageModel`    | Language Model API    | Custom prompts and advanced use cases     |
+| `useLanguageDetector` | Language Detector API | Automatic language detection              |
 
-### Usage Example
-
-```typescript
-const translator = useTranslator();
-const result = await translator.translate("Hello", "es");
-```
-
-All hooks automatically detect feature availability and degrade gracefully when AI isn’t supported:
+### Example
 
 ```typescript
-const { available } = useTranslator();
-if (available === "no") {
-  // Fallback to non-AI behavior
-}
+const { createTranslator } = useTranslator();
+const translator = await createTranslator({
+  sourceLanguage: "en",
+  targetLanguage: "he",
+});
 ```
-
-### Resilience & Fallbacks
-
-- The app remains fully functional even without AI.
-- Users receive clear feedback when AI capabilities are unavailable.
-- All critical AAC functionality (board navigation, message composition, speech synthesis) works offline.
 
 ---
 
@@ -52,15 +41,15 @@ if (available === "no") {
 **Core:** React 19 • TypeScript 5.9 • Vite 7  
 **UI:** Material UI 7 • Emotion  
 **Routing:** React Router 7  
-**Storage:** IndexedDB (via `idb`)  
-**AI:** Chrome Built-in AI APIs (Proofreader, Rewriter, Translator, Writer, Language Model)  
-**Validation:** Zod  
-**Testing:** Vitest + Playwright
+**Storage:** IndexedDB (`idb`) — board data and settings  
+**AI:** Chrome Built-in AI (Gemini Nano)  
+**Validation:** Zod 4  
+**Testing:** Vitest + Playwright browser mode
 
 **Highlights**
 
-- React Compiler enabled for automatic optimization
-- State managed with React Context (no Redux or external store)
+- React Compiler for automatic optimization
+- State managed via React Context (Theme, Speech, Language, AI, Board, Snackbar)
 - 100% client-side — no backend or network dependencies
 
 ---
@@ -69,24 +58,19 @@ if (available === "no") {
 
 ### 1. Feature-Sliced Design
 
-Each feature (for example, `features/board/`) is a self-contained module with its own UI, logic, data, and types.  
-This separation keeps the project scalable and easy to maintain.
+Each feature (e.g. `features/board/`) is a self-contained module with its own UI, logic, data access, and types.  
+This modular structure supports scalability and independent development.
 
-### 2. Separation of Concerns
+### 2. Path Aliases
 
-- **Contexts** (`shared/contexts/`) hold global app state — theme, speech, language, AI settings.
-- **Hooks** (`shared/hooks/ai/`) wrap browser AI APIs without state, making them portable and independent.
-
-### 3. Path Aliases
-
-Simplified imports with clear namespaces:
+Simplified imports for clean structure:
 
 ```typescript
 import { useBoard } from "@features/board/context/useBoard";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 ```
 
-Aliases are defined in `tsconfig.app.json` and `vite.config.ts`:
+Aliases defined in `tsconfig.app.json` and `vite.config.ts`:
 
 - `@app` → `src/app`
 - `@features` → `src/features`
@@ -99,28 +83,41 @@ Aliases are defined in `tsconfig.app.json` and `vite.config.ts`:
 
 ```
 src/
-├── app/
+├── app/                   # App shell and global layout
+│   ├── AppProviders.tsx   # Composed context providers
+│   ├── dialogs/           # Global dialogs
+│   └── shell/             # Header, drawers, layout
 ├── features/
-│   └── board/
-│       ├── components/
-│       ├── context/
-│       ├── db/
-│       ├── hooks/
-│       ├── mappers/
+│   └── board/             # AAC board feature
+│       ├── components/    # UI components
+│       ├── context/       # Board state
+│       ├── db/            # IndexedDB operations
+│       ├── hooks/         # Feature-specific hooks
+│       ├── mappers/       # OBF format mapping
 │       └── types.ts
-├── pages/
+├── pages/                 # Routed pages
 │   ├── HomePage.tsx
 │   ├── BoardPage.tsx
 │   └── AboutPage.tsx
-└── shared/
-    ├── components/
-    ├── contexts/
+└── shared/                # Reusable utilities
+    ├── components/        # Shared UI
+    ├── contexts/          # Global contexts
     ├── hooks/
-    │   └── ai/
-    ├── open-board-format/
+    │   └── ai/            # Chrome AI hooks
+    ├── open-board-format/ # OBF/OBZ parsing
     ├── types/
     └── utils/
 ```
+
+---
+
+## Data Storage
+
+**IndexedDB** (via `idb`) stores:
+
+- Board sets and individual boards (parsed from OBZ files)
+
+All data is stored locally — no sync or cloud dependency.
 
 ---
 
@@ -128,24 +125,21 @@ src/
 
 **Requirements**
 
-- **Browser:** Chrome 138+
-- **AI Features:** Require manual flag enablement
-
-Enable these Chrome flags to unlock Built-in AI APIs:
+- Chrome 138+
+- Manual flag enablement for AI features:
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
-After enabling, Chrome downloads the Gemini Nano model (~1.7 GB) for local processing.
+Once enabled, Chrome downloads the Gemini Nano model for local inference.
 
 ---
 
 ## Progressive Enhancement
 
-AAC Board AI is built with progressive enhancement in mind:
+AAC Board AI adapts gracefully to the browser's capabilities:
 
-1. **Core AAC features** (board navigation, message building, speech synthesis) work without AI.
-2. **AI features** enhance phrasing, tone, and translation when available.
-3. **Feature detection** ensures graceful fallback when APIs are disabled or unsupported.
+- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline.
+- **Enhanced mode:** When Chrome AI APIs are available, phrasing, tone, and translation are improved automatically.
