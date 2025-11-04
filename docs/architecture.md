@@ -10,29 +10,45 @@ The architecture follows **feature-sliced design** principles, keeping UI, logic
 
 ## AI Integration
 
-Chrome's Built-in AI capabilities are accessed through **standalone React hooks** in `shared/hooks/ai/`.  
-Each hook directly wraps a browser API — no global state or providers required.
+Chrome's Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
+Each hook wraps a browser API and manages model downloading and session lifecycle.
 
-### Available AI Hooks
+### AI Hooks
 
-| Hook                  | Chrome API            | Purpose                                   |
-| --------------------- | --------------------- | ----------------------------------------- |
-| `useProofreader`      | Proofreader API       | Grammar and spelling correction           |
-| `useRewriter`         | Rewriter API          | Tone adjustment (casual, formal, neutral) |
-| `useTranslator`       | Translator API        | Real-time translation                     |
-| `useWriter`           | Writer API            | Text generation and completion            |
-| `useLanguageModel`    | Language Model API    | Custom prompts and advanced use cases     |
-| `useLanguageDetector` | Language Detector API | Automatic language detection              |
+| Hook                  | Chrome API            | Status       | Purpose                                   |
+| --------------------- | --------------------- | ------------ | ----------------------------------------- |
+| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction           |
+| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (casual, formal, neutral) |
+| `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                     |
+| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion            |
+| `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions       |
+| `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection              |
+
+**Status Key:**
+
+- ✅ **Active** - Currently used in the application
+- 🔧 **Available** - Implemented but not yet integrated into UI
 
 ### Example
 
 ```typescript
-const { createTranslator } = useTranslator();
-const translator = await createTranslator({
-  sourceLanguage: "en",
-  targetLanguage: "he",
-});
+// Creating a translator
+const { createTranslator, isTranslatorSupported, downloadProgress } =
+  useTranslator();
+
+if (isTranslatorSupported) {
+  const translator = await createTranslator({
+    sourceLanguage: "en",
+    targetLanguage: "he",
+  });
+
+  const translated = await translator.translate("Hello world");
+}
 ```
+
+**Shared Context**
+
+The `AIProvider` context manages shared context across AI sessions, allowing you to provide background information that enhances AI responses across different features.
 
 ---
 
@@ -41,15 +57,16 @@ const translator = await createTranslator({
 **Core:** React 19 • TypeScript 5.9 • Vite 7  
 **UI:** Material UI 7 • Emotion  
 **Routing:** React Router 7  
-**Storage:** IndexedDB (`idb`) — board data and settings  
+**Storage:** IndexedDB (`idb`) — board data, assets, and settings  
+**Compression:** fflate — OBZ file handling
 **AI:** Chrome Built-in AI (Gemini Nano)  
 **Validation:** Zod 4  
-**Testing:** Vitest + Playwright browser mode
+**Testing:** Vitest 4 + Playwright browser mode
 
 **Highlights**
 
 - React Compiler for automatic optimization
-- State managed via React Context (Theme, Speech, Language, AI, Board, Snackbar)
+- State managed via React Context (`ThemeProvider`, `SpeechProvider`, `LanguageProvider`, `AIProvider`, `BoardProvider`, `SnackbarProvider`)
 - 100% client-side — no backend or network dependencies
 
 ---
@@ -115,7 +132,9 @@ src/
 
 **IndexedDB** (via `idb`) stores:
 
-- Board sets and individual boards (parsed from OBZ files)
+- **Boardsets** - Metadata for collections of boards
+- **Boards** - Individual board configurations (parsed from OBF files)
+- **Assets** - Images, sounds, and other media resources (extracted from OBZ packages)
 
 All data is stored locally — no sync or cloud dependency.
 
@@ -141,5 +160,7 @@ Once enabled, Chrome downloads the Gemini Nano model for local inference.
 
 AAC Board AI adapts gracefully to the browser's capabilities:
 
-- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline.
-- **Enhanced mode:** When Chrome AI APIs are available, phrasing, tone, and translation are improved automatically.
+- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API.
+- **Enhanced mode:** When Chrome AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
+
+This approach ensures the application remains functional even if AI features are unavailable, while providing enhanced capabilities when possible.
