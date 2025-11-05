@@ -56,6 +56,10 @@ export function Tile({
             ? darken(backgroundColor, 0.3)
             : undefined,
         },
+        "&:focus-visible": {
+          outline: `3px solid ${theme.palette.text.primary}`,
+          outlineOffset: 2,
+        },
         "&::after": {
           content: '""',
           display: variant === "folder" ? "block" : "none",
