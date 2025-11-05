@@ -1,7 +1,6 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
-import BackspaceIcon from "@mui/icons-material/Backspace";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
@@ -9,12 +8,14 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
+import { BackspaceButton } from "./BackspaceButton";
 
 export function MessageBar() {
   const ref = useRef<HTMLDivElement>(null);
   const {
     message,
     removeLastMessage,
+    clearMessage,
     playMessage,
     stopMessage,
     isPlayingMessage,
@@ -68,18 +69,7 @@ export function MessageBar() {
           ))}
         </Stack>
 
-        <Tooltip title="Backspace" enterDelay={800}>
-          <Box sx={{ alignSelf: "center" }}>
-            <IconButton
-              aria-label="Backspace"
-              size="large"
-              color="inherit"
-              onClick={() => removeLastMessage()}
-            >
-              <BackspaceIcon />
-            </IconButton>
-          </Box>
-        </Tooltip>
+        <BackspaceButton onPress={() => removeLastMessage()} onLongPress={() => clearMessage()} />
       </Stack>
 
       <Tooltip
