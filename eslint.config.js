@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactDom from "eslint-plugin-react-dom";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
@@ -18,6 +19,7 @@ export default defineConfig([
       reactX.configs["recommended-typescript"],
       reactDom.configs.recommended,
       reactHooks.configs.flat.recommended,
+      jsxA11y.flatConfigs.recommended,
       reactRefresh.configs.vite,
     ],
     languageOptions: {

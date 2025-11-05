@@ -71,7 +71,7 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose} autoFocus variant="contained" size="large">
+        <Button onClick={onClose} variant="contained" size="large">
           Get started
         </Button>
       </DialogActions>
