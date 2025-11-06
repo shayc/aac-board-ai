@@ -2,6 +2,7 @@ import { importFile } from "@features/board/db/import-board";
 import FileOpenIcon from "@mui/icons-material/FileOpen";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -46,6 +47,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   }
 
   const menuItems = [
+    {
+      id: "library",
+      icon: LibraryBooksIcon,
+      label: "Library",
+      to: "/library",
+      onClick: onClose,
+    },
     {
       id: "import-board",
       icon: FileOpenIcon,
