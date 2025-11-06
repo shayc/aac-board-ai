@@ -9,10 +9,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ViewListIcon from "@mui/icons-material/ViewList";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Fade from "@mui/material/Fade";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
@@ -37,6 +43,8 @@ export function LibraryPage() {
   const [boardSets, setBoardSets] = useState<BoardSetWithMetadata[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [setToDelete, setSetToDelete] = useState<string | null>(null);
   const { showSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -77,17 +85,32 @@ export function LibraryPage() {
     void loadBoardSets();
   }, [showSnackbar]);
 
-  async function handleDelete(setId: string) {
+  function handleDeleteClick(setId: string) {
+    setSetToDelete(setId);
+    setDeleteDialogOpen(true);
+  }
+
+  function handleDeleteCancel() {
+    setDeleteDialogOpen(false);
+    setSetToDelete(null);
+  }
+
+  async function handleDeleteConfirm() {
+    if (!setToDelete) return;
+
     try {
       const db = await openBoardsDB();
-      await deleteBoardset(db, setId);
+      await deleteBoardset(db, setToDelete);
       db.close();
 
-      setBoardSets((prev) => prev.filter((set) => set.setId !== setId));
+      setBoardSets((prev) => prev.filter((set) => set.setId !== setToDelete));
       showSnackbar({ message: "Board set deleted" });
     } catch (error) {
       console.error("Failed to delete board set:", error);
       showSnackbar({ message: "Failed to delete board set" });
+    } finally {
+      setDeleteDialogOpen(false);
+      setSetToDelete(null);
     }
   }
 
@@ -106,6 +129,10 @@ export function LibraryPage() {
       </Container>
     );
   }
+
+  const setToDeleteName = boardSets.find(
+    (set) => set.setId === setToDelete
+  )?.name;
 
   return (
     <Container component="main" maxWidth="lg">
@@ -206,7 +233,7 @@ export function LibraryPage() {
                     <Tooltip title="Delete board set">
                       <IconButton
                         size="small"
-                        onClick={() => void handleDelete(set.setId)}
+                        onClick={() => handleDeleteClick(set.setId)}
                         aria-label="delete"
                       >
                         <DeleteIcon />
@@ -269,7 +296,7 @@ export function LibraryPage() {
                     </Box>
                     <Tooltip title="Delete board set">
                       <IconButton
-                        onClick={() => void handleDelete(set.setId)}
+                        onClick={() => handleDeleteClick(set.setId)}
                         aria-label="delete"
                       >
                         <DeleteIcon />
@@ -282,6 +309,31 @@ export function LibraryPage() {
           )}
         </Box>
       </Fade>
+
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={handleDeleteCancel}
+        aria-labelledby="delete-dialog-title"
+        aria-describedby="delete-dialog-description"
+      >
+        <DialogTitle id="delete-dialog-title">Delete Board Set?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="delete-dialog-description">
+            Are you sure you want to delete "{setToDeleteName}"? This action
+            cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button
+            onClick={() => void handleDeleteConfirm()}
+            color="error"
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 }
