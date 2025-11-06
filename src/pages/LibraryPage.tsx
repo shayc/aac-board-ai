@@ -1,5 +1,6 @@
 import {
   deleteBoardset,
+  getBoardsBatch,
   listBoardsets,
   openBoardsDB,
   type BoardsetRecord,
@@ -20,15 +21,20 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import type { OBFLicense } from "@shared/open-board-format/schema";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router";
 
 type ViewMode = "grid" | "list";
 
+interface BoardSetWithMetadata extends BoardsetRecord {
+  license?: OBFLicense;
+}
+
 export function LibraryPage() {
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const [boardSets, setBoardSets] = useState<BoardsetRecord[]>([]);
+  const [boardSets, setBoardSets] = useState<BoardSetWithMetadata[]>([]);
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const { showSnackbar } = useSnackbar();
@@ -38,7 +44,27 @@ export function LibraryPage() {
       try {
         const db = await openBoardsDB();
         const sets = await listBoardsets(db);
-        setBoardSets(sets);
+
+        // Fetch license info from root boards
+        const setsWithMetadata = await Promise.all(
+          sets.map(async (set) => {
+            if (!set.rootBoardId) {
+              return set;
+            }
+
+            const boards = await getBoardsBatch(db, set.setId, [
+              set.rootBoardId,
+            ]);
+            const rootBoard = boards[0];
+
+            return {
+              ...set,
+              license: rootBoard?.json.license,
+            };
+          })
+        );
+
+        setBoardSets(setsWithMetadata);
         db.close();
       } catch (error) {
         console.error("Failed to load board sets:", error);
@@ -157,6 +183,24 @@ export function LibraryPage() {
                       {set.boardCount}{" "}
                       {set.boardCount === 1 ? "board" : "boards"}
                     </Typography>
+                    {set.license?.author_name && (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 1 }}
+                      >
+                        By {set.license.author_name}
+                      </Typography>
+                    )}
+                    {set.license?.type && (
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{ mt: 0.5 }}
+                      >
+                        License: {set.license.type}
+                      </Typography>
+                    )}
                   </CardContent>
                   <CardActions sx={{ justifyContent: "flex-end", pt: 0 }}>
                     <Tooltip title="Delete board set">
@@ -199,10 +243,29 @@ export function LibraryPage() {
                       <Typography variant="h6" component="h2">
                         {set.name}
                       </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {set.boardCount}{" "}
-                        {set.boardCount === 1 ? "board" : "boards"}
-                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          gap: 2,
+                          flexWrap: "wrap",
+                          mt: 0.5,
+                        }}
+                      >
+                        <Typography variant="body2" color="text.secondary">
+                          {set.boardCount}{" "}
+                          {set.boardCount === 1 ? "board" : "boards"}
+                        </Typography>
+                        {set.license?.author_name && (
+                          <Typography variant="body2" color="text.secondary">
+                            By {set.license.author_name}
+                          </Typography>
+                        )}
+                        {set.license?.type && (
+                          <Typography variant="body2" color="text.secondary">
+                            License: {set.license.type}
+                          </Typography>
+                        )}
+                      </Box>
                     </Box>
                     <Tooltip title="Delete board set">
                       <IconButton
