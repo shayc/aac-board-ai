@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import path from "path";
 import { defineConfig } from "vite";
+import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
         plugins: [["babel-plugin-react-compiler"]],
       },
     }),
+    VitePWA()
   ],
   resolve: {
     alias: {
