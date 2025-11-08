@@ -16,7 +16,11 @@ declare global {
   // -------------------------------------------------------------------------------------------------
 
   /** Availability states returned by `.availability()`. */
-  type AIAvailability = "available" | "downloadable" | "unavailable";
+  type AIAvailability =
+    | "available"
+    | "downloadable"
+    | "downloading"
+    | "unavailable";
 
   /** Progress event fired while an on-device model or language pack downloads. */
   interface AIDownloadProgressEvent extends Event {
@@ -53,8 +57,8 @@ declare global {
   // -------------------------------------------------------------------------------------------------
 
   interface TranslatorCreateOptions extends AIBaseCreateOptions {
-    /** BCP-47 code of the input language, e.g. `"es"`. Optional. */
-    sourceLanguage?: string;
+    /** BCP-47 code of the input language, e.g. `"es"`. Required. */
+    sourceLanguage: string;
     /** BCP-47 code of the target language, e.g. `"fr"`. Required. */
     targetLanguage: string;
   }
@@ -189,8 +193,6 @@ declare global {
 
     /** Free resources for this instance. */
     destroy(): void;
-
-    tone: RewriterTone;
   }
 
   interface RewriterConstructor {
@@ -333,13 +335,6 @@ declare global {
   // Permission-Policy: <iframe allow="language-model">; not available in Web Workers.
   // Last verified: 2025-09-21
   // -------------------------------------------------------------------------------------------------
-
-  /** Availability states for the Language Model API. */
-  type LanguageModelAvailability =
-    | "available"
-    | "downloadable"
-    | "downloading"
-    | "unavailable";
 
   /** Model parameters returned by LanguageModel.params(). */
   interface LanguageModelParams {
@@ -494,7 +489,7 @@ declare global {
      */
     availability(
       options?: LanguageModelAvailabilityOptions
-    ): Promise<LanguageModelAvailability>;
+    ): Promise<AIAvailability>;
 
     /** Create a new language model session (may download on first use). */
     create(options?: LanguageModelCreateOptions): Promise<LanguageModelSession>;
