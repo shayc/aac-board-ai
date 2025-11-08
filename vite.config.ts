@@ -18,7 +18,7 @@ export default defineConfig({
       includeAssets: ["vite.svg"],
       manifest: {
         name: "AAC Board AI",
-        short_name: "Board AI",
+        short_name: "AAC Board",
         description:
           "AAC Board AI helps people who can't speak communicate naturally with Chrome's Built-in AI — proofreading, rephrasing, and translating safely on their device.",
       },
