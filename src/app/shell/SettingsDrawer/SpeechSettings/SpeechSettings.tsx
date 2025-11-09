@@ -37,7 +37,7 @@ export function SpeechSettings() {
       sourceLanguage: "en",
       targetLanguage: languageCode,
     });
-    
+
     const text = "Hi, this is my voice!";
     const previewText = (await translator?.translate(text)) ?? text;
 

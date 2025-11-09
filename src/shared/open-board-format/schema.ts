@@ -145,7 +145,7 @@ export const OBFImageSchema = OBFMediaSchema.and(
     width: z.number().optional(),
     /** Height of the image in pixels. */
     height: z.number().optional(),
-  })
+  }),
 );
 export type OBFImage = z.infer<typeof OBFImageSchema>;
 

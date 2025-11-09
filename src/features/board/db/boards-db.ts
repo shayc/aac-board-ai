@@ -92,7 +92,7 @@ function localeFor(db: IDBPDatabase<BoardsDBSchema>) {
 
 /** Open/Close */
 export async function openBoardsDB(
-  opts: OpenOptions = {}
+  opts: OpenOptions = {},
 ): Promise<IDBPDatabase<BoardsDBSchema>> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
@@ -128,7 +128,7 @@ export async function upsertBoardset(
     name: string;
     rootBoardId?: string;
     boardCount?: number;
-  }
+  },
 ): Promise<void> {
   validateId(input.setId, "setId");
   const prev = await db.get("boardsets", input.setId);
@@ -145,7 +145,7 @@ export async function upsertBoardset(
   await db.put("boardsets", row);
 }
 export async function listBoardsets(
-  db: IDBPDatabase<BoardsDBSchema>
+  db: IDBPDatabase<BoardsDBSchema>,
 ): Promise<BoardsetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
@@ -163,7 +163,7 @@ export async function listBoardsets(
 
 export async function getBoardset(
   db: IDBPDatabase<BoardsDBSchema>,
-  setId: string
+  setId: string,
 ): Promise<BoardsetRecord | null> {
   validateId(setId, "setId");
   return (await db.get("boardsets", setId)) ?? null;
@@ -173,7 +173,7 @@ export async function getBoardset(
 export async function bulkPutBoards(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  items: { boardId: string; name: string; json: OBFBoard }[]
+  items: { boardId: string; name: string; json: OBFBoard }[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "boardsets"], "readwrite");
@@ -220,7 +220,7 @@ export async function bulkPutBoards(
 
 export async function listBoards(
   db: IDBPDatabase<BoardsDBSchema>,
-  setId: string
+  setId: string,
 ): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   const rows = await db.getAllFromIndex("boards", "bySetId", setId);
@@ -232,7 +232,7 @@ export async function searchBoards(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   query: string,
-  limit = 50
+  limit = 50,
 ): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   const key = toNameKey(query, localeFor(db));
@@ -243,13 +243,13 @@ export async function searchBoards(
 export async function getBoardsBatch(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  boardIds: string[]
+  boardIds: string[],
 ): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   if (boardIds.length === 0) return [];
 
   const rows = await Promise.all(
-    boardIds.map((id) => db.get("boards", [setId, id]))
+    boardIds.map((id) => db.get("boards", [setId, id])),
   );
 
   return rows.filter((r): r is BoardRecord => r !== undefined);
@@ -265,7 +265,7 @@ export async function bulkPutAssets(
     mime?: string;
     size?: number;
     mediaId?: string;
-  }[]
+  }[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["assets", "boardsets"], "readwrite");
@@ -300,7 +300,7 @@ export async function bulkPutAssets(
 export async function getAssetUrlByPath(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  path: string
+  path: string,
 ): Promise<string | null> {
   validateId(setId, "setId");
   const p = normalizePath(path);
@@ -316,7 +316,7 @@ export async function getAssetUrlByPath(
 export async function getAssetUrlByMediaId(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  mediaId: string
+  mediaId: string,
 ): Promise<string | null> {
   validateId(setId, "setId");
   if (!mediaId) {
@@ -336,7 +336,7 @@ export async function getAssetUrlByMediaId(
 }
 export async function getManifestJson<T = unknown>(
   db: IDBPDatabase<BoardsDBSchema>,
-  setId: string
+  setId: string,
 ): Promise<T | null> {
   validateId(setId, "setId");
   const row = await db.get("assets", [setId, "manifest.json"]);
@@ -355,7 +355,7 @@ export async function getManifestJson<T = unknown>(
 /** Deletes */
 export async function deleteBoardset(
   db: IDBPDatabase<BoardsDBSchema>,
-  setId: string
+  setId: string,
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
@@ -390,7 +390,7 @@ export async function deleteBoardset(
 export async function deleteBoard(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  boardId: string
+  boardId: string,
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
@@ -417,7 +417,7 @@ export async function deleteBoard(
 export async function deleteAsset(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-  path: string
+  path: string,
 ): Promise<void> {
   validateId(setId, "setId");
   const p = normalizePath(path);

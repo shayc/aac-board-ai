@@ -21,7 +21,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     id: obfBoard.id,
     name: obfBoard.name,
     buttons: obfBoard.buttons.map((button) =>
-      transformButton(button, imageSources, soundSources)
+      transformButton(button, imageSources, soundSources),
     ),
     grid: transformGrid(obfBoard.grid),
   };
@@ -67,7 +67,7 @@ function buildSoundMap(obfBoard: OBFBoard): Map<string, string> {
 function transformButton(
   obfButton: OBFButton,
   imageSources: Map<string, string>,
-  soundSources: Map<string, string>
+  soundSources: Map<string, string>,
 ): BoardButton {
   return {
     id: obfButton.id,
@@ -82,7 +82,7 @@ function transformButton(
       ? soundSources.get(obfButton.sound_id)
       : undefined,
     actions: [obfButton.action, ...(obfButton.actions ?? [])].filter(
-      (a): a is BoardAction => Boolean(a)
+      (a): a is BoardAction => Boolean(a),
     ),
     loadBoard: obfButton.load_board
       ? transformLoadBoard(obfButton.load_board)

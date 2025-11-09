@@ -178,7 +178,7 @@ export function useCommunicationBoard({
               } catch (err) {
                 console.warn(
                   `Failed to load image ${img.id} from path ${img.path}:`,
-                  err
+                  err,
                 );
               }
             }
@@ -194,7 +194,7 @@ export function useCommunicationBoard({
               } catch (err) {
                 console.warn(
                   `Failed to load sound ${sound.id} from path ${sound.path}:`,
-                  err
+                  err,
                 );
               }
             }
@@ -239,7 +239,7 @@ export function useCommunicationBoard({
           let translatedVocalization = button.vocalization;
           if (button.vocalization) {
             translatedVocalization = await translator?.translate(
-              button.vocalization
+              button.vocalization,
             );
           }
 
@@ -248,7 +248,7 @@ export function useCommunicationBoard({
             label: translatedLabel,
             vocalization: translatedVocalization,
           };
-        })
+        }),
       );
 
       setTranslatedBoard({

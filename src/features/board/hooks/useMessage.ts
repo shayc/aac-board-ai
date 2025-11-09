@@ -22,7 +22,7 @@ export function useMessage() {
 
   const [message, setMessage] = usePersistentState<MessagePart[]>(
     "message",
-    []
+    [],
   );
 
   const [isPlayingMessage, setIsPlayingMessage] = useState(false);
@@ -137,7 +137,7 @@ function mergeTextSegments(segments: Segment[]): Segment[] {
       previousSegment.data =
         `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
           /\s+/g,
-          " "
+          " ",
         );
     } else {
       mergedSegments.push({ ...currentSegment });

@@ -9,7 +9,7 @@ export interface AIProviderProps {
 export function AIProvider({ children }: AIProviderProps) {
   const [sharedContext, setSharedContext] = usePersistentState<string>(
     "ai-shared-context",
-    ""
+    "",
   );
 
   const contextValue: AIContextValue = {

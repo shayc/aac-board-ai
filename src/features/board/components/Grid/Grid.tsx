@@ -30,7 +30,11 @@ export function Grid<TItem extends { id: string }>({
       {grid.map((row, rowIndex) => (
         <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
           {row.map((item, cellIndex) => (
-            <Stack key={cellIndex} flex={1} sx={{ minWidth: 64, minHeight: 64 }}>
+            <Stack
+              key={cellIndex}
+              flex={1}
+              sx={{ minWidth: 64, minHeight: 64 }}
+            >
               {item && renderItem(item)}
             </Stack>
           ))}
@@ -44,7 +48,7 @@ function buildGrid<T extends { id: string }>(
   items: readonly T[],
   rows: number,
   columns: number,
-  order?: (string | null)[][]
+  order?: (string | null)[][],
 ): (T | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
@@ -63,6 +67,6 @@ function buildGrid<T extends { id: string }>(
     Array.from({ length: columns }, (_, c) => {
       const index = r * columns + c;
       return items[index];
-    })
+    }),
   );
 }

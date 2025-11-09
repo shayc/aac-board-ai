@@ -35,7 +35,7 @@ declare global {
     addEventListener(
       type: "downloadprogress",
       listener: (ev: AIDownloadProgressEvent) => void,
-      options?: boolean | AddEventListenerOptions
+      options?: boolean | AddEventListenerOptions,
     ): void;
   }
 
@@ -76,7 +76,7 @@ declare global {
     /** Translate the full input string. */
     translate(
       input: string,
-      options?: TranslatorTranslateOptions
+      options?: TranslatorTranslateOptions,
     ): Promise<string>;
 
     /**
@@ -85,7 +85,7 @@ declare global {
      */
     translateStreaming(
       input: string,
-      options?: TranslatorTranslateOptions
+      options?: TranslatorTranslateOptions,
     ): AsyncIterable<string>;
 
     /** Free resources for this instance. */
@@ -128,7 +128,7 @@ declare global {
     /** Detect likely languages for `input`. */
     detect(
       input: string,
-      options?: LanguageDetectorDetectOptions
+      options?: LanguageDetectorDetectOptions,
     ): Promise<LanguageDetectionCandidate[]>;
 
     /** Free resources for this instance. */
@@ -138,7 +138,7 @@ declare global {
   interface LanguageDetectorConstructor {
     /** Check whether detection is ready, downloadable, or unavailable. */
     availability(
-      options?: LanguageDetectorCreateOptions
+      options?: LanguageDetectorCreateOptions,
     ): Promise<AIAvailability>;
     /** Create a LanguageDetector; call from a user gesture if download is required. */
     create(options?: LanguageDetectorCreateOptions): Promise<LanguageDetector>;
@@ -188,7 +188,7 @@ declare global {
     /** Stream rewritten text as generated. */
     rewriteStreaming(
       input: string,
-      options?: RewriterRewriteOptions
+      options?: RewriterRewriteOptions,
     ): AsyncIterable<string>;
 
     /** Free resources for this instance. */
@@ -256,7 +256,7 @@ declare global {
     /** Generate output as a stream of text chunks. */
     writeStreaming(
       input: string,
-      options?: WriterWriteOptions
+      options?: WriterWriteOptions,
     ): AsyncIterable<string>;
 
     /** Free resources for this instance. */
@@ -314,7 +314,7 @@ declare global {
     /** Proofread text and return corrections. */
     proofread(
       input: string,
-      options?: ProofreaderProofreadOptions
+      options?: ProofreaderProofreadOptions,
     ): Promise<ProofreadResult>;
     /** Free resources for this instance. */
     destroy(): void;
@@ -432,13 +432,13 @@ declare global {
     /** Send a prompt (string or messages) and get the full response. */
     prompt(
       input: string | PromptMessage[],
-      options?: LanguageModelPromptOptions
+      options?: LanguageModelPromptOptions,
     ): Promise<string>;
 
     /** Send a prompt and stream the response as text chunks. */
     promptStreaming(
       input: string | PromptMessage[],
-      options?: LanguageModelPromptOptions
+      options?: LanguageModelPromptOptions,
     ): ReadableStream<string>;
 
     /**
@@ -462,7 +462,7 @@ declare global {
       options?: Pick<
         LanguageModelPromptOptions,
         "responseConstraint" | "omitResponseConstraintInput"
-      >
+      >,
     ): Promise<number>;
 
     /** Current tokens/characters accounted for this session's context window. */
@@ -488,7 +488,7 @@ declare global {
      * Pass the same expectations (modalities/languages) you'll use for prompting.
      */
     availability(
-      options?: LanguageModelAvailabilityOptions
+      options?: LanguageModelAvailabilityOptions,
     ): Promise<AIAvailability>;
 
     /** Create a new language model session (may download on first use). */

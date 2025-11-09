@@ -8,7 +8,7 @@ export function useProofreader() {
   const isReady = isProofreaderSupported && downloadProgress === 1;
 
   async function createProofreader(
-    options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] }
+    options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] },
   ) {
     if (!isProofreaderSupported) {
       return null;

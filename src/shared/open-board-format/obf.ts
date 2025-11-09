@@ -13,7 +13,7 @@ export function parseOBF(json: string): OBFBoard {
     throw new Error(
       `Invalid OBF: JSON parse failed${
         (error as Error)?.message ? ` — ${(error as Error).message}` : ""
-      }`
+      }`,
     );
   }
 

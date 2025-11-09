@@ -23,7 +23,7 @@ export function useWriter() {
     options: WriterOptions = {
       length: "short",
       tone: "neutral",
-    }
+    },
   ) {
     if (!isWriterSupported) {
       return null;

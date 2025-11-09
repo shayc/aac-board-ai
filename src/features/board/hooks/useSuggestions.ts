@@ -20,7 +20,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
     const generateSuggestions = async (
       text: string,
       tone: RewriterTone,
-      sharedContext?: string
+      sharedContext?: string,
     ) => {
       abortRef.current?.abort();
 
@@ -50,7 +50,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
           proofread?.correctedInput ?? "",
           rewritten ?? "",
         ].filter(
-          (s) => s && !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) && !s.includes('"')
+          (s) => s && !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) && !s.includes('"'),
         );
 
         const uniqueSuggestions = Array.from(new Set(suggestions));

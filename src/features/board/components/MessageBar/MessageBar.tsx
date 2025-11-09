@@ -69,7 +69,10 @@ export function MessageBar() {
           ))}
         </Stack>
 
-        <BackspaceButton onPress={() => removeLastMessage()} onLongPress={() => clearMessage()} />
+        <BackspaceButton
+          onPress={() => removeLastMessage()}
+          onLongPress={() => clearMessage()}
+        />
       </Stack>
 
       <Tooltip

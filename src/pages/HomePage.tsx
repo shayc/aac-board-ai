@@ -34,9 +34,9 @@ export function HomePage() {
 
       void navigate(
         `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(
-          boardId
+          boardId,
         )}`,
-        { replace: true }
+        { replace: true },
       );
     }
 

@@ -21,7 +21,7 @@ export function unzip(buffer: ArrayBuffer): Promise<Map<string, Uint8Array>> {
 }
 
 export function zip(
-  files: Map<string, Uint8Array | ArrayBuffer>
+  files: Map<string, Uint8Array | ArrayBuffer>,
 ): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     const input: Record<string, Uint8Array> = {};

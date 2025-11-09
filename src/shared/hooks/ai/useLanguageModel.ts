@@ -17,7 +17,7 @@ export function useLanguageModel(words: string[] | undefined) {
     options: UseLanguageModelOptions = {
       temperature: 0.1,
       topK: 1,
-    }
+    },
   ) {
     if (!isLanguageModelSupported) {
       return null;

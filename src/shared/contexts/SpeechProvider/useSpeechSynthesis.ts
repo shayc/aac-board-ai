@@ -15,7 +15,7 @@ export function useSpeechSynthesis() {
   const [isPaused, setIsPaused] = useState(false);
 
   const langs = Array.from(new Set(voices.map((v) => v.lang))).sort((a, b) =>
-    a.localeCompare(b)
+    a.localeCompare(b),
   );
 
   const voicesByLang = voices.reduce<Record<string, SpeechSynthesisVoice[]>>(
@@ -29,7 +29,7 @@ export function useSpeechSynthesis() {
       acc[lang].push(voice);
       return acc;
     },
-    {}
+    {},
   );
 
   const speak = async (text: string) => {

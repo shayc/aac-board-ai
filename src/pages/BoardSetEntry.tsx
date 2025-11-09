@@ -38,7 +38,7 @@ export function BoardSetEntry() {
       } catch (err) {
         console.error("Error fetching root board:", err);
         setError(
-          err instanceof Error ? err.message : "Failed to load board set"
+          err instanceof Error ? err.message : "Failed to load board set",
         );
       } finally {
         setLoading(false);

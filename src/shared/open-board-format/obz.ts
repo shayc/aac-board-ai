@@ -82,7 +82,7 @@ export function parseManifest(json: string): OBFManifest {
 export async function createOBZ(
   boards: OBFBoard[],
   rootBoardId: string,
-  resources?: Map<string, Uint8Array | ArrayBuffer>
+  resources?: Map<string, Uint8Array | ArrayBuffer>,
 ): Promise<Blob> {
   const files = new Map<string, Uint8Array | ArrayBuffer>();
 
@@ -92,7 +92,7 @@ export async function createOBZ(
     root: `boards/${rootBoardId}.obf`,
     paths: {
       boards: Object.fromEntries(
-        boards.map((board) => [board.id, `boards/${board.id}.obf`])
+        boards.map((board) => [board.id, `boards/${board.id}.obf`]),
       ),
       images: {},
       sounds: {},

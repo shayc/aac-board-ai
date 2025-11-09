@@ -9,7 +9,7 @@ export interface RewriterOptions {
 }
 
 export function useRewriter() {
-  const { isRewriterSupported} = getAICapabilities();
+  const { isRewriterSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterOptions | null>(null);
@@ -20,7 +20,7 @@ export function useRewriter() {
       length: "shorter",
       tone: "as-is",
       format: "as-is",
-    }
+    },
   ) {
     if (!isRewriterSupported) {
       return null;

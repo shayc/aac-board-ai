@@ -25,7 +25,7 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
           const selectedSet = boardsets.find((s) => s.setId === e.target.value);
           if (selectedSet?.rootBoardId) {
             void navigate(
-              `/sets/${selectedSet.setId}/boards/${selectedSet.rootBoardId}`
+              `/sets/${selectedSet.setId}/boards/${selectedSet.rootBoardId}`,
             );
           }
         }}

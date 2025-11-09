@@ -31,7 +31,7 @@ export async function importFile(file: File): Promise<ImportResult> {
 async function importOBZFile(
   db: IDBPDatabase<BoardsDBSchema>,
   file: File,
-  setId: string
+  setId: string,
 ): Promise<ImportResult> {
   const { manifest, boards, files } = await loadOBZ(file);
 
@@ -70,16 +70,16 @@ async function importOBZFile(
       const mime = path.endsWith(".png")
         ? "image/png"
         : path.endsWith(".jpg") || path.endsWith(".jpeg")
-        ? "image/jpeg"
-        : path.endsWith(".gif")
-        ? "image/gif"
-        : path.endsWith(".svg")
-        ? "image/svg+xml"
-        : path.endsWith(".mp3")
-        ? "audio/mpeg"
-        : path.endsWith(".wav")
-        ? "audio/wav"
-        : "application/octet-stream";
+          ? "image/jpeg"
+          : path.endsWith(".gif")
+            ? "image/gif"
+            : path.endsWith(".svg")
+              ? "image/svg+xml"
+              : path.endsWith(".mp3")
+                ? "audio/mpeg"
+                : path.endsWith(".wav")
+                  ? "audio/wav"
+                  : "application/octet-stream";
 
       return {
         path,
@@ -98,7 +98,7 @@ async function importOBZFile(
 async function importOBFFile(
   db: IDBPDatabase<BoardsDBSchema>,
   file: File,
-  setId: string
+  setId: string,
 ): Promise<ImportResult> {
   const board = await loadOBF(file);
 

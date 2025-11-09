@@ -21,7 +21,7 @@ export function ToneSelector({
 
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    tone: ToneOption | null
+    tone: ToneOption | null,
   ) => {
     if (tone) {
       setTone(tone);

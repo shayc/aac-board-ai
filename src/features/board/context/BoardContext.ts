@@ -3,6 +3,4 @@ import { createContext } from "react";
 
 export type BoardContextValue = UseCommunicationBoardReturn;
 
-export const BoardContext = createContext<BoardContextValue | undefined>(
-  undefined
-);
+export const BoardContext = createContext<BoardContextValue | null>(null);
