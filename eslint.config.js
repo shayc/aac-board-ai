@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import jsxA11y from "eslint-plugin-jsx-a11y";
 import reactDom from "eslint-plugin-react-dom";
 import reactHooks from "eslint-plugin-react-hooks";
@@ -21,6 +22,7 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       jsxA11y.flatConfigs.recommended,
       reactRefresh.configs.vite,
+      eslintConfigPrettier,
     ],
     languageOptions: {
       parserOptions: {
