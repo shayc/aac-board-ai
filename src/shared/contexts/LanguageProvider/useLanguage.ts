@@ -5,7 +5,7 @@ export function useLanguage(): LanguageContextValue {
   const context = use(LanguageContext);
 
   if (!context) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    throw new Error("useLanguage must be used within LanguageProvider");
   }
 
   return context;

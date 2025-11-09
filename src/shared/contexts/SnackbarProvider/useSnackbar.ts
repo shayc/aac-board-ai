@@ -5,7 +5,7 @@ export function useSnackbar(): SnackbarContextValue {
   const context = use(SnackbarContext);
 
   if (!context) {
-    throw new Error("useSnackbar must be used within a SnackbarProvider");
+    throw new Error("useSnackbar must be used within SnackbarProvider");
   }
 
   return context;

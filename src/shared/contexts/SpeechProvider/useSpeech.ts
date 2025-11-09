@@ -5,7 +5,7 @@ export function useSpeech(): SpeechContextType {
   const context = use(SpeechContext);
 
   if (!context) {
-    throw new Error("useSpeech must be used within a SpeechProvider");
+    throw new Error("useSpeech must be used within SpeechProvider");
   }
 
   return context;
