@@ -19,6 +19,4 @@ export interface SpeechContextType {
   isPaused: boolean;
 }
 
-export const SpeechContext = createContext<SpeechContextType | undefined>(
-  undefined,
-);
+export const SpeechContext = createContext<SpeechContextType | null>(null);

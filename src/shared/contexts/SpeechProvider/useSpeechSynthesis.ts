@@ -5,7 +5,6 @@ export function useSpeechSynthesis() {
   const synth = window.speechSynthesis;
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-
   const [voiceURI, setVoiceURI] = useState("");
   const [pitch, setPitch] = useState(1);
   const [rate, setRate] = useState(1);
