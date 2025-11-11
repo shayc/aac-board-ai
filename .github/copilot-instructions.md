@@ -133,6 +133,7 @@ Used for full-DOM and AI-hook integration tests; tests are colocated next to sou
 ```ts
 import { expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { useTranslator } from "./useTranslator";
 
 test("should be supported", async () => {
   const { result } = await renderHook(() => useTranslator());
@@ -144,13 +145,13 @@ test("should be supported", async () => {
 
 ## Code Conventions
 
-- **React:** Function components only, named exports, imports from `react-router` (not `react-router-dom`)
-- **React 19:** Uses `use()` hook for context consumption, React Compiler enabled
+- **React:** Function components only, named exports
+- **React 19:** Uses `use()` hook for context consumption
 - **Props:** `interface ComponentNameProps`
 - **TypeScript:** Strict mode, prefer `interface` over `type`
 - **Naming:** Components PascalCase, Hooks camelCase, Tests `*.test.tsx`
 - **MUI:** v7 + Emotion, subpath imports (`@mui/material/Button`)
-- **Formatting:** ESLint + Prettier
+- **Formatting:** Enforced by ESLint + Prettier
 - **Build:** Vite 7 with PWA plugin for offline support
 
 ---
@@ -176,8 +177,10 @@ const { setId, boardId } = useParams<{ setId: string; boardId: string }>();
 
 // Progressive enhancement
 const { createProofreader, isProofreaderSupported } = useProofreader();
+
 if (isProofreaderSupported) {
   const proofreader = await createProofreader();
+
   if (proofreader) {
     const corrected = await proofreader.proofread(text);
   }
