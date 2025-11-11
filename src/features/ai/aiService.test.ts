@@ -311,8 +311,12 @@ describe("translate", () => {
     );
 
     await expect(translate("test text", "es")).rejects.toThrow(AIError);
-    const error = await translate("test text", "es").catch((e) => e as AIError);
-    expect(error.code).toBe("UNSUPPORTED_LANG");
+    try {
+      await translate("test text", "es");
+    } catch (e) {
+      const error = e as AIError;
+      expect(error.code).toBe("UNSUPPORTED_LANG");
+    }
   });
 
   it("should cache results per language pair", async () => {

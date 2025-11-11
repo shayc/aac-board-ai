@@ -72,6 +72,155 @@ Open [http://localhost:5173](http://localhost:5173)
 
 Download and import example boards from [openboardformat.org/examples](https://www.openboardformat.org/examples).
 
+## AI Architecture
+
+AAC Board AI uses a centralized service layer architecture for interacting with Chrome's Built-in AI APIs. This design provides consistent error handling, caching, and cancellation support across all AI features.
+
+### Service Layer (`src/features/ai/aiService.ts`)
+
+The service layer encapsulates all AI API calls with:
+
+- **Unified Error Handling**: Custom `AIError` class with standardized error codes
+- **Capability Detection**: Runtime checks for API availability
+- **Caching**: Two-tier caching (in-memory Map + IndexedDB) with 24-hour TTL
+- **Input Validation**: Zod schemas for type-safe parameters
+- **Cancellation**: AbortSignal support for all operations
+
+#### Core Functions
+
+```typescript
+// Proofread text for grammar/spelling corrections
+proofread(text: string, signal?: AbortSignal): Promise<string>
+
+// Rewrite text with tone adjustment
+rewrite(text: string, tone: Tone, signal?: AbortSignal): Promise<string>
+// Tone options: 'casual' | 'formal' | 'neutral'
+
+// Translate text between languages
+translate(
+  text: string,
+  targetLang: LanguageCode,
+  sourceLang?: LanguageCode,
+  signal?: AbortSignal
+): Promise<string>
+
+// Check API availability
+isAvailable(kind: 'proofreader' | 'rewriter' | 'translator'): boolean
+```
+
+#### Error Codes
+
+| Code               | Description                                        | Handling            |
+| ------------------ | -------------------------------------------------- | ------------------- |
+| `UNAVAILABLE`      | API not available in browser                       | Skip operation      |
+| `UNSUPPORTED_LANG` | Language pair not supported                        | Skip translation    |
+| `ABORTED`          | Operation cancelled by user                        | Silent cancellation |
+| `INTERNAL`         | Unexpected error from Chrome AI or validation fail | Show error to user  |
+
+### React Hooks (`src/features/ai/hooks/`)
+
+#### Individual AI Hooks
+
+Lightweight wrappers around service functions:
+
+```typescript
+const { available, status, data, error, run, cancel } = useProofread();
+const { available, status, data, error, run, cancel } = useRewrite();
+const { available, status, data, error, run, cancel } = useTranslate();
+```
+
+**Status lifecycle**: `idle` → `running` → `success` | `error`
+
+#### Message Pipeline Hook
+
+Orchestrates the complete AI transformation pipeline:
+
+```typescript
+const { step, result, error, run, cancel, setOnStepChange } =
+  useMessagePipeline();
+
+// Run pipeline with optional tone and translation
+await run(rawText, {
+  tone: "formal", // Optional: casual | formal | neutral
+  translateTo: "es", // Optional: BCP-47 language code
+  sourceLang: "en", // Optional: defaults to 'en'
+});
+```
+
+**Pipeline steps**: `idle` → `proofreading` → `rewriting` (optional) → `translating` (optional) → `done` | `error`
+
+**Result structure**:
+
+```typescript
+{
+  original: string;        // Input text
+  proofread?: string;      // After grammar correction
+  rewritten?: string;      // After tone adjustment
+  translated?: string;     // After translation
+  final: string;           // Final output
+  skippedSteps: string[];  // Steps skipped due to unavailability
+}
+```
+
+### Graceful Degradation
+
+The architecture prioritizes user experience even when AI features are unavailable:
+
+1. **Capability Detection**: Runtime checks before API calls
+2. **Skip Unavailable Steps**: Continue pipeline even if some APIs are missing
+3. **Fallback Behavior**: Return original text if all transformations fail
+4. **Cache Persistence**: Serve cached results when APIs temporarily unavailable
+
+### Accessibility
+
+`AIAnnouncementRegion` component provides screen reader announcements for each pipeline step:
+
+- "Checking grammar and spelling..."
+- "Adjusting tone..."
+- "Translating message..."
+- "Message transformation complete."
+
+### Caching Strategy
+
+**Two-tier cache** balances performance and persistence:
+
+1. **In-Memory Map**: Fast lookups for recently used transformations
+2. **IndexedDB**: Persistent cache survives page reloads
+
+**Cache key**: JSON.stringify of operation + parameters  
+**TTL**: 24 hours  
+**Invalidation**: Manual via `clearCache()` or automatic expiration
+
+**Example**: Same text + tone will reuse cached result, different tone creates new entry.
+
+### Usage Example
+
+```typescript
+import { useMessagePipeline } from '@features/ai/hooks';
+import { AIAnnouncementRegion } from '@features/ai/components/AIAnnouncementRegion';
+
+function MessageComposer() {
+  const pipeline = useMessagePipeline();
+
+  const handleTransform = async () => {
+    await pipeline.run('me want drink water', {
+      tone: 'formal',
+      translateTo: 'es'
+    });
+
+    // Result: "I would like to drink water." → "Me gustaría beber agua."
+    console.log(pipeline.result?.final);
+  };
+
+  return (
+    <>
+      <AIAnnouncementRegion step={pipeline.step} />
+      {/* Your UI */}
+    </>
+  );
+}
+```
+
 ## References
 
 - [Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai/built-in)

@@ -10,12 +10,12 @@ vi.mock("@features/ai/aiService", () => ({
   rewrite: vi.fn(),
   translate: vi.fn(),
   AIError: class AIError extends Error {
-    constructor(
-      public code: string,
-      message: string,
-    ) {
+    readonly code: string;
+
+    constructor(code: string, message: string) {
       super(message);
       this.name = "AIError";
+      this.code = code;
     }
   },
 }));
