@@ -1,3 +1,8 @@
+---
+applyTo: "**/*.tsx"
+description: Material UI instructions
+---
+
 ## Use the mui-mcp server to answer any MUI questions
 
 1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question
