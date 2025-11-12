@@ -8,7 +8,7 @@ AAC Board AI helps people who can’t speak express themselves more naturally, u
 
 AAC (Augmentative and Alternative Communication) tools help people who can’t rely on speech communicate through symbols, text, or synthesized voice. These tools often use communication boards — visual grids of pictures or words that users tap to form messages.
 
-**AAC Board AI** brings these boards to life with [Chrome's Built-in AI](https://developer.chrome.com/docs/ai/built-in), adding smart suggestions and tone control so messages sound natural and expressive — all powered locally by Gemini Nano for private, offline communication.
+**AAC Board AI** brings these boards to life with [Chrome's Built-in AI](https://developer.chrome.com/docs/ai/built-in), adding proofreading and rewriting so messages sound natural and expressive — all powered locally by Gemini Nano for private, offline communication.
 
 ![AAC Board AI interface](screenshot.png)
 
@@ -43,7 +43,7 @@ AAC Board AI uses Chrome's Built-in AI to transform pictogram-based messages int
 
 ## Technical Stack
 
-Built with React 19, TypeScript, and Material UI. Powered entirely by Chrome’s on-device Gemini Nano for local AI processing. For complete technical details and architecture, see [Architecture Documentation →](docs/architecture.md).
+Built with React 19, TypeScript, Vite, and Material UI. Powered entirely by Chrome’s on-device Gemini Nano for local AI processing. For complete technical details and architecture, see [Architecture Documentation →](docs/architecture.md).
 
 ## Prerequisites
 
@@ -83,4 +83,4 @@ This project was built for the _Google Chrome Built-in AI Challenge 2025_.
 
 ## License
 
-[MIT](./LICENSE) — built with ❤️
+[MIT](./LICENSE)
