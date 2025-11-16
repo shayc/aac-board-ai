@@ -9,7 +9,7 @@ and offline use.
 
 ## Overview
 
-AAC (Augmentative and Alternative Communication) tools often rely on symbol-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into clear, natural-language sentences to support faster and more natural communication.
+AAC (Augmentative and Alternative Communication) tools often rely on pictogram-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into fully formed sentences for faster, more expressive communication.
 
 ![AAC Board AI interface](screenshot.png)
 
@@ -18,14 +18,16 @@ Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
 
 ## Impact & Motivation
 
-**The Problem:**\
+**The Problem:**
+
 Traditional communication boards help users express intent, but the
 output is often incomplete or robotic, making conversations slower and
 less natural. Users tap pictograms word-by-word, often producing
 telegraphic messages like "me want drink water" instead of "I want to
 drink water."
 
-**The Solution:**\
+**The Solution:**
+
 AAC Board AI uses Chrome's Built‑in AI to transform pictogram-based
 messages into natural, grammatically correct sentences with adjustable
 tone.
@@ -56,23 +58,6 @@ tone.
   [Translator
   API](https://developer.chrome.com/docs/ai/translator-api)
 
-## Technical Stack
-
-**Frontend** - React 19 + TypeScript 5.9 - Material UI 7 - React Router
-7
-
-**AI Processing** - Chrome Built-in AI (Gemini Nano)
-
-**Audio Output** - Web Speech API (SpeechSynthesis)
-
-**Data & Storage** - IndexedDB (idb) - Zod (Open Board Format
-validation) - fflate (OBZ extraction)
-
-**Build & Dev** - Vite 7 - Vitest + Playwright
-
-See full architecture details:
-[docs/architecture.md](docs/architecture.md).
-
 ## Prerequisites
 
 Requires Chrome 138+ with Built‑in AI flags enabled.
@@ -91,6 +76,23 @@ npm install && npm run dev
 ```
 
 Open http://localhost:5173
+
+## Technical Stack
+
+**Frontend** - React 19 + TypeScript 5.9 - Material UI 7 - React Router
+7
+
+**AI Processing** - Chrome Built-in AI (Gemini Nano)
+
+**Audio Output** - Web Speech API (SpeechSynthesis)
+
+**Data & Storage** - IndexedDB (idb) - Zod (Open Board Format
+validation) - fflate (OBZ extraction)
+
+**Build & Dev** - Vite 7 - Vitest + Playwright
+
+See full architecture details:
+[docs/architecture.md](docs/architecture.md).
 
 ## Example Boards
 
