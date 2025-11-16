@@ -41,10 +41,10 @@ tone.
 
 **Why Local AI Matters:**
 
-- Privacy: No data leaves the device
-- Offline: Works without internet
-- Free: No API costs or usage limits
-- Fast: Instant feedback
+- **Privacy** - No data leaves the device
+- **Offline** - Works without internet
+- **Free** - No API costs or usage limits
+- **Fast** - Instant feedback
 
 ## Key Features
 
@@ -79,17 +79,30 @@ Open http://localhost:5173
 
 ## Technical Stack
 
-**Frontend** - React 19 + TypeScript 5.9 - Material UI 7 - React Router
-7
+**Frontend**
 
-**AI Processing** - Chrome Built-in AI (Gemini Nano)
+- React 19 + TypeScript 5.9
+- Material UI 7
+- React Router 7
 
-**Audio Output** - Web Speech API (SpeechSynthesis)
+**AI Processing**
 
-**Data & Storage** - IndexedDB (idb) - Zod (Open Board Format
-validation) - fflate (OBZ extraction)
+- Chrome Built-in AI (Gemini Nano)
 
-**Build & Dev** - Vite 7 - Vitest + Playwright
+**Audio Output**
+
+- Web Speech API (SpeechSynthesis)
+
+**Data & Storage**
+
+- IndexedDB (idb)
+- Zod (Open Board Format validation)
+- fflate (OBZ extraction)
+
+**Build & Dev**
+
+- Vite 7
+- Vitest + Playwright
 
 See full architecture details:
 [docs/architecture.md](docs/architecture.md).
