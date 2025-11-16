@@ -11,7 +11,7 @@ and offline use.
 
 AAC (Augmentative and Alternative Communication) tools often rely on pictogram-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into fully formed sentences for faster, more expressive communication.
 
-![AAC Board AI interface](screenshot.png)
+![Screenshot of AAC Board AI, an AI-powered pictogram-based AAC board](screenshot.png)
 
 Try the live demo at [aacboard.app](https://aacboard.app). _(requires
 Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
