@@ -1,7 +1,7 @@
 # AAC Board AI
 
 AAC Board AI helps people who can't speak express themselves more
-naturally, using Chrome's Built-in AI to proofread, rephrase, and
+naturally, using **Chrome's Built-in AI** to proofread, rewrite, and
 translate messages - all processed locally on the device for privacy
 and offline use.
 
@@ -9,7 +9,7 @@ and offline use.
 
 ## Overview
 
-AAC (Augmentative and Alternative Communication) tools often rely on pictogram-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into fully formed sentences for faster, more expressive communication.
+AAC (Augmentative and Alternative Communication) tools often rely on pictogram-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into **fully formed sentences** for faster, more expressive communication.
 
 ![Screenshot of AAC Board AI, an AI-powered pictogram-based AAC board](screenshot.png)
 
@@ -29,7 +29,7 @@ drink water."
 **The Solution:**
 
 AAC Board AI uses Chrome's Built‑in AI to transform pictogram-based
-messages into natural, grammatically correct sentences with adjustable
+messages into **natural, grammatically correct sentences** with adjustable
 tone.
 
 **Who Benefits:**
@@ -60,7 +60,7 @@ tone.
 
 ## Prerequisites
 
-Requires Chrome 138+ with Built‑in AI flags enabled.
+Requires **Chrome 138+** with Built‑in AI flags enabled.
 
 Enable these flags and restart Chrome:
 
