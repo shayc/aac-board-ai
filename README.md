@@ -64,8 +64,10 @@ Requires **Chrome 138+** with Built‑in AI flags enabled.
 
 Enable these flags and restart Chrome:
 
-    chrome://flags/#proofreader-api-for-gemini-nano
-    chrome://flags/#rewriter-api-for-gemini-nano
+```
+chrome://flags/#proofreader-api-for-gemini-nano
+chrome://flags/#rewriter-api-for-gemini-nano
+```
 
 ## Quick Start
 
