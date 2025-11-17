@@ -26,7 +26,7 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
-        {suggestions.map((suggestion: string, index: number) => (
+        {suggestions.map((suggestion, index) => (
           <Chip
             key={index}
             label={suggestion}
