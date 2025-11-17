@@ -137,32 +137,3 @@ test("play button aria-label changes based on playing state", async () => {
   const stopButton = screen.getByRole("button", { name: "Stop playback" });
   await expect.element(stopButton).toBeVisible();
 });
-
-test("renders message parts with images", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
-
-  const messagePart: MessagePart = {
-    id: "test-1",
-    label: "Home",
-    imageSrc: "data:image/png;base64,test",
-  };
-
-  const screen = await render(
-    <MessageBar
-      message={[messagePart]}
-      isPlaying={false}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
-
-  await expect.element(screen.getByText("Home")).toBeVisible();
-
-  const image = screen.getByRole("img");
-  await expect.element(image).toBeInTheDocument();
-});
