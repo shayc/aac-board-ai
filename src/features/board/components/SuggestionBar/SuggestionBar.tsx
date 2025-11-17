@@ -1,13 +1,21 @@
-import { useBoard } from "@features/board/context/useBoard";
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { ToneSelector } from "./ToneSelector/ToneSelector";
 
-export function SuggestionBar() {
-  const { suggestions, suggestionTone, setSuggestionTone, setMessage } =
-    useBoard();
+export interface SuggestionBarProps {
+  suggestions: string[];
+  tone: RewriterTone;
+  onToneChange: (tone: RewriterTone) => void;
+  onSuggestionClick: (suggestion: string) => void;
+}
 
+export function SuggestionBar({
+  suggestions,
+  tone,
+  onToneChange,
+  onSuggestionClick,
+}: SuggestionBarProps) {
   return (
     <Stack direction="row" alignItems="center" px={2} gap={2}>
       <Box
@@ -18,19 +26,16 @@ export function SuggestionBar() {
           overflowX: "auto",
         }}
       >
-        {suggestions?.map((suggestion: string, index: number) => (
+        {suggestions.map((suggestion: string, index: number) => (
           <Chip
             key={index}
             label={suggestion}
-            onClick={() => setMessage([{ id: suggestion, label: suggestion }])}
+            onClick={() => onSuggestionClick(suggestion)}
           />
         ))}
       </Box>
 
-      <ToneSelector
-        tone={suggestionTone}
-        onChange={(tone) => setSuggestionTone(tone)}
-      />
+      <ToneSelector tone={tone} onChange={onToneChange} />
     </Stack>
   );
 }
