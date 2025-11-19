@@ -33,6 +33,7 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      "react-x/no-array-index-key": "off",
       "no-restricted-imports": [
         "error",
         {
