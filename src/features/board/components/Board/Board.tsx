@@ -9,7 +9,21 @@ import type { BoardButton } from "@features/board/types";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
-  const { board, activateButton, isSuggestionsEnabled } = useBoard();
+  const {
+    board,
+    activateButton,
+    isSuggestionsEnabled,
+    message,
+    isPlayingMessage,
+    removeLastMessage,
+    clearMessage,
+    playMessage,
+    stopMessage,
+    suggestions,
+    suggestionTone,
+    setSuggestionTone,
+    setMessage,
+  } = useBoard();
 
   if (!board) {
     return null;
@@ -27,9 +41,25 @@ export function Board() {
             : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
       })}
     >
-      <MessageBar />
+      <MessageBar
+        message={message}
+        isPlaying={isPlayingMessage}
+        onBackspacePress={removeLastMessage}
+        onBackspaceLongPress={clearMessage}
+        onPlayClick={() => void playMessage()}
+        onStopClick={stopMessage}
+      />
 
-      {isSuggestionsEnabled && <SuggestionBar />}
+      {isSuggestionsEnabled && (
+        <SuggestionBar
+          suggestions={suggestions}
+          tone={suggestionTone}
+          onToneChange={setSuggestionTone}
+          onSuggestionClick={(suggestion) => {
+            setMessage([{ id: suggestion, label: suggestion }]);
+          }}
+        />
+      )}
 
       <Grid<BoardButton>
         rows={board.grid.rows}

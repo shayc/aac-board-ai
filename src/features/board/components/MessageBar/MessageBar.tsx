@@ -1,5 +1,4 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
-import { useBoard } from "@features/board/context/useBoard";
 import type { MessagePart } from "@features/board/hooks/useMessage";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
@@ -10,32 +9,43 @@ import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
 import { BackspaceButton } from "./BackspaceButton";
 
-export function MessageBar() {
-  const ref = useRef<HTMLDivElement>(null);
-  const {
-    message,
-    removeLastMessage,
-    clearMessage,
-    playMessage,
-    stopMessage,
-    isPlayingMessage,
-  } = useBoard();
+export interface MessageBarProps {
+  message: MessagePart[];
+  isPlaying: boolean;
+  onBackspacePress: () => void;
+  onBackspaceLongPress: () => void;
+  onPlayClick: () => void;
+  onStopClick: () => void;
+}
+
+export function MessageBar({
+  message,
+  isPlaying,
+  onBackspacePress,
+  onBackspaceLongPress,
+  onPlayClick,
+  onStopClick,
+}: MessageBarProps) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scroller = ref.current;
+    const scroller = scrollerRef.current;
+    const lastChild = scroller?.lastElementChild as HTMLElement | null;
 
-    if (!scroller?.lastElementChild) {
+    if (!lastChild) {
       return;
     }
 
     requestAnimationFrame(() => {
-      (scroller.lastElementChild as HTMLElement).scrollIntoView({
+      lastChild.scrollIntoView({
         block: "nearest",
         inline: "end",
         behavior: "instant",
       });
     });
   }, [message]);
+
+  const playButtonLabel = isPlaying ? "Stop playback" : "Play message";
 
   return (
     <Stack direction="row" padding={2} gap={2}>
@@ -57,35 +67,36 @@ export function MessageBar() {
               : `1px solid ${theme.palette.grey[300]}`,
         }}
       >
-        <Stack ref={ref} direction="row" gap={2} flexGrow={1} overflow="auto">
-          {message.map((p: MessagePart, index: number) => (
-            <Stack key={index} direction="row">
+        <Stack
+          ref={scrollerRef}
+          direction="row"
+          gap={2}
+          flexGrow={1}
+          overflow="auto"
+        >
+          {message.map((part) => (
+            <Stack key={part.id} direction="row">
               <Pictogram
-                label={p.label}
-                labelTypographyVariant={p.imageSrc ? "body2" : "h5"}
-                src={p.imageSrc}
+                label={part.label}
+                labelTypographyVariant={part.imageSrc ? "body2" : "h5"}
+                src={part.imageSrc}
               />
             </Stack>
           ))}
         </Stack>
 
         <BackspaceButton
-          onPress={() => removeLastMessage()}
-          onLongPress={() => clearMessage()}
+          onPress={onBackspacePress}
+          onLongPress={onBackspaceLongPress}
         />
       </Stack>
 
-      <Tooltip
-        title={isPlayingMessage ? "Stop speaking" : "Speak message"}
-        enterDelay={800}
-      >
+      <Tooltip title={playButtonLabel} enterDelay={800}>
         <Box sx={{ alignSelf: "center" }}>
           <IconButton
-            aria-label="Play"
+            aria-label={playButtonLabel}
             size="large"
-            onClick={() =>
-              void (isPlayingMessage ? stopMessage() : playMessage())
-            }
+            onClick={isPlaying ? onStopClick : onPlayClick}
             sx={{
               width: 96,
               height: 96,
@@ -96,7 +107,7 @@ export function MessageBar() {
               },
             }}
           >
-            {isPlayingMessage ? (
+            {isPlaying ? (
               <StopIcon sx={{ width: 48, height: 48 }} />
             ) : (
               <PlayArrowIcon sx={{ width: 48, height: 48 }} />

@@ -9,7 +9,7 @@ and offline use.
 
 ## Overview
 
-AAC (Augmentative and Alternative Communication) tools often rely on pictogram-based communication boards. AAC Board AI enhances this experience with Chrome’s Built-in AI, turning tapped pictograms into **fully formed sentences** for faster, more expressive communication.
+Many AAC (Augmentative and Alternative Communication) tools rely on pictogram-based boards. AAC Board AI enhances this experience by turning tapped pictograms into **fully formed sentences** using Chrome’s on-device AI, making communication faster and more expressive.
 
 ![Screenshot of AAC Board AI, an AI-powered pictogram-based AAC board](screenshot.png)
 
@@ -20,17 +20,11 @@ Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
 
 **The Problem:**
 
-Traditional communication boards help users express intent, but the
-output is often incomplete or robotic, making conversations slower and
-less natural. Users tap pictograms word-by-word, often producing
-telegraphic messages like "me want drink water" instead of "I want to
-drink water."
+Traditional communication boards often result in telegraphic, incomplete output (“me want drink water”), slowing down conversations and reducing clarity.
 
 **The Solution:**
 
-AAC Board AI uses Chrome's Built‑in AI to transform pictogram-based
-messages into **natural, grammatically correct sentences** with adjustable
-tone.
+AAC Board AI converts pictogram-based messages into **natural, grammatically correct sentences** with adjustable tone.
 
 **Who Benefits:**
 
@@ -41,33 +35,38 @@ tone.
 
 **Why Local AI Matters:**
 
-- **Privacy** - No data leaves the device
+- **Privacy** - Fully on-device
 - **Offline** - Works without internet
-- **Free** - No API costs or usage limits
-- **Fast** - Instant feedback
+- **Free** - No API costs
+- **Fast** - Instant responses
+
+These advantages create the foundation for the features below.
 
 ## Key Features
 
-- **Grammar Correction** - Instantly fixes grammar using the
+- **Grammar Correction** - Using the
   [Proofreader
   API](https://developer.chrome.com/docs/ai/proofreader-api)
-- **Tone Adjustment** - Rewrites phrases for casual, formal, or
-  neutral delivery using the [Rewriter
+- **Tone Adjustment** - Via the [Rewriter
   API](https://developer.chrome.com/docs/ai/rewriter-api)
-- **Multi-Language Support** - Translates messages using the
+- **Multi-Language Support** - Powered by
   [Translator
   API](https://developer.chrome.com/docs/ai/translator-api)
+
+To use these AI features, Chrome must be configured first.
 
 ## Prerequisites
 
 Requires **Chrome 138+** with Built‑in AI flags enabled.
 
-Enable these flags and restart Chrome:
+Enable the following flags and restart Chrome:
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
+
+Once Chrome is configured, set up the project locally:
 
 ## Quick Start
 
@@ -106,12 +105,12 @@ Open http://localhost:5173
 - Vite 7
 - Vitest + Playwright
 
-See full architecture details:
+See full architecture details in
 [docs/architecture.md](docs/architecture.md).
 
 ## Example Boards
 
-Download and import example boards from:\
+Download and import example boards from:
 https://www.openboardformat.org/examples
 
 ## References
@@ -126,4 +125,4 @@ Built for the Google Chrome Built‑in AI Challenge 2025.
 
 ## License
 
-MIT
+[MIT](LICENSE)

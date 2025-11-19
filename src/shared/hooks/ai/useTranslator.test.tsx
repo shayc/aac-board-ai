@@ -2,7 +2,7 @@ import { expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useTranslator } from "./useTranslator";
 
-test("should be supported", async () => {
+test("returns isTranslatorSupported as true", async () => {
   const { result } = await renderHook(() => useTranslator());
   const { isTranslatorSupported } = result.current;
 
