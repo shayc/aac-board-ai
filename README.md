@@ -9,7 +9,10 @@ and offline use.
 
 ## Overview
 
-Many AAC (Augmentative and Alternative Communication) tools rely on pictogram-based boards. AAC Board AI enhances this experience by turning tapped pictograms into **fully formed sentences** using Chrome’s on-device AI, making communication faster and more expressive.
+Many AAC (Augmentative and Alternative Communication) tools rely on
+pictogram-based boards that produce short, telegraphic phrases. AAC Board AI
+reduces the effort required to communicate: as the user taps symbols, it
+generates **full, natural sentences** in real time using Chrome’s on-device AI.
 
 ![Screenshot of AAC Board AI, an AI-powered pictogram-based AAC board](screenshot.png)
 
@@ -40,18 +43,18 @@ AAC Board AI converts pictogram-based messages into **natural, grammatically cor
 - **Free** - No API costs
 - **Fast** - Instant responses
 
-These advantages create the foundation for the features below.
-
 ## Key Features
 
-- **Grammar Correction** - Using the
-  [Proofreader
-  API](https://developer.chrome.com/docs/ai/proofreader-api)
-- **Tone Adjustment** - Via the [Rewriter
-  API](https://developer.chrome.com/docs/ai/rewriter-api)
-- **Multi-Language Support** - Powered by
-  [Translator
-  API](https://developer.chrome.com/docs/ai/translator-api)
+- **Grammar Correction** – Turns short, telegraphic text
+  into clear, natural sentences (using the
+  [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
+- **Tone Adjustment** – Rewrites messages into casual, polite, or
+  formal tones (via the
+  [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
+- **Multi-Language Support** – Translates messages between languages (powered by the
+  [Translator API](https://developer.chrome.com/docs/ai/translator-api)).
+
+AAC Board AI degrades gracefully: if Chrome’s Built-in AI features are unavailable, it continues to function as a standard pictogram-based board. AI enhancements appear only when supported.
 
 To use these AI features, Chrome must be configured first.
 
