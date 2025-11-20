@@ -3,9 +3,11 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
+import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
 
 export function LanguageSettings() {
   const { languages, languageCode, setLanguageCode } = useLanguage();
+  const { isTranslatorSupported } = getAICapabilities();
 
   return (
     <FormControl size="small" fullWidth sx={{ mb: 2 }}>
@@ -15,6 +17,7 @@ export function LanguageSettings() {
         labelId="language-select-label"
         id="language-select"
         value={languageCode}
+        disabled={!isTranslatorSupported}
         onChange={(event) => setLanguageCode(event.target.value)}
       >
         {languages.map((language) => (
