@@ -62,7 +62,7 @@ To use these AI features, Chrome must be configured first.
 
 Requires **Chrome 138+** with Built‑in AI flags enabled.
 
-Enable the following flags and restart Chrome:
+Enable the following flags and relaunch Chrome:
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
