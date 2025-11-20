@@ -66,6 +66,9 @@ Enable the following flags and restart Chrome:
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
+```
+
+```
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
