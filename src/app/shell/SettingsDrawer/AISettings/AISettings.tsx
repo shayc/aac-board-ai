@@ -3,9 +3,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { AICapabilitiesList } from "@shared/components/AICapabilitiesList";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
 
 export function AISettings() {
   const { sharedContext, setSharedContext } = useAI();
+  const { isRewriterSupported } = getAICapabilities();
 
   return (
     <>
@@ -20,6 +22,7 @@ export function AISettings() {
           placeholder="e.g., Sarcastic, Polite."
           helperText="Personalize AI suggestions"
           value={sharedContext}
+          disabled={!isRewriterSupported}
           onChange={(e) => setSharedContext(e.target.value)}
         />
       </Box>
