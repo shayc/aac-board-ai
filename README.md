@@ -14,7 +14,7 @@ pictogram-based boards that produce short, telegraphic phrases. AAC Board AI
 reduces the effort required to communicate: as the user taps symbols, it
 generates **full, natural sentences** in real time using Chrome’s on-device AI.
 
-![Screenshot of AAC Board AI, an AI-powered pictogram-based AAC board](screenshot.png)
+![Screenshot of AAC Board AI](screenshot.png)
 
 Try the live demo at [aacboard.app](https://aacboard.app). _(requires
 Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
@@ -53,10 +53,6 @@ AAC Board AI converts pictogram-based messages into **natural, grammatically cor
   [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
 - **Multi-Language Support** – Translates messages between languages (powered by the
   [Translator API](https://developer.chrome.com/docs/ai/translator-api)).
-
-AAC Board AI degrades gracefully: if Chrome’s Built-in AI features are unavailable, it continues to function as a standard pictogram-based board. AI enhancements appear only when supported.
-
-To use these AI features, Chrome must be configured first.
 
 ## Prerequisites
 
