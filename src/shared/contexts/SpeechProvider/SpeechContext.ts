@@ -14,7 +14,7 @@ export interface SpeechContextType {
   setVolume: (volume: number) => void;
   speak: (text: string) => Promise<void>;
   cancel: () => void;
-  isSupported: boolean;
+  isSpeechSupported: boolean;
   isSpeaking: boolean;
   isPaused: boolean;
 }
