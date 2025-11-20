@@ -24,7 +24,7 @@ export function SpeechSettings() {
     setRate,
     volume,
     setVolume,
-    isSupported,
+    isSpeechSupported,
     speak,
   } = useSpeech();
 
@@ -50,15 +50,14 @@ export function SpeechSettings() {
 
   return (
     <Box sx={{ mb: 3 }}>
-      <Typography gutterBottom>Voice</Typography>
-      <FormControl size="small" fullWidth>
+      <FormControl size="small" fullWidth sx={{ mb: 2 }}>
         <InputLabel id="voice-select-label">Voice</InputLabel>
         <Select
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
           value={voiceURI ?? defaultVoice?.voiceURI}
-          disabled={!isSupported}
+          disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
           {voices.map((voice) => (
@@ -77,7 +76,7 @@ export function SpeechSettings() {
         min={0.1}
         max={2}
         step={0.1}
-        disabled={!isSupported}
+        disabled={!isSpeechSupported}
         onChange={(_event, value) => setPitch(value)}
       />
 
@@ -89,7 +88,7 @@ export function SpeechSettings() {
         min={0.1}
         max={2}
         step={0.1}
-        disabled={!isSupported}
+        disabled={!isSpeechSupported}
         onChange={(_event, value) => setRate(value)}
       />
 
@@ -101,14 +100,14 @@ export function SpeechSettings() {
         min={0}
         max={1}
         step={0.1}
-        disabled={!isSupported}
+        disabled={!isSpeechSupported}
         onChange={(_event, value) => setVolume(value)}
       />
 
       <Button
         variant="contained"
         color="primary"
-        disabled={!isSupported}
+        disabled={!isSpeechSupported}
         onClick={() => void handlePreviewClick()}
       >
         Preview

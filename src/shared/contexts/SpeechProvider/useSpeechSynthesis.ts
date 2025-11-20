@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export function useSpeechSynthesis() {
-  const isSupported = "speechSynthesis" in window;
+  const isSpeechSupported = "speechSynthesis" in window;
   const synth = window.speechSynthesis;
 
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -33,7 +33,7 @@ export function useSpeechSynthesis() {
 
   const speak = async (text: string) => {
     return new Promise<void>((resolve, reject) => {
-      if (!isSupported) {
+      if (!isSpeechSupported) {
         reject(new Error("Speech Synthesis is not supported in this browser."));
         return;
       }
@@ -128,7 +128,7 @@ export function useSpeechSynthesis() {
     cancel,
     pause,
     resume,
-    isSupported,
+    isSpeechSupported,
     isSpeaking,
     isPaused,
     langs,
