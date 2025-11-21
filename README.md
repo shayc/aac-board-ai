@@ -1,11 +1,16 @@
 # AAC Board AI
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
+
 AAC Board AI helps people who can't speak express themselves more
 naturally, using **Chrome's Built-in AI** to proofread, rewrite, and
 translate messages - all processed locally on the device for privacy
 and offline use.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
+![Screenshot of AAC Board AI](screenshot.png)
+
+Try the live demo at [aacboard.app](https://aacboard.app). _(requires
+Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
 
 ## Overview
 
@@ -13,11 +18,6 @@ Many AAC (Augmentative and Alternative Communication) tools rely on
 pictogram-based boards that produce short, telegraphic phrases. AAC Board AI
 reduces the effort required to communicate: as the user taps symbols, it
 generates **full, natural sentences** in real time using Chrome’s on-device AI.
-
-![Screenshot of AAC Board AI](screenshot.png)
-
-Try the live demo at [aacboard.app](https://aacboard.app). _(requires
-Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
 
 ## Impact & Motivation
 
@@ -68,8 +68,6 @@ chrome://flags/#proofreader-api-for-gemini-nano
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
-Once Chrome is configured, set up the project locally:
-
 ## Quick Start
 
 ```bash
@@ -84,7 +82,8 @@ Open http://localhost:5173
 
 **Frontend**
 
-- React 19 + TypeScript 5.9
+- React 19 + React Compiler
+- TypeScript 5.9
 - Material UI 7
 - React Router 7
 
