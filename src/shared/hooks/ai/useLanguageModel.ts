@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getAICapabilities } from "./getAICapabilities";
 
-export interface UseLanguageModelOptions {
-  temperature?: number;
-  topK?: number;
-  signal?: AbortSignal;
-}
-
 export function useLanguageModel(words: string[] | undefined) {
   const { isLanguageModelSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -14,7 +8,7 @@ export function useLanguageModel(words: string[] | undefined) {
   const isReady = isLanguageModelSupported && downloadProgress === 1;
 
   async function createLanguageModel(
-    options: UseLanguageModelOptions = {
+    options: LanguageModelCreateOptions = {
       temperature: 0.1,
       topK: 1,
     },

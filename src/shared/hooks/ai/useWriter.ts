@@ -1,18 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getAICapabilities } from "./getAICapabilities";
 
-export type WriterTone = "formal" | "neutral" | "casual";
-export type WriterFormat = "markdown" | "plain-text";
-export type WriterLength = "short" | "medium" | "long";
-
-export interface WriterOptions {
-  tone?: WriterTone;
-  format?: WriterFormat;
-  length?: WriterLength;
-  sharedContext?: string;
-  signal?: AbortSignal;
-}
-
 export function useWriter() {
   const { isWriterSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
@@ -20,7 +8,7 @@ export function useWriter() {
   const isReady = isWriterSupported && downloadProgress === 1;
 
   async function createWriter(
-    options: WriterOptions = {
+    options: WriterCreateOptions = {
       length: "short",
       tone: "neutral",
     },
