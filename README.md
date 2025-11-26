@@ -2,10 +2,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
 
-AAC Board AI helps people who can't speak express themselves more
-naturally, using **Chrome's Built-in AI** to proofread, rewrite, and
-translate messages - all processed locally on the device for privacy
-and offline use.
+**AAC Board AI** is a communication tool that enables non-verbal users to express themselves naturally. It leverages **Chrome's Built-in AI** for on-device message refinement—including proofreading, rewriting, and translation. Since all processing is local, this architecture guarantees both user **privacy** and reliable **offline functionality**.
 
 ![Screenshot of AAC Board AI](screenshot.png)
 
