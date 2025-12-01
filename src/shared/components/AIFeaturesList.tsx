@@ -15,7 +15,7 @@ const AI_FEATURES = [
   // { key: "isWriterSupported" as const, label: "Writer" },
 ];
 
-export function AICapabilitiesList() {
+export function AIFeaturesList() {
   const capabilities = getAICapabilities();
 
   return (

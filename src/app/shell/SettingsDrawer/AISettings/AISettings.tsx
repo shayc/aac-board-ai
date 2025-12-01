@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { AICapabilitiesList } from "@shared/components/AICapabilitiesList";
+import { AIFeaturesList } from "@shared/components/AIFeaturesList";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
 
@@ -31,7 +31,7 @@ export function AISettings() {
         <Typography variant="subtitle1" gutterBottom>
           Built-in AI Support
         </Typography>
-        <AICapabilitiesList />
+        <AIFeaturesList />
       </Box>
     </>
   );
