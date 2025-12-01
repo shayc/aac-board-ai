@@ -12,7 +12,7 @@ import Tooltip from "@mui/material/Tooltip";
 import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
+import { BoardSetSelector } from "../../features/board/components/BoardSetSelector/BoardSetSelector";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
