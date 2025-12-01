@@ -6,7 +6,7 @@ import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
-export function BoardSetRedirect() {
+export function BoardSetRootRedirect() {
   const { setId } = useParams<BoardRouteParams>();
   const [rootBoardId, setRootBoardId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
