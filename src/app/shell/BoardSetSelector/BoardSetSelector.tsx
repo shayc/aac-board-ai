@@ -6,7 +6,7 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 
-interface BoardSetSelectorProps {
+export interface BoardSetSelectorProps {
   boardsets: BoardsetRecord[];
   setId: string;
 }

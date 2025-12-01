@@ -8,7 +8,7 @@ import { useState } from "react";
 
 type ToneOption = "as-is" | "more-formal" | "more-casual";
 
-interface ToneSelectorProps {
+export interface ToneSelectorProps {
   tone?: ToneOption;
   onChange?: (tone: ToneOption) => void;
 }

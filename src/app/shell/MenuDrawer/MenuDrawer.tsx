@@ -17,7 +17,7 @@ import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { openFile } from "@shared/utils/files";
 import { Link as RouterLink } from "react-router";
 
-interface MenuDrawerProps {
+export interface MenuDrawerProps {
   open: boolean;
   onClose: () => void;
 }

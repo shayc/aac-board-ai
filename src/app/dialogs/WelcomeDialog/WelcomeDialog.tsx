@@ -13,7 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Typography from "@mui/material/Typography";
 
-interface WelcomeDialogProps {
+export interface WelcomeDialogProps {
   open: boolean;
   onClose: () => void;
 }

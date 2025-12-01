@@ -4,7 +4,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
-interface BackspaceButtonProps {
+export interface BackspaceButtonProps {
   onPress: () => void;
   onLongPress: () => void;
 }

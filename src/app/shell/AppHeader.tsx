@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
 
-interface AppHeaderProps {
+export interface AppHeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
 }
