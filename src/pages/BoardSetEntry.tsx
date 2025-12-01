@@ -2,11 +2,12 @@ import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
 export function BoardSetEntry() {
-  const { setId } = useParams();
+  const { setId } = useParams<BoardRouteParams>();
   const [rootBoardId, setRootBoardId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

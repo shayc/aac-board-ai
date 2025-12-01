@@ -1,4 +1,5 @@
 import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
+import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -10,7 +11,7 @@ interface NavigationState {
 export function useNavigation() {
   const navigate = useNavigate();
 
-  const { setId, boardId } = useParams();
+  const { setId, boardId } = useParams<BoardRouteParams>();
   const [rootBoardId, setRootBoardId] = useState("");
 
   const [navState, setNavState] = useState<NavigationState>({

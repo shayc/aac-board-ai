@@ -9,6 +9,7 @@ import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
+import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
@@ -19,7 +20,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { setId = "" } = useParams<{ setId: string; boardId: string }>();
+  const { setId = "" } = useParams<BoardRouteParams>();
   const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
   const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
 
