@@ -1,4 +1,7 @@
 import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
@@ -50,8 +53,8 @@ export function BoardSetEntry() {
 
   if (loading) {
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -59,25 +62,24 @@ export function BoardSetEntry() {
         }}
       >
         Loading board set...
-      </div>
+      </Box>
     );
   }
 
   if (error) {
     return (
-      <div
-        style={{
+      <Stack
+        sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
           height: "100vh",
-          flexDirection: "column",
-          gap: "1rem",
         }}
+        gap={2}
       >
-        <h2>Error</h2>
-        <p>{error}</p>
-      </div>
+        <Typography variant="h5">Error</Typography>
+        <Typography>{error}</Typography>
+      </Stack>
     );
   }
 
