@@ -1,45 +1,21 @@
-import { useBoard } from "@features/board/context/useBoard";
-import type { BoardsetRecord } from "@features/board/db/boards-db";
-import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import type { BoardRouteParams } from "@shared/types/routes";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router";
-import { BoardSetSelector } from "../../features/board/components/BoardSetSelector/BoardSetSelector";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
+  children?: React.ReactNode;
 }
 
-export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { setId = "" } = useParams<BoardRouteParams>();
-  const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
-  const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
-
-  useEffect(() => {
-    async function loadBoardsets() {
-      const db = await openBoardsDB();
-
-      try {
-        const sets = await listBoardsets(db);
-        setBoardsets(sets);
-      } finally {
-        db.close();
-      }
-    }
-
-    void loadBoardsets();
-    // TODO: remove setId from dependencies
-  }, [setId]);
-
+export function AppHeader({
+  onMenuClick,
+  onSettingsClick,
+  children,
+}: AppHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
@@ -56,38 +32,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        <Tooltip title="Go back" enterDelay={800}>
-          <span>
-            <IconButton
-              aria-label="Back"
-              size="large"
-              color="inherit"
-              disabled={!canGoBack}
-              onClick={() => navigateBack()}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Go home" enterDelay={800}>
-          <span>
-            <IconButton
-              aria-label="Home"
-              size="large"
-              color="inherit"
-              disabled={!canGoHome}
-              onClick={() => navigateHome()}
-              sx={{ mr: 2 }}
-            >
-              <HomeIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        {boardsets.length > 0 && (
-          <BoardSetSelector boardsets={boardsets} setId={setId} />
-        )}
+        {children}
 
         <Tooltip title="Open settings" enterDelay={800} sx={{ ml: "auto" }}>
           <IconButton

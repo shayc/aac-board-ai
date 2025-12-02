@@ -11,6 +11,7 @@ export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
+  const [headerContent, setHeaderContent] = useState<React.ReactNode>(null);
 
   return (
     <AppProviders>
@@ -18,10 +19,12 @@ export function AppShell() {
         <AppHeader
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
-        />
+        >
+          {headerContent}
+        </AppHeader>
 
         <Box sx={{ flexGrow: 1 }}>
-          <Outlet />
+          <Outlet context={{ setHeaderContent }} />
         </Box>
 
         <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
