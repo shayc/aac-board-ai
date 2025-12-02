@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shared/open-board-format/schema";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 
-export interface BoardsetRecord {
+export interface BoardSetRecord {
   setId: string;
   name: string;
   nameKey: string;
@@ -28,9 +28,9 @@ export interface AssetRecord {
 
 /** Schema */
 export interface BoardsDBSchema extends DBSchema {
-  boardsets: {
+  boardSets: {
     key: string;
-    value: BoardsetRecord;
+    value: BoardSetRecord;
     indexes: { byNameKey: string; byUpdatedAt: number };
   };
   boards: {
@@ -96,9 +96,9 @@ export async function openBoardsDB(
 ): Promise<IDBPDatabase<BoardsDBSchema>> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
-      const boardsets = db.createObjectStore("boardsets", { keyPath: "setId" });
-      boardsets.createIndex("byNameKey", "nameKey");
-      boardsets.createIndex("byUpdatedAt", "updatedAt");
+      const boardSets = db.createObjectStore("boardSets", { keyPath: "setId" });
+      boardSets.createIndex("byNameKey", "nameKey");
+      boardSets.createIndex("byUpdatedAt", "updatedAt");
 
       const boards = db.createObjectStore("boards", {
         keyPath: ["setId", "boardId"],
@@ -131,9 +131,9 @@ export async function upsertBoardset(
   },
 ): Promise<void> {
   validateId(input.setId, "setId");
-  const prev = await db.get("boardsets", input.setId);
+  const prev = await db.get("boardSets", input.setId);
 
-  const row: BoardsetRecord = {
+  const row: BoardSetRecord = {
     setId: input.setId,
     name: input.name,
     nameKey: toNameKey(input.name, localeFor(db)),
@@ -142,14 +142,14 @@ export async function upsertBoardset(
     boardCount: input.boardCount ?? prev?.boardCount ?? 0,
   };
 
-  await db.put("boardsets", row);
+  await db.put("boardSets", row);
 }
-export async function listBoardsets(
+export async function listBoardSets(
   db: IDBPDatabase<BoardsDBSchema>,
-): Promise<BoardsetRecord[]> {
-  const tx = db.transaction("boardsets", "readonly");
+): Promise<BoardSetRecord[]> {
+  const tx = db.transaction("boardSets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
-  const out: BoardsetRecord[] = [];
+  const out: BoardSetRecord[] = [];
   let cur = await idx.openCursor(undefined, "prev");
 
   while (cur) {
@@ -161,12 +161,12 @@ export async function listBoardsets(
   return out;
 }
 
-export async function getBoardset(
+export async function getBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-): Promise<BoardsetRecord | null> {
+): Promise<BoardSetRecord | null> {
   validateId(setId, "setId");
-  return (await db.get("boardsets", setId)) ?? null;
+  return (await db.get("boardSets", setId)) ?? null;
 }
 
 /** Boards */
@@ -176,7 +176,7 @@ export async function bulkPutBoards(
   items: { boardId: string; name: string; json: OBFBoard }[],
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["boards", "boardsets"], "readwrite");
+  const tx = db.transaction(["boards", "boardSets"], "readwrite");
 
   try {
     const boards = tx.objectStore("boards");
@@ -199,7 +199,7 @@ export async function bulkPutBoards(
       }
     }
 
-    const bs = await tx.objectStore("boardsets").get(setId);
+    const bs = await tx.objectStore("boardSets").get(setId);
 
     if (bs) {
       const count =
@@ -207,7 +207,7 @@ export async function bulkPutBoards(
           ? bs.boardCount + delta
           : await boards.index("bySetId").count(setId);
       await tx
-        .objectStore("boardsets")
+        .objectStore("boardSets")
         .put({ ...bs, boardCount: count, updatedAt: Date.now() });
     }
 
@@ -268,7 +268,7 @@ export async function bulkPutAssets(
   }[],
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["assets", "boardsets"], "readwrite");
+  const tx = db.transaction(["assets", "boardSets"], "readwrite");
 
   try {
     const assets = tx.objectStore("assets");
@@ -284,10 +284,10 @@ export async function bulkPutAssets(
       } as AssetRecord);
     }
 
-    const bs = await tx.objectStore("boardsets").get(setId);
+    const bs = await tx.objectStore("boardSets").get(setId);
 
     if (bs) {
-      await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
+      await tx.objectStore("boardSets").put({ ...bs, updatedAt: Date.now() });
     }
 
     await tx.done;
@@ -358,7 +358,7 @@ export async function deleteBoardset(
   setId: string,
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
+  const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
   try {
     {
@@ -379,7 +379,7 @@ export async function deleteBoardset(
         c = await c.continue();
       }
     }
-    await tx.objectStore("boardsets").delete(setId);
+    await tx.objectStore("boardSets").delete(setId);
     await tx.done;
   } catch (e) {
     tx.abort();
@@ -394,16 +394,16 @@ export async function deleteBoard(
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
-  const tx = db.transaction(["boards", "boardsets"], "readwrite");
+  const tx = db.transaction(["boards", "boardSets"], "readwrite");
 
   try {
     await tx.objectStore("boards").delete([setId, boardId]);
     const cnt = await tx.objectStore("boards").index("bySetId").count(setId);
-    const bs = await tx.objectStore("boardsets").get(setId);
+    const bs = await tx.objectStore("boardSets").get(setId);
 
     if (bs) {
       await tx
-        .objectStore("boardsets")
+        .objectStore("boardSets")
         .put({ ...bs, boardCount: cnt, updatedAt: Date.now() });
     }
 
@@ -421,14 +421,13 @@ export async function deleteAsset(
 ): Promise<void> {
   validateId(setId, "setId");
   const p = normalizePath(path);
-  const tx = db.transaction(["assets", "boardsets"], "readwrite");
+  const tx = db.transaction(["assets", "boardSets"], "readwrite");
 
   try {
     await tx.objectStore("assets").delete([setId, p]);
-    const bs = await tx.objectStore("boardsets").get(setId);
-
+    const bs = await tx.objectStore("boardSets").get(setId);
     if (bs) {
-      await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
+      await tx.objectStore("boardSets").put({ ...bs, updatedAt: Date.now() });
     }
 
     await tx.done;

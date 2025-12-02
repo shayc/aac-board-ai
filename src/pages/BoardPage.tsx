@@ -1,7 +1,7 @@
 import { Board } from "@features/board/components/Board/Board";
 import { BoardNavigation } from "@features/board/components/BoardNavigation";
 import { BoardSetSelector } from "@features/board/components/BoardSetSelector/BoardSetSelector";
-import { useBoardsets } from "@features/board/hooks/useBoardsets";
+import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import type { BoardRouteParams } from "@shared/types/routes";
 import { useEffect } from "react";
 import { useOutletContext, useParams } from "react-router";
@@ -13,20 +13,20 @@ interface OutletContext {
 export function BoardPage() {
   const { setHeaderContent } = useOutletContext<OutletContext>();
   const { setId = "" } = useParams<BoardRouteParams>();
-  const { boardsets } = useBoardsets();
+  const { boardSets } = useBoardSets();
 
   useEffect(() => {
-    if (boardsets.length > 0) {
+    if (boardSets.length > 0) {
       setHeaderContent(
         <>
           <BoardNavigation />
-          <BoardSetSelector boardsets={boardsets} setId={setId} />
+          <BoardSetSelector boardSets={boardSets} setId={setId} />
         </>,
       );
     }
 
     return () => setHeaderContent(null);
-  }, [boardsets, setId, setHeaderContent]);
+  }, [boardSets, setId, setHeaderContent]);
 
   return <Board />;
 }

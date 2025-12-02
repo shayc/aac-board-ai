@@ -14,7 +14,7 @@ export function HomePage() {
 
     async function loadDefaultBoardIfNeeded() {
       const db = await openBoardsDB();
-      const existingSets = await db.getAll("boardsets");
+      const existingSets = await db.getAll("boardSets");
       db.close();
 
       if (existingSets.length > 0) {

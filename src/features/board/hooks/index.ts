@@ -1,4 +1,4 @@
-export { useBoardsets } from "./useBoardsets";
+export { useBoardSets } from "./useBoardSets";
 export { useCommunicationBoard } from "./useCommunicationBoard";
 export { useMessage } from "./useMessage";
 export { useNavigation } from "./useNavigation";

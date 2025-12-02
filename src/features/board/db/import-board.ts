@@ -47,9 +47,10 @@ async function importOBZFile(
     rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
   }
 
+  const name = file.name.replace(/\.(obz|obf)$/i, "");
   await upsertBoardset(db, {
     setId,
-    name: file.name,
+    name,
     rootBoardId: rootBoardId,
     boardCount: boards.size,
   });
