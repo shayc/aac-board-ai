@@ -58,7 +58,7 @@ export function useCommunicationBoard({
   boardId,
 }: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
   const { languageCode } = useLanguage();
-  const { createTranslator } = useTranslator();
+  const { createTranslator, isTranslatorSupported } = useTranslator();
   const { sharedContext } = useAI();
 
   const speech = useSpeech();
@@ -258,7 +258,9 @@ export function useCommunicationBoard({
       });
     };
 
-    void translatedBoard();
+    if (isTranslatorSupported) {
+      void translatedBoard();
+    }
   }, [languageCode, board]);
 
   useEffect(() => {
