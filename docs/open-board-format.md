@@ -12,17 +12,17 @@
 [Absolute Positioning](#absolute-positioning)  
 [Licensing](#licensing)  
 [Extensions](#extensions)  
-[url vs. data_url](#url-vs.-data_url)  
+[url vs. data_url](#url-vs-data_url)  
 [Parsing Guidelines and Gotchas](#parsing-guidelines-and-gotchas)  
 [ID Uniqueness](#id-uniqueness)  
 [Images and Sounds with Multiple References](#images-and-sounds-with-multiple-references)  
 [Future Work](#future-work)
 
-# Introduction {#introduction}
+# Introduction
 
 AAC apps are relatively consistent in their interface and layout, so it seems reasonable to expect a way to transfer boards and board sets from one app to another. However, there isn’t a standardized file format for doing so. The .obf (stands for Open Board Format) and .obz file extensions are meant to address this problem by providing a simple, flexible format for packaging potentially-self-contained board configurations.
 
-# Basics {#basics}
+# Basics
 
 .obf files are JSON files that contain the structure and layout of an individual board. There are a number of more advanced options, but at a basic level you define a list of buttons, a list of images, and a grid-based layout for the buttons (non-grid layouts are supported, I’ll cover that below). The `format` attribute should be "open-board-0.1" to support versioning. All IDs should be strings (not numbers). Buttons, images and sounds must have a unique ID, but it doesn’t need to be globally unique, just unique to the current .obf or .obz file. Note that image (and sound) files are referenced on button entries using `image_id` (or `sound_id`).
 
@@ -116,7 +116,7 @@ Magic, right? If you’re wondering how to handle proprietary symbol sets, there
 
 Path-based referencing is useful because then you can use the same file across multiple boards, potentially resulting in a smaller overall file size.
 
-# Linking to Other Boards {#linking-to-other-boards}
+# Linking to Other Boards
 
 You can link to other boards within an .obz file or using URLs. To configure a button as a linked button, you define its `load_board` attribute:
 
@@ -162,11 +162,11 @@ Linking within an .obz file is a lot more straightforward. The `load_board` attr
 
 Which can then be used to parse the next .obf file. Note that it is recommended that an importing app import all .obf files in the .obz package, regardless of whether they are eventually referenced through the root board, but this behavior is not required for compliance.
 
-# Additional Parameters {#additional-parameters}
+# Additional Parameters
 
 In addition to linking and referencing resources, there are a bunch of other things you can configure. The idea is to be flexible without going crazy, but if there are things you think should be here that aren’t, please make a comment.
 
-### **Button Ordering** {#button-ordering}
+### **Button Ordering**
 
 In a grid-based layout (absolute-positioned is [defined below](#absolute-positioning)) you define your button order as a list of ids. Each id should match the unique id provided for the corresponding button in the buttons list. The grid is defined using the board’s `grid` attribute. Any buttons that are empty or unused should have a null placeholder in the grid’s `order` attribute, which is an array of arrays.
 
@@ -184,7 +184,7 @@ In a grid-based layout (absolute-positioned is [defined below](#absolute-positio
 }
 ```
 
-### **Proprietary Symbol Sets** {#proprietary-symbol-sets}
+### **Proprietary Symbol Sets**
 
 If you’re using a proprietary or licensed symbol set then it’s likely a violation of terms of use to have a public image URL or embed the images in shareable data files like an .obf. In that case you can define the `symbol` attribute on the image, which includes a few sub-attributes. Standardization of symbol sets across apps is desired (i.e. if two apps use SymbolStix, it should be possible to pass .obf files back and forth and the boards should remain intact). _NOTE: I haven’t used any proprietary symbol sets, so I’m definitely open to suggestions on the best way to organize this attribute._ If an app does not have access to the specified symbol set, it may fail or notify the user of alternative images.
 
@@ -205,7 +205,7 @@ If you’re using a proprietary or licensed symbol set then it’s likely a viol
 }
 ```
 
-### **Different Sound than Labelled** {#different-sound-than-labelled}
+### **Different Sound than Labelled**
 
 Sometimes you want to make a different sound than is provided by the label (i.e. the button says "happy" but you want it to say "I am happy"). In these cases you can define the `vocalization` attribute to whatever you would like. If it is not defined, then the `label` attribute will be used to generate the sound.
 
@@ -222,7 +222,7 @@ Sometimes you want to make a different sound than is provided by the label (i.e.
 }
 ```
 
-### **Spelling and Specialty Actions** {#spelling-and-specialty-actions}
+### **Spelling and Specialty Actions**
 
 Some buttons will be used to perform actions other than vocalizing a word or phrase. For example, a keyboard-style board would have individual letters which should be combined to make single words, not pronounced independently, and would also have a “spacebar” button for ending words. Other common actions include returning to the home screen, clearing the current sentence, etc. as well as more advanced functions like copy and paste. All of these options are defined using the `action` attribute on a button.
 
@@ -296,7 +296,7 @@ If a button needs to support multiple actions, you can define it in the optional
 }
 ```
 
-### **Color Definitions** {#color-definitions}
+### **Color Definitions**
 
 Buttons can define both background and border colors. Text color is currently non-configurable and should be handled by the communication app based on its implementation. Color attributes are string values and can be represented as rgb or rgba values. If alpha is not supported (i.e. rgba) then it is suggested that the communication app convert the color into a similar non-alpha color based on its implementation (note this probably should be something more intelligent than “just strip off the alpha” or the color won’t really match as expected).
 
@@ -314,7 +314,7 @@ Buttons can define both background and border colors. Text color is currently no
 }
 ```
 
-### **Absolute Positioning** {#absolute-positioning}
+### **Absolute Positioning**
 
 The default layout is defined using the `grid` attribute, and grid should always be defined in case an importing app doesn’t support absolute positioning of buttons. However, if an app supports absolute positioning, you can define `top`, `left`, `width`, and `height` attributes for all buttons, in which case they will be rendered using absolute positioning. All four attributes are required for all buttons, and have values defined as a percentage (from 0.0 and 1.0).
 
@@ -380,7 +380,7 @@ As an optional enhancement to support boards that can be rendered in multiple la
 
 In the above example the English strings matches some of the attributes defined on the buttons. The label “Brian” is not translated, so the app will fall back to using the attribute as-is. The Spanish strings are also, but the French strings are missing a translation for “Brian” and also “happy”, so the app can fall back to the strings as-is for both of these labels, or search alternate string lists for a different fallback.
 
-### **Licensing** {#licensing}
+### **Licensing**
 
 You can define licenses for boards, images and sounds, including proper attribution. If no license is defined for a resource then the importing app should assume it is private, all rights reserved.
 
@@ -418,7 +418,7 @@ You can define licenses for boards, images and sounds, including proper attribut
 }
 ```
 
-### **Extensions** {#extensions}
+### **Extensions**
 
 If there are additional parameters you need that aren’t available, you are free to add them to the file, just make sure to prefix them with `ext_` to prevent any collisions in the future. It is recommended that you include the name of your app in the attribute name (i.e. for an app called “speakify” you could define `ext_speakify_name`, `ext_speakify_animation`, etc.)
 
@@ -435,11 +435,11 @@ If there are additional parameters you need that aren’t available, you are fre
 }
 ```
 
-### **url vs. data_url** {#url-vs.-data_url}
+### **url vs. data_url**
 
 In addition to defining `url` attributes on images and sounds, you can also define the `data_url` attribute, which is the URL to a programmatic endpoint (API call) for retrieving information about the resource. These endpoints may or may not require authentication, depending on the app.
 
-# Parsing Guidelines and Gotchas {#parsing-guidelines-and-gotchas}
+# Parsing Guidelines and Gotchas
 
 There are cases where an .obf file may include some ambiguity. The goal of this section is to help address that.
 
@@ -447,11 +447,11 @@ There are cases where an .obf file may include some ambiguity. The goal of this 
 
 It has been observed that some implementers have been using numerical IDs instead of string IDs. This is contrary to the spec, but you may see it in the real world. The easiest fix is to cast all IDs as strings (button IDs, image IDs, grid order IDs, etc.) before trying to use them.
 
-### **ID Uniqueness** {#id-uniqueness}
+### **ID Uniqueness**
 
 It’s worth repeating that board, image and sound ids do not need to be globally unique, but should be unique to the current .obf or .obz file. When multiple .obf files are zipped up together in a single .obz file, the image and sound ids should be unique to that .obz file, which is a stronger constraint than is required for the .obf files when bundled independently (i.e. if two .obf files both have images with id of “2”, when they are independent that is fine, but when they are combined into a single .obz file the package is invalid). As such, it may actually be in your best interest to use globally-unique or system-wide-unique ids to make your life easier.
 
-### **Images and Sounds with Multiple References** {#images-and-sounds-with-multiple-references}
+### **Images and Sounds with Multiple References**
 
 There is nothing preventing an image or sound record in an .obf file from including multiple file references (i.e. a data-URI as well as a remove URL or zipped file attribute). If multiple references are included, the app should use the first reference found in the following order:
 
@@ -460,7 +460,7 @@ There is nothing preventing an image or sound record in an .obf file from includ
 - `url`
 - `symbol`
 
-# Future Work {#future-work}
+# Future Work
 
 Currently I’m [working on a ruby gem](https://github.com/CoughDrop/obf) (library) that will provide better support for importing and exporting from other systems. I also plan to host a website that will provide public documentation as well as a validator and .obf-to-.pdf and .obz-to-.pdf converters.
 
