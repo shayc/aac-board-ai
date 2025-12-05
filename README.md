@@ -45,13 +45,10 @@ AAC Board AI converts pictogram-based messages into **natural, grammatically cor
 ## Key Features
 
 - **Grammar Correction** – Turns short, telegraphic text
-  into clear, natural sentences (using the
-  [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
+  into clear, natural sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
 - **Tone Adjustment** – Rewrites messages into casual, polite, or
-  formal tones (via the
-  [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
-- **Multi-Language Support** – Translates messages between languages (powered by the
-  [Translator API](https://developer.chrome.com/docs/ai/translator-api)).
+  formal tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
+- **Multi-Language Support** – Translates messages between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 
 ## Prerequisites
 
