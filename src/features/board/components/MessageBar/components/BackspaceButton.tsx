@@ -30,6 +30,7 @@ export function BackspaceButton({
           aria-label="Backspace"
           size="large"
           color="inherit"
+          sx={{ width: 62, height: 62 }}
         >
           <BackspaceIcon />
         </IconButton>
