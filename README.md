@@ -35,10 +35,12 @@ AAC Board AI converts pictogram-based messages into **natural, grammatically cor
 
 **Why Local AI Matters:**
 
-- **Privacy** - Fully on-device
-- **Offline** - Works without internet
-- **Free** - No API costs
-- **Fast** - Instant responses
+| Benefit | Why it matters                                                         |
+| ------- | ---------------------------------------------------------------------- |
+| Privacy | All processing stays fully on-device — no cloud, no data sharing       |
+| Offline | Works without internet, useful in clinics, schools, and during travel  |
+| Free    | No API usage fees, making it accessible for families and organizations |
+| Fast    | Generates natural sentences instantly as the user builds messages      |
 
 ## Key Features
 
