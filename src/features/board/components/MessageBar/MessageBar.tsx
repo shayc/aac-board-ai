@@ -1,13 +1,9 @@
 import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
 import type { MessagePart } from "@features/board/hooks/useMessage";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from "@mui/icons-material/Stop";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useRef } from "react";
-import { BackspaceButton } from "./BackspaceButton";
+import { BackspaceButton } from "./components/BackspaceButton";
+import { PlayButton } from "./components/PlayButton";
 
 export interface MessageBarProps {
   message: MessagePart[];
@@ -44,8 +40,6 @@ export function MessageBar({
       });
     });
   }, [message]);
-
-  const playButtonLabel = isPlaying ? "Stop playback" : "Play message";
 
   return (
     <Stack direction="row" padding={2} gap={2}>
@@ -91,30 +85,11 @@ export function MessageBar({
         />
       </Stack>
 
-      <Tooltip title={playButtonLabel} enterDelay={800}>
-        <Box sx={{ alignSelf: "center" }}>
-          <IconButton
-            aria-label={playButtonLabel}
-            size="large"
-            onClick={isPlaying ? onStopClick : onPlayClick}
-            sx={{
-              width: 96,
-              height: 96,
-              backgroundColor: (theme) => theme.palette.primary.main,
-              color: (theme) => theme.palette.primary.contrastText,
-              "&:hover": {
-                backgroundColor: (theme) => theme.palette.primary.dark,
-              },
-            }}
-          >
-            {isPlaying ? (
-              <StopIcon sx={{ width: 48, height: 48 }} />
-            ) : (
-              <PlayArrowIcon sx={{ width: 48, height: 48 }} />
-            )}
-          </IconButton>
-        </Box>
-      </Tooltip>
+      <PlayButton
+        isPlaying={isPlaying}
+        onPlayClick={onPlayClick}
+        onStopClick={onStopClick}
+      />
     </Stack>
   );
 }
