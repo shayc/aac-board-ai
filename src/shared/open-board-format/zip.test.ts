@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isZip, unzip, zip } from "../zip";
+import { isZip, unzip, zip } from "./zip";
 
 const ZIP_MAGIC_BYTES = new Uint8Array([0x50, 0x4b, 0x03, 0x04]);
 

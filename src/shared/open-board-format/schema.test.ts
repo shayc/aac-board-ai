@@ -1,4 +1,5 @@
 import { describe, expect, test } from "vitest";
+import lotsOfStuffExample from "./examples/lots_of_stuff.json";
 import {
   OBFBoardSchema,
   OBFButtonSchema,
@@ -11,8 +12,7 @@ import {
   OBFMediaSchema,
   OBFSpecialtyActionSchema,
   OBFSymbolInfoSchema,
-} from "../schema";
-import lotsOfStuffExample from "../examples/lots_of_stuff.json";
+} from "./schema";
 
 describe("OBFIDSchema", () => {
   test("coerces numbers to strings", () => {
