@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { parseOBF, stringifyOBF, validateOBF } from "../obf";
 import type { OBFBoard } from "../schema";
 
@@ -9,34 +9,60 @@ const validBoard: OBFBoard = {
   grid: { rows: 1, columns: 1, order: [["btn-1"]] },
 };
 
-test("parseOBF handles UTF-8 BOM prefix", () => {
-  const jsonWithBom = "\uFEFF" + JSON.stringify(validBoard);
-  const result = parseOBF(jsonWithBom);
+describe("parseOBF", () => {
+  test("parses valid JSON board", () => {
+    const json = JSON.stringify(validBoard);
+    const result = parseOBF(json);
 
-  expect(result.id).toBe("test-board");
+    expect(result).toEqual(validBoard);
+  });
+
+  test("handles UTF-8 BOM prefix", () => {
+    const jsonWithBom = "\uFEFF" + JSON.stringify(validBoard);
+    const result = parseOBF(jsonWithBom);
+
+    expect(result.id).toBe("test-board");
+  });
+
+  test("throws descriptive error for invalid JSON", () => {
+    const malformedJson = '{ "format": "open-board-0.1", }';
+
+    expect(() => parseOBF(malformedJson)).toThrow(
+      /Invalid OBF: JSON parse failed/,
+    );
+  });
 });
 
-test("parseOBF throws descriptive error for invalid JSON", () => {
-  const malformedJson = '{ "format": "open-board-0.1", }';
+describe("validateOBF", () => {
+  test("accepts valid board structure", () => {
+    expect(() => validateOBF(validBoard)).not.toThrow();
+  });
 
-  expect(() => parseOBF(malformedJson)).toThrow(
-    /Invalid OBF: JSON parse failed/,
-  );
+  test("throws for missing required grid field", () => {
+    const boardWithoutGrid = {
+      format: "open-board-0.1",
+      id: "test-board",
+      buttons: [],
+    };
+
+    expect(() => validateOBF(boardWithoutGrid)).toThrow(/Invalid OBF/);
+  });
 });
 
-test("validateOBF throws for missing required grid field", () => {
-  const boardWithoutGrid = {
-    format: "open-board-0.1",
-    id: "test-board",
-    buttons: [],
-  };
+describe("stringifyOBF", () => {
+  test("converts board to JSON string", () => {
+    const json = stringifyOBF(validBoard);
+    const parsed = JSON.parse(json) as OBFBoard;
 
-  expect(() => validateOBF(boardWithoutGrid)).toThrow(/Invalid OBF/);
+    expect(parsed).toEqual(validBoard);
+  });
 });
 
-test("stringifyOBF and parseOBF round-trip preserves data", () => {
-  const json = stringifyOBF(validBoard);
-  const parsed = parseOBF(json);
+describe("Integration: parseOBF and stringifyOBF", () => {
+  test("round-trip preserves data", () => {
+    const json = stringifyOBF(validBoard);
+    const parsed = parseOBF(json);
 
-  expect(parsed).toEqual(validBoard);
+    expect(parsed).toEqual(validBoard);
+  });
 });
