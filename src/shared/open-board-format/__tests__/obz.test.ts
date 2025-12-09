@@ -68,20 +68,6 @@ describe("extractOBZ", () => {
 });
 
 describe("createOBZ", () => {
-  test("creates valid OBZ with single board", async () => {
-    const board: OBFBoard = {
-      format: "open-board-0.1",
-      id: "board-1",
-      buttons: [{ id: "btn-1", label: "Test" }],
-      grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-    };
-
-    const obzBlob = await createOBZ([board], "board-1");
-
-    expect(obzBlob.type).toBe("application/zip");
-    expect(obzBlob.size).toBeGreaterThan(0);
-  });
-
   test("includes resources in archive", async () => {
     const board: OBFBoard = {
       format: "open-board-0.1",

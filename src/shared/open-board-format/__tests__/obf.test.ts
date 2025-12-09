@@ -49,15 +49,6 @@ describe("validateOBF", () => {
   });
 });
 
-describe("stringifyOBF", () => {
-  test("converts board to JSON string", () => {
-    const json = stringifyOBF(validBoard);
-    const parsed = JSON.parse(json) as OBFBoard;
-
-    expect(parsed).toEqual(validBoard);
-  });
-});
-
 describe("Integration: parseOBF and stringifyOBF", () => {
   test("round-trip preserves data", () => {
     const json = stringifyOBF(validBoard);
