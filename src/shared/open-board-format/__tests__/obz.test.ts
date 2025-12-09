@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
-import { createOBZ, extractOBZ, parseManifest } from "./obz";
-import type { OBFBoard } from "./schema";
+import { createOBZ, extractOBZ, parseManifest } from "../obz";
+import type { OBFBoard } from "../schema";
 
 test("extractOBZ throws for non-ZIP input", async () => {
   const notZip = new ArrayBuffer(10);
@@ -11,7 +11,7 @@ test("extractOBZ throws for non-ZIP input", async () => {
 });
 
 test("extractOBZ throws for missing manifest.json", async () => {
-  const { zip } = await import("./zip");
+  const { zip } = await import("../zip");
   const filesWithoutManifest = new Map([
     ["boards/test.obf", new TextEncoder().encode("{}")],
   ]);
