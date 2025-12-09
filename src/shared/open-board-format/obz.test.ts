@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import { createOBZ, extractOBZ, loadOBZ, parseManifest } from "./obz";
+import { zip } from "./zip";
 import type { OBFBoard } from "./schema";
 
 describe("parseManifest", () => {
@@ -41,25 +42,15 @@ describe("loadOBZ", () => {
 
 describe("extractOBZ", () => {
   test("extracts valid OBZ archive", async () => {
-    const { zip } = await import("./zip");
     const board: OBFBoard = {
       format: "open-board-0.1",
       id: "test",
       buttons: [],
       grid: { rows: 1, columns: 1, order: [[null]] },
     };
-    const manifest = {
-      format: "open-board-0.1",
-      root: "boards/test.obf",
-      paths: { boards: { test: "boards/test.obf" }, images: {} },
-    };
-    const files = new Map([
-      ["manifest.json", new TextEncoder().encode(JSON.stringify(manifest))],
-      ["boards/test.obf", new TextEncoder().encode(JSON.stringify(board))],
-    ]);
-    const zipBuffer = await zip(files);
 
-    const result = await extractOBZ(zipBuffer.buffer as ArrayBuffer);
+    const obzBlob = await createOBZ([board], "test");
+    const result = await extractOBZ(await obzBlob.arrayBuffer());
 
     expect(result.manifest.root).toBe("boards/test.obf");
     expect(result.boards.get("test")).toBeDefined();
@@ -74,7 +65,6 @@ describe("extractOBZ", () => {
   });
 
   test("throws for missing manifest.json", async () => {
-    const { zip } = await import("./zip");
     const filesWithoutManifest = new Map([
       ["boards/test.obf", new TextEncoder().encode("{}")],
     ]);
