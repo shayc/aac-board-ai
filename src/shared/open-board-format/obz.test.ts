@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
-import { createOBZ, extractOBZ, loadOBZ, parseManifest } from "../obz";
-import type { OBFBoard } from "../schema";
+import { createOBZ, extractOBZ, loadOBZ, parseManifest } from "./obz";
+import type { OBFBoard } from "./schema";
 
 describe("parseManifest", () => {
   test("parses valid manifest", () => {
@@ -41,7 +41,7 @@ describe("loadOBZ", () => {
 
 describe("extractOBZ", () => {
   test("extracts valid OBZ archive", async () => {
-    const { zip } = await import("../zip");
+    const { zip } = await import("./zip");
     const board: OBFBoard = {
       format: "open-board-0.1",
       id: "test",
@@ -74,7 +74,7 @@ describe("extractOBZ", () => {
   });
 
   test("throws for missing manifest.json", async () => {
-    const { zip } = await import("../zip");
+    const { zip } = await import("./zip");
     const filesWithoutManifest = new Map([
       ["boards/test.obf", new TextEncoder().encode("{}")],
     ]);
