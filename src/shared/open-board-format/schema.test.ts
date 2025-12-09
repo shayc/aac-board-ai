@@ -5,12 +5,14 @@ import {
   OBFFormatVersionSchema,
   OBFGridSchema,
   OBFIDSchema,
+  OBFImageSchema,
   OBFLicenseSchema,
   OBFManifestSchema,
   OBFMediaSchema,
   OBFSpecialtyActionSchema,
   OBFSymbolInfoSchema,
 } from "./schema";
+import lotsOfStuffExample from "./examples/lots_of_stuff.json";
 
 describe("OBFIDSchema", () => {
   test("coerces numbers to strings", () => {
@@ -53,6 +55,27 @@ describe("OBFSpecialtyActionSchema", () => {
 });
 
 describe("OBFLicenseSchema", () => {
+  test("accepts valid license with all fields", () => {
+    const validLicense = {
+      type: "CC-BY-SA",
+      copyright_notice_url: "https://creativecommons.org/licenses/by-sa/4.0/",
+      source_url: "https://example.com/source",
+      author_name: "John Doe",
+      author_url: "https://example.com/author",
+      author_email: "john@example.com",
+    };
+
+    expect(OBFLicenseSchema.safeParse(validLicense).success).toBe(true);
+  });
+
+  test("accepts minimal valid license", () => {
+    const minimalLicense = {
+      type: "CC-BY",
+    };
+
+    expect(OBFLicenseSchema.safeParse(minimalLicense).success).toBe(true);
+  });
+
   test("rejects invalid URLs", () => {
     const invalidUrl = {
       type: "CC-BY",
@@ -73,6 +96,36 @@ describe("OBFLicenseSchema", () => {
 });
 
 describe("OBFMediaSchema", () => {
+  test("accepts valid media with URL", () => {
+    const validMedia = {
+      id: "img1",
+      url: "https://example.com/image.png",
+      content_type: "image/png",
+    };
+
+    expect(OBFMediaSchema.safeParse(validMedia).success).toBe(true);
+  });
+
+  test("accepts valid media with data URI", () => {
+    const validMedia = {
+      id: "img2",
+      data: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUg==",
+      content_type: "image/png",
+    };
+
+    expect(OBFMediaSchema.safeParse(validMedia).success).toBe(true);
+  });
+
+  test("accepts valid media with path", () => {
+    const validMedia = {
+      id: "img3",
+      path: "images/icon.png",
+      content_type: "image/png",
+    };
+
+    expect(OBFMediaSchema.safeParse(validMedia).success).toBe(true);
+  });
+
   test("rejects invalid URLs", () => {
     const invalidUrl = { id: "1", url: "not-a-url" };
     const invalidDataUrl = { id: "1", data_url: "invalid" };
@@ -91,6 +144,45 @@ describe("OBFSymbolInfoSchema", () => {
     expect(OBFSymbolInfoSchema.safeParse(valid).success).toBe(true);
     expect(OBFSymbolInfoSchema.safeParse(missingSet).success).toBe(false);
     expect(OBFSymbolInfoSchema.safeParse(missingFilename).success).toBe(false);
+  });
+});
+
+describe("OBFImageSchema", () => {
+  test("accepts valid image with symbol info", () => {
+    const validImage = {
+      id: "img1",
+      symbol: {
+        set: "symbolstix",
+        filename: "happy.png",
+      },
+      width: 300,
+      height: 300,
+      content_type: "image/png",
+    };
+
+    expect(OBFImageSchema.safeParse(validImage).success).toBe(true);
+  });
+
+  test("accepts valid image without symbol info", () => {
+    const validImage = {
+      id: "img2",
+      url: "https://example.com/image.png",
+      width: 200,
+      height: 200,
+      content_type: "image/png",
+    };
+
+    expect(OBFImageSchema.safeParse(validImage).success).toBe(true);
+  });
+
+  test("accepts image without dimensions", () => {
+    const validImage = {
+      id: "img3",
+      path: "images/icon.png",
+      content_type: "image/png",
+    };
+
+    expect(OBFImageSchema.safeParse(validImage).success).toBe(true);
   });
 });
 
@@ -241,5 +333,25 @@ describe("OBFManifestSchema", () => {
     };
 
     expect(OBFManifestSchema.safeParse(missingBoards).success).toBe(false);
+  });
+});
+
+describe("Integration: Real-world OBF Board", () => {
+  test("validates complete board from lots_of_stuff.json example", () => {
+    const result = OBFBoardSchema.safeParse(lotsOfStuffExample);
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      // Verify key properties are parsed correctly
+      expect(result.data.format).toBe("open-board-0.1");
+      expect(result.data.id).toBe("lots_of_stuff");
+      expect(result.data.locale).toBe("en");
+      expect(result.data.buttons).toHaveLength(5);
+      expect(result.data.images).toHaveLength(3);
+      expect(result.data.sounds).toHaveLength(2);
+      expect(result.data.grid.rows).toBe(2);
+      expect(result.data.grid.columns).toBe(3);
+    }
   });
 });
