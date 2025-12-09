@@ -1,50 +1,84 @@
 # AGENTS.md
 
-## Project
+Project: **AAC Board AI** — React 19 + TypeScript AAC board.  
+Critical: **Accessibility must not break.** Chrome Built-In AI optional → always provide fallback.
 
-AAC Board AI — React 19 + TypeScript AAC board with Chrome Built-in AI.  
-Vite, MUI, Vitest. Accessibility-critical.
+## Commands
 
-## Dev
+| Action  | Command        |
+| ------- | -------------- |
+| Install | `npm install`  |
+| Dev     | `npm run dev`  |
+| Test    | `npm test`     |
+| Lint    | `npm run lint` |
 
-- Install: `npm install`
-- Dev server: `npm run dev`
-- Test suite: `npm test`
-- Lint: `npm run lint`
-- Path aliases: `@app`, `@features`, `@shared`, `@pages`
+Before completion: `npm run lint && npm test`
+
+## Code Requirements
+
+- **TS strict** — no `any` unless justified.
+- **React Compiler** active → avoid `useMemo`/`useCallback` unless required.
+- **Co-locate** component + test + style.
+- **Accessibility mandatory**:
+  - semantic HTML, ARIA, keyboard nav.
+- **AI usage**:
+  - check API availability, implement graceful fallback.
 
 ## Structure
 
-- `app` — shell, providers, layout, dialogs
-- `features/board` — AAC board logic (components/hooks/DB/state)
-- `pages` — route components
-- `shared` — reusable UI, utilities, Chrome AI helpers
+```
+src/
+├─ app/ Shell, providers, layout
+├─ features/ Modules (AAC logic)
+├─ pages/ Routes
+└─ shared/ UI, utils, Chrome AI helpers
+```
 
-## Testing
+Aliases: `@app`, `@features`, `@pages`, `@shared`
 
-- When behavior or UI changes, **add/update tests** next to the code you touched.
-- Before final output, run: `npm test`.
+## Testing Rules
 
-## Code Style
+- Tests sit beside code (`*.test.tsx`).
+- Update tests when behavior/UI changes.
+- Use coverage for critical changes.
 
-- React Compiler is enabled → **avoid `useMemo` / `useCallback` unless strictly required**.
+## Boundaries
 
-## Git / Workflow
+Always:
 
-- Keep changes **small and focused** (one logical change per PR).
+- Maintain accessibility & strict typing.
+- Follow structure + aliases.
+- Add/update tests for behavior changes.
 
-## Boundaries for Agents
+Ask first:
 
-- ✅ **Always do**
-  - Use the existing folder structure (`app`, `features`, `pages`, `shared`).
-- ⚠️ **Ask first**
-  - Adding new libraries, changing build config, or modifying test setup.
-- 🚫 **Never do**
-  - Remove or weaken accessibility features just to simplify code.
+- New deps
+- Build/CI/tooling config changes
+- New `src/features/*` modules
 
-## Responses
+Never:
 
-- When you change behavior or design, **state your assumptions**.
-- Summarize:
-  - Files changed.
-  - Any follow-up work you recommend.
+- Break accessibility
+- Commit secrets
+- Skip tests
+- Disable TS strict
+- Remove fallbacks for unsupported AI
+
+## Completion Output
+
+Reply with:
+Changes:
+
+- files modified/added
+
+Tests:
+
+- npm test result summary
+
+Assumptions:
+
+- design decisions
+
+Follow-ups:
+
+- recommended next steps
