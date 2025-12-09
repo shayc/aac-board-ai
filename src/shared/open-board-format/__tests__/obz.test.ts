@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createOBZ, extractOBZ, parseManifest } from "../obz";
+import { createOBZ, extractOBZ, loadOBZ, parseManifest } from "../obz";
 import type { OBFBoard } from "../schema";
 
 describe("parseManifest", () => {
@@ -17,6 +17,25 @@ describe("parseManifest", () => {
     const invalidManifest = JSON.stringify({ format: "wrong-format" });
 
     expect(() => parseManifest(invalidManifest)).toThrow(/Invalid manifest/);
+  });
+});
+
+describe("loadOBZ", () => {
+  test("loads OBZ package from File object", async () => {
+    const board: OBFBoard = {
+      format: "open-board-0.1",
+      id: "test",
+      buttons: [],
+      grid: { rows: 1, columns: 1, order: [[null]] },
+    };
+
+    const obzBlob = await createOBZ([board], "test");
+    const file = new File([obzBlob], "test.obz", { type: "application/zip" });
+
+    const result = await loadOBZ(file);
+
+    expect(result.manifest.root).toBe("boards/test.obf");
+    expect(result.boards.get("test")).toBeDefined();
   });
 });
 

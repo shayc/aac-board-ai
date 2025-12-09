@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseOBF, stringifyOBF, validateOBF } from "../obf";
+import { loadOBF, parseOBF, stringifyOBF, validateOBF } from "../obf";
 import type { OBFBoard } from "../schema";
 
 const validBoard: OBFBoard = {
@@ -46,6 +46,28 @@ describe("validateOBF", () => {
     };
 
     expect(() => validateOBF(boardWithoutGrid)).toThrow(/Invalid OBF/);
+  });
+});
+
+describe("loadOBF", () => {
+  test("loads board from File object", async () => {
+    const json = JSON.stringify(validBoard);
+    const file = new File([json], "test.obf", { type: "application/json" });
+
+    const result = await loadOBF(file);
+
+    expect(result).toEqual(validBoard);
+  });
+
+  test("handles UTF-8 BOM in File", async () => {
+    const jsonWithBom = "\ufeff" + JSON.stringify(validBoard);
+    const file = new File([jsonWithBom], "test.obf", {
+      type: "application/json",
+    });
+
+    const result = await loadOBF(file);
+
+    expect(result.id).toBe("test-board");
   });
 });
 
