@@ -2,39 +2,49 @@
 
 ## Project
 
-AAC Board AI — React 19 + TypeScript AAC board with Chrome Built-in AI. MUI, Vite, Vitest. Accessibility-critical.
+AAC Board AI — React 19 + TypeScript AAC board with Chrome Built-in AI.  
+Vite, MUI, Vitest. Accessibility-critical.
 
 ## Dev
 
 - Install: `npm install`
-- Dev: `npm run dev`
-- Tests: `npm test`
+- Dev server: `npm run dev`
+- Test suite: `npm test`
 - Lint: `npm run lint`
-- Aliases: `@app`, `@features`, `@shared`, `@pages`
+- Path aliases: `@app`, `@features`, `@shared`, `@pages`
 
 ## Structure
 
 - `app` — shell, providers, layout, dialogs
 - `features/board` — AAC board logic (components/hooks/DB/state)
 - `pages` — route components
-- `shared` — reusable UI + utils + AI hooks
+- `shared` — reusable UI, utilities, Chrome AI helpers
 
 ## Testing
 
-- MUST update/add tests when behavior/UI changes.
-- MUST run tests before final output (`npm test`).
+- When behavior or UI changes, **add/update tests** next to the code you touched.
+- Before final output, run: `npm test`.
 
-## Agent Rules
+## Code Style
 
-- Small scoped changes; ask before large refactors.
-- Maintain folder boundaries.
+- React Compiler is enabled → **avoid `useMemo` / `useCallback` unless strictly required**.
 
-## Style
+## Git / Workflow
 
-- TypeScript + React 19, functional components.
-- React Compiler enabled → **avoid `useMemo`/`useCallback`**.
-- Accessibility required (keyboard use preserved).
+- Keep changes **small and focused** (one logical change per PR).
+
+## Boundaries for Agents
+
+- ✅ **Always do**
+  - Use the existing folder structure (`app`, `features`, `pages`, `shared`).
+- ⚠️ **Ask first**
+  - Adding new libraries, changing build config, or modifying test setup.
+- 🚫 **Never do**
+  - Remove or weaken accessibility features just to simplify code.
 
 ## Responses
 
-- State assumptions when modifying design.
+- When you change behavior or design, **state your assumptions**.
+- Summarize:
+  - Files changed.
+  - Any follow-up work you recommend.
