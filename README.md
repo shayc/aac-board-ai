@@ -2,6 +2,8 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
 
+**Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
+
 **AAC Board AI** is a communication tool that enables non-verbal users to express themselves naturally. It leverages **Chrome's Built-in AI** for on-device message refinement—including proofreading, rewriting, and translation. Since all processing is local, this architecture guarantees both user **privacy** and reliable **offline functionality**.
 
 ![Screenshot of AAC Board AI](screenshot.png)
@@ -115,10 +117,6 @@ https://www.openboardformat.org/examples
 - Chrome Built‑in AI Docs:
   https://developer.chrome.com/docs/ai/built-in
 - Open Board Format: https://www.openboardformat.org/
-
-## Acknowledgements
-
-Built for the Google Chrome Built‑in AI Challenge 2025.
 
 ## License
 
