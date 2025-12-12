@@ -5,7 +5,7 @@ import { BoardSetEntry } from "@pages/BoardSetEntry";
 import { HomePage } from "@pages/HomePage";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-export function App() {
+export function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
