@@ -14,7 +14,7 @@
 - Format: `npm run format`
 - Test: `npm test`
 - Build (includes typecheck): `npm run build`
-- Playwright browsers (required for tests / CI): `npx playwright install --with-deps`
+- Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
 
 ## Project Structure
 
@@ -29,9 +29,8 @@
 
 ## Testing Instructions
 
-- Runner: Vitest (`npm test`); tests colocated as `*.test.ts(x)`.
-- Tests run in browser mode via the Playwright provider; ensure browsers are installed before running `npm test`.
-- For behavior changes, update/add the nearest colocated test.
+- Tests are colocated as `*.test.ts(x)`.
+- `npm test` runs Vitest in browser mode via the Playwright provider.
 - Prefer deterministic tests; avoid timing-based sleeps.
 
 ## Code Style Guidelines
@@ -39,6 +38,7 @@
 - TypeScript strict: keep types accurate; avoid `any` unless unavoidable.
 - Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
 - MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
+- React Compiler is enabled: avoid `useMemo`/`useCallback` by convention; rely on automatic memoization.
 
 ## Workflow (Git/PR)
 
@@ -50,7 +50,7 @@
 ### Always
 
 - Keep changes scoped; avoid broad refactors/sweeping reformatting.
-- For non-trivial changes, run: `npm run lint`, `npm test`, `npm run build`.
+- For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
 - Preserve progressive enhancement: core AAC works without Chrome AI APIs.
 - Follow existing module boundaries and local patterns.
 
