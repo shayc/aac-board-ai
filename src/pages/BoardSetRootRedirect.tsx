@@ -2,7 +2,7 @@ import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
-export function BoardSetEntry() {
+export function BoardSetRootRedirect() {
   const { setId } = useParams();
   const [rootBoardId, setRootBoardId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);

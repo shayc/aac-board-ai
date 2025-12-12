@@ -1,84 +1,69 @@
 # AGENTS.md
 
-Project: **AAC Board AI** — React 19 + TypeScript AAC board.  
-Critical: **Accessibility must not break.** Chrome Built-In AI optional → always provide fallback.
+## Project Overview
+
+- Client-side AAC (communication board) web app.
+- Stack: React 19 + TypeScript + Vite; MUI; React Router.
+- AI is progressive enhancement via Chrome Built-in AI APIs; core app must work without AI.
 
 ## Commands
 
-| Action  | Command        |
-| ------- | -------------- |
-| Install | `npm install`  |
-| Dev     | `npm run dev`  |
-| Test    | `npm test`     |
-| Lint    | `npm run lint` |
+- Install (CI): `npm ci`
+- Dev: `npm run dev`
+- Lint: `npm run lint`
+- Format: `npm run format`
+- Test: `npm test`
+- Build (includes typecheck): `npm run build`
+- Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
 
-Before completion: `npm run lint && npm test`
+## Project Structure
 
-## Code Requirements
+- `src/main.tsx`: React entry
+- `src/app/`: app shell + providers
+- `src/features/`: feature modules
+- `src/pages/`: routes/pages
+- `src/shared/`: shared code + Open Board Format / OBZ support
+- `public/`: static assets
+- `docs/`: architecture/references
+- Do not edit generated output: `dist/`, `coverage/`
 
-- **TS strict** — no `any` unless justified.
-- **React Compiler** active → avoid `useMemo`/`useCallback` unless required.
-- **Co-locate** component + test + style.
-- **Accessibility mandatory**:
-  - semantic HTML, ARIA, keyboard nav.
-- **AI usage**:
-  - check API availability, implement graceful fallback.
+## Testing Instructions
 
-## Structure
+- Tests are colocated as `*.test.ts(x)`.
+- `npm test` runs Vitest in browser mode via the Playwright provider.
+- Prefer deterministic tests; avoid timing-based sleeps.
 
-```
-src/
-├─ app/ Shell, providers, layout
-├─ features/ Modules (AAC logic)
-├─ pages/ Routes
-└─ shared/ UI, utils, Chrome AI helpers
-```
+## Code Style Guidelines
 
-Aliases: `@app`, `@features`, `@pages`, `@shared`
+- TypeScript strict: keep types accurate; avoid `any` unless unavoidable.
+- Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
+- MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
+- React Compiler is enabled: avoid `useMemo`/`useCallback` by convention; rely on automatic memoization.
 
-## Testing Rules
+## Workflow (Git/PR)
 
-- Tests sit beside code (`*.test.tsx`).
-- Update tests when behavior/UI changes.
-- Use coverage for critical changes.
+- CI (Node 22): `npm ci` → Playwright install → lint → test → build.
+- Pre-commit: `lint-staged` runs ESLint `--fix` + Prettier on staged files.
 
-## Boundaries
+## Boundaries (Safety Rules)
 
-Always:
+### Always
 
-- Maintain accessibility & strict typing.
-- Follow structure + aliases.
-- Add/update tests for behavior changes.
+- Keep changes scoped; avoid broad refactors/sweeping reformatting.
+- For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
+- Preserve progressive enhancement: core AAC works without Chrome AI APIs.
+- Follow existing module boundaries and local patterns.
 
-Ask first:
+### Ask First
 
-- New deps
-- Build/CI/tooling config changes
-- New `src/features/*` modules
+- Dependency/lockfile changes (`package.json`, `package-lock.json`).
+- Changes to CI/build/tooling or lint/test infrastructure.
+- Data format/compatibility changes (OBF/OBZ import/export/parsing).
+- Large UI rewrites, routing changes, or cross-cutting refactors.
 
-Never:
+### Never
 
-- Break accessibility
-- Commit secrets
-- Skip tests
-- Disable TS strict
-- Remove fallbacks for unsupported AI
-
-## Completion Output
-
-Reply with:
-Changes:
-
-- files modified/added
-
-Tests:
-
-- npm test result summary
-
-Assumptions:
-
-- design decisions
-
-Follow-ups:
-
-- recommended next steps
+- Commit secrets/tokens/keys.
+- Disable/relax linting, typechecking, or tests to “make it pass”.
+- Hand-edit generated output (`dist/`, `coverage/`).
+- Add telemetry/analytics or data exfiltration without explicit approval.
