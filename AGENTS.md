@@ -4,7 +4,7 @@
 
 - Client-side AAC (communication board) web app.
 - Stack: React 19 + TypeScript + Vite; MUI; React Router.
-- AI is progressive enhancement via Chrome Built-in AI APIs; core app must work without AI.
+- Chrome Built-in AI is progressive enhancement; core app must work when AI APIs are unavailable.
 
 ## Commands
 
@@ -22,9 +22,7 @@
 - `src/app/`: app shell + providers
 - `src/features/`: feature modules
 - `src/pages/`: routes/pages
-- `src/shared/`: shared code + Open Board Format / OBZ support
-- `public/`: static assets
-- `docs/`: architecture/references
+- `src/shared/`: shared code + Open Board Format support
 - Do not edit generated output: `dist/`, `coverage/`
 
 ## Testing Instructions
@@ -38,7 +36,7 @@
 - TypeScript strict: keep types accurate; avoid `any` unless unavoidable.
 - Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
 - MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
-- React Compiler is enabled: avoid `useMemo`/`useCallback` by convention; rely on automatic memoization.
+- React Compiler is enabled: avoid `useMemo`/`useCallback` micro-optimizations.
 
 ## Workflow (Git/PR)
 
@@ -51,14 +49,13 @@
 
 - Keep changes scoped; avoid broad refactors/sweeping reformatting.
 - For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
-- Preserve progressive enhancement: core AAC works without Chrome AI APIs.
-- Follow existing module boundaries and local patterns.
+- Follow existing module boundaries and nearby-file patterns.
 
 ### Ask First
 
 - Dependency/lockfile changes (`package.json`, `package-lock.json`).
 - Changes to CI/build/tooling or lint/test infrastructure.
-- Data format/compatibility changes (OBF/OBZ import/export/parsing).
+- Data format/compatibility changes (OBF/OBZ import/export).
 - Large UI rewrites, routing changes, or cross-cutting refactors.
 
 ### Never

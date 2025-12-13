@@ -10,7 +10,7 @@ import type {
   OBFButton,
   OBFGrid,
   OBFLoadBoard,
-  OBFSound,
+  OBFMedia,
 } from "@shared/open-board-format/schema";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
@@ -27,10 +27,10 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   };
 }
 
-function pickMediaSource(sound: OBFSound): string | undefined {
-  if (sound.data) return sound.data;
-  if (sound.path) return sound.path;
-  if (sound.url) return sound.url;
+function pickMediaSource(media: OBFMedia): string | undefined {
+  if (media.data) return media.data;
+  if (media.path) return media.path;
+  if (media.url) return media.url;
   return undefined;
 }
 
