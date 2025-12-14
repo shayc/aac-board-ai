@@ -4,7 +4,7 @@ import { getAICapabilities } from "./getAICapabilities";
 export function useLanguageModel(words: string[] | undefined) {
   const { isLanguageModelSupported } = getAICapabilities();
   const [downloadProgress, setDownloadProgress] = useState(0);
-  const sessionRef = useRef<LanguageModelSession | null>(null);
+  const sessionRef = useRef<LanguageModel | null>(null);
   const isReady = isLanguageModelSupported && downloadProgress === 1;
 
   async function createLanguageModel(
@@ -31,9 +31,9 @@ export function useLanguageModel(words: string[] | undefined) {
     const temperature = options.temperature ?? modelParams?.defaultTemperature;
     const topK = options.topK ?? modelParams?.defaultTopK;
 
-    const initialPrompts: PromptMessage[] = [
+    const initialPrompts: LanguageModelPrompt = [
       {
-        role: "system",
+        role: "assistant",
         content: `
           ROLE
           Extend the user's utterance by appending one to four words.
