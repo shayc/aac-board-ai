@@ -40,7 +40,7 @@
 
 ## Workflow (Git/PR)
 
-- CI (Node 22): `npm ci` → Playwright install → lint → test → build.
+- CI (Node 24): `npm ci` → Playwright install → lint → test → build.
 - Pre-commit: `lint-staged` runs ESLint `--fix` + Prettier on staged files.
 
 ## Boundaries (Safety Rules)
