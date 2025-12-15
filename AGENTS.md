@@ -13,6 +13,7 @@
 - Lint: `npm run lint`
 - Format: `npm run format`
 - Test: `npm test`
+- Coverage: `npm run coverage`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
 
