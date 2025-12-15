@@ -21,14 +21,8 @@ export function AboutPage() {
             <Typography variant="body1" component="p">
               AAC Board AI helps people who can't rely on speech communicate
               more easily and naturally. It uses on-device AI to correct
-              grammar, adjust tone, and translate messages — keeping every
-              interaction private, offline, and fast.
-            </Typography>
-
-            <Typography variant="body1" component="p">
-              Powered by Chrome's Built-in AI with Gemini Nano, it supports
-              people with cerebral palsy, autism, and aphasia, as well as the
-              therapists who work alongside them.
+              grammar, adjust tone, and translate messages. That keeps
+              interactions private and fast.
             </Typography>
 
             <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
@@ -37,8 +31,8 @@ export function AboutPage() {
 
             <Typography
               variant="body2"
-              color="text.secondary"
               component="p"
+              color="text.secondary"
               sx={{
                 "& a": {
                   color: "primary.main",
@@ -49,16 +43,16 @@ export function AboutPage() {
                 "& em": { fontStyle: "italic" },
               }}
             >
-              Created for the{" "}
+              Winner of the{" "}
               <Link
-                href="https://developer.chrome.com/blog/ai-challenge-2025"
+                href="https://developer.chrome.com/blog/ai-challenge-winners-2025/"
                 target="_blank"
                 rel="noopener noreferrer"
                 underline="hover"
               >
                 Google Chrome Built-in AI Challenge 2025
               </Link>
-              , built on the{" "}
+              . Built on the{" "}
               <Link
                 href="https://www.openboardformat.org/"
                 target="_blank"
