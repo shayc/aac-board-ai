@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { ToneSelector } from "./ToneSelector/ToneSelector";
+import { ToneSelector } from "./components/ToneSelector";
 
 export interface SuggestionBarProps {
   suggestions: string[];
