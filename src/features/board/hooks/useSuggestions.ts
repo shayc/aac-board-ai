@@ -38,7 +38,7 @@ export function useSuggestions(message: MessagePart[], sharedContext?: string) {
         });
 
         const [proofread, rewritten] = await Promise.all([
-          proofreader?.proofread(text),
+          proofreader?.proofread(text, { signal }),
           rewriter?.rewrite(text, { signal }),
         ]);
 
