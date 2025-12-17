@@ -31,6 +31,7 @@
 - Tests are colocated as `*.test.ts(x)`.
 - `npm test` runs Vitest in browser mode via the Playwright provider.
 - Prefer deterministic tests; avoid timing-based sleeps.
+- No render-only tests: each test must prove a behavior (interaction → observable result). Presence-only assertions are insufficient.
 
 ## Code Style Guidelines
 
@@ -62,6 +63,6 @@
 ### Never
 
 - Commit secrets/tokens/keys.
-- Disable/relax linting, typechecking, or tests to “make it pass”.
+- Disable/relax linting, typechecking, or tests to "make it pass".
 - Hand-edit generated output (`dist/`, `coverage/`).
 - Add telemetry/analytics or data exfiltration without explicit approval.

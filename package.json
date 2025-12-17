@@ -34,14 +34,14 @@
     "fflate": "^0.8.2",
     "idb": "^8.0.3",
     "react": "^19.2.3",
-    "react-aria": "^3.44.0",
+    "react-aria": "^3.45.0",
     "react-dom": "^19.2.3",
-    "react-router": "^7.10.1",
-    "zod": "^4.2.0"
+    "react-router": "^7.11.0",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/dom-chromium-ai": "^0.0.11",
+    "@types/dom-chromium-ai": "^0.0.13",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
@@ -55,7 +55,7 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react-dom": "^2.3.13",
     "eslint-plugin-react-hooks": "^7.0.1",
-    "eslint-plugin-react-refresh": "^0.4.25",
+    "eslint-plugin-react-refresh": "^0.4.26",
     "eslint-plugin-react-x": "^2.3.13",
     "globals": "^16.5.0",
     "husky": "^9.1.7",
