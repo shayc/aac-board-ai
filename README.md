@@ -18,32 +18,6 @@ pictogram-based boards that produce short, telegraphic phrases. AAC Board AI
 reduces the effort required to communicate: as the user taps symbols, it
 generates **full, natural sentences** in real time using Chrome’s on-device AI.
 
-## Impact & Motivation
-
-**The Problem:**
-
-Traditional communication boards often result in telegraphic, incomplete output (“me want drink water”), slowing down conversations and reducing clarity.
-
-**The Solution:**
-
-AAC Board AI converts pictogram-based messages into **natural, grammatically correct sentences** with adjustable tone.
-
-**Who Benefits:**
-
-- People with cerebral palsy, autism, aphasia, or other speech
-  disabilities
-- Speech-language therapists and AAC specialists
-- Caregivers and family members
-
-**Why Local AI Matters:**
-
-| Benefit | Why it matters                                                         |
-| ------- | ---------------------------------------------------------------------- |
-| Privacy | All processing stays fully on-device — no cloud, no data sharing       |
-| Offline | Works without internet, useful in clinics, schools, and during travel  |
-| Free    | No API usage fees, making it accessible for families and organizations |
-| Fast    | Generates natural sentences instantly as the user builds messages      |
-
 ## Key Features
 
 - **Grammar Correction** – Turns short, telegraphic text
