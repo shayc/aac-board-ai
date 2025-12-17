@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useRewriter() {
   const { isRewriterSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { downloads, setDownload } = useAI();
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterCreateOptions | null>(null);
+  const downloadProgress = downloads.rewriter ?? 0;
   const isReady = isRewriterSupported && downloadProgress === 1;
 
   async function createRewriter(
@@ -35,7 +37,7 @@ export function useRewriter() {
       ...options,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("rewriter", event.loaded);
         });
       },
     });

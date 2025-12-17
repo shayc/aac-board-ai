@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useProofreader() {
   const { isProofreaderSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { downloads, setDownload } = useAI();
   const proofreaderRef = useRef<Proofreader | null>(null);
+  const downloadProgress = downloads.proofreader ?? 0;
   const isReady = isProofreaderSupported && downloadProgress === 1;
 
   async function createProofreader(
@@ -27,7 +29,7 @@ export function useProofreader() {
       ...options,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("proofreader", event.loaded);
         });
       },
     });

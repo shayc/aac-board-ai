@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useLanguageModel(words: string[] | undefined) {
   const { isLanguageModelSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { downloads, setDownload } = useAI();
   const sessionRef = useRef<LanguageModel | null>(null);
+  const downloadProgress = downloads.languageModel ?? 0;
   const isReady = isLanguageModelSupported && downloadProgress === 1;
 
   async function createLanguageModel(
@@ -62,7 +64,7 @@ export function useLanguageModel(words: string[] | undefined) {
       expectedOutputs: [{ type: "text", languages: ["en"] }],
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("languageModel", event.loaded);
         });
       },
     });
