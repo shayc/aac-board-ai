@@ -32,9 +32,9 @@ export function SpeechSettings() {
   const voices = voicesByLang[languageCode] ?? [];
   const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
 
-  const selectedVoice = voices.some((v) => v.voiceURI === voiceURI)
+  const selectedVoiceURI = voices.some((v) => v.voiceURI === voiceURI)
     ? voiceURI
-    : (defaultVoice?.voiceURI ?? "");
+    : defaultVoice?.voiceURI || "";
 
   async function handlePreviewClick() {
     const translator = await createTranslator({
@@ -60,7 +60,7 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={selectedVoice}
+          value={selectedVoiceURI}
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
