@@ -76,7 +76,7 @@ See full architecture details in
 
 ## Example Boards
 
-Download and import example boards from:
+Download example boards from:
 https://www.openboardformat.org/examples
 
 ## References
