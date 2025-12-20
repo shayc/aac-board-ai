@@ -4,10 +4,8 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useProofreader() {
   const { isProofreaderSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const proofreaderRef = useRef<Proofreader | null>(null);
-  const downloadProgress = downloads.proofreader ?? 0;
-  const isReady = isProofreaderSupported && downloadProgress === 1;
 
   async function createProofreader(
     options: ProofreaderCreateOptions = { expectedInputLanguages: ["en"] },
@@ -45,9 +43,6 @@ export function useProofreader() {
   }, []);
 
   return {
-    isProofreaderSupported,
-    isReady,
-    downloadProgress,
     createProofreader,
   };
 }

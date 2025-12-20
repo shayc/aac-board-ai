@@ -4,11 +4,9 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useRewriter() {
   const { isRewriterSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterCreateOptions | null>(null);
-  const downloadProgress = downloads.rewriter ?? 0;
-  const isReady = isRewriterSupported && downloadProgress === 1;
 
   async function createRewriter(
     options: RewriterCreateOptions = {
@@ -55,9 +53,6 @@ export function useRewriter() {
   }, []);
 
   return {
-    isRewriterSupported,
-    isReady,
-    downloadProgress,
     createRewriter,
   };
 }

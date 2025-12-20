@@ -4,10 +4,8 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useLanguageDetector() {
   const { isLanguageDetectorSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const detectorRef = useRef<LanguageDetector | null>(null);
-  const downloadProgress = downloads.languageDetector ?? 0;
-  const isReady = isLanguageDetectorSupported && downloadProgress === 1;
 
   async function createLanguageDetector() {
     if (!isLanguageDetectorSupported) {
@@ -42,9 +40,6 @@ export function useLanguageDetector() {
   }, []);
 
   return {
-    isLanguageDetectorSupported,
-    isReady,
-    downloadProgress,
     createLanguageDetector,
   };
 }

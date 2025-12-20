@@ -4,10 +4,8 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useLanguageModel(words: string[] | undefined) {
   const { isLanguageModelSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const sessionRef = useRef<LanguageModel | null>(null);
-  const downloadProgress = downloads.languageModel ?? 0;
-  const isReady = isLanguageModelSupported && downloadProgress === 1;
 
   async function createLanguageModel(
     options: LanguageModelCreateOptions = {
@@ -80,9 +78,6 @@ export function useLanguageModel(words: string[] | undefined) {
   }, []);
 
   return {
-    isLanguageModelSupported,
-    isReady,
-    downloadProgress,
     createLanguageModel,
   };
 }

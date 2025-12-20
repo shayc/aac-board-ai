@@ -4,10 +4,8 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useWriter() {
   const { isWriterSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const writerRef = useRef<Writer | null>(null);
-  const downloadProgress = downloads.writer ?? 0;
-  const isReady = isWriterSupported && downloadProgress === 1;
 
   async function createWriter(
     options: WriterCreateOptions = {
@@ -48,9 +46,6 @@ export function useWriter() {
   }, []);
 
   return {
-    isWriterSupported,
-    isReady,
-    downloadProgress,
     createWriter,
   };
 }

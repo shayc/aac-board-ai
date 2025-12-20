@@ -4,10 +4,8 @@ import { getAICapabilities } from "./getAICapabilities";
 
 export function useTranslator() {
   const { isTranslatorSupported } = getAICapabilities();
-  const { downloads, setDownload } = useAI();
+  const { setDownload } = useAI();
   const translatorRef = useRef<Translator | null>(null);
-  const downloadProgress = downloads.translator ?? 0;
-  const isReady = isTranslatorSupported && downloadProgress === 1;
 
   async function createTranslator(options: TranslatorCreateOptions) {
     if (!isTranslatorSupported) {
@@ -43,9 +41,6 @@ export function useTranslator() {
   }, []);
 
   return {
-    isTranslatorSupported,
-    isReady,
-    downloadProgress,
     createTranslator,
   };
 }
