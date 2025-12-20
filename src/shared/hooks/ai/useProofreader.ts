@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
@@ -35,12 +35,6 @@ export function useProofreader() {
     proofreaderRef.current = proofreader;
     return proofreader;
   }
-
-  useEffect(() => {
-    return () => {
-      proofreaderRef.current = null;
-    };
-  }, []);
 
   return {
     createProofreader,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
@@ -32,12 +32,6 @@ export function useLanguageDetector() {
     detectorRef.current = languageDetector;
     return languageDetector;
   }
-
-  useEffect(() => {
-    return () => {
-      detectorRef.current = null;
-    };
-  }, []);
 
   return {
     createLanguageDetector,

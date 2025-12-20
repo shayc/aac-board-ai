@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
@@ -70,12 +70,6 @@ export function useLanguageModel(words: string[] | undefined) {
     sessionRef.current = session;
     return session;
   }
-
-  useEffect(() => {
-    return () => {
-      sessionRef.current = null;
-    };
-  }, []);
 
   return {
     createLanguageModel,
