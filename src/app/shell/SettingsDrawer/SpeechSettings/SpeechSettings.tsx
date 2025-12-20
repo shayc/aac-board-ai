@@ -9,7 +9,6 @@ import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
-import { useEffect } from "react";
 
 export function SpeechSettings() {
   const { createTranslator } = useTranslator();
@@ -29,12 +28,7 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] ?? [];
-  const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
-
-  const selectedVoiceURI = voices.some((v) => v.voiceURI === voiceURI)
-    ? voiceURI
-    : defaultVoice?.voiceURI || "";
+  const voices = voicesByLang[languageCode] || [];
 
   async function handlePreviewClick() {
     const translator = await createTranslator({
@@ -48,10 +42,6 @@ export function SpeechSettings() {
     void speak(previewText);
   }
 
-  useEffect(() => {
-    setVoiceURI(defaultVoice?.voiceURI);
-  }, [languageCode]);
-
   return (
     <Box sx={{ mb: 4 }}>
       <FormControl size="small" fullWidth sx={{ mb: 2 }}>
@@ -60,7 +50,7 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={selectedVoiceURI}
+          value={voiceURI}
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
