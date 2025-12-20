@@ -68,8 +68,8 @@ export function MessageBar({
           flexGrow={1}
           overflow="auto"
         >
-          {message.map((part) => (
-            <Stack key={part.id} direction="row">
+          {message.map((part, index) => (
+            <Stack key={index} direction="row">
               <Pictogram
                 label={part.label}
                 labelTypographyVariant={part.imageSrc ? "body2" : "h5"}
