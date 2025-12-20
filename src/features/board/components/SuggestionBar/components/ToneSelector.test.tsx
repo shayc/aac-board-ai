@@ -103,7 +103,9 @@ test("allows changing between different tones", async () => {
 test("defaults to neutral tone when no tone prop provided", async () => {
   const onChange = vi.fn();
 
-  const screen = await render(<ToneSelector onChange={onChange} />);
+  const screen = await render(
+    <ToneSelector tone="as-is" onChange={onChange} />,
+  );
 
   const neutralButton = screen.getByRole("button", { name: "neutral tone" });
   await expect.element(neutralButton).toHaveAttribute("aria-pressed", "true");

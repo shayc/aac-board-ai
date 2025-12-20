@@ -12,7 +12,7 @@ interface ToneSelectorProps {
   onChange: (tone: ToneOption) => void;
 }
 
-export function ToneSelector({ tone = "as-is", onChange }: ToneSelectorProps) {
+export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
     tone: ToneOption | null,
