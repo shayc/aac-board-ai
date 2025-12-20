@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useLanguageDetector() {
   const { isLanguageDetectorSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { setDownload } = useAI();
   const detectorRef = useRef<LanguageDetector | null>(null);
-  const isReady = isLanguageDetectorSupported && downloadProgress === 1;
 
   async function createLanguageDetector() {
     if (!isLanguageDetectorSupported) {
@@ -24,7 +24,7 @@ export function useLanguageDetector() {
     const languageDetector = await LanguageDetector.create({
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("languageDetector", event.loaded);
         });
       },
     });
@@ -40,9 +40,6 @@ export function useLanguageDetector() {
   }, []);
 
   return {
-    isLanguageDetectorSupported,
-    isReady,
-    downloadProgress,
     createLanguageDetector,
   };
 }

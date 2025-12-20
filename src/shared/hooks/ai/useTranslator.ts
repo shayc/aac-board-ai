@@ -1,15 +1,23 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useTranslator() {
   const { isTranslatorSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { setDownload } = useAI();
   const translatorRef = useRef<Translator | null>(null);
-  const isReady = isTranslatorSupported && downloadProgress === 1;
 
   async function createTranslator(options: TranslatorCreateOptions) {
     if (!isTranslatorSupported) {
       return null;
+    }
+
+    if (
+      translatorRef.current &&
+      translatorRef.current.sourceLanguage === options.sourceLanguage &&
+      translatorRef.current.targetLanguage === options.targetLanguage
+    ) {
+      return translatorRef.current;
     }
 
     const availability = await Translator.availability({
@@ -25,7 +33,7 @@ export function useTranslator() {
       ...options,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("translator", event.loaded);
         });
       },
     });
@@ -41,9 +49,6 @@ export function useTranslator() {
   }, []);
 
   return {
-    isTranslatorSupported,
-    isReady,
-    downloadProgress,
     createTranslator,
   };
 }

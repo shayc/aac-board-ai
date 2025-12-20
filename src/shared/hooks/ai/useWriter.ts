@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useWriter() {
   const { isWriterSupported } = getAICapabilities();
-  const [downloadProgress, setDownloadProgress] = useState(0);
+  const { setDownload } = useAI();
   const writerRef = useRef<Writer | null>(null);
-  const isReady = isWriterSupported && downloadProgress === 1;
 
   async function createWriter(
     options: WriterCreateOptions = {
@@ -30,7 +30,7 @@ export function useWriter() {
       ...options,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(event.loaded);
+          setDownload("writer", event.loaded);
         });
       },
     });
@@ -46,9 +46,6 @@ export function useWriter() {
   }, []);
 
   return {
-    isWriterSupported,
-    isReady,
-    downloadProgress,
     createWriter,
   };
 }

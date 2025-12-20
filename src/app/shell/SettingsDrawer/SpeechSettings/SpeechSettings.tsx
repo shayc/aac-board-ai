@@ -32,6 +32,10 @@ export function SpeechSettings() {
   const voices = voicesByLang[languageCode] ?? [];
   const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
 
+  const selectedVoiceURI = voices.some((v) => v.voiceURI === voiceURI)
+    ? voiceURI
+    : defaultVoice?.voiceURI || "";
+
   async function handlePreviewClick() {
     const translator = await createTranslator({
       sourceLanguage: "en",
@@ -49,14 +53,14 @@ export function SpeechSettings() {
   }, [languageCode]);
 
   return (
-    <Box sx={{ mb: 3 }}>
+    <Box sx={{ mb: 4 }}>
       <FormControl size="small" fullWidth sx={{ mb: 2 }}>
         <InputLabel id="voice-select-label">Voice</InputLabel>
         <Select
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI ?? defaultVoice?.voiceURI}
+          value={selectedVoiceURI}
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
