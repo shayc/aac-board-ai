@@ -45,31 +45,11 @@ Open http://localhost:5173
 
 ## Technical Stack
 
-**Frontend**
-
-- React 19 + React Compiler
-- TypeScript 5.9
-- Material UI 7
-- React Router 7
-
-**AI Processing**
-
-- Chrome Built-in AI (Gemini Nano)
-
-**Audio Output**
-
-- Web Speech API (SpeechSynthesis)
-
-**Data & Storage**
-
-- IndexedDB (idb)
-- Zod (Open Board Format validation)
-- fflate (OBZ extraction)
-
-**Build & Dev**
-
-- Vite 7
-- Vitest + Playwright
+- **UI:** React 19, TypeScript, Material UI, React Router
+- **On-device AI:** Chrome Built-in AI APIs
+- **Speech:** Web Speech API (SpeechSynthesis)
+- **Storage:** IndexedDB (idb), Zod (Open Board Format), fflate (OBZ)
+- **Tooling:** Vite, Vitest, Playwright
 
 See full architecture details in
 [docs/architecture.md](docs/architecture.md).
