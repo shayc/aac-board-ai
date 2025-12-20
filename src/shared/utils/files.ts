@@ -1,24 +1,18 @@
-export async function openFile(): Promise<File | undefined> {
-  try {
-    const [handle] = await window.showOpenFilePicker({
-      types: [
-        {
-          description: "Open Board Format files",
-          accept: {
-            "application/zip": [".obz"],
-            "application/json": [".obf"],
-          },
-        },
-      ],
-      excludeAcceptAllOption: true,
-      multiple: false,
+export function openFile(): Promise<File | undefined> {
+  return new Promise((resolve) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".obz,.obf,application/zip,application/json";
+
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      resolve(file);
     });
 
-    const file = await handle.getFile();
-    return file;
-  } catch (error) {
-    if (error instanceof Error && error.name !== "AbortError") {
-      console.error(error);
-    }
-  }
+    input.addEventListener("cancel", () => {
+      resolve(undefined);
+    });
+
+    input.click();
+  });
 }
