@@ -1,6 +1,7 @@
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -18,8 +19,8 @@ export function LanguageSettings() {
   const isDownloading = downloads.translator !== 1;
 
   return (
-    <>
-      <FormControl size="small" fullWidth sx={{ mb: 2 }}>
+    <Box sx={{ mb: 4 }}>
+      <FormControl size="small" fullWidth>
         <InputLabel id="language-select-label">Language</InputLabel>
         <Select
           label="Language"
@@ -40,9 +41,9 @@ export function LanguageSettings() {
       {isDownloading && (
         <Alert
           severity="info"
-          variant="filled"
+          variant="outlined"
           icon={<DownloadingIcon fontSize="inherit" />}
-          sx={{ mb: 4 }}
+          sx={{ mt: 2 }}
         >
           <AlertTitle>Downloading language</AlertTitle>
           <Typography>
@@ -50,6 +51,6 @@ export function LanguageSettings() {
           </Typography>
         </Alert>
       )}
-    </>
+    </Box>
   );
 }

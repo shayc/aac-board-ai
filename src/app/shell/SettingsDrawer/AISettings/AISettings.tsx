@@ -10,29 +10,26 @@ export function AISettings() {
   const { isRewriterSupported } = getAICapabilities();
 
   return (
-    <>
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle1" gutterBottom>
-          Custom Instructions
-        </Typography>
-        <TextField
-          fullWidth
-          multiline
-          rows={3}
-          placeholder="e.g., Sarcastic, Polite."
-          helperText="Personalize AI suggestions"
-          value={sharedContext}
-          disabled={!isRewriterSupported}
-          onChange={(e) => setSharedContext(e.target.value)}
-        />
-      </Box>
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="subtitle1" gutterBottom>
+        Custom Instructions
+      </Typography>
+      <TextField
+        fullWidth
+        multiline
+        rows={3}
+        placeholder="e.g., Sarcastic, Polite."
+        helperText="Personalize AI suggestions"
+        value={sharedContext}
+        disabled={!isRewriterSupported}
+        onChange={(e) => setSharedContext(e.target.value)}
+        sx={{ mb: 2 }}
+      />
 
-      <Box>
-        <Typography variant="subtitle1" gutterBottom>
-          Built-in AI Support
-        </Typography>
-        <AICapabilitiesList />
-      </Box>
-    </>
+      <Typography variant="subtitle1" gutterBottom>
+        Built-in AI Support
+      </Typography>
+      <AICapabilitiesList />
+    </Box>
   );
 }
