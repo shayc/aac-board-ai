@@ -4,45 +4,12 @@
 
 **Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
 
-**AAC Board AI** is a communication tool that enables non-verbal users to express themselves naturally. It leverages **Chrome's Built-in AI** for on-device message refinement—including proofreading, rewriting, and translation. Since all processing is local, this architecture guarantees both user **privacy** and reliable **offline functionality**.
+**AAC Board AI** is a communication tool for non-verbal users. It uses **Chrome’s Built-in AI** to proofread, rewrite, and translate messages on-device, keeping processing local for stronger privacy and offline use.
 
 ![Screenshot of AAC Board AI](screenshot.png)
 
 Try the live demo at [aacboard.app](https://aacboard.app). _(requires
 Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
-
-## Overview
-
-Many AAC (Augmentative and Alternative Communication) tools rely on
-pictogram-based boards that produce short, telegraphic phrases. AAC Board AI
-reduces the effort required to communicate: as the user taps symbols, it
-generates **full, natural sentences** in real time using Chrome’s on-device AI.
-
-## Impact & Motivation
-
-**The Problem:**
-
-Traditional communication boards often result in telegraphic, incomplete output (“me want drink water”), slowing down conversations and reducing clarity.
-
-**The Solution:**
-
-AAC Board AI converts pictogram-based messages into **natural, grammatically correct sentences** with adjustable tone.
-
-**Who Benefits:**
-
-- People with cerebral palsy, autism, aphasia, or other speech
-  disabilities
-- Speech-language therapists and AAC specialists
-- Caregivers and family members
-
-**Why Local AI Matters:**
-
-| Benefit | Why it matters                                                         |
-| ------- | ---------------------------------------------------------------------- |
-| Privacy | All processing stays fully on-device — no cloud, no data sharing       |
-| Offline | Works without internet, useful in clinics, schools, and during travel  |
-| Free    | No API usage fees, making it accessible for families and organizations |
-| Fast    | Generates natural sentences instantly as the user builds messages      |
 
 ## Key Features
 
@@ -109,12 +76,12 @@ See full architecture details in
 
 ## Example Boards
 
-Download and import example boards from:
+Download example boards from:
 https://www.openboardformat.org/examples
 
 ## References
 
-- Chrome Built‑in AI Docs:
+- Chrome Built‑in AI:
   https://developer.chrome.com/docs/ai/built-in
 - Open Board Format: https://www.openboardformat.org/
 
