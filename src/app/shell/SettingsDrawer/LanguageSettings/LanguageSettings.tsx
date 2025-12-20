@@ -16,7 +16,7 @@ export function LanguageSettings() {
   const { isTranslatorSupported } = getAICapabilities();
   const { downloads } = useAI();
 
-  const isDownloading = downloads.translator !== 1;
+  const isDownloading = downloads.translator > 0 && downloads.translator < 1;
 
   return (
     <Box sx={{ mb: 4 }}>
