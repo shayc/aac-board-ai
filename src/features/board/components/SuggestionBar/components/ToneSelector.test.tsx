@@ -77,7 +77,6 @@ test("does not call onChange when clicking already selected tone", async () => {
   const neutralButton = screen.getByRole("button", { name: "neutral tone" });
   await neutralButton.click();
 
-  // MUI ToggleButtonGroup doesn't call onChange when clicking the same value
   expect(onChange).not.toHaveBeenCalled();
 });
 
