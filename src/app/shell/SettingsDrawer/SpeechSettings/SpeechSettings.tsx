@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
@@ -30,6 +31,9 @@ export function SpeechSettings() {
   const { languageCode } = useLanguage();
   const voices = voicesByLang[languageCode] || [];
 
+  const localVoices = voices.filter((voice) => voice.localService);
+  const onlineVoices = voices.filter((voice) => !voice.localService);
+
   async function handlePreviewClick() {
     const translator = await createTranslator({
       sourceLanguage: "en",
@@ -54,7 +58,15 @@ export function SpeechSettings() {
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
-          {voices.map((voice) => (
+          {localVoices.length > 0 && <ListSubheader>Local</ListSubheader>}
+          {localVoices.map((voice) => (
+            <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+              {voice.name}
+            </MenuItem>
+          ))}
+
+          {onlineVoices.length > 0 && <ListSubheader>Online</ListSubheader>}
+          {onlineVoices.map((voice) => (
             <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
               {voice.name}
             </MenuItem>
