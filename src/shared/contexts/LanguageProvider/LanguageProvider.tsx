@@ -14,7 +14,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     "en",
   );
 
-  const unsupportedLangs = ["ca", "ms", "nb", "yue"];
+  const unsupportedLangs = ["ca", "da", "ms", "nb", "yue"];
   const supportedLanguages = Array.from(
     new Set(langs.map((l) => l.split("-")[0])),
   ).filter((l) => !unsupportedLangs.includes(l));
