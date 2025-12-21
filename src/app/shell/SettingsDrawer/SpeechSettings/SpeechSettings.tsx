@@ -74,18 +74,6 @@ export function SpeechSettings() {
         </Select>
       </FormControl>
 
-      <Typography gutterBottom>Pitch</Typography>
-      <Slider
-        aria-label="Pitch"
-        valueLabelDisplay="auto"
-        value={pitch}
-        min={0.1}
-        max={2}
-        step={0.1}
-        disabled={!isSpeechSupported}
-        onChange={(_event, value) => setPitch(value)}
-      />
-
       <Typography gutterBottom>Rate</Typography>
       <Slider
         aria-label="Rate"
@@ -96,6 +84,18 @@ export function SpeechSettings() {
         step={0.1}
         disabled={!isSpeechSupported}
         onChange={(_event, value) => setRate(value)}
+      />
+
+      <Typography gutterBottom>Pitch</Typography>
+      <Slider
+        aria-label="Pitch"
+        valueLabelDisplay="auto"
+        value={pitch}
+        min={0.1}
+        max={2}
+        step={0.1}
+        disabled={!isSpeechSupported}
+        onChange={(_event, value) => setPitch(value)}
       />
 
       <Typography gutterBottom>Volume</Typography>
