@@ -5,7 +5,7 @@
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client", "dom-chromium-ai", "wicg-file-system-access"],
+    "types": ["vite/client", "dom-chromium-ai"],
     "skipLibCheck": true,
 
     "baseUrl": ".",
