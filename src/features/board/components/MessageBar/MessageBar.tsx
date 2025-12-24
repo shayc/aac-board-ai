@@ -48,8 +48,8 @@ export function MessageBar({
         padding={2}
         gap={2}
         flexGrow={2}
+        borderRadius={20}
         overflow="hidden"
-        borderRadius={12}
         sx={{
           backgroundColor: (theme) =>
             theme.palette.mode === "dark"
@@ -83,13 +83,13 @@ export function MessageBar({
           onPress={onBackspacePress}
           onLongPress={onBackspaceLongPress}
         />
-      </Stack>
 
-      <PlayButton
-        isPlaying={isPlaying}
-        onPlayClick={onPlayClick}
-        onStopClick={onStopClick}
-      />
+        <PlayButton
+          isPlaying={isPlaying}
+          onPlayClick={onPlayClick}
+          onStopClick={onStopClick}
+        />
+      </Stack>
     </Stack>
   );
 }
