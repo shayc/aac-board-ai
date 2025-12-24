@@ -22,7 +22,7 @@ export function Pictogram(props: PictogramProps) {
       }}
     >
       {src && (
-        <Box sx={{ flexGrow: 1, position: "relative", minWidth: "44px" }}>
+        <Box sx={{ flexGrow: 1, position: "relative", minWidth: "56px" }}>
           <Box
             component="img"
             src={src}
