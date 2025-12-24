@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "./getAICapabilities";
 
@@ -38,12 +38,6 @@ export function useWriter() {
     writerRef.current = writer;
     return writer;
   }
-
-  useEffect(() => {
-    return () => {
-      writerRef.current = null;
-    };
-  }, []);
 
   return {
     createWriter,

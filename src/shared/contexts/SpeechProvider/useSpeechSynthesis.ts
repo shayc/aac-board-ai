@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
-export function useSpeechSynthesis() {
-  const isSpeechSupported = "speechSynthesis" in window;
-  const synth = window.speechSynthesis;
+const isSpeechSupported = "speechSynthesis" in window;
+const synth = window.speechSynthesis;
 
+export function useSpeechSynthesis() {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
   const [pitch, setPitch] = useState(1);
@@ -98,12 +98,6 @@ export function useSpeechSynthesis() {
     const getVoices = () => {
       const voices = synth.getVoices();
       setVoices(voices);
-
-      if (!voiceURI && voices.length > 0) {
-        const defaultVoice = voices.find((v) => v.default) ?? voices[0];
-
-        setVoiceURI(defaultVoice.voiceURI);
-      }
     };
 
     getVoices();

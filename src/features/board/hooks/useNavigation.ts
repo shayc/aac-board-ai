@@ -43,17 +43,13 @@ export function useNavigation() {
       return;
     }
 
-    const id = navState.history[navState.index - 1];
+    const newIndex = navState.index - 1;
+    const id = navState.history[newIndex];
 
-    setNavState((prev) => {
-      const next = prev.history.slice(0, prev.index).concat(id);
-
-      return {
-        ...prev,
-        history: next,
-        index: next.length - 1,
-      };
-    });
+    setNavState((prev) => ({
+      ...prev,
+      index: newIndex,
+    }));
 
     void navigate(`/sets/${setId}/boards/${id}`);
   }

@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
@@ -9,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
-import { useEffect } from "react";
 
 export function SpeechSettings() {
   const { createTranslator } = useTranslator();
@@ -29,12 +29,10 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] ?? [];
-  const defaultVoice = voices.find((voice) => voice.default) ?? voices[0];
+  const voices = voicesByLang[languageCode] || [];
 
-  const selectedVoiceURI = voices.some((v) => v.voiceURI === voiceURI)
-    ? voiceURI
-    : defaultVoice?.voiceURI || "";
+  const localVoices = voices.filter((voice) => voice.localService);
+  const onlineVoices = voices.filter((voice) => !voice.localService);
 
   async function handlePreviewClick() {
     const translator = await createTranslator({
@@ -48,10 +46,6 @@ export function SpeechSettings() {
     void speak(previewText);
   }
 
-  useEffect(() => {
-    setVoiceURI(defaultVoice?.voiceURI);
-  }, [languageCode]);
-
   return (
     <Box sx={{ mb: 4 }}>
       <FormControl size="small" fullWidth sx={{ mb: 2 }}>
@@ -60,29 +54,25 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={selectedVoiceURI}
+          value={voiceURI}
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
-          {voices.map((voice) => (
+          {localVoices.length > 0 && <ListSubheader>Local</ListSubheader>}
+          {localVoices.map((voice) => (
+            <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+              {voice.name}
+            </MenuItem>
+          ))}
+
+          {onlineVoices.length > 0 && <ListSubheader>Online</ListSubheader>}
+          {onlineVoices.map((voice) => (
             <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
               {voice.name}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-
-      <Typography gutterBottom>Pitch</Typography>
-      <Slider
-        aria-label="Pitch"
-        valueLabelDisplay="auto"
-        value={pitch}
-        min={0.1}
-        max={2}
-        step={0.1}
-        disabled={!isSpeechSupported}
-        onChange={(_event, value) => setPitch(value)}
-      />
 
       <Typography gutterBottom>Rate</Typography>
       <Slider
@@ -94,6 +84,18 @@ export function SpeechSettings() {
         step={0.1}
         disabled={!isSpeechSupported}
         onChange={(_event, value) => setRate(value)}
+      />
+
+      <Typography gutterBottom>Pitch</Typography>
+      <Slider
+        aria-label="Pitch"
+        valueLabelDisplay="auto"
+        value={pitch}
+        min={0.1}
+        max={2}
+        step={0.1}
+        disabled={!isSpeechSupported}
+        onChange={(_event, value) => setPitch(value)}
       />
 
       <Typography gutterBottom>Volume</Typography>

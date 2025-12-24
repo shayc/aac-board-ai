@@ -77,7 +77,6 @@ test("does not call onChange when clicking already selected tone", async () => {
   const neutralButton = screen.getByRole("button", { name: "neutral tone" });
   await neutralButton.click();
 
-  // MUI ToggleButtonGroup doesn't call onChange when clicking the same value
   expect(onChange).not.toHaveBeenCalled();
 });
 
@@ -103,7 +102,9 @@ test("allows changing between different tones", async () => {
 test("defaults to neutral tone when no tone prop provided", async () => {
   const onChange = vi.fn();
 
-  const screen = await render(<ToneSelector onChange={onChange} />);
+  const screen = await render(
+    <ToneSelector tone="as-is" onChange={onChange} />,
+  );
 
   const neutralButton = screen.getByRole("button", { name: "neutral tone" });
   await expect.element(neutralButton).toHaveAttribute("aria-pressed", "true");

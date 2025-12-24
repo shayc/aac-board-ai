@@ -4,28 +4,21 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import { useState } from "react";
 
 type ToneOption = "as-is" | "more-formal" | "more-casual";
 
 interface ToneSelectorProps {
-  tone?: ToneOption;
-  onChange?: (tone: ToneOption) => void;
+  tone: ToneOption;
+  onChange: (tone: ToneOption) => void;
 }
 
-export function ToneSelector({
-  tone: initialTone = "as-is",
-  onChange,
-}: ToneSelectorProps) {
-  const [tone, setTone] = useState<ToneOption>(initialTone);
-
+export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
     tone: ToneOption | null,
   ) => {
     if (tone) {
-      setTone(tone);
-      onChange?.(tone);
+      onChange(tone);
     }
   };
 
