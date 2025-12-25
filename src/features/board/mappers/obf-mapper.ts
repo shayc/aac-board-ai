@@ -2,7 +2,7 @@ import type {
   Board,
   BoardAction,
   BoardButton,
-  Grid,
+  BoardGrid,
   LoadBoard,
 } from "@features/board/types";
 import type {
@@ -20,6 +20,17 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   return {
     id: obfBoard.id,
     name: obfBoard.name,
+    descriptionHTML: obfBoard.description_html,
+    ...(obfBoard.license && {
+      license: {
+        type: obfBoard.license.type,
+        copyrightNoticeUrl: obfBoard.license.copyright_notice_url,
+        sourceUrl: obfBoard.license.source_url,
+        authorName: obfBoard.license.author_name,
+        authorUrl: obfBoard.license.author_url,
+        authorEmail: obfBoard.license.author_email,
+      },
+    }),
     buttons: obfBoard.buttons.map((button) =>
       transformButton(button, imageSources, soundSources),
     ),
@@ -100,7 +111,7 @@ function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
   };
 }
 
-function transformGrid(obfGrid: OBFGrid): Grid {
+function transformGrid(obfGrid: OBFGrid): BoardGrid {
   return {
     rows: obfGrid.rows,
     columns: obfGrid.columns,

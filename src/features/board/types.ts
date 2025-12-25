@@ -1,4 +1,13 @@
-export interface Grid {
+export interface BoardLicense {
+  type: string;
+  copyrightNoticeUrl?: string;
+  sourceUrl?: string;
+  authorName?: string;
+  authorUrl?: string;
+  authorEmail?: string;
+}
+
+export interface BoardGrid {
   rows: number;
   columns: number;
   order?: (string | null)[][];
@@ -32,6 +41,8 @@ export interface BoardButton {
 export interface Board {
   id: string;
   name?: string;
+  descriptionHTML?: string;
+  license?: BoardLicense;
   buttons: BoardButton[];
-  grid: Grid;
+  grid: BoardGrid;
 }
