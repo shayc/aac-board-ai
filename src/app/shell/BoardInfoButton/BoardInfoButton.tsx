@@ -48,7 +48,7 @@ export function BoardInfoButton() {
           horizontal: "center",
         }}
       >
-        <Box sx={{ p: 2, width: "300px" }}>
+        <Box sx={{ width: "320px", p: 2 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
             {board?.name}
           </Typography>
