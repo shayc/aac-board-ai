@@ -25,7 +25,12 @@ export function BoardInfoButton() {
   return (
     <>
       <Tooltip title="View board information">
-        <IconButton aria-label="View board information" onClick={handleClick}>
+        <IconButton
+          aria-label="View board information"
+          size="large"
+          color="inherit"
+          onClick={handleClick}
+        >
           <InfoIcon />
         </IconButton>
       </Tooltip>
