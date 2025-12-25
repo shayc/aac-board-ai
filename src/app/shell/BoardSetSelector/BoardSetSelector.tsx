@@ -5,7 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
-import { BoardInfoButton } from "../BoardInfoButton/BoardInfoButton";
 
 interface BoardSetSelectorProps {
   boardsets: BoardsetRecord[];
@@ -41,8 +40,6 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
       <Typography noWrap sx={{ ml: 2, mr: 1 }}>
         {board?.name}
       </Typography>
-
-      <BoardInfoButton />
     </Box>
   );
 }
