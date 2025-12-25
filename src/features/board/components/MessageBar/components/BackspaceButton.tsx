@@ -12,13 +12,13 @@ const RING_FILL_MS = 500;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 
 const StyledCircularProgress = styled(CircularProgress, {
-  shouldForwardProp: (prop) => prop !== "progress",
-})<{ progress: number }>(({ progress }) => ({
+  shouldForwardProp: (prop) => prop !== "active",
+})<{ active: boolean }>(({ active }) => ({
   "& svg circle": {
     transitionProperty: "stroke-dashoffset",
-    transitionDuration: progress > 0 ? `${RING_FILL_MS}ms` : "0ms",
+    transitionDuration: active ? `${RING_FILL_MS}ms` : "0ms",
     transitionTimingFunction: "linear",
-    transitionDelay: progress > 0 ? `${RING_DELAY_MS}ms` : "0ms",
+    transitionDelay: active ? `${RING_DELAY_MS}ms` : "0ms",
   },
 }));
 
@@ -58,8 +58,8 @@ export function BackspaceButton({
 
         <StyledCircularProgress
           variant="determinate"
-          progress={progress}
           value={progress}
+          active={progress > 0}
           size={68}
           sx={{
             position: "absolute",
