@@ -58,7 +58,7 @@ export function MessageBar({
           border: (theme) =>
             theme.palette.mode === "dark"
               ? `1px solid ${theme.palette.grey[700]}`
-              : `1px solid ${theme.palette.grey[300]}`,
+              : `1px solid ${theme.palette.grey[400]}`,
         }}
       >
         <Stack
