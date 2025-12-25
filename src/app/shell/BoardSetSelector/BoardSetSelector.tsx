@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import MenuItem from "@mui/material/MenuItem";
 import Popover from "@mui/material/Popover";
 import Select from "@mui/material/Select";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -53,13 +54,15 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
         ))}
       </Select>
 
-      <Typography noWrap sx={{ ml: 2 }}>
+      <Typography noWrap sx={{ ml: 2, mr: 1 }}>
         {board?.name}
       </Typography>
 
-      <IconButton onClick={handleClick} aria-label="Board information">
-        <InfoIcon />
-      </IconButton>
+      <Tooltip title="View board information">
+        <IconButton aria-label="View board information" onClick={handleClick}>
+          <InfoIcon />
+        </IconButton>
+      </Tooltip>
 
       <Popover
         open={open}
@@ -73,35 +76,34 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
           vertical: "top",
           horizontal: "center",
         }}
-        sx={{ width: "400px" }}
       >
-        <Typography variant="h6" sx={{ p: 2 }}>
-          {board?.name}
-        </Typography>
+        <Box sx={{ p: 2, width: "300px" }}>
+          <Typography variant="h6" sx={{ mb: 2 }}>
+            {board?.name}
+          </Typography>
 
-        <Typography sx={{ px: 2 }}>
-          Author:{" "}
-          <Link
-            href={board?.license?.authorUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {board?.license?.authorName}
-          </Link>
-        </Typography>
+          <Typography>
+            Author:{" "}
+            <Link
+              href={board?.license?.authorUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {board?.license?.authorName}
+            </Link>
+          </Typography>
 
-        <Typography sx={{ px: 2 }}>
-          License:{" "}
-          <Link
-            href={board?.license?.copyrightNoticeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {board?.license?.type}
-          </Link>
-        </Typography>
-
-        <Typography sx={{ p: 2 }}>{board?.descriptionHTML}</Typography>
+          <Typography>
+            License:{" "}
+            <Link
+              href={board?.license?.copyrightNoticeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {board?.license?.type}
+            </Link>
+          </Typography>
+        </Box>
       </Popover>
     </Box>
   );
