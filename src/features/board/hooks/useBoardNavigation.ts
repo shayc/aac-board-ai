@@ -7,7 +7,7 @@ interface NavigationState {
   index: number;
 }
 
-export function useNavigation() {
+export function useBoardNavigation() {
   const navigate = useNavigate();
 
   const { setId, boardId } = useParams();

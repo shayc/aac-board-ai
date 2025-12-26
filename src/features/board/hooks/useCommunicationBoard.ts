@@ -4,7 +4,7 @@ import { useBoardTranslation } from "./useBoardTranslation";
 import { useButtonActivation } from "./useButtonActivation";
 import { useLoadBoard } from "./useLoadBoard";
 import { useMessage, type MessagePart } from "./useMessage";
-import { useNavigation } from "./useNavigation";
+import { useBoardNavigation } from "./useBoardNavigation";
 import { useSuggestions } from "./useSuggestions";
 
 export interface UseCommunicationBoardOptions {
@@ -59,7 +59,7 @@ export function useCommunicationBoard({
     navigateToBoard,
     navigateBack,
     navigateHome,
-  } = useNavigation();
+  } = useBoardNavigation();
 
   const {
     message,
