@@ -20,7 +20,7 @@ export function useBoardTranslation({
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 
   useEffect(() => {
-    const translatedBoard = async () => {
+    const translateBoard = async () => {
       if (!board) {
         return;
       }
@@ -38,23 +38,15 @@ export function useBoardTranslation({
       const translatedName = await translator?.translate(board.name ?? "");
       const translatedButtons = await Promise.all(
         board.buttons.map(async (button) => {
-          let translatedLabel = button.label;
-          if (button.label) {
-            translatedLabel = await translator?.translate(button.label);
-          }
+          const label = button.label
+            ? await translator?.translate(button.label)
+            : button.label;
 
-          let translatedVocalization = button.vocalization;
-          if (button.vocalization) {
-            translatedVocalization = await translator?.translate(
-              button.vocalization,
-            );
-          }
+          const vocalization = button.vocalization
+            ? await translator?.translate(button.vocalization)
+            : button.vocalization;
 
-          return {
-            ...button,
-            label: translatedLabel,
-            vocalization: translatedVocalization,
-          };
+          return { ...button, label, vocalization };
         }),
       );
 
@@ -65,7 +57,7 @@ export function useBoardTranslation({
       });
     };
 
-    void translatedBoard();
+    void translateBoard();
   }, [languageCode, board]);
 
   return {
