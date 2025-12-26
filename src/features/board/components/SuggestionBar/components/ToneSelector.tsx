@@ -13,9 +13,11 @@ interface ToneSelectorProps {
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    tone: RewriterTone,
+    tone: RewriterTone | null,
   ) => {
-    onChange(tone);
+    if (tone) {
+      onChange(tone);
+    }
   };
 
   return (
