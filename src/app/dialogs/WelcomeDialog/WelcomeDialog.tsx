@@ -5,7 +5,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -23,56 +22,121 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      keepMounted
       fullWidth
-      maxWidth="sm"
-      scroll="paper"
+      maxWidth="xs"
       aria-labelledby="welcome-dialog-title"
       aria-describedby="welcome-dialog-description"
+      slotProps={{
+        paper: {
+          sx: {
+            borderRadius: 6,
+            p: 1,
+          },
+        },
+      }}
     >
-      <DialogTitle id="welcome-dialog-title" sx={{ fontWeight: 600 }}>
-        Welcome to AAC Board AI
-      </DialogTitle>
-
-      <DialogContent>
-        <DialogContentText
-          id="welcome-dialog-description"
-          sx={{ mb: 1.5, fontSize: "1.05rem" }}
+      <DialogTitle id="welcome-dialog-title" sx={{ pt: 4, pb: 0 }}>
+        <Typography
+          variant="h4"
+          sx={{
+            fontWeight: 800,
+            textAlign: "center",
+            mb: 1,
+            letterSpacing: "-0.02em",
+          }}
         >
-          Turn symbols into speech naturally using Chrome's built-in AI.
-        </DialogContentText>
+          Your Voice, Enhanced
+        </Typography>
+      </DialogTitle>
+      <DialogContent>
+        <Typography
+          id="welcome-dialog-description"
+          variant="body1"
+          color="text.secondary"
+          sx={{ textAlign: "center", mb: 4, px: 2, lineHeight: 1.5 }}
+        >
+          AAC Board AI helps you communicate naturally and privately using
+          on-device intelligence.
+        </Typography>
 
-        <List dense sx={{ pt: 0.5 }}>
-          <ListItem disableGutters>
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <AutoAwesomeOutlinedIcon color="primary" />
+        <List sx={{ pt: 0 }}>
+          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 3 }}>
+            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
+              <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />
             </ListItemIcon>
-            <ListItemText primary="Smart suggestions as you build messages" />
+            <ListItemText
+              primary="Smart Rewriting"
+              secondary="Turn short phrases into natural sentences and adjust your tone instantly."
+              slotProps={{
+                primary: {
+                  fontWeight: 700,
+                  variant: "h6",
+                  sx: { mb: 0.5 },
+                },
+              }}
+            />
           </ListItem>
 
-          <ListItem disableGutters>
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <TranslateIcon color="primary" />
+          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 3 }}>
+            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
+              <TranslateIcon color="primary" fontSize="large" />
             </ListItemIcon>
-            <ListItemText primary="Translate and speak instantly" />
+            <ListItemText
+              primary="Real-time Translation"
+              secondary="Translate and speak your messages in multiple languages, fully offline."
+              slotProps={{
+                primary: {
+                  fontWeight: 700,
+                  variant: "h6",
+                  sx: { mb: 0.5 },
+                },
+              }}
+            />
           </ListItem>
 
-          <ListItem disableGutters>
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              <LockOutlinedIcon color="primary" />
+          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
+            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
+              <LockOutlinedIcon color="primary" fontSize="large" />
             </ListItemIcon>
-            <ListItemText primary="Works offline — private by design" />
+            <ListItemText
+              primary="Private by Design"
+              secondary="No servers. No cloud. All AI processing stays safely on your device."
+              slotProps={{
+                primary: {
+                  fontWeight: 700,
+                  variant: "h6",
+                  sx: { mb: 0.5 },
+                },
+              }}
+            />
           </ListItem>
         </List>
 
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-          Supports Open Board Format (.obf, .obz) files.
+        <Typography
+          variant="caption"
+          color="text.disabled"
+          sx={{ mt: 4, display: "block", textAlign: "center", fontWeight: 500 }}
+        >
+          Winner of the Google Chrome Built-in AI Challenge 2025
         </Typography>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} variant="contained" size="large">
-          Get started
+      <DialogActions sx={{ p: 2, pt: 1, pb: 3 }}>
+        <Button
+          onClick={onClose}
+          variant="contained"
+          fullWidth
+          size="large"
+          sx={{
+            borderRadius: 4,
+            py: 2,
+            textTransform: "none",
+            fontWeight: 800,
+            fontSize: "1.1rem",
+            boxShadow: "0 4px 14px 0 rgba(0,118,255,0.39)",
+          }}
+        >
+          Get Started
         </Button>
       </DialogActions>
     </Dialog>
