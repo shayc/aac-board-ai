@@ -93,7 +93,6 @@ export function useNavigation() {
 
   return {
     navigationHistory: navState.history,
-    navigationIndex: navState.index,
     canGoBack,
     canGoHome,
     navigateToBoard,
