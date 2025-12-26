@@ -5,12 +5,12 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Typography from "@mui/material/Typography";
 
 interface WelcomeDialogProps {
   open: boolean;
@@ -35,34 +35,34 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
         },
       }}
     >
-      <DialogTitle id="welcome-dialog-title" sx={{ pt: 4, pb: 0 }}>
-        <Typography
+      <DialogContent sx={{ pt: 4, pb: 0 }}>
+        <DialogTitle
+          id="welcome-dialog-title"
           variant="h4"
           sx={{
             fontWeight: 800,
             textAlign: "center",
             mb: 1,
             letterSpacing: "-0.02em",
+            p: 0,
           }}
         >
           Your Voice, Enhanced
-        </Typography>
-      </DialogTitle>
-      <DialogContent>
-        <Typography
+        </DialogTitle>
+
+        <DialogContentText
           id="welcome-dialog-description"
           variant="body1"
-          color="text.secondary"
-          sx={{ textAlign: "center", mb: 4, px: 2, lineHeight: 1.5 }}
+          sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
         >
           AAC Board AI helps you communicate naturally and privately using
           on-device intelligence.
-        </Typography>
+        </DialogContentText>
 
-        <List sx={{ pt: 0 }}>
-          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 3 }}>
-            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
-              <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />
+        <List sx={{ pt: 0, pb: 0 }}>
+          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
+              <AutoAwesomeOutlinedIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Smart Rewriting"
@@ -70,16 +70,20 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
               slotProps={{
                 primary: {
                   fontWeight: 700,
-                  variant: "h6",
-                  sx: { mb: 0.5 },
+                  variant: "subtitle1",
+                  sx: { mb: 0 },
+                },
+                secondary: {
+                  variant: "body2",
+                  sx: { lineHeight: 1.3 },
                 },
               }}
             />
           </ListItem>
 
-          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 3 }}>
-            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
-              <TranslateIcon color="primary" fontSize="large" />
+          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
+              <TranslateIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Real-time Translation"
@@ -87,16 +91,20 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
               slotProps={{
                 primary: {
                   fontWeight: 700,
-                  variant: "h6",
-                  sx: { mb: 0.5 },
+                  variant: "subtitle1",
+                  sx: { mb: 0 },
+                },
+                secondary: {
+                  variant: "body2",
+                  sx: { lineHeight: 1.3 },
                 },
               }}
             />
           </ListItem>
 
-          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 48, mt: 0.5 }}>
-              <LockOutlinedIcon color="primary" fontSize="large" />
+          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
+              <LockOutlinedIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Private by Design"
@@ -104,24 +112,20 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
               slotProps={{
                 primary: {
                   fontWeight: 700,
-                  variant: "h6",
-                  sx: { mb: 0.5 },
+                  variant: "subtitle1",
+                  sx: { mb: 0 },
+                },
+                secondary: {
+                  variant: "body2",
+                  sx: { lineHeight: 1.3 },
                 },
               }}
             />
           </ListItem>
         </List>
-
-        <Typography
-          variant="caption"
-          color="text.disabled"
-          sx={{ mt: 4, display: "block", textAlign: "center", fontWeight: 500 }}
-        >
-          Winner of the Google Chrome Built-in AI Challenge 2025
-        </Typography>
       </DialogContent>
 
-      <DialogActions sx={{ p: 2, pt: 1, pb: 3 }}>
+      <DialogActions sx={{ p: 3, pt: 1, pb: 4 }}>
         <Button
           onClick={onClose}
           variant="contained"
@@ -129,11 +133,10 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
           size="large"
           sx={{
             borderRadius: 4,
-            py: 2,
+            py: 1.5,
             textTransform: "none",
             fontWeight: 800,
             fontSize: "1.1rem",
-            boxShadow: "0 4px 14px 0 rgba(0,118,255,0.39)",
           }}
         >
           Get Started
