@@ -7,8 +7,8 @@ import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
-const RING_DELAY_MS = 300;
-const RING_FILL_MS = 500;
+const RING_DELAY_MS = 200;
+const RING_FILL_MS = 400;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 
 const StyledCircularProgress = styled(CircularProgress, {
@@ -16,9 +16,9 @@ const StyledCircularProgress = styled(CircularProgress, {
 })<{ active: boolean }>(({ active }) => ({
   "& svg circle": {
     transitionProperty: "stroke-dashoffset",
-    transitionDuration: active ? `${RING_FILL_MS}ms` : "0ms",
     transitionTimingFunction: "linear",
     transitionDelay: active ? `${RING_DELAY_MS}ms` : "0ms",
+    transitionDuration: active ? `${RING_FILL_MS}ms` : "0ms",
   },
 }));
 
