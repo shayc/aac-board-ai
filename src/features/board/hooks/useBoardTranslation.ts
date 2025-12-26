@@ -2,15 +2,15 @@ import type { Board } from "@features/board/types";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect, useState } from "react";
 
-export interface TranslatedBoardOptions {
+export interface BoardTranslationOptions {
   board: Board | null;
   languageCode: string;
 }
 
-export function useTranslatedBoard({
+export function useBoardTranslation({
   board,
   languageCode,
-}: TranslatedBoardOptions): Board | null {
+}: BoardTranslationOptions): Board | null {
   const { createTranslator } = useTranslator();
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 

@@ -12,14 +12,9 @@ export interface LoadBoardOptions {
   boardId: string;
 }
 
-export interface LoadBoardReturn {
+export function useLoadBoard({ setId, boardId }: LoadBoardOptions): {
   board: Board | null;
-}
-
-export function useLoadBoard({
-  setId,
-  boardId,
-}: LoadBoardOptions): LoadBoardReturn {
+} {
   const [board, setBoard] = useState<Board | null>(null);
 
   useEffect(() => {

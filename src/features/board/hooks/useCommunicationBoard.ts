@@ -6,7 +6,7 @@ import { useLoadBoard } from "./useLoadBoard";
 import { useMessage, type MessagePart } from "./useMessage";
 import { useNavigation } from "./useNavigation";
 import { useSuggestions } from "./useSuggestions";
-import { useTranslatedBoard } from "./useTranslatedBoard";
+import { useBoardTranslation } from "./useBoardTranslation";
 
 export interface CommunicationBoardOptions {
   setId: string;
@@ -55,7 +55,7 @@ export function useCommunicationBoard({
   const { board: rawBoard } = useLoadBoard({ setId, boardId });
 
   // Translate board
-  const board = useTranslatedBoard({ board: rawBoard, languageCode });
+  const board = useBoardTranslation({ board: rawBoard, languageCode });
 
   // Navigation
   const navigation = useNavigation();

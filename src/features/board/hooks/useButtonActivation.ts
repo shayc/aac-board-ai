@@ -17,13 +17,9 @@ export interface ButtonActivationOptions {
   navigateHome: () => void;
 }
 
-export interface ButtonActivationReturn {
+export function useButtonActivation(deps: ButtonActivationOptions): {
   activateButton: (button: BoardButton) => Promise<void>;
-}
-
-export function useButtonActivation(
-  deps: ButtonActivationOptions,
-): ButtonActivationReturn {
+} {
   const speech = useSpeech();
   const audio = useAudio();
 
