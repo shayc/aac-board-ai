@@ -5,17 +5,15 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 
-type ToneOption = "as-is" | "more-formal" | "more-casual";
-
 interface ToneSelectorProps {
-  tone: ToneOption;
-  onChange: (tone: ToneOption) => void;
+  tone: RewriterTone;
+  onChange: (tone: RewriterTone) => void;
 }
 
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    tone: ToneOption | null,
+    tone: RewriterTone | null,
   ) => {
     if (tone) {
       onChange(tone);

@@ -18,6 +18,8 @@ export function useLoadBoard({ setId, boardId }: LoadBoardOptions): {
   const [board, setBoard] = useState<Board | null>(null);
 
   useEffect(() => {
+    const objectUrls: string[] = [];
+
     const loadBoard = async () => {
       try {
         const db = await openBoardsDB();
@@ -36,7 +38,10 @@ export function useLoadBoard({ setId, boardId }: LoadBoardOptions): {
               if (img.path) {
                 try {
                   const url = await getAssetUrlByPath(db, setId, img.path);
-                  if (url) img.data = url;
+                  if (url) {
+                    objectUrls.push(url);
+                    img.data = url;
+                  }
                 } catch (err) {
                   console.warn(
                     `Failed to load image ${img.id} from path ${img.path}:`,
@@ -52,7 +57,10 @@ export function useLoadBoard({ setId, boardId }: LoadBoardOptions): {
               if (sound.path) {
                 try {
                   const url = await getAssetUrlByPath(db, setId, sound.path);
-                  if (url) sound.data = url;
+                  if (url) {
+                    objectUrls.push(url);
+                    sound.data = url;
+                  }
                 } catch (err) {
                   console.warn(
                     `Failed to load sound ${sound.id} from path ${sound.path}:`,
@@ -75,6 +83,10 @@ export function useLoadBoard({ setId, boardId }: LoadBoardOptions): {
     };
 
     void loadBoard();
+
+    return () => {
+      objectUrls.forEach((url) => URL.revokeObjectURL(url));
+    };
   }, [setId, boardId]);
 
   return { board };

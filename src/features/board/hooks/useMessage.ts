@@ -3,7 +3,7 @@ import { useAudio } from "@shared/hooks/useAudio";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 
-export interface Segment {
+interface Segment {
   type: "text" | "sound";
   data: string;
 }

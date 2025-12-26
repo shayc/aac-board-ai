@@ -20,7 +20,7 @@ export function useBoardTranslation({
         return;
       }
 
-      if (languageCode.includes("en")) {
+      if (languageCode.startsWith("en")) {
         setTranslatedBoard(null);
         return;
       }
