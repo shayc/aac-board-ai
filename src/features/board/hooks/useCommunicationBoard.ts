@@ -1,28 +1,19 @@
-import {
-  getAssetUrlByPath,
-  getBoardsBatch,
-  openBoardsDB,
-} from "@features/board/db/boards-db";
-import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Board, BoardAction, BoardButton } from "@features/board/types";
+import type { Board, BoardButton } from "@features/board/types";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
-import { useTranslator } from "@shared/hooks/ai/useTranslator";
-import { useAudio } from "@shared/hooks/useAudio";
-import { useEffect, useState } from "react";
+import { useButtonActivation } from "./useButtonActivation";
+import { useLoadBoard } from "./useLoadBoard";
 import { useMessage, type MessagePart } from "./useMessage";
 import { useNavigation } from "./useNavigation";
 import { useSuggestions } from "./useSuggestions";
+import { useTranslatedBoard } from "./useTranslatedBoard";
 
-type ActionHandler = () => void | Promise<void>;
-
-export interface UseCommunicationBoardOptions {
+export interface CommunicationBoardOptions {
   setId: string;
   boardId: string;
 }
 
-export interface UseCommunicationBoardReturn {
+export interface CommunicationBoardReturn {
   // Board
   board: Board | null;
   activateButton: (button: BoardButton) => Promise<void>;
@@ -56,243 +47,50 @@ export interface UseCommunicationBoardReturn {
 export function useCommunicationBoard({
   setId,
   boardId,
-}: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
+}: CommunicationBoardOptions): CommunicationBoardReturn {
   const { languageCode } = useLanguage();
-  const { createTranslator } = useTranslator();
   const { sharedContext } = useAI();
 
-  const speech = useSpeech();
-  const audio = useAudio();
+  // Load raw board
+  const { board: rawBoard } = useLoadBoard({ setId, boardId });
 
-  const [board, setBoard] = useState<Board | null>(null);
-  const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
+  // Translate board
+  const board = useTranslatedBoard({ board: rawBoard, languageCode });
 
-  const {
-    canGoBack,
-    canGoHome,
-    navigationHistory,
-    navigateToBoard,
-    navigateBack,
-    navigateHome,
-  } = useNavigation();
+  // Navigation
+  const navigation = useNavigation();
 
-  const {
-    message,
-    isPlayingMessage,
-    addMessage,
-    setMessage,
-    removeLastMessage,
-    updateLastMessage,
-    clearMessage,
-    addSpace,
-    playMessage,
-    stopMessage,
-  } = useMessage();
+  // Message
+  const messageHook = useMessage();
 
-  const {
-    suggestions,
-    isSuggestionsEnabled,
-    suggestionTone,
-    setSuggestionTone,
-  } = useSuggestions(message, sharedContext);
+  // Suggestions
+  const suggestionsHook = useSuggestions(messageHook.message, sharedContext);
 
-  const actionHandlers: Record<string, ActionHandler> = {
-    ":space": addSpace,
-    ":clear": clearMessage,
-    ":home": navigateHome,
-    ":speak": playMessage,
-    ":backspace": removeLastMessage,
-  };
-
-  async function executeAction(action: BoardAction) {
-    if (action.startsWith("+")) {
-      const text = action.slice(1).trim();
-
-      updateLastMessage({
-        id: text,
-        label: `${message[message.length - 1]?.label ?? ""}${text}`,
-      });
-
-      return;
-    }
-
-    const handler = actionHandlers[action];
-    await handler?.();
-  }
-
-  const activateButton = async (button: BoardButton) => {
-    if (button.loadBoard?.id) {
-      navigateToBoard(button.loadBoard.id);
-      return;
-    }
-
-    if (button.actions?.length) {
-      for (const action of button.actions) {
-        await executeAction(action);
-      }
-
-      return;
-    }
-
-    const messagePart = {
-      id: button.id,
-      label: button.label,
-      imageSrc: button.imageSrc,
-      soundSrc: button.soundSrc,
-      vocalization: button.vocalization,
-    };
-
-    addMessage(messagePart);
-
-    if (button.soundSrc) {
-      void audio.play(button.soundSrc);
-      return;
-    }
-
-    const text = button.vocalization ?? button.label;
-
-    if (text) {
-      void speech.speak(text.toLowerCase());
-    }
-  };
-
-  const loadBoard = async (boardId: string) => {
-    try {
-      const db = await openBoardsDB();
-
-      try {
-        const [boardData] = await getBoardsBatch(db, setId, [boardId]);
-
-        if (!boardData) {
-          throw new Error(`Board not found: ${boardId}`);
-        }
-
-        const obfBoard = boardData.json;
-
-        if (obfBoard.images) {
-          for (const img of obfBoard.images) {
-            if (img.path) {
-              try {
-                const url = await getAssetUrlByPath(db, setId, img.path);
-                if (url) img.data = url;
-              } catch (err) {
-                console.warn(
-                  `Failed to load image ${img.id} from path ${img.path}:`,
-                  err,
-                );
-              }
-            }
-          }
-        }
-
-        if (obfBoard.sounds) {
-          for (const sound of obfBoard.sounds) {
-            if (sound.path) {
-              try {
-                const url = await getAssetUrlByPath(db, setId, sound.path);
-                if (url) sound.data = url;
-              } catch (err) {
-                console.warn(
-                  `Failed to load sound ${sound.id} from path ${sound.path}:`,
-                  err,
-                );
-              }
-            }
-          }
-        }
-
-        const newBoard = obfToBoard(obfBoard);
-
-        setBoard(newBoard);
-      } finally {
-        db.close();
-      }
-    } catch (err) {
-      console.error("Error loading board:", err);
-    }
-  };
-
-  useEffect(() => {
-    const translatedBoard = async () => {
-      if (!board) {
-        return;
-      }
-
-      if (languageCode.includes("en")) {
-        setTranslatedBoard(null);
-        return;
-      }
-
-      const translator = await createTranslator({
-        sourceLanguage: "en",
-        targetLanguage: languageCode,
-      });
-
-      const translatedName = await translator?.translate(board.name ?? "");
-      const translatedButtons = await Promise.all(
-        board.buttons.map(async (button) => {
-          let translatedLabel = button.label;
-          if (button.label) {
-            translatedLabel = await translator?.translate(button.label);
-          }
-
-          let translatedVocalization = button.vocalization;
-          if (button.vocalization) {
-            translatedVocalization = await translator?.translate(
-              button.vocalization,
-            );
-          }
-
-          return {
-            ...button,
-            label: translatedLabel,
-            vocalization: translatedVocalization,
-          };
-        }),
-      );
-
-      setTranslatedBoard({
-        ...board,
-        name: translatedName,
-        buttons: translatedButtons,
-      });
-    };
-
-    void translatedBoard();
-  }, [languageCode, board]);
-
-  useEffect(() => {
-    void loadBoard(boardId);
-  }, [boardId]);
+  // Button activation
+  const { activateButton } = useButtonActivation({
+    message: messageHook.message,
+    addMessage: messageHook.addMessage,
+    updateLastMessage: messageHook.updateLastMessage,
+    addSpace: messageHook.addSpace,
+    clearMessage: messageHook.clearMessage,
+    removeLastMessage: messageHook.removeLastMessage,
+    playMessage: messageHook.playMessage,
+    navigateToBoard: navigation.navigateToBoard,
+    navigateHome: navigation.navigateHome,
+  });
 
   return {
     // Board
-    board: translatedBoard ?? board,
+    board,
     activateButton,
 
     // Message
-    message,
-    isPlayingMessage,
-    addMessage,
-    setMessage,
-    removeLastMessage,
-    updateLastMessage,
-    clearMessage,
-    playMessage,
-    stopMessage,
+    ...messageHook,
 
     // Navigation
-    navigationHistory,
-    canGoBack,
-    canGoHome,
-    navigateToBoard,
-    navigateBack,
-    navigateHome,
+    ...navigation,
 
     // Suggestions
-    suggestions,
-    isSuggestionsEnabled,
-    suggestionTone,
-    setSuggestionTone,
+    ...suggestionsHook,
   };
 }
