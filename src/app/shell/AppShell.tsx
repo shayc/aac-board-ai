@@ -1,5 +1,5 @@
 import { AppProviders } from "@app/AppProviders";
-import { WelcomeDialog } from "@app/dialogs/WelcomeDialog/WelcomeDialog";
+import { OnboardingModal } from "@app/dialogs/OnboardingModal/OnboardingModal";
 import Box from "@mui/material/Box";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
@@ -19,7 +19,7 @@ export function AppShell() {
 
   return (
     <AppProviders>
-      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
+      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
         <AppHeader
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
@@ -36,7 +36,7 @@ export function AppShell() {
           onClose={() => setIsSettingsOpen(false)}
         />
 
-        <WelcomeDialog
+        <OnboardingModal
           open={isWelcomeOpen}
           onClose={() => {
             setWelcomeSeen(true);

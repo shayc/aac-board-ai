@@ -12,12 +12,12 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-interface WelcomeDialogProps {
+interface OnboardingModalProps {
   open: boolean;
   onClose: () => void;
 }
 
-export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
+export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
   return (
     <Dialog
       open={open}
