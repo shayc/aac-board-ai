@@ -1,6 +1,7 @@
 import { AppProviders } from "@app/AppProviders";
 import { WelcomeDialog } from "@app/dialogs/WelcomeDialog/WelcomeDialog";
 import Box from "@mui/material/Box";
+import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppHeader } from "./AppHeader";
@@ -10,7 +11,11 @@ import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isWelcomeOpen, setIsWelcomeOpen] = useState(false);
+  const [welcomeSeen, setWelcomeSeen] = usePersistentState(
+    "welcomeSeen",
+    false,
+  );
+  const [isWelcomeOpen, setIsWelcomeOpen] = useState(!welcomeSeen);
 
   return (
     <AppProviders>
@@ -33,7 +38,10 @@ export function AppShell() {
 
         <WelcomeDialog
           open={isWelcomeOpen}
-          onClose={() => setIsWelcomeOpen(false)}
+          onClose={() => {
+            setWelcomeSeen(true);
+            setIsWelcomeOpen(false);
+          }}
         />
       </Box>
     </AppProviders>
