@@ -17,7 +17,7 @@ export interface ButtonActivationOptions {
   navigateHome: () => void;
 }
 
-export function useButtonActivation(deps: ButtonActivationOptions): {
+export function useButtonActivation(options: ButtonActivationOptions): {
   activateButton: (button: BoardButton) => Promise<void>;
 } {
   const speech = useSpeech();
@@ -33,7 +33,7 @@ export function useButtonActivation(deps: ButtonActivationOptions): {
     playMessage,
     navigateToBoard,
     navigateHome,
-  } = deps;
+  } = options;
 
   const actionHandlers: Record<string, ActionHandler> = {
     ":space": addSpace,
