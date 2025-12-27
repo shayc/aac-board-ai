@@ -11,6 +11,7 @@ export interface TileProps {
   disabled?: boolean;
   variant?: "folder";
   onClick: () => void;
+  ref?: (element: HTMLButtonElement | null) => void;
 }
 
 export function Tile({
@@ -21,9 +22,11 @@ export function Tile({
   disabled,
   variant,
   onClick,
+  ref,
 }: TileProps) {
   return (
     <Button
+      ref={ref}
       disableRipple
       disabled={disabled}
       onClick={onClick}

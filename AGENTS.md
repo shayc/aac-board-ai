@@ -39,6 +39,7 @@
 - Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
 - MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
 - React Compiler is enabled: avoid `useMemo`/`useCallback` micro-optimizations.
+- Comments: only document exported interfaces, code should be self documented. You may add inline comments to explain the "why" behind non-trivial choices.
 
 ## Workflow (Git/PR)
 
