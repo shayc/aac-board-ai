@@ -66,10 +66,11 @@ export function Board() {
         columns={board.grid.columns}
         order={board.grid.order}
         items={board.buttons}
-        renderItem={(button, ref) => (
+        renderItem={(button, { ref, tabIndex }) => (
           <Tile
             key={button.id}
             ref={ref}
+            tabIndex={tabIndex}
             label={button.label}
             imageSrc={button.imageSrc}
             backgroundColor={button.backgroundColor}

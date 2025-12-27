@@ -2,16 +2,18 @@ import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 
+export interface GridItemProps {
+  ref: (el: HTMLElement | null) => void;
+  tabIndex: number;
+}
+
 export interface GridProps<TItem extends { id: string }> {
   rows: number;
   columns: number;
   gap?: number;
   order?: (string | null)[][];
   items: TItem[];
-  renderItem: (
-    item: TItem,
-    ref?: (el: HTMLElement | null) => void,
-  ) => React.ReactNode;
+  renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -41,7 +43,7 @@ export function Grid<TItem extends { id: string }>({
     }
   }
 
-  const { keyboardProps } = useGridKeyboard({
+  const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
     cellRefs,
     rows,
     columns,
@@ -50,6 +52,7 @@ export function Grid<TItem extends { id: string }>({
   return (
     <Stack
       {...keyboardProps}
+      onFocus={handleFocus}
       height="100%"
       direction="column"
       flexGrow={1}
@@ -58,19 +61,26 @@ export function Grid<TItem extends { id: string }>({
     >
       {grid.map((row, rowIndex) => (
         <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
-          {row.map((item, cellIndex) => (
-            <Stack
-              key={cellIndex}
-              data-grid-cell="true"
-              data-row={rowIndex}
-              data-col={cellIndex}
-              flex={1}
-              sx={{ minWidth: 64, minHeight: 64 }}
-            >
-              {item &&
-                renderItem(item, refCallbacks[`${rowIndex}-${cellIndex}`])}
-            </Stack>
-          ))}
+          {row.map((item, cellIndex) => {
+            const isActive =
+              rowIndex === activeCell.row && cellIndex === activeCell.col;
+            return (
+              <Stack
+                key={cellIndex}
+                data-grid-cell="true"
+                data-row={rowIndex}
+                data-col={cellIndex}
+                flex={1}
+                sx={{ minWidth: 64, minHeight: 64 }}
+              >
+                {item &&
+                  renderItem(item, {
+                    ref: refCallbacks[`${rowIndex}-${cellIndex}`],
+                    tabIndex: isActive ? 0 : -1,
+                  })}
+              </Stack>
+            );
+          })}
         </Stack>
       ))}
     </Stack>

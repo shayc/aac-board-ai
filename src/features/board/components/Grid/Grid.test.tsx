@@ -13,7 +13,11 @@ test("renders items in grid", async () => {
       rows={1}
       columns={2}
       items={items}
-      renderItem={(item) => <div>{item.label}</div>}
+      renderItem={(item, { ref, tabIndex }) => (
+        <div ref={ref} tabIndex={tabIndex}>
+          {item.label}
+        </div>
+      )}
     />,
   );
 
