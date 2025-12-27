@@ -2,8 +2,10 @@ import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 
+export type RefCallback = (element: HTMLElement | null) => void;
+
 export interface GridItemProps {
-  ref: (el: HTMLElement | null) => void;
+  ref: RefCallback;
   tabIndex: number;
 }
 
@@ -28,17 +30,18 @@ export function Grid<TItem extends { id: string }>({
   const cellRefs = useRef<(HTMLElement | null)[][]>([]);
   const defaultActiveCell = findFirstNonEmptyCell(grid);
 
-  const refCallbacks: Record<string, (el: HTMLElement | null) => void> = {};
+  const refCallbacks: Record<string, RefCallback> = {};
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     for (let cellIndex = 0; cellIndex < columns; cellIndex++) {
       const key = `${rowIndex}-${cellIndex}`;
-      refCallbacks[key] = ((r: number, c: number) => {
-        return (el: HTMLElement | null) => {
+
+      refCallbacks[key] = ((r: number, c: number): RefCallback => {
+        return (element: HTMLElement | null) => {
           if (!cellRefs.current[r]) {
             cellRefs.current[r] = [];
           }
-          cellRefs.current[r][c] = el;
+          cellRefs.current[r][c] = element;
         };
       })(rowIndex, cellIndex);
     }
