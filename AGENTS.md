@@ -53,6 +53,7 @@
 - Keep changes scoped; avoid broad refactors/sweeping reformatting.
 - For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
 - Follow existing module boundaries and nearby-file patterns.
+- Use braces for `if` statements, even when the body is a single statement.
 
 ### Ask First
 

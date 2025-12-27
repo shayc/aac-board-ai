@@ -15,7 +15,9 @@ export function useGridKeyboard({
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
       const grid = cellRefs.current;
-      if (!grid) return;
+      if (!grid) {
+        return;
+      }
 
       const activeElement = document.activeElement;
       let currentRow = -1;
@@ -29,10 +31,15 @@ export function useGridKeyboard({
             break;
           }
         }
-        if (currentRow !== -1) break;
+
+        if (currentRow !== -1) {
+          break;
+        }
       }
 
-      if (currentRow === -1 || currentCol === -1) return;
+      if (currentRow === -1 || currentCol === -1) {
+        return;
+      }
 
       let targetRow = currentRow;
       let targetCol = currentCol;
@@ -52,6 +59,10 @@ export function useGridKeyboard({
           break;
         default:
           return;
+      }
+
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        return;
       }
 
       const nextCell = findNextNonEmptyCell(
