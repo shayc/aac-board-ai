@@ -1,4 +1,5 @@
 import {
+  NavigationButtons,
   Grid,
   MessageBar,
   SuggestionBar,
@@ -50,16 +51,20 @@ export function Board() {
         onStopClick={stopMessage}
       />
 
-      {isSuggestionsEnabled && (
-        <SuggestionBar
-          suggestions={suggestions}
-          tone={suggestionTone}
-          onToneChange={setSuggestionTone}
-          onSuggestionClick={(suggestion) => {
-            setMessage([{ id: suggestion, label: suggestion }]);
-          }}
-        />
-      )}
+      <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
+        <NavigationButtons />
+
+        {isSuggestionsEnabled && (
+          <SuggestionBar
+            suggestions={suggestions}
+            tone={suggestionTone}
+            onToneChange={setSuggestionTone}
+            onSuggestionClick={(suggestion) => {
+              setMessage([{ id: suggestion, label: suggestion }]);
+            }}
+          />
+        )}
+      </Stack>
 
       <Grid<BoardButton>
         rows={board.grid.rows}

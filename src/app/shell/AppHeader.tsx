@@ -1,8 +1,5 @@
-import { useBoard } from "@features/board/context/useBoard";
 import type { BoardsetRecord } from "@features/board/db/boards-db";
 import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HomeIcon from "@mui/icons-material/Home";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
@@ -21,7 +18,6 @@ interface AppHeaderProps {
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
   const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
-  const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
 
   useEffect(() => {
     async function loadBoardsets() {
@@ -53,35 +49,6 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           >
             <MenuIcon />
           </IconButton>
-        </Tooltip>
-
-        <Tooltip title="Go back">
-          <span>
-            <IconButton
-              aria-label="Back"
-              size="large"
-              color="inherit"
-              disabled={!canGoBack}
-              onClick={() => navigateBack()}
-            >
-              <ArrowBackIcon />
-            </IconButton>
-          </span>
-        </Tooltip>
-
-        <Tooltip title="Go home">
-          <span>
-            <IconButton
-              aria-label="Home"
-              size="large"
-              color="inherit"
-              disabled={!canGoHome}
-              onClick={() => navigateHome()}
-              sx={{ mr: 2 }}
-            >
-              <HomeIcon />
-            </IconButton>
-          </span>
         </Tooltip>
 
         {boardsets.length > 0 && (

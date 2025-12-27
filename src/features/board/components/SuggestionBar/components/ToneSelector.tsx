@@ -1,5 +1,5 @@
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import DragHandleIcon from "@mui/icons-material/DragHandle";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -30,7 +30,7 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
     >
       <Tooltip title="Neutral tone">
         <ToggleButton value="as-is" aria-label="neutral tone">
-          <DragHandleIcon fontSize="medium" />
+          <HorizontalRuleIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 

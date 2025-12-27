@@ -17,7 +17,13 @@ export function SuggestionBar({
   onSuggestionClick,
 }: SuggestionBarProps) {
   return (
-    <Stack direction="row" alignItems="center" px={2} gap={2}>
+    <Stack
+      flex="1"
+      direction="row"
+      alignItems="center"
+      gap={2}
+      overflow="hidden"
+    >
       <Box
         sx={{
           display: "flex",
