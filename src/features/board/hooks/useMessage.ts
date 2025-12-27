@@ -71,6 +71,8 @@ export function useMessage() {
     }
   }
 
+  const messageText = message.map((part) => part.label).join(" ");
+
   async function playMessage() {
     try {
       setIsPlayingMessage(true);
@@ -95,6 +97,7 @@ export function useMessage() {
 
   return {
     message,
+    messageText,
     isPlayingMessage,
     addMessage,
     addSpace,
