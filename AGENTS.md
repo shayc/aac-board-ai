@@ -24,7 +24,7 @@
 - `src/features/`: feature modules
 - `src/pages/`: routes/pages
 - `src/shared/`: shared code + Open Board Format support
-- Do not edit generated output: `dist/`, `coverage/`
+- `dist/`, `coverage/`: generated build artifacts
 
 ## Testing Instructions
 
@@ -39,7 +39,8 @@
 - Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
 - MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
 - React Compiler is enabled: avoid `useMemo`/`useCallback` micro-optimizations.
-- Comments: only document exported interfaces, code should be self documented. You may add inline comments to explain the "why" behind non-trivial choices.
+- Use braces for `if` statements, even when the body is a single statement.
+- Comments: prioritize self-documenting code. Use inline comments only to explain the "why" behind complex logic, not the "what".
 
 ## Workflow (Git/PR)
 
@@ -53,7 +54,6 @@
 - Keep changes scoped; avoid broad refactors/sweeping reformatting.
 - For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
 - Follow existing module boundaries and nearby-file patterns.
-- Use braces for `if` statements, even when the body is a single statement.
 
 ### Ask First
 
