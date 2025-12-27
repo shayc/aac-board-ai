@@ -61,6 +61,9 @@ export function Grid<TItem extends { id: string }>({
           {row.map((item, cellIndex) => (
             <Stack
               key={cellIndex}
+              data-grid-cell="true"
+              data-row={rowIndex}
+              data-col={cellIndex}
               flex={1}
               sx={{ minWidth: 64, minHeight: 64 }}
             >

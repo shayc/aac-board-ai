@@ -19,25 +19,18 @@ export function useGridKeyboard({
         return;
       }
 
-      const activeElement = document.activeElement;
-      let currentRow = -1;
-      let currentCol = -1;
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-          if (grid[r]?.[c] === activeElement) {
-            currentRow = r;
-            currentCol = c;
-            break;
-          }
-        }
-
-        if (currentRow !== -1) {
-          break;
-        }
+      // O(1) lookup
+      const cell = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-grid-cell]",
+      );
+      if (!cell) {
+        return;
       }
 
-      if (currentRow === -1 || currentCol === -1) {
+      const currentRow = parseInt(cell.dataset.row ?? "", 10);
+      const currentCol = parseInt(cell.dataset.col ?? "", 10);
+
+      if (isNaN(currentRow) || isNaN(currentCol)) {
         return;
       }
 
