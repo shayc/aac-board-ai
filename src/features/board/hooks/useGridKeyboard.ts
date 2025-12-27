@@ -13,7 +13,7 @@ export function useGridKeyboard({
   columns,
 }: UseGridKeyboardOptions) {
   const { keyboardProps } = useKeyboard({
-    onKeyDown: (e) => {
+    onKeyDown: (event) => {
       const grid = cellRefs.current;
       if (!grid) return;
 
@@ -37,7 +37,7 @@ export function useGridKeyboard({
       let targetRow = currentRow;
       let targetCol = currentCol;
 
-      switch (e.key) {
+      switch (event.key) {
         case "ArrowUp":
           targetRow = currentRow - 1;
           break;
@@ -60,11 +60,11 @@ export function useGridKeyboard({
         targetCol,
         rows,
         columns,
-        e.key,
+        event.key,
       );
 
       if (nextCell) {
-        e.preventDefault();
+        event.preventDefault();
         nextCell.focus();
       }
     },
