@@ -30,6 +30,7 @@
 
 - Structure: Colocate tests as `*.test.ts(x)`.
 - Runner: `npm test` runs Vitest in browser mode via the Playwright provider.
+- Utilities: Use `vitest-browser-react` for component testing and interactions.
 - Stability: Write deterministic tests; avoid timing-based sleeps.
 - Scope: No render-only tests; each test must prove a behavior (interaction → observable result).
 
