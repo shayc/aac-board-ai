@@ -1,7 +1,7 @@
 import { use } from "react";
-import { SpeechContext, type SpeechContextType } from "./SpeechContext";
+import { SpeechContext, type SpeechContextValue } from "./SpeechContext";
 
-export function useSpeech(): SpeechContextType {
+export function useSpeech(): SpeechContextValue {
   const context = use(SpeechContext);
 
   if (!context) {

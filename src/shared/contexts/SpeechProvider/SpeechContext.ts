@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export interface SpeechContextType {
+export interface SpeechContextValue {
   langs: string[];
   voicesByLang: Record<string, SpeechSynthesisVoice[]>;
   voices: SpeechSynthesisVoice[];
@@ -19,4 +19,4 @@ export interface SpeechContextType {
   isPaused: boolean;
 }
 
-export const SpeechContext = createContext<SpeechContextType | null>(null);
+export const SpeechContext = createContext<SpeechContextValue | null>(null);
