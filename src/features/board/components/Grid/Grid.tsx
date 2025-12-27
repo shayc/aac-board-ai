@@ -1,4 +1,6 @@
+import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
+import { useRef } from "react";
 
 export interface GridProps<TItem extends { id: string }> {
   rows: number;
@@ -6,7 +8,10 @@ export interface GridProps<TItem extends { id: string }> {
   gap?: number;
   order?: (string | null)[][];
   items: TItem[];
-  renderItem: (item: TItem) => React.ReactNode;
+  renderItem: (
+    item: TItem,
+    ref?: (el: HTMLElement | null) => void,
+  ) => React.ReactNode;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -18,9 +23,33 @@ export function Grid<TItem extends { id: string }>({
   renderItem,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
+  const cellRefs = useRef<(HTMLElement | null)[][]>([]);
+
+  const refCallbacks: Record<string, (el: HTMLElement | null) => void> = {};
+
+  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
+    for (let cellIndex = 0; cellIndex < columns; cellIndex++) {
+      const key = `${rowIndex}-${cellIndex}`;
+      refCallbacks[key] = ((r: number, c: number) => {
+        return (el: HTMLElement | null) => {
+          if (!cellRefs.current[r]) {
+            cellRefs.current[r] = [];
+          }
+          cellRefs.current[r][c] = el;
+        };
+      })(rowIndex, cellIndex);
+    }
+  }
+
+  const { keyboardProps } = useGridKeyboard({
+    cellRefs,
+    rows,
+    columns,
+  });
 
   return (
     <Stack
+      {...keyboardProps}
       height="100%"
       direction="column"
       flexGrow={1}
@@ -35,7 +64,8 @@ export function Grid<TItem extends { id: string }>({
               flex={1}
               sx={{ minWidth: 64, minHeight: 64 }}
             >
-              {item && renderItem(item)}
+              {item &&
+                renderItem(item, refCallbacks[`${rowIndex}-${cellIndex}`])}
             </Stack>
           ))}
         </Stack>
