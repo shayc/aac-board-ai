@@ -46,8 +46,8 @@
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/browser-playwright": "^4.0.15",
-    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/browser-playwright": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.16",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -64,7 +64,7 @@
     "typescript-eslint": "^8.50.1",
     "vite": "^7.3.0",
     "vite-plugin-pwa": "^1.2.0",
-    "vitest": "^4.0.15",
+    "vitest": "^4.0.16",
     "vitest-browser-react": "^2.0.2"
   }
 }

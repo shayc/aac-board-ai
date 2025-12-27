@@ -23,7 +23,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           Settings
         </Typography>
 
-        <Tooltip title="Close settings" enterDelay={800}>
+        <Tooltip title="Close settings">
           <span>
             <IconButton
               aria-label="Close settings"

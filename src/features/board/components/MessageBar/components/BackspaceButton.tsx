@@ -40,11 +40,11 @@ export function BackspaceButton({
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
     onLongPressStart: () => setProgress(100),
-    onLongPressEnd: () => setProgress(0),
+    onLongPressEnd: () => setTimeout(() => setProgress(0), 100),
   });
 
   return (
-    <Tooltip title="Backspace" enterDelay={800}>
+    <Tooltip title="Backspace">
       <Box sx={{ alignSelf: "center", position: "relative" }}>
         <IconButton
           {...mergeProps(pressProps, longPressProps)}
