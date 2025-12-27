@@ -40,7 +40,7 @@ export function BackspaceButton({
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
     onLongPressStart: () => setProgress(100),
-    onLongPressEnd: () => setProgress(0),
+    onLongPressEnd: () => setTimeout(() => setProgress(0), 0),
   });
 
   return (
