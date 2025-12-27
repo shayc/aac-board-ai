@@ -13,7 +13,7 @@ test("renders items in grid", async () => {
       rows={1}
       columns={2}
       items={items}
-      renderItem={(item) => <div>{item.label}</div>}
+      renderItem={(item, props) => <button {...props}>{item.label}</button>}
     />,
   );
 

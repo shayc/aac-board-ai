@@ -55,8 +55,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
           variant="body1"
           sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
         >
-          AAC Board AI helps you communicate naturally and privately using
-          on-device intelligence.
+          Communicate naturally and privately with on-device intelligence.
         </DialogContentText>
 
         <List sx={{ pt: 0, pb: 0 }}>
@@ -87,7 +86,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
             </ListItemIcon>
             <ListItemText
               primary="Real-time Translation"
-              secondary="Translate and speak your messages in multiple languages, fully offline."
+              secondary="Translate and speak your messages in multiple languages."
               slotProps={{
                 primary: {
                   fontWeight: 700,

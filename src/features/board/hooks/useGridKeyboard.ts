@@ -1,129 +1,136 @@
-import type { RefObject } from "react";
+import type { FocusEvent, RefObject } from "react";
+import { useCallback, useState } from "react";
 import { useKeyboard } from "react-aria";
+
+interface GridCell {
+  row: number;
+  col: number;
+}
 
 interface UseGridKeyboardOptions {
   cellRefs: RefObject<(HTMLElement | null)[][]>;
   rows: number;
   columns: number;
+  defaultActiveCell?: GridCell;
+}
+
+interface CellResult {
+  element: HTMLElement;
+  row: number;
+  col: number;
 }
 
 export function useGridKeyboard({
   cellRefs,
   rows,
   columns,
+  defaultActiveCell = { row: 0, col: 0 },
 }: UseGridKeyboardOptions) {
+  const [activeCell, setActiveCell] = useState<GridCell>(defaultActiveCell);
+
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
+      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
       const grid = cellRefs.current;
       if (!grid) {
         return;
       }
 
-      const activeElement = document.activeElement;
-      let currentRow = -1;
-      let currentCol = -1;
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < columns; c++) {
-          if (grid[r]?.[c] === activeElement) {
-            currentRow = r;
-            currentCol = c;
-            break;
-          }
-        }
-
-        if (currentRow !== -1) {
-          break;
-        }
-      }
-
-      if (currentRow === -1 || currentCol === -1) {
+      const cell = (event.target as HTMLElement).closest<HTMLElement>(
+        "[data-grid-cell]",
+      );
+      if (!cell) {
         return;
       }
 
-      let targetRow = currentRow;
-      let targetCol = currentCol;
+      const currentRow = parseInt(cell.dataset.row ?? "", 10);
+      const currentCol = parseInt(cell.dataset.col ?? "", 10);
+
+      if (isNaN(currentRow) || isNaN(currentCol)) {
+        return;
+      }
+
+      let dRow = 0;
+      let dCol = 0;
 
       switch (event.key) {
         case "ArrowUp":
-          targetRow = currentRow - 1;
+          dRow = -1;
           break;
         case "ArrowDown":
-          targetRow = currentRow + 1;
+          dRow = 1;
           break;
         case "ArrowLeft":
-          targetCol = currentCol - 1;
+          dCol = -1;
           break;
         case "ArrowRight":
-          targetCol = currentCol + 1;
+          dCol = 1;
           break;
         default:
           return;
       }
 
-      if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
-        return;
-      }
-
-      const nextCell = findNextNonEmptyCell(
+      const result = findNextNonEmptyCell(
         grid,
-        targetRow,
-        targetCol,
+        currentRow + dRow,
+        currentCol + dCol,
         rows,
         columns,
-        event.key,
+        dRow,
+        dCol,
       );
 
-      if (nextCell) {
+      if (result) {
         event.preventDefault();
-        nextCell.focus();
+        setActiveCell({ row: result.row, col: result.col });
+        result.element.focus();
       }
     },
   });
 
-  return { keyboardProps };
+  const handleFocus = useCallback((event: FocusEvent) => {
+    const cell = (event.target as HTMLElement).closest<HTMLElement>(
+      "[data-grid-cell]",
+    );
+    if (!cell) {
+      return;
+    }
+
+    const row = parseInt(cell.dataset.row ?? "", 10);
+    const col = parseInt(cell.dataset.col ?? "", 10);
+
+    if (!isNaN(row) && !isNaN(col)) {
+      setActiveCell({ row, col });
+    }
+  }, []);
+
+  return { keyboardProps, activeCell, handleFocus };
 }
 
 function findNextNonEmptyCell(
   grid: (HTMLElement | null)[][],
-  targetRow: number,
-  targetCol: number,
+  startRow: number,
+  startCol: number,
   rows: number,
   columns: number,
-  key: string,
-): HTMLElement | null {
-  if (
-    targetRow < 0 ||
-    targetRow >= rows ||
-    targetCol < 0 ||
-    targetCol >= columns
-  ) {
-    return null;
-  }
-
-  let r = targetRow;
-  let c = targetCol;
+  dRow: number,
+  dCol: number,
+): CellResult | null {
+  let r = startRow;
+  let c = startCol;
 
   while (r >= 0 && r < rows && c >= 0 && c < columns) {
     const cell = grid[r]?.[c];
+
     if (cell) {
-      return cell;
+      return { element: cell, row: r, col: c };
     }
 
-    switch (key) {
-      case "ArrowUp":
-        r--;
-        break;
-      case "ArrowDown":
-        r++;
-        break;
-      case "ArrowLeft":
-        c--;
-        break;
-      case "ArrowRight":
-        c++;
-        break;
-    }
+    r += dRow;
+    c += dCol;
   }
 
   return null;

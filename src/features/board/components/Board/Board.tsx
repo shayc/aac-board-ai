@@ -66,16 +66,16 @@ export function Board() {
         columns={board.grid.columns}
         order={board.grid.order}
         items={board.buttons}
-        renderItem={(button, ref) => (
+        renderItem={(button, props) => (
           <Tile
             key={button.id}
-            ref={ref}
             label={button.label}
             imageSrc={button.imageSrc}
             backgroundColor={button.backgroundColor}
             borderColor={button.borderColor}
             variant={button.loadBoard ? "folder" : undefined}
             onClick={() => void activateButton(button)}
+            {...props}
           />
         )}
       />

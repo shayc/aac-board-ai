@@ -37,6 +37,7 @@
 ## Code Style Guidelines
 
 - TypeScript: Maintain strict type accuracy; avoid `any` unless unavoidable.
+- Linting: Fix underlying issues explicitly; do not use `eslint-disable` comments.
 - Imports: Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
 - MUI: Import subpaths (e.g., `@mui/material/Button`) over package root to minimize bundle size.
 - React Compiler: Enabled by default; avoid `useMemo`/`useCallback` micro-optimizations.

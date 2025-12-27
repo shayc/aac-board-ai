@@ -2,16 +2,20 @@ import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 
+export type RefCallback = (element: HTMLElement | null) => void;
+
+export interface GridItemProps {
+  ref: RefCallback;
+  tabIndex: number;
+}
+
 export interface GridProps<TItem extends { id: string }> {
   rows: number;
   columns: number;
   gap?: number;
   order?: (string | null)[][];
   items: TItem[];
-  renderItem: (
-    item: TItem,
-    ref?: (el: HTMLElement | null) => void,
-  ) => React.ReactNode;
+  renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -24,32 +28,36 @@ export function Grid<TItem extends { id: string }>({
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const cellRefs = useRef<(HTMLElement | null)[][]>([]);
+  const defaultActiveCell = findFirstNonEmptyCell(grid);
 
-  const refCallbacks: Record<string, (el: HTMLElement | null) => void> = {};
+  const refCallbacks: Record<string, RefCallback> = {};
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
     for (let cellIndex = 0; cellIndex < columns; cellIndex++) {
       const key = `${rowIndex}-${cellIndex}`;
-      refCallbacks[key] = ((r: number, c: number) => {
-        return (el: HTMLElement | null) => {
+
+      refCallbacks[key] = ((r: number, c: number): RefCallback => {
+        return (element: HTMLElement | null) => {
           if (!cellRefs.current[r]) {
             cellRefs.current[r] = [];
           }
-          cellRefs.current[r][c] = el;
+          cellRefs.current[r][c] = element;
         };
       })(rowIndex, cellIndex);
     }
   }
 
-  const { keyboardProps } = useGridKeyboard({
+  const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
     cellRefs,
     rows,
     columns,
+    defaultActiveCell,
   });
 
   return (
     <Stack
       {...keyboardProps}
+      onFocus={handleFocus}
       height="100%"
       direction="column"
       flexGrow={1}
@@ -58,16 +66,26 @@ export function Grid<TItem extends { id: string }>({
     >
       {grid.map((row, rowIndex) => (
         <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
-          {row.map((item, cellIndex) => (
-            <Stack
-              key={cellIndex}
-              flex={1}
-              sx={{ minWidth: 64, minHeight: 64 }}
-            >
-              {item &&
-                renderItem(item, refCallbacks[`${rowIndex}-${cellIndex}`])}
-            </Stack>
-          ))}
+          {row.map((item, cellIndex) => {
+            const isActive =
+              rowIndex === activeCell.row && cellIndex === activeCell.col;
+            return (
+              <Stack
+                key={cellIndex}
+                data-grid-cell="true"
+                data-row={rowIndex}
+                data-col={cellIndex}
+                flex={1}
+                sx={{ minWidth: 64, minHeight: 64 }}
+              >
+                {item &&
+                  renderItem(item, {
+                    ref: refCallbacks[`${rowIndex}-${cellIndex}`],
+                    tabIndex: isActive ? 0 : -1,
+                  })}
+              </Stack>
+            );
+          })}
         </Stack>
       ))}
     </Stack>
@@ -99,4 +117,18 @@ function buildGrid<T extends { id: string }>(
       return items[index];
     }),
   );
+}
+
+function findFirstNonEmptyCell<T>(grid: (T | undefined)[][]): {
+  row: number;
+  col: number;
+} {
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      if (grid[row][col]) {
+        return { row, col };
+      }
+    }
+  }
+  return { row: 0, col: 0 };
 }
