@@ -27,15 +27,15 @@ export function useMessage() {
 
   const [isPlayingMessage, setIsPlayingMessage] = useState(false);
 
-  function addMessage(part: MessagePart) {
+  function addPart(part: MessagePart) {
     setMessage((prev) => [...prev, part]);
   }
 
-  function removeLastMessage() {
+  function removeLastPart() {
     setMessage((prev) => prev.slice(0, -1));
   }
 
-  function updateLastMessage(part: Partial<MessagePart>) {
+  function updateLastPart(part: Partial<MessagePart>) {
     setMessage((prev) => {
       if (prev.length === 0) {
         return prev;
@@ -56,7 +56,7 @@ export function useMessage() {
   }
 
   function addSpace() {
-    addMessage({
+    addPart({
       id: "space", // TODO: unique ID
       label: "",
     });
@@ -99,11 +99,11 @@ export function useMessage() {
     message,
     messageText,
     isPlayingMessage,
-    addMessage,
+    addPart,
     addSpace,
     setMessage,
-    removeLastMessage,
-    updateLastMessage,
+    removeLastPart,
+    updateLastPart,
     clearMessage,
     playMessage,
     stopMessage,

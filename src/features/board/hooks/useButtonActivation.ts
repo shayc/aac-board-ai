@@ -7,13 +7,13 @@ type ActionHandler = () => void | Promise<void>;
 
 export interface UseButtonActivationOptions {
   navigateToBoard: (id: string) => void;
-  addMessage: (part: MessagePart) => void;
-  updateLastMessage: (part: Partial<MessagePart>) => void;
+  addPart: (part: MessagePart) => void;
+  updateLastPart: (part: Partial<MessagePart>) => void;
   addSpace: () => void;
   clearMessage: () => void;
   navigateHome: () => void;
   playMessage: () => Promise<void>;
-  removeLastMessage: () => void;
+  removeLastPart: () => void;
   message: MessagePart[];
 }
 
@@ -23,13 +23,13 @@ export interface UseButtonActivationReturn {
 
 export function useButtonActivation({
   navigateToBoard,
-  addMessage,
-  updateLastMessage,
+  addPart,
+  updateLastPart,
   addSpace,
   clearMessage,
   navigateHome,
   playMessage,
-  removeLastMessage,
+  removeLastPart,
   message,
 }: UseButtonActivationOptions): UseButtonActivationReturn {
   const speech = useSpeech();
@@ -40,14 +40,14 @@ export function useButtonActivation({
     ":clear": clearMessage,
     ":home": navigateHome,
     ":speak": playMessage,
-    ":backspace": removeLastMessage,
+    ":backspace": removeLastPart,
   };
 
   async function executeAction(action: BoardAction) {
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
 
-      updateLastMessage({
+      updateLastPart({
         id: text,
         label: `${message[message.length - 1]?.label ?? ""}${text}`,
       });
@@ -81,7 +81,7 @@ export function useButtonActivation({
       vocalization: button.vocalization,
     };
 
-    addMessage(messagePart);
+    addPart(messagePart);
 
     if (button.soundSrc) {
       void audio.play(button.soundSrc);

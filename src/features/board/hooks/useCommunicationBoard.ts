@@ -20,10 +20,10 @@ export interface UseCommunicationBoardReturn {
   // Message
   message: MessagePart[];
   isPlayingMessage: boolean;
-  addMessage: (part: MessagePart) => void;
+  addPart: (part: MessagePart) => void;
   setMessage: (parts: MessagePart[]) => void;
-  removeLastMessage: () => void;
-  updateLastMessage: (part: Partial<MessagePart>) => void;
+  removeLastPart: () => void;
+  updateLastPart: (part: Partial<MessagePart>) => void;
   clearMessage: () => void;
   playMessage: () => Promise<void>;
   stopMessage: () => void;
@@ -65,10 +65,10 @@ export function useCommunicationBoard({
     message,
     messageText,
     isPlayingMessage,
-    addMessage,
+    addPart,
     setMessage,
-    removeLastMessage,
-    updateLastMessage,
+    removeLastPart,
+    updateLastPart,
     clearMessage,
     addSpace,
     playMessage,
@@ -84,13 +84,13 @@ export function useCommunicationBoard({
 
   const { activateButton } = useButtonActivation({
     navigateToBoard,
-    addMessage,
-    updateLastMessage,
+    addPart,
+    updateLastPart,
     addSpace,
     clearMessage,
     navigateHome,
     playMessage,
-    removeLastMessage,
+    removeLastPart,
     message,
   });
 
@@ -102,10 +102,10 @@ export function useCommunicationBoard({
     // Message
     message,
     isPlayingMessage,
-    addMessage,
+    addPart,
     setMessage,
-    removeLastMessage,
-    updateLastMessage,
+    removeLastPart,
+    updateLastPart,
     clearMessage,
     playMessage,
     stopMessage,

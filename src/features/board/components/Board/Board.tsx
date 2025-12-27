@@ -15,7 +15,7 @@ export function Board() {
     isSuggestionsEnabled,
     message,
     isPlayingMessage,
-    removeLastMessage,
+    removeLastPart,
     clearMessage,
     playMessage,
     stopMessage,
@@ -44,7 +44,7 @@ export function Board() {
       <MessageBar
         message={message}
         isPlaying={isPlayingMessage}
-        onBackspacePress={removeLastMessage}
+        onBackspacePress={removeLastPart}
         onBackspaceLongPress={clearMessage}
         onPlayClick={() => void playMessage()}
         onStopClick={stopMessage}
