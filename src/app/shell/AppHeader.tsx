@@ -42,7 +42,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Tooltip title="Open menu" enterDelay={800}>
+        <Tooltip title="Open menu">
           <IconButton
             aria-label="Menu"
             size="large"
@@ -55,7 +55,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        <Tooltip title="Go back" enterDelay={800}>
+        <Tooltip title="Go back">
           <span>
             <IconButton
               aria-label="Back"
@@ -69,7 +69,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </span>
         </Tooltip>
 
-        <Tooltip title="Go home" enterDelay={800}>
+        <Tooltip title="Go home">
           <span>
             <IconButton
               aria-label="Home"
@@ -88,7 +88,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           <BoardSetSelector boardsets={boardsets} setId={setId} />
         )}
 
-        <Tooltip title="Open settings" enterDelay={800} sx={{ ml: "auto" }}>
+        <Tooltip title="Open settings" sx={{ ml: "auto" }}>
           <IconButton
             aria-label="Settings"
             size="large"

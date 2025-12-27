@@ -18,7 +18,7 @@ export function PlayButton({
   const playButtonLabel = isPlaying ? "Stop playback" : "Play message";
 
   return (
-    <Tooltip title={playButtonLabel} enterDelay={800}>
+    <Tooltip title={playButtonLabel}>
       <Box sx={{ alignSelf: "center" }}>
         <IconButton
           aria-label={playButtonLabel}

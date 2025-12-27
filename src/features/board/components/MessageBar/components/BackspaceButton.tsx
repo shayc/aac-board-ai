@@ -44,7 +44,7 @@ export function BackspaceButton({
   });
 
   return (
-    <Tooltip title="Backspace" enterDelay={800}>
+    <Tooltip title="Backspace">
       <Box sx={{ alignSelf: "center", position: "relative" }}>
         <IconButton
           {...mergeProps(pressProps, longPressProps)}

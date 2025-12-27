@@ -13,6 +13,13 @@ const theme = createTheme({
   colorSchemes: {
     dark: true,
   },
+  components: {
+    MuiTooltip: {
+      defaultProps: {
+        enterDelay: 800,
+      },
+    },
+  },
 });
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
