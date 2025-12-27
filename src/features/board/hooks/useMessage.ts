@@ -57,7 +57,7 @@ export function useMessage() {
 
   function addSpace() {
     addPart({
-      id: "space", // TODO: unique ID
+      id: crypto.randomUUID(),
       label: "",
     });
   }
