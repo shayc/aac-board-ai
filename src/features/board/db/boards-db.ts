@@ -246,7 +246,9 @@ export async function getBoardsBatch(
   boardIds: string[],
 ): Promise<BoardRecord[]> {
   validateId(setId, "setId");
-  if (boardIds.length === 0) return [];
+  if (boardIds.length === 0) {
+    return [];
+  }
 
   const rows = await Promise.all(
     boardIds.map((id) => db.get("boards", [setId, id])),

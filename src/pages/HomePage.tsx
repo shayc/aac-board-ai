@@ -30,7 +30,9 @@ export function HomePage() {
       });
 
       const { setId, boardId } = await importFile(file);
-      if (cancelled) return;
+      if (cancelled) {
+        return;
+      }
 
       void navigate(
         `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(

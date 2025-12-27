@@ -63,6 +63,7 @@ export function useCommunicationBoard({
 
   const {
     message,
+    messageText,
     isPlayingMessage,
     addMessage,
     setMessage,
@@ -79,7 +80,7 @@ export function useCommunicationBoard({
     isSuggestionsEnabled,
     suggestionTone,
     setSuggestionTone,
-  } = useSuggestions(message, sharedContext);
+  } = useSuggestions(messageText, sharedContext);
 
   const { activateButton } = useButtonActivation({
     navigateToBoard,

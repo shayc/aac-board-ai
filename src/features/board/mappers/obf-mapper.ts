@@ -20,6 +20,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   return {
     id: obfBoard.id,
     name: obfBoard.name,
+    locale: obfBoard.locale,
     descriptionHTML: obfBoard.description_html,
     ...(obfBoard.license && {
       license: {
@@ -39,16 +40,24 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 }
 
 function pickMediaSource(media: OBFMedia): string | undefined {
-  if (media.data) return media.data;
-  if (media.path) return media.path;
-  if (media.url) return media.url;
+  if (media.data) {
+    return media.data;
+  }
+  if (media.path) {
+    return media.path;
+  }
+  if (media.url) {
+    return media.url;
+  }
   return undefined;
 }
 
 function buildImageMap(obfBoard: OBFBoard): Map<string, string> {
   const imageMap = new Map<string, string>();
 
-  if (!obfBoard.images) return imageMap;
+  if (!obfBoard.images) {
+    return imageMap;
+  }
 
   for (const image of obfBoard.images) {
     const source = pickMediaSource(image);
@@ -63,7 +72,9 @@ function buildImageMap(obfBoard: OBFBoard): Map<string, string> {
 function buildSoundMap(obfBoard: OBFBoard): Map<string, string> {
   const soundMap = new Map<string, string>();
 
-  if (!obfBoard.sounds) return soundMap;
+  if (!obfBoard.sounds) {
+    return soundMap;
+  }
 
   for (const sound of obfBoard.sounds) {
     const source = pickMediaSource(sound);
