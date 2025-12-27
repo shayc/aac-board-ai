@@ -7,7 +7,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
-const RING_DELAY_MS = 200;
+const RING_DELAY_MS = 300;
 const RING_FILL_MS = 400;
 const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 
