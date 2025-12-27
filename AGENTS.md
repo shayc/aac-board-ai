@@ -28,19 +28,20 @@
 
 ## Testing Instructions
 
-- Tests are colocated as `*.test.ts(x)`.
-- `npm test` runs Vitest in browser mode via the Playwright provider.
-- Prefer deterministic tests; avoid timing-based sleeps.
-- No render-only tests: each test must prove a behavior (interaction → observable result). Presence-only assertions are insufficient.
+- Structure: Colocate tests as `*.test.ts(x)`.
+- Runner: `npm test` runs Vitest in browser mode via the Playwright provider.
+- Stability: Write deterministic tests; avoid timing-based sleeps.
+- Scope: No render-only tests; each test must prove a behavior (interaction → observable result).
 
 ## Code Style Guidelines
 
-- TypeScript strict: keep types accurate; avoid `any` unless unavoidable.
-- Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
-- MUI imports: prefer subpaths (e.g., `@mui/material/Button`) over package root.
-- React Compiler is enabled: avoid `useMemo`/`useCallback` micro-optimizations.
-- Use braces for `if` statements, even when the body is a single statement.
-- Comments: prioritize self-documenting code. Use inline comments only to explain the "why" behind complex logic, not the "what".
+- TypeScript: Maintain strict type accuracy; avoid `any` unless unavoidable.
+- Imports: Prefer path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
+- MUI: Import subpaths (e.g., `@mui/material/Button`) over package root to minimize bundle size.
+- React Compiler: Enabled by default; avoid `useMemo`/`useCallback` micro-optimizations.
+- Syntax: Use braces for `if` statements, even when the body is a single statement.
+- Comments: Prioritize self-documenting code; use inline comments only to explain "why", not "what".
+- Naming: Use meaningful variable names; avoid ambiguous abbreviations.
 
 ## Workflow (Git/PR)
 
@@ -51,20 +52,20 @@
 
 ### Always
 
-- Keep changes scoped; avoid broad refactors/sweeping reformatting.
-- For code or behavior changes, run: `npm run lint`, `npm test`, `npm run build`.
-- Follow existing module boundaries and nearby-file patterns.
+- Keep changes scoped; avoid broad refactors or sweeping reformatting.
+- Verify changes: Run `npm run lint`, `npm test`, and `npm run build` before committing.
+- Consistency: Follow existing module boundaries and nearby-file patterns.
 
 ### Ask First
 
-- Dependency/lockfile changes (`package.json`, `package-lock.json`).
-- Changes to CI/build/tooling or lint/test infrastructure.
-- Data format/compatibility changes (OBF/OBZ import/export).
-- Large UI rewrites, routing changes, or cross-cutting refactors.
+- Dependency updates (`package.json`, `package-lock.json`).
+- Infrastructure changes (CI, build tooling, lint/test config).
+- Data format modifications (OBF/OBZ import/export compatibility).
+- Architecture changes (Large UI rewrites, routing overhaul, cross-cutting refactors).
 
 ### Never
 
-- Commit secrets/tokens/keys.
-- Disable/relax linting, typechecking, or tests to "make it pass".
-- Hand-edit generated output (`dist/`, `coverage/`).
-- Add telemetry/analytics or data exfiltration without explicit approval.
+- Commit secrets, tokens, or API keys.
+- Suppress linting, typechecking, or tests to force a passing build.
+- Manually edit generated output (`dist/`, `coverage/`).
+- Add telemetry, analytics, or data exfiltration without explicit approval.
