@@ -48,7 +48,7 @@ export function MessageBar({
         padding={2}
         gap={2}
         flexGrow={2}
-        borderRadius={20}
+        borderRadius={18}
         overflow="hidden"
         sx={{
           backgroundColor: (theme) =>
@@ -67,6 +67,10 @@ export function MessageBar({
           gap={2}
           flexGrow={1}
           overflow="auto"
+          sx={{
+            borderTopLeftRadius: 44,
+            borderBottomLeftRadius: 44,
+          }}
         >
           {message.map((part, index) => (
             <Stack key={index} direction="row">
