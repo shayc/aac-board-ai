@@ -11,6 +11,7 @@ interface UseGridKeyboardOptions {
   cellRefs: RefObject<(HTMLElement | null)[][]>;
   rows: number;
   columns: number;
+  defaultActiveCell?: GridCell;
 }
 
 interface CellResult {
@@ -23,8 +24,9 @@ export function useGridKeyboard({
   cellRefs,
   rows,
   columns,
+  defaultActiveCell = { row: 0, col: 0 },
 }: UseGridKeyboardOptions) {
-  const [activeCell, setActiveCell] = useState<GridCell>({ row: 0, col: 0 });
+  const [activeCell, setActiveCell] = useState<GridCell>(defaultActiveCell);
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {

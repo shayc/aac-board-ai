@@ -26,6 +26,7 @@ export function Grid<TItem extends { id: string }>({
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const cellRefs = useRef<(HTMLElement | null)[][]>([]);
+  const defaultActiveCell = findFirstNonEmptyCell(grid);
 
   const refCallbacks: Record<string, (el: HTMLElement | null) => void> = {};
 
@@ -47,6 +48,7 @@ export function Grid<TItem extends { id: string }>({
     cellRefs,
     rows,
     columns,
+    defaultActiveCell,
   });
 
   return (
@@ -112,4 +114,18 @@ function buildGrid<T extends { id: string }>(
       return items[index];
     }),
   );
+}
+
+function findFirstNonEmptyCell<T>(grid: (T | undefined)[][]): {
+  row: number;
+  col: number;
+} {
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      if (grid[row][col]) {
+        return { row, col };
+      }
+    }
+  }
+  return { row: 0, col: 0 };
 }
