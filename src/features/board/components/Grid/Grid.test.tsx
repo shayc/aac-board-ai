@@ -17,7 +17,7 @@ function getCellPosition(item: Locator): { row: number; col: number } {
 }
 
 describe("Grid", () => {
-  describe("default grid construction (no order)", () => {
+  describe("default grid construction (order not provided)", () => {
     test("renders items in row-major order when order is not provided", async () => {
       const items = [
         { id: "1", label: "Item 1" },
@@ -122,7 +122,7 @@ describe("Grid", () => {
     });
   });
 
-  describe("ordered grid construction", () => {
+  describe("ordered grid construction (order provided)", () => {
     test("renders items according to order matrix", async () => {
       const items = [
         { id: "1", label: "Item 1" },
@@ -242,9 +242,50 @@ describe("Grid", () => {
       const item2Button = screen.getByRole("button", { name: "Item 2" });
       const item3Button = screen.getByRole("button", { name: "Item 3" });
 
-      await expect.element(item1Button).toHaveAttribute("tabindex", "0");
-      await expect.element(item2Button).toHaveAttribute("tabindex", "-1");
-      await expect.element(item3Button).toHaveAttribute("tabindex", "-1");
+      await expect
+        .poll(() => item1Button.element().getAttribute("tabindex"))
+        .toBe("0");
+      await expect
+        .poll(() => item2Button.element().getAttribute("tabindex"))
+        .toBe("-1");
+      await expect
+        .poll(() => item3Button.element().getAttribute("tabindex"))
+        .toBe("-1");
+    });
+
+    test("makes first non-empty cell tabbable when (0,0) is empty", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+      ];
+
+      const order = [
+        [null, "2"],
+        ["1", null],
+      ];
+
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={items}
+          order={order}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
+
+      expect(getCellPosition(item2)).toEqual({ row: 0, col: 1 });
+      expect(getCellPosition(item1)).toEqual({ row: 1, col: 0 });
+
+      await expect
+        .poll(() => item2.element().getAttribute("tabindex"))
+        .toBe("0");
+      await expect
+        .poll(() => item1.element().getAttribute("tabindex"))
+        .toBe("-1");
     });
 
     test("moves focus with arrow keys to the next focusable cell", async () => {
