@@ -46,6 +46,7 @@ export function MessageBar({
       <Stack
         direction="row"
         padding={2}
+        paddingInlineStart={0}
         gap={2}
         flexGrow={2}
         borderRadius={18}
@@ -63,14 +64,11 @@ export function MessageBar({
       >
         <Stack
           ref={scrollerRef}
+          paddingLeft={2}
           direction="row"
           gap={2}
           flexGrow={1}
           overflow="auto"
-          sx={{
-            borderTopLeftRadius: 44,
-            borderBottomLeftRadius: 44,
-          }}
         >
           {message.map((part, index) => (
             <Stack key={index} direction="row">
