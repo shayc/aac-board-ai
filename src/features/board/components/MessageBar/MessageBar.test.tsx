@@ -29,6 +29,43 @@ test("renders multiple message parts in correct order", async () => {
   await expect.element(screen.getByText("I")).toBeVisible();
   await expect.element(screen.getByText("want")).toBeVisible();
   await expect.element(screen.getByText("water")).toBeVisible();
+
+  const allText = screen.container.textContent ?? "";
+  const iIndex = allText.indexOf("I");
+  const wantIndex = allText.indexOf("want");
+  const waterIndex = allText.indexOf("water");
+
+  expect(iIndex).toBeGreaterThan(-1);
+  expect(wantIndex).toBeGreaterThan(-1);
+  expect(waterIndex).toBeGreaterThan(-1);
+  expect(iIndex).toBeLessThan(wantIndex);
+  expect(wantIndex).toBeLessThan(waterIndex);
+});
+
+test("renders empty message with controls available", async () => {
+  const onBackspacePress = vi.fn();
+  const onBackspaceLongPress = vi.fn();
+  const onPlayClick = vi.fn();
+  const onStopClick = vi.fn();
+
+  const screen = await render(
+    <MessageBar
+      message={[]}
+      isPlaying={false}
+      onBackspacePress={onBackspacePress}
+      onBackspaceLongPress={onBackspaceLongPress}
+      onPlayClick={onPlayClick}
+      onStopClick={onStopClick}
+    />,
+  );
+
+  await expect
+    .element(screen.getByRole("button", { name: "Backspace" }))
+    .toBeVisible();
+
+  await expect
+    .element(screen.getByRole("button", { name: "Play message" }))
+    .toBeVisible();
 });
 
 test("clicking backspace button calls onBackspacePress", async () => {
@@ -134,6 +171,11 @@ test("play button aria-label changes based on playing state", async () => {
     />,
   );
 
-  const stopButton = screen.getByRole("button", { name: "Stop playback" });
-  await expect.element(stopButton).toBeVisible();
+  expect(
+    screen.getByRole("button", { name: "Play message" }).query(),
+  ).toBeNull();
+
+  await expect
+    .element(screen.getByRole("button", { name: "Stop playback" }))
+    .toBeVisible();
 });
