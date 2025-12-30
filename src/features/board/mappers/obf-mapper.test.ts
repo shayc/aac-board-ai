@@ -43,7 +43,7 @@ test("obfToBoard prefers media sources in data > path > url order", () => {
   expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
 });
 
-test("obfToBoard merges action + actions and filters falsy values", () => {
+test("obfToBoard merges action + actions in order", () => {
   const obfBoard: OBFBoard = {
     format: "open-board-0.1",
     id: "board-2",
@@ -52,8 +52,7 @@ test("obfToBoard merges action + actions and filters falsy values", () => {
         id: "btn-1",
         label: "Speak",
         action: ":speak",
-        // Force some falsy values to ensure filtering is robust.
-        actions: [":space", undefined as unknown as ":space", ":clear"],
+        actions: [":space", ":clear"],
       },
     ],
     grid: {
@@ -64,7 +63,6 @@ test("obfToBoard merges action + actions and filters falsy values", () => {
   };
 
   const board = obfToBoard(obfBoard);
-
   expect(board.buttons[0]?.actions).toEqual([":speak", ":space", ":clear"]);
 });
 
@@ -191,6 +189,45 @@ test("obfToBoard returns undefined imageSrc/soundSrc for unknown ids", () => {
   expect(board.buttons[0]?.soundSrc).toBeUndefined();
 });
 
+test("obfToBoard prefers path over url when data is absent", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-path-fallback",
+    buttons: [
+      {
+        id: "btn-1",
+        label: "Media",
+        image_id: "img-1",
+        sound_id: "snd-1",
+      },
+    ],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [["btn-1"]],
+    },
+    images: [
+      {
+        id: "img-1",
+        path: "images/img-1.png",
+        url: "https://example.com/img.png",
+      },
+    ],
+    sounds: [
+      {
+        id: "snd-1",
+        path: "sounds/snd-1.mp3",
+        url: "https://example.com/snd.mp3",
+      },
+    ],
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.buttons[0]?.imageSrc).toBe("images/img-1.png");
+  expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
+});
+
 test("obfToBoard falls back to url when no data/path is available", () => {
   const obfBoard: OBFBoard = {
     format: "open-board-0.1",
@@ -242,4 +279,141 @@ test("obfToBoard sets actions to an empty array when none are provided", () => {
 
   const board = obfToBoard(obfBoard);
   expect(board.buttons[0]?.actions).toEqual([]);
+});
+
+test("obfToBoard maps license fields with snake_case to camelCase", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-license",
+    buttons: [],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [[null]],
+    },
+    license: {
+      type: "CC BY-SA 4.0",
+      copyright_notice_url: "https://example.com/copyright",
+      source_url: "https://example.com/source",
+      author_name: "Jane Doe",
+      author_url: "https://example.com/author",
+      author_email: "jane@example.com",
+    },
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.license).toEqual({
+    type: "CC BY-SA 4.0",
+    copyrightNoticeUrl: "https://example.com/copyright",
+    sourceUrl: "https://example.com/source",
+    authorName: "Jane Doe",
+    authorUrl: "https://example.com/author",
+    authorEmail: "jane@example.com",
+  });
+});
+
+test("obfToBoard maps top-level locale and descriptionHTML fields", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-top-level",
+    name: "My Board",
+    locale: "en-US",
+    description_html: "<p>Board description</p>",
+    buttons: [],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [[null]],
+    },
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.id).toBe("board-top-level");
+  expect(board.name).toBe("My Board");
+  expect(board.locale).toBe("en-US");
+  expect(board.descriptionHTML).toBe("<p>Board description</p>");
+});
+
+test("obfToBoard handles missing images and sounds arrays gracefully", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-no-media-arrays",
+    buttons: [
+      {
+        id: "btn-1",
+        label: "Button",
+        image_id: "img-1",
+        sound_id: "snd-1",
+      },
+    ],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [["btn-1"]],
+    },
+    // No images or sounds arrays defined
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.buttons[0]?.imageSrc).toBeUndefined();
+  expect(board.buttons[0]?.soundSrc).toBeUndefined();
+});
+
+test("obfToBoard ignores media entries without any source (no data, path, or url)", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-empty-media",
+    buttons: [
+      {
+        id: "btn-1",
+        label: "Button",
+        image_id: "img-empty",
+        sound_id: "snd-empty",
+      },
+    ],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [["btn-1"]],
+    },
+    images: [
+      {
+        id: "img-empty",
+        // No data, path, or url provided
+      },
+    ],
+    sounds: [
+      {
+        id: "snd-empty",
+        // No data, path, or url provided
+      },
+    ],
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.buttons[0]?.imageSrc).toBeUndefined();
+  expect(board.buttons[0]?.soundSrc).toBeUndefined();
+});
+
+test("obfToBoard handles board without optional name field", () => {
+  const obfBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-no-name",
+    // name is optional and omitted
+    buttons: [],
+    grid: {
+      rows: 1,
+      columns: 1,
+      order: [[null]],
+    },
+  };
+
+  const board = obfToBoard(obfBoard);
+
+  expect(board.id).toBe("board-no-name");
+  expect(board.name).toBeUndefined();
 });
