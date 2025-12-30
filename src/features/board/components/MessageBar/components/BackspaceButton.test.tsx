@@ -2,19 +2,23 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BackspaceButton } from "./BackspaceButton";
 
+function createHandlers() {
+  return {
+    onPress: vi.fn(),
+    onLongPress: vi.fn(),
+  };
+}
+
 describe("BackspaceButton", () => {
   test("calls onPress when clicked", async () => {
-    const onPress = vi.fn();
-    const onLongPress = vi.fn();
+    const handlers = createHandlers();
 
-    const screen = await render(
-      <BackspaceButton onPress={onPress} onLongPress={onLongPress} />,
-    );
+    const screen = await render(<BackspaceButton {...handlers} />);
 
     const button = screen.getByRole("button", { name: "Backspace" });
     await button.click();
 
-    expect(onPress).toHaveBeenCalledTimes(1);
-    expect(onLongPress).not.toHaveBeenCalled();
+    expect(handlers.onPress).toHaveBeenCalledTimes(1);
+    expect(handlers.onLongPress).not.toHaveBeenCalled();
   });
 });
