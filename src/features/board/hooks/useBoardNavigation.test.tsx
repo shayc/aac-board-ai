@@ -1,0 +1,331 @@
+import * as boardsDB from "@features/board/db/boards-db";
+import type { ReactNode } from "react";
+import { MemoryRouter, Route, Routes } from "react-router";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { renderHook } from "vitest-browser-react";
+import { useBoardNavigation } from "./useBoardNavigation";
+
+vi.mock("@features/board/db/boards-db", () => ({
+  getBoardset: vi.fn(),
+  openBoardsDB: vi.fn(),
+}));
+
+const mockNavigate = vi.fn();
+vi.mock("react-router", async () => {
+  const actual = await vi.importActual("react-router");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
+function createWrapper(initialSetId = "set-1", initialBoardId = "board-1") {
+  return function Wrapper({ children }: { children: ReactNode }) {
+    return (
+      <MemoryRouter
+        initialEntries={[`/sets/${initialSetId}/boards/${initialBoardId}`]}
+      >
+        <Routes>
+          <Route
+            path="/sets/:setId/boards/:boardId"
+            element={<>{children}</>}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+  };
+}
+
+describe("useBoardNavigation", () => {
+  let mockDB: { close: ReturnType<typeof vi.fn> };
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockDB = {
+      close: vi.fn(),
+    };
+    vi.mocked(boardsDB.openBoardsDB).mockResolvedValue(mockDB as never);
+    vi.mocked(boardsDB.getBoardset).mockResolvedValue({
+      id: "set-1",
+      rootBoardId: "root-1",
+    } as never);
+  });
+
+  test("initializes with current boardId in navigation history", async () => {
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(result.current.canGoBack).toBe(false);
+  });
+
+  test("navigateToBoard appends new board to history and navigates", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await act(() => {
+      result.current.navigateToBoard("board-2");
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1", "board-2"]);
+    expect(result.current.canGoBack).toBe(true);
+    expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-2");
+  });
+
+  test("navigateToBoard ignores empty or duplicate board id", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await act(() => {
+      result.current.navigateToBoard("");
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(mockNavigate).not.toHaveBeenCalled();
+
+    await act(() => {
+      result.current.navigateToBoard("board-1");
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  test("navigateBack moves to previous board in history", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await act(() => {
+      result.current.navigateToBoard("board-2");
+    });
+
+    mockNavigate.mockClear();
+
+    await act(() => {
+      result.current.navigateBack();
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1", "board-2"]);
+    expect(result.current.canGoBack).toBe(false);
+    expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-1");
+  });
+
+  test("navigateBack does nothing when at start of history", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await act(() => {
+      result.current.navigateBack();
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  test("navigateToBoard truncates forward history when navigating from middle", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await act(() => {
+      result.current.navigateToBoard("board-2");
+    });
+    await act(() => {
+      result.current.navigateToBoard("board-3");
+    });
+
+    expect(result.current.canGoBack).toBe(true);
+
+    mockNavigate.mockClear();
+
+    await act(() => {
+      result.current.navigateBack();
+    });
+
+    // We should now be at index 1 ("board-2"), i.e. in the middle of history.
+    expect(result.current.canGoBack).toBe(true);
+
+    expect(result.current.navigationHistory).toEqual([
+      "board-1",
+      "board-2",
+      "board-3",
+    ]);
+    expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-2");
+
+    mockNavigate.mockClear();
+
+    await act(() => {
+      result.current.navigateToBoard("board-4");
+    });
+
+    expect(result.current.navigationHistory).toEqual([
+      "board-1",
+      "board-2",
+      "board-4",
+    ]);
+    expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-4");
+  });
+
+  test("canGoHome returns true when root board is loaded", async () => {
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(result.current.canGoHome).toBe(true);
+    });
+  });
+
+  test("canGoHome returns false when root board is not available", async () => {
+    vi.mocked(boardsDB.getBoardset).mockResolvedValue(null);
+
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(result.current.canGoHome).toBe(false);
+    });
+  });
+
+  test("navigateHome resets to root board", async () => {
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(result.current.canGoHome).toBe(true);
+    });
+
+    await act(() => {
+      result.current.navigateToBoard("board-2");
+    });
+    await act(() => {
+      result.current.navigateToBoard("board-3");
+    });
+
+    mockNavigate.mockClear();
+
+    await act(() => {
+      result.current.navigateHome();
+    });
+
+    expect(result.current.navigationHistory).toEqual(["root-1"]);
+    expect(result.current.canGoBack).toBe(false);
+    expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/root-1");
+  });
+
+  test("navigateHome does nothing when rootBoardId is not loaded", async () => {
+    vi.mocked(boardsDB.getBoardset).mockResolvedValue(null);
+
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(result.current.canGoHome).toBe(false);
+    });
+
+    // Precondition: history initialized with current board
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+
+    await act(() => {
+      result.current.navigateHome();
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  test("navigateToBoard does nothing when setId is missing", async () => {
+    function WrapperWithBoardOnlyParam({ children }: { children: ReactNode }) {
+      return (
+        <MemoryRouter initialEntries={["/boards/board-1"]}>
+          <Routes>
+            <Route path="/boards/:boardId" element={<>{children}</>} />
+          </Routes>
+        </MemoryRouter>
+      );
+    }
+
+    const { result, act } = await renderHook(() => useBoardNavigation(), {
+      wrapper: WrapperWithBoardOnlyParam,
+    });
+
+    // Precondition: history initialized with current board
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+
+    await act(() => {
+      result.current.navigateToBoard("board-2");
+    });
+
+    expect(result.current.navigationHistory).toEqual(["board-1"]);
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  test("loads root board from database on mount", async () => {
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(result.current.canGoHome).toBe(true);
+    });
+
+    expect(boardsDB.openBoardsDB).toHaveBeenCalled();
+    expect(boardsDB.getBoardset).toHaveBeenCalledWith(mockDB, "set-1");
+    await vi.waitFor(() => {
+      expect(mockDB.close).toHaveBeenCalled();
+    });
+  });
+
+  test("handles database error when loading root board", async () => {
+    const consoleErrorSpy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {
+        // Suppress console output during test
+      });
+    vi.mocked(boardsDB.getBoardset).mockRejectedValue(new Error("DB error"));
+
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: createWrapper("set-1", "board-1"),
+    });
+
+    await vi.waitFor(() => {
+      expect(mockDB.close).toHaveBeenCalled();
+    });
+
+    expect(result.current.canGoHome).toBe(false);
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      "Failed to load board:",
+      expect.any(Error),
+    );
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  test("does not load root board when setId is missing", async () => {
+    function WrapperWithoutParams({ children }: { children: ReactNode }) {
+      return (
+        <MemoryRouter initialEntries={["/other"]}>
+          <Routes>
+            <Route path="/other" element={<>{children}</>} />
+          </Routes>
+        </MemoryRouter>
+      );
+    }
+
+    const { result } = await renderHook(() => useBoardNavigation(), {
+      wrapper: WrapperWithoutParams,
+    });
+
+    expect(boardsDB.openBoardsDB).not.toHaveBeenCalled();
+    expect(result.current.canGoHome).toBe(false);
+    expect(result.current.navigationHistory).toEqual([]);
+  });
+});
