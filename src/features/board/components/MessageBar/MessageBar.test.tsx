@@ -1,139 +1,135 @@
 import type { MessagePart } from "@features/board/hooks/useMessage";
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { MessageBar } from "./MessageBar";
 
-test("renders multiple message parts in correct order", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+function createHandlers() {
+  return {
+    onBackspacePress: vi.fn(),
+    onBackspaceLongPress: vi.fn(),
+    onPlayClick: vi.fn(),
+    onStopClick: vi.fn(),
+  };
+}
 
-  const messageParts: MessagePart[] = [
-    { id: "1", label: "I" },
-    { id: "2", label: "want" },
-    { id: "3", label: "water" },
-  ];
+describe("MessageBar", () => {
+  test("renders empty message with controls available", async () => {
+    const handlers = createHandlers();
 
-  const screen = await render(
-    <MessageBar
-      message={messageParts}
-      isPlaying={false}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+    const screen = await render(
+      <MessageBar message={[]} isPlaying={false} {...handlers} />,
+    );
 
-  await expect.element(screen.getByText("I")).toBeVisible();
-  await expect.element(screen.getByText("want")).toBeVisible();
-  await expect.element(screen.getByText("water")).toBeVisible();
-});
+    await expect
+      .element(screen.getByRole("button", { name: "Backspace" }))
+      .toBeVisible();
 
-test("clicking backspace button calls onBackspacePress", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeVisible();
+  });
 
-  const screen = await render(
-    <MessageBar
-      message={[{ id: "1", label: "Test" }]}
-      isPlaying={false}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+  test("renders multiple message parts in correct order", async () => {
+    const handlers = createHandlers();
 
-  const backspaceButton = screen.getByRole("button", { name: "Backspace" });
-  await backspaceButton.click();
+    const messageParts: MessagePart[] = [
+      { id: "1", label: "I" },
+      { id: "2", label: "want" },
+      { id: "3", label: "water" },
+    ];
 
-  expect(onBackspacePress).toHaveBeenCalledTimes(1);
-});
+    const screen = await render(
+      <MessageBar message={messageParts} isPlaying={false} {...handlers} />,
+    );
 
-test("clicking play button calls onPlayClick when not playing", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    await expect.element(screen.getByText("I")).toBeVisible();
+    await expect.element(screen.getByText("want")).toBeVisible();
+    await expect.element(screen.getByText("water")).toBeVisible();
 
-  const screen = await render(
-    <MessageBar
-      message={[{ id: "1", label: "Test" }]}
-      isPlaying={false}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+    const allText = screen.container.textContent ?? "";
+    const iIndex = allText.indexOf("I");
+    const wantIndex = allText.indexOf("want");
+    const waterIndex = allText.indexOf("water");
 
-  const playButton = screen.getByRole("button", { name: "Play message" });
-  await playButton.click();
+    expect(iIndex).toBeGreaterThan(-1);
+    expect(wantIndex).toBeGreaterThan(-1);
+    expect(waterIndex).toBeGreaterThan(-1);
+    expect(iIndex).toBeLessThan(wantIndex);
+    expect(wantIndex).toBeLessThan(waterIndex);
+  });
 
-  expect(onPlayClick).toHaveBeenCalledTimes(1);
-  expect(onStopClick).not.toHaveBeenCalled();
-});
+  test("play button aria-label changes based on playing state", async () => {
+    const handlers = createHandlers();
 
-test("clicking stop button calls onStopClick when playing", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    const screen = await render(
+      <MessageBar message={[]} isPlaying={false} {...handlers} />,
+    );
 
-  const screen = await render(
-    <MessageBar
-      message={[{ id: "1", label: "Test" }]}
-      isPlaying={true}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+    const playButton = screen.getByRole("button", { name: "Play message" });
+    await expect.element(playButton).toBeVisible();
 
-  const stopButton = screen.getByRole("button", { name: "Stop playback" });
-  await stopButton.click();
+    const { rerender } = screen;
+    await rerender(<MessageBar message={[]} isPlaying={true} {...handlers} />);
 
-  expect(onStopClick).toHaveBeenCalledTimes(1);
-  expect(onPlayClick).not.toHaveBeenCalled();
-});
+    expect(
+      screen.getByRole("button", { name: "Play message" }).query(),
+    ).toBeNull();
 
-test("play button aria-label changes based on playing state", async () => {
-  const onBackspacePress = vi.fn();
-  const onBackspaceLongPress = vi.fn();
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    await expect
+      .element(screen.getByRole("button", { name: "Stop playback" }))
+      .toBeVisible();
+  });
 
-  const screen = await render(
-    <MessageBar
-      message={[]}
-      isPlaying={false}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+  test("clicking backspace button calls onBackspacePress", async () => {
+    const handlers = createHandlers();
 
-  const playButton = screen.getByRole("button", { name: "Play message" });
-  await expect.element(playButton).toBeVisible();
+    const screen = await render(
+      <MessageBar
+        message={[{ id: "1", label: "Test" }]}
+        isPlaying={false}
+        {...handlers}
+      />,
+    );
 
-  const { rerender } = screen;
-  await rerender(
-    <MessageBar
-      message={[]}
-      isPlaying={true}
-      onBackspacePress={onBackspacePress}
-      onBackspaceLongPress={onBackspaceLongPress}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+    const backspaceButton = screen.getByRole("button", { name: "Backspace" });
+    await backspaceButton.click();
 
-  const stopButton = screen.getByRole("button", { name: "Stop playback" });
-  await expect.element(stopButton).toBeVisible();
+    expect(handlers.onBackspacePress).toHaveBeenCalledTimes(1);
+  });
+
+  test("clicking play button calls onPlayClick when not playing", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <MessageBar
+        message={[{ id: "1", label: "Test" }]}
+        isPlaying={false}
+        {...handlers}
+      />,
+    );
+
+    const playButton = screen.getByRole("button", { name: "Play message" });
+    await playButton.click();
+
+    expect(handlers.onPlayClick).toHaveBeenCalledTimes(1);
+    expect(handlers.onStopClick).not.toHaveBeenCalled();
+  });
+
+  test("clicking stop button calls onStopClick when playing", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <MessageBar
+        message={[{ id: "1", label: "Test" }]}
+        isPlaying={true}
+        {...handlers}
+      />,
+    );
+
+    const stopButton = screen.getByRole("button", { name: "Stop playback" });
+    await stopButton.click();
+
+    expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
+    expect(handlers.onPlayClick).not.toHaveBeenCalled();
+  });
 });

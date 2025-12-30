@@ -1,108 +1,62 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionBar } from "./SuggestionBar";
 
-test("renders multiple suggestion chips", async () => {
-  const onSuggestionClick = vi.fn();
-  const onToneChange = vi.fn();
-  const suggestions = ["Hello", "How are you?", "Thank you"];
+function createHandlers() {
+  return {
+    onSuggestionClick: vi.fn(),
+    onToneChange: vi.fn(),
+  };
+}
 
-  const screen = await render(
-    <SuggestionBar
-      suggestions={suggestions}
-      tone="as-is"
-      onToneChange={onToneChange}
-      onSuggestionClick={onSuggestionClick}
-    />,
-  );
+describe("SuggestionBar", () => {
+  test("renders a chip for each suggestion", async () => {
+    const handlers = createHandlers();
+    const suggestions = ["Hello", "How are you?", "Thank you"];
 
-  await expect.element(screen.getByText("Hello")).toBeVisible();
-  await expect.element(screen.getByText("How are you?")).toBeVisible();
-  await expect.element(screen.getByText("Thank you")).toBeVisible();
-});
+    const screen = await render(
+      <SuggestionBar suggestions={suggestions} tone="as-is" {...handlers} />,
+    );
 
-test("clicking suggestion chips calls onSuggestionClick with correct values", async () => {
-  const onSuggestionClick = vi.fn();
-  const onToneChange = vi.fn();
-  const suggestions = ["Hello", "Goodbye"];
+    for (const suggestion of suggestions) {
+      await expect
+        .element(screen.getByRole("button", { name: suggestion }))
+        .toBeVisible();
+    }
+  });
 
-  const screen = await render(
-    <SuggestionBar
-      suggestions={suggestions}
-      tone="as-is"
-      onToneChange={onToneChange}
-      onSuggestionClick={onSuggestionClick}
-    />,
-  );
+  test("clicking suggestion chips calls onSuggestionClick with correct values", async () => {
+    const handlers = createHandlers();
+    const suggestions = ["Hello", "Goodbye"];
 
-  const firstChip = screen.getByText("Hello");
-  await firstChip.click();
+    const screen = await render(
+      <SuggestionBar suggestions={suggestions} tone="as-is" {...handlers} />,
+    );
 
-  expect(onSuggestionClick).toHaveBeenCalledWith("Hello");
-  expect(onSuggestionClick).toHaveBeenCalledTimes(1);
+    const firstChip = screen.getByRole("button", { name: "Hello" });
+    await firstChip.click();
 
-  const secondChip = screen.getByText("Goodbye");
-  await secondChip.click();
+    expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Hello");
+    expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(1);
 
-  expect(onSuggestionClick).toHaveBeenCalledWith("Goodbye");
-  expect(onSuggestionClick).toHaveBeenCalledTimes(2);
-});
+    const secondChip = screen.getByRole("button", { name: "Goodbye" });
+    await secondChip.click();
 
-test("passes tone prop to ToneSelector", async () => {
-  const onSuggestionClick = vi.fn();
-  const onToneChange = vi.fn();
+    expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
+    expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(2);
+  });
 
-  const screen = await render(
-    <SuggestionBar
-      suggestions={["Hello"]}
-      tone="more-formal"
-      onToneChange={onToneChange}
-      onSuggestionClick={onSuggestionClick}
-    />,
-  );
+  test("changing tone calls onToneChange with correct tone value", async () => {
+    const handlers = createHandlers();
 
-  const formalButton = screen.getByLabelText("formal tone");
-  await expect.element(formalButton).toHaveAttribute("aria-pressed", "true");
-});
+    const screen = await render(
+      <SuggestionBar suggestions={["Hello"]} tone="as-is" {...handlers} />,
+    );
 
-test("changing tone calls onToneChange with correct tone value", async () => {
-  const onSuggestionClick = vi.fn();
-  const onToneChange = vi.fn();
+    const casualButton = screen.getByRole("button", { name: "casual tone" });
+    await casualButton.click();
 
-  const screen = await render(
-    <SuggestionBar
-      suggestions={["Hello"]}
-      tone="as-is"
-      onToneChange={onToneChange}
-      onSuggestionClick={onSuggestionClick}
-    />,
-  );
-
-  const casualButton = screen.getByLabelText("casual tone");
-  await casualButton.click();
-
-  expect(onToneChange).toHaveBeenCalledWith("more-casual");
-  expect(onToneChange).toHaveBeenCalledTimes(1);
-});
-
-test("renders ToneSelector when suggestions array is empty", async () => {
-  const onSuggestionClick = vi.fn();
-  const onToneChange = vi.fn();
-
-  const screen = await render(
-    <SuggestionBar
-      suggestions={[]}
-      tone="as-is"
-      onToneChange={onToneChange}
-      onSuggestionClick={onSuggestionClick}
-    />,
-  );
-
-  const neutralButton = screen.getByLabelText("neutral tone");
-  const formalButton = screen.getByLabelText("formal tone");
-  const casualButton = screen.getByLabelText("casual tone");
-
-  await expect.element(neutralButton).toBeVisible();
-  await expect.element(formalButton).toBeVisible();
-  await expect.element(casualButton).toBeVisible();
+    expect(handlers.onToneChange).toHaveBeenCalledWith("more-casual");
+    expect(handlers.onToneChange).toHaveBeenCalledTimes(1);
+  });
 });

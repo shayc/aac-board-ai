@@ -1,70 +1,52 @@
-import { expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { PlayButton } from "./PlayButton";
 
-test("calls onPlayClick when clicked while not playing", async () => {
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+function createHandlers() {
+  return {
+    onPlayClick: vi.fn(),
+    onStopClick: vi.fn(),
+  };
+}
 
-  const screen = await render(
-    <PlayButton
-      isPlaying={false}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+describe("PlayButton", () => {
+  test("calls onPlayClick when clicked while not playing", async () => {
+    const handlers = createHandlers();
 
-  const button = screen.getByRole("button", { name: "Play message" });
-  await button.click();
+    const screen = await render(<PlayButton isPlaying={false} {...handlers} />);
 
-  expect(onPlayClick).toHaveBeenCalledTimes(1);
-  expect(onStopClick).not.toHaveBeenCalled();
-});
+    const button = screen.getByRole("button", { name: "Play message" });
+    await button.click();
 
-test("calls onStopClick when clicked while playing", async () => {
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    expect(handlers.onPlayClick).toHaveBeenCalledTimes(1);
+    expect(handlers.onStopClick).not.toHaveBeenCalled();
+  });
 
-  const screen = await render(
-    <PlayButton
-      isPlaying={true}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+  test("calls onStopClick when clicked while playing", async () => {
+    const handlers = createHandlers();
 
-  const button = screen.getByRole("button", { name: "Stop playback" });
-  await button.click();
+    const screen = await render(<PlayButton isPlaying={true} {...handlers} />);
 
-  expect(onStopClick).toHaveBeenCalledTimes(1);
-  expect(onPlayClick).not.toHaveBeenCalled();
-});
+    const button = screen.getByRole("button", { name: "Stop playback" });
+    await button.click();
 
-test("changes label when isPlaying state changes", async () => {
-  const onPlayClick = vi.fn();
-  const onStopClick = vi.fn();
+    expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
+    expect(handlers.onPlayClick).not.toHaveBeenCalled();
+  });
 
-  const screen = await render(
-    <PlayButton
-      isPlaying={false}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+  test("changes label when isPlaying state changes", async () => {
+    const handlers = createHandlers();
 
-  await expect
-    .element(screen.getByRole("button", { name: "Play message" }))
-    .toBeVisible();
+    const screen = await render(<PlayButton isPlaying={false} {...handlers} />);
 
-  await screen.rerender(
-    <PlayButton
-      isPlaying={true}
-      onPlayClick={onPlayClick}
-      onStopClick={onStopClick}
-    />,
-  );
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeVisible();
 
-  await expect
-    .element(screen.getByRole("button", { name: "Stop playback" }))
-    .toBeVisible();
+    await screen.rerender(<PlayButton isPlaying={true} {...handlers} />);
+
+    await expect
+      .element(screen.getByRole("button", { name: "Stop playback" }))
+      .toBeVisible();
+  });
 });
