@@ -1,8 +1,6 @@
 import { openBoardsDB } from "@features/board/db/boards-db";
 import { importFile } from "@features/board/db/import-board";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
+import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
@@ -48,19 +46,5 @@ export function HomePage() {
     };
   }, [navigate]);
 
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 2,
-        marginTop: 4,
-      }}
-    >
-      <CircularProgress />
-      <Typography>Loading board...</Typography>
-    </Box>
-  );
+  return <LoadingIndicator message="Loading board..." />;
 }
