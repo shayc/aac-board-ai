@@ -22,6 +22,10 @@ export function useBoardNavigation() {
   const canGoHome = rootBoardId !== "";
 
   function navigateToBoard(id: string) {
+    if (!setId) {
+      return;
+    }
+
     if (!id || id === navState.history[navState.index]) {
       return;
     }
@@ -39,6 +43,10 @@ export function useBoardNavigation() {
   }
 
   function navigateBack() {
+    if (!setId) {
+      return;
+    }
+
     if (!canGoBack) {
       return;
     }
@@ -55,6 +63,14 @@ export function useBoardNavigation() {
   }
 
   function navigateHome() {
+    if (!setId) {
+      return;
+    }
+
+    if (!rootBoardId) {
+      return;
+    }
+
     setNavState((prev) => ({
       ...prev,
       history: [rootBoardId],
