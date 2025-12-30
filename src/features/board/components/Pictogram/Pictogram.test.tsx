@@ -4,6 +4,13 @@ import { render } from "vitest-browser-react";
 import { Pictogram } from "./Pictogram";
 
 describe("Pictogram", () => {
+  test("renders no content when no src or label is provided", async () => {
+    const screen = await render(<Pictogram />);
+
+    expect(screen.container.textContent).toBe("");
+    expect(screen.container.querySelector("img")).toBeNull();
+  });
+
   test("renders label when provided", async () => {
     const screen = await render(<Pictogram label="Hello" />);
 
@@ -12,9 +19,7 @@ describe("Pictogram", () => {
   });
 
   test("renders image when src is provided", async () => {
-    const screen = await render(
-      <Pictogram src={TEST_IMAGE_SRC} label="Test" />,
-    );
+    const screen = await render(<Pictogram src={TEST_IMAGE_SRC} />);
 
     const img = screen.container.querySelector("img");
     expect(img).not.toBeNull();
@@ -28,21 +33,10 @@ describe("Pictogram", () => {
     );
 
     await expect.element(screen.getByText("Action")).toBeVisible();
-    expect(screen.container.querySelector("img")).not.toBeNull();
-  });
-
-  test("renders no content when no src or label is provided", async () => {
-    const screen = await render(<Pictogram />);
-
-    expect(screen.container.textContent).toBe("");
-    expect(screen.container.querySelector("img")).toBeNull();
-  });
-
-  test("renders only image when label is omitted", async () => {
-    const screen = await render(<Pictogram src={TEST_IMAGE_SRC} />);
 
     const img = screen.container.querySelector("img");
+    expect(img).not.toBeNull();
     expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
-    expect(screen.container.textContent).toBe("");
+    expect(img?.getAttribute("alt")).toBe("");
   });
 });
