@@ -12,8 +12,11 @@
 
 import { z } from "zod";
 
-/** Unique identifier as a string. */
-export const OBFIDSchema = z.coerce.string();
+/** Unique identifier as a string. Must be a non-empty string or number (coerced to string). */
+export const OBFIDSchema = z
+  .union([z.string(), z.number()])
+  .transform((val) => String(val))
+  .pipe(z.string().min(1));
 export type OBFID = z.infer<typeof OBFIDSchema>;
 
 /**
@@ -44,7 +47,7 @@ export type OBFStrings = z.infer<typeof OBFStringsSchema>;
  * Represents custom actions for spelling.
  * Prefixed with '+' followed by the text to append.
  */
-export const OBFSpellingActionSchema = z.string();
+export const OBFSpellingActionSchema = z.string().regex(/^\+.+$/);
 export type OBFSpellingAction = z.infer<typeof OBFSpellingActionSchema>;
 
 /**
@@ -52,12 +55,9 @@ export type OBFSpellingAction = z.infer<typeof OBFSpellingActionSchema>;
  * Standard actions are prefixed with ':'.
  * Custom actions start with ':ext_'.
  */
-export const OBFSpecialtyActionSchema = z.enum([
-  ":space",
-  ":clear",
-  ":home",
-  ":speak",
-  ":backspace",
+export const OBFSpecialtyActionSchema = z.union([
+  z.enum([":space", ":clear", ":home", ":speak", ":backspace"]),
+  z.string().regex(/^:ext_.+$/),
 ]);
 export type OBFSpecialtyAction = z.infer<typeof OBFSpecialtyActionSchema>;
 
@@ -212,17 +212,24 @@ export type OBFButton = z.infer<typeof OBFButtonSchema>;
 /**
  * Grid layout information for the board.
  */
-export const OBFGridSchema = z.object({
-  /** Number of rows in the grid. */
-  rows: z.number().int().min(1),
-  /** Number of columns in the grid. */
-  columns: z.number().int().min(1),
-  /**
-   * 2D array representing the order of buttons by their IDs.
-   * Each sub-array corresponds to a row, and each element is a button ID or null for empty slots.
-   */
-  order: z.array(z.array(z.union([OBFIDSchema, z.null()]))),
-});
+export const OBFGridSchema = z
+  .object({
+    /** Number of rows in the grid. */
+    rows: z.number().int().min(1),
+    /** Number of columns in the grid. */
+    columns: z.number().int().min(1),
+    /**
+     * 2D array representing the order of buttons by their IDs.
+     * Each sub-array corresponds to a row, and each element is a button ID or null for empty slots.
+     */
+    order: z.array(z.array(z.union([OBFIDSchema, z.null()]))),
+  })
+  .refine((g) => g.order.length === g.rows, {
+    message: "Grid order length must match rows",
+  })
+  .refine((g) => g.order.every((row) => row.length === g.columns), {
+    message: "Each grid row must have length equal to columns",
+  });
 export type OBFGrid = z.infer<typeof OBFGridSchema>;
 
 /**
