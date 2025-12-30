@@ -91,10 +91,8 @@ export function useGridKeyboard({
     },
   });
 
-  const handleFocus = (event: FocusEvent) => {
-    const cell = (event.target as HTMLElement).closest<HTMLElement>(
-      "[data-grid-cell]",
-    );
+  const handleFocus = (event: FocusEvent<HTMLElement>) => {
+    const cell = event.target.closest<HTMLElement>("[data-grid-cell]");
     if (!cell) {
       return;
     }
