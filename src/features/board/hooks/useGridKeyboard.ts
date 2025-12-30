@@ -1,5 +1,5 @@
 import type { FocusEvent, RefObject } from "react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useKeyboard } from "react-aria";
 
 interface GridCell {
@@ -91,7 +91,7 @@ export function useGridKeyboard({
     },
   });
 
-  const handleFocus = useCallback((event: FocusEvent) => {
+  const handleFocus = (event: FocusEvent) => {
     const cell = (event.target as HTMLElement).closest<HTMLElement>(
       "[data-grid-cell]",
     );
@@ -105,7 +105,7 @@ export function useGridKeyboard({
     if (!isNaN(row) && !isNaN(col)) {
       setActiveCell({ row, col });
     }
-  }, []);
+  };
 
   return { keyboardProps, activeCell, handleFocus };
 }
