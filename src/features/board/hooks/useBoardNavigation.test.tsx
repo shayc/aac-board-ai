@@ -147,7 +147,6 @@ describe("useBoardNavigation", () => {
       result.current.navigateBack();
     });
 
-    // We should now be at index 1 ("board-2"), i.e. in the middle of history.
     expect(result.current.canGoBack).toBe(true);
 
     expect(result.current.navigationHistory).toEqual([
@@ -231,7 +230,6 @@ describe("useBoardNavigation", () => {
       expect(result.current.canGoHome).toBe(false);
     });
 
-    // Precondition: history initialized with current board
     expect(result.current.navigationHistory).toEqual(["board-1"]);
 
     await act(() => {
@@ -257,7 +255,6 @@ describe("useBoardNavigation", () => {
       wrapper: WrapperWithBoardOnlyParam,
     });
 
-    // Precondition: history initialized with current board
     expect(result.current.navigationHistory).toEqual(["board-1"]);
 
     await act(() => {
