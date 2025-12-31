@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-export function NavigationButtons() {
+export function NavButtons() {
   const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
 
   return (

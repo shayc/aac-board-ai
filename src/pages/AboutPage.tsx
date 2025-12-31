@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export function AboutPage() {
+function AboutPage() {
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   return (
@@ -78,3 +78,5 @@ export function AboutPage() {
     </Container>
   );
 }
+
+export default AboutPage;

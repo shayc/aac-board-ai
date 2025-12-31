@@ -11,11 +11,11 @@ import { SettingsDrawer } from "./SettingsDrawer/SettingsDrawer";
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [welcomeSeen, setWelcomeSeen] = usePersistentState(
-    "welcomeSeen",
+  const [onboardingSeen, setOnboardingSeen] = usePersistentState(
+    "onboardingSeen",
     false,
   );
-  const [isWelcomeOpen, setIsWelcomeOpen] = useState(!welcomeSeen);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!onboardingSeen);
 
   return (
     <AppProviders>
@@ -37,10 +37,10 @@ export function AppShell() {
         />
 
         <OnboardingModal
-          open={isWelcomeOpen}
+          open={isOnboardingOpen}
           onClose={() => {
-            setWelcomeSeen(true);
-            setIsWelcomeOpen(false);
+            setOnboardingSeen(true);
+            setIsOnboardingOpen(false);
           }}
         />
       </Box>

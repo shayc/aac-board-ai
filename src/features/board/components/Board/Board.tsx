@@ -1,5 +1,5 @@
 import {
-  NavigationButtons,
+  NavButtons,
   Grid,
   MessageBar,
   SuggestionBar,
@@ -52,7 +52,7 @@ export function Board() {
       />
 
       <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
-        <NavigationButtons />
+        <NavButtons />
 
         {isSuggestionsEnabled && (
           <SuggestionBar

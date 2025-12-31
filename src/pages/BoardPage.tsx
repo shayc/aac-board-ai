@@ -1,5 +1,7 @@
 import { Board } from "@features/board/components/Board/Board";
 
-export function BoardPage() {
+function BoardPage() {
   return <Board />;
 }
+
+export default BoardPage;

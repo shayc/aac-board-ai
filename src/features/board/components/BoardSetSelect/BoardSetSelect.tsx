@@ -1,17 +1,17 @@
 import { useBoard } from "@features/board/context/useBoard";
-import type { BoardsetRecord } from "@features/board/db/boards-db";
+import type { BoardSetRecord } from "@features/board/db/boards-db";
 import Box from "@mui/material/Box";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 
-interface BoardSetSelectorProps {
-  boardsets: BoardsetRecord[];
-  setId: string;
+interface BoardSetSelectProps {
+  boardSets: BoardSetRecord[];
+  boardSetId: string;
 }
 
-export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
+export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
   const { board } = useBoard();
   const navigate = useNavigate();
 
@@ -20,9 +20,9 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
       <Select
         sx={{ color: "inherit" }}
         size="small"
-        value={setId}
+        value={boardSetId}
         onChange={(e) => {
-          const selectedSet = boardsets.find((s) => s.setId === e.target.value);
+          const selectedSet = boardSets.find((s) => s.setId === e.target.value);
           if (selectedSet?.rootBoardId) {
             void navigate(
               `/sets/${selectedSet.setId}/boards/${selectedSet.rootBoardId}`,
@@ -30,7 +30,7 @@ export function BoardSetSelector({ boardsets, setId }: BoardSetSelectorProps) {
           }
         }}
       >
-        {boardsets.map((set) => (
+        {boardSets.map((set) => (
           <MenuItem key={set.setId} value={set.setId}>
             {set.name}
           </MenuItem>

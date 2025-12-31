@@ -1,4 +1,4 @@
-import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
+import { getBoardSet, openBoardsDB } from "@features/board/db/boards-db";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
@@ -19,19 +19,19 @@ export function BoardSetRootRedirect() {
       try {
         const db = await openBoardsDB();
         try {
-          const boardset = await getBoardset(db, setId!);
+          const boardSet = await getBoardSet(db, setId!);
 
-          if (!boardset) {
+          if (!boardSet) {
             setError(`Board set "${setId}" not found`);
             return;
           }
 
-          if (!boardset.rootBoardId) {
+          if (!boardSet.rootBoardId) {
             setError(`Board set "${setId}" has no root board`);
             return;
           }
 
-          setRootBoardId(boardset.rootBoardId);
+          setRootBoardId(boardSet.rootBoardId);
         } finally {
           db.close();
         }
