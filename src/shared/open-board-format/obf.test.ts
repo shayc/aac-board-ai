@@ -21,7 +21,7 @@ describe("parseOBF", () => {
     const jsonWithBom = "\uFEFF" + JSON.stringify(validBoard);
     const result = parseOBF(jsonWithBom);
 
-    expect(result.id).toBe("test-board");
+    expect(result).toEqual(validBoard);
   });
 
   test("throws descriptive error for invalid JSON", () => {
@@ -39,7 +39,7 @@ describe("validateOBF", () => {
   });
 
   test("throws for missing required grid field", () => {
-    const boardWithoutGrid = {
+    const boardWithoutGrid: unknown = {
       format: "open-board-0.1",
       id: "test-board",
       buttons: [],
@@ -67,11 +67,11 @@ describe("loadOBF", () => {
 
     const result = await loadOBF(file);
 
-    expect(result.id).toBe("test-board");
+    expect(result).toEqual(validBoard);
   });
 });
 
-describe("Integration: parseOBF and stringifyOBF", () => {
+describe("OBF round-trip", () => {
   test("round-trip preserves data", () => {
     const json = stringifyOBF(validBoard);
     const parsed = parseOBF(json);

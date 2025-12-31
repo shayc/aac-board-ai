@@ -2,6 +2,7 @@ import { describe, expect, test } from "vitest";
 import lotsOfStuffExample from "./examples/lots_of_stuff.json";
 import {
   OBFBoardSchema,
+  OBFButtonActionSchema,
   OBFButtonSchema,
   OBFFormatVersionSchema,
   OBFGridSchema,
@@ -11,6 +12,7 @@ import {
   OBFManifestSchema,
   OBFMediaSchema,
   OBFSpecialtyActionSchema,
+  OBFSpellingActionSchema,
   OBFSymbolInfoSchema,
 } from "./schema";
 
@@ -19,6 +21,10 @@ describe("OBFIDSchema", () => {
     expect(OBFIDSchema.parse(123)).toBe("123");
     expect(OBFIDSchema.parse("abc")).toBe("abc");
     expect(OBFIDSchema.parse(0)).toBe("0");
+  });
+
+  test("rejects empty string", () => {
+    expect(OBFIDSchema.safeParse("").success).toBe(false);
   });
 });
 
@@ -38,19 +44,69 @@ describe("OBFFormatVersionSchema", () => {
     );
     expect(OBFFormatVersionSchema.safeParse("board-0.1").success).toBe(false);
   });
+
+  test("rejects empty suffix after open-board-", () => {
+    expect(OBFFormatVersionSchema.safeParse("open-board-").success).toBe(false);
+  });
+});
+
+describe("OBFSpellingActionSchema", () => {
+  test("accepts valid spelling actions with + prefix", () => {
+    expect(OBFSpellingActionSchema.safeParse("+hello").success).toBe(true);
+    expect(OBFSpellingActionSchema.safeParse("+a").success).toBe(true);
+    expect(OBFSpellingActionSchema.safeParse("+Hello World").success).toBe(
+      true,
+    );
+  });
+
+  test("rejects actions without + prefix", () => {
+    expect(OBFSpellingActionSchema.safeParse("hello").success).toBe(false);
+    expect(OBFSpellingActionSchema.safeParse(":space").success).toBe(false);
+  });
+
+  test("rejects empty + action", () => {
+    expect(OBFSpellingActionSchema.safeParse("+").success).toBe(false);
+  });
 });
 
 describe("OBFSpecialtyActionSchema", () => {
-  test("accepts valid specialty actions", () => {
-    expect(OBFSpecialtyActionSchema.safeParse(":space").success).toBe(true);
-    expect(OBFSpecialtyActionSchema.safeParse(":clear").success).toBe(true);
-    expect(OBFSpecialtyActionSchema.safeParse(":home").success).toBe(true);
-    expect(OBFSpecialtyActionSchema.safeParse(":speak").success).toBe(true);
-    expect(OBFSpecialtyActionSchema.safeParse(":backspace").success).toBe(true);
+  test.each([":space", ":clear", ":home", ":speak", ":backspace"])(
+    "accepts %s",
+    (action) => {
+      expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(true);
+    },
+  );
+
+  test.each([":ext_custom", ":ext_my_action"])(
+    "accepts custom extension %s",
+    (action) => {
+      expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(true);
+    },
+  );
+
+  test.each([":invalid", ":ext_"])("rejects invalid action %s", (action) => {
+    expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(false);
+  });
+});
+
+describe("OBFButtonActionSchema", () => {
+  test("accepts spelling actions with + prefix", () => {
+    expect(OBFButtonActionSchema.safeParse("+hello").success).toBe(true);
+    expect(OBFButtonActionSchema.safeParse("+a").success).toBe(true);
+  });
+
+  test("accepts specialty actions", () => {
+    expect(OBFButtonActionSchema.safeParse(":space").success).toBe(true);
+    expect(OBFButtonActionSchema.safeParse(":clear").success).toBe(true);
+  });
+
+  test("accepts custom :ext_ actions", () => {
+    expect(OBFButtonActionSchema.safeParse(":ext_custom").success).toBe(true);
   });
 
   test("rejects invalid actions", () => {
-    expect(OBFSpecialtyActionSchema.safeParse(":invalid").success).toBe(false);
+    expect(OBFButtonActionSchema.safeParse(":invalid").success).toBe(false);
+    expect(OBFButtonActionSchema.safeParse("hello").success).toBe(false);
   });
 });
 
@@ -74,6 +130,14 @@ describe("OBFLicenseSchema", () => {
     };
 
     expect(OBFLicenseSchema.safeParse(minimalLicense).success).toBe(true);
+  });
+
+  test("rejects missing type field", () => {
+    const missingType = {
+      author_name: "John Doe",
+    };
+
+    expect(OBFLicenseSchema.safeParse(missingType).success).toBe(false);
   });
 
   test("rejects invalid URLs", () => {
@@ -124,6 +188,28 @@ describe("OBFMediaSchema", () => {
     };
 
     expect(OBFMediaSchema.safeParse(validMedia).success).toBe(true);
+  });
+
+  test("accepts valid media with data_url", () => {
+    const validMedia = {
+      id: "img4",
+      data_url: "https://example.com/api/image",
+      content_type: "image/png",
+    };
+
+    expect(OBFMediaSchema.safeParse(validMedia).success).toBe(true);
+  });
+
+  test("accepts media with only id (reference is optional)", () => {
+    const minimalMedia = { id: "x" };
+
+    expect(OBFMediaSchema.safeParse(minimalMedia).success).toBe(true);
+  });
+
+  test("coerces numeric id to string in nested object", () => {
+    const result = OBFMediaSchema.parse({ id: 123 });
+
+    expect(result.id).toBe("123");
   });
 
   test("rejects invalid URLs", () => {
@@ -187,6 +273,30 @@ describe("OBFImageSchema", () => {
 });
 
 describe("OBFButtonSchema", () => {
+  test("rejects missing id", () => {
+    const missingId = { label: "Hello" };
+
+    expect(OBFButtonSchema.safeParse(missingId).success).toBe(false);
+  });
+
+  test("accepts button with valid action", () => {
+    const withSpellingAction = { id: "1", action: "+hello" };
+    const withSpecialtyAction = { id: "2", action: ":space" };
+    const withExtAction = { id: "3", action: ":ext_custom" };
+
+    expect(OBFButtonSchema.safeParse(withSpellingAction).success).toBe(true);
+    expect(OBFButtonSchema.safeParse(withSpecialtyAction).success).toBe(true);
+    expect(OBFButtonSchema.safeParse(withExtAction).success).toBe(true);
+  });
+
+  test("rejects button with invalid action", () => {
+    const invalidAction = { id: "1", action: ":invalid" };
+    const plainString = { id: "1", action: "hello" };
+
+    expect(OBFButtonSchema.safeParse(invalidAction).success).toBe(false);
+    expect(OBFButtonSchema.safeParse(plainString).success).toBe(false);
+  });
+
   test("accepts valid positioning bounds", () => {
     const validButton = {
       id: "1",
@@ -234,6 +344,44 @@ describe("OBFButtonSchema", () => {
 
     expect(OBFButtonSchema.safeParse(outOfBoundsWidth).success).toBe(false);
   });
+
+  test("accepts button with actions array and load_board, coerces nested ID", () => {
+    const buttonWithActionsAndLoadBoard = {
+      id: "nav-btn",
+      actions: [":clear", "+Hello", ":speak"],
+      load_board: { id: 1, path: "boards/home.obf" },
+    };
+
+    const result = OBFButtonSchema.safeParse(buttonWithActionsAndLoadBoard);
+
+    expect(result.success).toBe(true);
+
+    if (result.success) {
+      expect(result.data.actions).toHaveLength(3);
+      expect(result.data.load_board?.id).toBe("1");
+      expect(result.data.load_board?.path).toBe("boards/home.obf");
+    }
+  });
+
+  test("rejects invalid action in actions array", () => {
+    const invalidActionsArray = {
+      id: "1",
+      actions: [":clear", "invalid-action", ":speak"],
+    };
+
+    expect(OBFButtonSchema.safeParse(invalidActionsArray).success).toBe(false);
+  });
+
+  test("rejects invalid URL in load_board", () => {
+    const invalidLoadBoardUrl = {
+      id: "1",
+      load_board: {
+        url: "not-a-valid-url",
+      },
+    };
+
+    expect(OBFButtonSchema.safeParse(invalidLoadBoardUrl).success).toBe(false);
+  });
 });
 
 describe("OBFGridSchema", () => {
@@ -248,6 +396,27 @@ describe("OBFGridSchema", () => {
     };
 
     expect(OBFGridSchema.safeParse(validGrid).success).toBe(true);
+  });
+
+  test("coerces numeric IDs in order to strings", () => {
+    const gridWithNumericIds = {
+      rows: 2,
+      columns: 2,
+      order: [
+        [1, 2],
+        [3, null],
+      ],
+    };
+
+    const result = OBFGridSchema.safeParse(gridWithNumericIds);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.order[0][0]).toBe("1");
+      expect(result.data.order[0][1]).toBe("2");
+      expect(result.data.order[1][0]).toBe("3");
+      expect(result.data.order[1][1]).toBeNull();
+    }
   });
 
   test("rejects zero rows", () => {
@@ -267,9 +436,46 @@ describe("OBFGridSchema", () => {
 
     expect(OBFGridSchema.safeParse(floatRows).success).toBe(false);
   });
+
+  test("rejects order length mismatch with rows", () => {
+    const mismatchedRows = {
+      rows: 3,
+      columns: 2,
+      order: [
+        ["a", "b"],
+        ["c", "d"],
+      ],
+    };
+
+    expect(OBFGridSchema.safeParse(mismatchedRows).success).toBe(false);
+  });
+
+  test("rejects row length mismatch with columns", () => {
+    const mismatchedColumns = {
+      rows: 2,
+      columns: 3,
+      order: [
+        ["a", "b"],
+        ["c", "d", "e"],
+      ],
+    };
+
+    expect(OBFGridSchema.safeParse(mismatchedColumns).success).toBe(false);
+  });
 });
 
 describe("OBFBoardSchema", () => {
+  test("accepts minimal valid board", () => {
+    const minimalBoard = {
+      format: "open-board-0.1",
+      id: "board-1",
+      buttons: [],
+      grid: { rows: 1, columns: 1, order: [[null]] },
+    };
+
+    expect(OBFBoardSchema.safeParse(minimalBoard).success).toBe(true);
+  });
+
   test("requires format field", () => {
     const missingFormat = {
       id: "1",
@@ -319,6 +525,24 @@ describe("OBFManifestSchema", () => {
     expect(OBFManifestSchema.safeParse(validManifest).success).toBe(true);
   });
 
+  test("rejects missing format field", () => {
+    const missingFormat = {
+      root: "boards/main.obf",
+      paths: { boards: { main: "boards/main.obf" }, images: {} },
+    };
+
+    expect(OBFManifestSchema.safeParse(missingFormat).success).toBe(false);
+  });
+
+  test("rejects missing root field", () => {
+    const missingRoot = {
+      format: "open-board-0.1",
+      paths: { boards: { main: "boards/main.obf" }, images: {} },
+    };
+
+    expect(OBFManifestSchema.safeParse(missingRoot).success).toBe(false);
+  });
+
   test("requires paths field", () => {
     const missingPaths = { format: "open-board-0.1", root: "boards/main.obf" };
 
@@ -333,6 +557,29 @@ describe("OBFManifestSchema", () => {
     };
 
     expect(OBFManifestSchema.safeParse(missingBoards).success).toBe(false);
+  });
+
+  test("requires images in paths", () => {
+    const missingImages = {
+      format: "open-board-0.1",
+      root: "boards/main.obf",
+      paths: { boards: { main: "boards/main.obf" } },
+    };
+
+    expect(OBFManifestSchema.safeParse(missingImages).success).toBe(false);
+  });
+
+  test("accepts manifest without sounds (optional)", () => {
+    const noSounds = {
+      format: "open-board-0.1",
+      root: "boards/main.obf",
+      paths: {
+        boards: { main: "boards/main.obf" },
+        images: { icon: "images/icon.png" },
+      },
+    };
+
+    expect(OBFManifestSchema.safeParse(noSounds).success).toBe(true);
   });
 });
 
