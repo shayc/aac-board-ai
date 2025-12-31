@@ -7,13 +7,8 @@ import { lazy, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-const AboutPage = lazy(() =>
-  import("@pages/AboutPage").then((module) => ({ default: module.AboutPage })),
-);
-
-const BoardPage = lazy(() =>
-  import("@pages/BoardPage").then((module) => ({ default: module.BoardPage })),
-);
+const AboutPage = lazy(() => import("@pages/AboutPage"));
+const BoardPage = lazy(() => import("@pages/BoardPage"));
 
 export function AppRoutes() {
   return (
