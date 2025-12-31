@@ -1,5 +1,5 @@
-import type { BoardsetRecord } from "@features/board/db/boards-db";
-import { listBoardsets, openBoardsDB } from "@features/board/db/boards-db";
+import type { BoardSetRecord } from "@features/board/db/boards-db";
+import { listBoardSets, openBoardsDB } from "@features/board/db/boards-db";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsIcon from "@mui/icons-material/Settings";
 import AppBar from "@mui/material/AppBar";
@@ -17,21 +17,21 @@ interface AppHeaderProps {
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
-  const [boardsets, setBoardsets] = useState<BoardsetRecord[]>([]);
+  const [boardSets, setBoardSets] = useState<BoardSetRecord[]>([]);
 
   useEffect(() => {
-    async function loadBoardsets() {
+    async function loadBoardSets() {
       const db = await openBoardsDB();
 
       try {
-        const sets = await listBoardsets(db);
-        setBoardsets(sets);
+        const sets = await listBoardSets(db);
+        setBoardSets(sets);
       } finally {
         db.close();
       }
     }
 
-    void loadBoardsets();
+    void loadBoardSets();
     // TODO: remove setId from dependencies
   }, [setId]);
 
@@ -51,8 +51,8 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        {boardsets.length > 0 && (
-          <BoardSetSelector boardsets={boardsets} setId={setId} />
+        {boardSets.length > 0 && (
+          <BoardSetSelector boardSets={boardSets} setId={setId} />
         )}
 
         <Tooltip title="Open settings" sx={{ ml: "auto" }}>

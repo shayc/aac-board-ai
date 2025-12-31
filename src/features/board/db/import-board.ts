@@ -5,7 +5,7 @@ import {
   bulkPutAssets,
   bulkPutBoards,
   openBoardsDB,
-  upsertBoardset,
+  upsertBoardSet,
 } from "./boards-db";
 
 export interface ImportResult {
@@ -47,7 +47,7 @@ async function importOBZFile(
     rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
   }
 
-  await upsertBoardset(db, {
+  await upsertBoardSet(db, {
     setId,
     name: file.name,
     rootBoardId: rootBoardId,
@@ -102,7 +102,7 @@ async function importOBFFile(
 ): Promise<ImportResult> {
   const board = await loadOBF(file);
 
-  await upsertBoardset(db, {
+  await upsertBoardSet(db, {
     setId,
     name: file.name,
     rootBoardId: board.id,

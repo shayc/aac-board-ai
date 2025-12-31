@@ -1,4 +1,4 @@
-import { getBoardset, openBoardsDB } from "@features/board/db/boards-db";
+import { getBoardSet, openBoardsDB } from "@features/board/db/boards-db";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
@@ -89,10 +89,10 @@ export function useBoardNavigation() {
       const db = await openBoardsDB();
 
       try {
-        const boardset = await getBoardset(db, setId);
+        const boardSet = await getBoardSet(db, setId);
 
-        if (boardset?.rootBoardId) {
-          setRootBoardId(boardset.rootBoardId);
+        if (boardSet?.rootBoardId) {
+          setRootBoardId(boardSet.rootBoardId);
         } else {
           setRootBoardId("");
         }

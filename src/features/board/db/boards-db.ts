@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shared/open-board-format/schema";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 
-export interface BoardsetRecord {
+export interface BoardSetRecord {
   setId: string;
   name: string;
   nameKey: string;
@@ -30,7 +30,7 @@ export interface AssetRecord {
 export interface BoardsDBSchema extends DBSchema {
   boardsets: {
     key: string;
-    value: BoardsetRecord;
+    value: BoardSetRecord;
     indexes: { byNameKey: string; byUpdatedAt: number };
   };
   boards: {
@@ -120,8 +120,8 @@ export function closeBoardsDB(db: IDBPDatabase<BoardsDBSchema>): void {
   db.close();
 }
 
-/** Boardsets */
-export async function upsertBoardset(
+/** BoardSets */
+export async function upsertBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   input: {
     setId: string;
@@ -133,7 +133,7 @@ export async function upsertBoardset(
   validateId(input.setId, "setId");
   const prev = await db.get("boardsets", input.setId);
 
-  const row: BoardsetRecord = {
+  const row: BoardSetRecord = {
     setId: input.setId,
     name: input.name,
     nameKey: toNameKey(input.name, localeFor(db)),
@@ -144,12 +144,12 @@ export async function upsertBoardset(
 
   await db.put("boardsets", row);
 }
-export async function listBoardsets(
+export async function listBoardSets(
   db: IDBPDatabase<BoardsDBSchema>,
-): Promise<BoardsetRecord[]> {
+): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
-  const out: BoardsetRecord[] = [];
+  const out: BoardSetRecord[] = [];
   let cur = await idx.openCursor(undefined, "prev");
 
   while (cur) {
@@ -161,10 +161,10 @@ export async function listBoardsets(
   return out;
 }
 
-export async function getBoardset(
+export async function getBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
-): Promise<BoardsetRecord | null> {
+): Promise<BoardSetRecord | null> {
   validateId(setId, "setId");
   return (await db.get("boardsets", setId)) ?? null;
 }
@@ -355,7 +355,7 @@ export async function getManifestJson<T = unknown>(
 }
 
 /** Deletes */
-export async function deleteBoardset(
+export async function deleteBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
 ): Promise<void> {

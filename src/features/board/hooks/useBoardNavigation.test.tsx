@@ -6,7 +6,7 @@ import { renderHook } from "vitest-browser-react";
 import { useBoardNavigation } from "./useBoardNavigation";
 
 vi.mock("@features/board/db/boards-db", () => ({
-  getBoardset: vi.fn(),
+  getBoardSet: vi.fn(),
   openBoardsDB: vi.fn(),
 }));
 
@@ -45,7 +45,7 @@ describe("useBoardNavigation", () => {
       close: vi.fn(),
     };
     vi.mocked(boardsDB.openBoardsDB).mockResolvedValue(mockDB as never);
-    vi.mocked(boardsDB.getBoardset).mockResolvedValue({
+    vi.mocked(boardsDB.getBoardSet).mockResolvedValue({
       id: "set-1",
       rootBoardId: "root-1",
     } as never);
@@ -181,7 +181,7 @@ describe("useBoardNavigation", () => {
   });
 
   test("canGoHome returns false when root board is not available", async () => {
-    vi.mocked(boardsDB.getBoardset).mockResolvedValue(null);
+    vi.mocked(boardsDB.getBoardSet).mockResolvedValue(null);
 
     const { result } = await renderHook(() => useBoardNavigation(), {
       wrapper: createWrapper("set-1", "board-1"),
@@ -220,7 +220,7 @@ describe("useBoardNavigation", () => {
   });
 
   test("navigateHome does nothing when rootBoardId is not loaded", async () => {
-    vi.mocked(boardsDB.getBoardset).mockResolvedValue(null);
+    vi.mocked(boardsDB.getBoardSet).mockResolvedValue(null);
 
     const { result, act } = await renderHook(() => useBoardNavigation(), {
       wrapper: createWrapper("set-1", "board-1"),
@@ -275,7 +275,7 @@ describe("useBoardNavigation", () => {
     });
 
     expect(boardsDB.openBoardsDB).toHaveBeenCalled();
-    expect(boardsDB.getBoardset).toHaveBeenCalledWith(mockDB, "set-1");
+    expect(boardsDB.getBoardSet).toHaveBeenCalledWith(mockDB, "set-1");
     await vi.waitFor(() => {
       expect(mockDB.close).toHaveBeenCalled();
     });
@@ -287,7 +287,7 @@ describe("useBoardNavigation", () => {
       .mockImplementation(() => {
         // Suppress console output during test
       });
-    vi.mocked(boardsDB.getBoardset).mockRejectedValue(new Error("DB error"));
+    vi.mocked(boardsDB.getBoardSet).mockRejectedValue(new Error("DB error"));
 
     const { result } = await renderHook(() => useBoardNavigation(), {
       wrapper: createWrapper("set-1", "board-1"),
