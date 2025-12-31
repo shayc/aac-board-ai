@@ -6,12 +6,12 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router";
 
-interface BoardSetSelectorProps {
+interface BoardSetSelectProps {
   boardSets: BoardSetRecord[];
-  setId: string;
+  boardSetId: string;
 }
 
-export function BoardSetSelector({ boardSets, setId }: BoardSetSelectorProps) {
+export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
   const { board } = useBoard();
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ export function BoardSetSelector({ boardSets, setId }: BoardSetSelectorProps) {
       <Select
         sx={{ color: "inherit" }}
         size="small"
-        value={setId}
+        value={boardSetId}
         onChange={(e) => {
           const selectedSet = boardSets.find((s) => s.setId === e.target.value);
           if (selectedSet?.rootBoardId) {

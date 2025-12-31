@@ -8,7 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { BoardSetSelector } from "./BoardSetSelector/BoardSetSelector";
+import { BoardSetSelect } from "./BoardSetSelect/BoardSetSelect";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
@@ -52,7 +52,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
         </Tooltip>
 
         {boardSets.length > 0 && (
-          <BoardSetSelector boardSets={boardSets} setId={setId} />
+          <BoardSetSelect boardSets={boardSets} boardSetId={setId} />
         )}
 
         <Tooltip title="Open settings" sx={{ ml: "auto" }}>
