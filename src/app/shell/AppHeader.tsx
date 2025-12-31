@@ -1,3 +1,4 @@
+import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { listBoardSets, openBoardsDB } from "@features/board/db/boards-db";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -8,7 +9,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { BoardSetSelect } from "./BoardSetSelect/BoardSetSelect";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
