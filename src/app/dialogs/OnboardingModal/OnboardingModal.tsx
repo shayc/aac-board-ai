@@ -47,7 +47,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
             p: 0,
           }}
         >
-          Your Voice, Enhanced
+          Say It Your Way
         </DialogTitle>
 
         <DialogContentText
@@ -55,17 +55,17 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
           variant="body1"
           sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
         >
-          Communicate naturally and privately with on-device intelligence.
+          Natural communication, refined.
         </DialogContentText>
 
         <List sx={{ pt: 0, pb: 0 }}>
-          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
             <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
               <AutoAwesomeOutlinedIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Smart Rewriting"
-              secondary="Turn short phrases into natural sentences and adjust your tone instantly."
+              secondary="Turn short phrases into clear sentences."
               slotProps={{
                 primary: {
                   fontWeight: 700,
@@ -80,13 +80,13 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
             />
           </ListItem>
 
-          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
             <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
               <TranslateIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Real-time Translation"
-              secondary="Translate and speak your messages in multiple languages."
+              secondary="Translate messages instantly."
               slotProps={{
                 primary: {
                   fontWeight: 700,
@@ -101,13 +101,13 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
             />
           </ListItem>
 
-          <ListItem disableGutters sx={{ alignItems: "flex-start", mb: 1.5 }}>
+          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
             <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
               <LockOutlinedIcon color="primary" fontSize="medium" />
             </ListItemIcon>
             <ListItemText
               primary="Private by Design"
-              secondary="No servers. No cloud. All AI processing stays safely on your device."
+              secondary="On-device processing. No cloud."
               slotProps={{
                 primary: {
                   fontWeight: 700,
@@ -124,7 +124,7 @@ export function OnboardingModal({ open, onClose }: OnboardingModalProps) {
         </List>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3, pt: 1, pb: 4 }}>
+      <DialogActions sx={{ p: 3, pt: 4, pb: 4 }}>
         <Button
           onClick={onClose}
           variant="contained"
