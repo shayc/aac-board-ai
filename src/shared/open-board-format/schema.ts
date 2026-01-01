@@ -54,10 +54,6 @@ export type OBFSpellingAction = z.infer<typeof OBFSpellingActionSchema>;
  * Represents specialty actions.
  * Standard actions are prefixed with ':'.
  * Custom actions start with ':ext_'.
- *
- * Note: The OBF spec mentions the list of standard actions will grow over time.
- * Real-world OBF files (e.g., CoughDrop) use additional actions like ':native-keyboard'.
- * We accept any colon-prefixed action with at least one character after the colon.
  */
 export const OBFSpecialtyActionSchema = z
   .string()
