@@ -71,7 +71,7 @@ describe("OBFSpellingActionSchema", () => {
 
 describe("OBFSpecialtyActionSchema", () => {
   test.each([":space", ":clear", ":home", ":speak", ":backspace"])(
-    "accepts %s",
+    "accepts standard action %s",
     (action) => {
       expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(true);
     },
@@ -84,9 +84,19 @@ describe("OBFSpecialtyActionSchema", () => {
     },
   );
 
-  test.each([":invalid", ":ext_"])("rejects invalid action %s", (action) => {
-    expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(false);
-  });
+  test.each([":native-keyboard", ":copy", ":paste"])(
+    "accepts non-standard action %s",
+    (action) => {
+      expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(true);
+    },
+  );
+
+  test.each([":", ":123", ": invalid", "invalid"])(
+    "rejects invalid action %s",
+    (action) => {
+      expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(false);
+    },
+  );
 });
 
 describe("OBFButtonActionSchema", () => {
@@ -104,8 +114,14 @@ describe("OBFButtonActionSchema", () => {
     expect(OBFButtonActionSchema.safeParse(":ext_custom").success).toBe(true);
   });
 
+  test("accepts non-standard colon-prefixed actions", () => {
+    expect(OBFButtonActionSchema.safeParse(":native-keyboard").success).toBe(
+      true,
+    );
+  });
+
   test("rejects invalid actions", () => {
-    expect(OBFButtonActionSchema.safeParse(":invalid").success).toBe(false);
+    expect(OBFButtonActionSchema.safeParse(":").success).toBe(false);
     expect(OBFButtonActionSchema.safeParse("hello").success).toBe(false);
   });
 });
@@ -290,10 +306,10 @@ describe("OBFButtonSchema", () => {
   });
 
   test("rejects button with invalid action", () => {
-    const invalidAction = { id: "1", action: ":invalid" };
+    const emptyAction = { id: "1", action: ":" };
     const plainString = { id: "1", action: "hello" };
 
-    expect(OBFButtonSchema.safeParse(invalidAction).success).toBe(false);
+    expect(OBFButtonSchema.safeParse(emptyAction).success).toBe(false);
     expect(OBFButtonSchema.safeParse(plainString).success).toBe(false);
   });
 

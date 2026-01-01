@@ -55,10 +55,9 @@ export type OBFSpellingAction = z.infer<typeof OBFSpellingActionSchema>;
  * Standard actions are prefixed with ':'.
  * Custom actions start with ':ext_'.
  */
-export const OBFSpecialtyActionSchema = z.union([
-  z.enum([":space", ":clear", ":home", ":speak", ":backspace"]),
-  z.string().regex(/^:ext_.+$/),
-]);
+export const OBFSpecialtyActionSchema = z
+  .string()
+  .regex(/^:[a-z][a-z0-9_-]*$/i);
 export type OBFSpecialtyAction = z.infer<typeof OBFSpecialtyActionSchema>;
 
 /**
