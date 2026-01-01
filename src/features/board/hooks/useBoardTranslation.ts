@@ -58,7 +58,7 @@ export function useBoardTranslation({
     };
 
     void translateBoard();
-  }, [languageCode, board]);
+  }, [createTranslator, languageCode, board]);
 
   return {
     translatedBoard,
