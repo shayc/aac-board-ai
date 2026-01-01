@@ -54,11 +54,14 @@ export type OBFSpellingAction = z.infer<typeof OBFSpellingActionSchema>;
  * Represents specialty actions.
  * Standard actions are prefixed with ':'.
  * Custom actions start with ':ext_'.
+ *
+ * Note: The OBF spec mentions the list of standard actions will grow over time.
+ * Real-world OBF files (e.g., CoughDrop) use additional actions like ':native-keyboard'.
+ * We accept any colon-prefixed action with at least one character after the colon.
  */
-export const OBFSpecialtyActionSchema = z.union([
-  z.enum([":space", ":clear", ":home", ":speak", ":backspace"]),
-  z.string().regex(/^:ext_.+$/),
-]);
+export const OBFSpecialtyActionSchema = z
+  .string()
+  .regex(/^:[a-z][a-z0-9_-]*$/i);
 export type OBFSpecialtyAction = z.infer<typeof OBFSpecialtyActionSchema>;
 
 /**
