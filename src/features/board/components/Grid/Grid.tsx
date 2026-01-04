@@ -60,7 +60,6 @@ export function Grid<TItem extends { id: string }>({
       onFocus={handleFocus}
       height="100%"
       direction="column"
-      flexGrow={1}
       padding={gap}
       gap={gap}
     >
