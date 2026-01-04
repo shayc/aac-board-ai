@@ -23,11 +23,13 @@ const StyledCircularProgress = styled(CircularProgress, {
 }));
 
 interface BackspaceButtonProps {
+  disabled?: boolean;
   onPress: () => void;
   onLongPress: () => void;
 }
 
 export function BackspaceButton({
+  disabled,
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
@@ -51,6 +53,8 @@ export function BackspaceButton({
           aria-label="Backspace"
           size="large"
           color="inherit"
+          disabled={disabled}
+          sx={{ width: 64, height: 64 }}
         >
           <BackspaceIcon />
         </IconButton>
@@ -59,11 +63,11 @@ export function BackspaceButton({
           variant="determinate"
           value={progress}
           active={progress > 0}
-          size={56}
+          size={76}
           sx={{
             position: "absolute",
-            top: -4,
-            left: -4,
+            top: -6,
+            left: -6,
             zIndex: 1,
             pointerEvents: "none",
           }}

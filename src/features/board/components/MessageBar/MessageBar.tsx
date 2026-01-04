@@ -42,13 +42,11 @@ export function MessageBar({
   }, [message]);
 
   return (
-    <Stack direction="row" padding={2} gap={2}>
+    <Stack direction="row" padding={2}>
       <Stack
         direction="row"
-        padding={2}
-        paddingInlineStart={0}
-        gap={2}
         flexGrow={2}
+        gap={2}
         borderRadius={18}
         overflow="hidden"
         sx={{
@@ -64,10 +62,10 @@ export function MessageBar({
       >
         <Stack
           ref={scrollerRef}
-          paddingLeft={2}
-          direction="row"
-          gap={2}
           flexGrow={1}
+          direction="row"
+          padding={2}
+          gap={2}
           overflow="auto"
         >
           {message.map((part, index) => (
@@ -81,16 +79,18 @@ export function MessageBar({
           ))}
         </Stack>
 
-        <BackspaceButton
-          onPress={onBackspacePress}
-          onLongPress={onBackspaceLongPress}
-        />
+        <Stack direction="row" gap={1}>
+          <BackspaceButton
+            onPress={onBackspacePress}
+            onLongPress={onBackspaceLongPress}
+          />
 
-        <PlayButton
-          isPlaying={isPlaying}
-          onPlayClick={onPlayClick}
-          onStopClick={onStopClick}
-        />
+          <PlayButton
+            isPlaying={isPlaying}
+            onPlayClick={onPlayClick}
+            onStopClick={onStopClick}
+          />
+        </Stack>
       </Stack>
     </Stack>
   );

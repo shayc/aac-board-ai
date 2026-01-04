@@ -5,12 +5,14 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
 interface PlayButtonProps {
+  disabled?: boolean;
   isPlaying: boolean;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
 
 export function PlayButton({
+  disabled,
   isPlaying,
   onPlayClick,
   onStopClick,
@@ -19,14 +21,15 @@ export function PlayButton({
 
   return (
     <Tooltip title={playButtonLabel}>
-      <Box sx={{ alignSelf: "center" }}>
+      <Box sx={{ m: 1 }}>
         <IconButton
           aria-label={playButtonLabel}
           size="large"
+          disabled={disabled}
           onClick={isPlaying ? onStopClick : onPlayClick}
           sx={{
-            width: 80,
-            height: 80,
+            width: 96,
+            height: 96,
             backgroundColor: (theme) => theme.palette.primary.main,
             color: (theme) => theme.palette.primary.contrastText,
             "&:hover": {

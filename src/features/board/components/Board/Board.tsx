@@ -1,12 +1,13 @@
 import {
-  NavButtons,
   Grid,
   MessageBar,
+  NavButtons,
   SuggestionBar,
   Tile,
 } from "@features/board/components";
 import { useBoard } from "@features/board/context/useBoard";
 import type { BoardButton } from "@features/board/types";
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
@@ -65,25 +66,26 @@ export function Board() {
           />
         )}
       </Stack>
-
-      <Grid<BoardButton>
-        rows={board.grid.rows}
-        columns={board.grid.columns}
-        order={board.grid.order}
-        items={board.buttons}
-        renderItem={(button, props) => (
-          <Tile
-            key={button.id}
-            label={button.label}
-            imageSrc={button.imageSrc}
-            backgroundColor={button.backgroundColor}
-            borderColor={button.borderColor}
-            variant={button.loadBoard ? "folder" : undefined}
-            onClick={() => void activateButton(button)}
-            {...props}
-          />
-        )}
-      />
+      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <Grid<BoardButton>
+          rows={board.grid.rows}
+          columns={board.grid.columns}
+          order={board.grid.order}
+          items={board.buttons}
+          renderItem={(button, props) => (
+            <Tile
+              key={button.id}
+              label={button.label}
+              imageSrc={button.imageSrc}
+              backgroundColor={button.backgroundColor}
+              borderColor={button.borderColor}
+              variant={button.loadBoard ? "folder" : undefined}
+              onClick={() => void activateButton(button)}
+              {...props}
+            />
+          )}
+        />
+      </Box>
     </Stack>
   );
 }
