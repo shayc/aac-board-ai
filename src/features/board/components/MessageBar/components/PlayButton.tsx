@@ -19,14 +19,14 @@ export function PlayButton({
 
   return (
     <Tooltip title={playButtonLabel}>
-      <Box sx={{ alignSelf: "center" }}>
+      <Box sx={{ m: 1 }}>
         <IconButton
           aria-label={playButtonLabel}
           size="large"
           onClick={isPlaying ? onStopClick : onPlayClick}
           sx={{
-            width: 80,
-            height: 80,
+            width: 96,
+            height: 96,
             backgroundColor: (theme) => theme.palette.primary.main,
             color: (theme) => theme.palette.primary.contrastText,
             "&:hover": {
