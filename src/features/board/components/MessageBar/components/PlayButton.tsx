@@ -5,12 +5,14 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
 interface PlayButtonProps {
+  disabled?: boolean;
   isPlaying: boolean;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
 
 export function PlayButton({
+  disabled,
   isPlaying,
   onPlayClick,
   onStopClick,
@@ -23,6 +25,7 @@ export function PlayButton({
         <IconButton
           aria-label={playButtonLabel}
           size="large"
+          disabled={disabled}
           onClick={isPlaying ? onStopClick : onPlayClick}
           sx={{
             width: 96,
