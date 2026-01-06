@@ -63,11 +63,11 @@ export function BackspaceButton({
           variant="determinate"
           value={progress}
           active={progress > 0}
-          size={76}
+          size={64}
           sx={{
             position: "absolute",
-            top: -6,
-            left: -6,
+            top: 0,
+            left: 0,
             zIndex: 1,
             pointerEvents: "none",
           }}
