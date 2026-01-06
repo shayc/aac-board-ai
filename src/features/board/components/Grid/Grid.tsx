@@ -68,21 +68,22 @@ export function Grid<TItem extends { id: string }>({
     >
       {grid.map((row, rowIndex) => (
         <Stack key={rowIndex} role="row" direction="row" flexGrow={1} gap={gap}>
-          {row.map((item, cellIndex) => {
+          {row.map((item, colIndex) => {
             const isActive =
-              rowIndex === activeCell.row && cellIndex === activeCell.col;
+              rowIndex === activeCell.row && colIndex === activeCell.col;
+
             return (
               <Stack
-                key={cellIndex}
+                key={colIndex}
                 role="gridcell"
                 aria-rowindex={rowIndex + 1}
-                aria-colindex={cellIndex + 1}
+                aria-colindex={colIndex + 1}
                 flex={1}
                 sx={{ minWidth: 80, minHeight: 80 }}
               >
                 {item &&
                   renderItem(item, {
-                    ref: refCallbacks[`${rowIndex}-${cellIndex}`],
+                    ref: refCallbacks[`${rowIndex}-${colIndex}`],
                     tabIndex: isActive ? 0 : -1,
                   })}
               </Stack>
