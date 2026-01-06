@@ -40,14 +40,16 @@ export function useGridKeyboard({
       }
 
       const cell = (event.target as HTMLElement).closest<HTMLElement>(
-        "[data-grid-cell]",
+        "[role='gridcell']",
       );
       if (!cell) {
         return;
       }
 
-      const currentRow = parseInt(cell.dataset.row ?? "", 10);
-      const currentCol = parseInt(cell.dataset.col ?? "", 10);
+      const currentRow =
+        parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
+      const currentCol =
+        parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
 
       if (isNaN(currentRow) || isNaN(currentCol)) {
         return;
@@ -92,13 +94,13 @@ export function useGridKeyboard({
   });
 
   const handleFocus = (event: FocusEvent<HTMLElement>) => {
-    const cell = event.target.closest<HTMLElement>("[data-grid-cell]");
+    const cell = event.target.closest<HTMLElement>("[role='gridcell']");
     if (!cell) {
       return;
     }
 
-    const row = parseInt(cell.dataset.row ?? "", 10);
-    const col = parseInt(cell.dataset.col ?? "", 10);
+    const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
+    const col = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
 
     if (!isNaN(row) && !isNaN(col)) {
       setActiveCell({ row, col });

@@ -4,14 +4,14 @@ import type { Locator } from "@vitest/browser/context";
 import { Grid } from "./Grid";
 
 function getCellPosition(item: Locator): { row: number; col: number } {
-  const cell = item.element().closest("[data-grid-cell]");
+  const cell = item.element().closest("[role='gridcell']");
   if (!cell) {
     throw new Error("Item is not inside a grid cell");
   }
-  const row = parseInt(cell.getAttribute("data-row") ?? "", 10);
-  const col = parseInt(cell.getAttribute("data-col") ?? "", 10);
+  const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
+  const col = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
   if (isNaN(row) || isNaN(col)) {
-    throw new Error("Grid cell missing valid data-row or data-col");
+    throw new Error("Grid cell missing valid aria-rowindex or aria-colindex");
   }
   return { row, col };
 }
