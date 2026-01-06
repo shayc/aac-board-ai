@@ -41,14 +41,7 @@ export function Pictogram(props: PictogramProps) {
       )}
 
       {label && (
-        <Typography
-          noWrap
-          variant={labelTypographyVariant}
-          component="span"
-          sx={{
-            px: 1,
-          }}
-        >
+        <Typography noWrap variant={labelTypographyVariant} component="span">
           {label}
         </Typography>
       )}

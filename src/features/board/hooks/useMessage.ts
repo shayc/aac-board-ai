@@ -35,19 +35,14 @@ export function useMessage() {
     setMessage((prev) => prev.slice(0, -1));
   }
 
-  function updateLastPart(part: Partial<MessagePart>) {
+  function updateLastPart(part: MessagePart) {
     setMessage((prev) => {
-      if (prev.length === 0) {
-        return prev;
+      const lastPart = prev.at(-1);
+      if (!lastPart) {
+        return [part];
       }
 
-      const updated = [...prev];
-      updated[updated.length - 1] = {
-        ...updated[updated.length - 1],
-        ...part,
-      };
-
-      return updated;
+      return [...prev.slice(0, -1), { ...lastPart, ...part }];
     });
   }
 

@@ -75,7 +75,7 @@ export function Grid<TItem extends { id: string }>({
                 data-row={rowIndex}
                 data-col={cellIndex}
                 flex={1}
-                sx={{ minWidth: 64, minHeight: 64 }}
+                sx={{ minWidth: 80, minHeight: 80 }}
               >
                 {item &&
                   renderItem(item, {
