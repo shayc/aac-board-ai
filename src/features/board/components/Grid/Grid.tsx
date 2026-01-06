@@ -58,28 +58,32 @@ export function Grid<TItem extends { id: string }>({
     <Stack
       {...keyboardProps}
       onFocus={handleFocus}
+      role="grid"
+      aria-rowcount={rows}
+      aria-colcount={columns}
       height="100%"
       direction="column"
       padding={gap}
       gap={gap}
     >
       {grid.map((row, rowIndex) => (
-        <Stack key={rowIndex} direction="row" flexGrow={1} gap={gap}>
-          {row.map((item, cellIndex) => {
+        <Stack key={rowIndex} role="row" direction="row" flexGrow={1} gap={gap}>
+          {row.map((item, colIndex) => {
             const isActive =
-              rowIndex === activeCell.row && cellIndex === activeCell.col;
+              rowIndex === activeCell.row && colIndex === activeCell.col;
+
             return (
               <Stack
-                key={cellIndex}
-                data-grid-cell="true"
-                data-row={rowIndex}
-                data-col={cellIndex}
+                key={colIndex}
+                role="gridcell"
+                aria-rowindex={rowIndex + 1}
+                aria-colindex={colIndex + 1}
                 flex={1}
-                sx={{ minWidth: 64, minHeight: 64 }}
+                sx={{ minWidth: 80, minHeight: 80 }}
               >
                 {item &&
                   renderItem(item, {
-                    ref: refCallbacks[`${rowIndex}-${cellIndex}`],
+                    ref: refCallbacks[`${rowIndex}-${colIndex}`],
                     tabIndex: isActive ? 0 : -1,
                   })}
               </Stack>

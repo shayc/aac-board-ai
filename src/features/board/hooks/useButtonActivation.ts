@@ -8,7 +8,7 @@ type ActionHandler = () => void | Promise<void>;
 export interface UseButtonActivationOptions {
   navigateToBoard: (id: string) => void;
   addPart: (part: MessagePart) => void;
-  updateLastPart: (part: Partial<MessagePart>) => void;
+  updateLastPart: (part: MessagePart) => void;
   addSpace: () => void;
   clearMessage: () => void;
   navigateHome: () => void;
@@ -46,10 +46,11 @@ export function useButtonActivation({
   async function executeAction(action: BoardAction) {
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
+      const lastPart = message.at(-1);
 
       updateLastPart({
         id: text,
-        label: `${message[message.length - 1]?.label ?? ""}${text}`,
+        label: `${lastPart?.label ?? ""}${text}`,
       });
 
       return;

@@ -1,10 +1,10 @@
 import type { Board, BoardButton } from "@features/board/types";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { useBoardNavigation } from "./useBoardNavigation";
 import { useBoardTranslation } from "./useBoardTranslation";
 import { useButtonActivation } from "./useButtonActivation";
 import { useLoadBoard } from "./useLoadBoard";
 import { useMessage, type MessagePart } from "./useMessage";
-import { useBoardNavigation } from "./useBoardNavigation";
 import { useSuggestions } from "./useSuggestions";
 
 export interface UseCommunicationBoardOptions {
@@ -23,7 +23,7 @@ export interface UseCommunicationBoardReturn {
   addPart: (part: MessagePart) => void;
   setMessage: (parts: MessagePart[]) => void;
   removeLastPart: () => void;
-  updateLastPart: (part: Partial<MessagePart>) => void;
+  updateLastPart: (part: MessagePart) => void;
   clearMessage: () => void;
   playMessage: () => Promise<void>;
   stopMessage: () => void;
