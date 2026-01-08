@@ -1,5 +1,5 @@
 import { importFile } from "@features/board/db/import-board";
-import FileOpenIcon from "@mui/icons-material/FileOpen";
+import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
@@ -48,7 +48,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const menuItems = [
     {
       id: "import-board",
-      icon: FileOpenIcon,
+      icon: FileOpenOutlined,
       label: "Import board...",
       onClick: handleImportBoard,
     },
