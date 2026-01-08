@@ -68,7 +68,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   ];
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
-      <Box sx={{ width: 360 }}>
+      <Box sx={{ width: 320 }}>
         <Toolbar>
           <Typography variant="h6" component="div" noWrap>
             AAC Board AI
