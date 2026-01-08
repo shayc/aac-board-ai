@@ -5,10 +5,10 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { AISettings } from "./AISettings/AISettings";
-import { AppearanceSettings } from "./AppearanceSettings/AppearanceSettings";
-import { LanguageSettings } from "./LanguageSettings/LanguageSettings";
-import { SpeechSettings } from "./SpeechSettings/SpeechSettings";
+import { AISettings } from "./panels/AISettings";
+import { AppearanceSettings } from "./panels/AppearanceSettings";
+import { LanguageSettings } from "./panels/LanguageSettings";
+import { SpeechSettings } from "./panels/SpeechSettings";
 
 interface SettingsDrawerProps {
   open: boolean;

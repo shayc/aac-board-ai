@@ -1,4 +1,4 @@
-import { AppShell } from "@app/shell/AppShell";
+import { AppShell } from "@app/layouts/AppShell";
 import { BoardSetRootRedirect } from "@pages/BoardSetRootRedirect";
 import { HomePage } from "@pages/HomePage";
 import { ErrorFallback } from "@shared/components/ErrorFallback";
