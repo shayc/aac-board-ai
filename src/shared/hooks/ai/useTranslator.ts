@@ -1,5 +1,5 @@
-import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { useRef } from "react";
 import { getAICapabilities } from "./getAICapabilities";
 
 export function useTranslator() {
@@ -13,9 +13,8 @@ export function useTranslator() {
     }
 
     if (
-      translatorRef.current &&
-      translatorRef.current.sourceLanguage === options.sourceLanguage &&
-      translatorRef.current.targetLanguage === options.targetLanguage
+      translatorRef.current?.sourceLanguage === options.sourceLanguage &&
+      translatorRef.current?.targetLanguage === options.targetLanguage
     ) {
       return translatorRef.current;
     }
