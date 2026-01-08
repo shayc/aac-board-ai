@@ -47,7 +47,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             p: 0,
           }}
         >
-          Say It Your Way
+          AAC Board AI
         </DialogTitle>
 
         <DialogContentText
@@ -107,7 +107,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             </ListItemIcon>
             <ListItemText
               primary="Private by Design"
-              secondary="On-device processing. No cloud."
+              secondary="Runs on device. No cloud."
               slotProps={{
                 primary: {
                   fontWeight: 700,
@@ -138,7 +138,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             fontSize: "1.1rem",
           }}
         >
-          Get Started
+          Continue
         </Button>
       </DialogActions>
     </Dialog>
