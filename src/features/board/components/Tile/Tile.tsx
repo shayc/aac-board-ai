@@ -40,7 +40,7 @@ export function Tile({
         alignItems: "stretch",
         justifyContent: "stretch",
         textTransform: "none",
-        padding: "0 4px",
+        padding: "4px 4px 0 4px",
         position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
