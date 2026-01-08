@@ -1,6 +1,6 @@
 import { useBoard } from "@features/board/context/useBoard";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import HomeIcon from "@mui/icons-material/Home";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
@@ -18,7 +18,7 @@ export function NavButtons() {
             disabled={!canGoBack}
             onClick={() => navigateBack()}
           >
-            <ArrowBackIcon />
+            <ArrowBackOutlinedIcon />
           </IconButton>
         </span>
       </Tooltip>
@@ -31,7 +31,7 @@ export function NavButtons() {
             disabled={!canGoHome}
             onClick={() => navigateHome()}
           >
-            <HomeIcon />
+            <HomeOutlinedIcon />
           </IconButton>
         </span>
       </Tooltip>
