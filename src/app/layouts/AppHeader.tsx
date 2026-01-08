@@ -2,7 +2,7 @@ import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardS
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { listBoardSets, openBoardsDB } from "@features/board/db/boards-db";
 import MenuIcon from "@mui/icons-material/Menu";
-import SettingsIcon from "@mui/icons-material/Settings";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
@@ -63,7 +63,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
             color="inherit"
             onClick={onSettingsClick}
           >
-            <SettingsIcon />
+            <SettingsOutlinedIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>

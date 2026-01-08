@@ -49,7 +49,7 @@ async function importOBZFile(
 
   await upsertBoardSet(db, {
     setId,
-    name: file.name,
+    name: file.name.replace(/\.(obz|obf)$/i, ""),
     rootBoardId: rootBoardId,
     boardCount: boards.size,
   });
@@ -104,7 +104,7 @@ async function importOBFFile(
 
   await upsertBoardSet(db, {
     setId,
-    name: file.name,
+    name: file.name.replace(/\.(obz|obf)$/i, ""),
     rootBoardId: board.id,
     boardCount: 1,
   });

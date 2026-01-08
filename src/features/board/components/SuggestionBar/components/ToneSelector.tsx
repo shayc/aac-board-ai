@@ -1,6 +1,6 @@
-import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
+import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
@@ -28,20 +28,20 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
       size="medium"
       onChange={handleChange}
     >
-      <Tooltip title="Neutral tone">
-        <ToggleButton value="as-is" aria-label="neutral tone">
-          <HorizontalRuleIcon fontSize="medium" />
+      <Tooltip title="Direct tone">
+        <ToggleButton value="as-is" aria-label="direct tone">
+          <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
-      <Tooltip title="Formal tone">
-        <ToggleButton value="more-formal" aria-label="formal tone">
-          <BusinessCenterIcon fontSize="medium" />
+      <Tooltip title="Professional tone">
+        <ToggleButton value="more-formal" aria-label="professional tone">
+          <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
-      <Tooltip title="Casual tone">
-        <ToggleButton value="more-casual" aria-label="casual tone">
+      <Tooltip title="Friendly tone">
+        <ToggleButton value="more-casual" aria-label="friendly tone">
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
