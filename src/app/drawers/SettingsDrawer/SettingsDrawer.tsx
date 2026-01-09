@@ -38,7 +38,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Box sx={{ width: 330, px: 3 }}>
+      <Box sx={{ width: 320, px: 3 }}>
         <AppearanceSettings />
         <LanguageSettings />
         <SpeechSettings />
