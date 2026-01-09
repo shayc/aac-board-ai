@@ -1,13 +1,22 @@
-import { useBoard } from "@features/board/context/useBoard";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 
-export function NavButtons() {
-  const { canGoBack, canGoHome, navigateBack, navigateHome } = useBoard();
+interface NavButtonsProps {
+  canGoBack: boolean;
+  canGoHome: boolean;
+  navigateBack: () => void;
+  navigateHome: () => void;
+}
 
+export function NavButtons({
+  canGoBack,
+  canGoHome,
+  navigateBack,
+  navigateHome,
+}: NavButtonsProps) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
       <Tooltip title="Go back">
