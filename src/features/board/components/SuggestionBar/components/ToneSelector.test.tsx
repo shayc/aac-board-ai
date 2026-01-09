@@ -11,47 +11,55 @@ describe("ToneSelector", () => {
     );
 
     await expect
-      .element(screen.getByRole("button", { name: "neutral tone" }))
+      .element(screen.getByRole("button", { name: "direct tone" }))
       .toBeVisible();
     await expect
-      .element(screen.getByRole("button", { name: "formal tone" }))
+      .element(screen.getByRole("button", { name: "professional tone" }))
       .toBeVisible();
     await expect
-      .element(screen.getByRole("button", { name: "casual tone" }))
+      .element(screen.getByRole("button", { name: "friendly tone" }))
       .toBeVisible();
   });
 
-  test("highlights neutral tone when selected", async () => {
+  test("highlights direct tone when selected", async () => {
     const onChange = vi.fn();
 
     const screen = await render(
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    const neutralButton = screen.getByRole("button", { name: "neutral tone" });
-    await expect.element(neutralButton).toHaveAttribute("aria-pressed", "true");
+    const directButton = screen.getByRole("button", { name: "direct tone" });
+    await expect.element(directButton).toHaveAttribute("aria-pressed", "true");
   });
 
-  test("highlights formal tone when selected", async () => {
+  test("highlights professional tone when selected", async () => {
     const onChange = vi.fn();
 
     const screen = await render(
       <ToneSelector tone="more-formal" onChange={onChange} />,
     );
 
-    const formalButton = screen.getByRole("button", { name: "formal tone" });
-    await expect.element(formalButton).toHaveAttribute("aria-pressed", "true");
+    const professionalButton = screen.getByRole("button", {
+      name: "professional tone",
+    });
+    await expect
+      .element(professionalButton)
+      .toHaveAttribute("aria-pressed", "true");
   });
 
-  test("highlights casual tone when selected", async () => {
+  test("highlights friendly tone when selected", async () => {
     const onChange = vi.fn();
 
     const screen = await render(
       <ToneSelector tone="more-casual" onChange={onChange} />,
     );
 
-    const casualButton = screen.getByRole("button", { name: "casual tone" });
-    await expect.element(casualButton).toHaveAttribute("aria-pressed", "true");
+    const friendlyButton = screen.getByRole("button", {
+      name: "friendly tone",
+    });
+    await expect
+      .element(friendlyButton)
+      .toHaveAttribute("aria-pressed", "true");
   });
 
   test("calls onChange with new tone when selection changes", async () => {
@@ -61,8 +69,10 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    const formalButton = screen.getByRole("button", { name: "formal tone" });
-    await formalButton.click();
+    const professionalButton = screen.getByRole("button", {
+      name: "professional tone",
+    });
+    await professionalButton.click();
 
     expect(onChange).toHaveBeenCalledWith("more-formal");
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -75,8 +85,8 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    const neutralButton = screen.getByRole("button", { name: "neutral tone" });
-    await neutralButton.click();
+    const directButton = screen.getByRole("button", { name: "direct tone" });
+    await directButton.click();
 
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -88,26 +98,30 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    const formalButton = screen.getByRole("button", { name: "formal tone" });
-    await formalButton.click();
+    const professionalButton = screen.getByRole("button", {
+      name: "professional tone",
+    });
+    await professionalButton.click();
 
     expect(onChange).toHaveBeenCalledWith("more-formal");
 
-    const casualButton = screen.getByRole("button", { name: "casual tone" });
-    await casualButton.click();
+    const friendlyButton = screen.getByRole("button", {
+      name: "friendly tone",
+    });
+    await friendlyButton.click();
 
     expect(onChange).toHaveBeenCalledWith("more-casual");
     expect(onChange).toHaveBeenCalledTimes(2);
   });
 
-  test("defaults to neutral tone when no tone prop provided", async () => {
+  test("defaults to direct tone when no tone prop provided", async () => {
     const onChange = vi.fn();
 
     const screen = await render(
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    const neutralButton = screen.getByRole("button", { name: "neutral tone" });
-    await expect.element(neutralButton).toHaveAttribute("aria-pressed", "true");
+    const directButton = screen.getByRole("button", { name: "direct tone" });
+    await expect.element(directButton).toHaveAttribute("aria-pressed", "true");
   });
 });
