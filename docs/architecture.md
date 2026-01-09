@@ -15,14 +15,14 @@ Each hook wraps a browser API and manages model downloading and session lifecycl
 
 ### AI Hooks
 
-| Hook                  | Chrome API            | Status       | Purpose                                   |
-| --------------------- | --------------------- | ------------ | ----------------------------------------- |
-| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction           |
-| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (casual, formal, neutral) |
-| `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                     |
-| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion            |
-| `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions       |
-| `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection              |
+| Hook                  | Chrome API            | Status       | Purpose                                          |
+| --------------------- | --------------------- | ------------ | ------------------------------------------------ |
+| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction                  |
+| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (direct, professional, friendly) |
+| `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                            |
+| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion                   |
+| `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions              |
+| `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection                     |
 
 **Status Key:**
 
