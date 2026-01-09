@@ -60,8 +60,8 @@ export function Board() {
         <NavButtons
           canGoBack={canGoBack}
           canGoHome={canGoHome}
-          navigateBack={navigateBack}
-          navigateHome={navigateHome}
+          onBackClick={navigateBack}
+          onHomeClick={navigateHome}
         />
 
         {isSuggestionsEnabled && (

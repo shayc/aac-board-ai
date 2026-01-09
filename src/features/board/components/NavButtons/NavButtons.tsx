@@ -7,15 +7,15 @@ import Tooltip from "@mui/material/Tooltip";
 interface NavButtonsProps {
   canGoBack: boolean;
   canGoHome: boolean;
-  navigateBack: () => void;
-  navigateHome: () => void;
+  onBackClick: () => void;
+  onHomeClick: () => void;
 }
 
 export function NavButtons({
   canGoBack,
   canGoHome,
-  navigateBack,
-  navigateHome,
+  onBackClick,
+  onHomeClick,
 }: NavButtonsProps) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
@@ -25,7 +25,7 @@ export function NavButtons({
             aria-label="Back"
             size="large"
             disabled={!canGoBack}
-            onClick={() => navigateBack()}
+            onClick={onBackClick}
           >
             <ArrowBackOutlinedIcon />
           </IconButton>
@@ -38,7 +38,7 @@ export function NavButtons({
             aria-label="Home"
             size="large"
             disabled={!canGoHome}
-            onClick={() => navigateHome()}
+            onClick={onHomeClick}
           >
             <HomeOutlinedIcon />
           </IconButton>
