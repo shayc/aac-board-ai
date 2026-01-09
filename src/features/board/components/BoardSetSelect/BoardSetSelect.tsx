@@ -14,7 +14,6 @@ interface BoardSetSelectProps {
 export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
   const navigate = useNavigate();
   const { board } = useBoard();
-  const selectedSet = boardSets.find((s) => s.setId === boardSetId);
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>
@@ -39,7 +38,7 @@ export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
       </Select>
 
       <Typography noWrap sx={{ ml: 2 }}>
-        {selectedSet?.rootBoardId === board?.id ? "Home" : board?.name}
+        {board?.name}
       </Typography>
     </Box>
   );
