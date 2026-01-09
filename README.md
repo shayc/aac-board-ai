@@ -9,14 +9,14 @@
 ![Screenshot of AAC Board AI](screenshot.png)
 
 Try the live demo at [aacboard.app](https://aacboard.app). _(requires
-Chrome 138+ with [Built‑in AI flags enabled](#prerequisites))_.
+Chrome with [Built‑in AI flags enabled](#prerequisites))_.
 
 ## Key Features
 
 - **Grammar Correction** – Turns short, telegraphic text
   into clear, natural sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
-- **Tone Adjustment** – Rewrites messages into casual, polite, or
-  formal tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
+- **Tone Adjustment** – Rewrites messages into direct, professional, or
+  friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
 - **Multi-Language Support** – Translates messages between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 
 ## Prerequisites
