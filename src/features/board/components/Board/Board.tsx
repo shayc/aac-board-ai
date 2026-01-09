@@ -14,6 +14,10 @@ export function Board() {
   const {
     board,
     activateButton,
+    canGoBack,
+    canGoHome,
+    navigateBack,
+    navigateHome,
     isSuggestionsEnabled,
     message,
     isPlayingMessage,
@@ -53,7 +57,12 @@ export function Board() {
       />
 
       <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
-        <NavButtons />
+        <NavButtons
+          canGoBack={canGoBack}
+          canGoHome={canGoHome}
+          onBackClick={navigateBack}
+          onHomeClick={navigateHome}
+        />
 
         {isSuggestionsEnabled && (
           <SuggestionBar

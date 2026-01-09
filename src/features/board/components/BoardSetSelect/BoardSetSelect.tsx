@@ -12,8 +12,8 @@ interface BoardSetSelectProps {
 }
 
 export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
-  const { board } = useBoard();
   const navigate = useNavigate();
+  const { board } = useBoard();
 
   return (
     <Box sx={{ display: "flex", alignItems: "center", overflow: "hidden" }}>
