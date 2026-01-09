@@ -53,8 +53,10 @@ describe("SuggestionBar", () => {
       <SuggestionBar suggestions={["Hello"]} tone="as-is" {...handlers} />,
     );
 
-    const casualButton = screen.getByRole("button", { name: "casual tone" });
-    await casualButton.click();
+    const friendlyButton = screen.getByRole("button", {
+      name: "friendly tone",
+    });
+    await friendlyButton.click();
 
     expect(handlers.onToneChange).toHaveBeenCalledWith("more-casual");
     expect(handlers.onToneChange).toHaveBeenCalledTimes(1);
