@@ -6,6 +6,7 @@
       "args": ["-y", "@mui/mcp@latest"]
     },
     "react-aria-mcp": {
+      "type": "stdio",
       "command": "npx",
       "args": ["@react-aria/mcp@latest"]
     }
