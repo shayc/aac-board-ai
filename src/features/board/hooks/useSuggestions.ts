@@ -1,3 +1,4 @@
+import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
@@ -10,10 +11,8 @@ export interface UseSuggestionsReturn {
   setTone: (tone: RewriterTone) => void;
 }
 
-export function useSuggestions(
-  text: string,
-  sharedContext?: string,
-): UseSuggestionsReturn {
+export function useSuggestions(text: string): UseSuggestionsReturn {
+  const { sharedContext } = useAI();
   const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
   const isSuggestionsEnabled = isProofreaderSupported || isRewriterSupported;
 
