@@ -1,5 +1,4 @@
 import type { Board, BoardButton } from "@features/board/types";
-import { useAI } from "@shared/contexts/AIProvider/useAI";
 import {
   useBoardNavigation,
   type UseBoardNavigationReturn,
@@ -34,9 +33,7 @@ export function useCommunicationBoard({
 
   const message = useMessage();
   const navigation = useBoardNavigation();
-
-  const { sharedContext } = useAI();
-  const suggestions = useSuggestions(message.text, sharedContext);
+  const suggestions = useSuggestions(message.text);
 
   const { activateButton } = useButtonActivation({ message, navigation });
 
