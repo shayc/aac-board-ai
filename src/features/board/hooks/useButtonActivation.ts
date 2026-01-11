@@ -1,20 +1,23 @@
 import type { BoardAction, BoardButton } from "@features/board/types";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
-import type { MessagePart } from "./useMessage";
+import type { UseMessageReturn } from "./useMessage";
+import type { UseBoardNavigationReturn } from "./useBoardNavigation";
 
 type ActionHandler = () => void | Promise<void>;
 
 export interface UseButtonActivationOptions {
-  navigateToBoard: (id: string) => void;
-  addPart: (part: MessagePart) => void;
-  updateLastPart: (part: MessagePart) => void;
-  addSpace: () => void;
-  clearMessage: () => void;
-  navigateHome: () => void;
-  playMessage: () => Promise<void>;
-  removeLastPart: () => void;
-  message: MessagePart[];
+  message: Pick<
+    UseMessageReturn,
+    | "parts"
+    | "addPart"
+    | "addSpace"
+    | "updateLastPart"
+    | "removeLastPart"
+    | "clear"
+    | "play"
+  >;
+  navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
 export interface UseButtonActivationReturn {
@@ -22,33 +25,26 @@ export interface UseButtonActivationReturn {
 }
 
 export function useButtonActivation({
-  navigateToBoard,
-  addPart,
-  updateLastPart,
-  addSpace,
-  clearMessage,
-  navigateHome,
-  playMessage,
-  removeLastPart,
   message,
+  navigation,
 }: UseButtonActivationOptions): UseButtonActivationReturn {
   const speech = useSpeech();
   const audio = useAudio();
 
   const actionHandlers: Record<string, ActionHandler> = {
-    ":space": addSpace,
-    ":clear": clearMessage,
-    ":home": navigateHome,
-    ":speak": playMessage,
-    ":backspace": removeLastPart,
+    ":space": message.addSpace,
+    ":clear": message.clear,
+    ":home": navigation.goHome,
+    ":speak": message.play,
+    ":backspace": message.removeLastPart,
   };
 
   async function executeAction(action: BoardAction) {
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
-      const lastPart = message.at(-1);
+      const lastPart = message.parts.at(-1);
 
-      updateLastPart({
+      message.updateLastPart({
         id: text,
         label: `${lastPart?.label ?? ""}${text}`,
       });
@@ -62,7 +58,7 @@ export function useButtonActivation({
 
   const activateButton = async (button: BoardButton) => {
     if (button.loadBoard?.id) {
-      navigateToBoard(button.loadBoard.id);
+      navigation.goToBoard(button.loadBoard.id);
       return;
     }
 
@@ -77,12 +73,12 @@ export function useButtonActivation({
     const messagePart = {
       id: button.id,
       label: button.label,
+      vocalization: button.vocalization,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
-      vocalization: button.vocalization,
     };
 
-    addPart(messagePart);
+    message.addPart(messagePart);
 
     if (button.soundSrc) {
       void audio.play(button.soundSrc);
