@@ -8,9 +8,11 @@ export interface PictogramProps {
   labelTypographyVariant?: TypographyVariant;
 }
 
-export function Pictogram(props: PictogramProps) {
-  const { src, label, labelTypographyVariant = "body1" } = props;
-
+export function Pictogram({
+  src,
+  label,
+  labelTypographyVariant = "body1",
+}: PictogramProps) {
   return (
     <Box
       sx={{

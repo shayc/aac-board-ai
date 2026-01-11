@@ -2,7 +2,7 @@ import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 
-export type RefCallback = (element: HTMLElement | null) => void;
+type RefCallback = (element: HTMLElement | null) => void;
 
 export interface GridItemProps {
   ref: RefCallback;
