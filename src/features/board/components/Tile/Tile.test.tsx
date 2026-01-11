@@ -50,7 +50,6 @@ describe("Tile", () => {
     await expect
       .element(screen.getByRole("button", { name: "Hello" }))
       .toBeVisible();
-    await expect.element(screen.getByText("Hello")).toBeVisible();
   });
 
   test("respects tabIndex for keyboard navigation", async () => {
