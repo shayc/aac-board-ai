@@ -3,11 +3,6 @@ import { useAudio } from "@shared/hooks/useAudio";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 
-interface Segment {
-  type: "text" | "sound";
-  data: string;
-}
-
 export interface MessagePart {
   id: string;
   label?: string;
@@ -42,6 +37,13 @@ export function useMessage(): UseMessageReturn {
     setParts((prev) => [...prev, part]);
   }
 
+  function addSpace() {
+    addPart({
+      id: crypto.randomUUID(),
+      label: "",
+    });
+  }
+
   function removeLastPart() {
     setParts((prev) => prev.slice(0, -1));
   }
@@ -61,22 +63,6 @@ export function useMessage(): UseMessageReturn {
     setParts([]);
   }
 
-  function addSpace() {
-    addPart({
-      id: crypto.randomUUID(),
-      label: "",
-    });
-  }
-  function stop() {
-    try {
-      speech.cancel();
-    } catch (error) {
-      console.error("Error stopping message:", error);
-    } finally {
-      setIsPlaying(false);
-    }
-  }
-
   async function play() {
     try {
       setIsPlaying(true);
@@ -93,7 +79,16 @@ export function useMessage(): UseMessageReturn {
       }
     } catch (error) {
       console.error("Error playing message:", error);
+    } finally {
       setIsPlaying(false);
+    }
+  }
+
+  function stop() {
+    try {
+      speech.cancel();
+    } catch (error) {
+      console.error("Error stopping message:", error);
     } finally {
       setIsPlaying(false);
     }
@@ -112,6 +107,11 @@ export function useMessage(): UseMessageReturn {
     play,
     stop,
   };
+}
+
+interface Segment {
+  type: "text" | "sound";
+  data: string;
 }
 
 function convertPartsToSegments(parts: MessagePart[]): Segment[] {
