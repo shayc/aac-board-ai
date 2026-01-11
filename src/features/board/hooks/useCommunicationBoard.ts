@@ -29,14 +29,15 @@ export function useCommunicationBoard({
   setId,
   boardId,
 }: UseCommunicationBoardOptions): UseCommunicationBoardReturn {
-  const { sharedContext } = useAI();
-
-  const navigation = useBoardNavigation();
-  const message = useMessage();
-  const suggestions = useSuggestions(message.text, sharedContext);
-
   const { board } = useLoadBoard({ setId, boardId });
   const { translatedBoard } = useBoardTranslation({ board });
+
+  const message = useMessage();
+  const navigation = useBoardNavigation();
+
+  const { sharedContext } = useAI();
+  const suggestions = useSuggestions(message.text, sharedContext);
+
   const { activateButton } = useButtonActivation({ message, navigation });
 
   return {
