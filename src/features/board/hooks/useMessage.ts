@@ -15,11 +15,11 @@ export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
   isPlaying: boolean;
+  setParts: (parts: MessagePart[]) => void;
   addPart: (part: MessagePart) => void;
   addSpace: () => void;
-  setParts: (parts: MessagePart[]) => void;
-  removeLastPart: () => void;
   updateLastPart: (part: MessagePart) => void;
+  removeLastPart: () => void;
   clear: () => void;
   play: () => Promise<void>;
   stop: () => void;
@@ -44,10 +44,6 @@ export function useMessage(): UseMessageReturn {
     });
   }
 
-  function removeLastPart() {
-    setParts((prev) => prev.slice(0, -1));
-  }
-
   function updateLastPart(part: MessagePart) {
     setParts((prev) => {
       const lastPart = prev.at(-1);
@@ -57,6 +53,10 @@ export function useMessage(): UseMessageReturn {
 
       return [...prev.slice(0, -1), { ...lastPart, ...part }];
     });
+  }
+
+  function removeLastPart() {
+    setParts((prev) => prev.slice(0, -1));
   }
 
   function clear() {
@@ -98,11 +98,11 @@ export function useMessage(): UseMessageReturn {
     parts,
     text,
     isPlaying,
+    setParts,
     addPart,
     addSpace,
-    setParts,
-    removeLastPart,
     updateLastPart,
+    removeLastPart,
     clear,
     play,
     stop,
