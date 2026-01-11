@@ -2,6 +2,7 @@ import type { MessagePart } from "@features/board/hooks/useMessage";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { MessageBar } from "./MessageBar";
+import { LONG_PRESS_THRESHOLD_MS } from "./components/BackspaceButton";
 
 function createHandlers() {
   return {
@@ -95,6 +96,7 @@ describe("MessageBar", () => {
     await backspaceButton.click();
 
     expect(handlers.onBackspacePress).toHaveBeenCalledTimes(1);
+    expect(handlers.onBackspaceLongPress).not.toHaveBeenCalled();
   });
 
   test("clicking play button calls onPlayClick when not playing", async () => {
@@ -131,5 +133,26 @@ describe("MessageBar", () => {
 
     expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
     expect(handlers.onPlayClick).not.toHaveBeenCalled();
+  });
+
+  test("long-pressing backspace button calls onBackspaceLongPress", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <MessageBar
+        message={[{ id: "1", label: "Test" }]}
+        isPlaying={false}
+        {...handlers}
+      />,
+    );
+
+    const backspaceButton = screen.getByRole("button", { name: "Backspace" });
+
+    await backspaceButton.click({
+      delay: LONG_PRESS_THRESHOLD_MS,
+    });
+
+    expect(handlers.onBackspaceLongPress).toHaveBeenCalledTimes(1);
+    expect(handlers.onBackspacePress).not.toHaveBeenCalled();
   });
 });
