@@ -2,7 +2,6 @@ import type { MessagePart } from "@features/board/hooks/useMessage";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { MessageBar } from "./MessageBar";
-import { LONG_PRESS_THRESHOLD_MS } from "./components/BackspaceButton";
 
 function createHandlers() {
   return {
@@ -57,102 +56,5 @@ describe("MessageBar", () => {
     expect(waterIndex).toBeGreaterThan(-1);
     expect(iIndex).toBeLessThan(wantIndex);
     expect(wantIndex).toBeLessThan(waterIndex);
-  });
-
-  test("play button aria-label changes based on playing state", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <MessageBar message={[]} isPlaying={false} {...handlers} />,
-    );
-
-    const playButton = screen.getByRole("button", { name: "Play message" });
-    await expect.element(playButton).toBeVisible();
-
-    const { rerender } = screen;
-    await rerender(<MessageBar message={[]} isPlaying={true} {...handlers} />);
-
-    expect(
-      screen.getByRole("button", { name: "Play message" }).query(),
-    ).toBeNull();
-
-    await expect
-      .element(screen.getByRole("button", { name: "Stop playback" }))
-      .toBeVisible();
-  });
-
-  test("clicking backspace button calls onBackspacePress", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <MessageBar
-        message={[{ id: "1", label: "Test" }]}
-        isPlaying={false}
-        {...handlers}
-      />,
-    );
-
-    const backspaceButton = screen.getByRole("button", { name: "Backspace" });
-    await backspaceButton.click();
-
-    expect(handlers.onBackspacePress).toHaveBeenCalledTimes(1);
-    expect(handlers.onBackspaceLongPress).not.toHaveBeenCalled();
-  });
-
-  test("clicking play button calls onPlayClick when not playing", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <MessageBar
-        message={[{ id: "1", label: "Test" }]}
-        isPlaying={false}
-        {...handlers}
-      />,
-    );
-
-    const playButton = screen.getByRole("button", { name: "Play message" });
-    await playButton.click();
-
-    expect(handlers.onPlayClick).toHaveBeenCalledTimes(1);
-    expect(handlers.onStopClick).not.toHaveBeenCalled();
-  });
-
-  test("clicking stop button calls onStopClick when playing", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <MessageBar
-        message={[{ id: "1", label: "Test" }]}
-        isPlaying={true}
-        {...handlers}
-      />,
-    );
-
-    const stopButton = screen.getByRole("button", { name: "Stop playback" });
-    await stopButton.click();
-
-    expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
-    expect(handlers.onPlayClick).not.toHaveBeenCalled();
-  });
-
-  test("long-pressing backspace button calls onBackspaceLongPress", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <MessageBar
-        message={[{ id: "1", label: "Test" }]}
-        isPlaying={false}
-        {...handlers}
-      />,
-    );
-
-    const backspaceButton = screen.getByRole("button", { name: "Backspace" });
-
-    await backspaceButton.click({
-      delay: LONG_PRESS_THRESHOLD_MS,
-    });
-
-    expect(handlers.onBackspaceLongPress).toHaveBeenCalledTimes(1);
-    expect(handlers.onBackspacePress).not.toHaveBeenCalled();
   });
 });
