@@ -54,6 +54,7 @@ describe("NavButtons", () => {
     await expect
       .element(screen.getByRole("button", { name: "Back" }))
       .toBeDisabled();
+
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
       .toBeEnabled();
@@ -72,6 +73,7 @@ describe("NavButtons", () => {
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
       .toBeDisabled();
+
     await expect
       .element(screen.getByRole("button", { name: "Back" }))
       .toBeEnabled();
@@ -90,6 +92,7 @@ describe("NavButtons", () => {
     await expect
       .element(screen.getByRole("button", { name: "Back" }))
       .toBeDisabled();
+
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
       .toBeDisabled();

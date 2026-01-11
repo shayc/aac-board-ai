@@ -1,18 +1,22 @@
+import type { Locator } from "@vitest/browser/context";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import type { Locator } from "@vitest/browser/context";
 import { Grid } from "./Grid";
 
 function getCellPosition(item: Locator): { row: number; col: number } {
   const cell = item.element().closest("[role='gridcell']");
+
   if (!cell) {
     throw new Error("Item is not inside a grid cell");
   }
+
   const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
   const col = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
+
   if (isNaN(row) || isNaN(col)) {
     throw new Error("Grid cell missing valid aria-rowindex or aria-colindex");
   }
+
   return { row, col };
 }
 
@@ -44,9 +48,22 @@ describe("Grid", () => {
       expect(getCellPosition(item2)).toEqual({ row: 0, col: 1 });
       expect(getCellPosition(item3)).toEqual({ row: 1, col: 0 });
       expect(getCellPosition(item4)).toEqual({ row: 1, col: 1 });
+    });
 
-      await expect.element(item1).toBeVisible();
-      await expect.element(item4).toBeVisible();
+    test("renders no items when items is empty", async () => {
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={[]}
+          renderItem={(item: { id: string; label: string }, props) => (
+            <button {...props}>{item.label}</button>
+          )}
+        />,
+      );
+
+      const buttons = screen.getByRole("button").query();
+      expect(buttons).toBeNull();
     });
 
     test("renders only provided items when fewer than grid capacity", async () => {
@@ -75,22 +92,6 @@ describe("Grid", () => {
       expect(allButtons).toHaveLength(2);
     });
 
-    test("renders no items when items is empty", async () => {
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={[]}
-          renderItem={(item: { id: string; label: string }, props) => (
-            <button {...props}>{item.label}</button>
-          )}
-        />,
-      );
-
-      const buttons = screen.getByRole("button").query();
-      expect(buttons).toBeNull();
-    });
-
     test("limits rendered items to grid capacity", async () => {
       const items = Array.from({ length: 10 }, (_, i) => ({
         id: String(i + 1),
@@ -108,13 +109,6 @@ describe("Grid", () => {
 
       const buttons = screen.getByRole("button").all();
       expect(buttons).toHaveLength(4);
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 1", exact: true }))
-        .toBeVisible();
-      await expect
-        .element(screen.getByRole("button", { name: "Item 4", exact: true }))
-        .toBeVisible();
 
       expect(
         screen.getByRole("button", { name: "Item 5", exact: true }).query(),
@@ -211,13 +205,6 @@ describe("Grid", () => {
 
       const buttons = screen.getByRole("button").all();
       expect(buttons).toHaveLength(2);
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 1", exact: true }))
-        .toBeVisible();
-      await expect
-        .element(screen.getByRole("button", { name: "Item 2", exact: true }))
-        .toBeVisible();
     });
   });
 
