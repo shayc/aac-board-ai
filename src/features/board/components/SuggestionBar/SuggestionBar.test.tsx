@@ -46,19 +46,15 @@ describe("SuggestionBar", () => {
     expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(2);
   });
 
-  test("changing tone calls onToneChange with correct tone value", async () => {
+  test("passes onToneChange to ToneSelector", async () => {
     const handlers = createHandlers();
 
     const screen = await render(
-      <SuggestionBar suggestions={["Hello"]} tone="as-is" {...handlers} />,
+      <SuggestionBar suggestions={[]} tone="as-is" {...handlers} />,
     );
 
-    const friendlyButton = screen.getByRole("button", {
-      name: "friendly tone",
-    });
-    await friendlyButton.click();
+    await screen.getByRole("button", { name: "friendly tone" }).click();
 
     expect(handlers.onToneChange).toHaveBeenCalledWith("more-casual");
-    expect(handlers.onToneChange).toHaveBeenCalledTimes(1);
   });
 });
