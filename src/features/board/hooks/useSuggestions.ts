@@ -3,7 +3,17 @@ import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
 
-export function useSuggestions(text: string, sharedContext?: string) {
+export interface UseSuggestionsReturn {
+  items: string[];
+  isEnabled: boolean;
+  tone: RewriterTone;
+  setTone: (tone: RewriterTone) => void;
+}
+
+export function useSuggestions(
+  text: string,
+  sharedContext?: string,
+): UseSuggestionsReturn {
   const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
   const isSuggestionsEnabled = isProofreaderSupported || isRewriterSupported;
 
@@ -70,9 +80,9 @@ export function useSuggestions(text: string, sharedContext?: string) {
   }, [text, tone, sharedContext, createProofreader, createRewriter]);
 
   return {
-    suggestions,
-    isSuggestionsEnabled,
-    suggestionTone: tone,
-    setSuggestionTone: setTone,
+    items: suggestions,
+    isEnabled: isSuggestionsEnabled,
+    tone,
+    setTone,
   };
 }

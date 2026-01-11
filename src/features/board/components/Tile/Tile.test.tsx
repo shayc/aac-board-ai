@@ -4,6 +4,89 @@ import { render } from "vitest-browser-react";
 import { Tile } from "./Tile";
 
 describe("Tile", () => {
+  test("renders label without image when imageSrc is not provided", async () => {
+    const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
+
+    await expect
+      .element(screen.getByRole("button", { name: "Hello" }))
+      .toBeVisible();
+  });
+
+  test("renders with image when imageSrc is provided", async () => {
+    const screen = await render(
+      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onClick={vi.fn()} />,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "Cat" }))
+      .toBeVisible();
+
+    // Image is decorative (alt=""), use querySelector
+    const img = screen.container.querySelector("img");
+    expect(img).not.toBeNull();
+    expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
+  });
+
+  test("renders folder corner indicator when variant is folder", async () => {
+    const screen = await render(
+      <Tile
+        label="Folder"
+        variant="folder"
+        borderColor="#000000"
+        onClick={vi.fn()}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Folder" });
+    const afterStyles = getComputedStyle(button.element(), "::after");
+
+    expect(afterStyles.display).toBe("block");
+  });
+
+  test("applies backgroundColor to the button", async () => {
+    const screen = await render(
+      <Tile label="Colored" backgroundColor="#ff0000" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Colored" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.backgroundColor).toBe("rgb(255, 0, 0)");
+  });
+
+  test("uses light text color on dark backgrounds", async () => {
+    const screen = await render(
+      <Tile label="Dark bg" backgroundColor="#000000" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Dark bg" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.color).toBe("rgb(255, 255, 255)");
+  });
+
+  test("uses dark text color on light backgrounds", async () => {
+    const screen = await render(
+      <Tile label="Light bg" backgroundColor="#ffffff" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Light bg" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.color).toBe("rgb(0, 0, 0)");
+  });
+
+  test("applies borderColor when provided", async () => {
+    const screen = await render(
+      <Tile label="Bordered" borderColor="#00ff00" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Bordered" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.borderColor).toBe("rgb(0, 255, 0)");
+  });
+
   test("calls onClick when clicked", async () => {
     const onClick = vi.fn();
 
@@ -29,30 +112,6 @@ describe("Tile", () => {
     expect(onClick).not.toHaveBeenCalled();
   });
 
-  test("renders with image when imageSrc is provided", async () => {
-    const screen = await render(
-      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onClick={vi.fn()} />,
-    );
-
-    await expect
-      .element(screen.getByRole("button", { name: "Cat" }))
-      .toBeVisible();
-
-    // Image is decorative (alt=""), use querySelector
-    const img = screen.container.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
-  });
-
-  test("renders label without image when imageSrc is not provided", async () => {
-    const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
-
-    await expect
-      .element(screen.getByRole("button", { name: "Hello" }))
-      .toBeVisible();
-    await expect.element(screen.getByText("Hello")).toBeVisible();
-  });
-
   test("respects tabIndex for keyboard navigation", async () => {
     const screen = await render(
       <Tile label="Focusable" onClick={vi.fn()} tabIndex={0} />,
@@ -69,5 +128,13 @@ describe("Tile", () => {
 
     const button = screen.getByRole("button", { name: "Not focusable" });
     await expect.element(button).toHaveAttribute("tabindex", "-1");
+  });
+
+  test("forwards ref to button element", async () => {
+    const refCallback = vi.fn();
+
+    await render(<Tile label="Ref test" onClick={vi.fn()} ref={refCallback} />);
+
+    expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
   });
 });

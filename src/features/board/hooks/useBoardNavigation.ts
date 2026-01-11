@@ -7,7 +7,16 @@ interface NavigationState {
   index: number;
 }
 
-export function useBoardNavigation() {
+export interface UseBoardNavigationReturn {
+  history: string[];
+  canGoBack: boolean;
+  canGoHome: boolean;
+  goToBoard: (id: string) => void;
+  goBack: () => void;
+  goHome: () => void;
+}
+
+export function useBoardNavigation(): UseBoardNavigationReturn {
   const navigate = useNavigate();
 
   const { setId, boardId } = useParams();
@@ -21,7 +30,7 @@ export function useBoardNavigation() {
   const canGoBack = navState.index > 0;
   const canGoHome = rootBoardId !== "";
 
-  function navigateToBoard(id: string) {
+  function goToBoard(id: string) {
     if (!setId) {
       return;
     }
@@ -42,7 +51,7 @@ export function useBoardNavigation() {
     void navigate(`/sets/${setId}/boards/${id}`);
   }
 
-  function navigateBack() {
+  function goBack() {
     if (!setId) {
       return;
     }
@@ -62,7 +71,7 @@ export function useBoardNavigation() {
     void navigate(`/sets/${setId}/boards/${id}`);
   }
 
-  function navigateHome() {
+  function goHome() {
     if (!setId) {
       return;
     }
@@ -108,11 +117,11 @@ export function useBoardNavigation() {
   }, [setId]);
 
   return {
-    navigationHistory: navState.history,
+    history: navState.history,
     canGoBack,
     canGoHome,
-    navigateToBoard,
-    navigateBack,
-    navigateHome,
+    goToBoard,
+    goBack,
+    goHome,
   };
 }

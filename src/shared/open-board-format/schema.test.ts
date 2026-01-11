@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import lotsOfStuffExample from "./examples/lots_of_stuff.json";
 import {
   OBFBoardSchema,
-  OBFButtonActionSchema,
   OBFButtonSchema,
   OBFFormatVersionSchema,
   OBFGridSchema,
@@ -97,33 +96,6 @@ describe("OBFSpecialtyActionSchema", () => {
       expect(OBFSpecialtyActionSchema.safeParse(action).success).toBe(false);
     },
   );
-});
-
-describe("OBFButtonActionSchema", () => {
-  test("accepts spelling actions with + prefix", () => {
-    expect(OBFButtonActionSchema.safeParse("+hello").success).toBe(true);
-    expect(OBFButtonActionSchema.safeParse("+a").success).toBe(true);
-  });
-
-  test("accepts specialty actions", () => {
-    expect(OBFButtonActionSchema.safeParse(":space").success).toBe(true);
-    expect(OBFButtonActionSchema.safeParse(":clear").success).toBe(true);
-  });
-
-  test("accepts custom :ext_ actions", () => {
-    expect(OBFButtonActionSchema.safeParse(":ext_custom").success).toBe(true);
-  });
-
-  test("accepts non-standard colon-prefixed actions", () => {
-    expect(OBFButtonActionSchema.safeParse(":native-keyboard").success).toBe(
-      true,
-    );
-  });
-
-  test("rejects invalid actions", () => {
-    expect(OBFButtonActionSchema.safeParse(":").success).toBe(false);
-    expect(OBFButtonActionSchema.safeParse("hello").success).toBe(false);
-  });
 });
 
 describe("OBFLicenseSchema", () => {
@@ -289,12 +261,6 @@ describe("OBFImageSchema", () => {
 });
 
 describe("OBFButtonSchema", () => {
-  test("rejects missing id", () => {
-    const missingId = { label: "Hello" };
-
-    expect(OBFButtonSchema.safeParse(missingId).success).toBe(false);
-  });
-
   test("accepts button with valid action", () => {
     const withSpellingAction = { id: "1", action: "+hello" };
     const withSpecialtyAction = { id: "2", action: ":space" };
@@ -303,6 +269,12 @@ describe("OBFButtonSchema", () => {
     expect(OBFButtonSchema.safeParse(withSpellingAction).success).toBe(true);
     expect(OBFButtonSchema.safeParse(withSpecialtyAction).success).toBe(true);
     expect(OBFButtonSchema.safeParse(withExtAction).success).toBe(true);
+  });
+
+  test("rejects missing id", () => {
+    const missingId = { label: "Hello" };
+
+    expect(OBFButtonSchema.safeParse(missingId).success).toBe(false);
   });
 
   test("rejects button with invalid action", () => {

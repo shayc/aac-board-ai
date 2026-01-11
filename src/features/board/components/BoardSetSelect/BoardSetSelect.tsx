@@ -38,7 +38,7 @@ export function BoardSetSelect({ boardSets, boardSetId }: BoardSetSelectProps) {
       </Select>
 
       <Typography noWrap sx={{ ml: 2 }}>
-        {board?.name}
+        {board.data?.name}
       </Typography>
     </Box>
   );

@@ -11,27 +11,9 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
-  const {
-    board,
-    activateButton,
-    canGoBack,
-    canGoHome,
-    navigateBack,
-    navigateHome,
-    isSuggestionsEnabled,
-    message,
-    isPlayingMessage,
-    removeLastPart,
-    clearMessage,
-    playMessage,
-    stopMessage,
-    suggestions,
-    suggestionTone,
-    setSuggestionTone,
-    setMessage,
-  } = useBoard();
+  const { board, message, navigation, suggestions } = useBoard();
 
-  if (!board) {
+  if (!board.data) {
     return null;
   }
 
@@ -48,39 +30,39 @@ export function Board() {
       })}
     >
       <MessageBar
-        message={message}
-        isPlaying={isPlayingMessage}
-        onBackspacePress={removeLastPart}
-        onBackspaceLongPress={clearMessage}
-        onPlayClick={() => void playMessage()}
-        onStopClick={stopMessage}
+        message={message.parts}
+        isPlaying={message.isPlaying}
+        onBackspacePress={message.removeLastPart}
+        onBackspaceLongPress={message.clear}
+        onPlayClick={() => void message.play()}
+        onStopClick={message.stop}
       />
 
       <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
         <NavButtons
-          canGoBack={canGoBack}
-          canGoHome={canGoHome}
-          onBackClick={navigateBack}
-          onHomeClick={navigateHome}
+          canGoBack={navigation.canGoBack}
+          canGoHome={navigation.canGoHome}
+          onBackClick={navigation.goBack}
+          onHomeClick={navigation.goHome}
         />
 
-        {isSuggestionsEnabled && (
+        {suggestions.isEnabled && (
           <SuggestionBar
-            suggestions={suggestions}
-            tone={suggestionTone}
-            onToneChange={setSuggestionTone}
+            suggestions={suggestions.items}
+            tone={suggestions.tone}
+            onToneChange={suggestions.setTone}
             onSuggestionClick={(suggestion) => {
-              setMessage([{ id: suggestion, label: suggestion }]);
+              message.setParts([{ id: suggestion, label: suggestion }]);
             }}
           />
         )}
       </Stack>
       <Box sx={{ flexGrow: 1, overflow: "auto" }}>
         <Grid<BoardButton>
-          rows={board.grid.rows}
-          columns={board.grid.columns}
-          order={board.grid.order}
-          items={board.buttons}
+          rows={board.data.grid.rows}
+          columns={board.data.grid.columns}
+          order={board.data.grid.order}
+          items={board.data.buttons}
           renderItem={(button, props) => (
             <Tile
               key={button.id}
@@ -89,7 +71,7 @@ export function Board() {
               backgroundColor={button.backgroundColor}
               borderColor={button.borderColor}
               variant={button.loadBoard ? "folder" : undefined}
-              onClick={() => void activateButton(button)}
+              onClick={() => void board.activateButton(button)}
               {...props}
             />
           )}

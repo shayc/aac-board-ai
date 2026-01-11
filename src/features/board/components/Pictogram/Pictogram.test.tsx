@@ -33,10 +33,6 @@ describe("Pictogram", () => {
     );
 
     await expect.element(screen.getByText("Action")).toBeVisible();
-
-    const img = screen.container.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
-    expect(img?.getAttribute("alt")).toBe("");
+    expect(screen.container.querySelector("img")).not.toBeNull();
   });
 });

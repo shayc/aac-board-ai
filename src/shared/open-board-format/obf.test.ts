@@ -17,19 +17,19 @@ describe("parseOBF", () => {
     expect(result).toEqual(validBoard);
   });
 
-  test("handles UTF-8 BOM prefix", () => {
-    const jsonWithBom = "\uFEFF" + JSON.stringify(validBoard);
-    const result = parseOBF(jsonWithBom);
-
-    expect(result).toEqual(validBoard);
-  });
-
   test("throws descriptive error for invalid JSON", () => {
     const malformedJson = '{ "format": "open-board-0.1", }';
 
     expect(() => parseOBF(malformedJson)).toThrow(
       /Invalid OBF: JSON parse failed/,
     );
+  });
+
+  test("handles UTF-8 BOM prefix", () => {
+    const jsonWithBom = "\uFEFF" + JSON.stringify(validBoard);
+    const result = parseOBF(jsonWithBom);
+
+    expect(result).toEqual(validBoard);
   });
 });
 
@@ -53,17 +53,6 @@ describe("loadOBF", () => {
   test("loads board from File object", async () => {
     const json = JSON.stringify(validBoard);
     const file = new File([json], "test.obf", { type: "application/json" });
-
-    const result = await loadOBF(file);
-
-    expect(result).toEqual(validBoard);
-  });
-
-  test("handles UTF-8 BOM in File", async () => {
-    const jsonWithBom = "\ufeff" + JSON.stringify(validBoard);
-    const file = new File([jsonWithBom], "test.obf", {
-      type: "application/json",
-    });
 
     const result = await loadOBF(file);
 

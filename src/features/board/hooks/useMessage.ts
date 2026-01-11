@@ -11,32 +11,43 @@ interface Segment {
 export interface MessagePart {
   id: string;
   label?: string;
+  vocalization?: string;
   imageSrc?: string;
   soundSrc?: string;
-  vocalization?: string;
 }
 
-export function useMessage() {
+export interface UseMessageReturn {
+  parts: MessagePart[];
+  text: string;
+  isPlaying: boolean;
+  addPart: (part: MessagePart) => void;
+  addSpace: () => void;
+  setParts: (parts: MessagePart[]) => void;
+  removeLastPart: () => void;
+  updateLastPart: (part: MessagePart) => void;
+  clear: () => void;
+  play: () => Promise<void>;
+  stop: () => void;
+}
+
+export function useMessage(): UseMessageReturn {
   const speech = useSpeech();
   const audio = useAudio();
 
-  const [message, setMessage] = usePersistentState<MessagePart[]>(
-    "message",
-    [],
-  );
-
-  const [isPlayingMessage, setIsPlayingMessage] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [parts, setParts] = usePersistentState<MessagePart[]>("message", []);
+  const text = parts.map((part) => part.label).join(" ");
 
   function addPart(part: MessagePart) {
-    setMessage((prev) => [...prev, part]);
+    setParts((prev) => [...prev, part]);
   }
 
   function removeLastPart() {
-    setMessage((prev) => prev.slice(0, -1));
+    setParts((prev) => prev.slice(0, -1));
   }
 
   function updateLastPart(part: MessagePart) {
-    setMessage((prev) => {
+    setParts((prev) => {
       const lastPart = prev.at(-1);
       if (!lastPart) {
         return [part];
@@ -46,8 +57,8 @@ export function useMessage() {
     });
   }
 
-  function clearMessage() {
-    setMessage([]);
+  function clear() {
+    setParts([]);
   }
 
   function addSpace() {
@@ -56,22 +67,20 @@ export function useMessage() {
       label: "",
     });
   }
-  function stopMessage() {
+  function stop() {
     try {
       speech.cancel();
     } catch (error) {
       console.error("Error stopping message:", error);
     } finally {
-      setIsPlayingMessage(false);
+      setIsPlaying(false);
     }
   }
 
-  const messageText = message.map((part) => part.label).join(" ");
-
-  async function playMessage() {
+  async function play() {
     try {
-      setIsPlayingMessage(true);
-      const segments = convertPartsToSegments(message);
+      setIsPlaying(true);
+      const segments = convertPartsToSegments(parts);
 
       for (const seg of segments) {
         if (seg.type === "sound") {
@@ -84,24 +93,24 @@ export function useMessage() {
       }
     } catch (error) {
       console.error("Error playing message:", error);
-      setIsPlayingMessage(false);
+      setIsPlaying(false);
     } finally {
-      setIsPlayingMessage(false);
+      setIsPlaying(false);
     }
   }
 
   return {
-    message,
-    messageText,
-    isPlayingMessage,
+    parts,
+    text,
+    isPlaying,
     addPart,
     addSpace,
-    setMessage,
+    setParts,
     removeLastPart,
     updateLastPart,
-    clearMessage,
-    playMessage,
-    stopMessage,
+    clear,
+    play,
+    stop,
   };
 }
 
@@ -116,7 +125,6 @@ function convertPartsToSegments(parts: MessagePart[]): Segment[] {
       if (text) {
         return { type: "text", data: text };
       }
-
       return null;
     })
     .filter((segment): segment is Segment => segment !== null);

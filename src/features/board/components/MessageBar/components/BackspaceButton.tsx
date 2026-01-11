@@ -9,7 +9,7 @@ import { mergeProps, useLongPress, usePress } from "react-aria";
 
 const RING_DELAY_MS = 300;
 const RING_FILL_MS = 300;
-const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
+export const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
 
 const StyledCircularProgress = styled(CircularProgress, {
   shouldForwardProp: (prop) => prop !== "active",

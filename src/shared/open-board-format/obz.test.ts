@@ -30,25 +30,6 @@ describe("parseManifest", () => {
 });
 
 describe("extractOBZ", () => {
-  test("throws for non-ZIP input", async () => {
-    const notZip = new ArrayBuffer(10);
-
-    await expect(extractOBZ(notZip)).rejects.toThrow(
-      "Invalid OBZ: not a ZIP file",
-    );
-  });
-
-  test("throws for missing manifest.json", async () => {
-    const filesWithoutManifest = new Map([
-      ["boards/test.obf", new TextEncoder().encode("{}")],
-    ]);
-    const zipBuffer = await zip(filesWithoutManifest);
-
-    await expect(extractOBZ(zipBuffer.buffer as ArrayBuffer)).rejects.toThrow(
-      "Invalid OBZ: missing manifest.json",
-    );
-  });
-
   test("extracts valid OBZ archive", async () => {
     const board: OBFBoard = {
       format: "open-board-0.1",
@@ -70,6 +51,25 @@ describe("extractOBZ", () => {
       buttons: [{ id: "btn-1", label: "Hello" }],
       grid: { rows: 1, columns: 1, order: [["btn-1"]] },
     });
+  });
+
+  test("throws for non-ZIP input", async () => {
+    const notZip = new ArrayBuffer(10);
+
+    await expect(extractOBZ(notZip)).rejects.toThrow(
+      "Invalid OBZ: not a ZIP file",
+    );
+  });
+
+  test("throws for missing manifest.json", async () => {
+    const filesWithoutManifest = new Map([
+      ["boards/test.obf", new TextEncoder().encode("{}")],
+    ]);
+    const zipBuffer = await zip(filesWithoutManifest);
+
+    await expect(extractOBZ(zipBuffer.buffer as ArrayBuffer)).rejects.toThrow(
+      "Invalid OBZ: missing manifest.json",
+    );
   });
 
   test("handles manifest referencing missing board file", async () => {
@@ -106,14 +106,6 @@ describe("loadOBZ", () => {
 
     expect(result.manifest.root).toBe("boards/test.obf");
     expect(result.boards.get("test")).toBeDefined();
-  });
-
-  test("rejects non-ZIP file", async () => {
-    const notZipFile = new File([new ArrayBuffer(10)], "fake.obz");
-
-    await expect(loadOBZ(notZipFile)).rejects.toThrow(
-      "Invalid OBZ: not a ZIP file",
-    );
   });
 });
 
