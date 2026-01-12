@@ -46,9 +46,9 @@ Open http://localhost:5173
 ## Technical Stack
 
 - **UI:** React 19, TypeScript, Material UI, React Router
-- **On-device AI:** Chrome Built-in AI APIs
-- **Speech:** Web Speech API (SpeechSynthesis)
-- **Storage:** IndexedDB (idb), Zod (Open Board Format), fflate (OBZ)
+- **AI:** Chrome Built-in AI
+- **Speech:** Web Speech API
+- **Storage:** IndexedDB, Zod (OBF), fflate (OBZ)
 - **Tooling:** Vite, Vitest, Playwright
 
 See full architecture details in
