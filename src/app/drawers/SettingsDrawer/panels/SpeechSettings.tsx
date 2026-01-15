@@ -9,6 +9,14 @@ import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
+import {
+  PITCH_MAX,
+  PITCH_MIN,
+  RATE_MAX,
+  RATE_MIN,
+  VOLUME_MAX,
+  VOLUME_MIN,
+} from "@shared/contexts/SpeechProvider/useSpeechSynthesis";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 
 export function SpeechSettings() {
@@ -79,8 +87,8 @@ export function SpeechSettings() {
         aria-label="Rate"
         valueLabelDisplay="auto"
         value={rate}
-        min={0.1}
-        max={2}
+        min={RATE_MIN}
+        max={RATE_MAX}
         step={0.1}
         disabled={!isSpeechSupported}
         onChange={(_event, value) => setRate(value)}
@@ -91,8 +99,8 @@ export function SpeechSettings() {
         aria-label="Pitch"
         valueLabelDisplay="auto"
         value={pitch}
-        min={0.1}
-        max={2}
+        min={PITCH_MIN}
+        max={PITCH_MAX}
         step={0.1}
         disabled={!isSpeechSupported}
         onChange={(_event, value) => setPitch(value)}
@@ -103,8 +111,8 @@ export function SpeechSettings() {
         aria-label="Volume"
         valueLabelDisplay="auto"
         value={volume}
-        min={0}
-        max={1}
+        min={VOLUME_MIN}
+        max={VOLUME_MAX}
         step={0.1}
         disabled={!isSpeechSupported}
         onChange={(_event, value) => setVolume(value)}

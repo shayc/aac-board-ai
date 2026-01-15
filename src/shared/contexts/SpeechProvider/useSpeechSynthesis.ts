@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
 
+export const VOLUME_MIN = 0;
+export const VOLUME_MAX = 1;
+export const RATE_MIN = 0.1;
+export const RATE_MAX = 2;
+export const PITCH_MIN = 0.1;
+export const PITCH_MAX = 2;
+
 const isSpeechSupported = "speechSynthesis" in window;
 const synth = window.speechSynthesis;
 
