@@ -15,13 +15,11 @@ export interface UseCommunicationBoardOptions {
 }
 
 export interface UseCommunicationBoardReturn {
-  board: {
-    data: Board | null;
-    activateButton: (button: BoardButton) => Promise<void>;
-  };
+  board: Board | null;
   message: UseMessageReturn;
-  navigation: UseBoardNavigationReturn;
   suggestions: UseSuggestionsReturn;
+  navigation: UseBoardNavigationReturn;
+  activateButton: (button: BoardButton) => Promise<void>;
 }
 
 export function useCommunicationBoard({
@@ -32,18 +30,15 @@ export function useCommunicationBoard({
   const { translatedBoard } = useBoardTranslation({ board });
 
   const message = useMessage();
-  const navigation = useBoardNavigation();
   const suggestions = useSuggestions(message.text);
-
+  const navigation = useBoardNavigation();
   const { activateButton } = useButtonActivation({ message, navigation });
 
   return {
-    board: {
-      data: translatedBoard ?? board,
-      activateButton,
-    },
+    board: translatedBoard ?? board,
     message,
-    navigation,
     suggestions,
+    navigation,
+    activateButton,
   };
 }
