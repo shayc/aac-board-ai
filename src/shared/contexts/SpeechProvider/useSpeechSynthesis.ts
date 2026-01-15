@@ -24,19 +24,14 @@ export function useSpeechSynthesis() {
     a.localeCompare(b),
   );
 
-  const voicesByLang = voices.reduce<Record<string, SpeechSynthesisVoice[]>>(
-    (acc, voice) => {
-      const lang = voice.lang.split("-")[0];
+  const voicesByLang: Record<string, SpeechSynthesisVoice[]> = {};
+  const voicesByLocale: Record<string, SpeechSynthesisVoice[]> = {};
 
-      if (!acc[lang]) {
-        acc[lang] = [];
-      }
-
-      acc[lang].push(voice);
-      return acc;
-    },
-    {},
-  );
+  for (const voice of voices) {
+    const lang = voice.lang.split("-")[0];
+    (voicesByLang[lang] ??= []).push(voice);
+    (voicesByLocale[voice.lang] ??= []).push(voice);
+  }
 
   const speak = async (text: string) => {
     return new Promise<void>((resolve, reject) => {
@@ -134,5 +129,6 @@ export function useSpeechSynthesis() {
     isPaused,
     langs,
     voicesByLang,
+    voicesByLocale,
   };
 }

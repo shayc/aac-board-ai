@@ -19,26 +19,11 @@ import {
 } from "@shared/contexts/SpeechProvider/useSpeechSynthesis";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 
-function groupVoicesByLocale(
-  voices: SpeechSynthesisVoice[],
-): Record<string, SpeechSynthesisVoice[]> {
-  return voices.reduce<Record<string, SpeechSynthesisVoice[]>>((acc, voice) => {
-    const locale = voice.lang;
-
-    if (!acc[locale]) {
-      acc[locale] = [];
-    }
-
-    acc[locale].push(voice);
-    return acc;
-  }, {});
-}
-
 export function SpeechSettings() {
   const { createTranslator } = useTranslator();
 
   const {
-    voicesByLang,
+    voicesByLocale,
     voiceURI,
     setVoiceURI,
     pitch,
@@ -52,12 +37,10 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] || [];
 
-  const voicesByLocale = groupVoicesByLocale(voices);
-  const locales = Object.keys(voicesByLocale).sort((a, b) =>
-    a.localeCompare(b),
-  );
+  const locales = Object.keys(voicesByLocale)
+    .filter((locale) => locale.startsWith(languageCode))
+    .sort((a, b) => a.localeCompare(b));
 
   const localeDisplayNames = new Intl.DisplayNames([languageCode], {
     type: "language",
