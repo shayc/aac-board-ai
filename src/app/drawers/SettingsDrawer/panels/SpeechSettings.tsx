@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
+import { Fragment } from "react";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import {
@@ -18,6 +19,16 @@ import {
   VOLUME_MIN,
 } from "@shared/contexts/SpeechProvider/useSpeechSynthesis";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
+
+function groupVoicesByLocale(
+  voices: SpeechSynthesisVoice[],
+): Record<string, SpeechSynthesisVoice[]> {
+  return voices.reduce<Record<string, SpeechSynthesisVoice[]>>((acc, voice) => {
+    const locale = voice.lang;
+    (acc[locale] ??= []).push(voice);
+    return acc;
+  }, {});
+}
 
 export function SpeechSettings() {
   const { createTranslator } = useTranslator();
@@ -37,10 +48,16 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] || [];
+  const voices = voicesByLang[languageCode] ?? [];
 
-  const localVoices = voices.filter((voice) => voice.localService);
-  const onlineVoices = voices.filter((voice) => !voice.localService);
+  const voicesByLocale = groupVoicesByLocale(voices);
+  const locales = Object.keys(voicesByLocale).sort((a, b) =>
+    a.localeCompare(b),
+  );
+
+  const localeDisplayNames = new Intl.DisplayNames([languageCode], {
+    type: "language",
+  });
 
   async function handlePreviewClick() {
     const translator = await createTranslator({
@@ -66,18 +83,17 @@ export function SpeechSettings() {
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
-          {localVoices.length > 0 && <ListSubheader>Local</ListSubheader>}
-          {localVoices.map((voice) => (
-            <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
-              {voice.name}
-            </MenuItem>
-          ))}
-
-          {onlineVoices.length > 0 && <ListSubheader>Online</ListSubheader>}
-          {onlineVoices.map((voice) => (
-            <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
-              {voice.name}
-            </MenuItem>
+          {locales.map((locale) => (
+            <Fragment key={locale}>
+              <ListSubheader>
+                {localeDisplayNames.of(locale) ?? locale}
+              </ListSubheader>
+              {voicesByLocale[locale].map((voice) => (
+                <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+                  {voice.name}
+                </MenuItem>
+              ))}
+            </Fragment>
           ))}
         </Select>
       </FormControl>
