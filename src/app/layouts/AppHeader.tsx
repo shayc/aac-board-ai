@@ -1,13 +1,11 @@
 import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
-import type { BoardSetRecord } from "@features/board/db/boards-db";
-import { listBoardSets, openBoardsDB } from "@features/board/db/boards-db";
+import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 
 interface AppHeaderProps {
@@ -17,23 +15,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
-  const [boardSets, setBoardSets] = useState<BoardSetRecord[]>([]);
-
-  useEffect(() => {
-    async function loadBoardSets() {
-      const db = await openBoardsDB();
-
-      try {
-        const sets = await listBoardSets(db);
-        setBoardSets(sets);
-      } finally {
-        db.close();
-      }
-    }
-
-    void loadBoardSets();
-    // TODO: remove setId from dependencies
-  }, [setId]);
+  const { boardSets } = useBoardSets();
 
   return (
     <AppBar position="static">
