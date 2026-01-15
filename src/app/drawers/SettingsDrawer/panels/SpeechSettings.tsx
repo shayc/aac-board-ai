@@ -7,7 +7,6 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Typography from "@mui/material/Typography";
-import { Fragment } from "react";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import {
@@ -25,7 +24,12 @@ function groupVoicesByLocale(
 ): Record<string, SpeechSynthesisVoice[]> {
   return voices.reduce<Record<string, SpeechSynthesisVoice[]>>((acc, voice) => {
     const locale = voice.lang;
-    (acc[locale] ??= []).push(voice);
+
+    if (!acc[locale]) {
+      acc[locale] = [];
+    }
+
+    acc[locale].push(voice);
     return acc;
   }, {});
 }
@@ -48,7 +52,7 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { languageCode } = useLanguage();
-  const voices = voicesByLang[languageCode] ?? [];
+  const voices = voicesByLang[languageCode] || [];
 
   const voicesByLocale = groupVoicesByLocale(voices);
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
@@ -83,18 +87,16 @@ export function SpeechSettings() {
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
-          {locales.map((locale) => (
-            <Fragment key={locale}>
-              <ListSubheader>
-                {localeDisplayNames.of(locale) ?? locale}
-              </ListSubheader>
-              {voicesByLocale[locale].map((voice) => (
-                <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
-                  {voice.name}
-                </MenuItem>
-              ))}
-            </Fragment>
-          ))}
+          {locales.map((locale) => [
+            <ListSubheader key={`header-${locale}`}>
+              {localeDisplayNames.of(locale) ?? locale}
+            </ListSubheader>,
+            ...voicesByLocale[locale].map((voice) => (
+              <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+                {voice.name}
+              </MenuItem>
+            )),
+          ])}
         </Select>
       </FormControl>
 
