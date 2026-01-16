@@ -26,7 +26,6 @@ export interface AssetRecord {
   size?: number;
 }
 
-/** Schema */
 export interface BoardsDBSchema extends DBSchema {
   boardsets: {
     key: string;
@@ -45,16 +44,13 @@ export interface BoardsDBSchema extends DBSchema {
   };
 }
 
-/** Options */
 export interface OpenOptions {
   nameKeyLocale?: string | string[];
 }
 
-/** Constants */
 export const DB_NAME = "aac-board-db";
 export const DB_VERSION = 1;
 
-/** Utils */
 export function normalizePath(p: string): string {
   if (!p) throw new Error("Path cannot be empty");
 
@@ -81,7 +77,6 @@ const nameCollator = new Intl.Collator(undefined, {
   sensitivity: "base",
 });
 
-/** Per-DB metadata (locale) */
 const meta = new WeakMap<
   IDBPDatabase<BoardsDBSchema>,
   { locale?: string | string[] }
@@ -90,7 +85,6 @@ function localeFor(db: IDBPDatabase<BoardsDBSchema>) {
   return meta.get(db)?.locale;
 }
 
-/** Open/Close */
 export async function openBoardsDB(
   opts: OpenOptions = {},
 ): Promise<IDBPDatabase<BoardsDBSchema>> {
@@ -120,7 +114,6 @@ export function closeBoardsDB(db: IDBPDatabase<BoardsDBSchema>): void {
   db.close();
 }
 
-/** BoardSets */
 export async function upsertBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   input: {
@@ -169,7 +162,6 @@ export async function getBoardSet(
   return (await db.get("boardsets", setId)) ?? null;
 }
 
-/** Boards */
 export async function bulkPutBoards(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
@@ -257,7 +249,6 @@ export async function getBoardsBatch(
   return rows.filter((r): r is BoardRecord => r !== undefined);
 }
 
-/** Assets */
 export async function bulkPutAssets(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
@@ -354,7 +345,6 @@ export async function getManifestJson<T = unknown>(
   }
 }
 
-/** Deletes */
 export async function deleteBoardSet(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
