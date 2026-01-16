@@ -71,7 +71,7 @@ export function MessageBar({
           flexGrow={1}
           direction="row"
           padding={2}
-          gap={2}
+          gap={1}
           overflow="auto"
         >
           {message.map((part, index) => (

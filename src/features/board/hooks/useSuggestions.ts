@@ -58,7 +58,11 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
           proofread?.correctedInput ?? "",
           rewritten ?? "",
         ].filter(
-          (s) => s && !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) && !s.includes('"'),
+          (s) =>
+            s &&
+            s !== text &&
+            !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) &&
+            !s.includes('"'),
         );
 
         const uniqueSuggestions = Array.from(new Set(suggestions));
