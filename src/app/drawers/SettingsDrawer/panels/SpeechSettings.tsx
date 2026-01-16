@@ -71,9 +71,11 @@ export function SpeechSettings() {
           onChange={(event) => setVoiceURI(event.target.value)}
         >
           {locales.map((locale) => [
-            <ListSubheader key={`header-${locale}`}>
-              {localeDisplayNames.of(locale) ?? locale}
-            </ListSubheader>,
+            locales.length > 1 && (
+              <ListSubheader key={`header-${locale}`}>
+                {localeDisplayNames.of(locale) ?? locale}
+              </ListSubheader>
+            ),
             ...voicesByLocale[locale].map((voice) => (
               <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
                 {voice.name}
