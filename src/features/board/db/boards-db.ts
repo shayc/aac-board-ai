@@ -110,6 +110,7 @@ export async function openBoardsDB(
   meta.set(db, { locale: opts.nameKeyLocale });
   return db;
 }
+
 export function closeBoardsDB(db: IDBPDatabase<BoardsDBSchema>): void {
   db.close();
 }
@@ -137,6 +138,7 @@ export async function upsertBoardSet(
 
   await db.put("boardsets", row);
 }
+
 export async function listBoardSets(
   db: IDBPDatabase<BoardsDBSchema>,
 ): Promise<BoardSetRecord[]> {
@@ -327,6 +329,7 @@ export async function getAssetUrlByMediaId(
 
   return URL.createObjectURL(row.blob);
 }
+
 export async function getManifestJson<T = unknown>(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
