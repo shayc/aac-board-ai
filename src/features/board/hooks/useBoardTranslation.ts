@@ -25,13 +25,18 @@ export function useBoardTranslation({
         return;
       }
 
-      if (languageCode.includes("en")) {
+      const boardLocale = board.locale ?? "en";
+      const isSameLanguage =
+        languageCode.startsWith(boardLocale) ||
+        boardLocale.startsWith(languageCode);
+
+      if (isSameLanguage) {
         setTranslatedBoard(null);
         return;
       }
 
       const translator = await createTranslator({
-        sourceLanguage: "en",
+        sourceLanguage: boardLocale,
         targetLanguage: languageCode,
       });
 
