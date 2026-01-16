@@ -1,4 +1,5 @@
 import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { normalizeLocaleCode } from "@shared/utils/language";
 import { useRef } from "react";
 import { getAICapabilities } from "./getAICapabilities";
 
@@ -12,16 +13,19 @@ export function useTranslator() {
       return null;
     }
 
+    const sourceLanguage = normalizeLocaleCode(options.sourceLanguage ?? "en");
+    const targetLanguage = normalizeLocaleCode(options.targetLanguage);
+
     if (
-      translatorRef.current?.sourceLanguage === options.sourceLanguage &&
-      translatorRef.current?.targetLanguage === options.targetLanguage
+      translatorRef.current?.sourceLanguage === sourceLanguage &&
+      translatorRef.current?.targetLanguage === targetLanguage
     ) {
       return translatorRef.current;
     }
 
     const availability = await Translator.availability({
-      sourceLanguage: options.sourceLanguage ?? "en",
-      targetLanguage: options.targetLanguage,
+      sourceLanguage,
+      targetLanguage,
     });
 
     if (availability === "unavailable") {
@@ -29,7 +33,8 @@ export function useTranslator() {
     }
 
     const translator = await Translator.create({
-      ...options,
+      sourceLanguage,
+      targetLanguage,
       monitor(m) {
         m.addEventListener("downloadprogress", (event) => {
           setDownload("translator", event.loaded);
