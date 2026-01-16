@@ -38,6 +38,8 @@ export interface BoardButton {
   loadBoard?: LoadBoard;
 }
 
+export type BoardStrings = Record<string, Record<string, string>>;
+
 export interface Board {
   id: string;
   name?: string;
@@ -46,4 +48,5 @@ export interface Board {
   buttons: BoardButton[];
   descriptionHTML?: string;
   license?: BoardLicense;
+  strings?: BoardStrings;
 }

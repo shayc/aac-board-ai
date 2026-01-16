@@ -42,7 +42,13 @@ export function MessageBar({
   }, [message]);
 
   return (
-    <Stack direction="row" padding={2}>
+    <Stack
+      direction="row"
+      paddingTop={2}
+      paddingLeft={2}
+      paddingRight={2}
+      gap={2}
+    >
       <Stack
         direction="row"
         flexGrow={2}
@@ -70,11 +76,7 @@ export function MessageBar({
         >
           {message.map((part, index) => (
             <Stack key={index} direction="row">
-              <Pictogram
-                label={part.label}
-                labelTypographyVariant={part.imageSrc ? "body2" : "h5"}
-                src={part.imageSrc}
-              />
+              <Pictogram label={part.label} src={part.imageSrc} />
             </Stack>
           ))}
         </Stack>

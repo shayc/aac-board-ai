@@ -3,6 +3,7 @@ import { createContext } from "react";
 export interface SpeechContextValue {
   langs: string[];
   voicesByLang: Record<string, SpeechSynthesisVoice[]>;
+  voicesByLocale: Record<string, SpeechSynthesisVoice[]>;
   voices: SpeechSynthesisVoice[];
   voiceURI: string;
   setVoiceURI: (voiceURI: string) => void;

@@ -3,12 +3,14 @@ import type {
   BoardAction,
   BoardButton,
   BoardGrid,
+  BoardLicense,
   LoadBoard,
 } from "@features/board/types";
 import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
+  OBFLicense,
   OBFLoadBoard,
   OBFMedia,
 } from "@shared/open-board-format/schema";
@@ -23,19 +25,13 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     locale: obfBoard.locale,
     descriptionHTML: obfBoard.description_html,
     ...(obfBoard.license && {
-      license: {
-        type: obfBoard.license.type,
-        copyrightNoticeUrl: obfBoard.license.copyright_notice_url,
-        sourceUrl: obfBoard.license.source_url,
-        authorName: obfBoard.license.author_name,
-        authorUrl: obfBoard.license.author_url,
-        authorEmail: obfBoard.license.author_email,
-      },
+      license: transformLicense(obfBoard.license),
     }),
     buttons: obfBoard.buttons.map((button) =>
       transformButton(button, imageSources, soundSources),
     ),
     grid: transformGrid(obfBoard.grid),
+    strings: obfBoard.strings,
   };
 }
 
@@ -127,5 +123,16 @@ function transformGrid(obfGrid: OBFGrid): BoardGrid {
     rows: obfGrid.rows,
     columns: obfGrid.columns,
     order: obfGrid.order,
+  };
+}
+
+function transformLicense(obfLicense: OBFLicense): BoardLicense {
+  return {
+    type: obfLicense.type,
+    copyrightNoticeUrl: obfLicense.copyright_notice_url,
+    sourceUrl: obfLicense.source_url,
+    authorName: obfLicense.author_name,
+    authorUrl: obfLicense.author_url,
+    authorEmail: obfLicense.author_email,
   };
 }

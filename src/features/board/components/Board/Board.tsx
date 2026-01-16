@@ -11,9 +11,10 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
 export function Board() {
-  const { board, message, navigation, suggestions } = useBoard();
+  const { board, message, suggestions, navigation, activateButton } =
+    useBoard();
 
-  if (!board.data) {
+  if (!board) {
     return null;
   }
 
@@ -38,7 +39,7 @@ export function Board() {
         onStopClick={message.stop}
       />
 
-      <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
+      <Stack direction="row" justifyContent="space-between" spacing={2} p={2}>
         <NavButtons
           canGoBack={navigation.canGoBack}
           canGoHome={navigation.canGoHome}
@@ -57,12 +58,13 @@ export function Board() {
           />
         )}
       </Stack>
-      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+
+      <Box sx={{ flexGrow: 1, height: 0, px: 2, pb: 2, overflow: "auto" }}>
         <Grid<BoardButton>
-          rows={board.data.grid.rows}
-          columns={board.data.grid.columns}
-          order={board.data.grid.order}
-          items={board.data.buttons}
+          rows={board.grid.rows}
+          columns={board.grid.columns}
+          order={board.grid.order}
+          items={board.buttons}
           renderItem={(button, props) => (
             <Tile
               key={button.id}
@@ -71,7 +73,7 @@ export function Board() {
               backgroundColor={button.backgroundColor}
               borderColor={button.borderColor}
               variant={button.loadBoard ? "folder" : undefined}
-              onClick={() => void board.activateButton(button)}
+              onClick={() => void activateButton(button)}
               {...props}
             />
           )}

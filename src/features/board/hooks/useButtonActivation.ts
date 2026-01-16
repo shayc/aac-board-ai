@@ -1,10 +1,8 @@
 import type { BoardAction, BoardButton } from "@features/board/types";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
-import type { UseMessageReturn } from "./useMessage";
 import type { UseBoardNavigationReturn } from "./useBoardNavigation";
-
-type ActionHandler = () => void | Promise<void>;
+import type { UseMessageReturn } from "./useMessage";
 
 export interface UseButtonActivationOptions {
   message: Pick<
@@ -31,15 +29,15 @@ export function useButtonActivation({
   const speech = useSpeech();
   const audio = useAudio();
 
-  const actionHandlers: Record<string, ActionHandler> = {
-    ":space": message.addSpace,
-    ":clear": message.clear,
-    ":home": navigation.goHome,
-    ":speak": message.play,
-    ":backspace": message.removeLastPart,
-  };
-
   async function executeAction(action: BoardAction) {
+    const actionHandlers: Record<BoardAction, () => void | Promise<void>> = {
+      ":space": message.addSpace,
+      ":backspace": message.removeLastPart,
+      ":speak": message.play,
+      ":clear": message.clear,
+      ":home": navigation.goHome,
+    };
+
     if (action.startsWith("+")) {
       const text = action.slice(1).trim();
       const lastPart = message.parts.at(-1);
