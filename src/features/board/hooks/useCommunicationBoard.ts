@@ -35,7 +35,7 @@ export function useCommunicationBoard({
   const { activateButton } = useButtonActivation({ message, navigation });
 
   return {
-    board: translatedBoard ?? board,
+    board: translatedBoard,
     message,
     suggestions,
     navigation,

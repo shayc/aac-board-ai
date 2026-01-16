@@ -31,7 +31,7 @@ export function useBoardTranslation({
         boardLocale.startsWith(languageCode);
 
       if (isSameLanguage) {
-        setTranslatedBoard(null);
+        setTranslatedBoard(board);
         return;
       }
 
