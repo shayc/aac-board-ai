@@ -61,9 +61,8 @@ export function Grid<TItem extends { id: string }>({
       role="grid"
       aria-rowcount={rows}
       aria-colcount={columns}
-      height="100%"
+      minHeight="100%"
       direction="column"
-      padding={gap}
       gap={gap}
     >
       {grid.map((row, rowIndex) => (

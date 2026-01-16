@@ -39,7 +39,7 @@ export function Board() {
         onStopClick={message.stop}
       />
 
-      <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
+      <Stack direction="row" justifyContent="space-between" spacing={2} p={2}>
         <NavButtons
           canGoBack={navigation.canGoBack}
           canGoHome={navigation.canGoHome}
@@ -58,7 +58,8 @@ export function Board() {
           />
         )}
       </Stack>
-      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+
+      <Box sx={{ flexGrow: 1, height: 0, px: 2, pb: 2, overflow: "auto" }}>
         <Grid<BoardButton>
           rows={board.grid.rows}
           columns={board.grid.columns}
