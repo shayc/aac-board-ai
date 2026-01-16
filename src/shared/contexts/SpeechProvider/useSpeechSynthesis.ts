@@ -61,13 +61,13 @@ export function useSpeechSynthesis() {
       };
 
       utterance.onresume = () => {
-        setIsPaused(false);
         setIsSpeaking(true);
+        setIsPaused(false);
       };
 
       utterance.onpause = () => {
-        setIsPaused(true);
         setIsSpeaking(false);
+        setIsPaused(true);
       };
 
       utterance.onerror = (event) => {
@@ -88,18 +88,16 @@ export function useSpeechSynthesis() {
 
   const pause = () => {
     synth.pause();
-    setIsPaused(true);
   };
 
   const resume = () => {
     synth.resume();
-    setIsPaused(false);
   };
 
   useEffect(() => {
     const getVoices = () => {
-      const voices = synth.getVoices();
-      setVoices(voices);
+      const availableVoices = synth.getVoices();
+      setVoices(availableVoices);
     };
 
     getVoices();
