@@ -53,7 +53,12 @@ export function Board() {
             tone={suggestions.tone}
             onToneChange={suggestions.setTone}
             onSuggestionClick={(suggestion) => {
-              message.setParts([{ id: suggestion, label: suggestion }]);
+              const words = suggestion.split(/\s+/).filter(Boolean);
+              const parts = words.map((word) => ({
+                id: crypto.randomUUID(),
+                label: word,
+              }));
+              message.setParts(parts);
             }}
           />
         )}
