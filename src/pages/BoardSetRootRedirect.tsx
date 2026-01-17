@@ -55,7 +55,7 @@ export function BoardSetRootRedirect() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100svh",
         }}
       >
         Loading board set...
@@ -70,7 +70,7 @@ export function BoardSetRootRedirect() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          height: "100vh",
+          height: "100svh",
           flexDirection: "column",
           gap: "1rem",
         }}

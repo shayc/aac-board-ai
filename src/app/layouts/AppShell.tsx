@@ -11,15 +11,15 @@ import { AppHeader } from "./AppHeader";
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [onboardingSeen, setOnboardingSeen] = usePersistentState(
-    "onboardingSeen",
+  const [hasSeenOnboarding, setHasSeenOnboarding] = usePersistentState(
+    "hasSeenOnboarding",
     false,
   );
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!onboardingSeen);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!hasSeenOnboarding);
 
   return (
     <AppProviders>
-      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
         <AppHeader
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
@@ -39,7 +39,7 @@ export function AppShell() {
         <OnboardingDialog
           open={isOnboardingOpen}
           onClose={() => {
-            setOnboardingSeen(true);
+            setHasSeenOnboarding(true);
             setIsOnboardingOpen(false);
           }}
         />
