@@ -63,6 +63,7 @@ export function Grid<TItem extends { id: string }>({
       aria-colcount={columns}
       minHeight="100%"
       direction="column"
+      p={2}
       gap={gap}
     >
       {grid.map((row, rowIndex) => (
