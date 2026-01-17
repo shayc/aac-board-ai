@@ -24,14 +24,12 @@ export function useSpeechSynthesis() {
     a.localeCompare(b),
   );
 
-  const voicesByLang: Record<string, SpeechSynthesisVoice[]> = {};
-  const voicesByLocale: Record<string, SpeechSynthesisVoice[]> = {};
+  const voicesByLang = Object.groupBy(
+    voices,
+    (voice) => voice.lang.split("-")[0],
+  );
 
-  for (const voice of voices) {
-    const lang = voice.lang.split("-")[0];
-    (voicesByLang[lang] ??= []).push(voice);
-    (voicesByLocale[voice.lang] ??= []).push(voice);
-  }
+  const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
 
   useEffect(() => {
     const getVoices = () => {
