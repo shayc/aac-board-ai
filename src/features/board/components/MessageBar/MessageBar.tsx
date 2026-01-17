@@ -42,13 +42,7 @@ export function MessageBar({
   }, [message]);
 
   return (
-    <Stack
-      direction="row"
-      paddingTop={2}
-      paddingLeft={2}
-      paddingRight={2}
-      gap={2}
-    >
+    <Stack direction="row" p={2} gap={2}>
       <Stack
         direction="row"
         flexGrow={2}
