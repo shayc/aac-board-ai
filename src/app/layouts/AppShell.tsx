@@ -19,7 +19,7 @@ export function AppShell() {
 
   return (
     <AppProviders>
-      <Box sx={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+      <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
         <AppHeader
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
