@@ -76,7 +76,7 @@ export function SpeechSettings() {
                 {localeDisplayNames.of(locale) ?? locale}
               </ListSubheader>
             ),
-            ...voicesByLocale[locale].map((voice) => (
+            ...(voicesByLocale[locale] ?? []).map((voice) => (
               <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
                 {voice.name}
               </MenuItem>
