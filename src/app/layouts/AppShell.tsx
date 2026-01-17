@@ -11,11 +11,11 @@ import { AppHeader } from "./AppHeader";
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [onboardingSeen, setOnboardingSeen] = usePersistentState(
-    "onboardingSeen",
+  const [hasSeenOnboarding, setHasSeenOnboarding] = usePersistentState(
+    "hasSeenOnboarding",
     false,
   );
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!onboardingSeen);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!hasSeenOnboarding);
 
   return (
     <AppProviders>
@@ -39,7 +39,7 @@ export function AppShell() {
         <OnboardingDialog
           open={isOnboardingOpen}
           onClose={() => {
-            setOnboardingSeen(true);
+            setHasSeenOnboarding(true);
             setIsOnboardingOpen(false);
           }}
         />
