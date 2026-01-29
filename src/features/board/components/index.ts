@@ -1,4 +1,4 @@
-export { Board } from "./Board/Board";
+export { BoardPlayer } from "./BoardPlayer/BoardPlayer";
 export { BoardSetSelect } from "./BoardSetSelect/BoardSetSelect";
 export { Grid } from "./Grid/Grid";
 export { MessageBar } from "./MessageBar/MessageBar";

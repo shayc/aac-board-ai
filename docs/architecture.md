@@ -66,7 +66,7 @@ The `AIProvider` context manages shared context across AI sessions, allowing you
 **Highlights**
 
 - React Compiler for automatic optimization
-- State managed via React Context (`ThemeProvider`, `SpeechProvider`, `LanguageProvider`, `AIProvider`, `BoardProvider`, `SnackbarProvider`)
+- State managed via React Context (`ThemeProvider`, `SpeechProvider`, `LanguageProvider`, `AIProvider`, `SnackbarProvider`)
 - 100% client-side — no backend or network dependencies
 
 ---
