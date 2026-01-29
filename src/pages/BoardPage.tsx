@@ -1,12 +1,12 @@
 import { Board } from "@features/board/components/Board/Board";
-import { useCommunicationBoard } from "@features/board/hooks/useCommunicationBoard";
+import { useBoard } from "@features/board/hooks/useBoard";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useParams } from "react-router";
 
 function BoardPage() {
   const params = useParams<{ setId: string; boardId: string }>();
 
-  const { board } = useCommunicationBoard({
+  const { board } = useBoard({
     setId: params.setId ?? "",
     boardId: params.boardId ?? "",
   });
