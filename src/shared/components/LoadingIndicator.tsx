@@ -12,12 +12,12 @@ export function LoadingIndicator({ message }: LoadingIndicatorProps) {
     <Fade in timeout={400} style={{ transitionDelay: "500ms" }}>
       <Box
         sx={{
+          height: "100%",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
           gap: 2,
-          marginTop: 4,
         }}
       >
         <CircularProgress />

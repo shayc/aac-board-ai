@@ -1,4 +1,6 @@
 import { getBoardSet, openBoardsDB } from "@features/board/db/boards-db";
+import { ErrorFallback } from "@shared/components/ErrorFallback";
+import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router";
 
@@ -49,36 +51,11 @@ export function BoardSetRootRedirect() {
   }, [setId]);
 
   if (loading) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100svh",
-        }}
-      >
-        Loading board set...
-      </div>
-    );
+    return <LoadingIndicator message="Loading board set..." />;
   }
 
   if (error) {
-    return (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100svh",
-          flexDirection: "column",
-          gap: "1rem",
-        }}
-      >
-        <h2>Error</h2>
-        <p>{error}</p>
-      </div>
-    );
+    return <ErrorFallback title="Error" message={error} />;
   }
 
   if (rootBoardId && setId) {

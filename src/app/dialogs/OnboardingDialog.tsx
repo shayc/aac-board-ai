@@ -35,7 +35,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         },
       }}
     >
-      <DialogContent sx={{ pt: 4, pb: 0 }}>
+      <DialogContent sx={{ pt: 4, pb: 4 }}>
         <DialogTitle
           id="welcome-dialog-title"
           variant="h4"
@@ -60,8 +60,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
         <List sx={{ pt: 0, pb: 0 }}>
           <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
-              <AutoAwesomeOutlinedIcon color="primary" fontSize="medium" />
+            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
+              <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />
             </ListItemIcon>
             <ListItemText
               primary="Smart Rewriting"
@@ -81,8 +81,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           </ListItem>
 
           <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
-              <TranslateIcon color="primary" fontSize="medium" />
+            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
+              <TranslateIcon color="primary" fontSize="large" />
             </ListItemIcon>
             <ListItemText
               primary="Real-time Translation"
@@ -102,8 +102,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           </ListItem>
 
           <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 0.75 }}>
-              <LockOutlinedIcon color="primary" fontSize="medium" />
+            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
+              <LockOutlinedIcon color="primary" fontSize="large" />
             </ListItemIcon>
             <ListItemText
               primary="Private by Design"
