@@ -6,7 +6,7 @@ import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 interface AppHeaderProps {
   onMenuClick: () => void;
@@ -15,6 +15,7 @@ interface AppHeaderProps {
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
+  const navigate = useNavigate();
   const { boardSets } = useBoardSets();
 
   return (
@@ -34,7 +35,21 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
         </Tooltip>
 
         {boardSets.length > 0 && (
-          <BoardSetSelect boardSets={boardSets} boardSetId={setId} />
+          <BoardSetSelect
+            boardSets={boardSets}
+            boardSetId={setId}
+            onChange={(event) => {
+              const selectedSet = boardSets.find(
+                (s) => s.setId === event.target.value,
+              );
+
+              if (selectedSet?.rootBoardId) {
+                void navigate(
+                  `/sets/${selectedSet.setId}/boards/${selectedSet.rootBoardId}`,
+                );
+              }
+            }}
+          />
         )}
 
         <Tooltip title="Open settings" sx={{ ml: "auto" }}>
