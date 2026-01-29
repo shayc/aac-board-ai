@@ -35,7 +35,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         },
       }}
     >
-      <DialogContent sx={{ pt: 4, pb: 0 }}>
+      <DialogContent sx={{ pt: 4, pb: 4 }}>
         <DialogTitle
           id="welcome-dialog-title"
           variant="h4"
