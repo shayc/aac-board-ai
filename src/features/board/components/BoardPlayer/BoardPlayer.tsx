@@ -9,15 +9,15 @@ import { useBoardNavigation } from "@features/board/hooks/useBoardNavigation";
 import { useButtonActivation } from "@features/board/hooks/useButtonActivation";
 import { useMessage } from "@features/board/hooks/useMessage";
 import { useSuggestions } from "@features/board/hooks/useSuggestions";
-import type { BoardButton, Board as BoardType } from "@features/board/types";
+import type { Board, BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-interface BoardProps {
-  board: BoardType;
+interface BoardPlayerProps {
+  board: Board;
 }
 
-export function Board({ board }: BoardProps) {
+export function BoardPlayer({ board }: BoardPlayerProps) {
   const message = useMessage();
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
