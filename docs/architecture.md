@@ -55,13 +55,14 @@ The `AIProvider` context manages shared context across AI sessions, allowing you
 ## Tech Stack
 
 **Core:** React 19 • TypeScript 5.9 • Vite 7  
-**UI:** Material UI 7 • Emotion  
+**UI:** Material UI 7 • Emotion • React Aria  
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) — board data, assets, and settings  
-**Compression:** fflate — OBZ file handling
+**Compression:** fflate — OBZ file handling  
 **AI:** Chrome Built-in AI (Gemini Nano)  
 **Validation:** Zod 4  
-**Testing:** Vitest 4 + Playwright browser mode
+**Testing:** Vitest 4 + Playwright browser mode  
+**Error Handling:** react-error-boundary
 
 **Highlights**
 
@@ -83,7 +84,7 @@ This modular structure supports scalability and independent development.
 Simplified imports for clean structure:
 
 ```typescript
-import { useBoard } from "@features/board/context/useBoard";
+import { useBoard } from "@features/board/hooks/useBoard";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 ```
 
@@ -102,19 +103,22 @@ Aliases defined in `tsconfig.app.json` and `vite.config.ts`:
 src/
 ├── app/                   # App shell and global layout
 │   ├── AppProviders.tsx   # Composed context providers
+│   ├── AppRoutes.tsx      # Route definitions
 │   ├── dialogs/           # Global dialogs
-│   └── shell/             # Header, drawers, layout
+│   ├── drawers/           # Slide-out drawers
+│   └── layouts/           # Header, layout components
 ├── features/
 │   └── board/             # AAC board feature
 │       ├── components/    # UI components
-│       ├── context/       # Board state
 │       ├── db/            # IndexedDB operations
 │       ├── hooks/         # Feature-specific hooks
 │       ├── mappers/       # OBF format mapping
+│       ├── utils/         # Feature utilities
 │       └── types.ts
 ├── pages/                 # Routed pages
 │   ├── HomePage.tsx
 │   ├── BoardPage.tsx
+│   ├── BoardSetRootRedirect.tsx
 │   └── AboutPage.tsx
 └── shared/                # Reusable utilities
     ├── components/        # Shared UI
@@ -122,7 +126,7 @@ src/
     ├── hooks/
     │   └── ai/            # Chrome AI hooks
     ├── open-board-format/ # OBF/OBZ parsing
-    ├── types/
+    ├── testing/           # Test utilities
     └── utils/
 ```
 
