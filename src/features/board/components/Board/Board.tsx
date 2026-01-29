@@ -5,18 +5,23 @@ import {
   SuggestionBar,
   Tile,
 } from "@features/board/components";
-import { useBoard } from "@features/board/context/useBoard";
-import type { BoardButton } from "@features/board/types";
+import { useBoardNavigation } from "@features/board/hooks/useBoardNavigation";
+import { useButtonActivation } from "@features/board/hooks/useButtonActivation";
+import { useMessage } from "@features/board/hooks/useMessage";
+import { useSuggestions } from "@features/board/hooks/useSuggestions";
+import type { BoardButton, Board as BoardType } from "@features/board/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-export function Board() {
-  const { board, message, suggestions, navigation, activateButton } =
-    useBoard();
+interface BoardProps {
+  board: BoardType;
+}
 
-  if (!board) {
-    return null;
-  }
+export function Board({ board }: BoardProps) {
+  const message = useMessage();
+  const suggestions = useSuggestions(message.text);
+  const navigation = useBoardNavigation();
+  const { activateButton } = useButtonActivation({ message, navigation });
 
   return (
     <Stack
