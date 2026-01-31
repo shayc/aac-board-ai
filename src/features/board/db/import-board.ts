@@ -1,5 +1,6 @@
 import { loadOBF, loadOBZ } from "@shared/open-board-format";
 import type { IDBPDatabase } from "idb";
+import { lookup } from "mrmime";
 import type { BoardsDBSchema } from "./boards-db";
 import {
   bulkPutAssets,
@@ -67,24 +68,12 @@ async function importOBZFile(
   const assetItems = Array.from(files.entries())
     .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
     .map(([path, buffer]) => {
-      const mime = path.endsWith(".png")
-        ? "image/png"
-        : path.endsWith(".jpg") || path.endsWith(".jpeg")
-          ? "image/jpeg"
-          : path.endsWith(".gif")
-            ? "image/gif"
-            : path.endsWith(".svg")
-              ? "image/svg+xml"
-              : path.endsWith(".mp3")
-                ? "audio/mpeg"
-                : path.endsWith(".wav")
-                  ? "audio/wav"
-                  : "application/octet-stream";
+      const mime = lookup(path) ?? "application/octet-stream";
 
       return {
         path,
-        blob: new Blob([buffer.buffer as ArrayBuffer], { type: mime }),
         mime,
+        blob: new Blob([buffer.buffer as ArrayBuffer], { type: mime }),
       };
     });
 
