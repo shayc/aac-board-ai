@@ -4,7 +4,7 @@
 
 **Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
 
-**AAC Board AI** is a communication tool for non-verbal users. It uses **Chrome’s Built-in AI** to proofread, rewrite, and translate messages on-device, keeping processing local for stronger privacy and offline use.
+**AAC Board AI** is a communication tool for non-verbal users. It uses **Built-in AI** to proofread, rewrite, and translate messages on-device, keeping processing local for stronger privacy and offline use.
 
 ![Screenshot of AAC Board AI](screenshot.png)
 
@@ -46,7 +46,7 @@ Open http://localhost:5173
 ## Technical Stack
 
 - **UI:** React 19, TypeScript, Material UI, React Router
-- **AI:** Chrome Built-in AI
+- **AI:** Built-in AI
 - **Speech:** Web Speech API
 - **Storage:** IndexedDB, Zod (OBF), fflate (OBZ)
 - **Tooling:** Vite, Vitest, Playwright
