@@ -57,13 +57,14 @@ See full architecture details in
 ## Example Boards
 
 Download example boards from:
-https://www.openboardformat.org/examples
+[openboardformat.org/examples](https://www.openboardformat.org/examples)
 
 ## References
 
 - Chrome Built‑in AI:
-  https://developer.chrome.com/docs/ai/built-in
-- Open Board Format: https://www.openboardformat.org/
+  [developer.chrome.com/docs/ai/built-in](https://developer.chrome.com/docs/ai/built-in)
+- Open Board Format:
+  [openboardformat.org](https://www.openboardformat.org)
 
 ## License
 
