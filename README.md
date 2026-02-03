@@ -63,6 +63,8 @@ Download example boards from:
 
 - Chrome Built‑in AI:
   [developer.chrome.com/docs/ai/built-in](https://developer.chrome.com/docs/ai/built-in)
+- Edge Built‑in AI Playgrounds:
+  [microsoftedge.github.io/Demos/built-in-ai/playgrounds](https://microsoftedge.github.io/Demos/built-in-ai/playgrounds/)
 - Open Board Format:
   [openboardformat.org](https://www.openboardformat.org)
 
