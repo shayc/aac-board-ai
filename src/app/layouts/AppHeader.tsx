@@ -38,14 +38,10 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           <BoardSetSelect
             boardSets={boardSets}
             boardSetId={setId}
-            onChange={(event) => {
-              const selectedSet = boardSets.find(
-                (s) => s.setId === event.target.value,
-              );
-
-              if (selectedSet?.rootBoardId) {
+            onChange={(boardSet) => {
+              if (boardSet.rootBoardId) {
                 void navigate(
-                  `/sets/${selectedSet.setId}/boards/${selectedSet.rootBoardId}`,
+                  `/sets/${boardSet.setId}/boards/${boardSet.rootBoardId}`,
                 );
               }
             }}
