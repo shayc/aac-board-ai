@@ -7,11 +7,17 @@ interface GridCell {
   col: number;
 }
 
-interface UseGridKeyboardOptions {
+export interface UseGridKeyboardOptions {
   cellRefs: RefObject<(HTMLElement | null)[][]>;
   rows: number;
   columns: number;
   defaultActiveCell?: GridCell;
+}
+
+export interface UseGridKeyboardReturn {
+  keyboardProps: ReturnType<typeof useKeyboard>["keyboardProps"];
+  activeCell: GridCell;
+  handleFocus: (event: FocusEvent<HTMLElement>) => void;
 }
 
 interface CellResult {
@@ -25,7 +31,7 @@ export function useGridKeyboard({
   rows,
   columns,
   defaultActiveCell = { row: 0, col: 0 },
-}: UseGridKeyboardOptions) {
+}: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const [activeCell, setActiveCell] = useState<GridCell>(defaultActiveCell);
 
   const { keyboardProps } = useKeyboard({
