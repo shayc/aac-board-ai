@@ -1,4 +1,4 @@
-import { importFiles } from "@features/board/db/import-board";
+import { importFiles } from "@features/board/db/board-import";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
