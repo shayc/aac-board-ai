@@ -45,6 +45,15 @@ npm install && npm run dev
 
 Open http://localhost:5173
 
+## Development
+
+```bash
+npm run dev        # Start dev server
+npm run lint       # Lint
+npm test           # Run tests (requires Playwright browsers)
+npm run build      # Typecheck + production build
+```
+
 ## Technical Stack
 
 - **UI:** React 19, TypeScript, Material UI, React Router

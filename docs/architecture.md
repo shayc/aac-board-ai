@@ -146,15 +146,7 @@ All data is stored locally — no sync or cloud dependency.
 
 ## Browser Compatibility
 
-**Requirements**
-
-- Chrome 138+
-- Manual flag enablement for AI features:
-
-```
-chrome://flags/#proofreader-api-for-gemini-nano
-chrome://flags/#rewriter-api-for-gemini-nano
-```
+Requires Chrome 138+ with Built-in AI flags enabled. See [Prerequisites](../README.md#prerequisites) for the full list of required flags.
 
 Once enabled, Chrome downloads the Gemini Nano model for local inference.
 
