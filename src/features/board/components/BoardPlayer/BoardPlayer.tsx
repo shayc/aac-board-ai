@@ -11,7 +11,7 @@ import type { Board, BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-interface BoardPlayerProps {
+export interface BoardPlayerProps {
   board: Board;
 }
 
