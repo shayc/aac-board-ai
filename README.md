@@ -18,6 +18,8 @@ Chrome with [Built‑in AI flags enabled](#prerequisites))_.
 - **Tone Adjustment** – Rewrites messages into direct, professional, or
   friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
 - **Multi-Language Support** – Translates messages between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
+- **Text to Speech** – Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
+- **Installable** – Works offline as a standalone app with automatic updates.
 
 ## Prerequisites
 
