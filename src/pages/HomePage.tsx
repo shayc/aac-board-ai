@@ -1,5 +1,7 @@
-import { openBoardsDB } from "@features/board/db/boards-db";
-import { importBoardFiles } from "@features/board/store/board-sets-store";
+import {
+  fetchBoardSets,
+  importBoardFiles,
+} from "@features/board/store/board-sets-store";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -11,9 +13,7 @@ export function HomePage() {
     let cancelled = false;
 
     async function loadDefaultBoardIfNeeded() {
-      const db = await openBoardsDB();
-      const existingSets = await db.getAll("boardsets");
-      db.close();
+      const existingSets = await fetchBoardSets();
 
       if (existingSets.length > 0) {
         void navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);

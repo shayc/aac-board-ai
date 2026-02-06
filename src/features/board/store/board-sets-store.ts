@@ -59,6 +59,16 @@ export function getBoardSetsSnapshot(): BoardSetsSnapshot {
   return snapshot;
 }
 
+export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
+  if (pending) {
+    await pending;
+  } else if (!fetched) {
+    await refresh();
+  }
+
+  return snapshot.data;
+}
+
 export async function invalidateBoardSets(): Promise<void> {
   pending = refresh();
   await pending;

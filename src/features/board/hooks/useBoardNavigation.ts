@@ -1,5 +1,5 @@
-import { getBoardSet, openBoardsDB } from "@features/board/db/boards-db";
-import { useEffect, useState } from "react";
+import { useBoardSets } from "@features/board/hooks/useBoardSets";
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 interface NavigationState {
@@ -20,7 +20,9 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const navigate = useNavigate();
 
   const { setId, boardId } = useParams();
-  const [rootBoardId, setRootBoardId] = useState("");
+  const { boardSets } = useBoardSets();
+  const rootBoardId =
+    boardSets.find((s) => s.setId === setId)?.rootBoardId ?? "";
 
   const [navState, setNavState] = useState<NavigationState>({
     history: boardId ? [boardId] : [],
@@ -88,33 +90,6 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
 
     void navigate(`/sets/${setId}/boards/${rootBoardId}`);
   }
-
-  useEffect(() => {
-    async function loadRootBoard() {
-      if (!setId) {
-        return;
-      }
-
-      const db = await openBoardsDB();
-
-      try {
-        const boardSet = await getBoardSet(db, setId);
-
-        if (boardSet?.rootBoardId) {
-          setRootBoardId(boardSet.rootBoardId);
-        } else {
-          setRootBoardId("");
-        }
-      } catch (error) {
-        console.error("Failed to load board:", error);
-        setRootBoardId("");
-      } finally {
-        db.close();
-      }
-    }
-
-    void loadRootBoard();
-  }, [setId]);
 
   return {
     history: navState.history,
