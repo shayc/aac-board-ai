@@ -1,4 +1,4 @@
-import { importFiles } from "@features/board/db/board-import";
+import { importBoardFiles } from "@features/board/store/board-sets-store";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -15,7 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { openFiles } from "@shared/utils/files";
-import { Link as RouterLink } from "react-router";
+import { Link as RouterLink, useNavigate } from "react-router";
 
 export interface MenuDrawerProps {
   open: boolean;
@@ -23,6 +23,7 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
+  const navigate = useNavigate();
   const { showSnackbar } = useSnackbar();
 
   async function handleImportBoard() {
@@ -33,16 +34,35 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     }
 
     onClose();
-    showSnackbar({ message: "Importing board..." });
+
+    const isPlural = files.length > 1;
+    showSnackbar({
+      message: isPlural ? "Importing boards..." : "Importing board...",
+    });
 
     try {
-      await importFiles(files);
+      const results = await importBoardFiles(files);
+
       showSnackbar({
-        message: "Board imported successfully",
+        message: isPlural
+          ? "Boards imported successfully"
+          : "Board imported successfully",
         severity: "success",
       });
+
+      if (results.length === 1) {
+        const { setId, boardId } = results[0];
+        void navigate(
+          `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(boardId)}`,
+        );
+      }
     } catch {
-      showSnackbar({ message: "Failed to import board", severity: "error" });
+      showSnackbar({
+        message: isPlural
+          ? "Failed to import boards"
+          : "Failed to import board",
+        severity: "error",
+      });
     }
   }
 
@@ -67,6 +87,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       href: "http://github.com/shayc/aac-board-ai",
     },
   ];
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>
