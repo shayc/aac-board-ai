@@ -1,7 +1,10 @@
 import { createContext, type ReactNode } from "react";
 
+export type SnackbarSeverity = "success" | "error" | "info" | "warning";
+
 export interface SnackbarOptions {
   message: string;
+  severity?: SnackbarSeverity;
   duration?: number;
   action?: ReactNode;
 }

@@ -39,9 +39,10 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       await importFiles(files);
       showSnackbar({
         message: "Board imported successfully",
+        severity: "success",
       });
     } catch {
-      showSnackbar({ message: "Failed to import board" });
+      showSnackbar({ message: "Failed to import board", severity: "error" });
     }
   }
 

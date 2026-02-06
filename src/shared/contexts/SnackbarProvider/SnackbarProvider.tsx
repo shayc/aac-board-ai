@@ -1,5 +1,6 @@
-import Snackbar from "@mui/material/Snackbar";
-import { type ReactNode, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import { type ReactNode, useReducer } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -14,45 +15,83 @@ interface SnackbarMessage extends SnackbarOptions {
   key: number;
 }
 
-export function SnackbarProvider({ children }: SnackbarProviderProps) {
-  const [queue, setQueue] = useState<SnackbarMessage[]>([]);
-  const [current, setCurrent] = useState<SnackbarMessage | undefined>();
-  const [open, setOpen] = useState(false);
+interface SnackbarState {
+  queue: SnackbarMessage[];
+  current: SnackbarMessage | undefined;
+  open: boolean;
+}
 
-  if (!current && queue.length > 0) {
-    setCurrent(queue[0]);
-    setQueue((prev) => prev.slice(1));
-    setOpen(true);
+type SnackbarAction =
+  | { type: "show"; message: SnackbarMessage }
+  | { type: "close" }
+  | { type: "exited" };
+
+function snackbarReducer(
+  state: SnackbarState,
+  action: SnackbarAction,
+): SnackbarState {
+  switch (action.type) {
+    case "show": {
+      if (state.current) {
+        return {
+          ...state,
+          queue: [...state.queue, action.message],
+          open: false,
+        };
+      }
+
+      return { ...state, current: action.message, open: true };
+    }
+
+    case "close":
+      return { ...state, open: false };
+
+    case "exited": {
+      if (state.queue.length > 0) {
+        return {
+          current: state.queue[0],
+          queue: state.queue.slice(1),
+          open: true,
+        };
+      }
+
+      return { ...state, current: undefined };
+    }
   }
+}
+
+const initialState: SnackbarState = {
+  queue: [],
+  current: undefined,
+  open: false,
+};
+
+let nextKey = 0;
+
+export function SnackbarProvider({ children }: SnackbarProviderProps) {
+  const [state, dispatch] = useReducer(snackbarReducer, initialState);
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
-    const message: SnackbarMessage = { ...snackbarOptions, key: Date.now() };
-
-    if (current) {
-      setQueue((prev) => [...prev, message]);
-      setOpen(false);
-    } else {
-      setCurrent(message);
-      setOpen(true);
-    }
+    const message: SnackbarMessage = { ...snackbarOptions, key: nextKey++ };
+    dispatch({ type: "show", message });
   };
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string,
+    reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setOpen(false);
+    dispatch({ type: "close" });
   };
 
   const handleExited = () => {
-    setCurrent(undefined);
+    dispatch({ type: "exited" });
   };
 
   const contextValue: SnackbarContextValue = {
@@ -64,15 +103,22 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       {children}
 
       <Snackbar
-        key={current?.key}
-        open={open}
-        autoHideDuration={current?.duration ?? 4000}
-        message={current?.message ?? ""}
-        action={current?.action}
+        key={state.current?.key}
+        open={state.open}
+        autoHideDuration={state.current?.duration ?? 4000}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
         slotProps={{ transition: { onExited: handleExited } }}
-      />
+      >
+        <Alert
+          onClose={handleClose}
+          severity={state.current?.severity ?? "info"}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {state.current?.message}
+        </Alert>
+      </Snackbar>
     </SnackbarContext>
   );
 }
