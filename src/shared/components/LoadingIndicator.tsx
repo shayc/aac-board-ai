@@ -3,7 +3,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 
-interface LoadingIndicatorProps {
+export interface LoadingIndicatorProps {
   message?: string;
 }
 
