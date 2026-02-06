@@ -1,4 +1,4 @@
-import { importFiles } from "@features/board/db/board-import";
+import { importBoardFiles } from "@features/board/store/board-sets-store";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -36,7 +36,8 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     showSnackbar({ message: "Importing board..." });
 
     try {
-      await importFiles(files);
+      await importBoardFiles(files);
+
       showSnackbar({
         message: "Board imported successfully",
         severity: "success",
@@ -67,6 +68,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       href: "http://github.com/shayc/aac-board-ai",
     },
   ];
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>
