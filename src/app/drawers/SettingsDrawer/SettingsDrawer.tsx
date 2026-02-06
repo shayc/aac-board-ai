@@ -10,7 +10,7 @@ import { AppearanceSettings } from "./panels/AppearanceSettings";
 import { LanguageSettings } from "./panels/LanguageSettings";
 import { SpeechSettings } from "./panels/SpeechSettings";
 
-interface SettingsDrawerProps {
+export interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
