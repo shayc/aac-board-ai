@@ -15,7 +15,6 @@ export function AppShell() {
     "hasSeenOnboarding",
     false,
   );
-  const [isOnboardingOpen, setIsOnboardingOpen] = useState(!hasSeenOnboarding);
 
   return (
     <AppProviders>
@@ -37,11 +36,8 @@ export function AppShell() {
         />
 
         <OnboardingDialog
-          open={isOnboardingOpen}
-          onClose={() => {
-            setHasSeenOnboarding(true);
-            setIsOnboardingOpen(false);
-          }}
+          open={!hasSeenOnboarding}
+          onClose={() => setHasSeenOnboarding(true)}
         />
       </Box>
     </AppProviders>

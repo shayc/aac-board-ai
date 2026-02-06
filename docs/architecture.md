@@ -113,7 +113,7 @@ src/
 │       ├── db/            # IndexedDB operations
 │       ├── hooks/         # Feature-specific hooks
 │       ├── mappers/       # OBF format mapping
-│       ├── utils/         # Feature utilities
+│       ├── store/         # External store (board sets)
 │       └── types.ts
 ├── pages/                 # Routed pages
 │   ├── HomePage.tsx
@@ -146,17 +146,21 @@ All data is stored locally — no sync or cloud dependency.
 
 ## Browser Compatibility
 
-**Requirements**
-
-- Chrome 138+
-- Manual flag enablement for AI features:
-
-```
-chrome://flags/#proofreader-api-for-gemini-nano
-chrome://flags/#rewriter-api-for-gemini-nano
-```
+Requires Chrome 138+ with Built-in AI flags enabled. See [Prerequisites](../README.md#prerequisites) for the full list of required flags.
 
 Once enabled, Chrome downloads the Gemini Nano model for local inference.
+
+---
+
+## PWA & Offline Support
+
+The app is a **Progressive Web App** powered by `vite-plugin-pwa`:
+
+- **Installable** — users can add it to their home screen on desktop and mobile.
+- **Auto-updating service worker** (`registerType: "autoUpdate"`) ensures the latest version loads without manual intervention.
+- **Offline-capable** — after the first visit, all app assets are served from the service worker cache.
+
+Configuration lives in `vite.config.ts` under the `VitePWA()` plugin.
 
 ---
 
@@ -164,7 +168,7 @@ Once enabled, Chrome downloads the Gemini Nano model for local inference.
 
 AAC Board AI adapts gracefully to the browser's capabilities:
 
-- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API.
+- **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API. The PWA service worker ensures the app itself loads without a network connection.
 - **Enhanced mode:** When Chrome AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
 
 This approach ensures the application remains functional even if AI features are unavailable, while providing enhanced capabilities when possible.

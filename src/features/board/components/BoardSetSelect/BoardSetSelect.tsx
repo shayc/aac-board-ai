@@ -1,11 +1,11 @@
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import MenuItem from "@mui/material/MenuItem";
-import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 
 export interface BoardSetSelectProps {
   boardSets: BoardSetRecord[];
   boardSetId: string;
-  onChange: (event: SelectChangeEvent<string>, child: React.ReactNode) => void;
+  onChange: (boardSet: BoardSetRecord) => void;
 }
 
 export function BoardSetSelect({
@@ -18,7 +18,13 @@ export function BoardSetSelect({
       sx={{ color: "inherit" }}
       size="small"
       value={boardSetId}
-      onChange={onChange}
+      onChange={(event) => {
+        const selected = boardSets.find((s) => s.setId === event.target.value);
+
+        if (selected) {
+          onChange(selected);
+        }
+      }}
     >
       {boardSets.map((set) => (
         <MenuItem key={set.setId} value={set.setId}>
