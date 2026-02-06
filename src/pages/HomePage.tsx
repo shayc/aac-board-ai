@@ -1,5 +1,5 @@
 import { openBoardsDB } from "@features/board/db/boards-db";
-import { importFiles } from "@features/board/db/import-board";
+import { importFiles } from "@features/board/db/board-import";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";

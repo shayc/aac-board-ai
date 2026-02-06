@@ -2,7 +2,7 @@ import type { BoardSetRecord } from "@features/board/db/boards-db";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { type SelectChangeEvent } from "@mui/material/Select";
 
-interface BoardSetSelectProps {
+export interface BoardSetSelectProps {
   boardSets: BoardSetRecord[];
   boardSetId: string;
   onChange: (event: SelectChangeEvent<string>, child: React.ReactNode) => void;

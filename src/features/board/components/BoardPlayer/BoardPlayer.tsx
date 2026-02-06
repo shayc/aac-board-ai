@@ -1,10 +1,8 @@
-import {
-  Grid,
-  MessageBar,
-  NavButtons,
-  SuggestionBar,
-  Tile,
-} from "@features/board/components";
+import { Grid } from "@features/board/components/Grid/Grid";
+import { MessageBar } from "@features/board/components/MessageBar/MessageBar";
+import { NavButtons } from "@features/board/components/NavButtons/NavButtons";
+import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
+import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoardNavigation } from "@features/board/hooks/useBoardNavigation";
 import { useButtonActivation } from "@features/board/hooks/useButtonActivation";
 import { useMessage } from "@features/board/hooks/useMessage";
@@ -13,7 +11,7 @@ import type { Board, BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-interface BoardPlayerProps {
+export interface BoardPlayerProps {
   board: Board;
 }
 

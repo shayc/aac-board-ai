@@ -12,7 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 
-interface OnboardingDialogProps {
+export interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
 }

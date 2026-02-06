@@ -1,4 +1,4 @@
-import { importFiles } from "@features/board/db/import-board";
+import { importFiles } from "@features/board/db/board-import";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -17,7 +17,7 @@ import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { openFiles } from "@shared/utils/files";
 import { Link as RouterLink } from "react-router";
 
-interface MenuDrawerProps {
+export interface MenuDrawerProps {
   open: boolean;
   onClose: () => void;
 }

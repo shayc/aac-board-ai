@@ -1,12 +1,12 @@
 import { AppProviders } from "@app/AppProviders";
 import { OnboardingDialog } from "@app/dialogs/OnboardingDialog";
+import { MenuDrawer } from "@app/drawers/MenuDrawer";
+import { SettingsDrawer } from "@app/drawers/SettingsDrawer/SettingsDrawer";
+import { AppHeader } from "@app/layouts/AppHeader";
 import Box from "@mui/material/Box";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 import { Outlet } from "react-router";
-import { MenuDrawer } from "../drawers/MenuDrawer";
-import { SettingsDrawer } from "../drawers/SettingsDrawer/SettingsDrawer";
-import { AppHeader } from "./AppHeader";
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

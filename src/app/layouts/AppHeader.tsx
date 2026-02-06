@@ -8,7 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate, useParams } from "react-router";
 
-interface AppHeaderProps {
+export interface AppHeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
 }
