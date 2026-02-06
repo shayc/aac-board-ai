@@ -1,14 +1,16 @@
 import {
-  getAssetUrlByPath,
+  getAssetBlobByPath,
   getBoardsBatch,
   openBoardsDB,
 } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board } from "@features/board/types";
 import type { OBFBoard, OBFMedia } from "@shared/open-board-format/schema";
+import type { ObjectUrlRegistry } from "@shared/utils/object-url";
+import { createObjectUrlRegistry } from "@shared/utils/object-url";
 import type { IDBPDatabase } from "idb";
 import type { BoardsDBSchema } from "@features/board/db/boards-db";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface UseLoadBoardOptions {
   setId: string;
@@ -24,9 +26,11 @@ export function useLoadBoard({
   boardId,
 }: UseLoadBoardOptions): UseLoadBoardReturn {
   const [board, setBoard] = useState<Board | null>(null);
+  const registryRef = useRef<ObjectUrlRegistry | null>(null);
 
   useEffect(() => {
     let cancelled = false;
+    const registry = createObjectUrlRegistry();
 
     void (async () => {
       if (!setId || !boardId) {
@@ -35,12 +39,17 @@ export function useLoadBoard({
       }
 
       try {
-        const loaded = await loadBoard({ setId, boardId });
+        const loaded = await loadBoard({ setId, boardId, registry });
         if (!cancelled) {
+          registryRef.current?.revokeAll();
+          registryRef.current = registry;
           setBoard(loaded);
+        } else {
+          registry.revokeAll();
         }
       } catch (err) {
         console.error("Error loading board:", err);
+        registry.revokeAll();
         if (!cancelled) {
           setBoard(null);
         }
@@ -52,19 +61,28 @@ export function useLoadBoard({
     };
   }, [setId, boardId]);
 
+  useEffect(() => {
+    return () => {
+      registryRef.current?.revokeAll();
+      registryRef.current = null;
+    };
+  }, []);
+
   return { board };
 }
 
 async function loadBoard({
   setId,
   boardId,
+  registry,
 }: {
   setId: string;
   boardId: string;
+  registry: ObjectUrlRegistry;
 }): Promise<Board> {
   const obf = await withBoardsDB(async (db) => {
     const board = await fetchOBFBoard(db, setId, boardId);
-    return hydrateBoard(db, setId, board);
+    return hydrateBoard(db, setId, board, registry);
   });
 
   return obfToBoard(obf);
@@ -97,11 +115,12 @@ async function hydrateBoard(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   board: OBFBoard,
+  registry: ObjectUrlRegistry,
 ): Promise<OBFBoard> {
   return {
     ...board,
-    images: await hydrateAssets(db, setId, board.images, "image"),
-    sounds: await hydrateAssets(db, setId, board.sounds, "sound"),
+    images: await hydrateAssets(db, setId, board.images, "image", registry),
+    sounds: await hydrateAssets(db, setId, board.sounds, "sound", registry),
   };
 }
 
@@ -110,6 +129,7 @@ async function hydrateAssets(
   setId: string,
   assets: OBFMedia[] | undefined,
   kind: "image" | "sound",
+  registry: ObjectUrlRegistry,
 ): Promise<OBFMedia[] | undefined> {
   if (!assets?.length) {
     return assets;
@@ -123,7 +143,8 @@ async function hydrateAssets(
     }
 
     try {
-      const url = await getAssetUrlByPath(db, setId, asset.path);
+      const blob = await getAssetBlobByPath(db, setId, asset.path);
+      const url = blob ? registry.create(blob) : null;
       out.push(url ? { ...asset, data: url } : asset);
     } catch (err) {
       console.warn(

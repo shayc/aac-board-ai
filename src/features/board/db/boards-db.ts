@@ -292,20 +292,16 @@ export async function bulkPutAssets(
   }
 }
 
-export async function getAssetUrlByPath(
+export async function getAssetBlobByPath(
   db: IDBPDatabase<BoardsDBSchema>,
   setId: string,
   path: string,
-): Promise<string | null> {
+): Promise<Blob | null> {
   validateId(setId, "setId");
   const p = normalizePath(path);
   const row = await db.get("assets", [setId, p]);
 
-  if (!row) {
-    return null;
-  }
-
-  return URL.createObjectURL(row.blob);
+  return row?.blob ?? null;
 }
 
 export async function getAssetUrlByMediaId(
