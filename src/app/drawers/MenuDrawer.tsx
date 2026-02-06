@@ -84,7 +84,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       id: "contribute",
       icon: GitHubIcon,
       label: "Contribute",
-      href: "http://github.com/shayc/aac-board-ai",
+      href: "https://github.com/shayc/aac-board-ai",
     },
   ];
 
