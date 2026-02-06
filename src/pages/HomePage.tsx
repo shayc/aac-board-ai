@@ -1,5 +1,5 @@
 import { openBoardsDB } from "@features/board/db/boards-db";
-import { importFile } from "@features/board/db/import-board";
+import { importFiles } from "@features/board/db/import-board";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
@@ -27,7 +27,7 @@ export function HomePage() {
         type: blob.type ?? "application/octet-stream",
       });
 
-      const { setId, boardId } = await importFile(file);
+      const [{ setId, boardId }] = await importFiles(file);
       if (cancelled) {
         return;
       }

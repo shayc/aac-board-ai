@@ -1,16 +1,16 @@
-export function openFile(): Promise<File | undefined> {
+export function openFiles(): Promise<File[]> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
+    input.multiple = true;
     input.accept = ".obz,.obf,application/zip,application/json";
 
     input.addEventListener("change", () => {
-      const file = input.files?.[0];
-      resolve(file);
+      resolve(input.files ? Array.from(input.files) : []);
     });
 
     input.addEventListener("cancel", () => {
-      resolve(undefined);
+      resolve([]);
     });
 
     input.click();

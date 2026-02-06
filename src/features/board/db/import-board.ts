@@ -14,16 +14,26 @@ export interface ImportResult {
   boardId: string;
 }
 
-export async function importFile(file: File): Promise<ImportResult> {
+export async function importFiles(
+  input: File | File[],
+): Promise<ImportResult[]> {
+  const files = Array.isArray(input) ? input : [input];
   const db = await openBoardsDB();
-  const setId = file.name.replace(/\.(obz|obf)$/i, "").toLowerCase();
 
   try {
-    if (file.name.toLowerCase().endsWith(".obz")) {
-      return await importOBZFile(db, file, setId);
-    } else {
-      return await importOBFFile(db, file, setId);
+    const results: ImportResult[] = [];
+
+    for (const file of files) {
+      const setId = file.name.replace(/\.(obz|obf)$/i, "").toLowerCase();
+
+      if (file.name.toLowerCase().endsWith(".obz")) {
+        results.push(await importOBZFile(db, file, setId));
+      } else {
+        results.push(await importOBFFile(db, file, setId));
+      }
     }
+
+    return results;
   } finally {
     db.close();
   }
