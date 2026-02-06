@@ -12,10 +12,11 @@ import {
 export interface BoardSetsSnapshot {
   data: BoardSetRecord[];
   isLoading: boolean;
+  error: Error | null;
 }
 
 const listeners = new Set<() => void>();
-let snapshot: BoardSetsSnapshot = { data: [], isLoading: true };
+let snapshot: BoardSetsSnapshot = { data: [], isLoading: true, error: null };
 let fetched = false;
 let pending: Promise<void> | null = null;
 
@@ -26,17 +27,27 @@ function emit() {
 }
 
 async function refresh(): Promise<void> {
-  const db = await openBoardsDB();
-
   try {
-    const data = await listBoardSets(db);
-    snapshot = { data, isLoading: false };
-    fetched = true;
-    emit();
+    const db = await openBoardsDB();
+
+    try {
+      const data = await listBoardSets(db);
+      snapshot = { data, isLoading: false, error: null };
+      fetched = true;
+    } finally {
+      db.close();
+    }
+  } catch (err) {
+    snapshot = {
+      data: [],
+      isLoading: false,
+      error: err instanceof Error ? err : new Error(String(err)),
+    };
   } finally {
-    db.close();
     pending = null;
   }
+
+  emit();
 }
 
 function ensureFetched() {

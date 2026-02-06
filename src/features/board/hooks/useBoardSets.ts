@@ -8,13 +8,15 @@ import { useSyncExternalStore } from "react";
 export interface UseBoardSetsReturn {
   boardSets: BoardSetRecord[];
   isLoading: boolean;
+  error: Error | null;
 }
 
 export function useBoardSets(): UseBoardSetsReturn {
-  const { data: boardSets, isLoading } = useSyncExternalStore(
-    subscribeBoardSets,
-    getBoardSetsSnapshot,
-  );
+  const {
+    data: boardSets,
+    isLoading,
+    error,
+  } = useSyncExternalStore(subscribeBoardSets, getBoardSetsSnapshot);
 
-  return { boardSets, isLoading };
+  return { boardSets, isLoading, error };
 }

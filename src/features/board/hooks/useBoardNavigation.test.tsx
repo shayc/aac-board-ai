@@ -54,6 +54,7 @@ describe("useBoardNavigation", () => {
         },
       ],
       isLoading: false,
+      error: null,
     });
   });
 
@@ -189,6 +190,7 @@ describe("useBoardNavigation", () => {
         },
       ],
       isLoading: false,
+      error: null,
     });
 
     const { result } = await renderHook(() => useBoardNavigation(), {
@@ -227,6 +229,7 @@ describe("useBoardNavigation", () => {
     vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
       data: [],
       isLoading: false,
+      error: null,
     });
 
     const { result, act } = await renderHook(() => useBoardNavigation(), {
@@ -283,6 +286,7 @@ describe("useBoardNavigation", () => {
     vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
       data: [],
       isLoading: false,
+      error: null,
     });
 
     const { result } = await renderHook(() => useBoardNavigation(), {
