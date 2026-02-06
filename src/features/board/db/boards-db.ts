@@ -294,7 +294,7 @@ export async function getAssetBlob(
   return row?.blob ?? null;
 }
 
-export async function removeBoardSet(
+export async function deleteBoardSet(
   db: BoardsDB,
   setId: string,
 ): Promise<void> {

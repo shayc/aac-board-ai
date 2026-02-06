@@ -4,7 +4,7 @@ import {
 } from "@features/board/db/board-import";
 import {
   listBoardSets,
-  removeBoardSet,
+  deleteBoardSet,
   withBoardsDB,
   type BoardSetRecord,
 } from "@features/board/db/boards-db";
@@ -88,8 +88,8 @@ export async function importBoardFiles(
   return results;
 }
 
-export async function removeBoardSetById(setId: string): Promise<void> {
-  await withBoardsDB((db) => removeBoardSet(db, setId));
+export async function removeBoardSet(setId: string): Promise<void> {
+  await withBoardsDB((db) => deleteBoardSet(db, setId));
 
   await invalidateBoardSets();
   channel.postMessage("invalidate");
