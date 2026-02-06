@@ -10,44 +10,35 @@ export interface SnackbarProviderProps {
   children: ReactNode;
 }
 
-interface SnackbarState {
-  open: boolean;
-  message: string;
-  duration: number;
-  action?: ReactNode;
+interface SnackbarMessage extends SnackbarOptions {
+  key: number;
 }
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
-  const [snackbarState, setSnackbarState] = useState<SnackbarState>({
-    open: false,
-    message: "",
-    duration: 4000,
-  });
+  const [queue, setQueue] = useState<SnackbarMessage[]>([]);
+  const [current, setCurrent] = useState<SnackbarMessage | undefined>();
+  const [open, setOpen] = useState(false);
 
-  const [queue, setQueue] = useState<SnackbarOptions[]>([]);
+  if (!current && queue.length > 0) {
+    setCurrent(queue[0]);
+    setQueue((prev) => prev.slice(1));
+    setOpen(true);
+  }
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
-    setQueue((prev) => [...prev, snackbarOptions]);
-  };
+    const message: SnackbarMessage = { ...snackbarOptions, key: Date.now() };
 
-  const processQueue = () => {
-    if (queue.length > 0 && !snackbarState.open) {
-      const nextSnackbar = queue[0];
-      setSnackbarState({
-        open: true,
-        message: nextSnackbar.message,
-        duration: nextSnackbar.duration ?? 4000,
-      });
-      setQueue((prev) => prev.slice(1));
+    if (current) {
+      setQueue((prev) => [...prev, message]);
+      setOpen(false);
+    } else {
+      setCurrent(message);
+      setOpen(true);
     }
   };
-
-  if (queue.length > 0 && !snackbarState.open) {
-    processQueue();
-  }
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
@@ -57,7 +48,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       return;
     }
 
-    setSnackbarState((prev) => ({ ...prev, open: false }));
+    setOpen(false);
+  };
+
+  const handleExited = () => {
+    setCurrent(undefined);
   };
 
   const contextValue: SnackbarContextValue = {
@@ -69,12 +64,14 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       {children}
 
       <Snackbar
-        open={snackbarState.open}
-        autoHideDuration={snackbarState.duration}
-        message={snackbarState.message}
-        action={snackbarState.action}
+        key={current?.key}
+        open={open}
+        autoHideDuration={current?.duration ?? 4000}
+        message={current?.message ?? ""}
+        action={current?.action}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
+        slotProps={{ transition: { onExited: handleExited } }}
       />
     </SnackbarContext>
   );
