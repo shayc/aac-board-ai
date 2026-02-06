@@ -4,7 +4,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { getAICapabilities } from "@shared/hooks/ai";
+import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
 
 const AI_FEATURES = [
   { key: "isProofreaderSupported" as const, label: "Proofreader" },
