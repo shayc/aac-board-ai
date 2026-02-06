@@ -1,4 +1,4 @@
-import { importFile } from "@features/board/db/import-board";
+import { importFiles } from "@features/board/db/import-board";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -14,7 +14,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
-import { openFile } from "@shared/utils/files";
+import { openFiles } from "@shared/utils/files";
 import { Link as RouterLink } from "react-router";
 
 interface MenuDrawerProps {
@@ -26,9 +26,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const { showSnackbar } = useSnackbar();
 
   async function handleImportBoard() {
-    const file = await openFile();
+    const files = await openFiles();
 
-    if (!file) {
+    if (files.length === 0) {
       return;
     }
 
@@ -36,12 +36,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     showSnackbar({ message: "Importing board..." });
 
     try {
-      await importFile(file);
+      await importFiles(files);
       showSnackbar({
         message: "Board imported successfully",
+        severity: "success",
       });
     } catch {
-      showSnackbar({ message: "Failed to import board" });
+      showSnackbar({ message: "Failed to import board", severity: "error" });
     }
   }
 

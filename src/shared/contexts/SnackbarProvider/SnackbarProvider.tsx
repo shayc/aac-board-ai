@@ -1,5 +1,6 @@
-import Snackbar from "@mui/material/Snackbar";
-import { type ReactNode, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import { type ReactNode, useReducer } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -10,54 +11,87 @@ export interface SnackbarProviderProps {
   children: ReactNode;
 }
 
-interface SnackbarState {
-  open: boolean;
-  message: string;
-  duration: number;
-  action?: ReactNode;
+interface SnackbarMessage extends SnackbarOptions {
+  key: number;
 }
 
-export function SnackbarProvider({ children }: SnackbarProviderProps) {
-  const [snackbarState, setSnackbarState] = useState<SnackbarState>({
-    open: false,
-    message: "",
-    duration: 4000,
-  });
+interface SnackbarState {
+  queue: SnackbarMessage[];
+  current: SnackbarMessage | undefined;
+  open: boolean;
+}
 
-  const [queue, setQueue] = useState<SnackbarOptions[]>([]);
+type SnackbarAction =
+  | { type: "show"; message: SnackbarMessage }
+  | { type: "close" }
+  | { type: "exited" };
+
+function snackbarReducer(
+  state: SnackbarState,
+  action: SnackbarAction,
+): SnackbarState {
+  switch (action.type) {
+    case "show": {
+      if (state.current) {
+        return {
+          ...state,
+          queue: [...state.queue, action.message],
+          open: false,
+        };
+      }
+
+      return { ...state, current: action.message, open: true };
+    }
+
+    case "close":
+      return { ...state, open: false };
+
+    case "exited": {
+      if (state.queue.length > 0) {
+        return {
+          current: state.queue[0],
+          queue: state.queue.slice(1),
+          open: true,
+        };
+      }
+
+      return { ...state, current: undefined };
+    }
+  }
+}
+
+const initialState: SnackbarState = {
+  queue: [],
+  current: undefined,
+  open: false,
+};
+
+let nextKey = 0;
+
+export function SnackbarProvider({ children }: SnackbarProviderProps) {
+  const [state, dispatch] = useReducer(snackbarReducer, initialState);
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
-    setQueue((prev) => [...prev, snackbarOptions]);
+    const message: SnackbarMessage = { ...snackbarOptions, key: nextKey++ };
+    dispatch({ type: "show", message });
   };
-
-  const processQueue = () => {
-    if (queue.length > 0 && !snackbarState.open) {
-      const nextSnackbar = queue[0];
-      setSnackbarState({
-        open: true,
-        message: nextSnackbar.message,
-        duration: nextSnackbar.duration ?? 4000,
-      });
-      setQueue((prev) => prev.slice(1));
-    }
-  };
-
-  if (queue.length > 0 && !snackbarState.open) {
-    processQueue();
-  }
 
   const handleClose = (
     _event?: React.SyntheticEvent | Event,
-    reason?: string,
+    reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") {
       return;
     }
 
-    setSnackbarState((prev) => ({ ...prev, open: false }));
+    dispatch({ type: "close" });
+  };
+
+  const handleExited = () => {
+    dispatch({ type: "exited" });
   };
 
   const contextValue: SnackbarContextValue = {
@@ -69,13 +103,22 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       {children}
 
       <Snackbar
-        open={snackbarState.open}
-        autoHideDuration={snackbarState.duration}
-        message={snackbarState.message}
-        action={snackbarState.action}
+        key={state.current?.key}
+        open={state.open}
+        autoHideDuration={state.current?.duration ?? 4000}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         onClose={handleClose}
-      />
+        slotProps={{ transition: { onExited: handleExited } }}
+      >
+        <Alert
+          onClose={handleClose}
+          severity={state.current?.severity ?? "info"}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {state.current?.message}
+        </Alert>
+      </Snackbar>
     </SnackbarContext>
   );
 }
