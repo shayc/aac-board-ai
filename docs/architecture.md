@@ -113,7 +113,7 @@ src/
 │       ├── db/            # IndexedDB operations
 │       ├── hooks/         # Feature-specific hooks
 │       ├── mappers/       # OBF format mapping
-│       ├── utils/         # Feature utilities
+│       ├── store/         # External store (board sets)
 │       └── types.ts
 ├── pages/                 # Routed pages
 │   ├── HomePage.tsx
