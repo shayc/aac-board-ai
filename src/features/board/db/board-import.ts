@@ -1,12 +1,11 @@
 import { loadOBF, loadOBZ } from "@shared/open-board-format";
-import type { IDBPDatabase } from "idb";
 import { lookup } from "mrmime";
-import type { BoardsDBSchema } from "./boards-db";
+import type { BoardsDB } from "./boards-db";
 import {
-  bulkPutAssets,
-  bulkPutBoards,
-  openBoardsDB,
+  putAssets,
+  putBoards,
   upsertBoardSet,
+  withBoardsDB,
 } from "./boards-db";
 
 export interface ImportResult {
@@ -18,9 +17,8 @@ export async function importFiles(
   input: File | File[],
 ): Promise<ImportResult[]> {
   const files = Array.isArray(input) ? input : [input];
-  const db = await openBoardsDB();
 
-  try {
+  return withBoardsDB(async (db) => {
     const results: ImportResult[] = [];
 
     for (const file of files) {
@@ -34,13 +32,11 @@ export async function importFiles(
     }
 
     return results;
-  } finally {
-    db.close();
-  }
+  });
 }
 
 async function importOBZFile(
-  db: IDBPDatabase<BoardsDBSchema>,
+  db: BoardsDB,
   file: File,
   setId: string,
 ): Promise<ImportResult> {
@@ -73,7 +69,7 @@ async function importOBZFile(
     };
   });
 
-  await bulkPutBoards(db, setId, boardItems);
+  await putBoards(db, setId, boardItems);
 
   const assetItems = Array.from(files.entries())
     .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
@@ -88,14 +84,14 @@ async function importOBZFile(
     });
 
   if (assetItems.length > 0) {
-    await bulkPutAssets(db, setId, assetItems);
+    await putAssets(db, setId, assetItems);
   }
 
   return { setId, boardId: rootBoardId };
 }
 
 async function importOBFFile(
-  db: IDBPDatabase<BoardsDBSchema>,
+  db: BoardsDB,
   file: File,
   setId: string,
 ): Promise<ImportResult> {
@@ -108,7 +104,7 @@ async function importOBFFile(
     boardCount: 1,
   });
 
-  await bulkPutBoards(db, setId, [
+  await putBoards(db, setId, [
     {
       boardId: board.id,
       name: board.name ?? board.id,

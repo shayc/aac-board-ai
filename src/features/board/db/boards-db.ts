@@ -44,14 +44,16 @@ export interface BoardsDBSchema extends DBSchema {
   };
 }
 
-export interface OpenOptions {
+export interface BoardsDBOptions {
   nameKeyLocale?: string | string[];
 }
 
-export const DB_NAME = "aac-board-db";
-export const DB_VERSION = 1;
+export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 
-export function normalizePath(p: string): string {
+const DB_NAME = "aac-board-db";
+const DB_VERSION = 1;
+
+function normalizePath(p: string): string {
   if (!p) throw new Error("Path cannot be empty");
 
   const cleaned = p
@@ -62,7 +64,7 @@ export function normalizePath(p: string): string {
   return cleaned;
 }
 
-export function toNameKey(name: string, locale?: string | string[]): string {
+function toNameKey(name: string, locale?: string | string[]): string {
   return name.toLocaleLowerCase(locale).normalize("NFC");
 }
 
@@ -72,22 +74,15 @@ function validateId(id: string, name: string): void {
   }
 }
 
-const nameCollator = new Intl.Collator(undefined, {
-  numeric: true,
-  sensitivity: "base",
-});
+const meta = new WeakMap<BoardsDB, { locale?: string | string[] }>();
 
-const meta = new WeakMap<
-  IDBPDatabase<BoardsDBSchema>,
-  { locale?: string | string[] }
->();
-function localeFor(db: IDBPDatabase<BoardsDBSchema>) {
+function localeFor(db: BoardsDB) {
   return meta.get(db)?.locale;
 }
 
 export async function openBoardsDB(
-  opts: OpenOptions = {},
-): Promise<IDBPDatabase<BoardsDBSchema>> {
+  opts: BoardsDBOptions = {},
+): Promise<BoardsDB> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       const boardsets = db.createObjectStore("boardsets", { keyPath: "setId" });
@@ -111,37 +106,45 @@ export async function openBoardsDB(
   return db;
 }
 
-export function closeBoardsDB(db: IDBPDatabase<BoardsDBSchema>): void {
-  db.close();
+export async function withBoardsDB<T>(
+  fn: (db: BoardsDB) => Promise<T>,
+  opts?: BoardsDBOptions,
+): Promise<T> {
+  const db = await openBoardsDB(opts);
+  try {
+    return await fn(db);
+  } finally {
+    db.close();
+  }
+}
+
+export interface UpsertBoardSetInput {
+  setId: string;
+  name: string;
+  rootBoardId?: string;
+  boardCount?: number;
 }
 
 export async function upsertBoardSet(
-  db: IDBPDatabase<BoardsDBSchema>,
-  input: {
-    setId: string;
-    name: string;
-    rootBoardId?: string;
-    boardCount?: number;
-  },
+  db: BoardsDB,
+  boardSet: UpsertBoardSetInput,
 ): Promise<void> {
-  validateId(input.setId, "setId");
-  const prev = await db.get("boardsets", input.setId);
+  validateId(boardSet.setId, "setId");
+  const prev = await db.get("boardsets", boardSet.setId);
 
   const row: BoardSetRecord = {
-    setId: input.setId,
-    name: input.name,
-    nameKey: toNameKey(input.name, localeFor(db)),
-    rootBoardId: input.rootBoardId ?? prev?.rootBoardId,
+    setId: boardSet.setId,
+    name: boardSet.name,
+    nameKey: toNameKey(boardSet.name, localeFor(db)),
+    rootBoardId: boardSet.rootBoardId ?? prev?.rootBoardId,
     updatedAt: Date.now(),
-    boardCount: input.boardCount ?? prev?.boardCount ?? 0,
+    boardCount: boardSet.boardCount ?? prev?.boardCount ?? 0,
   };
 
   await db.put("boardsets", row);
 }
 
-export async function listBoardSets(
-  db: IDBPDatabase<BoardsDBSchema>,
-): Promise<BoardSetRecord[]> {
+export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
   const idx = tx.store.index("byUpdatedAt");
   const out: BoardSetRecord[] = [];
@@ -156,18 +159,16 @@ export async function listBoardSets(
   return out;
 }
 
-export async function getBoardSet(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-): Promise<BoardSetRecord | null> {
-  validateId(setId, "setId");
-  return (await db.get("boardsets", setId)) ?? null;
+export interface PutBoardInput {
+  boardId: string;
+  name: string;
+  json: OBFBoard;
 }
 
-export async function bulkPutBoards(
-  db: IDBPDatabase<BoardsDBSchema>,
+export async function putBoards(
+  db: BoardsDB,
   setId: string,
-  items: { boardId: string; name: string; json: OBFBoard }[],
+  items: PutBoardInput[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "boardsets"], "readwrite");
@@ -212,30 +213,17 @@ export async function bulkPutBoards(
   }
 }
 
-export async function listBoards(
-  db: IDBPDatabase<BoardsDBSchema>,
+export async function getBoard(
+  db: BoardsDB,
   setId: string,
-): Promise<BoardRecord[]> {
+  boardId: string,
+): Promise<BoardRecord | undefined> {
   validateId(setId, "setId");
-  const rows = await db.getAllFromIndex("boards", "bySetId", setId);
-  rows.sort((a, b) => nameCollator.compare(a.name, b.name));
-  return rows;
+  return db.get("boards", [setId, boardId]);
 }
 
-export async function searchBoards(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-  query: string,
-  limit = 50,
-): Promise<BoardRecord[]> {
-  validateId(setId, "setId");
-  const key = toNameKey(query, localeFor(db));
-  const range = IDBKeyRange.bound([setId, key], [setId, key + "\uffff"]);
-  return db.getAllFromIndex("boards", "bySetIdNameKey", range, limit);
-}
-
-export async function getBoardsBatch(
-  db: IDBPDatabase<BoardsDBSchema>,
+export async function getBoardsByIds(
+  db: BoardsDB,
   setId: string,
   boardIds: string[],
 ): Promise<BoardRecord[]> {
@@ -251,16 +239,18 @@ export async function getBoardsBatch(
   return rows.filter((r): r is BoardRecord => r !== undefined);
 }
 
-export async function bulkPutAssets(
-  db: IDBPDatabase<BoardsDBSchema>,
+export interface PutAssetInput {
+  path: string;
+  blob: Blob;
+  mime?: string;
+  size?: number;
+  mediaId?: string;
+}
+
+export async function putAssets(
+  db: BoardsDB,
   setId: string,
-  items: {
-    path: string;
-    blob: Blob;
-    mime?: string;
-    size?: number;
-    mediaId?: string;
-  }[],
+  items: PutAssetInput[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["assets", "boardsets"], "readwrite");
@@ -292,60 +282,20 @@ export async function bulkPutAssets(
   }
 }
 
-export async function getAssetBlobByPath(
-  db: IDBPDatabase<BoardsDBSchema>,
+export async function getAssetBlob(
+  db: BoardsDB,
   setId: string,
   path: string,
 ): Promise<Blob | null> {
   validateId(setId, "setId");
-  const p = normalizePath(path);
-  const row = await db.get("assets", [setId, p]);
+  const normalizedPath = normalizePath(path);
+  const row = await db.get("assets", [setId, normalizedPath]);
 
   return row?.blob ?? null;
 }
 
-export async function getAssetUrlByMediaId(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-  mediaId: string,
-): Promise<string | null> {
-  validateId(setId, "setId");
-  if (!mediaId) {
-    return null;
-  }
-
-  const row = await db.getFromIndex("assets", "bySetIdMediaId", [
-    setId,
-    mediaId,
-  ]);
-
-  if (!row) {
-    return null;
-  }
-
-  return URL.createObjectURL(row.blob);
-}
-
-export async function getManifestJson<T = unknown>(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-): Promise<T | null> {
-  validateId(setId, "setId");
-  const row = await db.get("assets", [setId, "manifest.json"]);
-
-  if (!row) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(await row.blob.text()) as T;
-  } catch {
-    return null;
-  }
-}
-
-export async function deleteBoardSet(
-  db: IDBPDatabase<BoardsDBSchema>,
+export async function removeBoardSet(
+  db: BoardsDB,
   setId: string,
 ): Promise<void> {
   validateId(setId, "setId");
@@ -371,57 +321,6 @@ export async function deleteBoardSet(
       }
     }
     await tx.objectStore("boardsets").delete(setId);
-    await tx.done;
-  } catch (e) {
-    tx.abort();
-    throw e;
-  }
-}
-
-export async function deleteBoard(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-  boardId: string,
-): Promise<void> {
-  validateId(setId, "setId");
-  validateId(boardId, "boardId");
-  const tx = db.transaction(["boards", "boardsets"], "readwrite");
-
-  try {
-    await tx.objectStore("boards").delete([setId, boardId]);
-    const cnt = await tx.objectStore("boards").index("bySetId").count(setId);
-    const bs = await tx.objectStore("boardsets").get(setId);
-
-    if (bs) {
-      await tx
-        .objectStore("boardsets")
-        .put({ ...bs, boardCount: cnt, updatedAt: Date.now() });
-    }
-
-    await tx.done;
-  } catch (e) {
-    tx.abort();
-    throw e;
-  }
-}
-
-export async function deleteAsset(
-  db: IDBPDatabase<BoardsDBSchema>,
-  setId: string,
-  path: string,
-): Promise<void> {
-  validateId(setId, "setId");
-  const p = normalizePath(path);
-  const tx = db.transaction(["assets", "boardsets"], "readwrite");
-
-  try {
-    await tx.objectStore("assets").delete([setId, p]);
-    const bs = await tx.objectStore("boardsets").get(setId);
-
-    if (bs) {
-      await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
-    }
-
     await tx.done;
   } catch (e) {
     tx.abort();

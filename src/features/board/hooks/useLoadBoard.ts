@@ -1,15 +1,14 @@
 import {
-  getAssetBlobByPath,
-  getBoardsBatch,
-  openBoardsDB,
+  getAssetBlob,
+  getBoard,
+  withBoardsDB,
 } from "@features/board/db/boards-db";
+import type { BoardsDB } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board } from "@features/board/types";
 import type { OBFBoard, OBFMedia } from "@shared/open-board-format/schema";
 import type { ObjectUrlRegistry } from "@shared/utils/object-url";
 import { createObjectUrlRegistry } from "@shared/utils/object-url";
-import type { IDBPDatabase } from "idb";
-import type { BoardsDBSchema } from "@features/board/db/boards-db";
 import { useEffect, useRef, useState } from "react";
 
 export interface UseLoadBoardOptions {
@@ -88,23 +87,12 @@ async function loadBoard({
   return obfToBoard(obf);
 }
 
-async function withBoardsDB<T>(
-  fn: (db: IDBPDatabase<BoardsDBSchema>) => Promise<T>,
-): Promise<T> {
-  const db = await openBoardsDB();
-  try {
-    return await fn(db);
-  } finally {
-    db.close();
-  }
-}
-
 async function fetchOBFBoard(
-  db: IDBPDatabase<BoardsDBSchema>,
+  db: BoardsDB,
   setId: string,
   boardId: string,
 ): Promise<OBFBoard> {
-  const [boardData] = await getBoardsBatch(db, setId, [boardId]);
+  const boardData = await getBoard(db, setId, boardId);
   if (!boardData) {
     throw new Error(`Board not found: ${boardId}`);
   }
@@ -112,7 +100,7 @@ async function fetchOBFBoard(
 }
 
 async function hydrateBoard(
-  db: IDBPDatabase<BoardsDBSchema>,
+  db: BoardsDB,
   setId: string,
   board: OBFBoard,
   registry: ObjectUrlRegistry,
@@ -125,7 +113,7 @@ async function hydrateBoard(
 }
 
 async function hydrateAssets(
-  db: IDBPDatabase<BoardsDBSchema>,
+  db: BoardsDB,
   setId: string,
   assets: OBFMedia[] | undefined,
   kind: "image" | "sound",
@@ -143,7 +131,7 @@ async function hydrateAssets(
     }
 
     try {
-      const blob = await getAssetBlobByPath(db, setId, asset.path);
+      const blob = await getAssetBlob(db, setId, asset.path);
       const url = blob ? registry.create(blob) : null;
       out.push(url ? { ...asset, data: url } : asset);
     } catch (err) {

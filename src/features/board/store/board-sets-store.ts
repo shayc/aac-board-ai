@@ -3,9 +3,9 @@ import {
   type ImportResult,
 } from "@features/board/db/board-import";
 import {
-  deleteBoardSet,
   listBoardSets,
-  openBoardsDB,
+  removeBoardSet,
+  withBoardsDB,
   type BoardSetRecord,
 } from "@features/board/db/boards-db";
 
@@ -28,15 +28,9 @@ function emit() {
 
 async function refresh(): Promise<void> {
   try {
-    const db = await openBoardsDB();
-
-    try {
-      const data = await listBoardSets(db);
-      snapshot = { data, isLoading: false, error: null };
-      fetched = true;
-    } finally {
-      db.close();
-    }
+    const data = await withBoardsDB((db) => listBoardSets(db));
+    snapshot = { data, isLoading: false, error: null };
+    fetched = true;
   } catch (err) {
     snapshot = {
       data: [],
@@ -94,14 +88,8 @@ export async function importBoardFiles(
   return results;
 }
 
-export async function removeBoardSet(setId: string): Promise<void> {
-  const db = await openBoardsDB();
-
-  try {
-    await deleteBoardSet(db, setId);
-  } finally {
-    db.close();
-  }
+export async function removeBoardSetById(setId: string): Promise<void> {
+  await withBoardsDB((db) => removeBoardSet(db, setId));
 
   await invalidateBoardSets();
   channel.postMessage("invalidate");
