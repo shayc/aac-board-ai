@@ -1,3 +1,4 @@
+import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -17,6 +18,15 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
   const navigate = useNavigate();
   const { boardSets } = useBoardSets();
+  const sortedBoardSets = boardSets.toSorted((a, b) =>
+    a.name.localeCompare(b.name),
+  );
+
+  function handleBoardSetChange(boardSet: BoardSetRecord) {
+    if (boardSet.rootBoardId) {
+      void navigate(`/sets/${boardSet.setId}/boards/${boardSet.rootBoardId}`);
+    }
+  }
 
   return (
     <AppBar position="static">
@@ -34,17 +44,11 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        {boardSets.length > 0 && (
+        {sortedBoardSets.length > 0 && (
           <BoardSetSelect
-            boardSets={boardSets}
+            boardSets={sortedBoardSets}
             boardSetId={setId}
-            onChange={(boardSet) => {
-              if (boardSet.rootBoardId) {
-                void navigate(
-                  `/sets/${boardSet.setId}/boards/${boardSet.rootBoardId}`,
-                );
-              }
-            }}
+            onChange={handleBoardSetChange}
           />
         )}
 
