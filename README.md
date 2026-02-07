@@ -6,7 +6,7 @@
 
 **AAC Board AI** is a communication tool for non-verbal users. It uses **Built-in AI** to proofread, rewrite, and translate messages on-device, keeping processing local for stronger privacy and offline use.
 
-![Screenshot of AAC Board AI](screenshot.png)
+![Screenshot of AAC Board AI](screenshot.jpg)
 
 Try the live demo at [aacboard.app](https://aacboard.app). _(requires
 Chrome with [Built‑in AI flags enabled](#prerequisites))_.
