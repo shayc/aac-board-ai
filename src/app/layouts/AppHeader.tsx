@@ -1,5 +1,5 @@
-import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
+import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -18,8 +18,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const { setId = "" } = useParams<{ setId: string; boardId: string }>();
   const navigate = useNavigate();
   const { boardSets } = useBoardSets();
+
   const sortedBoardSets = boardSets.toSorted((a, b) =>
-    a.name.localeCompare(b.name),
+    a.name.localeCompare(b.name, undefined, { numeric: true }),
   );
 
   function handleBoardSetChange(boardSet: BoardSetRecord) {
