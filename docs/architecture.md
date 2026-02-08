@@ -74,30 +74,23 @@ The `AIProvider` context manages shared context across AI sessions, allowing you
 
 ## Design Principles
 
-### 1. Feature-Sliced Design
+### Feature-Sliced Design
 
 Each feature (e.g. `features/board/`) is a self-contained module with its own UI, logic, data access, and types.  
 This modular structure supports scalability and independent development.
 
-### 2. Path Aliases
+---
 
-Simplified imports for clean structure:
+## Project Structure
 
-```typescript
-import { useBoard } from "@features/board/hooks/useBoard";
-import { useTranslator } from "@shared/hooks/ai/useTranslator";
-```
+### Path Aliases
 
-Aliases defined in `tsconfig.app.json` and `vite.config.ts`:
+Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.ts`:
 
 - `@app` → `src/app`
 - `@features` → `src/features`
 - `@shared` → `src/shared`
 - `@pages` → `src/pages`
-
----
-
-## Project Structure
 
 ```
 src/
