@@ -1,4 +1,4 @@
-import { BoardPlayer } from "@features/board/components/BoardPlayer/BoardPlayer";
+import { BoardView } from "@features/board/components/BoardView/BoardView";
 import { useBoard } from "@features/board/hooks/useBoard";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useParams } from "react-router";
@@ -16,7 +16,7 @@ function BoardPage() {
     return <LoadingIndicator />;
   }
 
-  return <BoardPlayer board={board} />;
+  return <BoardView board={board} />;
 }
 
 export default BoardPage;

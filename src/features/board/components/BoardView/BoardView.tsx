@@ -11,11 +11,11 @@ import type { Board, BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 
-export interface BoardPlayerProps {
+export interface BoardViewProps {
   board: Board;
 }
 
-export function BoardPlayer({ board }: BoardPlayerProps) {
+export function BoardView({ board }: BoardViewProps) {
   const message = useMessage();
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
@@ -50,7 +50,7 @@ export function BoardPlayer({ board }: BoardPlayerProps) {
           onHomeClick={navigation.goHome}
         />
 
-        {suggestions.isEnabled && (
+        {suggestions.isAvailable && (
           <SuggestionBar
             suggestions={suggestions.items}
             tone={suggestions.tone}
