@@ -1,3 +1,4 @@
+import type { BoardRouteParams } from "@app/AppRoutes";
 import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
@@ -7,8 +8,7 @@ import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { useNavigate, useParams } from "react-router";
-import type { BoardRouteParams } from "@app/AppRoutes";
+import { generatePath, useNavigate, useParams } from "react-router";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -26,7 +26,12 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
 
   function handleBoardSetChange(boardSet: BoardSetRecord) {
     if (boardSet.rootBoardId) {
-      void navigate(`/sets/${boardSet.setId}/boards/${boardSet.rootBoardId}`);
+      void navigate(
+        generatePath("/sets/:setId/boards/:boardId", {
+          setId: boardSet.setId,
+          boardId: boardSet.rootBoardId,
+        }),
+      );
     }
   }
 

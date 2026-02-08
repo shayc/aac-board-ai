@@ -4,7 +4,7 @@ import {
 } from "@features/board/store/board-sets-store";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { generatePath, useNavigate } from "react-router";
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -33,9 +33,7 @@ export function HomePage() {
       }
 
       void navigate(
-        `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(
-          boardId,
-        )}`,
+        generatePath("/sets/:setId/boards/:boardId", { setId, boardId }),
         { replace: true },
       );
     }

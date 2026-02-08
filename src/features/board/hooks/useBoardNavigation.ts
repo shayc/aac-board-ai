@@ -1,6 +1,11 @@
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
-import { useLocation, useNavigate, useParams } from "react-router";
 import type { BoardRouteParams } from "@app/AppRoutes";
+import { useBoardSets } from "@features/board/hooks/useBoardSets";
+import {
+  generatePath,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router";
 
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
@@ -46,9 +51,12 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    void navigate(`/sets/${setId}/boards/${id}`, {
-      state: { backStack: [...backStack, boardId] },
-    });
+    void navigate(
+      generatePath("/sets/:setId/boards/:boardId", { setId, boardId: id }),
+      {
+        state: { backStack: [...backStack, boardId] },
+      },
+    );
   }
 
   function goBack() {
@@ -72,10 +80,16 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    void navigate(`/sets/${setId}/boards/${rootBoardId}`, {
-      state: { backStack: [] },
-      replace: true,
-    });
+    void navigate(
+      generatePath("/sets/:setId/boards/:boardId", {
+        setId,
+        boardId: rootBoardId,
+      }),
+      {
+        state: { backStack: [] },
+        replace: true,
+      },
+    );
   }
 
   return {
