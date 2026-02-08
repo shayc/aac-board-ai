@@ -93,7 +93,6 @@ export function useMessage(): UseMessageReturn {
       }
     } catch (error) {
       console.error("Error playing message:", error);
-      setIsPlaying(false);
     } finally {
       setIsPlaying(false);
     }

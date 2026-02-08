@@ -7,10 +7,32 @@ export const PITCH_MAX = 2;
 export const VOLUME_MIN = 0;
 export const VOLUME_MAX = 1;
 
+export interface UseSpeechSynthesisReturn {
+  langs: string[];
+  voicesByLang: Partial<Record<string, SpeechSynthesisVoice[]>>;
+  voicesByLocale: Partial<Record<string, SpeechSynthesisVoice[]>>;
+  voices: SpeechSynthesisVoice[];
+  voiceURI: string;
+  setVoiceURI: (voiceURI: string) => void;
+  pitch: number;
+  setPitch: (pitch: number) => void;
+  rate: number;
+  setRate: (rate: number) => void;
+  volume: number;
+  setVolume: (volume: number) => void;
+  speak: (text: string) => Promise<void>;
+  cancel: () => void;
+  pause: () => void;
+  resume: () => void;
+  isSpeechSupported: boolean;
+  isSpeaking: boolean;
+  isPaused: boolean;
+}
+
 const isSpeechSupported = "speechSynthesis" in window;
 const synth = window.speechSynthesis;
 
-export function useSpeechSynthesis() {
+export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
   const [rate, setRate] = useState(1);

@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-export function useAudio() {
+export interface UseAudioReturn {
+  play: (url: string) => Promise<void>;
+  isPlaying: boolean;
+  isPaused: boolean;
+}
+
+export function useAudio(): UseAudioReturn {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
