@@ -21,6 +21,16 @@ export function BoardView({ board }: BoardViewProps) {
   const navigation = useBoardNavigation();
   const { activateButton } = useButtonActivation({ message, navigation });
 
+  function applySuggestion(suggestion: string) {
+    const words = suggestion.split(/\s+/).filter(Boolean);
+    const parts = words.map((word) => ({
+      id: crypto.randomUUID(),
+      label: word,
+    }));
+
+    message.setParts(parts);
+  }
+
   return (
     <Stack
       height="100%"
@@ -55,14 +65,7 @@ export function BoardView({ board }: BoardViewProps) {
             suggestions={suggestions.items}
             tone={suggestions.tone}
             onToneChange={suggestions.setTone}
-            onSuggestionClick={(suggestion) => {
-              const words = suggestion.split(/\s+/).filter(Boolean);
-              const parts = words.map((word) => ({
-                id: crypto.randomUUID(),
-                label: word,
-              }));
-              message.setParts(parts);
-            }}
+            onSuggestionClick={applySuggestion}
           />
         )}
       </Stack>
