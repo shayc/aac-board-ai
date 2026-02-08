@@ -1,10 +1,11 @@
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import { ErrorFallback } from "@shared/components/ErrorFallback";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
-import { Navigate, useParams } from "react-router";
+import { generatePath, Navigate, useParams } from "react-router";
+import type { BoardRouteParams } from "@app/AppRoutes";
 
 export function BoardSetRootRedirect() {
-  const { setId } = useParams();
+  const { setId } = useParams<BoardRouteParams>();
   const { boardSets, isLoading } = useBoardSets();
 
   if (!setId) {
@@ -33,6 +34,12 @@ export function BoardSetRootRedirect() {
   }
 
   return (
-    <Navigate to={`/sets/${setId}/boards/${boardSet.rootBoardId}`} replace />
+    <Navigate
+      to={generatePath("/sets/:setId/boards/:boardId", {
+        setId,
+        boardId: boardSet.rootBoardId,
+      })}
+      replace
+    />
   );
 }

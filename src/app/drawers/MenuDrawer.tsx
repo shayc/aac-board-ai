@@ -15,7 +15,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { openFiles } from "@shared/utils/files";
-import { Link as RouterLink, useNavigate } from "react-router";
+import { generatePath, Link as RouterLink, useNavigate } from "react-router";
 
 export interface MenuDrawerProps {
   open: boolean;
@@ -53,7 +53,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       if (results.length === 1) {
         const { setId, boardId } = results[0];
         void navigate(
-          `/sets/${encodeURIComponent(setId)}/boards/${encodeURIComponent(boardId)}`,
+          generatePath("/sets/:setId/boards/:boardId", { setId, boardId }),
         );
       }
     } catch {
