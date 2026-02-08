@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 export interface UseSuggestionsReturn {
   items: string[];
-  isEnabled: boolean;
+  isAvailable: boolean;
   tone: RewriterTone;
   setTone: (tone: RewriterTone) => void;
 }
@@ -14,7 +14,7 @@ export interface UseSuggestionsReturn {
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const { sharedContext } = useAI();
   const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
-  const isSuggestionsEnabled = isProofreaderSupported || isRewriterSupported;
+  const isSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
 
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
@@ -84,7 +84,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   return {
     items: suggestions,
-    isEnabled: isSuggestionsEnabled,
+    isAvailable: isSuggestionsAvailable,
     tone,
     setTone,
   };
