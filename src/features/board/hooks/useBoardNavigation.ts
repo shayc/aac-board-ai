@@ -1,14 +1,7 @@
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
-
-interface NavigationState {
-  history: string[];
-  index: number;
-}
+import { useLocation, useNavigate, useParams } from "react-router";
 
 export interface UseBoardNavigationReturn {
-  history: string[];
   canGoBack: boolean;
   canGoHome: boolean;
   goToBoard: (id: string) => void;
@@ -16,20 +9,31 @@ export interface UseBoardNavigationReturn {
   goHome: () => void;
 }
 
+function getBackStack(state: unknown): string[] {
+  if (
+    state !== null &&
+    typeof state === "object" &&
+    "backStack" in state &&
+    Array.isArray(state.backStack)
+  ) {
+    return state.backStack as string[];
+  }
+
+  return [];
+}
+
 export function useBoardNavigation(): UseBoardNavigationReturn {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { setId, boardId } = useParams();
   const { boardSets } = useBoardSets();
   const rootBoardId =
     boardSets.find((s) => s.setId === setId)?.rootBoardId ?? "";
 
-  const [navState, setNavState] = useState<NavigationState>({
-    history: boardId ? [boardId] : [],
-    index: 0,
-  });
+  const backStack = getBackStack(location.state);
 
-  const canGoBack = navState.index > 0;
+  const canGoBack = backStack.length > 0;
   const canGoHome = rootBoardId !== "";
 
   function goToBoard(id: string) {
@@ -37,20 +41,13 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    if (!id || id === navState.history[navState.index]) {
+    if (!id || id === boardId) {
       return;
     }
 
-    setNavState((prev) => {
-      const next = prev.history.slice(0, prev.index + 1).concat(id);
-      return {
-        ...prev,
-        history: next,
-        index: next.length - 1,
-      };
+    void navigate(`/sets/${setId}/boards/${id}`, {
+      state: { backStack: [...backStack, boardId] },
     });
-
-    void navigate(`/sets/${setId}/boards/${id}`);
   }
 
   function goBack() {
@@ -62,15 +59,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    const newIndex = navState.index - 1;
-    const id = navState.history[newIndex];
-
-    setNavState((prev) => ({
-      ...prev,
-      index: newIndex,
-    }));
-
-    void navigate(`/sets/${setId}/boards/${id}`);
+    void navigate(-1);
   }
 
   function goHome() {
@@ -82,17 +71,13 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    setNavState((prev) => ({
-      ...prev,
-      history: [rootBoardId],
-      index: 0,
-    }));
-
-    void navigate(`/sets/${setId}/boards/${rootBoardId}`);
+    void navigate(`/sets/${setId}/boards/${rootBoardId}`, {
+      state: { backStack: [] },
+      replace: true,
+    });
   }
 
   return {
-    history: navState.history,
     canGoBack,
     canGoHome,
     goToBoard,
