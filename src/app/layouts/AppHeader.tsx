@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { useNavigate, useParams } from "react-router";
+import type { BoardRouteParams } from "@app/AppRoutes";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -15,7 +16,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { setId = "" } = useParams<{ setId: string; boardId: string }>();
+  const { setId = "" } = useParams<BoardRouteParams>();
   const navigate = useNavigate();
   const { boardSets } = useBoardSets();
 

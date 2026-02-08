@@ -7,6 +7,12 @@ import { lazy, type ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { BrowserRouter, Route, Routes } from "react-router";
 
+export interface BoardRouteParams {
+  [key: string]: string;
+  setId: string;
+  boardId: string;
+}
+
 const BoardPage = lazy(() => import("@pages/BoardPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 

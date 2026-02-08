@@ -1,5 +1,6 @@
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import { useLocation, useNavigate, useParams } from "react-router";
+import type { BoardRouteParams } from "@app/AppRoutes";
 
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
@@ -26,7 +27,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { setId, boardId } = useParams();
+  const { setId, boardId } = useParams<BoardRouteParams>();
   const { boardSets } = useBoardSets();
   const rootBoardId =
     boardSets.find((s) => s.setId === setId)?.rootBoardId ?? "";
