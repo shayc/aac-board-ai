@@ -64,16 +64,16 @@ export function useAudio(): UseAudioReturn {
         resolve();
       };
 
-      audio.onerror = (e) => {
+      audio.onerror = (error) => {
         setIsPlaying(false);
         rejectRef.current = null;
-        reject(new Error(`Audio error: ${(e as Event).type}`));
+        reject(new Error(`Audio error: ${(error as Event).type}`));
       };
 
-      audio.play().catch((err: unknown) => {
+      audio.play().catch((error: unknown) => {
         setIsPlaying(false);
         rejectRef.current = null;
-        reject(err instanceof Error ? err : new Error(String(err)));
+        reject(error instanceof Error ? error : new Error(String(error)));
       });
     });
   };
