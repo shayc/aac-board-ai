@@ -70,6 +70,7 @@ export function useMessage(): UseMessageReturn {
   function stop() {
     try {
       speech.cancel();
+      audio.stop();
     } catch (error) {
       console.error("Error stopping message:", error);
     } finally {
