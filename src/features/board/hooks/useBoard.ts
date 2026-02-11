@@ -13,7 +13,7 @@ export interface UseBoardReturn {
 
 export function useBoard({ setId, boardId }: UseBoardOptions): UseBoardReturn {
   const { board } = useLoadBoard({ setId, boardId });
-  const { translatedBoard } = useBoardTranslation({ setId, boardId, board });
+  const { translatedBoard } = useBoardTranslation({ setId, board });
 
   return {
     board: translatedBoard,

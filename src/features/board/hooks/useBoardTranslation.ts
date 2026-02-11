@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 
 export interface UseBoardTranslationOptions {
   setId: string;
-  boardId: string;
   board: Board | null;
 }
 
@@ -16,7 +15,6 @@ export interface UseBoardTranslationReturn {
 
 export function useBoardTranslation({
   setId,
-  boardId,
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { languageCode } = useLanguage();
@@ -70,7 +68,7 @@ export function useBoardTranslation({
         return;
       }
 
-      void persistStrings(setId, boardId, languageCode, translatedStrings);
+      void persistStrings(setId, board.id, languageCode, translatedStrings);
 
       setTranslatedBoard(applyStrings(board, translatedStrings));
     };
@@ -80,7 +78,7 @@ export function useBoardTranslation({
     return () => {
       cancelled = true;
     };
-  }, [createTranslator, languageCode, board, setId, boardId]);
+  }, [createTranslator, languageCode, board, setId]);
 
   return {
     translatedBoard,
