@@ -1,9 +1,12 @@
-import type { Board } from "@features/board/types";
+import { updateBoardStrings, withBoardsDB } from "@features/board/db/boards-db";
+import type { Board, BoardButton } from "@features/board/types";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect, useState } from "react";
 
 export interface UseBoardTranslationOptions {
+  setId: string;
+  boardId: string;
   board: Board | null;
 }
 
@@ -12,6 +15,8 @@ export interface UseBoardTranslationReturn {
 }
 
 export function useBoardTranslation({
+  setId,
+  boardId,
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { languageCode } = useLanguage();
@@ -20,6 +25,8 @@ export function useBoardTranslation({
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 
   useEffect(() => {
+    let cancelled = false;
+
     const translateBoard = async () => {
       if (!board) {
         return;
@@ -35,37 +42,113 @@ export function useBoardTranslation({
         return;
       }
 
+      const existingStrings = board.strings?.[languageCode];
+
+      if (existingStrings) {
+        setTranslatedBoard(applyStrings(board, existingStrings));
+        return;
+      }
+
       const translator = await createTranslator({
         sourceLanguage: boardLocale,
         targetLanguage: languageCode,
       });
 
-      const translatedName = await translator?.translate(board.name ?? "");
-      const translatedButtons = await Promise.all(
-        board.buttons.map(async (button) => {
-          const label = button.label
-            ? await translator?.translate(button.label)
-            : button.label;
+      if (cancelled) {
+        return;
+      }
 
-          const vocalization = button.vocalization
-            ? await translator?.translate(button.vocalization)
-            : button.vocalization;
+      if (!translator) {
+        setTranslatedBoard(board);
+        return;
+      }
 
-          return { ...button, label, vocalization };
-        }),
-      );
+      const keys = collectTranslatableStrings(board);
+      const translatedStrings = await translateStrings(keys, translator);
 
-      setTranslatedBoard({
-        ...board,
-        name: translatedName,
-        buttons: translatedButtons,
-      });
+      if (cancelled) {
+        return;
+      }
+
+      void persistStrings(setId, boardId, languageCode, translatedStrings);
+
+      setTranslatedBoard(applyStrings(board, translatedStrings));
     };
 
     void translateBoard();
-  }, [createTranslator, languageCode, board]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [createTranslator, languageCode, board, setId, boardId]);
 
   return {
     translatedBoard,
   };
+}
+
+function collectTranslatableStrings(board: Board): Set<string> {
+  const keys = new Set<string>();
+
+  if (board.name) {
+    keys.add(board.name);
+  }
+
+  for (const button of board.buttons) {
+    if (button.label) {
+      keys.add(button.label);
+    }
+    if (button.vocalization) {
+      keys.add(button.vocalization);
+    }
+  }
+
+  return keys;
+}
+
+async function translateStrings(
+  keys: Set<string>,
+  translator: Translator,
+): Promise<Record<string, string>> {
+  const entries = await Promise.all(
+    Array.from(keys).map(async (key) => {
+      const translated = await translator.translate(key);
+      return [key, translated] as const;
+    }),
+  );
+
+  return Object.fromEntries(entries);
+}
+
+function applyStrings(board: Board, strings: Record<string, string>): Board {
+  const resolvedButtons: BoardButton[] = board.buttons.map((button) => ({
+    ...button,
+    label: button.label
+      ? (strings[button.label] ?? button.label)
+      : button.label,
+    vocalization: button.vocalization
+      ? (strings[button.vocalization] ?? button.vocalization)
+      : button.vocalization,
+  }));
+
+  return {
+    ...board,
+    name: board.name ? (strings[board.name] ?? board.name) : board.name,
+    buttons: resolvedButtons,
+  };
+}
+
+async function persistStrings(
+  setId: string,
+  boardId: string,
+  locale: string,
+  strings: Record<string, string>,
+): Promise<void> {
+  try {
+    await withBoardsDB(async (db) => {
+      await updateBoardStrings(db, setId, boardId, locale, strings);
+    });
+  } catch (err) {
+    console.warn("Failed to persist translated strings:", err);
+  }
 }
