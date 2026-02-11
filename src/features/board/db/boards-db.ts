@@ -282,6 +282,28 @@ export async function putAssets(
   }
 }
 
+export async function updateBoardStrings(
+  db: BoardsDB,
+  setId: string,
+  boardId: string,
+  locale: string,
+  localizedStrings: Record<string, string>,
+): Promise<void> {
+  validateId(setId, "setId");
+  const record = await db.get("boards", [setId, boardId]);
+
+  if (!record) {
+    throw new Error(`Board not found: ${boardId}`);
+  }
+
+  const updatedJson = {
+    ...record.json,
+    strings: { ...record.json.strings, [locale]: localizedStrings },
+  };
+
+  await db.put("boards", { ...record, json: updatedJson });
+}
+
 export async function getAssetBlob(
   db: BoardsDB,
   setId: string,
