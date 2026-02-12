@@ -1,5 +1,5 @@
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { getAICapabilities } from "@shared/hooks/ai/getAICapabilities";
+import { aiCapabilities } from "@shared/hooks/ai/ai-capabilities";
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
@@ -13,7 +13,7 @@ export interface UseSuggestionsReturn {
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const { sharedContext } = useAI();
-  const { isProofreaderSupported, isRewriterSupported } = getAICapabilities();
+  const { isProofreaderSupported, isRewriterSupported } = aiCapabilities;
   const isSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
 
   const { createProofreader } = useProofreader();

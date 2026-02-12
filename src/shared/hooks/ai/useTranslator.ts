@@ -1,10 +1,10 @@
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { normalizeLocaleCode } from "@shared/utils/language";
 import { useRef } from "react";
-import { getAICapabilities } from "./getAICapabilities";
+import { aiCapabilities } from "./ai-capabilities";
 
 export function useTranslator() {
-  const { isTranslatorSupported } = getAICapabilities();
+  const { isTranslatorSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const translatorRef = useRef<Translator | null>(null);
 

@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { getAICapabilities } from "./getAICapabilities";
+import { aiCapabilities } from "./ai-capabilities";
 
 export function useLanguageDetector() {
-  const { isLanguageDetectorSupported } = getAICapabilities();
+  const { isLanguageDetectorSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const detectorRef = useRef<LanguageDetector | null>(null);
 
