@@ -1,17 +1,6 @@
-export interface AICapabilities {
-  isLanguageModelSupported: boolean;
-  isTranslatorSupported: boolean;
-  isWriterSupported: boolean;
-  isRewriterSupported: boolean;
-  isLanguageDetectorSupported: boolean;
-  isProofreaderSupported: boolean;
-}
-
-export const aiCapabilities: AICapabilities = {
-  isLanguageModelSupported: "LanguageModel" in self,
-  isTranslatorSupported: "Translator" in self,
-  isWriterSupported: "Writer" in self,
-  isRewriterSupported: "Rewriter" in self,
-  isLanguageDetectorSupported: "LanguageDetector" in self,
-  isProofreaderSupported: "Proofreader" in self,
-};
+export const isLanguageModelSupported = "LanguageModel" in self;
+export const isTranslatorSupported = "Translator" in self;
+export const isWriterSupported = "Writer" in self;
+export const isRewriterSupported = "Rewriter" in self;
+export const isLanguageDetectorSupported = "LanguageDetector" in self;
+export const isProofreaderSupported = "Proofreader" in self;

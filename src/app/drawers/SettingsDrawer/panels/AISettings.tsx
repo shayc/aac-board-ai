@@ -3,11 +3,10 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { AICapabilitiesList } from "@shared/components/AICapabilitiesList";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { aiCapabilities } from "@shared/hooks/ai/ai-capabilities";
+import { isRewriterSupported } from "@shared/hooks/ai/ai-capabilities";
 
 export function AISettings() {
   const { sharedContext, setSharedContext } = useAI();
-  const { isRewriterSupported } = aiCapabilities;
 
   return (
     <Box sx={{ mb: 4 }}>

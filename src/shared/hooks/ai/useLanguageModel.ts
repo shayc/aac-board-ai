@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { aiCapabilities } from "./ai-capabilities";
+import { isLanguageModelSupported } from "./ai-capabilities";
 
 export function useLanguageModel(words: string[] | undefined) {
-  const { isLanguageModelSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const sessionRef = useRef<LanguageModel | null>(null);
 

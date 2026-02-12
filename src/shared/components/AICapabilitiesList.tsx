@@ -4,27 +4,24 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { aiCapabilities } from "@shared/hooks/ai/ai-capabilities";
+import {
+  isProofreaderSupported,
+  isRewriterSupported,
+  isTranslatorSupported,
+} from "@shared/hooks/ai/ai-capabilities";
 
 const AI_FEATURES = [
-  { key: "isProofreaderSupported" as const, label: "Proofreader" },
-  { key: "isRewriterSupported" as const, label: "Rewriter" },
-  { key: "isTranslatorSupported" as const, label: "Translator" },
-  // { key: "isLanguageDetectorSupported" as const, label: "Language Detector" },
-  // { key: "isLanguageModelSupported" as const, label: "Language Model" },
-  // { key: "isWriterSupported" as const, label: "Writer" },
+  { isSupported: isProofreaderSupported, label: "Proofreader" },
+  { isSupported: isRewriterSupported, label: "Rewriter" },
+  { isSupported: isTranslatorSupported, label: "Translator" },
 ];
 
 export function AICapabilitiesList() {
-  const capabilities = aiCapabilities;
-
   return (
     <List dense>
-      {AI_FEATURES.map(({ key, label }) => {
-        const isSupported = capabilities[key];
-
+      {AI_FEATURES.map(({ isSupported, label }) => {
         return (
-          <ListItem key={key}>
+          <ListItem key={label}>
             <ListItemIcon sx={{ minWidth: 36 }}>
               {isSupported ? (
                 <CheckCircleIcon color="success" fontSize="small" />
