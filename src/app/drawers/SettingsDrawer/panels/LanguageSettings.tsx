@@ -9,11 +9,10 @@ import Select from "@mui/material/Select";
 import Typography from "@mui/material/Typography";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { aiCapabilities } from "@shared/hooks/ai/ai-capabilities";
+import { isTranslatorSupported } from "@shared/hooks/ai/ai-capabilities";
 
 export function LanguageSettings() {
   const { languages, languageCode, setLanguageCode } = useLanguage();
-  const { isTranslatorSupported } = aiCapabilities;
   const { downloads } = useAI();
 
   const isDownloading = downloads.translator > 0 && downloads.translator < 1;

@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { aiCapabilities } from "./ai-capabilities";
+import { isProofreaderSupported } from "./ai-capabilities";
 
 export function useProofreader() {
-  const { isProofreaderSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const proofreaderRef = useRef<Proofreader | null>(null);
 
