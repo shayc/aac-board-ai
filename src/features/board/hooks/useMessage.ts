@@ -1,12 +1,4 @@
-import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
-import { useAudio } from "@shared/hooks/useAudio";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
-import { useState } from "react";
-
-interface Segment {
-  type: "text" | "sound";
-  data: string;
-}
 
 export interface MessagePart {
   id: string;
@@ -19,22 +11,16 @@ export interface MessagePart {
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
-  isPlaying: boolean;
   addPart: (part: MessagePart) => void;
   addSpace: () => void;
   setParts: (parts: MessagePart[]) => void;
+  setFromText: (text: string) => void;
   removeLastPart: () => void;
   updateLastPart: (part: MessagePart) => void;
   clear: () => void;
-  play: () => Promise<void>;
-  stop: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
-  const speech = useSpeech();
-  const audio = useAudio();
-
-  const [isPlaying, setIsPlaying] = useState(false);
   const [parts, setParts] = usePersistentState<MessagePart[]>("message", []);
   const text = parts.map((part) => part.label).join(" ");
 
@@ -67,88 +53,26 @@ export function useMessage(): UseMessageReturn {
       label: "",
     });
   }
-  function stop() {
-    try {
-      speech.cancel();
-      audio.stop();
-    } catch (error) {
-      console.error("Error stopping message:", error);
-    } finally {
-      setIsPlaying(false);
-    }
-  }
 
-  async function play() {
-    try {
-      setIsPlaying(true);
-      const segments = convertPartsToSegments(parts);
+  function setFromText(text: string) {
+    const words = text.split(/\s+/).filter(Boolean);
+    const parts = words.map((word) => ({
+      id: crypto.randomUUID(),
+      label: word,
+    }));
 
-      for (const seg of segments) {
-        if (seg.type === "sound") {
-          await audio.play(seg.data);
-        }
-
-        if (seg.type === "text") {
-          await speech.speak(seg.data);
-        }
-      }
-    } catch (error) {
-      console.error("Error playing message:", error);
-    } finally {
-      setIsPlaying(false);
-    }
+    setParts(parts);
   }
 
   return {
     parts,
     text,
-    isPlaying,
     addPart,
     addSpace,
     setParts,
+    setFromText,
     removeLastPart,
     updateLastPart,
     clear,
-    play,
-    stop,
   };
-}
-
-function convertPartsToSegments(parts: MessagePart[]): Segment[] {
-  const segments = parts
-    .map((part) => {
-      if (part.soundSrc) {
-        return { type: "sound", data: part.soundSrc };
-      }
-
-      const text = part.vocalization ?? part.label;
-      if (text) {
-        return { type: "text", data: text };
-      }
-      return null;
-    })
-    .filter((segment): segment is Segment => segment !== null);
-
-  const mergedSegments = mergeTextSegments(segments);
-  return mergedSegments;
-}
-
-function mergeTextSegments(segments: Segment[]): Segment[] {
-  const mergedSegments: Segment[] = [];
-
-  for (const currentSegment of segments) {
-    const previousSegment = mergedSegments.at(-1);
-
-    if (previousSegment?.type === "text" && currentSegment.type === "text") {
-      previousSegment.data =
-        `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
-          /\s+/g,
-          " ",
-        );
-    } else {
-      mergedSegments.push({ ...currentSegment });
-    }
-  }
-
-  return mergedSegments;
 }

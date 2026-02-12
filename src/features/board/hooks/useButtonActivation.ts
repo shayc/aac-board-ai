@@ -3,19 +3,12 @@ import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
 import type { UseBoardNavigationReturn } from "./useBoardNavigation";
 import type { UseMessageReturn } from "./useMessage";
+import type { UseMessagePlaybackReturn } from "./useMessagePlayback";
 
 export interface UseButtonActivationOptions {
-  message: Pick<
-    UseMessageReturn,
-    | "parts"
-    | "addPart"
-    | "addSpace"
-    | "updateLastPart"
-    | "removeLastPart"
-    | "clear"
-    | "play"
-  >;
-  navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
+  message: UseMessageReturn;
+  playback: UseMessagePlaybackReturn;
+  navigation: UseBoardNavigationReturn;
 }
 
 export interface UseButtonActivationReturn {
@@ -24,6 +17,7 @@ export interface UseButtonActivationReturn {
 
 export function useButtonActivation({
   message,
+  playback,
   navigation,
 }: UseButtonActivationOptions): UseButtonActivationReturn {
   const speech = useSpeech();
@@ -33,7 +27,7 @@ export function useButtonActivation({
     const actionHandlers: Record<BoardAction, () => void | Promise<void>> = {
       ":space": message.addSpace,
       ":backspace": message.removeLastPart,
-      ":speak": message.play,
+      ":speak": playback.play,
       ":clear": message.clear,
       ":home": navigation.goHome,
     };

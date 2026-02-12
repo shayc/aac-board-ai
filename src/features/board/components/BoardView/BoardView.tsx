@@ -6,6 +6,7 @@ import { Tile } from "@features/board/components/Tile/Tile";
 import { useBoardNavigation } from "@features/board/hooks/useBoardNavigation";
 import { useButtonActivation } from "@features/board/hooks/useButtonActivation";
 import { useMessage } from "@features/board/hooks/useMessage";
+import { useMessagePlayback } from "@features/board/hooks/useMessagePlayback";
 import { useSuggestions } from "@features/board/hooks/useSuggestions";
 import type { Board, BoardButton } from "@features/board/types";
 import Box from "@mui/material/Box";
@@ -17,19 +18,15 @@ export interface BoardViewProps {
 
 export function BoardView({ board }: BoardViewProps) {
   const message = useMessage();
+  const playback = useMessagePlayback(message.parts);
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
-  const { activateButton } = useButtonActivation({ message, navigation });
 
-  function applySuggestion(suggestion: string) {
-    const words = suggestion.split(/\s+/).filter(Boolean);
-    const parts = words.map((word) => ({
-      id: crypto.randomUUID(),
-      label: word,
-    }));
-
-    message.setParts(parts);
-  }
+  const { activateButton } = useButtonActivation({
+    message,
+    playback,
+    navigation,
+  });
 
   return (
     <Stack
@@ -45,11 +42,11 @@ export function BoardView({ board }: BoardViewProps) {
     >
       <MessageBar
         message={message.parts}
-        isPlaying={message.isPlaying}
+        isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}
-        onPlayClick={() => void message.play()}
-        onStopClick={message.stop}
+        onPlayClick={() => void playback.play()}
+        onStopClick={playback.stop}
       />
 
       <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
@@ -65,7 +62,7 @@ export function BoardView({ board }: BoardViewProps) {
             suggestions={suggestions.items}
             tone={suggestions.tone}
             onToneChange={suggestions.setTone}
-            onSuggestionClick={applySuggestion}
+            onSuggestionClick={message.setFromText}
           />
         )}
       </Stack>
