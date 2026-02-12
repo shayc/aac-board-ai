@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { getAICapabilities } from "./getAICapabilities";
+import { aiCapabilities } from "./ai-capabilities";
 
 export function useWriter() {
-  const { isWriterSupported } = getAICapabilities();
+  const { isWriterSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const writerRef = useRef<Writer | null>(null);
 

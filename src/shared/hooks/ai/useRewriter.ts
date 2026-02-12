@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { getAICapabilities } from "./getAICapabilities";
+import { aiCapabilities } from "./ai-capabilities";
 
 export function useRewriter() {
-  const { isRewriterSupported } = getAICapabilities();
+  const { isRewriterSupported } = aiCapabilities;
   const { setDownload } = useAI();
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterCreateOptions | null>(null);
