@@ -1,4 +1,5 @@
 import { loadOBF, loadOBZ } from "@shared/open-board-format";
+import type { OBFBoard } from "@shared/open-board-format/schema";
 import { lookup } from "mrmime";
 import type { BoardsDB } from "./boards-db";
 import {
@@ -42,11 +43,14 @@ async function importOBZFile(
 ): Promise<ImportResult> {
   const { manifest, boards, files } = await loadOBZ(file);
 
+  const pathToId = new Map<string, string>();
   let rootBoardId = "";
+
   for (const [id, path] of Object.entries(manifest.paths.boards)) {
+    pathToId.set(path, id);
+
     if (path === manifest.root) {
       rootBoardId = id;
-      break;
     }
   }
 
@@ -65,7 +69,7 @@ async function importOBZFile(
     return {
       boardId: id,
       name: board.name ?? id,
-      json: board,
+      json: resolveLoadBoardPaths(board, pathToId),
     };
   });
 
@@ -88,6 +92,29 @@ async function importOBZFile(
   }
 
   return { setId, boardId: rootBoardId };
+}
+
+function resolveLoadBoardPaths(
+  board: OBFBoard,
+  pathToId: Map<string, string>,
+): OBFBoard {
+  const buttons = board.buttons.map((button) => {
+    if (!button.load_board?.path || button.load_board.id) {
+      return button;
+    }
+
+    const resolvedId = pathToId.get(button.load_board.path);
+    if (!resolvedId) {
+      return button;
+    }
+
+    return {
+      ...button,
+      load_board: { ...button.load_board, id: resolvedId },
+    };
+  });
+
+  return { ...board, buttons };
 }
 
 async function importOBFFile(
