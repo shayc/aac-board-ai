@@ -45,6 +45,18 @@ npm install && npm run dev
 
 Open http://localhost:5173
 
+## Usage
+
+### Loading a Board via URL
+
+You can load a board directly by passing an OBF or OBZ file URL as the `board` search parameter:
+
+```
+https://aacboard.app/?board=https://example.com/board.obz
+```
+
+The app will fetch, import, and navigate to the board automatically.
+
 ## Development
 
 ```bash
