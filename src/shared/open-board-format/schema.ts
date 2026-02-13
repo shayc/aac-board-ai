@@ -24,6 +24,15 @@ const OBFOptionalEmailSchema = z
   .transform((val) => (val === "" ? undefined : val))
   .optional();
 
+/** Optional ID that treats empty strings as undefined. */
+const OBFOptionalIDSchema = z
+  .union([z.string(), z.number()])
+  .transform((val) => {
+    const str = String(val);
+    return str === "" ? undefined : str;
+  })
+  .optional();
+
 /** Unique identifier as a string. Must be a non-empty string or number (coerced to string). */
 export const OBFIDSchema = z
   .union([z.string(), z.number()])
@@ -171,7 +180,7 @@ export type OBFSound = z.infer<typeof OBFSoundSchema>;
  */
 export const OBFLoadBoardSchema = z.object({
   /** Unique identifier of the board to load. */
-  id: OBFIDSchema.optional(),
+  id: OBFOptionalIDSchema,
   /** Name of the board to load. */
   name: z.string().optional(),
   /** Data URL to fetch the board programmatically. */
@@ -195,9 +204,9 @@ export const OBFButtonSchema = z.object({
   /** Alternative text for vocalization when the button is activated. */
   vocalization: z.string().optional(),
   /** Identifier of the image associated with the button. */
-  image_id: OBFIDSchema.optional(),
+  image_id: OBFOptionalIDSchema,
   /** Identifier of the sound associated with the button. */
-  sound_id: OBFIDSchema.optional(),
+  sound_id: OBFOptionalIDSchema,
   /** Action associated with the button. */
   action: OBFButtonActionSchema.optional(),
   /** List of multiple actions for the button, executed in order. */
