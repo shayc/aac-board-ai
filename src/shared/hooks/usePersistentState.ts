@@ -1,4 +1,4 @@
-import { type Dispatch, type SetStateAction, useState, useEffect } from "react";
+import { type Dispatch, type SetStateAction, useEffect, useState } from "react";
 
 export type UsePersistentStateReturn<T> = readonly [
   T,
@@ -10,8 +10,12 @@ export function usePersistentState<T>(
   initial: T,
 ): UsePersistentStateReturn<T> {
   const [value, setValue] = useState<T>(() => {
-    const stored = localStorage.getItem(key);
-    return stored ? (JSON.parse(stored) as T) : initial;
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? (JSON.parse(stored) as T) : initial;
+    } catch {
+      return initial;
+    }
   });
 
   useEffect(() => {
