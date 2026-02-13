@@ -15,14 +15,14 @@ import { z } from "zod";
 /** Optional URL that treats empty strings as undefined. */
 const OBFOptionalUrlSchema = z
   .union([z.url(), z.literal("")])
-  .optional()
-  .transform((val) => (val === "" ? undefined : val));
+  .transform((val) => (val === "" ? undefined : val))
+  .optional();
 
 /** Optional email that treats empty strings as undefined. */
 const OBFOptionalEmailSchema = z
   .union([z.email(), z.literal("")])
-  .optional()
-  .transform((val) => (val === "" ? undefined : val));
+  .transform((val) => (val === "" ? undefined : val))
+  .optional();
 
 /** Unique identifier as a string. Must be a non-empty string or number (coerced to string). */
 export const OBFIDSchema = z
