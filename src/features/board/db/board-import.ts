@@ -1,4 +1,5 @@
 import { loadOBF, loadOBZ } from "@shared/open-board-format";
+import type { OBFBoard } from "@shared/open-board-format/schema";
 import { lookup } from "mrmime";
 import type { BoardsDB } from "./boards-db";
 import {
@@ -61,13 +62,15 @@ async function importOBZFile(
     boardCount: boards.size,
   });
 
-  const boardItems = Array.from(boards.entries()).map(([id, board]) => {
-    return {
-      boardId: id,
-      name: board.name ?? id,
-      json: board,
-    };
-  });
+  const pathToId = new Map(
+    Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
+  );
+
+  const boardItems = Array.from(boards.entries()).map(([id, board]) => ({
+    boardId: id,
+    name: board.name ?? id,
+    json: resolveLoadBoardPaths(board, pathToId),
+  }));
 
   await putBoards(db, setId, boardItems);
 
@@ -88,6 +91,29 @@ async function importOBZFile(
   }
 
   return { setId, boardId: rootBoardId };
+}
+
+function resolveLoadBoardPaths(
+  board: OBFBoard,
+  pathToId: Map<string, string>,
+): OBFBoard {
+  const buttons = board.buttons.map((button) => {
+    if (!button.load_board?.path || button.load_board.id) {
+      return button;
+    }
+
+    const resolvedId = pathToId.get(button.load_board.path);
+    if (!resolvedId) {
+      return button;
+    }
+
+    return {
+      ...button,
+      load_board: { ...button.load_board, id: resolvedId },
+    };
+  });
+
+  return { ...board, buttons };
 }
 
 async function importOBFFile(
