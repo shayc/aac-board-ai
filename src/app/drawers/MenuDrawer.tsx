@@ -1,4 +1,4 @@
-import { importBoardFiles } from "@features/board/store/board-sets-store";
+import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -13,9 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
-import { openFiles } from "@shared/utils/files";
-import { generatePath, Link as RouterLink, useNavigate } from "react-router";
+import { Link as RouterLink } from "react-router";
 
 export interface MenuDrawerProps {
   open: boolean;
@@ -23,47 +21,11 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const navigate = useNavigate();
-  const { showSnackbar } = useSnackbar();
+  const { importBoardFiles } = useImportBoardFiles();
 
   async function handleImportBoard() {
-    const files = await openFiles();
-
-    if (files.length === 0) {
-      return;
-    }
-
     onClose();
-
-    const isPlural = files.length > 1;
-    showSnackbar({
-      message: isPlural ? "Importing boards..." : "Importing board...",
-    });
-
-    try {
-      const results = await importBoardFiles(files);
-
-      showSnackbar({
-        message: isPlural
-          ? "Boards imported successfully"
-          : "Board imported successfully",
-        severity: "success",
-      });
-
-      if (results.length === 1) {
-        const { setId, boardId } = results[0];
-        void navigate(
-          generatePath("/sets/:setId/boards/:boardId", { setId, boardId }),
-        );
-      }
-    } catch {
-      showSnackbar({
-        message: isPlural
-          ? "Failed to import boards"
-          : "Failed to import board",
-        severity: "error",
-      });
-    }
+    await importBoardFiles();
   }
 
   const menuItems = [
