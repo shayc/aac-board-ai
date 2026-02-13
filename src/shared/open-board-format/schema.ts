@@ -12,6 +12,18 @@
 
 import { z } from "zod";
 
+/** Optional URL that treats empty strings as undefined. */
+const OBFOptionalUrlSchema = z
+  .union([z.url(), z.literal("")])
+  .optional()
+  .transform((val) => (val === "" ? undefined : val));
+
+/** Optional email that treats empty strings as undefined. */
+const OBFOptionalEmailSchema = z
+  .union([z.email(), z.literal("")])
+  .optional()
+  .transform((val) => (val === "" ? undefined : val));
+
 /** Unique identifier as a string. Must be a non-empty string or number (coerced to string). */
 export const OBFIDSchema = z
   .union([z.string(), z.number()])
@@ -76,15 +88,15 @@ export const OBFLicenseSchema = z.object({
   /** Type of the license, e.g., 'CC-BY-SA'. */
   type: z.string(),
   /** URL to the license terms. */
-  copyright_notice_url: z.url().optional(),
+  copyright_notice_url: OBFOptionalUrlSchema,
   /** Source URL of the resource. */
-  source_url: z.url().optional(),
+  source_url: OBFOptionalUrlSchema,
   /** Name of the author. */
   author_name: z.string().optional(),
   /** URL of the author's webpage. */
-  author_url: z.url().optional(),
+  author_url: OBFOptionalUrlSchema,
   /** Email address of the author. */
-  author_email: z.email().optional(),
+  author_email: OBFOptionalEmailSchema,
 });
 
 export type OBFLicense = z.infer<typeof OBFLicenseSchema>;
@@ -105,9 +117,9 @@ export const OBFMediaSchema = z.object({
   /** Path to the media file within an .obz package. */
   path: z.string().optional(),
   /** Data URL to fetch the media programmatically. */
-  data_url: z.url().optional(),
+  data_url: OBFOptionalUrlSchema,
   /** URL to the media resource. */
-  url: z.url().optional(),
+  url: OBFOptionalUrlSchema,
   /** MIME type of the media, e.g., 'image/png', 'audio/mpeg'. */
   content_type: z.string().optional(),
   /** Licensing information for the media. */
@@ -163,9 +175,9 @@ export const OBFLoadBoardSchema = z.object({
   /** Name of the board to load. */
   name: z.string().optional(),
   /** Data URL to fetch the board programmatically. */
-  data_url: z.url().optional(),
+  data_url: OBFOptionalUrlSchema,
   /** URL to access the board via a web browser. */
-  url: z.url().optional(),
+  url: OBFOptionalUrlSchema,
   /** Path to the board within an .obz package. */
   path: z.string().optional(),
 });
@@ -244,7 +256,7 @@ export const OBFBoardSchema = z.object({
   /** List of buttons on the board. */
   buttons: z.array(OBFButtonSchema),
   /** URL where the board can be accessed or downloaded. */
-  url: z.url().optional(),
+  url: OBFOptionalUrlSchema,
   /** Name of the board. */
   name: z.string().optional(),
   /** Description of the board in HTML format. */
