@@ -1,48 +1,59 @@
 import {
   fetchBoardSets,
-  importBoardFiles,
+  importBoardFromUrl,
 } from "@features/board/store/board-sets-store";
+import { ErrorFallback } from "@shared/components/ErrorFallback";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
-import { useEffect } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { generatePath, useNavigate, useSearchParams } from "react-router";
+
+const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
+
+async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
+  if (boardUrl) {
+    const { setId, boardId } = await importBoardFromUrl(boardUrl);
+    return generatePath("/sets/:setId/boards/:boardId", { setId, boardId });
+  }
+
+  const existingSets = await fetchBoardSets();
+  if (existingSets.length > 0) {
+    return `/sets/${encodeURIComponent(existingSets[0].setId)}`;
+  }
+
+  const { setId, boardId } = await importBoardFromUrl(DEFAULT_BOARD_URL);
+  return generatePath("/sets/:setId/boards/:boardId", { setId, boardId });
+}
 
 export function HomePage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [error, setError] = useState<string | null>(null);
+
+  const boardUrl = searchParams.get("board");
 
   useEffect(() => {
     let cancelled = false;
 
-    async function loadDefaultBoardIfNeeded() {
-      const existingSets = await fetchBoardSets();
-
-      if (existingSets.length > 0) {
-        void navigate(`/sets/${encodeURIComponent(existingSets[0].setId)}`);
-        return;
-      }
-
-      const obzUrl = `${import.meta.env.BASE_URL}quick-core-24.obz`;
-      const response = await fetch(obzUrl, { cache: "no-store" });
-      const blob = await response.blob();
-      const file = new File([blob], "quick-core-24.obz", {
-        type: blob.type ?? "application/octet-stream",
+    resolveInitialBoard(boardUrl)
+      .then((path) => {
+        if (!cancelled) {
+          void navigate(path, { replace: true });
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : String(err));
+        }
       });
 
-      const [{ setId, boardId }] = await importBoardFiles(file);
-      if (cancelled) {
-        return;
-      }
-
-      void navigate(
-        generatePath("/sets/:setId/boards/:boardId", { setId, boardId }),
-        { replace: true },
-      );
-    }
-
-    loadDefaultBoardIfNeeded().catch(console.error);
     return () => {
       cancelled = true;
     };
-  }, [navigate]);
+  }, [navigate, boardUrl]);
+
+  if (error) {
+    return <ErrorFallback title="Failed to load board" message={error} />;
+  }
 
   return <LoadingIndicator message="Loading board..." />;
 }
