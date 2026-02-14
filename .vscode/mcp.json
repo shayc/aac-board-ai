@@ -9,6 +9,10 @@
       "type": "stdio",
       "command": "npx",
       "args": ["@react-aria/mcp@latest"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/"
     }
   },
   "inputs": []
