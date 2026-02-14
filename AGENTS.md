@@ -33,7 +33,9 @@
 - Utilities: Use `vitest-browser-react` for component testing and interactions.
 - Stability: Write deterministic tests; avoid timing-based sleeps.
 - Mocking: Zero-mocking policy for internal code. Do not mock child components, custom hooks, contexts, or providers. Render the full tree to test real integration.
-- Scope: No render-only tests; each test must prove a behavior (interaction → observable result).
+- Scope:
+  - **Interactive Components:** Must prove a behavior (interaction → observable result).
+  - **Presentational Components:** Use render-only assertions to verify accessibility, content presence, and visibility.
 
 ## Code Style Guidelines
 
