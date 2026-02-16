@@ -8,8 +8,7 @@
 
 ![Screenshot of AAC Board AI](screenshot.jpg)
 
-Try the live demo at [aacboard.app](https://aacboard.app). _(requires
-Chrome with [Built‑in AI flags enabled](#prerequisites))_.
+Try the live demo at [aacboard.app](https://aacboard.app) _(requires Chrome or Edge with [Built‑in AI flags](#prerequisites))_.
 
 ## Key Features
 
@@ -23,7 +22,9 @@ Chrome with [Built‑in AI flags enabled](#prerequisites))_.
 
 ## Prerequisites
 
-Requires **Chrome 138+** with Built‑in AI flags enabled.
+Requires **Chrome** or **Edge** with Built‑in AI flags enabled.
+
+### Chrome
 
 Enable the following flags and relaunch Chrome:
 
@@ -33,6 +34,14 @@ chrome://flags/#proofreader-api-for-gemini-nano
 
 ```
 chrome://flags/#rewriter-api-for-gemini-nano
+```
+
+### Edge
+
+Enable the following flag and relaunch Edge:
+
+```
+edge://flags/#edge-llm-rewriter-api-for-phi-mini
 ```
 
 ## Quick Start
@@ -69,7 +78,7 @@ npm run build      # Typecheck + production build
 ## Technical Stack
 
 - **UI:** React 19, TypeScript, Material UI, React Router
-- **AI:** Built-in AI
+- **AI:** Gemini Nano (Chrome) / Phi 4 Mini (Edge)
 - **Speech:** Web Speech API
 - **Storage:** IndexedDB, Zod (OBF), fflate (OBZ)
 - **Tooling:** Vite, Vitest, Playwright
@@ -84,12 +93,9 @@ Download example boards from:
 
 ## References
 
-- Chrome Built‑in AI:
-  [developer.chrome.com/docs/ai/built-in](https://developer.chrome.com/docs/ai/built-in)
-- Edge Built‑in AI Playgrounds:
-  [microsoftedge.github.io/Demos/built-in-ai/playgrounds](https://microsoftedge.github.io/Demos/built-in-ai/playgrounds/)
-- Open Board Format:
-  [openboardformat.org](https://www.openboardformat.org)
+- [Chrome Built‑in AI](https://developer.chrome.com/docs/ai/built-in) ([Playground](https://chrome.dev/web-ai-demos/built-in-ai-playground/))
+- [Edge Built‑in AI](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/prompt-api) ([Playground](https://microsoftedge.github.io/Demos/built-in-ai/playgrounds/))
+- [Open Board Format](https://www.openboardformat.org)
 
 ## License
 
