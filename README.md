@@ -12,7 +12,7 @@ Try the live demo at [aacboard.app](https://aacboard.app). Some AI features requ
 
 ## Key Features
 
-- **Grammar Correction** – Fixes spelling and grammar errors ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
+- **Grammar Correction** – Turns telegraphic text into clear sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
 - **Tone Adjustment** – Rewrites messages in direct, professional, or friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
 - **Multi-Language Support** – Translates messages and boards between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** – Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
