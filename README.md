@@ -8,7 +8,7 @@
 
 ![Screenshot of AAC Board AI](screenshot.jpg)
 
-Try the live demo at [aacboard.app](https://aacboard.app). AI features require [specific browser flags](#enabling-built-in-ai).
+Try the live demo at [aacboard.app](https://aacboard.app). Some AI features require [browser flags](#enabling-built-in-ai).
 
 ## Key Features
 
@@ -20,7 +20,7 @@ Try the live demo at [aacboard.app](https://aacboard.app). AI features require [
 
 ## Enabling Built-in AI
 
-AI features require **Chrome** or **Edge**. Enable the relevant flags below and relaunch your browser.
+Some AI features require experimental flags in **Chrome** or **Edge**.
 
 ### Chrome
 
