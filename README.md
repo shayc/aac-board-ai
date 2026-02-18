@@ -49,22 +49,11 @@ npm install && npm run dev
 
 Open [http://localhost:5173](http://localhost:5173)
 
-## Loading a Board via URL
-
-Load a board by passing an OBF or OBZ file URL as the `board` query parameter:
-
-```
-https://aacboard.app/?board=https://example.com/board.obz
-```
-
-The app fetches, imports, and navigates to the board automatically.
-
 ## Development
 
 ```bash
 npm run dev             # Start dev server
 npm run lint            # Lint
-npx playwright install  # Install test browsers (one-time)
 npm test                # Run tests
 npm run build           # Typecheck + production build
 ```
@@ -79,6 +68,16 @@ npm run build           # Typecheck + production build
 - **Tooling:** Vite, Vitest, Playwright
 
 See full architecture details in [docs/architecture.md](docs/architecture.md).
+
+## Loading a Board via URL
+
+Load a board by passing an OBF or OBZ file URL as the `board` query parameter:
+
+```
+https://aacboard.app/?board=https://example.com/board.obz
+```
+
+The app fetches, imports, and navigates to the board automatically.
 
 ## References
 
