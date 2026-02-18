@@ -1,5 +1,6 @@
 # AAC Board AI
 
+[![CI](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
 
 **Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
@@ -14,28 +15,31 @@ Try the live demo at [aacboard.app](https://aacboard.app). Some AI features requ
 
 - **Grammar Correction** – Turns telegraphic text into clear sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
 - **Tone Adjustment** – Rewrites messages in direct, professional, or friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
-- **Multi-Language Support** – Translates messages and boards between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
+- **Translation** – Translates messages and boards between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** – Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
-- **Offline Ready** – Installable as a standalone app with automatic updates.
+- **Offline Ready** – Installs as a standalone app with automatic updates ([PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)).
+- **Open Board Format** – Imports `.obf` and `.obz` files ([examples](https://www.openboardformat.org/examples)).
 
 ## Enabling Built-in AI
 
-Some AI features require experimental flags in **Chrome** or **Edge**.
+Grammar correction and tone adjustment require experimental browser flags.
 
-### Chrome
+**Chrome:**
 
 ```
 chrome://flags/#proofreader-api-for-gemini-nano
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
-### Edge
+**Edge:**
 
 ```
 edge://flags/#edge-llm-rewriter-api-for-phi-mini
 ```
 
 ## Quick Start
+
+Requires Node.js 24+.
 
 ```bash
 git clone https://github.com/shayc/aac-board-ai.git
@@ -76,16 +80,12 @@ npm run build           # Typecheck + production build
 
 See full architecture details in [docs/architecture.md](docs/architecture.md).
 
-## Example Boards
-
-Download example boards from [openboardformat.org/examples](https://www.openboardformat.org/examples).
-
 ## References
 
-- [Chrome Built‑in AI](https://developer.chrome.com/docs/ai/built-in) ([Playground](https://chrome.dev/web-ai-demos/built-in-ai-playground/))
-- [Edge Built‑in AI](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/prompt-api) ([Playground](https://microsoftedge.github.io/Demos/built-in-ai/playgrounds/))
+- [Chrome Built‑in AI](https://developer.chrome.com/docs/ai/built-in)
+- [Edge Built‑in AI](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/prompt-api)
 - [Open Board Format](https://www.openboardformat.org)
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) © Shay Cojocaru
