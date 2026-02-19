@@ -63,7 +63,7 @@ function LibraryPage() {
   }
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ py: 4 }}>
+    <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
       <Stack
         direction="row"
         alignItems="center"

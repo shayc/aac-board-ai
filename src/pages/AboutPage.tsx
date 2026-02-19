@@ -19,7 +19,7 @@ function AboutPage() {
   }, [setPageTitle]);
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ py: 4 }}>
+    <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
       <Fade in timeout={reduceMotion ? 0 : 400}>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
