@@ -1,14 +1,11 @@
-import type { BoardRouteParams } from "@app/AppRoutes";
-import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
-import type { BoardSetRecord } from "@features/board/db/boards-db";
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
+import { usePageTitle } from "@app/hooks/usePageTitle";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { generatePath, useNavigate, useParams } from "react-router";
+import Typography from "@mui/material/Typography";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -16,24 +13,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { setId = "" } = useParams<BoardRouteParams>();
-  const navigate = useNavigate();
-  const { boardSets } = useBoardSets();
-
-  const sortedBoardSets = boardSets.toSorted((a, b) =>
-    a.name.localeCompare(b.name, undefined, { numeric: true }),
-  );
-
-  function handleBoardSetChange(boardSet: BoardSetRecord) {
-    if (boardSet.rootBoardId) {
-      void navigate(
-        generatePath("/sets/:setId/boards/:boardId", {
-          setId: boardSet.setId,
-          boardId: boardSet.rootBoardId,
-        }),
-      );
-    }
-  }
+  const { pageTitle } = usePageTitle();
 
   return (
     <AppBar position="static">
@@ -51,15 +31,11 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        {sortedBoardSets.length > 0 && (
-          <BoardSetSelect
-            boardSets={sortedBoardSets}
-            boardSetId={setId}
-            onChange={handleBoardSetChange}
-          />
-        )}
+        <Typography variant="h6" component="h1" noWrap sx={{ flexGrow: 1 }}>
+          {pageTitle}
+        </Typography>
 
-        <Tooltip title="Open settings" sx={{ ml: "auto" }}>
+        <Tooltip title="Open settings">
           <IconButton
             aria-label="Settings"
             size="large"

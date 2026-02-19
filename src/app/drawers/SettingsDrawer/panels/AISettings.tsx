@@ -10,20 +10,23 @@ export function AISettings() {
 
   return (
     <Box sx={{ mb: 4 }}>
-      <Typography variant="subtitle1" gutterBottom>
-        Custom Instructions
-      </Typography>
-      <TextField
-        fullWidth
-        multiline
-        rows={3}
-        placeholder="e.g., Sarcastic, Polite."
-        helperText="Personalize AI suggestions"
-        value={sharedContext}
-        disabled={!isRewriterSupported}
-        onChange={(e) => setSharedContext(e.target.value)}
-        sx={{ mb: 2 }}
-      />
+      {isRewriterSupported && (
+        <>
+          <Typography variant="subtitle1" gutterBottom>
+            Custom Instructions
+          </Typography>
+          <TextField
+            fullWidth
+            multiline
+            rows={3}
+            placeholder="e.g., Sarcastic, Polite."
+            helperText="Personalize AI suggestions"
+            value={sharedContext}
+            onChange={(e) => setSharedContext(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+        </>
+      )}
 
       <Typography variant="subtitle1" gutterBottom>
         Built-in AI Support

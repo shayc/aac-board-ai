@@ -77,19 +77,17 @@ describe("upsertBoardSet", () => {
     expect(sets[0].rootBoardId).toBe("root-1");
   });
 
-  test("preserves boardCount on upsert without explicit count", async () => {
+  test("preserves boardCount on upsert", async () => {
     const db = await openTestDB();
 
-    await upsertBoardSet(db, {
-      setId: "set-1",
-      name: "Set",
-      boardCount: 5,
-    });
+    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    const json = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
 
     await upsertBoardSet(db, { setId: "set-1", name: "Set Renamed" });
 
     const sets = await listBoardSets(db);
-    expect(sets[0].boardCount).toBe(5);
+    expect(sets[0].boardCount).toBe(1);
   });
 
   test("rejects empty setId", async () => {
@@ -154,7 +152,7 @@ describe("putBoards and getBoard", () => {
     expect(board!.json.id).toBe("b1");
   });
 
-  test("increments boardCount only for new boards", async () => {
+  test("counts only unique boards", async () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
@@ -171,7 +169,7 @@ describe("putBoards and getBoard", () => {
     expect(sets[0].boardCount).toBe(1);
   });
 
-  test("increments boardCount correctly for multiple new boards", async () => {
+  test("counts multiple boards correctly", async () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
@@ -487,24 +485,5 @@ describe("withBoardsDB", () => {
     expect(() => {
       capturedDb!.transaction("boardsets", "readonly");
     }).toThrow();
-  });
-});
-
-describe("nameKey locale support", () => {
-  test("generates locale-aware nameKey", async () => {
-    db = await openBoardsDB({ nameKeyLocale: "tr" });
-
-    // Clear stores
-    const tx = db.transaction(["boardsets", "boards", "assets"], "readwrite");
-    await tx.objectStore("boardsets").clear();
-    await tx.objectStore("boards").clear();
-    await tx.objectStore("assets").clear();
-    await tx.done;
-
-    // Turkish locale: uppercase I lowercases to ı (dotless i)
-    await upsertBoardSet(db, { setId: "set-1", name: "ISTANBUL" });
-
-    const sets = await listBoardSets(db);
-    expect(sets[0].nameKey).toBe("ıstanbul");
   });
 });

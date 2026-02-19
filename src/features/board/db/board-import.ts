@@ -55,11 +55,14 @@ async function importOBZFile(
     rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
   }
 
+  const rootBoard = boards.get(rootBoardId);
+
   await upsertBoardSet(db, {
     setId,
-    name: file.name.replace(/\.(obz|obf)$/i, ""),
+    name: rootBoard?.name ?? file.name,
     rootBoardId: rootBoardId,
-    boardCount: boards.size,
+    author: rootBoard?.license?.author_name,
+    locale: rootBoard?.locale,
   });
 
   const pathToId = new Map(
@@ -125,9 +128,10 @@ async function importOBFFile(
 
   await upsertBoardSet(db, {
     setId,
-    name: file.name.replace(/\.(obz|obf)$/i, ""),
+    name: board.name ?? file.name,
     rootBoardId: board.id,
-    boardCount: 1,
+    author: board.license?.author_name,
+    locale: board.locale,
   });
 
   await putBoards(db, setId, [

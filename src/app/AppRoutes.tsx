@@ -12,6 +12,7 @@ export interface BoardRouteParams {
 }
 
 const BoardPage = lazy(() => import("@pages/BoardPage"));
+const LibraryPage = lazy(() => import("@pages/LibraryPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 
 export function AppRoutes() {
@@ -32,6 +33,15 @@ export function AppRoutes() {
               }
             />
           </Route>
+
+          <Route
+            path="library"
+            element={
+              <AsyncBoundary>
+                <LibraryPage />
+              </AsyncBoundary>
+            }
+          />
 
           <Route
             path="about"

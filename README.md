@@ -5,7 +5,7 @@
 
 **Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
 
-**AAC Board AI** is an Augmentative and Alternative Communication board for non-verbal users, enhanced with **Built-in AI** for on-device proofreading, rewriting, and translation — ensuring privacy and offline reliability.
+**AAC Board AI** is an Augmentative and Alternative Communication board that helps people who cannot rely on speech communicate more easily and naturally. It is enhanced with **Built-in AI** for on-device proofreading, rewriting, and translation — keeping interactions private, fast, and reliable offline.
 
 ![Screenshot of AAC Board AI](screenshot.jpg)
 

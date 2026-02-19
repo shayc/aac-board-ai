@@ -68,7 +68,6 @@ describe("useBoardNavigation", () => {
         {
           setId: "set-1",
           name: "Set 1",
-          nameKey: "set 1",
           rootBoardId: "root-1",
           updatedAt: Date.now(),
           boardCount: 1,
@@ -114,7 +113,6 @@ describe("useBoardNavigation", () => {
           {
             setId: "set-1",
             name: "Set 1",
-            nameKey: "set 1",
             rootBoardId: "",
             updatedAt: Date.now(),
             boardCount: 1,

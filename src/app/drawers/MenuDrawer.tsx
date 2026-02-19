@@ -1,11 +1,8 @@
-import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
-import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
-import GitHubIcon from "@mui/icons-material/GitHub";
+import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -21,19 +18,13 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const { importBoardFiles } = useImportBoardFiles();
-
-  async function handleImportBoard() {
-    onClose();
-    await importBoardFiles();
-  }
-
   const menuItems = [
     {
-      id: "import-board",
-      icon: FileOpenOutlined,
-      label: "Import board...",
-      onClick: handleImportBoard,
+      id: "library",
+      icon: CollectionsBookmarkOutlinedIcon,
+      label: "Library",
+      to: "/library",
+      onClick: onClose,
     },
     {
       id: "about",
@@ -41,12 +32,6 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       label: "About",
       to: "/about",
       onClick: onClose,
-    },
-    {
-      id: "contribute",
-      icon: GitHubIcon,
-      label: "Contribute",
-      href: "https://github.com/shayc/aac-board-ai",
     },
   ];
 
@@ -65,12 +50,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           {menuItems.map((item) => (
             <ListItem key={item.id} disablePadding>
               <ListItemButton
-                onClick={item.onClick ? () => void item.onClick?.() : undefined}
-                component={item.to ? RouterLink : item.href ? "a" : "button"}
+                onClick={() => void item.onClick()}
+                component={RouterLink}
                 to={item.to}
-                href={item.href}
-                target={item.href ? "_blank" : undefined}
-                rel={item.href ? "noopener" : undefined}
               >
                 <ListItemIcon>
                   <item.icon />
@@ -80,25 +62,6 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
             </ListItem>
           ))}
         </List>
-
-        <Divider />
-
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          sx={{ m: 2 }}
-        >
-          Powered by{" "}
-          <Link
-            href="https://developer.chrome.com/docs/ai/built-in"
-            underline="hover"
-            target="_blank"
-            rel="noopener"
-          >
-            Built-in AI
-          </Link>
-        </Typography>
       </Box>
     </Drawer>
   );
