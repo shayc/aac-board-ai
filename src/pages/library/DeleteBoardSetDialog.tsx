@@ -25,8 +25,8 @@ export function DeleteBoardSetDialog({
       <DialogTitle id="delete-dialog-title">Delete board set?</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          &ldquo;{target?.name}&rdquo; and all its boards will be permanently
-          deleted. This action cannot be undone.
+          &ldquo;{target?.name}&rdquo; will be permanently deleted. This action
+          cannot be undone.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

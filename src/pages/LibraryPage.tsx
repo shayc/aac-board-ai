@@ -69,7 +69,7 @@ function LibraryPage() {
         </Typography>
 
         <Button
-          variant="outlined"
+          variant="text"
           startIcon={<AddIcon />}
           onClick={() => void importBoardFiles()}
         >
