@@ -55,7 +55,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           variant="body1"
           sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
         >
-          Natural communication, refined.
+          Communicate more easily and naturally.
         </DialogContentText>
 
         <List sx={{ pt: 0, pb: 0 }}>
@@ -107,7 +107,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             </ListItemIcon>
             <ListItemText
               primary="Private by Design"
-              secondary="Runs on device. No cloud."
+              secondary="Works offline, on your device. No cloud."
               slotProps={{
                 primary: {
                   fontWeight: 700,
