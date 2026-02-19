@@ -9,7 +9,7 @@
 
 ![Screenshot of AAC Board AI](screenshot.jpg)
 
-Try the live demo at [aacboard.app](https://aacboard.app). Some AI features require [browser flags](#enabling-built-in-ai).
+Try the live demo at [aacboard.app](https://aacboard.app). Requires Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
 ## Key Features
 
@@ -84,6 +84,10 @@ The app fetches, imports, and navigates to the board automatically.
 - [Chrome Built‑in AI](https://developer.chrome.com/docs/ai/built-in)
 - [Edge Built‑in AI](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/prompt-api)
 - [Open Board Format](https://www.openboardformat.org)
+
+## Contributing
+
+While I'm thrilled if you find this code useful, this repository serves as my personal workspace and I am not accepting pull requests at this time. Feel free to fork the project and adapt it to your own needs under the MIT license.
 
 ## License
 
