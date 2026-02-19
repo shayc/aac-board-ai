@@ -318,25 +318,16 @@ export async function deleteBoardSet(
   const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
 
   try {
-    {
-      const idx = tx.objectStore("boards").index("bySetId");
-      let c = await idx.openCursor(IDBKeyRange.only(setId));
+    void tx
+      .objectStore("boards")
+      .delete(IDBKeyRange.bound([setId], [setId, []]));
 
-      while (c) {
-        await c.delete();
-        c = await c.continue();
-      }
-    }
-    {
-      const idx = tx.objectStore("assets").index("bySetId");
-      let c = await idx.openCursor(IDBKeyRange.only(setId));
+    void tx
+      .objectStore("assets")
+      .delete(IDBKeyRange.bound([setId], [setId, []]));
 
-      while (c) {
-        await c.delete();
-        c = await c.continue();
-      }
-    }
-    await tx.objectStore("boardsets").delete(setId);
+    void tx.objectStore("boardsets").delete(setId);
+
     await tx.done;
   } catch (e) {
     tx.abort();
