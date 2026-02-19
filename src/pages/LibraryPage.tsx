@@ -1,3 +1,4 @@
+import { usePageTitle } from "@app/hooks/usePageTitle";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
 import { removeBoardSet } from "@features/board/store/board-sets-store";
@@ -5,9 +6,8 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { BoardSetList } from "./library/BoardSetList";
 import { DeleteBoardSetDialog } from "./library/DeleteBoardSetDialog";
@@ -18,6 +18,12 @@ function LibraryPage() {
   const { importBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
+
+  const { setPageTitle } = usePageTitle();
+
+  useEffect(() => {
+    setPageTitle("Library");
+  }, [setPageTitle]);
 
   const [deleteTarget, setDeleteTarget] = useState<{
     setId: string;
@@ -61,13 +67,9 @@ function LibraryPage() {
       <Stack
         direction="row"
         alignItems="center"
-        justifyContent="space-between"
+        justifyContent="flex-end"
         sx={{ mb: 2 }}
       >
-        <Typography variant="h5" component="h1">
-          Library
-        </Typography>
-
         <Button
           variant="text"
           startIcon={<AddIcon />}
