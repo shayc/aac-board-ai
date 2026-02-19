@@ -3,7 +3,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import Link from "@mui/material/Link";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -63,25 +62,6 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
             </ListItem>
           ))}
         </List>
-
-        <Divider />
-
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          sx={{ m: 2 }}
-        >
-          Powered by{" "}
-          <Link
-            href="https://developer.chrome.com/docs/ai/built-in"
-            underline="hover"
-            target="_blank"
-            rel="noopener"
-          >
-            Built-in AI
-          </Link>
-        </Typography>
       </Box>
     </Drawer>
   );
