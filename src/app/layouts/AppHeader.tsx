@@ -1,14 +1,9 @@
-import type { BoardRouteParams } from "@app/AppRoutes";
-import { BoardSetSelect } from "@features/board/components/BoardSetSelect/BoardSetSelect";
-import type { BoardSetRecord } from "@features/board/db/boards-db";
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
-import { generatePath, useNavigate, useParams } from "react-router";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -16,25 +11,6 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { setId = "" } = useParams<BoardRouteParams>();
-  const navigate = useNavigate();
-  const { boardSets } = useBoardSets();
-
-  const sortedBoardSets = boardSets.toSorted((a, b) =>
-    a.name.localeCompare(b.name, undefined, { numeric: true }),
-  );
-
-  function handleBoardSetChange(boardSet: BoardSetRecord) {
-    if (boardSet.rootBoardId) {
-      void navigate(
-        generatePath("/sets/:setId/boards/:boardId", {
-          setId: boardSet.setId,
-          boardId: boardSet.rootBoardId,
-        }),
-      );
-    }
-  }
-
   return (
     <AppBar position="static">
       <Toolbar>
@@ -50,14 +26,6 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
             <MenuIcon />
           </IconButton>
         </Tooltip>
-
-        {sortedBoardSets.length > 0 && (
-          <BoardSetSelect
-            boardSets={sortedBoardSets}
-            boardSetId={setId}
-            onChange={handleBoardSetChange}
-          />
-        )}
 
         <Tooltip title="Open settings" sx={{ ml: "auto" }}>
           <IconButton

@@ -7,6 +7,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Tooltip from "@mui/material/Tooltip";
 
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];
@@ -26,13 +27,15 @@ export function BoardSetList({
           key={set.setId}
           disablePadding
           secondaryAction={
-            <IconButton
-              edge="end"
-              aria-label={`Delete ${set.name}`}
-              onClick={() => onDelete(set.setId, set.name)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title="Delete">
+              <IconButton
+                edge="end"
+                aria-label={`Delete ${set.name}`}
+                onClick={() => onDelete(set.setId, set.name)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           }
         >
           <ListItemButton
