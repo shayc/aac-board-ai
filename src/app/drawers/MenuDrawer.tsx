@@ -1,4 +1,5 @@
 import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
+import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import FileOpenOutlined from "@mui/icons-material/FileOpenOutlined";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -29,6 +30,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   }
 
   const menuItems = [
+    {
+      id: "library",
+      icon: CollectionsBookmarkOutlinedIcon,
+      label: "Library",
+      to: "/library",
+      onClick: onClose,
+    },
     {
       id: "import-board",
       icon: FileOpenOutlined,
