@@ -61,7 +61,6 @@ async function importOBZFile(
     setId,
     name: rootBoard?.name ?? file.name,
     rootBoardId: rootBoardId,
-    boardCount: boards.size,
     author: rootBoard?.license?.author_name,
     locale: rootBoard?.locale,
   });
@@ -131,7 +130,6 @@ async function importOBFFile(
     setId,
     name: board.name ?? file.name,
     rootBoardId: board.id,
-    boardCount: 1,
     author: board.license?.author_name,
     locale: board.locale,
   });

@@ -124,7 +124,6 @@ export interface UpsertBoardSetInput {
   setId: string;
   name: string;
   rootBoardId?: string;
-  boardCount?: number;
   author?: string;
   locale?: string;
 }
@@ -142,7 +141,7 @@ export async function upsertBoardSet(
     nameKey: toNameKey(boardSet.name, localeFor(db)),
     rootBoardId: boardSet.rootBoardId ?? prev?.rootBoardId,
     updatedAt: Date.now(),
-    boardCount: boardSet.boardCount ?? prev?.boardCount ?? 0,
+    boardCount: prev?.boardCount ?? 0,
     author: boardSet.author ?? prev?.author,
     locale: boardSet.locale ?? prev?.locale,
   };
@@ -181,12 +180,8 @@ export async function putBoards(
 
   try {
     const boards = tx.objectStore("boards");
-    let delta = 0;
 
     for (const it of items) {
-      const key = [setId, it.boardId] as [string, string];
-      const existed = await boards.getKey(key);
-
       await boards.put({
         setId,
         boardId: it.boardId,
@@ -194,19 +189,12 @@ export async function putBoards(
         nameKey: toNameKey(it.name, localeFor(db)),
         json: it.json,
       } as BoardRecord);
-
-      if (!existed) {
-        delta++;
-      }
     }
 
     const bs = await tx.objectStore("boardsets").get(setId);
 
     if (bs) {
-      const count =
-        delta > 0
-          ? bs.boardCount + delta
-          : await boards.index("bySetId").count(setId);
+      const count = await boards.index("bySetId").count(setId);
       await tx
         .objectStore("boardsets")
         .put({ ...bs, boardCount: count, updatedAt: Date.now() });
