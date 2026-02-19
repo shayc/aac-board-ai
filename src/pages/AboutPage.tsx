@@ -1,4 +1,6 @@
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
 import Link from "@mui/material/Link";
@@ -21,8 +23,8 @@ function AboutPage() {
             <Typography variant="body1" component="p">
               AAC Board AI helps people who can't rely on speech communicate
               more easily and naturally. It uses on-device AI to correct
-              grammar, adjust tone, and translate messages. That keeps
-              interactions private and fast.
+              grammar, adjust tone, and translate messages, keeping interactions
+              private and fast.
             </Typography>
 
             <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
@@ -60,8 +62,8 @@ function AboutPage() {
                 underline="hover"
               >
                 Open Board Format
-              </Link>
-              , and featuring the <em>Quick Core 24</em> vocabulary set by{" "}
+              </Link>{" "}
+              and featuring the <em>Quick Core 24</em> vocabulary set by{" "}
               <Link
                 href="https://www.openaac.org"
                 target="_blank"
@@ -72,6 +74,22 @@ function AboutPage() {
               </Link>
               .
             </Typography>
+
+            <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
+              Open Source
+            </Typography>
+
+            <Box>
+              <Button
+                variant="text"
+                startIcon={<GitHubIcon />}
+                href="https://github.com/shayc/aac-board-ai"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Source Code on GitHub
+              </Button>
+            </Box>
           </Stack>
         </Fade>
       </Box>

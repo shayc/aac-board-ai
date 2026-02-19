@@ -9,6 +9,8 @@ export interface BoardSetRecord {
   rootBoardId?: string;
   updatedAt: number;
   boardCount: number;
+  author?: string;
+  locale?: string;
 }
 export interface BoardRecord {
   setId: string;
@@ -123,6 +125,8 @@ export interface UpsertBoardSetInput {
   name: string;
   rootBoardId?: string;
   boardCount?: number;
+  author?: string;
+  locale?: string;
 }
 
 export async function upsertBoardSet(
@@ -139,6 +143,8 @@ export async function upsertBoardSet(
     rootBoardId: boardSet.rootBoardId ?? prev?.rootBoardId,
     updatedAt: Date.now(),
     boardCount: boardSet.boardCount ?? prev?.boardCount ?? 0,
+    author: boardSet.author ?? prev?.author,
+    locale: boardSet.locale ?? prev?.locale,
   };
 
   await db.put("boardsets", row);

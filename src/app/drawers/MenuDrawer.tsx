@@ -1,5 +1,4 @@
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
-import GitHubIcon from "@mui/icons-material/GitHub";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -35,12 +34,6 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       to: "/about",
       onClick: onClose,
     },
-    {
-      id: "contribute",
-      icon: GitHubIcon,
-      label: "Contribute",
-      href: "https://github.com/shayc/aac-board-ai",
-    },
   ];
 
   return (
@@ -58,12 +51,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           {menuItems.map((item) => (
             <ListItem key={item.id} disablePadding>
               <ListItemButton
-                onClick={item.onClick ? () => void item.onClick?.() : undefined}
-                component={item.to ? RouterLink : item.href ? "a" : "button"}
+                onClick={() => void item.onClick()}
+                component={RouterLink}
                 to={item.to}
-                href={item.href}
-                target={item.href ? "_blank" : undefined}
-                rel={item.href ? "noopener" : undefined}
               >
                 <ListItemIcon>
                   <item.icon />
