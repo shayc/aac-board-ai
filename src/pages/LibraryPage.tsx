@@ -10,7 +10,6 @@ import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { BoardSetList } from "./library/BoardSetList";
-import { BoardSetListSkeleton } from "./library/BoardSetListSkeleton";
 import { DeleteBoardSetDialog } from "./library/DeleteBoardSetDialog";
 import { LibraryEmptyState } from "./library/LibraryEmptyState";
 
@@ -77,8 +76,6 @@ function LibraryPage() {
           Import
         </Button>
       </Stack>
-
-      {isLoading && <BoardSetListSkeleton />}
 
       {!isLoading && boardSets.length === 0 && <LibraryEmptyState />}
 
