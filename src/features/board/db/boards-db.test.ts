@@ -487,22 +487,3 @@ describe("withBoardsDB", () => {
     }).toThrow();
   });
 });
-
-describe("nameKey locale support", () => {
-  test("generates locale-aware nameKey", async () => {
-    db = await openBoardsDB({ nameKeyLocale: "tr" });
-
-    // Clear stores
-    const tx = db.transaction(["boardsets", "boards", "assets"], "readwrite");
-    await tx.objectStore("boardsets").clear();
-    await tx.objectStore("boards").clear();
-    await tx.objectStore("assets").clear();
-    await tx.done;
-
-    // Turkish locale: uppercase I lowercases to ı (dotless i)
-    await upsertBoardSet(db, { setId: "set-1", name: "ISTANBUL" });
-
-    const sets = await listBoardSets(db);
-    expect(sets[0].nameKey).toBe("ıstanbul");
-  });
-});

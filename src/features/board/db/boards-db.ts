@@ -5,7 +5,6 @@ import { openDB } from "idb";
 export interface BoardSetRecord {
   setId: string;
   name: string;
-  nameKey: string;
   rootBoardId?: string;
   updatedAt: number;
   boardCount: number;
@@ -16,7 +15,6 @@ export interface BoardRecord {
   setId: string;
   boardId: string;
   name: string;
-  nameKey: string;
   json: OBFBoard;
 }
 export interface AssetRecord {
@@ -32,22 +30,18 @@ export interface BoardsDBSchema extends DBSchema {
   boardsets: {
     key: string;
     value: BoardSetRecord;
-    indexes: { byNameKey: string; byUpdatedAt: number };
+    indexes: { byUpdatedAt: number };
   };
   boards: {
     key: [string, string];
     value: BoardRecord;
-    indexes: { bySetId: string; bySetIdNameKey: [string, string] };
+    indexes: { bySetId: string };
   };
   assets: {
     key: [string, string];
     value: AssetRecord;
     indexes: { bySetId: string; bySetIdMediaId: [string, string] };
   };
-}
-
-export interface BoardsDBOptions {
-  nameKeyLocale?: string | string[];
 }
 
 export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
@@ -66,36 +60,22 @@ function normalizePath(p: string): string {
   return cleaned;
 }
 
-function toNameKey(name: string, locale?: string | string[]): string {
-  return name.toLocaleLowerCase(locale).normalize("NFC");
-}
-
 function validateId(id: string, name: string): void {
   if (!id || id.length > 255) {
     throw new Error(`Invalid ${name}: must be 1-255 characters`);
   }
 }
 
-const meta = new WeakMap<BoardsDB, { locale?: string | string[] }>();
-
-function localeFor(db: BoardsDB) {
-  return meta.get(db)?.locale;
-}
-
-export async function openBoardsDB(
-  opts: BoardsDBOptions = {},
-): Promise<BoardsDB> {
+export async function openBoardsDB(): Promise<BoardsDB> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       const boardsets = db.createObjectStore("boardsets", { keyPath: "setId" });
-      boardsets.createIndex("byNameKey", "nameKey");
       boardsets.createIndex("byUpdatedAt", "updatedAt");
 
       const boards = db.createObjectStore("boards", {
         keyPath: ["setId", "boardId"],
       });
       boards.createIndex("bySetId", "setId");
-      boards.createIndex("bySetIdNameKey", ["setId", "nameKey"]);
 
       const assets = db.createObjectStore("assets", {
         keyPath: ["setId", "path"],
@@ -104,15 +84,13 @@ export async function openBoardsDB(
       assets.createIndex("bySetIdMediaId", ["setId", "mediaId"]);
     },
   });
-  meta.set(db, { locale: opts.nameKeyLocale });
   return db;
 }
 
 export async function withBoardsDB<T>(
   fn: (db: BoardsDB) => Promise<T>,
-  opts?: BoardsDBOptions,
 ): Promise<T> {
-  const db = await openBoardsDB(opts);
+  const db = await openBoardsDB();
   try {
     return await fn(db);
   } finally {
@@ -138,7 +116,6 @@ export async function upsertBoardSet(
   const row: BoardSetRecord = {
     setId: boardSet.setId,
     name: boardSet.name,
-    nameKey: toNameKey(boardSet.name, localeFor(db)),
     rootBoardId: boardSet.rootBoardId ?? prev?.rootBoardId,
     updatedAt: Date.now(),
     boardCount: prev?.boardCount ?? 0,
@@ -186,7 +163,6 @@ export async function putBoards(
         setId,
         boardId: it.boardId,
         name: it.name,
-        nameKey: toNameKey(it.name, localeFor(db)),
         json: it.json,
       } as BoardRecord);
     }
