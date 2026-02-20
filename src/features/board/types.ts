@@ -1,5 +1,5 @@
 export interface BoardRouteParams {
-  [key: string]: string;
+  [key: string]: string | undefined;
   setId: string;
   boardId: string;
 }
