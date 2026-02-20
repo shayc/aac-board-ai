@@ -15,7 +15,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["vite.svg"],
+      includeAssets: ["board.svg"],
       manifest: {
         name: "AAC Board AI",
         short_name: "AAC Board",
