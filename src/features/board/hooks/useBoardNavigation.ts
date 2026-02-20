@@ -1,4 +1,4 @@
-import type { BoardRouteParams } from "@app/AppRoutes";
+import type { BoardRouteParams } from "@features/board/types";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import {
   generatePath,
