@@ -10,12 +10,6 @@ import { useEffect, useRef, useState } from "react";
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
-/**
- * Validates that an AI-generated suggestion is suitable for display.
- * Rejects suggestions that contain underscored compound words (e.g. "some_word")
- * which indicate raw tokenizer artifacts, and suggestions with quoted strings
- * which are hallucinated additions not present in the original input.
- */
 function isValidSuggestion(suggestion: string): boolean {
   if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
     return false;
