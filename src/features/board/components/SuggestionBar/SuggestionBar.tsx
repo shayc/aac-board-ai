@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import type { Tone } from "@features/board/types";
 import { ToneSelector } from "./components/ToneSelector";
 
 export interface SuggestionBarProps {
   suggestions: string[];
-  tone: RewriterTone;
-  onToneChange: (tone: RewriterTone) => void;
+  tone: Tone;
+  onToneChange: (tone: Tone) => void;
   onSuggestionClick: (suggestion: string) => void;
 }
 

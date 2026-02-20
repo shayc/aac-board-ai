@@ -5,13 +5,14 @@ import {
 } from "@shared/hooks/ai/ai-capabilities";
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
+import type { Tone } from "@features/board/types";
 import { useEffect, useRef, useState } from "react";
 
 export interface UseSuggestionsReturn {
   items: string[];
   isAvailable: boolean;
-  tone: RewriterTone;
-  setTone: (tone: RewriterTone) => void;
+  tone: Tone;
+  setTone: (tone: Tone) => void;
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
@@ -21,7 +22,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
 
-  const [tone, setTone] = useState<RewriterTone>("as-is");
+  const [tone, setTone] = useState<Tone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -29,7 +30,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   useEffect(() => {
     const generateSuggestions = async (
       text: string,
-      tone: RewriterTone,
+      tone: Tone,
       sharedContext?: string,
     ) => {
       abortRef.current?.abort();

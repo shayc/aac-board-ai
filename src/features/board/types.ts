@@ -4,6 +4,8 @@ export interface BoardRouteParams {
   boardId: string;
 }
 
+export type Tone = RewriterTone;
+
 type SpecialtyAction = ":space" | ":clear" | ":home" | ":speak" | ":backspace";
 type SpellingAction = `+${string}`;
 
