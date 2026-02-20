@@ -1,3 +1,11 @@
+export interface BoardRouteParams {
+  [key: string]: string;
+  setId: string;
+  boardId: string;
+}
+
+export type SuggestionTone = RewriterTone;
+
 type SpecialtyAction = ":space" | ":clear" | ":home" | ":speak" | ":backspace";
 type SpellingAction = `+${string}`;
 

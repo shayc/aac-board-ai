@@ -5,12 +5,6 @@ import { AsyncBoundary } from "@shared/components/AsyncBoundary";
 import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 
-export interface BoardRouteParams {
-  [key: string]: string;
-  setId: string;
-  boardId: string;
-}
-
 const BoardPage = lazy(() => import("@pages/BoardPage"));
 const LibraryPage = lazy(() => import("@pages/LibraryPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));

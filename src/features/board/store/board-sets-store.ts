@@ -8,6 +8,7 @@ import {
   withBoardsDB,
   type BoardSetRecord,
 } from "@features/board/db/boards-db";
+import { createExternalStore } from "@shared/utils/external-store";
 
 export interface BoardSetsSnapshot {
   data: BoardSetRecord[];
@@ -15,33 +16,29 @@ export interface BoardSetsSnapshot {
   error: Error | null;
 }
 
-const listeners = new Set<() => void>();
-let snapshot: BoardSetsSnapshot = { data: [], isLoading: true, error: null };
+const store = createExternalStore<BoardSetsSnapshot>({
+  data: [],
+  isLoading: true,
+  error: null,
+});
+
 let fetched = false;
 let pending: Promise<void> | null = null;
-
-function emit() {
-  for (const cb of listeners) {
-    cb();
-  }
-}
 
 async function refresh(): Promise<void> {
   try {
     const data = await withBoardsDB((db) => listBoardSets(db));
-    snapshot = { data, isLoading: false, error: null };
+    store.setState({ data, isLoading: false, error: null });
     fetched = true;
   } catch (err) {
-    snapshot = {
+    store.setState({
       data: [],
       isLoading: false,
       error: err instanceof Error ? err : new Error(String(err)),
-    };
+    });
   } finally {
     pending = null;
   }
-
-  emit();
 }
 
 function ensureFetched() {
@@ -51,17 +48,14 @@ function ensureFetched() {
 }
 
 export function subscribeBoardSets(callback: () => void): () => void {
-  listeners.add(callback);
+  const unsubscribe = store.subscribe(callback);
   ensureFetched();
-
-  return () => {
-    listeners.delete(callback);
-  };
+  return unsubscribe;
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
   ensureFetched();
-  return snapshot;
+  return store.getSnapshot();
 }
 
 export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
@@ -71,7 +65,7 @@ export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
     await refresh();
   }
 
-  return snapshot.data;
+  return store.getState().data;
 }
 
 export async function invalidateBoardSets(): Promise<void> {

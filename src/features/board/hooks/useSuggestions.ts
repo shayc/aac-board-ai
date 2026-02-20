@@ -5,13 +5,28 @@ import {
 } from "@shared/hooks/ai/ai-capabilities";
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
+import type { SuggestionTone } from "@features/board/types";
 import { useEffect, useRef, useState } from "react";
+
+const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
+
+function isValidSuggestion(suggestion: string): boolean {
+  if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
+    return false;
+  }
+
+  if (suggestion.includes('"')) {
+    return false;
+  }
+
+  return true;
+}
 
 export interface UseSuggestionsReturn {
   items: string[];
   isAvailable: boolean;
-  tone: RewriterTone;
-  setTone: (tone: RewriterTone) => void;
+  tone: SuggestionTone;
+  setTone: (tone: SuggestionTone) => void;
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
@@ -21,7 +36,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
 
-  const [tone, setTone] = useState<RewriterTone>("as-is");
+  const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -29,7 +44,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   useEffect(() => {
     const generateSuggestions = async (
       text: string,
-      tone: RewriterTone,
+      tone: SuggestionTone,
       sharedContext?: string,
     ) => {
       abortRef.current?.abort();
@@ -59,13 +74,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
         const suggestions = [
           proofread?.correctedInput ?? "",
           rewritten ?? "",
-        ].filter(
-          (s) =>
-            s &&
-            s !== text &&
-            !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) &&
-            !s.includes('"'),
-        );
+        ].filter((s) => s && s !== text && isValidSuggestion(s));
 
         const uniqueSuggestions = Array.from(new Set(suggestions));
 

@@ -4,7 +4,7 @@ import { useBoard } from "@features/board/hooks/useBoard";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import type { BoardRouteParams } from "@app/AppRoutes";
+import type { BoardRouteParams } from "@features/board/types";
 
 function BoardPage() {
   const params = useParams<BoardRouteParams>();

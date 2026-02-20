@@ -4,16 +4,17 @@ import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
+import type { SuggestionTone } from "@features/board/types";
 
 interface ToneSelectorProps {
-  tone: RewriterTone;
-  onChange: (tone: RewriterTone) => void;
+  tone: SuggestionTone;
+  onChange: (tone: SuggestionTone) => void;
 }
 
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    tone: RewriterTone | null,
+    tone: SuggestionTone | null,
   ) => {
     if (tone) {
       onChange(tone);
