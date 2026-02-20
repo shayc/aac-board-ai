@@ -5,7 +5,7 @@ import {
 } from "@shared/hooks/ai/ai-capabilities";
 import { useProofreader } from "@shared/hooks/ai/useProofreader";
 import { useRewriter } from "@shared/hooks/ai/useRewriter";
-import type { Tone } from "@features/board/types";
+import type { SuggestionTone } from "@features/board/types";
 import { useEffect, useRef, useState } from "react";
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
@@ -25,8 +25,8 @@ function isValidSuggestion(suggestion: string): boolean {
 export interface UseSuggestionsReturn {
   items: string[];
   isAvailable: boolean;
-  tone: Tone;
-  setTone: (tone: Tone) => void;
+  tone: SuggestionTone;
+  setTone: (tone: SuggestionTone) => void;
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
@@ -36,7 +36,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
 
-  const [tone, setTone] = useState<Tone>("as-is");
+  const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const abortRef = useRef<AbortController | null>(null);
@@ -44,7 +44,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   useEffect(() => {
     const generateSuggestions = async (
       text: string,
-      tone: Tone,
+      tone: SuggestionTone,
       sharedContext?: string,
     ) => {
       abortRef.current?.abort();
