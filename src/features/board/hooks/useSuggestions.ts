@@ -8,6 +8,26 @@ import { useRewriter } from "@shared/hooks/ai/useRewriter";
 import type { Tone } from "@features/board/types";
 import { useEffect, useRef, useState } from "react";
 
+const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
+
+/**
+ * Validates that an AI-generated suggestion is suitable for display.
+ * Rejects suggestions that contain underscored compound words (e.g. "some_word")
+ * which indicate raw tokenizer artifacts, and suggestions with quoted strings
+ * which are hallucinated additions not present in the original input.
+ */
+function isValidSuggestion(suggestion: string): boolean {
+  if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
+    return false;
+  }
+
+  if (suggestion.includes('"')) {
+    return false;
+  }
+
+  return true;
+}
+
 export interface UseSuggestionsReturn {
   items: string[];
   isAvailable: boolean;
@@ -60,13 +80,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
         const suggestions = [
           proofread?.correctedInput ?? "",
           rewritten ?? "",
-        ].filter(
-          (s) =>
-            s &&
-            s !== text &&
-            !/\b[A-Za-z]+_[A-Za-z]+\b/.exec(s) &&
-            !s.includes('"'),
-        );
+        ].filter((s) => s && s !== text && isValidSuggestion(s));
 
         const uniqueSuggestions = Array.from(new Set(suggestions));
 
