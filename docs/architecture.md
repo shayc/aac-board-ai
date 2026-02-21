@@ -4,14 +4,14 @@
 
 **AAC Board AI** is a client-side React app powered by **Chrome’s Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
 
-The architecture follows **feature-sliced design** principles, keeping UI, logic, and data layers isolated and easy to maintain.
+The architecture follows **feature-sliced design** principles — each feature is a self-contained module with its own UI, logic, data access, and types. Features may import from `shared/` but not from each other or from `app/`.
 
 ---
 
 ## AI Integration
 
 Chrome's Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
-Each hook wraps a browser API and manages model downloading and session lifecycle.
+Each hook wraps a browser API, tracks capability support, and manages download progress.
 
 ### AI Hooks
 
@@ -26,29 +26,10 @@ Each hook wraps a browser API and manages model downloading and session lifecycl
 
 **Status Key:**
 
-- ✅ **Active** - Currently used in the application
-- 🔧 **Available** - Implemented but not yet integrated into UI
+- ✅ **Active** — Currently used in the application
+- 🔧 **Available** — Implemented but not yet integrated into UI
 
-### Example
-
-```typescript
-// Creating a translator
-const { createTranslator, isTranslatorSupported, downloadProgress } =
-  useTranslator();
-
-if (isTranslatorSupported) {
-  const translator = await createTranslator({
-    sourceLanguage: "en",
-    targetLanguage: "he",
-  });
-
-  const translated = await translator.translate("Hello world");
-}
-```
-
-**Shared Context**
-
-The `AIProvider` context manages shared context across AI sessions, allowing you to provide background information that enhances AI responses across different features.
+The `AIProvider` context manages shared context across AI sessions. Users can provide background information (e.g. communication preferences) that enhances AI responses across different features.
 
 ---
 
@@ -57,27 +38,13 @@ The `AIProvider` context manages shared context across AI sessions, allowing you
 **Core:** React 19 • TypeScript 5.9 • Vite 7  
 **UI:** Material UI 7 • Emotion • React Aria  
 **Routing:** React Router 7  
-**Storage:** IndexedDB (`idb`) — board data, assets, and settings  
+**Storage:** IndexedDB (`idb`) + localStorage  
 **Compression:** fflate — OBZ file handling  
 **AI:** Chrome Built-in AI (Gemini Nano)  
+**Optimization:** React Compiler  
 **Validation:** Zod 4  
 **Testing:** Vitest 4 + Playwright browser mode  
 **Error Handling:** react-error-boundary
-
-**Highlights**
-
-- React Compiler for automatic optimization
-- State managed via React Context (`ThemeProvider`, `SpeechProvider`, `LanguageProvider`, `AIProvider`, `SnackbarProvider`)
-- 100% client-side — no backend or network dependencies
-
----
-
-## Design Principles
-
-### Feature-Sliced Design
-
-Each feature (e.g. `features/board/`) is a self-contained module with its own UI, logic, data access, and types.  
-This modular structure supports scalability and independent development.
 
 ---
 
@@ -125,15 +92,17 @@ src/
 
 ---
 
-## Data Storage
+## State Management
 
-**IndexedDB** (via `idb`) stores:
+All data stays on the device. Three storage layers, chosen by data weight and lifetime:
 
-- **Boardsets** - Metadata for collections of boards
-- **Boards** - Individual board configurations (parsed from OBF files)
-- **Assets** - Images, sounds, and other media resources (extracted from OBZ packages)
+| Layer                 | What lives there                                              | Access                                      |
+| --------------------- | ------------------------------------------------------------- | ------------------------------------------- |
+| **IndexedDB** (`idb`) | Board sets, boards, media assets (images/sounds)              | Feature DB helpers (`boards-db.ts`)         |
+| **localStorage**      | User preferences — language, message draft, AI shared context | `usePersistentState` hook                   |
+| **React Context**     | Runtime state — theme, speech, snackbar, AI download progress | Provider hooks (`useTheme`, `useSpeech`, …) |
 
-All data is stored locally — no sync or cloud dependency.
+Board-set data is consumed by components via a custom external store (`useSyncExternalStore`) with `BroadcastChannel` cross-tab sync — importing or deleting a board set in one tab is reflected in all others.
 
 ---
 
@@ -163,5 +132,3 @@ AAC Board AI adapts gracefully to the browser's capabilities:
 
 - **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API. The PWA service worker ensures the app itself loads without a network connection.
 - **Enhanced mode:** When Chrome AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
-
-This approach ensures the application remains functional even if AI features are unavailable, while providing enhanced capabilities when possible.
