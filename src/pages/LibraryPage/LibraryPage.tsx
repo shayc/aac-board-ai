@@ -10,37 +10,35 @@ import Stack from "@mui/material/Stack";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
-import { BoardSetInfoDialog } from "./library/BoardSetInfoDialog";
-import { BoardSetList } from "./library/BoardSetList";
-import { BoardSetDeleteDialog } from "./library/BoardSetDeleteDialog";
-import { LibraryEmptyState } from "./library/LibraryEmptyState";
+import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
+import { BoardSetInfoDialog } from "./components/BoardSetInfoDialog";
+import { BoardSetList } from "./components/BoardSetList";
+import { LibraryEmptyState } from "./components/LibraryEmptyState";
 
 function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { importBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
+  const { setPageTitle } = usePageTitle();
   const navigate = useNavigate();
 
-  const { setPageTitle } = usePageTitle();
+  const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
+  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   useEffect(() => {
     setPageTitle("Library");
   }, [setPageTitle]);
 
-  const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
-
-  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
-
-  function handleNavigate(setId: string, boardId?: string) {
-    if (boardId) {
+  function handleSelect(boardSet: BoardSetRecord) {
+    if (boardSet.rootBoardId) {
       void navigate(
         generatePath("/sets/:setId/boards/:boardId", {
-          setId,
-          boardId,
+          setId: boardSet.setId,
+          boardId: boardSet.rootBoardId,
         }),
       );
     } else {
-      void navigate(`/sets/${encodeURIComponent(setId)}`);
+      void navigate(`/sets/${encodeURIComponent(boardSet.setId)}`);
     }
   }
 
@@ -83,24 +81,26 @@ function LibraryPage() {
       {!isLoading && boardSets.length === 0 && <LibraryEmptyState />}
 
       {!isLoading && boardSets.length > 0 && (
-        <BoardSetList
-          boardSets={boardSets}
-          onNavigate={handleNavigate}
-          onDelete={setDeleteTarget}
-          onInfo={setInfoTarget}
-        />
+        <>
+          <BoardSetList
+            boardSets={boardSets}
+            onSelect={handleSelect}
+            onDelete={setDeleteTarget}
+            onInfo={setInfoTarget}
+          />
+
+          <BoardSetInfoDialog
+            boardSet={infoTarget}
+            onClose={() => setInfoTarget(null)}
+          />
+
+          <BoardSetDeleteDialog
+            boardSet={deleteTarget}
+            onConfirm={() => void handleDelete()}
+            onClose={() => setDeleteTarget(null)}
+          />
+        </>
       )}
-
-      <BoardSetInfoDialog
-        boardSet={infoTarget}
-        onClose={() => setInfoTarget(null)}
-      />
-
-      <BoardSetDeleteDialog
-        boardSet={deleteTarget}
-        onConfirm={() => void handleDelete()}
-        onCancel={() => setDeleteTarget(null)}
-      />
     </Container>
   );
 }

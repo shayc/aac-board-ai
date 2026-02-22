@@ -20,8 +20,6 @@ import {
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 
 export function SpeechSettings() {
-  const { createTranslator } = useTranslator();
-
   const {
     voicesByLocale,
     voiceURI,
@@ -35,8 +33,8 @@ export function SpeechSettings() {
     isSpeechSupported,
     speak,
   } = useSpeech();
-
   const { languageCode } = useLanguage();
+  const { createTranslator } = useTranslator();
 
   const locales = Object.keys(voicesByLocale)
     .filter((locale) => locale.startsWith(languageCode))

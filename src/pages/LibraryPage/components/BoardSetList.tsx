@@ -15,34 +15,29 @@ import { useState } from "react";
 
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];
-  onNavigate: (setId: string, boardId?: string) => void;
+  onSelect: (boardSet: BoardSetRecord) => void;
   onDelete: (boardSet: BoardSetRecord) => void;
   onInfo: (boardSet: BoardSetRecord) => void;
 }
 
 export function BoardSetList({
   boardSets,
-  onNavigate,
+  onSelect,
   onDelete,
   onInfo,
 }: BoardSetListProps) {
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
-    setId: string;
-    name: string;
+    boardSet: BoardSetRecord;
   } | null>(null);
 
   const menuOpen = Boolean(menuAnchor);
 
   function handleMenuOpen(
     event: React.MouseEvent<HTMLElement>,
-    set: BoardSetRecord,
+    boardSet: BoardSetRecord,
   ) {
-    setMenuAnchor({
-      element: event.currentTarget,
-      setId: set.setId,
-      name: set.name,
-    });
+    setMenuAnchor({ element: event.currentTarget, boardSet });
   }
 
   function handleMenuClose() {
@@ -51,10 +46,7 @@ export function BoardSetList({
 
   function handleInfo() {
     if (menuAnchor) {
-      const set = boardSets.find((s) => s.setId === menuAnchor.setId);
-      if (set) {
-        onInfo(set);
-      }
+      onInfo(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -62,10 +54,7 @@ export function BoardSetList({
 
   function handleDelete() {
     if (menuAnchor) {
-      const set = boardSets.find((s) => s.setId === menuAnchor.setId);
-      if (set) {
-        onDelete(set);
-      }
+      onDelete(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -93,9 +82,7 @@ export function BoardSetList({
               </Tooltip>
             }
           >
-            <ListItemButton
-              onClick={() => onNavigate(set.setId, set.rootBoardId)}
-            >
+            <ListItemButton onClick={() => onSelect(set)}>
               <ListItemText
                 primary={set.name}
                 secondary={formatSecondary(set)}
