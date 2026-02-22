@@ -35,19 +35,6 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   };
 }
 
-function pickMediaSource(media: OBFMedia): string | undefined {
-  if (media.data) {
-    return media.data;
-  }
-  if (media.path) {
-    return media.path;
-  }
-  if (media.url) {
-    return media.url;
-  }
-  return undefined;
-}
-
 function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
   const map = new Map<string, string>();
 
@@ -63,6 +50,19 @@ function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
   }
 
   return map;
+}
+
+function pickMediaSource(media: OBFMedia): string | undefined {
+  if (media.data) {
+    return media.data;
+  }
+  if (media.path) {
+    return media.path;
+  }
+  if (media.url) {
+    return media.url;
+  }
+  return undefined;
 }
 
 function transformButton(
