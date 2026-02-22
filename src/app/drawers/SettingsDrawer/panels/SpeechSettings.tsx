@@ -131,6 +131,7 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         disabled={!isSpeechSupported}
+        sx={{ alignSelf: "flex-start" }}
         onClick={() => void handlePreviewClick()}
       >
         Preview
