@@ -81,24 +81,26 @@ function LibraryPage() {
       {!isLoading && boardSets.length === 0 && <LibraryEmptyState />}
 
       {!isLoading && boardSets.length > 0 && (
-        <BoardSetList
-          boardSets={boardSets}
-          onSelect={handleSelect}
-          onDelete={setDeleteTarget}
-          onInfo={setInfoTarget}
-        />
+        <>
+          <BoardSetList
+            boardSets={boardSets}
+            onSelect={handleSelect}
+            onDelete={setDeleteTarget}
+            onInfo={setInfoTarget}
+          />
+
+          <BoardSetInfoDialog
+            boardSet={infoTarget}
+            onClose={() => setInfoTarget(null)}
+          />
+
+          <BoardSetDeleteDialog
+            boardSet={deleteTarget}
+            onConfirm={() => void handleDelete()}
+            onClose={() => setDeleteTarget(null)}
+          />
+        </>
       )}
-
-      <BoardSetInfoDialog
-        boardSet={infoTarget}
-        onClose={() => setInfoTarget(null)}
-      />
-
-      <BoardSetDeleteDialog
-        boardSet={deleteTarget}
-        onConfirm={() => void handleDelete()}
-        onClose={() => setDeleteTarget(null)}
-      />
     </Container>
   );
 }
