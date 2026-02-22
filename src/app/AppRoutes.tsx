@@ -6,7 +6,7 @@ import { lazy } from "react";
 import { BrowserRouter, Route, Routes } from "react-router";
 
 const BoardPage = lazy(() => import("@pages/BoardPage"));
-const LibraryPage = lazy(() => import("@pages/LibraryPage"));
+const LibraryPage = lazy(() => import("@pages/LibraryPage/LibraryPage"));
 const AboutPage = lazy(() => import("@pages/AboutPage"));
 
 export function AppRoutes() {

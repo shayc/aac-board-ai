@@ -10,10 +10,10 @@ import Stack from "@mui/material/Stack";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
-import { BoardSetInfoDialog } from "./library/BoardSetInfoDialog";
-import { BoardSetList } from "./library/BoardSetList";
-import { BoardSetDeleteDialog } from "./library/BoardSetDeleteDialog";
-import { LibraryEmptyState } from "./library/LibraryEmptyState";
+import { BoardSetInfoDialog } from "./components/BoardSetInfoDialog";
+import { BoardSetList } from "./components/BoardSetList";
+import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
+import { LibraryEmptyState } from "./components/LibraryEmptyState";
 
 function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
@@ -31,16 +31,16 @@ function LibraryPage() {
 
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
-  function handleNavigate(setId: string, boardId?: string) {
-    if (boardId) {
+  function handleSelect(boardSet: BoardSetRecord) {
+    if (boardSet.rootBoardId) {
       void navigate(
         generatePath("/sets/:setId/boards/:boardId", {
-          setId,
-          boardId,
+          setId: boardSet.setId,
+          boardId: boardSet.rootBoardId,
         }),
       );
     } else {
-      void navigate(`/sets/${encodeURIComponent(setId)}`);
+      void navigate(`/sets/${encodeURIComponent(boardSet.setId)}`);
     }
   }
 
@@ -85,7 +85,7 @@ function LibraryPage() {
       {!isLoading && boardSets.length > 0 && (
         <BoardSetList
           boardSets={boardSets}
-          onNavigate={handleNavigate}
+          onSelect={handleSelect}
           onDelete={setDeleteTarget}
           onInfo={setInfoTarget}
         />
@@ -99,7 +99,7 @@ function LibraryPage() {
       <BoardSetDeleteDialog
         boardSet={deleteTarget}
         onConfirm={() => void handleDelete()}
-        onCancel={() => setDeleteTarget(null)}
+        onClose={() => setDeleteTarget(null)}
       />
     </Container>
   );
