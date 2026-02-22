@@ -10,9 +10,9 @@ import Stack from "@mui/material/Stack";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
+import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
 import { BoardSetInfoDialog } from "./components/BoardSetInfoDialog";
 import { BoardSetList } from "./components/BoardSetList";
-import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
 import { LibraryEmptyState } from "./components/LibraryEmptyState";
 
 function LibraryPage() {
