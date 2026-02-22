@@ -24,15 +24,16 @@ export function SpeechSettings() {
     voicesByLocale,
     voiceURI,
     setVoiceURI,
-    pitch,
-    setPitch,
     rate,
     setRate,
+    pitch,
+    setPitch,
     volume,
     setVolume,
     isSpeechSupported,
     speak,
   } = useSpeech();
+
   const { languageCode } = useLanguage();
   const { createTranslator } = useTranslator();
 
@@ -43,6 +44,30 @@ export function SpeechSettings() {
   const localeDisplayNames = new Intl.DisplayNames([languageCode], {
     type: "language",
   });
+
+  const speechControls = [
+    {
+      label: "Rate",
+      value: rate,
+      min: RATE_MIN,
+      max: RATE_MAX,
+      onChange: setRate,
+    },
+    {
+      label: "Pitch",
+      value: pitch,
+      min: PITCH_MIN,
+      max: PITCH_MAX,
+      onChange: setPitch,
+    },
+    {
+      label: "Volume",
+      value: volume,
+      min: VOLUME_MIN,
+      max: VOLUME_MAX,
+      onChange: setVolume,
+    },
+  ];
 
   async function handlePreviewClick() {
     const translator = await createTranslator({
@@ -84,53 +109,23 @@ export function SpeechSettings() {
         </Select>
       </FormControl>
 
-      <Stack spacing={0.5}>
-        <Typography variant="body2" color="text.secondary">
-          Rate
-        </Typography>
-        <Slider
-          aria-label="Rate"
-          valueLabelDisplay="auto"
-          value={rate}
-          min={RATE_MIN}
-          max={RATE_MAX}
-          step={0.1}
-          disabled={!isSpeechSupported}
-          onChange={(_event, value) => setRate(value)}
-        />
-      </Stack>
-
-      <Stack spacing={0.5}>
-        <Typography variant="body2" color="text.secondary">
-          Pitch
-        </Typography>
-        <Slider
-          aria-label="Pitch"
-          valueLabelDisplay="auto"
-          value={pitch}
-          min={PITCH_MIN}
-          max={PITCH_MAX}
-          step={0.1}
-          disabled={!isSpeechSupported}
-          onChange={(_event, value) => setPitch(value)}
-        />
-      </Stack>
-
-      <Stack spacing={0.5}>
-        <Typography variant="body2" color="text.secondary">
-          Volume
-        </Typography>
-        <Slider
-          aria-label="Volume"
-          valueLabelDisplay="auto"
-          value={volume}
-          min={VOLUME_MIN}
-          max={VOLUME_MAX}
-          step={0.1}
-          disabled={!isSpeechSupported}
-          onChange={(_event, value) => setVolume(value)}
-        />
-      </Stack>
+      {speechControls.map(({ label, value, min, max, onChange }) => (
+        <Stack key={label} spacing={0.5}>
+          <Typography variant="body2" color="text.secondary">
+            {label}
+          </Typography>
+          <Slider
+            aria-label={label}
+            valueLabelDisplay="auto"
+            value={value}
+            min={min}
+            max={max}
+            step={0.1}
+            disabled={!isSpeechSupported}
+            onChange={(_event, newValue) => onChange(newValue)}
+          />
+        </Stack>
+      ))}
 
       <Button
         variant="contained"
