@@ -12,11 +12,10 @@ export interface UseBoardSetsReturn {
 }
 
 export function useBoardSets(): UseBoardSetsReturn {
-  const {
-    data: boardSets,
-    isLoading,
-    error,
-  } = useSyncExternalStore(subscribeBoardSets, getBoardSetsSnapshot);
+  const { boardSets, isLoading, error } = useSyncExternalStore(
+    subscribeBoardSets,
+    getBoardSetsSnapshot,
+  );
 
   return { boardSets, isLoading, error };
 }

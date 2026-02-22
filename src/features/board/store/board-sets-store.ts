@@ -3,21 +3,21 @@ import {
   type ImportResult,
 } from "@features/board/db/board-import";
 import {
-  listBoardSets,
   deleteBoardSet,
+  listBoardSets,
   withBoardsDB,
   type BoardSetRecord,
 } from "@features/board/db/boards-db";
 import { createExternalStore } from "@shared/utils/external-store";
 
 export interface BoardSetsSnapshot {
-  data: BoardSetRecord[];
+  boardSets: BoardSetRecord[];
   isLoading: boolean;
   error: Error | null;
 }
 
 const store = createExternalStore<BoardSetsSnapshot>({
-  data: [],
+  boardSets: [],
   isLoading: true,
   error: null,
 });
@@ -27,12 +27,12 @@ let pending: Promise<void> | null = null;
 
 async function refresh(): Promise<void> {
   try {
-    const data = await withBoardsDB((db) => listBoardSets(db));
-    store.setState({ data, isLoading: false, error: null });
+    const boardSets = await withBoardsDB((db) => listBoardSets(db));
+    store.setState({ boardSets, isLoading: false, error: null });
     fetched = true;
   } catch (err) {
     store.setState({
-      data: [],
+      boardSets: [],
       isLoading: false,
       error: err instanceof Error ? err : new Error(String(err)),
     });
@@ -65,7 +65,7 @@ export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
     await refresh();
   }
 
-  return store.getState().data;
+  return store.getState().boardSets;
 }
 
 export async function invalidateBoardSets(): Promise<void> {
