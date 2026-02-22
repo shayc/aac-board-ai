@@ -63,6 +63,8 @@ async function importOBZFile(
     rootBoardId: rootBoardId,
     author: rootBoard?.license?.author_name,
     locale: rootBoard?.locale,
+    gridRows: rootBoard?.grid.rows,
+    gridColumns: rootBoard?.grid.columns,
   });
 
   const pathToId = new Map(
@@ -132,6 +134,8 @@ async function importOBFFile(
     rootBoardId: board.id,
     author: board.license?.author_name,
     locale: board.locale,
+    gridRows: board.grid.rows,
+    gridColumns: board.grid.columns,
   });
 
   await putBoards(db, setId, [

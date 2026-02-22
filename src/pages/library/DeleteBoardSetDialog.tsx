@@ -22,12 +22,11 @@ export function DeleteBoardSetDialog({
       onClose={onCancel}
       aria-labelledby="delete-dialog-title"
     >
-      <DialogTitle id="delete-dialog-title">Delete board set?</DialogTitle>
+      <DialogTitle id="delete-dialog-title">
+        Delete "{target?.name}"?
+      </DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          "{target?.name}" will be permanently deleted. This action cannot be
-          undone.
-        </DialogContentText>
+        <DialogContentText>This action cannot be undone.</DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>

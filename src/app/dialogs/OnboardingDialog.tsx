@@ -11,6 +11,25 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import type { ReactNode } from "react";
+
+const features: { icon: ReactNode; primary: string; secondary: string }[] = [
+  {
+    icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
+    primary: "Smart Rewriting",
+    secondary: "Turn short phrases into clear sentences.",
+  },
+  {
+    icon: <TranslateIcon color="primary" fontSize="large" />,
+    primary: "Real-time Translation",
+    secondary: "Translate messages instantly.",
+  },
+  {
+    icon: <LockOutlinedIcon color="primary" fontSize="large" />,
+    primary: "Private by Design",
+    secondary: "Works offline, on your device. No cloud.",
+  },
+];
 
 export interface OnboardingDialogProps {
   open: boolean;
@@ -59,68 +78,32 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </DialogContentText>
 
         <List sx={{ pt: 0, pb: 0 }}>
-          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
-              <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Smart Rewriting"
-              secondary="Turn short phrases into clear sentences."
-              slotProps={{
-                primary: {
-                  fontWeight: 700,
-                  variant: "subtitle1",
-                  sx: { mb: 0 },
-                },
-                secondary: {
-                  variant: "body2",
-                  sx: { lineHeight: 1.3 },
-                },
-              }}
-            />
-          </ListItem>
-
-          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
-              <TranslateIcon color="primary" fontSize="large" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Real-time Translation"
-              secondary="Translate messages instantly."
-              slotProps={{
-                primary: {
-                  fontWeight: 700,
-                  variant: "subtitle1",
-                  sx: { mb: 0 },
-                },
-                secondary: {
-                  variant: "body2",
-                  sx: { lineHeight: 1.3 },
-                },
-              }}
-            />
-          </ListItem>
-
-          <ListItem disableGutters sx={{ alignItems: "flex-start" }}>
-            <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
-              <LockOutlinedIcon color="primary" fontSize="large" />
-            </ListItemIcon>
-            <ListItemText
-              primary="Private by Design"
-              secondary="Works offline, on your device. No cloud."
-              slotProps={{
-                primary: {
-                  fontWeight: 700,
-                  variant: "subtitle1",
-                  sx: { mb: 0 },
-                },
-                secondary: {
-                  variant: "body2",
-                  sx: { lineHeight: 1.3 },
-                },
-              }}
-            />
-          </ListItem>
+          {features.map((feature) => (
+            <ListItem
+              key={feature.primary}
+              disableGutters
+              sx={{ alignItems: "flex-start" }}
+            >
+              <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
+                {feature.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={feature.primary}
+                secondary={feature.secondary}
+                slotProps={{
+                  primary: {
+                    fontWeight: 700,
+                    variant: "subtitle1",
+                    sx: { mb: 0 },
+                  },
+                  secondary: {
+                    variant: "body2",
+                    sx: { lineHeight: 1.3 },
+                  },
+                }}
+              />
+            </ListItem>
+          ))}
         </List>
       </DialogContent>
 

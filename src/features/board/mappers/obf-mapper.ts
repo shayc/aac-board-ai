@@ -16,8 +16,8 @@ import type {
 } from "@shared/open-board-format/schema";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSources = buildImageMap(obfBoard);
-  const soundSources = buildSoundMap(obfBoard);
+  const imageSources = buildMediaMap(obfBoard.images);
+  const soundSources = buildMediaMap(obfBoard.sounds);
 
   return {
     id: obfBoard.id,
@@ -35,6 +35,23 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   };
 }
 
+function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
+  const map = new Map<string, string>();
+
+  if (!media) {
+    return map;
+  }
+
+  for (const item of media) {
+    const source = pickMediaSource(item);
+    if (source) {
+      map.set(item.id, source);
+    }
+  }
+
+  return map;
+}
+
 function pickMediaSource(media: OBFMedia): string | undefined {
   if (media.data) {
     return media.data;
@@ -46,40 +63,6 @@ function pickMediaSource(media: OBFMedia): string | undefined {
     return media.url;
   }
   return undefined;
-}
-
-function buildImageMap(obfBoard: OBFBoard): Map<string, string> {
-  const imageMap = new Map<string, string>();
-
-  if (!obfBoard.images) {
-    return imageMap;
-  }
-
-  for (const image of obfBoard.images) {
-    const source = pickMediaSource(image);
-    if (source) {
-      imageMap.set(image.id, source);
-    }
-  }
-
-  return imageMap;
-}
-
-function buildSoundMap(obfBoard: OBFBoard): Map<string, string> {
-  const soundMap = new Map<string, string>();
-
-  if (!obfBoard.sounds) {
-    return soundMap;
-  }
-
-  for (const sound of obfBoard.sounds) {
-    const source = pickMediaSource(sound);
-    if (source) {
-      soundMap.set(sound.id, source);
-    }
-  }
-
-  return soundMap;
 }
 
 function transformButton(
