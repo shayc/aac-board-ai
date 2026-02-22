@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -6,6 +5,7 @@ import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
@@ -57,10 +57,11 @@ export function SpeechSettings() {
   }
 
   return (
-    <Box sx={{ mb: 4 }}>
-      <FormControl size="small" fullWidth sx={{ mb: 2 }}>
+    <Stack spacing={3}>
+      <FormControl size="small" fullWidth>
         <InputLabel id="voice-select-label">Voice</InputLabel>
         <Select
+          variant="outlined"
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
@@ -83,41 +84,53 @@ export function SpeechSettings() {
         </Select>
       </FormControl>
 
-      <Typography gutterBottom>Rate</Typography>
-      <Slider
-        aria-label="Rate"
-        valueLabelDisplay="auto"
-        value={rate}
-        min={RATE_MIN}
-        max={RATE_MAX}
-        step={0.1}
-        disabled={!isSpeechSupported}
-        onChange={(_event, value) => setRate(value)}
-      />
+      <Stack spacing={0.5}>
+        <Typography variant="body2" color="text.secondary">
+          Rate
+        </Typography>
+        <Slider
+          aria-label="Rate"
+          valueLabelDisplay="auto"
+          value={rate}
+          min={RATE_MIN}
+          max={RATE_MAX}
+          step={0.1}
+          disabled={!isSpeechSupported}
+          onChange={(_event, value) => setRate(value)}
+        />
+      </Stack>
 
-      <Typography gutterBottom>Pitch</Typography>
-      <Slider
-        aria-label="Pitch"
-        valueLabelDisplay="auto"
-        value={pitch}
-        min={PITCH_MIN}
-        max={PITCH_MAX}
-        step={0.1}
-        disabled={!isSpeechSupported}
-        onChange={(_event, value) => setPitch(value)}
-      />
+      <Stack spacing={0.5}>
+        <Typography variant="body2" color="text.secondary">
+          Pitch
+        </Typography>
+        <Slider
+          aria-label="Pitch"
+          valueLabelDisplay="auto"
+          value={pitch}
+          min={PITCH_MIN}
+          max={PITCH_MAX}
+          step={0.1}
+          disabled={!isSpeechSupported}
+          onChange={(_event, value) => setPitch(value)}
+        />
+      </Stack>
 
-      <Typography gutterBottom>Volume</Typography>
-      <Slider
-        aria-label="Volume"
-        valueLabelDisplay="auto"
-        value={volume}
-        min={VOLUME_MIN}
-        max={VOLUME_MAX}
-        step={0.1}
-        disabled={!isSpeechSupported}
-        onChange={(_event, value) => setVolume(value)}
-      />
+      <Stack spacing={0.5}>
+        <Typography variant="body2" color="text.secondary">
+          Volume
+        </Typography>
+        <Slider
+          aria-label="Volume"
+          valueLabelDisplay="auto"
+          value={volume}
+          min={VOLUME_MIN}
+          max={VOLUME_MAX}
+          step={0.1}
+          disabled={!isSpeechSupported}
+          onChange={(_event, value) => setVolume(value)}
+        />
+      </Stack>
 
       <Button
         variant="contained"
@@ -127,6 +140,6 @@ export function SpeechSettings() {
       >
         Preview
       </Button>
-    </Box>
+    </Stack>
   );
 }
