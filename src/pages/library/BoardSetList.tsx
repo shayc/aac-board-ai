@@ -1,6 +1,6 @@
 import type { BoardSetRecord } from "@features/board/db/boards-db";
-import DeleteIcon from "@mui/icons-material/Delete";
-import InfoIcon from "@mui/icons-material/Info";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -113,13 +113,13 @@ export function BoardSetList({
       >
         <MenuItem onClick={handleInfo}>
           <ListItemIcon>
-            <InfoIcon fontSize="small" />
+            <InfoOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Info</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleDelete}>
           <ListItemIcon>
-            <DeleteIcon fontSize="small" />
+            <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
