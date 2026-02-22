@@ -16,8 +16,8 @@ import type {
 } from "@shared/open-board-format/schema";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSources = buildImageMap(obfBoard);
-  const soundSources = buildSoundMap(obfBoard);
+  const imageSources = buildMediaMap(obfBoard.images);
+  const soundSources = buildMediaMap(obfBoard.sounds);
 
   return {
     id: obfBoard.id,
@@ -48,38 +48,21 @@ function pickMediaSource(media: OBFMedia): string | undefined {
   return undefined;
 }
 
-function buildImageMap(obfBoard: OBFBoard): Map<string, string> {
-  const imageMap = new Map<string, string>();
+function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
+  const map = new Map<string, string>();
 
-  if (!obfBoard.images) {
-    return imageMap;
+  if (!media) {
+    return map;
   }
 
-  for (const image of obfBoard.images) {
-    const source = pickMediaSource(image);
+  for (const item of media) {
+    const source = pickMediaSource(item);
     if (source) {
-      imageMap.set(image.id, source);
+      map.set(item.id, source);
     }
   }
 
-  return imageMap;
-}
-
-function buildSoundMap(obfBoard: OBFBoard): Map<string, string> {
-  const soundMap = new Map<string, string>();
-
-  if (!obfBoard.sounds) {
-    return soundMap;
-  }
-
-  for (const sound of obfBoard.sounds) {
-    const source = pickMediaSource(sound);
-    if (source) {
-      soundMap.set(sound.id, source);
-    }
-  }
-
-  return soundMap;
+  return map;
 }
 
 function transformButton(
