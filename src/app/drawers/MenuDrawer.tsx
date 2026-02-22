@@ -1,4 +1,5 @@
 import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
@@ -19,6 +20,13 @@ export interface MenuDrawerProps {
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const menuItems = [
+    {
+      id: "home",
+      icon: HomeOutlinedIcon,
+      label: "Home",
+      to: "/",
+      onClick: onClose,
+    },
     {
       id: "library",
       icon: CollectionsBookmarkOutlinedIcon,
