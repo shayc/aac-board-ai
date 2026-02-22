@@ -7,6 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { getLanguageDisplayName } from "@shared/utils/language";
 
 export interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;
@@ -67,7 +68,7 @@ function buildChips(boardSet: BoardSetRecord): string[] {
   }
 
   if (boardSet.locale) {
-    chips.push(boardSet.locale);
+    chips.push(getLanguageDisplayName(boardSet.locale));
   }
 
   if (boardSet.license) {
