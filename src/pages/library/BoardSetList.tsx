@@ -1,5 +1,6 @@
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import DeleteIcon from "@mui/icons-material/Delete";
+import InfoIcon from "@mui/icons-material/Info";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
@@ -14,14 +15,16 @@ import { useState } from "react";
 
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];
-  onNavigate: (setId: string, rootBoardId?: string) => void;
-  onDelete: (setId: string, name: string) => void;
+  onNavigate: (setId: string, boardId?: string) => void;
+  onDelete: (boardSet: BoardSetRecord) => void;
+  onInfo: (boardSet: BoardSetRecord) => void;
 }
 
 export function BoardSetList({
   boardSets,
   onNavigate,
   onDelete,
+  onInfo,
 }: BoardSetListProps) {
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
@@ -46,9 +49,23 @@ export function BoardSetList({
     setMenuAnchor(null);
   }
 
+  function handleInfo() {
+    if (menuAnchor) {
+      const set = boardSets.find((s) => s.setId === menuAnchor.setId);
+      if (set) {
+        onInfo(set);
+      }
+    }
+
+    handleMenuClose();
+  }
+
   function handleDelete() {
     if (menuAnchor) {
-      onDelete(menuAnchor.setId, menuAnchor.name);
+      const set = boardSets.find((s) => s.setId === menuAnchor.setId);
+      if (set) {
+        onDelete(set);
+      }
     }
 
     handleMenuClose();
@@ -94,6 +111,12 @@ export function BoardSetList({
         open={menuOpen}
         onClose={handleMenuClose}
       >
+        <MenuItem onClick={handleInfo}>
+          <ListItemIcon>
+            <InfoIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText>Info</ListItemText>
+        </MenuItem>
         <MenuItem onClick={handleDelete}>
           <ListItemIcon>
             <DeleteIcon fontSize="small" />
