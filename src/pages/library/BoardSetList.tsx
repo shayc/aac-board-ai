@@ -9,6 +9,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 
 export interface BoardSetListProps {
@@ -61,16 +62,18 @@ export function BoardSetList({
             key={set.setId}
             disablePadding
             secondaryAction={
-              <IconButton
-                edge="end"
-                aria-label={`Options for ${set.name}`}
-                aria-controls={menuOpen ? "board-set-menu" : undefined}
-                aria-haspopup="true"
-                aria-expanded={menuOpen ? "true" : undefined}
-                onClick={(event) => handleMenuOpen(event, set)}
-              >
-                <MoreVertIcon />
-              </IconButton>
+              <Tooltip title="More options">
+                <IconButton
+                  edge="end"
+                  aria-label={`More options for ${set.name}`}
+                  aria-controls={menuOpen ? "board-set-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={menuOpen ? "true" : undefined}
+                  onClick={(event) => handleMenuOpen(event, set)}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </Tooltip>
             }
           >
             <ListItemButton
