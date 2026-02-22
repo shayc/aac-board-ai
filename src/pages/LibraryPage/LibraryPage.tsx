@@ -19,17 +19,15 @@ function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { importBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
+  const { setPageTitle } = usePageTitle();
   const navigate = useNavigate();
 
-  const { setPageTitle } = usePageTitle();
+  const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
+  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   useEffect(() => {
     setPageTitle("Library");
   }, [setPageTitle]);
-
-  const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
-
-  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   function handleSelect(boardSet: BoardSetRecord) {
     if (boardSet.rootBoardId) {

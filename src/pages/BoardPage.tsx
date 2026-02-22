@@ -8,13 +8,12 @@ import type { BoardRouteParams } from "@features/board/types";
 
 function BoardPage() {
   const params = useParams<BoardRouteParams>();
+  const { setPageTitle } = usePageTitle();
 
   const { board } = useBoard({
     setId: params.setId ?? "",
     boardId: params.boardId ?? "",
   });
-
-  const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
     setPageTitle(board?.name);
