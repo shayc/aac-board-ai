@@ -9,6 +9,7 @@ export interface BoardSetRecord {
   updatedAt: number;
   boardCount: number;
   author?: string;
+  description?: string;
   license?: string;
   locale?: string;
   gridRows?: number;
@@ -106,6 +107,7 @@ export interface UpsertBoardSetInput {
   name: string;
   rootBoardId?: string;
   author?: string;
+  description?: string;
   license?: string;
   locale?: string;
   gridRows?: number;
@@ -126,6 +128,7 @@ export async function upsertBoardSet(
     updatedAt: Date.now(),
     boardCount: prev?.boardCount ?? 0,
     author: boardSet.author ?? prev?.author,
+    description: boardSet.description ?? prev?.description,
     license: boardSet.license ?? prev?.license,
     locale: boardSet.locale ?? prev?.locale,
     gridRows: boardSet.gridRows ?? prev?.gridRows,

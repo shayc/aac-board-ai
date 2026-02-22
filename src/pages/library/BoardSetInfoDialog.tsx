@@ -57,6 +57,10 @@ function buildInfoRows(
 
   rows.push({ label: "Boards", value: String(boardSet.boardCount) });
 
+  if (boardSet.description) {
+    rows.push({ label: "Description", value: boardSet.description });
+  }
+
   if (boardSet.gridRows && boardSet.gridColumns) {
     rows.push({
       label: "Grid size",
