@@ -37,7 +37,7 @@ export function BoardSetInfoDialog({
         )}
       </DialogTitle>
 
-      <DialogContent>
+      <DialogContent sx={{ overflowX: "hidden", overflowY: "auto" }}>
         {chips.length > 0 && (
           <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
             {chips.map((label) => (
@@ -47,7 +47,11 @@ export function BoardSetInfoDialog({
         )}
 
         {boardSet?.description && (
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ mt: 2, whiteSpace: "pre-line" }}
+          >
             {boardSet.description}
           </Typography>
         )}
