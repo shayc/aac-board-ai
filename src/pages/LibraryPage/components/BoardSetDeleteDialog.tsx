@@ -26,9 +26,11 @@ export function BoardSetDeleteDialog({
       <DialogTitle id="delete-dialog-title">
         Delete "{boardSet?.name}"?
       </DialogTitle>
+
       <DialogContent>
         <DialogContentText>This action cannot be undone.</DialogContentText>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={onClose}>Cancel</Button>
         <Button onClick={onConfirm} color="error">
