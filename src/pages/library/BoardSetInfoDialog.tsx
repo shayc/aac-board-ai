@@ -68,14 +68,13 @@ function buildInfoRows(
     rows.push({ label: "Author", value: boardSet.author });
   }
 
+  if (boardSet.license) {
+    rows.push({ label: "License", value: boardSet.license });
+  }
+
   if (boardSet.locale) {
     rows.push({ label: "Locale", value: boardSet.locale });
   }
-
-  rows.push({
-    label: "Last updated",
-    value: new Date(boardSet.updatedAt).toLocaleDateString(),
-  });
 
   return rows;
 }
