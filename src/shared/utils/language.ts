@@ -10,3 +10,16 @@ export function normalizeLocaleCode(code: string): string {
 
   return `${language.toLowerCase()}-${region.toUpperCase()}`;
 }
+
+/**
+ * Returns the display name of a locale code in English.
+ * Falls back to the original code if the locale is not recognized.
+ */
+export function getLanguageDisplayName(code: string): string {
+  try {
+    const displayNames = new Intl.DisplayNames(["en"], { type: "language" });
+    return displayNames.of(normalizeLocaleCode(code)) ?? code;
+  } catch {
+    return code;
+  }
+}

@@ -1,4 +1,5 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
+import type { BoardSetRecord } from "@features/board/db/boards-db";
 import { useBoardSets } from "@features/board/hooks/useBoardSets";
 import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
 import { removeBoardSet } from "@features/board/store/board-sets-store";
@@ -9,8 +10,9 @@ import Stack from "@mui/material/Stack";
 import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
+import { BoardSetInfoDialog } from "./library/BoardSetInfoDialog";
 import { BoardSetList } from "./library/BoardSetList";
-import { DeleteBoardSetDialog } from "./library/DeleteBoardSetDialog";
+import { BoardSetDeleteDialog } from "./library/BoardSetDeleteDialog";
 import { LibraryEmptyState } from "./library/LibraryEmptyState";
 
 function LibraryPage() {
@@ -25,17 +27,16 @@ function LibraryPage() {
     setPageTitle("Library");
   }, [setPageTitle]);
 
-  const [deleteTarget, setDeleteTarget] = useState<{
-    setId: string;
-    name: string;
-  } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
 
-  function handleNavigate(setId: string, rootBoardId?: string) {
-    if (rootBoardId) {
+  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
+
+  function handleNavigate(setId: string, boardId?: string) {
+    if (boardId) {
       void navigate(
         generatePath("/sets/:setId/boards/:boardId", {
           setId,
-          boardId: rootBoardId,
+          boardId,
         }),
       );
     } else {
@@ -85,12 +86,18 @@ function LibraryPage() {
         <BoardSetList
           boardSets={boardSets}
           onNavigate={handleNavigate}
-          onDelete={(setId, name) => setDeleteTarget({ setId, name })}
+          onDelete={setDeleteTarget}
+          onInfo={setInfoTarget}
         />
       )}
 
-      <DeleteBoardSetDialog
-        target={deleteTarget}
+      <BoardSetInfoDialog
+        boardSet={infoTarget}
+        onClose={() => setInfoTarget(null)}
+      />
+
+      <BoardSetDeleteDialog
+        boardSet={deleteTarget}
         onConfirm={() => void handleDelete()}
         onCancel={() => setDeleteTarget(null)}
       />

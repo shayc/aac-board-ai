@@ -1,5 +1,6 @@
 import { loadOBF, loadOBZ } from "@shared/open-board-format";
 import type { OBFBoard } from "@shared/open-board-format/schema";
+import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import type { BoardsDB } from "./boards-db";
 import {
@@ -62,6 +63,10 @@ async function importOBZFile(
     name: rootBoard?.name ?? file.name,
     rootBoardId: rootBoardId,
     author: rootBoard?.license?.author_name,
+    description: rootBoard?.description_html
+      ? stripHtmlTags(rootBoard.description_html)
+      : undefined,
+    license: rootBoard?.license?.type,
     locale: rootBoard?.locale,
     gridRows: rootBoard?.grid.rows,
     gridColumns: rootBoard?.grid.columns,
@@ -133,6 +138,10 @@ async function importOBFFile(
     name: board.name ?? file.name,
     rootBoardId: board.id,
     author: board.license?.author_name,
+    description: board.description_html
+      ? stripHtmlTags(board.description_html)
+      : undefined,
+    license: board.license?.type,
     locale: board.locale,
     gridRows: board.grid.rows,
     gridColumns: board.grid.columns,
