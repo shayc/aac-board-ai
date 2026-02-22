@@ -1,11 +1,9 @@
 import type { BoardSetRecord } from "@features/board/db/boards-db";
 import DeleteIcon from "@mui/icons-material/Delete";
-import GridViewIcon from "@mui/icons-material/GridView";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
 
@@ -41,9 +39,6 @@ export function BoardSetList({
           <ListItemButton
             onClick={() => onNavigate(set.setId, set.rootBoardId)}
           >
-            <ListItemIcon>
-              <GridViewIcon />
-            </ListItemIcon>
             <ListItemText primary={set.name} secondary={formatSecondary(set)} />
           </ListItemButton>
         </ListItem>
@@ -55,11 +50,15 @@ export function BoardSetList({
 function formatSecondary(set: BoardSetRecord): string {
   const parts: string[] = [];
 
-  if (set.author) {
-    parts.push(`By ${set.author}`);
+  const { gridRows, gridColumns, author } = set;
+
+  if (gridRows && gridColumns) {
+    parts.push(`${gridRows}x${gridColumns}`);
   }
 
-  parts.push(`${set.boardCount} ${set.boardCount === 1 ? "board" : "boards"}`);
+  if (author) {
+    parts.push(`By ${author}`);
+  }
 
   return parts.join(" · ");
 }

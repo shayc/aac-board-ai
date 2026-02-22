@@ -10,6 +10,8 @@ export interface BoardSetRecord {
   boardCount: number;
   author?: string;
   locale?: string;
+  gridRows?: number;
+  gridColumns?: number;
 }
 export interface BoardRecord {
   setId: string;
@@ -104,6 +106,8 @@ export interface UpsertBoardSetInput {
   rootBoardId?: string;
   author?: string;
   locale?: string;
+  gridRows?: number;
+  gridColumns?: number;
 }
 
 export async function upsertBoardSet(
@@ -121,6 +125,8 @@ export async function upsertBoardSet(
     boardCount: prev?.boardCount ?? 0,
     author: boardSet.author ?? prev?.author,
     locale: boardSet.locale ?? prev?.locale,
+    gridRows: boardSet.gridRows ?? prev?.gridRows,
+    gridColumns: boardSet.gridColumns ?? prev?.gridColumns,
   };
 
   await db.put("boardsets", row);
