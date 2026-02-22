@@ -64,7 +64,7 @@ describe("useBoardNavigation", () => {
       return () => undefined;
     });
     vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-      data: [
+      boardSets: [
         {
           setId: "set-1",
           name: "Set 1",
@@ -109,7 +109,7 @@ describe("useBoardNavigation", () => {
 
     test("is false when root board is not available", async () => {
       vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        data: [
+        boardSets: [
           {
             setId: "set-1",
             name: "Set 1",
@@ -131,7 +131,7 @@ describe("useBoardNavigation", () => {
 
     test("is false when board set is missing", async () => {
       vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        data: [],
+        boardSets: [],
         isLoading: false,
         error: null,
       });
@@ -272,7 +272,7 @@ describe("useBoardNavigation", () => {
 
     test("does nothing when rootBoardId is not loaded", async () => {
       vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        data: [],
+        boardSets: [],
         isLoading: false,
         error: null,
       });

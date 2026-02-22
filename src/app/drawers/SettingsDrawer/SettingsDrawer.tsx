@@ -1,7 +1,9 @@
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
@@ -38,11 +40,21 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Box sx={{ width: 320, px: 3 }}>
-        <AppearanceSettings />
-        <LanguageSettings />
-        <SpeechSettings />
-        <AISettings />
+      <Box sx={{ width: 320, px: 3, pb: 3 }}>
+        <Stack spacing={0}>
+          <AppearanceSettings />
+
+          <Divider sx={{ my: 3 }} />
+
+          <Stack spacing={3}>
+            <LanguageSettings />
+            <SpeechSettings />
+          </Stack>
+
+          <Divider sx={{ my: 3 }} />
+
+          <AISettings />
+        </Stack>
       </Box>
     </Drawer>
   );

@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -14,23 +13,26 @@ export function AppearanceSettings() {
   }
 
   return (
-    <Box sx={{ mb: 4 }}>
-      <FormControl>
-        <FormLabel id="theme-toggle">Theme</FormLabel>
-        <RadioGroup
-          aria-labelledby="theme-toggle"
-          name="theme-toggle"
-          row
-          value={mode}
-          onChange={(event) =>
-            setMode(event.target.value as "system" | "light" | "dark")
-          }
-        >
-          <FormControlLabel value="system" control={<Radio />} label="System" />
-          <FormControlLabel value="light" control={<Radio />} label="Light" />
-          <FormControlLabel value="dark" control={<Radio />} label="Dark" />
-        </RadioGroup>
-      </FormControl>
-    </Box>
+    <FormControl>
+      <FormLabel
+        id="theme-toggle"
+        sx={{ typography: "body2", color: "text.secondary" }}
+      >
+        Theme
+      </FormLabel>
+      <RadioGroup
+        aria-labelledby="theme-toggle"
+        name="theme-toggle"
+        row
+        value={mode}
+        onChange={(event) =>
+          setMode(event.target.value as "system" | "light" | "dark")
+        }
+      >
+        <FormControlLabel value="system" control={<Radio />} label="System" />
+        <FormControlLabel value="light" control={<Radio />} label="Light" />
+        <FormControlLabel value="dark" control={<Radio />} label="Dark" />
+      </RadioGroup>
+    </FormControl>
   );
 }

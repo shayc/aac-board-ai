@@ -1,4 +1,4 @@
-import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { AICapabilitiesList } from "@shared/components/AICapabilitiesList";
@@ -9,29 +9,28 @@ export function AISettings() {
   const { sharedContext, setSharedContext } = useAI();
 
   return (
-    <Box sx={{ mb: 4 }}>
+    <Stack spacing={3}>
       {isRewriterSupported && (
-        <>
-          <Typography variant="subtitle1" gutterBottom>
-            Custom Instructions
-          </Typography>
-          <TextField
-            fullWidth
-            multiline
-            rows={3}
-            placeholder="e.g., Sarcastic, Polite."
-            helperText="Personalize AI suggestions"
-            value={sharedContext}
-            onChange={(e) => setSharedContext(e.target.value)}
-            sx={{ mb: 2 }}
-          />
-        </>
+        <TextField
+          variant="outlined"
+          fullWidth
+          multiline
+          rows={4}
+          label="Custom Instructions"
+          slotProps={{ inputLabel: { shrink: true } }}
+          placeholder="e.g., Sarcastic, Polite."
+          helperText="Personalize AI suggestions"
+          value={sharedContext}
+          onChange={(e) => setSharedContext(e.target.value)}
+        />
       )}
 
-      <Typography variant="subtitle1" gutterBottom>
-        Built-in AI Support
-      </Typography>
-      <AICapabilitiesList />
-    </Box>
+      <Stack spacing={1}>
+        <Typography variant="body2" color="text.secondary">
+          Built-in AI Support
+        </Typography>
+        <AICapabilitiesList />
+      </Stack>
+    </Stack>
   );
 }
