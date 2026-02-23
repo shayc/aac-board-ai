@@ -1,6 +1,6 @@
-import type { OBFBoard } from "@shared/open-board-format/schema";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
+import type { OBFBoard } from "open-board-format";
 
 export interface BoardSetRecord {
   setId: string;

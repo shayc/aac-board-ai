@@ -13,7 +13,7 @@ import type {
   OBFLicense,
   OBFLoadBoard,
   OBFMedia,
-} from "@shared/open-board-format/schema";
+} from "open-board-format";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSources = buildMediaMap(obfBoard.images);
