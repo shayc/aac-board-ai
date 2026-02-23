@@ -1,4 +1,4 @@
-import type { OBFBoard } from "@shared/open-board-format/schema";
+import type { OBFBoard } from "open-board-format";
 import { afterEach, describe, expect, test } from "vitest";
 import {
   deleteBoardSet,

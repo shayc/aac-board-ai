@@ -1,5 +1,5 @@
-import { loadOBF, loadOBZ } from "@shared/open-board-format";
-import type { OBFBoard } from "@shared/open-board-format/schema";
+import { loadOBF, loadOBZ } from "open-board-format";
+import type { OBFBoard } from "open-board-format";
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import type { BoardsDB } from "./boards-db";

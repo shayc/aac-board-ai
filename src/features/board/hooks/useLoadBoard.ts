@@ -6,7 +6,7 @@ import {
 import type { BoardsDB } from "@features/board/db/boards-db";
 import { obfToBoard } from "@features/board/mappers/obf-mapper";
 import type { Board } from "@features/board/types";
-import type { OBFBoard, OBFMedia } from "@shared/open-board-format/schema";
+import type { OBFBoard, OBFMedia } from "open-board-format";
 import type { ObjectUrlRegistry } from "@shared/utils/object-url";
 import { createObjectUrlRegistry } from "@shared/utils/object-url";
 import { useEffect, useRef, useState } from "react";
