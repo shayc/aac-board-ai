@@ -64,7 +64,7 @@ npm run build           # Typecheck + production build
 - **AI:** Gemini Nano (Chrome) / Phi 4 Mini (Edge)
 - **Speech:** Web Speech API
 - **Storage:** IndexedDB
-- **Data:** Zod (OBF validation), fflate (OBZ compression)
+- **Data:** open-board-format (OBF/OBZ parsing)
 - **Tooling:** Vite, Vitest, Playwright
 
 See full architecture details in [docs/architecture.md](docs/architecture.md).
