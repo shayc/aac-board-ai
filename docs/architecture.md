@@ -39,10 +39,9 @@ The `AIProvider` context manages shared context across AI sessions. Users can pr
 **UI:** Material UI 7 • Emotion • React Aria  
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) + localStorage  
-**Compression:** fflate — OBZ file handling  
+**Data:** open-board-format (OBF/OBZ parsing)  
 **AI:** Chrome Built-in AI (Gemini Nano)  
 **Optimization:** React Compiler  
-**Validation:** Zod 4  
 **Testing:** Vitest 4 + Playwright browser mode  
 **Error Handling:** react-error-boundary
 
@@ -85,7 +84,6 @@ src/
     ├── contexts/          # Global contexts
     ├── hooks/
     │   └── ai/            # Chrome AI hooks
-    ├── open-board-format/ # OBF/OBZ parsing
     ├── testing/           # Test utilities
     └── utils/
 ```
