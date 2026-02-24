@@ -3,7 +3,7 @@ import { useAudio } from "@shared/hooks/useAudio";
 import { useState } from "react";
 import type { MessagePart } from "./useMessage";
 
-interface Segment {
+interface PlaybackSegment {
   type: "text" | "sound";
   data: string;
 }
@@ -26,13 +26,13 @@ export function useMessagePlayback(
       setIsPlaying(true);
       const segments = convertPartsToSegments(parts);
 
-      for (const seg of segments) {
-        if (seg.type === "sound") {
-          await audio.play(seg.data);
+      for (const segment of segments) {
+        if (segment.type === "sound") {
+          await audio.play(segment.data);
         }
 
-        if (seg.type === "text") {
-          await speech.speak(seg.data);
+        if (segment.type === "text") {
+          await speech.speak(segment.data);
         }
       }
     } catch (error) {
@@ -60,41 +60,36 @@ export function useMessagePlayback(
   };
 }
 
-function convertPartsToSegments(parts: MessagePart[]): Segment[] {
-  const segments = parts
-    .map((part) => {
-      if (part.soundSrc) {
-        return { type: "sound", data: part.soundSrc };
-      }
+function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
+  const segments = parts.flatMap((part) => {
+    if (part.soundSrc) {
+      return { type: "sound" as const, data: part.soundSrc };
+    }
 
-      const text = part.vocalization ?? part.label;
-      if (text) {
-        return { type: "text", data: text };
-      }
-      return null;
-    })
-    .filter((segment): segment is Segment => segment !== null);
+    const text = part.vocalization ?? part.label;
+    if (text) {
+      return { type: "text" as const, data: text };
+    }
 
-  const mergedSegments = mergeTextSegments(segments);
-  return mergedSegments;
+    return [];
+  });
+
+  return mergeTextSegments(segments);
 }
 
-function mergeTextSegments(segments: Segment[]): Segment[] {
-  const mergedSegments: Segment[] = [];
+function mergeTextSegments(segments: PlaybackSegment[]): PlaybackSegment[] {
+  const result: PlaybackSegment[] = [];
 
-  for (const currentSegment of segments) {
-    const previousSegment = mergedSegments.at(-1);
+  for (const segment of segments) {
+    const previous = result.at(-1);
+    const canMerge = previous?.type === "text" && segment.type === "text";
 
-    if (previousSegment?.type === "text" && currentSegment.type === "text") {
-      previousSegment.data =
-        `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
-          /\s+/g,
-          " ",
-        );
+    if (canMerge) {
+      previous.data = `${previous.data} ${segment.data}`.replace(/\s+/g, " ");
     } else {
-      mergedSegments.push({ ...currentSegment });
+      result.push({ ...segment });
     }
   }
 
-  return mergedSegments;
+  return result;
 }

@@ -23,7 +23,7 @@ function isValidSuggestion(suggestion: string): boolean {
 }
 
 export interface UseSuggestionsReturn {
-  items: string[];
+  phrases: string[];
   isAvailable: boolean;
   tone: SuggestionTone;
   setTone: (tone: SuggestionTone) => void;
@@ -94,7 +94,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   }, [text, tone, sharedContext, createProofreader, createRewriter]);
 
   return {
-    items: suggestions,
+    phrases: suggestions,
     isAvailable: isSuggestionsAvailable,
     tone,
     setTone,
