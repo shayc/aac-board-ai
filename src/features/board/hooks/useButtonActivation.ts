@@ -24,31 +24,36 @@ export function useButtonActivation({
   const audio = useAudio();
 
   async function executeAction(action: BoardAction) {
-    const actionHandlers: Record<BoardAction, () => void | Promise<void>> = {
-      ":space": message.addSpace,
-      ":backspace": message.removeLastPart,
-      ":speak": playback.play,
-      ":clear": message.clear,
-      ":home": navigation.goHome,
-    };
+    switch (action) {
+      case ":space":
+        message.addSpace();
+        return;
+      case ":backspace":
+        message.removeLastPart();
+        return;
+      case ":speak":
+        await playback.play();
+        return;
+      case ":clear":
+        message.clear();
+        return;
+      case ":home":
+        navigation.goHome();
+        return;
+      default:
+        if (action.startsWith("+")) {
+          const text = action.slice(1).trim();
+          const lastPart = message.parts.at(-1);
 
-    if (action.startsWith("+")) {
-      const text = action.slice(1).trim();
-      const lastPart = message.parts.at(-1);
-
-      message.updateLastPart({
-        id: text,
-        label: `${lastPart?.label ?? ""}${text}`,
-      });
-
-      return;
+          message.updateLastPart({
+            id: text,
+            label: `${lastPart?.label ?? ""}${text}`,
+          });
+        }
     }
-
-    const handler = actionHandlers[action];
-    await handler?.();
   }
 
-  const activateButton = async (button: BoardButton) => {
+  async function activateButton(button: BoardButton) {
     if (button.loadBoard?.id) {
       navigation.goToBoard(button.loadBoard.id);
       return;
@@ -82,7 +87,7 @@ export function useButtonActivation({
     if (text) {
       void speech.speak(text.toLowerCase());
     }
-  };
+  }
 
   return {
     activateButton,
