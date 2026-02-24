@@ -59,7 +59,7 @@ export function BoardView({ board }: BoardViewProps) {
 
         {suggestions.isAvailable && (
           <SuggestionBar
-            suggestions={suggestions.items}
+            suggestions={suggestions.phrases}
             tone={suggestions.tone}
             onToneChange={suggestions.setTone}
             onSuggestionClick={message.setFromText}

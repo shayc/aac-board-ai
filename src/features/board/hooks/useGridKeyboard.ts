@@ -61,21 +61,21 @@ export function useGridKeyboard({
         return;
       }
 
-      let dRow = 0;
-      let dCol = 0;
+      let deltaRow = 0;
+      let deltaCol = 0;
 
       switch (event.key) {
         case "ArrowUp":
-          dRow = -1;
+          deltaRow = -1;
           break;
         case "ArrowDown":
-          dRow = 1;
+          deltaRow = 1;
           break;
         case "ArrowLeft":
-          dCol = -1;
+          deltaCol = -1;
           break;
         case "ArrowRight":
-          dCol = 1;
+          deltaCol = 1;
           break;
         default:
           return;
@@ -83,12 +83,12 @@ export function useGridKeyboard({
 
       const result = findNextNonEmptyCell(
         grid,
-        currentRow + dRow,
-        currentCol + dCol,
+        currentRow + deltaRow,
+        currentCol + deltaCol,
         rows,
         columns,
-        dRow,
-        dCol,
+        deltaRow,
+        deltaCol,
       );
 
       if (result) {
@@ -122,21 +122,21 @@ function findNextNonEmptyCell(
   startCol: number,
   rows: number,
   columns: number,
-  dRow: number,
-  dCol: number,
+  deltaRow: number,
+  deltaCol: number,
 ): CellResult | null {
-  let r = startRow;
-  let c = startCol;
+  let row = startRow;
+  let col = startCol;
 
-  while (r >= 0 && r < rows && c >= 0 && c < columns) {
-    const cell = grid[r]?.[c];
+  while (row >= 0 && row < rows && col >= 0 && col < columns) {
+    const cell = grid[row]?.[col];
 
     if (cell) {
-      return { element: cell, row: r, col: c };
+      return { element: cell, row, col };
     }
 
-    r += dRow;
-    c += dCol;
+    row += deltaRow;
+    col += deltaCol;
   }
 
   return null;

@@ -26,13 +26,13 @@ export function useMessagePlayback(
       setIsPlaying(true);
       const segments = convertPartsToSegments(parts);
 
-      for (const seg of segments) {
-        if (seg.type === "sound") {
-          await audio.play(seg.data);
+      for (const segment of segments) {
+        if (segment.type === "sound") {
+          await audio.play(segment.data);
         }
 
-        if (seg.type === "text") {
-          await speech.speak(seg.data);
+        if (segment.type === "text") {
+          await speech.speak(segment.data);
         }
       }
     } catch (error) {

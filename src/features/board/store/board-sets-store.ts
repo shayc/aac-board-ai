@@ -22,14 +22,14 @@ const store = createExternalStore<BoardSetsSnapshot>({
   error: null,
 });
 
-let fetched = false;
-let pending: Promise<void> | null = null;
+let hasFetched = false;
+let pendingRefresh: Promise<void> | null = null;
 
 async function refresh(): Promise<void> {
   try {
     const boardSets = await withBoardsDB((db) => listBoardSets(db));
     store.setState({ boardSets, isLoading: false, error: null });
-    fetched = true;
+    hasFetched = true;
   } catch (err) {
     store.setState({
       boardSets: [],
@@ -37,13 +37,13 @@ async function refresh(): Promise<void> {
       error: err instanceof Error ? err : new Error(String(err)),
     });
   } finally {
-    pending = null;
+    pendingRefresh = null;
   }
 }
 
 function ensureFetched() {
-  if (!fetched && !pending) {
-    pending = refresh();
+  if (!hasFetched && !pendingRefresh) {
+    pendingRefresh = refresh();
   }
 }
 
@@ -59,9 +59,9 @@ export function getBoardSetsSnapshot(): BoardSetsSnapshot {
 }
 
 export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
-  if (pending) {
-    await pending;
-  } else if (!fetched) {
+  if (pendingRefresh) {
+    await pendingRefresh;
+  } else if (!hasFetched) {
     await refresh();
   }
 
@@ -69,8 +69,8 @@ export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function invalidateBoardSets(): Promise<void> {
-  pending = refresh();
-  await pending;
+  pendingRefresh = refresh();
+  await pendingRefresh;
 }
 
 export async function importBoardFiles(
