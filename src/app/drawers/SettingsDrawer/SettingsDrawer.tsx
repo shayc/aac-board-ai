@@ -26,22 +26,20 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Typography>
 
         <Tooltip title="Close settings">
-          <span>
-            <IconButton
-              aria-label="Close settings"
-              size="large"
-              edge="end"
-              color="inherit"
-              onClick={onClose}
-            >
-              <CloseIcon />
-            </IconButton>
-          </span>
+          <IconButton
+            aria-label="Close settings"
+            size="large"
+            edge="end"
+            color="inherit"
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
         </Tooltip>
       </Toolbar>
 
       <Box sx={{ width: 320, px: 3, pb: 3 }}>
-        <Stack spacing={0}>
+        <Stack>
           <AppearanceSettings />
 
           <Divider sx={{ my: 3 }} />

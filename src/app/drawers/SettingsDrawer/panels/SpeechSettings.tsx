@@ -69,7 +69,7 @@ export function SpeechSettings() {
     },
   ];
 
-  async function handlePreviewClick() {
+  async function previewVoice() {
     const translator = await createTranslator({
       sourceLanguage: "en",
       targetLanguage: languageCode,
@@ -132,7 +132,7 @@ export function SpeechSettings() {
         color="primary"
         disabled={!isSpeechSupported}
         sx={{ alignSelf: "flex-start" }}
-        onClick={() => void handlePreviewClick()}
+        onClick={() => void previewVoice()}
       >
         Preview
       </Button>

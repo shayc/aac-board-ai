@@ -13,36 +13,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router";
 
+const menuItems = [
+  { icon: HomeOutlinedIcon, label: "Home", to: "/" },
+  { icon: CollectionsBookmarkOutlinedIcon, label: "Library", to: "/library" },
+  { icon: InfoOutlinedIcon, label: "About", to: "/about" },
+];
+
 export interface MenuDrawerProps {
   open: boolean;
   onClose: () => void;
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const menuItems = [
-    {
-      id: "home",
-      icon: HomeOutlinedIcon,
-      label: "Home",
-      to: "/",
-      onClick: onClose,
-    },
-    {
-      id: "library",
-      icon: CollectionsBookmarkOutlinedIcon,
-      label: "Library",
-      to: "/library",
-      onClick: onClose,
-    },
-    {
-      id: "about",
-      icon: InfoOutlinedIcon,
-      label: "About",
-      to: "/about",
-      onClick: onClose,
-    },
-  ];
-
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>
@@ -56,9 +38,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
 
         <List>
           {menuItems.map((item) => (
-            <ListItem key={item.id} disablePadding>
+            <ListItem key={item.to} disablePadding>
               <ListItemButton
-                onClick={() => void item.onClick()}
+                onClick={onClose}
                 component={RouterLink}
                 to={item.to}
               >
