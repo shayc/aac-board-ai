@@ -16,50 +16,55 @@ import type {
 } from "open-board-format";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSources = buildMediaMap(obfBoard.images);
-  const soundSources = buildMediaMap(obfBoard.sounds);
+  const imageSourceById = buildMediaSourceMap(obfBoard.images);
+  const soundSourceById = buildMediaSourceMap(obfBoard.sounds);
 
-  return {
+  const board: Board = {
     id: obfBoard.id,
     name: obfBoard.name,
     locale: obfBoard.locale,
     descriptionHTML: obfBoard.description_html,
-    ...(obfBoard.license && {
-      license: transformLicense(obfBoard.license),
-    }),
     buttons: obfBoard.buttons.map((button) =>
-      transformButton(button, imageSources, soundSources),
+      transformButton(button, imageSourceById, soundSourceById),
     ),
     grid: transformGrid(obfBoard.grid),
     strings: obfBoard.strings,
   };
+
+  if (obfBoard.license) {
+    board.license = transformLicense(obfBoard.license);
+  }
+
+  return board;
 }
 
-function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
-  const map = new Map<string, string>();
+function buildMediaSourceMap(
+  media: OBFMedia[] | undefined,
+): Map<string, string> {
+  const sourceById = new Map<string, string>();
 
   if (!media) {
-    return map;
+    return sourceById;
   }
 
   for (const item of media) {
-    const source = pickMediaSource(item);
+    const source = resolveMediaSource(item);
     if (source) {
-      map.set(item.id, source);
+      sourceById.set(item.id, source);
     }
   }
 
-  return map;
+  return sourceById;
 }
 
-function pickMediaSource(media: OBFMedia): string | undefined {
+function resolveMediaSource(media: OBFMedia): string | undefined {
   return media.data ?? media.path ?? media.url;
 }
 
 function transformButton(
   obfButton: OBFButton,
-  imageSources: Map<string, string>,
-  soundSources: Map<string, string>,
+  imageSourceById: Map<string, string>,
+  soundSourceById: Map<string, string>,
 ): BoardButton {
   return {
     id: obfButton.id,
@@ -68,18 +73,22 @@ function transformButton(
     backgroundColor: obfButton.background_color,
     borderColor: obfButton.border_color,
     imageSrc: obfButton.image_id
-      ? imageSources.get(obfButton.image_id)
+      ? imageSourceById.get(obfButton.image_id)
       : undefined,
     soundSrc: obfButton.sound_id
-      ? soundSources.get(obfButton.sound_id)
+      ? soundSourceById.get(obfButton.sound_id)
       : undefined,
-    actions: [obfButton.action, ...(obfButton.actions ?? [])].filter(
-      (a): a is BoardAction => Boolean(a),
-    ),
+    actions: collectActions(obfButton),
     loadBoard: obfButton.load_board
       ? transformLoadBoard(obfButton.load_board)
       : undefined,
   };
+}
+
+function collectActions(obfButton: OBFButton): BoardAction[] {
+  return [obfButton.action, ...(obfButton.actions ?? [])].filter(
+    (a): a is BoardAction => Boolean(a),
+  );
 }
 
 function transformLoadBoard(obfLoadBoard: OBFLoadBoard): BoardLink {
