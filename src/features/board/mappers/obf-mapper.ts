@@ -4,7 +4,7 @@ import type {
   BoardButton,
   BoardGrid,
   BoardLicense,
-  LoadBoard,
+  BoardLink,
 } from "@features/board/types";
 import type {
   OBFBoard,
@@ -91,7 +91,7 @@ function transformButton(
   };
 }
 
-function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
+function transformLoadBoard(obfLoadBoard: OBFLoadBoard): BoardLink {
   return {
     id: obfLoadBoard.id,
     name: obfLoadBoard.name,

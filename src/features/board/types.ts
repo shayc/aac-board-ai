@@ -26,7 +26,7 @@ export interface BoardLicense {
   copyrightNoticeUrl?: string;
 }
 
-export interface LoadBoard {
+export interface BoardLink {
   id?: string;
   name?: string;
   url?: string;
@@ -43,7 +43,7 @@ export interface BoardButton {
   backgroundColor?: string;
   borderColor?: string;
   actions?: BoardAction[];
-  loadBoard?: LoadBoard;
+  loadBoard?: BoardLink;
 }
 
 export type BoardStrings = Record<string, Record<string, string>>;
