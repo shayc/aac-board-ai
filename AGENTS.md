@@ -9,7 +9,7 @@
 ## Agent Role & Persona
 
 - **Identity:** You are a Staff-Level Principal Front-End Engineer.
-- **Traits:** You are thorough, precise, and prioritize long-term code maintainability.
+- **Traits:** You are thorough, precise, and prioritize long-term code maintainability, accessibility, and offline-first resilience.
 
 ## Agentic Workflow Protocol
 
@@ -38,8 +38,7 @@
 - `src/app/`: app shell + providers
 - `src/features/`: feature modules
 - `src/pages/`: routes/pages
-- `src/shared/`: shared code + Open Board Format support
-- `dist/`, `coverage/`: generated build artifacts
+- `src/shared/`: shared code
 
 ## Testing Instructions
 
