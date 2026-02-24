@@ -61,39 +61,35 @@ export function useMessagePlayback(
 }
 
 function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
-  const segments = parts
-    .map((part) => {
-      if (part.soundSrc) {
-        return { type: "sound", data: part.soundSrc };
-      }
+  const segments = parts.flatMap((part) => {
+    if (part.soundSrc) {
+      return { type: "sound" as const, data: part.soundSrc };
+    }
 
-      const text = part.vocalization ?? part.label;
-      if (text) {
-        return { type: "text", data: text };
-      }
-      return null;
-    })
-    .filter((segment): segment is PlaybackSegment => segment !== null);
+    const text = part.vocalization ?? part.label;
+    if (text) {
+      return { type: "text" as const, data: text };
+    }
+
+    return [];
+  });
 
   return mergeTextSegments(segments);
 }
 
 function mergeTextSegments(segments: PlaybackSegment[]): PlaybackSegment[] {
-  const mergedSegments: PlaybackSegment[] = [];
+  const result: PlaybackSegment[] = [];
 
-  for (const currentSegment of segments) {
-    const previousSegment = mergedSegments.at(-1);
+  for (const segment of segments) {
+    const previous = result.at(-1);
+    const canMerge = previous?.type === "text" && segment.type === "text";
 
-    if (previousSegment?.type === "text" && currentSegment.type === "text") {
-      previousSegment.data =
-        `${previousSegment.data.trim()} ${currentSegment.data.trim()}`.replace(
-          /\s+/g,
-          " ",
-        );
+    if (canMerge) {
+      previous.data = `${previous.data} ${segment.data}`.replace(/\s+/g, " ");
     } else {
-      mergedSegments.push({ ...currentSegment });
+      result.push({ ...segment });
     }
   }
 
-  return mergedSegments;
+  return result;
 }
