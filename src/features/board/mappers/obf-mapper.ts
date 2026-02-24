@@ -53,16 +53,7 @@ function buildMediaMap(media: OBFMedia[] | undefined): Map<string, string> {
 }
 
 function pickMediaSource(media: OBFMedia): string | undefined {
-  if (media.data) {
-    return media.data;
-  }
-  if (media.path) {
-    return media.path;
-  }
-  if (media.url) {
-    return media.url;
-  }
-  return undefined;
+  return media.data ?? media.path ?? media.url;
 }
 
 function transformButton(

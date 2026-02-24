@@ -75,8 +75,7 @@ function convertPartsToSegments(parts: MessagePart[]): Segment[] {
     })
     .filter((segment): segment is Segment => segment !== null);
 
-  const mergedSegments = mergeTextSegments(segments);
-  return mergedSegments;
+  return mergeTextSegments(segments);
 }
 
 function mergeTextSegments(segments: Segment[]): Segment[] {

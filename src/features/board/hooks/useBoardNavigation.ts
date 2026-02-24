@@ -43,11 +43,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const canGoHome = rootBoardId !== "";
 
   function goToBoard(id: string) {
-    if (!setId) {
-      return;
-    }
-
-    if (!id || id === boardId) {
+    if (!setId || !id || id === boardId) {
       return;
     }
 
@@ -60,11 +56,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   }
 
   function goBack() {
-    if (!setId) {
-      return;
-    }
-
-    if (!canGoBack) {
+    if (!setId || !canGoBack) {
       return;
     }
 
@@ -72,11 +64,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   }
 
   function goHome() {
-    if (!setId) {
-      return;
-    }
-
-    if (!rootBoardId) {
+    if (!setId || !rootBoardId) {
       return;
     }
 
