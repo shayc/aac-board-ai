@@ -3,7 +3,7 @@ import { useAudio } from "@shared/hooks/useAudio";
 import { useState } from "react";
 import type { MessagePart } from "./useMessage";
 
-interface Segment {
+interface PlaybackSegment {
   type: "text" | "sound";
   data: string;
 }
@@ -60,7 +60,7 @@ export function useMessagePlayback(
   };
 }
 
-function convertPartsToSegments(parts: MessagePart[]): Segment[] {
+function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
   const segments = parts
     .map((part) => {
       if (part.soundSrc) {
@@ -73,13 +73,13 @@ function convertPartsToSegments(parts: MessagePart[]): Segment[] {
       }
       return null;
     })
-    .filter((segment): segment is Segment => segment !== null);
+    .filter((segment): segment is PlaybackSegment => segment !== null);
 
   return mergeTextSegments(segments);
 }
 
-function mergeTextSegments(segments: Segment[]): Segment[] {
-  const mergedSegments: Segment[] = [];
+function mergeTextSegments(segments: PlaybackSegment[]): PlaybackSegment[] {
+  const mergedSegments: PlaybackSegment[] = [];
 
   for (const currentSegment of segments) {
     const previousSegment = mergedSegments.at(-1);
