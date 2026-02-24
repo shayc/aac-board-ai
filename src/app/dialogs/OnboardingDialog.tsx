@@ -13,7 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import type { ReactNode } from "react";
 
-const features: { icon: ReactNode; primary: string; secondary: string }[] = [
+const highlights: { icon: ReactNode; primary: string; secondary: string }[] = [
   {
     icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
     primary: "Smart Rewriting",
@@ -77,19 +77,19 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           Communicate more easily and naturally.
         </DialogContentText>
 
-        <List sx={{ pt: 0, pb: 0 }}>
-          {features.map((feature) => (
+        <List sx={{ py: 0 }}>
+          {highlights.map((highlight) => (
             <ListItem
-              key={feature.primary}
+              key={highlight.primary}
               disableGutters
               sx={{ alignItems: "flex-start" }}
             >
               <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
-                {feature.icon}
+                {highlight.icon}
               </ListItemIcon>
               <ListItemText
-                primary={feature.primary}
-                secondary={feature.secondary}
+                primary={highlight.primary}
+                secondary={highlight.secondary}
                 slotProps={{
                   primary: {
                     fontWeight: 700,
