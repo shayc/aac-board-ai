@@ -299,12 +299,12 @@ describe("putAssets and getAssetBlob", () => {
     expect(retrieved).not.toBeNull();
   });
 
-  test("returns null for nonexistent asset", async () => {
+  test("returns undefined for nonexistent asset", async () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
     const blob = await getAssetBlob(db, "set-1", "nope.png");
-    expect(blob).toBeNull();
+    expect(blob).toBeUndefined();
   });
 
   test("stores asset size from blob when not explicitly provided", async () => {
@@ -423,8 +423,8 @@ describe("deleteBoardSet", () => {
 
     await deleteBoardSet(db, "set-1");
 
-    expect(await getAssetBlob(db, "set-1", "img1.png")).toBeNull();
-    expect(await getAssetBlob(db, "set-1", "img2.png")).toBeNull();
+    expect(await getAssetBlob(db, "set-1", "img1.png")).toBeUndefined();
+    expect(await getAssetBlob(db, "set-1", "img2.png")).toBeUndefined();
   });
 
   test("does not affect other board sets", async () => {

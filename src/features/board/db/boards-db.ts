@@ -209,6 +209,7 @@ export async function getBoard(
   boardId: string,
 ): Promise<BoardRecord | undefined> {
   validateId(setId, "setId");
+  validateId(boardId, "boardId");
   return db.get("boards", [setId, boardId]);
 }
 
@@ -249,10 +250,10 @@ export async function putAssets(
     const assetStore = tx.objectStore("assets");
 
     for (const asset of assets) {
-      const path = normalizePath(asset.path);
+      const normalizedPath = normalizePath(asset.path);
       await assetStore.put({
         setId,
-        path,
+        path: normalizedPath,
         mediaId: asset.mediaId,
         blob: asset.blob,
         mime: asset.mime,
@@ -283,6 +284,7 @@ export async function updateBoardStrings(
   translations: Record<string, string>,
 ): Promise<void> {
   validateId(setId, "setId");
+  validateId(boardId, "boardId");
   const record = await db.get("boards", [setId, boardId]);
 
   if (!record) {
@@ -301,12 +303,12 @@ export async function getAssetBlob(
   db: BoardsDB,
   setId: string,
   path: string,
-): Promise<Blob | null> {
+): Promise<Blob | undefined> {
   validateId(setId, "setId");
   const normalizedPath = normalizePath(path);
   const asset = await db.get("assets", [setId, normalizedPath]);
 
-  return asset?.blob ?? null;
+  return asset?.blob;
 }
 
 export async function deleteBoardSet(
