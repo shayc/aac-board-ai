@@ -250,10 +250,10 @@ export async function putAssets(
     const assetStore = tx.objectStore("assets");
 
     for (const asset of assets) {
-      const normalizedPath = normalizePath(asset.path);
+      const cleanPath = normalizePath(asset.path);
       await assetStore.put({
         setId,
-        path: normalizedPath,
+        path: cleanPath,
         mediaId: asset.mediaId,
         blob: asset.blob,
         mime: asset.mime,
@@ -305,8 +305,8 @@ export async function getAssetBlob(
   path: string,
 ): Promise<Blob | undefined> {
   validateId(setId, "setId");
-  const normalizedPath = normalizePath(path);
-  const asset = await db.get("assets", [setId, normalizedPath]);
+  const cleanPath = normalizePath(path);
+  const asset = await db.get("assets", [setId, cleanPath]);
 
   return asset?.blob;
 }
