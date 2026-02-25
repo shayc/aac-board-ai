@@ -1,6 +1,5 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
@@ -10,8 +9,13 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useEffect } from "react";
 
+const FADE_DURATION_MS = 400;
+
 function AboutPage() {
-  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const prefersReducedMotion = useMediaQuery(
+    "(prefers-reduced-motion: reduce)",
+  );
+
   const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
@@ -20,7 +24,7 @@ function AboutPage() {
 
   return (
     <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
-      <Fade in timeout={reduceMotion ? 0 : 400}>
+      <Fade in timeout={prefersReducedMotion ? 0 : FADE_DURATION_MS}>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
             AAC Board AI helps people who can't rely on speech communicate more
@@ -81,17 +85,16 @@ function AboutPage() {
             Open Source
           </Typography>
 
-          <Box>
-            <Button
-              variant="text"
-              startIcon={<GitHubIcon />}
-              href="https://github.com/shayc/aac-board-ai"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Source Code on GitHub
-            </Button>
-          </Box>
+          <Button
+            variant="text"
+            startIcon={<GitHubIcon />}
+            href="https://github.com/shayc/aac-board-ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{ alignSelf: "flex-start" }}
+          >
+            View Source Code on GitHub
+          </Button>
         </Stack>
       </Fade>
     </Container>
