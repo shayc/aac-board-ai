@@ -33,17 +33,13 @@ export function Grid<TItem extends { id: string }>({
   const refCallbacks: Record<string, RefCallback> = {};
 
   for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-    for (let cellIndex = 0; cellIndex < columns; cellIndex++) {
-      const key = `${rowIndex}-${cellIndex}`;
-
-      refCallbacks[key] = ((r: number, c: number): RefCallback => {
-        return (element: HTMLElement | null) => {
-          if (!cellRefs.current[r]) {
-            cellRefs.current[r] = [];
-          }
-          cellRefs.current[r][c] = element;
-        };
-      })(rowIndex, cellIndex);
+    for (let colIndex = 0; colIndex < columns; colIndex++) {
+      refCallbacks[`${rowIndex}-${colIndex}`] = (element) => {
+        if (!cellRefs.current[rowIndex]) {
+          cellRefs.current[rowIndex] = [];
+        }
+        cellRefs.current[rowIndex][colIndex] = element;
+      };
     }
   }
 
@@ -104,19 +100,19 @@ function buildGrid<T extends { id: string }>(
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
 
-    return Array.from({ length: rows }, (_, r) => {
-      const orderRow = order[r] ?? [];
+    return Array.from({ length: rows }, (_, row) => {
+      const orderRow = order[row] ?? [];
 
-      return Array.from({ length: columns }, (_, c) => {
-        const id = orderRow[c] ?? undefined;
+      return Array.from({ length: columns }, (_, col) => {
+        const id = orderRow[col];
         return id ? itemsById.get(id) : undefined;
       });
     });
   }
 
-  return Array.from({ length: rows }, (_, r) =>
-    Array.from({ length: columns }, (_, c) => {
-      const index = r * columns + c;
+  return Array.from({ length: rows }, (_, row) =>
+    Array.from({ length: columns }, (_, col) => {
+      const index = row * columns + col;
       return items[index];
     }),
   );
