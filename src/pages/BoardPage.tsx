@@ -1,19 +1,15 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
 import { BoardView } from "@features/board/components/BoardView/BoardView";
 import { useBoard } from "@features/board/hooks/useBoard";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
-import { useParams } from "react-router";
-import { useEffect } from "react";
 import type { BoardRouteParams } from "@features/board/types";
+import { LoadingIndicator } from "@shared/components/LoadingIndicator";
+import { useEffect } from "react";
+import { useParams } from "react-router";
 
 function BoardPage() {
-  const params = useParams<BoardRouteParams>();
+  const { setId = "", boardId = "" } = useParams<BoardRouteParams>();
   const { setPageTitle } = usePageTitle();
-
-  const { board } = useBoard({
-    setId: params.setId ?? "",
-    boardId: params.boardId ?? "",
-  });
+  const { board } = useBoard({ setId, boardId });
 
   useEffect(() => {
     setPageTitle(board?.name);

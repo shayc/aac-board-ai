@@ -15,12 +15,14 @@ export interface BoardSetRecord {
   gridRows?: number;
   gridColumns?: number;
 }
+
 export interface BoardRecord {
   setId: string;
   boardId: string;
   name: string;
   json: OBFBoard;
 }
+
 export interface AssetRecord {
   setId: string;
   path: string;
@@ -53,20 +55,22 @@ export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 const DB_NAME = "aac-board-db";
 const DB_VERSION = 1;
 
-function normalizePath(p: string): string {
-  if (!p) throw new Error("Path cannot be empty");
+function normalizePath(rawPath: string): string {
+  if (!rawPath) {
+    throw new Error("Path cannot be empty");
+  }
 
-  const cleaned = p
+  const normalized = rawPath
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
 
-  return cleaned;
+  return normalized;
 }
 
-function validateId(id: string, name: string): void {
+function validateId(id: string, fieldName: string): void {
   if (!id || id.length > 255) {
-    throw new Error(`Invalid ${name}: must be 1-255 characters`);
+    throw new Error(`Invalid ${fieldName}: must be 1-255 characters`);
   }
 }
 
@@ -88,15 +92,16 @@ export async function openBoardsDB(): Promise<BoardsDB> {
       assets.createIndex("bySetIdMediaId", ["setId", "mediaId"]);
     },
   });
+
   return db;
 }
 
 export async function withBoardsDB<T>(
-  fn: (db: BoardsDB) => Promise<T>,
+  operation: (db: BoardsDB) => Promise<T>,
 ): Promise<T> {
   const db = await openBoardsDB();
   try {
-    return await fn(db);
+    return await operation(db);
   } finally {
     db.close();
   }
@@ -119,38 +124,41 @@ export async function upsertBoardSet(
   boardSet: UpsertBoardSetInput,
 ): Promise<void> {
   validateId(boardSet.setId, "setId");
-  const prev = await db.get("boardsets", boardSet.setId);
+  const existing = await db.get("boardsets", boardSet.setId);
 
-  const row: BoardSetRecord = {
+  const record: BoardSetRecord = {
     setId: boardSet.setId,
     name: boardSet.name,
-    rootBoardId: boardSet.rootBoardId ?? prev?.rootBoardId,
+    rootBoardId: boardSet.rootBoardId ?? existing?.rootBoardId,
     updatedAt: Date.now(),
-    boardCount: prev?.boardCount ?? 0,
-    author: boardSet.author ?? prev?.author,
-    description: boardSet.description ?? prev?.description,
-    license: boardSet.license ?? prev?.license,
-    locale: boardSet.locale ?? prev?.locale,
-    gridRows: boardSet.gridRows ?? prev?.gridRows,
-    gridColumns: boardSet.gridColumns ?? prev?.gridColumns,
+    boardCount: existing?.boardCount ?? 0,
+    author: boardSet.author ?? existing?.author,
+    description: boardSet.description ?? existing?.description,
+    license: boardSet.license ?? existing?.license,
+    locale: boardSet.locale ?? existing?.locale,
+    gridRows: boardSet.gridRows ?? existing?.gridRows,
+    gridColumns: boardSet.gridColumns ?? existing?.gridColumns,
   };
 
-  await db.put("boardsets", row);
+  await db.put("boardsets", record);
 }
 
 export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardsets", "readonly");
-  const idx = tx.store.index("byUpdatedAt");
-  const out: BoardSetRecord[] = [];
-  let cur = await idx.openCursor(undefined, "prev");
+  const index = tx.store.index("byUpdatedAt");
 
-  while (cur) {
-    out.push(cur.value);
-    cur = await cur.continue();
+  // Manual cursor iteration is required to retrieve records in reverse chronological order;
+  // IDB's getAll() does not support a direction argument.
+  const boardSets: BoardSetRecord[] = [];
+  let cursor = await index.openCursor(undefined, "prev");
+
+  while (cursor) {
+    boardSets.push(cursor.value);
+    cursor = await cursor.continue();
   }
 
   await tx.done;
-  return out;
+  return boardSets;
 }
 
 export interface PutBoardInput {
@@ -162,36 +170,36 @@ export interface PutBoardInput {
 export async function putBoards(
   db: BoardsDB,
   setId: string,
-  items: PutBoardInput[],
+  boards: PutBoardInput[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "boardsets"], "readwrite");
 
   try {
-    const boards = tx.objectStore("boards");
+    const boardStore = tx.objectStore("boards");
 
-    for (const it of items) {
-      await boards.put({
+    for (const board of boards) {
+      await boardStore.put({
         setId,
-        boardId: it.boardId,
-        name: it.name,
-        json: it.json,
-      } as BoardRecord);
+        boardId: board.boardId,
+        name: board.name,
+        json: board.json,
+      });
     }
 
-    const bs = await tx.objectStore("boardsets").get(setId);
+    const boardSet = await tx.objectStore("boardsets").get(setId);
 
-    if (bs) {
-      const count = await boards.index("bySetId").count(setId);
+    if (boardSet) {
+      const count = await boardStore.index("bySetId").count(setId);
       await tx
         .objectStore("boardsets")
-        .put({ ...bs, boardCount: count, updatedAt: Date.now() });
+        .put({ ...boardSet, boardCount: count, updatedAt: Date.now() });
     }
 
     await tx.done;
-  } catch (e) {
+  } catch (error) {
     tx.abort();
-    throw e;
+    throw error;
   }
 }
 
@@ -201,6 +209,7 @@ export async function getBoard(
   boardId: string,
 ): Promise<BoardRecord | undefined> {
   validateId(setId, "setId");
+  validateId(boardId, "boardId");
   return db.get("boards", [setId, boardId]);
 }
 
@@ -214,11 +223,11 @@ export async function getBoardsByIds(
     return [];
   }
 
-  const rows = await Promise.all(
+  const boards = await Promise.all(
     boardIds.map((id) => db.get("boards", [setId, id])),
   );
 
-  return rows.filter((r): r is BoardRecord => r !== undefined);
+  return boards.filter((record): record is BoardRecord => record !== undefined);
 }
 
 export interface PutAssetInput {
@@ -232,35 +241,38 @@ export interface PutAssetInput {
 export async function putAssets(
   db: BoardsDB,
   setId: string,
-  items: PutAssetInput[],
+  assets: PutAssetInput[],
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["assets", "boardsets"], "readwrite");
 
   try {
-    const assets = tx.objectStore("assets");
-    for (const it of items) {
-      const path = normalizePath(it.path);
-      await assets.put({
+    const assetStore = tx.objectStore("assets");
+
+    for (const asset of assets) {
+      const cleanPath = normalizePath(asset.path);
+      await assetStore.put({
         setId,
-        path,
-        mediaId: it.mediaId,
-        blob: it.blob,
-        mime: it.mime,
-        size: it.size ?? it.blob.size,
-      } as AssetRecord);
+        path: cleanPath,
+        mediaId: asset.mediaId,
+        blob: asset.blob,
+        mime: asset.mime,
+        size: asset.size ?? asset.blob.size,
+      });
     }
 
-    const bs = await tx.objectStore("boardsets").get(setId);
+    const boardSet = await tx.objectStore("boardsets").get(setId);
 
-    if (bs) {
-      await tx.objectStore("boardsets").put({ ...bs, updatedAt: Date.now() });
+    if (boardSet) {
+      await tx
+        .objectStore("boardsets")
+        .put({ ...boardSet, updatedAt: Date.now() });
     }
 
     await tx.done;
-  } catch (e) {
+  } catch (error) {
     tx.abort();
-    throw e;
+    throw error;
   }
 }
 
@@ -269,9 +281,10 @@ export async function updateBoardStrings(
   setId: string,
   boardId: string,
   locale: string,
-  localizedStrings: Record<string, string>,
+  translations: Record<string, string>,
 ): Promise<void> {
   validateId(setId, "setId");
+  validateId(boardId, "boardId");
   const record = await db.get("boards", [setId, boardId]);
 
   if (!record) {
@@ -280,7 +293,7 @@ export async function updateBoardStrings(
 
   const updatedJson = {
     ...record.json,
-    strings: { ...record.json.strings, [locale]: localizedStrings },
+    strings: { ...record.json.strings, [locale]: translations },
   };
 
   await db.put("boards", { ...record, json: updatedJson });
@@ -290,12 +303,12 @@ export async function getAssetBlob(
   db: BoardsDB,
   setId: string,
   path: string,
-): Promise<Blob | null> {
+): Promise<Blob | undefined> {
   validateId(setId, "setId");
-  const normalizedPath = normalizePath(path);
-  const row = await db.get("assets", [setId, normalizedPath]);
+  const cleanPath = normalizePath(path);
+  const asset = await db.get("assets", [setId, cleanPath]);
 
-  return row?.blob ?? null;
+  return asset?.blob;
 }
 
 export async function deleteBoardSet(
@@ -306,6 +319,8 @@ export async function deleteBoardSet(
   const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
 
   try {
+    // Fire all three deletes without awaiting individually;
+    // they share a single transaction and commit together on tx.done.
     void tx
       .objectStore("boards")
       .delete(IDBKeyRange.bound([setId], [setId, []]));
@@ -317,8 +332,8 @@ export async function deleteBoardSet(
     void tx.objectStore("boardsets").delete(setId);
 
     await tx.done;
-  } catch (e) {
+  } catch (error) {
     tx.abort();
-    throw e;
+    throw error;
   }
 }
