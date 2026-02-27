@@ -20,7 +20,6 @@ Each hook wraps a browser API, tracks capability support, and manages download p
 | `useProofread`        | Proofreader API       | ✅ Active    | Grammar and spelling correction                  |
 | `useRewrite`          | Rewriter API          | ✅ Active    | Tone adjustment (direct, professional, friendly) |
 | `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                            |
-| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion                   |
 | `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions              |
 | `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection                     |
 
