@@ -33,7 +33,7 @@
     "@mui/material": "^7.3.8",
     "idb": "^8.0.3",
     "mrmime": "^2.0.1",
-    "open-board-format": "^1.0.2",
+    "open-board-format": "^1.0.3",
     "react": "^19.2.4",
     "react-aria": "^3.46.0",
     "react-dom": "^19.2.4",
@@ -43,7 +43,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.3",
     "@types/dom-chromium-ai": "^0.0.14",
-    "@types/node": "^24.10.13",
+    "@types/node": "^24.10.15",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
