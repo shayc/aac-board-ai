@@ -41,7 +41,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const phrases = Array.from(
     new Set(
       [proofread.data, rewrite.data].filter(
-        (s): s is string => !!s && s !== text && isValidSuggestion(s),
+        (s): s is string =>
+          !!s &&
+          s.toLocaleLowerCase() !== text.toLocaleLowerCase() &&
+          isValidSuggestion(s),
       ),
     ),
   );
