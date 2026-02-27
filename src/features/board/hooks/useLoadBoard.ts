@@ -123,25 +123,25 @@ async function hydrateAssets(
     return assets;
   }
 
-  const out: OBFMedia[] = [];
+  const resolvedMedia: OBFMedia[] = [];
   for (const asset of assets) {
     if (!asset.path) {
-      out.push(asset);
+      resolvedMedia.push(asset);
       continue;
     }
 
     try {
       const blob = await getAssetBlob(db, setId, asset.path);
       const url = blob ? registry.create(blob) : null;
-      out.push(url ? { ...asset, data: url } : asset);
+      resolvedMedia.push(url ? { ...asset, data: url } : asset);
     } catch (err) {
       console.warn(
         `Failed to load ${kind} ${asset.id} from path ${asset.path}:`,
         err,
       );
-      out.push(asset);
+      resolvedMedia.push(asset);
     }
   }
 
-  return out;
+  return resolvedMedia;
 }
