@@ -17,8 +17,8 @@ Each hook wraps a browser API, tracks capability support, and manages download p
 
 | Hook                  | Chrome API            | Status       | Purpose                                          |
 | --------------------- | --------------------- | ------------ | ------------------------------------------------ |
-| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction                  |
-| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (direct, professional, friendly) |
+| `useProofread`        | Proofreader API       | ✅ Active    | Grammar and spelling correction                  |
+| `useRewrite`          | Rewriter API          | ✅ Active    | Tone adjustment (direct, professional, friendly) |
 | `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                            |
 | `useWriter`           | Writer API            | 🔧 Available | Text generation and completion                   |
 | `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions              |
