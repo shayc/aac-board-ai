@@ -41,7 +41,7 @@ async function importOBZFile(
   file: File,
   setId: string,
 ): Promise<ImportResult> {
-  const { manifest, boards, files } = await loadOBZ(file);
+  const { manifest, boards, resources } = await loadOBZ(file);
 
   let rootBoardId = "";
   for (const [id, path] of Object.entries(manifest.paths.boards)) {
@@ -83,7 +83,7 @@ async function importOBZFile(
 
   await putBoards(db, setId, boardItems);
 
-  const assetItems = Array.from(files.entries())
+  const assetItems = Array.from(resources.entries())
     .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
     .map(([path, buffer]) => {
       const mime = lookup(path) ?? "application/octet-stream";
