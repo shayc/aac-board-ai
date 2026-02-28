@@ -4,18 +4,16 @@ import { useRewrite } from "@shared/hooks/ai/useRewrite";
 import type { SuggestionTone } from "@features/board/types";
 import { useState } from "react";
 
-const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
+// AI models sometimes emit snake_case tokens or quoted fragments;
+// these are artifacts, not real suggestions.
+const SNAKE_CASE_WORD = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
-function isValidSuggestion(suggestion: string): boolean {
-  if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
-    return false;
-  }
+function isModelArtifact(text: string): boolean {
+  return SNAKE_CASE_WORD.test(text) || text.includes('"');
+}
 
-  if (suggestion.includes('"')) {
-    return false;
-  }
-
-  return true;
+function isEchoOf(suggestion: string, original: string): boolean {
+  return suggestion.toLocaleLowerCase() === original.toLocaleLowerCase();
 }
 
 export interface UseSuggestionsReturn {
@@ -38,14 +36,13 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const isLoading = proofread.isLoading || rewrite.isLoading;
   const error = proofread.error ?? rewrite.error;
 
+  const validResults = [proofread.data, rewrite.data].filter(
+    (s): s is string => !!s,
+  );
+
   const phrases = Array.from(
     new Set(
-      [proofread.data, rewrite.data].filter(
-        (s): s is string =>
-          !!s &&
-          s.toLocaleLowerCase() !== text.toLocaleLowerCase() &&
-          isValidSuggestion(s),
-      ),
+      validResults.filter((s) => !isEchoOf(s, text) && !isModelArtifact(s)),
     ),
   );
 
