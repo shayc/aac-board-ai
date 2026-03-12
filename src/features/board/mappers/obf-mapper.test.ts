@@ -1,6 +1,6 @@
 import type { OBFBoard } from "open-board-format";
 import { describe, expect, test } from "vitest";
-import { obfToBoard } from "./obf-mapper";
+import { obfToBoard, resolveLoadBoardPaths } from "./obf-mapper";
 
 describe("obfToBoard", () => {
   test("maps a minimal board (id, buttons, grid)", () => {
@@ -445,5 +445,78 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.imageSrc).toBeUndefined();
       expect(board.buttons[0]?.soundSrc).toBeUndefined();
     });
+  });
+});
+
+describe("resolveLoadBoardPaths", () => {
+  const minimalBoard: OBFBoard = {
+    format: "open-board-0.1",
+    id: "board-1",
+    buttons: [],
+    grid: { rows: 1, columns: 1, order: [[null]] },
+  };
+
+  test("resolves load_board path to id using pathToId map", () => {
+    const board: OBFBoard = {
+      ...minimalBoard,
+      buttons: [
+        { id: "btn-1", label: "Go", load_board: { path: "boards/child.obf" } },
+      ],
+    };
+    const pathToId = new Map([["boards/child.obf", "child-1"]]);
+
+    const result = resolveLoadBoardPaths(board, pathToId);
+
+    expect(result.buttons[0]?.load_board?.id).toBe("child-1");
+    expect(result.buttons[0]?.load_board?.path).toBe("boards/child.obf");
+  });
+
+  test("skips buttons that already have a load_board id", () => {
+    const board: OBFBoard = {
+      ...minimalBoard,
+      buttons: [
+        {
+          id: "btn-1",
+          label: "Go",
+          load_board: { id: "existing-id", path: "boards/child.obf" },
+        },
+      ],
+    };
+    const pathToId = new Map([["boards/child.obf", "different-id"]]);
+
+    const result = resolveLoadBoardPaths(board, pathToId);
+
+    expect(result.buttons[0]?.load_board?.id).toBe("existing-id");
+  });
+
+  test("skips buttons with unmatched path", () => {
+    const board: OBFBoard = {
+      ...minimalBoard,
+      buttons: [
+        {
+          id: "btn-1",
+          label: "Go",
+          load_board: { path: "boards/unknown.obf" },
+        },
+      ],
+    };
+    const pathToId = new Map([["boards/child.obf", "child-1"]]);
+
+    const result = resolveLoadBoardPaths(board, pathToId);
+
+    expect(result.buttons[0]?.load_board?.id).toBeUndefined();
+  });
+
+  test("passes through buttons without load_board", () => {
+    const board: OBFBoard = {
+      ...minimalBoard,
+      buttons: [{ id: "btn-1", label: "Hello" }],
+    };
+    const pathToId = new Map([["boards/child.obf", "child-1"]]);
+
+    const result = resolveLoadBoardPaths(board, pathToId);
+
+    expect(result.buttons[0]?.load_board).toBeUndefined();
+    expect(result.buttons[0]?.label).toBe("Hello");
   });
 });
