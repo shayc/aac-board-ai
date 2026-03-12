@@ -2,7 +2,7 @@
 
 ## Overview
 
-**AAC Board AI** is a client-side React app powered by **Chrome’s Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
+**AAC Board AI** is a client-side React app powered by **Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
 
 The architecture follows **feature-sliced design** principles — each feature is a self-contained module with its own UI, logic, data access, and types. Features may import from `shared/` but not from each other or from `app/`.
 
@@ -10,7 +10,7 @@ The architecture follows **feature-sliced design** principles — each feature i
 
 ## AI Integration
 
-Chrome's Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
+Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
 Each hook wraps a browser API, tracks capability support, and manages download progress.
 
 ### AI Hooks
