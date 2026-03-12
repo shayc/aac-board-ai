@@ -67,10 +67,11 @@ src/
 │       ├── store/         # External store (board sets)
 │       └── types.ts
 ├── pages/                 # Routed pages
-│   ├── HomePage.tsx
+│   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
-│   └── AboutPage.tsx
+│   ├── HomePage.tsx
+│   └── LibraryPage/       # Board set library
 └── shared/                # Reusable utilities
     ├── components/        # Shared UI
     ├── contexts/          # Global contexts
