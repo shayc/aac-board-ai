@@ -1,6 +1,7 @@
 import { createExternalStore } from "@shared/utils/external-store";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 
+// Singleton store — assumes one page owns the title at a time (enforced by the router).
 const store = createExternalStore("");
 
 export function usePageTitle() {
@@ -15,8 +16,8 @@ export function usePageTitle() {
     };
   }, []);
 
-  function setPageTitle(value: string | undefined) {
-    const next = value ?? "";
+  function setPageTitle(title: string | undefined) {
+    const next = title ?? "";
     if (store.getState() !== next) {
       store.setState(next);
       ownsTitle.current = next !== "";

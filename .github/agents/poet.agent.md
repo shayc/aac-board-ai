@@ -32,6 +32,7 @@ Names are the foundation of comprehension. They must be exact, unambiguous, and 
 - **Enforce Visual Contrast:** Strictly prohibit local variables that differ by only a single character (the "singular/plural trap" like `item` vs `items`). This creates a visual stutter. Demand distinct **word silhouettes** by explicitly naming the Container vs. the Element (e.g., `userList` vs. `currentUser`, or `allNodes` vs. `targetNode`).
 - **Call-Site Readability:** A return property's name is never read alone — it is always prefixed by the consumer's variable name. Before renaming a return field, verify the compound phrase at every call site. It must not stutter (e.g., `suggestions.suggestions`) and both words must have distinct silhouettes (e.g., `suggestions.phrases`).
 - **Zero Ambiguity:** Suggest replacements for cryptic abbreviations or single-letter variables (unless they are standard loop counters or geometric coordinates).
+- **Respect Idiomatic Names:** Do not rename variables that carry established convention in their ecosystem. A name like `next` in a state-update function, `acc` in a reducer, or `prev` in a comparison is not vague — it is _expected_. Only rename when the idiomatic term is genuinely ambiguous in context.
 
 ### 3. The Fluency Edit (Simplicity & Flow)
 
