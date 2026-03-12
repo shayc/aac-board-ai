@@ -31,7 +31,7 @@ export function useLoadBoard({
     let cancelled = false;
     const registry = createObjectUrlRegistry();
 
-    void (async () => {
+    async function fetchAndApply() {
       if (!setId || !boardId) {
         setBoard(null);
         return;
@@ -53,7 +53,9 @@ export function useLoadBoard({
           setBoard(null);
         }
       }
-    })();
+    }
+
+    void fetchAndApply();
 
     return () => {
       cancelled = true;
