@@ -1,6 +1,6 @@
 import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import { type ReactNode, useReducer } from "react";
+import { type ReactNode, useReducer, useRef } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -66,10 +66,9 @@ const initialState: SnackbarState = {
   open: false,
 };
 
-let snackbarKeyCounter = 0;
-
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
+  const keyCounterRef = useRef(0);
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -77,7 +76,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
     const message: SnackbarMessage = {
       ...snackbarOptions,
-      key: snackbarKeyCounter++,
+      key: keyCounterRef.current++,
     };
     dispatch({ type: "show", message });
   };

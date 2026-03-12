@@ -23,6 +23,20 @@ export function useButtonActivation({
   const speech = useSpeech();
   const audio = useAudio();
 
+  function handleSpellingAction(action: string) {
+    if (!action.startsWith("+")) {
+      return;
+    }
+
+    const text = action.slice(1).trim();
+    const lastPart = message.parts.at(-1);
+
+    message.updateLastPart({
+      id: text,
+      label: `${lastPart?.label ?? ""}${text}`,
+    });
+  }
+
   async function executeAction(action: BoardAction) {
     switch (action) {
       case ":space":
@@ -41,15 +55,7 @@ export function useButtonActivation({
         navigation.goHome();
         return;
       default:
-        if (action.startsWith("+")) {
-          const text = action.slice(1).trim();
-          const lastPart = message.parts.at(-1);
-
-          message.updateLastPart({
-            id: text,
-            label: `${lastPart?.label ?? ""}${text}`,
-          });
-        }
+        handleSpellingAction(action);
     }
   }
 

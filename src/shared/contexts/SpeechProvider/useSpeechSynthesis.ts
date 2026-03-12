@@ -29,8 +29,8 @@ export interface UseSpeechSynthesisReturn {
   isPaused: boolean;
 }
 
-const isSpeechSupported = "speechSynthesis" in window;
-const synth = window.speechSynthesis;
+const isSpeechSupported = "speechSynthesis" in globalThis;
+const synth = globalThis.speechSynthesis;
 
 export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
@@ -42,8 +42,8 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const langs = Array.from(new Set(voices.map((v) => v.lang))).sort((a, b) =>
-    a.localeCompare(b),
+  const langs = Array.from(new Set(voices.map((voice) => voice.lang))).sort(
+    (a, b) => a.localeCompare(b),
   );
 
   const voicesByLang = Object.groupBy(
@@ -54,16 +54,20 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
 
   useEffect(() => {
+    if (!isSpeechSupported) {
+      return;
+    }
+
     const getVoices = () => {
       const availableVoices = synth.getVoices();
       setVoices(availableVoices);
     };
 
     getVoices();
-    synth.addEventListener?.("voiceschanged", getVoices);
+    synth.addEventListener("voiceschanged", getVoices);
 
     return () => {
-      synth.removeEventListener?.("voiceschanged", getVoices);
+      synth.removeEventListener("voiceschanged", getVoices);
     };
   }, []);
 
@@ -75,7 +79,7 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
       }
 
       const utterance = new SpeechSynthesisUtterance(text);
-      const selectedVoice = voices.find((v) => v.voiceURI === voiceURI);
+      const selectedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
 
       utterance.voice = selectedVoice ?? null;
       utterance.pitch = pitch;

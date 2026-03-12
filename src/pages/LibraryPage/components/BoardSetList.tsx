@@ -63,29 +63,29 @@ export function BoardSetList({
   return (
     <>
       <List>
-        {boardSets.map((set) => (
+        {boardSets.map((boardSet) => (
           <ListItem
-            key={set.setId}
+            key={boardSet.setId}
             disablePadding
             secondaryAction={
               <Tooltip title="More options">
                 <IconButton
                   edge="end"
-                  aria-label={`More options for ${set.name}`}
+                  aria-label={`More options for ${boardSet.name}`}
                   aria-controls={menuOpen ? "board-set-menu" : undefined}
                   aria-haspopup="true"
                   aria-expanded={menuOpen ? "true" : undefined}
-                  onClick={(event) => handleMenuOpen(event, set)}
+                  onClick={(event) => handleMenuOpen(event, boardSet)}
                 >
                   <MoreVertIcon />
                 </IconButton>
               </Tooltip>
             }
           >
-            <ListItemButton onClick={() => onSelect(set)}>
+            <ListItemButton onClick={() => onSelect(boardSet)}>
               <ListItemText
-                primary={set.name}
-                secondary={formatSecondary(set)}
+                primary={boardSet.name}
+                secondary={formatSecondary(boardSet)}
               />
             </ListItemButton>
           </ListItem>
@@ -115,10 +115,10 @@ export function BoardSetList({
   );
 }
 
-function formatSecondary(set: BoardSetRecord): string {
+function formatSecondary(boardSet: BoardSetRecord): string {
   const parts: string[] = [];
 
-  const { gridRows, gridColumns, author } = set;
+  const { gridRows, gridColumns, author } = boardSet;
 
   if (gridRows && gridColumns) {
     parts.push(`${gridRows}x${gridColumns}`);
