@@ -15,19 +15,11 @@ Each hook wraps a browser API, tracks capability support, and manages download p
 
 ### AI Hooks
 
-| Hook                  | Chrome API            | Status       | Purpose                                          |
-| --------------------- | --------------------- | ------------ | ------------------------------------------------ |
-| `useProofreader`      | Proofreader API       | ✅ Active    | Grammar and spelling correction                  |
-| `useRewriter`         | Rewriter API          | ✅ Active    | Tone adjustment (direct, professional, friendly) |
-| `useTranslator`       | Translator API        | ✅ Active    | Real-time translation                            |
-| `useWriter`           | Writer API            | 🔧 Available | Text generation and completion                   |
-| `useLanguageModel`    | Language Model API    | 🔧 Available | Custom prompts for word suggestions              |
-| `useLanguageDetector` | Language Detector API | 🔧 Available | Automatic language detection                     |
-
-**Status Key:**
-
-- ✅ **Active** — Currently used in the application
-- 🔧 **Available** — Implemented but not yet integrated into UI
+| Hook             | Chrome API      | Purpose                                          |
+| ---------------- | --------------- | ------------------------------------------------ |
+| `useProofreader` | Proofreader API | Grammar and spelling correction                  |
+| `useRewriter`    | Rewriter API    | Tone adjustment (direct, professional, friendly) |
+| `useTranslator`  | Translator API  | Real-time translation                            |
 
 The `AIProvider` context manages shared context across AI sessions. Users can provide background information (e.g. communication preferences) that enhances AI responses across different features.
 
