@@ -1,6 +1,6 @@
 import { getContrastRatio } from "@mui/material/styles";
 
-export function getReadableTextColor(background: string) {
+export function getReadableTextColor(background: string): string {
   const white = "#fff";
   const black = "#000";
 

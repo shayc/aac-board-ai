@@ -3,7 +3,7 @@ import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { type ReactNode, type ReactElement, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-interface AsyncBoundaryProps {
+export interface AsyncBoundaryProps {
   children: ReactNode;
   loadingFallback?: ReactNode;
   errorFallback?: ReactElement;
