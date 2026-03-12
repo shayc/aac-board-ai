@@ -38,6 +38,29 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   return board;
 }
 
+export function resolveLoadBoardPaths(
+  board: OBFBoard,
+  pathToId: Map<string, string>,
+): OBFBoard {
+  const buttons = board.buttons.map((button) => {
+    if (!button.load_board?.path || button.load_board.id) {
+      return button;
+    }
+
+    const resolvedId = pathToId.get(button.load_board.path);
+    if (!resolvedId) {
+      return button;
+    }
+
+    return {
+      ...button,
+      load_board: { ...button.load_board, id: resolvedId },
+    };
+  });
+
+  return { ...board, buttons };
+}
+
 function buildMediaSourceMap(
   media: OBFMedia[] | undefined,
 ): Map<string, string> {

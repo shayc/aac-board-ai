@@ -1,7 +1,8 @@
+import { resolveLoadBoardPaths } from "@features/board/mappers/obf-mapper";
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
-import type { BoardsDB } from "./boards-db";
+import type { BoardsDB, UpsertBoardSetInput } from "./boards-db";
 import {
   putAssets,
   putBoards,
@@ -57,19 +58,10 @@ async function importOBZFile(
 
   const rootBoard = boards.get(rootBoardId);
 
-  await upsertBoardSet(db, {
-    setId,
-    name: rootBoard?.name ?? file.name,
-    rootBoardId: rootBoardId,
-    author: rootBoard?.license?.author_name,
-    description: rootBoard?.description_html
-      ? stripHtmlTags(rootBoard.description_html)
-      : undefined,
-    license: rootBoard?.license?.type,
-    locale: rootBoard?.locale,
-    gridRows: rootBoard?.grid.rows,
-    gridColumns: rootBoard?.grid.columns,
-  });
+  await upsertBoardSet(
+    db,
+    buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
+  );
 
   const pathToId = new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
@@ -102,27 +94,25 @@ async function importOBZFile(
   return { setId, boardId: rootBoardId };
 }
 
-function resolveLoadBoardPaths(
-  board: OBFBoard,
-  pathToId: Map<string, string>,
-): OBFBoard {
-  const buttons = board.buttons.map((button) => {
-    if (!button.load_board?.path || button.load_board.id) {
-      return button;
-    }
-
-    const resolvedId = pathToId.get(button.load_board.path);
-    if (!resolvedId) {
-      return button;
-    }
-
-    return {
-      ...button,
-      load_board: { ...button.load_board, id: resolvedId },
-    };
-  });
-
-  return { ...board, buttons };
+function buildBoardSetInput(
+  setId: string,
+  board: OBFBoard | undefined,
+  rootBoardId: string,
+  fallbackName: string,
+): UpsertBoardSetInput {
+  return {
+    setId,
+    name: board?.name ?? fallbackName,
+    rootBoardId,
+    author: board?.license?.author_name,
+    description: board?.description_html
+      ? stripHtmlTags(board.description_html)
+      : undefined,
+    license: board?.license?.type,
+    locale: board?.locale,
+    gridRows: board?.grid.rows,
+    gridColumns: board?.grid.columns,
+  };
 }
 
 async function importOBFFile(
@@ -132,19 +122,10 @@ async function importOBFFile(
 ): Promise<ImportResult> {
   const board = await loadOBF(file);
 
-  await upsertBoardSet(db, {
-    setId,
-    name: board.name ?? file.name,
-    rootBoardId: board.id,
-    author: board.license?.author_name,
-    description: board.description_html
-      ? stripHtmlTags(board.description_html)
-      : undefined,
-    license: board.license?.type,
-    locale: board.locale,
-    gridRows: board.grid.rows,
-    gridColumns: board.grid.columns,
-  });
+  await upsertBoardSet(
+    db,
+    buildBoardSetInput(setId, board, board.id, file.name),
+  );
 
   await putBoards(db, setId, [
     {
