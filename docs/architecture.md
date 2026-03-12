@@ -2,7 +2,7 @@
 
 ## Overview
 
-**AAC Board AI** is a client-side React app powered by **Built-in AI (Gemini Nano)**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
+**AAC Board AI** is a client-side React app powered by **Built-in AI**, providing private, on-device communication assistance for people with speech disabilities — no servers, no cloud, no data leaving the browser.
 
 The architecture follows **feature-sliced design** principles — each feature is a self-contained module with its own UI, logic, data access, and types. Features may import from `shared/` but not from each other or from `app/`.
 
@@ -15,7 +15,7 @@ Each hook wraps a browser API, tracks capability support, and manages download p
 
 ### AI Hooks
 
-| Hook             | Chrome API      | Purpose                                          |
+| Hook             | API             | Purpose                                          |
 | ---------------- | --------------- | ------------------------------------------------ |
 | `useProofreader` | Proofreader API | Grammar and spelling correction                  |
 | `useRewriter`    | Rewriter API    | Tone adjustment (direct, professional, friendly) |
@@ -32,7 +32,7 @@ The `AIProvider` context manages shared context across AI sessions. Users can pr
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) + localStorage  
 **Data:** open-board-format (OBF/OBZ parsing)  
-**AI:** Chrome Built-in AI (Gemini Nano)  
+**AI:** Built-in AI  
 **Optimization:** React Compiler  
 **Testing:** Vitest 4 + Playwright browser mode  
 **Error Handling:** react-error-boundary
@@ -75,7 +75,7 @@ src/
     ├── components/        # Shared UI
     ├── contexts/          # Global contexts
     ├── hooks/
-    │   └── ai/            # Chrome AI hooks
+    │   └── ai/            # Built-in AI hooks
     ├── testing/           # Test utilities
     └── utils/
 ```
@@ -100,7 +100,7 @@ Board-set data is consumed by components via a custom external store (`useSyncEx
 
 Requires Chrome 138+ with Built-in AI flags enabled. See [Prerequisites](../README.md#prerequisites) for the full list of required flags.
 
-Once enabled, Chrome downloads the Gemini Nano model for local inference.
+Once enabled, the browser downloads the AI model for local inference.
 
 ---
 
@@ -121,4 +121,4 @@ Configuration lives in `vite.config.ts` under the `VitePWA()` plugin.
 AAC Board AI adapts gracefully to the browser's capabilities:
 
 - **Core mode:** Board navigation, message composition, and speech synthesis run fully offline using Web Speech API. The PWA service worker ensures the app itself loads without a network connection.
-- **Enhanced mode:** When Chrome AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
+- **Enhanced mode:** When Built-in AI APIs are available and enabled, message quality is improved through grammar correction (Proofreader), tone adjustment (Rewriter), and translation (Translator).
