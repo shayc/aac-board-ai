@@ -27,7 +27,7 @@ The `AIProvider` context manages shared context across AI sessions. Users can pr
 
 ## Tech Stack
 
-**Core:** React 19 • TypeScript 5.9 • Vite 7  
+**Core:** React 19 • TypeScript 5.9 • Vite 8  
 **UI:** Material UI 7 • Emotion • React Aria  
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) + localStorage  
