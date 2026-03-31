@@ -71,14 +71,12 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
           return;
         }
 
-        const suggestions = [
+        const candidates = [
           proofread?.correctedInput ?? "",
           rewritten ?? "",
         ].filter((s) => s && s !== text && isValidSuggestion(s));
 
-        const uniqueSuggestions = Array.from(new Set(suggestions));
-
-        setSuggestions(uniqueSuggestions);
+        setSuggestions(Array.from(new Set(candidates)));
       } catch (error) {
         if ((error as DOMException).name === "AbortError") {
           return;

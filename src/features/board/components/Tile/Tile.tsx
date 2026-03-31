@@ -42,13 +42,16 @@ export function Tile({
         textTransform: "none",
         padding: "4px 4px 0 4px",
         position: "relative",
+
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",
+
         color: backgroundColor
           ? getReadableTextColor(backgroundColor)
           : "inherit",
         backgroundColor,
+
         transition: theme.transitions.create("background-color", {
           duration: theme.transitions.duration.short,
         }),
@@ -62,10 +65,12 @@ export function Tile({
             ? darken(backgroundColor, 0.3)
             : undefined,
         },
+
         "&:focus-visible": {
           outline: `3px solid ${theme.palette.text.primary}`,
           outlineOffset: 2,
         },
+
         "&::after": {
           content: '""',
           display: variant === "folder" ? "block" : "none",
