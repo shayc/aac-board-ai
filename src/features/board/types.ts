@@ -4,6 +4,7 @@ export interface BoardRouteParams {
   boardId: string;
 }
 
+// RewriterTone is an ambient type from the Chrome AI Rewriter API.
 export type SuggestionTone = RewriterTone;
 
 type SpecialtyAction = ":space" | ":clear" | ":home" | ":speak" | ":backspace";
