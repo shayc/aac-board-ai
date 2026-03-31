@@ -285,7 +285,9 @@ export async function updateBoardStrings(
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
-  const record = await db.get("boards", [setId, boardId]);
+
+  const tx = db.transaction("boards", "readwrite");
+  const record = await tx.store.get([setId, boardId]);
 
   if (!record) {
     throw new Error(`Board not found: ${boardId}`);
@@ -296,7 +298,8 @@ export async function updateBoardStrings(
     strings: { ...record.json.strings, [locale]: translations },
   };
 
-  await db.put("boards", { ...record, json: updatedJson });
+  await tx.store.put({ ...record, json: updatedJson });
+  await tx.done;
 }
 
 export async function getAssetBlob(
