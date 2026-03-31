@@ -19,7 +19,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSourceById = buildMediaSourceMap(obfBoard.images);
   const soundSourceById = buildMediaSourceMap(obfBoard.sounds);
 
-  const board: Board = {
+  return {
     id: obfBoard.id,
     name: obfBoard.name,
     locale: obfBoard.locale,
@@ -29,13 +29,10 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     ),
     grid: transformGrid(obfBoard.grid),
     strings: obfBoard.strings,
+    ...(obfBoard.license && {
+      license: transformLicense(obfBoard.license),
+    }),
   };
-
-  if (obfBoard.license) {
-    board.license = transformLicense(obfBoard.license);
-  }
-
-  return board;
 }
 
 export function resolveLoadBoardPaths(
