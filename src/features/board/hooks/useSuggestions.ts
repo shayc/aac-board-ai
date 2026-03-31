@@ -31,7 +31,7 @@ export interface UseSuggestionsReturn {
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const { sharedContext } = useAI();
-  const isSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
+  const areSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
 
   const { createProofreader } = useProofreader();
   const { createRewriter } = useRewriter();
@@ -95,7 +95,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   return {
     phrases: suggestions,
-    isAvailable: isSuggestionsAvailable,
+    isAvailable: areSuggestionsAvailable,
     tone,
     setTone,
   };
