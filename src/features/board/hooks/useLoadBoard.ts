@@ -94,11 +94,11 @@ async function fetchOBFBoard(
   setId: string,
   boardId: string,
 ): Promise<OBFBoard> {
-  const boardData = await getBoard(db, setId, boardId);
-  if (!boardData) {
+  const boardRecord = await getBoard(db, setId, boardId);
+  if (!boardRecord) {
     throw new Error(`Board not found: ${boardId}`);
   }
-  return boardData.json;
+  return boardRecord.json;
 }
 
 async function hydrateBoard(

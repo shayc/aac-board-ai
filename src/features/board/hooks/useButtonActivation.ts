@@ -23,7 +23,7 @@ export function useButtonActivation({
   const speech = useSpeech();
   const audio = useAudio();
 
-  function handleSpellingAction(action: string) {
+  function applySpellingAction(action: string) {
     if (!action.startsWith("+")) {
       return;
     }
@@ -55,7 +55,7 @@ export function useButtonActivation({
         navigation.goHome();
         return;
       default:
-        handleSpellingAction(action);
+        applySpellingAction(action);
     }
   }
 
