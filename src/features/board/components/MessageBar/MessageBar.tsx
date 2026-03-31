@@ -68,10 +68,8 @@ export function MessageBar({
           gap={1}
           overflow="auto"
         >
-          {message.map((part, index) => (
-            <Stack key={index} direction="row">
-              <Pictogram label={part.label} src={part.imageSrc} />
-            </Stack>
+          {message.map((part) => (
+            <Pictogram key={part.id} label={part.label} src={part.imageSrc} />
           ))}
         </Stack>
 

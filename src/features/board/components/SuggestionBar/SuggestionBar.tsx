@@ -33,9 +33,9 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
-        {suggestions.map((suggestion, index) => (
+        {suggestions.map((suggestion) => (
           <Chip
-            key={index}
+            key={suggestion}
             label={suggestion}
             onClick={() => onSuggestionClick(suggestion)}
           />
