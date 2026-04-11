@@ -1,8 +1,8 @@
-import * as boardSetsStore from "../store/board-sets-store";
 import type { ReactNode } from "react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import * as boardSetsStore from "../store/board-sets-store";
 import { useBoardNavigation } from "./useBoardNavigation";
 
 vi.mock("../store/board-sets-store", () => ({

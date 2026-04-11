@@ -1,11 +1,11 @@
-import type { BoardRouteParams } from "../types";
-import { useBoardSets } from "./useBoardSets";
 import {
   generatePath,
   useLocation,
   useNavigate,
   useParams,
 } from "react-router";
+import type { BoardRouteParams } from "../types";
+import { useBoardSets } from "./useBoardSets";
 
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;

@@ -1,9 +1,9 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
 import {
   removeBoardSet,
-  type BoardSetRecord,
   useBoardSets,
   useImportBoardFiles,
+  type BoardSetRecord,
 } from "@features/board";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
