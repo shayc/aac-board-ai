@@ -42,14 +42,14 @@ export function MessageBar({
   }, [message]);
 
   return (
-    <Stack direction="row" p={2} gap={2}>
+    <Stack direction="row" sx={{ p: 2, gap: 2 }}>
       <Stack
         direction="row"
-        flexGrow={2}
-        gap={2}
-        borderRadius={18}
-        overflow="hidden"
         sx={{
+          flexGrow: 2,
+          gap: 2,
+          borderRadius: 18,
+          overflow: "hidden",
           backgroundColor: (theme) =>
             theme.palette.mode === "dark"
               ? theme.palette.grey[800]
@@ -62,11 +62,8 @@ export function MessageBar({
       >
         <Stack
           ref={scrollerRef}
-          flexGrow={1}
           direction="row"
-          padding={2}
-          gap={1}
-          overflow="auto"
+          sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
           {message.map((part, index) => (
             <Stack key={index} direction="row">
@@ -75,7 +72,7 @@ export function MessageBar({
           ))}
         </Stack>
 
-        <Stack direction="row" gap={1}>
+        <Stack direction="row" sx={{ gap: 1 }}>
           <BackspaceButton
             onPress={onBackspacePress}
             onLongPress={onBackspaceLongPress}

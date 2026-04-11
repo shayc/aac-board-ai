@@ -92,9 +92,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 secondary={highlight.secondary}
                 slotProps={{
                   primary: {
-                    fontWeight: 700,
                     variant: "subtitle1",
-                    sx: { mb: 0 },
+                    sx: { fontWeight: 700, mb: 0 },
                   },
                   secondary: {
                     variant: "body2",

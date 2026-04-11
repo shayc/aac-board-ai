@@ -39,7 +39,12 @@ export function BoardSetInfoDialog({
 
       <DialogContent sx={{ overflowX: "hidden", overflowY: "auto" }}>
         {chips.length > 0 && (
-          <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+          <Stack
+            direction="row"
+            spacing={1}
+            useFlexGap
+            sx={{ flexWrap: "wrap" }}
+          >
             {chips.map((label) => (
               <Chip key={label} label={label} size="small" variant="outlined" />
             ))}
