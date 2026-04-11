@@ -1,8 +1,10 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
-import type { BoardSetRecord } from "@features/board/db/boards-db";
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
-import { useImportBoardFiles } from "@features/board/hooks/useImportBoardFiles";
-import { removeBoardSet } from "@features/board/store/board-sets-store";
+import {
+  removeBoardSet,
+  type BoardSetRecord,
+  useBoardSets,
+  useImportBoardFiles,
+} from "@features/board";
 import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";

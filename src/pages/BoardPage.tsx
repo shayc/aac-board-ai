@@ -1,7 +1,5 @@
 import { usePageTitle } from "@app/hooks/usePageTitle";
-import { BoardView } from "@features/board/components/BoardView/BoardView";
-import { useBoard } from "@features/board/hooks/useBoard";
-import type { BoardRouteParams } from "@features/board/types";
+import { BoardView, type BoardRouteParams, useBoard } from "@features/board";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect } from "react";
 import { useParams } from "react-router";

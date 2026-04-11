@@ -1,7 +1,4 @@
-import {
-  fetchBoardSets,
-  importBoardFromUrl,
-} from "@features/board/store/board-sets-store";
+import { fetchBoardSets, importBoardFromUrl } from "@features/board";
 import { ErrorFallback } from "@shared/components/ErrorFallback";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { useEffect, useState } from "react";
