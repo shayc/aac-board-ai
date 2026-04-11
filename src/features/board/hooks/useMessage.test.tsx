@@ -54,6 +54,31 @@ describe("useMessage", () => {
     expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
   });
 
+  test("removeLastPart removes the last added part", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.addPart({ id: "1", label: "hello" });
+    await rerender();
+    result.current.addPart({ id: "2", label: "world" });
+    await rerender();
+
+    result.current.removeLastPart();
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(1);
+    expect(result.current.text).toBe("hello");
+  });
+
+  test("setFromText splits text into word parts", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setFromText("I want water");
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(3);
+    expect(result.current.text).toBe("I want water");
+  });
+
   test("setFromText replaces existing parts", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
