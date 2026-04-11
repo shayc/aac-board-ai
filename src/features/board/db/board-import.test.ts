@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { loadOBF, loadOBZ } from "open-board-format";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { importFiles } from "./board-import";
 import {
   getAssetBlob,

@@ -1,8 +1,7 @@
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
+import { type BoardRouteParams, useBoardSets } from "@features/board";
 import { ErrorFallback } from "@shared/components/ErrorFallback";
 import { LoadingIndicator } from "@shared/components/LoadingIndicator";
 import { generatePath, Navigate, useParams } from "react-router";
-import type { BoardRouteParams } from "@features/board/types";
 
 export function BoardSetRootRedirect() {
   const { setId } = useParams<BoardRouteParams>();

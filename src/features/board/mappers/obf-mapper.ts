@@ -1,12 +1,4 @@
 import type {
-  Board,
-  BoardAction,
-  BoardButton,
-  BoardGrid,
-  BoardLicense,
-  BoardLink,
-} from "@features/board/types";
-import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
@@ -14,6 +6,14 @@ import type {
   OBFLoadBoard,
   OBFMedia,
 } from "open-board-format";
+import type {
+  Board,
+  BoardAction,
+  BoardButton,
+  BoardGrid,
+  BoardLicense,
+  BoardLink,
+} from "../types";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSourceById = buildMediaSourceMap(obfBoard.images);

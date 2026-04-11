@@ -1,6 +1,6 @@
-import type { BoardAction, BoardButton } from "@features/board/types";
 import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
+import type { BoardAction, BoardButton } from "../types";
 import type { UseBoardNavigationReturn } from "./useBoardNavigation";
 import type { UseMessageReturn } from "./useMessage";
 import type { UseMessagePlaybackReturn } from "./useMessagePlayback";

@@ -1,7 +1,7 @@
-import { resolveLoadBoardPaths } from "@features/board/mappers/obf-mapper";
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
+import { resolveLoadBoardPaths } from "../mappers/obf-mapper";
 import type { BoardsDB, UpsertBoardSetInput } from "./boards-db";
 import {
   putAssets,

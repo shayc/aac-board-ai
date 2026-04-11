@@ -1,14 +1,11 @@
-import {
-  importFiles,
-  type ImportResult,
-} from "@features/board/db/board-import";
+import { createExternalStore } from "@shared/utils/external-store";
+import { importFiles, type ImportResult } from "../db/board-import";
 import {
   deleteBoardSet,
   listBoardSets,
   withBoardsDB,
   type BoardSetRecord,
-} from "@features/board/db/boards-db";
-import { createExternalStore } from "@shared/utils/external-store";
+} from "../db/boards-db";
 
 export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];

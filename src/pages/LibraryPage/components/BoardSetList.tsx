@@ -1,4 +1,4 @@
-import type { BoardSetRecord } from "@features/board/db/boards-db";
+import type { BoardSetRecord } from "@features/board";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

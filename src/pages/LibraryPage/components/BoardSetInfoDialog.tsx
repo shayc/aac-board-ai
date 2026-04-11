@@ -1,4 +1,4 @@
-import type { BoardSetRecord } from "@features/board/db/boards-db";
+import type { BoardSetRecord } from "@features/board";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
