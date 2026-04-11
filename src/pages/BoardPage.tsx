@@ -8,8 +8,8 @@ import { useParams } from "react-router";
 
 function BoardPage() {
   const { setId = "", boardId = "" } = useParams<BoardRouteParams>();
-  const { setPageTitle } = usePageTitle();
   const { board } = useBoard({ setId, boardId });
+  const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
     setPageTitle(board?.name);
