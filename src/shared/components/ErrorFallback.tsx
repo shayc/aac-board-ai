@@ -12,13 +12,15 @@ export function ErrorFallback({
 }: ErrorFallbackProps) {
   return (
     <Box
-      display="flex"
-      flexDirection="column"
-      alignItems="center"
-      justifyContent="center"
-      height="100%"
-      gap={2}
-      p={4}
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        gap: 2,
+        p: 4,
+      }}
     >
       <Typography variant="h6" color="error">
         {title}

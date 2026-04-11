@@ -61,13 +61,16 @@ export function Grid<TItem extends { id: string }>({
       role="grid"
       aria-rowcount={rows}
       aria-colcount={columns}
-      minHeight="100%"
       direction="column"
-      p={2}
-      gap={gap}
+      sx={{ minHeight: "100%", p: 2, gap }}
     >
       {grid.map((row, rowIndex) => (
-        <Stack key={rowIndex} role="row" direction="row" flexGrow={1} gap={gap}>
+        <Stack
+          key={rowIndex}
+          role="row"
+          direction="row"
+          sx={{ flexGrow: 1, gap }}
+        >
           {row.map((item, colIndex) => {
             const isActive =
               rowIndex === activeCell.row && colIndex === activeCell.col;
@@ -78,8 +81,7 @@ export function Grid<TItem extends { id: string }>({
                 role="gridcell"
                 aria-rowindex={rowIndex + 1}
                 aria-colindex={colIndex + 1}
-                flex={1}
-                sx={{ minWidth: 80, minHeight: 80 }}
+                sx={{ flex: 1, minWidth: 80, minHeight: 80 }}
               >
                 {item &&
                   renderItem(item, {

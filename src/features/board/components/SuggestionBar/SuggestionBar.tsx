@@ -19,11 +19,8 @@ export function SuggestionBar({
 }: SuggestionBarProps) {
   return (
     <Stack
-      flex="1"
       direction="row"
-      alignItems="center"
-      gap={2}
-      overflow="hidden"
+      sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
     >
       <Box
         sx={{

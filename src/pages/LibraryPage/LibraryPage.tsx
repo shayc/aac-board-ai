@@ -65,9 +65,7 @@ function LibraryPage() {
     <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
       <Stack
         direction="row"
-        alignItems="center"
-        justifyContent="flex-end"
-        sx={{ mb: 2 }}
+        sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
       >
         <Button
           variant="text"

@@ -30,9 +30,9 @@ export function BoardView({ board }: BoardViewProps) {
 
   return (
     <Stack
-      height="100%"
       direction="column"
       sx={(theme) => ({
+        height: "100%",
         backgroundRepeat: "no-repeat",
         backgroundImage:
           theme.palette.mode === "dark"
@@ -49,7 +49,11 @@ export function BoardView({ board }: BoardViewProps) {
         onStopClick={playback.stop}
       />
 
-      <Stack direction="row" justifyContent="space-between" spacing={2} px={2}>
+      <Stack
+        direction="row"
+        spacing={2}
+        sx={{ justifyContent: "space-between", px: 2 }}
+      >
         <NavButtons
           canGoBack={navigation.canGoBack}
           canGoHome={navigation.canGoHome}
