@@ -1,4 +1,4 @@
-import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
+import { Pictogram } from "../Pictogram/Pictogram";
 import Button from "@mui/material/Button";
 import { darken } from "@mui/material/styles";
 import { getReadableTextColor } from "@shared/utils/colors";

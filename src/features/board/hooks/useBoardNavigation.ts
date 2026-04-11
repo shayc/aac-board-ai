@@ -1,5 +1,5 @@
-import type { BoardRouteParams } from "@features/board/types";
-import { useBoardSets } from "@features/board/hooks/useBoardSets";
+import type { BoardRouteParams } from "../types";
+import { useBoardSets } from "./useBoardSets";
 import {
   generatePath,
   useLocation,

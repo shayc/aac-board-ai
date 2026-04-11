@@ -1,11 +1,7 @@
-import type { BoardsDB } from "@features/board/db/boards-db";
-import {
-  getAssetBlob,
-  getBoard,
-  withBoardsDB,
-} from "@features/board/db/boards-db";
-import { obfToBoard } from "@features/board/mappers/obf-mapper";
-import type { Board } from "@features/board/types";
+import type { BoardsDB } from "../db/boards-db";
+import { getAssetBlob, getBoard, withBoardsDB } from "../db/boards-db";
+import { obfToBoard } from "../mappers/obf-mapper";
+import type { Board } from "../types";
 import type { ObjectUrlRegistry } from "@shared/utils/object-url";
 import { createObjectUrlRegistry } from "@shared/utils/object-url";
 import type { OBFBoard, OBFMedia } from "open-board-format";

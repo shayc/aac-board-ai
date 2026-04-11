@@ -1,5 +1,5 @@
-import { updateBoardStrings, withBoardsDB } from "@features/board/db/boards-db";
-import type { Board, BoardButton } from "@features/board/types";
+import { updateBoardStrings, withBoardsDB } from "../db/boards-db";
+import type { Board, BoardButton } from "../types";
 import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
 import { useTranslator } from "@shared/hooks/ai/useTranslator";
 import { useEffect, useState } from "react";

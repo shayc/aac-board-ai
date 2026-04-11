@@ -1,4 +1,4 @@
-import { useGridKeyboard } from "@features/board/hooks/useGridKeyboard";
+import { useGridKeyboard } from "../../hooks/useGridKeyboard";
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 

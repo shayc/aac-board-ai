@@ -1,4 +1,4 @@
-import type { MessagePart } from "@features/board/hooks/useMessage";
+import type { MessagePart } from "../../hooks/useMessage";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { MessageBar } from "./MessageBar";

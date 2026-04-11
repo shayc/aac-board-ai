@@ -1,14 +1,14 @@
-import { Grid } from "@features/board/components/Grid/Grid";
-import { MessageBar } from "@features/board/components/MessageBar/MessageBar";
-import { NavButtons } from "@features/board/components/NavButtons/NavButtons";
-import { SuggestionBar } from "@features/board/components/SuggestionBar/SuggestionBar";
-import { Tile } from "@features/board/components/Tile/Tile";
-import { useBoardNavigation } from "@features/board/hooks/useBoardNavigation";
-import { useButtonActivation } from "@features/board/hooks/useButtonActivation";
-import { useMessage } from "@features/board/hooks/useMessage";
-import { useMessagePlayback } from "@features/board/hooks/useMessagePlayback";
-import { useSuggestions } from "@features/board/hooks/useSuggestions";
-import type { Board, BoardButton } from "@features/board/types";
+import { Grid } from "../Grid/Grid";
+import { MessageBar } from "../MessageBar/MessageBar";
+import { NavButtons } from "../NavButtons/NavButtons";
+import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
+import { Tile } from "../Tile/Tile";
+import { useBoardNavigation } from "../../hooks/useBoardNavigation";
+import { useButtonActivation } from "../../hooks/useButtonActivation";
+import { useMessage } from "../../hooks/useMessage";
+import { useMessagePlayback } from "../../hooks/useMessagePlayback";
+import { useSuggestions } from "../../hooks/useSuggestions";
+import type { Board, BoardButton } from "../../types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 

@@ -5,7 +5,7 @@ import type {
   BoardGrid,
   BoardLicense,
   BoardLink,
-} from "@features/board/types";
+} from "../types";
 import type {
   OBFBoard,
   OBFButton,

@@ -1,8 +1,8 @@
-import type { BoardSetRecord } from "@features/board/db/boards-db";
+import type { BoardSetRecord } from "../db/boards-db";
 import {
   getBoardSetsSnapshot,
   subscribeBoardSets,
-} from "@features/board/store/board-sets-store";
+} from "../store/board-sets-store";
 import { useSyncExternalStore } from "react";
 
 export interface UseBoardSetsReturn {

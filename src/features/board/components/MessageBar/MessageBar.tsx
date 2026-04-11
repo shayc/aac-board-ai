@@ -1,5 +1,5 @@
-import { Pictogram } from "@features/board/components/Pictogram/Pictogram";
-import type { MessagePart } from "@features/board/hooks/useMessage";
+import { Pictogram } from "../Pictogram/Pictogram";
+import type { MessagePart } from "../../hooks/useMessage";
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { BackspaceButton } from "./components/BackspaceButton";
