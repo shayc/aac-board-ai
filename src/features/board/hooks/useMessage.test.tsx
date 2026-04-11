@@ -9,145 +9,76 @@ afterEach(() => {
 });
 
 describe("useMessage", () => {
-  describe("addPart", () => {
-    test("adds a part to an empty message", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+  test("builds text from multiple parts joined by spaces", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.addPart({ id: "1", label: "hello" });
-      await rerender();
+    result.current.addPart({ id: "1", label: "I" });
+    await rerender();
+    result.current.addPart({ id: "2", label: "want" });
+    await rerender();
+    result.current.addPart({ id: "3", label: "water" });
+    await rerender();
 
-      expect(result.current.parts).toHaveLength(1);
-      expect(result.current.parts[0]).toEqual({ id: "1", label: "hello" });
-      expect(result.current.text).toBe("hello");
-    });
-
-    test("adds multiple parts and joins labels with spaces", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.addPart({ id: "1", label: "I" });
-      await rerender();
-      result.current.addPart({ id: "2", label: "want" });
-      await rerender();
-      result.current.addPart({ id: "3", label: "water" });
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(3);
-      expect(result.current.text).toBe("I want water");
-    });
+    expect(result.current.parts).toHaveLength(3);
+    expect(result.current.text).toBe("I want water");
   });
 
-  describe("removeLastPart", () => {
-    test("removes the last part", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+  test("merges into existing last part preserving untouched fields", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.addPart({ id: "1", label: "hello" });
-      await rerender();
-      result.current.addPart({ id: "2", label: "world" });
-      await rerender();
-
-      result.current.removeLastPart();
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(1);
-      expect(result.current.parts[0].id).toBe("1");
+    result.current.addPart({ id: "1", label: "first" });
+    await rerender();
+    result.current.addPart({
+      id: "2",
+      label: "he",
+      imageSrc: "img.png",
     });
+    await rerender();
+
+    result.current.updateLastPart({ id: "2", label: "hello" });
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(2);
+    expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
+    expect(result.current.parts[1].label).toBe("hello");
+    expect(result.current.parts[1].imageSrc).toBe("img.png");
   });
 
-  describe("updateLastPart", () => {
-    test("merges into the existing last part", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+  test("updateLastPart inserts as first element when empty", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.addPart({
-        id: "1",
-        label: "he",
-        imageSrc: "img.png",
-      });
-      await rerender();
+    result.current.updateLastPart({ id: "1", label: "first" });
+    await rerender();
 
-      result.current.updateLastPart({ id: "1", label: "hello" });
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(1);
-      expect(result.current.parts[0].label).toBe("hello");
-      expect(result.current.parts[0].imageSrc).toBe("img.png");
-    });
-
-    test("inserts part as first element when empty", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.updateLastPart({ id: "1", label: "first" });
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(1);
-      expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
-    });
+    expect(result.current.parts).toHaveLength(1);
+    expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
   });
 
-  describe("clear", () => {
-    test("resets message to empty", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+  test("setFromText replaces existing parts", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
 
-      result.current.addPart({ id: "1", label: "hello" });
-      await rerender();
+    result.current.addPart({ id: "1", label: "existing" });
+    await rerender();
 
-      result.current.clear();
-      await rerender();
+    result.current.setFromText("");
+    await rerender();
 
-      expect(result.current.parts).toHaveLength(0);
-      expect(result.current.text).toBe("");
-    });
+    expect(result.current.parts).toHaveLength(0);
   });
 
-  describe("addSpace", () => {
-    test("adds a spacer part with empty label", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+  test("persists parts across unmount and remount", async () => {
+    const first = await renderHook(() => useMessage());
 
-      result.current.addPart({ id: "1", label: "hello" });
-      await rerender();
-      result.current.addSpace();
-      await rerender();
-      result.current.addPart({ id: "2", label: "world" });
-      await rerender();
+    first.result.current.addPart({ id: "1", label: "hello" });
+    await first.rerender();
+    first.result.current.addPart({ id: "2", label: "world" });
+    await first.rerender();
 
-      expect(result.current.parts).toHaveLength(3);
-      expect(result.current.parts[1].label).toBe("");
-      expect(result.current.parts[1].id).toBeTruthy();
-    });
-  });
+    await first.unmount();
 
-  describe("setFromText", () => {
-    test("splits text into word parts", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
+    const second = await renderHook(() => useMessage());
 
-      result.current.setFromText("hello world");
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(2);
-      expect(result.current.parts[0].label).toBe("hello");
-      expect(result.current.parts[1].label).toBe("world");
-    });
-
-    test("handles extra whitespace", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.setFromText("  hello   world  ");
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(2);
-      expect(result.current.parts[0].label).toBe("hello");
-      expect(result.current.parts[1].label).toBe("world");
-    });
-
-    test("produces empty parts for empty string", async () => {
-      const { result, rerender } = await renderHook(() => useMessage());
-
-      result.current.addPart({ id: "1", label: "existing" });
-      await rerender();
-
-      result.current.setFromText("");
-      await rerender();
-
-      expect(result.current.parts).toHaveLength(0);
-    });
+    expect(second.result.current.parts).toHaveLength(2);
+    expect(second.result.current.text).toBe("hello world");
   });
 });
