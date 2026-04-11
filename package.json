@@ -28,6 +28,12 @@
   "overrides": {
     "vite-plugin-pwa": {
       "vite": "$vite"
+    },
+    "eslint-plugin-react-dom": {
+      "typescript": "$typescript"
+    },
+    "eslint-plugin-react-x": {
+      "typescript": "$typescript"
     }
   },
   "dependencies": {
