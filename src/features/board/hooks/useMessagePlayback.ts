@@ -1,4 +1,4 @@
-import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
+import { useSpeech } from "@shared/speech/useSpeech";
 import { useAudio } from "@shared/hooks/useAudio";
 import { useState } from "react";
 import type { MessagePart } from "./useMessage";

@@ -1,10 +1,10 @@
-import { useAI } from "@shared/contexts/AIProvider/useAI";
+import { useAI } from "@shared/ai/useAI";
 import {
   isProofreaderSupported,
   isRewriterSupported,
-} from "@shared/hooks/ai/ai-capabilities";
-import { useProofreader } from "@shared/hooks/ai/useProofreader";
-import { useRewriter } from "@shared/hooks/ai/useRewriter";
+} from "@shared/ai/ai-capabilities";
+import { useProofreader } from "@shared/ai/useProofreader";
+import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
 import type { SuggestionTone } from "../types";
 

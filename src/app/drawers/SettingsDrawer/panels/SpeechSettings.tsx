@@ -7,8 +7,9 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
+import { useTranslator } from "@shared/ai/useTranslator";
+import { useLanguage } from "@shared/language/useLanguage";
+import { useSpeech } from "@shared/speech/useSpeech";
 import {
   PITCH_MAX,
   PITCH_MIN,
@@ -16,8 +17,7 @@ import {
   RATE_MIN,
   VOLUME_MAX,
   VOLUME_MIN,
-} from "@shared/contexts/SpeechProvider/useSpeechSynthesis";
-import { useTranslator } from "@shared/hooks/ai/useTranslator";
+} from "@shared/speech/useSpeechSynthesis";
 
 export function SpeechSettings() {
   const {

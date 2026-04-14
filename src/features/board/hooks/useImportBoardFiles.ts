@@ -1,4 +1,4 @@
-import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
+import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { openFiles } from "@shared/utils/files";
 import { importBoardFiles as importFiles } from "../store/board-sets-store";
 

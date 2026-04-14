@@ -8,7 +8,7 @@ import {
   isProofreaderSupported,
   isRewriterSupported,
   isTranslatorSupported,
-} from "@shared/hooks/ai/ai-capabilities";
+} from "./ai-capabilities";
 
 const AI_FEATURES = [
   { isSupported: isProofreaderSupported, label: "Proofreader" },

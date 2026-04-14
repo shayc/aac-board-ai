@@ -1,5 +1,5 @@
-import { useSpeech } from "@shared/contexts/SpeechProvider/useSpeech";
 import { usePersistentState } from "@shared/hooks/usePersistentState";
+import { useSpeech } from "@shared/speech/useSpeech";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./LanguageContext";
 

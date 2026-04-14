@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
+import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
