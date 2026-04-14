@@ -104,7 +104,7 @@ Board-set data is consumed by components via a custom external store (`useSyncEx
 
 ## Browser Compatibility
 
-Requires Chrome 138+ with Built-in AI flags enabled. See [Prerequisites](../README.md#prerequisites) for the full list of required flags.
+Requires Chrome 138+ with Built-in AI flags enabled. See [Enabling Built-in AI](../README.md#enabling-built-in-ai) for the full list of required flags.
 
 Once enabled, the browser downloads the AI model for local inference.
 
