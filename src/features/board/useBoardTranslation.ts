@@ -1,8 +1,8 @@
 import { useTranslator } from "@shared/ai/useTranslator";
 import { useLanguage } from "@shared/language/useLanguage";
 import { useEffect, useState } from "react";
-import { updateBoardStrings, withBoardsDB } from "../db/boards-db";
-import type { Board, BoardButton } from "../types";
+import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
+import type { Board, BoardButton } from "./types";
 
 export interface UseBoardTranslationOptions {
   setId: string;

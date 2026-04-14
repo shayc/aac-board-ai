@@ -27,11 +27,11 @@ The `AIProvider` context manages shared context across AI sessions. Users can pr
 
 ## Tech Stack
 
-**Core:** React 19 • TypeScript 5.9 • Vite 8  
-**UI:** Material UI 7 • Emotion • React Aria  
+**Core:** React 19 • TypeScript 6 • Vite 8  
+**UI:** Material UI 9 • Emotion • React Aria  
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) + localStorage  
-**Data:** open-board-format (OBF/OBZ parsing)  
+**Data:** open-board-format (OBF/OBZ file parsing)  
 **AI:** Built-in AI  
 **Optimization:** React Compiler  
 **Testing:** Vitest 4 + Playwright browser mode  
@@ -52,36 +52,38 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell & global layout
-│   ├── AppProviders.tsx   # Composed context providers
-│   ├── AppRoutes.tsx      # Route definitions
-│   ├── dialogs/           # Global dialogs
-│   ├── drawers/           # Settings & navigation panels
-│   └── layouts/           # App header & shell
+├── app/                   # App shell and layout
+│   ├── AppProviders.tsx
+│   ├── AppRoutes.tsx
+│   ├── dialogs/           # Onboarding and app-level dialogs
+│   ├── drawers/           # Menu and settings panels
+│   ├── hooks/             # App-scoped hooks (page title, etc.)
+│   └── layouts/           # Header and shell chrome
 ├── features/
-│   └── board/             # AAC board feature
-│       ├── components/    # Board UI components
-│       ├── db/            # Board & media persistence
-│       ├── hooks/         # Board-specific hooks
-│       ├── mappers/       # OBF format mapping
-│       ├── store/         # Board set state
-│       └── types.ts
-├── pages/                 # Route pages
+│   └── board/             # The AAC communication board
+│       ├── grid/          # Tappable tile grid with keyboard nav
+│       ├── message/       # Sentence strip with playback controls
+│       ├── navigation/    # Back, home, and board-linking logic
+│       ├── suggestions/   # AI-powered phrase and tone suggestions
+│       ├── storage/       # IndexedDB persistence and board-set state
+│       ├── import/        # OBZ/OBF file ingestion and format mapping
+│       └── *.tsx / *.ts   # Root orchestrators, types, public barrel
+├── pages/                 # One file per route
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
 │   ├── HomePage.tsx
-│   └── LibraryPage/       # Board set library
-└── shared/                # Reusable utilities
-    ├── ai/                # Built-in AI integration
-    ├── components/        # Shared UI components
-    ├── hooks/             # Generic hooks
-    ├── language/          # Language & locale
-    ├── snackbar/          # Toast notifications
-    ├── speech/            # Text-to-speech
-    ├── testing/           # Test fixtures
-    ├── theme/             # MUI theme
-    └── utils/             # General utilities
+│   └── LibraryPage/       # Board set browsing and management
+└── shared/                # Cross-cutting code used by any feature
+    ├── ai/                # Built-in AI capability detection and hooks
+    ├── components/        # Shared UI primitives
+    ├── hooks/             # Reusable stateful hooks
+    ├── language/          # Locale detection and language context
+    ├── snackbar/          # Snackbar notification system
+    ├── speech/            # Text-to-speech synthesis
+    ├── testing/           # Fixtures and sample board files
+    ├── theme/             # MUI theme configuration
+    └── utils/             # Pure utility functions
 ```
 
 ---
@@ -102,7 +104,7 @@ Board-set data is consumed by components via a custom external store (`useSyncEx
 
 ## Browser Compatibility
 
-Requires Chrome 138+ with Built-in AI flags enabled. See [Prerequisites](../README.md#prerequisites) for the full list of required flags.
+Requires Chrome 138+ with Built-in AI flags enabled. See [Enabling Built-in AI](../README.md#enabling-built-in-ai) for the full list of required flags.
 
 Once enabled, the browser downloads the AI model for local inference.
 

@@ -1,16 +1,16 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { useBoardNavigation } from "../../hooks/useBoardNavigation";
-import { useButtonActivation } from "../../hooks/useButtonActivation";
-import { useMessage } from "../../hooks/useMessage";
-import { useMessagePlayback } from "../../hooks/useMessagePlayback";
-import { useSuggestions } from "../../hooks/useSuggestions";
-import type { Board, BoardButton } from "../../types";
-import { Grid } from "../Grid/Grid";
-import { MessageBar } from "../MessageBar/MessageBar";
-import { NavButtons } from "../NavButtons/NavButtons";
-import { SuggestionBar } from "../SuggestionBar/SuggestionBar";
-import { Tile } from "../Tile/Tile";
+import { Grid } from "./grid/Grid";
+import { Tile } from "./grid/Tile";
+import { MessageBar } from "./message/MessageBar";
+import { useMessage } from "./message/useMessage";
+import { useMessagePlayback } from "./message/useMessagePlayback";
+import { useBoardNavigation } from "./navigation/useBoardNavigation";
+import { SuggestionBar } from "./suggestions/SuggestionBar";
+import { useSuggestions } from "./suggestions/useSuggestions";
+import type { Board, BoardButton } from "./types";
+import { useButtonActivation } from "./useButtonActivation";
+import { NavButtons } from "./navigation/NavButtons";
 
 export interface BoardViewProps {
   board: Board;

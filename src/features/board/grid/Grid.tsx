@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useRef } from "react";
-import { useGridKeyboard } from "../../hooks/useGridKeyboard";
+import { useGridKeyboard } from "./useGridKeyboard";
 
 type RefCallback = (element: HTMLElement | null) => void;
 

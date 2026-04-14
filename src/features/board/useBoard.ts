@@ -1,4 +1,4 @@
-import type { Board } from "../types";
+import type { Board } from "./types";
 import { useBoardTranslation } from "./useBoardTranslation";
 import { useLoadBoard } from "./useLoadBoard";
 
