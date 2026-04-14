@@ -60,11 +60,14 @@ src/
 │   └── layouts/           # App header & shell
 ├── features/
 │   └── board/             # AAC board feature
-│       ├── components/    # Board UI components
-│       ├── db/            # Board & media persistence
-│       ├── hooks/         # Board-specific hooks
-│       ├── mappers/       # OBF format mapping
-│       ├── store/         # Board set state
+│       ├── grid/          # Grid layout, tiles, pictograms, keyboard nav
+│       ├── message/       # Sentence strip: composition, playback, controls
+│       ├── navigation/    # Board-to-board routing & nav buttons
+│       ├── suggestions/   # AI phrase suggestions & tone selection
+│       ├── storage/       # IndexedDB persistence & board-sets state
+│       ├── import/        # OBZ/OBF parsing, format mapping, import hooks
+│       ├── BoardView.tsx  # Top-level board orchestrator
+│       ├── useBoard.ts    # Primary hook (load + translate)
 │       └── types.ts
 ├── pages/                 # Route pages
 │   ├── AboutPage.tsx
