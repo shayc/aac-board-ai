@@ -52,39 +52,40 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell & global layout
+├── app/                   # App shell & providers
 │   ├── AppProviders.tsx   # Composed context providers
 │   ├── AppRoutes.tsx      # Route definitions
-│   ├── dialogs/           # Global dialogs
-│   ├── drawers/           # Settings & navigation panels
+│   ├── dialogs/           # App-level dialogs (e.g. onboarding)
+│   ├── drawers/           # Menu & settings panels
+│   ├── hooks/             # App-level hooks (e.g. page title)
 │   └── layouts/           # App header & shell
 ├── features/
 │   └── board/             # AAC board feature
-│       ├── grid/          # Grid layout, tiles, pictograms, keyboard nav
-│       ├── message/       # Sentence strip: composition, playback, controls
+│       ├── grid/          # Tile grid, pictograms & keyboard navigation
+│       ├── message/       # Sentence strip, playback & editing controls
 │       ├── navigation/    # Board-to-board routing & nav buttons
 │       ├── suggestions/   # AI phrase suggestions & tone selection
 │       ├── storage/       # IndexedDB persistence & board-sets state
-│       ├── import/        # OBZ/OBF parsing, format mapping, import hooks
-│       ├── BoardView.tsx  # Top-level board orchestrator
-│       ├── useBoard.ts    # Primary hook (load + translate)
-│       └── types.ts
-├── pages/                 # Route pages
+│       ├── import/        # OBZ/OBF file parsing & format mapping
+│       ├── BoardView.tsx  # Top-level board UI orchestrator
+│       ├── useBoard.ts    # Primary hook (load & translate a board)
+│       └── types.ts       # Shared domain types
+├── pages/                 # Route-level page components
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
 │   ├── HomePage.tsx
-│   └── LibraryPage/       # Board set library
-└── shared/                # Reusable utilities
-    ├── ai/                # Built-in AI integration
-    ├── components/        # Shared UI components
-    ├── hooks/             # Generic hooks
-    ├── language/          # Language & locale
-    ├── snackbar/          # Toast notifications
-    ├── speech/            # Text-to-speech
-    ├── testing/           # Test fixtures
-    ├── theme/             # MUI theme
-    └── utils/             # General utilities
+│   └── LibraryPage/       # Board set library & management
+└── shared/                # Cross-cutting utilities & providers
+    ├── ai/                # Built-in AI hooks & capability detection
+    ├── components/        # Error boundaries & loading indicators
+    ├── hooks/             # Persistent state & audio playback
+    ├── language/          # Locale detection & language context
+    ├── snackbar/          # Snackbar notifications
+    ├── speech/            # Text-to-speech synthesis
+    ├── testing/           # Test fixtures & sample board files
+    ├── theme/             # MUI theme provider
+    └── utils/             # Color, HTML, file & object-URL helpers
 ```
 
 ---
