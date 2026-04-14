@@ -67,9 +67,7 @@ src/
 │       ├── suggestions/   # AI phrase suggestions & tone selection
 │       ├── storage/       # IndexedDB persistence & board-sets state
 │       ├── import/        # OBZ/OBF file parsing & format mapping
-│       ├── BoardView.tsx  # Top-level board UI orchestrator
-│       ├── useBoard.ts    # Primary hook (load & translate a board)
-│       └── types.ts       # Shared domain types
+│       └── *.tsx / *.ts   # Board orchestrators, types & public barrel
 ├── pages/                 # Route-level page components
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
@@ -78,14 +76,14 @@ src/
 │   └── LibraryPage/       # Board set library & management
 └── shared/                # Cross-cutting utilities & providers
     ├── ai/                # Built-in AI hooks & capability detection
-    ├── components/        # Error boundaries & loading indicators
-    ├── hooks/             # Persistent state & audio playback
+    ├── components/        # Shared UI primitives
+    ├── hooks/             # Reusable stateful hooks
     ├── language/          # Locale detection & language context
     ├── snackbar/          # Snackbar notifications
     ├── speech/            # Text-to-speech synthesis
     ├── testing/           # Test fixtures & sample board files
     ├── theme/             # MUI theme provider
-    └── utils/             # Color, HTML, file & object-URL helpers
+    └── utils/             # Pure utility functions
 ```
 
 ---
