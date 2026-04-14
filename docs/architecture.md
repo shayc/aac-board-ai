@@ -52,37 +52,37 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell & providers
-│   ├── AppProviders.tsx   # Composed context providers
-│   ├── AppRoutes.tsx      # Route definitions
-│   ├── dialogs/           # App-level dialogs (e.g. onboarding)
-│   ├── drawers/           # Menu & settings panels
-│   ├── hooks/             # App-level hooks (e.g. page title)
-│   └── layouts/           # App header & shell
+├── app/                   # App shell, providers, global layout
+│   ├── AppProviders.tsx
+│   ├── AppRoutes.tsx
+│   ├── dialogs/           # Onboarding and app-level dialogs
+│   ├── drawers/           # Menu and settings panels
+│   ├── hooks/             # App-scoped hooks (page title, etc.)
+│   └── layouts/           # Header and shell chrome
 ├── features/
-│   └── board/             # AAC board feature
-│       ├── grid/          # Tile grid, pictograms & keyboard navigation
-│       ├── message/       # Sentence strip, playback & editing controls
-│       ├── navigation/    # Board-to-board routing & nav buttons
-│       ├── suggestions/   # AI phrase suggestions & tone selection
-│       ├── storage/       # IndexedDB persistence & board-sets state
-│       ├── import/        # OBZ/OBF file parsing & format mapping
-│       └── *.tsx / *.ts   # Board orchestrators, types & public barrel
-├── pages/                 # Route-level page components
+│   └── board/             # The AAC communication board
+│       ├── grid/          # Tappable tile grid with keyboard nav
+│       ├── message/       # Sentence strip with playback controls
+│       ├── navigation/    # Back, home, and board-linking logic
+│       ├── suggestions/   # AI-powered phrase and tone suggestions
+│       ├── storage/       # IndexedDB persistence and board-set state
+│       ├── import/        # OBZ/OBF file ingestion and format mapping
+│       └── *.tsx / *.ts   # Root orchestrators, types, public barrel
+├── pages/                 # One file per route
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
 │   ├── HomePage.tsx
-│   └── LibraryPage/       # Board set library & management
-└── shared/                # Cross-cutting utilities & providers
-    ├── ai/                # Built-in AI hooks & capability detection
+│   └── LibraryPage/       # Board set browsing and management
+└── shared/                # Cross-cutting code used by any feature
+    ├── ai/                # Built-in AI capability detection and hooks
     ├── components/        # Shared UI primitives
     ├── hooks/             # Reusable stateful hooks
-    ├── language/          # Locale detection & language context
-    ├── snackbar/          # Snackbar notifications
+    ├── language/          # Locale detection and language context
+    ├── snackbar/          # Snackbar notification system
     ├── speech/            # Text-to-speech synthesis
-    ├── testing/           # Test fixtures & sample board files
-    ├── theme/             # MUI theme provider
+    ├── testing/           # Fixtures and sample board files
+    ├── theme/             # MUI theme configuration
     └── utils/             # Pure utility functions
 ```
 
