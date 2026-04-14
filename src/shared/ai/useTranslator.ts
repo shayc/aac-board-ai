@@ -1,4 +1,4 @@
-import { normalizeLocaleCode } from "@shared/language/language";
+import { normalizeLocaleCode } from "@shared/language/locale";
 import { useRef } from "react";
 import { isTranslatorSupported } from "./capabilities";
 import { useAI } from "./useAI";

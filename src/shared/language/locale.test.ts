@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { normalizeLocaleCode } from "./language";
+import { normalizeLocaleCode } from "./locale";
 
 describe("normalizeLocaleCode", () => {
   test("lowercases a language-only code", () => {
