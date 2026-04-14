@@ -1,6 +1,6 @@
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles as importFiles } from "../store/board-sets-store";
+import { importBoardFiles as importFiles } from "../storage/board-sets-store";
 
 export interface UseImportBoardFilesReturn {
   importBoardFiles: () => Promise<void>;

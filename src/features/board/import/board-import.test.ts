@@ -7,7 +7,7 @@ import {
   listBoardSets,
   openBoardsDB,
   withBoardsDB,
-} from "./boards-db";
+} from "../storage/boards-db";
 
 const FIXTURES_DIR = "/src/shared/testing/fixtures";
 const OBZ_FIXTURE = "lots_of_stuff.obz";

@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
-import type { MessagePart } from "../../hooks/useMessage";
-import { Pictogram } from "../Pictogram/Pictogram";
+import type { MessagePart } from "./useMessage";
+import { Pictogram } from "../grid/Pictogram";
 import { BackspaceButton } from "./components/BackspaceButton";
 import { PlayButton } from "./components/PlayButton";
 

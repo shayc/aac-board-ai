@@ -5,7 +5,7 @@ import {
   useParams,
 } from "react-router";
 import type { BoardRouteParams } from "../types";
-import { useBoardSets } from "./useBoardSets";
+import { useBoardSets } from "../storage/useBoardSets";
 
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
