@@ -10,7 +10,7 @@ The architecture follows **feature-sliced design** principles — each feature i
 
 ## AI Integration
 
-Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
+Built-in AI capabilities are accessed through **React hooks** in `shared/ai/`.  
 Each hook wraps a browser API, tracks capability support, and manages download progress.
 
 ### AI Hooks
@@ -73,12 +73,15 @@ src/
 │   ├── HomePage.tsx
 │   └── LibraryPage/       # Board set library
 └── shared/                # Reusable utilities
-    ├── components/        # Shared UI
-    ├── contexts/          # Global contexts
-    ├── hooks/
-    │   └── ai/            # Built-in AI hooks
-    ├── testing/           # Test utilities
-    └── utils/
+    ├── ai/                # Built-in AI integration
+    ├── components/        # Shared UI components
+    ├── hooks/             # Generic hooks
+    ├── language/          # Language & locale
+    ├── snackbar/          # Toast notifications
+    ├── speech/            # Text-to-speech
+    ├── testing/           # Test fixtures
+    ├── theme/             # MUI theme
+    └── utils/             # General utilities
 ```
 
 ---
