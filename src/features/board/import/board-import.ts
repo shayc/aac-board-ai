@@ -1,7 +1,6 @@
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
-import { resolveLoadBoardPaths } from "./obf-mapper";
 import type { BoardsDB, UpsertBoardSetInput } from "../storage/boards-db";
 import {
   putAssets,
@@ -9,6 +8,7 @@ import {
   upsertBoardSet,
   withBoardsDB,
 } from "../storage/boards-db";
+import { resolveLoadBoardPaths } from "./obf-mapper";
 
 export interface ImportResult {
   setId: string;
