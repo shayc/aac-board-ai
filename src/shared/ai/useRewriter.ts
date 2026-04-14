@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { isRewriterSupported } from "./ai-capabilities";
+import { isRewriterSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
 export function useRewriter() {

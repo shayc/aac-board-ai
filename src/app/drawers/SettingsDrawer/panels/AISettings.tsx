@@ -2,8 +2,8 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { AICapabilitiesList } from "@shared/ai/AICapabilitiesList";
+import { isRewriterSupported } from "@shared/ai/capabilities";
 import { useAI } from "@shared/ai/useAI";
-import { isRewriterSupported } from "@shared/ai/ai-capabilities";
 
 export function AISettings() {
   const { sharedContext, setSharedContext } = useAI();

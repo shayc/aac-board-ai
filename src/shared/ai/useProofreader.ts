@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { isProofreaderSupported } from "./ai-capabilities";
+import { isProofreaderSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
 export function useProofreader() {

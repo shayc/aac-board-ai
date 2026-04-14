@@ -1,8 +1,8 @@
-import { useAI } from "@shared/ai/useAI";
 import {
   isProofreaderSupported,
   isRewriterSupported,
-} from "@shared/ai/ai-capabilities";
+} from "@shared/ai/capabilities";
+import { useAI } from "@shared/ai/useAI";
 import { useProofreader } from "@shared/ai/useProofreader";
 import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";

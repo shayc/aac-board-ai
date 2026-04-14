@@ -1,6 +1,6 @@
 import { normalizeLocaleCode } from "@shared/language/language";
 import { useRef } from "react";
-import { isTranslatorSupported } from "./ai-capabilities";
+import { isTranslatorSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
 export function useTranslator() {
