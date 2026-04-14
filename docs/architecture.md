@@ -31,7 +31,7 @@ The `AIProvider` context manages shared context across AI sessions. Users can pr
 **UI:** Material UI 9 • Emotion • React Aria  
 **Routing:** React Router 7  
 **Storage:** IndexedDB (`idb`) + localStorage  
-**Data:** open-board-format (OBF/OBZ parsing)  
+**Data:** open-board-format (OBF/OBZ file parsing)  
 **AI:** Built-in AI  
 **Optimization:** React Compiler  
 **Testing:** Vitest 4 + Playwright browser mode  
