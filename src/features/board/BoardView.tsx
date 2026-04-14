@@ -5,12 +5,12 @@ import { Tile } from "./grid/Tile";
 import { MessageBar } from "./message/MessageBar";
 import { useMessage } from "./message/useMessage";
 import { useMessagePlayback } from "./message/useMessagePlayback";
+import { NavButtons } from "./navigation/NavButtons";
 import { useBoardNavigation } from "./navigation/useBoardNavigation";
 import { SuggestionBar } from "./suggestions/SuggestionBar";
 import { useSuggestions } from "./suggestions/useSuggestions";
 import type { Board, BoardButton } from "./types";
 import { useButtonActivation } from "./useButtonActivation";
-import { NavButtons } from "./navigation/NavButtons";
 
 export interface BoardViewProps {
   board: Board;

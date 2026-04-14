@@ -1,6 +1,5 @@
 import { loadOBF, loadOBZ } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { importFiles } from "./board-import";
 import {
   getAssetBlob,
   getBoard,
@@ -8,6 +7,7 @@ import {
   openBoardsDB,
   withBoardsDB,
 } from "../storage/boards-db";
+import { importFiles } from "./board-import";
 
 const FIXTURES_DIR = "/src/shared/testing/fixtures";
 const OBZ_FIXTURE = "lots_of_stuff.obz";

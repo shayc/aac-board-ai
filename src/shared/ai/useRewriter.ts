@@ -21,6 +21,8 @@ export function useRewriter() {
     if (
       rewriterRef.current &&
       optionsRef.current?.tone === options.tone &&
+      optionsRef.current?.length === options.length &&
+      optionsRef.current?.format === options.format &&
       optionsRef.current?.sharedContext === options.sharedContext
     ) {
       return rewriterRef.current;
