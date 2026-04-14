@@ -1,7 +1,7 @@
-import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { normalizeLocaleCode } from "@shared/utils/language";
+import { normalizeLocaleCode } from "@shared/language/locale";
 import { useRef } from "react";
-import { isTranslatorSupported } from "./ai-capabilities";
+import { isTranslatorSupported } from "./capabilities";
+import { useAI } from "./useAI";
 
 export function useTranslator() {
   const { setDownload } = useAI();

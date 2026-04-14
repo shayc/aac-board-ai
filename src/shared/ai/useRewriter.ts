@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { isRewriterSupported } from "./ai-capabilities";
+import { isRewriterSupported } from "./capabilities";
+import { useAI } from "./useAI";
 
 export function useRewriter() {
   const { setDownload } = useAI();

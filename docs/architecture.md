@@ -10,7 +10,7 @@ The architecture follows **feature-sliced design** principles — each feature i
 
 ## AI Integration
 
-Built-in AI capabilities are accessed through **React hooks** in `shared/hooks/ai/`.  
+Built-in AI capabilities are accessed through **React hooks** in `shared/ai/`.  
 Each hook wraps a browser API, tracks capability support, and manages download progress.
 
 ### AI Hooks
@@ -52,33 +52,36 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell and global layout
+├── app/                   # App shell & global layout
 │   ├── AppProviders.tsx   # Composed context providers
 │   ├── AppRoutes.tsx      # Route definitions
 │   ├── dialogs/           # Global dialogs
-│   ├── drawers/           # Slide-out drawers
-│   └── layouts/           # Header, layout components
+│   ├── drawers/           # Settings & navigation panels
+│   └── layouts/           # App header & shell
 ├── features/
 │   └── board/             # AAC board feature
-│       ├── components/    # UI components
-│       ├── db/            # IndexedDB operations
-│       ├── hooks/         # Feature-specific hooks
+│       ├── components/    # Board UI components
+│       ├── db/            # Board & media persistence
+│       ├── hooks/         # Board-specific hooks
 │       ├── mappers/       # OBF format mapping
-│       ├── store/         # External store (board sets)
+│       ├── store/         # Board set state
 │       └── types.ts
-├── pages/                 # Routed pages
+├── pages/                 # Route pages
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
 │   ├── HomePage.tsx
 │   └── LibraryPage/       # Board set library
 └── shared/                # Reusable utilities
-    ├── components/        # Shared UI
-    ├── contexts/          # Global contexts
-    ├── hooks/
-    │   └── ai/            # Built-in AI hooks
-    ├── testing/           # Test utilities
-    └── utils/
+    ├── ai/                # Built-in AI integration
+    ├── components/        # Shared UI components
+    ├── hooks/             # Generic hooks
+    ├── language/          # Language & locale
+    ├── snackbar/          # Toast notifications
+    ├── speech/            # Text-to-speech
+    ├── testing/           # Test fixtures
+    ├── theme/             # MUI theme
+    └── utils/             # General utilities
 ```
 
 ---

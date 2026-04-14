@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { isProofreaderSupported } from "./ai-capabilities";
+import { isProofreaderSupported } from "./capabilities";
+import { useAI } from "./useAI";
 
 export function useProofreader() {
   const { setDownload } = useAI();

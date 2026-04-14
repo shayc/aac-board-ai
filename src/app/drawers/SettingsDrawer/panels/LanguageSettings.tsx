@@ -7,9 +7,9 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useAI } from "@shared/contexts/AIProvider/useAI";
-import { useLanguage } from "@shared/contexts/LanguageProvider/useLanguage";
-import { isTranslatorSupported } from "@shared/hooks/ai/ai-capabilities";
+import { isTranslatorSupported } from "@shared/ai/capabilities";
+import { useAI } from "@shared/ai/useAI";
+import { useLanguage } from "@shared/language/useLanguage";
 
 export function LanguageSettings() {
   const { languages, languageCode, setLanguageCode } = useLanguage();

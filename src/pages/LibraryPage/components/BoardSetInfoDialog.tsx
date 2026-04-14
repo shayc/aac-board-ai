@@ -7,7 +7,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { getLanguageDisplayName } from "@shared/utils/language";
+import { getLanguageDisplayName } from "@shared/language/locale";
 
 export interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;

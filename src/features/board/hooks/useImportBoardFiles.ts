@@ -1,5 +1,5 @@
-import { useSnackbar } from "@shared/contexts/SnackbarProvider/useSnackbar";
-import { openFiles } from "@shared/utils/files";
+import { useSnackbar } from "@shared/snackbar/useSnackbar";
+import { openFiles } from "@shared/utils/file-picker";
 import { importBoardFiles as importFiles } from "../store/board-sets-store";
 
 export interface UseImportBoardFilesReturn {
