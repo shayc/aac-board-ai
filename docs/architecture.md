@@ -52,21 +52,21 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell and global layout
+├── app/                   # App shell & global layout
 │   ├── AppProviders.tsx   # Composed context providers
 │   ├── AppRoutes.tsx      # Route definitions
 │   ├── dialogs/           # Global dialogs
-│   ├── drawers/           # Slide-out drawers
-│   └── layouts/           # Header, layout components
+│   ├── drawers/           # Settings & navigation panels
+│   └── layouts/           # App header & shell
 ├── features/
 │   └── board/             # AAC board feature
-│       ├── components/    # UI components
-│       ├── db/            # IndexedDB operations
-│       ├── hooks/         # Feature-specific hooks
+│       ├── components/    # Board UI components
+│       ├── db/            # Board & media persistence
+│       ├── hooks/         # Board-specific hooks
 │       ├── mappers/       # OBF format mapping
-│       ├── store/         # External store (board sets)
+│       ├── store/         # Board set state
 │       └── types.ts
-├── pages/                 # Routed pages
+├── pages/                 # Route pages
 │   ├── AboutPage.tsx
 │   ├── BoardPage.tsx
 │   ├── BoardSetRootRedirect.tsx
