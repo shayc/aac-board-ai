@@ -52,7 +52,7 @@ Simplified imports via aliases defined in `tsconfig.app.json` and `vite.config.t
 
 ```
 src/
-├── app/                   # App shell, providers, global layout
+├── app/                   # App shell and layout
 │   ├── AppProviders.tsx
 │   ├── AppRoutes.tsx
 │   ├── dialogs/           # Onboarding and app-level dialogs
