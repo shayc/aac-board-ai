@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { Grid } from "./grid/Grid";
+import type { SxProps, Theme } from "@mui/material/styles";
+import { Grid, type GridItemProps } from "./grid/Grid";
 import { Tile } from "./grid/Tile";
 import { MessageBar } from "./message/MessageBar";
 import { useMessage } from "./message/useMessage";
@@ -16,6 +17,15 @@ export interface BoardViewProps {
   board: Board;
 }
 
+const containerSx: SxProps<Theme> = (theme) => ({
+  height: "100%",
+  backgroundRepeat: "no-repeat",
+  backgroundImage:
+    theme.palette.mode === "dark"
+      ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
+      : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
+});
+
 export function BoardView({ board }: BoardViewProps) {
   const message = useMessage();
   const playback = useMessagePlayback(message.parts);
@@ -28,18 +38,21 @@ export function BoardView({ board }: BoardViewProps) {
     navigation,
   });
 
+  const renderTile = (button: BoardButton, props: GridItemProps) => (
+    <Tile
+      key={button.id}
+      label={button.label}
+      imageSrc={button.imageSrc}
+      backgroundColor={button.backgroundColor}
+      borderColor={button.borderColor}
+      variant={button.loadBoard ? "folder" : undefined}
+      onClick={() => void activateButton(button)}
+      {...props}
+    />
+  );
+
   return (
-    <Stack
-      direction="column"
-      sx={(theme) => ({
-        height: "100%",
-        backgroundRepeat: "no-repeat",
-        backgroundImage:
-          theme.palette.mode === "dark"
-            ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
-            : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
-      })}
-    >
+    <Stack direction="column" sx={containerSx}>
       <MessageBar
         message={message.parts}
         isPlaying={playback.isPlaying}
@@ -77,18 +90,7 @@ export function BoardView({ board }: BoardViewProps) {
           columns={board.grid.columns}
           order={board.grid.order}
           items={board.buttons}
-          renderItem={(button, props) => (
-            <Tile
-              key={button.id}
-              label={button.label}
-              imageSrc={button.imageSrc}
-              backgroundColor={button.backgroundColor}
-              borderColor={button.borderColor}
-              variant={button.loadBoard ? "folder" : undefined}
-              onClick={() => void activateButton(button)}
-              {...props}
-            />
-          )}
+          renderItem={renderTile}
         />
       </Box>
     </Stack>
