@@ -14,6 +14,22 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
+function scrollToLastChild(container: HTMLElement | null) {
+  const lastChild = container?.lastElementChild;
+
+  if (!lastChild) {
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    lastChild.scrollIntoView({
+      block: "nearest",
+      inline: "end",
+      behavior: "instant",
+    });
+  });
+}
+
 export function MessageBar({
   message,
   isPlaying,
@@ -25,40 +41,28 @@ export function MessageBar({
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scroller = scrollerRef.current;
-    const lastChild = scroller?.lastElementChild as HTMLElement | null;
-
-    if (!lastChild) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      lastChild.scrollIntoView({
-        block: "nearest",
-        inline: "end",
-        behavior: "instant",
-      });
-    });
+    scrollToLastChild(scrollerRef.current);
   }, [message]);
 
   return (
     <Stack direction="row" sx={{ p: 2, gap: 2 }}>
       <Stack
         direction="row"
-        sx={{
+        sx={(theme) => ({
           flexGrow: 2,
           gap: 2,
           borderRadius: 18,
           overflow: "hidden",
-          backgroundColor: (theme) =>
+          backgroundColor:
             theme.palette.mode === "dark"
               ? theme.palette.grey[800]
               : theme.palette.grey[200],
-          border: (theme) =>
+          border: `1px solid ${
             theme.palette.mode === "dark"
-              ? `1px solid ${theme.palette.grey[700]}`
-              : `1px solid ${theme.palette.grey[400]}`,
-        }}
+              ? theme.palette.grey[700]
+              : theme.palette.grey[400]
+          }`,
+        })}
       >
         <Stack
           ref={scrollerRef}
