@@ -1,3 +1,4 @@
+import { AppProviders } from "@app/AppProviders";
 import { AppShell } from "@app/layouts/AppShell";
 import { BoardSetRootRedirect } from "@pages/BoardSetRootRedirect";
 import { HomePage } from "@pages/HomePage";
@@ -11,42 +12,44 @@ const AboutPage = lazy(() => import("@pages/AboutPage"));
 
 export function AppRoutes() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<AppShell />}>
-          <Route index element={<HomePage />} />
-          <Route path="sets/:setId">
-            <Route index element={<BoardSetRootRedirect />} />
+    <AppProviders>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<AppShell />}>
+            <Route index element={<HomePage />} />
+            <Route path="sets/:setId">
+              <Route index element={<BoardSetRootRedirect />} />
+
+              <Route
+                path="boards/:boardId"
+                element={
+                  <AsyncBoundary>
+                    <BoardPage />
+                  </AsyncBoundary>
+                }
+              />
+            </Route>
 
             <Route
-              path="boards/:boardId"
+              path="library"
               element={
                 <AsyncBoundary>
-                  <BoardPage />
+                  <LibraryPage />
+                </AsyncBoundary>
+              }
+            />
+
+            <Route
+              path="about"
+              element={
+                <AsyncBoundary>
+                  <AboutPage />
                 </AsyncBoundary>
               }
             />
           </Route>
-
-          <Route
-            path="library"
-            element={
-              <AsyncBoundary>
-                <LibraryPage />
-              </AsyncBoundary>
-            }
-          />
-
-          <Route
-            path="about"
-            element={
-              <AsyncBoundary>
-                <AboutPage />
-              </AsyncBoundary>
-            }
-          />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </AppProviders>
   );
 }

@@ -1,4 +1,3 @@
-import { AppProviders } from "@app/AppProviders";
 import { OnboardingDialog } from "@app/dialogs/OnboardingDialog";
 import { useOnboarding } from "@app/dialogs/useOnboarding";
 import { MenuDrawer } from "@app/drawers/MenuDrawer";
@@ -14,29 +13,27 @@ export function AppShell() {
   const onboarding = useOnboarding();
 
   return (
-    <AppProviders>
-      <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
-        <AppHeader
-          onMenuClick={() => setIsMenuOpen(true)}
-          onSettingsClick={() => setIsSettingsOpen(true)}
-        />
+    <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
+      <AppHeader
+        onMenuClick={() => setIsMenuOpen(true)}
+        onSettingsClick={() => setIsSettingsOpen(true)}
+      />
 
-        <Box sx={{ flexGrow: 1, overflow: "auto" }}>
-          <Outlet />
-        </Box>
-
-        <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-        <SettingsDrawer
-          open={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-        />
-
-        <OnboardingDialog
-          open={onboarding.shouldShow}
-          onClose={onboarding.dismiss}
-        />
+      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <Outlet />
       </Box>
-    </AppProviders>
+
+      <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+
+      <SettingsDrawer
+        open={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
+      <OnboardingDialog
+        open={onboarding.shouldShow}
+        onClose={onboarding.dismiss}
+      />
+    </Box>
   );
 }
