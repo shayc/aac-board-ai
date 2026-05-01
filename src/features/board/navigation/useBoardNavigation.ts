@@ -15,14 +15,14 @@ export interface UseBoardNavigationReturn {
   goHome: () => void;
 }
 
-function getBackStack(state: unknown): string[] {
+function readBackStack(state: unknown): string[] {
   if (
     state !== null &&
     typeof state === "object" &&
     "backStack" in state &&
     Array.isArray(state.backStack)
   ) {
-    return state.backStack as string[];
+    return state.backStack.filter((id): id is string => typeof id === "string");
   }
 
   return [];
@@ -37,7 +37,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const rootBoardId =
     boardSets.find((s) => s.setId === setId)?.rootBoardId ?? "";
 
-  const backStack = getBackStack(location.state);
+  const backStack = readBackStack(location.state);
 
   const canGoBack = backStack.length > 0;
   const canGoHome = rootBoardId !== "";
