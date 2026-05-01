@@ -2,6 +2,7 @@ import js from "@eslint/js";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import reactDom from "eslint-plugin-react-dom";
 import reactHooks from "eslint-plugin-react-hooks";
+import reactJsx from "eslint-plugin-react-jsx";
 import { reactRefresh } from "eslint-plugin-react-refresh";
 import reactX from "eslint-plugin-react-x";
 import { defineConfig, globalIgnores } from "eslint/config";
@@ -18,6 +19,7 @@ export default defineConfig([
       tseslint.configs.stylisticTypeChecked,
       reactX.configs["recommended-typescript"],
       reactDom.configs.recommended,
+      reactJsx.configs.recommended,
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite(),
       eslintConfigPrettier,
