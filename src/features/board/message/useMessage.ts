@@ -1,12 +1,10 @@
 import { usePersistentState } from "@shared/hooks/usePersistentState";
+import type { BoardButton } from "../types";
 
-export interface MessagePart {
-  id: string;
-  label?: string;
-  vocalization?: string;
-  imageSrc?: string;
-  soundSrc?: string;
-}
+export type MessagePart = Pick<
+  BoardButton,
+  "id" | "label" | "vocalization" | "imageSrc" | "soundSrc"
+>;
 
 export interface UseMessageReturn {
   parts: MessagePart[];

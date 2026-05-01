@@ -7,7 +7,7 @@ import {
   openBoardsDB,
   withBoardsDB,
 } from "../storage/boards-db";
-import { importFiles } from "./board-import";
+import { storeBoardFiles } from "./board-import";
 
 const FIXTURES_DIR = "/src/shared/testing/fixtures";
 const OBZ_FIXTURE = "lots_of_stuff.obz";
@@ -44,7 +44,7 @@ async function loadFixtureFile(name: string): Promise<File> {
   });
 }
 
-describe("importFiles", () => {
+describe("storeBoardFiles", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -57,7 +57,7 @@ describe("importFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    const importResults = await importFiles(fixtureFile);
+    const importResults = await storeBoardFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -118,7 +118,7 @@ describe("importFiles", () => {
     assertDefined(sampleAssetEntry);
     const [sampleAssetPath, sampleAssetBytes] = sampleAssetEntry;
 
-    const importResults = await importFiles(fixtureFile);
+    const importResults = await storeBoardFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {

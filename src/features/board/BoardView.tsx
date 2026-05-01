@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { Grid } from "./grid/Grid";
+import { Grid, type GridItemProps } from "./grid/Grid";
 import { Tile } from "./grid/Tile";
 import { MessageBar } from "./message/MessageBar";
 import { useMessage } from "./message/useMessage";
@@ -28,6 +28,19 @@ export function BoardView({ board }: BoardViewProps) {
     navigation,
   });
 
+  const renderTile = (button: BoardButton, props: GridItemProps) => (
+    <Tile
+      key={button.id}
+      label={button.label}
+      imageSrc={button.imageSrc}
+      backgroundColor={button.backgroundColor}
+      borderColor={button.borderColor}
+      variant={button.loadBoard ? "folder" : undefined}
+      onClick={() => void activateButton(button)}
+      {...props}
+    />
+  );
+
   return (
     <Stack
       direction="column"
@@ -41,7 +54,7 @@ export function BoardView({ board }: BoardViewProps) {
       })}
     >
       <MessageBar
-        message={message.parts}
+        parts={message.parts}
         isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}
@@ -77,18 +90,7 @@ export function BoardView({ board }: BoardViewProps) {
           columns={board.grid.columns}
           order={board.grid.order}
           items={board.buttons}
-          renderItem={(button, props) => (
-            <Tile
-              key={button.id}
-              label={button.label}
-              imageSrc={button.imageSrc}
-              backgroundColor={button.backgroundColor}
-              borderColor={button.borderColor}
-              variant={button.loadBoard ? "folder" : undefined}
-              onClick={() => void activateButton(button)}
-              {...props}
-            />
-          )}
+          renderItem={renderTile}
         />
       </Box>
     </Stack>

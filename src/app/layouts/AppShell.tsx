@@ -1,20 +1,17 @@
 import { AppProviders } from "@app/AppProviders";
 import { OnboardingDialog } from "@app/dialogs/OnboardingDialog";
+import { useOnboarding } from "@app/dialogs/useOnboarding";
 import { MenuDrawer } from "@app/drawers/MenuDrawer";
 import { SettingsDrawer } from "@app/drawers/SettingsDrawer/SettingsDrawer";
 import { AppHeader } from "@app/layouts/AppHeader";
 import Box from "@mui/material/Box";
-import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { useState } from "react";
 import { Outlet } from "react-router";
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [hasSeenOnboarding, setHasSeenOnboarding] = usePersistentState(
-    "hasSeenOnboarding",
-    false,
-  );
+  const onboarding = useOnboarding();
 
   return (
     <AppProviders>
@@ -36,8 +33,8 @@ export function AppShell() {
         />
 
         <OnboardingDialog
-          open={!hasSeenOnboarding}
-          onClose={() => setHasSeenOnboarding(true)}
+          open={onboarding.shouldShow}
+          onClose={onboarding.dismiss}
         />
       </Box>
     </AppProviders>

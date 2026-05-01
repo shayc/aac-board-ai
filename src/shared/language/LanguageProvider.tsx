@@ -9,10 +9,7 @@ export interface LanguageProviderProps {
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const { langs, voicesByLang, setVoiceURI } = useSpeech();
-  const [languageCode, setLanguageCode] = usePersistentState<string>(
-    "languageCode",
-    "en",
-  );
+  const [locale, setLocale] = usePersistentState<string>("locale", "en");
 
   const unsupportedLangs = ["ca", "ms", "nb", "yue"];
   const supportedLanguages = Array.from(
@@ -30,19 +27,19 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const contextValue: LanguageContextValue = {
     languages,
-    languageCode,
-    setLanguageCode,
+    locale,
+    setLocale,
   };
 
   useEffect(() => {
     const defaultVoice =
-      voicesByLang[languageCode]?.find((voice) => voice.default) ??
-      voicesByLang[languageCode]?.[0];
+      voicesByLang[locale]?.find((voice) => voice.default) ??
+      voicesByLang[locale]?.[0];
 
     if (defaultVoice) {
       setVoiceURI(defaultVoice?.voiceURI);
     }
-  }, [languageCode, voicesByLang, setVoiceURI]);
+  }, [locale, voicesByLang, setVoiceURI]);
 
   return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }

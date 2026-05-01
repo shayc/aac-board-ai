@@ -1,5 +1,5 @@
 import { createExternalStore } from "@shared/utils/external-store";
-import { importFiles, type ImportResult } from "../import/board-import";
+import { storeBoardFiles, type ImportResult } from "../import/board-import";
 import {
   deleteBoardSet,
   listBoardSets,
@@ -80,7 +80,7 @@ export async function invalidateBoardSets(): Promise<void> {
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
-  const results = await importFiles(files);
+  const results = await storeBoardFiles(files);
   await invalidateAndBroadcast();
   return results;
 }

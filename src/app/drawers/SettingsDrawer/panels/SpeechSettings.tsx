@@ -34,14 +34,14 @@ export function SpeechSettings() {
     speak,
   } = useSpeech();
 
-  const { languageCode } = useLanguage();
+  const { locale } = useLanguage();
   const { createTranslator } = useTranslator();
 
   const locales = Object.keys(voicesByLocale)
-    .filter((locale) => locale.startsWith(languageCode))
+    .filter((voiceLocale) => voiceLocale.startsWith(locale))
     .sort((a, b) => a.localeCompare(b));
 
-  const localeDisplayNames = new Intl.DisplayNames([languageCode], {
+  const localeDisplayNames = new Intl.DisplayNames([locale], {
     type: "language",
   });
 
@@ -72,7 +72,7 @@ export function SpeechSettings() {
   async function previewVoice() {
     const translator = await createTranslator({
       sourceLanguage: "en",
-      targetLanguage: languageCode,
+      targetLanguage: locale,
     });
 
     const text = "Hi, this is my voice!";
@@ -94,13 +94,13 @@ export function SpeechSettings() {
           disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value)}
         >
-          {locales.map((locale) => [
+          {locales.map((voiceLocale) => [
             locales.length > 1 && (
-              <ListSubheader key={`header-${locale}`}>
-                {localeDisplayNames.of(locale) ?? locale}
+              <ListSubheader key={`header-${voiceLocale}`}>
+                {localeDisplayNames.of(voiceLocale) ?? voiceLocale}
               </ListSubheader>
             ),
-            ...(voicesByLocale[locale] ?? []).map((voice) => (
+            ...(voicesByLocale[voiceLocale] ?? []).map((voice) => (
               <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
                 {voice.name}
               </MenuItem>

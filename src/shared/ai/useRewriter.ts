@@ -20,8 +20,8 @@ export function useRewriter() {
 
     if (
       rewriterRef.current &&
-      optionsRef.current?.tone === options.tone &&
-      optionsRef.current?.sharedContext === options.sharedContext
+      optionsRef.current &&
+      isSameOptions(optionsRef.current, options)
     ) {
       return rewriterRef.current;
     }
@@ -47,4 +47,16 @@ export function useRewriter() {
   return {
     createRewriter,
   };
+}
+
+function isSameOptions(
+  previous: RewriterCreateOptions,
+  next: RewriterCreateOptions,
+): boolean {
+  return (
+    previous.tone === next.tone &&
+    previous.format === next.format &&
+    previous.length === next.length &&
+    previous.sharedContext === next.sharedContext
+  );
 }

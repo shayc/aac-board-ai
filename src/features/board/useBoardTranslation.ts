@@ -17,7 +17,7 @@ export function useBoardTranslation({
   setId,
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
-  const { languageCode } = useLanguage();
+  const { locale } = useLanguage();
   const { createTranslator } = useTranslator();
 
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
@@ -32,15 +32,14 @@ export function useBoardTranslation({
 
       const boardLocale = board.locale ?? "en";
       const isSameLanguage =
-        languageCode.startsWith(boardLocale) ||
-        boardLocale.startsWith(languageCode);
+        locale.startsWith(boardLocale) || boardLocale.startsWith(locale);
 
       if (isSameLanguage) {
         setTranslatedBoard(board);
         return;
       }
 
-      const existingStrings = board.strings?.[languageCode];
+      const existingStrings = board.strings?.[locale];
 
       if (existingStrings) {
         setTranslatedBoard(applyStrings(board, existingStrings));
@@ -49,7 +48,7 @@ export function useBoardTranslation({
 
       const translator = await createTranslator({
         sourceLanguage: boardLocale,
-        targetLanguage: languageCode,
+        targetLanguage: locale,
       });
 
       if (cancelled) {
@@ -68,7 +67,7 @@ export function useBoardTranslation({
         return;
       }
 
-      void persistStrings(setId, board.id, languageCode, translatedStrings);
+      void persistStrings(setId, board.id, locale, translatedStrings);
 
       setTranslatedBoard(applyStrings(board, translatedStrings));
     };
@@ -78,7 +77,7 @@ export function useBoardTranslation({
     return () => {
       cancelled = true;
     };
-  }, [createTranslator, languageCode, board, setId]);
+  }, [createTranslator, locale, board, setId]);
 
   return {
     translatedBoard,

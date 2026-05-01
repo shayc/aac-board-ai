@@ -6,7 +6,7 @@ import { PlayButton } from "./components/PlayButton";
 import type { MessagePart } from "./useMessage";
 
 export interface MessageBarProps {
-  message: MessagePart[];
+  parts: MessagePart[];
   isPlaying: boolean;
   onBackspacePress: () => void;
   onBackspaceLongPress: () => void;
@@ -14,8 +14,24 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
+function scrollToEnd(container: HTMLElement | null): number | null {
+  const lastChild = container?.lastElementChild;
+
+  if (!lastChild) {
+    return null;
+  }
+
+  return requestAnimationFrame(() => {
+    lastChild.scrollIntoView({
+      block: "nearest",
+      inline: "end",
+      behavior: "instant",
+    });
+  });
+}
+
 export function MessageBar({
-  message,
+  parts,
   isPlaying,
   onBackspacePress,
   onBackspaceLongPress,
@@ -25,47 +41,41 @@ export function MessageBar({
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const scroller = scrollerRef.current;
-    const lastChild = scroller?.lastElementChild as HTMLElement | null;
+    const frameId = scrollToEnd(scrollerRef.current);
 
-    if (!lastChild) {
-      return;
-    }
-
-    requestAnimationFrame(() => {
-      lastChild.scrollIntoView({
-        block: "nearest",
-        inline: "end",
-        behavior: "instant",
-      });
-    });
-  }, [message]);
+    return () => {
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
+  }, [parts]);
 
   return (
     <Stack direction="row" sx={{ p: 2, gap: 2 }}>
       <Stack
         direction="row"
-        sx={{
+        sx={(theme) => ({
           flexGrow: 2,
           gap: 2,
           borderRadius: 18,
           overflow: "hidden",
-          backgroundColor: (theme) =>
+          backgroundColor:
             theme.palette.mode === "dark"
               ? theme.palette.grey[800]
               : theme.palette.grey[200],
-          border: (theme) =>
+          border: `1px solid ${
             theme.palette.mode === "dark"
-              ? `1px solid ${theme.palette.grey[700]}`
-              : `1px solid ${theme.palette.grey[400]}`,
-        }}
+              ? theme.palette.grey[700]
+              : theme.palette.grey[400]
+          }`,
+        })}
       >
         <Stack
           ref={scrollerRef}
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
-          {message.map((part, index) => (
+          {parts.map((part, index) => (
             <Stack key={index} direction="row">
               <Pictogram label={part.label} src={part.imageSrc} />
             </Stack>

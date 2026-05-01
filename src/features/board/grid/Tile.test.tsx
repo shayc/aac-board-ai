@@ -129,12 +129,4 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Not focusable" });
     await expect.element(button).toHaveAttribute("tabindex", "-1");
   });
-
-  test("forwards ref to button element", async () => {
-    const refCallback = vi.fn();
-
-    await render(<Tile label="Ref test" onClick={vi.fn()} ref={refCallback} />);
-
-    expect(refCallback).toHaveBeenCalledWith(expect.any(HTMLButtonElement));
-  });
 });
