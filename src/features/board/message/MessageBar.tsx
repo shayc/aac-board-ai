@@ -14,7 +14,7 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
-function scrollToLastChild(container: HTMLElement | null) {
+function scrollToEnd(container: HTMLElement | null) {
   const lastChild = container?.lastElementChild;
 
   if (!lastChild) {
@@ -41,7 +41,7 @@ export function MessageBar({
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToLastChild(scrollerRef.current);
+    scrollToEnd(scrollerRef.current);
   }, [message]);
 
   return (
