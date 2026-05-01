@@ -77,12 +77,12 @@ async function loadBoard({
   boardId: string;
   registry: ObjectUrlRegistry;
 }): Promise<Board> {
-  const obf = await withBoardsDB(async (db) => {
+  const obfBoard = await withBoardsDB(async (db) => {
     const board = await fetchOBFBoard(db, setId, boardId);
     return hydrateBoard(db, setId, board, registry);
   });
 
-  return obfToBoard(obf);
+  return obfToBoard(obfBoard);
 }
 
 async function fetchOBFBoard(

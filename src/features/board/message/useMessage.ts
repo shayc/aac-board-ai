@@ -53,13 +53,12 @@ export function useMessage(): UseMessageReturn {
   }
 
   function setFromText(text: string) {
-    const words = text.split(/\s+/).filter(Boolean);
-    const parts = words.map((word) => ({
-      id: crypto.randomUUID(),
-      label: word,
-    }));
-
-    setParts(parts);
+    setParts(
+      text
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((word) => ({ id: crypto.randomUUID(), label: word })),
+    );
   }
 
   return {

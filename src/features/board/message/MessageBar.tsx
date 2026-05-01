@@ -14,20 +14,22 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
-function scrollToEnd(container: HTMLElement | null): number | null {
+function scrollToEnd(container: HTMLElement | null): () => void {
   const lastChild = container?.lastElementChild;
 
   if (!lastChild) {
-    return null;
+    return () => undefined;
   }
 
-  return requestAnimationFrame(() => {
+  const frameId = requestAnimationFrame(() => {
     lastChild.scrollIntoView({
       block: "nearest",
       inline: "end",
       behavior: "instant",
     });
   });
+
+  return () => cancelAnimationFrame(frameId);
 }
 
 export function MessageBar({
@@ -41,13 +43,7 @@ export function MessageBar({
   const scrollerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const frameId = scrollToEnd(scrollerRef.current);
-
-    return () => {
-      if (frameId !== null) {
-        cancelAnimationFrame(frameId);
-      }
-    };
+    return scrollToEnd(scrollerRef.current);
   }, [parts]);
 
   return (
