@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { SxProps, Theme } from "@mui/material/styles";
 import { Grid, type GridItemProps } from "./grid/Grid";
 import { Tile } from "./grid/Tile";
 import { MessageBar } from "./message/MessageBar";
@@ -16,15 +15,6 @@ import { useButtonActivation } from "./useButtonActivation";
 export interface BoardViewProps {
   board: Board;
 }
-
-const containerSx: SxProps<Theme> = (theme) => ({
-  height: "100%",
-  backgroundRepeat: "no-repeat",
-  backgroundImage:
-    theme.palette.mode === "dark"
-      ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
-      : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
-});
 
 export function BoardView({ board }: BoardViewProps) {
   const message = useMessage();
@@ -52,7 +42,17 @@ export function BoardView({ board }: BoardViewProps) {
   );
 
   return (
-    <Stack direction="column" sx={containerSx}>
+    <Stack
+      direction="column"
+      sx={(theme) => ({
+        height: "100%",
+        backgroundRepeat: "no-repeat",
+        backgroundImage:
+          theme.palette.mode === "dark"
+            ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
+            : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
+      })}
+    >
       <MessageBar
         message={message.parts}
         isPlaying={playback.isPlaying}
