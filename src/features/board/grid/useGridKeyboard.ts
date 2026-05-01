@@ -8,7 +8,7 @@ interface GridCell {
 }
 
 export interface UseGridKeyboardOptions {
-  cellRefs: RefObject<(HTMLElement | null)[][]>;
+  gridRef: RefObject<HTMLElement | null>;
   rows: number;
   columns: number;
   defaultActiveCell?: GridCell;
@@ -27,7 +27,7 @@ interface CellResult {
 }
 
 export function useGridKeyboard({
-  cellRefs,
+  gridRef,
   rows,
   columns,
   defaultActiveCell = { row: 0, col: 0 },
@@ -40,7 +40,7 @@ export function useGridKeyboard({
         return;
       }
 
-      const grid = cellRefs.current;
+      const grid = gridRef.current;
       if (!grid) {
         return;
       }
@@ -117,7 +117,7 @@ export function useGridKeyboard({
 }
 
 function findNextNonEmptyCell(
-  grid: (HTMLElement | null)[][],
+  grid: HTMLElement,
   startRow: number,
   startCol: number,
   rows: number,
@@ -129,10 +129,13 @@ function findNextNonEmptyCell(
   let col = startCol;
 
   while (row >= 0 && row < rows && col >= 0 && col < columns) {
-    const cell = grid[row]?.[col];
+    const cell = grid.querySelector<HTMLElement>(
+      `[role='gridcell'][aria-rowindex='${row + 1}'][aria-colindex='${col + 1}']`,
+    );
+    const focusable = cell?.querySelector<HTMLElement>("[tabindex]");
 
-    if (cell) {
-      return { element: cell, row, col };
+    if (focusable) {
+      return { element: focusable, row, col };
     }
 
     row += deltaRow;

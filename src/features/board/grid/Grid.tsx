@@ -2,10 +2,7 @@ import Stack from "@mui/material/Stack";
 import { useRef } from "react";
 import { useGridKeyboard } from "./useGridKeyboard";
 
-type RefCallback = (element: HTMLElement | null) => void;
-
 export interface GridItemProps {
-  ref: RefCallback;
   tabIndex: number;
 }
 
@@ -27,28 +24,11 @@ export function Grid<TItem extends { id: string }>({
   renderItem,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const cellRefs = useRef<(HTMLElement | null)[][]>([]);
+  const gridRef = useRef<HTMLDivElement>(null);
   const defaultActiveCell = findFirstNonEmptyCell(grid);
 
-  const refCallbacks: Record<string, RefCallback> = {};
-
-  for (let rowIndex = 0; rowIndex < rows; rowIndex++) {
-    for (let cellIndex = 0; cellIndex < columns; cellIndex++) {
-      const key = `${rowIndex}-${cellIndex}`;
-
-      refCallbacks[key] = ((r: number, c: number): RefCallback => {
-        return (element: HTMLElement | null) => {
-          if (!cellRefs.current[r]) {
-            cellRefs.current[r] = [];
-          }
-          cellRefs.current[r][c] = element;
-        };
-      })(rowIndex, cellIndex);
-    }
-  }
-
   const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
-    cellRefs,
+    gridRef,
     rows,
     columns,
     defaultActiveCell,
@@ -57,6 +37,7 @@ export function Grid<TItem extends { id: string }>({
   return (
     <Stack
       {...keyboardProps}
+      ref={gridRef}
       onFocus={handleFocus}
       role="grid"
       aria-rowcount={rows}
@@ -85,7 +66,6 @@ export function Grid<TItem extends { id: string }>({
               >
                 {item &&
                   renderItem(item, {
-                    ref: refCallbacks[`${rowIndex}-${colIndex}`],
                     tabIndex: isActive ? 0 : -1,
                   })}
               </Stack>
