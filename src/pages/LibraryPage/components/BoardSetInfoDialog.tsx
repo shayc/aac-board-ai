@@ -18,7 +18,7 @@ export function BoardSetInfoDialog({
   boardSet,
   onClose,
 }: BoardSetInfoDialogProps) {
-  const chips = boardSet ? buildChips(boardSet) : [];
+  const chipLabels = boardSet ? buildChipLabels(boardSet) : [];
 
   return (
     <Dialog
@@ -38,14 +38,14 @@ export function BoardSetInfoDialog({
       </DialogTitle>
 
       <DialogContent sx={{ overflowX: "hidden", overflowY: "auto" }}>
-        {chips.length > 0 && (
+        {chipLabels.length > 0 && (
           <Stack
             direction="row"
             spacing={1}
             useFlexGap
             sx={{ flexWrap: "wrap" }}
           >
-            {chips.map((label) => (
+            {chipLabels.map((label) => (
               <Chip key={label} label={label} size="small" variant="outlined" />
             ))}
           </Stack>
@@ -69,20 +69,20 @@ export function BoardSetInfoDialog({
   );
 }
 
-function buildChips(boardSet: BoardSetRecord): string[] {
-  const chips: string[] = [];
+function buildChipLabels(boardSet: BoardSetRecord): string[] {
+  const labels: string[] = [];
 
   if (boardSet.gridRows && boardSet.gridColumns) {
-    chips.push(`${boardSet.gridRows}×${boardSet.gridColumns} Grid`);
+    labels.push(`${boardSet.gridRows}×${boardSet.gridColumns} Grid`);
   }
 
   if (boardSet.locale) {
-    chips.push(getLanguageDisplayName(boardSet.locale));
+    labels.push(getLanguageDisplayName(boardSet.locale));
   }
 
   if (boardSet.license) {
-    chips.push(boardSet.license);
+    labels.push(boardSet.license);
   }
 
-  return chips;
+  return labels;
 }
