@@ -12,7 +12,6 @@ export interface TileProps {
   variant?: "folder";
   tabIndex?: number;
   onClick: () => void;
-  ref?: (element: HTMLButtonElement | null) => void;
 }
 
 export function Tile({
@@ -24,11 +23,9 @@ export function Tile({
   variant,
   tabIndex,
   onClick,
-  ref,
 }: TileProps) {
   return (
     <Button
-      ref={ref}
       tabIndex={tabIndex}
       disableRipple
       disabled={disabled}
