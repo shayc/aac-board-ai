@@ -1,6 +1,6 @@
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles as importFiles } from "../storage/board-sets-store";
+import { importBoardFiles } from "../storage/board-sets-store";
 
 export interface UseImportBoardFilesReturn {
   importBoardFiles: () => Promise<void>;
@@ -9,7 +9,7 @@ export interface UseImportBoardFilesReturn {
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
 
-  async function importBoardFiles() {
+  async function handleImport() {
     const files = await openFiles();
 
     if (files.length === 0) {
@@ -22,7 +22,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      await importFiles(files);
+      await importBoardFiles(files);
 
       showSnackbar({
         message: isPlural
@@ -40,5 +40,5 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  return { importBoardFiles };
+  return { importBoardFiles: handleImport };
 }

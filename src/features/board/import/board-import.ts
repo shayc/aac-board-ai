@@ -15,7 +15,7 @@ export interface ImportResult {
   boardId: string;
 }
 
-export async function importFiles(
+export async function storeBoardFiles(
   input: File | File[],
 ): Promise<ImportResult[]> {
   const files = Array.isArray(input) ? input : [input];
