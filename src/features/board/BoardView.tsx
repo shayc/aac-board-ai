@@ -54,7 +54,7 @@ export function BoardView({ board }: BoardViewProps) {
       })}
     >
       <MessageBar
-        message={message.parts}
+        parts={message.parts}
         isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}

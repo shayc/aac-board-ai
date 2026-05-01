@@ -1,6 +1,6 @@
 import { useAudio } from "@shared/hooks/useAudio";
 import { useSpeech } from "@shared/speech/useSpeech";
-import type { UseMessageReturn } from "./message/useMessage";
+import type { MessagePart, UseMessageReturn } from "./message/useMessage";
 import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
 import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
 import type { BoardAction, BoardButton } from "./types";
@@ -59,6 +59,19 @@ export function useButtonActivation({
     }
   }
 
+  function playButtonAudio(button: BoardButton) {
+    if (button.soundSrc) {
+      void audio.play(button.soundSrc);
+      return;
+    }
+
+    const text = button.vocalization ?? button.label;
+
+    if (text) {
+      void speech.speak(text.toLowerCase());
+    }
+  }
+
   async function activateButton(button: BoardButton) {
     if (button.loadBoard?.id) {
       navigation.goToBoard(button.loadBoard.id);
@@ -73,29 +86,21 @@ export function useButtonActivation({
       return;
     }
 
-    const messagePart = {
-      id: button.id,
-      label: button.label,
-      vocalization: button.vocalization,
-      imageSrc: button.imageSrc,
-      soundSrc: button.soundSrc,
-    };
-
-    message.addPart(messagePart);
-
-    if (button.soundSrc) {
-      void audio.play(button.soundSrc);
-      return;
-    }
-
-    const text = button.vocalization ?? button.label;
-
-    if (text) {
-      void speech.speak(text.toLowerCase());
-    }
+    message.addPart(toMessagePart(button));
+    playButtonAudio(button);
   }
 
   return {
     activateButton,
+  };
+}
+
+function toMessagePart(button: BoardButton): MessagePart {
+  return {
+    id: button.id,
+    label: button.label,
+    vocalization: button.vocalization,
+    imageSrc: button.imageSrc,
+    soundSrc: button.soundSrc,
   };
 }

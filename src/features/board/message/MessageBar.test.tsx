@@ -17,7 +17,7 @@ describe("MessageBar", () => {
     const handlers = createHandlers();
 
     const screen = await render(
-      <MessageBar message={[]} isPlaying={false} {...handlers} />,
+      <MessageBar parts={[]} isPlaying={false} {...handlers} />,
     );
 
     await expect
@@ -39,7 +39,7 @@ describe("MessageBar", () => {
     ];
 
     const screen = await render(
-      <MessageBar message={messageParts} isPlaying={false} {...handlers} />,
+      <MessageBar parts={messageParts} isPlaying={false} {...handlers} />,
     );
 
     await expect.element(screen.getByText("I")).toBeVisible();

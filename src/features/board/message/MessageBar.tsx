@@ -6,7 +6,7 @@ import { PlayButton } from "./components/PlayButton";
 import type { MessagePart } from "./useMessage";
 
 export interface MessageBarProps {
-  message: MessagePart[];
+  parts: MessagePart[];
   isPlaying: boolean;
   onBackspacePress: () => void;
   onBackspaceLongPress: () => void;
@@ -31,7 +31,7 @@ function scrollToEnd(container: HTMLElement | null): number | null {
 }
 
 export function MessageBar({
-  message,
+  parts,
   isPlaying,
   onBackspacePress,
   onBackspaceLongPress,
@@ -48,7 +48,7 @@ export function MessageBar({
         cancelAnimationFrame(frameId);
       }
     };
-  }, [message]);
+  }, [parts]);
 
   return (
     <Stack direction="row" sx={{ p: 2, gap: 2 }}>
@@ -75,7 +75,7 @@ export function MessageBar({
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
-          {message.map((part, index) => (
+          {parts.map((part, index) => (
             <Stack key={index} direction="row">
               <Pictogram label={part.label} src={part.imageSrc} />
             </Stack>
