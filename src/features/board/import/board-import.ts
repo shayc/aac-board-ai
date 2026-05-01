@@ -42,7 +42,7 @@ async function importOBZFile(
   file: File,
   setId: string,
 ): Promise<ImportResult> {
-  const { manifest, boards, resources } = await loadOBZ(file);
+  const { manifest, boards: obfBoards, resources } = await loadOBZ(file);
 
   let rootBoardId = "";
   for (const [id, path] of Object.entries(manifest.paths.boards)) {
@@ -56,21 +56,21 @@ async function importOBZFile(
     rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
   }
 
-  const rootBoard = boards.get(rootBoardId);
+  const rootObfBoard = obfBoards.get(rootBoardId);
 
   await upsertBoardSet(
     db,
-    buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
+    buildBoardSetInput(setId, rootObfBoard, rootBoardId, file.name),
   );
 
   const pathToId = new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
 
-  const boardItems = Array.from(boards.entries()).map(([id, board]) => ({
+  const boardItems = Array.from(obfBoards.entries()).map(([id, obfBoard]) => ({
     boardId: id,
-    name: board.name ?? id,
-    json: resolveLoadBoardPaths(board, pathToId),
+    name: obfBoard.name ?? id,
+    json: resolveLoadBoardPaths(obfBoard, pathToId),
   }));
 
   await putBoards(db, setId, boardItems);
@@ -96,22 +96,22 @@ async function importOBZFile(
 
 function buildBoardSetInput(
   setId: string,
-  board: OBFBoard | undefined,
+  obfBoard: OBFBoard | undefined,
   rootBoardId: string,
   fallbackName: string,
 ): UpsertBoardSetInput {
   return {
     setId,
-    name: board?.name ?? fallbackName,
+    name: obfBoard?.name ?? fallbackName,
     rootBoardId,
-    author: board?.license?.author_name,
-    description: board?.description_html
-      ? stripHtmlTags(board.description_html)
+    author: obfBoard?.license?.author_name,
+    description: obfBoard?.description_html
+      ? stripHtmlTags(obfBoard.description_html)
       : undefined,
-    license: board?.license?.type,
-    locale: board?.locale,
-    gridRows: board?.grid.rows,
-    gridColumns: board?.grid.columns,
+    license: obfBoard?.license?.type,
+    locale: obfBoard?.locale,
+    gridRows: obfBoard?.grid.rows,
+    gridColumns: obfBoard?.grid.columns,
   };
 }
 
@@ -120,20 +120,20 @@ async function importOBFFile(
   file: File,
   setId: string,
 ): Promise<ImportResult> {
-  const board = await loadOBF(file);
+  const obfBoard = await loadOBF(file);
 
   await upsertBoardSet(
     db,
-    buildBoardSetInput(setId, board, board.id, file.name),
+    buildBoardSetInput(setId, obfBoard, obfBoard.id, file.name),
   );
 
   await putBoards(db, setId, [
     {
-      boardId: board.id,
-      name: board.name ?? board.id,
-      json: board,
+      boardId: obfBoard.id,
+      name: obfBoard.name ?? obfBoard.id,
+      json: obfBoard,
     },
   ]);
 
-  return { setId, boardId: board.id };
+  return { setId, boardId: obfBoard.id };
 }

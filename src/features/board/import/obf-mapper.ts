@@ -24,8 +24,8 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     name: obfBoard.name,
     locale: obfBoard.locale,
     descriptionHTML: obfBoard.description_html,
-    buttons: obfBoard.buttons.map((button) =>
-      transformButton(button, imageSourceById, soundSourceById),
+    buttons: obfBoard.buttons.map((obfButton) =>
+      transformButton(obfButton, imageSourceById, soundSourceById),
     ),
     grid: transformGrid(obfBoard.grid),
     strings: obfBoard.strings,
@@ -39,26 +39,26 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 }
 
 export function resolveLoadBoardPaths(
-  board: OBFBoard,
+  obfBoard: OBFBoard,
   pathToId: Map<string, string>,
 ): OBFBoard {
-  const buttons = board.buttons.map((button) => {
-    if (!button.load_board?.path || button.load_board.id) {
-      return button;
+  const buttons = obfBoard.buttons.map((obfButton) => {
+    if (!obfButton.load_board?.path || obfButton.load_board.id) {
+      return obfButton;
     }
 
-    const resolvedId = pathToId.get(button.load_board.path);
+    const resolvedId = pathToId.get(obfButton.load_board.path);
     if (!resolvedId) {
-      return button;
+      return obfButton;
     }
 
     return {
-      ...button,
-      load_board: { ...button.load_board, id: resolvedId },
+      ...obfButton,
+      load_board: { ...obfButton.load_board, id: resolvedId },
     };
   });
 
-  return { ...board, buttons };
+  return { ...obfBoard, buttons };
 }
 
 function buildMediaSourceMap(
