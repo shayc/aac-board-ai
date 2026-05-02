@@ -1,3 +1,4 @@
+import { normalizeLocaleCode } from "@shared/language/locale";
 import type {
   OBFBoard,
   OBFButton,
@@ -22,7 +23,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   const board: Board = {
     id: obfBoard.id,
     name: obfBoard.name,
-    locale: obfBoard.locale,
+    locale: obfBoard.locale ? normalizeLocaleCode(obfBoard.locale) : undefined,
     descriptionHTML: obfBoard.description_html,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),

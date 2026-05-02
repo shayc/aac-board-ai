@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { normalizeLocaleCode } from "./locale";
+import { getPrimaryLanguage, normalizeLocaleCode } from "./locale";
 
 describe("normalizeLocaleCode", () => {
   test("lowercases a language-only code", () => {
@@ -24,5 +24,23 @@ describe("normalizeLocaleCode", () => {
 
   test("handles already-normalized code", () => {
     expect(normalizeLocaleCode("zh-TW")).toBe("zh-TW");
+  });
+});
+
+describe("getPrimaryLanguage", () => {
+  test("returns a language-only code as-is", () => {
+    expect(getPrimaryLanguage("en")).toBe("en");
+  });
+
+  test("strips the region from a hyphen-separated locale", () => {
+    expect(getPrimaryLanguage("en-US")).toBe("en");
+  });
+
+  test("strips the region from an underscore-separated locale", () => {
+    expect(getPrimaryLanguage("pt_BR")).toBe("pt");
+  });
+
+  test("lowercases the primary subtag", () => {
+    expect(getPrimaryLanguage("EN-GB")).toBe("en");
   });
 });

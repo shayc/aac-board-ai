@@ -47,6 +47,20 @@ describe("obfToBoard", () => {
       expect(board.descriptionHTML).toBe("<p>Board description</p>");
     });
 
+    test("normalizes the locale to BCP-47 casing on import", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-locale-casing",
+        locale: "en_us",
+        buttons: [],
+        grid: { rows: 1, columns: 1, order: [[null]] },
+      };
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.locale).toBe("en-US");
+    });
+
     test("handles board without optional name field", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",

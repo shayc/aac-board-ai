@@ -8,6 +8,7 @@ import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslator } from "@shared/ai/useTranslator";
+import { getPrimaryLanguage } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/useLanguage";
 import { useSpeech } from "@shared/speech/useSpeech";
 import {
@@ -34,14 +35,14 @@ export function SpeechSettings() {
     speak,
   } = useSpeech();
 
-  const { locale } = useLanguage();
+  const { language } = useLanguage();
   const { createTranslator } = useTranslator();
 
   const locales = Object.keys(voicesByLocale)
-    .filter((voiceLocale) => voiceLocale.startsWith(locale))
+    .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
     .sort((a, b) => a.localeCompare(b));
 
-  const localeDisplayNames = new Intl.DisplayNames([locale], {
+  const localeDisplayNames = new Intl.DisplayNames([language], {
     type: "language",
   });
 
@@ -72,7 +73,7 @@ export function SpeechSettings() {
   async function previewVoice() {
     const translator = await createTranslator({
       sourceLanguage: "en",
-      targetLanguage: locale,
+      targetLanguage: language,
     });
 
     const text = "Hi, this is my voice!";

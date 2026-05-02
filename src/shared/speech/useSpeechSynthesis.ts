@@ -1,3 +1,4 @@
+import { getPrimaryLanguage } from "@shared/language/locale";
 import { useEffect, useState } from "react";
 
 export const RATE_MIN = 0.1;
@@ -8,8 +9,8 @@ export const VOLUME_MIN = 0;
 export const VOLUME_MAX = 1;
 
 export interface UseSpeechSynthesisReturn {
-  langs: string[];
-  voicesByLang: Partial<Record<string, SpeechSynthesisVoice[]>>;
+  locales: string[];
+  voicesByLanguage: Partial<Record<string, SpeechSynthesisVoice[]>>;
   voicesByLocale: Partial<Record<string, SpeechSynthesisVoice[]>>;
   voices: SpeechSynthesisVoice[];
   voiceURI: string;
@@ -30,11 +31,11 @@ export interface UseSpeechSynthesisReturn {
 }
 
 const isSpeechSupported = "speechSynthesis" in globalThis;
-const synth = globalThis.speechSynthesis;
+const synthesis = globalThis.speechSynthesis;
 
 export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(() =>
-    isSpeechSupported ? synth.getVoices() : [],
+    isSpeechSupported ? synthesis.getVoices() : [],
   );
   const [voiceURI, setVoiceURI] = useState("");
   const [rate, setRate] = useState(1);
@@ -44,13 +45,12 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
-  const langs = Array.from(new Set(voices.map((voice) => voice.lang))).sort(
+  const locales = Array.from(new Set(voices.map((voice) => voice.lang))).sort(
     (a, b) => a.localeCompare(b),
   );
 
-  const voicesByLang = Object.groupBy(
-    voices,
-    (voice) => voice.lang.split("-")[0],
+  const voicesByLanguage = Object.groupBy(voices, (voice) =>
+    getPrimaryLanguage(voice.lang),
   );
 
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
@@ -61,18 +61,18 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
     }
 
     const handleVoicesChanged = () => {
-      setVoices(synth.getVoices());
+      setVoices(synthesis.getVoices());
     };
 
-    synth.addEventListener("voiceschanged", handleVoicesChanged);
+    synthesis.addEventListener("voiceschanged", handleVoicesChanged);
 
     return () => {
-      synth.removeEventListener("voiceschanged", handleVoicesChanged);
+      synthesis.removeEventListener("voiceschanged", handleVoicesChanged);
     };
   }, []);
 
-  const speak = async (text: string) => {
-    return new Promise<void>((resolve, reject) => {
+  const speak = (text: string) =>
+    new Promise<void>((resolve, reject) => {
       if (!isSpeechSupported) {
         reject(new Error("Speech Synthesis is not supported in this browser."));
         return;
@@ -86,57 +86,56 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
       utterance.rate = rate;
       utterance.volume = volume;
 
-      utterance.onstart = () => {
+      const markSpeaking = () => {
         setIsSpeaking(true);
         setIsPaused(false);
       };
 
-      utterance.onend = () => {
-        setIsSpeaking(false);
-        setIsPaused(false);
-
-        resolve();
-      };
-
-      utterance.onresume = () => {
-        setIsSpeaking(true);
-        setIsPaused(false);
-      };
-
-      utterance.onpause = () => {
+      const markPaused = () => {
         setIsSpeaking(false);
         setIsPaused(true);
       };
 
-      utterance.onerror = (event) => {
+      const markIdle = () => {
         setIsSpeaking(false);
         setIsPaused(false);
+      };
 
+      utterance.onstart = markSpeaking;
+      utterance.onresume = markSpeaking;
+      utterance.onpause = markPaused;
+
+      utterance.onend = () => {
+        markIdle();
+        resolve();
+      };
+
+      utterance.onerror = (event) => {
+        markIdle();
         reject(new Error(event.error));
       };
 
-      synth.cancel();
-      synth.speak(utterance);
+      synthesis.cancel();
+      synthesis.speak(utterance);
     });
-  };
 
   const cancel = () => {
-    synth.cancel();
+    synthesis.cancel();
   };
 
   const pause = () => {
-    synth.pause();
+    synthesis.pause();
   };
 
   const resume = () => {
-    synth.resume();
+    synthesis.resume();
   };
 
   return {
     isSpeechSupported,
     voices,
-    langs,
-    voicesByLang,
+    locales,
+    voicesByLanguage,
     voicesByLocale,
     voiceURI,
     setVoiceURI,
