@@ -42,7 +42,9 @@ export function SpeechSettings() {
     .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
     .sort((a, b) => a.localeCompare(b));
 
-  const localeDisplayNames = new Intl.DisplayNames([language], {
+  const hasMultipleLocales = locales.length > 1;
+
+  const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });
 
@@ -76,10 +78,11 @@ export function SpeechSettings() {
       targetLanguage: language,
     });
 
-    const text = "Hi, this is my voice!";
-    const previewText = (await translator?.translate(text)) ?? text;
+    const defaultGreeting = "Hi, this is my voice!";
+    const greeting =
+      (await translator?.translate(defaultGreeting)) ?? defaultGreeting;
 
-    void speak(previewText);
+    void speak(greeting);
   }
 
   return (
@@ -96,9 +99,9 @@ export function SpeechSettings() {
           onChange={(event) => setVoiceURI(event.target.value)}
         >
           {locales.map((voiceLocale) => [
-            locales.length > 1 && (
+            hasMultipleLocales && (
               <ListSubheader key={`header-${voiceLocale}`}>
-                {localeDisplayNames.of(voiceLocale) ?? voiceLocale}
+                {languageNames.of(voiceLocale) ?? voiceLocale}
               </ListSubheader>
             ),
             ...(voicesByLocale[voiceLocale] ?? []).map((voice) => (
