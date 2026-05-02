@@ -110,6 +110,19 @@ Once enabled, the browser downloads the AI model for local inference.
 
 ---
 
+## Locale vs. Language
+
+Both [OBF](./external/open-board-format.md) (`board.locale`) and the Web Speech API (`voice.lang`) use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags. Inside the app we split them into two roles:
+
+| Term           | Meaning                              | Examples          |
+| -------------- | ------------------------------------ | ----------------- |
+| **`locale`**   | Full BCP-47 tag (language + region). | `"en"`, `"en-US"` |
+| **`language`** | Primary subtag only.                 | `"en"`, `"pt"`    |
+
+Helpers in [`src/shared/language/locale.ts`](../src/shared/language/locale.ts): `normalizeLocaleCode` (canonical casing) and `getPrimaryLanguage` (locale → language).
+
+---
+
 ## PWA & Offline Support
 
 The app is a **Progressive Web App** powered by `vite-plugin-pwa`:

@@ -12,7 +12,7 @@ import { useAI } from "@shared/ai/useAI";
 import { useLanguage } from "@shared/language/useLanguage";
 
 export function LanguageSettings() {
-  const { languages, locale, setLocale } = useLanguage();
+  const { languages, language, setLanguage } = useLanguage();
   const { downloads } = useAI();
 
   const isDownloading = downloads.translator > 0 && downloads.translator < 1;
@@ -26,13 +26,13 @@ export function LanguageSettings() {
           label="Language"
           labelId="language-select-label"
           id="language-select"
-          value={locale}
+          value={language}
           disabled={!isTranslatorSupported}
-          onChange={(event) => setLocale(event.target.value)}
+          onChange={(event) => setLanguage(event.target.value)}
         >
-          {languages.map((language) => (
-            <MenuItem key={language.code} value={language.code}>
-              {language.name}
+          {languages.map((lang) => (
+            <MenuItem key={lang.code} value={lang.code}>
+              {lang.name}
             </MenuItem>
           ))}
         </Select>

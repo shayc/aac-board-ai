@@ -1,4 +1,5 @@
 import { useTranslator } from "@shared/ai/useTranslator";
+import { getPrimaryLanguage } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/useLanguage";
 import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
@@ -17,7 +18,7 @@ export function useBoardTranslation({
   setId,
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
-  const { locale } = useLanguage();
+  const { language } = useLanguage();
   const { createTranslator } = useTranslator();
 
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
@@ -30,16 +31,14 @@ export function useBoardTranslation({
         return;
       }
 
-      const boardLocale = board.locale ?? "en";
-      const isSameLanguage =
-        locale.startsWith(boardLocale) || boardLocale.startsWith(locale);
+      const boardLanguage = getPrimaryLanguage(board.locale ?? "en");
 
-      if (isSameLanguage) {
+      if (boardLanguage === language) {
         setTranslatedBoard(board);
         return;
       }
 
-      const existingStrings = board.strings?.[locale];
+      const existingStrings = findStringsForLanguage(board.strings, language);
 
       if (existingStrings) {
         setTranslatedBoard(applyStrings(board, existingStrings));
@@ -47,8 +46,8 @@ export function useBoardTranslation({
       }
 
       const translator = await createTranslator({
-        sourceLanguage: boardLocale,
-        targetLanguage: locale,
+        sourceLanguage: boardLanguage,
+        targetLanguage: language,
       });
 
       if (cancelled) {
@@ -67,7 +66,7 @@ export function useBoardTranslation({
         return;
       }
 
-      void persistStrings(setId, board.id, locale, translatedStrings);
+      void persistStrings(setId, board.id, language, translatedStrings);
 
       setTranslatedBoard(applyStrings(board, translatedStrings));
     };
@@ -77,11 +76,32 @@ export function useBoardTranslation({
     return () => {
       cancelled = true;
     };
-  }, [createTranslator, locale, board, setId]);
+  }, [createTranslator, language, board, setId]);
 
   return {
     translatedBoard,
   };
+}
+
+function findStringsForLanguage(
+  strings: Board["strings"],
+  language: string,
+): Record<string, string> | undefined {
+  if (!strings) {
+    return undefined;
+  }
+
+  if (strings[language]) {
+    return strings[language];
+  }
+
+  for (const [key, value] of Object.entries(strings)) {
+    if (getPrimaryLanguage(key) === language) {
+      return value;
+    }
+  }
+
+  return undefined;
 }
 
 function collectTranslatableStrings(board: Board): Set<string> {
@@ -138,12 +158,12 @@ function applyStrings(board: Board, strings: Record<string, string>): Board {
 async function persistStrings(
   setId: string,
   boardId: string,
-  locale: string,
+  language: string,
   strings: Record<string, string>,
 ): Promise<void> {
   try {
     await withBoardsDB(async (db) => {
-      await updateBoardStrings(db, setId, boardId, locale, strings);
+      await updateBoardStrings(db, setId, boardId, language, strings);
     });
   } catch (err) {
     console.warn("Failed to persist translated strings:", err);

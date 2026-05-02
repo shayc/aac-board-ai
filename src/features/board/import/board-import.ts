@@ -1,3 +1,4 @@
+import { normalizeLocaleCode } from "@shared/language/locale";
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
@@ -109,7 +110,7 @@ function buildBoardSetInput(
       ? stripHtmlTags(obfBoard.description_html)
       : undefined,
     license: obfBoard?.license?.type,
-    locale: obfBoard?.locale,
+    locale: obfBoard?.locale ? normalizeLocaleCode(obfBoard.locale) : undefined,
     gridRows: obfBoard?.grid.rows,
     gridColumns: obfBoard?.grid.columns,
   };
