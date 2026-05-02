@@ -33,7 +33,9 @@ const isSpeechSupported = "speechSynthesis" in globalThis;
 const synth = globalThis.speechSynthesis;
 
 export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>(() =>
+    isSpeechSupported ? synth.getVoices() : [],
+  );
   const [voiceURI, setVoiceURI] = useState("");
   const [rate, setRate] = useState(1);
   const [pitch, setPitch] = useState(1);
@@ -58,16 +60,14 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
       return;
     }
 
-    const getVoices = () => {
-      const availableVoices = synth.getVoices();
-      setVoices(availableVoices);
+    const handleVoicesChanged = () => {
+      setVoices(synth.getVoices());
     };
 
-    getVoices();
-    synth.addEventListener("voiceschanged", getVoices);
+    synth.addEventListener("voiceschanged", handleVoicesChanged);
 
     return () => {
-      synth.removeEventListener("voiceschanged", getVoices);
+      synth.removeEventListener("voiceschanged", handleVoicesChanged);
     };
   }, []);
 
