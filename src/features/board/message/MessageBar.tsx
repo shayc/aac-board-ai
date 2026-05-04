@@ -53,6 +53,7 @@ export function MessageBar({
         sx={(theme) => ({
           flexGrow: 2,
           gap: 2,
+          paddingInlineEnd: 2,
           borderRadius: 18,
           overflow: "hidden",
           backgroundColor:
@@ -78,19 +79,17 @@ export function MessageBar({
           ))}
         </Stack>
 
-        <Stack direction="row" sx={{ gap: 1 }}>
-          <BackspaceButton
-            onPress={onBackspacePress}
-            onLongPress={onBackspaceLongPress}
-          />
-
-          <PlayButton
-            isPlaying={isPlaying}
-            onPlayClick={onPlayClick}
-            onStopClick={onStopClick}
-          />
-        </Stack>
+        <BackspaceButton
+          onPress={onBackspacePress}
+          onLongPress={onBackspaceLongPress}
+        />
       </Stack>
+
+      <PlayButton
+        isPlaying={isPlaying}
+        onPlayClick={onPlayClick}
+        onStopClick={onStopClick}
+      />
     </Stack>
   );
 }

@@ -21,7 +21,7 @@ export function PlayButton({
 
   return (
     <Tooltip title={playButtonLabel}>
-      <Box sx={{ m: 1 }}>
+      <Box>
         <IconButton
           aria-label={playButtonLabel}
           size="large"
