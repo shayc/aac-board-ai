@@ -135,7 +135,7 @@ Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens t
 
 The app adapts to the browser's capabilities, not its version. There is no hard-coded minimum version.
 
-- **Always works:** board rendering, navigation, message composition, text-to-speech (Web Speech API), board import/export, offline use.
+- **Always works:** board rendering, navigation, message composition, text-to-speech (Web Speech API), board import, offline use.
 - **Enhanced when available** — each capability is detected at module load (`"X" in self`); UI components condition on the matching boolean and the affordance is hidden when missing, never broken:
   - **Translator API** → translates board labels into the user's language and caches the result.
   - **Rewriter API** → tone-adjusted phrase suggestions in `SuggestionBar`.

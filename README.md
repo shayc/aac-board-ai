@@ -5,17 +5,17 @@
 
 **Winner - [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
 
-**AAC Board AI** is an Augmentative and Alternative Communication board that helps people who cannot rely on speech communicate more easily and naturally. It is enhanced with **Built-in AI** for on-device proofreading, rewriting, and translation — keeping interactions private, fast, and reliable offline.
+**AAC Board AI** is an Augmentative and Alternative Communication board that helps people who cannot rely on speech communicate more easily and naturally. It is enhanced with **Built-in AI** for on-device proofreading, rewriting, and board translation — keeping interactions private, fast, and reliable offline.
 
 ![Screenshot of AAC Board AI](screenshot.jpg)
 
-Try the live demo at [aacboard.app](https://aacboard.app). Requires Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
+Try the live demo at [aacboard.app](https://aacboard.app). Core board features work without AI; Built-in AI enhancements require Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
 ## Key Features
 
 - **Grammar Correction** – Turns telegraphic text into clear sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
 - **Tone Adjustment** – Rewrites messages in direct, professional, or friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
-- **Translation** – Translates messages and boards between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
+- **Translation** – Translates board labels and vocalizations between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** – Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
 - **Offline Ready** – Installs as a standalone app with automatic updates ([PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)).
 - **Open Board Format** – Imports `.obf` and `.obz` files ([examples](https://www.openboardformat.org/examples)).
