@@ -22,7 +22,7 @@ const StyledCircularProgress = styled(CircularProgress, {
   },
 }));
 
-interface BackspaceButtonProps {
+export interface BackspaceButtonProps {
   disabled?: boolean;
   onPress: () => void;
   onLongPress: () => void;

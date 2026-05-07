@@ -1,6 +1,8 @@
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles } from "../storage/board-sets-store";
+import { importBoardFiles } from "./storage/board-sets-store";
+
+const BOARD_FILE_ACCEPT = ".obz,.obf,application/zip,application/json";
 
 export interface UseImportBoardFilesReturn {
   importBoardFiles: () => Promise<void>;
@@ -10,7 +12,10 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
 
   async function handleImport() {
-    const files = await openFiles();
+    const files = await openFiles({
+      accept: BOARD_FILE_ACCEPT,
+      multiple: true,
+    });
 
     if (files.length === 0) {
       return;
