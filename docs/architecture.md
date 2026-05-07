@@ -19,7 +19,7 @@ The codebase is **feature-sliced**. The single feature today is `board`. Layers 
 
 Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts).
 
-**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `import/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardView`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`fetchBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
+**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardView`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`fetchBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
 
 **See:** [tsconfig.app.json](../tsconfig.app.json), [src/features/board/index.ts](../src/features/board/index.ts).
 
@@ -90,7 +90,7 @@ flowchart TD
 
 IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardView`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage), `useSpeech` / `useAudio`, and `useBoardNavigation` — see §8 for playback and §6 for storage.
 
-**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
+**See:** [src/features/board/obf/board-import.ts](../src/features/board/obf/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
 
 ## 6. Storage
 
