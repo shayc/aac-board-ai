@@ -6,7 +6,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import type { SuggestionTone } from "../types";
 
-interface ToneSelectorProps {
+export interface ToneSelectorProps {
   tone: SuggestionTone;
   onChange: (tone: SuggestionTone) => void;
 }
