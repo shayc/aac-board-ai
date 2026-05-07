@@ -39,7 +39,19 @@ Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-bounda
 
 **See:** [src/app/AppRoutes.tsx](../src/app/AppRoutes.tsx), [src/shared/components/AsyncBoundary.tsx](../src/shared/components/AsyncBoundary.tsx), [src/features/board/navigation/useBoardNavigation.ts](../src/features/board/navigation/useBoardNavigation.ts).
 
-## 4. Provider stack
+## 4. App shell
+
+`<AppShell>` is the layout shared by every route. It renders the header, hosts the menu and settings drawers, mounts the onboarding dialog, and renders an `<Outlet>` for the active page.
+
+**Onboarding.** `OnboardingDialog` opens on first visit, gated by the `hasSeenOnboarding` localStorage key through `useOnboarding`. Dismissal sets the flag; the dialog never appears again on that device.
+
+**Snackbar.** `SnackbarProvider` exposes `showSnackbar({ message, severity })` via `useSnackbar()`. Today it surfaces import success/failure (`useImportBoardFiles`) and board-set deletion outcomes (`LibraryPage`). Other transient feedback should go through the same channel rather than rolling its own UI.
+
+**Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/SettingsDrawer/panels/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
+
+**See:** [src/app/layouts/AppShell.tsx](../src/app/layouts/AppShell.tsx), [src/app/dialogs/useOnboarding.ts](../src/app/dialogs/useOnboarding.ts), [src/shared/snackbar/SnackbarProvider.tsx](../src/shared/snackbar/SnackbarProvider.tsx), [src/app/drawers/SettingsDrawer/SettingsDrawer.tsx](../src/app/drawers/SettingsDrawer/SettingsDrawer.tsx).
+
+## 5. Provider stack
 
 `AppProviders` composes context in this order, outer to inner:
 
@@ -55,7 +67,7 @@ Order is load-bearing. `LanguageProvider` reads `useSpeech()` to discover availa
 
 **See:** [src/app/AppProviders.tsx](../src/app/AppProviders.tsx), [src/shared/language/LanguageProvider.tsx](../src/shared/language/LanguageProvider.tsx).
 
-## 5. Data flow
+## 6. Data flow
 
 The end-to-end pipeline from imported file to spoken message:
 
@@ -92,11 +104,13 @@ IndexedDB is the convergence point: it's written by import, read by board loadin
 
 **See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
 
-## 6. Storage
+## 7. Storage
 
 Three layers, by lifetime.
 
-**IndexedDB** — database `aac-board-db`, version 1.
+### IndexedDB
+
+Database `aac-board-db`, version 1.
 
 | Object store | Key                | Indexes                     | Holds                                      |
 | ------------ | ------------------ | --------------------------- | ------------------------------------------ |
@@ -106,7 +120,9 @@ Three layers, by lifetime.
 
 Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens the DB, runs the callback, and closes — connections are not pooled. Deletes use bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
 
-**localStorage** — via `usePersistentState`.
+### localStorage
+
+Via `usePersistentState`.
 
 | Key                 | Holds                                  | Owner                                                           |
 | ------------------- | -------------------------------------- | --------------------------------------------------------------- |
@@ -115,7 +131,9 @@ Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens t
 | `ai-shared-context` | User-supplied free-text custom prompt  | [AIProvider](../src/shared/ai/AIProvider.tsx)                   |
 | `hasSeenOnboarding` | Boolean — has the welcome dialog shown | [useOnboarding](../src/app/dialogs/useOnboarding.ts)            |
 
-**React Context** — runtime only.
+### React Context
+
+Runtime only.
 
 | Context              | Provides                                                                              |
 | -------------------- | ------------------------------------------------------------------------------------- |
@@ -131,7 +149,7 @@ Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens t
 
 **See:** [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/utils/object-url.ts](../src/shared/utils/object-url.ts), [src/shared/hooks/usePersistentState.ts](../src/shared/hooks/usePersistentState.ts).
 
-## 7. AI integration
+## 8. AI integration
 
 The app adapts to the browser's capabilities, not its version. There is no hard-coded minimum version.
 
@@ -165,7 +183,7 @@ The persisted `ai-shared-context` string is currently passed only through `useSu
 
 **See:** [src/shared/ai/capabilities.ts](../src/shared/ai/capabilities.ts), [src/shared/ai/AIProvider.tsx](../src/shared/ai/AIProvider.tsx), [src/shared/ai/useTranslator.ts](../src/shared/ai/useTranslator.ts), [src/shared/ai/useRewriter.ts](../src/shared/ai/useRewriter.ts), [src/shared/ai/useProofreader.ts](../src/shared/ai/useProofreader.ts), [src/features/board/suggestions/useSuggestions.ts](../src/features/board/suggestions/useSuggestions.ts).
 
-## 8. Speech & audio
+## 9. Speech & audio
 
 Two engines play message parts:
 
@@ -176,7 +194,7 @@ Two engines play message parts:
 
 **See:** [src/shared/speech/useSpeechSynthesis.ts](../src/shared/speech/useSpeechSynthesis.ts), [src/shared/hooks/useAudio.ts](../src/shared/hooks/useAudio.ts), [src/features/board/message/useMessagePlayback.ts](../src/features/board/message/useMessagePlayback.ts).
 
-## 9. Internationalization
+## 10. Internationalization
 
 Both [OBF](./external/open-board-format.md) (`board.locale`) and the Web Speech API (`voice.lang`) use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags. The app splits them into two roles:
 
@@ -199,7 +217,7 @@ If the Translator capability is unavailable, the original board is shown unchang
 
 **See:** [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts).
 
-## 10. PWA & offline
+## 11. PWA & offline
 
 Powered by `vite-plugin-pwa`:
 
