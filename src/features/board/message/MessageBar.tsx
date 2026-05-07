@@ -1,8 +1,8 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { Pictogram } from "../grid/Pictogram";
-import { BackspaceButton } from "./components/BackspaceButton";
-import { PlayButton } from "./components/PlayButton";
+import { BackspaceButton } from "./BackspaceButton";
+import { PlayButton } from "./PlayButton";
 import type { MessagePart } from "./useMessage";
 
 export interface MessageBarProps {
