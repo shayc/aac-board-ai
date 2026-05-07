@@ -47,9 +47,9 @@ Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-bounda
 
 **Snackbar.** `SnackbarProvider` exposes `showSnackbar({ message, severity })` via `useSnackbar()`. Today it surfaces import success/failure (`useImportBoardFiles`) and board-set deletion outcomes (`LibraryPage`). Other transient feedback should go through the same channel rather than rolling its own UI.
 
-**Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/SettingsDrawer/panels/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
+**Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/settings/panels/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
 
-**See:** [src/app/layouts/AppShell.tsx](../src/app/layouts/AppShell.tsx), [src/app/dialogs/useOnboarding.ts](../src/app/dialogs/useOnboarding.ts), [src/shared/snackbar/SnackbarProvider.tsx](../src/shared/snackbar/SnackbarProvider.tsx), [src/app/drawers/SettingsDrawer/SettingsDrawer.tsx](../src/app/drawers/SettingsDrawer/SettingsDrawer.tsx).
+**See:** [src/app/layouts/AppShell.tsx](../src/app/layouts/AppShell.tsx), [src/app/dialogs/useOnboarding.ts](../src/app/dialogs/useOnboarding.ts), [src/shared/snackbar/SnackbarProvider.tsx](../src/shared/snackbar/SnackbarProvider.tsx), [src/app/drawers/settings/SettingsDrawer.tsx](../src/app/drawers/settings/SettingsDrawer.tsx).
 
 ## 5. Provider stack
 

@@ -1,7 +1,7 @@
 import { OnboardingDialog } from "@app/dialogs/OnboardingDialog";
 import { useOnboarding } from "@app/dialogs/useOnboarding";
 import { MenuDrawer } from "@app/drawers/MenuDrawer";
-import { SettingsDrawer } from "@app/drawers/SettingsDrawer/SettingsDrawer";
+import { SettingsDrawer } from "@app/drawers/settings/SettingsDrawer";
 import { AppHeader } from "@app/layouts/AppHeader";
 import Box from "@mui/material/Box";
 import { useState } from "react";
