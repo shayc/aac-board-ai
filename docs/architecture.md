@@ -88,7 +88,7 @@ flowchart TD
   E --> F
 ```
 
-IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardView`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage), `useSpeech` / `useAudio`, and `useBoardNavigation` — see §8 for playback and §6 for storage.
+IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardView`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `useSpeech` / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
 
 **See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
 
@@ -145,7 +145,7 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 ### Capability detection
 
-`capabilities.ts` exports three booleans evaluated once at module load: `isProofreaderSupported`, `isRewriterSupported`, `isTranslatorSupported`. UI conditionals (`SuggestionBar`, `AISettings`) read these directly.
+`capabilities.ts` exports three booleans evaluated once at module load: `isProofreaderSupported`, `isRewriterSupported`, `isTranslatorSupported`. Read directly by `AICapabilitiesList`, `AISettings`, `LanguageSettings`, and `useSuggestions`.
 
 ### Session caching
 
@@ -153,7 +153,7 @@ Each AI hook (`useProofreader`, `useRewriter`, `useTranslator`) holds a single l
 
 ### Download-progress aggregation
 
-`AIProvider` owns a `downloads: Record<string, number>` keyed by capability name. Each hook subscribes to `downloadprogress` on its session monitor and writes `event.loaded` (0–1) to the matching key via `setDownload`. The settings drawer reads `downloads.translator` to render a progress message.
+`AIProvider` owns a `downloads: Record<string, number>` keyed by capability name. Each hook subscribes to `downloadprogress` on its session monitor and writes `event.loaded` (0–1) to the matching key via `setDownload`. `LanguageSettings` reads `downloads.translator` to render a progress message.
 
 ### Where `sharedContext` is actually used
 
@@ -161,7 +161,7 @@ The persisted `ai-shared-context` string is currently passed only through `useSu
 
 ### Suggestions composition
 
-`useSuggestions` debounces on the message text, runs the proofreader and rewriter in parallel against the same `AbortController`, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
+`useSuggestions` runs the proofreader and rewriter in parallel against a shared `AbortController`, cancels in-flight calls when the input changes, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
 
 **See:** [src/shared/ai/capabilities.ts](../src/shared/ai/capabilities.ts), [src/shared/ai/AIProvider.tsx](../src/shared/ai/AIProvider.tsx), [src/shared/ai/useTranslator.ts](../src/shared/ai/useTranslator.ts), [src/shared/ai/useRewriter.ts](../src/shared/ai/useRewriter.ts), [src/shared/ai/useProofreader.ts](../src/shared/ai/useProofreader.ts), [src/features/board/suggestions/useSuggestions.ts](../src/features/board/suggestions/useSuggestions.ts).
 
@@ -170,7 +170,7 @@ The persisted `ai-shared-context` string is currently passed only through `useSu
 Two engines play message parts:
 
 - **`useSpeech` / `useSpeechSynthesis`** — wraps the Web Speech API: voice list (refreshed on `voiceschanged`), per-utterance rate/pitch/volume, promise-returning `speak`. Voices are grouped by language and locale for the language picker.
-- **`useAudio`** — plays an OBF sound asset (already a blob URL from the ObjectURL registry) on a single `HTMLAudioElement`. `play()` returns a promise that resolves on `ended` or rejects when `stop()` is called.
+- **`useAudio`** — plays an OBF sound asset (already a blob URL from the ObjectURL registry) one at a time; `play()` returns a promise that resolves on `ended` or rejects when `stop()` is called.
 
 `useMessagePlayback` interleaves them: it walks each `MessagePart` in order; if the part has a `soundSrc`, it plays the audio; otherwise it speaks the `vocalization ?? label`. Adjacent text parts are merged into a single utterance to avoid clipped speech between words.
 
