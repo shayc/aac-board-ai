@@ -1,5 +1,4 @@
 export { BoardView } from "./BoardView";
-export { useImportBoardFiles } from "./obf/useImportBoardFiles";
 export {
   fetchBoardSets,
   importBoardFromUrl,
@@ -9,3 +8,4 @@ export type { BoardSetRecord } from "./storage/boards-db";
 export { useBoardSets } from "./storage/useBoardSets";
 export type { BoardRouteParams } from "./types";
 export { useBoard } from "./useBoard";
+export { useImportBoardFiles } from "./useImportBoardFiles";
