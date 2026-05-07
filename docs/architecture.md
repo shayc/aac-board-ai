@@ -4,7 +4,7 @@
 
 ## 1. System overview
 
-A client-side React 19 app that renders [Open Board Format](./external/open-board-format.md) communication boards from an in-browser IndexedDB store. Imported `.obf` / `.obz` files are parsed and persisted; boards are loaded on demand, optionally translated through the browser's Built-in AI Translator, and rendered as a keyboard-navigable tile grid that drives a message strip with text-to-speech playback. There is no backend — every byte stays on the device.
+A client-side React 19 app that renders [Open Board Format](./third-party/open-board-format.md) communication boards from an in-browser IndexedDB store. Imported `.obf` / `.obz` files are parsed and persisted; boards are loaded on demand, optionally translated through the browser's Built-in AI Translator, and rendered as a keyboard-navigable tile grid that drives a message strip with text-to-speech playback. There is no backend — every byte stays on the device.
 
 Built-in AI is a **leaf-level enhancement**, not the architecture: when available, it adds proofreading and rewriting suggestions to the message strip and translation to board labels. Everything else works without it.
 
@@ -196,7 +196,7 @@ Two engines play message parts:
 
 ## 10. Internationalization
 
-Both [OBF](./external/open-board-format.md) (`board.locale`) and the Web Speech API (`voice.lang`) use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags. The app splits them into two roles:
+Both [OBF](./third-party/open-board-format.md) (`board.locale`) and the Web Speech API (`voice.lang`) use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags. The app splits them into two roles:
 
 | Term       | Meaning                              | Examples          |
 | ---------- | ------------------------------------ | ----------------- |
