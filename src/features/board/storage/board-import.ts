@@ -2,14 +2,14 @@ import { normalizeLocaleCode } from "@shared/language/locale";
 import { stripHtmlTags } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
-import type { BoardsDB, UpsertBoardSetInput } from "../storage/boards-db";
+import { resolveLoadBoardPaths } from "../obf/mapper";
+import type { BoardsDB, UpsertBoardSetInput } from "./boards-db";
 import {
   putAssets,
   putBoards,
   upsertBoardSet,
   withBoardsDB,
-} from "../storage/boards-db";
-import { resolveLoadBoardPaths } from "./obf-mapper";
+} from "./boards-db";
 
 export interface ImportResult {
   setId: string;

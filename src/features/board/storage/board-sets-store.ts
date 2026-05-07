@@ -1,5 +1,5 @@
 import { createExternalStore } from "@shared/utils/external-store";
-import { storeBoardFiles, type ImportResult } from "../obf/board-import";
+import { storeBoardFiles, type ImportResult } from "./board-import";
 import {
   deleteBoardSet,
   listBoardSets,

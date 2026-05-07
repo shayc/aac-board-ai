@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/hooks/usePageTitle";
+import { usePageTitle } from "@app/usePageTitle";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";

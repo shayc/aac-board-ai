@@ -1,15 +1,15 @@
 import { loadOBF, loadOBZ } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { storeBoardFiles } from "./board-import";
 import {
   getAssetBlob,
   getBoard,
   listBoardSets,
   openBoardsDB,
   withBoardsDB,
-} from "../storage/boards-db";
-import { storeBoardFiles } from "./board-import";
+} from "./boards-db";
 
-const FIXTURES_DIR = "/src/shared/testing/fixtures";
+const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBZ_FIXTURE = "lots_of_stuff.obz";
 const OBF_FIXTURE = "lots_of_stuff.obf";
 const IMPORTED_SET_ID = "lots_of_stuff";
@@ -31,7 +31,7 @@ async function resetBoardsDB(): Promise<void> {
 }
 
 async function loadFixtureFile(name: string): Promise<File> {
-  const response = await fetch(`${FIXTURES_DIR}/${name}`);
+  const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
 
   if (!response.ok) {
     throw new Error(`Failed to load test fixture: ${response.status}`);
