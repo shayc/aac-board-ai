@@ -38,6 +38,7 @@ Names are the foundation of comprehension. They must be exact, unambiguous, and 
 - **Call-Site Readability:** A return property's name is never read alone — it is always prefixed by the consumer's variable name. Before renaming a return field, verify the compound phrase at every call site. It must not stutter (e.g., `suggestions.suggestions`) and both words must have distinct silhouettes (e.g., `suggestions.phrases`).
 - **Zero Ambiguity:** Suggest replacements for cryptic abbreviations or single-letter variables (unless they are standard loop counters or geometric coordinates).
 - **Respect Idiomatic Names:** Do not rename variables that carry established convention in their ecosystem. A name like `next` in a state-update function, `acc` in a reducer, or `prev` in a comparison is not vague — it is _expected_. Only rename when the idiomatic term is genuinely ambiguous in context.
+- **Read the Siblings:** Before condemning a generic-sounding name (`components`, `utils`, `data`, `helpers`), audit its peers. When the siblings form a consistent axis — by kind, by layer, by capability — the "vague" name is the axis label, doing precise work; renaming it breaks the parent's grammar. Judge a name by the next plausible member of its set, not by the snapshot of today's contents.
 
 ### 3. The Fluency Edit (Simplicity & Flow)
 
