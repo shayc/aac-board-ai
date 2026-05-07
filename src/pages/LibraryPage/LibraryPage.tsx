@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/hooks/usePageTitle";
+import { usePageTitle } from "@app/usePageTitle";
 import {
   removeBoardSet,
   useBoardSets,

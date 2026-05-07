@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/hooks/usePageTitle";
+import { usePageTitle } from "@app/usePageTitle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
