@@ -28,13 +28,15 @@
 ## Testing Instructions
 
 - Structure: Colocate tests as `*.test.ts(x)`.
-- Runner: `npm test` runs Vitest in browser mode via the Playwright provider.
-- Utilities: Use `vitest-browser-react` for component testing and interactions.
-- Stability: Write deterministic tests; avoid timing-based sleeps.
-- Mocking: Zero-mocking policy for internal code. Do not mock child components, custom hooks, contexts, or providers. Render the full tree to test real integration.
+- Runner: `npm test` runs Vitest browser mode via Playwright (real Chromium).
+- Utilities: Use `vitest-browser-react` for components and interactions.
+- Determinism: No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
+- Mocking: Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities) or native web APIs.
+  - **Allowed stubs (closed list):** network (e.g., `fetch`, WebSocket), non-determinism (e.g., `Date.now`, `Math.random`), device output (e.g., `speechSynthesis`, `HTMLAudioElement.play`).
+  - **Method:** Prefer `vi.spyOn` over `vi.mock`.
 - Scope:
-  - **Interactive Components:** Must prove a behavior (interaction → observable result).
-  - **Presentational Components:** Use render-only assertions to verify accessibility, content presence, and visibility.
+  - **Interactive:** Prove a behavior (interaction → observable result).
+  - **Presentational:** Render-only assertions for accessibility, content, and visibility.
 
 ## Code Style Guidelines
 
