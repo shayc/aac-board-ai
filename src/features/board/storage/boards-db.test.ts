@@ -6,7 +6,6 @@ import {
   getBoard,
   getBoardsByIds,
   listBoardSets,
-  openBoardsDB,
   putAssets,
   putBoards,
   updateBoardStrings,
@@ -14,6 +13,7 @@ import {
   withBoardsDB,
   type BoardsDB,
 } from "./boards-db";
+import { openCleanBoardsDB } from "./test-helpers";
 
 function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   return {
@@ -36,14 +36,7 @@ afterEach(() => {
 });
 
 async function openTestDB(): Promise<BoardsDB> {
-  db = await openBoardsDB();
-
-  const tx = db.transaction(["boardsets", "boards", "assets"], "readwrite");
-  await tx.objectStore("boardsets").clear();
-  await tx.objectStore("boards").clear();
-  await tx.objectStore("assets").clear();
-  await tx.done;
-
+  db = await openCleanBoardsDB();
   return db;
 }
 
