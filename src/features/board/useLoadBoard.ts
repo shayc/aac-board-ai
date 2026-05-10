@@ -14,6 +14,8 @@ export interface UseLoadBoardOptions {
 
 export interface UseLoadBoardReturn {
   board: Board | null;
+  isLoading: boolean;
+  error: Error | null;
 }
 
 export function useLoadBoard({
@@ -21,6 +23,8 @@ export function useLoadBoard({
   boardId,
 }: UseLoadBoardOptions): UseLoadBoardReturn {
   const [board, setBoard] = useState<Board | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const registryRef = useRef<ObjectUrlRegistry | null>(null);
 
   useEffect(() => {
@@ -30,8 +34,13 @@ export function useLoadBoard({
     async function fetchAndApply() {
       if (!setId || !boardId) {
         setBoard(null);
+        setIsLoading(false);
+        setError(null);
         return;
       }
+
+      setIsLoading(true);
+      setError(null);
 
       try {
         const loaded = await loadBoard({ setId, boardId, registry });
@@ -39,6 +48,7 @@ export function useLoadBoard({
           registryRef.current?.revokeAll();
           registryRef.current = registry;
           setBoard(loaded);
+          setIsLoading(false);
         } else {
           registry.revokeAll();
         }
@@ -47,6 +57,8 @@ export function useLoadBoard({
         registry.revokeAll();
         if (!cancelled) {
           setBoard(null);
+          setError(err instanceof Error ? err : new Error(String(err)));
+          setIsLoading(false);
         }
       }
     }
@@ -65,7 +77,7 @@ export function useLoadBoard({
     };
   }, []);
 
-  return { board };
+  return { board, isLoading, error };
 }
 
 async function loadBoard({
