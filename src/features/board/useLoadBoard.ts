@@ -14,6 +14,8 @@ export interface UseLoadBoardOptions {
 
 export interface UseLoadBoardReturn {
   board: Board | null;
+  isLoading: boolean;
+  error: Error | null;
 }
 
 export function useLoadBoard({
@@ -21,6 +23,8 @@ export function useLoadBoard({
   boardId,
 }: UseLoadBoardOptions): UseLoadBoardReturn {
   const [board, setBoard] = useState<Board | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
   const registryRef = useRef<ObjectUrlRegistry | null>(null);
 
   useEffect(() => {
@@ -29,9 +33,16 @@ export function useLoadBoard({
 
     async function fetchAndApply() {
       if (!setId || !boardId) {
+        registryRef.current?.revokeAll();
+        registryRef.current = null;
         setBoard(null);
+        setIsLoading(false);
+        setError(null);
         return;
       }
+
+      setIsLoading(true);
+      setError(null);
 
       try {
         const loaded = await loadBoard({ setId, boardId, registry });
@@ -39,14 +50,17 @@ export function useLoadBoard({
           registryRef.current?.revokeAll();
           registryRef.current = registry;
           setBoard(loaded);
+          setIsLoading(false);
+          setError(null);
         } else {
           registry.revokeAll();
         }
       } catch (err) {
-        console.error("Error loading board:", err);
         registry.revokeAll();
         if (!cancelled) {
           setBoard(null);
+          setIsLoading(false);
+          setError(err instanceof Error ? err : new Error(String(err)));
         }
       }
     }
@@ -65,7 +79,7 @@ export function useLoadBoard({
     };
   }, []);
 
-  return { board };
+  return { board, isLoading, error };
 }
 
 async function loadBoard({
@@ -103,11 +117,12 @@ async function hydrateBoard(
   board: OBFBoard,
   registry: ObjectUrlRegistry,
 ): Promise<OBFBoard> {
-  return {
-    ...board,
-    images: await hydrateAssets(db, setId, board.images, "image", registry),
-    sounds: await hydrateAssets(db, setId, board.sounds, "sound", registry),
-  };
+  const [images, sounds] = await Promise.all([
+    hydrateAssets(db, setId, board.images, "image", registry),
+    hydrateAssets(db, setId, board.sounds, "sound", registry),
+  ]);
+
+  return { ...board, images, sounds };
 }
 
 async function hydrateAssets(
@@ -121,25 +136,23 @@ async function hydrateAssets(
     return assets;
   }
 
-  const resolvedMedia: OBFMedia[] = [];
-  for (const asset of assets) {
-    if (!asset.path) {
-      resolvedMedia.push(asset);
-      continue;
-    }
+  return Promise.all(
+    assets.map(async (asset) => {
+      if (!asset.path) {
+        return asset;
+      }
 
-    try {
-      const blob = await getAssetBlob(db, setId, asset.path);
-      const url = blob ? registry.create(blob) : null;
-      resolvedMedia.push(url ? { ...asset, data: url } : asset);
-    } catch (err) {
-      console.warn(
-        `Failed to load ${kind} ${asset.id} from path ${asset.path}:`,
-        err,
-      );
-      resolvedMedia.push(asset);
-    }
-  }
-
-  return resolvedMedia;
+      try {
+        const blob = await getAssetBlob(db, setId, asset.path);
+        const url = blob ? registry.create(blob) : null;
+        return url ? { ...asset, data: url } : asset;
+      } catch (err) {
+        console.warn(
+          `Failed to load ${kind} ${asset.id} from path ${asset.path}:`,
+          err,
+        );
+        return asset;
+      }
+    }),
+  );
 }
