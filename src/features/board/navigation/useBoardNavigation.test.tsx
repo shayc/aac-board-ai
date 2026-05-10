@@ -1,303 +1,248 @@
 import type { ReactNode } from "react";
-import { MemoryRouter, Route, Routes } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
-import * as boardSetsStore from "../storage/board-sets-store";
-import { useBoardNavigation } from "./useBoardNavigation";
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  type Location,
+  type NavigateFunction,
+} from "react-router";
+import { beforeEach, describe, expect, test } from "vitest";
+import { renderHook, type RenderHookResult } from "vitest-browser-react";
+import { seedBoardSets } from "../storage/test-helpers";
+import {
+  useBoardNavigation,
+  type UseBoardNavigationReturn,
+} from "./useBoardNavigation";
 
-vi.mock("../storage/board-sets-store", () => ({
-  subscribeBoardSets: vi.fn(),
-  getBoardSetsSnapshot: vi.fn(),
-}));
-
-const mockNavigate = vi.fn();
-vi.mock("react-router", async () => {
-  const actual = await vi.importActual("react-router");
-  return {
-    ...actual,
-    useNavigate: () => mockNavigate,
-  };
-});
-
-function createWrapper(
-  initialSetId = "set-1",
-  initialBoardId = "board-1",
-  state?: { backStack: string[] },
-) {
-  return function Wrapper({ children }: { children: ReactNode }) {
-    const entry = {
-      pathname: `/sets/${initialSetId}/boards/${initialBoardId}`,
-      state,
-    };
-
-    return (
-      <MemoryRouter initialEntries={[entry]}>
-        <Routes>
-          <Route
-            path="/sets/:setId/boards/:boardId"
-            element={<>{children}</>}
-          />
-        </Routes>
-      </MemoryRouter>
-    );
-  };
+interface NavState {
+  backStack: string[];
 }
 
-function createWrapperWithoutSetId(state?: { backStack: string[] }) {
-  return function WrapperWithoutSetId({ children }: { children: ReactNode }) {
-    const entry = { pathname: "/boards/board-1", state };
+interface NavTestHook {
+  nav: UseBoardNavigationReturn;
+  location: Location;
+  navigate: NavigateFunction;
+}
 
-    return (
-      <MemoryRouter initialEntries={[entry]}>
-        <Routes>
-          <Route path="/boards/:boardId" element={<>{children}</>} />
-        </Routes>
-      </MemoryRouter>
-    );
-  };
+function setup(
+  pathname = "/sets/set-1/boards/board-1",
+  state?: NavState,
+): Promise<RenderHookResult<NavTestHook, unknown>> {
+  return renderHook(
+    (): NavTestHook => ({
+      nav: useBoardNavigation(),
+      location: useLocation(),
+      navigate: useNavigate(),
+    }),
+    {
+      wrapper: ({ children }: { children: ReactNode }) => (
+        <MemoryRouter initialEntries={[{ pathname, state }]}>
+          <Routes>
+            <Route
+              path="/sets/:setId/boards/:boardId"
+              element={<>{children}</>}
+            />
+            <Route path="/boards/:boardId" element={<>{children}</>} />
+          </Routes>
+        </MemoryRouter>
+      ),
+    },
+  );
 }
 
 describe("useBoardNavigation", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(boardSetsStore.subscribeBoardSets).mockImplementation(() => {
-      return () => undefined;
-    });
-    vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-      boardSets: [
-        {
-          setId: "set-1",
-          name: "Set 1",
-          rootBoardId: "root-1",
-          updatedAt: Date.now(),
-          boardCount: 1,
-        },
-      ],
-      isLoading: false,
-      error: null,
-    });
+  beforeEach(async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-1" }]);
   });
 
   describe("canGoBack", () => {
     test("is false when backStack is empty", async () => {
-      const { result } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+      const { result } = await setup();
 
-      expect(result.current.canGoBack).toBe(false);
+      expect(result.current.nav.canGoBack).toBe(false);
     });
 
     test("is true when backStack has entries", async () => {
-      const { result } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-2", {
-          backStack: ["board-1"],
-        }),
+      const { result } = await setup("/sets/set-1/boards/board-2", {
+        backStack: ["board-1"],
       });
 
-      expect(result.current.canGoBack).toBe(true);
+      expect(result.current.nav.canGoBack).toBe(true);
     });
   });
 
   describe("canGoHome", () => {
-    test("is true when root board is loaded", async () => {
-      const { result } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+    test("is true when the board set has a root board", async () => {
+      const { result } = await setup();
 
-      expect(result.current.canGoHome).toBe(true);
+      expect(result.current.nav.canGoHome).toBe(true);
     });
 
-    test("is false when root board is not available", async () => {
-      vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        boardSets: [
-          {
-            setId: "set-1",
-            name: "Set 1",
-            rootBoardId: "",
-            updatedAt: Date.now(),
-            boardCount: 1,
-          },
-        ],
-        isLoading: false,
-        error: null,
-      });
+    test("is false when the board set has no root board", async () => {
+      await seedBoardSets([{ setId: "set-1" }]);
 
-      const { result } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+      const { result } = await setup();
 
-      expect(result.current.canGoHome).toBe(false);
+      expect(result.current.nav.canGoHome).toBe(false);
     });
 
-    test("is false when board set is missing", async () => {
-      vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        boardSets: [],
-        isLoading: false,
-        error: null,
-      });
+    test("is false when the board set is missing", async () => {
+      await seedBoardSets([]);
 
-      const { result } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+      const { result } = await setup();
 
-      expect(result.current.canGoHome).toBe(false);
+      expect(result.current.nav.canGoHome).toBe(false);
     });
   });
 
   describe("goToBoard", () => {
-    test("navigates with backStack in state", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
+    test("navigates and pushes the current board onto backStack", async () => {
+      const { result, act } = await setup();
+
+      await act(() => result.current.nav.goToBoard("board-2"));
+
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-2",
+      );
+      expect(result.current.location.state).toEqual({ backStack: ["board-1"] });
+    });
+
+    test("appends the current board onto an existing backStack", async () => {
+      const { result, act } = await setup("/sets/set-1/boards/board-2", {
+        backStack: ["board-1"],
       });
 
-      await act(() => {
-        result.current.goToBoard("board-2");
-      });
+      await act(() => result.current.nav.goToBoard("board-3"));
 
-      expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-2", {
-        state: { backStack: ["board-1"] },
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-3",
+      );
+      expect(result.current.location.state).toEqual({
+        backStack: ["board-1", "board-2"],
       });
     });
 
-    test("appends current board to existing backStack", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-2", {
-          backStack: ["board-1"],
-        }),
-      });
+    test("ignores an empty board id", async () => {
+      const { result, act } = await setup();
 
-      await act(() => {
-        result.current.goToBoard("board-3");
-      });
+      await act(() => result.current.nav.goToBoard(""));
 
-      expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/board-3", {
-        state: { backStack: ["board-1", "board-2"] },
-      });
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-1",
+      );
+      expect(result.current.location.state).toBeNull();
     });
 
-    test("ignores empty board id", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+    test("ignores navigation to the current board", async () => {
+      const { result, act } = await setup();
 
-      await act(() => {
-        result.current.goToBoard("");
-      });
+      await act(() => result.current.nav.goToBoard("board-1"));
 
-      expect(mockNavigate).not.toHaveBeenCalled();
+      expect(result.current.location.state).toBeNull();
     });
 
-    test("ignores duplicate board id", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+    test("does nothing when setId is missing from the route", async () => {
+      const { result, act } = await setup("/boards/board-1");
 
-      await act(() => {
-        result.current.goToBoard("board-1");
-      });
+      await act(() => result.current.nav.goToBoard("board-2"));
 
-      expect(mockNavigate).not.toHaveBeenCalled();
-    });
-
-    test("does nothing when setId is missing", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapperWithoutSetId(),
-      });
-
-      await act(() => {
-        result.current.goToBoard("board-2");
-      });
-
-      expect(mockNavigate).not.toHaveBeenCalled();
+      expect(result.current.location.pathname).toBe("/boards/board-1");
     });
   });
 
   describe("goBack", () => {
-    test("returns to previous board", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-2", {
-          backStack: ["board-1"],
-        }),
-      });
+    test("returns to the previous board after navigating forward", async () => {
+      const { result, act } = await setup();
 
-      await act(() => {
-        result.current.goBack();
-      });
+      await act(() => result.current.nav.goToBoard("board-2"));
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-2",
+      );
 
-      expect(mockNavigate).toHaveBeenCalledWith(-1);
+      await act(() => result.current.nav.goBack());
+
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-1",
+      );
     });
 
     test("does nothing when backStack is empty", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+      const { result, act } = await setup();
 
-      await act(() => {
-        result.current.goBack();
-      });
+      await act(() => result.current.nav.goBack());
 
-      expect(mockNavigate).not.toHaveBeenCalled();
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-1",
+      );
     });
 
-    test("does nothing when setId is missing", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapperWithoutSetId({ backStack: ["board-1"] }),
+    test("does nothing when setId is missing from the route", async () => {
+      const { result, act } = await setup("/boards/board-1", {
+        backStack: ["board-0"],
       });
 
-      await act(() => {
-        result.current.goBack();
-      });
+      await act(() => result.current.nav.goBack());
 
-      expect(mockNavigate).not.toHaveBeenCalled();
+      expect(result.current.location.pathname).toBe("/boards/board-1");
     });
   });
 
   describe("goHome", () => {
-    test("navigates to root board with replace", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-2", {
-          backStack: ["board-1"],
-        }),
+    test("navigates to the root board and clears backStack", async () => {
+      const { result, act } = await setup("/sets/set-1/boards/board-2", {
+        backStack: ["board-1"],
       });
 
-      await act(() => {
-        result.current.goHome();
-      });
+      await act(() => result.current.nav.goHome());
 
-      expect(mockNavigate).toHaveBeenCalledWith("/sets/set-1/boards/root-1", {
-        state: { backStack: [] },
-        replace: true,
-      });
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/root-1",
+      );
+      expect(result.current.location.state).toEqual({ backStack: [] });
     });
 
-    test("does nothing when rootBoardId is not loaded", async () => {
-      vi.mocked(boardSetsStore.getBoardSetsSnapshot).mockReturnValue({
-        boardSets: [],
-        isLoading: false,
-        error: null,
+    test("replaces the current entry so browser back skips it", async () => {
+      const { result, act } = await setup("/sets/set-1/boards/board-2", {
+        backStack: ["board-1"],
       });
 
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapper("set-1", "board-1"),
-      });
+      await act(() => result.current.nav.goToBoard("board-3"));
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-3",
+      );
 
-      await act(() => {
-        result.current.goHome();
-      });
+      await act(() => result.current.nav.goHome());
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/root-1",
+      );
 
-      expect(mockNavigate).not.toHaveBeenCalled();
+      await act(() => result.current.navigate(-1));
+
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-2",
+      );
     });
 
-    test("does nothing when setId is missing", async () => {
-      const { result, act } = await renderHook(() => useBoardNavigation(), {
-        wrapper: createWrapperWithoutSetId(),
-      });
+    test("does nothing when the board set has no root board", async () => {
+      await seedBoardSets([]);
 
-      await act(() => {
-        result.current.goHome();
-      });
+      const { result, act } = await setup();
 
-      expect(mockNavigate).not.toHaveBeenCalled();
+      await act(() => result.current.nav.goHome());
+
+      expect(result.current.location.pathname).toBe(
+        "/sets/set-1/boards/board-1",
+      );
+    });
+
+    test("does nothing when setId is missing from the route", async () => {
+      const { result, act } = await setup("/boards/board-1");
+
+      await act(() => result.current.nav.goHome());
+
+      expect(result.current.location.pathname).toBe("/boards/board-1");
     });
   });
 });

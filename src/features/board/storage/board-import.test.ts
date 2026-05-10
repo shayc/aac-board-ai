@@ -5,9 +5,9 @@ import {
   getAssetBlob,
   getBoard,
   listBoardSets,
-  openBoardsDB,
   withBoardsDB,
 } from "./boards-db";
+import { resetBoardsDB } from "./test-helpers";
 
 const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBZ_FIXTURE = "lots_of_stuff.obz";
@@ -16,18 +16,6 @@ const IMPORTED_SET_ID = "lots_of_stuff";
 
 function assertDefined<T>(value: T | undefined | null): asserts value is T {
   expect(value).toBeDefined();
-}
-
-async function resetBoardsDB(): Promise<void> {
-  const db = await openBoardsDB();
-
-  const tx = db.transaction(["boardsets", "boards", "assets"], "readwrite");
-  await tx.objectStore("boardsets").clear();
-  await tx.objectStore("boards").clear();
-  await tx.objectStore("assets").clear();
-  await tx.done;
-
-  db.close();
 }
 
 async function loadFixtureFile(name: string): Promise<File> {
