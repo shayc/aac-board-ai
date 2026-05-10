@@ -53,7 +53,6 @@ export function useLoadBoard({
           registry.revokeAll();
         }
       } catch (err) {
-        console.error("Error loading board:", err);
         registry.revokeAll();
         if (!cancelled) {
           setBoard(null);
