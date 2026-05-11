@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 
 function BoardPage() {
   const { setId = "", boardId = "" } = useParams<BoardRouteParams>();
-  const { board, isLoading, error } = useBoard({ setId, boardId });
+  const { board, error } = useBoard({ setId, boardId });
   const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ function BoardPage() {
     );
   }
 
-  if (isLoading || !board) {
+  if (!board) {
     return <LoadingIndicator />;
   }
 
