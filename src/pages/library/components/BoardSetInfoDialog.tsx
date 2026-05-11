@@ -26,7 +26,7 @@ export function BoardSetInfoDialog({
       onClose={onClose}
       aria-labelledby="info-dialog-title"
       fullWidth
-      maxWidth="xs"
+      maxWidth="sm"
     >
       <DialogTitle id="info-dialog-title">
         {boardSet?.name}
