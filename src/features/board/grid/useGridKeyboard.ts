@@ -9,8 +9,6 @@ interface GridCell {
 
 export interface UseGridKeyboardOptions {
   gridRef: RefObject<HTMLElement | null>;
-  rows: number;
-  columns: number;
   defaultActiveCell?: GridCell;
 }
 
@@ -28,8 +26,6 @@ interface CellResult {
 
 export function useGridKeyboard({
   gridRef,
-  rows,
-  columns,
   defaultActiveCell = { row: 0, col: 0 },
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const [activeCell, setActiveCell] = useState<GridCell>(defaultActiveCell);
@@ -83,10 +79,8 @@ export function useGridKeyboard({
 
       const result = findNextNonEmptyCell(
         grid,
-        currentRow + deltaRow,
-        currentCol + deltaCol,
-        rows,
-        columns,
+        currentRow,
+        currentCol,
         deltaRow,
         deltaCol,
       );
@@ -118,29 +112,57 @@ export function useGridKeyboard({
 
 function findNextNonEmptyCell(
   grid: HTMLElement,
-  startRow: number,
-  startCol: number,
-  rows: number,
-  columns: number,
+  currentRow: number,
+  currentCol: number,
   deltaRow: number,
   deltaCol: number,
 ): CellResult | null {
-  let row = startRow;
-  let col = startCol;
+  const cells = grid.querySelectorAll<HTMLElement>("[role='gridcell']");
 
-  while (row >= 0 && row < rows && col >= 0 && col < columns) {
-    const cell = grid.querySelector<HTMLElement>(
-      `[role='gridcell'][aria-rowindex='${row + 1}'][aria-colindex='${col + 1}']`,
-    );
-    const focusable = cell?.querySelector<HTMLElement>("[tabindex]");
+  let best: (CellResult & { primary: number; perp: number }) | null = null;
 
-    if (focusable) {
-      return { element: focusable, row, col };
+  for (const cell of cells) {
+    const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
+    const col = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
+    if (isNaN(row) || isNaN(col)) {
+      continue;
     }
 
-    row += deltaRow;
-    col += deltaCol;
+    const focusable = cell.querySelector<HTMLElement>("[tabindex]");
+    if (!focusable) {
+      continue;
+    }
+
+    const dr = row - currentRow;
+    const dc = col - currentCol;
+
+    // Reject cells that aren't in the arrow's half-plane. Primary axis is the
+    // arrow's axis; perp axis is the other one. When no in-line tile exists,
+    // ranking by (perp, primary) prefers the most-aligned diagonal hop.
+    let primary: number;
+    let perp: number;
+    if (deltaRow !== 0) {
+      if (Math.sign(dr) !== deltaRow) {
+        continue;
+      }
+      primary = Math.abs(dr);
+      perp = Math.abs(dc);
+    } else {
+      if (Math.sign(dc) !== deltaCol) {
+        continue;
+      }
+      primary = Math.abs(dc);
+      perp = Math.abs(dr);
+    }
+
+    if (
+      !best ||
+      perp < best.perp ||
+      (perp === best.perp && primary < best.primary)
+    ) {
+      best = { element: focusable, row, col, primary, perp };
+    }
   }
 
-  return null;
+  return best ? { element: best.element, row: best.row, col: best.col } : null;
 }

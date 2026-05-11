@@ -30,8 +30,6 @@ export function Grid<TItem extends { id: string }>({
 
   const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
     gridRef,
-    rows,
-    columns,
     defaultActiveCell,
   });
 

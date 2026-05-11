@@ -308,7 +308,7 @@ describe("Grid", () => {
         .toBe(true);
     });
 
-    test("does not move focus into empty cells", async () => {
+    test("falls back to the nearest diagonal cell when the arrow's line is empty", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -335,30 +335,81 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      const item1El = item1.element();
-      item1El.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
-      );
-
-      await expect
-        .poll(() => document.activeElement === item1.element())
-        .toBe(true);
-
-      item1El.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
-      );
-      await expect
-        .poll(() => document.activeElement === item1.element())
-        .toBe(true);
-
-      item2.element().focus();
-      const item2El = item2.element();
-      item2El.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowUp", bubbles: true }),
-      );
+      item1
+        .element()
+        .dispatchEvent(
+          new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+        );
 
       await expect
         .poll(() => document.activeElement === item2.element())
+        .toBe(true);
+    });
+
+    test("prefers an in-line cell over a diagonal one", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+        { id: "3", label: "Item 3" },
+      ];
+
+      const order = [
+        ["1", "2", null],
+        [null, null, "3"],
+      ];
+
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={3}
+          items={items}
+          order={order}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
+
+      item1.element().focus();
+      await expect.element(item1).toHaveFocus();
+
+      item1
+        .element()
+        .dispatchEvent(
+          new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
+        );
+
+      await expect
+        .poll(() => document.activeElement === item2.element())
+        .toBe(true);
+    });
+
+    test("stays in place when no focusable cell exists in the arrow's direction", async () => {
+      const items = [{ id: "1", label: "Item 1" }];
+
+      const screen = await render(
+        <Grid
+          rows={1}
+          columns={2}
+          items={items}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+
+      item1.element().focus();
+      await expect.element(item1).toHaveFocus();
+
+      item1
+        .element()
+        .dispatchEvent(
+          new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
+        );
+
+      await expect
+        .poll(() => document.activeElement === item1.element())
         .toBe(true);
     });
   });
