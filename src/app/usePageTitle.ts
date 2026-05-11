@@ -18,7 +18,7 @@ export function usePageTitle() {
 
   function setPageTitle(title: string | undefined) {
     const next = title ?? "";
-    if (store.getState() !== next) {
+    if (store.getSnapshot() !== next) {
       store.setState(next);
       ownsTitle.current = next !== "";
     }

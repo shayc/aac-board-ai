@@ -5,14 +5,12 @@ describe("createExternalStore", () => {
   test("should return the initial state", () => {
     const store = createExternalStore(42);
     expect(store.getSnapshot()).toBe(42);
-    expect(store.getState()).toBe(42);
   });
 
   test("should update state with setState", () => {
     const store = createExternalStore("hello");
     store.setState("world");
     expect(store.getSnapshot()).toBe("world");
-    expect(store.getState()).toBe("world");
   });
 
   test("should notify listeners on setState", () => {

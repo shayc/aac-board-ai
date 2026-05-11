@@ -69,7 +69,7 @@ export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
     await refresh();
   }
 
-  return store.getState().boardSets;
+  return store.getSnapshot().boardSets;
 }
 
 export async function invalidateBoardSets(): Promise<void> {
