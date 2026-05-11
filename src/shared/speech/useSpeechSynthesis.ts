@@ -3,10 +3,15 @@ import { useEffect, useState } from "react";
 
 export const RATE_MIN = 0.1;
 export const RATE_MAX = 2;
+export const RATE_DEFAULT = 1;
+
 export const PITCH_MIN = 0.1;
 export const PITCH_MAX = 2;
+export const PITCH_DEFAULT = 1;
+
 export const VOLUME_MIN = 0;
 export const VOLUME_MAX = 1;
+export const VOLUME_DEFAULT = 1;
 
 export interface UseSpeechSynthesisReturn {
   locales: string[];
@@ -38,9 +43,9 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
     isSpeechSupported ? synthesis.getVoices() : [],
   );
   const [voiceURI, setVoiceURI] = useState("");
-  const [rate, setRate] = useState(1);
-  const [pitch, setPitch] = useState(1);
-  const [volume, setVolume] = useState(1);
+  const [rate, setRate] = useState(RATE_DEFAULT);
+  const [pitch, setPitch] = useState(PITCH_DEFAULT);
+  const [volume, setVolume] = useState(VOLUME_DEFAULT);
 
   const [status, setStatus] = useState<"idle" | "speaking" | "paused">("idle");
   const isSpeaking = status === "speaking";
