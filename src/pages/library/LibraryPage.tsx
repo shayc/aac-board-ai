@@ -9,13 +9,13 @@ import AddIcon from "@mui/icons-material/Add";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
+import { EmptyState } from "@shared/components/EmptyState";
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
 import { BoardSetInfoDialog } from "./components/BoardSetInfoDialog";
 import { BoardSetList } from "./components/BoardSetList";
-import { LibraryEmptyState } from "./components/LibraryEmptyState";
 
 function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
@@ -78,7 +78,9 @@ function LibraryPage() {
         </Button>
       </Stack>
 
-      {!isLoading && boardSets.length === 0 && <LibraryEmptyState />}
+      {!isLoading && boardSets.length === 0 && (
+        <EmptyState message="No board sets imported yet." />
+      )}
 
       {!isLoading && boardSets.length > 0 && (
         <>
