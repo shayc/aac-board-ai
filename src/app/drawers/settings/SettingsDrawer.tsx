@@ -7,10 +7,10 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { AISettings } from "./panels/AISettings";
-import { AppearanceSettings } from "./panels/AppearanceSettings";
-import { LanguageSettings } from "./panels/LanguageSettings";
-import { SpeechSettings } from "./panels/SpeechSettings";
+import { AISettings } from "./AISettings";
+import { AppearanceSettings } from "./AppearanceSettings";
+import { LanguageSettings } from "./LanguageSettings";
+import { SpeechSettings } from "./SpeechSettings";
 
 export interface SettingsDrawerProps {
   open: boolean;
