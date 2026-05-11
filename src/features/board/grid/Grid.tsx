@@ -1,5 +1,5 @@
 import Stack from "@mui/material/Stack";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useGridKeyboard } from "./useGridKeyboard";
 
 export interface GridItemProps {
@@ -25,14 +25,53 @@ export function Grid<TItem extends { id: string }>({
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const gridRef = useRef<HTMLDivElement>(null);
+  const previousItemsRef = useRef(items);
   const defaultActiveCell = findFirstNonEmptyCell(grid);
 
   const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
     gridRef,
-    rows,
-    columns,
     defaultActiveCell,
   });
+
+  const activeCellRef = useRef(activeCell);
+  useEffect(() => {
+    activeCellRef.current = activeCell;
+  });
+
+  useEffect(() => {
+    if (previousItemsRef.current === items) {
+      return;
+    }
+    previousItemsRef.current = items;
+
+    // When the items change (board navigation) the previously focused cell
+    // is unmounted and the browser drops focus to <body>. Restore focus to
+    // the same row/col if the new board has a tile there, otherwise fall
+    // back to the first focusable cell.
+    if (document.activeElement !== document.body) {
+      return;
+    }
+
+    const root = gridRef.current;
+    if (!root) {
+      return;
+    }
+
+    const { row, col } = activeCellRef.current;
+    const sameCell = root.querySelector<HTMLElement>(
+      `[role='gridcell'][aria-rowindex='${row + 1}'][aria-colindex='${col + 1}'] [tabindex]`,
+    );
+
+    if (sameCell) {
+      sameCell.focus();
+      return;
+    }
+
+    const firstFocusable = root.querySelector<HTMLElement>(
+      "[role='gridcell'] [tabindex]",
+    );
+    firstFocusable?.focus();
+  }, [items]);
 
   return (
     <Stack
