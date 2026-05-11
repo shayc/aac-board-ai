@@ -28,8 +28,8 @@ export function PlayButton({
           disabled={disabled}
           onClick={isPlaying ? onStopClick : onPlayClick}
           sx={{
-            width: 96,
-            height: 96,
+            width: 104,
+            height: 104,
             backgroundColor: (theme) => theme.palette.primary.main,
             color: (theme) => theme.palette.primary.contrastText,
             "&:hover": {
