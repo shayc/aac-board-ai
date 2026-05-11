@@ -54,7 +54,7 @@ export function BackspaceButton({
           size="large"
           color="inherit"
           disabled={disabled}
-          sx={{ width: 64, height: 64 }}
+          sx={{ width: 72, height: 72 }}
         >
           <BackspaceIcon />
         </IconButton>
@@ -63,7 +63,7 @@ export function BackspaceButton({
           variant="determinate"
           value={progress}
           active={progress > 0}
-          size={64}
+          size={72}
           sx={{
             position: "absolute",
             top: 0,
