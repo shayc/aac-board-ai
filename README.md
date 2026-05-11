@@ -18,7 +18,7 @@ Try the live demo at [aacboard.app](https://aacboard.app). Core board features w
 - **Translation** – Translates board labels and vocalizations between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** – Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
 - **Offline Ready** – Installs as a standalone app with automatic updates ([PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)).
-- **Open Board Format** – Imports `.obf` and `.obz` files ([examples](https://www.openboardformat.org/examples)).
+- **Open Board Format** – Imports `.obf` and `.obz` files ([example boards](https://www.openboardformat.org/examples)).
 
 ## Enabling Built-in AI
 
