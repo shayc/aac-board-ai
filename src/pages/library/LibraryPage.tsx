@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/usePageTitle";
+import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
 import {
   removeBoardSet,
   useBoardSets,
@@ -11,7 +11,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/EmptyState";
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 import { BoardSetDeleteDialog } from "./components/BoardSetDeleteDialog";
 import { BoardSetInfoDialog } from "./components/BoardSetInfoDialog";
@@ -21,15 +21,12 @@ function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { importBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
-  const { setPageTitle } = usePageTitle();
   const navigate = useNavigate();
+
+  useDeclareHeaderTitle("Library");
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
-
-  useEffect(() => {
-    setPageTitle("Library");
-  }, [setPageTitle]);
 
   function handleSelect(boardSet: BoardSetRecord) {
     if (boardSet.rootBoardId) {
