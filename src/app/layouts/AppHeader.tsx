@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/usePageTitle";
+import { useHeaderTitle } from "@app/useHeaderTitle";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -13,7 +13,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const { pageTitle } = usePageTitle();
+  const headerTitle = useHeaderTitle();
 
   return (
     <AppBar position="static">
@@ -32,7 +32,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
         </Tooltip>
 
         <Typography variant="h6" component="h1" noWrap sx={{ flexGrow: 1 }}>
-          {pageTitle}
+          {headerTitle}
         </Typography>
 
         <Tooltip title="Open settings">

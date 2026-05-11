@@ -1,4 +1,4 @@
-import { usePageTitle } from "@app/usePageTitle";
+import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
@@ -7,7 +7,6 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useEffect } from "react";
 
 const FADE_DURATION_MS = 400;
 
@@ -16,11 +15,7 @@ function AboutPage() {
     "(prefers-reduced-motion: reduce)",
   );
 
-  const { setPageTitle } = usePageTitle();
-
-  useEffect(() => {
-    setPageTitle("About");
-  }, [setPageTitle]);
+  useDeclareHeaderTitle("About");
 
   return (
     <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
