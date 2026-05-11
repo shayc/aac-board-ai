@@ -1,13 +1,17 @@
 import Typography from "@mui/material/Typography";
 
-export function LibraryEmptyState() {
+export interface EmptyStateProps {
+  message: string;
+}
+
+export function EmptyState({ message }: EmptyStateProps) {
   return (
     <Typography
       variant="body1"
       color="text.secondary"
       sx={{ textAlign: "center", py: 8 }}
     >
-      No board sets imported yet.
+      {message}
     </Typography>
   );
 }
