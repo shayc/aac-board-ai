@@ -31,7 +31,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["@mui/material", "@mui/icons-material"],
+    include: ["@mui/material/*", "@mui/icons-material/*"],
   },
   test: {
     browser: {
