@@ -1,3 +1,4 @@
+import { AppProviders } from "@app/AppProviders";
 import { AppRoutes } from "@app/AppRoutes";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
@@ -8,6 +9,8 @@ import { createRoot } from "react-dom/client";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppRoutes />
+    <AppProviders>
+      <AppRoutes />
+    </AppProviders>
   </StrictMode>,
 );
