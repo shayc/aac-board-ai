@@ -6,6 +6,44 @@ import path from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
+const MUI_DEPS = [
+  // Icons
+  "@mui/icons-material/AutoAwesomeOutlined",
+  "@mui/icons-material/Cancel",
+  "@mui/icons-material/CheckCircle",
+  "@mui/icons-material/Close",
+  "@mui/icons-material/CollectionsBookmarkOutlined",
+  "@mui/icons-material/Downloading",
+  "@mui/icons-material/InfoOutlined",
+  "@mui/icons-material/LockOutlined",
+  "@mui/icons-material/Menu",
+  "@mui/icons-material/SettingsOutlined",
+  "@mui/icons-material/Translate",
+
+  // Components
+  "@mui/material/Alert",
+  "@mui/material/AlertTitle",
+  "@mui/material/AppBar",
+  "@mui/material/CssBaseline",
+  "@mui/material/Dialog",
+  "@mui/material/DialogActions",
+  "@mui/material/DialogContent",
+  "@mui/material/DialogContentText",
+  "@mui/material/DialogTitle",
+  "@mui/material/Divider",
+  "@mui/material/Drawer",
+  "@mui/material/Fade",
+  "@mui/material/FormControl",
+  "@mui/material/FormControlLabel",
+  "@mui/material/FormLabel",
+  "@mui/material/InputLabel",
+  "@mui/material/List",
+  "@mui/material/ListItem",
+  "@mui/material/ListItemButton",
+  "@mui/material/ListItemIcon",
+  "@mui/material/ListItemText",
+];
+
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -29,6 +67,9 @@ export default defineConfig({
       "@shared": path.resolve(__dirname, "./src/shared"),
       "@pages": path.resolve(__dirname, "./src/pages"),
     },
+  },
+  optimizeDeps: {
+    include: MUI_DEPS,
   },
   test: {
     browser: {
