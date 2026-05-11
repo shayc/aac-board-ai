@@ -1,4 +1,4 @@
-import BackspaceIcon from "@mui/icons-material/Backspace";
+import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
@@ -56,7 +56,7 @@ export function BackspaceButton({
           disabled={disabled}
           sx={{ width: 72, height: 72 }}
         >
-          <BackspaceIcon />
+          <BackspaceOutlinedIcon />
         </IconButton>
 
         <StyledCircularProgress
