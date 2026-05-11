@@ -33,11 +33,13 @@ export function useGridKeyboard({
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
       if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+        event.continuePropagation();
         return;
       }
 
       const grid = gridRef.current;
       if (!grid) {
+        event.continuePropagation();
         return;
       }
 
@@ -45,6 +47,7 @@ export function useGridKeyboard({
         "[role='gridcell']",
       );
       if (!cell) {
+        event.continuePropagation();
         return;
       }
 
@@ -54,6 +57,7 @@ export function useGridKeyboard({
         parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
 
       if (isNaN(currentRow) || isNaN(currentCol)) {
+        event.continuePropagation();
         return;
       }
 
@@ -74,6 +78,7 @@ export function useGridKeyboard({
           deltaCol = 1;
           break;
         default:
+          event.continuePropagation();
           return;
       }
 

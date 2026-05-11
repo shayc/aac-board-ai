@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import { Grid, type GridItemProps } from "./grid/Grid";
 import { MessageBar } from "./message/MessageBar";
 import { useMessage } from "./message/useMessage";
+import { useMessageKeyboard } from "./message/useMessageKeyboard";
 import { useMessagePlayback } from "./message/useMessagePlayback";
 import { NavButtons } from "./navigation/NavButtons";
 import { useBoardNavigation } from "./navigation/useBoardNavigation";
@@ -28,6 +29,10 @@ export function BoardView({ board }: BoardViewProps) {
     navigation,
   });
 
+  const { keyboardProps } = useMessageKeyboard({
+    onBackspace: message.removeLastPart,
+  });
+
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
       key={button.id}
@@ -44,6 +49,7 @@ export function BoardView({ board }: BoardViewProps) {
   return (
     <Stack
       direction="column"
+      {...keyboardProps}
       sx={(theme) => ({
         height: "100%",
         backgroundRepeat: "no-repeat",
