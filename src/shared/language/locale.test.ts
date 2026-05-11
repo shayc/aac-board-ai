@@ -2,45 +2,25 @@ import { describe, expect, test } from "vitest";
 import { getPrimaryLanguage, normalizeLocaleCode } from "./locale";
 
 describe("normalizeLocaleCode", () => {
-  test("lowercases a language-only code", () => {
-    expect(normalizeLocaleCode("EN")).toBe("en");
-  });
-
-  test("returns a language-only code as-is when already lowercase", () => {
-    expect(normalizeLocaleCode("fr")).toBe("fr");
-  });
-
-  test("normalizes language-region with hyphen separator", () => {
-    expect(normalizeLocaleCode("en-us")).toBe("en-US");
-  });
-
-  test("normalizes language-region with underscore separator", () => {
-    expect(normalizeLocaleCode("pt_br")).toBe("pt-BR");
-  });
-
-  test("normalizes mixed-case language-region", () => {
-    expect(normalizeLocaleCode("EN-gb")).toBe("en-GB");
-  });
-
-  test("handles already-normalized code", () => {
-    expect(normalizeLocaleCode("zh-TW")).toBe("zh-TW");
+  test.each([
+    ["EN", "en"],
+    ["fr", "fr"],
+    ["en-us", "en-US"],
+    ["pt_br", "pt-BR"],
+    ["EN-gb", "en-GB"],
+    ["zh-TW", "zh-TW"],
+  ])("normalizes %s → %s", (input, expected) => {
+    expect(normalizeLocaleCode(input)).toBe(expected);
   });
 });
 
 describe("getPrimaryLanguage", () => {
-  test("returns a language-only code as-is", () => {
-    expect(getPrimaryLanguage("en")).toBe("en");
-  });
-
-  test("strips the region from a hyphen-separated locale", () => {
-    expect(getPrimaryLanguage("en-US")).toBe("en");
-  });
-
-  test("strips the region from an underscore-separated locale", () => {
-    expect(getPrimaryLanguage("pt_BR")).toBe("pt");
-  });
-
-  test("lowercases the primary subtag", () => {
-    expect(getPrimaryLanguage("EN-GB")).toBe("en");
+  test.each([
+    ["en", "en"],
+    ["en-US", "en"],
+    ["pt_BR", "pt"],
+    ["EN-GB", "en"],
+  ])("extracts primary language from %s → %s", (input, expected) => {
+    expect(getPrimaryLanguage(input)).toBe(expected);
   });
 });
