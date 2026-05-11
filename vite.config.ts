@@ -13,12 +13,34 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["board.svg"],
+      includeAssets: ["board.svg", "apple-touch-icon-180x180.png"],
       manifest: {
         name: "AAC Board AI",
         short_name: "AAC Board",
         description:
           "AAC Board AI helps people who can't speak communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
+        start_url: "/",
+        display: "standalone",
+        theme_color: "#222222",
+        background_color: "#222222",
+        icons: [
+          {
+            src: "pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+          {
+            src: "maskable-icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
       },
     }),
   ],
