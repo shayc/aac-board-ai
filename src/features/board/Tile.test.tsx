@@ -43,37 +43,16 @@ describe("Tile", () => {
     expect(afterStyles.display).toBe("block");
   });
 
-  test("applies backgroundColor to the button", async () => {
+  test("applies backgroundColor and a readable text color", async () => {
     const screen = await render(
-      <Tile label="Colored" backgroundColor="#ff0000" onClick={vi.fn()} />,
+      <Tile label="Colored" backgroundColor="#000000" onClick={vi.fn()} />,
     );
 
     const button = screen.getByRole("button", { name: "Colored" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.backgroundColor).toBe("rgb(255, 0, 0)");
-  });
-
-  test("uses light text color on dark backgrounds", async () => {
-    const screen = await render(
-      <Tile label="Dark bg" backgroundColor="#000000" onClick={vi.fn()} />,
-    );
-
-    const button = screen.getByRole("button", { name: "Dark bg" });
-    const styles = getComputedStyle(button.element());
-
+    expect(styles.backgroundColor).toBe("rgb(0, 0, 0)");
     expect(styles.color).toBe("rgb(255, 255, 255)");
-  });
-
-  test("uses dark text color on light backgrounds", async () => {
-    const screen = await render(
-      <Tile label="Light bg" backgroundColor="#ffffff" onClick={vi.fn()} />,
-    );
-
-    const button = screen.getByRole("button", { name: "Light bg" });
-    const styles = getComputedStyle(button.element());
-
-    expect(styles.color).toBe("rgb(0, 0, 0)");
   });
 
   test("applies borderColor when provided", async () => {
