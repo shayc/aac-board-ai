@@ -1,7 +1,6 @@
 export interface ExternalStore<T> {
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => T;
-  getState: () => T;
   setState: (next: T) => void;
 }
 
@@ -26,14 +25,10 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
     return state;
   }
 
-  function getState() {
-    return state;
-  }
-
   function setState(next: T) {
     state = next;
     emit();
   }
 
-  return { subscribe, getSnapshot, getState, setState };
+  return { subscribe, getSnapshot, setState };
 }
