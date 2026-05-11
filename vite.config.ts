@@ -7,6 +7,10 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 const MUI_DEPS = [
+  // Core
+  "react-dom/client",
+  "react-error-boundary",
+
   // Icons
   "@mui/icons-material/AutoAwesomeOutlined",
   "@mui/icons-material/Cancel",
@@ -42,6 +46,15 @@ const MUI_DEPS = [
   "@mui/material/ListItemButton",
   "@mui/material/ListItemIcon",
   "@mui/material/ListItemText",
+  "@mui/material/ListSubheader",
+  "@mui/material/MenuItem",
+  "@mui/material/Radio",
+  "@mui/material/RadioGroup",
+  "@mui/material/Select",
+  "@mui/material/Slider",
+  "@mui/material/Snackbar",
+  "@mui/material/TextField",
+  "@mui/material/Toolbar",
 ];
 
 // https://vite.dev/config/
