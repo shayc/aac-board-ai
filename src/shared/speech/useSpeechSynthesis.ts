@@ -42,8 +42,9 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   const [pitch, setPitch] = useState(1);
   const [volume, setVolume] = useState(1);
 
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
+  const [status, setStatus] = useState<"idle" | "speaking" | "paused">("idle");
+  const isSpeaking = status === "speaking";
+  const isPaused = status === "paused";
 
   const locales = Array.from(new Set(voices.map((voice) => voice.lang))).sort(
     (a, b) => a.localeCompare(b),
@@ -86,32 +87,17 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
       utterance.rate = rate;
       utterance.volume = volume;
 
-      const markSpeaking = () => {
-        setIsSpeaking(true);
-        setIsPaused(false);
-      };
-
-      const markPaused = () => {
-        setIsSpeaking(false);
-        setIsPaused(true);
-      };
-
-      const markIdle = () => {
-        setIsSpeaking(false);
-        setIsPaused(false);
-      };
-
-      utterance.onstart = markSpeaking;
-      utterance.onresume = markSpeaking;
-      utterance.onpause = markPaused;
+      utterance.onstart = () => setStatus("speaking");
+      utterance.onresume = () => setStatus("speaking");
+      utterance.onpause = () => setStatus("paused");
 
       utterance.onend = () => {
-        markIdle();
+        setStatus("idle");
         resolve();
       };
 
       utterance.onerror = (event) => {
-        markIdle();
+        setStatus("idle");
         reject(new Error(event.error));
       };
 
