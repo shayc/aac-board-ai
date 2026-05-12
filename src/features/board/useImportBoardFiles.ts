@@ -30,9 +30,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       await importBoardFiles(files);
 
       showSnackbar({
-        message: isPlural
-          ? "Boards imported successfully"
-          : "Board imported successfully",
+        message: isPlural ? "Boards imported" : "Board imported",
         severity: "success",
       });
     } catch {
