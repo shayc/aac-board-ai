@@ -6,10 +6,12 @@ import {
   type BoardSetRecord,
 } from "@features/board";
 import AddIcon from "@mui/icons-material/Add";
+import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/EmptyState";
+import { LoadingState } from "@shared/components/LoadingState";
+import { PageContainer } from "@shared/components/PageContainer";
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
@@ -54,14 +56,43 @@ function LibraryPage() {
       showSnackbar({ message: `"${name}" deleted`, severity: "success" });
     } catch {
       showSnackbar({
-        message: `Failed to delete "${name}"`,
+        message: `Couldn't delete "${name}"`,
         severity: "error",
       });
     }
   }
 
+  if (isLoading) {
+    return (
+      <PageContainer>
+        <LoadingState message="Loading board sets..." />
+      </PageContainer>
+    );
+  }
+
+  if (boardSets.length === 0) {
+    return (
+      <PageContainer>
+        <EmptyState
+          icon={<CollectionsBookmarkOutlinedIcon />}
+          title="Your library is empty"
+          description="Import communication boards to get started."
+          action={
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => void importBoardFiles()}
+            >
+              Import board set
+            </Button>
+          }
+        />
+      </PageContainer>
+    );
+  }
+
   return (
-    <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
+    <PageContainer>
       <Stack
         direction="row"
         sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
@@ -75,32 +106,24 @@ function LibraryPage() {
         </Button>
       </Stack>
 
-      {!isLoading && boardSets.length === 0 && (
-        <EmptyState message="No board sets imported yet." />
-      )}
+      <BoardSetList
+        boardSets={boardSets}
+        onSelect={handleSelect}
+        onDelete={setDeleteTarget}
+        onInfo={setInfoTarget}
+      />
 
-      {!isLoading && boardSets.length > 0 && (
-        <>
-          <BoardSetList
-            boardSets={boardSets}
-            onSelect={handleSelect}
-            onDelete={setDeleteTarget}
-            onInfo={setInfoTarget}
-          />
+      <BoardSetInfoDialog
+        boardSet={infoTarget}
+        onClose={() => setInfoTarget(null)}
+      />
 
-          <BoardSetInfoDialog
-            boardSet={infoTarget}
-            onClose={() => setInfoTarget(null)}
-          />
-
-          <BoardSetDeleteDialog
-            boardSet={deleteTarget}
-            onConfirm={() => void handleDelete()}
-            onClose={() => setDeleteTarget(null)}
-          />
-        </>
-      )}
-    </Container>
+      <BoardSetDeleteDialog
+        boardSet={deleteTarget}
+        onConfirm={() => void handleDelete()}
+        onClose={() => setDeleteTarget(null)}
+      />
+    </PageContainer>
   );
 }
 

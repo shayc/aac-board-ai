@@ -1,21 +1,22 @@
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 
-export interface EmptyStateProps {
-  title: string;
+export interface ErrorStateProps {
+  title?: string;
   description?: string;
   icon?: ReactNode;
   action?: ReactNode;
 }
 
-export function EmptyState({
-  title,
+export function ErrorState({
+  title = "Something went wrong",
   description,
-  icon,
+  icon = <ErrorOutlineIcon />,
   action,
-}: EmptyStateProps) {
+}: ErrorStateProps) {
   return (
     <Stack
       spacing={1}
@@ -28,12 +29,14 @@ export function EmptyState({
       }}
     >
       {icon && (
-        <Box sx={{ color: "text.disabled", "& svg": { fontSize: 64, mb: 1 } }}>
+        <Box sx={{ color: "error.main", "& svg": { fontSize: 64, mb: 1 } }}>
           {icon}
         </Box>
       )}
 
-      <Typography variant="h6">{title}</Typography>
+      <Typography variant="h6" color="error.main">
+        {title}
+      </Typography>
 
       {description && (
         <Typography

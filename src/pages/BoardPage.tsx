@@ -1,7 +1,7 @@
 import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
 import { BoardView, useBoard, type BoardRouteParams } from "@features/board";
-import { ErrorFallback } from "@shared/components/ErrorFallback";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
+import { ErrorState } from "@shared/components/ErrorState";
+import { LoadingState } from "@shared/components/LoadingState";
 import { useParams } from "react-router";
 
 function BoardPage() {
@@ -12,12 +12,15 @@ function BoardPage() {
 
   if (error) {
     return (
-      <ErrorFallback title="Failed to load board" message={error.message} />
+      <ErrorState
+        title="Couldn't load board"
+        description="This board may be missing or corrupted."
+      />
     );
   }
 
   if (!board) {
-    return <LoadingIndicator />;
+    return <LoadingState message="Loading board..." />;
   }
 
   return <BoardView board={board} />;

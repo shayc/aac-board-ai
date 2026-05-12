@@ -1,12 +1,12 @@
 import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Fade from "@mui/material/Fade";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { PageContainer } from "@shared/components/PageContainer";
 
 const FADE_DURATION_MS = 400;
 
@@ -18,7 +18,7 @@ function AboutPage() {
   useDeclareHeaderTitle("About");
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
+    <PageContainer>
       <Fade in timeout={prefersReducedMotion ? 0 : FADE_DURATION_MS}>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
@@ -92,7 +92,7 @@ function AboutPage() {
           </Button>
         </Stack>
       </Fade>
-    </Container>
+    </PageContainer>
   );
 }
 

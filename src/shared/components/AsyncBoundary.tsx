@@ -1,6 +1,6 @@
-import { ErrorFallback } from "@shared/components/ErrorFallback";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
-import { type ReactNode, type ReactElement, Suspense } from "react";
+import { ErrorState } from "@shared/components/ErrorState";
+import { LoadingState } from "@shared/components/LoadingState";
+import { type ReactElement, type ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 export interface AsyncBoundaryProps {
@@ -11,8 +11,8 @@ export interface AsyncBoundaryProps {
 
 export function AsyncBoundary({
   children,
-  loadingFallback = <LoadingIndicator />,
-  errorFallback = <ErrorFallback />,
+  loadingFallback = <LoadingState />,
+  errorFallback = <ErrorState />,
 }: AsyncBoundaryProps) {
   return (
     <ErrorBoundary fallback={errorFallback}>

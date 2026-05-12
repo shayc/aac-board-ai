@@ -1,6 +1,6 @@
 import { fetchBoardSets, importBoardFromUrl } from "@features/board";
-import { ErrorFallback } from "@shared/components/ErrorFallback";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
+import { ErrorState } from "@shared/components/ErrorState";
+import { LoadingState } from "@shared/components/LoadingState";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate, useSearchParams } from "react-router";
 
@@ -24,7 +24,7 @@ async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
 export function HomePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
 
   const boardUrl = searchParams.get("board");
 
@@ -39,7 +39,8 @@ export function HomePage() {
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err));
+          console.error(err);
+          setError(err);
         }
       });
 
@@ -49,8 +50,13 @@ export function HomePage() {
   }, [navigate, boardUrl]);
 
   if (error) {
-    return <ErrorFallback title="Failed to load board" message={error} />;
+    return (
+      <ErrorState
+        title="Couldn't load board"
+        description="Try importing a board file to get started."
+      />
+    );
   }
 
-  return <LoadingIndicator message="Loading board..." />;
+  return <LoadingState message="Loading board..." />;
 }
