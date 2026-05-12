@@ -1,6 +1,6 @@
 import { type BoardRouteParams, useBoardSets } from "@features/board";
-import { ErrorFallback } from "@shared/components/ErrorFallback";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
+import { ErrorState } from "@shared/components/ErrorState";
+import { LoadingState } from "@shared/components/LoadingState";
 import { generatePath, Navigate, useParams } from "react-router";
 
 export function BoardSetRootRedirect() {
@@ -8,24 +8,24 @@ export function BoardSetRootRedirect() {
   const { boardSets, isLoading } = useBoardSets();
 
   if (!setId) {
-    return <ErrorFallback title="Error" message="Board set ID is required" />;
+    return <ErrorState title="Error" message="Board set ID is required" />;
   }
 
   if (isLoading) {
-    return <LoadingIndicator message="Loading board set..." />;
+    return <LoadingState message="Loading board set..." />;
   }
 
   const boardSet = boardSets.find((s) => s.setId === setId);
 
   if (!boardSet) {
     return (
-      <ErrorFallback title="Error" message={`Board set "${setId}" not found`} />
+      <ErrorState title="Error" message={`Board set "${setId}" not found`} />
     );
   }
 
   if (!boardSet.rootBoardId) {
     return (
-      <ErrorFallback
+      <ErrorState
         title="Error"
         message={`Board set "${setId}" has no root board`}
       />

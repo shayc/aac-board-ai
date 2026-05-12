@@ -1,6 +1,6 @@
 import { fetchBoardSets, importBoardFromUrl } from "@features/board";
-import { ErrorFallback } from "@shared/components/ErrorFallback";
-import { LoadingIndicator } from "@shared/components/LoadingIndicator";
+import { ErrorState } from "@shared/components/ErrorState";
+import { LoadingState } from "@shared/components/LoadingState";
 import { useEffect, useState } from "react";
 import { generatePath, useNavigate, useSearchParams } from "react-router";
 
@@ -49,8 +49,8 @@ export function HomePage() {
   }, [navigate, boardUrl]);
 
   if (error) {
-    return <ErrorFallback title="Failed to load board" message={error} />;
+    return <ErrorState title="Failed to load board" message={error} />;
   }
 
-  return <LoadingIndicator message="Loading board..." />;
+  return <LoadingState message="Loading board..." />;
 }

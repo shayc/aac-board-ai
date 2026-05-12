@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
-export interface ErrorFallbackProps {
+export interface ErrorStateProps {
   title?: string;
   message?: string;
 }
 
-export function ErrorFallback({
+export function ErrorState({
   title = "Something went wrong",
   message = "Try refreshing the page",
-}: ErrorFallbackProps) {
+}: ErrorStateProps) {
   return (
     <Box
       sx={{

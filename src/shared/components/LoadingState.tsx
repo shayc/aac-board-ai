@@ -3,11 +3,11 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
 import Typography from "@mui/material/Typography";
 
-export interface LoadingIndicatorProps {
+export interface LoadingStateProps {
   message?: string;
 }
 
-export function LoadingIndicator({ message }: LoadingIndicatorProps) {
+export function LoadingState({ message }: LoadingStateProps) {
   return (
     <Fade in timeout={400} style={{ transitionDelay: "500ms" }}>
       <Box
