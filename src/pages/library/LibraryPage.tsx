@@ -60,23 +60,38 @@ function LibraryPage() {
     }
   }
 
+  const isEmpty = !isLoading && boardSets.length === 0;
+
   return (
     <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
-      <Stack
-        direction="row"
-        sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
-      >
-        <Button
-          variant="text"
-          startIcon={<AddIcon />}
-          onClick={() => void importBoardFiles()}
+      {!isEmpty && (
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
         >
-          Import
-        </Button>
-      </Stack>
+          <Button
+            variant="text"
+            startIcon={<AddIcon />}
+            onClick={() => void importBoardFiles()}
+          >
+            Import
+          </Button>
+        </Stack>
+      )}
 
-      {!isLoading && boardSets.length === 0 && (
-        <EmptyState title="No board sets imported yet." />
+      {isEmpty && (
+        <EmptyState
+          title="No board sets yet"
+          action={
+            <Button
+              variant="contained"
+              startIcon={<AddIcon />}
+              onClick={() => void importBoardFiles()}
+            >
+              Import your first board set
+            </Button>
+          }
+        />
       )}
 
       {!isLoading && boardSets.length > 0 && (
