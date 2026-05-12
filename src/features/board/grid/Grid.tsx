@@ -26,11 +26,11 @@ export function Grid<TItem extends { id: string }>({
   const grid = buildGrid(items, rows, columns, order);
   const gridRef = useRef<HTMLDivElement>(null);
   const previousItemsRef = useRef(items);
-  const defaultActiveCell = findFirstNonEmptyCell(grid);
+  const initialActiveCell = findFirstNonEmptyCell(grid);
 
   const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
     gridRef,
-    defaultActiveCell,
+    initialActiveCell,
   });
 
   const activeCellRef = useRef(activeCell);

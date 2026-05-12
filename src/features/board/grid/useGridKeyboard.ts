@@ -2,23 +2,23 @@ import type { FocusEvent, RefObject } from "react";
 import { useState } from "react";
 import { useKeyboard } from "react-aria";
 
-interface GridCell {
+interface GridPosition {
   row: number;
   col: number;
 }
 
 export interface UseGridKeyboardOptions {
   gridRef: RefObject<HTMLElement | null>;
-  defaultActiveCell?: GridCell;
+  initialActiveCell?: GridPosition;
 }
 
 export interface UseGridKeyboardReturn {
   keyboardProps: ReturnType<typeof useKeyboard>["keyboardProps"];
-  activeCell: GridCell;
+  activeCell: GridPosition;
   handleFocus: (event: FocusEvent<HTMLElement>) => void;
 }
 
-interface CellResult {
+interface FocusableCell {
   element: HTMLElement;
   row: number;
   col: number;
@@ -26,9 +26,9 @@ interface CellResult {
 
 export function useGridKeyboard({
   gridRef,
-  defaultActiveCell = { row: 0, col: 0 },
+  initialActiveCell = { row: 0, col: 0 },
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
-  const [activeCell, setActiveCell] = useState<GridCell>(defaultActiveCell);
+  const [activeCell, setActiveCell] = useState<GridPosition>(initialActiveCell);
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -57,32 +57,32 @@ export function useGridKeyboard({
         return;
       }
 
-      let deltaRow = 0;
-      let deltaCol = 0;
+      let rowDirection = 0;
+      let colDirection = 0;
 
       switch (event.key) {
         case "ArrowUp":
-          deltaRow = -1;
+          rowDirection = -1;
           break;
         case "ArrowDown":
-          deltaRow = 1;
+          rowDirection = 1;
           break;
         case "ArrowLeft":
-          deltaCol = -1;
+          colDirection = -1;
           break;
         case "ArrowRight":
-          deltaCol = 1;
+          colDirection = 1;
           break;
         default:
           return;
       }
 
-      const result = findNextNonEmptyCell(
+      const result = findNextFocusableCell(
         grid,
         currentRow,
         currentCol,
-        deltaRow,
-        deltaCol,
+        rowDirection,
+        colDirection,
       );
 
       if (result) {
@@ -110,16 +110,16 @@ export function useGridKeyboard({
   return { keyboardProps, activeCell, handleFocus };
 }
 
-function findNextNonEmptyCell(
+function findNextFocusableCell(
   grid: HTMLElement,
   currentRow: number,
   currentCol: number,
-  deltaRow: number,
-  deltaCol: number,
-): CellResult | null {
+  rowDirection: number,
+  colDirection: number,
+): FocusableCell | null {
   const cells = grid.querySelectorAll<HTMLElement>("[role='gridcell']");
 
-  let best: (CellResult & { primary: number; perp: number }) | null = null;
+  let best: (FocusableCell & { primary: number; perp: number }) | null = null;
 
   for (const cell of cells) {
     const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
@@ -141,14 +141,14 @@ function findNextNonEmptyCell(
     // ranking by (perp, primary) prefers the most-aligned diagonal hop.
     let primary: number;
     let perp: number;
-    if (deltaRow !== 0) {
-      if (Math.sign(dr) !== deltaRow) {
+    if (rowDirection !== 0) {
+      if (Math.sign(dr) !== rowDirection) {
         continue;
       }
       primary = Math.abs(dr);
       perp = Math.abs(dc);
     } else {
-      if (Math.sign(dc) !== deltaCol) {
+      if (Math.sign(dc) !== colDirection) {
         continue;
       }
       primary = Math.abs(dc);

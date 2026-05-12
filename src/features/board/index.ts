@@ -1,6 +1,6 @@
 export { BoardView } from "./BoardView";
 export {
-  fetchBoardSets,
+  getBoardSets,
   importBoardFromUrl,
   removeBoardSet,
 } from "./storage/board-sets-store";

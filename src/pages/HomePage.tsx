@@ -1,4 +1,4 @@
-import { fetchBoardSets, importBoardFromUrl } from "@features/board";
+import { getBoardSets, importBoardFromUrl } from "@features/board";
 import { ErrorState } from "@shared/components/ErrorState";
 import { LoadingState } from "@shared/components/LoadingState";
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
     return generatePath("/sets/:setId/boards/:boardId", { setId, boardId });
   }
 
-  const existingSets = await fetchBoardSets();
+  const existingSets = await getBoardSets();
   if (existingSets.length > 0) {
     return `/sets/${encodeURIComponent(existingSets[0].setId)}`;
   }

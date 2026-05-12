@@ -108,7 +108,7 @@ async function fetchOBFBoard(
   if (!boardData) {
     throw new Error(`Board not found: ${boardId}`);
   }
-  return boardData.json;
+  return boardData.obf;
 }
 
 async function hydrateBoard(

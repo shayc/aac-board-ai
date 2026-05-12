@@ -1,6 +1,6 @@
 import { loadOBF, loadOBZ } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { storeBoardFiles } from "./board-import";
+import { importBoardFiles } from "./board-import";
 import {
   getAssetBlob,
   getBoard,
@@ -32,7 +32,7 @@ async function loadFixtureFile(name: string): Promise<File> {
   });
 }
 
-describe("storeBoardFiles", () => {
+describe("importBoardFiles", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -45,7 +45,7 @@ describe("storeBoardFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    const importResults = await storeBoardFiles(fixtureFile);
+    const importResults = await importBoardFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -72,8 +72,8 @@ describe("storeBoardFiles", () => {
       assertDefined(storedBoard);
 
       expect(storedBoard.name).toBe(board.name ?? board.id);
-      expect(storedBoard.json.buttons.length).toBe(board.buttons.length);
-      expect(storedBoard.json.grid).toEqual(board.grid);
+      expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
+      expect(storedBoard.obf.grid).toEqual(board.grid);
 
       const assetCount = await db.countFromIndex(
         "assets",
@@ -106,7 +106,7 @@ describe("storeBoardFiles", () => {
     assertDefined(sampleAssetEntry);
     const [sampleAssetPath, sampleAssetBytes] = sampleAssetEntry;
 
-    const importResults = await storeBoardFiles(fixtureFile);
+    const importResults = await importBoardFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -143,7 +143,7 @@ describe("storeBoardFiles", () => {
       const storedRootBoard = await getBoard(db, IMPORTED_SET_ID, rootBoardId);
       assertDefined(storedRootBoard);
 
-      const linkedButtons = storedRootBoard.json.buttons.filter((button) =>
+      const linkedButtons = storedRootBoard.obf.buttons.filter((button) =>
         Boolean(button.load_board?.path),
       );
 
