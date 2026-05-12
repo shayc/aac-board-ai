@@ -19,7 +19,7 @@ export function AppShell() {
         onSettingsClick={() => setIsSettingsOpen(true)}
       />
 
-      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />
       </Box>
 

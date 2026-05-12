@@ -12,12 +12,15 @@ function BoardPage() {
 
   if (error) {
     return (
-      <ErrorState title="Failed to load board" description={error.message} />
+      <ErrorState
+        title="Couldn't load board"
+        description="This board may be missing or its file may be corrupted."
+      />
     );
   }
 
   if (!board) {
-    return <LoadingState />;
+    return <LoadingState message="Loading board..." />;
   }
 
   return <BoardView board={board} />;

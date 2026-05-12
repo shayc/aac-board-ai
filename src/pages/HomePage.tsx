@@ -24,7 +24,7 @@ async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
 export function HomePage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown>(null);
 
   const boardUrl = searchParams.get("board");
 
@@ -39,7 +39,8 @@ export function HomePage() {
       })
       .catch((err) => {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : String(err));
+          console.error(err);
+          setError(err);
         }
       });
 
@@ -49,7 +50,12 @@ export function HomePage() {
   }, [navigate, boardUrl]);
 
   if (error) {
-    return <ErrorState title="Failed to load board" description={error} />;
+    return (
+      <ErrorState
+        title="Couldn't load board"
+        description="Something went wrong setting up your boards. Try importing a board file."
+      />
+    );
   }
 
   return <LoadingState message="Loading board..." />;

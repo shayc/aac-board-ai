@@ -37,9 +37,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       });
     } catch {
       showSnackbar({
-        message: isPlural
-          ? "Failed to import boards"
-          : "Failed to import board",
+        message: isPlural ? "Couldn't import boards" : "Couldn't import board",
         severity: "error",
       });
     }

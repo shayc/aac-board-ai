@@ -6,10 +6,12 @@ import {
   type BoardSetRecord,
 } from "@features/board";
 import AddIcon from "@mui/icons-material/Add";
+import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
 import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/EmptyState";
+import { LoadingState } from "@shared/components/LoadingState";
+import { PageContainer } from "@shared/components/PageContainer";
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
@@ -54,34 +56,21 @@ function LibraryPage() {
       showSnackbar({ message: `"${name}" deleted`, severity: "success" });
     } catch {
       showSnackbar({
-        message: `Failed to delete "${name}"`,
+        message: `Couldn't delete "${name}"`,
         severity: "error",
       });
     }
   }
 
-  const isEmpty = !isLoading && boardSets.length === 0;
-
   return (
-    <Container component="main" maxWidth="sm" sx={{ py: 6 }}>
-      {!isEmpty && (
-        <Stack
-          direction="row"
-          sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
-        >
-          <Button
-            variant="text"
-            startIcon={<AddIcon />}
-            onClick={() => void importBoardFiles()}
-          >
-            Import
-          </Button>
-        </Stack>
-      )}
+    <PageContainer>
+      {isLoading && <LoadingState message="Loading board sets..." />}
 
-      {isEmpty && (
+      {!isLoading && boardSets.length === 0 && (
         <EmptyState
+          icon={<CollectionsBookmarkOutlinedIcon />}
           title="No board sets yet"
+          description="Board sets are collections of communication boards. Import an existing file to get started."
           action={
             <Button
               variant="contained"
@@ -96,6 +85,19 @@ function LibraryPage() {
 
       {!isLoading && boardSets.length > 0 && (
         <>
+          <Stack
+            direction="row"
+            sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
+          >
+            <Button
+              variant="text"
+              startIcon={<AddIcon />}
+              onClick={() => void importBoardFiles()}
+            >
+              Import
+            </Button>
+          </Stack>
+
           <BoardSetList
             boardSets={boardSets}
             onSelect={handleSelect}
@@ -115,7 +117,7 @@ function LibraryPage() {
           />
         </>
       )}
-    </Container>
+    </PageContainer>
   );
 }
 

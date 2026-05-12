@@ -4,17 +4,8 @@ import { LoadingState } from "@shared/components/LoadingState";
 import { generatePath, Navigate, useParams } from "react-router";
 
 export function BoardSetRootRedirect() {
-  const { setId } = useParams<BoardRouteParams>();
+  const { setId = "" } = useParams<BoardRouteParams>();
   const { boardSets, isLoading } = useBoardSets();
-
-  if (!setId) {
-    return (
-      <ErrorState
-        title="Missing board set ID"
-        description="The URL is missing a board set ID."
-      />
-    );
-  }
 
   if (isLoading) {
     return <LoadingState message="Loading board set..." />;
@@ -26,7 +17,7 @@ export function BoardSetRootRedirect() {
     return (
       <ErrorState
         title="Board set not found"
-        description={`No board set with id "${setId}".`}
+        description="We couldn't find this board set. It may have been deleted."
       />
     );
   }
@@ -34,8 +25,8 @@ export function BoardSetRootRedirect() {
   if (!boardSet.rootBoardId) {
     return (
       <ErrorState
-        title="Board set has no root board"
-        description={`The board set "${setId}" is missing a root board.`}
+        title="Board set is incomplete"
+        description="This board set is missing a starting board."
       />
     );
   }
