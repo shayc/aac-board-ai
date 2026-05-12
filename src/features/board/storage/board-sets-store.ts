@@ -13,7 +13,7 @@ export interface BoardSetsSnapshot {
   error: Error | null;
 }
 
-const channel = new BroadcastChannel("board-sets-sync");
+const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
 
 const store = createExternalStore<BoardSetsSnapshot>({
   boardSets: [],
@@ -21,14 +21,14 @@ const store = createExternalStore<BoardSetsSnapshot>({
   error: null,
 });
 
-let hasFetched = false;
-let pendingRefresh: Promise<void> | null = null;
+let hasLoaded = false;
+let pendingLoad: Promise<void> | null = null;
 
-async function refresh(): Promise<void> {
+async function loadBoardSets(): Promise<void> {
   try {
     const boardSets = await withBoardsDB((db) => listBoardSets(db));
     store.setState({ boardSets, isLoading: false, error: null });
-    hasFetched = true;
+    hasLoaded = true;
   } catch (error) {
     store.setState({
       boardSets: [],
@@ -36,52 +36,52 @@ async function refresh(): Promise<void> {
       error: error instanceof Error ? error : new Error(String(error)),
     });
   } finally {
-    pendingRefresh = null;
+    pendingLoad = null;
   }
 }
 
-function ensureFetched(): void {
-  if (!hasFetched && !pendingRefresh) {
-    pendingRefresh = refresh();
+function ensureLoaded(): void {
+  if (!hasLoaded && !pendingLoad) {
+    pendingLoad = loadBoardSets();
   }
 }
 
-async function invalidateAndBroadcast(): Promise<void> {
+async function reloadAndBroadcast(): Promise<void> {
   await invalidateBoardSets();
-  channel.postMessage("invalidate");
+  boardSetsSyncChannel.postMessage("invalidate");
 }
 
 export function subscribeBoardSets(listener: () => void): () => void {
   const unsubscribe = store.subscribe(listener);
-  ensureFetched();
+  ensureLoaded();
   return unsubscribe;
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
-  ensureFetched();
+  ensureLoaded();
   return store.getSnapshot();
 }
 
-export async function fetchBoardSets(): Promise<BoardSetRecord[]> {
-  if (pendingRefresh) {
-    await pendingRefresh;
-  } else if (!hasFetched) {
-    await refresh();
+export async function getBoardSets(): Promise<BoardSetRecord[]> {
+  if (pendingLoad) {
+    await pendingLoad;
+  } else if (!hasLoaded) {
+    await loadBoardSets();
   }
 
   return store.getSnapshot().boardSets;
 }
 
 export async function invalidateBoardSets(): Promise<void> {
-  pendingRefresh = refresh();
-  await pendingRefresh;
+  pendingLoad = loadBoardSets();
+  await pendingLoad;
 }
 
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const results = await storeBoardFiles(files);
-  await invalidateAndBroadcast();
+  await reloadAndBroadcast();
   return results;
 }
 
@@ -106,9 +106,9 @@ export async function importBoardFromUrl(url: string): Promise<ImportResult> {
 
 export async function removeBoardSet(setId: string): Promise<void> {
   await withBoardsDB((db) => deleteBoardSet(db, setId));
-  await invalidateAndBroadcast();
+  await reloadAndBroadcast();
 }
 
-channel.addEventListener("message", () => {
+boardSetsSyncChannel.addEventListener("message", () => {
   void invalidateBoardSets();
 });
