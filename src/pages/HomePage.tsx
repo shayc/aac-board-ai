@@ -53,7 +53,7 @@ export function HomePage() {
     return (
       <ErrorState
         title="Couldn't load board"
-        description="Something went wrong setting up your boards. Try importing a board file."
+        description="Try importing a board file to get started."
       />
     );
   }

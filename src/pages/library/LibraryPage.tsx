@@ -69,15 +69,15 @@ function LibraryPage() {
       {!isLoading && boardSets.length === 0 && (
         <EmptyState
           icon={<CollectionsBookmarkOutlinedIcon />}
-          title="No board sets yet"
-          description="Board sets are collections of communication boards. Import an existing file to get started."
+          title="Your library is empty"
+          description="Import communication boards to get started."
           action={
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => void importBoardFiles()}
             >
-              Import your first board set
+              Import board set
             </Button>
           }
         />

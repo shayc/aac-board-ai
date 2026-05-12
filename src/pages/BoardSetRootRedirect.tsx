@@ -17,7 +17,7 @@ export function BoardSetRootRedirect() {
     return (
       <ErrorState
         title="Board set not found"
-        description="We couldn't find this board set. It may have been deleted."
+        description="This board set may have been deleted."
       />
     );
   }
@@ -25,8 +25,8 @@ export function BoardSetRootRedirect() {
   if (!boardSet.rootBoardId) {
     return (
       <ErrorState
-        title="Board set is incomplete"
-        description="This board set is missing a starting board."
+        title="Board set incomplete"
+        description="This board set has no starting board."
       />
     );
   }

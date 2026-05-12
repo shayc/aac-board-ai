@@ -14,7 +14,7 @@ function BoardPage() {
     return (
       <ErrorState
         title="Couldn't load board"
-        description="This board may be missing or its file may be corrupted."
+        description="This board may be missing or corrupted."
       />
     );
   }
