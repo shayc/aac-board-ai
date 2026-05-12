@@ -76,7 +76,7 @@ function LibraryPage() {
       </Stack>
 
       {!isLoading && boardSets.length === 0 && (
-        <EmptyState message="No board sets imported yet." />
+        <EmptyState title="No board sets imported yet." />
       )}
 
       {!isLoading && boardSets.length > 0 && (

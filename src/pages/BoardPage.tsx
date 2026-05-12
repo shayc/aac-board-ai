@@ -11,7 +11,9 @@ function BoardPage() {
   useDeclareHeaderTitle(board?.name);
 
   if (error) {
-    return <ErrorState title="Failed to load board" message={error.message} />;
+    return (
+      <ErrorState title="Failed to load board" description={error.message} />
+    );
   }
 
   if (!board) {

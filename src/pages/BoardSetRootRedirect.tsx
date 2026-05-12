@@ -8,7 +8,7 @@ export function BoardSetRootRedirect() {
   const { boardSets, isLoading } = useBoardSets();
 
   if (!setId) {
-    return <ErrorState title="Error" message="Board set ID is required" />;
+    return <ErrorState title="Error" description="Board set ID is required" />;
   }
 
   if (isLoading) {
@@ -19,7 +19,10 @@ export function BoardSetRootRedirect() {
 
   if (!boardSet) {
     return (
-      <ErrorState title="Error" message={`Board set "${setId}" not found`} />
+      <ErrorState
+        title="Error"
+        description={`Board set "${setId}" not found`}
+      />
     );
   }
 
@@ -27,7 +30,7 @@ export function BoardSetRootRedirect() {
     return (
       <ErrorState
         title="Error"
-        message={`Board set "${setId}" has no root board`}
+        description={`Board set "${setId}" has no root board`}
       />
     );
   }

@@ -49,7 +49,7 @@ export function HomePage() {
   }, [navigate, boardUrl]);
 
   if (error) {
-    return <ErrorState title="Failed to load board" message={error} />;
+    return <ErrorState title="Failed to load board" description={error} />;
   }
 
   return <LoadingState message="Loading board..." />;

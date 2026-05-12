@@ -1,31 +1,54 @@
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import type { ReactNode } from "react";
 
 export interface ErrorStateProps {
   title?: string;
-  message?: string;
+  description?: string;
+  icon?: ReactNode;
+  action?: ReactNode;
 }
 
 export function ErrorState({
   title = "Something went wrong",
-  message = "Try refreshing the page",
+  description,
+  icon = <ErrorOutlineIcon />,
+  action,
 }: ErrorStateProps) {
   return (
-    <Box
+    <Stack
+      spacing={1}
       sx={{
-        display: "flex",
-        flexDirection: "column",
+        py: 8,
+        height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        height: "100%",
-        gap: 2,
-        p: 4,
+        textAlign: "center",
       }}
     >
-      <Typography variant="h6" color="error">
+      {icon && (
+        <Box sx={{ color: "error.main", "& svg": { fontSize: 64, mb: 1 } }}>
+          {icon}
+        </Box>
+      )}
+
+      <Typography variant="h6" color="error.main">
         {title}
       </Typography>
-      <Typography color="text.secondary">{message}</Typography>
-    </Box>
+
+      {description && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ maxWidth: "sm" }}
+        >
+          {description}
+        </Typography>
+      )}
+
+      {action && <Box sx={{ mt: 2 }}>{action}</Box>}
+    </Stack>
   );
 }
