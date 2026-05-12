@@ -72,8 +72,8 @@ describe("importBoardFiles", () => {
       assertDefined(storedBoard);
 
       expect(storedBoard.name).toBe(board.name ?? board.id);
-      expect(storedBoard.json.buttons.length).toBe(board.buttons.length);
-      expect(storedBoard.json.grid).toEqual(board.grid);
+      expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
+      expect(storedBoard.obf.grid).toEqual(board.grid);
 
       const assetCount = await db.countFromIndex(
         "assets",
@@ -143,7 +143,7 @@ describe("importBoardFiles", () => {
       const storedRootBoard = await getBoard(db, IMPORTED_SET_ID, rootBoardId);
       assertDefined(storedRootBoard);
 
-      const linkedButtons = storedRootBoard.json.buttons.filter((button) =>
+      const linkedButtons = storedRootBoard.obf.buttons.filter((button) =>
         Boolean(button.load_board?.path),
       );
 

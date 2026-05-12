@@ -20,7 +20,7 @@ export interface BoardRecord {
   setId: string;
   boardId: string;
   name: string;
-  json: OBFBoard;
+  obf: OBFBoard;
 }
 
 export interface AssetRecord {
@@ -33,7 +33,7 @@ export interface AssetRecord {
 }
 
 export interface BoardsDBSchema extends DBSchema {
-  boardsets: {
+  boardSets: {
     key: string;
     value: BoardSetRecord;
     indexes: { byUpdatedAt: number };
@@ -46,13 +46,13 @@ export interface BoardsDBSchema extends DBSchema {
   assets: {
     key: [string, string];
     value: AssetRecord;
-    indexes: { bySetId: string; bySetIdMediaId: [string, string] };
+    indexes: { bySetId: string; bySetIdAndMediaId: [string, string] };
   };
 }
 
 export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 
-const DB_NAME = "aac-board-db";
+const DB_NAME = "aac-boards-db";
 const DB_VERSION = 1;
 
 function normalizePath(rawPath: string): string {
@@ -77,8 +77,8 @@ function validateId(id: string, fieldName: string): void {
 export async function openBoardsDB(): Promise<BoardsDB> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
-      const boardsets = db.createObjectStore("boardsets", { keyPath: "setId" });
-      boardsets.createIndex("byUpdatedAt", "updatedAt");
+      const boardSets = db.createObjectStore("boardSets", { keyPath: "setId" });
+      boardSets.createIndex("byUpdatedAt", "updatedAt");
 
       const boards = db.createObjectStore("boards", {
         keyPath: ["setId", "boardId"],
@@ -89,7 +89,7 @@ export async function openBoardsDB(): Promise<BoardsDB> {
         keyPath: ["setId", "path"],
       });
       assets.createIndex("bySetId", "setId");
-      assets.createIndex("bySetIdMediaId", ["setId", "mediaId"]);
+      assets.createIndex("bySetIdAndMediaId", ["setId", "mediaId"]);
     },
   });
 
@@ -121,30 +121,30 @@ export interface UpsertBoardSetInput {
 
 export async function upsertBoardSet(
   db: BoardsDB,
-  boardSet: UpsertBoardSetInput,
+  input: UpsertBoardSetInput,
 ): Promise<void> {
-  validateId(boardSet.setId, "setId");
-  const existing = await db.get("boardsets", boardSet.setId);
+  validateId(input.setId, "setId");
+  const existing = await db.get("boardSets", input.setId);
 
   const record: BoardSetRecord = {
-    setId: boardSet.setId,
-    name: boardSet.name,
-    rootBoardId: boardSet.rootBoardId ?? existing?.rootBoardId,
+    setId: input.setId,
+    name: input.name,
+    rootBoardId: input.rootBoardId ?? existing?.rootBoardId,
     updatedAt: Date.now(),
     boardCount: existing?.boardCount ?? 0,
-    author: boardSet.author ?? existing?.author,
-    description: boardSet.description ?? existing?.description,
-    license: boardSet.license ?? existing?.license,
-    locale: boardSet.locale ?? existing?.locale,
-    gridRows: boardSet.gridRows ?? existing?.gridRows,
-    gridColumns: boardSet.gridColumns ?? existing?.gridColumns,
+    author: input.author ?? existing?.author,
+    description: input.description ?? existing?.description,
+    license: input.license ?? existing?.license,
+    locale: input.locale ?? existing?.locale,
+    gridRows: input.gridRows ?? existing?.gridRows,
+    gridColumns: input.gridColumns ?? existing?.gridColumns,
   };
 
-  await db.put("boardsets", record);
+  await db.put("boardSets", record);
 }
 
 export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
-  const tx = db.transaction("boardsets", "readonly");
+  const tx = db.transaction("boardSets", "readonly");
   const index = tx.store.index("byUpdatedAt");
 
   // Manual cursor iteration is required to retrieve records in reverse chronological order;
@@ -161,19 +161,19 @@ export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   return boardSets;
 }
 
-export interface PutBoardInput {
+export interface UpsertBoardInput {
   boardId: string;
   name: string;
-  json: OBFBoard;
+  obf: OBFBoard;
 }
 
 export async function putBoards(
   db: BoardsDB,
   setId: string,
-  boards: PutBoardInput[],
+  boards: UpsertBoardInput[],
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["boards", "boardsets"], "readwrite");
+  const tx = db.transaction(["boards", "boardSets"], "readwrite");
 
   try {
     const boardStore = tx.objectStore("boards");
@@ -183,16 +183,16 @@ export async function putBoards(
         setId,
         boardId: board.boardId,
         name: board.name,
-        json: board.json,
+        obf: board.obf,
       });
     }
 
-    const boardSet = await tx.objectStore("boardsets").get(setId);
+    const boardSet = await tx.objectStore("boardSets").get(setId);
 
     if (boardSet) {
       const count = await boardStore.index("bySetId").count(setId);
       await tx
-        .objectStore("boardsets")
+        .objectStore("boardSets")
         .put({ ...boardSet, boardCount: count, updatedAt: Date.now() });
     }
 
@@ -213,7 +213,7 @@ export async function getBoard(
   return db.get("boards", [setId, boardId]);
 }
 
-export async function getBoardsByIds(
+export async function getBoards(
   db: BoardsDB,
   setId: string,
   boardIds: string[],
@@ -230,7 +230,7 @@ export async function getBoardsByIds(
   return boards.filter((record): record is BoardRecord => record !== undefined);
 }
 
-export interface PutAssetInput {
+export interface UpsertAssetInput {
   path: string;
   blob: Blob;
   mime?: string;
@@ -241,10 +241,10 @@ export interface PutAssetInput {
 export async function putAssets(
   db: BoardsDB,
   setId: string,
-  assets: PutAssetInput[],
+  assets: UpsertAssetInput[],
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["assets", "boardsets"], "readwrite");
+  const tx = db.transaction(["assets", "boardSets"], "readwrite");
 
   try {
     const assetStore = tx.objectStore("assets");
@@ -261,11 +261,11 @@ export async function putAssets(
       });
     }
 
-    const boardSet = await tx.objectStore("boardsets").get(setId);
+    const boardSet = await tx.objectStore("boardSets").get(setId);
 
     if (boardSet) {
       await tx
-        .objectStore("boardsets")
+        .objectStore("boardSets")
         .put({ ...boardSet, updatedAt: Date.now() });
     }
 
@@ -291,12 +291,12 @@ export async function updateBoardStrings(
     throw new Error(`Board not found: ${boardId}`);
   }
 
-  const updatedJson = {
-    ...record.json,
-    strings: { ...record.json.strings, [locale]: translations },
+  const updatedObf = {
+    ...record.obf,
+    strings: { ...record.obf.strings, [locale]: translations },
   };
 
-  await db.put("boards", { ...record, json: updatedJson });
+  await db.put("boards", { ...record, obf: updatedObf });
 }
 
 export async function getAssetBlob(
@@ -316,7 +316,7 @@ export async function deleteBoardSet(
   setId: string,
 ): Promise<void> {
   validateId(setId, "setId");
-  const tx = db.transaction(["boards", "assets", "boardsets"], "readwrite");
+  const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
   try {
     // Fire all three deletes without awaiting individually;
@@ -329,7 +329,7 @@ export async function deleteBoardSet(
       .objectStore("assets")
       .delete(IDBKeyRange.bound([setId], [setId, []]));
 
-    void tx.objectStore("boardsets").delete(setId);
+    void tx.objectStore("boardSets").delete(setId);
 
     await tx.done;
   } catch (error) {

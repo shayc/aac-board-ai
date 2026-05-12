@@ -6,7 +6,7 @@ import {
   type BoardsDB,
 } from "./boards-db";
 
-const STORE_NAMES = ["boardsets", "boards", "assets"] as const;
+const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
 async function clearAllStores(db: BoardsDB): Promise<void> {
   const tx = db.transaction(STORE_NAMES, "readwrite");

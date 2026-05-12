@@ -4,7 +4,7 @@ import {
   deleteBoardSet,
   getAssetBlob,
   getBoard,
-  getBoardsByIds,
+  getBoards,
   listBoardSets,
   putAssets,
   putBoards,
@@ -74,8 +74,8 @@ describe("upsertBoardSet", () => {
     const db = await openTestDB();
 
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
-    const json = makeOBFBoard({ id: "b1" });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
+    const obf = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
     await upsertBoardSet(db, { setId: "set-1", name: "Set Renamed" });
 
@@ -115,8 +115,8 @@ describe("listBoardSets", () => {
     await upsertBoardSet(db, { setId: "new", name: "New" });
 
     // Force deterministic ordering via raw puts
-    const tx = db.transaction("boardsets", "readwrite");
-    const store = tx.objectStore("boardsets");
+    const tx = db.transaction("boardSets", "readwrite");
+    const store = tx.objectStore("boardSets");
     const oldRec = (await store.get("old"))!;
     const newRec = (await store.get("new"))!;
     await store.put({ ...oldRec, updatedAt: 1000 });
@@ -135,28 +135,28 @@ describe("putBoards and getBoard", () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const json = makeOBFBoard({ id: "b1", name: "Board One" });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "Board One", json }]);
+    const obf = makeOBFBoard({ id: "b1", name: "Board One" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "Board One", obf }]);
 
     const board = await getBoard(db, "set-1", "b1");
     expect(board).toBeDefined();
     expect(board!.boardId).toBe("b1");
     expect(board!.name).toBe("Board One");
-    expect(board!.json.id).toBe("b1");
+    expect(board!.obf.id).toBe("b1");
   });
 
   test("counts only unique boards", async () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const json = makeOBFBoard({ id: "b1" });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
+    const obf = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
     let sets = await listBoardSets(db);
     expect(sets[0].boardCount).toBe(1);
 
     // Put the same board again (update, not new)
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1 Updated", json }]);
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1 Updated", obf }]);
 
     sets = await listBoardSets(db);
     expect(sets[0].boardCount).toBe(1);
@@ -167,9 +167,9 @@ describe("putBoards and getBoard", () => {
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
     const boards = [
-      { boardId: "b1", name: "B1", json: makeOBFBoard({ id: "b1" }) },
-      { boardId: "b2", name: "B2", json: makeOBFBoard({ id: "b2" }) },
-      { boardId: "b3", name: "B3", json: makeOBFBoard({ id: "b3" }) },
+      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
+      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
+      { boardId: "b3", name: "B3", obf: makeOBFBoard({ id: "b3" }) },
     ];
 
     await putBoards(db, "set-1", boards);
@@ -189,8 +189,8 @@ describe("putBoards and getBoard", () => {
   test("stores boards even when boardset record does not exist", async () => {
     const db = await openTestDB();
 
-    const json = makeOBFBoard({ id: "b1" });
-    await putBoards(db, "orphan-set", [{ boardId: "b1", name: "B1", json }]);
+    const obf = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "orphan-set", [{ boardId: "b1", name: "B1", obf }]);
 
     const board = await getBoard(db, "orphan-set", "b1");
     expect(board).toBeDefined();
@@ -201,23 +201,23 @@ describe("putBoards and getBoard", () => {
     const db = await openTestDB();
 
     await expect(
-      putBoards(db, "", [{ boardId: "b1", name: "B", json: makeOBFBoard() }]),
+      putBoards(db, "", [{ boardId: "b1", name: "B", obf: makeOBFBoard() }]),
     ).rejects.toThrow("Invalid setId");
   });
 });
 
-describe("getBoardsByIds", () => {
+describe("getBoards", () => {
   test("returns matching boards", async () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
     await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", json: makeOBFBoard({ id: "b1" }) },
-      { boardId: "b2", name: "B2", json: makeOBFBoard({ id: "b2" }) },
-      { boardId: "b3", name: "B3", json: makeOBFBoard({ id: "b3" }) },
+      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
+      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
+      { boardId: "b3", name: "B3", obf: makeOBFBoard({ id: "b3" }) },
     ]);
 
-    const boards = await getBoardsByIds(db, "set-1", ["b1", "b3"]);
+    const boards = await getBoards(db, "set-1", ["b1", "b3"]);
     expect(boards).toHaveLength(2);
     expect(boards.map((b) => b.boardId).sort()).toEqual(["b1", "b3"]);
   });
@@ -227,10 +227,10 @@ describe("getBoardsByIds", () => {
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
     await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", json: makeOBFBoard({ id: "b1" }) },
+      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
     ]);
 
-    const boards = await getBoardsByIds(db, "set-1", ["b1", "missing"]);
+    const boards = await getBoards(db, "set-1", ["b1", "missing"]);
     expect(boards).toHaveLength(1);
     expect(boards[0].boardId).toBe("b1");
   });
@@ -239,7 +239,7 @@ describe("getBoardsByIds", () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const boards = await getBoardsByIds(db, "set-1", []);
+    const boards = await getBoards(db, "set-1", []);
     expect(boards).toEqual([]);
   });
 });
@@ -319,8 +319,8 @@ describe("updateBoardStrings", () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const json = makeOBFBoard({ id: "b1" });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
+    const obf = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
     await updateBoardStrings(db, "set-1", "b1", "es", {
       hello: "hola",
@@ -328,7 +328,7 @@ describe("updateBoardStrings", () => {
     });
 
     const board = await getBoard(db, "set-1", "b1");
-    expect(board!.json.strings).toEqual({
+    expect(board!.obf.strings).toEqual({
       es: { hello: "hola", world: "mundo" },
     });
   });
@@ -337,16 +337,16 @@ describe("updateBoardStrings", () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const json = makeOBFBoard({
+    const obf = makeOBFBoard({
       id: "b1",
       strings: { fr: { hello: "bonjour" } },
     });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
     await updateBoardStrings(db, "set-1", "b1", "es", { hello: "hola" });
 
     const board = await getBoard(db, "set-1", "b1");
-    expect(board!.json.strings).toEqual({
+    expect(board!.obf.strings).toEqual({
       fr: { hello: "bonjour" },
       es: { hello: "hola" },
     });
@@ -356,8 +356,8 @@ describe("updateBoardStrings", () => {
     const db = await openTestDB();
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
-    const json = makeOBFBoard({ id: "b1" });
-    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", json }]);
+    const obf = makeOBFBoard({ id: "b1" });
+    await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
     await updateBoardStrings(db, "set-1", "b1", "es", {
       hello: "hola",
@@ -366,7 +366,7 @@ describe("updateBoardStrings", () => {
     await updateBoardStrings(db, "set-1", "b1", "es", { hello: "ey" });
 
     const board = await getBoard(db, "set-1", "b1");
-    expect(board!.json.strings).toEqual({ es: { hello: "ey" } });
+    expect(board!.obf.strings).toEqual({ es: { hello: "ey" } });
   });
 
   test("throws when board does not exist", async () => {
@@ -395,8 +395,8 @@ describe("deleteBoardSet", () => {
     await upsertBoardSet(db, { setId: "set-1", name: "Set" });
 
     await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", json: makeOBFBoard({ id: "b1" }) },
-      { boardId: "b2", name: "B2", json: makeOBFBoard({ id: "b2" }) },
+      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
+      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
     ]);
 
     await deleteBoardSet(db, "set-1");
@@ -426,10 +426,10 @@ describe("deleteBoardSet", () => {
     await upsertBoardSet(db, { setId: "set-2", name: "Set 2" });
 
     await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", json: makeOBFBoard({ id: "b1" }) },
+      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
     ]);
     await putBoards(db, "set-2", [
-      { boardId: "b2", name: "B2", json: makeOBFBoard({ id: "b2" }) },
+      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
     ]);
 
     await deleteBoardSet(db, "set-1");
@@ -461,7 +461,7 @@ describe("withBoardsDB", () => {
     // After withBoardsDB returns, the DB should be closed.
     // Attempting a transaction on a closed DB throws.
     expect(() => {
-      capturedDb!.transaction("boardsets", "readonly");
+      capturedDb!.transaction("boardSets", "readonly");
     }).toThrow();
   });
 
@@ -476,7 +476,7 @@ describe("withBoardsDB", () => {
     ).rejects.toThrow("boom");
 
     expect(() => {
-      capturedDb!.transaction("boardsets", "readonly");
+      capturedDb!.transaction("boardSets", "readonly");
     }).toThrow();
   });
 });

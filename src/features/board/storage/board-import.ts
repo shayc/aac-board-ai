@@ -75,7 +75,7 @@ async function importOBZFile(
   const boardRecords = Array.from(boards.entries()).map(([id, board]) => ({
     boardId: id,
     name: board.name ?? id,
-    json: resolveLoadBoardPaths(board, boardPathToId),
+    obf: resolveLoadBoardPaths(board, boardPathToId),
   }));
 
   await putBoards(db, setId, boardRecords);
@@ -136,7 +136,7 @@ async function importOBFFile(
     {
       boardId: board.id,
       name: board.name ?? board.id,
-      json: board,
+      obf: board,
     },
   ]);
 
