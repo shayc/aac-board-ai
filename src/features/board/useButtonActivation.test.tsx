@@ -7,7 +7,10 @@ import type { MessagePart, UseMessageReturn } from "./message/useMessage";
 import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
 import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
 import type { BoardAction, BoardButton } from "./types";
-import { useButtonActivation } from "./useButtonActivation";
+import {
+  resolveButtonIntent,
+  useButtonActivation,
+} from "./useButtonActivation";
 
 function SpeechWrapper({ children }: { children: ReactNode }) {
   return <SpeechProvider>{children}</SpeechProvider>;
@@ -241,5 +244,50 @@ describe("useButtonActivation", () => {
     expect(message.addPart).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();
     expect(audio.play).not.toHaveBeenCalled();
+  });
+});
+
+describe("resolveButtonIntent", () => {
+  test("navigate takes precedence over actions and utter when loadBoard.id is set", () => {
+    expect(
+      resolveButtonIntent({
+        id: "btn",
+        label: "Folder",
+        loadBoard: { id: "child-board" },
+        actions: [":space"],
+      }),
+    ).toEqual({ kind: "navigate", boardId: "child-board" });
+  });
+
+  test("treats loadBoard without an id as not navigable", () => {
+    const button: BoardButton = {
+      id: "btn",
+      label: "hi",
+      loadBoard: { name: "Other" },
+    };
+
+    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
+  });
+
+  test("returns actions when there is no loadBoard.id and actions is non-empty", () => {
+    expect(
+      resolveButtonIntent({ id: "btn", actions: [":space", ":speak"] }),
+    ).toEqual({ kind: "actions", actions: [":space", ":speak"] });
+  });
+
+  test("falls through to utter when actions is an empty array", () => {
+    const button: BoardButton = { id: "btn", label: "hi", actions: [] };
+
+    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
+  });
+
+  test("returns utter with the original button when there is no loadBoard.id and no actions", () => {
+    const button: BoardButton = {
+      id: "btn",
+      label: "hi",
+      vocalization: "hello",
+    };
+
+    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
   });
 });
