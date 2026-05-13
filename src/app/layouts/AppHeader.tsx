@@ -25,7 +25,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
             edge="start"
             color="inherit"
             onClick={onMenuClick}
-            sx={{ mr: 2 }}
+            sx={{ marginInlineEnd: 2 }}
           >
             <MenuIcon />
           </IconButton>
