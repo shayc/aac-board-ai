@@ -7,12 +7,12 @@ interface GridPosition {
   col: number;
 }
 
-export interface UseGridKeyboardOptions {
+export interface UseGridArrowNavigationOptions {
   gridRef: RefObject<HTMLElement | null>;
   initialActiveCell?: GridPosition;
 }
 
-export interface UseGridKeyboardReturn {
+export interface UseGridArrowNavigationReturn {
   keyboardProps: ReturnType<typeof useKeyboard>["keyboardProps"];
   activeCell: GridPosition;
   handleFocus: (event: FocusEvent<HTMLElement>) => void;
@@ -24,10 +24,10 @@ interface FocusableCell {
   col: number;
 }
 
-export function useGridKeyboard({
+export function useGridArrowNavigation({
   gridRef,
   initialActiveCell = { row: 0, col: 0 },
-}: UseGridKeyboardOptions): UseGridKeyboardReturn {
+}: UseGridArrowNavigationOptions): UseGridArrowNavigationReturn {
   const [activeCell, setActiveCell] = useState<GridPosition>(initialActiveCell);
 
   const { keyboardProps } = useKeyboard({

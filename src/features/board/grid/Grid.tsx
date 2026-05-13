@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
-import { useGridKeyboard } from "./useGridKeyboard";
+import { useGridArrowNavigation } from "./useGridArrowNavigation";
 
 export interface GridItemProps {
   tabIndex: number;
@@ -28,7 +28,7 @@ export function Grid<TItem extends { id: string }>({
   const previousItemsRef = useRef(items);
   const initialActiveCell = findFirstNonEmptyCell(grid);
 
-  const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
+  const { keyboardProps, activeCell, handleFocus } = useGridArrowNavigation({
     gridRef,
     initialActiveCell,
   });
