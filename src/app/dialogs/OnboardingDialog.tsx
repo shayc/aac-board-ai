@@ -1,6 +1,6 @@
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import TranslateIcon from "@mui/icons-material/Translate";
+import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -20,7 +20,7 @@ const highlights: { icon: ReactNode; primary: string; secondary: string }[] = [
     secondary: "Turn short phrases into clear sentences.",
   },
   {
-    icon: <TranslateIcon color="primary" fontSize="large" />,
+    icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
     primary: "Real-time Translation",
     secondary: "Translate messages instantly.",
   },
@@ -106,7 +106,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </List>
       </DialogContent>
 
-      <DialogActions sx={{ p: 3, pt: 4, pb: 4 }}>
+      <DialogActions sx={{ px: 3, py: 4 }}>
         <Button
           onClick={onClose}
           variant="contained"
@@ -115,7 +115,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           sx={{
             borderRadius: 4,
             py: 1.5,
-            textTransform: "none",
             fontWeight: 800,
             fontSize: "1.1rem",
           }}

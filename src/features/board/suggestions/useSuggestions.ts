@@ -76,7 +76,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
         setSuggestions(uniqueSuggestions);
       } catch (error) {
-        if ((error as DOMException).name === "AbortError") {
+        if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
 

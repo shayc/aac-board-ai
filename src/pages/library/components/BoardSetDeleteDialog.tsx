@@ -22,13 +22,16 @@ export function BoardSetDeleteDialog({
       open={boardSet !== null}
       onClose={onClose}
       aria-labelledby="delete-dialog-title"
+      aria-describedby="delete-dialog-description"
     >
       <DialogTitle id="delete-dialog-title">
         Delete "{boardSet?.name}"?
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText>This action cannot be undone.</DialogContentText>
+        <DialogContentText id="delete-dialog-description">
+          This action cannot be undone.
+        </DialogContentText>
       </DialogContent>
 
       <DialogActions>

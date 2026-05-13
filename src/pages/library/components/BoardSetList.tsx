@@ -73,7 +73,7 @@ export function BoardSetList({
                   edge="end"
                   aria-label={`More options for ${boardSet.name}`}
                   aria-controls={menuOpen ? "board-set-menu" : undefined}
-                  aria-haspopup="true"
+                  aria-haspopup="menu"
                   aria-expanded={menuOpen ? "true" : undefined}
                   onClick={(event) => handleMenuOpen(event, boardSet)}
                 >
@@ -121,7 +121,7 @@ function formatSecondary(boardSet: BoardSetRecord): string {
   const { gridRows, gridColumns, author } = boardSet;
 
   if (gridRows && gridColumns) {
-    parts.push(`${gridRows}x${gridColumns}`);
+    parts.push(`${gridRows}×${gridColumns}`);
   }
 
   if (author) {

@@ -1,4 +1,4 @@
-import Cancel from "@mui/icons-material/Cancel";
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -52,7 +52,7 @@ export function AISettings() {
                 {isSupported ? (
                   <CheckCircleIcon color="success" fontSize="small" />
                 ) : (
-                  <Cancel color="error" fontSize="small" />
+                  <CancelIcon color="error" fontSize="small" />
                 )}
               </ListItemIcon>
               <ListItemText primary={label} />

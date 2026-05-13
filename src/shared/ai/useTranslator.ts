@@ -3,7 +3,13 @@ import { useRef } from "react";
 import { isTranslatorSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
-export function useTranslator() {
+export interface UseTranslatorReturn {
+  createTranslator: (
+    options: TranslatorCreateOptions,
+  ) => Promise<Translator | null>;
+}
+
+export function useTranslator(): UseTranslatorReturn {
   const { setDownload } = useAI();
   const translatorRef = useRef<Translator | null>(null);
 

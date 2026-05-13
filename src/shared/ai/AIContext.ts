@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-type DownloadKey = "proofreader" | "rewriter" | "translator";
+export type DownloadKey = "proofreader" | "rewriter" | "translator";
 
 export interface AIContextValue {
   sharedContext: string;

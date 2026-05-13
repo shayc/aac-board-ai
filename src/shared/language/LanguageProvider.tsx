@@ -8,14 +8,14 @@ export interface LanguageProviderProps {
   children: ReactNode;
 }
 
+const UNSUPPORTED_LANGUAGES = ["ca", "ms", "nb", "yue"];
+
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const { locales, voicesByLanguage, setVoiceURI } = useSpeech();
   const [language, setLanguage] = usePersistentState<string>("language", "en");
-
-  const unsupportedLanguages = ["ca", "ms", "nb", "yue"];
   const supportedLanguages = Array.from(
     new Set(locales.map(getPrimaryLanguage)),
-  ).filter((langCode) => !unsupportedLanguages.includes(langCode));
+  ).filter((langCode) => !UNSUPPORTED_LANGUAGES.includes(langCode));
 
   const languages = supportedLanguages.map((lang) => {
     const displayName = new Intl.DisplayNames([lang], { type: "language" });
@@ -38,7 +38,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
       voicesByLanguage[language]?.[0];
 
     if (defaultVoice) {
-      setVoiceURI(defaultVoice?.voiceURI);
+      setVoiceURI(defaultVoice.voiceURI);
     }
   }, [language, voicesByLanguage, setVoiceURI]);
 
