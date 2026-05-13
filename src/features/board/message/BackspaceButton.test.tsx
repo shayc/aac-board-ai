@@ -1,6 +1,6 @@
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { BackspaceButton, LONG_PRESS_THRESHOLD_MS } from "./BackspaceButton";
+import { BackspaceButton } from "./BackspaceButton";
 
 function createHandlers() {
   return {
@@ -9,7 +9,31 @@ function createHandlers() {
   };
 }
 
+// pressure must be non-zero: react-aria treats pressure===0 + pointerType==="mouse"
+// as a virtual (assistive-technology) event and skips the long-press timer entirely.
+function longPress(element: Element) {
+  element.dispatchEvent(
+    new PointerEvent("pointerdown", {
+      bubbles: true,
+      button: 0,
+      pointerType: "mouse",
+      pressure: 0.5,
+    }),
+  );
+  vi.advanceTimersByTime(700);
+  element.dispatchEvent(new PointerEvent("pointerup", { bubbles: true }));
+}
+
 describe("BackspaceButton", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.clearAllTimers();
+    vi.useRealTimers();
+  });
+
   test("calls onPress when clicked", async () => {
     const handlers = createHandlers();
 
@@ -28,7 +52,7 @@ describe("BackspaceButton", () => {
     const screen = await render(<BackspaceButton {...handlers} />);
 
     const button = screen.getByRole("button", { name: "Backspace" });
-    await button.click({ delay: LONG_PRESS_THRESHOLD_MS + 100 });
+    longPress(button.element());
 
     expect(handlers.onLongPress).toHaveBeenCalledTimes(1);
     expect(handlers.onPress).not.toHaveBeenCalled();
