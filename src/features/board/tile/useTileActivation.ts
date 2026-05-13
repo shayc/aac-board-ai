@@ -1,9 +1,9 @@
 import { useAudio } from "@shared/hooks/useAudio";
 import { useSpeech } from "@shared/speech/useSpeech";
-import type { MessagePart, UseMessageReturn } from "./message/useMessage";
-import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
-import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
-import type { BoardAction, BoardButton } from "./types";
+import type { MessagePart, UseMessageReturn } from "../message/useMessage";
+import type { UseMessagePlaybackReturn } from "../message/useMessagePlayback";
+import type { UseBoardNavigationReturn } from "../navigation/useBoardNavigation";
+import type { BoardAction, BoardButton } from "../types";
 
 export interface UseTileActivationOptions {
   message: UseMessageReturn;

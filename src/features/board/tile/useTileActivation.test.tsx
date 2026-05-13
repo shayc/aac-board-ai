@@ -3,10 +3,10 @@ import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import type { MessagePart, UseMessageReturn } from "./message/useMessage";
-import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
-import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
-import type { BoardAction, BoardButton } from "./types";
+import type { MessagePart, UseMessageReturn } from "../message/useMessage";
+import type { UseMessagePlaybackReturn } from "../message/useMessagePlayback";
+import type { UseBoardNavigationReturn } from "../navigation/useBoardNavigation";
+import type { BoardAction, BoardButton } from "../types";
 import { resolveButtonIntent, useTileActivation } from "./useTileActivation";
 
 function SpeechWrapper({ children }: { children: ReactNode }) {

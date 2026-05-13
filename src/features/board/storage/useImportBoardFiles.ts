@@ -1,6 +1,6 @@
 import { useSnackbar } from "@shared/snackbar/useSnackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles } from "./storage/board-sets-store";
+import { importBoardFiles } from "./board-sets-store";
 
 const BOARD_FILE_ACCEPT = ".obz,.obf,application/zip,application/json";
 

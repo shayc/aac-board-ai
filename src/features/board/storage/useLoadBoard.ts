@@ -2,10 +2,10 @@ import type { ObjectUrlRegistry } from "@shared/utils/object-url";
 import { createObjectUrlRegistry } from "@shared/utils/object-url";
 import type { OBFBoard, OBFMedia } from "open-board-format";
 import { useEffect, useRef, useState } from "react";
-import { obfToBoard } from "./obf/mapper";
-import type { BoardsDB } from "./storage/boards-db";
-import { getAssetBlob, getBoard, withBoardsDB } from "./storage/boards-db";
-import type { Board } from "./types";
+import { obfToBoard } from "../obf/mapper";
+import type { Board } from "../types";
+import type { BoardsDB } from "./boards-db";
+import { getAssetBlob, getBoard, withBoardsDB } from "./boards-db";
 
 export interface UseLoadBoardOptions {
   setId: string;

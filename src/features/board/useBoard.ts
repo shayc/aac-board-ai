@@ -1,6 +1,6 @@
+import { useLoadBoard } from "./storage/useLoadBoard";
 import type { Board } from "./types";
 import { useBoardTranslation } from "./useBoardTranslation";
-import { useLoadBoard } from "./useLoadBoard";
 
 export interface UseBoardOptions {
   setId: string;
