@@ -42,11 +42,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    const generateSuggestions = async (
-      text: string,
-      tone: SuggestionTone,
-      sharedContext?: string,
-    ) => {
+    const generateSuggestions = async () => {
       abortRef.current?.abort();
 
       const controller = new AbortController();
@@ -88,7 +84,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
       }
     };
 
-    void generateSuggestions(text, tone, sharedContext);
+    void generateSuggestions();
 
     return () => abortRef.current?.abort();
   }, [text, tone, sharedContext, createProofreader, createRewriter]);
