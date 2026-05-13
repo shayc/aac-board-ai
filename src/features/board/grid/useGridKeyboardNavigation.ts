@@ -58,8 +58,6 @@ export function useGridKeyboardNavigation({
   return { rootProps: { ...keyboardProps, onFocus }, activeCell };
 }
 
-// --- internals ---
-
 interface Step {
   row: -1 | 0 | 1;
   col: -1 | 0 | 1;

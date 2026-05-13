@@ -47,10 +47,8 @@ export function Grid<TItem extends { id: string }>({
     }
     previousItemsRef.current = items;
 
-    // When the items change (board navigation) the previously focused cell
-    // is unmounted and the browser drops focus to <body>. Restore focus to
-    // the same row/col if the new board has a tile there, otherwise fall
-    // back to the first focusable cell.
+    // Board navigation unmounts the focused cell; the browser drops focus to <body>.
+    // Restore to the same row/col, or fall back to the first focusable cell.
     if (document.activeElement !== document.body) {
       return;
     }

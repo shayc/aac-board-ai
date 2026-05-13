@@ -92,38 +92,41 @@ function LibraryPage() {
   }
 
   return (
-    <PageContainer>
-      <Stack
-        direction="row"
-        sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
-      >
-        <Button
-          variant="text"
-          startIcon={<AddIcon />}
-          onClick={() => void pickAndImportBoardFiles()}
+    <>
+      <title>Library – AAC Board AI</title>
+      <PageContainer>
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
         >
-          Import
-        </Button>
-      </Stack>
+          <Button
+            variant="text"
+            startIcon={<AddIcon />}
+            onClick={() => void pickAndImportBoardFiles()}
+          >
+            Import
+          </Button>
+        </Stack>
 
-      <BoardSetList
-        boardSets={boardSets}
-        onSelect={handleSelect}
-        onDelete={setDeleteTarget}
-        onInfo={setInfoTarget}
-      />
+        <BoardSetList
+          boardSets={boardSets}
+          onSelect={handleSelect}
+          onDelete={setDeleteTarget}
+          onInfo={setInfoTarget}
+        />
 
-      <BoardSetInfoDialog
-        boardSet={infoTarget}
-        onClose={() => setInfoTarget(null)}
-      />
+        <BoardSetInfoDialog
+          boardSet={infoTarget}
+          onClose={() => setInfoTarget(null)}
+        />
 
-      <BoardSetDeleteDialog
-        boardSet={deleteTarget}
-        onConfirm={() => void handleDelete()}
-        onClose={() => setDeleteTarget(null)}
-      />
-    </PageContainer>
+        <BoardSetDeleteDialog
+          boardSet={deleteTarget}
+          onConfirm={() => void handleDelete()}
+          onClose={() => setDeleteTarget(null)}
+        />
+      </PageContainer>
+    </>
   );
 }
 
