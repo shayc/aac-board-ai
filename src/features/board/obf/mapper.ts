@@ -41,21 +41,21 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
 export function resolveLoadBoardPaths(
   obfBoard: OBFBoard,
-  pathToId: Map<string, string>,
+  boardIdByPath: Map<string, string>,
 ): OBFBoard {
   const buttons = obfBoard.buttons.map((obfButton) => {
     if (!obfButton.load_board?.path || obfButton.load_board.id) {
       return obfButton;
     }
 
-    const resolvedId = pathToId.get(obfButton.load_board.path);
-    if (!resolvedId) {
+    const targetBoardId = boardIdByPath.get(obfButton.load_board.path);
+    if (!targetBoardId) {
       return obfButton;
     }
 
     return {
       ...obfButton,
-      load_board: { ...obfButton.load_board, id: resolvedId },
+      load_board: { ...obfButton.load_board, id: targetBoardId },
     };
   });
 
@@ -65,20 +65,20 @@ export function resolveLoadBoardPaths(
 function buildMediaSourceMap(
   media: OBFMedia[] | undefined,
 ): Map<string, string> {
-  const sourceById = new Map<string, string>();
+  const mediaSourceById = new Map<string, string>();
 
   if (!media) {
-    return sourceById;
+    return mediaSourceById;
   }
 
   for (const item of media) {
     const source = resolveMediaSource(item);
     if (source) {
-      sourceById.set(item.id, source);
+      mediaSourceById.set(item.id, source);
     }
   }
 
-  return sourceById;
+  return mediaSourceById;
 }
 
 function resolveMediaSource(media: OBFMedia): string | undefined {
@@ -111,7 +111,7 @@ function transformButton(
 
 function collectActions(obfButton: OBFButton): BoardAction[] {
   return [obfButton.action, ...(obfButton.actions ?? [])].filter(
-    (a): a is BoardAction => Boolean(a),
+    (action): action is BoardAction => Boolean(action),
   );
 }
 

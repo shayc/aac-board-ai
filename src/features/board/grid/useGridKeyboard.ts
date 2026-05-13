@@ -77,7 +77,7 @@ export function useGridKeyboard({
           return;
       }
 
-      const result = findNextFocusableCell(
+      const nextCell = findNextFocusableCell(
         grid,
         currentRow,
         currentCol,
@@ -85,10 +85,10 @@ export function useGridKeyboard({
         colDirection,
       );
 
-      if (result) {
+      if (nextCell) {
         event.preventDefault();
-        setActiveCell({ row: result.row, col: result.col });
-        result.element.focus();
+        setActiveCell({ row: nextCell.row, col: nextCell.col });
+        nextCell.element.focus();
       }
     },
   });
@@ -119,7 +119,9 @@ function findNextFocusableCell(
 ): FocusableCell | null {
   const cells = grid.querySelectorAll<HTMLElement>("[role='gridcell']");
 
-  let best: (FocusableCell & { primary: number; perp: number }) | null = null;
+  let bestCandidate:
+    | (FocusableCell & { primaryDist: number; perpDist: number })
+    | null = null;
 
   for (const cell of cells) {
     const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
@@ -128,41 +130,55 @@ function findNextFocusableCell(
       continue;
     }
 
-    const focusable = cell.querySelector<HTMLElement>("[tabindex]");
-    if (!focusable) {
+    const focusableElement = cell.querySelector<HTMLElement>("[tabindex]");
+    if (!focusableElement) {
       continue;
     }
 
-    const dr = row - currentRow;
-    const dc = col - currentCol;
+    const deltaRow = row - currentRow;
+    const deltaCol = col - currentCol;
 
-    // Reject cells that aren't in the arrow's half-plane. Primary axis is the
-    // arrow's axis; perp axis is the other one. When no in-line tile exists,
-    // ranking by (perp, primary) prefers the most-aligned diagonal hop.
-    let primary: number;
-    let perp: number;
+    // Reject cells that aren't in the arrow's half-plane. The primary axis is
+    // the arrow's axis; the perp axis is the other one. When no in-line tile
+    // exists, ranking by (perpDist, primaryDist) prefers the most-aligned
+    // diagonal hop.
+    let primaryDist: number;
+    let perpDist: number;
     if (rowDirection !== 0) {
-      if (Math.sign(dr) !== rowDirection) {
+      if (Math.sign(deltaRow) !== rowDirection) {
         continue;
       }
-      primary = Math.abs(dr);
-      perp = Math.abs(dc);
+      primaryDist = Math.abs(deltaRow);
+      perpDist = Math.abs(deltaCol);
     } else {
-      if (Math.sign(dc) !== colDirection) {
+      if (Math.sign(deltaCol) !== colDirection) {
         continue;
       }
-      primary = Math.abs(dc);
-      perp = Math.abs(dr);
+      primaryDist = Math.abs(deltaCol);
+      perpDist = Math.abs(deltaRow);
     }
 
     if (
-      !best ||
-      perp < best.perp ||
-      (perp === best.perp && primary < best.primary)
+      !bestCandidate ||
+      perpDist < bestCandidate.perpDist ||
+      (perpDist === bestCandidate.perpDist &&
+        primaryDist < bestCandidate.primaryDist)
     ) {
-      best = { element: focusable, row, col, primary, perp };
+      bestCandidate = {
+        element: focusableElement,
+        row,
+        col,
+        primaryDist,
+        perpDist,
+      };
     }
   }
 
-  return best ? { element: best.element, row: best.row, col: best.col } : null;
+  return bestCandidate
+    ? {
+        element: bestCandidate.element,
+        row: bestCandidate.row,
+        col: bestCandidate.col,
+      }
+    : null;
 }
