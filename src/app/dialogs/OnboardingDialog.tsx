@@ -11,7 +11,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useTheme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 
 const highlights: { icon: ReactNode; primary: string; secondary: string }[] = [
@@ -38,11 +37,8 @@ export interface OnboardingDialogProps {
 }
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
-  const { direction } = useTheme();
-
   return (
     <Dialog
-      dir={direction}
       open={open}
       onClose={onClose}
       fullWidth

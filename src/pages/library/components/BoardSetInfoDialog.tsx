@@ -6,7 +6,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
-import { useTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { getLocaleDisplayName } from "@shared/language/locale";
 
@@ -19,12 +18,10 @@ export function BoardSetInfoDialog({
   boardSet,
   onClose,
 }: BoardSetInfoDialogProps) {
-  const { direction } = useTheme();
   const chipLabels = boardSet ? buildChipLabels(boardSet) : [];
 
   return (
     <Dialog
-      dir={direction}
       open={boardSet !== null}
       onClose={onClose}
       aria-labelledby="info-dialog-title"

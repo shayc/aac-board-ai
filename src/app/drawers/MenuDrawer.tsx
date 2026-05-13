@@ -9,7 +9,6 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useTheme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link as RouterLink } from "react-router";
@@ -26,10 +25,8 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const { direction } = useTheme();
-
   return (
-    <Drawer anchor="left" dir={direction} open={open} onClose={onClose}>
+    <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>
         <Toolbar>
           <Typography variant="h6" component="div" noWrap>

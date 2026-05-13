@@ -10,7 +10,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useTheme } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
 
@@ -27,7 +26,6 @@ export function BoardSetList({
   onDelete,
   onInfo,
 }: BoardSetListProps) {
-  const { direction } = useTheme();
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
     boardSet: BoardSetRecord;
@@ -96,7 +94,6 @@ export function BoardSetList({
 
       <Menu
         id="board-set-menu"
-        dir={direction}
         anchorEl={menuAnchor?.element}
         open={menuOpen}
         onClose={handleMenuClose}
