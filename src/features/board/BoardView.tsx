@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { useLanguage } from "@shared/language/useLanguage";
 import { Grid, type GridItemProps } from "./grid/Grid";
 import { MessageBar } from "./message/MessageBar";
 import { useMessage } from "./message/useMessage";
@@ -17,6 +18,7 @@ export interface BoardViewProps {
 }
 
 export function BoardView({ board }: BoardViewProps) {
+  const { direction } = useLanguage();
   const message = useMessage();
   const playback = useMessagePlayback(message.parts);
   const suggestions = useSuggestions(message.text);
@@ -91,6 +93,7 @@ export function BoardView({ board }: BoardViewProps) {
           order={board.grid.order}
           items={board.buttons}
           renderItem={renderTile}
+          dir={direction}
         />
       </Box>
     </Stack>
