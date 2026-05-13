@@ -21,7 +21,7 @@ import { BoardSetList } from "./components/BoardSetList";
 
 function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
-  const { importBoardFiles } = useImportBoardFiles();
+  const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
@@ -81,7 +81,7 @@ function LibraryPage() {
             <Button
               variant="contained"
               startIcon={<AddIcon />}
-              onClick={() => void importBoardFiles()}
+              onClick={() => void pickAndImportBoardFiles()}
             >
               Import board set
             </Button>
@@ -100,7 +100,7 @@ function LibraryPage() {
         <Button
           variant="text"
           startIcon={<AddIcon />}
-          onClick={() => void importBoardFiles()}
+          onClick={() => void pickAndImportBoardFiles()}
         >
           Import
         </Button>

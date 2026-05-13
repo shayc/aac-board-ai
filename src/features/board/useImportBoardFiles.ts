@@ -5,7 +5,7 @@ import { importBoardFiles } from "./storage/board-sets-store";
 const BOARD_FILE_ACCEPT = ".obz,.obf,application/zip,application/json";
 
 export interface UseImportBoardFilesReturn {
-  importBoardFiles: () => Promise<void>;
+  pickAndImportBoardFiles: () => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
@@ -41,5 +41,5 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  return { importBoardFiles: handleImport };
+  return { pickAndImportBoardFiles: handleImport };
 }
