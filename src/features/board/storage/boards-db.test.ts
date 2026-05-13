@@ -307,7 +307,6 @@ describe("putAssets and getAssetBlob", () => {
     const blob = new Blob(["12345"]);
     await putAssets(db, "set-1", [{ path: "file.bin", blob }]);
 
-    // Verify the asset exists and blob size matches
     const retrieved = await getAssetBlob(db, "set-1", "file.bin");
     expect(retrieved).not.toBeNull();
     expect(retrieved!.size).toBe(5);
@@ -458,8 +457,7 @@ describe("withBoardsDB", () => {
       await upsertBoardSet(db, { setId: "temp", name: "Temp" });
     });
 
-    // After withBoardsDB returns, the DB should be closed.
-    // Attempting a transaction on a closed DB throws.
+    // IDB throws on any transaction after close — proves withBoardsDB closed the DB.
     expect(() => {
       capturedDb!.transaction("boardSets", "readonly");
     }).toThrow();

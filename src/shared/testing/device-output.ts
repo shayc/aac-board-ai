@@ -1,10 +1,7 @@
 import { vi } from "vitest";
 
-// Real speak()/play() resolve via utterance.onend / audio.onended; the spies
-// trigger those events via microtask so awaited callers can settle in tests.
-// cancel/pause are stubbed alongside because the real hooks call them as part
-// of their start/stop lifecycle, and exercising them on real device output
-// causes spurious AbortErrors in browser-mode tests.
+// Stubs fire onend/ended via microtask so awaited callers can settle in tests.
+// cancel/pause are also stubbed: real device output calls them during lifecycle, causing spurious AbortErrors.
 
 export function stubSpeech() {
   const cancel = vi.spyOn(speechSynthesis, "cancel").mockReturnValue(undefined);
