@@ -15,6 +15,23 @@ export interface UseButtonActivationReturn {
   activateButton: (button: BoardButton) => Promise<void>;
 }
 
+export type ButtonIntent =
+  | { kind: "navigate"; boardId: string }
+  | { kind: "actions"; actions: BoardAction[] }
+  | { kind: "utter"; button: BoardButton };
+
+export function resolveButtonIntent(button: BoardButton): ButtonIntent {
+  if (button.loadBoard?.id) {
+    return { kind: "navigate", boardId: button.loadBoard.id };
+  }
+
+  if (button.actions?.length) {
+    return { kind: "actions", actions: button.actions };
+  }
+
+  return { kind: "utter", button };
+}
+
 export function useButtonActivation({
   message,
   playback,
@@ -24,21 +41,28 @@ export function useButtonActivation({
   const audio = useAudio();
 
   async function activateButton(button: BoardButton) {
-    if (button.loadBoard?.id) {
-      navigation.goToBoard(button.loadBoard.id);
-      return;
-    }
+    const intent = resolveButtonIntent(button);
 
-    if (button.actions?.length) {
-      for (const action of button.actions) {
-        await executeAction(action);
+    switch (intent.kind) {
+      case "navigate":
+        navigation.goToBoard(intent.boardId);
+        return;
+      case "actions":
+        for (const action of intent.actions) {
+          await executeAction(action);
+        }
+        return;
+      case "utter":
+        message.addPart(toMessagePart(intent.button));
+        playButtonAudio(intent.button);
+        return;
+      default: {
+        const _exhaustive: never = intent;
+        throw new Error(
+          `Unhandled button intent: ${JSON.stringify(_exhaustive)}`,
+        );
       }
-
-      return;
     }
-
-    message.addPart(toMessagePart(button));
-    playButtonAudio(button);
   }
 
   async function executeAction(action: BoardAction) {
