@@ -8,6 +8,13 @@ import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
 import type { SuggestionTone } from "./types";
 
+export interface UseSuggestionsReturn {
+  phrases: string[];
+  isAvailable: boolean;
+  tone: SuggestionTone;
+  setTone: (tone: SuggestionTone) => void;
+}
+
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
 function isValidSuggestion(suggestion: string): boolean {
@@ -20,13 +27,6 @@ function isValidSuggestion(suggestion: string): boolean {
   }
 
   return true;
-}
-
-export interface UseSuggestionsReturn {
-  phrases: string[];
-  isAvailable: boolean;
-  tone: SuggestionTone;
-  setTone: (tone: SuggestionTone) => void;
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {

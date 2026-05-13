@@ -23,18 +23,22 @@ export function useButtonActivation({
   const speech = useSpeech();
   const audio = useAudio();
 
-  function handleSpellingAction(action: string) {
-    if (!action.startsWith("+")) {
+  async function activateButton(button: BoardButton) {
+    if (button.loadBoard?.id) {
+      navigation.goToBoard(button.loadBoard.id);
       return;
     }
 
-    const text = action.slice(1).trim();
-    const lastPart = message.parts.at(-1);
+    if (button.actions?.length) {
+      for (const action of button.actions) {
+        await executeAction(action);
+      }
 
-    message.updateLastPart({
-      id: text,
-      label: `${lastPart?.label ?? ""}${text}`,
-    });
+      return;
+    }
+
+    message.addPart(toMessagePart(button));
+    playButtonAudio(button);
   }
 
   async function executeAction(action: BoardAction) {
@@ -59,6 +63,20 @@ export function useButtonActivation({
     }
   }
 
+  function handleSpellingAction(action: string) {
+    if (!action.startsWith("+")) {
+      return;
+    }
+
+    const text = action.slice(1).trim();
+    const lastPart = message.parts.at(-1);
+
+    message.updateLastPart({
+      id: text,
+      label: `${lastPart?.label ?? ""}${text}`,
+    });
+  }
+
   function playButtonAudio(button: BoardButton) {
     if (button.soundSrc) {
       void audio.play(button.soundSrc);
@@ -70,24 +88,6 @@ export function useButtonActivation({
     if (text) {
       void speech.speak(text.toLowerCase());
     }
-  }
-
-  async function activateButton(button: BoardButton) {
-    if (button.loadBoard?.id) {
-      navigation.goToBoard(button.loadBoard.id);
-      return;
-    }
-
-    if (button.actions?.length) {
-      for (const action of button.actions) {
-        await executeAction(action);
-      }
-
-      return;
-    }
-
-    message.addPart(toMessagePart(button));
-    playButtonAudio(button);
   }
 
   return {

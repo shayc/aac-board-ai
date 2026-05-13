@@ -16,10 +16,6 @@ export interface ImportResult {
   boardId: string;
 }
 
-function deriveSetId(filename: string): string {
-  return filename.replace(/\.(obz|obf)$/i, "").toLowerCase();
-}
-
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
@@ -141,4 +137,8 @@ async function importOBFFile(
   ]);
 
   return { setId, boardId: board.id };
+}
+
+function deriveSetId(filename: string): string {
+  return filename.replace(/\.(obz|obf)$/i, "").toLowerCase();
 }

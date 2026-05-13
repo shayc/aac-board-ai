@@ -26,6 +26,12 @@ type SnackbarAction =
   | { type: "close" }
   | { type: "exited" };
 
+const initialState: SnackbarState = {
+  queue: [],
+  current: undefined,
+  open: false,
+};
+
 function snackbarReducer(
   state: SnackbarState,
   action: SnackbarAction,
@@ -59,12 +65,6 @@ function snackbarReducer(
     }
   }
 }
-
-const initialState: SnackbarState = {
-  queue: [],
-  current: undefined,
-  open: false,
-};
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
