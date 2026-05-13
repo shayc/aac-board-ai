@@ -7,5 +7,5 @@ export {
 } from "./storage/board-sets-store";
 export type { BoardSetRecord } from "./storage/boards-db";
 export { useBoardSets } from "./storage/useBoardSets";
+export { useImportBoardFiles } from "./storage/useImportBoardFiles";
 export { useBoard } from "./useBoard";
-export { useImportBoardFiles } from "./useImportBoardFiles";

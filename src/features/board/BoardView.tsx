@@ -8,7 +8,7 @@ import { NavButtons } from "./navigation/NavButtons";
 import { useBoardNavigation } from "./navigation/useBoardNavigation";
 import { SuggestionBar } from "./suggestions/SuggestionBar";
 import { useSuggestions } from "./suggestions/useSuggestions";
-import { Tile } from "./Tile";
+import { Tile } from "./tile/Tile";
 import type { Board, BoardButton } from "./types";
 import { useButtonActivation } from "./useButtonActivation";
 

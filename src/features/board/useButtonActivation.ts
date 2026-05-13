@@ -20,18 +20,6 @@ export type ButtonIntent =
   | { kind: "actions"; actions: BoardAction[] }
   | { kind: "utter"; button: BoardButton };
 
-export function resolveButtonIntent(button: BoardButton): ButtonIntent {
-  if (button.loadBoard?.id) {
-    return { kind: "navigate", boardId: button.loadBoard.id };
-  }
-
-  if (button.actions?.length) {
-    return { kind: "actions", actions: button.actions };
-  }
-
-  return { kind: "utter", button };
-}
-
 export function useButtonActivation({
   message,
   playback,
@@ -117,6 +105,18 @@ export function useButtonActivation({
   return {
     activateButton,
   };
+}
+
+export function resolveButtonIntent(button: BoardButton): ButtonIntent {
+  if (button.loadBoard?.id) {
+    return { kind: "navigate", boardId: button.loadBoard.id };
+  }
+
+  if (button.actions?.length) {
+    return { kind: "actions", actions: button.actions };
+  }
+
+  return { kind: "utter", button };
 }
 
 function toMessagePart(button: BoardButton): MessagePart {

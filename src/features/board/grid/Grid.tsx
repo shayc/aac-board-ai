@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
-import { useGridKeyboard } from "./useGridKeyboard";
+import { useGridKeyboardNavigation } from "./useGridKeyboardNavigation";
 
 export interface GridItemProps {
   tabIndex: number;
@@ -13,6 +13,7 @@ export interface GridProps<TItem extends { id: string }> {
   order?: (string | null)[][];
   items: TItem[];
   renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
+  dir?: "ltr" | "rtl";
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -22,15 +23,17 @@ export function Grid<TItem extends { id: string }>({
   order,
   gap = 2,
   renderItem,
+  dir = "ltr",
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const gridRef = useRef<HTMLDivElement>(null);
   const previousItemsRef = useRef(items);
   const initialActiveCell = findFirstNonEmptyCell(grid);
 
-  const { keyboardProps, activeCell, handleFocus } = useGridKeyboard({
+  const { rootProps, activeCell } = useGridKeyboardNavigation({
     gridRef,
     initialActiveCell,
+    dir,
   });
 
   const activeCellRef = useRef(activeCell);
@@ -75,13 +78,13 @@ export function Grid<TItem extends { id: string }>({
 
   return (
     <Stack
-      {...keyboardProps}
+      {...rootProps}
       ref={gridRef}
-      onFocus={handleFocus}
       role="grid"
       aria-rowcount={rows}
       aria-colcount={columns}
       direction="column"
+      dir={dir}
       sx={{ minHeight: "100%", p: 2, gap }}
     >
       {grid.map((row, rowIndex) => (
