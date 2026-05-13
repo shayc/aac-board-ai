@@ -25,7 +25,7 @@ describe("SuggestionBar", () => {
     }
   });
 
-  test("clicking suggestion chips calls onSuggestionClick with correct values", async () => {
+  test("calls onSuggestionClick with the correct value when a suggestion chip is clicked", async () => {
     const handlers = createHandlers();
     const suggestions = ["Hello", "Goodbye"];
 

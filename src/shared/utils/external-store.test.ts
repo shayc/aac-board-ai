@@ -2,18 +2,18 @@ import { describe, expect, test, vi } from "vitest";
 import { createExternalStore } from "./external-store";
 
 describe("createExternalStore", () => {
-  test("should return the initial state", () => {
+  test("returns the initial state", () => {
     const store = createExternalStore(42);
     expect(store.getSnapshot()).toBe(42);
   });
 
-  test("should update state with setState", () => {
+  test("updates state with setState", () => {
     const store = createExternalStore("hello");
     store.setState("world");
     expect(store.getSnapshot()).toBe("world");
   });
 
-  test("should notify listeners on setState", () => {
+  test("notifies listeners on setState", () => {
     const store = createExternalStore(0);
     const listener = vi.fn();
     store.subscribe(listener);
@@ -22,7 +22,7 @@ describe("createExternalStore", () => {
     expect(listener).toHaveBeenCalledOnce();
   });
 
-  test("should stop notifying after unsubscribe", () => {
+  test("stops notifying after unsubscribe", () => {
     const store = createExternalStore(0);
     const listener = vi.fn();
     const unsubscribe = store.subscribe(listener);
@@ -32,7 +32,7 @@ describe("createExternalStore", () => {
     expect(listener).not.toHaveBeenCalled();
   });
 
-  test("should support object state", () => {
+  test("supports object state", () => {
     const store = createExternalStore({ count: 0, label: "test" });
     store.setState({ count: 1, label: "updated" });
     expect(store.getSnapshot()).toEqual({ count: 1, label: "updated" });
