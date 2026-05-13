@@ -32,3 +32,22 @@ export function getLocaleDisplayName(code: string): string {
     return code;
   }
 }
+
+/**
+ * Returns the writing direction for a BCP-47 locale code.
+ * Falls back to "ltr" for unrecognized codes.
+ */
+export function getLanguageDirection(code: string): "ltr" | "rtl" {
+  try {
+    // `getTextInfo()` is not yet declared in TypeScript's bundled lib.
+    type LocaleWithTextInfo = Intl.Locale & {
+      getTextInfo(): { direction?: "ltr" | "rtl" };
+    };
+    const locale = new Intl.Locale(
+      normalizeLocaleCode(code),
+    ) as LocaleWithTextInfo;
+    return locale.getTextInfo().direction === "rtl" ? "rtl" : "ltr";
+  } catch {
+    return "ltr";
+  }
+}

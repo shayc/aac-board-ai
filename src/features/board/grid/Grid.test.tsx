@@ -771,7 +771,7 @@ describe("Grid", () => {
       await expectFocus(item2);
     });
 
-    test("RTL: Home still moves to the lowest aria-colindex (logical first)", async () => {
+    test("RTL: Home moves to the visually-left edge (highest aria-colindex)", async () => {
       const items = [
         { id: "1", label: "Item 1" },
         { id: "2", label: "Item 2" },
@@ -791,12 +791,108 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
+      // In RTL, Item 1 (col 0) is visually rightmost and Item 3 (col 2) is
+      // visually leftmost. macOS sends Home for Fn+ArrowLeft, so Home should
+      // move toward the visual left to stay consistent with ArrowLeft.
+      item1.element().focus();
+      await expect.element(item1).toHaveFocus();
+
+      press(item1, "Home");
+
+      await expectFocus(item3);
+    });
+
+    test("RTL: End moves to the visually-right edge (lowest aria-colindex)", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+        { id: "3", label: "Item 3" },
+      ];
+
+      const screen = await render(
+        <Grid
+          rows={1}
+          columns={3}
+          items={items}
+          dir="rtl"
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
+
+      // End (Fn+ArrowRight on macOS) mirrors ArrowRight: moves toward the
+      // visual right, which is col 0 (Item 1) in RTL.
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
-      press(item3, "Home");
+      press(item3, "End");
 
-      // Home is logical (not visual), so it still goes to col 0 (Item 1) in RTL
+      await expectFocus(item1);
+    });
+
+    test("RTL: Ctrl+Home moves to the visually bottom-left cell of the grid", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+        { id: "3", label: "Item 3" },
+        { id: "4", label: "Item 4" },
+      ];
+
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={items}
+          dir="rtl"
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+      const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+
+      item1.element().focus();
+      await expect.element(item1).toHaveFocus();
+
+      // macOS Fn+Ctrl+ArrowLeft sends Ctrl+Home. Because ArrowLeft is the
+      // forward/end direction in RTL, Ctrl+Home jumps to the last cell in
+      // reading order — row max / col max — which is visually bottom-left.
+      press(item1, "Home", { ctrlKey: true });
+
+      await expectFocus(item4);
+    });
+
+    test("RTL: Ctrl+End moves to the visually top-right cell of the grid", async () => {
+      const items = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+        { id: "3", label: "Item 3" },
+        { id: "4", label: "Item 4" },
+      ];
+
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={items}
+          dir="rtl"
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+      const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+
+      item4.element().focus();
+      await expect.element(item4).toHaveFocus();
+
+      // macOS Fn+Ctrl+ArrowRight sends Ctrl+End. ArrowRight is the
+      // backward/start direction in RTL, so Ctrl+End jumps to the first
+      // cell in reading order — row 0 / col 0 — which is visually top-right.
+      press(item4, "End", { ctrlKey: true });
+
       await expectFocus(item1);
     });
 

@@ -39,7 +39,7 @@ export default defineConfig([
         {
           patterns: [
             {
-              regex: "^@mui/[^/]+$",
+              regex: "^@mui/(?!stylis-plugin-rtl)[^/]+$",
               message: "Import from subpaths, e.g. @mui/material/Button",
             },
           ],

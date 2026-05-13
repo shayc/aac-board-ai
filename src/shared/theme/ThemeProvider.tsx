@@ -1,37 +1,53 @@
+import createCache from "@emotion/cache";
+import { CacheProvider } from "@emotion/react";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import rtlPlugin from "@mui/stylis-plugin-rtl";
+import { useLanguage } from "@shared/language/useLanguage";
 import type { ReactNode } from "react";
+import { prefixer } from "stylis";
 
 export interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const theme = createTheme({
-  colorSchemes: {
-    dark: true,
-  },
-  components: {
-    MuiTooltip: {
-      defaultProps: {
-        enterDelay: 800,
-      },
-    },
-  },
-  typography: {
-    button: {
-      textTransform: "none",
-    },
-  },
+const ltrCache = createCache({ key: "muiltr" });
+const rtlCache = createCache({
+  key: "muirtl",
+  stylisPlugins: [prefixer, rtlPlugin],
 });
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
+  const { direction } = useLanguage();
+
+  const theme = createTheme({
+    direction,
+    colorSchemes: {
+      dark: true,
+    },
+    components: {
+      MuiTooltip: {
+        defaultProps: {
+          enterDelay: 800,
+        },
+      },
+    },
+    typography: {
+      button: {
+        textTransform: "none",
+      },
+    },
+  });
+
   return (
-    <MUIThemeProvider theme={theme} noSsr>
-      <CssBaseline />
-      {children}
-    </MUIThemeProvider>
+    <CacheProvider value={direction === "rtl" ? rtlCache : ltrCache}>
+      <MUIThemeProvider theme={theme} noSsr>
+        <CssBaseline />
+        {children}
+      </MUIThemeProvider>
+    </CacheProvider>
   );
 }

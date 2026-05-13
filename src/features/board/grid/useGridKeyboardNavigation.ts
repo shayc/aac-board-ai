@@ -93,11 +93,24 @@ function nextFocus(
     const candidates = grid.querySelectorAll<HTMLElement>(
       `${scope} ${FOCUSABLE}`,
     );
-    const element =
-      event.key === "Home" ? candidates[0] : candidates[candidates.length - 1];
+
+    // Home/End follow the visual direction of the physical arrow key so
+    // they stay consistent with ArrowLeft/ArrowRight. On macOS Fn+ArrowLeft
+    // sends Home and Fn+Ctrl+ArrowLeft sends Ctrl+Home; both should move
+    // toward the visual-left edge regardless of writing direction. Because
+    // ArrowLeft is the "end" direction in RTL, Home there picks the last
+    // cell in reading order (DOM order), and End picks the first.
+    const goToFirst =
+      dir === "rtl" ? event.key === "End" : event.key === "Home";
+
+    const element = goToFirst
+      ? candidates[0]
+      : candidates[candidates.length - 1];
+
     if (!element) {
       return null;
     }
+
     const position = cellOf(element);
     return position ? { element, position } : null;
   }
