@@ -4,7 +4,7 @@ import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import type { SuggestionTone } from "../types";
+import type { SuggestionTone } from "./types";
 
 export interface ToneSelectorProps {
   tone: SuggestionTone;

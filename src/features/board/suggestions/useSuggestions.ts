@@ -6,7 +6,7 @@ import { useAI } from "@shared/ai/useAI";
 import { useProofreader } from "@shared/ai/useProofreader";
 import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
-import type { SuggestionTone } from "../types";
+import type { SuggestionTone } from "./types";
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
