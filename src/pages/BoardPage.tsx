@@ -23,7 +23,12 @@ function BoardPage() {
     return <LoadingState message="Loading board..." />;
   }
 
-  return <BoardView board={board} />;
+  return (
+    <>
+      <title>{board.name}</title>
+      <BoardView board={board} />
+    </>
+  );
 }
 
 export default BoardPage;

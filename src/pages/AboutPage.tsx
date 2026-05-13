@@ -1,25 +1,18 @@
 import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
-import Fade from "@mui/material/Fade";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { PageContainer } from "@shared/components/PageContainer";
 
-const FADE_DURATION_MS = 400;
-
 function AboutPage() {
-  const prefersReducedMotion = useMediaQuery(
-    "(prefers-reduced-motion: reduce)",
-  );
-
   useDeclareHeaderTitle("About");
 
   return (
-    <PageContainer>
-      <Fade in timeout={prefersReducedMotion ? 0 : FADE_DURATION_MS}>
+    <>
+      <title>About – AAC Board AI</title>
+      <PageContainer>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
             AAC Board AI helps people who can't rely on speech communicate more
@@ -91,8 +84,8 @@ function AboutPage() {
             View Source Code on GitHub
           </Button>
         </Stack>
-      </Fade>
-    </PageContainer>
+      </PageContainer>
+    </>
   );
 }
 
