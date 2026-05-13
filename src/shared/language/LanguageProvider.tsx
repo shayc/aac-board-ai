@@ -47,5 +47,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     }
   }, [language, voicesByLanguage, setVoiceURI]);
 
+  useEffect(() => {
+    document.documentElement.dir = direction;
+    document.documentElement.lang = language;
+  }, [direction, language]);
+
   return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }

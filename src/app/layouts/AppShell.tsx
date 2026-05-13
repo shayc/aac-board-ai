@@ -4,21 +4,16 @@ import { MenuDrawer } from "@app/drawers/MenuDrawer";
 import { SettingsDrawer } from "@app/drawers/settings/SettingsDrawer";
 import { AppHeader } from "@app/layouts/AppHeader";
 import Box from "@mui/material/Box";
-import { useLanguage } from "@shared/language/useLanguage";
 import { useState } from "react";
 import { Outlet } from "react-router";
 
 export function AppShell() {
-  const { direction } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
 
   return (
-    <Box
-      dir={direction}
-      sx={{ height: "100svh", display: "flex", flexDirection: "column" }}
-    >
+    <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
       <AppHeader
         onMenuClick={() => setIsMenuOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
