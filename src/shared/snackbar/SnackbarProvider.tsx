@@ -68,7 +68,7 @@ const initialState: SnackbarState = {
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
-  const keyCounterRef = useRef(0);
+  const nextKeyRef = useRef(0);
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -76,7 +76,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
     const message: SnackbarMessage = {
       ...snackbarOptions,
-      key: keyCounterRef.current++,
+      key: nextKeyRef.current++,
     };
     dispatch({ type: "show", message });
   };
