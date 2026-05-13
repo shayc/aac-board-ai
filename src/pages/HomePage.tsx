@@ -14,7 +14,7 @@ async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
 
   const existingSets = await getBoardSets();
   if (existingSets.length > 0) {
-    return `/sets/${encodeURIComponent(existingSets[0].setId)}`;
+    return generatePath("/sets/:setId", { setId: existingSets[0].setId });
   }
 
   const { setId, boardId } = await importBoardFromUrl(DEFAULT_BOARD_URL);

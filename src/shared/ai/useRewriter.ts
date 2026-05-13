@@ -2,7 +2,11 @@ import { useRef } from "react";
 import { isRewriterSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
-export function useRewriter() {
+export interface UseRewriterReturn {
+  createRewriter: (options?: RewriterCreateOptions) => Promise<Rewriter | null>;
+}
+
+export function useRewriter(): UseRewriterReturn {
   const { setDownload } = useAI();
   const rewriterRef = useRef<Rewriter | null>(null);
   const optionsRef = useRef<RewriterCreateOptions | null>(null);
@@ -27,9 +31,11 @@ export function useRewriter() {
     }
 
     const availability = await Rewriter.availability();
+
     if (availability === "unavailable") {
       return null;
     }
+
     const rewriter = await Rewriter.create({
       ...options,
       monitor(m) {

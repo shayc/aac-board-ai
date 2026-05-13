@@ -50,22 +50,6 @@ describe("Grid", () => {
       expect(getCellPosition(item4)).toEqual({ row: 1, col: 1 });
     });
 
-    test("renders no items when items is empty", async () => {
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={[]}
-          renderItem={(item: { id: string; label: string }, props) => (
-            <button {...props}>{item.label}</button>
-          )}
-        />,
-      );
-
-      const buttons = screen.getByRole("button").query();
-      expect(buttons).toBeNull();
-    });
-
     test("renders only provided items when fewer than grid capacity", async () => {
       const items = [
         { id: "1", label: "Item 1" },
@@ -113,6 +97,22 @@ describe("Grid", () => {
       expect(
         screen.getByRole("button", { name: "Item 5", exact: true }).query(),
       ).toBeNull();
+    });
+
+    test("renders no items when items is empty", async () => {
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={[]}
+          renderItem={(item: { id: string; label: string }, props) => (
+            <button {...props}>{item.label}</button>
+          )}
+        />,
+      );
+
+      const buttons = screen.getByRole("button").query();
+      expect(buttons).toBeNull();
     });
   });
 

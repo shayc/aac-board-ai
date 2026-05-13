@@ -19,7 +19,7 @@ The codebase is **feature-sliced**. The single feature today is `board`. Layers 
 
 Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts).
 
-**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardView`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`fetchBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
+**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardView`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`getBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
 
 **See:** [tsconfig.app.json](../tsconfig.app.json), [src/features/board/index.ts](../src/features/board/index.ts).
 
@@ -47,7 +47,7 @@ Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-bounda
 
 **Snackbar.** `SnackbarProvider` exposes `showSnackbar({ message, severity })` via `useSnackbar()`. Today it surfaces import success/failure (`useImportBoardFiles`) and board-set deletion outcomes (`LibraryPage`). Other transient feedback should go through the same channel rather than rolling its own UI.
 
-**Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/settings/panels/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
+**Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/settings/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
 
 **See:** [src/app/layouts/AppShell.tsx](../src/app/layouts/AppShell.tsx), [src/app/dialogs/useOnboarding.ts](../src/app/dialogs/useOnboarding.ts), [src/shared/snackbar/SnackbarProvider.tsx](../src/shared/snackbar/SnackbarProvider.tsx), [src/app/drawers/settings/SettingsDrawer.tsx](../src/app/drawers/settings/SettingsDrawer.tsx).
 
@@ -74,7 +74,7 @@ The end-to-end pipeline from imported file to spoken message:
 ```mermaid
 flowchart TD
   subgraph Import
-    A[File / URL] --> B[storeBoardFiles]
+    A[File / URL] --> B[importBoardFiles]
     B --> C[(IndexedDB:<br/>boardsets · boards · assets)]
   end
 
@@ -110,13 +110,13 @@ Three layers, by lifetime.
 
 ### IndexedDB
 
-Database `aac-board-db`, version 1.
+Database `aac-boards-db`, version 1.
 
-| Object store | Key                | Indexes                     | Holds                                      |
-| ------------ | ------------------ | --------------------------- | ------------------------------------------ |
-| `boardsets`  | `setId`            | `byUpdatedAt`               | `BoardSetRecord` — metadata per import     |
-| `boards`     | `[setId, boardId]` | `bySetId`                   | `BoardRecord` — the OBF JSON for one board |
-| `assets`     | `[setId, path]`    | `bySetId`, `bySetIdMediaId` | `AssetRecord` — image/sound `Blob`s        |
+| Object store | Key                | Indexes                        | Holds                                      |
+| ------------ | ------------------ | ------------------------------ | ------------------------------------------ |
+| `boardSets`  | `setId`            | `byUpdatedAt`                  | `BoardSetRecord` — metadata per import     |
+| `boards`     | `[setId, boardId]` | `bySetId`                      | `BoardRecord` — the OBF JSON for one board |
+| `assets`     | `[setId, path]`    | `bySetId`, `bySetIdAndMediaId` | `AssetRecord` — image/sound `Blob`s        |
 
 Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens the DB, runs the callback, and closes — connections are not pooled. Deletes use bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
 

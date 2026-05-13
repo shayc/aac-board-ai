@@ -4,7 +4,7 @@ import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import type { SuggestionTone } from "../types";
+import type { SuggestionTone } from "./types";
 
 export interface ToneSelectorProps {
   tone: SuggestionTone;
@@ -30,19 +30,19 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
       onChange={handleChange}
     >
       <Tooltip title="Direct tone">
-        <ToggleButton value="as-is" aria-label="direct tone">
+        <ToggleButton value="as-is" aria-label="Direct tone">
           <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title="Professional tone">
-        <ToggleButton value="more-formal" aria-label="professional tone">
+        <ToggleButton value="more-formal" aria-label="Professional tone">
           <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title="Friendly tone">
-        <ToggleButton value="more-casual" aria-label="friendly tone">
+        <ToggleButton value="more-casual" aria-label="Friendly tone">
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>

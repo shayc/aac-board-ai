@@ -15,6 +15,12 @@ describe("usePersistentState", () => {
     expect(result.current[0]).toBe(42);
   });
 
+  test("writes initial value to localStorage on first render", async () => {
+    await renderHook(() => usePersistentState(KEY, "initial"));
+
+    expect(JSON.parse(localStorage.getItem(KEY)!)).toBe("initial");
+  });
+
   test("reads existing value from localStorage", async () => {
     localStorage.setItem(KEY, JSON.stringify("stored-value"));
 
@@ -23,6 +29,16 @@ describe("usePersistentState", () => {
     );
 
     expect(result.current[0]).toBe("stored-value");
+  });
+
+  test("falls back to initial value when localStorage contains invalid JSON", async () => {
+    localStorage.setItem(KEY, "not-valid-json{{{");
+
+    const { result } = await renderHook(() =>
+      usePersistentState(KEY, "fallback"),
+    );
+
+    expect(result.current[0]).toBe("fallback");
   });
 
   test("persists value to localStorage on update", async () => {
@@ -64,16 +80,6 @@ describe("usePersistentState", () => {
     expect(result.current[0]).toBe(15);
   });
 
-  test("falls back to initial value when localStorage contains invalid JSON", async () => {
-    localStorage.setItem(KEY, "not-valid-json{{{");
-
-    const { result } = await renderHook(() =>
-      usePersistentState(KEY, "fallback"),
-    );
-
-    expect(result.current[0]).toBe("fallback");
-  });
-
   test("different keys are isolated", async () => {
     const keyA = KEY + "-a";
     const keyB = KEY + "-b";
@@ -89,11 +95,5 @@ describe("usePersistentState", () => {
 
     localStorage.removeItem(keyA);
     localStorage.removeItem(keyB);
-  });
-
-  test("writes initial value to localStorage on first render", async () => {
-    await renderHook(() => usePersistentState(KEY, "initial"));
-
-    expect(JSON.parse(localStorage.getItem(KEY)!)).toBe("initial");
   });
 });

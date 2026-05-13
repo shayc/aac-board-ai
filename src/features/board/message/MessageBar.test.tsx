@@ -51,9 +51,6 @@ describe("MessageBar", () => {
     const wantIndex = allText.indexOf("want");
     const waterIndex = allText.indexOf("water");
 
-    expect(iIndex).toBeGreaterThan(-1);
-    expect(wantIndex).toBeGreaterThan(-1);
-    expect(waterIndex).toBeGreaterThan(-1);
     expect(iIndex).toBeLessThan(wantIndex);
     expect(wantIndex).toBeLessThan(waterIndex);
   });

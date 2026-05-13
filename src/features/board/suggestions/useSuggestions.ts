@@ -6,7 +6,14 @@ import { useAI } from "@shared/ai/useAI";
 import { useProofreader } from "@shared/ai/useProofreader";
 import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useRef, useState } from "react";
-import type { SuggestionTone } from "../types";
+import type { SuggestionTone } from "./types";
+
+export interface UseSuggestionsReturn {
+  phrases: string[];
+  isAvailable: boolean;
+  tone: SuggestionTone;
+  setTone: (tone: SuggestionTone) => void;
+}
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
@@ -22,13 +29,6 @@ function isValidSuggestion(suggestion: string): boolean {
   return true;
 }
 
-export interface UseSuggestionsReturn {
-  phrases: string[];
-  isAvailable: boolean;
-  tone: SuggestionTone;
-  setTone: (tone: SuggestionTone) => void;
-}
-
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const { sharedContext } = useAI();
   const isSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
@@ -42,11 +42,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    const generateSuggestions = async (
-      text: string,
-      tone: SuggestionTone,
-      sharedContext?: string,
-    ) => {
+    const generateSuggestions = async () => {
       abortRef.current?.abort();
 
       const controller = new AbortController();
@@ -80,7 +76,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
         setSuggestions(uniqueSuggestions);
       } catch (error) {
-        if ((error as DOMException).name === "AbortError") {
+        if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
 
@@ -88,7 +84,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
       }
     };
 
-    void generateSuggestions(text, tone, sharedContext);
+    void generateSuggestions();
 
     return () => abortRef.current?.abort();
   }, [text, tone, sharedContext, createProofreader, createRewriter]);

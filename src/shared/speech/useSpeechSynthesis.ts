@@ -77,8 +77,8 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
     };
   }, []);
 
-  const speak = (text: string) =>
-    new Promise<void>((resolve, reject) => {
+  function speak(text: string) {
+    return new Promise<void>((resolve, reject) => {
       if (!isSpeechSupported) {
         reject(new Error("Speech Synthesis is not supported in this browser."));
         return;
@@ -109,18 +109,19 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
       synthesis.cancel();
       synthesis.speak(utterance);
     });
+  }
 
-  const cancel = () => {
+  function cancel() {
     synthesis.cancel();
-  };
+  }
 
-  const pause = () => {
+  function pause() {
     synthesis.pause();
-  };
+  }
 
-  const resume = () => {
+  function resume() {
     synthesis.resume();
-  };
+  }
 
   return {
     isSpeechSupported,

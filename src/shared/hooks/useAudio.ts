@@ -14,7 +14,7 @@ export function useAudio(): UseAudioReturn {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const rejectRef = useRef<((reason: Error) => void) | null>(null);
 
-  const cleanup = () => {
+  function cleanup() {
     const audio = audioRef.current;
     if (audio) {
       audio.onplay = null;
@@ -32,13 +32,13 @@ export function useAudio(): UseAudioReturn {
     }
 
     audioRef.current = null;
-  };
+  }
 
   useEffect(() => {
     return () => cleanup();
   }, []);
 
-  const play = async (url: string) => {
+  async function play(url: string) {
     cleanup();
 
     const audio = new Audio(url);
@@ -76,13 +76,13 @@ export function useAudio(): UseAudioReturn {
         reject(error instanceof Error ? error : new Error(String(error)));
       });
     });
-  };
+  }
 
-  const stop = () => {
+  function stop() {
     cleanup();
     setIsPlaying(false);
     setIsPaused(false);
-  };
+  }
 
   return { play, stop, isPlaying, isPaused };
 }

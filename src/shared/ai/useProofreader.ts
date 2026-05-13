@@ -2,7 +2,13 @@ import { useRef } from "react";
 import { isProofreaderSupported } from "./capabilities";
 import { useAI } from "./useAI";
 
-export function useProofreader() {
+export interface UseProofreaderReturn {
+  createProofreader: (
+    options?: ProofreaderCreateOptions,
+  ) => Promise<Proofreader | null>;
+}
+
+export function useProofreader(): UseProofreaderReturn {
   const { setDownload } = useAI();
   const proofreaderRef = useRef<Proofreader | null>(null);
 

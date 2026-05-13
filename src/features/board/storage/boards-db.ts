@@ -32,6 +32,32 @@ export interface AssetRecord {
   size?: number;
 }
 
+export interface UpsertBoardSetInput {
+  setId: string;
+  name: string;
+  rootBoardId?: string;
+  author?: string;
+  description?: string;
+  license?: string;
+  locale?: string;
+  gridRows?: number;
+  gridColumns?: number;
+}
+
+export interface UpsertBoardInput {
+  boardId: string;
+  name: string;
+  obf: OBFBoard;
+}
+
+export interface UpsertAssetInput {
+  path: string;
+  blob: Blob;
+  mime?: string;
+  size?: number;
+  mediaId?: string;
+}
+
 export interface BoardsDBSchema extends DBSchema {
   boardSets: {
     key: string;
@@ -107,18 +133,6 @@ export async function withBoardsDB<T>(
   }
 }
 
-export interface UpsertBoardSetInput {
-  setId: string;
-  name: string;
-  rootBoardId?: string;
-  author?: string;
-  description?: string;
-  license?: string;
-  locale?: string;
-  gridRows?: number;
-  gridColumns?: number;
-}
-
 export async function upsertBoardSet(
   db: BoardsDB,
   input: UpsertBoardSetInput,
@@ -161,10 +175,31 @@ export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   return boardSets;
 }
 
-export interface UpsertBoardInput {
-  boardId: string;
-  name: string;
-  obf: OBFBoard;
+export async function deleteBoardSet(
+  db: BoardsDB,
+  setId: string,
+): Promise<void> {
+  validateId(setId, "setId");
+  const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
+
+  try {
+    // Fire all three deletes without awaiting individually;
+    // they share a single transaction and commit together on tx.done.
+    void tx
+      .objectStore("boards")
+      .delete(IDBKeyRange.bound([setId], [setId, []]));
+
+    void tx
+      .objectStore("assets")
+      .delete(IDBKeyRange.bound([setId], [setId, []]));
+
+    void tx.objectStore("boardSets").delete(setId);
+
+    await tx.done;
+  } catch (error) {
+    tx.abort();
+    throw error;
+  }
 }
 
 export async function putBoards(
@@ -230,14 +265,6 @@ export async function getBoards(
   return boards.filter((record): record is BoardRecord => record !== undefined);
 }
 
-export interface UpsertAssetInput {
-  path: string;
-  blob: Blob;
-  mime?: string;
-  size?: number;
-  mediaId?: string;
-}
-
 export async function putAssets(
   db: BoardsDB,
   setId: string,
@@ -276,6 +303,18 @@ export async function putAssets(
   }
 }
 
+export async function getAssetBlob(
+  db: BoardsDB,
+  setId: string,
+  path: string,
+): Promise<Blob | undefined> {
+  validateId(setId, "setId");
+  const cleanPath = normalizePath(path);
+  const asset = await db.get("assets", [setId, cleanPath]);
+
+  return asset?.blob;
+}
+
 export async function updateBoardStrings(
   db: BoardsDB,
   setId: string,
@@ -297,43 +336,4 @@ export async function updateBoardStrings(
   };
 
   await db.put("boards", { ...record, obf: updatedObf });
-}
-
-export async function getAssetBlob(
-  db: BoardsDB,
-  setId: string,
-  path: string,
-): Promise<Blob | undefined> {
-  validateId(setId, "setId");
-  const cleanPath = normalizePath(path);
-  const asset = await db.get("assets", [setId, cleanPath]);
-
-  return asset?.blob;
-}
-
-export async function deleteBoardSet(
-  db: BoardsDB,
-  setId: string,
-): Promise<void> {
-  validateId(setId, "setId");
-  const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
-
-  try {
-    // Fire all three deletes without awaiting individually;
-    // they share a single transaction and commit together on tx.done.
-    void tx
-      .objectStore("boards")
-      .delete(IDBKeyRange.bound([setId], [setId, []]));
-
-    void tx
-      .objectStore("assets")
-      .delete(IDBKeyRange.bound([setId], [setId, []]));
-
-    void tx.objectStore("boardSets").delete(setId);
-
-    await tx.done;
-  } catch (error) {
-    tx.abort();
-    throw error;
-  }
 }

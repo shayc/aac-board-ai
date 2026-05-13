@@ -1,11 +1,11 @@
 import { getContrastRatio } from "@mui/material/styles";
 
 export function getReadableTextColor(background: string): string {
-  const white = "#fff";
-  const black = "#000";
+  const lightText = "#fff";
+  const darkText = "#000";
 
-  const whiteRatio = getContrastRatio(white, background);
-  const blackRatio = getContrastRatio(black, background);
+  const whiteRatio = getContrastRatio(lightText, background);
+  const blackRatio = getContrastRatio(darkText, background);
 
-  return whiteRatio >= blackRatio ? white : black;
+  return whiteRatio >= blackRatio ? lightText : darkText;
 }

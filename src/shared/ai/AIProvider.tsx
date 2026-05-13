@@ -1,6 +1,6 @@
 import { usePersistentState } from "@shared/hooks/usePersistentState";
 import { type ReactNode, useState } from "react";
-import { AIContext, type AIContextValue } from "./AIContext";
+import { AIContext, type AIContextValue, type DownloadKey } from "./AIContext";
 
 export interface AIProviderProps {
   children: ReactNode;
@@ -11,9 +11,13 @@ export function AIProvider({ children }: AIProviderProps) {
     "ai-shared-context",
     "",
   );
-  const [downloads, setDownloads] = useState<Record<string, number>>({});
+  const [downloads, setDownloads] = useState<Record<DownloadKey, number>>({
+    proofreader: 0,
+    rewriter: 0,
+    translator: 0,
+  });
 
-  function setDownload(key: string, progress: number) {
+  function setDownload(key: DownloadKey, progress: number) {
     setDownloads((prev) => ({ ...prev, [key]: progress }));
   }
 
