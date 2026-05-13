@@ -5,14 +5,14 @@ import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
 import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
 import type { BoardAction, BoardButton } from "./types";
 
-export interface UseButtonActivationOptions {
+export interface UseTileActivationOptions {
   message: UseMessageReturn;
   playback: UseMessagePlaybackReturn;
   navigation: UseBoardNavigationReturn;
 }
 
-export interface UseButtonActivationReturn {
-  activateButton: (button: BoardButton) => Promise<void>;
+export interface UseTileActivationReturn {
+  activateTile: (button: BoardButton) => Promise<void>;
 }
 
 export type ButtonIntent =
@@ -20,15 +20,15 @@ export type ButtonIntent =
   | { kind: "actions"; actions: BoardAction[] }
   | { kind: "utter"; button: BoardButton };
 
-export function useButtonActivation({
+export function useTileActivation({
   message,
   playback,
   navigation,
-}: UseButtonActivationOptions): UseButtonActivationReturn {
+}: UseTileActivationOptions): UseTileActivationReturn {
   const speech = useSpeech();
   const audio = useAudio();
 
-  async function activateButton(button: BoardButton) {
+  async function activateTile(button: BoardButton) {
     const intent = resolveButtonIntent(button);
 
     switch (intent.kind) {
@@ -103,7 +103,7 @@ export function useButtonActivation({
   }
 
   return {
-    activateButton,
+    activateTile,
   };
 }
 
