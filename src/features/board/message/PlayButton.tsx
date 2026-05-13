@@ -3,6 +3,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { flipForRtl } from "@shared/theme/rtl";
 
 export interface PlayButtonProps {
   disabled?: boolean;
@@ -40,7 +41,7 @@ export function PlayButton({
           {isPlaying ? (
             <StopIcon sx={{ width: 48, height: 48 }} />
           ) : (
-            <PlayArrowIcon sx={{ width: 48, height: 48 }} />
+            <PlayArrowIcon sx={[flipForRtl, { width: 48, height: 48 }]} />
           )}
         </IconButton>
       </Box>

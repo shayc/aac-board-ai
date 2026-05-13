@@ -1,6 +1,39 @@
+import {
+  createTheme,
+  ThemeProvider as MUIThemeProvider,
+} from "@mui/material/styles";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { NavButtons } from "./NavButtons";
+
+function renderWithDirection(
+  direction: "ltr" | "rtl",
+  props: {
+    canGoBack?: boolean;
+    canGoHome?: boolean;
+    onBackClick?: () => void;
+    onHomeClick?: () => void;
+  } = {},
+) {
+  const theme = createTheme({ direction });
+  const {
+    canGoBack = true,
+    canGoHome = true,
+    onBackClick = vi.fn(),
+    onHomeClick = vi.fn(),
+  } = props;
+
+  return render(
+    <MUIThemeProvider theme={theme}>
+      <NavButtons
+        canGoBack={canGoBack}
+        canGoHome={canGoHome}
+        onBackClick={onBackClick}
+        onHomeClick={onHomeClick}
+      />
+    </MUIThemeProvider>,
+  );
+}
 
 describe("NavButtons", () => {
   test("calls onBackClick when back button is clicked", async () => {
@@ -96,5 +129,41 @@ describe("NavButtons", () => {
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
       .toBeDisabled();
+  });
+
+  describe("RTL icon mirroring", () => {
+    test("back arrow is flipped in RTL", async () => {
+      const screen = await renderWithDirection("rtl");
+
+      const backButton = screen.getByRole("button", { name: "Back" });
+      const icon = backButton.element().querySelector("svg");
+
+      expect(icon).not.toBeNull();
+      // Browsers resolve scaleX(-1) to its matrix equivalent
+      const styles = getComputedStyle(icon!);
+      expect(styles.transform).toBe("matrix(-1, 0, 0, 1, 0, 0)");
+    });
+
+    test("back arrow is not flipped in LTR", async () => {
+      const screen = await renderWithDirection("ltr");
+
+      const backButton = screen.getByRole("button", { name: "Back" });
+      const icon = backButton.element().querySelector("svg");
+
+      expect(icon).not.toBeNull();
+      const styles = getComputedStyle(icon!);
+      expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
+    });
+
+    test("home icon is not flipped in RTL", async () => {
+      const screen = await renderWithDirection("rtl");
+
+      const homeButton = screen.getByRole("button", { name: "Home" });
+      const icon = homeButton.element().querySelector("svg");
+
+      expect(icon).not.toBeNull();
+      const styles = getComputedStyle(icon!);
+      expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
+    });
   });
 });

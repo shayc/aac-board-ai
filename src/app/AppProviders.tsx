@@ -11,14 +11,14 @@ export interface AppProvidersProps {
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    <ThemeProvider>
-      <SnackbarProvider>
-        <SpeechProvider>
-          <LanguageProvider>
+    <SpeechProvider>
+      <LanguageProvider>
+        <ThemeProvider>
+          <SnackbarProvider>
             <AIProvider>{children}</AIProvider>
-          </LanguageProvider>
-        </SpeechProvider>
-      </SnackbarProvider>
-    </ThemeProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </LanguageProvider>
+    </SpeechProvider>
   );
 }

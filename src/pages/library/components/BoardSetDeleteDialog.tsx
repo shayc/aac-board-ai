@@ -5,6 +5,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useTheme } from "@mui/material/styles";
 
 export interface BoardSetDeleteDialogProps {
   boardSet: BoardSetRecord | null;
@@ -17,8 +18,11 @@ export function BoardSetDeleteDialog({
   onConfirm,
   onClose,
 }: BoardSetDeleteDialogProps) {
+  const { direction } = useTheme();
+
   return (
     <Dialog
+      dir={direction}
       open={boardSet !== null}
       onClose={onClose}
       aria-labelledby="delete-dialog-title"

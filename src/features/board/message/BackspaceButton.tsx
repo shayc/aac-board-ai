@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { flipForRtl } from "@shared/theme/rtl";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
@@ -56,7 +57,7 @@ export function BackspaceButton({
           disabled={disabled}
           sx={{ width: 72, height: 72 }}
         >
-          <BackspaceOutlinedIcon />
+          <BackspaceOutlinedIcon sx={flipForRtl} />
         </IconButton>
 
         <StyledCircularProgress

@@ -3,6 +3,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { flipForRtl } from "@shared/theme/rtl";
 
 export interface NavButtonsProps {
   canGoBack: boolean;
@@ -27,7 +28,7 @@ export function NavButtons({
             disabled={!canGoBack}
             onClick={onBackClick}
           >
-            <ArrowBackOutlinedIcon />
+            <ArrowBackOutlinedIcon sx={flipForRtl} />
           </IconButton>
         </span>
       </Tooltip>
