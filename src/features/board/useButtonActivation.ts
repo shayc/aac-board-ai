@@ -1,18 +1,18 @@
 import { useAudio } from "@shared/hooks/useAudio";
 import { useSpeech } from "@shared/speech/useSpeech";
-import type { MessagePart, UseMessageReturn } from "../message/useMessage";
-import type { UseMessagePlaybackReturn } from "../message/useMessagePlayback";
-import type { UseBoardNavigationReturn } from "../navigation/useBoardNavigation";
-import type { BoardAction, BoardButton } from "../types";
+import type { MessagePart, UseMessageReturn } from "./message/useMessage";
+import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
+import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
+import type { BoardAction, BoardButton } from "./types";
 
-export interface UseTileActivationOptions {
+export interface UseButtonActivationOptions {
   message: UseMessageReturn;
   playback: UseMessagePlaybackReturn;
   navigation: UseBoardNavigationReturn;
 }
 
-export interface UseTileActivationReturn {
-  activateTile: (button: BoardButton) => Promise<void>;
+export interface UseButtonActivationReturn {
+  activateButton: (button: BoardButton) => Promise<void>;
 }
 
 export type ButtonIntent =
@@ -20,15 +20,15 @@ export type ButtonIntent =
   | { kind: "actions"; actions: BoardAction[] }
   | { kind: "utter"; button: BoardButton };
 
-export function useTileActivation({
+export function useButtonActivation({
   message,
   playback,
   navigation,
-}: UseTileActivationOptions): UseTileActivationReturn {
+}: UseButtonActivationOptions): UseButtonActivationReturn {
   const speech = useSpeech();
   const audio = useAudio();
 
-  async function activateTile(button: BoardButton) {
+  async function activateButton(button: BoardButton) {
     const intent = resolveButtonIntent(button);
 
     switch (intent.kind) {
@@ -103,7 +103,7 @@ export function useTileActivation({
   }
 
   return {
-    activateTile,
+    activateButton,
   };
 }
 

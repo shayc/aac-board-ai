@@ -3,11 +3,14 @@ import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import type { MessagePart, UseMessageReturn } from "../message/useMessage";
-import type { UseMessagePlaybackReturn } from "../message/useMessagePlayback";
-import type { UseBoardNavigationReturn } from "../navigation/useBoardNavigation";
-import type { BoardAction, BoardButton } from "../types";
-import { resolveButtonIntent, useTileActivation } from "./useTileActivation";
+import type { MessagePart, UseMessageReturn } from "./message/useMessage";
+import type { UseMessagePlaybackReturn } from "./message/useMessagePlayback";
+import type { UseBoardNavigationReturn } from "./navigation/useBoardNavigation";
+import type { BoardAction, BoardButton } from "./types";
+import {
+  resolveButtonIntent,
+  useButtonActivation,
+} from "./useButtonActivation";
 
 function SpeechWrapper({ children }: { children: ReactNode }) {
   return <SpeechProvider>{children}</SpeechProvider>;
@@ -57,14 +60,14 @@ async function setup(opts: SetupOptions = {}) {
   const navigation = opts.navigation ?? createNavigationStub();
 
   const { result } = await renderHook(
-    () => useTileActivation({ message, playback, navigation }),
+    () => useButtonActivation({ message, playback, navigation }),
     { wrapper: SpeechWrapper },
   );
 
   return { result, message, playback, navigation };
 }
 
-describe("useTileActivation", () => {
+describe("useButtonActivation", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
@@ -86,7 +89,7 @@ describe("useTileActivation", () => {
       loadBoard: { id: "child-board" },
     };
 
-    await result.current.activateTile(button);
+    await result.current.activateButton(button);
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(message.addPart).not.toHaveBeenCalled();
@@ -112,7 +115,7 @@ describe("useTileActivation", () => {
 
     const { result } = await setup({ message, playback });
 
-    await result.current.activateTile({
+    await result.current.activateButton({
       id: "btn",
       actions: [":space", ":speak", ":clear"],
     });
@@ -127,7 +130,7 @@ describe("useTileActivation", () => {
   ] as const)("maps %s to message.%s", async (action, methodName) => {
     const { result, message } = await setup();
 
-    await result.current.activateTile({ id: "btn", actions: [action] });
+    await result.current.activateButton({ id: "btn", actions: [action] });
 
     expect(message[methodName]).toHaveBeenCalledTimes(1);
   });
@@ -135,7 +138,7 @@ describe("useTileActivation", () => {
   test("maps :speak to playback.play", async () => {
     const { result, playback } = await setup();
 
-    await result.current.activateTile({ id: "btn", actions: [":speak"] });
+    await result.current.activateButton({ id: "btn", actions: [":speak"] });
 
     expect(playback.play).toHaveBeenCalledTimes(1);
   });
@@ -143,7 +146,7 @@ describe("useTileActivation", () => {
   test("maps :home to navigation.goHome", async () => {
     const { result, navigation } = await setup();
 
-    await result.current.activateTile({ id: "btn", actions: [":home"] });
+    await result.current.activateButton({ id: "btn", actions: [":home"] });
 
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
@@ -152,7 +155,7 @@ describe("useTileActivation", () => {
     const message = createMessageStub([{ id: "ca", label: "ca" }]);
     const { result } = await setup({ message });
 
-    await result.current.activateTile({ id: "btn", actions: ["+t"] });
+    await result.current.activateButton({ id: "btn", actions: ["+t"] });
 
     expect(message.updateLastPart).toHaveBeenCalledWith({
       id: "t",
@@ -163,7 +166,7 @@ describe("useTileActivation", () => {
   test("ignores unrecognized default actions", async () => {
     const { result, message, playback, navigation } = await setup();
 
-    await result.current.activateTile({
+    await result.current.activateButton({
       id: "btn",
       actions: [":unknown" as BoardAction],
     });
@@ -182,7 +185,7 @@ describe("useTileActivation", () => {
   test("adds the button as a message part when there are no actions and no loadBoard", async () => {
     const { result, message } = await setup();
 
-    await result.current.activateTile({
+    await result.current.activateButton({
       id: "btn",
       label: "hi",
       vocalization: "hello",
@@ -201,7 +204,7 @@ describe("useTileActivation", () => {
   test("plays the button's soundSrc rather than speaking when both are present", async () => {
     const { result } = await setup();
 
-    await result.current.activateTile({
+    await result.current.activateButton({
       id: "btn",
       label: "bell",
       soundSrc: "bell.mp3",
@@ -214,7 +217,7 @@ describe("useTileActivation", () => {
   test("speaks the lowercased vocalization when no soundSrc", async () => {
     const { result } = await setup();
 
-    await result.current.activateTile({
+    await result.current.activateButton({
       id: "btn",
       label: "I",
       vocalization: "Hello",
@@ -227,7 +230,7 @@ describe("useTileActivation", () => {
   test("falls back to the lowercased label when vocalization is absent", async () => {
     const { result } = await setup();
 
-    await result.current.activateTile({ id: "btn", label: "Goodbye" });
+    await result.current.activateButton({ id: "btn", label: "Goodbye" });
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("goodbye");
@@ -236,7 +239,7 @@ describe("useTileActivation", () => {
   test("stays silent when the button has neither sound nor any speakable text", async () => {
     const { result, message } = await setup();
 
-    await result.current.activateTile({ id: "btn" });
+    await result.current.activateButton({ id: "btn" });
 
     expect(message.addPart).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();

@@ -9,8 +9,8 @@ import { useBoardNavigation } from "./navigation/useBoardNavigation";
 import { SuggestionBar } from "./suggestions/SuggestionBar";
 import { useSuggestions } from "./suggestions/useSuggestions";
 import { Tile } from "./tile/Tile";
-import { useTileActivation } from "./tile/useTileActivation";
 import type { Board, BoardButton } from "./types";
+import { useButtonActivation } from "./useButtonActivation";
 
 export interface BoardViewProps {
   board: Board;
@@ -22,7 +22,7 @@ export function BoardView({ board }: BoardViewProps) {
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
 
-  const { activateTile } = useTileActivation({
+  const { activateButton } = useButtonActivation({
     message,
     playback,
     navigation,
@@ -36,7 +36,7 @@ export function BoardView({ board }: BoardViewProps) {
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
       variant={button.loadBoard ? "folder" : undefined}
-      onClick={() => void activateTile(button)}
+      onClick={() => void activateButton(button)}
       {...props}
     />
   );
