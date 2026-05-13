@@ -44,6 +44,7 @@ export function AISettings() {
         <Typography variant="body2" color="text.secondary">
           Built-in AI Support
         </Typography>
+
         <List dense>
           {AI_FEATURES.map(({ isSupported, label }) => (
             <ListItem key={label}>
