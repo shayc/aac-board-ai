@@ -1,5 +1,5 @@
 import { useDeclareHeaderTitle } from "@app/useHeaderTitle";
-import { BoardView, useBoard, type BoardRouteParams } from "@features/board";
+import { BoardViewer, useBoard, type BoardRouteParams } from "@features/board";
 import { ErrorState } from "@shared/components/ErrorState";
 import { LoadingState } from "@shared/components/LoadingState";
 import { useParams } from "react-router";
@@ -26,7 +26,7 @@ function BoardPage() {
   return (
     <>
       <title>{board.name}</title>
-      <BoardView board={board} />
+      <BoardViewer board={board} />
     </>
   );
 }
