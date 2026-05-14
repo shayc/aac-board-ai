@@ -13,11 +13,11 @@ import { Tile } from "./tile/Tile";
 import type { Board, BoardButton } from "./types";
 import { useButtonActivation } from "./useButtonActivation";
 
-export interface BoardViewProps {
+export interface BoardViewerProps {
   board: Board;
 }
 
-export function BoardView({ board }: BoardViewProps) {
+export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const message = useMessage();
   const playback = useMessagePlayback(message.parts);

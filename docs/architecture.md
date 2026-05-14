@@ -19,7 +19,7 @@ The codebase is **feature-sliced**. The single feature today is `board`. Layers 
 
 Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts).
 
-**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardView`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`getBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
+**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention. The barrel exposes `BoardViewer`, `useBoard`, `useBoardSets`, `useImportBoardFiles`, and the imperative store functions (`getBoardSets`, `importBoardFromUrl`, `removeBoardSet`).
 
 **See:** [tsconfig.app.json](../tsconfig.app.json), [src/features/board/index.ts](../src/features/board/index.ts).
 
@@ -93,14 +93,14 @@ flowchart TD
     G --> K[useBoardTranslation]
     K -. optional .-> L[Translator API]
     K -. cache .-> C
-    J --> M[BoardView]
+    J --> M[BoardViewer]
     K --> M
   end
 
   E --> F
 ```
 
-IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardView`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `useSpeech` / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
+IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardViewer`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `useSpeech` / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
 
 **See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
 

@@ -1,4 +1,4 @@
-export { BoardView } from "./BoardView";
+export { BoardViewer } from "./BoardViewer";
 export type { BoardRouteParams } from "./navigation/types";
 export {
   getBoardSets,
