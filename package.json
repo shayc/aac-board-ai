@@ -34,7 +34,7 @@
     "@mui/stylis-plugin-rtl": "^9.0.1",
     "idb": "^8.0.3",
     "mrmime": "^2.0.1",
-    "open-board-format": "^1.0.4",
+    "open-board-format": "^1.0.5",
     "react": "^19.2.6",
     "react-aria": "^3.48.0",
     "react-dom": "^19.2.6",
