@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useTranslator } from "./useBuiltInAI";
+import { useTranslator } from "./useTranslator";
 
 function makeTranslatorFake({
   failCreate = false,
@@ -85,21 +85,6 @@ describe("useTranslator", () => {
     expect(create).toHaveBeenCalledTimes(1);
   });
 
-  test("eager mode auto-creates from downloadable", async () => {
-    const { Fake, create } = makeTranslatorFake({ status: "downloadable" });
-    vi.stubGlobal("Translator", Fake);
-
-    const { result } = await renderHook(() =>
-      useTranslator(
-        { sourceLanguage: "en", targetLanguage: "fr" },
-        { mode: "eager" },
-      ),
-    );
-
-    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
-    expect(create).toHaveBeenCalledTimes(1);
-  });
-
   test("surfaces a non-abort create failure as an error", async () => {
     const { Fake } = makeTranslatorFake({ failCreate: true });
     vi.stubGlobal("Translator", Fake);
@@ -110,5 +95,94 @@ describe("useTranslator", () => {
 
     await vi.waitFor(() => expect(result.current.status).toBe("error"));
     expect(result.current.error?.message).toBe("create failed");
+  });
+
+  test("retries via create() after a non-abort error", async () => {
+    let shouldFail = true;
+    const create = vi.fn(() =>
+      shouldFail
+        ? Promise.reject(new Error("create failed"))
+        : Promise.resolve({
+            translate: (input: string) => Promise.resolve(`T:${input}`),
+            translateStreaming: () => new ReadableStream<string>(),
+            destroy: vi.fn(),
+          }),
+    );
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("error"));
+
+    shouldFail = false;
+    result.current.create();
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+
+  test("reports unsupported when the global yields no namespace", async () => {
+    vi.stubGlobal("Translator", undefined);
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("unsupported"));
+    expect(result.current.session).toBeNull();
+  });
+
+  test("parks at downloading until create() is called", async () => {
+    const { Fake, create } = makeTranslatorFake({ status: "downloading" });
+    vi.stubGlobal("Translator", Fake);
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
+    expect(create).not.toHaveBeenCalled();
+
+    result.current.create();
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  test("destroys a session that resolves after unmount", async () => {
+    const destroy = vi.fn();
+    const session = {
+      translate: (input: string) => Promise.resolve(`T:${input}`),
+      translateStreaming: () => new ReadableStream<string>(),
+      destroy,
+    };
+    let resolveCreate!: (value: typeof session) => void;
+    const create = vi.fn(
+      () =>
+        new Promise<typeof session>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result, unmount } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("creating"));
+
+    await unmount();
+
+    resolveCreate(session);
+
+    await vi.waitFor(() => expect(destroy).toHaveBeenCalledTimes(1));
   });
 });

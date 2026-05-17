@@ -37,14 +37,14 @@ export interface CreateSessionOptions {
 }
 
 /** The slice of every built-in AI global we depend on. */
-interface AINamespace<O, I> {
-  availability(options?: O): Promise<Availability>;
+interface AINamespace<Options, Instance> {
+  availability(options?: Options): Promise<Availability>;
   create(
-    options?: O & {
+    options?: Options & {
       signal?: AbortSignal;
       monitor?: (monitor: CreateMonitor) => void;
     },
-  ): Promise<I>;
+  ): Promise<Instance>;
 }
 
 /**

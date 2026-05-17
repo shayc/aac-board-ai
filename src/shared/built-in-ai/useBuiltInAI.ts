@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   type AvailabilityStatus,
   type BuiltInAIName,
@@ -33,20 +33,9 @@ export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   signal: AbortSignal;
   /**
    * Start (or retry) create. Call from a user-gesture handler when the model
-   * must download. No-op while "checking" / "creating" / "ready".
+   * must download, or to retry after an error. No-op otherwise.
    */
   create: () => void;
-}
-
-export interface UseBuiltInAIOptions {
-  /**
-   * `"auto"` (default): auto-create when the model is already available; wait
-   * for `create()` (a user gesture) before starting a download. `"eager"`:
-   * auto-create even when a download is needed (caller asserts a gesture).
-   */
-  mode?: "auto" | "eager";
-  /** Identity override; defaults to a stable key over `options`. */
-  key?: string;
 }
 
 interface State<K extends BuiltInAIName> {
@@ -55,42 +44,6 @@ interface State<K extends BuiltInAIName> {
   session: Session<K> | null;
   error: Error | null;
   signal: AbortSignal;
-}
-
-type Action<K extends BuiltInAIName> =
-  | { type: "reset"; status: AIStatus; signal: AbortSignal }
-  | { type: "status"; status: AIStatus }
-  | { type: "progress"; progress: number }
-  | { type: "ready"; session: Session<K> }
-  | { type: "error"; error: Error };
-
-function reducer<K extends BuiltInAIName>(
-  state: State<K>,
-  action: Action<K>,
-): State<K> {
-  switch (action.type) {
-    case "reset":
-      return {
-        status: action.status,
-        progress: 0,
-        session: null,
-        error: null,
-        signal: action.signal,
-      };
-    case "status":
-      return { ...state, status: action.status };
-    case "progress":
-      return { ...state, status: "downloading", progress: action.progress };
-    case "ready":
-      return {
-        ...state,
-        status: "ready",
-        progress: 1,
-        session: action.session,
-      };
-    case "error":
-      return { ...state, status: "error", error: action.error };
-  }
 }
 
 /** Recursive sorted-key serialization — stable for these flat option bags. */
@@ -124,154 +77,111 @@ function isAbort(value: unknown): boolean {
 export function useBuiltInAI<K extends BuiltInAIName>(
   name: K,
   options?: CreateOptions<K>,
-  hookOptions?: UseBuiltInAIOptions,
 ): UseBuiltInAIResult<K> {
   const supported = name in globalThis;
-  const [state, dispatch] = useReducer(
-    reducer<K>,
-    undefined,
-    (): State<K> => ({
-      status: supported ? "checking" : "unsupported",
-      progress: 0,
-      session: null,
-      error: null,
-      signal: new AbortController().signal,
-    }),
-  );
+  const optionsKey = stableKey(options);
 
-  const mode = hookOptions?.mode ?? "auto";
-  const key = hookOptions?.key ?? `${name}:${stableKey(options)}`;
-
+  // Latest options for the effect's async closures, without retriggering on
+  // every render. Read-only outside render.
   const optionsRef = useRef(options);
-  const stateRef = useRef(state);
-  const manualRef = useRef(false);
-  const [tick, bump] = useReducer((n: number): number => n + 1, 0);
+  optionsRef.current = options;
+
+  const [state, setState] = useState<State<K>>(() => ({
+    status: supported ? "checking" : "unsupported",
+    progress: 0,
+    session: null,
+    error: null,
+    signal: new AbortController().signal,
+  }));
+
+  // Populated by the effect whenever it parks awaiting a user gesture (or a
+  // retry after error). `create()` simply invokes it.
+  const pendingCreateRef = useRef<(() => void) | null>(null);
+  const create = useCallback(() => pendingCreateRef.current?.(), []);
 
   useEffect(() => {
-    optionsRef.current = options;
-    stateRef.current = state;
-  });
-
-  // `bump()` re-runs the whole effect (re-probing availability) instead of
-  // calling create directly, so gesture-gated download and retry-after-error
-  // share one path; `manualRef` tells that re-run the create was user-driven.
-  const create = useCallback(() => {
-    const { status } = stateRef.current;
-    if (status === "checking" || status === "creating" || status === "ready") {
-      return;
-    }
-    manualRef.current = true;
-    bump();
-  }, []);
-
-  useEffect(() => {
-    if (!(name in globalThis)) {
-      dispatch({
-        type: "reset",
-        status: "unsupported",
-        signal: new AbortController().signal,
-      });
-      return;
-    }
+    if (!supported) return;
 
     const controller = new AbortController();
     const { signal } = controller;
     let session: Session<K> | null = null;
-    dispatch({ type: "reset", status: "checking", signal });
 
-    void (async () => {
-      let availabilityStatus: AvailabilityStatus;
+    // One linear lifecycle pass: probe, then auto-create, park for gesture, or
+    // settle into a terminal status. Re-entered with `force = true` when the
+    // user calls `create()`.
+    const run = async (force: boolean): Promise<void> => {
+      pendingCreateRef.current = null;
+      setState((s) => ({
+        ...s,
+        status: "checking",
+        progress: 0,
+        error: null,
+        signal,
+      }));
+
+      let status: AvailabilityStatus;
       try {
-        availabilityStatus = await availability(name, optionsRef.current);
+        status = await availability(name, optionsRef.current);
       } catch (error) {
         if (signal.aborted) return;
-        dispatch({ type: "error", error: toError(error) });
+        setState((s) => ({ ...s, status: "error", error: toError(error) }));
+        pendingCreateRef.current = () => void run(true);
         return;
       }
       if (signal.aborted) return;
 
-      if (
-        availabilityStatus === "unsupported" ||
-        availabilityStatus === "unavailable"
-      ) {
-        dispatch({ type: "status", status: availabilityStatus });
+      if (status === "unsupported" || status === "unavailable") {
+        setState((s) => ({ ...s, status }));
         return;
       }
 
-      const startCreate = (status: "creating" | "downloading") => {
-        dispatch({ type: "status", status });
-        void createSession(name, {
+      if (status === "downloadable" || status === "downloading") {
+        if (!force) {
+          setState((s) => ({ ...s, status }));
+          pendingCreateRef.current = () => void run(true);
+          return;
+        }
+        setState((s) => ({ ...s, status: "downloading" }));
+      } else {
+        setState((s) => ({ ...s, status: "creating" }));
+      }
+
+      try {
+        session = await createSession(name, {
           ...optionsRef.current,
           signal,
-          onProgress: (progress: number) => {
+          onProgress: (progress) => {
             if (!signal.aborted) {
-              dispatch({ type: "progress", progress });
+              setState((s) => ({ ...s, status: "downloading", progress }));
             }
           },
-        })
-          .then((created) => {
-            if (signal.aborted) {
-              created?.destroy();
-              return;
-            }
-            session = created;
-            if (created) {
-              dispatch({ type: "ready", session: created });
-            } else {
-              dispatch({ type: "status", status: "unavailable" });
-            }
-          })
-          .catch((error: unknown) => {
-            if (signal.aborted || isAbort(error)) return;
-            dispatch({ type: "error", error: toError(error) });
-          });
-      };
-
-      if (availabilityStatus === "available") {
-        startCreate("creating");
+        });
+      } catch (error) {
+        if (signal.aborted || isAbort(error)) return;
+        setState((s) => ({ ...s, status: "error", error: toError(error) }));
+        pendingCreateRef.current = () => void run(true);
         return;
       }
-
-      // availabilityStatus: "downloadable" | "downloading"
-      const manual = manualRef.current;
-      manualRef.current = false;
-      if (mode === "eager" || manual) {
-        startCreate("downloading");
+      if (signal.aborted) {
+        session?.destroy();
+        session = null;
         return;
       }
-      dispatch({ type: "status", status: availabilityStatus });
-    })();
+      if (!session) {
+        setState((s) => ({ ...s, status: "unavailable" }));
+        return;
+      }
+      setState((s) => ({ ...s, status: "ready", progress: 1, session }));
+    };
+
+    void run(false);
 
     return () => {
       controller.abort();
       session?.destroy();
+      pendingCreateRef.current = null;
     };
-  }, [key, tick, name, mode]);
+  }, [name, optionsKey, supported]);
 
-  return {
-    status: state.status,
-    progress: state.progress,
-    session: state.session,
-    error: state.error,
-    signal: state.signal,
-    create,
-  };
+  return { ...state, create };
 }
-
-export const useTranslator = (
-  options: CreateOptions<"Translator">,
-  hookOptions?: UseBuiltInAIOptions,
-): UseBuiltInAIResult<"Translator"> =>
-  useBuiltInAI("Translator", options, hookOptions);
-
-export const useRewriter = (
-  options?: CreateOptions<"Rewriter">,
-  hookOptions?: UseBuiltInAIOptions,
-): UseBuiltInAIResult<"Rewriter"> =>
-  useBuiltInAI("Rewriter", options, hookOptions);
-
-export const useProofreader = (
-  options?: CreateOptions<"Proofreader">,
-  hookOptions?: UseBuiltInAIOptions,
-): UseBuiltInAIResult<"Proofreader"> =>
-  useBuiltInAI("Proofreader", options, hookOptions);
