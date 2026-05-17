@@ -8,6 +8,11 @@ import {
   createSession,
 } from "./built-in-ai";
 
+/**
+ * Mirrors the spec `Availability` (`"unavailable"`, `"downloadable"`,
+ * `"downloading"`, `"available"` → `"ready"`) and adds hook-local states:
+ * `"unsupported"`, `"checking"`, `"gesture-required"`, `"creating"`, `"error"`.
+ */
 export type AIStatus =
   | "unsupported"
   | "checking"
@@ -63,7 +68,7 @@ type Action<K extends BuiltInAIName> =
   | { type: "unavailable" }
   | { type: "gesture-required" }
   | { type: "failed"; error: Error }
-  | { type: "requested" };
+  | { type: "retry" };
 
 function reducer<K extends BuiltInAIName>(
   state: State<K>,
@@ -104,22 +109,22 @@ function reducer<K extends BuiltInAIName>(
       return { ...state, status: "gesture-required" };
     case "failed":
       return { ...state, status: "error", error: action.error };
-    case "requested":
+    case "retry":
       return { ...state, generation: state.generation + 1 };
   }
 }
 
-function stableKey(value: unknown): string {
+function serializeOptions(value: unknown): string {
   if (value === null || typeof value !== "object") {
     return JSON.stringify(value) ?? "null";
   }
   if (Array.isArray(value)) {
-    return `[${value.map(stableKey).join(",")}]`;
+    return `[${value.map(serializeOptions).join(",")}]`;
   }
   const entries = Object.entries(value as Record<string, unknown>)
     .filter(([, v]) => v !== undefined)
     .sort(([a], [b]) => (a < b ? -1 : 1))
-    .map(([k, v]) => `${JSON.stringify(k)}:${stableKey(v)}`);
+    .map(([k, v]) => `${JSON.stringify(k)}:${serializeOptions(v)}`);
   return `{${entries.join(",")}}`;
 }
 
@@ -145,7 +150,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   options?: CreateOptions<K>,
 ): UseBuiltInAIResult<K> {
   const supported = name in globalThis;
-  const optionsKey = stableKey(options);
+  const optionsKey = serializeOptions(options);
 
   const [state, dispatch] = useReducer(
     reducer as (state: State<K>, action: Action<K>) => State<K>,
@@ -240,7 +245,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       state.status === "gesture-required" ||
       state.status === "error"
     ) {
-      dispatch({ type: "requested" });
+      dispatch({ type: "retry" });
     }
   };
 
