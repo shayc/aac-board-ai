@@ -12,7 +12,7 @@ export type BuiltInAIName = keyof BuiltInAINamespaces;
 
 /**
  * `create()` options for a given API, inferred from the spec.
- * Pass-through, except for `monitor` and `signal`, which the wrapper owns.
+ * Pass-through, except for `monitor`, which the wrapper owns.
  */
 export type CreateOptions<K extends BuiltInAIName> = NonNullable<
   Parameters<BuiltInAINamespaces[K]["create"]>[0]
