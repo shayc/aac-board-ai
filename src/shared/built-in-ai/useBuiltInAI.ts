@@ -14,6 +14,7 @@ export type AIStatus =
   | "unavailable"
   | "downloadable"
   | "downloading"
+  | "gesture-required"
   | "creating"
   | "ready"
   | "error";
@@ -27,14 +28,20 @@ export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   /** Non-null iff `status === "error"`. */
   error: Error | null;
   /**
-   * Aborts on unmount or identity change. Pass to verb calls so they cancel
-   * with the hook: `session.translate(text, { signal })`.
+   * Aborts on unmount or identity change. Pass per call to verb operations
+   * (e.g. `session.translate(text, { signal })`) so they cancel with the hook.
+   *
+   * Identity changes whenever the hook resets — read `result.signal` fresh
+   * per call rather than capturing it across renders.
    */
   signal: AbortSignal;
   /**
-   * Starts (or retries) session creation. Call from a user gesture when
-   * `status` is `"downloadable"` or `"downloading"`, or to retry after `"error"`.
-   * No-op otherwise.
+   * Starts (or retries) session creation. Call from a user gesture (click,
+   * keydown, pointerup, ...) when `status` is `"downloadable"`,
+   * `"downloading"`, `"gesture-required"`, or `"error"`. No-op otherwise.
+   *
+   * The gesture is required only while the model is not yet downloaded;
+   * once `status` reaches `"ready"`, verb calls proceed without one.
    */
   create: () => void;
 }
@@ -54,6 +61,7 @@ type Action<K extends BuiltInAIName> =
   | { type: "downloading"; progress: number }
   | { type: "ready"; session: Session<K> }
   | { type: "unavailable" }
+  | { type: "gesture-required" }
   | { type: "failed"; error: Error }
   | { type: "requested" };
 
@@ -99,6 +107,8 @@ function reducer<K extends BuiltInAIName>(
       };
     case "unavailable":
       return { ...state, status: "unavailable" };
+    case "gesture-required":
+      return { ...state, status: "gesture-required" };
     case "failed":
       return { ...state, status: "error", error: action.error };
     case "requested":
@@ -126,6 +136,10 @@ function toError(value: unknown): Error {
 
 function isAbort(value: unknown): boolean {
   return value instanceof DOMException && value.name === "AbortError";
+}
+
+function isGestureRequired(value: unknown): boolean {
+  return value instanceof DOMException && value.name === "NotAllowedError";
 }
 
 /**
@@ -187,6 +201,10 @@ export function useBuiltInAI<K extends BuiltInAIName>(
         });
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
+        if (isGestureRequired(error)) {
+          dispatch({ type: "gesture-required" });
+          return;
+        }
         dispatch({ type: "failed", error: toError(error) });
         return;
       }
@@ -226,6 +244,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     if (
       state.status === "downloadable" ||
       state.status === "downloading" ||
+      state.status === "gesture-required" ||
       state.status === "error"
     ) {
       dispatch({ type: "requested" });

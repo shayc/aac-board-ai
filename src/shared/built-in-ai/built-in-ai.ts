@@ -80,13 +80,16 @@ export async function createSession<K extends BuiltInAIName>(
   if (!namespace) {
     return null;
   }
-  if ((await namespace.availability(options)) === "unavailable") {
+
+  const { onProgress, ...createOptions } = (options ?? {}) as CreateOptions<K> &
+    CreateSessionOptions;
+
+  if ((await namespace.availability(createOptions)) === "unavailable") {
     return null;
   }
 
-  const onProgress = options?.onProgress;
   return namespace.create({
-    ...options,
+    ...createOptions,
     monitor: (monitor) =>
       monitor.addEventListener("downloadprogress", (event) => {
         onProgress?.(event.loaded);

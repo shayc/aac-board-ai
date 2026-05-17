@@ -153,6 +153,86 @@ describe("useTranslator", () => {
     expect(create).toHaveBeenCalledTimes(1);
   });
 
+  test("settles at unavailable when availability resolves to unavailable", async () => {
+    const { Fake, create } = makeTranslatorFake({ status: "unavailable" });
+    vi.stubGlobal("Translator", Fake);
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("unavailable"));
+    expect(create).not.toHaveBeenCalled();
+    expect(result.current.session).toBeNull();
+  });
+
+  test("surfaces an availability() failure as an error", async () => {
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.reject(new Error("availability boom"))),
+      create: vi.fn(),
+    });
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("error"));
+    expect(result.current.error?.message).toBe("availability boom");
+  });
+
+  test("surfaces NotAllowedError from create() as gesture-required", async () => {
+    const create = vi.fn(() =>
+      Promise.reject(
+        new DOMException("user activation required", "NotAllowedError"),
+      ),
+    );
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() =>
+      expect(result.current.status).toBe("gesture-required"),
+    );
+    expect(result.current.error).toBeNull();
+  });
+
+  test("retries via create() after gesture-required", async () => {
+    let needsGesture = true;
+    const create = vi.fn(() =>
+      needsGesture
+        ? Promise.reject(
+            new DOMException("user activation required", "NotAllowedError"),
+          )
+        : Promise.resolve({
+            translate: (input: string) => Promise.resolve(`T:${input}`),
+            destroy: vi.fn(),
+          }),
+    );
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() =>
+      expect(result.current.status).toBe("gesture-required"),
+    );
+
+    needsGesture = false;
+    result.current.create();
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+
   test("destroys a session that resolves after unmount", async () => {
     const destroy = vi.fn();
     const session = {

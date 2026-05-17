@@ -86,4 +86,23 @@ describe("built-in-ai", () => {
     ).resolves.toBeNull();
     expect(create).not.toHaveBeenCalled();
   });
+
+  test("does not leak onProgress into namespace.availability or namespace.create", async () => {
+    const availability = vi.fn<(options: unknown) => Promise<Availability>>(
+      () => Promise.resolve("available"),
+    );
+    const create = vi.fn<
+      (options: unknown) => Promise<{ destroy: () => void }>
+    >(() => Promise.resolve({ destroy: vi.fn() }));
+    vi.stubGlobal("Translator", { availability, create });
+
+    await createSession("Translator", {
+      sourceLanguage: "en",
+      targetLanguage: "fr",
+      onProgress: vi.fn(),
+    });
+
+    expect(availability.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
+    expect(create.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
+  });
 });
