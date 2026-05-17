@@ -7,15 +7,14 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { isTranslatorSupported } from "@shared/ai/capabilities";
-import { useAI } from "@shared/ai/useAI";
+import { isSupported } from "@shared/built-in-ai/core/built-in-ai";
+import { useDownloadProgress } from "@shared/built-in-ai/downloadProgress";
 import { useLanguage } from "@shared/language/useLanguage";
 
 export function LanguageSettings() {
   const { languages, language, setLanguage } = useLanguage();
-  const { downloads } = useAI();
-
-  const isDownloading = downloads.translator > 0 && downloads.translator < 1;
+  const progress = useDownloadProgress("Translator");
+  const isDownloading = progress > 0;
 
   return (
     <Stack spacing={2}>
@@ -27,7 +26,7 @@ export function LanguageSettings() {
           labelId="language-select-label"
           id="language-select"
           value={language}
-          disabled={!isTranslatorSupported}
+          disabled={!isSupported("Translator")}
           onChange={(event) => setLanguage(event.target.value)}
         >
           {languages.map((lang) => (
@@ -45,9 +44,7 @@ export function LanguageSettings() {
           icon={<DownloadingIcon fontSize="inherit" />}
         >
           <AlertTitle>Downloading language</AlertTitle>
-          <Typography>
-            {Math.round(downloads.translator * 100)}% complete...
-          </Typography>
+          <Typography>{Math.round(progress * 100)}% complete...</Typography>
         </Alert>
       )}
     </Stack>

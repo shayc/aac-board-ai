@@ -42,10 +42,15 @@ interface AINamespace<Options, Instance> {
   ): Promise<Instance>;
 }
 
+/** True when the API's global namespace is present in this environment. */
+export function isSupported(name: BuiltInAIName): boolean {
+  return name in globalThis;
+}
+
 function getNamespace<K extends BuiltInAIName>(
   name: K,
 ): AINamespace<CreateOptions<K>, Session<K>> | undefined {
-  if (!(name in globalThis)) {
+  if (!isSupported(name)) {
     return undefined;
   }
   const globals = globalThis as unknown as Record<

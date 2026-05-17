@@ -6,6 +6,7 @@ import {
   type Session,
   availability,
   createSession,
+  isSupported,
 } from "./built-in-ai";
 
 /**
@@ -182,7 +183,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   name: K,
   options?: CreateOptions<K>,
 ): UseBuiltInAIResult<K> {
-  const supported = name in globalThis;
+  const supported = isSupported(name);
   const optionsKey = serializeOptions(options);
 
   const [state, dispatch] = useReducer(
@@ -261,7 +262,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     if (!supported) return;
     // A bumped generation means create() was called — treat the rerun as a
     // user-requested retry (force=true), which skips the downloadable/
-    // downloading park and proceeds straight to namespace.create().
+    // downloading wait and proceeds straight to namespace.create().
     const force = state.generation > lastGenRef.current;
     lastGenRef.current = state.generation;
 

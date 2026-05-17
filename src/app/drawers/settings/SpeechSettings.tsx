@@ -7,8 +7,12 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useTranslator } from "@shared/ai/useTranslator";
-import { getPrimaryLanguage } from "@shared/language/locale";
+import { createSession } from "@shared/built-in-ai/core/built-in-ai";
+import { setDownloadProgress } from "@shared/built-in-ai/downloadProgress";
+import {
+  getPrimaryLanguage,
+  normalizeLocaleCode,
+} from "@shared/language/locale";
 import { useLanguage } from "@shared/language/useLanguage";
 import { useSpeech } from "@shared/speech/useSpeech";
 import {
@@ -36,7 +40,6 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { language } = useLanguage();
-  const { createTranslator } = useTranslator();
 
   const locales = Object.keys(voicesByLocale)
     .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
@@ -73,14 +76,30 @@ export function SpeechSettings() {
   ];
 
   async function previewVoice() {
-    const translator = await createTranslator({
-      sourceLanguage: "en",
-      targetLanguage: language,
-    });
-
     const defaultGreeting = "Hi, this is my voice!";
-    const greeting =
-      (await translator?.translate(defaultGreeting)) ?? defaultGreeting;
+    const sourceLanguage = normalizeLocaleCode("en");
+    const targetLanguage = normalizeLocaleCode(language);
+    let greeting = defaultGreeting;
+
+    if (sourceLanguage !== targetLanguage) {
+      const translator = await createSession("Translator", {
+        sourceLanguage,
+        targetLanguage,
+        onProgress: (p) =>
+          setDownloadProgress(
+            "Translator",
+            p,
+            `${sourceLanguage}:${targetLanguage}`,
+          ),
+      });
+      if (translator) {
+        try {
+          greeting = await translator.translate(defaultGreeting);
+        } finally {
+          translator.destroy();
+        }
+      }
+    }
 
     void speak(greeting);
   }

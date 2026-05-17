@@ -1,4 +1,3 @@
-import { AIProvider } from "@shared/ai/AIProvider";
 import { LanguageProvider } from "@shared/language/LanguageProvider";
 import { SnackbarProvider } from "@shared/snackbar/SnackbarProvider";
 import { SpeechProvider } from "@shared/speech/SpeechProvider";
@@ -14,9 +13,7 @@ export function AppProviders({ children }: AppProvidersProps) {
     <SpeechProvider>
       <LanguageProvider>
         <ThemeProvider>
-          <SnackbarProvider>
-            <AIProvider>{children}</AIProvider>
-          </SnackbarProvider>
+          <SnackbarProvider>{children}</SnackbarProvider>
         </ThemeProvider>
       </LanguageProvider>
     </SpeechProvider>

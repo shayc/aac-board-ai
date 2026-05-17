@@ -1,11 +1,7 @@
-import {
-  isProofreaderSupported,
-  isRewriterSupported,
-} from "@shared/ai/capabilities";
-import { useAI } from "@shared/ai/useAI";
-import { useProofreader } from "@shared/ai/useProofreader";
-import { useRewriter } from "@shared/ai/useRewriter";
-import { useEffect, useRef, useState } from "react";
+import { useSharedContext } from "@shared/built-in-ai/sharedContext";
+import { useProofreader } from "@shared/built-in-ai/useProofreader";
+import { useRewriter } from "@shared/built-in-ai/useRewriter";
+import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 
 export interface UseSuggestionsReturn {
@@ -30,64 +26,64 @@ function isValidSuggestion(suggestion: string): boolean {
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
-  const { sharedContext } = useAI();
-  const isSuggestionsAvailable = isProofreaderSupported || isRewriterSupported;
-
-  const { createProofreader } = useProofreader();
-  const { createRewriter } = useRewriter();
-
+  const [sharedContext] = useSharedContext();
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const abortRef = useRef<AbortController | null>(null);
+  const proofreader = useProofreader();
+  const rewriter = useRewriter({
+    tone,
+    sharedContext,
+    length: "shorter",
+    format: "plain-text",
+  });
+
+  const isSuggestionsAvailable =
+    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
 
   useEffect(() => {
+    if (proofreader.status !== "ready" && rewriter.status !== "ready") {
+      return;
+    }
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const generateSuggestions = async () => {
-      abortRef.current?.abort();
-
-      const controller = new AbortController();
-      abortRef.current = controller;
-      const { signal } = controller;
-
       try {
-        const proofreader = await createProofreader();
-        const rewriter = await createRewriter({
-          tone,
-          sharedContext,
-          length: "shorter",
-          format: "plain-text",
-        });
-
         const [proofread, rewritten] = await Promise.all([
-          proofreader?.proofread(text, { signal }),
-          rewriter?.rewrite(text, { signal }),
+          proofreader.session?.proofread(text, { signal }),
+          rewriter.session?.rewrite(text, { signal }),
         ]);
 
         if (signal.aborted) {
           return;
         }
 
-        const suggestions = [
-          proofread?.correctedInput ?? "",
-          rewritten ?? "",
-        ].filter((s) => s && s !== text && isValidSuggestion(s));
+        const next = [proofread?.correctedInput ?? "", rewritten ?? ""].filter(
+          (s) => s && s !== text && isValidSuggestion(s),
+        );
 
-        const uniqueSuggestions = Array.from(new Set(suggestions));
-
-        setSuggestions(uniqueSuggestions);
+        setSuggestions(Array.from(new Set(next)));
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
 
-        console.error("generateSuggestions failed:", error);
+        console.warn("generateSuggestions failed:", error);
       }
     };
 
     void generateSuggestions();
 
-    return () => abortRef.current?.abort();
-  }, [text, tone, sharedContext, createProofreader, createRewriter]);
+    return () => controller.abort();
+  }, [
+    text,
+    proofreader.status,
+    proofreader.session,
+    rewriter.status,
+    rewriter.session,
+  ]);
 
   return {
     phrases: suggestions,

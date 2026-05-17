@@ -8,24 +8,23 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
-  isProofreaderSupported,
-  isRewriterSupported,
-  isTranslatorSupported,
-} from "@shared/ai/capabilities";
-import { useAI } from "@shared/ai/useAI";
+  type BuiltInAIName,
+  isSupported,
+} from "@shared/built-in-ai/core/built-in-ai";
+import { useSharedContext } from "@shared/built-in-ai/sharedContext";
 
 const AI_FEATURES = [
-  { isSupported: isProofreaderSupported, label: "Proofreader" },
-  { isSupported: isRewriterSupported, label: "Rewriter" },
-  { isSupported: isTranslatorSupported, label: "Translator" },
-];
+  "Proofreader",
+  "Rewriter",
+  "Translator",
+] as const satisfies readonly BuiltInAIName[];
 
 export function AISettings() {
-  const { sharedContext, setSharedContext } = useAI();
+  const [sharedContext, setSharedContext] = useSharedContext();
 
   return (
     <Stack spacing={3}>
-      {isRewriterSupported && (
+      {isSupported("Rewriter") && (
         <TextField
           variant="outlined"
           fullWidth
@@ -46,16 +45,16 @@ export function AISettings() {
         </Typography>
 
         <List dense>
-          {AI_FEATURES.map(({ isSupported, label }) => (
-            <ListItem key={label}>
+          {AI_FEATURES.map((name) => (
+            <ListItem key={name}>
               <ListItemIcon sx={{ minWidth: 36 }}>
-                {isSupported ? (
+                {isSupported(name) ? (
                   <CheckCircleIcon color="success" fontSize="small" />
                 ) : (
                   <CancelIcon color="error" fontSize="small" />
                 )}
               </ListItemIcon>
-              <ListItemText primary={label} />
+              <ListItemText primary={name} />
             </ListItem>
           ))}
         </List>
