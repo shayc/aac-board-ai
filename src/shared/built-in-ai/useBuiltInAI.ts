@@ -79,23 +79,16 @@ function reducer<K extends BuiltInAIName>(
         error: null,
         signal: action.signal,
       };
-    case "checked":
-      if (
-        action.availability === "unsupported" ||
-        action.availability === "unavailable"
-      ) {
-        return { ...state, status: action.availability };
+    case "checked": {
+      const { availability, force } = action;
+      if (availability === "unsupported" || availability === "unavailable") {
+        return { ...state, status: availability };
       }
-      if (
-        action.availability === "downloadable" ||
-        action.availability === "downloading"
-      ) {
-        return {
-          ...state,
-          status: action.force ? "downloading" : action.availability,
-        };
+      if (availability === "downloadable" || availability === "downloading") {
+        return { ...state, status: force ? "downloading" : availability };
       }
       return { ...state, status: "creating" };
+    }
     case "downloading":
       return { ...state, status: "downloading", progress: action.progress };
     case "ready":
@@ -125,7 +118,7 @@ function stableKey(value: unknown): string {
   }
   const entries = Object.entries(value as Record<string, unknown>)
     .filter(([, v]) => v !== undefined)
-    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+    .sort(([a], [b]) => (a < b ? -1 : 1))
     .map(([k, v]) => `${JSON.stringify(k)}:${stableKey(v)}`);
   return `{${entries.join(",")}}`;
 }
