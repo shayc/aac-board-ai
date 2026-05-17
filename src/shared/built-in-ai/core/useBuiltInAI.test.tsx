@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useTranslator } from "./useTranslator";
+import { useTranslator } from "../useTranslator";
 
 function makeTranslatorFake({
   failCreate = false,
