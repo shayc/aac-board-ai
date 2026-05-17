@@ -1,38 +1,22 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useTranslator } from "../useTranslator";
-
-function makeTranslatorFake({
-  failCreate = false,
-  status = "available",
-}: { failCreate?: boolean; status?: Availability } = {}) {
-  const destroy = vi.fn();
-  const create = vi.fn(() =>
-    failCreate
-      ? Promise.reject(new Error("create failed"))
-      : Promise.resolve({
-          translate: (input: string) => Promise.resolve(`T:${input}`),
-          destroy,
-        }),
-  );
-  return {
-    Fake: { availability: vi.fn(() => Promise.resolve(status)), create },
-    create,
-    destroy,
-  };
-}
+import { useBuiltInAI } from "./useBuiltInAI";
+import { makeTranslatorFake } from "./__fixtures__/translator-fake";
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("useTranslator", () => {
+describe("useBuiltInAI", () => {
   test("reaches ready and exposes a session", async () => {
     const { Fake } = makeTranslatorFake();
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
@@ -44,7 +28,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", Fake);
 
     const { result, unmount } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
@@ -58,7 +45,10 @@ describe("useTranslator", () => {
 
     const { result, rerender } = await renderHook(
       (props: { target: string } = { target: "fr" }) =>
-        useTranslator({ sourceLanguage: "en", targetLanguage: props.target }),
+        useBuiltInAI("Translator", {
+          sourceLanguage: "en",
+          targetLanguage: props.target,
+        }),
       { initialProps: { target: "fr" } },
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
@@ -72,7 +62,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("downloadable"));
@@ -89,7 +82,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("error"));
@@ -113,7 +109,10 @@ describe("useTranslator", () => {
     });
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("error"));
@@ -129,7 +128,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", undefined);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("unsupported"));
@@ -141,7 +143,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
@@ -158,7 +163,10 @@ describe("useTranslator", () => {
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("unavailable"));
@@ -173,7 +181,10 @@ describe("useTranslator", () => {
     });
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("error"));
@@ -192,7 +203,10 @@ describe("useTranslator", () => {
     });
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() =>
@@ -219,7 +233,10 @@ describe("useTranslator", () => {
     });
 
     const { result } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() =>
@@ -252,7 +269,10 @@ describe("useTranslator", () => {
     });
 
     const { result, unmount } = await renderHook(() =>
-      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("creating"));
@@ -262,5 +282,85 @@ describe("useTranslator", () => {
     resolveCreate(session);
 
     await vi.waitFor(() => expect(destroy).toHaveBeenCalledTimes(1));
+  });
+
+  test("destroys an in-flight session when options change mid-create", async () => {
+    const destroy = vi.fn();
+    const firstSession = {
+      translate: (input: string) => Promise.resolve(`T:${input}`),
+      destroy,
+    };
+    let resolveFirstCreate!: (value: typeof firstSession) => void;
+    const create = vi.fn((options: { targetLanguage: string }) => {
+      if (options.targetLanguage === "fr") {
+        return new Promise<typeof firstSession>((resolve) => {
+          resolveFirstCreate = resolve;
+        });
+      }
+      return Promise.resolve({
+        translate: (input: string) => Promise.resolve(`T:${input}`),
+        destroy: vi.fn(),
+      });
+    });
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result, rerender } = await renderHook(
+      (props: { target: string } = { target: "fr" }) =>
+        useBuiltInAI("Translator", {
+          sourceLanguage: "en",
+          targetLanguage: props.target,
+        }),
+      { initialProps: { target: "fr" } },
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("creating"));
+
+    await rerender({ target: "de" });
+    await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+
+    resolveFirstCreate(firstSession);
+
+    await vi.waitFor(() => expect(destroy).toHaveBeenCalledTimes(1));
+  });
+
+  test("advances progress while downloading", async () => {
+    const destroy = vi.fn();
+    const session = {
+      translate: (input: string) => Promise.resolve(`T:${input}`),
+      destroy,
+    };
+    let resolveCreate!: (value: typeof session) => void;
+    const create = vi.fn((options: { monitor?: (m: EventTarget) => void }) => {
+      const monitor = new EventTarget();
+      options.monitor?.(monitor);
+      monitor.dispatchEvent(
+        Object.assign(new Event("downloadprogress"), { loaded: 0.5 }),
+      );
+      return new Promise<typeof session>((resolve) => {
+        resolveCreate = resolve;
+      });
+    });
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
+    );
+
+    await vi.waitFor(() => expect(result.current.progress).toBe(0.5));
+    expect(result.current.status).toBe("downloading");
+
+    resolveCreate(session);
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(result.current.progress).toBe(1);
   });
 });

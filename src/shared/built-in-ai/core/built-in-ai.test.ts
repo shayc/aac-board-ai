@@ -1,29 +1,6 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { availability, createSession } from "./built-in-ai";
-
-function progressEvent(loaded: number): Event {
-  return Object.assign(new Event("downloadprogress"), { loaded });
-}
-
-function makeTranslatorFake({
-  status = "available",
-}: { status?: Availability } = {}) {
-  const destroy = vi.fn();
-  const create = vi.fn((options: { monitor?: (m: EventTarget) => void }) => {
-    const monitor = new EventTarget();
-    options.monitor?.(monitor);
-    monitor.dispatchEvent(progressEvent(0.5));
-    return Promise.resolve({
-      translate: (input: string) => Promise.resolve(`T:${input}`),
-      destroy,
-    });
-  });
-  return {
-    Fake: { availability: vi.fn(() => Promise.resolve(status)), create },
-    create,
-    destroy,
-  };
-}
+import { makeTranslatorFake } from "./__fixtures__/translator-fake";
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -59,7 +36,10 @@ describe("built-in-ai", () => {
   });
 
   test("creates a session and reports download progress", async () => {
-    const { Fake } = makeTranslatorFake({ status: "downloadable" });
+    const { Fake } = makeTranslatorFake({
+      status: "downloadable",
+      withMonitor: true,
+    });
     vi.stubGlobal("Translator", Fake);
 
     const seen: number[] = [];
@@ -88,13 +68,16 @@ describe("built-in-ai", () => {
   });
 
   test("does not leak onProgress into namespace.availability or namespace.create", async () => {
-    const availability = vi.fn<(options: unknown) => Promise<Availability>>(
+    const availabilityMock = vi.fn<(options: unknown) => Promise<Availability>>(
       () => Promise.resolve("available"),
     );
-    const create = vi.fn<
+    const createMock = vi.fn<
       (options: unknown) => Promise<{ destroy: () => void }>
     >(() => Promise.resolve({ destroy: vi.fn() }));
-    vi.stubGlobal("Translator", { availability, create });
+    vi.stubGlobal("Translator", {
+      availability: availabilityMock,
+      create: createMock,
+    });
 
     await createSession("Translator", {
       sourceLanguage: "en",
@@ -102,7 +85,9 @@ describe("built-in-ai", () => {
       onProgress: vi.fn(),
     });
 
-    expect(availability.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
-    expect(create.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
+    expect(availabilityMock.mock.calls[0]?.[0]).not.toHaveProperty(
+      "onProgress",
+    );
+    expect(createMock.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
   });
 });

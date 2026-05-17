@@ -160,7 +160,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       progress: 0,
       session: null,
       error: null,
-      signal: new AbortController().signal,
+      signal: AbortSignal.abort(),
       generation: 0,
     }),
   );
@@ -226,6 +226,9 @@ export function useBuiltInAI<K extends BuiltInAIName>(
 
   useEffect(() => {
     if (!supported) return;
+    // A bumped generation means create() was called — treat the rerun as a
+    // user-requested retry (force=true), which skips the downloadable/
+    // downloading park and proceeds straight to namespace.create().
     const force = state.generation > lastGenRef.current;
     lastGenRef.current = state.generation;
 
