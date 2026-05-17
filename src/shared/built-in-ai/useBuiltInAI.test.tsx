@@ -2,7 +2,10 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useTranslator } from "./useBuiltInAI";
 
-function makeTranslatorFake({ failCreate = false } = {}) {
+function makeTranslatorFake({
+  failCreate = false,
+  status = "available",
+}: { failCreate?: boolean; status?: Availability } = {}) {
   const destroy = vi.fn();
   const create = vi.fn(() =>
     failCreate
@@ -14,7 +17,7 @@ function makeTranslatorFake({ failCreate = false } = {}) {
         }),
   );
   return {
-    Fake: { availability: vi.fn(() => Promise.resolve("available")), create },
+    Fake: { availability: vi.fn(() => Promise.resolve(status)), create },
     create,
     destroy,
   };
@@ -63,6 +66,38 @@ describe("useTranslator", () => {
 
     await rerender({ target: "de" });
     await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+  });
+
+  test("gates the download behind create() and reaches ready on the gesture", async () => {
+    const { Fake, create } = makeTranslatorFake({ status: "downloadable" });
+    vi.stubGlobal("Translator", Fake);
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("downloadable"));
+    expect(create).not.toHaveBeenCalled();
+
+    result.current.create();
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  test("eager mode auto-creates from downloadable", async () => {
+    const { Fake, create } = makeTranslatorFake({ status: "downloadable" });
+    vi.stubGlobal("Translator", Fake);
+
+    const { result } = await renderHook(() =>
+      useTranslator(
+        { sourceLanguage: "en", targetLanguage: "fr" },
+        { mode: "eager" },
+      ),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(create).toHaveBeenCalledTimes(1);
   });
 
   test("surfaces a non-abort create failure as an error", async () => {

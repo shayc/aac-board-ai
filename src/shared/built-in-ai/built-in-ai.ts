@@ -57,8 +57,11 @@ function getNamespace<K extends BuiltInAIName>(
   if (!(name in globalThis)) {
     return undefined;
   }
-  const value: unknown = (globalThis as Record<string, unknown>)[name];
-  return value as AINamespace<CreateOptions<K>, Session<K>>;
+  const globals = globalThis as unknown as Record<
+    K,
+    AINamespace<CreateOptions<K>, Session<K>>
+  >;
+  return globals[name];
 }
 
 /** Resolve the model's availability, or `"unsupported"` when absent. */

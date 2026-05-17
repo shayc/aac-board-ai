@@ -31,6 +31,7 @@ afterEach(() => {
 
 describe("built-in-ai", () => {
   test("unsupported when the global is absent", async () => {
+    vi.stubGlobal("Translator", undefined);
     await expect(
       availability("Translator", {
         sourceLanguage: "en",

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useReducer, useRef } from "react";
 import {
+  type AvailabilityStatus,
   type BuiltInAIName,
   type CreateOptions,
   type Session,
@@ -151,6 +152,9 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     stateRef.current = state;
   });
 
+  // `bump()` re-runs the whole effect (re-probing availability) instead of
+  // calling create directly, so gesture-gated download and retry-after-error
+  // share one path; `manualRef` tells that re-run the create was user-driven.
   const create = useCallback(() => {
     const { status } = stateRef.current;
     if (status === "checking" || status === "creating" || status === "ready") {
@@ -176,7 +180,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     dispatch({ type: "reset", status: "checking", signal });
 
     void (async () => {
-      let availabilityStatus;
+      let availabilityStatus: AvailabilityStatus;
       try {
         availabilityStatus = await availability(name, optionsRef.current);
       } catch (error) {
