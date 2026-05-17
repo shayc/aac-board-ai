@@ -1,7 +1,19 @@
-export { defineModel, type BuiltInAIModel } from "./core/descriptor";
-export { proofreader, rewriter, translator } from "./core/descriptors";
-export { BuiltInAIUnavailableError } from "./core/errors";
-export type { BuiltInAIHandle } from "./core/registry";
-export type { AvailabilityState, BuiltInAIStatus } from "./core/types";
-export { useBuiltInAI, type UseBuiltInAIResult } from "./react/useBuiltInAI";
-export { useProofreader, useRewriter, useTranslator } from "./react/presets";
+export {
+  availability,
+  createSession,
+  type AvailabilityStatus,
+  type BuiltInAIName,
+  type BuiltInAINamespaces,
+  type CreateOptions,
+  type CreateSessionOptions,
+  type Session,
+} from "./built-in-ai";
+export {
+  useBuiltInAI,
+  useProofreader,
+  useRewriter,
+  useTranslator,
+  type AIStatus,
+  type UseBuiltInAIOptions,
+  type UseBuiltInAIResult,
+} from "./useBuiltInAI";

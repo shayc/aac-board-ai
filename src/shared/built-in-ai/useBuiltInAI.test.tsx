@@ -1,16 +1,17 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { resetRegistry } from "../core/registry";
-import { useTranslator } from "./presets";
+import { useTranslator } from "./useBuiltInAI";
 
-function makeTranslatorFake() {
+function makeTranslatorFake({ failCreate = false } = {}) {
   const destroy = vi.fn();
   const create = vi.fn(() =>
-    Promise.resolve({
-      translate: (input: string) => Promise.resolve(`T:${input}`),
-      translateStreaming: () => new ReadableStream<string>(),
-      destroy,
-    }),
+    failCreate
+      ? Promise.reject(new Error("create failed"))
+      : Promise.resolve({
+          translate: (input: string) => Promise.resolve(`T:${input}`),
+          translateStreaming: () => new ReadableStream<string>(),
+          destroy,
+        }),
   );
   return {
     Fake: { availability: vi.fn(() => Promise.resolve("available")), create },
@@ -20,12 +21,11 @@ function makeTranslatorFake() {
 }
 
 afterEach(() => {
-  resetRegistry();
   vi.unstubAllGlobals();
 });
 
 describe("useTranslator", () => {
-  test("transitions to available and runs", async () => {
+  test("reaches ready and exposes a session", async () => {
     const { Fake } = makeTranslatorFake();
     vi.stubGlobal("Translator", Fake);
 
@@ -33,24 +33,24 @@ describe("useTranslator", () => {
       useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
     );
 
-    await vi.waitFor(() => expect(result.current.status).toBe("available"));
-    await expect(result.current.run("hi")).resolves.toBe("T:hi");
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    await expect(result.current.session?.translate("hi")).resolves.toBe("T:hi");
   });
 
-  test("releases the instance on unmount", async () => {
+  test("destroys the session on unmount", async () => {
     const { Fake, destroy } = makeTranslatorFake();
     vi.stubGlobal("Translator", Fake);
 
     const { result, unmount } = await renderHook(() =>
       useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
     );
-    await vi.waitFor(() => expect(result.current.status).toBe("available"));
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
     await unmount();
     await vi.waitFor(() => expect(destroy).toHaveBeenCalledTimes(1));
   });
 
-  test("re-acquires when the identity changes", async () => {
+  test("re-creates when the identity changes", async () => {
     const { Fake, create } = makeTranslatorFake();
     vi.stubGlobal("Translator", Fake);
 
@@ -59,9 +59,21 @@ describe("useTranslator", () => {
         useTranslator({ sourceLanguage: "en", targetLanguage: props.target }),
       { initialProps: { target: "fr" } },
     );
-    await vi.waitFor(() => expect(result.current.status).toBe("available"));
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
     await rerender({ target: "de" });
     await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+  });
+
+  test("surfaces a non-abort create failure as an error", async () => {
+    const { Fake } = makeTranslatorFake({ failCreate: true });
+    vi.stubGlobal("Translator", Fake);
+
+    const { result } = await renderHook(() =>
+      useTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("error"));
+    expect(result.current.error?.message).toBe("create failed");
   });
 });
