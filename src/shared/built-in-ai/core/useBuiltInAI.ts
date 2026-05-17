@@ -24,14 +24,9 @@ export type AIStatus =
   | "ready"
   | "error";
 
-export interface UseBuiltInAIResult<K extends BuiltInAIName> {
-  status: AIStatus;
+interface UseBuiltInAIResultBase {
   /** Download progress as a `0..1` fraction. */
   progress: number;
-  /** Non-null only when `status === "ready"`. */
-  session: Session<K> | null;
-  /** Non-null only when `status === "error"`. */
-  error: Error | null;
   /**
    * Aborts on unmount or identity change. Pass per call to verb operations
    * (e.g. `session.translate(text, { signal })`) so they cancel with the hook.
@@ -50,6 +45,28 @@ export interface UseBuiltInAIResult<K extends BuiltInAIName> {
    */
   create: () => void;
 }
+
+/**
+ * Discriminated by `status`: narrowing on `"ready"` yields a non-null
+ * `session`; narrowing on `"error"` yields a non-null `error`. Every other
+ * status guarantees both are `null`.
+ */
+export type UseBuiltInAIResult<K extends BuiltInAIName> =
+  | (UseBuiltInAIResultBase & {
+      status: "ready";
+      session: Session<K>;
+      error: null;
+    })
+  | (UseBuiltInAIResultBase & {
+      status: "error";
+      session: null;
+      error: Error;
+    })
+  | (UseBuiltInAIResultBase & {
+      status: Exclude<AIStatus, "ready" | "error">;
+      session: null;
+      error: null;
+    });
 
 interface State<K extends BuiltInAIName> {
   status: AIStatus;
@@ -138,6 +155,22 @@ function isAbort(value: unknown): boolean {
 
 function isGestureRequired(value: unknown): boolean {
   return value instanceof DOMException && value.name === "NotAllowedError";
+}
+
+function toResult<K extends BuiltInAIName>(
+  state: State<K>,
+  create: () => void,
+): UseBuiltInAIResult<K> {
+  const { status, progress, signal, session, error } = state;
+  const base = { progress, signal, create };
+  switch (status) {
+    case "ready":
+      return { ...base, status, session: session as Session<K>, error: null };
+    case "error":
+      return { ...base, status, session: null, error: error! };
+    default:
+      return { ...base, status, session: null, error: null };
+  }
 }
 
 /**
@@ -252,5 +285,5 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     }
   };
 
-  return { ...state, create };
+  return toResult(state, create);
 }
