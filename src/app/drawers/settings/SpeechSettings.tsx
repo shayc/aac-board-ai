@@ -8,7 +8,10 @@ import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { createSession } from "@shared/built-in-ai/core/built-in-ai";
-import { setDownloadProgress } from "@shared/built-in-ai/downloadProgress";
+import {
+  setDownloadProgress,
+  useDownloadProgress,
+} from "@shared/built-in-ai/downloadProgress";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -40,6 +43,9 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { language } = useLanguage();
+  const translatorProgress = useDownloadProgress("Translator");
+  const isTranslatorDownloading =
+    translatorProgress > 0 && translatorProgress < 1;
 
   const locales = Object.keys(voicesByLocale)
     .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
@@ -153,7 +159,7 @@ export function SpeechSettings() {
       <Button
         variant="contained"
         color="primary"
-        disabled={!isSpeechSupported}
+        disabled={!isSpeechSupported || isTranslatorDownloading}
         sx={{ alignSelf: "flex-start" }}
         onClick={() => void previewVoice()}
       >
