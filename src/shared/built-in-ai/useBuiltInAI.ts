@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useReducer, useRef } from "react";
 import {
   type AvailabilityStatus,
   type BuiltInAIName,
@@ -47,6 +47,60 @@ interface State<K extends BuiltInAIName> {
   signal: AbortSignal;
 }
 
+type Action<K extends BuiltInAIName> =
+  | { type: "reset"; signal: AbortSignal }
+  | { type: "checked"; availability: AvailabilityStatus; force: boolean }
+  | { type: "downloading"; progress: number }
+  | { type: "ready"; session: Session<K> }
+  | { type: "unavailable" }
+  | { type: "failed"; error: Error };
+
+function reducer<K extends BuiltInAIName>(
+  state: State<K>,
+  action: Action<K>,
+): State<K> {
+  switch (action.type) {
+    case "reset":
+      return {
+        status: "checking",
+        progress: 0,
+        session: null,
+        error: null,
+        signal: action.signal,
+      };
+    case "checked":
+      if (
+        action.availability === "unsupported" ||
+        action.availability === "unavailable"
+      ) {
+        return { ...state, status: action.availability };
+      }
+      if (
+        action.availability === "downloadable" ||
+        action.availability === "downloading"
+      ) {
+        return {
+          ...state,
+          status: action.force ? "downloading" : action.availability,
+        };
+      }
+      return { ...state, status: "creating" };
+    case "downloading":
+      return { ...state, status: "downloading", progress: action.progress };
+    case "ready":
+      return {
+        ...state,
+        status: "ready",
+        progress: 1,
+        session: action.session,
+      };
+    case "unavailable":
+      return { ...state, status: "unavailable" };
+    case "failed":
+      return { ...state, status: "error", error: action.error };
+  }
+}
+
 function stableKey(value: unknown): string {
   if (value === null || typeof value !== "object") {
     return JSON.stringify(value) ?? "null";
@@ -82,18 +136,24 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   const optionsKey = stableKey(options);
 
   const optionsRef = useRef(options);
-  optionsRef.current = options;
+  useEffect(() => {
+    optionsRef.current = options;
+  });
 
-  const [state, setState] = useState<State<K>>(() => ({
-    status: supported ? "checking" : "unsupported",
-    progress: 0,
-    session: null,
-    error: null,
-    signal: new AbortController().signal,
-  }));
+  const [state, dispatch] = useReducer(
+    reducer as (state: State<K>, action: Action<K>) => State<K>,
+    null,
+    (): State<K> => ({
+      status: supported ? "checking" : "unsupported",
+      progress: 0,
+      session: null,
+      error: null,
+      signal: new AbortController().signal,
+    }),
+  );
 
   const pendingCreateRef = useRef<(() => void) | null>(null);
-  const create = useCallback(() => pendingCreateRef.current?.(), []);
+  const create = () => pendingCreateRef.current?.();
 
   useEffect(() => {
     if (!supported) return;
@@ -104,40 +164,26 @@ export function useBuiltInAI<K extends BuiltInAIName>(
 
     const run = async (force: boolean): Promise<void> => {
       pendingCreateRef.current = null;
-      setState((s) => ({
-        ...s,
-        status: "checking",
-        progress: 0,
-        session: null,
-        error: null,
-        signal,
-      }));
+      dispatch({ type: "reset", signal });
 
       let status: AvailabilityStatus;
       try {
         status = await availability(name, optionsRef.current);
       } catch (error) {
         if (signal.aborted) return;
-        setState((s) => ({ ...s, status: "error", error: toError(error) }));
+        dispatch({ type: "failed", error: toError(error) });
         pendingCreateRef.current = () => void run(true);
         return;
       }
       if (signal.aborted) return;
 
-      if (status === "unsupported" || status === "unavailable") {
-        setState((s) => ({ ...s, status }));
-        return;
-      }
+      dispatch({ type: "checked", availability: status, force });
 
-      if (status === "downloadable" || status === "downloading") {
-        if (!force) {
-          setState((s) => ({ ...s, status }));
-          pendingCreateRef.current = () => void run(true);
-          return;
-        }
-        setState((s) => ({ ...s, status: "downloading" }));
-      } else {
-        setState((s) => ({ ...s, status: "creating" }));
+      if (status === "unsupported" || status === "unavailable") return;
+
+      if ((status === "downloadable" || status === "downloading") && !force) {
+        pendingCreateRef.current = () => void run(true);
+        return;
       }
 
       try {
@@ -146,13 +192,13 @@ export function useBuiltInAI<K extends BuiltInAIName>(
           signal,
           onProgress: (progress) => {
             if (!signal.aborted) {
-              setState((s) => ({ ...s, status: "downloading", progress }));
+              dispatch({ type: "downloading", progress });
             }
           },
         });
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
-        setState((s) => ({ ...s, status: "error", error: toError(error) }));
+        dispatch({ type: "failed", error: toError(error) });
         pendingCreateRef.current = () => void run(true);
         return;
       }
@@ -162,10 +208,10 @@ export function useBuiltInAI<K extends BuiltInAIName>(
         return;
       }
       if (!session) {
-        setState((s) => ({ ...s, status: "unavailable" }));
+        dispatch({ type: "unavailable" });
         return;
       }
-      setState((s) => ({ ...s, status: "ready", progress: 1, session }));
+      dispatch({ type: "ready", session });
     };
 
     void run(false);
