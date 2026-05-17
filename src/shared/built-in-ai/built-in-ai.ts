@@ -12,13 +12,13 @@ export type BuiltInAIName = keyof BuiltInAINamespaces;
 
 /**
  * `create()` options for a given API, inferred from the spec.
- * Pass-through, except for `monitor`, which the wrapper owns.
+ * Pass-through, except for `monitor`, which `createSession()` owns.
  */
 export type CreateOptions<K extends BuiltInAIName> = NonNullable<
   Parameters<BuiltInAINamespaces[K]["create"]>[0]
 >;
 
-/** Session instance a given API's `create()` resolves to. */
+/** Session instance returned by `create()` for a given API. */
 export type Session<K extends BuiltInAIName> = Awaited<
   ReturnType<BuiltInAINamespaces[K]["create"]>
 >;

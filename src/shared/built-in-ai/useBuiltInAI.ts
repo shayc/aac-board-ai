@@ -23,9 +23,9 @@ export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   status: AIStatus;
   /** Download progress as a `0..1` fraction. */
   progress: number;
-  /** Non-null iff `status === "ready"`. */
+  /** Non-null only when `status === "ready"`. */
   session: Session<K> | null;
-  /** Non-null iff `status === "error"`. */
+  /** Non-null only when `status === "error"`. */
   error: Error | null;
   /**
    * Aborts on unmount or identity change. Pass per call to verb operations
