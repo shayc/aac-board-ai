@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { BuiltInAIName } from "./core/built-in-ai";
+import type { BuiltInAIName } from "./built-in-ai/spec";
 
 const progressByKey = new Map<string, number>();
 const listeners = new Set<() => void>();

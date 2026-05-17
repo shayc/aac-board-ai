@@ -1,5 +1,8 @@
-import { type CreateOptions } from "./core/built-in-ai";
-import { type UseBuiltInAIResult, useBuiltInAI } from "./core/useBuiltInAI";
+import { type CreateOptions } from "./built-in-ai/spec";
+import {
+  type UseBuiltInAIResult,
+  useBuiltInAI,
+} from "./built-in-ai/useBuiltInAI";
 
 export const useSummarizer = (
   options?: CreateOptions<"Summarizer">,

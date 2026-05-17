@@ -7,8 +7,8 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { isSupported } from "@shared/built-in-ai/core/built-in-ai";
-import { useDownloadProgress } from "@shared/built-in-ai/downloadProgress";
+import { isSupported } from "@shared/ai/built-in-ai/spec";
+import { useDownloadProgress } from "@shared/ai/downloadProgress";
 import { useLanguage } from "@shared/language/useLanguage";
 
 export function LanguageSettings() {

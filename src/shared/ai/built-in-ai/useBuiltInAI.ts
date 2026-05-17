@@ -7,7 +7,7 @@ import {
   availability,
   createSession,
   isSupported,
-} from "./built-in-ai";
+} from "./spec";
 
 /**
  * Mirrors the spec `Availability` (`"unavailable"`, `"downloadable"`,

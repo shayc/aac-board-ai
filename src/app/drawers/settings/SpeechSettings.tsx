@@ -7,11 +7,11 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { createSession } from "@shared/built-in-ai/core/built-in-ai";
+import { createSession } from "@shared/ai/built-in-ai/spec";
 import {
   setDownloadProgress,
   useDownloadProgress,
-} from "@shared/built-in-ai/downloadProgress";
+} from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,

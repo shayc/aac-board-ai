@@ -1,5 +1,5 @@
-import { createSession } from "@shared/built-in-ai/core/built-in-ai";
-import { setDownloadProgress } from "@shared/built-in-ai/downloadProgress";
+import { createSession } from "@shared/ai/built-in-ai/spec";
+import { setDownloadProgress } from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,

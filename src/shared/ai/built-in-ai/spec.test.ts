@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { availability, createSession } from "./built-in-ai";
+import { availability, createSession } from "./spec";
 import { makeTranslatorFake } from "./__fixtures__/translator-fake";
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("built-in-ai", () => {
+describe("spec", () => {
   test("unsupported when the global is absent", async () => {
     vi.stubGlobal("Translator", undefined);
     await expect(
