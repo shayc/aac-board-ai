@@ -9,14 +9,14 @@ import {
 } from "./built-in-ai";
 
 export type AIStatus =
-  | "unsupported" // global missing — terminal
-  | "checking" // availability() probe in flight
-  | "unavailable" // model can't run here — terminal until identity change
-  | "downloadable" // needs a user gesture to start download (call create())
-  | "downloading" // model downloading; `progress` is live
-  | "creating" // create() in flight for an already-available model
-  | "ready" // `session` usable
-  | "error"; // create() failed (non-abort) — retry via create()
+  | "unsupported"
+  | "checking"
+  | "unavailable"
+  | "downloadable"
+  | "downloading"
+  | "creating"
+  | "ready"
+  | "error";
 
 export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   status: AIStatus;
@@ -33,7 +33,9 @@ export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   signal: AbortSignal;
   /**
    * Start (or retry) create. Call from a user-gesture handler when the model
-   * must download, or to retry after an error. No-op otherwise.
+   * must download, or to retry after an error. No-op when the hook isn't
+   * parked — i.e. status is `checking`, `creating`, `ready`, `unsupported`,
+   * or `unavailable`.
    */
   create: () => void;
 }
@@ -46,7 +48,6 @@ interface State<K extends BuiltInAIName> {
   signal: AbortSignal;
 }
 
-/** Recursive sorted-key serialization — stable for these flat option bags. */
 function stableKey(value: unknown): string {
   if (value === null || typeof value !== "object") {
     return JSON.stringify(value) ?? "null";
@@ -81,8 +82,6 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   const supported = name in globalThis;
   const optionsKey = stableKey(options);
 
-  // Latest options for the effect's async closures, without retriggering on
-  // every render. Read-only outside render.
   const optionsRef = useRef(options);
   optionsRef.current = options;
 
@@ -94,8 +93,6 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     signal: new AbortController().signal,
   }));
 
-  // Populated by the effect whenever it parks awaiting a user gesture (or a
-  // retry after error). `create()` simply invokes it.
   const pendingCreateRef = useRef<(() => void) | null>(null);
   const create = useCallback(() => pendingCreateRef.current?.(), []);
 
@@ -106,15 +103,13 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     const { signal } = controller;
     let session: Session<K> | null = null;
 
-    // One linear lifecycle pass: probe, then auto-create, park for gesture, or
-    // settle into a terminal status. Re-entered with `force = true` when the
-    // user calls `create()`.
     const run = async (force: boolean): Promise<void> => {
       pendingCreateRef.current = null;
       setState((s) => ({
         ...s,
         status: "checking",
         progress: 0,
+        session: null,
         error: null,
         signal,
       }));

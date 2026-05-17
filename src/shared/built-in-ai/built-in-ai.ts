@@ -1,10 +1,3 @@
-/**
- * Framework-agnostic wrapper over Chrome's built-in AI APIs. Every API
- * (`Translator`, `Rewriter`, …) shares one static shape, so the whole library
- * is two functions plus types inferred straight from `@types/dom-chromium-ai`.
- * Adding an API is one line in `BuiltInAINamespaces` — nothing else changes.
- */
-
 export interface BuiltInAINamespaces {
   Translator: typeof Translator;
   Rewriter: typeof Rewriter;
@@ -17,7 +10,12 @@ export interface BuiltInAINamespaces {
 
 export type BuiltInAIName = keyof BuiltInAINamespaces;
 
-/** The `create()` options for a given API, inferred from the spec types. */
+/**
+ * The `create()` options for a given API, inferred from the spec types.
+ * `monitor` and `signal` are owned by this module — values passed for them
+ * are overridden by the wrapper. (Not excluded at the type level because
+ * `Omit` over a generic blocks spread inference at the call sites.)
+ */
 export type CreateOptions<K extends BuiltInAIName> = NonNullable<
   Parameters<BuiltInAINamespaces[K]["create"]>[0]
 >;
@@ -36,7 +34,6 @@ export interface CreateSessionOptions {
   onProgress?: (fraction: number) => void;
 }
 
-/** The slice of every built-in AI global we depend on. */
 interface AINamespace<Options, Instance> {
   availability(options?: Options): Promise<Availability>;
   create(
@@ -47,10 +44,6 @@ interface AINamespace<Options, Instance> {
   ): Promise<Instance>;
 }
 
-/**
- * The one structural assertion in the module: built-in AI globals are ambient
- * and may be absent, so the lookup is untyped and narrowed here once.
- */
 function getNamespace<K extends BuiltInAIName>(
   name: K,
 ): AINamespace<CreateOptions<K>, Session<K>> | undefined {
@@ -95,8 +88,6 @@ export async function createSession<K extends BuiltInAIName>(
   }
 
   const onProgress = options?.onProgress;
-  // `onProgress` rides along via spread (exempt from excess-property checks)
-  // and is harmlessly ignored by the native `create()`.
   return namespace.create({
     ...options,
     monitor: (monitor) =>

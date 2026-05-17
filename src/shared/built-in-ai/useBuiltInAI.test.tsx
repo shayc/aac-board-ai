@@ -12,7 +12,6 @@ function makeTranslatorFake({
       ? Promise.reject(new Error("create failed"))
       : Promise.resolve({
           translate: (input: string) => Promise.resolve(`T:${input}`),
-          translateStreaming: () => new ReadableStream<string>(),
           destroy,
         }),
   );
@@ -158,7 +157,6 @@ describe("useTranslator", () => {
     const destroy = vi.fn();
     const session = {
       translate: (input: string) => Promise.resolve(`T:${input}`),
-      translateStreaming: () => new ReadableStream<string>(),
       destroy,
     };
     let resolveCreate!: (value: typeof session) => void;
