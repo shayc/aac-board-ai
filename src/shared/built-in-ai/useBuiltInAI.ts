@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef } from "react";
+import { useEffect, useEffectEvent, useReducer, useRef } from "react";
 import {
   type AvailabilityStatus,
   type BuiltInAIName,
@@ -45,6 +45,7 @@ interface State<K extends BuiltInAIName> {
   session: Session<K> | null;
   error: Error | null;
   signal: AbortSignal;
+  generation: number;
 }
 
 type Action<K extends BuiltInAIName> =
@@ -53,7 +54,8 @@ type Action<K extends BuiltInAIName> =
   | { type: "downloading"; progress: number }
   | { type: "ready"; session: Session<K> }
   | { type: "unavailable" }
-  | { type: "failed"; error: Error };
+  | { type: "failed"; error: Error }
+  | { type: "requested" };
 
 function reducer<K extends BuiltInAIName>(
   state: State<K>,
@@ -62,6 +64,7 @@ function reducer<K extends BuiltInAIName>(
   switch (action.type) {
     case "reset":
       return {
+        ...state,
         status: "checking",
         progress: 0,
         session: null,
@@ -98,6 +101,8 @@ function reducer<K extends BuiltInAIName>(
       return { ...state, status: "unavailable" };
     case "failed":
       return { ...state, status: "error", error: action.error };
+    case "requested":
+      return { ...state, generation: state.generation + 1 };
   }
 }
 
@@ -135,11 +140,6 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   const supported = name in globalThis;
   const optionsKey = stableKey(options);
 
-  const optionsRef = useRef(options);
-  useEffect(() => {
-    optionsRef.current = options;
-  });
-
   const [state, dispatch] = useReducer(
     reducer as (state: State<K>, action: Action<K>) => State<K>,
     null,
@@ -149,30 +149,20 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       session: null,
       error: null,
       signal: new AbortController().signal,
+      generation: 0,
     }),
   );
 
-  const pendingCreateRef = useRef<(() => void) | null>(null);
-  const create = () => pendingCreateRef.current?.();
-
-  useEffect(() => {
-    if (!supported) return;
-
-    const controller = new AbortController();
-    const { signal } = controller;
-    let session: Session<K> | null = null;
-
-    const run = async (force: boolean): Promise<void> => {
-      pendingCreateRef.current = null;
+  const performRun = useEffectEvent(
+    async (signal: AbortSignal, force: boolean): Promise<void> => {
       dispatch({ type: "reset", signal });
 
       let status: AvailabilityStatus;
       try {
-        status = await availability(name, optionsRef.current);
+        status = await availability(name, options);
       } catch (error) {
         if (signal.aborted) return;
         dispatch({ type: "failed", error: toError(error) });
-        pendingCreateRef.current = () => void run(true);
         return;
       }
       if (signal.aborted) return;
@@ -180,15 +170,14 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       dispatch({ type: "checked", availability: status, force });
 
       if (status === "unsupported" || status === "unavailable") return;
-
       if ((status === "downloadable" || status === "downloading") && !force) {
-        pendingCreateRef.current = () => void run(true);
         return;
       }
 
+      let session: Session<K> | null;
       try {
         session = await createSession(name, {
-          ...optionsRef.current,
+          ...options,
           signal,
           onProgress: (progress) => {
             if (!signal.aborted) {
@@ -199,12 +188,10 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
         dispatch({ type: "failed", error: toError(error) });
-        pendingCreateRef.current = () => void run(true);
         return;
       }
       if (signal.aborted) {
         session?.destroy();
-        session = null;
         return;
       }
       if (!session) {
@@ -212,16 +199,38 @@ export function useBuiltInAI<K extends BuiltInAIName>(
         return;
       }
       dispatch({ type: "ready", session });
-    };
+    },
+  );
 
-    void run(false);
+  const destroyCurrentSession = useEffectEvent(() => {
+    state.session?.destroy();
+  });
+
+  const lastGenRef = useRef(0);
+
+  useEffect(() => {
+    if (!supported) return;
+    const force = state.generation > lastGenRef.current;
+    lastGenRef.current = state.generation;
+
+    const controller = new AbortController();
+    void performRun(controller.signal, force);
 
     return () => {
       controller.abort();
-      session?.destroy();
-      pendingCreateRef.current = null;
+      destroyCurrentSession();
     };
-  }, [name, optionsKey, supported]);
+  }, [name, optionsKey, supported, state.generation]);
+
+  const create = () => {
+    if (
+      state.status === "downloadable" ||
+      state.status === "downloading" ||
+      state.status === "error"
+    ) {
+      dispatch({ type: "requested" });
+    }
+  };
 
   return { ...state, create };
 }
