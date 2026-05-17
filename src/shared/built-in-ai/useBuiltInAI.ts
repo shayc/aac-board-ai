@@ -20,22 +20,21 @@ export type AIStatus =
 
 export interface UseBuiltInAIResult<K extends BuiltInAIName> {
   status: AIStatus;
-  /** Model download progress, a `0..1` fraction. */
+  /** Download progress as a `0..1` fraction. */
   progress: number;
   /** Non-null iff `status === "ready"`. */
   session: Session<K> | null;
   /** Non-null iff `status === "error"`. */
   error: Error | null;
   /**
-   * Aborts on unmount / identity change. Pass to verb calls so they die with
-   * the hook: `session.translate(text, { signal })`.
+   * Aborts on unmount or identity change. Pass to verb calls so they cancel
+   * with the hook: `session.translate(text, { signal })`.
    */
   signal: AbortSignal;
   /**
-   * Start (or retry) create. Call from a user-gesture handler when the model
-   * must download, or to retry after an error. No-op when the hook isn't
-   * parked — i.e. status is `checking`, `creating`, `ready`, `unsupported`,
-   * or `unavailable`.
+   * Starts (or retries) session creation. Call from a user gesture when
+   * `status` is `"downloadable"` or `"downloading"`, or to retry after `"error"`.
+   * No-op otherwise.
    */
   create: () => void;
 }
@@ -71,9 +70,9 @@ function isAbort(value: unknown): boolean {
 }
 
 /**
- * React binding over a built-in AI session. Owns the full lifecycle —
- * availability probe, gesture-gated create, download progress, abort on
- * unmount/identity-change, and `destroy()` — so no consumer can forget a step.
+ * React binding for a built-in AI session. Owns the full lifecycle:
+ * availability probe, gesture-gated create, download progress, plus abort
+ * and `destroy()` on unmount or identity change.
  */
 export function useBuiltInAI<K extends BuiltInAIName>(
   name: K,

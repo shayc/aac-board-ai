@@ -11,26 +11,24 @@ export interface BuiltInAINamespaces {
 export type BuiltInAIName = keyof BuiltInAINamespaces;
 
 /**
- * The `create()` options for a given API, inferred from the spec types.
- * `monitor` and `signal` are owned by this module — values passed for them
- * are overridden by the wrapper. (Not excluded at the type level because
- * `Omit` over a generic blocks spread inference at the call sites.)
+ * `create()` options for a given API, inferred from the spec.
+ * Pass-through, except for `monitor` and `signal`, which the wrapper owns.
  */
 export type CreateOptions<K extends BuiltInAIName> = NonNullable<
   Parameters<BuiltInAINamespaces[K]["create"]>[0]
 >;
 
-/** The session instance a given API's `create()` resolves to. */
+/** Session instance a given API's `create()` resolves to. */
 export type Session<K extends BuiltInAIName> = Awaited<
   ReturnType<BuiltInAINamespaces[K]["create"]>
 >;
 
-/** Spec `Availability` plus our `"unsupported"` for a missing global. */
+/** Spec `Availability`, extended with `"unsupported"` for a missing global. */
 export type AvailabilityStatus = "unsupported" | Availability;
 
 export interface CreateSessionOptions {
   signal?: AbortSignal;
-  /** Model download progress, a `0..1` fraction. */
+  /** Download progress as a `0..1` fraction. */
   onProgress?: (fraction: number) => void;
 }
 
@@ -57,7 +55,7 @@ function getNamespace<K extends BuiltInAIName>(
   return globals[name];
 }
 
-/** Resolve the model's availability, or `"unsupported"` when absent. */
+/** Resolves the model's availability, or `"unsupported"` when the global is missing. */
 export async function availability<K extends BuiltInAIName>(
   name: K,
   options?: CreateOptions<K>,
@@ -70,10 +68,9 @@ export async function availability<K extends BuiltInAIName>(
 }
 
 /**
- * Create a session, awaiting any model download (progress via `onProgress`).
- * Resolves `null` only when the model cannot be used (unsupported or
- * `"unavailable"`); genuine `create()` failures reject so they can't be
- * silently ignored.
+ * Creates a session, awaiting any model download (progress via `onProgress`).
+ * Resolves `null` when the model cannot be used (`"unsupported"` or
+ * `"unavailable"`); other `create()` failures reject.
  */
 export async function createSession<K extends BuiltInAIName>(
   name: K,
