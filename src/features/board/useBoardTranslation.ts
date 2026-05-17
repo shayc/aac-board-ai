@@ -52,6 +52,7 @@ export function useBoardTranslation({
 
       const sourceLanguage = normalizeLocaleCode(boardLanguage);
       const targetLanguage = normalizeLocaleCode(language);
+      const progressKey = `${sourceLanguage}:${targetLanguage}`;
 
       // Imperative createSession (vs. useTranslator) because we only know the
       // language pair after checking for a cached translation above.
@@ -62,11 +63,7 @@ export function useBoardTranslation({
           targetLanguage,
           signal,
           onProgress: (progress) =>
-            setDownloadProgress(
-              "Translator",
-              progress,
-              `${sourceLanguage}:${targetLanguage}`,
-            ),
+            setDownloadProgress("Translator", progress, progressKey),
         });
         if (signal.aborted) return;
         if (!translator) {
@@ -90,6 +87,10 @@ export function useBoardTranslation({
         console.warn("Board translation failed:", error);
       } finally {
         translator?.destroy();
+        // Clear in-flight progress so an aborted download (e.g. language
+        // switched mid-download) doesn't leave a stale entry that keeps
+        // `useDownloadProgress("Translator")` reporting > 0 forever.
+        setDownloadProgress("Translator", 1, progressKey);
       }
     };
 

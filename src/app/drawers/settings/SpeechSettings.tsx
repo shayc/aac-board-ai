@@ -88,22 +88,20 @@ export function SpeechSettings() {
     let greeting = defaultGreeting;
 
     if (sourceLanguage !== targetLanguage) {
-      const translator = await createSession("Translator", {
-        sourceLanguage,
-        targetLanguage,
-        onProgress: (p) =>
-          setDownloadProgress(
-            "Translator",
-            p,
-            `${sourceLanguage}:${targetLanguage}`,
-          ),
-      });
-      if (translator) {
-        try {
+      const progressKey = `${sourceLanguage}:${targetLanguage}`;
+      let translator: Translator | null = null;
+      try {
+        translator = await createSession("Translator", {
+          sourceLanguage,
+          targetLanguage,
+          onProgress: (p) => setDownloadProgress("Translator", p, progressKey),
+        });
+        if (translator) {
           greeting = await translator.translate(defaultGreeting);
-        } finally {
-          translator.destroy();
         }
+      } finally {
+        translator?.destroy();
+        setDownloadProgress("Translator", 1, progressKey);
       }
     }
 
