@@ -35,22 +35,20 @@ describe("namespaces", () => {
     ).resolves.toBe("downloadable");
   });
 
-  test("creates a session and reports download progress", async () => {
+  test("creates a session from a downloadable namespace", async () => {
     const { Fake } = makeTranslatorFake({
       status: "downloadable",
       withMonitor: true,
     });
     vi.stubGlobal("Translator", Fake);
 
-    const seen: number[] = [];
     const session = await createSession("Translator", {
       sourceLanguage: "en",
       targetLanguage: "fr",
-      onProgress: (fraction) => seen.push(fraction),
+      progressKey: "Translator:en:fr",
     });
 
     expect(session).not.toBeNull();
-    expect(seen).toContain(0.5);
     await expect(session?.translate("hi")).resolves.toBe("T:hi");
   });
 
@@ -67,7 +65,7 @@ describe("namespaces", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("does not leak onProgress into namespace.availability or namespace.create", async () => {
+  test("does not leak progressKey into namespace.availability or namespace.create", async () => {
     const availabilityMock = vi.fn<(options: unknown) => Promise<Availability>>(
       () => Promise.resolve("available"),
     );
@@ -82,12 +80,12 @@ describe("namespaces", () => {
     await createSession("Translator", {
       sourceLanguage: "en",
       targetLanguage: "fr",
-      onProgress: vi.fn(),
+      progressKey: "Translator:en:fr",
     });
 
     expect(availabilityMock.mock.calls[0]?.[0]).not.toHaveProperty(
-      "onProgress",
+      "progressKey",
     );
-    expect(createMock.mock.calls[0]?.[0]).not.toHaveProperty("onProgress");
+    expect(createMock.mock.calls[0]?.[0]).not.toHaveProperty("progressKey");
   });
 });

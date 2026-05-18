@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, useReducer, useRef } from "react";
+import { useDownloadProgress } from "../downloadProgress";
 import {
   type AvailabilityStatus,
   type BuiltInAIName,
@@ -71,7 +72,6 @@ export type UseBuiltInAIResult<K extends BuiltInAIName> =
 
 interface State<K extends BuiltInAIName> {
   status: AIStatus;
-  progress: number;
   session: Session<K> | null;
   error: Error | null;
   signal: AbortSignal;
@@ -81,7 +81,6 @@ interface State<K extends BuiltInAIName> {
 type Action<K extends BuiltInAIName> =
   | { type: "reset"; signal: AbortSignal }
   | { type: "checked"; availability: AvailabilityStatus; force: boolean }
-  | { type: "downloading"; progress: number }
   | { type: "ready"; session: Session<K> }
   | { type: "unavailable" }
   | { type: "gesture-required" }
@@ -97,7 +96,6 @@ function reducer<K extends BuiltInAIName>(
       return {
         ...state,
         status: "checking",
-        progress: 0,
         session: null,
         error: null,
         signal: action.signal,
@@ -112,15 +110,8 @@ function reducer<K extends BuiltInAIName>(
       }
       return { ...state, status: "creating" };
     }
-    case "downloading":
-      return { ...state, status: "downloading", progress: action.progress };
     case "ready":
-      return {
-        ...state,
-        status: "ready",
-        progress: 1,
-        session: action.session,
-      };
+      return { ...state, status: "ready", session: action.session };
     case "unavailable":
       return { ...state, status: "unavailable" };
     case "gesture-required":
@@ -160,9 +151,10 @@ function isGestureRequired(value: unknown): boolean {
 
 function toResult<K extends BuiltInAIName>(
   state: State<K>,
+  progress: number,
   create: () => void,
 ): UseBuiltInAIResult<K> {
-  const { status, progress, signal, session, error } = state;
+  const { status, signal, session, error } = state;
   const base = { progress, signal, create };
   switch (status) {
     case "ready":
@@ -191,13 +183,15 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     null,
     (): State<K> => ({
       status: supported ? "checking" : "unsupported",
-      progress: 0,
       session: null,
       error: null,
       signal: AbortSignal.abort(),
       generation: 0,
     }),
   );
+
+  const storeProgress = useDownloadProgress(name);
+  const progress = state.status === "ready" ? 1 : storeProgress;
 
   const performRun = useEffectEvent(
     async (signal: AbortSignal, force: boolean): Promise<void> => {
@@ -225,11 +219,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
         session = await createSession(name, {
           ...options,
           signal,
-          onProgress: (progress) => {
-            if (!signal.aborted) {
-              dispatch({ type: "downloading", progress });
-            }
-          },
+          progressKey: name,
         });
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
@@ -286,5 +276,5 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     }
   };
 
-  return toResult(state, create);
+  return toResult(state, progress, create);
 }

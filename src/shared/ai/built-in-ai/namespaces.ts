@@ -1,3 +1,8 @@
+import {
+  clearDownloadProgress,
+  setDownloadProgress,
+} from "../downloadProgress";
+
 export interface BuiltInAINamespaces {
   Translator: typeof Translator;
   Rewriter: typeof Rewriter;
@@ -28,8 +33,12 @@ export type AvailabilityStatus = "unsupported" | Availability;
 
 export interface CreateSessionOptions {
   signal?: AbortSignal;
-  /** Download progress as a `0..1` fraction. */
-  onProgress?: (fraction: number) => void;
+  /**
+   * When set, download progress is reported into the shared
+   * `downloadProgress` store under this key while `create()` runs, and the
+   * entry is cleared on settle (resolve, reject, or abort).
+   */
+  progressKey?: string;
 }
 
 interface AINamespace<Options, Instance> {
@@ -73,9 +82,10 @@ export async function availability<K extends BuiltInAIName>(
 }
 
 /**
- * Creates a session, awaiting any model download (progress via `onProgress`).
- * Resolves `null` when the model cannot be used (`"unsupported"` or
- * `"unavailable"`); other `create()` failures reject.
+ * Creates a session, awaiting any model download. Pass `progressKey` to have
+ * download progress reported into the shared `downloadProgress` store (and
+ * cleared on settle). Resolves `null` when the model cannot be used
+ * (`"unsupported"` or `"unavailable"`); other `create()` failures reject.
  */
 export async function createSession<K extends BuiltInAIName>(
   name: K,
@@ -86,18 +96,22 @@ export async function createSession<K extends BuiltInAIName>(
     return null;
   }
 
-  const { onProgress, ...createOptions } = (options ?? {}) as CreateOptions<K> &
-    CreateSessionOptions;
+  const { progressKey, ...createOptions } = (options ??
+    {}) as CreateOptions<K> & CreateSessionOptions;
 
   if ((await namespace.availability(createOptions)) === "unavailable") {
     return null;
   }
 
-  return namespace.create({
-    ...createOptions,
-    monitor: (monitor) =>
-      monitor.addEventListener("downloadprogress", (event) => {
-        onProgress?.(event.loaded);
-      }),
-  });
+  try {
+    return await namespace.create({
+      ...createOptions,
+      monitor: (monitor) =>
+        monitor.addEventListener("downloadprogress", (event) => {
+          if (progressKey) setDownloadProgress(progressKey, event.loaded);
+        }),
+    });
+  } finally {
+    if (progressKey) clearDownloadProgress(progressKey);
+  }
 }

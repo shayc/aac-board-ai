@@ -1,5 +1,4 @@
 import { createSession } from "@shared/ai/built-in-ai/namespaces";
-import { setDownloadProgress } from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -52,9 +51,8 @@ export function useBoardTranslation({
 
       const sourceLanguage = normalizeLocaleCode(boardLanguage);
       const targetLanguage = normalizeLocaleCode(language);
-      const progressKey = `${sourceLanguage}:${targetLanguage}`;
 
-      // Imperative createSession (vs. useTranslator) because we only know the
+      // Imperative createSession (vs. useBuiltInAI) because we only know the
       // language pair after checking for a cached translation above.
       let translator: Translator | null = null;
       try {
@@ -62,8 +60,7 @@ export function useBoardTranslation({
           sourceLanguage,
           targetLanguage,
           signal,
-          onProgress: (progress) =>
-            setDownloadProgress("Translator", progress, progressKey),
+          progressKey: `Translator:${sourceLanguage}:${targetLanguage}`,
         });
         if (signal.aborted) return;
         if (!translator) {
@@ -87,10 +84,6 @@ export function useBoardTranslation({
         console.warn("Board translation failed:", error);
       } finally {
         translator?.destroy();
-        // Clear in-flight progress so an aborted download (e.g. language
-        // switched mid-download) doesn't leave a stale entry that keeps
-        // `useDownloadProgress("Translator")` reporting > 0 forever.
-        setDownloadProgress("Translator", 1, progressKey);
       }
     };
 

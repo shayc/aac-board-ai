@@ -1,5 +1,4 @@
 import { useSyncExternalStore } from "react";
-import type { BuiltInAIName } from "./built-in-ai/namespaces";
 
 const progressByKey = new Map<string, number>();
 const listeners = new Set<() => void>();
@@ -18,38 +17,36 @@ function notify(): void {
 }
 
 /**
- * Records download progress (`0..1`) for a built-in AI model. Use `subKey`
- * to distinguish concurrent downloads of the same API (e.g. different
- * language pairs for `Translator`). Passing `>= 1` clears the entry —
- * nothing is reported once a download completes.
+ * Records in-flight download progress (`0..1`) under an arbitrary key. The
+ * key shape is the caller's choice — use a plain namespace name for a single
+ * model, or a structured form like `"Translator:en:fr"` to keep concurrent
+ * downloads of the same namespace distinct.
  */
-export function setDownloadProgress(
-  name: BuiltInAIName,
-  progress: number,
-  subKey?: string,
-): void {
-  const key = subKey ? `${name}:${subKey}` : name;
-  if (progress >= 1) {
-    if (!progressByKey.delete(key)) return;
-  } else {
-    progressByKey.set(key, progress);
-  }
+export function setDownloadProgress(key: string, progress: number): void {
+  if (progressByKey.get(key) === progress) return;
+  progressByKey.set(key, progress);
+  notify();
+}
+
+/** Removes the entry for `key`. No-op when the key is absent. */
+export function clearDownloadProgress(key: string): void {
+  if (!progressByKey.delete(key)) return;
   notify();
 }
 
 /**
- * Highest in-flight progress for `name`, aggregated across all sub-keys, as
- * a `0..1` fraction. Returns `0` when nothing is downloading.
+ * Highest in-flight progress for any entry matching `prefix` (exact match or
+ * `${prefix}:...`), as a `0..1` fraction. Returns `0` when nothing matches.
  */
-export function useDownloadProgress(name: BuiltInAIName): number {
-  return useSyncExternalStore(subscribe, () => snapshotFor(name));
+export function useDownloadProgress(prefix: string): number {
+  return useSyncExternalStore(subscribe, () => snapshotFor(prefix));
 }
 
-function snapshotFor(name: BuiltInAIName): number {
-  const prefix = `${name}:`;
+function snapshotFor(prefix: string): number {
+  const sep = `${prefix}:`;
   let max = 0;
   for (const [key, progress] of progressByKey) {
-    if (key !== name && !key.startsWith(prefix)) continue;
+    if (key !== prefix && !key.startsWith(sep)) continue;
     if (progress > max) max = progress;
   }
   return max;

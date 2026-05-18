@@ -1,6 +1,5 @@
+import { useBuiltInAI } from "@shared/ai/built-in-ai/useBuiltInAI";
 import { useSharedContext } from "@shared/ai/sharedContext";
-import { useProofreader } from "@shared/ai/useProofreader";
-import { useRewriter } from "@shared/ai/useRewriter";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 
@@ -30,8 +29,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const proofreader = useProofreader();
-  const rewriter = useRewriter({
+  const proofreader = useBuiltInAI("Proofreader");
+  const rewriter = useBuiltInAI("Rewriter", {
     tone,
     sharedContext,
     length: "shorter",

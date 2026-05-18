@@ -8,10 +8,7 @@ import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { createSession } from "@shared/ai/built-in-ai/namespaces";
-import {
-  setDownloadProgress,
-  useDownloadProgress,
-} from "@shared/ai/downloadProgress";
+import { useDownloadProgress } from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -88,20 +85,18 @@ export function SpeechSettings() {
     let greeting = defaultGreeting;
 
     if (sourceLanguage !== targetLanguage) {
-      const progressKey = `${sourceLanguage}:${targetLanguage}`;
       let translator: Translator | null = null;
       try {
         translator = await createSession("Translator", {
           sourceLanguage,
           targetLanguage,
-          onProgress: (p) => setDownloadProgress("Translator", p, progressKey),
+          progressKey: `Translator:${sourceLanguage}:${targetLanguage}`,
         });
         if (translator) {
           greeting = await translator.translate(defaultGreeting);
         }
       } finally {
         translator?.destroy();
-        setDownloadProgress("Translator", 1, progressKey);
       }
     }
 

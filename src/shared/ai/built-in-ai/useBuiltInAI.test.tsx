@@ -344,7 +344,7 @@ describe("useBuiltInAI", () => {
       });
     });
     vi.stubGlobal("Translator", {
-      availability: vi.fn(() => Promise.resolve("available")),
+      availability: vi.fn(() => Promise.resolve("downloadable")),
       create,
     });
 
@@ -354,6 +354,9 @@ describe("useBuiltInAI", () => {
         targetLanguage: "fr",
       }),
     );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("downloadable"));
+    result.current.create();
 
     await vi.waitFor(() => expect(result.current.progress).toBe(0.5));
     expect(result.current.status).toBe("downloading");
