@@ -13,28 +13,28 @@ export {
   type SummarizeCallOptions,
   type SummarizerHookReturn,
   type SummarizerOptions,
-} from "./hooks/use-summarizer.ts";
+} from "./hooks/useSummarizer.ts";
 
 export {
   useWriter,
   type WriteCallOptions,
   type WriterHookReturn,
   type WriterOptions,
-} from "./hooks/use-writer.ts";
+} from "./hooks/useWriter.ts";
 
 export {
   useRewriter,
   type RewriteCallOptions,
   type RewriterHookReturn,
   type RewriterOptions,
-} from "./hooks/use-rewriter.ts";
+} from "./hooks/useRewriter.ts";
 
 export {
   useTranslator,
   type TranslateCallOptions,
   type TranslatorHookReturn,
   type TranslatorOptions,
-} from "./hooks/use-translator.ts";
+} from "./hooks/useTranslator.ts";
 
 export {
   useLanguageDetector,
@@ -42,7 +42,7 @@ export {
   type LanguageDetectionResult,
   type LanguageDetectorHookReturn,
   type LanguageDetectorOptions,
-} from "./hooks/use-language-detector.ts";
+} from "./hooks/useLanguageDetector.ts";
 
 export {
   useProofreader,
@@ -52,4 +52,4 @@ export {
   type ProofreadResult,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
-} from "./hooks/use-proofreader.ts";
+} from "./hooks/useProofreader.ts";
