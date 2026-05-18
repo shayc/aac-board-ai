@@ -1,4 +1,4 @@
-import { useBuiltInAI } from "@shared/ai/built-in-ai/useBuiltInAI";
+import { useBuiltInAI } from "@shared/ai/useBuiltInAI";
 import { useSharedContext } from "@shared/ai/sharedContext";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";

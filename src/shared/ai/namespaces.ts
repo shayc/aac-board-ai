@@ -1,7 +1,4 @@
-import {
-  clearDownloadProgress,
-  setDownloadProgress,
-} from "../downloadProgress";
+import { clearDownloadProgress, setDownloadProgress } from "./downloadProgress";
 
 export interface BuiltInAINamespaces {
   Translator: typeof Translator;
@@ -16,11 +13,12 @@ export interface BuiltInAINamespaces {
 export type BuiltInAIName = keyof BuiltInAINamespaces;
 
 /**
- * `create()` options for a given API, inferred from the spec.
- * Pass-through, except for `monitor`, which `createSession()` owns.
+ * `create()` options for a given API, inferred from the spec. `monitor` is
+ * stripped — `createSession()` owns it for download-progress reporting.
  */
-export type CreateOptions<K extends BuiltInAIName> = NonNullable<
-  Parameters<BuiltInAINamespaces[K]["create"]>[0]
+export type CreateOptions<K extends BuiltInAIName> = Omit<
+  NonNullable<Parameters<BuiltInAINamespaces[K]["create"]>[0]>,
+  "monitor"
 >;
 
 /** Session instance returned by `create()` for a given API. */
@@ -96,8 +94,11 @@ export async function createSession<K extends BuiltInAIName>(
     return null;
   }
 
-  const { progressKey, ...createOptions } = (options ??
-    {}) as CreateOptions<K> & CreateSessionOptions;
+  const { progressKey, ...rest } = (options ?? {}) as CreateOptions<K> &
+    CreateSessionOptions;
+  // TS can't narrow `Omit<CreateOptions<K> & CreateSessionOptions, "progressKey">`
+  // back to `CreateOptions<K>` over a generic, so cast once here.
+  const createOptions = rest as CreateOptions<K>;
 
   if ((await namespace.availability(createOptions)) === "unavailable") {
     return null;

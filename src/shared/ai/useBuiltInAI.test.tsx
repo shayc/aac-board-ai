@@ -366,4 +366,66 @@ describe("useBuiltInAI", () => {
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
     expect(result.current.progress).toBe(1);
   });
+
+  test("two hook instances with different options track progress independently", async () => {
+    const monitorsByTarget = new Map<string, EventTarget>();
+    const resolversByTarget = new Map<
+      string,
+      (value: { destroy: () => void }) => void
+    >();
+    const create = vi.fn(
+      (options: {
+        targetLanguage: string;
+        monitor?: (m: EventTarget) => void;
+      }) => {
+        const monitor = new EventTarget();
+        options.monitor?.(monitor);
+        monitorsByTarget.set(options.targetLanguage, monitor);
+        return new Promise<{ destroy: () => void }>((resolve) => {
+          resolversByTarget.set(options.targetLanguage, resolve);
+        });
+      },
+    );
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create,
+    });
+
+    const hookA = await renderHook(() =>
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      }),
+    );
+    const hookB = await renderHook(() =>
+      useBuiltInAI("Translator", {
+        sourceLanguage: "en",
+        targetLanguage: "de",
+      }),
+    );
+
+    await vi.waitFor(() =>
+      expect(hookA.result.current.status).toBe("downloadable"),
+    );
+    await vi.waitFor(() =>
+      expect(hookB.result.current.status).toBe("downloadable"),
+    );
+
+    hookA.result.current.create();
+    hookB.result.current.create();
+
+    await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(2));
+
+    monitorsByTarget
+      .get("fr")
+      ?.dispatchEvent(
+        Object.assign(new Event("downloadprogress"), { loaded: 0.7 }),
+      );
+
+    await vi.waitFor(() => expect(hookA.result.current.progress).toBe(0.7));
+    expect(hookB.result.current.progress).toBe(0);
+
+    resolversByTarget.get("fr")?.({ destroy: vi.fn() });
+    resolversByTarget.get("de")?.({ destroy: vi.fn() });
+  });
 });

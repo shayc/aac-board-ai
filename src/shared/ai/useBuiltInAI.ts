@@ -1,9 +1,10 @@
 import { useEffect, useEffectEvent, useReducer, useRef } from "react";
-import { useDownloadProgress } from "../downloadProgress";
+import { useDownloadProgress } from "./downloadProgress";
 import {
   type AvailabilityStatus,
   type BuiltInAIName,
   type CreateOptions,
+  type CreateSessionOptions,
   type Session,
   availability,
   createSession,
@@ -29,14 +30,6 @@ export type AIStatus =
 interface UseBuiltInAIResultBase {
   /** Download progress as a `0..1` fraction. */
   progress: number;
-  /**
-   * Aborts on unmount or identity change. Pass per call to verb operations
-   * (e.g. `session.translate(text, { signal })`) so they cancel with the hook.
-   *
-   * Identity changes whenever the hook resets — read `result.signal` fresh
-   * per call rather than capturing it across renders.
-   */
-  signal: AbortSignal;
   /**
    * Starts (or retries) session creation. Call from a user gesture (click,
    * keydown, pointerup, ...) when `status` is `"downloadable"`,
@@ -74,12 +67,11 @@ interface State<K extends BuiltInAIName> {
   status: AIStatus;
   session: Session<K> | null;
   error: Error | null;
-  signal: AbortSignal;
   generation: number;
 }
 
 type Action<K extends BuiltInAIName> =
-  | { type: "reset"; signal: AbortSignal }
+  | { type: "reset" }
   | { type: "checked"; availability: AvailabilityStatus; force: boolean }
   | { type: "ready"; session: Session<K> }
   | { type: "unavailable" }
@@ -98,7 +90,6 @@ function reducer<K extends BuiltInAIName>(
         status: "checking",
         session: null,
         error: null,
-        signal: action.signal,
       };
     case "checked": {
       const { availability, force } = action;
@@ -154,8 +145,8 @@ function toResult<K extends BuiltInAIName>(
   progress: number,
   create: () => void,
 ): UseBuiltInAIResult<K> {
-  const { status, signal, session, error } = state;
-  const base = { progress, signal, create };
+  const { status, session, error } = state;
+  const base = { progress, create };
   switch (status) {
     case "ready":
       return { ...base, status, session: session as Session<K>, error: null };
@@ -185,17 +176,17 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       status: supported ? "checking" : "unsupported",
       session: null,
       error: null,
-      signal: AbortSignal.abort(),
       generation: 0,
     }),
   );
 
-  const storeProgress = useDownloadProgress(name);
+  const progressKey = `${name}:${optionsKey}`;
+  const storeProgress = useDownloadProgress(progressKey);
   const progress = state.status === "ready" ? 1 : storeProgress;
 
   const performRun = useEffectEvent(
     async (signal: AbortSignal, force: boolean): Promise<void> => {
-      dispatch({ type: "reset", signal });
+      dispatch({ type: "reset" });
 
       let status: AvailabilityStatus;
       try {
@@ -219,8 +210,9 @@ export function useBuiltInAI<K extends BuiltInAIName>(
         session = await createSession(name, {
           ...options,
           signal,
-          progressKey: name,
-        });
+          progressKey,
+          // TS can't preserve the generic relation through the spread; cast once.
+        } as CreateOptions<K> & CreateSessionOptions);
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
         if (isGestureRequired(error)) {

@@ -1,4 +1,4 @@
-import { createSession } from "@shared/ai/built-in-ai/namespaces";
+import { createSession } from "@shared/ai/namespaces";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,

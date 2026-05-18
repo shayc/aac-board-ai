@@ -7,7 +7,7 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { createSession } from "@shared/ai/built-in-ai/namespaces";
+import { createSession } from "@shared/ai/namespaces";
 import { useDownloadProgress } from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,
