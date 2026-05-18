@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useLifecycle } from "../internal/lifecycle.ts";
 import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
 
 export interface SummarizerOptions {
   type?: "tldr" | "teaser" | "key-points" | "headline";

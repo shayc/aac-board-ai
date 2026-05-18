@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useLifecycle } from "../internal/lifecycle.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
 
 export interface LanguageDetectorOptions {
   expectedInputLanguages?: readonly string[];

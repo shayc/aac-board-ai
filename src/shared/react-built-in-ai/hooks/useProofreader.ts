@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLifecycle } from "../internal/lifecycle.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 
 export type CorrectionType =
