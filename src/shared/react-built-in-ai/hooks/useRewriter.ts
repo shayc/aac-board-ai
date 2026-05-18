@@ -32,27 +32,29 @@ export interface RewriterHookReturn extends BaseHookReturn {
 }
 
 export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
-  const lc = useLifecycle<RewriterOptions, Rewriter>("Rewriter", options);
+  const { acquire, ...lifecycle } = useLifecycle<RewriterOptions, Rewriter>(
+    "Rewriter",
+    options,
+  );
 
-  const [api] = useState(() => ({
-    rewrite: async (input: string, opts?: RewriteCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+  const [actions] = useState(() => ({
+    async rewrite(input: string, opts?: RewriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.rewrite(input, { context: opts?.context, signal });
     },
-    rewriteStream: (
+    async *rewriteStream(
       input: string,
       opts?: RewriteCallOptions,
-    ): AsyncIterable<string> =>
-      (async function* () {
-        const { instance, signal } = await lc.acquire(opts?.signal);
-        const stream = instance.rewriteStreaming(input, {
-          context: opts?.context,
-          signal,
-        });
-        yield* streamChunks(stream, signal);
-      })(),
-    measureInput: async (input: string, opts?: RewriteCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.rewriteStreaming(input, {
+        context: opts?.context,
+        signal,
+      });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: RewriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.measureInputUsage(input, {
         context: opts?.context,
         signal,
@@ -60,14 +62,5 @@ export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    inputQuota: lc.inputQuota,
-    prepare: lc.prepare,
-    rewrite: api.rewrite,
-    rewriteStream: api.rewriteStream,
-    measureInput: api.measureInput,
-  };
+  return { ...lifecycle, ...actions };
 }

@@ -27,29 +27,21 @@ export interface LanguageDetectorHookReturn extends BaseHookReturn {
 export function useLanguageDetector(
   options?: LanguageDetectorOptions,
 ): LanguageDetectorHookReturn {
-  const lc = useLifecycle<LanguageDetectorOptions, LanguageDetector>(
-    "LanguageDetector",
-    options,
-  );
+  const { acquire, ...lifecycle } = useLifecycle<
+    LanguageDetectorOptions,
+    LanguageDetector
+  >("LanguageDetector", options);
 
-  const [api] = useState(() => ({
-    detect: async (input: string, opts?: DetectCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+  const [actions] = useState(() => ({
+    async detect(input: string, opts?: DetectCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.detect(input, { signal });
     },
-    measureInput: async (input: string, opts?: DetectCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    async measureInput(input: string, opts?: DetectCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.measureInputUsage(input, { signal });
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    inputQuota: lc.inputQuota,
-    prepare: lc.prepare,
-    detect: api.detect,
-    measureInput: api.measureInput,
-  };
+  return { ...lifecycle, ...actions };
 }

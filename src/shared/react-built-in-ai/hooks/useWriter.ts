@@ -29,27 +29,29 @@ export interface WriterHookReturn extends BaseHookReturn {
 }
 
 export function useWriter(options?: WriterOptions): WriterHookReturn {
-  const lc = useLifecycle<WriterOptions, Writer>("Writer", options);
+  const { acquire, ...lifecycle } = useLifecycle<WriterOptions, Writer>(
+    "Writer",
+    options,
+  );
 
-  const [api] = useState(() => ({
-    write: async (input: string, opts?: WriteCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+  const [actions] = useState(() => ({
+    async write(input: string, opts?: WriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.write(input, { context: opts?.context, signal });
     },
-    writeStream: (
+    async *writeStream(
       input: string,
       opts?: WriteCallOptions,
-    ): AsyncIterable<string> =>
-      (async function* () {
-        const { instance, signal } = await lc.acquire(opts?.signal);
-        const stream = instance.writeStreaming(input, {
-          context: opts?.context,
-          signal,
-        });
-        yield* streamChunks(stream, signal);
-      })(),
-    measureInput: async (input: string, opts?: WriteCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.writeStreaming(input, {
+        context: opts?.context,
+        signal,
+      });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: WriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.measureInputUsage(input, {
         context: opts?.context,
         signal,
@@ -57,14 +59,5 @@ export function useWriter(options?: WriterOptions): WriterHookReturn {
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    inputQuota: lc.inputQuota,
-    prepare: lc.prepare,
-    write: api.write,
-    writeStream: api.writeStream,
-    measureInput: api.measureInput,
-  };
+  return { ...lifecycle, ...actions };
 }

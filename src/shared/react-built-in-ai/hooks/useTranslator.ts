@@ -28,36 +28,29 @@ export interface TranslatorHookReturn extends BaseHookReturn {
 export function useTranslator(
   options: TranslatorOptions,
 ): TranslatorHookReturn {
-  const lc = useLifecycle<TranslatorOptions, Translator>("Translator", options);
+  const { acquire, ...lifecycle } = useLifecycle<TranslatorOptions, Translator>(
+    "Translator",
+    options,
+  );
 
-  const [api] = useState(() => ({
-    translate: async (input: string, opts?: TranslateCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+  const [actions] = useState(() => ({
+    async translate(input: string, opts?: TranslateCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.translate(input, { signal });
     },
-    translateStream: (
+    async *translateStream(
       input: string,
       opts?: TranslateCallOptions,
-    ): AsyncIterable<string> =>
-      (async function* () {
-        const { instance, signal } = await lc.acquire(opts?.signal);
-        const stream = instance.translateStreaming(input, { signal });
-        yield* streamChunks(stream, signal);
-      })(),
-    measureInput: async (input: string, opts?: TranslateCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.translateStreaming(input, { signal });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: TranslateCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.measureInputUsage(input, { signal });
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    inputQuota: lc.inputQuota,
-    prepare: lc.prepare,
-    translate: api.translate,
-    translateStream: api.translateStream,
-    measureInput: api.measureInput,
-  };
+  return { ...lifecycle, ...actions };
 }

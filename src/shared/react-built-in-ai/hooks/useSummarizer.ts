@@ -34,27 +34,29 @@ export interface SummarizerHookReturn extends BaseHookReturn {
 export function useSummarizer(
   options?: SummarizerOptions,
 ): SummarizerHookReturn {
-  const lc = useLifecycle<SummarizerOptions, Summarizer>("Summarizer", options);
+  const { acquire, ...lifecycle } = useLifecycle<SummarizerOptions, Summarizer>(
+    "Summarizer",
+    options,
+  );
 
-  const [api] = useState(() => ({
-    summarize: async (input: string, opts?: SummarizeCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+  const [actions] = useState(() => ({
+    async summarize(input: string, opts?: SummarizeCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.summarize(input, { context: opts?.context, signal });
     },
-    summarizeStream: (
+    async *summarizeStream(
       input: string,
       opts?: SummarizeCallOptions,
-    ): AsyncIterable<string> =>
-      (async function* () {
-        const { instance, signal } = await lc.acquire(opts?.signal);
-        const stream = instance.summarizeStreaming(input, {
-          context: opts?.context,
-          signal,
-        });
-        yield* streamChunks(stream, signal);
-      })(),
-    measureInput: async (input: string, opts?: SummarizeCallOptions) => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.summarizeStreaming(input, {
+        context: opts?.context,
+        signal,
+      });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: SummarizeCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.measureInputUsage(input, {
         context: opts?.context,
         signal,
@@ -62,14 +64,5 @@ export function useSummarizer(
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    inputQuota: lc.inputQuota,
-    prepare: lc.prepare,
-    summarize: api.summarize,
-    summarizeStream: api.summarizeStream,
-    measureInput: api.measureInput,
-  };
+  return { ...lifecycle, ...actions };
 }

@@ -44,26 +44,20 @@ export interface ProofreaderHookReturn extends BaseHookReturn {
 export function useProofreader(
   options?: ProofreaderOptions,
 ): ProofreaderHookReturn {
-  const lc = useLifecycle<ProofreaderOptions, Proofreader>(
-    "Proofreader",
-    options,
-  );
+  const { acquire, ...lifecycle } = useLifecycle<
+    ProofreaderOptions,
+    Proofreader
+  >("Proofreader", options);
 
-  const [api] = useState(() => ({
-    proofread: async (
+  const [actions] = useState(() => ({
+    async proofread(
       input: string,
       opts?: ProofreadCallOptions,
-    ): Promise<ProofreadResult> => {
-      const { instance, signal } = await lc.acquire(opts?.signal);
+    ): Promise<ProofreadResult> {
+      const { instance, signal } = await acquire(opts?.signal);
       return instance.proofread(input, { signal });
     },
   }));
 
-  return {
-    status: lc.status,
-    progress: lc.progress,
-    error: lc.error,
-    prepare: lc.prepare,
-    proofread: api.proofread,
-  };
+  return { ...lifecycle, ...actions };
 }
