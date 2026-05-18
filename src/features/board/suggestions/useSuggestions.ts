@@ -1,5 +1,8 @@
-import { useBuiltInAI } from "@shared/ai/useBuiltInAI";
-import { useSharedContext } from "@shared/ai/sharedContext";
+import {
+  useProofreader,
+  useRewriter,
+  useSharedContext,
+} from "@shared/react-built-in-ai";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 
@@ -29,8 +32,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const proofreader = useBuiltInAI("Proofreader");
-  const rewriter = useBuiltInAI("Rewriter", {
+  const { status: proofreaderStatus, proofread } = useProofreader();
+  const { status: rewriterStatus, rewrite } = useRewriter({
     tone,
     sharedContext,
     length: "shorter",
@@ -38,10 +41,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   });
 
   const isSuggestionsAvailable =
-    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
+    proofreaderStatus !== "unsupported" || rewriterStatus !== "unsupported";
 
   useEffect(() => {
-    if (proofreader.status !== "ready" && rewriter.status !== "ready") {
+    if (proofreaderStatus !== "ready" && rewriterStatus !== "ready") {
       return;
     }
 
@@ -50,18 +53,21 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
     const generateSuggestions = async () => {
       try {
-        const [proofread, rewritten] = await Promise.all([
-          proofreader.session?.proofread(text, { signal }),
-          rewriter.session?.rewrite(text, { signal }),
+        const [proofreadResult, rewritten] = await Promise.all([
+          proofreaderStatus === "ready"
+            ? proofread(text, { signal })
+            : undefined,
+          rewriterStatus === "ready" ? rewrite(text, { signal }) : undefined,
         ]);
 
         if (signal.aborted) {
           return;
         }
 
-        const next = [proofread?.correctedInput ?? "", rewritten ?? ""].filter(
-          (s) => s && s !== text && isValidSuggestion(s),
-        );
+        const next = [
+          proofreadResult?.correctedInput ?? "",
+          rewritten ?? "",
+        ].filter((s) => s && s !== text && isValidSuggestion(s));
 
         setSuggestions(Array.from(new Set(next)));
       } catch (error) {
@@ -76,13 +82,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     void generateSuggestions();
 
     return () => controller.abort();
-  }, [
-    text,
-    proofreader.status,
-    proofreader.session,
-    rewriter.status,
-    rewriter.session,
-  ]);
+  }, [text, proofreaderStatus, proofread, rewriterStatus, rewrite]);
 
   return {
     phrases: suggestions,

@@ -7,8 +7,11 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { type BuiltInAIName, isSupported } from "@shared/ai/namespaces";
-import { useSharedContext } from "@shared/ai/sharedContext";
+import {
+  type BuiltInAIName,
+  isSupported,
+  useSharedContext,
+} from "@shared/react-built-in-ai";
 
 const AI_FEATURES = [
   "Proofreader",

@@ -17,9 +17,10 @@ function notify(): void {
 }
 
 /**
- * Records download progress (`0..1`) for `key`. Use a `<Namespace>` or
- * `<Namespace>:<params>` shape so `useDownloadProgress` can aggregate by
- * prefix.
+ * Records download progress (`0..1`) for `key`. Internal: the lifecycle store
+ * and `createTranslator` write here; consumers read via `useDownloadProgress`.
+ * Use a `<Namespace>` or `<Namespace>:<params>` key shape so prefix
+ * aggregation works.
  */
 export function setDownloadProgress(key: string, progress: number): void {
   if (progressByKey.get(key) === progress) {
@@ -57,4 +58,20 @@ function snapshotFor(prefix: string): number {
     }
   }
   return max;
+}
+
+/**
+ * Stable key for an instance distinguished by `options`. Empty/undefined
+ * options collapse to just the namespace name; otherwise the JSON-stringified
+ * options are appended so concurrent instances with different options don't
+ * overwrite each other.
+ */
+export function buildProgressKey(
+  globalName: string,
+  options: object | undefined,
+): string {
+  if (!options || Object.keys(options).length === 0) {
+    return globalName;
+  }
+  return `${globalName}:${JSON.stringify(options)}`;
 }

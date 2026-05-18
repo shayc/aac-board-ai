@@ -1,4 +1,4 @@
-import { createSession } from "@shared/ai/namespaces";
+import { createTranslator } from "@shared/react-built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -54,15 +54,14 @@ export function useBoardTranslation({
       const sourceLanguage = normalizeLocaleCode(boardLanguage);
       const targetLanguage = normalizeLocaleCode(language);
 
-      // Imperative createSession (vs. useBuiltInAI) because we only know the
-      // language pair after checking for a cached translation above.
+      // Imperative createTranslator (vs. useTranslator) because we only know
+      // the language pair after checking for a cached translation above.
       let translator: Translator | null = null;
       try {
-        translator = await createSession("Translator", {
+        translator = await createTranslator({
           sourceLanguage,
           targetLanguage,
           signal,
-          progressKey: `Translator:${sourceLanguage}:${targetLanguage}`,
         });
         if (signal.aborted) {
           return;

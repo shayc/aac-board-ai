@@ -7,8 +7,10 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { createSession } from "@shared/ai/namespaces";
-import { useDownloadProgress } from "@shared/ai/downloadProgress";
+import {
+  createTranslator,
+  useDownloadProgress,
+} from "@shared/react-built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -87,10 +89,9 @@ export function SpeechSettings() {
     if (sourceLanguage !== targetLanguage) {
       let translator: Translator | null = null;
       try {
-        translator = await createSession("Translator", {
+        translator = await createTranslator({
           sourceLanguage,
           targetLanguage,
-          progressKey: `Translator:${sourceLanguage}:${targetLanguage}`,
         });
         if (translator) {
           greeting = await translator.translate(defaultGreeting);

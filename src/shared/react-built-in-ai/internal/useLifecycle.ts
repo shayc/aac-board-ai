@@ -7,6 +7,11 @@ import {
   UnsupportedError,
 } from "../errors.ts";
 import { hasUserActivation } from "./activation.ts";
+import {
+  buildProgressKey,
+  clearDownloadProgress,
+  setDownloadProgress,
+} from "./downloadProgress.ts";
 import { shallowEqualOptions } from "./options-equality.ts";
 import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
@@ -75,12 +80,13 @@ interface Store<Options extends object, Instance extends DestroyableInstance> {
 function createStore<
   Options extends object,
   Instance extends DestroyableInstance,
->(): Store<Options, Instance> {
+>(globalName: string): Store<Options, Instance> {
   let snapshot: Snapshot = INITIAL;
   const listeners = new Set<() => void>();
 
   let namespace: AINamespace<Options, Instance> | undefined;
   let options: Options | undefined;
+  let progressKey: string | null = null;
   let controller = new AbortController();
   let generation = 0;
   let instance: Instance | null = null;
@@ -107,6 +113,7 @@ function createStore<
     const ns = namespace!;
     const opts = options;
     const signal = controller.signal;
+    const key = progressKey;
 
     update({ status: "downloading", progress: 0 });
 
@@ -117,6 +124,9 @@ function createStore<
               return;
             }
             update({ progress: event.loaded });
+            if (key) {
+              setDownloadProgress(key, event.loaded);
+            }
           });
         }
       : undefined;
@@ -131,6 +141,9 @@ function createStore<
 
     promise.then(
       (created) => {
+        if (key) {
+          clearDownloadProgress(key);
+        }
         if (!isCurrent(g)) {
           safeDestroy(created);
           return;
@@ -146,6 +159,9 @@ function createStore<
         });
       },
       (error) => {
+        if (key) {
+          clearDownloadProgress(key);
+        }
         if (!isCurrent(g)) {
           return;
         }
@@ -199,6 +215,9 @@ function createStore<
   ): void {
     namespace = nextNamespace;
     options = nextOptions;
+    progressKey = nextNamespace
+      ? buildProgressKey(globalName, nextOptions)
+      : null;
     generation += 1;
     controller = new AbortController();
     mounted = true;
@@ -220,6 +239,9 @@ function createStore<
     controller.abort(abortError("lifecycle reset"));
     pending = null;
     pendingCreate = null;
+    if (progressKey) {
+      clearDownloadProgress(progressKey);
+    }
     const toDestroy = instance;
     instance = null;
     safeDestroy(toDestroy);
@@ -348,7 +370,7 @@ export function useLifecycle<
     setStableOptions(options);
   }
 
-  const [store] = useState(() => createStore<Options, Instance>());
+  const [store] = useState(() => createStore<Options, Instance>(globalName));
 
   useEffect(() => {
     store.start(namespace, stableOptions);

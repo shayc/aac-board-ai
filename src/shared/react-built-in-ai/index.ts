@@ -6,6 +6,17 @@ export {
   UnsupportedError,
 } from "./errors.ts";
 
+export {
+  createTranslator,
+  type CreateTranslatorOptions,
+} from "./createTranslator.ts";
+
+export { useDownloadProgress } from "./internal/downloadProgress.ts";
+
+export { type BuiltInAIName, isSupported } from "./namespaces.ts";
+
+export { setSharedContext, useSharedContext } from "./sharedContext.ts";
+
 export type { BaseHookReturn, Status } from "./internal/types.ts";
 
 export {
