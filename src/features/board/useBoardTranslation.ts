@@ -26,7 +26,9 @@ export function useBoardTranslation({
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 
   useEffect(() => {
-    if (!board) return;
+    if (!board) {
+      return;
+    }
 
     const controller = new AbortController();
     const { signal } = controller;
@@ -62,7 +64,9 @@ export function useBoardTranslation({
           signal,
           progressKey: `Translator:${sourceLanguage}:${targetLanguage}`,
         });
-        if (signal.aborted) return;
+        if (signal.aborted) {
+          return;
+        }
         if (!translator) {
           setTranslatedBoard(board);
           return;
@@ -74,13 +78,16 @@ export function useBoardTranslation({
           translator,
           signal,
         );
-        if (signal.aborted) return;
+        if (signal.aborted) {
+          return;
+        }
 
         void persistTranslations(setId, board.id, language, translations);
         setTranslatedBoard(applyTranslations(board, translations));
       } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError")
+        if (error instanceof DOMException && error.name === "AbortError") {
           return;
+        }
         console.warn("Board translation failed:", error);
       } finally {
         translator?.destroy();

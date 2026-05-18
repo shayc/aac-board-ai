@@ -6,7 +6,9 @@ const listeners = new Set<() => void>();
 function readStored(): string {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw === null) return "";
+    if (raw === null) {
+      return "";
+    }
     const parsed: unknown = JSON.parse(raw);
     return typeof parsed === "string" ? parsed : "";
   } catch {
@@ -28,10 +30,14 @@ function subscribe(listener: () => void): () => void {
  * the value is unchanged.
  */
 export function setSharedContext(next: string): void {
-  if (next === value) return;
+  if (next === value) {
+    return;
+  }
   value = next;
   localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  for (const listener of listeners) listener();
+  for (const listener of listeners) {
+    listener();
+  }
 }
 
 /**

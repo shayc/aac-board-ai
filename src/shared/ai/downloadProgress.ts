@@ -22,14 +22,18 @@ function notify(): void {
  * prefix.
  */
 export function setDownloadProgress(key: string, progress: number): void {
-  if (progressByKey.get(key) === progress) return;
+  if (progressByKey.get(key) === progress) {
+    return;
+  }
   progressByKey.set(key, progress);
   notify();
 }
 
 /** Removes the entry for `key`. No-op when the key is absent. */
 export function clearDownloadProgress(key: string): void {
-  if (!progressByKey.delete(key)) return;
+  if (!progressByKey.delete(key)) {
+    return;
+  }
   notify();
 }
 
@@ -45,8 +49,12 @@ function snapshotFor(prefix: string): number {
   const sep = `${prefix}:`;
   let max = 0;
   for (const [key, progress] of progressByKey) {
-    if (key !== prefix && !key.startsWith(sep)) continue;
-    if (progress > max) max = progress;
+    if (key !== prefix && !key.startsWith(sep)) {
+      continue;
+    }
+    if (progress > max) {
+      max = progress;
+    }
   }
   return max;
 }

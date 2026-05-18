@@ -102,10 +102,14 @@ export async function createSession<K extends BuiltInAIName>(
       ...createOptions,
       monitor: (monitor) =>
         monitor.addEventListener("downloadprogress", (event) => {
-          if (progressKey) setDownloadProgress(progressKey, event.loaded);
+          if (progressKey) {
+            setDownloadProgress(progressKey, event.loaded);
+          }
         }),
     });
   } finally {
-    if (progressKey) clearDownloadProgress(progressKey);
+    if (progressKey) {
+      clearDownloadProgress(progressKey);
+    }
   }
 }

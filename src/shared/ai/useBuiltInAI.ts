@@ -195,15 +195,21 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       try {
         status = await availability(name, options);
       } catch (error) {
-        if (signal.aborted) return;
+        if (signal.aborted) {
+          return;
+        }
         dispatch({ type: "failed", error: toError(error) });
         return;
       }
-      if (signal.aborted) return;
+      if (signal.aborted) {
+        return;
+      }
 
       dispatch({ type: "checked", availability: status, force });
 
-      if (status === "unsupported" || status === "unavailable") return;
+      if (status === "unsupported" || status === "unavailable") {
+        return;
+      }
       if ((status === "downloadable" || status === "downloading") && !force) {
         return;
       }
@@ -217,7 +223,9 @@ export function useBuiltInAI<K extends BuiltInAIName>(
           progressKey,
         } as CreateOptions<K> & CreateSessionOptions);
       } catch (error) {
-        if (signal.aborted || isAbort(error)) return;
+        if (signal.aborted || isAbort(error)) {
+          return;
+        }
         if (isGestureRequired(error)) {
           dispatch({ type: "gesture-required" });
           return;
@@ -242,7 +250,9 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   });
 
   useEffect(() => {
-    if (!supported) return;
+    if (!supported) {
+      return;
+    }
     const controller = new AbortController();
     void performRun(controller.signal);
 

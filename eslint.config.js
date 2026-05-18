@@ -45,6 +45,7 @@ export default defineConfig([
           ],
         },
       ],
+      curly: ["error"],
     },
   },
 ]);
