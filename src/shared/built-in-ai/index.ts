@@ -11,7 +11,7 @@ export {
   type CreateTranslatorOptions,
 } from "./createTranslator.ts";
 
-export { useDownloadProgress } from "./internal/downloadProgress.ts";
+export { useDownloadProgress } from "./hooks/useDownloadProgress.ts";
 
 export { type BuiltInAIName, isSupported } from "./namespaces.ts";
 

@@ -11,7 +11,7 @@ import {
   type BuiltInAIName,
   isSupported,
   useSharedContext,
-} from "@shared/react-built-in-ai";
+} from "@shared/built-in-ai";
 
 const AI_FEATURES = [
   "Proofreader",

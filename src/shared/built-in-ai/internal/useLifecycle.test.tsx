@@ -14,9 +14,9 @@ import {
   NotReadyError,
   UnavailableError,
   UnsupportedError,
-} from "../../errors.ts";
-import { useLifecycle } from "../useLifecycle.ts";
-import { makeAIFake } from "./mocks/ai-namespace-fake.ts";
+} from "../errors.ts";
+import { makeAIFake } from "./test-fakes/ai-namespace-fake.ts";
+import { useLifecycle } from "./useLifecycle.ts";
 
 interface TestOptions {
   mode?: string;

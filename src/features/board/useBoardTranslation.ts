@@ -1,4 +1,4 @@
-import { createTranslator } from "@shared/react-built-in-ai";
+import { createTranslator } from "@shared/built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,

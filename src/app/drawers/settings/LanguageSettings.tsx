@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { isSupported, useDownloadProgress } from "@shared/react-built-in-ai";
+import { isSupported, useDownloadProgress } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/useLanguage";
 
 export function LanguageSettings() {

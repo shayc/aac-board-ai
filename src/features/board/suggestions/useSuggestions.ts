@@ -2,7 +2,7 @@ import {
   useProofreader,
   useRewriter,
   useSharedContext,
-} from "@shared/react-built-in-ai";
+} from "@shared/built-in-ai";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 

@@ -1,4 +1,4 @@
-# `react-built-in-ai`
+# `built-in-ai`
 
 Six React hooks over Chrome's built-in AI: `useSummarizer`, `useWriter`,
 `useRewriter`, `useTranslator`, `useLanguageDetector`, `useProofreader`.
@@ -6,7 +6,7 @@ Six React hooks over Chrome's built-in AI: `useSummarizer`, `useWriter`,
 Import from the folder root:
 
 ```ts
-import { useSummarizer } from "@shared/react-built-in-ai";
+import { useSummarizer } from "@shared/built-in-ai";
 ```
 
 ## Lifecycle

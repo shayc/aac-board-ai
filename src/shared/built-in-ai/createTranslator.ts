@@ -2,7 +2,7 @@ import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-} from "./internal/downloadProgress.ts";
+} from "./internal/progress-store.ts";
 import { isSupported } from "./namespaces.ts";
 
 export interface CreateTranslatorOptions {

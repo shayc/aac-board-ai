@@ -7,10 +7,7 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import {
-  createTranslator,
-  useDownloadProgress,
-} from "@shared/react-built-in-ai";
+import { createTranslator, useDownloadProgress } from "@shared/built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,

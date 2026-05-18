@@ -11,7 +11,7 @@ import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-} from "./downloadProgress.ts";
+} from "./progress-store.ts";
 import { shallowEqualOptions } from "./options-equality.ts";
 import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";

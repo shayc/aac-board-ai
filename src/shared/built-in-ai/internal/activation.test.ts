@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "vitest";
-import { hasUserActivation } from "../activation.ts";
+import { hasUserActivation } from "./activation.ts";
 
 afterEach(() => {
   delete (navigator as unknown as { userActivation?: unknown }).userActivation;

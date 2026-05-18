@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { shallowEqualOptions } from "../options-equality.ts";
+import { shallowEqualOptions } from "./options-equality.ts";
 
 describe("shallowEqualOptions", () => {
   test("both undefined → true", () => {

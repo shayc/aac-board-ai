@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { streamChunks } from "../stream.ts";
+import { streamChunks } from "./stream.ts";
 
 function streamFromChunks(chunks: readonly string[]): ReadableStream<string> {
   return new ReadableStream<string>({

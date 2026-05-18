@@ -1,11 +1,10 @@
 import { afterEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
-  buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-  useDownloadProgress,
-} from "../downloadProgress.ts";
+} from "../internal/progress-store.ts";
+import { useDownloadProgress } from "./useDownloadProgress.ts";
 
 function cleanup(...keys: string[]): void {
   for (const k of keys) {
@@ -62,21 +61,5 @@ describe("useDownloadProgress", () => {
     expect(result.current).toBe(0);
 
     clearDownloadProgress("Summarizer");
-  });
-});
-
-describe("buildProgressKey", () => {
-  test("returns the bare name when options are empty or undefined", () => {
-    expect(buildProgressKey("Summarizer", undefined)).toBe("Summarizer");
-    expect(buildProgressKey("Summarizer", {})).toBe("Summarizer");
-  });
-
-  test("appends a JSON-stringified options suffix when present", () => {
-    expect(
-      buildProgressKey("Translator", {
-        sourceLanguage: "en",
-        targetLanguage: "fr",
-      }),
-    ).toBe('Translator:{"sourceLanguage":"en","targetLanguage":"fr"}');
   });
 });

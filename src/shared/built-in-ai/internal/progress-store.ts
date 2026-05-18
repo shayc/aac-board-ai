@@ -1,9 +1,7 @@
-import { useSyncExternalStore } from "react";
-
 const progressByKey = new Map<string, number>();
 const listeners = new Set<() => void>();
 
-function subscribe(listener: () => void): () => void {
+export function subscribeProgress(listener: () => void): () => void {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
@@ -42,11 +40,7 @@ export function clearDownloadProgress(key: string): void {
  * Highest in-flight progress (`0..1`) across keys matching `prefix` (exact,
  * or `${prefix}:…`). Returns `0` when nothing matches.
  */
-export function useDownloadProgress(prefix: string): number {
-  return useSyncExternalStore(subscribe, () => snapshotFor(prefix));
-}
-
-function snapshotFor(prefix: string): number {
+export function snapshotProgressFor(prefix: string): number {
   const sep = `${prefix}:`;
   let max = 0;
   for (const [key, progress] of progressByKey) {
