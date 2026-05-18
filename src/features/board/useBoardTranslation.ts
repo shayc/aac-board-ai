@@ -1,4 +1,4 @@
-import { createSession } from "@shared/ai/built-in-ai/spec";
+import { createSession } from "@shared/ai/built-in-ai/namespaces";
 import { setDownloadProgress } from "@shared/ai/downloadProgress";
 import {
   getPrimaryLanguage,

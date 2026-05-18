@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { availability, createSession } from "./spec";
+import { availability, createSession } from "./namespaces";
 import { makeTranslatorFake } from "./__fixtures__/translator-fake";
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-describe("spec", () => {
+describe("namespaces", () => {
   test("unsupported when the global is absent", async () => {
     vi.stubGlobal("Translator", undefined);
     await expect(

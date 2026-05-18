@@ -1,4 +1,4 @@
-import { type CreateOptions } from "./built-in-ai/spec";
+import { type CreateOptions } from "./built-in-ai/namespaces";
 import {
   type UseBuiltInAIResult,
   useBuiltInAI,

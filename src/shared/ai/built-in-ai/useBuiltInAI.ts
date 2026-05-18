@@ -7,7 +7,7 @@ import {
   availability,
   createSession,
   isSupported,
-} from "./spec";
+} from "./namespaces";
 
 /**
  * Mirrors the spec `Availability` (`"unavailable"`, `"downloadable"`,
