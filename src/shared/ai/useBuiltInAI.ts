@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useReducer, useRef } from "react";
+import { useEffect, useEffectEvent, useReducer } from "react";
 import { useDownloadProgress } from "./downloadProgress";
 import {
   type AvailabilityStatus,
@@ -12,9 +12,9 @@ import {
 } from "./namespaces";
 
 /**
- * Mirrors the spec `Availability` (`"unavailable"`, `"downloadable"`,
- * `"downloading"`, `"available"` → `"ready"`) and adds hook-local states:
- * `"unsupported"`, `"checking"`, `"gesture-required"`, `"creating"`, `"error"`.
+ * Lifecycle status. Mirrors spec `Availability` (with `"available"` → `"ready"`)
+ * and adds `"unsupported"`, `"checking"`, `"gesture-required"`, `"creating"`,
+ * `"error"`.
  */
 export type AIStatus =
   | "unsupported"
@@ -31,20 +31,18 @@ interface UseBuiltInAIResultBase {
   /** Download progress as a `0..1` fraction. */
   progress: number;
   /**
-   * Starts (or retries) session creation. Call from a user gesture (click,
-   * keydown, pointerup, ...) when `status` is `"downloadable"`,
-   * `"downloading"`, `"gesture-required"`, or `"error"`. No-op otherwise.
-   *
-   * The gesture is required only while the model is not yet downloaded;
-   * once `status` reaches `"ready"`, verb calls proceed without one.
+   * Starts or retries session creation. Call from a user gesture when
+   * `status` is `"downloadable"`, `"downloading"`, `"gesture-required"`, or
+   * `"error"`; no-op otherwise. The gesture is only required before the
+   * model is downloaded — once `status` reaches `"ready"`, verb calls
+   * proceed without one.
    */
   create: () => void;
 }
 
 /**
- * Discriminated by `status`: narrowing on `"ready"` yields a non-null
- * `session`; narrowing on `"error"` yields a non-null `error`. Every other
- * status guarantees both are `null`.
+ * Discriminated by `status`. `"ready"` narrows `session` to non-null;
+ * `"error"` narrows `error` to non-null; otherwise both are `null`.
  */
 export type UseBuiltInAIResult<K extends BuiltInAIName> =
   | (UseBuiltInAIResultBase & {
@@ -68,6 +66,7 @@ interface State<K extends BuiltInAIName> {
   session: Session<K> | null;
   error: Error | null;
   generation: number;
+  force: boolean;
 }
 
 type Action<K extends BuiltInAIName> =
@@ -90,6 +89,7 @@ function reducer<K extends BuiltInAIName>(
         status: "checking",
         session: null,
         error: null,
+        force: false,
       };
     case "checked": {
       const { availability, force } = action;
@@ -110,7 +110,7 @@ function reducer<K extends BuiltInAIName>(
     case "failed":
       return { ...state, status: "error", error: action.error };
     case "retry":
-      return { ...state, generation: state.generation + 1 };
+      return { ...state, generation: state.generation + 1, force: true };
   }
 }
 
@@ -158,9 +158,10 @@ function toResult<K extends BuiltInAIName>(
 }
 
 /**
- * React binding for a built-in AI session. Owns the full lifecycle:
- * availability probe, gesture-gated create, download progress, plus abort
- * and `destroy()` on unmount or identity change.
+ * React binding for a built-in AI session. Probes availability, gates create
+ * behind a user gesture when required, tracks download progress, and aborts
+ * plus calls `destroy()` on unmount or identity change. `options` need not be
+ * referentially stable — the hook re-runs only on deep-equal changes.
  */
 export function useBuiltInAI<K extends BuiltInAIName>(
   name: K,
@@ -177,6 +178,7 @@ export function useBuiltInAI<K extends BuiltInAIName>(
       session: null,
       error: null,
       generation: 0,
+      force: false,
     }),
   );
 
@@ -185,7 +187,8 @@ export function useBuiltInAI<K extends BuiltInAIName>(
   const progress = state.status === "ready" ? 1 : storeProgress;
 
   const performRun = useEffectEvent(
-    async (signal: AbortSignal, force: boolean): Promise<void> => {
+    async (signal: AbortSignal): Promise<void> => {
+      const force = state.force;
       dispatch({ type: "reset" });
 
       let status: AvailabilityStatus;
@@ -207,11 +210,11 @@ export function useBuiltInAI<K extends BuiltInAIName>(
 
       let session: Session<K> | null;
       try {
+        // TS can't preserve the generic relation through the spread.
         session = await createSession(name, {
           ...options,
           signal,
           progressKey,
-          // TS can't preserve the generic relation through the spread; cast once.
         } as CreateOptions<K> & CreateSessionOptions);
       } catch (error) {
         if (signal.aborted || isAbort(error)) return;
@@ -238,18 +241,10 @@ export function useBuiltInAI<K extends BuiltInAIName>(
     state.session?.destroy();
   });
 
-  const lastGenRef = useRef(0);
-
   useEffect(() => {
     if (!supported) return;
-    // A bumped generation means create() was called — treat the rerun as a
-    // user-requested retry (force=true), which skips the downloadable/
-    // downloading wait and proceeds straight to namespace.create().
-    const force = state.generation > lastGenRef.current;
-    lastGenRef.current = state.generation;
-
     const controller = new AbortController();
-    void performRun(controller.signal, force);
+    void performRun(controller.signal);
 
     return () => {
       controller.abort();

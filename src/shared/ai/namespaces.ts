@@ -12,16 +12,13 @@ export interface BuiltInAINamespaces {
 
 export type BuiltInAIName = keyof BuiltInAINamespaces;
 
-/**
- * `create()` options for a given API, inferred from the spec. `monitor` is
- * stripped — `createSession()` owns it for download-progress reporting.
- */
+/** Options for `K.create()`, with the reserved `monitor` field omitted. */
 export type CreateOptions<K extends BuiltInAIName> = Omit<
   NonNullable<Parameters<BuiltInAINamespaces[K]["create"]>[0]>,
   "monitor"
 >;
 
-/** Session instance returned by `create()` for a given API. */
+/** Session instance produced by `K.create()`. */
 export type Session<K extends BuiltInAIName> = Awaited<
   ReturnType<BuiltInAINamespaces[K]["create"]>
 >;
@@ -32,9 +29,8 @@ export type AvailabilityStatus = "unsupported" | Availability;
 export interface CreateSessionOptions {
   signal?: AbortSignal;
   /**
-   * When set, download progress is reported into the shared
-   * `downloadProgress` store under this key while `create()` runs, and the
-   * entry is cleared on settle (resolve, reject, or abort).
+   * Key used to report download progress while `create()` runs. Cleared on
+   * settle. See `setDownloadProgress` for the recommended key shape.
    */
   progressKey?: string;
 }
@@ -49,7 +45,7 @@ interface AINamespace<Options, Instance> {
   ): Promise<Instance>;
 }
 
-/** True when the API's global namespace is present in this environment. */
+/** True when `name`'s global namespace exists. */
 export function isSupported(name: BuiltInAIName): boolean {
   return name in globalThis;
 }
@@ -67,7 +63,7 @@ function getNamespace<K extends BuiltInAIName>(
   return globals[name];
 }
 
-/** Resolves the model's availability, or `"unsupported"` when the global is missing. */
+/** Resolves the model's availability. Returns `"unsupported"` when the global is missing. */
 export async function availability<K extends BuiltInAIName>(
   name: K,
   options?: CreateOptions<K>,
@@ -80,10 +76,8 @@ export async function availability<K extends BuiltInAIName>(
 }
 
 /**
- * Creates a session, awaiting any model download. Pass `progressKey` to have
- * download progress reported into the shared `downloadProgress` store (and
- * cleared on settle). Resolves `null` when the model cannot be used
- * (`"unsupported"` or `"unavailable"`); other `create()` failures reject.
+ * Creates a session, awaiting any model download. Returns `null` when the
+ * model is `"unsupported"` or `"unavailable"`; other failures reject.
  */
 export async function createSession<K extends BuiltInAIName>(
   name: K,
@@ -96,8 +90,7 @@ export async function createSession<K extends BuiltInAIName>(
 
   const { progressKey, ...rest } = (options ?? {}) as CreateOptions<K> &
     CreateSessionOptions;
-  // TS can't narrow `Omit<CreateOptions<K> & CreateSessionOptions, "progressKey">`
-  // back to `CreateOptions<K>` over a generic, so cast once here.
+  // TS can't narrow the omit back to `CreateOptions<K>` through a generic.
   const createOptions = rest as CreateOptions<K>;
 
   if ((await namespace.availability(createOptions)) === "unavailable") {

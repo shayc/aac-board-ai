@@ -17,10 +17,9 @@ function notify(): void {
 }
 
 /**
- * Records in-flight download progress (`0..1`) under an arbitrary key. The
- * key shape is the caller's choice — use a plain namespace name for a single
- * model, or a structured form like `"Translator:en:fr"` to keep concurrent
- * downloads of the same namespace distinct.
+ * Records download progress (`0..1`) for `key`. Use a `<Namespace>` or
+ * `<Namespace>:<params>` shape so `useDownloadProgress` can aggregate by
+ * prefix.
  */
 export function setDownloadProgress(key: string, progress: number): void {
   if (progressByKey.get(key) === progress) return;
@@ -35,8 +34,8 @@ export function clearDownloadProgress(key: string): void {
 }
 
 /**
- * Highest in-flight progress for any entry matching `prefix` (exact match or
- * `${prefix}:...`), as a `0..1` fraction. Returns `0` when nothing matches.
+ * Highest in-flight progress (`0..1`) across keys matching `prefix` (exact,
+ * or `${prefix}:…`). Returns `0` when nothing matches.
  */
 export function useDownloadProgress(prefix: string): number {
   return useSyncExternalStore(subscribe, () => snapshotFor(prefix));

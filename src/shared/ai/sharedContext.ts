@@ -23,6 +23,10 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
+/**
+ * Updates the shared context and persists it to `localStorage`. No-op when
+ * the value is unchanged.
+ */
 export function setSharedContext(next: string): void {
   if (next === value) return;
   value = next;
@@ -31,9 +35,8 @@ export function setSharedContext(next: string): void {
 }
 
 /**
- * Shared user-authored context (e.g. tone, persona) passed to built-in AI
- * sessions. Backed by `localStorage` and broadcast to all subscribers in
- * the tab, so a write in one component is visible to the rest immediately.
+ * User-authored context (e.g. tone, persona) passed to built-in AI sessions.
+ * Returns the current value and a setter; persisted in `localStorage`.
  */
 export function useSharedContext(): readonly [string, (next: string) => void] {
   const current = useSyncExternalStore(subscribe, () => value);
