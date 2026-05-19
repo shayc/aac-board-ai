@@ -83,6 +83,39 @@ describe("useLifecycle", () => {
     expect(createArg.monitor).toBeUndefined();
   });
 
+  test("auto-create on 'available' never passes through 'downloading'", async () => {
+    let resolveCreate!: (value: TestInstance) => void;
+    const inst = buildInstance({ marker: "no-flash" });
+    const create = vi.fn(
+      () =>
+        new Promise<TestInstance>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    vi.stubGlobal(NAMESPACE, {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const observed: string[] = [];
+    const { result } = await renderHook(() => {
+      const lifecycle = useLifecycle<TestOptions, TestInstance>(
+        NAMESPACE,
+        undefined,
+      );
+      observed.push(lifecycle.status);
+      return lifecycle;
+    });
+
+    await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(1));
+    expect(result.current.status).toBe("idle");
+    expect(observed).not.toContain("downloading");
+
+    resolveCreate(inst);
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(observed).not.toContain("downloading");
+  });
+
   test("settles at unavailable and never calls create", async () => {
     const { Fake, create } = makeAIFake({
       status: "unavailable",
@@ -284,13 +317,17 @@ describe("useLifecycle", () => {
         }),
     );
     vi.stubGlobal(NAMESPACE, {
-      availability: vi.fn(() => Promise.resolve("available")),
+      availability: vi.fn(() => Promise.resolve("downloadable")),
       create,
     });
 
     const { result } = await renderHook(() =>
       useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
     );
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    setUserActivation(true);
+    void result.current.prepare();
     await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
 
     const pending = result.current.acquire();
@@ -304,13 +341,19 @@ describe("useLifecycle", () => {
   test("acquire() rejects with the caller's abort reason mid-download", async () => {
     const create = vi.fn(() => new Promise<TestInstance>(() => undefined));
     vi.stubGlobal(NAMESPACE, {
-      availability: vi.fn(() => Promise.resolve("available")),
+      availability: vi.fn(() => Promise.resolve("downloadable")),
       create,
     });
 
     const { result } = await renderHook(() =>
       useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
     );
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    setUserActivation(true);
+    // The eventual unmount aborts this prepare with "lifecycle reset" — that
+    // is expected; swallow it so it doesn't surface as an unhandled rejection.
+    result.current.prepare().catch(() => undefined);
     await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
 
     const controller = new AbortController();
@@ -402,10 +445,10 @@ describe("useLifecycle", () => {
       create,
     });
 
-    const { result, unmount } = await renderHook(() =>
+    const { unmount } = await renderHook(() =>
       useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
     );
-    await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
+    await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(1));
 
     await unmount();
     resolveCreate(inst);

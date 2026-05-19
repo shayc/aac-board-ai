@@ -7,12 +7,12 @@ import {
   UnsupportedError,
 } from "../errors.ts";
 import { hasUserActivation } from "./activation.ts";
+import { shallowEqualOptions } from "./options-equality.ts";
 import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
 } from "./progress-store.ts";
-import { shallowEqualOptions } from "./options-equality.ts";
 import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
 
@@ -121,7 +121,9 @@ function createStore<
     const signal = controller.signal;
     const key = progressKey;
 
-    update({ status: "downloading", progress: 0 });
+    if (withMonitor) {
+      update({ status: "downloading", progress: 0 });
+    }
 
     const monitorCallback = withMonitor
       ? (monitor: CreateMonitor) => {
@@ -147,12 +149,12 @@ function createStore<
 
     promise.then(
       (created) => {
-        if (key) {
-          clearDownloadProgress(key);
-        }
         if (!isCurrent(expected)) {
           destroyQuietly(created);
           return;
+        }
+        if (key) {
+          clearDownloadProgress(key);
         }
         instance = created;
         pending = null;
@@ -165,11 +167,11 @@ function createStore<
         });
       },
       (error) => {
-        if (key) {
-          clearDownloadProgress(key);
-        }
         if (!isCurrent(expected)) {
           return;
+        }
+        if (key) {
+          clearDownloadProgress(key);
         }
         pending = null;
         pendingCreate = null;
@@ -202,8 +204,6 @@ function createStore<
             () => undefined,
           );
         }
-        // "downloadable" or "downloading": remain idle until the consumer
-        // calls prepare() or acquire() under a user activation.
         pending = null;
       },
       (error) => {
