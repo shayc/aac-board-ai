@@ -7,7 +7,11 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { createTranslator, useDownloadProgress } from "@shared/built-in-ai";
+import {
+  BuiltInAIError,
+  createTranslator,
+  useDownloadProgress,
+} from "@shared/built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -84,12 +88,17 @@ export function SpeechSettings() {
     let greeting = defaultGreeting;
 
     if (sourceLanguage !== targetLanguage) {
-      await using translator = await createTranslator({
-        sourceLanguage,
-        targetLanguage,
-      });
-      if (translator) {
+      try {
+        await using translator = await createTranslator({
+          sourceLanguage,
+          targetLanguage,
+        });
         greeting = await translator.translate(defaultGreeting);
+      } catch (error) {
+        // Lifecycle gating — fall through to the untranslated greeting.
+        if (!(error instanceof BuiltInAIError)) {
+          throw error;
+        }
       }
     }
 

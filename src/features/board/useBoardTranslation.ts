@@ -1,4 +1,4 @@
-import { createTranslator } from "@shared/built-in-ai";
+import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
 import {
   getPrimaryLanguage,
   normalizeLocaleCode,
@@ -65,10 +65,6 @@ export function useBoardTranslation({
         if (signal.aborted) {
           return;
         }
-        if (!translator) {
-          setTranslatedBoard(board);
-          return;
-        }
 
         const phrases = collectSourcePhrases(board);
         const translations = await translatePhrases(
@@ -84,6 +80,13 @@ export function useBoardTranslation({
         setTranslatedBoard(applyTranslations(board, translations));
       } catch (error) {
         if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        // Lifecycle gating (unsupported / unavailable / no-activation): the
+        // effect runs outside a user gesture, so a required download cannot
+        // start. Fall back to the untranslated board.
+        if (error instanceof BuiltInAIError) {
+          setTranslatedBoard(board);
           return;
         }
         console.warn("Board translation failed:", error);

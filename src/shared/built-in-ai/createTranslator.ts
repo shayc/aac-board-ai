@@ -1,4 +1,10 @@
 import {
+  NoUserActivationError,
+  UnavailableError,
+  UnsupportedError,
+} from "./errors.ts";
+import { hasUserActivation } from "./internal/activation.ts";
+import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
@@ -13,44 +19,67 @@ export interface CreateTranslatorOptions {
 
 /**
  * Imperative `Translator` factory for call sites that decide the language pair
- * mid-flow and can't drive a hook. Returns `null` when unsupported or
- * unavailable; other failures reject. Progress flows through the
- * `useDownloadProgress` store.
+ * mid-flow and can't drive a hook. Mirrors the hook lifecycle: throws the same
+ * `BuiltInAIError` subclasses (`Unsupported`, `Unavailable`, `NoUserActivation`)
+ * the hooks throw, and progress flows through the same `useDownloadProgress` store.
  *
  * Result is `AsyncDisposable` — prefer `await using translator = await createTranslator(...)`.
  * `.destroy()` still works for callers releasing before scope exit.
  */
 export async function createTranslator(
   options: CreateTranslatorOptions,
-): Promise<(Translator & AsyncDisposable) | null> {
+): Promise<Translator & AsyncDisposable> {
   if (!isSupported("Translator")) {
-    return null;
+    throw new UnsupportedError("Built-in AI is not supported");
   }
 
   const { signal, ...createOptions } = options;
   const key = buildProgressKey("Translator", createOptions);
 
-  if ((await Translator.availability(createOptions)) === "unavailable") {
-    return null;
+  const availability = await Translator.availability(createOptions);
+  if (availability === "unavailable") {
+    throw new UnavailableError("Built-in AI model is unavailable");
+  }
+
+  const willDownload = availability !== "available";
+  if (willDownload && !hasUserActivation()) {
+    throw new NoUserActivationError(
+      "Built-in AI requires a user activation to download",
+    );
+  }
+
+  if (willDownload) {
+    setDownloadProgress(key, 0);
   }
 
   try {
     const instance = await Translator.create({
       ...createOptions,
       signal,
-      monitor: (monitor) =>
-        monitor.addEventListener("downloadprogress", (event) => {
-          setDownloadProgress(key, event.loaded);
-        }),
+      monitor: willDownload
+        ? (monitor) =>
+            monitor.addEventListener("downloadprogress", (event) => {
+              setDownloadProgress(key, event.loaded);
+            })
+        : undefined,
     });
-    Object.defineProperty(instance, Symbol.asyncDispose, {
-      value: () => {
-        instance.destroy();
-        return Promise.resolve();
-      },
-    });
+    // Polyfill only when the runtime doesn't already implement disposal —
+    // avoid clobbering a future native `[Symbol.asyncDispose]`.
+    if (
+      typeof (instance as Partial<AsyncDisposable>)[Symbol.asyncDispose] !==
+      "function"
+    ) {
+      Object.defineProperty(instance, Symbol.asyncDispose, {
+        value: () => {
+          instance.destroy();
+          return Promise.resolve();
+        },
+      });
+    }
     return instance as Translator & AsyncDisposable;
   } finally {
-    clearDownloadProgress(key);
+    if (willDownload) {
+      clearDownloadProgress(key);
+    }
   }
 }

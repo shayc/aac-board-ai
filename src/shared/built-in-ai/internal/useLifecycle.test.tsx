@@ -16,6 +16,7 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../errors.ts";
+import { snapshotProgressFor } from "./progress-store.ts";
 import { makeAIFake } from "./test-fakes/ai-namespace-fake.ts";
 import { useLifecycle } from "./useLifecycle.ts";
 
@@ -185,6 +186,39 @@ describe("useLifecycle", () => {
     // User-initiated downloads wire a monitor for progress events.
     const [createArg] = create.mock.calls[0] as [{ monitor?: unknown }];
     expect(createArg.monitor).toBeTypeOf("function");
+  });
+
+  // Seeds the cross-namespace progress store with 0 at download start so
+  // `useDownloadProgress` consumers see the download immediately rather than
+  // only after the first `downloadprogress` event arrives.
+  test("writes 0 to the shared progress store as soon as download starts", async () => {
+    let resolveCreate!: (value: TestInstance) => void;
+    const create = vi.fn(
+      () =>
+        new Promise<TestInstance>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    vi.stubGlobal(NAMESPACE, {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    setUserActivation(true);
+    // Swallow rejection — unmount in afterEach aborts the in-flight prepare.
+    result.current.prepare().catch(() => undefined);
+    await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
+
+    expect(snapshotProgressFor(NAMESPACE)).toBe(0);
+
+    resolveCreate(buildInstance());
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+    expect(snapshotProgressFor(NAMESPACE)).toBe(0);
   });
 
   test("emits progress via downloadprogress events while creating", async () => {

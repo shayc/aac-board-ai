@@ -55,14 +55,22 @@ export function snapshotProgressFor(prefix: string): number {
 /**
  * Stable key for an instance distinguished by `options`. Empty options yield
  * just the namespace; non-empty options are JSON-appended so concurrent
- * instances don't collide.
+ * instances don't collide. Keys are sorted so insertion order doesn't shard
+ * the same logical options into distinct entries.
  */
 export function buildProgressKey(
   globalName: string,
   options: object | undefined,
 ): string {
-  if (!options || Object.keys(options).length === 0) {
+  if (!options) {
     return globalName;
   }
-  return `${globalName}:${JSON.stringify(options)}`;
+  const keys = Object.keys(options).sort();
+  if (keys.length === 0) {
+    return globalName;
+  }
+  const ordered = Object.fromEntries(
+    keys.map((k) => [k, (options as Record<string, unknown>)[k]]),
+  );
+  return `${globalName}:${JSON.stringify(ordered)}`;
 }

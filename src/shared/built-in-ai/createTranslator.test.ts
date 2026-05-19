@@ -1,19 +1,37 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { createTranslator } from "./createTranslator.ts";
+import {
+  NoUserActivationError,
+  UnavailableError,
+  UnsupportedError,
+} from "./errors.ts";
+import {
+  clearDownloadProgress,
+  setDownloadProgress,
+  snapshotProgressFor,
+} from "./internal/progress-store.ts";
+
+function setUserActivation(isActive: boolean): void {
+  Object.defineProperty(navigator, "userActivation", {
+    value: { isActive },
+    configurable: true,
+  });
+}
 
 afterEach(() => {
   vi.unstubAllGlobals();
+  delete (navigator as unknown as { userActivation?: unknown }).userActivation;
 });
 
 describe("createTranslator", () => {
-  test("returns null when the Translator global is absent", async () => {
+  test("throws UnsupportedError when the Translator global is absent", async () => {
     vi.stubGlobal("Translator", undefined);
     await expect(
       createTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
-    ).resolves.toBeNull();
+    ).rejects.toBeInstanceOf(UnsupportedError);
   });
 
-  test("returns null when the model is unavailable", async () => {
+  test("throws UnavailableError when the model is unavailable", async () => {
     const create = vi.fn();
     vi.stubGlobal("Translator", {
       availability: vi.fn(() => Promise.resolve("unavailable")),
@@ -22,11 +40,25 @@ describe("createTranslator", () => {
 
     await expect(
       createTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
-    ).resolves.toBeNull();
+    ).rejects.toBeInstanceOf(UnavailableError);
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("creates a translator when available", async () => {
+  test("throws NoUserActivationError when downloadable without a user gesture", async () => {
+    setUserActivation(false);
+    const create = vi.fn();
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create,
+    });
+
+    await expect(
+      createTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    ).rejects.toBeInstanceOf(NoUserActivationError);
+    expect(create).not.toHaveBeenCalled();
+  });
+
+  test("creates a translator when available without requiring activation", async () => {
     const instance = {
       translate: (input: string) => Promise.resolve(`T:${input}`),
       destroy: vi.fn(),
@@ -41,8 +73,7 @@ describe("createTranslator", () => {
       targetLanguage: "fr",
     });
 
-    expect(translator).not.toBeNull();
-    await expect(translator?.translate("hi")).resolves.toBe("T:hi");
+    await expect(translator.translate("hi")).resolves.toBe("T:hi");
   });
 
   test("forwards the caller's AbortSignal to create()", async () => {
@@ -81,12 +112,30 @@ describe("createTranslator", () => {
         sourceLanguage: "en",
         targetLanguage: "fr",
       });
-      expect(translator).not.toBeNull();
-      expect(typeof translator?.[Symbol.asyncDispose]).toBe("function");
+      expect(typeof translator[Symbol.asyncDispose]).toBe("function");
       expect(destroy).not.toHaveBeenCalled();
     }
 
     expect(destroy).toHaveBeenCalledTimes(1);
+  });
+
+  test("does not redefine [Symbol.asyncDispose] when the instance already implements it", async () => {
+    const nativeDispose = vi.fn(() => Promise.resolve());
+    const instance = {
+      translate: vi.fn(),
+      destroy: vi.fn(),
+      [Symbol.asyncDispose]: nativeDispose,
+    };
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create: vi.fn(() => Promise.resolve(instance)),
+    });
+
+    const translator = await createTranslator({
+      sourceLanguage: "en",
+      targetLanguage: "fr",
+    });
+    expect(translator[Symbol.asyncDispose]).toBe(nativeDispose);
   });
 
   test("does not pass signal into availability()", async () => {
@@ -108,5 +157,54 @@ describe("createTranslator", () => {
     ];
     expect(arg).not.toHaveProperty("signal");
     expect(arg).toEqual({ sourceLanguage: "en", targetLanguage: "fr" });
+  });
+
+  test("writes 0 to the progress store at download start and clears it after create resolves", async () => {
+    setUserActivation(true);
+    let resolveCreate!: (value: { destroy: () => void }) => void;
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create: vi.fn(
+        () =>
+          new Promise<{ destroy: () => void }>((resolve) => {
+            resolveCreate = resolve;
+          }),
+      ),
+    });
+
+    const pending = createTranslator({
+      sourceLanguage: "en",
+      targetLanguage: "fr",
+    });
+
+    // While create is still in-flight, the store reflects 0 (not "no download").
+    await vi.waitFor(() => expect(snapshotProgressFor("Translator")).toBe(0));
+
+    resolveCreate({ destroy: vi.fn() });
+    await pending;
+
+    // After create resolves the entry is cleared.
+    expect(snapshotProgressFor("Translator")).toBe(0);
+    // Sanity: clearing-then-snapshotting an absent key still returns 0.
+    clearDownloadProgress(
+      'Translator:{"sourceLanguage":"en","targetLanguage":"fr"}',
+    );
+  });
+
+  // Fast path (availability='available') must not write to the cross-namespace
+  // progress store — a pre-seeded unrelated entry stays untouched.
+  test("does not touch the progress store on the available fast path", async () => {
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create: vi.fn(() => Promise.resolve({ destroy: vi.fn() })),
+    });
+
+    // Seed a different prefix; if createTranslator wrote anything Translator-prefixed,
+    // this would still be 0 — so we also assert by checking aggregation of "Translator".
+    setDownloadProgress("Summarizer", 0.42);
+    await createTranslator({ sourceLanguage: "en", targetLanguage: "fr" });
+    expect(snapshotProgressFor("Translator")).toBe(0);
+    expect(snapshotProgressFor("Summarizer")).toBe(0.42);
+    clearDownloadProgress("Summarizer");
   });
 });

@@ -123,6 +123,9 @@ function createStore<
 
     if (withMonitor) {
       update({ status: "downloading", progress: 0 });
+      if (key) {
+        setDownloadProgress(key, 0);
+      }
     }
 
     const monitorCallback = withMonitor

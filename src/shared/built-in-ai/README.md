@@ -94,19 +94,22 @@ A per-call `signal` cancels the _caller's_ wait and the underlying action call, 
 
 ## Other exports
 
-- `createTranslator(options)` — imperative `Translator` factory for call sites that decide the language pair mid-flow and can't drive a hook. Reports progress through the same store the hooks write to. Returns `null` when unsupported or unavailable. The returned instance is `AsyncDisposable`, so the recommended lifecycle is:
+- `createTranslator(options)` — imperative `Translator` factory for call sites that decide the language pair mid-flow and can't drive a hook. Mirrors the hook lifecycle: throws `UnsupportedError` / `UnavailableError` / `NoUserActivationError` under the same conditions, and reports progress through the same store the hooks write to. The returned instance is `AsyncDisposable`:
 
   ```ts
-  await using translator = await createTranslator({
-    sourceLanguage,
-    targetLanguage,
-  });
-  if (translator) {
+  try {
+    await using translator = await createTranslator({
+      sourceLanguage,
+      targetLanguage,
+    });
     const text = await translator.translate(input);
+  } catch (error) {
+    if (!(error instanceof BuiltInAIError)) throw error;
+    // unsupported / unavailable / no-activation — render a fallback.
   }
   ```
 
-  `.destroy()` is still exposed for callers that need to release the model before scope exit.
+  `.destroy()` is still exposed for callers that need to release the model before scope exit. Because `createTranslator` requires a user activation when a download is needed, prefer calling it from an event handler (or pre-warm via a hook before the call site is reached).
 
 - `useDownloadProgress(prefix)` — highest in-flight progress (`0..1`) across all instances matching a namespace prefix (e.g. `"Translator"` aggregates every language pair currently downloading).
 - `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Summarizer"`, etc.).
