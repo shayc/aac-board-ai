@@ -1,7 +1,7 @@
 export {
   BuiltInAIError,
-  NoUserActivationError,
   NotReadyError,
+  NoUserActivationError,
   UnavailableError,
   UnsupportedError,
 } from "./errors.ts";
@@ -13,9 +13,7 @@ export {
 
 export { useDownloadProgress } from "./hooks/useDownloadProgress.ts";
 
-export { type BuiltInAIName, isSupported } from "./namespaces.ts";
-
-export { setSharedContext, useSharedContext } from "./sharedContext.ts";
+export { isSupported, type BuiltInAIName } from "./namespaces.ts";
 
 export type { BaseHookReturn, Status } from "./internal/types.ts";
 
@@ -60,7 +58,7 @@ export {
   type CorrectionType,
   type ProofreadCallOptions,
   type ProofreadCorrection,
-  type ProofreadResult,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
+  type ProofreadResult,
 } from "./hooks/useProofreader.ts";

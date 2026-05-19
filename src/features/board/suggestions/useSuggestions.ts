@@ -1,10 +1,7 @@
-import {
-  useProofreader,
-  useRewriter,
-  useSharedContext,
-} from "@shared/built-in-ai";
+import { useProofreader, useRewriter } from "@shared/built-in-ai";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
+import { useCustomInstructions } from "./useCustomInstructions";
 
 export interface UseSuggestionsReturn {
   phrases: string[];
@@ -15,20 +12,38 @@ export interface UseSuggestionsReturn {
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
-function isValidSuggestion(suggestion: string): boolean {
+function isUsefulSuggestion(suggestion: string, original: string): boolean {
+  if (!suggestion || suggestion === original) {
+    return false;
+  }
   if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
     return false;
   }
-
   if (suggestion.includes('"')) {
     return false;
   }
-
   return true;
 }
 
+function collectSuggestions(
+  candidates: readonly (string | undefined)[],
+  original: string,
+): string[] {
+  const out = new Set<string>();
+  for (const candidate of candidates) {
+    if (candidate && isUsefulSuggestion(candidate, original)) {
+      out.add(candidate);
+    }
+  }
+  return [...out];
+}
+
+function isAbortError(error: unknown): boolean {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
 export function useSuggestions(text: string): UseSuggestionsReturn {
-  const [sharedContext] = useSharedContext();
+  const [sharedContext] = useCustomInstructions();
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
@@ -64,23 +79,21 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
           return;
         }
 
-        const next = [
-          proofreadResult?.correctedInput ?? "",
-          rewritten ?? "",
-        ].filter((s) => s && s !== text && isValidSuggestion(s));
-
-        setSuggestions(Array.from(new Set(next)));
+        setSuggestions(
+          collectSuggestions(
+            [proofreadResult?.correctedInput, rewritten],
+            text,
+          ),
+        );
       } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
+        if (isAbortError(error)) {
           return;
         }
-
         console.warn("generateSuggestions failed:", error);
       }
     };
 
     void generateSuggestions();
-
     return () => controller.abort();
   }, [text, isProofreaderReady, proofread, isRewriterReady, rewrite]);
 

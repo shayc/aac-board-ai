@@ -1,3 +1,4 @@
+import { useCustomInstructions } from "@features/board/suggestions/useCustomInstructions";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import List from "@mui/material/List";
@@ -7,11 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import {
-  type BuiltInAIName,
-  isSupported,
-  useSharedContext,
-} from "@shared/built-in-ai";
+import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
 
 const AI_FEATURES = [
   "Proofreader",
@@ -20,7 +17,7 @@ const AI_FEATURES = [
 ] as const satisfies readonly BuiltInAIName[];
 
 export function AISettings() {
-  const [sharedContext, setSharedContext] = useSharedContext();
+  const [sharedContext, setSharedContext] = useCustomInstructions();
 
   return (
     <Stack spacing={3}>

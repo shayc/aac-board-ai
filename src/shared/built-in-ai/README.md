@@ -90,5 +90,4 @@ All thrown errors are `instanceof BuiltInAIError`. When the underlying browser A
   `.destroy()` is still exposed for callers that need to release the model before scope exit.
 
 - `useDownloadProgress(prefix)` — highest in-flight progress (`0..1`) across all instances matching a namespace prefix (e.g. `"Translator"` aggregates every language pair currently downloading).
-- `useSharedContext()` / `setSharedContext(value)` — user-authored context (tone, persona) persisted to `localStorage`. Consumers pass it explicitly into hook options as `sharedContext`.
 - `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Summarizer"`, etc.).
