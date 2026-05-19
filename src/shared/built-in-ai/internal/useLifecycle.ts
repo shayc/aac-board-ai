@@ -309,6 +309,11 @@ function createStore<
   }
 
   async function prepare(): Promise<void> {
+    // Spec row 13: entering prepare() in "error" clears it and restarts once.
+    // Landing back in "error" (here or mid-drive) rejects — no implicit retry loop.
+    if (snapshot.status === "error") {
+      start(namespace, options);
+    }
     for (;;) {
       switch (snapshot.status) {
         case "ready":
@@ -318,8 +323,9 @@ function createStore<
         case "unavailable":
           throw new UnavailableError("Built-in AI model is unavailable");
         case "error":
-          start(namespace, options);
-          continue;
+          throw new NotReadyError("Built-in AI is in an error state", {
+            cause: snapshot.error?.cause ?? snapshot.error,
+          });
         case "downloading":
           await awaitPending(pending!, undefined);
           continue;

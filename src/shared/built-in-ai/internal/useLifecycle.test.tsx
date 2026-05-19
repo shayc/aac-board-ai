@@ -321,6 +321,28 @@ describe("useLifecycle", () => {
     expect(create).toHaveBeenCalledTimes(2);
   });
 
+  test("prepare() rejects with NotReadyError when the retry also fails", async () => {
+    const original = new Error("persistent failure");
+    const { Fake, create } = makeAIFake({
+      status: "available",
+      buildInstance,
+      failCreate: original,
+    });
+    vi.stubGlobal(NAMESPACE, Fake);
+
+    const { result } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(result.current.status).toBe("error"));
+
+    await expect(result.current.prepare()).rejects.toMatchObject({
+      name: "NotReadyError",
+      cause: original,
+    });
+    // One restart, no infinite loop: create was called twice (initial + one retry).
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+
   test("acquire() resolves with { instance, signal } once ready", async () => {
     const inst = buildInstance({ marker: "live" });
     const { Fake } = makeAIFake({
