@@ -174,7 +174,7 @@ function createStore<
           clearDownloadProgress(key);
         }
         pending = null;
-        update({ status: "error", error: wrap(error) });
+        update({ status: "error", progress: 0, error: wrap(error) });
       },
     );
 
@@ -210,7 +210,7 @@ function createStore<
           return;
         }
         pending = null;
-        update({ status: "error", error: wrap(error) });
+        update({ status: "error", progress: 0, error: wrap(error) });
       },
     );
     pending = chain;
@@ -220,6 +220,7 @@ function createStore<
     nextNamespace: AINamespace<Options, Instance> | undefined,
     nextOptions: Options | undefined,
   ): void {
+    controller.abort(abortError("lifecycle reset"));
     namespace = nextNamespace;
     options = nextOptions;
     progressKey = nextNamespace
@@ -272,15 +273,6 @@ function createStore<
   ): Promise<Acquired<Instance>> {
     for (;;) {
       switch (snapshot.status) {
-        case "unsupported":
-          throw new UnsupportedError("Built-in AI is not supported");
-        case "unavailable":
-          throw new UnavailableError("Built-in AI model is unavailable");
-        case "error":
-          // One-hop unwrap: surface the original rejection, not the BuiltInAIError wrapper.
-          throw new NotReadyError("Built-in AI is in an error state", {
-            cause: snapshot.error?.cause ?? snapshot.error,
-          });
         case "ready": {
           const merged = mergeSignals(controller.signal, callerSignal);
           if (merged.aborted) {
@@ -288,6 +280,14 @@ function createStore<
           }
           return { instance: instance!, signal: merged };
         }
+        case "unsupported":
+          throw new UnsupportedError("Built-in AI is not supported");
+        case "unavailable":
+          throw new UnavailableError("Built-in AI model is unavailable");
+        case "error":
+          throw new NotReadyError("Built-in AI is in an error state", {
+            cause: snapshot.error?.cause ?? snapshot.error,
+          });
         case "downloading":
           await awaitPending(pending!, callerSignal);
           continue;
@@ -363,11 +363,7 @@ function createStore<
   };
 }
 
-/**
- * Shared lifecycle for every built-in AI namespace. Drives the
- * availability → create → ready state machine, gates downloads behind a user
- * activation, and exposes `acquire` for action methods. Function refs are stable.
- */
+/** Shared lifecycle for every built-in AI namespace. Function refs are stable across renders. */
 export function useLifecycle<
   Options extends object,
   Instance extends DestroyableInstance,
