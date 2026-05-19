@@ -59,7 +59,9 @@ describe("createTranslator", () => {
       signal: controller.signal,
     });
 
-    const [createArg] = create.mock.calls[0] as [{ signal?: AbortSignal }];
+    const [createArg] = create.mock.calls[0] as unknown as [
+      { signal?: AbortSignal },
+    ];
     expect(createArg.signal).toBe(controller.signal);
   });
 
@@ -77,7 +79,9 @@ describe("createTranslator", () => {
       signal: controller.signal,
     });
 
-    const [arg] = availability.mock.calls[0] as [Record<string, unknown>];
+    const [arg] = availability.mock.calls[0] as unknown as [
+      Record<string, unknown>,
+    ];
     expect(arg).not.toHaveProperty("signal");
     expect(arg).toEqual({ sourceLanguage: "en", targetLanguage: "fr" });
   });

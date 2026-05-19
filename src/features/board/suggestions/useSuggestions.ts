@@ -32,21 +32,21 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const proofreader = useProofreader();
-  const rewriter = useRewriter({
+  const { status: proofreaderStatus, proofread } = useProofreader();
+  const { status: rewriterStatus, rewrite } = useRewriter({
     tone,
     sharedContext,
     length: "shorter",
     format: "plain-text",
   });
 
-  const proofreaderReady = proofreader.status === "ready";
-  const rewriterReady = rewriter.status === "ready";
+  const isProofreaderReady = proofreaderStatus === "ready";
+  const isRewriterReady = rewriterStatus === "ready";
   const isAvailable =
-    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
+    proofreaderStatus !== "unsupported" || rewriterStatus !== "unsupported";
 
   useEffect(() => {
-    if (!proofreaderReady && !rewriterReady) {
+    if (!isProofreaderReady && !isRewriterReady) {
       return;
     }
 
@@ -56,10 +56,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     const generateSuggestions = async () => {
       try {
         const [proofreadResult, rewritten] = await Promise.all([
-          proofreaderReady
-            ? proofreader.proofread(text, { signal })
-            : undefined,
-          rewriterReady ? rewriter.rewrite(text, { signal }) : undefined,
+          isProofreaderReady ? proofread(text, { signal }) : undefined,
+          isRewriterReady ? rewrite(text, { signal }) : undefined,
         ]);
 
         if (signal.aborted) {
@@ -84,7 +82,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     void generateSuggestions();
 
     return () => controller.abort();
-  }, [text, proofreaderReady, proofreader, rewriterReady, rewriter]);
+  }, [text, isProofreaderReady, proofread, isRewriterReady, rewrite]);
 
   return {
     phrases: suggestions,
