@@ -1,14 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { shallowEqualOptions } from "../util/options-equality.ts";
-import { createStore, type Acquired, type Snapshot } from "./store.ts";
+import { createStore } from "./store.ts";
 import type { AINamespace, DestroyableInstance } from "./types.ts";
-
-export type { Acquired } from "./store.ts";
-
-export interface Lifecycle<Instance> extends Snapshot {
-  prepare: () => Promise<void>;
-  acquire: (callerSignal?: AbortSignal) => Promise<Acquired<Instance>>;
-}
 
 /** Stabilizes the options reference so effects re-run on real changes only. */
 function useStableOptions<T extends object>(
@@ -25,7 +18,7 @@ function useStableOptions<T extends object>(
 export function useLifecycle<
   Options extends object,
   Instance extends DestroyableInstance,
->(globalName: string, options: Options | undefined): Lifecycle<Instance> {
+>(globalName: string, options: Options | undefined) {
   const stableOptions = useStableOptions(options);
   const namespace = (globalThis as Record<string, unknown>)[globalName] as
     | AINamespace<Options, Instance>

@@ -63,16 +63,8 @@ export async function createTranslator(
     options: createOptions,
     signal,
   });
-  if (
-    typeof (instance as Partial<AsyncDisposable>)[Symbol.asyncDispose] !==
-    "function"
-  ) {
-    Object.defineProperty(instance, Symbol.asyncDispose, {
-      value: () => {
-        instance.destroy();
-        return Promise.resolve();
-      },
-    });
-  }
-  return instance as Translator & AsyncDisposable;
+  const disposable = instance as Translator & Partial<AsyncDisposable>;
+  disposable[Symbol.asyncDispose] ??= () =>
+    Promise.resolve(disposable.destroy());
+  return disposable as Translator & AsyncDisposable;
 }
