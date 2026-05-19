@@ -216,21 +216,20 @@ describe("createInstance", () => {
     clearDownloadProgress(`${NAMESPACE}:{"mode":"a"}`);
   });
 
-  // Fast path (availability='available') must not write to the cross-namespace
-  // progress store — a pre-seeded unrelated entry stays untouched.
   test("does not touch the progress store on the available fast path", async () => {
+    const OTHER_NAMESPACE = "__OtherTestAI";
     vi.stubGlobal(NAMESPACE, {
       availability: vi.fn(() => Promise.resolve("available")),
       create: vi.fn(() => Promise.resolve({ destroy: vi.fn() })),
     });
 
-    setDownloadProgress("Summarizer", 0.42);
+    setDownloadProgress(OTHER_NAMESPACE, 0.42);
     await createInstance<TestOptions, TestInstance>({
       name: NAMESPACE,
       options: { mode: "a" },
     });
     expect(snapshotProgressFor(NAMESPACE)).toBe(0);
-    expect(snapshotProgressFor("Summarizer")).toBe(0.42);
-    clearDownloadProgress("Summarizer");
+    expect(snapshotProgressFor(OTHER_NAMESPACE)).toBe(0.42);
+    clearDownloadProgress(OTHER_NAMESPACE);
   });
 });
