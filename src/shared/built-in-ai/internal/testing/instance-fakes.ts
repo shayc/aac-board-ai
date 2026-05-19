@@ -1,7 +1,6 @@
 import { vi } from "vitest";
 import { makeChunkStream } from "./ai-namespace-fake.ts";
 
-// Context-bearing fakes echo `context` into the output — tests prove forwarding from the resolved value alone.
 interface ContextOpts {
   context?: string;
 }

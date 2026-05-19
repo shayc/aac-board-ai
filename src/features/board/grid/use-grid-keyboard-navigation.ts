@@ -137,8 +137,6 @@ function arrowStep(key: string, dir: "ltr" | "rtl"): Step | null {
   }
 }
 
-// Among cells in the step's half-plane, prefer the most in-line tile
-// (smallest cross-axis distance), then the closest along the primary axis.
 function nearestInDirection(
   grid: HTMLElement,
   from: Cell,

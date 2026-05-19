@@ -487,7 +487,6 @@ describe("Grid", () => {
         { id: "3", label: "Item 3" },
       ];
 
-      // Col 0 is empty; first focusable in row 0 is col 1 (Item 2)
       const order = [[null, "2", "3"]];
 
       const screen = await render(
@@ -517,7 +516,6 @@ describe("Grid", () => {
         { id: "2", label: "Item 2" },
       ];
 
-      // Col 2 is empty; last focusable in row 0 is col 1 (Item 2)
       const order = [["1", "2", null]];
 
       const screen = await render(
@@ -548,7 +546,6 @@ describe("Grid", () => {
         { id: "4", label: "Item 4" },
       ];
 
-      // (0,0) is empty; first focusable in grid is (0,1) which is Item 2
       const order = [
         [null, "2"],
         ["3", "4"],
@@ -582,7 +579,6 @@ describe("Grid", () => {
         { id: "3", label: "Item 3" },
       ];
 
-      // (1,1) is empty; last focusable in grid is (1,0) which is Item 3
       const order = [
         ["1", "2"],
         ["3", null],
@@ -701,7 +697,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      // Start at col 1 (Item 2), ArrowRight should move left to col 0 (Item 1)
       item2.element().focus();
       await expect.element(item2).toHaveFocus();
 
@@ -729,7 +724,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      // Start at col 0 (Item 1), ArrowLeft should move right to col 1 (Item 2)
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
@@ -791,9 +785,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      // In RTL, Item 1 (col 0) is visually rightmost and Item 3 (col 2) is
-      // visually leftmost. macOS sends Home for Fn+ArrowLeft, so Home should
-      // move toward the visual left to stay consistent with ArrowLeft.
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
@@ -822,8 +813,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      // End (Fn+ArrowRight on macOS) mirrors ArrowRight: moves toward the
-      // visual right, which is col 0 (Item 1) in RTL.
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
@@ -856,9 +845,6 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      // macOS Fn+Ctrl+ArrowLeft sends Ctrl+Home. Because ArrowLeft is the
-      // forward/end direction in RTL, Ctrl+Home jumps to the last cell in
-      // reading order — row max / col max — which is visually bottom-left.
       press(item1, "Home", { ctrlKey: true });
 
       await expectFocus(item4);
@@ -888,9 +874,6 @@ describe("Grid", () => {
       item4.element().focus();
       await expect.element(item4).toHaveFocus();
 
-      // macOS Fn+Ctrl+ArrowRight sends Ctrl+End. ArrowRight is the
-      // backward/start direction in RTL, so Ctrl+End jumps to the first
-      // cell in reading order — row 0 / col 0 — which is visually top-right.
       press(item4, "End", { ctrlKey: true });
 
       await expectFocus(item1);

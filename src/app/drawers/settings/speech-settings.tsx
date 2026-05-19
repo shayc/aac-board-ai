@@ -95,7 +95,6 @@ export function SpeechSettings() {
         });
         greeting = await translator.translate(defaultGreeting);
       } catch (error) {
-        // Lifecycle gating — fall through to the untranslated greeting.
         if (!(error instanceof BuiltInAIError)) {
           throw error;
         }

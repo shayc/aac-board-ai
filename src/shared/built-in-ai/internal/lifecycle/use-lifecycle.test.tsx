@@ -47,7 +47,6 @@ function setUserActivation(isActive: boolean): void {
 }
 
 beforeEach(() => {
-  // No activation by default — user-gesture gating tests need determinism.
   setUserActivation(false);
 });
 
@@ -195,9 +194,6 @@ describe("useLifecycle", () => {
     expect(createArg.monitor).toBeTypeOf("function");
   });
 
-  // Seeds the cross-namespace progress store with 0 at download start so
-  // `useGlobalDownloadProgress` consumers see the download immediately rather
-  // than only after the first `downloadprogress` event arrives.
   test("writes 0 to the shared progress store as soon as download starts", async () => {
     let resolveCreate!: (value: TestInstance) => void;
     const create = vi.fn(
@@ -346,7 +342,6 @@ describe("useLifecycle", () => {
       name: "NotReadyError",
       cause: original,
     });
-    // One restart, no infinite loop: create was called twice (initial + one retry).
     expect(create).toHaveBeenCalledTimes(2);
   });
 
@@ -470,7 +465,6 @@ describe("useLifecycle", () => {
     await expect(result.current.acquire()).rejects.toBeInstanceOf(
       NotReadyError,
     );
-    // `.cause` is the original error, not the wrapping BuiltInAIError (one-hop unwrap).
     await expect(result.current.acquire()).rejects.toMatchObject({
       name: "NotReadyError",
       cause: original,
@@ -672,9 +666,6 @@ describe("useLifecycle", () => {
     await expect(pending).rejects.toMatchObject({ name: "AbortError" });
   });
 
-  // Auto-create on 'available' keeps status='idle' (no 'downloading' flash),
-  // and is gesture-free — acquire() in this window must park on the in-flight
-  // create, NOT throw NoUserActivationError.
   test("acquire() during auto-create-on-'available' waits without requiring user activation", async () => {
     let resolveCreate!: (value: TestInstance) => void;
     const inst = buildInstance({ marker: "auto" });

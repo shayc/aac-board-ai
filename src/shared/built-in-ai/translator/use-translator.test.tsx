@@ -30,7 +30,6 @@ describe("useTranslator", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // Fake echoes input into the output — resolved value proves the forwarding.
     await expect(result.current.translate("hi")).resolves.toBe("T:hi");
   });
 
@@ -51,7 +50,6 @@ describe("useTranslator", () => {
   });
 
   test("useTranslator requires a TranslatorOptions argument (compile-time)", () => {
-    // Arrows are never invoked — runtime skipped; tsc still type-checks the call signatures.
     // @ts-expect-error - options argument is required
     void (() => useTranslator());
     // @ts-expect-error - options argument is not optional

@@ -16,8 +16,6 @@ describe("buildProgressKey", () => {
     ).toBe('Translator:{"sourceLanguage":"en","targetLanguage":"fr"}');
   });
 
-  // Keys are sorted before stringifying so the same logical options never
-  // shard the progress store across distinct entries based on insertion order.
   test("is order-independent across differently-ordered option objects", () => {
     const a = buildProgressKey("Translator", {
       sourceLanguage: "en",
