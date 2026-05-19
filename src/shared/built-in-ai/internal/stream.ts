@@ -15,11 +15,11 @@ export async function* streamChunks(
   try {
     for (;;) {
       const { done, value } = await reader.read();
-      if (done) {
-        return;
-      }
       if (signal.aborted) {
         throw abortError(signal.reason);
+      }
+      if (done) {
+        return;
       }
       yield value;
     }

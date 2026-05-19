@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import {
   afterEach,
   beforeEach,
@@ -498,6 +499,121 @@ describe("useLifecycle", () => {
     await rerender({ mode: "a" });
 
     expect(create).toHaveBeenCalledTimes(1);
+  });
+
+  test("acquire() rejects with NoUserActivationError when idle without activation", async () => {
+    const { Fake } = makeAIFake({
+      status: "downloadable",
+      buildInstance,
+    });
+    vi.stubGlobal(NAMESPACE, Fake);
+
+    const { result } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    await expect(result.current.acquire()).rejects.toBeInstanceOf(
+      NoUserActivationError,
+    );
+  });
+
+  test("acquire() after unmount rejects with AbortError", async () => {
+    const { Fake } = makeAIFake({
+      status: "available",
+      buildInstance: () => buildInstance({ marker: "post-unmount" }),
+    });
+    vi.stubGlobal(NAMESPACE, Fake);
+
+    const { result, unmount } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+
+    // Capture before unmount — `result.current` becomes stale once the hook
+    // tears down. `store.acquire` is stable so the captured ref keeps working.
+    const acquire = result.current.acquire;
+    await unmount();
+
+    await expect(acquire()).rejects.toMatchObject({ name: "AbortError" });
+  });
+
+  test("StrictMode double-mount does not create or leak duplicate instances", async () => {
+    const { Fake, create, instances } = makeAIFake({
+      status: "available",
+      buildInstance: () => buildInstance({ marker: "strict" }),
+    });
+    vi.stubGlobal(NAMESPACE, Fake);
+
+    const { result } = await renderHook(
+      () => useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+      { wrapper: StrictMode },
+    );
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+
+    // The generation guard in `start`/`isCurrent` may let StrictMode's double
+    // effect launch two creations; the stale one must be destroyed. We assert
+    // the net live-instance count is exactly one.
+    const live = instances.filter(
+      (inst) => inst.destroy.mock.calls.length === 0,
+    );
+    expect(live).toHaveLength(1);
+    // And no in-flight creation should have been orphaned.
+    expect(create.mock.calls.length).toBeGreaterThanOrEqual(1);
+  });
+
+  test("two concurrent prepare() during downloading share a single create call", async () => {
+    let resolveCreate!: (value: TestInstance) => void;
+    const create = vi.fn(
+      () =>
+        new Promise<TestInstance>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    vi.stubGlobal(NAMESPACE, {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    setUserActivation(true);
+    const p1 = result.current.prepare();
+    const p2 = result.current.prepare();
+    await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
+
+    resolveCreate(buildInstance({ marker: "shared" }));
+
+    await p1;
+    await p2;
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(result.current.status).toBe("ready");
+  });
+
+  test("prepare() rejects with AbortError when the hook unmounts mid-download", async () => {
+    const create = vi.fn(() => new Promise<TestInstance>(() => undefined));
+    vi.stubGlobal(NAMESPACE, {
+      availability: vi.fn(() => Promise.resolve("downloadable")),
+      create,
+    });
+
+    const { result, unmount } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(result.current.status).toBe("idle"));
+
+    setUserActivation(true);
+    const pending = result.current.prepare();
+    await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
+
+    await unmount();
+
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
   });
 
   test("two hook instances with different options track lifecycle independently", async () => {

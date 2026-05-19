@@ -76,14 +76,7 @@ describe("streamChunks", () => {
     const secondNext = iter.next();
     controller.abort(reason);
 
-    // The pending read may settle either as done (cancel drains it) or as a
-    // rejection — both leave the iterator in a clean state. We only care
-    // about the post-abort invariants.
-    await secondNext.then(
-      () => undefined,
-      () => undefined,
-    );
-
+    await expect(secondNext).rejects.toMatchObject({ name: "AbortError" });
     expect(cancelReason).toBe(reason);
     expect(stream.locked).toBe(false);
   });

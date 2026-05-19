@@ -29,10 +29,8 @@ export interface WriterHookReturn extends BaseHookReturn {
 }
 
 export function useWriter(options?: WriterOptions): WriterHookReturn {
-  const { acquire, ...lifecycle } = useLifecycle<WriterOptions, Writer>(
-    "Writer",
-    options,
-  );
+  const { status, progress, error, prepare, inputQuota, acquire } =
+    useLifecycle<WriterOptions, Writer>("Writer", options);
 
   const [actions] = useState(() => ({
     async write(input: string, opts?: WriteCallOptions) {
@@ -59,5 +57,5 @@ export function useWriter(options?: WriterOptions): WriterHookReturn {
     },
   }));
 
-  return { ...lifecycle, ...actions };
+  return { status, progress, error, prepare, inputQuota, ...actions };
 }

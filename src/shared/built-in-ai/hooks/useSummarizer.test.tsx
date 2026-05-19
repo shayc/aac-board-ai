@@ -46,4 +46,42 @@ describe("useSummarizer", () => {
     }
     expect(out).toEqual(["S:", "sum"]);
   });
+
+  test("summarize() rejection does not mutate status or error", async () => {
+    const { Fake } = makeAIFake({
+      buildInstance: () => {
+        const inst = buildSummarizerInstance();
+        inst.summarize = vi.fn(() => Promise.reject(new Error("boom")));
+        return inst;
+      },
+    });
+    vi.stubGlobal("Summarizer", Fake);
+
+    const { result } = await renderHook(() => useSummarizer());
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+
+    await expect(result.current.summarize("x")).rejects.toThrow("boom");
+    expect(result.current.status).toBe("ready");
+    expect(result.current.error).toBeNull();
+  });
+
+  test("action method identities are stable across rerenders", async () => {
+    const { Fake } = makeAIFake({ buildInstance: buildSummarizerInstance });
+    vi.stubGlobal("Summarizer", Fake);
+
+    const { result, rerender } = await renderHook(() => useSummarizer());
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+
+    const summarize = result.current.summarize;
+    const summarizeStream = result.current.summarizeStream;
+    const measureInput = result.current.measureInput;
+    const prepare = result.current.prepare;
+
+    await rerender();
+
+    expect(result.current.summarize).toBe(summarize);
+    expect(result.current.summarizeStream).toBe(summarizeStream);
+    expect(result.current.measureInput).toBe(measureInput);
+    expect(result.current.prepare).toBe(prepare);
+  });
 });

@@ -34,10 +34,8 @@ export interface SummarizerHookReturn extends BaseHookReturn {
 export function useSummarizer(
   options?: SummarizerOptions,
 ): SummarizerHookReturn {
-  const { acquire, ...lifecycle } = useLifecycle<SummarizerOptions, Summarizer>(
-    "Summarizer",
-    options,
-  );
+  const { status, progress, error, prepare, inputQuota, acquire } =
+    useLifecycle<SummarizerOptions, Summarizer>("Summarizer", options);
 
   const [actions] = useState(() => ({
     async summarize(input: string, opts?: SummarizeCallOptions) {
@@ -64,5 +62,5 @@ export function useSummarizer(
     },
   }));
 
-  return { ...lifecycle, ...actions };
+  return { status, progress, error, prepare, inputQuota, ...actions };
 }

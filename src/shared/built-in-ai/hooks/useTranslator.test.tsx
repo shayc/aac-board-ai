@@ -51,4 +51,13 @@ describe("useTranslator", () => {
     }
     expect(chunks).toEqual(["T:", "hello"]);
   });
+
+  test("useTranslator requires a TranslatorOptions argument (compile-time)", () => {
+    // Arrow wrappers keep the hook out of runtime (no React context here);
+    // tsc still type-checks the call signatures and fires @ts-expect-error.
+    // @ts-expect-error - options argument is required
+    void (() => useTranslator());
+    // @ts-expect-error - options argument is not optional
+    void (() => useTranslator(undefined));
+  });
 });

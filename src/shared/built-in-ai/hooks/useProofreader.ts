@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useLifecycle } from "../internal/useLifecycle.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
 
 export type CorrectionType =
   | "spelling"
@@ -44,7 +44,7 @@ export interface ProofreaderHookReturn extends BaseHookReturn {
 export function useProofreader(
   options?: ProofreaderOptions,
 ): ProofreaderHookReturn {
-  const { acquire, ...lifecycle } = useLifecycle<
+  const { status, progress, error, prepare, acquire } = useLifecycle<
     ProofreaderOptions,
     Proofreader
   >("Proofreader", options);
@@ -59,5 +59,5 @@ export function useProofreader(
     },
   }));
 
-  return { ...lifecycle, ...actions };
+  return { status, progress, error, prepare, ...actions };
 }

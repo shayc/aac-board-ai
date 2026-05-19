@@ -32,10 +32,8 @@ export interface RewriterHookReturn extends BaseHookReturn {
 }
 
 export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
-  const { acquire, ...lifecycle } = useLifecycle<RewriterOptions, Rewriter>(
-    "Rewriter",
-    options,
-  );
+  const { status, progress, error, prepare, inputQuota, acquire } =
+    useLifecycle<RewriterOptions, Rewriter>("Rewriter", options);
 
   const [actions] = useState(() => ({
     async rewrite(input: string, opts?: RewriteCallOptions) {
@@ -62,5 +60,5 @@ export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
     },
   }));
 
-  return { ...lifecycle, ...actions };
+  return { status, progress, error, prepare, inputQuota, ...actions };
 }

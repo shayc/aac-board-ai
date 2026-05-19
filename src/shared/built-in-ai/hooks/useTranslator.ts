@@ -28,10 +28,8 @@ export interface TranslatorHookReturn extends BaseHookReturn {
 export function useTranslator(
   options: TranslatorOptions,
 ): TranslatorHookReturn {
-  const { acquire, ...lifecycle } = useLifecycle<TranslatorOptions, Translator>(
-    "Translator",
-    options,
-  );
+  const { status, progress, error, prepare, inputQuota, acquire } =
+    useLifecycle<TranslatorOptions, Translator>("Translator", options);
 
   const [actions] = useState(() => ({
     async translate(input: string, opts?: TranslateCallOptions) {
@@ -52,5 +50,5 @@ export function useTranslator(
     },
   }));
 
-  return { ...lifecycle, ...actions };
+  return { status, progress, error, prepare, inputQuota, ...actions };
 }
