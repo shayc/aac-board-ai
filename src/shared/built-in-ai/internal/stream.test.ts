@@ -50,9 +50,8 @@ describe("streamChunks", () => {
   });
 
   test("cancels the underlying source and releases the lock when the signal aborts mid-stream", async () => {
-    // Stream emits one chunk, then hangs inside `pull` so the second
-    // `reader.read()` is pending when we abort. `cancel` records the reason
-    // so we can assert the abort propagated through.
+    // Stream emits one chunk, then hangs in `pull` so the next read is pending at abort.
+    // `cancel` records the reason for assertion.
     let cancelReason: unknown = "<<never>>";
     const stream = new ReadableStream<string>({
       start(controller) {

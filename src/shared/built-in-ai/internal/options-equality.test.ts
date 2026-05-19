@@ -32,10 +32,8 @@ describe("shallowEqualOptions", () => {
     expect(shallowEqualOptions({ a: NaN }, { a: NaN })).toBe(true);
   });
 
-  // Pinning this: equality is SHALLOW, so an array option re-created each
-  // render with the same contents is treated as *different*. Hooks like
-  // useTranslator/useSummarizer will re-init unless callers memoize the
-  // array — this test guards against accidentally adding deep equality.
+  // Shallow only — arrays with equal contents but different identity are NOT equal.
+  // Guards against drift toward deep equality; callers must memoize array options.
   test("arrays with same contents but different identity → false", () => {
     expect(
       shallowEqualOptions({ langs: ["en", "fr"] }, { langs: ["en", "fr"] }),

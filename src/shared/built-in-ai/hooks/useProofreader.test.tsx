@@ -26,8 +26,7 @@ describe("useProofreader", () => {
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
     const out = await result.current.proofread("helo world");
-    // The fake echoes input into correctedInput so input-forwarding is
-    // observable from the resolved value alone.
+    // Fake echoes input into `correctedInput` — resolved value proves the forwarding.
     expect(out.correctedInput).toBe("corrected(helo world)");
     expect(out.corrections).toHaveLength(1);
     expect(out.corrections[0]).toMatchObject({
@@ -38,8 +37,7 @@ describe("useProofreader", () => {
   });
 
   test("ProofreaderHookReturn omits inputQuota and measureInput (compile-time)", () => {
-    // Arrow wrapper keeps the hook out of runtime; tsc still type-checks the
-    // member accesses below and fires @ts-expect-error if either is present.
+    // Arrow is never invoked — runtime skipped; tsc still type-checks the accesses.
     void (() => {
       const ret = useProofreader();
       // @ts-expect-error - inputQuota is not part of ProofreaderHookReturn

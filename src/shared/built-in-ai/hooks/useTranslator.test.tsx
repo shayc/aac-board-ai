@@ -30,8 +30,7 @@ describe("useTranslator", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // The fake echoes input into its output so input-forwarding is
-    // observable from the resolved value alone.
+    // Fake echoes input into the output — resolved value proves the forwarding.
     await expect(result.current.translate("hi")).resolves.toBe("T:hi");
   });
 
@@ -52,8 +51,7 @@ describe("useTranslator", () => {
   });
 
   test("useTranslator requires a TranslatorOptions argument (compile-time)", () => {
-    // Arrow wrappers keep the hook out of runtime (no React context here);
-    // tsc still type-checks the call signatures and fires @ts-expect-error.
+    // Arrows are never invoked — runtime skipped; tsc still type-checks the call signatures.
     // @ts-expect-error - options argument is required
     void (() => useTranslator());
     // @ts-expect-error - options argument is not optional

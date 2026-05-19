@@ -28,8 +28,7 @@ describe("useRewriter", () => {
     const { result } = await renderHook(() => useRewriter());
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // The fake echoes context into its output so both forwardings are
-    // observable from the resolved value alone.
+    // Fake echoes context into the output — resolved value proves both forwardings.
     await expect(
       result.current.rewrite("hello", { context: "softer" }),
     ).resolves.toBe("R(softer):hello");

@@ -43,7 +43,7 @@ function setUserActivation(isActive: boolean): void {
 }
 
 beforeEach(() => {
-  // Default to no activation so user-gesture gating tests are deterministic.
+  // No activation by default — user-gesture gating tests need determinism.
   setUserActivation(false);
 });
 
@@ -78,8 +78,7 @@ describe("useLifecycle", () => {
     expect(result.current.inputQuota).toBe(1024);
     expect(result.current.error).toBeNull();
     expect(create).toHaveBeenCalledTimes(1);
-    // Auto-create must not register a download monitor — that's only for
-    // user-initiated downloads via prepare()/acquire().
+    // Auto-create wires no monitor — monitors are reserved for prepare()/acquire().
     const [createArg] = create.mock.calls[0] as [{ monitor?: unknown }];
     expect(createArg.monitor).toBeUndefined();
   });
@@ -183,7 +182,7 @@ describe("useLifecycle", () => {
 
     expect(result.current.status).toBe("ready");
     expect(create).toHaveBeenCalledTimes(1);
-    // User-initiated downloads do wire a monitor for progress events.
+    // User-initiated downloads wire a monitor for progress events.
     const [createArg] = create.mock.calls[0] as [{ monitor?: unknown }];
     expect(createArg.monitor).toBeTypeOf("function");
   });
@@ -351,8 +350,7 @@ describe("useLifecycle", () => {
     await vi.waitFor(() => expect(result.current.status).toBe("idle"));
 
     setUserActivation(true);
-    // The eventual unmount aborts this prepare with "lifecycle reset" — that
-    // is expected; swallow it so it doesn't surface as an unhandled rejection.
+    // Unmount will abort this prepare with "lifecycle reset" — swallow to silence the rejection.
     result.current.prepare().catch(() => undefined);
     await vi.waitFor(() => expect(result.current.status).toBe("downloading"));
 
@@ -528,8 +526,7 @@ describe("useLifecycle", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // Capture before unmount — `result.current` becomes stale once the hook
-    // tears down. `store.acquire` is stable so the captured ref keeps working.
+    // Capture pre-unmount — `result.current` goes stale; `store.acquire` stays stable.
     const acquire = result.current.acquire;
     await unmount();
 
@@ -550,9 +547,7 @@ describe("useLifecycle", () => {
 
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // The generation guard in `start`/`isCurrent` may let StrictMode's double
-    // effect launch two creations; the stale one must be destroyed. We assert
-    // the net live-instance count is exactly one.
+    // StrictMode may launch two creates; the stale one is destroyed. Assert net live === 1.
     const live = instances.filter(
       (inst) => inst.destroy.mock.calls.length === 0,
     );

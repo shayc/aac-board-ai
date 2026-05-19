@@ -16,9 +16,8 @@ describe("built-in AI error hierarchy", () => {
     { Ctor: NotReadyError, name: "NotReadyError" },
   ] as const;
 
-  // Lifecycle uses `instanceof BuiltInAIError` to decide whether to wrap an
-  // unknown error; the `name` is what shows up in logs and `instanceof` checks
-  // by callers. Both are load-bearing — pin them together.
+  // `instanceof` gates the lifecycle's wrap-or-not decision; `name` surfaces in logs.
+  // Both load-bearing — pin together.
   test.each(cases)(
     "$name extends BuiltInAIError and exposes name=$name",
     ({ Ctor, name }) => {

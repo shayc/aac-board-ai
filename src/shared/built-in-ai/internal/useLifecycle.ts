@@ -64,7 +64,7 @@ function destroyQuietly(
   try {
     instance.destroy?.();
   } catch {
-    // Destroy is best-effort during teardown; a thrown error has no recipient.
+    // Best-effort during teardown — a throw here has nowhere to go.
   }
 }
 
@@ -266,8 +266,7 @@ function createStore<
       if (merged.aborted) {
         throw err;
       }
-      // Underlying rejections are already classified into snapshot state;
-      // only the caller's own abort needs to propagate out of awaitPending.
+      // Underlying rejections settle into snapshot.error; only caller-aborts surface here.
     }
   }
 
