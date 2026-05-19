@@ -1,4 +1,3 @@
-import { useState } from "react";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
 
@@ -32,16 +31,15 @@ export function useLanguageDetector(
     LanguageDetector
   >("LanguageDetector", options);
 
-  const [actions] = useState(() => ({
-    async detect(input: string, opts?: DetectCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.detect(input, { signal });
-    },
-    async measureInput(input: string, opts?: DetectCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.measureInputUsage(input, { signal });
-    },
-  }));
+  async function detect(input: string, opts?: DetectCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.detect(input, { signal });
+  }
 
-  return { ...lifecycle, ...actions };
+  async function measureInput(input: string, opts?: DetectCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.measureInputUsage(input, { signal });
+  }
+
+  return { ...lifecycle, detect, measureInput };
 }

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
@@ -33,24 +32,24 @@ export function useTranslator(
     options,
   );
 
-  const [actions] = useState(() => ({
-    async translate(input: string, opts?: TranslateCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.translate(input, { signal });
-    },
-    async *translateStream(
-      input: string,
-      opts?: TranslateCallOptions,
-    ): AsyncIterable<string> {
-      const { instance, signal } = await acquire(opts?.signal);
-      const stream = instance.translateStreaming(input, { signal });
-      yield* streamChunks(stream, signal);
-    },
-    async measureInput(input: string, opts?: TranslateCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.measureInputUsage(input, { signal });
-    },
-  }));
+  async function translate(input: string, opts?: TranslateCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.translate(input, { signal });
+  }
 
-  return { ...lifecycle, ...actions };
+  async function* translateStream(
+    input: string,
+    opts?: TranslateCallOptions,
+  ): AsyncIterable<string> {
+    const { instance, signal } = await acquire(opts?.signal);
+    const stream = instance.translateStreaming(input, { signal });
+    yield* streamChunks(stream, signal);
+  }
+
+  async function measureInput(input: string, opts?: TranslateCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.measureInputUsage(input, { signal });
+  }
+
+  return { ...lifecycle, translate, translateStream, measureInput };
 }

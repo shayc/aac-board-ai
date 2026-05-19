@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
@@ -37,30 +36,30 @@ export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
     options,
   );
 
-  const [actions] = useState(() => ({
-    async rewrite(input: string, opts?: RewriteCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.rewrite(input, { context: opts?.context, signal });
-    },
-    async *rewriteStream(
-      input: string,
-      opts?: RewriteCallOptions,
-    ): AsyncIterable<string> {
-      const { instance, signal } = await acquire(opts?.signal);
-      const stream = instance.rewriteStreaming(input, {
-        context: opts?.context,
-        signal,
-      });
-      yield* streamChunks(stream, signal);
-    },
-    async measureInput(input: string, opts?: RewriteCallOptions) {
-      const { instance, signal } = await acquire(opts?.signal);
-      return instance.measureInputUsage(input, {
-        context: opts?.context,
-        signal,
-      });
-    },
-  }));
+  async function rewrite(input: string, opts?: RewriteCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.rewrite(input, { context: opts?.context, signal });
+  }
 
-  return { ...lifecycle, ...actions };
+  async function* rewriteStream(
+    input: string,
+    opts?: RewriteCallOptions,
+  ): AsyncIterable<string> {
+    const { instance, signal } = await acquire(opts?.signal);
+    const stream = instance.rewriteStreaming(input, {
+      context: opts?.context,
+      signal,
+    });
+    yield* streamChunks(stream, signal);
+  }
+
+  async function measureInput(input: string, opts?: RewriteCallOptions) {
+    const { instance, signal } = await acquire(opts?.signal);
+    return instance.measureInputUsage(input, {
+      context: opts?.context,
+      signal,
+    });
+  }
+
+  return { ...lifecycle, rewrite, rewriteStream, measureInput };
 }
