@@ -18,9 +18,15 @@ export interface RewriterOptions {
   length?: "as-is" | "shorter" | "longer";
   /** Context shared across every call on this instance. */
   sharedContext?: string;
-  /** BCP-47 tags of input languages the model should expect. */
+  /**
+   * BCP-47 tags of input languages this instance will receive. Affects
+   * `availability()` — unsupported languages can make the model unavailable.
+   */
   expectedInputLanguages?: readonly string[];
-  /** BCP-47 tags of context languages the model should expect. */
+  /**
+   * BCP-47 tags of context languages this instance will receive. Affects
+   * `availability()` — unsupported languages can make the model unavailable.
+   */
   expectedContextLanguages?: readonly string[];
   /** BCP-47 tag of the desired output language. */
   outputLanguage?: string;

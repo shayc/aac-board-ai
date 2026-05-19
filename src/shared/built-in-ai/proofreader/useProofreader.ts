@@ -15,7 +15,10 @@ export interface ProofreaderOptions {
   includeCorrectionExplanations?: boolean;
   /** BCP-47 tag of the language used for explanations. */
   correctionExplanationLanguage?: string;
-  /** BCP-47 tags of input languages the model should expect. */
+  /**
+   * BCP-47 tags of input languages this instance will receive. Affects
+   * `availability()` — unsupported languages can make the model unavailable.
+   */
   expectedInputLanguages?: readonly string[];
 }
 

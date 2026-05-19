@@ -1,7 +1,8 @@
 import { createInstance } from "../internal/lifecycle/create-instance.ts";
 
 /**
- * Options for {@link createTranslator}.
+ * Options for {@link createTranslator}. Same shape as {@link TranslatorOptions}
+ * plus an optional cancellation signal.
  */
 export interface CreateTranslatorOptions {
   /** BCP-47 language tag of the source text (e.g. `"en"`, `"fr"`). */
