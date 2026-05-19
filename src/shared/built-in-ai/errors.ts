@@ -3,16 +3,6 @@
  *
  * Use `instanceof BuiltInAIError` to distinguish library-thrown errors from
  * browser API rejections (e.g. `AbortError`) that pass through unchanged.
- *
- * @example
- * ```ts
- * try {
- *   await summarizer.summarize(text);
- * } catch (error) {
- *   if (error instanceof BuiltInAIError) return <Fallback />;
- *   throw error;
- * }
- * ```
  */
 export class BuiltInAIError extends Error {
   override name = "BuiltInAIError";
@@ -20,22 +10,31 @@ export class BuiltInAIError extends Error {
 
 export class UnsupportedError extends BuiltInAIError {
   override name = "UnsupportedError";
-  constructor(message = "Built-in AI is not supported") {
-    super(message);
+  constructor(
+    message = "Built-in AI is not supported",
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
   }
 }
 
 export class UnavailableError extends BuiltInAIError {
   override name = "UnavailableError";
-  constructor(message = "Built-in AI model is unavailable") {
-    super(message);
+  constructor(
+    message = "Built-in AI model is unavailable",
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
   }
 }
 
 export class NoUserActivationError extends BuiltInAIError {
   override name = "NoUserActivationError";
-  constructor(message = "Built-in AI requires a user activation to download") {
-    super(message);
+  constructor(
+    message = "Built-in AI requires a user activation to download",
+    options?: ErrorOptions,
+  ) {
+    super(message, options);
   }
 }
 
