@@ -5,8 +5,8 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../errors.ts";
-import { hasUserActivation } from "../util/activation.ts";
 import { abortError, mergeSignals, raceAbort } from "../util/signal.ts";
+import { hasUserActivation } from "./activation.ts";
 import { createInstance } from "./create-instance.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
 
