@@ -5,9 +5,9 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../errors.ts";
-import { hasUserActivation } from "./activation.ts";
+import { hasUserActivation } from "../util/activation.ts";
+import { abortError, mergeSignals, raceAbort } from "../util/signal.ts";
 import { createInstance } from "./create-instance.ts";
-import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
 
 export interface Snapshot {

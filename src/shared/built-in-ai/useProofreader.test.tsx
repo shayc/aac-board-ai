@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { makeAIFake } from "../internal/test-fakes/ai-namespace-fake.ts";
-import { buildProofreaderInstance } from "../internal/test-fakes/instance-fakes.ts";
+import { makeAIFake } from "./test-fakes/ai-namespace-fake.ts";
+import { buildProofreaderInstance } from "./test-fakes/instance-fakes.ts";
 import { useProofreader } from "./useProofreader.ts";
 
 afterEach(() => {

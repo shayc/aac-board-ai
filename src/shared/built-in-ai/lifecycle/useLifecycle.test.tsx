@@ -16,8 +16,8 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../errors.ts";
+import { makeAIFake } from "../test-fakes/ai-namespace-fake.ts";
 import { snapshotProgressFor } from "./progress-store.ts";
-import { makeAIFake } from "./test-fakes/ai-namespace-fake.ts";
 import { useLifecycle } from "./useLifecycle.ts";
 
 interface TestOptions {

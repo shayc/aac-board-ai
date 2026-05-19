@@ -3,7 +3,7 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../errors.ts";
-import { hasUserActivation } from "./activation.ts";
+import { hasUserActivation } from "../util/activation.ts";
 import {
   buildProgressKey,
   clearDownloadProgress,

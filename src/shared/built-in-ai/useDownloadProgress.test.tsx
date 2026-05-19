@@ -3,7 +3,7 @@ import { renderHook } from "vitest-browser-react";
 import {
   clearDownloadProgress,
   setDownloadProgress,
-} from "../internal/progress-store.ts";
+} from "./lifecycle/progress-store.ts";
 import { useDownloadProgress } from "./useDownloadProgress.ts";
 
 function cleanup(...keys: string[]): void {

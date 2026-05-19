@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import {
   snapshotProgressFor,
   subscribeProgress,
-} from "../internal/progress-store.ts";
+} from "./lifecycle/progress-store.ts";
 
 /**
  * Subscribes to the highest in-flight download progress across every built-in

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { isSupported } from "./namespaces.ts";
+import { isSupported } from "./is-supported.ts";
 
 afterEach(() => {
   vi.unstubAllGlobals();
