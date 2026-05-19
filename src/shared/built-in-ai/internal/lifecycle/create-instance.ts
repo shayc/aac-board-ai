@@ -31,14 +31,16 @@ export interface CreateInstanceOptions<O extends object> {
  *
  * Throws the library's typed lifecycle errors and writes to the shared
  * progress store on the caller's behalf. Never resolves with a partial
- * instance — on rejection the store is cleared in `finally`.
+ * instance — on rejection the store is cleared in `finally`. The returned
+ * instance is `AsyncDisposable`; the wrap is a no-op if the underlying
+ * instance already implements `[Symbol.asyncDispose]`.
  *
  * @internal
  */
 export async function createInstance<
   O extends object,
   I extends DestroyableInstance,
->(params: CreateInstanceOptions<O>): Promise<I> {
+>(params: CreateInstanceOptions<O>): Promise<I & AsyncDisposable> {
   const { name, options, signal, onProgress } = params;
 
   const namespace = (globalThis as Record<string, unknown>)[name] as
@@ -63,7 +65,7 @@ export async function createInstance<
     if (key) {
       setDownloadProgress(key, 0);
     }
-    return await namespace.create({
+    const instance = await namespace.create({
       ...options!,
       signal,
       monitor: willDownload
@@ -76,6 +78,10 @@ export async function createInstance<
             })
         : undefined,
     });
+    const disposable = instance as I & Partial<AsyncDisposable>;
+    disposable[Symbol.asyncDispose] ??= () =>
+      Promise.resolve(disposable.destroy?.());
+    return disposable as I & AsyncDisposable;
   } finally {
     if (key) {
       clearDownloadProgress(key);
