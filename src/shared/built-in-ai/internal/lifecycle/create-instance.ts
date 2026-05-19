@@ -7,7 +7,7 @@ import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-} from "../progress/progress-store.ts";
+} from "../progress-store.ts";
 import type { AINamespace, DestroyableInstance } from "./types.ts";
 
 function hasUserActivation(): boolean {

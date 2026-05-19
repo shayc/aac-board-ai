@@ -1,6 +1,9 @@
 import { useSyncExternalStore } from "react";
-import type { BuiltInAIName } from "../../is-supported.ts";
-import { snapshotProgressFor, subscribeProgress } from "./progress-store.ts";
+import type { BuiltInAIName } from "./is-supported.ts";
+import {
+  snapshotProgressFor,
+  subscribeProgress,
+} from "./internal/progress-store.ts";
 
 /**
  * Highest in-flight download progress across built-in AI instances. Tracks

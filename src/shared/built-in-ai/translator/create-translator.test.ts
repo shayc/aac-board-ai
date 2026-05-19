@@ -9,7 +9,7 @@ import {
   clearDownloadProgress,
   setDownloadProgress,
   snapshotProgressFor,
-} from "../internal/progress/progress-store.ts";
+} from "../internal/progress-store.ts";
 
 function setUserActivation(isActive: boolean): void {
   Object.defineProperty(navigator, "userActivation", {

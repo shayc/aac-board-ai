@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { BaseHookReturn } from "../internal/lifecycle/types.ts";
 import { useLifecycle } from "../internal/lifecycle/useLifecycle.ts";
-import { streamChunks } from "../util/stream.ts";
+import { streamChunks } from "../internal/stream.ts";
+import type { BaseHookReturn } from "../types.ts";
 
 /**
  * Options for {@link useTranslator}. Changing either field destroys the

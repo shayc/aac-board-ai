@@ -8,9 +8,9 @@ export {
 
 export { isSupported, type BuiltInAIName } from "./is-supported.ts";
 
-export type { BaseHookReturn, Status } from "./internal/lifecycle/types.ts";
+export type { BaseHookReturn, Status } from "./types.ts";
 
-export { useGlobalDownloadProgress } from "./internal/progress/useGlobalDownloadProgress.ts";
+export { useGlobalDownloadProgress } from "./useGlobalDownloadProgress.ts";
 
 export {
   createTranslator,

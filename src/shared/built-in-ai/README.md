@@ -129,6 +129,6 @@ Lifecycle gating throws `BuiltInAIError` subclasses (table below). Action method
 
 A per-call `signal` cancels the _caller's_ wait and the underlying action call, but does not tear down the shared model instance. If the hook is mid-download, aborting one call rejects that call with `AbortError` while the download keeps running for any other caller (and for the next call from the same component). **The download is only cancelled when the component unmounts or its options change.**
 
-## Other exports
+## Capability check
 
-- `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`).
+`isSupported(name)` — `true` when the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present. Combine with the hook's `status` (`"unavailable"`) for the full readiness picture.
