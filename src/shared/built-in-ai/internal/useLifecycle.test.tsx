@@ -438,12 +438,14 @@ describe("useLifecycle", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("error"));
 
-    await expect(result.current.acquire()).rejects.toMatchObject({
-      name: "NotReadyError",
-    });
     await expect(result.current.acquire()).rejects.toBeInstanceOf(
       NotReadyError,
     );
+    // `.cause` is the original error, not the wrapping BuiltInAIError (one-hop unwrap).
+    await expect(result.current.acquire()).rejects.toMatchObject({
+      name: "NotReadyError",
+      cause: original,
+    });
   });
 
   test("destroys the instance on unmount", async () => {
@@ -639,6 +641,37 @@ describe("useLifecycle", () => {
     await unmount();
 
     await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+  });
+
+  // Auto-create on 'available' keeps status='idle' (no 'downloading' flash),
+  // and is gesture-free — acquire() in this window must park on the in-flight
+  // create, NOT throw NoUserActivationError.
+  test("acquire() during auto-create-on-'available' waits without requiring user activation", async () => {
+    let resolveCreate!: (value: TestInstance) => void;
+    const inst = buildInstance({ marker: "auto" });
+    const create = vi.fn(
+      () =>
+        new Promise<TestInstance>((resolve) => {
+          resolveCreate = resolve;
+        }),
+    );
+    vi.stubGlobal(NAMESPACE, {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create,
+    });
+
+    const { result } = await renderHook(() =>
+      useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
+    );
+    await vi.waitFor(() => expect(create).toHaveBeenCalledTimes(1));
+    expect(result.current.status).toBe("idle");
+
+    const pending = result.current.acquire();
+    resolveCreate(inst);
+
+    const acquired = await pending;
+    expect(acquired.instance).toBe(inst);
+    expect(result.current.status).toBe("ready");
   });
 
   test("two hook instances with different options track lifecycle independently", async () => {

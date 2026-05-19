@@ -19,6 +19,8 @@ import { useSummarizer } from "@shared/built-in-ai";
 
 Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `summarize`, `summarizeStream`, `measureInput`).
 
+`useProofreader` is the one exception: the underlying API exposes neither `measureInputUsage` nor `inputQuota`, so its hook return omits `measureInput` and `inputQuota`.
+
 ## Lifecycle
 
 ```ts

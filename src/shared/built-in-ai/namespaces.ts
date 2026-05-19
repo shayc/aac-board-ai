@@ -5,7 +5,6 @@ export interface BuiltInAINamespaces {
   Summarizer: typeof Summarizer;
   Writer: typeof Writer;
   LanguageDetector: typeof LanguageDetector;
-  LanguageModel: typeof LanguageModel;
 }
 
 export type BuiltInAIName = keyof BuiltInAINamespaces;

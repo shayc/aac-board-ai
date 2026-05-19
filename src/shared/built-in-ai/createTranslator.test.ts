@@ -191,6 +191,20 @@ describe("createTranslator", () => {
     );
   });
 
+  test("passes an availability() rejection through unchanged (not wrapped)", async () => {
+    const original = new Error("availability boom");
+    const create = vi.fn();
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.reject(original)),
+      create,
+    });
+
+    await expect(
+      createTranslator({ sourceLanguage: "en", targetLanguage: "fr" }),
+    ).rejects.toBe(original);
+    expect(create).not.toHaveBeenCalled();
+  });
+
   // Fast path (availability='available') must not write to the cross-namespace
   // progress store — a pre-seeded unrelated entry stays untouched.
   test("does not touch the progress store on the available fast path", async () => {

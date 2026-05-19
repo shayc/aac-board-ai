@@ -64,6 +64,29 @@ describe("useSummarizer", () => {
     expect(result.current.error).toBeNull();
   });
 
+  test("opts.signal merges into the signal received by instance.summarize", async () => {
+    const instance = buildSummarizerInstance();
+    const { Fake } = makeAIFake({ buildInstance: () => instance });
+    vi.stubGlobal("Summarizer", Fake);
+
+    const { result } = await renderHook(() => useSummarizer());
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+
+    const controller = new AbortController();
+    await result.current.summarize("doc", { signal: controller.signal });
+
+    const [, callOpts] = instance.summarize.mock.calls[0] as [
+      string,
+      { signal: AbortSignal },
+    ];
+    expect(callOpts.signal).toBeInstanceOf(AbortSignal);
+    expect(callOpts.signal.aborted).toBe(false);
+    const reason = new DOMException("caller aborts", "AbortError");
+    controller.abort(reason);
+    expect(callOpts.signal.aborted).toBe(true);
+    expect(callOpts.signal.reason).toBe(reason);
+  });
+
   test("action method identities are stable across rerenders", async () => {
     const { Fake } = makeAIFake({ buildInstance: buildSummarizerInstance });
     vi.stubGlobal("Summarizer", Fake);

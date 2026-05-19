@@ -283,8 +283,9 @@ function createStore<
         case "unavailable":
           throw new UnavailableError("Built-in AI model is unavailable");
         case "error":
+          // One-hop unwrap: surface the original rejection, not the BuiltInAIError wrapper.
           throw new NotReadyError("Built-in AI is in an error state", {
-            cause: snapshot.error,
+            cause: snapshot.error?.cause ?? snapshot.error,
           });
         case "ready": {
           const merged = mergeSignals(controller.signal, callerSignal);
@@ -375,6 +376,8 @@ export function useLifecycle<
     | AINamespace<Options, Instance>
     | undefined;
 
+  // setState-in-render to collapse shallow-equal options to a stable reference
+  // (react.dev "store info from previous renders"); the effect re-runs only on real changes.
   const [stableOptions, setStableOptions] = useState<Options | undefined>(
     options,
   );

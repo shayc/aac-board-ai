@@ -55,10 +55,7 @@ export {
 
 export {
   useProofreader,
-  type CorrectionType,
   type ProofreadCallOptions,
-  type ProofreadCorrection,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
-  type ProofreadResult,
 } from "./hooks/useProofreader.ts";
