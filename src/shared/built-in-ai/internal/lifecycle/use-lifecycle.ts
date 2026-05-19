@@ -1,6 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import { createStore } from "./store.ts";
-import type { AINamespace, DestroyableInstance } from "./types.ts";
+import { getNamespace } from "./types.ts";
 
 function shallowEqualOptions<T extends object>(
   a: T | undefined,
@@ -40,14 +41,18 @@ function useStableOptions<T extends object>(
 /** Shared lifecycle for every built-in AI namespace. Function refs are stable across renders. */
 export function useLifecycle<
   Options extends object,
-  Instance extends DestroyableInstance,
->(globalName: string, options: Options | undefined) {
+  Instance extends DestroyableModel,
+>(
+  globalName: BuiltInAIName,
+  options: Options | undefined,
+  readQuota?: (instance: Instance) => number,
+) {
   const stableOptions = useStableOptions(options);
-  const namespace = (globalThis as Record<string, unknown>)[globalName] as
-    | AINamespace<Options, Instance>
-    | undefined;
+  const namespace = getNamespace<Options, Instance>(globalName);
 
-  const [store] = useState(() => createStore<Options, Instance>(globalName));
+  const [store] = useState(() =>
+    createStore<Options, Instance>(globalName, readQuota),
+  );
 
   useEffect(() => {
     store.start(namespace, stableOptions);

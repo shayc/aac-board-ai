@@ -3,20 +3,18 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../../errors.ts";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
 } from "../progress-store.ts";
-import type { AINamespace, DestroyableInstance } from "./types.ts";
-
-function hasUserActivation(): boolean {
-  return navigator.userActivation?.isActive ?? false;
-}
+import { hasUserActivation } from "../user-activation.ts";
+import { getNamespace } from "./types.ts";
 
 export interface CreateInstanceOptions<O extends object> {
   /** Built-in AI global namespace name (`"Translator"`, `"Rewriter"`, …). */
-  name: string;
+  name: BuiltInAIName;
   /** Browser `create()` options, forwarded verbatim. */
   options: O | undefined;
   /** Cancels both the (optional) download and `namespace.create()`. */
@@ -39,13 +37,11 @@ export interface CreateInstanceOptions<O extends object> {
  */
 export async function createInstance<
   O extends object,
-  I extends DestroyableInstance,
+  I extends DestroyableModel,
 >(params: CreateInstanceOptions<O>): Promise<I & AsyncDisposable> {
   const { name, options, signal, onProgress } = params;
 
-  const namespace = (globalThis as Record<string, unknown>)[name] as
-    | AINamespace<O, I>
-    | undefined;
+  const namespace = getNamespace<O, I>(name);
   if (!namespace) {
     throw new UnsupportedError();
   }
@@ -80,7 +76,7 @@ export async function createInstance<
     });
     const disposable = instance as I & Partial<AsyncDisposable>;
     disposable[Symbol.asyncDispose] ??= () =>
-      Promise.resolve(disposable.destroy?.());
+      Promise.resolve(disposable.destroy());
     return disposable as I & AsyncDisposable;
   } finally {
     if (key) {

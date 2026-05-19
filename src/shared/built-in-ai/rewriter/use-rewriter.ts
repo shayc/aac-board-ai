@@ -4,41 +4,16 @@ import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../types.ts";
 
 /**
- * Options for {@link useRewriter}. Mirrors `Rewriter.create()`. Compared
- * shallowly — memoize array values to avoid spurious re-creation.
+ * Options for {@link useRewriter}. Mirrors `Rewriter.create()` minus the
+ * hook-managed `signal` and `monitor`. Compared shallowly — memoize array
+ * values to avoid spurious re-creation.
  *
  * @see https://developer.chrome.com/docs/ai/rewriter-api
  */
-export interface RewriterOptions {
-  /** Voice adjustment relative to the input. `"as-is"` preserves the original tone. */
-  tone?: "as-is" | "more-formal" | "more-casual";
-  /** Output format. `"as-is"` preserves the input's format. */
-  format?: "as-is" | "plain-text" | "markdown";
-  /** Length adjustment relative to the input. */
-  length?: "as-is" | "shorter" | "longer";
-  /** Context shared across every call on this instance. */
-  sharedContext?: string;
-  /**
-   * BCP-47 tags of input languages this instance will receive. Affects
-   * `availability()` — unsupported languages can make the model unavailable.
-   */
-  expectedInputLanguages?: readonly string[];
-  /**
-   * BCP-47 tags of context languages this instance will receive. Affects
-   * `availability()` — unsupported languages can make the model unavailable.
-   */
-  expectedContextLanguages?: readonly string[];
-  /** BCP-47 tag of the desired output language. */
-  outputLanguage?: string;
-}
+export type RewriterOptions = Omit<RewriterCreateOptions, "signal" | "monitor">;
 
 /** Per-call options for {@link useRewriter} action methods. */
-export interface RewriteCallOptions {
-  /** Context specific to this call, in addition to `sharedContext`. */
-  context?: string;
-  /** Cancels this call only; does not destroy the shared instance. */
-  signal?: AbortSignal;
-}
+export type RewriteCallOptions = RewriterRewriteOptions;
 
 /**
  * Return value of {@link useRewriter}. Extends {@link BaseHookReturn} with the
@@ -95,7 +70,11 @@ export interface RewriterHookReturn extends BaseHookReturn {
  */
 export function useRewriter(options?: RewriterOptions): RewriterHookReturn {
   const { status, progress, error, prepare, inputQuota, acquire } =
-    useLifecycle<RewriterOptions, Rewriter>("Rewriter", options);
+    useLifecycle<RewriterOptions, Rewriter>(
+      "Rewriter",
+      options,
+      (instance) => instance.inputQuota,
+    );
 
   const [actions] = useState(() => ({
     async rewrite(input: string, opts?: RewriteCallOptions) {

@@ -8,25 +8,10 @@ import type { BaseHookReturn } from "../types.ts";
  *
  * @see https://developer.chrome.com/docs/ai/proofreader-api
  */
-export interface ProofreaderOptions {
-  /** Tag each correction with its kind (spelling, grammar, …). */
-  includeCorrectionTypes?: boolean;
-  /** Include a human-readable rationale on each correction. */
-  includeCorrectionExplanations?: boolean;
-  /** BCP-47 tag of the language used for explanations. */
-  correctionExplanationLanguage?: string;
-  /**
-   * BCP-47 tags of input languages this instance will receive. Affects
-   * `availability()` — unsupported languages can make the model unavailable.
-   */
-  expectedInputLanguages?: readonly string[];
-}
+export type ProofreaderOptions = ProofreaderCreateCoreOptions;
 
 /** Per-call options for {@link useProofreader} action methods. */
-export interface ProofreadCallOptions {
-  /** Cancels this call only; does not destroy the shared instance. */
-  signal?: AbortSignal;
-}
+export type ProofreadCallOptions = ProofreaderProofreadOptions;
 
 /**
  * Return value of {@link useProofreader}. Extends {@link BaseHookReturn} with
