@@ -2,24 +2,72 @@ import { useState } from "react";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
 
+/**
+ * Options for {@link useProofreader}. Mirrors `Proofreader.create()` options.
+ * Memoize `expectedInputLanguages` — options are compared shallowly to drive
+ * re-creation.
+ *
+ * @see https://developer.chrome.com/docs/ai/proofreader-api
+ */
 export interface ProofreaderOptions {
+  /** Tag each correction with its kind (spelling, grammar, …). */
   includeCorrectionTypes?: boolean;
+  /** Include a human-readable rationale on each correction. */
   includeCorrectionExplanations?: boolean;
+  /** BCP-47 tag of the language used for explanations. */
   correctionExplanationLanguage?: string;
+  /** BCP-47 tags of input languages the model should expect. */
   expectedInputLanguages?: readonly string[];
 }
 
+/** Per-call options for {@link useProofreader} action methods. */
 export interface ProofreadCallOptions {
+  /** Cancels this call only; does not destroy the shared instance. */
   signal?: AbortSignal;
 }
 
+/**
+ * Return value of {@link useProofreader}. Extends {@link BaseHookReturn} with
+ * the Proofreader action method.
+ *
+ * Unlike the other hooks, this surface omits `measureInput` and `inputQuota`:
+ * the underlying browser API exposes neither.
+ */
 export interface ProofreaderHookReturn extends BaseHookReturn {
+  /**
+   * Proofreads `input` and resolves with the browser's `ProofreadResult`.
+   * Streaming is not supported by the underlying API.
+   *
+   * @throws See {@link BaseHookReturn.prepare}.
+   */
   proofread: (
     input: string,
     options?: ProofreadCallOptions,
   ) => Promise<ProofreadResult>;
 }
 
+/**
+ * React hook around the browser's [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api).
+ * See {@link BaseHookReturn} for the lifecycle and gating rules.
+ *
+ * @example
+ * ```tsx
+ * function Proof({ text }: { text: string }) {
+ *   const proofreader = useProofreader({ includeCorrectionTypes: true });
+ *   return (
+ *     <button
+ *       disabled={proofreader.status === "downloading"}
+ *       onClick={async () => {
+ *         const result = await proofreader.proofread(text);
+ *         setCorrections(result.corrections);
+ *       }}
+ *     >
+ *       Proofread
+ *     </button>
+ *   );
+ * }
+ * ```
+ */
 export function useProofreader(
   options?: ProofreaderOptions,
 ): ProofreaderHookReturn {
