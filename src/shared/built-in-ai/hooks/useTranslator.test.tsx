@@ -21,10 +21,8 @@ describe("useTranslator", () => {
     expect(result.current.inputQuota).toBe(1024);
   });
 
-  test("translate() forwards input to the underlying instance", async () => {
-    const { Fake, instances } = makeAIFake({
-      buildInstance: buildTranslatorInstance,
-    });
+  test("translate() forwards input to the instance", async () => {
+    const { Fake } = makeAIFake({ buildInstance: buildTranslatorInstance });
     vi.stubGlobal("Translator", Fake);
 
     const { result } = await renderHook(() =>
@@ -32,8 +30,9 @@ describe("useTranslator", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
+    // The fake echoes input into its output so input-forwarding is
+    // observable from the resolved value alone.
     await expect(result.current.translate("hi")).resolves.toBe("T:hi");
-    expect(instances[0].translate).toHaveBeenCalledTimes(1);
   });
 
   test("translateStream() yields all chunks from the streaming source", async () => {

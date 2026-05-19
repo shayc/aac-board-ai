@@ -143,7 +143,6 @@ describe("useLifecycle", () => {
       useLifecycle<TestOptions, TestInstance>(NAMESPACE, undefined),
     );
 
-    // Wait for availability() to resolve, then assert the state holds.
     await vi.waitFor(() => expect(Fake.availability).toHaveBeenCalledTimes(1));
     expect(result.current.status).toBe("idle");
     expect(create).not.toHaveBeenCalled();
@@ -494,8 +493,6 @@ describe("useLifecycle", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // Pass a fresh object with the same content — shallow-equality should
-    // suppress the re-init.
     await rerender({ mode: "a" });
 
     expect(create).toHaveBeenCalledTimes(1);
@@ -560,7 +557,6 @@ describe("useLifecycle", () => {
       (inst) => inst.destroy.mock.calls.length === 0,
     );
     expect(live).toHaveLength(1);
-    // And no in-flight creation should have been orphaned.
     expect(create.mock.calls.length).toBeGreaterThanOrEqual(1);
   });
 

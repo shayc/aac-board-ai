@@ -9,6 +9,15 @@ afterEach(() => {
 });
 
 describe("useProofreader", () => {
+  test("reaches ready", async () => {
+    const { Fake } = makeAIFake({ buildInstance: buildProofreaderInstance });
+    vi.stubGlobal("Proofreader", Fake);
+
+    const { result } = await renderHook(() => useProofreader());
+
+    await vi.waitFor(() => expect(result.current.status).toBe("ready"));
+  });
+
   test("proofread() forwards input and returns a ProofreadResult from the instance", async () => {
     const { Fake } = makeAIFake({ buildInstance: buildProofreaderInstance });
     vi.stubGlobal("Proofreader", Fake);
@@ -25,6 +34,18 @@ describe("useProofreader", () => {
       startIndex: 0,
       endIndex: 5,
       correction: "Hello",
+    });
+  });
+
+  test("ProofreaderHookReturn omits inputQuota and measureInput (compile-time)", () => {
+    // Arrow wrapper keeps the hook out of runtime; tsc still type-checks the
+    // member accesses below and fires @ts-expect-error if either is present.
+    void (() => {
+      const ret = useProofreader();
+      // @ts-expect-error - inputQuota is not part of ProofreaderHookReturn
+      void ret.inputQuota;
+      // @ts-expect-error - measureInput is not part of ProofreaderHookReturn
+      void ret.measureInput;
     });
   });
 });

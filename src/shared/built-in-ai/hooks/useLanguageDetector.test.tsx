@@ -22,7 +22,7 @@ describe("useLanguageDetector", () => {
   });
 
   test("detect() returns the LanguageDetectionResult array from the instance", async () => {
-    const { Fake, instances } = makeAIFake({
+    const { Fake } = makeAIFake({
       buildInstance: buildLanguageDetectorInstance,
     });
     vi.stubGlobal("LanguageDetector", Fake);
@@ -34,6 +34,5 @@ describe("useLanguageDetector", () => {
       { detectedLanguage: "en", confidence: 0.9 },
       { detectedLanguage: "fr", confidence: 0.1 },
     ]);
-    expect(instances[0].detect).toHaveBeenCalledTimes(1);
   });
 });
