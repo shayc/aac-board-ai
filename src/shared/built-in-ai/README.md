@@ -1,30 +1,30 @@
 # `built-in-ai`
 
-A thin React layer over the browser's [Built-in AI](https://developer.chrome.com/docs/ai/built-in) APIs — Gemini Nano on Chrome, Phi 4 Mini on Edge. Six hooks plus a few helpers, all sharing one lifecycle state machine.
+A thin React layer over the browser's [Built-in AI](https://developer.chrome.com/docs/ai/built-in) APIs — Gemini Nano on Chrome, Phi 4 Mini on Edge. Three hooks plus a few helpers, all sharing one lifecycle state machine.
 
 ```ts
-import { useSummarizer } from "@shared/built-in-ai";
+import { useTranslator } from "@shared/built-in-ai";
 ```
 
 ## Hooks
 
-| Hook                  | Underlying API                                                                   |
-| --------------------- | -------------------------------------------------------------------------------- |
-| `useSummarizer`       | [Summarizer API](https://developer.chrome.com/docs/ai/summarizer-api)            |
-| `useWriter`           | [Writer API](https://developer.chrome.com/docs/ai/writer-api)                    |
-| `useRewriter`         | [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)                |
-| `useTranslator`       | [Translator API](https://developer.chrome.com/docs/ai/translator-api)            |
-| `useLanguageDetector` | [Language Detector API](https://developer.chrome.com/docs/ai/language-detection) |
-| `useProofreader`      | [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)          |
+| Hook             | Underlying API                                                          |
+| ---------------- | ----------------------------------------------------------------------- |
+| `useRewriter`    | [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)       |
+| `useTranslator`  | [Translator API](https://developer.chrome.com/docs/ai/translator-api)   |
+| `useProofreader` | [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api) |
 
-Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `summarize`, `summarizeStream`, `measureInput`).
+Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `translate`, `translateStream`, `measureInput`).
 
 `useProofreader` is the one exception: the underlying API exposes neither `measureInputUsage` nor `inputQuota`, so its hook return omits `measureInput` and `inputQuota`.
 
 ## Lifecycle
 
 ```ts
-const { status, progress, error, prepare } = useSummarizer({ type: "tldr" });
+const { status, progress, error, prepare } = useTranslator({
+  sourceLanguage: "en",
+  targetLanguage: "es",
+});
 ```
 
 `status` is always one of:
@@ -42,26 +42,29 @@ Action methods are gated by the lifecycle — they throw `UnsupportedError`, `Un
 
 ```tsx
 function Demo() {
-  const summarizer = useSummarizer({ length: "short" });
+  const translator = useTranslator({
+    sourceLanguage: "en",
+    targetLanguage: "es",
+  });
 
   // 1. Guard against browsers/devices that can't run the model.
-  if (summarizer.status === "unsupported") return <p>Not supported.</p>;
-  if (summarizer.status === "unavailable") return <p>Not available.</p>;
+  if (translator.status === "unsupported") return <p>Not supported.</p>;
+  if (translator.status === "unavailable") return <p>Not available.</p>;
 
   return (
     <button
       // 2. Block re-entry while the model is downloading.
-      disabled={summarizer.status === "downloading"}
+      disabled={translator.status === "downloading"}
       onClick={async () => {
         // 3. The click is a user activation, so the hook is allowed to start
         //    the download here if status was "idle"; otherwise it runs at once.
-        const out = await summarizer.summarize("…long text…");
+        const out = await translator.translate("…some text…");
         console.log(out);
       }}
     >
-      {summarizer.status === "ready"
-        ? "Summarize"
-        : `Prepare (${(summarizer.progress * 100) | 0}%)`}
+      {translator.status === "ready"
+        ? "Translate"
+        : `Prepare (${(translator.progress * 100) | 0}%)`}
     </button>
   );
 }
@@ -70,7 +73,7 @@ function Demo() {
 Streaming:
 
 ```ts
-for await (const chunk of summarizer.summarizeStream(text, { signal })) {
+for await (const chunk of translator.translateStream(text, { signal })) {
   emit(chunk);
 }
 ```
@@ -81,7 +84,7 @@ Options are compared by **shallow per-key equality**. Memoize array-valued optio
 
 ## Errors
 
-Lifecycle gating throws `BuiltInAIError` subclasses (table below). Action methods (`translate`, `summarize`, …) pass the browser API's own rejections through unchanged — most commonly an `AbortError` `DOMException` when a `signal` fires. When the lifecycle wraps a browser rejection into `"error"` state, the original error is preserved as `error.cause`.
+Lifecycle gating throws `BuiltInAIError` subclasses (table below). Action methods (`translate`, `rewrite`, …) pass the browser API's own rejections through unchanged — most commonly an `AbortError` `DOMException` when a `signal` fires. When the lifecycle wraps a browser rejection into `"error"` state, the original error is preserved as `error.cause`.
 
 | Error                   | What to do                                                                                                                    |
 | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -114,4 +117,4 @@ A per-call `signal` cancels the _caller's_ wait and the underlying action call, 
   `.destroy()` is still exposed for callers that need to release the model before scope exit. Because `createTranslator` requires a user activation when a download is needed, prefer calling it from an event handler (or pre-warm via a hook before the call site is reached).
 
 - `useDownloadProgress(prefix)` — highest in-flight progress (`0..1`) across all instances matching a namespace prefix (e.g. `"Translator"` aggregates every language pair currently downloading).
-- `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Summarizer"`, etc.).
+- `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`).

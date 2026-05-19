@@ -16,7 +16,7 @@ import {
  * variant.
  *
  * @param prefix - Progress key or prefix. A namespace name (e.g. `"Translator"`,
- *   `"Summarizer"`) aggregates every instance of that namespace.
+ *   `"Rewriter"`) aggregates every instance of that namespace.
  * @returns Highest progress value in `[0, 1]` among matching keys, or `0` when
  *   no download is in flight.
  *

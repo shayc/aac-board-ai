@@ -18,20 +18,6 @@ export { isSupported, type BuiltInAIName } from "./namespaces.ts";
 export type { BaseHookReturn, Status } from "./internal/types.ts";
 
 export {
-  useSummarizer,
-  type SummarizeCallOptions,
-  type SummarizerHookReturn,
-  type SummarizerOptions,
-} from "./hooks/useSummarizer.ts";
-
-export {
-  useWriter,
-  type WriteCallOptions,
-  type WriterHookReturn,
-  type WriterOptions,
-} from "./hooks/useWriter.ts";
-
-export {
   useRewriter,
   type RewriteCallOptions,
   type RewriterHookReturn,
@@ -44,14 +30,6 @@ export {
   type TranslatorHookReturn,
   type TranslatorOptions,
 } from "./hooks/useTranslator.ts";
-
-export {
-  useLanguageDetector,
-  type DetectCallOptions,
-  type LanguageDetectionResult,
-  type LanguageDetectorHookReturn,
-  type LanguageDetectorOptions,
-} from "./hooks/useLanguageDetector.ts";
 
 export {
   useProofreader,

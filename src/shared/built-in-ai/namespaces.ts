@@ -2,17 +2,11 @@
  * Identifier of a built-in AI global namespace.
  *
  * Each value corresponds to a global object the browser exposes when its
- * matching API is enabled (`Translator`, `Summarizer`, …).
+ * matching API is enabled (`Translator`, `Rewriter`, `Proofreader`).
  *
  * @see https://developer.chrome.com/docs/ai/built-in
  */
-export type BuiltInAIName =
-  | "Translator"
-  | "Rewriter"
-  | "Proofreader"
-  | "Summarizer"
-  | "Writer"
-  | "LanguageDetector";
+export type BuiltInAIName = "Translator" | "Rewriter" | "Proofreader";
 
 /**
  * Returns `true` when the global namespace for `name` is defined on this host.
