@@ -1,5 +1,8 @@
-import { useTranslator } from "@shared/ai/useTranslator";
-import { getPrimaryLanguage } from "@shared/language/locale";
+import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
+import {
+  getPrimaryLanguage,
+  normalizeLocaleCode,
+} from "@shared/language/locale";
 import { useLanguage } from "@shared/language/useLanguage";
 import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
@@ -19,18 +22,18 @@ export function useBoardTranslation({
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { language } = useLanguage();
-  const { createTranslator } = useTranslator();
 
   const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
 
   useEffect(() => {
-    let cancelled = false;
+    if (!board) {
+      return;
+    }
 
-    const translateBoard = async () => {
-      if (!board) {
-        return;
-      }
+    const controller = new AbortController();
+    const { signal } = controller;
 
+    const run = async () => {
       const boardLanguage = getPrimaryLanguage(board.locale ?? "en");
 
       if (boardLanguage === language) {
@@ -48,38 +51,54 @@ export function useBoardTranslation({
         return;
       }
 
-      const translator = await createTranslator({
-        sourceLanguage: boardLanguage,
-        targetLanguage: language,
-      });
+      const sourceLanguage = normalizeLocaleCode(boardLanguage);
+      const targetLanguage = normalizeLocaleCode(language);
 
-      if (cancelled) {
-        return;
+      // Imperative createTranslator (vs. useTranslator) because we only know
+      // the language pair after checking for a cached translation above.
+      try {
+        await using translator = await createTranslator({
+          sourceLanguage,
+          targetLanguage,
+          signal,
+        });
+        if (signal.aborted) {
+          return;
+        }
+
+        const phrases = collectSourcePhrases(board);
+        const translations = await translatePhrases(
+          phrases,
+          translator,
+          signal,
+        );
+        if (signal.aborted) {
+          return;
+        }
+
+        void persistTranslations(setId, board.id, language, translations);
+        setTranslatedBoard(applyTranslations(board, translations));
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+        // Lifecycle gating (unsupported / unavailable / no-activation): the
+        // effect runs outside a user gesture, so a required download cannot
+        // start. Fall back to the untranslated board.
+        if (error instanceof BuiltInAIError) {
+          setTranslatedBoard(board);
+          return;
+        }
+        console.warn("Board translation failed:", error);
       }
-
-      if (!translator) {
-        setTranslatedBoard(board);
-        return;
-      }
-
-      const phrases = collectSourcePhrases(board);
-      const translations = await translatePhrases(phrases, translator);
-
-      if (cancelled) {
-        return;
-      }
-
-      void persistTranslations(setId, board.id, language, translations);
-
-      setTranslatedBoard(applyTranslations(board, translations));
     };
 
-    void translateBoard();
+    void run();
 
     return () => {
-      cancelled = true;
+      controller.abort();
     };
-  }, [createTranslator, language, board, setId]);
+  }, [language, board, setId]);
 
   return {
     translatedBoard,
@@ -129,10 +148,11 @@ function collectSourcePhrases(board: Board): Set<string> {
 async function translatePhrases(
   phrases: Set<string>,
   translator: Translator,
+  signal: AbortSignal,
 ): Promise<Record<string, string>> {
   const entries = await Promise.all(
     Array.from(phrases).map(async (phrase) => {
-      const translated = await translator.translate(phrase);
+      const translated = await translator.translate(phrase, { signal });
       return [phrase, translated] as const;
     }),
   );

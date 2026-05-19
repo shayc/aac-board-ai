@@ -76,7 +76,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
           onHomeClick={navigation.goHome}
         />
 
-        {suggestions.isAvailable && (
+        {suggestions.isSupported && (
           <SuggestionBar
             suggestions={suggestions.phrases}
             tone={suggestions.tone}
