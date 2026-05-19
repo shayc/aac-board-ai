@@ -51,17 +51,20 @@ function wrap(error: unknown): BuiltInAIError {
 }
 
 function readQuota(instance: unknown): number {
-  const value = (instance as Record<PropertyKey, unknown>).inputQuota;
+  const value = (instance as { inputQuota?: unknown }).inputQuota;
   return typeof value === "number" ? value : 0;
 }
 
-function safeDestroy(instance: DestroyableInstance | null | undefined): void {
-  if (instance) {
-    try {
-      instance.destroy?.();
-    } catch {
-      /* swallow */
-    }
+function destroyQuietly(
+  instance: DestroyableInstance | null | undefined,
+): void {
+  if (!instance) {
+    return;
+  }
+  try {
+    instance.destroy?.();
+  } catch {
+    // Destroy is best-effort during teardown; a thrown error has no recipient.
   }
 }
 
@@ -95,8 +98,8 @@ function createStore<
   let mounted = false;
 
   function notify(): void {
-    for (const l of listeners) {
-      l();
+    for (const listener of listeners) {
+      listener();
     }
   }
 
@@ -105,11 +108,14 @@ function createStore<
     notify();
   }
 
-  function isCurrent(g: number): boolean {
-    return mounted && g === generation;
+  function isCurrent(expected: number): boolean {
+    return mounted && expected === generation;
   }
 
-  function startCreate(withMonitor: boolean, g: number): Promise<Instance> {
+  function startCreate(
+    withMonitor: boolean,
+    expected: number,
+  ): Promise<Instance> {
     const ns = namespace!;
     const opts = options;
     const signal = controller.signal;
@@ -117,10 +123,10 @@ function createStore<
 
     update({ status: "downloading", progress: 0 });
 
-    const monitor = withMonitor
-      ? (m: CreateMonitor) => {
-          m.addEventListener("downloadprogress", (event) => {
-            if (!isCurrent(g)) {
+    const monitorCallback = withMonitor
+      ? (monitor: CreateMonitor) => {
+          monitor.addEventListener("downloadprogress", (event) => {
+            if (!isCurrent(expected)) {
               return;
             }
             update({ progress: event.loaded });
@@ -134,7 +140,7 @@ function createStore<
     const promise = ns.create({
       ...opts!,
       signal,
-      monitor,
+      monitor: monitorCallback,
     });
     pending = promise;
     pendingCreate = promise;
@@ -144,8 +150,8 @@ function createStore<
         if (key) {
           clearDownloadProgress(key);
         }
-        if (!isCurrent(g)) {
-          safeDestroy(created);
+        if (!isCurrent(expected)) {
+          destroyQuietly(created);
           return;
         }
         instance = created;
@@ -162,7 +168,7 @@ function createStore<
         if (key) {
           clearDownloadProgress(key);
         }
-        if (!isCurrent(g)) {
+        if (!isCurrent(expected)) {
           return;
         }
         pending = null;
@@ -174,7 +180,7 @@ function createStore<
     return promise;
   }
 
-  function runChain(g: number): void {
+  function runAvailabilityChain(expected: number): void {
     const ns = namespace;
     if (!ns) {
       return;
@@ -182,7 +188,7 @@ function createStore<
     const opts = options;
     const chain = ns.availability(opts).then(
       (availability) => {
-        if (!isCurrent(g)) {
+        if (!isCurrent(expected)) {
           return;
         }
         if (availability === "unavailable") {
@@ -191,15 +197,17 @@ function createStore<
           return;
         }
         if (availability === "available") {
-          return startCreate(false, g).then(
+          return startCreate(false, expected).then(
             () => undefined,
             () => undefined,
           );
         }
+        // "downloadable" or "downloading": remain idle until the consumer
+        // calls prepare() or acquire() under a user activation.
         pending = null;
       },
       (error) => {
-        if (!isCurrent(g)) {
+        if (!isCurrent(expected)) {
           return;
         }
         pending = null;
@@ -231,7 +239,7 @@ function createStore<
       inputQuota: 0,
     };
     notify();
-    runChain(generation);
+    runAvailabilityChain(generation);
   }
 
   function stop(): void {
@@ -244,21 +252,22 @@ function createStore<
     }
     const toDestroy = instance;
     instance = null;
-    safeDestroy(toDestroy);
+    destroyQuietly(toDestroy);
   }
 
   async function awaitPending(
-    p: Promise<unknown>,
+    promise: Promise<unknown>,
     callerSignal: AbortSignal | undefined,
   ): Promise<void> {
     const merged = mergeSignals(controller.signal, callerSignal);
     try {
-      await raceAbort(p, merged);
+      await raceAbort(promise, merged);
     } catch (err) {
       if (merged.aborted) {
         throw err;
       }
-      // Underlying rejection has been classified into snapshot state already.
+      // Underlying rejections are already classified into snapshot state;
+      // only the caller's own abort needs to propagate out of awaitPending.
     }
   }
 
@@ -334,13 +343,15 @@ function createStore<
     }
   }
 
+  function subscribe(listener: () => void): () => void {
+    listeners.add(listener);
+    return () => {
+      listeners.delete(listener);
+    };
+  }
+
   return {
-    subscribe: (listener) => {
-      listeners.add(listener);
-      return () => {
-        listeners.delete(listener);
-      };
-    },
+    subscribe,
     getSnapshot: () => snapshot,
     prepare,
     acquire,
