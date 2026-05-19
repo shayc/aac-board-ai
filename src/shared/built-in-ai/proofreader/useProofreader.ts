@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { BaseHookReturn } from "./lifecycle/types.ts";
-import { useLifecycle } from "./lifecycle/useLifecycle.ts";
+import type { BaseHookReturn } from "../internal/types.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
 
 /**
  * Options for {@link useProofreader}. Mirrors `Proofreader.create()` options.

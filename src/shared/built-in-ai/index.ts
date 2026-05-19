@@ -6,34 +6,31 @@ export {
   UnsupportedError,
 } from "./errors.ts";
 
+export { isSupported, type BuiltInAIName } from "./is-supported.ts";
+
+export type { BaseHookReturn, Status } from "./internal/types.ts";
+
+export { useGlobalDownloadProgress } from "./internal/useGlobalDownloadProgress.ts";
+
 export {
   createTranslator,
   type CreateTranslatorOptions,
-} from "./create-translator.ts";
-
-export { useDownloadProgress } from "./useDownloadProgress.ts";
-
-export { isSupported, type BuiltInAIName } from "./is-supported.ts";
-
-export type { BaseHookReturn, Status } from "./lifecycle/types.ts";
+  useTranslator,
+  type TranslateCallOptions,
+  type TranslatorHookReturn,
+  type TranslatorOptions,
+} from "./translator/index.ts";
 
 export {
   useRewriter,
   type RewriteCallOptions,
   type RewriterHookReturn,
   type RewriterOptions,
-} from "./useRewriter.ts";
-
-export {
-  useTranslator,
-  type TranslateCallOptions,
-  type TranslatorHookReturn,
-  type TranslatorOptions,
-} from "./useTranslator.ts";
+} from "./rewriter/index.ts";
 
 export {
   useProofreader,
   type ProofreadCallOptions,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
-} from "./useProofreader.ts";
+} from "./proofreader/index.ts";

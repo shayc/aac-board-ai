@@ -29,11 +29,11 @@ export function clearDownloadProgress(key: string): void {
   notify();
 }
 
-export function snapshotProgressFor(prefix: string): number {
-  const sep = `${prefix}:`;
+export function snapshotProgressFor(prefix: string | undefined): number {
+  const sep = prefix === undefined ? undefined : `${prefix}:`;
   let max = 0;
   for (const [key, progress] of progressByKey) {
-    if (key !== prefix && !key.startsWith(sep)) {
+    if (sep !== undefined && key !== prefix && !key.startsWith(sep)) {
       continue;
     }
     if (progress > max) {

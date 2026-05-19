@@ -1,5 +1,5 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { shallowEqualOptions } from "../util/options-equality.ts";
+import { shallowEqualOptions } from "./options-equality.ts";
 import { createStore } from "./store.ts";
 import type { AINamespace, DestroyableInstance } from "./types.ts";
 

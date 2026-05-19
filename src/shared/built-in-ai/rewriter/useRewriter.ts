@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { BaseHookReturn } from "./lifecycle/types.ts";
-import { useLifecycle } from "./lifecycle/useLifecycle.ts";
-import { streamChunks } from "./util/stream.ts";
+import type { BaseHookReturn } from "../internal/types.ts";
+import { useLifecycle } from "../internal/useLifecycle.ts";
+import { streamChunks } from "../util/stream.ts";
 
 /**
  * Options for {@link useRewriter}. Mirrors `Rewriter.create()` options.

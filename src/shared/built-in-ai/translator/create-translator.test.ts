@@ -4,12 +4,12 @@ import {
   NoUserActivationError,
   UnavailableError,
   UnsupportedError,
-} from "./errors.ts";
+} from "../errors.ts";
 import {
   clearDownloadProgress,
   setDownloadProgress,
   snapshotProgressFor,
-} from "./lifecycle/progress-store.ts";
+} from "../internal/progress-store.ts";
 
 function setUserActivation(isActive: boolean): void {
   Object.defineProperty(navigator, "userActivation", {
