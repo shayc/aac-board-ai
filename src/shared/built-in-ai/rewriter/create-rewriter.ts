@@ -11,42 +11,19 @@ export interface CreateRewriterOptions extends RewriterOptions {
 }
 
 /**
- * Imperative `Rewriter` factory for call sites that decide options mid-flow and
- * can't drive a hook (e.g. queued rewrites, command palettes, one-shot scripts).
+ * Imperative `Rewriter` factory. Mirrors the {@link useRewriter} lifecycle for
+ * call sites that decide options mid-flow and can't render a hook (queued
+ * rewrites, command palettes, one-shot scripts).
  *
- * Mirrors the hook lifecycle exactly:
- *
- * - Throws `UnsupportedError` when the `Rewriter` namespace is missing.
- * - Throws `UnavailableError` when `availability()` reports `"unavailable"`.
- * - Throws `NoUserActivationError` when a download is required without a
- *   transient user activation. Call from a click or keypress handler, or
- *   pre-warm the model via `useRewriter`.
- * - Reports download progress through the same store `useGlobalDownloadProgress`
- *   reads from, so a hook elsewhere in the tree can render a global indicator.
- *
- * The result is `AsyncDisposable`: prefer `await using` so the instance is
- * released when scope exits. `.destroy()` is still exposed for callers that
- * need to release the model earlier.
- *
- * @param options - Rewriter options and an optional `AbortSignal`.
- * @returns A `Rewriter` instance with `Symbol.asyncDispose` attached.
+ * Throws {@link UnsupportedError}, {@link UnavailableError}, or
+ * {@link NoUserActivationError} — call from a user-activation handler when a
+ * download may be required, or pre-warm via {@link useRewriter}. The returned
+ * instance is `AsyncDisposable`; prefer `await using` to release on scope exit.
  *
  * @example
  * ```ts
- * async function rephrase(text: string, signal: AbortSignal) {
- *   try {
- *     await using rewriter = await createRewriter({
- *       tone: "more-formal",
- *       signal,
- *     });
- *     return await rewriter.rewrite(text);
- *   } catch (error) {
- *     if (error instanceof BuiltInAIError) {
- *       return null;
- *     }
- *     throw error;
- *   }
- * }
+ * await using rewriter = await createRewriter({ tone: "more-formal", signal });
+ * return await rewriter.rewrite(text);
  * ```
  */
 export async function createRewriter(

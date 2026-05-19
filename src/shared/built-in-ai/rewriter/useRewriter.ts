@@ -4,8 +4,8 @@ import { useLifecycle } from "../internal/lifecycle/useLifecycle.ts";
 import { streamChunks } from "../util/stream.ts";
 
 /**
- * Options for {@link useRewriter}. Mirrors `Rewriter.create()` options.
- * Memoize array values — options are compared shallowly to drive re-creation.
+ * Options for {@link useRewriter}. Mirrors `Rewriter.create()`. Compared
+ * shallowly — memoize array values to avoid spurious re-creation.
  *
  * @see https://developer.chrome.com/docs/ai/rewriter-api
  */
@@ -55,7 +55,11 @@ export interface RewriterHookReturn extends BaseHookReturn {
     input: string,
     options?: RewriteCallOptions,
   ) => AsyncIterable<string>;
-  /** Estimated usage of `input` against {@link inputQuota}. */
+  /**
+   * Estimated usage of `input` against {@link RewriterHookReturn.inputQuota}.
+   *
+   * @throws See {@link BaseHookReturn.prepare}.
+   */
   measureInput: (
     input: string,
     options?: RewriteCallOptions,

@@ -1,13 +1,13 @@
 /**
- * Base class for every error thrown by the lifecycle layer of this package.
- *
- * Use `instanceof BuiltInAIError` to distinguish library-thrown errors from
- * browser API rejections (e.g. `AbortError`) that pass through unchanged.
+ * Base class for every error thrown by this package's lifecycle. Use
+ * `instanceof BuiltInAIError` to separate library errors from browser API
+ * rejections (e.g. `AbortError`) that pass through unchanged.
  */
 export class BuiltInAIError extends Error {
   override name = "BuiltInAIError";
 }
 
+/** The built-in AI namespace (`Translator`, `Rewriter`, `Proofreader`) is not on `globalThis`. */
 export class UnsupportedError extends BuiltInAIError {
   override name = "UnsupportedError";
   constructor(
@@ -18,6 +18,7 @@ export class UnsupportedError extends BuiltInAIError {
   }
 }
 
+/** `availability()` reported the model can't run on this device. */
 export class UnavailableError extends BuiltInAIError {
   override name = "UnavailableError";
   constructor(
@@ -28,6 +29,7 @@ export class UnavailableError extends BuiltInAIError {
   }
 }
 
+/** A download was required but no transient user activation was present. */
 export class NoUserActivationError extends BuiltInAIError {
   override name = "NoUserActivationError";
   constructor(
@@ -38,6 +40,7 @@ export class NoUserActivationError extends BuiltInAIError {
   }
 }
 
+/** A prior `create()` rejected. Inspect `.cause` for the underlying browser rejection. */
 export class NotReadyError extends BuiltInAIError {
   override name = "NotReadyError";
   constructor(cause?: unknown) {

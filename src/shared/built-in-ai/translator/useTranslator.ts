@@ -4,11 +4,8 @@ import { useLifecycle } from "../internal/lifecycle/useLifecycle.ts";
 import { streamChunks } from "../util/stream.ts";
 
 /**
- * Options for {@link useTranslator}. The language pair identifies the instance:
- * changing either field re-enters the lifecycle for the new pair.
- *
- * Use {@link createTranslator} when the pair is decided mid-flow and a hook
- * cannot be rendered.
+ * Options for {@link useTranslator}. Changing either field destroys the
+ * current instance and re-enters the lifecycle for the new pair.
  *
  * @see https://developer.chrome.com/docs/ai/translator-api
  */
@@ -46,7 +43,11 @@ export interface TranslatorHookReturn extends BaseHookReturn {
     input: string,
     options?: TranslateCallOptions,
   ) => AsyncIterable<string>;
-  /** Estimated usage of `input` against {@link inputQuota}. */
+  /**
+   * Estimated usage of `input` against {@link TranslatorHookReturn.inputQuota}.
+   *
+   * @throws See {@link BaseHookReturn.prepare}.
+   */
   measureInput: (
     input: string,
     options?: TranslateCallOptions,

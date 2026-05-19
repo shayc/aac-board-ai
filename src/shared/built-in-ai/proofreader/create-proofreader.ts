@@ -11,42 +11,23 @@ export interface CreateProofreaderOptions extends ProofreaderOptions {
 }
 
 /**
- * Imperative `Proofreader` factory for call sites that decide options mid-flow
- * and can't drive a hook (e.g. queued passes, command palettes, one-shot scripts).
+ * Imperative `Proofreader` factory. Mirrors the {@link useProofreader}
+ * lifecycle for call sites that decide options mid-flow and can't render a
+ * hook (queued passes, command palettes, one-shot scripts).
  *
- * Mirrors the hook lifecycle exactly:
- *
- * - Throws `UnsupportedError` when the `Proofreader` namespace is missing.
- * - Throws `UnavailableError` when `availability()` reports `"unavailable"`.
- * - Throws `NoUserActivationError` when a download is required without a
- *   transient user activation. Call from a click or keypress handler, or
- *   pre-warm the model via `useProofreader`.
- * - Reports download progress through the same store `useGlobalDownloadProgress`
- *   reads from, so a hook elsewhere in the tree can render a global indicator.
- *
- * The result is `AsyncDisposable`: prefer `await using` so the instance is
- * released when scope exits. `.destroy()` is still exposed for callers that
- * need to release the model earlier.
- *
- * @param options - Proofreader options and an optional `AbortSignal`.
- * @returns A `Proofreader` instance with `Symbol.asyncDispose` attached.
+ * Throws {@link UnsupportedError}, {@link UnavailableError}, or
+ * {@link NoUserActivationError} — call from a user-activation handler when a
+ * download may be required, or pre-warm via {@link useProofreader}. The
+ * returned instance is `AsyncDisposable`; prefer `await using` to release on
+ * scope exit.
  *
  * @example
  * ```ts
- * async function proofread(text: string, signal: AbortSignal) {
- *   try {
- *     await using proofreader = await createProofreader({
- *       includeCorrectionTypes: true,
- *       signal,
- *     });
- *     return await proofreader.proofread(text);
- *   } catch (error) {
- *     if (error instanceof BuiltInAIError) {
- *       return null;
- *     }
- *     throw error;
- *   }
- * }
+ * await using proofreader = await createProofreader({
+ *   includeCorrectionTypes: true,
+ *   signal,
+ * });
+ * return await proofreader.proofread(text);
  * ```
  */
 export async function createProofreader(

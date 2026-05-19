@@ -1,6 +1,10 @@
 import type { BuiltInAIError } from "../../errors.ts";
 
-/** Lifecycle state of a built-in AI hook. */
+/**
+ * Lifecycle state of a built-in AI hook. Transitions: `idle` →
+ * `downloading` → `ready`, or one of the terminal states `unsupported` /
+ * `unavailable` / `error`.
+ */
 export type Status =
   | "unsupported"
   | "unavailable"
@@ -11,12 +15,19 @@ export type Status =
 
 /** Fields shared by every built-in AI hook return value. */
 export interface BaseHookReturn {
+  /** See {@link Status}. */
   status: Status;
   /** `0..1` while `status === "downloading"`; `0` otherwise. */
   progress: number;
-  /** Last lifecycle error; inspect `cause` for the underlying browser rejection. */
+  /** Last lifecycle error; inspect `.cause` for the underlying browser rejection. */
   error: BuiltInAIError | null;
-  /** Drives the state machine toward `"ready"`. Call from a user-activation handler. */
+  /**
+   * Drives the state machine toward `"ready"`. Call from a user-activation
+   * handler when a download may be required.
+   *
+   * @throws A {@link BuiltInAIError} subclass — `UnsupportedError`,
+   * `UnavailableError`, `NoUserActivationError`, or `NotReadyError`.
+   */
   prepare: () => Promise<void>;
 }
 

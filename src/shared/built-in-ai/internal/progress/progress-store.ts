@@ -44,10 +44,9 @@ export function snapshotProgressFor(prefix: string | undefined): number {
 }
 
 /**
- * Stable key for an instance distinguished by `options`. Empty options yield
- * just the namespace; non-empty options are JSON-appended so concurrent
- * instances don't collide. Keys are sorted so insertion order doesn't shard
- * the same logical options into distinct entries.
+ * Stable progress-store key for an instance distinguished by `options`. Keys
+ * are sorted before JSON encoding so insertion order doesn't shard the same
+ * logical options into separate entries.
  */
 export function buildProgressKey(
   globalName: string,

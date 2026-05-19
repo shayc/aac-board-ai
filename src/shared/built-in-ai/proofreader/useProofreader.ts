@@ -3,9 +3,8 @@ import type { BaseHookReturn } from "../internal/lifecycle/types.ts";
 import { useLifecycle } from "../internal/lifecycle/useLifecycle.ts";
 
 /**
- * Options for {@link useProofreader}. Mirrors `Proofreader.create()` options.
- * Memoize `expectedInputLanguages` — options are compared shallowly to drive
- * re-creation.
+ * Options for {@link useProofreader}. Mirrors `Proofreader.create()`. Compared
+ * shallowly — memoize `expectedInputLanguages` to avoid spurious re-creation.
  *
  * @see https://developer.chrome.com/docs/ai/proofreader-api
  */
