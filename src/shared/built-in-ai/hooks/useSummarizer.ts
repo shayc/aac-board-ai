@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
@@ -38,30 +39,30 @@ export function useSummarizer(
     options,
   );
 
-  async function summarize(input: string, opts?: SummarizeCallOptions) {
-    const { instance, signal } = await acquire(opts?.signal);
-    return instance.summarize(input, { context: opts?.context, signal });
-  }
+  const [actions] = useState(() => ({
+    async summarize(input: string, opts?: SummarizeCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
+      return instance.summarize(input, { context: opts?.context, signal });
+    },
+    async *summarizeStream(
+      input: string,
+      opts?: SummarizeCallOptions,
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.summarizeStreaming(input, {
+        context: opts?.context,
+        signal,
+      });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: SummarizeCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
+      return instance.measureInputUsage(input, {
+        context: opts?.context,
+        signal,
+      });
+    },
+  }));
 
-  async function* summarizeStream(
-    input: string,
-    opts?: SummarizeCallOptions,
-  ): AsyncIterable<string> {
-    const { instance, signal } = await acquire(opts?.signal);
-    const stream = instance.summarizeStreaming(input, {
-      context: opts?.context,
-      signal,
-    });
-    yield* streamChunks(stream, signal);
-  }
-
-  async function measureInput(input: string, opts?: SummarizeCallOptions) {
-    const { instance, signal } = await acquire(opts?.signal);
-    return instance.measureInputUsage(input, {
-      context: opts?.context,
-      signal,
-    });
-  }
-
-  return { ...lifecycle, summarize, summarizeStream, measureInput };
+  return { ...lifecycle, ...actions };
 }

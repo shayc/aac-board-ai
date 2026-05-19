@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useLifecycle } from "../internal/useLifecycle.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 
@@ -48,13 +49,15 @@ export function useProofreader(
     Proofreader
   >("Proofreader", options);
 
-  async function proofread(
-    input: string,
-    opts?: ProofreadCallOptions,
-  ): Promise<ProofreadResult> {
-    const { instance, signal } = await acquire(opts?.signal);
-    return instance.proofread(input, { signal });
-  }
+  const [actions] = useState(() => ({
+    async proofread(
+      input: string,
+      opts?: ProofreadCallOptions,
+    ): Promise<ProofreadResult> {
+      const { instance, signal } = await acquire(opts?.signal);
+      return instance.proofread(input, { signal });
+    },
+  }));
 
-  return { ...lifecycle, proofread };
+  return { ...lifecycle, ...actions };
 }

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { streamChunks } from "../internal/stream.ts";
 import type { BaseHookReturn } from "../internal/types.ts";
 import { useLifecycle } from "../internal/useLifecycle.ts";
@@ -33,30 +34,30 @@ export function useWriter(options?: WriterOptions): WriterHookReturn {
     options,
   );
 
-  async function write(input: string, opts?: WriteCallOptions) {
-    const { instance, signal } = await acquire(opts?.signal);
-    return instance.write(input, { context: opts?.context, signal });
-  }
+  const [actions] = useState(() => ({
+    async write(input: string, opts?: WriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
+      return instance.write(input, { context: opts?.context, signal });
+    },
+    async *writeStream(
+      input: string,
+      opts?: WriteCallOptions,
+    ): AsyncIterable<string> {
+      const { instance, signal } = await acquire(opts?.signal);
+      const stream = instance.writeStreaming(input, {
+        context: opts?.context,
+        signal,
+      });
+      yield* streamChunks(stream, signal);
+    },
+    async measureInput(input: string, opts?: WriteCallOptions) {
+      const { instance, signal } = await acquire(opts?.signal);
+      return instance.measureInputUsage(input, {
+        context: opts?.context,
+        signal,
+      });
+    },
+  }));
 
-  async function* writeStream(
-    input: string,
-    opts?: WriteCallOptions,
-  ): AsyncIterable<string> {
-    const { instance, signal } = await acquire(opts?.signal);
-    const stream = instance.writeStreaming(input, {
-      context: opts?.context,
-      signal,
-    });
-    yield* streamChunks(stream, signal);
-  }
-
-  async function measureInput(input: string, opts?: WriteCallOptions) {
-    const { instance, signal } = await acquire(opts?.signal);
-    return instance.measureInputUsage(input, {
-      context: opts?.context,
-      signal,
-    });
-  }
-
-  return { ...lifecycle, write, writeStream, measureInput };
+  return { ...lifecycle, ...actions };
 }
