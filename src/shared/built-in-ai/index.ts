@@ -8,33 +8,39 @@ export {
 
 export { isSupported, type BuiltInAIName } from "./is-supported.ts";
 
-export type { BaseHookReturn, Status } from "./internal/types.ts";
+export type { BaseHookReturn, Status } from "./internal/lifecycle/types.ts";
 
-export { useGlobalDownloadProgress } from "./internal/useGlobalDownloadProgress.ts";
+export { useGlobalDownloadProgress } from "./internal/progress/useGlobalDownloadProgress.ts";
 
 export {
   createTranslator,
   type CreateTranslatorOptions,
+} from "./translator/create-translator.ts";
+export {
   useTranslator,
   type TranslateCallOptions,
   type TranslatorHookReturn,
   type TranslatorOptions,
-} from "./translator/index.ts";
+} from "./translator/useTranslator.ts";
 
 export {
   createRewriter,
   type CreateRewriterOptions,
+} from "./rewriter/create-rewriter.ts";
+export {
   useRewriter,
   type RewriteCallOptions,
   type RewriterHookReturn,
   type RewriterOptions,
-} from "./rewriter/index.ts";
+} from "./rewriter/useRewriter.ts";
 
 export {
   createProofreader,
   type CreateProofreaderOptions,
+} from "./proofreader/create-proofreader.ts";
+export {
   useProofreader,
   type ProofreadCallOptions,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
-} from "./proofreader/index.ts";
+} from "./proofreader/useProofreader.ts";

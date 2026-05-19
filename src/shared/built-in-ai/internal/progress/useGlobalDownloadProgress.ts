@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { BuiltInAIName } from "../is-supported.ts";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import { snapshotProgressFor, subscribeProgress } from "./progress-store.ts";
 
 /**

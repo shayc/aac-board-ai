@@ -1,4 +1,4 @@
-import type { BuiltInAIError } from "../errors.ts";
+import type { BuiltInAIError } from "../../errors.ts";
 
 /** Lifecycle state of a built-in AI hook. */
 export type Status =

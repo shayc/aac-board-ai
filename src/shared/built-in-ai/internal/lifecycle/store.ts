@@ -4,11 +4,14 @@ import {
   NotReadyError,
   UnavailableError,
   UnsupportedError,
-} from "../errors.ts";
-import { abortError, mergeSignals, raceAbort } from "../util/signal.ts";
-import { hasUserActivation } from "./activation.ts";
+} from "../../errors.ts";
+import { abortError, mergeSignals, raceAbort } from "../../util/signal.ts";
 import { createInstance } from "./create-instance.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
+
+function hasUserActivation(): boolean {
+  return navigator.userActivation?.isActive ?? false;
+}
 
 export interface Snapshot {
   status: Status;

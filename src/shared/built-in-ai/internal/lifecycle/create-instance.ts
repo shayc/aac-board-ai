@@ -2,14 +2,17 @@ import {
   NoUserActivationError,
   UnavailableError,
   UnsupportedError,
-} from "../errors.ts";
-import { hasUserActivation } from "./activation.ts";
+} from "../../errors.ts";
 import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-} from "./progress-store.ts";
+} from "../progress/progress-store.ts";
 import type { AINamespace, DestroyableInstance } from "./types.ts";
+
+function hasUserActivation(): boolean {
+  return navigator.userActivation?.isActive ?? false;
+}
 
 export interface CreateInstanceOptions<O extends object> {
   /** Built-in AI global namespace name (`"Translator"`, `"Rewriter"`, …). */

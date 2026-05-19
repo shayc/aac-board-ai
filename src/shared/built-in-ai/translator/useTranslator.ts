@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { BaseHookReturn } from "../internal/types.ts";
-import { useLifecycle } from "../internal/useLifecycle.ts";
+import type { BaseHookReturn } from "../internal/lifecycle/types.ts";
+import { useLifecycle } from "../internal/lifecycle/useLifecycle.ts";
 import { streamChunks } from "../util/stream.ts";
 
 /**
