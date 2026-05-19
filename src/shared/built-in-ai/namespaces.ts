@@ -1,13 +1,10 @@
-export interface BuiltInAINamespaces {
-  Translator: typeof Translator;
-  Rewriter: typeof Rewriter;
-  Proofreader: typeof Proofreader;
-  Summarizer: typeof Summarizer;
-  Writer: typeof Writer;
-  LanguageDetector: typeof LanguageDetector;
-}
-
-export type BuiltInAIName = keyof BuiltInAINamespaces;
+export type BuiltInAIName =
+  | "Translator"
+  | "Rewriter"
+  | "Proofreader"
+  | "Summarizer"
+  | "Writer"
+  | "LanguageDetector";
 
 /** True when `name`'s global namespace exists and is defined. */
 export function isSupported(name: BuiltInAIName): boolean {

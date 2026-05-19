@@ -93,8 +93,10 @@ function createStore<
   let controller = new AbortController();
   let generation = 0;
   let instance: Instance | null = null;
+  // Tracks the in-flight availability call OR create call (mutually exclusive).
+  // During `"downloading"` it is always the create promise; during `"idle"` with
+  // availability mid-flight it is the availability chain.
   let pending: Promise<unknown> | null = null;
-  let pendingCreate: Promise<Instance> | null = null;
   let mounted = false;
 
   function notify(): void {
@@ -148,7 +150,6 @@ function createStore<
       monitor: monitorCallback,
     });
     pending = promise;
-    pendingCreate = promise;
 
     promise.then(
       (created) => {
@@ -161,7 +162,6 @@ function createStore<
         }
         instance = created;
         pending = null;
-        pendingCreate = null;
         update({
           status: "ready",
           progress: 0,
@@ -177,7 +177,6 @@ function createStore<
           clearDownloadProgress(key);
         }
         pending = null;
-        pendingCreate = null;
         update({ status: "error", error: wrap(error) });
       },
     );
@@ -234,7 +233,6 @@ function createStore<
     mounted = true;
     instance = null;
     pending = null;
-    pendingCreate = null;
     snapshot = {
       status: nextNamespace ? "idle" : "unsupported",
       progress: 0,
@@ -249,7 +247,6 @@ function createStore<
     mounted = false;
     controller.abort(abortError("lifecycle reset"));
     pending = null;
-    pendingCreate = null;
     if (progressKey) {
       clearDownloadProgress(progressKey);
     }
@@ -295,7 +292,7 @@ function createStore<
           return { instance: instance!, signal: merged };
         }
         case "downloading":
-          await awaitPending(pendingCreate!, callerSignal);
+          await awaitPending(pending!, callerSignal);
           continue;
         case "idle": {
           if (pending) {
@@ -327,7 +324,7 @@ function createStore<
           start(namespace, options);
           continue;
         case "downloading":
-          await awaitPending(pendingCreate!, undefined);
+          await awaitPending(pending!, undefined);
           continue;
         case "idle": {
           if (pending) {

@@ -1,3 +1,5 @@
+import type { BuiltInAIError } from "../errors.ts";
+
 export type Status =
   | "unsupported"
   | "unavailable"
@@ -9,7 +11,7 @@ export type Status =
 export interface BaseHookReturn {
   status: Status;
   progress: number;
-  error: Error | null;
+  error: BuiltInAIError | null;
   prepare: () => Promise<void>;
 }
 
