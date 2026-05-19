@@ -10,7 +10,7 @@ export { isSupported, type BuiltInAIName } from "./is-supported.ts";
 
 export type { BaseHookReturn, Status } from "./types.ts";
 
-export { useGlobalDownloadProgress } from "./use-global-download-progress.ts";
+export { useDownloadProgress } from "./use-download-progress.ts";
 
 export {
   createTranslator,

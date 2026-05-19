@@ -7,12 +7,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { isSupported, useGlobalDownloadProgress } from "@shared/built-in-ai";
+import { isSupported, useDownloadProgress } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 
 export function LanguageSettings() {
   const { languages, language, setLanguage } = useLanguage();
-  const progress = useGlobalDownloadProgress("Translator");
+  const progress = useDownloadProgress("Translator");
   const isDownloading = progress > 0;
 
   return (

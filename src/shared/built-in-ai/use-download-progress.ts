@@ -17,13 +17,13 @@ import {
  * @example
  * ```tsx
  * function GlobalDownloadBar() {
- *   const progress = useGlobalDownloadProgress();
+ *   const progress = useDownloadProgress();
  *   if (progress === 0) return null;
  *   return <ProgressBar value={progress} />;
  * }
  * ```
  */
-export function useGlobalDownloadProgress(namespace?: BuiltInAIName): number {
+export function useDownloadProgress(namespace?: BuiltInAIName): number {
   return useSyncExternalStore(subscribeProgress, () =>
     snapshotProgressFor(namespace),
   );

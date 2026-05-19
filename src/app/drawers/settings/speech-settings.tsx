@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import {
   BuiltInAIError,
   createTranslator,
-  useGlobalDownloadProgress,
+  useDownloadProgress,
 } from "@shared/built-in-ai";
 import {
   getPrimaryLanguage,
@@ -43,7 +43,7 @@ export function SpeechSettings() {
   } = useSpeech();
 
   const { language } = useLanguage();
-  const translatorProgress = useGlobalDownloadProgress("Translator");
+  const translatorProgress = useDownloadProgress("Translator");
   const isTranslatorDownloading =
     translatorProgress > 0 && translatorProgress < 1;
 

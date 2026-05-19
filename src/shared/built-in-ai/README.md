@@ -100,11 +100,11 @@ Because a creator requires a user activation when a download is needed, prefer c
 ## Download progress
 
 - **Per-instance** — read `progress` and `status` from the hook return (or the creator's lifecycle, which writes to the same place). This is the right signal for "this specific translator/rewriter/proofreader is downloading."
-- **Cross-instance** — `useGlobalDownloadProgress(namespace?)` reports the highest in-flight progress across every instance, regardless of which component (or imperative caller) initiated the download. Pass a namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`) to scope to one API, or call with no argument to aggregate across all built-in AI downloads. Useful for a global indicator that lives outside any specific hook call site.
+- **Cross-instance** — `useDownloadProgress(namespace?)` reports the highest in-flight progress across every instance, regardless of which component (or imperative caller) initiated the download. Pass a namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`) to scope to one API, or call with no argument to aggregate across all built-in AI downloads. Useful for a global indicator that lives outside any specific hook call site.
 
 ```tsx
 function GlobalDownloadBar() {
-  const progress = useGlobalDownloadProgress();
+  const progress = useDownloadProgress();
   if (progress === 0) return null;
   return <ProgressBar value={progress} />;
 }

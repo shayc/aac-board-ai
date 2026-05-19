@@ -4,7 +4,7 @@ import {
   clearDownloadProgress,
   setDownloadProgress,
 } from "./internal/progress-store.ts";
-import { useGlobalDownloadProgress } from "./use-global-download-progress.ts";
+import { useDownloadProgress } from "./use-download-progress.ts";
 
 function cleanup(...keys: string[]): void {
   for (const k of keys) {
@@ -24,10 +24,10 @@ afterEach(() => {
   );
 });
 
-describe("useGlobalDownloadProgress", () => {
+describe("useDownloadProgress", () => {
   test("reports the highest in-flight progress matching the namespace", async () => {
     const { result } = await renderHook(() =>
-      useGlobalDownloadProgress("Translator"),
+      useDownloadProgress("Translator"),
     );
     expect(result.current).toBe(0);
 
@@ -46,7 +46,7 @@ describe("useGlobalDownloadProgress", () => {
 
   test("matches an exact namespace key as well as `namespace:…` keys", async () => {
     const { result } = await renderHook(() =>
-      useGlobalDownloadProgress("Translator"),
+      useDownloadProgress("Translator"),
     );
 
     setDownloadProgress("Translator", 0.5);
@@ -56,7 +56,7 @@ describe("useGlobalDownloadProgress", () => {
 
   test("ignores keys outside the requested namespace", async () => {
     const { result } = await renderHook(() =>
-      useGlobalDownloadProgress("Translator"),
+      useDownloadProgress("Translator"),
     );
 
     setDownloadProgress("Rewriter", 0.9);
@@ -65,7 +65,7 @@ describe("useGlobalDownloadProgress", () => {
   });
 
   test("with no argument, aggregates across every namespace", async () => {
-    const { result } = await renderHook(() => useGlobalDownloadProgress());
+    const { result } = await renderHook(() => useDownloadProgress());
     expect(result.current).toBe(0);
 
     setDownloadProgress("Translator:en:fr", 0.2);
