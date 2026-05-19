@@ -281,13 +281,11 @@ function createStore<
           return { instance: instance!, signal: merged };
         }
         case "unsupported":
-          throw new UnsupportedError("Built-in AI is not supported");
+          throw new UnsupportedError();
         case "unavailable":
-          throw new UnavailableError("Built-in AI model is unavailable");
+          throw new UnavailableError();
         case "error":
-          throw new NotReadyError("Built-in AI is in an error state", {
-            cause: snapshot.error?.cause ?? snapshot.error,
-          });
+          throw new NotReadyError(snapshot.error?.cause);
         case "downloading":
           await awaitPending(pending!, callerSignal);
           continue;
@@ -297,9 +295,7 @@ function createStore<
             continue;
           }
           if (!hasUserActivation()) {
-            throw new NoUserActivationError(
-              "Built-in AI requires a user activation to download",
-            );
+            throw new NoUserActivationError();
           }
           void startCreate(true, generation);
           continue;
@@ -309,8 +305,8 @@ function createStore<
   }
 
   async function prepare(): Promise<void> {
-    // Spec row 13: entering prepare() in "error" clears it and restarts once.
-    // Landing back in "error" (here or mid-drive) rejects — no implicit retry loop.
+    // Entering prepare() in "error" clears it and restarts the chain once.
+    // Landing back in "error" (here or mid-drive) rejects — no retry loop.
     if (snapshot.status === "error") {
       start(namespace, options);
     }
@@ -319,13 +315,11 @@ function createStore<
         case "ready":
           return;
         case "unsupported":
-          throw new UnsupportedError("Built-in AI is not supported");
+          throw new UnsupportedError();
         case "unavailable":
-          throw new UnavailableError("Built-in AI model is unavailable");
+          throw new UnavailableError();
         case "error":
-          throw new NotReadyError("Built-in AI is in an error state", {
-            cause: snapshot.error?.cause ?? snapshot.error,
-          });
+          throw new NotReadyError(snapshot.error?.cause);
         case "downloading":
           await awaitPending(pending!, undefined);
           continue;
@@ -335,9 +329,7 @@ function createStore<
             continue;
           }
           if (!hasUserActivation()) {
-            throw new NoUserActivationError(
-              "Built-in AI requires a user activation to download",
-            );
+            throw new NoUserActivationError();
           }
           void startCreate(true, generation);
           continue;

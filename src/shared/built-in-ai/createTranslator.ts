@@ -72,7 +72,7 @@ export async function createTranslator(
   options: CreateTranslatorOptions,
 ): Promise<Translator & AsyncDisposable> {
   if (!isSupported("Translator")) {
-    throw new UnsupportedError("Built-in AI is not supported");
+    throw new UnsupportedError();
   }
 
   const { signal, ...createOptions } = options;
@@ -80,14 +80,12 @@ export async function createTranslator(
 
   const availability = await Translator.availability(createOptions);
   if (availability === "unavailable") {
-    throw new UnavailableError("Built-in AI model is unavailable");
+    throw new UnavailableError();
   }
 
   const willDownload = availability !== "available";
   if (willDownload && !hasUserActivation()) {
-    throw new NoUserActivationError(
-      "Built-in AI requires a user activation to download",
-    );
+    throw new NoUserActivationError();
   }
 
   if (willDownload) {

@@ -20,16 +20,28 @@ export class BuiltInAIError extends Error {
 
 export class UnsupportedError extends BuiltInAIError {
   override name = "UnsupportedError";
+  constructor(message = "Built-in AI is not supported") {
+    super(message);
+  }
 }
 
 export class UnavailableError extends BuiltInAIError {
   override name = "UnavailableError";
+  constructor(message = "Built-in AI model is unavailable") {
+    super(message);
+  }
 }
 
 export class NoUserActivationError extends BuiltInAIError {
   override name = "NoUserActivationError";
+  constructor(message = "Built-in AI requires a user activation to download") {
+    super(message);
+  }
 }
 
 export class NotReadyError extends BuiltInAIError {
   override name = "NotReadyError";
+  constructor(cause?: unknown) {
+    super("Built-in AI is in an error state", { cause });
+  }
 }
