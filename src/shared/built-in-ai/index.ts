@@ -9,7 +9,7 @@ export {
 export {
   createTranslator,
   type CreateTranslatorOptions,
-} from "./createTranslator.ts";
+} from "./create-translator.ts";
 
 export { useDownloadProgress } from "./hooks/useDownloadProgress.ts";
 

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { createTranslator } from "./createTranslator.ts";
+import { createTranslator } from "./create-translator.ts";
 import {
   NoUserActivationError,
   UnavailableError,

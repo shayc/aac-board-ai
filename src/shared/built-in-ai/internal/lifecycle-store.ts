@@ -6,7 +6,7 @@ import {
   UnsupportedError,
 } from "../errors.ts";
 import { hasUserActivation } from "./activation.ts";
-import { createInstance } from "./createInstance.ts";
+import { createInstance } from "./create-instance.ts";
 import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
 

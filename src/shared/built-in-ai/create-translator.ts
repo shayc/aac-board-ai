@@ -1,4 +1,4 @@
-import { createInstance } from "./internal/createInstance.ts";
+import { createInstance } from "./internal/create-instance.ts";
 
 /**
  * Options for {@link createTranslator}.

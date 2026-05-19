@@ -1,9 +1,13 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { createStore, type Acquired, type Snapshot } from "./lifecycleStore.ts";
+import {
+  createStore,
+  type Acquired,
+  type Snapshot,
+} from "./lifecycle-store.ts";
 import { shallowEqualOptions } from "./options-equality.ts";
 import type { AINamespace, DestroyableInstance } from "./types.ts";
 
-export type { Acquired } from "./lifecycleStore.ts";
+export type { Acquired } from "./lifecycle-store.ts";
 
 export interface Lifecycle<Instance> extends Snapshot {
   prepare: () => Promise<void>;
