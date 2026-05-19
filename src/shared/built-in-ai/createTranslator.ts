@@ -1,15 +1,4 @@
-import {
-  NoUserActivationError,
-  UnavailableError,
-  UnsupportedError,
-} from "./errors.ts";
-import { hasUserActivation } from "./internal/activation.ts";
-import {
-  buildProgressKey,
-  clearDownloadProgress,
-  setDownloadProgress,
-} from "./internal/progress-store.ts";
-import { isSupported } from "./namespaces.ts";
+import { createInstance } from "./internal/createInstance.ts";
 
 /**
  * Options for {@link createTranslator}.
@@ -30,12 +19,12 @@ export interface CreateTranslatorOptions {
  *
  * Mirrors the hook lifecycle exactly:
  *
- * - Throws {@link UnsupportedError} when the `Translator` namespace is missing.
- * - Throws {@link UnavailableError} when `availability()` reports `"unavailable"`.
- * - Throws {@link NoUserActivationError} when a download is required without a
+ * - Throws `UnsupportedError` when the `Translator` namespace is missing.
+ * - Throws `UnavailableError` when `availability()` reports `"unavailable"`.
+ * - Throws `NoUserActivationError` when a download is required without a
  *   transient user activation. Call from a click or keypress handler, or
- *   pre-warm the model via {@link useTranslator}.
- * - Reports download progress through the same store {@link useDownloadProgress}
+ *   pre-warm the model via `useTranslator`.
+ * - Reports download progress through the same store `useDownloadProgress`
  *   reads from, so a hook elsewhere in the tree can render a global indicator.
  *
  * The result is `AsyncDisposable`: prefer `await using` so the instance is
@@ -44,9 +33,6 @@ export interface CreateTranslatorOptions {
  *
  * @param options - Language pair and an optional `AbortSignal`.
  * @returns A `Translator` instance with `Symbol.asyncDispose` attached.
- * @throws {UnsupportedError} The `Translator` namespace is undefined.
- * @throws {UnavailableError} The model cannot run on this device.
- * @throws {NoUserActivationError} A download is required without a user activation.
  *
  * @example
  * ```ts
@@ -71,53 +57,22 @@ export interface CreateTranslatorOptions {
 export async function createTranslator(
   options: CreateTranslatorOptions,
 ): Promise<Translator & AsyncDisposable> {
-  if (!isSupported("Translator")) {
-    throw new UnsupportedError();
-  }
-
   const { signal, ...createOptions } = options;
-  const key = buildProgressKey("Translator", createOptions);
-
-  const availability = await Translator.availability(createOptions);
-  if (availability === "unavailable") {
-    throw new UnavailableError();
-  }
-
-  const willDownload = availability !== "available";
-  if (willDownload && !hasUserActivation()) {
-    throw new NoUserActivationError();
-  }
-
-  if (willDownload) {
-    setDownloadProgress(key, 0);
-  }
-
-  try {
-    const instance = await Translator.create({
-      ...createOptions,
-      signal,
-      monitor: willDownload
-        ? (monitor) =>
-            monitor.addEventListener("downloadprogress", (event) => {
-              setDownloadProgress(key, event.loaded);
-            })
-        : undefined,
+  const instance = await createInstance<typeof createOptions, Translator>({
+    name: "Translator",
+    options: createOptions,
+    signal,
+  });
+  if (
+    typeof (instance as Partial<AsyncDisposable>)[Symbol.asyncDispose] !==
+    "function"
+  ) {
+    Object.defineProperty(instance, Symbol.asyncDispose, {
+      value: () => {
+        instance.destroy();
+        return Promise.resolve();
+      },
     });
-    if (
-      typeof (instance as Partial<AsyncDisposable>)[Symbol.asyncDispose] !==
-      "function"
-    ) {
-      Object.defineProperty(instance, Symbol.asyncDispose, {
-        value: () => {
-          instance.destroy();
-          return Promise.resolve();
-        },
-      });
-    }
-    return instance as Translator & AsyncDisposable;
-  } finally {
-    if (willDownload) {
-      clearDownloadProgress(key);
-    }
   }
+  return instance as Translator & AsyncDisposable;
 }

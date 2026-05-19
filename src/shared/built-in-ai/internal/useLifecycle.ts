@@ -7,12 +7,8 @@ import {
   UnsupportedError,
 } from "../errors.ts";
 import { hasUserActivation } from "./activation.ts";
+import { createInstance } from "./createInstance.ts";
 import { shallowEqualOptions } from "./options-equality.ts";
-import {
-  buildProgressKey,
-  clearDownloadProgress,
-  setDownloadProgress,
-} from "./progress-store.ts";
 import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 import type { AINamespace, DestroyableInstance, Status } from "./types.ts";
 
@@ -89,7 +85,6 @@ function createStore<
 
   let namespace: AINamespace<Options, Instance> | undefined;
   let options: Options | undefined;
-  let progressKey: string | null = null;
   let controller = new AbortController();
   let generation = 0;
   let instance: Instance | null = null;
@@ -115,36 +110,20 @@ function createStore<
     withMonitor: boolean,
     expected: number,
   ): Promise<Instance> {
-    const ns = namespace!;
-    const opts = options;
-    const signal = controller.signal;
-    const key = progressKey;
-
     if (withMonitor) {
       update({ status: "downloading", progress: 0 });
-      if (key) {
-        setDownloadProgress(key, 0);
-      }
     }
 
-    const monitorCallback = withMonitor
-      ? (monitor: CreateMonitor) => {
-          monitor.addEventListener("downloadprogress", (event) => {
-            if (!isCurrent(expected)) {
-              return;
-            }
-            update({ progress: event.loaded });
-            if (key) {
-              setDownloadProgress(key, event.loaded);
-            }
-          });
+    const promise = createInstance<Options, Instance>({
+      name: globalName,
+      options,
+      signal: controller.signal,
+      onProgress: (loaded) => {
+        if (!isCurrent(expected)) {
+          return;
         }
-      : undefined;
-
-    const promise = ns.create({
-      ...opts!,
-      signal,
-      monitor: monitorCallback,
+        update({ progress: loaded });
+      },
     });
     pending = promise;
 
@@ -153,9 +132,6 @@ function createStore<
         if (!isCurrent(expected)) {
           destroyQuietly(created);
           return;
-        }
-        if (key) {
-          clearDownloadProgress(key);
         }
         instance = created;
         pending = null;
@@ -170,11 +146,16 @@ function createStore<
         if (!isCurrent(expected)) {
           return;
         }
-        if (key) {
-          clearDownloadProgress(key);
-        }
         pending = null;
-        update({ status: "error", progress: 0, error: wrap(error) });
+        // Map the primitive's typed rejections back to terminal states; only
+        // genuine create failures land in "error".
+        if (error instanceof UnsupportedError) {
+          update({ status: "unsupported", progress: 0, error: null });
+        } else if (error instanceof UnavailableError) {
+          update({ status: "unavailable", progress: 0, error: null });
+        } else {
+          update({ status: "error", progress: 0, error: wrap(error) });
+        }
       },
     );
 
@@ -223,9 +204,6 @@ function createStore<
     controller.abort(abortError("lifecycle reset"));
     namespace = nextNamespace;
     options = nextOptions;
-    progressKey = nextNamespace
-      ? buildProgressKey(globalName, nextOptions)
-      : null;
     generation += 1;
     controller = new AbortController();
     mounted = true;
@@ -245,9 +223,6 @@ function createStore<
     mounted = false;
     controller.abort(abortError("lifecycle reset"));
     pending = null;
-    if (progressKey) {
-      clearDownloadProgress(progressKey);
-    }
     const toDestroy = instance;
     instance = null;
     destroyQuietly(toDestroy);
