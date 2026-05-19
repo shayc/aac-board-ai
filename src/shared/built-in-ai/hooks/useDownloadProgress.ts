@@ -4,7 +4,10 @@ import {
   subscribeProgress,
 } from "../internal/progress-store.ts";
 
-/** React subscription wrapper around {@link snapshotProgressFor}. */
+/**
+ * Highest in-flight download progress (`0..1`) across keys matching `prefix`
+ * (exact, or `${prefix}:…`). Returns `0` when nothing matches.
+ */
 export function useDownloadProgress(prefix: string): number {
   return useSyncExternalStore(subscribeProgress, () =>
     snapshotProgressFor(prefix),

@@ -18,10 +18,6 @@ export function mergeSignals(
   return present.length === 1 ? present[0] : AbortSignal.any(present);
 }
 
-/**
- * Resolves with `promise`, or rejects with `signal.reason` on abort. Removes
- * the abort listener on settle — no leak.
- */
 export function raceAbort<T>(
   promise: Promise<T>,
   signal: AbortSignal,

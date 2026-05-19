@@ -93,9 +93,6 @@ function createStore<
   let controller = new AbortController();
   let generation = 0;
   let instance: Instance | null = null;
-  // Tracks the in-flight availability call OR create call (mutually exclusive).
-  // During `"downloading"` it is always the create promise; during `"idle"` with
-  // availability mid-flight it is the availability chain.
   let pending: Promise<unknown> | null = null;
   let mounted = false;
 

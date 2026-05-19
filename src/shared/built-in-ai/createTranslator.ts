@@ -63,8 +63,6 @@ export async function createTranslator(
             })
         : undefined,
     });
-    // Polyfill only when the runtime doesn't already implement disposal —
-    // avoid clobbering a future native `[Symbol.asyncDispose]`.
     if (
       typeof (instance as Partial<AsyncDisposable>)[Symbol.asyncDispose] !==
       "function"
