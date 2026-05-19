@@ -37,13 +37,9 @@ export async function createTranslator(
   options: CreateTranslatorOptions,
 ): Promise<Translator & AsyncDisposable> {
   const { signal, ...createOptions } = options;
-  const instance = await createInstance<typeof createOptions, Translator>({
+  return createInstance<typeof createOptions, Translator>({
     name: "Translator",
     options: createOptions,
     signal,
   });
-  const disposable = instance as Translator & Partial<AsyncDisposable>;
-  disposable[Symbol.asyncDispose] ??= () =>
-    Promise.resolve(disposable.destroy());
-  return disposable as Translator & AsyncDisposable;
 }

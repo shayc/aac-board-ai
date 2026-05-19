@@ -30,13 +30,9 @@ export async function createRewriter(
   options: CreateRewriterOptions = {},
 ): Promise<Rewriter & AsyncDisposable> {
   const { signal, ...createOptions } = options;
-  const instance = await createInstance<typeof createOptions, Rewriter>({
+  return createInstance<typeof createOptions, Rewriter>({
     name: "Rewriter",
     options: createOptions,
     signal,
   });
-  const disposable = instance as Rewriter & Partial<AsyncDisposable>;
-  disposable[Symbol.asyncDispose] ??= () =>
-    Promise.resolve(disposable.destroy());
-  return disposable as Rewriter & AsyncDisposable;
 }

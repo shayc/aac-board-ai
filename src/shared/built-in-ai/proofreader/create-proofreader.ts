@@ -34,13 +34,9 @@ export async function createProofreader(
   options: CreateProofreaderOptions = {},
 ): Promise<Proofreader & AsyncDisposable> {
   const { signal, ...createOptions } = options;
-  const instance = await createInstance<typeof createOptions, Proofreader>({
+  return createInstance<typeof createOptions, Proofreader>({
     name: "Proofreader",
     options: createOptions,
     signal,
   });
-  const disposable = instance as Proofreader & Partial<AsyncDisposable>;
-  disposable[Symbol.asyncDispose] ??= () =>
-    Promise.resolve(disposable.destroy());
-  return disposable as Proofreader & AsyncDisposable;
 }
