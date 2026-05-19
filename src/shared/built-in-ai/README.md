@@ -8,14 +8,16 @@ import { useSummarizer } from "@shared/built-in-ai";
 
 ## Hooks
 
-- `useSummarizer` — wraps the [Summarizer API](https://developer.chrome.com/docs/ai/summarizer-api).
-- `useWriter` — wraps the [Writer API](https://developer.chrome.com/docs/ai/writer-api).
-- `useRewriter` — wraps the [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api).
-- `useTranslator` — wraps the [Translator API](https://developer.chrome.com/docs/ai/translator-api).
-- `useLanguageDetector` — wraps the [Language Detector API](https://developer.chrome.com/docs/ai/language-detection).
-- `useProofreader` — wraps the [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api).
+| Hook                  | Underlying API                                                                   |
+| --------------------- | -------------------------------------------------------------------------------- |
+| `useSummarizer`       | [Summarizer API](https://developer.chrome.com/docs/ai/summarizer-api)            |
+| `useWriter`           | [Writer API](https://developer.chrome.com/docs/ai/writer-api)                    |
+| `useRewriter`         | [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)                |
+| `useTranslator`       | [Translator API](https://developer.chrome.com/docs/ai/translator-api)            |
+| `useLanguageDetector` | [Language Detector API](https://developer.chrome.com/docs/ai/language-detection) |
+| `useProofreader`      | [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)          |
 
-Every hook returns the same lifecycle surface and namespace-specific action methods (e.g. `summarize`, `summarizeStream`, `measureInput`).
+Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `summarize`, `summarizeStream`, `measureInput`).
 
 ## Lifecycle
 
@@ -23,23 +25,34 @@ Every hook returns the same lifecycle surface and namespace-specific action meth
 const { status, progress, error, prepare } = useSummarizer({ type: "tldr" });
 ```
 
-`status` walks through `"unsupported" | "unavailable" | "idle" | "downloading" | "ready" | "error"`. When the model is already available the hook auto-creates the instance and arrives at `"ready"`. When a download is required the hook stays at `"idle"` until `prepare()` (or any action method) is called from a user activation — then `status` advances to `"downloading"` and `progress` ticks from `0` to `1`.
+`status` is always one of:
+
+- **`unsupported`** — the global namespace is missing on this browser.
+- **`unavailable`** — the model reports it cannot run on this device.
+- **`idle`** — supported, but a download is required before use.
+- **`downloading`** — entered via **`prepare()`** (or any action method) called from a **user activation**. `progress` ticks from `0` to `1`.
+- **`ready`** — the instance is live; action methods can be called freely.
+- **`error`** — `availability()` or `create()` rejected. Call `prepare()` to retry.
 
 ## Acting
 
-Action methods are gated by the lifecycle: they throw `UnsupportedError`, `UnavailableError`, `NoUserActivationError`, or `NotReadyError` when the state forbids them. A rejected call never mutates the hook's `status` or `error`.
+Action methods are gated by the lifecycle — they throw `UnsupportedError`, `UnavailableError`, `NoUserActivationError`, or `NotReadyError` when the state forbids them. **A rejected call never mutates the hook's `status` or `error`.**
 
 ```tsx
 function Demo() {
   const summarizer = useSummarizer({ length: "short" });
 
+  // 1. Guard against browsers/devices that can't run the model.
   if (summarizer.status === "unsupported") return <p>Not supported.</p>;
   if (summarizer.status === "unavailable") return <p>Not available.</p>;
 
   return (
     <button
+      // 2. Block re-entry while the model is downloading.
       disabled={summarizer.status === "downloading"}
       onClick={async () => {
+        // 3. The click is a user activation, so the hook is allowed to start
+        //    the download here if status was "idle"; otherwise it runs at once.
         const out = await summarizer.summarize("…long text…");
         console.log(out);
       }}
@@ -62,16 +75,22 @@ for await (const chunk of summarizer.summarizeStream(text, { signal })) {
 
 ## Options
 
-Options are compared by shallow per-key equality. Memoize array-valued options (`expectedInputLanguages`, etc.) to avoid spurious re-creation. Changing any option destroys the current instance, aborts in-flight work with `AbortError`, and re-enters the state machine.
+Options are compared by **shallow per-key equality**. Memoize array-valued options (`expectedInputLanguages`, etc.) to avoid spurious re-creation. **Changing any option destroys the current instance, aborts in-flight work with `AbortError`, and re-enters the state machine.**
 
 ## Errors
 
-All thrown errors are `instanceof BuiltInAIError`. When the underlying browser API rejects, the hook's `error.cause` is the original error.
+Lifecycle gating throws `BuiltInAIError` subclasses (table below). Action methods (`translate`, `summarize`, …) pass the browser API's own rejections through unchanged — most commonly an `AbortError` `DOMException` when a `signal` fires. When the lifecycle wraps a browser rejection into `"error"` state, the original error is preserved as `error.cause`.
 
-- `UnsupportedError` — the global namespace is missing.
-- `UnavailableError` — the model reports `"unavailable"`.
-- `NoUserActivationError` — a download was needed but no user activation was present.
-- `NotReadyError` — the lifecycle is in `"error"` state; call `prepare()` to retry.
+| Error                   | What to do                                                                                                                    |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `UnsupportedError`      | The namespace is missing. Feature-detect with `isSupported()` and render a fallback.                                          |
+| `UnavailableError`      | The device can't run the model. Render a fallback; don't retry.                                                               |
+| `NoUserActivationError` | A download was needed without a user gesture. Trigger `prepare()` (or the first action) from a click/keypress handler.        |
+| `NotReadyError`         | A prior `create()` failed. Call `prepare()` from a user activation to retry; inspect `error.cause` for the underlying reason. |
+
+## Cancellation
+
+A per-call `signal` cancels the _caller's_ wait and the underlying action call, but does not tear down the shared model instance. If the hook is mid-download, aborting one call rejects that call with `AbortError` while the download keeps running for any other caller (and for the next call from the same component). **The download is only cancelled when the component unmounts or its options change.**
 
 ## Other exports
 
