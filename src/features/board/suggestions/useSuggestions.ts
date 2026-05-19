@@ -8,7 +8,7 @@ import type { SuggestionTone } from "./types";
 
 export interface UseSuggestionsReturn {
   phrases: string[];
-  isAvailable: boolean;
+  isSupported: boolean;
   tone: SuggestionTone;
   setTone: (tone: SuggestionTone) => void;
 }
@@ -42,7 +42,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isProofreaderReady = proofreaderStatus === "ready";
   const isRewriterReady = rewriterStatus === "ready";
-  const isAvailable =
+  const isSupported =
     proofreaderStatus !== "unsupported" || rewriterStatus !== "unsupported";
 
   useEffect(() => {
@@ -86,7 +86,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   return {
     phrases: suggestions,
-    isAvailable,
+    isSupported,
     tone,
     setTone,
   };
