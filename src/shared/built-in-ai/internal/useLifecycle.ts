@@ -360,10 +360,9 @@ function createStore<
 }
 
 /**
- * Stable shared lifecycle for every built-in AI namespace. Owns the
- * availability → create → ready state machine, gates download triggers behind
- * a user activation, and exposes a single `acquire` that action methods use
- * to obtain a live instance.
+ * Shared lifecycle for every built-in AI namespace. Drives the
+ * availability → create → ready state machine, gates downloads behind a user
+ * activation, and exposes `acquire` for action methods. Function refs are stable.
  */
 export function useLifecycle<
   Options extends object,

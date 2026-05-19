@@ -19,8 +19,8 @@ export function mergeSignals(
 }
 
 /**
- * Resolves with `promise`'s value, or rejects with `signal.reason` the moment
- * `signal` aborts — without leaving a dangling listener on the signal.
+ * Resolves with `promise`, or rejects with `signal.reason` on abort. Removes
+ * the abort listener on settle — no leak.
  */
 export function raceAbort<T>(
   promise: Promise<T>,

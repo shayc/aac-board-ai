@@ -12,16 +12,13 @@ export interface CreateTranslatorOptions {
 }
 
 /**
- * Imperative `Translator` factory for call sites that decide the language
- * pair mid-flow (e.g. after a cache check) and can't drive a hook. Awaits any
- * model download, reporting progress through the same store
- * [useDownloadProgress] subscribes to.
+ * Imperative `Translator` factory for call sites that decide the language pair
+ * mid-flow and can't drive a hook. Returns `null` when unsupported or
+ * unavailable; other failures reject. Progress flows through the
+ * `useDownloadProgress` store.
  *
- * Returns `null` when the namespace is missing or the model is
- * `"unavailable"`; other failures reject. The returned instance is
- * `AsyncDisposable`, so the preferred lifecycle is `await using translator =
- * await createTranslator(...)`. Calling `.destroy()` manually is still
- * supported for callers that need to release the model before scope exit.
+ * Result is `AsyncDisposable` — prefer `await using translator = await createTranslator(...)`.
+ * `.destroy()` still works for callers releasing before scope exit.
  */
 export async function createTranslator(
   options: CreateTranslatorOptions,

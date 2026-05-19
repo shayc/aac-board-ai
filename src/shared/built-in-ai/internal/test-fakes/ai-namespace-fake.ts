@@ -14,9 +14,8 @@ export interface MakeAIFakeOptions<I> {
 }
 
 /**
- * Minimal fake for any built-in AI namespace. Tests needing exotic timing
- * (manual create resolution, monitor wiring, mid-create option swaps) should
- * compose their fakes inline — this factory only covers the common path.
+ * Minimal fake for any built-in AI namespace — common path only. Tests needing
+ * exotic timing (manual create resolution, monitor wiring, etc.) compose inline.
  */
 export function makeAIFake<I>({
   status = "available",
@@ -41,10 +40,7 @@ export function makeAIFake<I>({
   };
 }
 
-/**
- * Build a `ReadableStream<string>` that emits the given chunks then closes.
- * Used by streaming instance fakes so `streamChunks` is exercised end-to-end.
- */
+/** `ReadableStream<string>` that emits `chunks` in order then closes. */
 export function makeChunkStream(
   chunks: readonly string[],
 ): ReadableStream<string> {
