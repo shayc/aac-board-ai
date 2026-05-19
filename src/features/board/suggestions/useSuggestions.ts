@@ -32,19 +32,21 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
-  const { status: proofreaderStatus, proofread } = useProofreader();
-  const { status: rewriterStatus, rewrite } = useRewriter({
+  const proofreader = useProofreader();
+  const rewriter = useRewriter({
     tone,
     sharedContext,
     length: "shorter",
     format: "plain-text",
   });
 
-  const isSuggestionsAvailable =
-    proofreaderStatus !== "unsupported" || rewriterStatus !== "unsupported";
+  const proofreaderReady = proofreader.status === "ready";
+  const rewriterReady = rewriter.status === "ready";
+  const isAvailable =
+    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
 
   useEffect(() => {
-    if (proofreaderStatus !== "ready" && rewriterStatus !== "ready") {
+    if (!proofreaderReady && !rewriterReady) {
       return;
     }
 
@@ -54,10 +56,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     const generateSuggestions = async () => {
       try {
         const [proofreadResult, rewritten] = await Promise.all([
-          proofreaderStatus === "ready"
-            ? proofread(text, { signal })
+          proofreaderReady
+            ? proofreader.proofread(text, { signal })
             : undefined,
-          rewriterStatus === "ready" ? rewrite(text, { signal }) : undefined,
+          rewriterReady ? rewriter.rewrite(text, { signal }) : undefined,
         ]);
 
         if (signal.aborted) {
@@ -82,11 +84,11 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     void generateSuggestions();
 
     return () => controller.abort();
-  }, [text, proofreaderStatus, proofread, rewriterStatus, rewrite]);
+  }, [text, proofreaderReady, proofreader, rewriterReady, rewriter]);
 
   return {
     phrases: suggestions,
-    isAvailable: isSuggestionsAvailable,
+    isAvailable,
     tone,
     setTone,
   };
