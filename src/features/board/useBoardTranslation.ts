@@ -56,9 +56,8 @@ export function useBoardTranslation({
 
       // Imperative createTranslator (vs. useTranslator) because we only know
       // the language pair after checking for a cached translation above.
-      let translator: Translator | null = null;
       try {
-        translator = await createTranslator({
+        await using translator = await createTranslator({
           sourceLanguage,
           targetLanguage,
           signal,
@@ -88,8 +87,6 @@ export function useBoardTranslation({
           return;
         }
         console.warn("Board translation failed:", error);
-      } finally {
-        translator?.destroy();
       }
     };
 

@@ -65,6 +65,30 @@ describe("createTranslator", () => {
     expect(createArg.signal).toBe(controller.signal);
   });
 
+  test("returned instance is AsyncDisposable and disposal destroys it", async () => {
+    const destroy = vi.fn();
+    const instance = {
+      translate: (input: string) => Promise.resolve(`T:${input}`),
+      destroy,
+    };
+    vi.stubGlobal("Translator", {
+      availability: vi.fn(() => Promise.resolve("available")),
+      create: vi.fn(() => Promise.resolve(instance)),
+    });
+
+    {
+      await using translator = await createTranslator({
+        sourceLanguage: "en",
+        targetLanguage: "fr",
+      });
+      expect(translator).not.toBeNull();
+      expect(typeof translator?.[Symbol.asyncDispose]).toBe("function");
+      expect(destroy).not.toHaveBeenCalled();
+    }
+
+    expect(destroy).toHaveBeenCalledTimes(1);
+  });
+
   test("does not pass signal into availability()", async () => {
     const availability = vi.fn(() => Promise.resolve("available" as const));
     vi.stubGlobal("Translator", {

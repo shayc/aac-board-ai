@@ -75,7 +75,20 @@ All thrown errors are `instanceof BuiltInAIError`. When the underlying browser A
 
 ## Other exports
 
-- `createTranslator(options)` — imperative `Translator` factory for call sites that decide the language pair mid-flow and can't drive a hook. Reports progress through the same store the hooks write to. Returns `null` when unsupported or unavailable; callers own `destroy()`.
+- `createTranslator(options)` — imperative `Translator` factory for call sites that decide the language pair mid-flow and can't drive a hook. Reports progress through the same store the hooks write to. Returns `null` when unsupported or unavailable. The returned instance is `AsyncDisposable`, so the recommended lifecycle is:
+
+  ```ts
+  await using translator = await createTranslator({
+    sourceLanguage,
+    targetLanguage,
+  });
+  if (translator) {
+    const text = await translator.translate(input);
+  }
+  ```
+
+  `.destroy()` is still exposed for callers that need to release the model before scope exit.
+
 - `useDownloadProgress(prefix)` — highest in-flight progress (`0..1`) across all instances matching a namespace prefix (e.g. `"Translator"` aggregates every language pair currently downloading).
 - `useSharedContext()` / `setSharedContext(value)` — user-authored context (tone, persona) persisted to `localStorage`. Consumers pass it explicitly into hook options as `sharedContext`.
 - `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Summarizer"`, etc.).

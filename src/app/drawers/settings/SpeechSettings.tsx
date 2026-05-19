@@ -84,17 +84,12 @@ export function SpeechSettings() {
     let greeting = defaultGreeting;
 
     if (sourceLanguage !== targetLanguage) {
-      let translator: Translator | null = null;
-      try {
-        translator = await createTranslator({
-          sourceLanguage,
-          targetLanguage,
-        });
-        if (translator) {
-          greeting = await translator.translate(defaultGreeting);
-        }
-      } finally {
-        translator?.destroy();
+      await using translator = await createTranslator({
+        sourceLanguage,
+        targetLanguage,
+      });
+      if (translator) {
+        greeting = await translator.translate(defaultGreeting);
       }
     }
 

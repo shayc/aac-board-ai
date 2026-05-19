@@ -18,11 +18,14 @@ export interface CreateTranslatorOptions {
  * [useDownloadProgress] subscribes to.
  *
  * Returns `null` when the namespace is missing or the model is
- * `"unavailable"`; other failures reject. Callers own `destroy()`.
+ * `"unavailable"`; other failures reject. The returned instance is
+ * `AsyncDisposable`, so the preferred lifecycle is `await using translator =
+ * await createTranslator(...)`. Calling `.destroy()` manually is still
+ * supported for callers that need to release the model before scope exit.
  */
 export async function createTranslator(
   options: CreateTranslatorOptions,
-): Promise<Translator | null> {
+): Promise<(Translator & AsyncDisposable) | null> {
   if (!isSupported("Translator")) {
     return null;
   }
@@ -35,7 +38,7 @@ export async function createTranslator(
   }
 
   try {
-    return await Translator.create({
+    const instance = await Translator.create({
       ...createOptions,
       signal,
       monitor: (monitor) =>
@@ -43,6 +46,13 @@ export async function createTranslator(
           setDownloadProgress(key, event.loaded);
         }),
     });
+    Object.defineProperty(instance, Symbol.asyncDispose, {
+      value: () => {
+        instance.destroy();
+        return Promise.resolve();
+      },
+    });
+    return instance as Translator & AsyncDisposable;
   } finally {
     clearDownloadProgress(key);
   }
