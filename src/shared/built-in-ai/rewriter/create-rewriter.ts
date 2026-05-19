@@ -1,5 +1,5 @@
 import { createInstance } from "../internal/lifecycle/create-instance.ts";
-import type { RewriterOptions } from "./useRewriter.ts";
+import type { RewriterOptions } from "./use-rewriter.ts";
 
 /**
  * Options for {@link createRewriter}. Mirrors {@link RewriterOptions} plus an

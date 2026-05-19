@@ -10,7 +10,7 @@ export { isSupported, type BuiltInAIName } from "./is-supported.ts";
 
 export type { BaseHookReturn, Status } from "./types.ts";
 
-export { useGlobalDownloadProgress } from "./useGlobalDownloadProgress.ts";
+export { useGlobalDownloadProgress } from "./use-global-download-progress.ts";
 
 export {
   createTranslator,
@@ -21,7 +21,7 @@ export {
   type TranslateCallOptions,
   type TranslatorHookReturn,
   type TranslatorOptions,
-} from "./translator/useTranslator.ts";
+} from "./translator/use-translator.ts";
 
 export {
   createRewriter,
@@ -32,7 +32,7 @@ export {
   type RewriteCallOptions,
   type RewriterHookReturn,
   type RewriterOptions,
-} from "./rewriter/useRewriter.ts";
+} from "./rewriter/use-rewriter.ts";
 
 export {
   createProofreader,
@@ -43,4 +43,4 @@ export {
   type ProofreadCallOptions,
   type ProofreaderHookReturn,
   type ProofreaderOptions,
-} from "./proofreader/useProofreader.ts";
+} from "./proofreader/use-proofreader.ts";
