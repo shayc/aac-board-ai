@@ -37,7 +37,7 @@ Single React Router `BrowserRouter`. All routes share `<AppShell>` (header, draw
 
 Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-boundary`). Board-to-board navigation goes through `useBoardNavigation`, which carries a `backStack: string[]` on `location.state` for a board-aware back button distinct from browser history.
 
-**See:** [src/app/AppRoutes.tsx](../src/app/AppRoutes.tsx), [src/shared/components/AsyncBoundary.tsx](../src/shared/components/AsyncBoundary.tsx), [src/features/board/navigation/useBoardNavigation.ts](../src/features/board/navigation/useBoardNavigation.ts).
+**See:** [src/app/app-routes.tsx](../src/app/app-routes.tsx), [src/shared/components/async-boundary.tsx](../src/shared/components/async-boundary.tsx), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts).
 
 ## 4. App shell
 
@@ -49,23 +49,22 @@ Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-bounda
 
 **Settings drawer.** `SettingsDrawer` composes four panels from `src/app/drawers/settings/`: `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
 
-**See:** [src/app/layouts/AppShell.tsx](../src/app/layouts/AppShell.tsx), [src/app/dialogs/useOnboarding.ts](../src/app/dialogs/useOnboarding.ts), [src/shared/snackbar/SnackbarProvider.tsx](../src/shared/snackbar/SnackbarProvider.tsx), [src/app/drawers/settings/SettingsDrawer.tsx](../src/app/drawers/settings/SettingsDrawer.tsx).
+**See:** [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/app/dialogs/use-onboarding.ts](../src/app/dialogs/use-onboarding.ts), [src/shared/snackbar/snackbar-provider.tsx](../src/shared/snackbar/snackbar-provider.tsx), [src/app/drawers/settings/settings-drawer.tsx](../src/app/drawers/settings/settings-drawer.tsx).
 
 ## 5. Provider stack
 
 `AppProviders` composes context in this order, outer to inner:
 
 ```
-ThemeProvider
-└─ SnackbarProvider
-   └─ SpeechProvider           // owns the Web Speech API state
-      └─ LanguageProvider      // consumes SpeechProvider to map language → voice
-         └─ AIProvider         // shared AI context + download-progress aggregation
+SpeechProvider                 // owns the Web Speech API state
+└─ LanguageProvider            // consumes SpeechProvider to map language → voice
+   └─ ThemeProvider            // MUI theme + RTL direction
+      └─ SnackbarProvider      // queued transient feedback
 ```
 
-Order is load-bearing. `LanguageProvider` reads `useSpeech()` to discover available voices and pick a default for the current language, so it must sit inside `SpeechProvider`. `AIProvider` is innermost so any descendant — including `LanguageProvider`-aware components — can read AI download state.
+Order is load-bearing. `LanguageProvider` reads `useSpeech()` to discover available voices and pick a default for the current language, so it must sit inside `SpeechProvider`. There is no AI-specific provider; built-in AI state is owned per-hook and aggregated via [`useGlobalDownloadProgress`](../src/shared/built-in-ai/use-global-download-progress.ts), which subscribes to a module-level progress store rather than a React context.
 
-**See:** [src/app/AppProviders.tsx](../src/app/AppProviders.tsx), [src/shared/language/LanguageProvider.tsx](../src/shared/language/LanguageProvider.tsx).
+**See:** [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
 
 ## 6. Data flow
 
@@ -102,7 +101,7 @@ flowchart TD
 
 IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardViewer`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `useSpeech` / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
 
-**See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/useLoadBoard.ts](../src/features/board/useLoadBoard.ts), [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/useButtonActivation.ts](../src/features/board/useButtonActivation.ts).
+**See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-load-board.ts](../src/features/board/use-load-board.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/features/board/use-button-activation.ts](../src/features/board/use-button-activation.ts).
 
 ## 7. Storage
 
@@ -124,30 +123,29 @@ Access goes through helpers in `boards-db.ts`. `withBoardsDB(operation)` opens t
 
 Via `usePersistentState`.
 
-| Key                 | Holds                                  | Owner                                                           |
-| ------------------- | -------------------------------------- | --------------------------------------------------------------- |
-| `language`          | Selected primary language subtag       | [LanguageProvider](../src/shared/language/LanguageProvider.tsx) |
-| `message`           | Current `MessagePart[]` (draft)        | [useMessage](../src/features/board/message/useMessage.ts)       |
-| `ai-shared-context` | User-supplied free-text custom prompt  | [AIProvider](../src/shared/ai/AIProvider.tsx)                   |
-| `hasSeenOnboarding` | Boolean — has the welcome dialog shown | [useOnboarding](../src/app/dialogs/useOnboarding.ts)            |
+| Key                 | Holds                                  | Owner                                                                                 |
+| ------------------- | -------------------------------------- | ------------------------------------------------------------------------------------- |
+| `language`          | Selected primary language subtag       | [LanguageProvider](../src/shared/language/language-provider.tsx)                      |
+| `message`           | Current `MessagePart[]` (draft)        | [useMessage](../src/features/board/message/use-message.ts)                            |
+| `ai-shared-context` | User-supplied free-text custom prompt  | [useCustomInstructions](../src/features/board/suggestions/use-custom-instructions.ts) |
+| `hasSeenOnboarding` | Boolean — has the welcome dialog shown | [useOnboarding](../src/app/dialogs/use-onboarding.ts)                                 |
 
 ### React Context
 
 Runtime only.
 
-| Context              | Provides                                                                              |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| `ThemeContext` (MUI) | Theme; consumed via `sx` callbacks, no custom `useTheme`                              |
-| `SnackbarContext`    | `showSnackbar` + queued `<Snackbar>` UI                                               |
-| `SpeechContext`      | Voices, locales, rate/pitch/volume, `speak`/`cancel`                                  |
-| `LanguageContext`    | Available languages, selected language, `setLanguage`                                 |
-| `AIContext`          | `sharedContext` (persisted), `downloads` (progress 0–1 per capability), `setDownload` |
+| Context              | Provides                                                 |
+| -------------------- | -------------------------------------------------------- |
+| `ThemeContext` (MUI) | Theme; consumed via `sx` callbacks, no custom `useTheme` |
+| `SnackbarContext`    | `showSnackbar` + queued `<Snackbar>` UI                  |
+| `SpeechContext`      | Voices, locales, rate/pitch/volume, `speak`/`cancel`     |
+| `LanguageContext`    | Available languages, selected language, `setLanguage`    |
 
 **Cross-tab sync.** `board-sets-store.ts` builds an external store with `createExternalStore` (a tiny `Set<listener>` + state) and exposes it through `useBoardSets` via `useSyncExternalStore`. Mutations call `invalidateAndBroadcast`, which refreshes the local snapshot and posts to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots.
 
 **ObjectURL lifecycle.** `useLoadBoard` allocates a fresh `ObjectUrlRegistry` per load and `revokeAll()`s the previous one on success or unmount, preventing blob-URL leaks across navigations.
 
-**See:** [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/utils/object-url.ts](../src/shared/utils/object-url.ts), [src/shared/hooks/usePersistentState.ts](../src/shared/hooks/usePersistentState.ts).
+**See:** [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/utils/object-url.ts](../src/shared/utils/object-url.ts), [src/shared/hooks/use-persistent-state.ts](../src/shared/hooks/use-persistent-state.ts).
 
 ## 8. AI integration
 
@@ -163,7 +161,7 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 ### Capability detection
 
-`capabilities.ts` exports three booleans evaluated once at module load: `isProofreaderSupported`, `isRewriterSupported`, `isTranslatorSupported`. Read directly by `AICapabilitiesList`, `AISettings`, `LanguageSettings`, and `useSuggestions`.
+[`isSupported(name)`](../src/shared/built-in-ai/is-supported.ts) returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. Called directly by `AISettings`, `LanguageSettings`, and `useSuggestions` to gate the AI affordances at render time. Combine with the hook's `status === "unavailable"` for the full readiness picture.
 
 ### Session caching
 
@@ -171,7 +169,7 @@ Each AI hook (`useProofreader`, `useRewriter`, `useTranslator`) holds a single l
 
 ### Download-progress aggregation
 
-`AIProvider` owns a `downloads: Record<string, number>` keyed by capability name. Each hook subscribes to `downloadprogress` on its session monitor and writes `event.loaded` (0–1) to the matching key via `setDownload`. `LanguageSettings` reads `downloads.translator` to render a progress message.
+Built-in AI sessions emit `downloadprogress` events during model download. The lifecycle store in [internal/lifecycle/store.ts](../src/shared/built-in-ai/internal/lifecycle/store.ts) forwards each event to a module-level [progress-store](../src/shared/built-in-ai/internal/progress-store.ts) keyed by namespace. [`useGlobalDownloadProgress(namespace?)`](../src/shared/built-in-ai/use-global-download-progress.ts) reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads triggered by hooks and the imperative `create*` factories alike. `LanguageSettings` and `SpeechSettings` consume `useGlobalDownloadProgress("Translator")` to render their progress messages.
 
 ### Where `sharedContext` is actually used
 
@@ -181,7 +179,7 @@ The persisted `ai-shared-context` string is currently passed only through `useSu
 
 `useSuggestions` runs the proofreader and rewriter in parallel against a shared `AbortController`, cancels in-flight calls when the input changes, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
 
-**See:** [src/shared/ai/capabilities.ts](../src/shared/ai/capabilities.ts), [src/shared/ai/AIProvider.tsx](../src/shared/ai/AIProvider.tsx), [src/shared/ai/useTranslator.ts](../src/shared/ai/useTranslator.ts), [src/shared/ai/useRewriter.ts](../src/shared/ai/useRewriter.ts), [src/shared/ai/useProofreader.ts](../src/shared/ai/useProofreader.ts), [src/features/board/suggestions/useSuggestions.ts](../src/features/board/suggestions/useSuggestions.ts).
+**See:** [src/shared/built-in-ai/](../src/shared/built-in-ai/) (module overview in its [README](../src/shared/built-in-ai/README.md)), [src/shared/built-in-ai/is-supported.ts](../src/shared/built-in-ai/is-supported.ts), [src/shared/built-in-ai/use-global-download-progress.ts](../src/shared/built-in-ai/use-global-download-progress.ts), [src/shared/built-in-ai/translator/use-translator.ts](../src/shared/built-in-ai/translator/use-translator.ts), [src/shared/built-in-ai/rewriter/use-rewriter.ts](../src/shared/built-in-ai/rewriter/use-rewriter.ts), [src/shared/built-in-ai/proofreader/use-proofreader.ts](../src/shared/built-in-ai/proofreader/use-proofreader.ts), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
 
 ## 9. Speech & audio
 
@@ -192,7 +190,7 @@ Two engines play message parts:
 
 `useMessagePlayback` interleaves them: it walks each `MessagePart` in order; if the part has a `soundSrc`, it plays the audio; otherwise it speaks the `vocalization ?? label`. Adjacent text parts are merged into a single utterance to avoid clipped speech between words.
 
-**See:** [src/shared/speech/useSpeechSynthesis.ts](../src/shared/speech/useSpeechSynthesis.ts), [src/shared/hooks/useAudio.ts](../src/shared/hooks/useAudio.ts), [src/features/board/message/useMessagePlayback.ts](../src/features/board/message/useMessagePlayback.ts).
+**See:** [src/shared/speech/use-speech-synthesis.ts](../src/shared/speech/use-speech-synthesis.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts).
 
 ## 10. Internationalization
 
@@ -215,7 +213,7 @@ When the user's selected language differs from a board's locale, `useBoardTransl
 
 If the Translator capability is unavailable, the original board is shown unchanged.
 
-**See:** [src/features/board/useBoardTranslation.ts](../src/features/board/useBoardTranslation.ts), [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts).
+**See:** [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts).
 
 ## 11. PWA & offline
 
