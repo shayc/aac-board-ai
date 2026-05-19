@@ -1,14 +1,11 @@
 import { createInstance } from "../internal/lifecycle/create-instance.ts";
+import type { TranslatorOptions } from "./use-translator.ts";
 
 /**
- * Options for {@link createTranslator}. Same shape as {@link TranslatorOptions}
- * plus an optional cancellation signal.
+ * Options for {@link createTranslator}. Mirrors {@link TranslatorOptions} plus
+ * an optional cancellation signal.
  */
-export interface CreateTranslatorOptions {
-  /** BCP-47 language tag of the source text (e.g. `"en"`, `"fr"`). */
-  sourceLanguage: string;
-  /** BCP-47 language tag of the target text (e.g. `"es"`, `"ja"`). */
-  targetLanguage: string;
+export interface CreateTranslatorOptions extends TranslatorOptions {
   /** Cancels both the (optional) download and `Translator.create()` call. */
   signal?: AbortSignal;
 }

@@ -16,6 +16,7 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../../errors.ts";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import { snapshotProgressFor } from "../progress-store.ts";
 import { makeAIFake } from "../testing/ai-namespace-fake.ts";
 import { useLifecycle } from "./use-lifecycle.ts";
@@ -30,7 +31,9 @@ interface TestInstance {
   marker?: string;
 }
 
-const NAMESPACE = "__TestAI";
+// Cast: useLifecycle restricts `globalName` to the BuiltInAIName union, but this
+// suite exercises the generic lifecycle with a stubbed-in fake.
+const NAMESPACE = "__TestAI" as BuiltInAIName;
 
 function buildInstance(overrides: Partial<TestInstance> = {}): TestInstance {
   return { destroy: vi.fn<() => void>(), inputQuota: 1024, ...overrides };
@@ -72,7 +75,11 @@ describe("useLifecycle", () => {
     vi.stubGlobal(NAMESPACE, Fake);
 
     const { result } = await renderHook(() =>
-      useLifecycle<TestOptions, TestInstance>(NAMESPACE, { mode: "a" }),
+      useLifecycle<TestOptions, TestInstance>(
+        NAMESPACE,
+        { mode: "a" },
+        (instance) => instance.inputQuota ?? 0,
+      ),
     );
 
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));

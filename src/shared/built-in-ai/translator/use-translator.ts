@@ -9,18 +9,10 @@ import type { BaseHookReturn } from "../types.ts";
  *
  * @see https://developer.chrome.com/docs/ai/translator-api
  */
-export interface TranslatorOptions {
-  /** BCP-47 tag of the source text (e.g. `"en"`, `"fr"`). */
-  sourceLanguage: string;
-  /** BCP-47 tag of the target text (e.g. `"es"`, `"ja"`). */
-  targetLanguage: string;
-}
+export type TranslatorOptions = TranslatorCreateCoreOptions;
 
 /** Per-call options for {@link useTranslator} action methods. */
-export interface TranslateCallOptions {
-  /** Cancels this call only; does not destroy the shared instance. */
-  signal?: AbortSignal;
-}
+export type TranslateCallOptions = TranslatorTranslateOptions;
 
 /**
  * Return value of {@link useTranslator}. Extends {@link BaseHookReturn} with the
@@ -79,7 +71,11 @@ export function useTranslator(
   options: TranslatorOptions,
 ): TranslatorHookReturn {
   const { status, progress, error, prepare, inputQuota, acquire } =
-    useLifecycle<TranslatorOptions, Translator>("Translator", options);
+    useLifecycle<TranslatorOptions, Translator>(
+      "Translator",
+      options,
+      (instance) => instance.inputQuota,
+    );
 
   const [actions] = useState(() => ({
     async translate(input: string, opts?: TranslateCallOptions) {

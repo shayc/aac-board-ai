@@ -5,14 +5,12 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../../errors.ts";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import type { Status } from "../../types.ts";
 import { abortError, mergeSignals, raceAbort } from "../signal.ts";
+import { hasUserActivation } from "../user-activation.ts";
 import { createInstance } from "./create-instance.ts";
-import type { AINamespace, DestroyableInstance } from "./types.ts";
-
-function hasUserActivation(): boolean {
-  return navigator.userActivation?.isActive ?? false;
-}
+import type { AINamespace } from "./types.ts";
 
 export interface Snapshot {
   status: Status;
@@ -43,19 +41,12 @@ function wrap(error: unknown): BuiltInAIError {
   );
 }
 
-function readQuota(instance: unknown): number {
-  const value = (instance as { inputQuota?: unknown }).inputQuota;
-  return typeof value === "number" ? value : 0;
-}
-
-function destroyQuietly(
-  instance: DestroyableInstance | null | undefined,
-): void {
+function destroyQuietly(instance: DestroyableModel | null | undefined): void {
   if (!instance) {
     return;
   }
   try {
-    instance.destroy?.();
+    instance.destroy();
   } catch {
     // Best-effort during teardown — a throw here has nowhere to go.
   }
@@ -63,8 +54,11 @@ function destroyQuietly(
 
 export function createStore<
   Options extends object,
-  Instance extends DestroyableInstance,
->(globalName: string) {
+  Instance extends DestroyableModel,
+>(
+  globalName: BuiltInAIName,
+  readQuota: (instance: Instance) => number = () => 0,
+) {
   let snapshot: Snapshot = INITIAL;
   const listeners = new Set<() => void>();
 
