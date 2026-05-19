@@ -81,6 +81,13 @@ export function createStore<
     notify();
   }
 
+  function fail(
+    status: "unsupported" | "unavailable" | "error",
+    error: BuiltInAIError | null = null,
+  ): void {
+    update({ status, progress: 0, error });
+  }
+
   /**
    * Probe availability on start. If the model is already local we auto-provision
    * (no "downloading" UI flash); otherwise we settle into the matching state
@@ -96,7 +103,7 @@ export function createStore<
         return;
       }
       if (availability === "unavailable") {
-        update({ status: "unavailable" });
+        fail("unavailable");
         return;
       }
       if (availability === "available") {
@@ -106,7 +113,7 @@ export function createStore<
       if (signal.aborted) {
         return;
       }
-      update({ status: "error", progress: 0, error: wrap(error) });
+      fail("error", wrap(error));
     }
   }
 
@@ -153,11 +160,11 @@ export function createStore<
       // Map the primitive's typed rejections back to terminal states;
       // only genuine create failures land in "error".
       if (error instanceof UnsupportedError) {
-        update({ status: "unsupported", progress: 0, error: null });
+        fail("unsupported");
       } else if (error instanceof UnavailableError) {
-        update({ status: "unavailable", progress: 0, error: null });
+        fail("unavailable");
       } else {
-        update({ status: "error", progress: 0, error: wrap(error) });
+        fail("error", wrap(error));
       }
     }
   }
@@ -185,7 +192,7 @@ export function createStore<
    */
   async function ensureReady(callerSignal?: AbortSignal): Promise<void> {
     // 1. Background availability check may be in flight — wait it out.
-    if (snapshot.status === "idle" && activeTask) {
+    if (snapshot.status === "idle") {
       await awaitActiveTask(callerSignal);
     }
 
@@ -198,7 +205,7 @@ export function createStore<
     }
 
     // 3. Provision in flight (ours, or a concurrent caller's) — wait it out.
-    if (snapshot.status === "downloading" && activeTask) {
+    if (snapshot.status === "downloading") {
       await awaitActiveTask(callerSignal);
     }
 
