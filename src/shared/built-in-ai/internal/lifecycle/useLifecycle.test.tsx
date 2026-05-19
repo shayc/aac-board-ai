@@ -189,8 +189,8 @@ describe("useLifecycle", () => {
   });
 
   // Seeds the cross-namespace progress store with 0 at download start so
-  // `useDownloadProgress` consumers see the download immediately rather than
-  // only after the first `downloadprogress` event arrives.
+  // `useGlobalDownloadProgress` consumers see the download immediately rather
+  // than only after the first `downloadprogress` event arrives.
   test("writes 0 to the shared progress store as soon as download starts", async () => {
     let resolveCreate!: (value: TestInstance) => void;
     const create = vi.fn(

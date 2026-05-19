@@ -24,7 +24,7 @@ export interface CreateTranslatorOptions {
  * - Throws `NoUserActivationError` when a download is required without a
  *   transient user activation. Call from a click or keypress handler, or
  *   pre-warm the model via `useTranslator`.
- * - Reports download progress through the same store `useDownloadProgress`
+ * - Reports download progress through the same store `useGlobalDownloadProgress`
  *   reads from, so a hook elsewhere in the tree can render a global indicator.
  *
  * The result is `AsyncDisposable`: prefer `await using` so the instance is
