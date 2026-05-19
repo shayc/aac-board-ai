@@ -64,32 +64,29 @@ function destroyQuietly(
   }
 }
 
-interface Store<Options extends object, Instance extends DestroyableInstance> {
-  subscribe: (listener: () => void) => () => void;
-  getSnapshot: () => Snapshot;
-  prepare: () => Promise<void>;
-  acquire: (callerSignal?: AbortSignal) => Promise<Acquired<Instance>>;
-  start: (
-    namespace: AINamespace<Options, Instance> | undefined,
-    options: Options | undefined,
-  ) => void;
-  stop: () => void;
+/** Stabilizes the options reference so effects re-run on real changes only. */
+function useStableOptions<T extends object>(
+  options: T | undefined,
+): T | undefined {
+  const [stable, setStable] = useState(options);
+  if (!shallowEqualOptions(stable, options)) {
+    setStable(options);
+  }
+  return stable;
 }
 
 function createStore<
   Options extends object,
   Instance extends DestroyableInstance,
->(globalName: string): Store<Options, Instance> {
+>(globalName: string) {
   let snapshot: Snapshot = INITIAL;
   const listeners = new Set<() => void>();
 
   let namespace: AINamespace<Options, Instance> | undefined;
   let options: Options | undefined;
-  let controller = new AbortController();
-  let generation = 0;
   let instance: Instance | null = null;
-  let pending: Promise<unknown> | null = null;
-  let mounted = false;
+  let abortController = new AbortController();
+  let activeTask: Promise<void> | null = null;
 
   function notify(): void {
     for (const listener of listeners) {
@@ -102,139 +99,96 @@ function createStore<
     notify();
   }
 
-  function isCurrent(expected: number): boolean {
-    return mounted && expected === generation;
-  }
-
-  function startCreate(
-    withMonitor: boolean,
-    expected: number,
-  ): Promise<Instance> {
-    if (withMonitor) {
-      update({ status: "downloading", progress: 0 });
-    }
-
-    const promise = createInstance<Options, Instance>({
-      name: globalName,
-      options,
-      signal: controller.signal,
-      onProgress: (loaded) => {
-        if (!isCurrent(expected)) {
-          return;
-        }
-        update({ progress: loaded });
-      },
-    });
-    pending = promise;
-
-    promise.then(
-      (created) => {
-        if (!isCurrent(expected)) {
-          destroyQuietly(created);
-          return;
-        }
-        instance = created;
-        pending = null;
-        update({
-          status: "ready",
-          progress: 0,
-          error: null,
-          inputQuota: readQuota(created),
-        });
-      },
-      (error) => {
-        if (!isCurrent(expected)) {
-          return;
-        }
-        pending = null;
-        // Map the primitive's typed rejections back to terminal states; only
-        // genuine create failures land in "error".
-        if (error instanceof UnsupportedError) {
-          update({ status: "unsupported", progress: 0, error: null });
-        } else if (error instanceof UnavailableError) {
-          update({ status: "unavailable", progress: 0, error: null });
-        } else {
-          update({ status: "error", progress: 0, error: wrap(error) });
-        }
-      },
-    );
-
-    return promise;
-  }
-
-  function runAvailabilityChain(expected: number): void {
-    const ns = namespace;
-    if (!ns) {
+  /**
+   * Probe availability on start. If the model is already local we auto-provision
+   * (no "downloading" UI flash); otherwise we settle into the matching state
+   * and wait for a user-initiated provision via prepare/acquire.
+   */
+  async function checkAvailability(signal: AbortSignal): Promise<void> {
+    if (!namespace) {
       return;
     }
-    const opts = options;
-    const chain = ns.availability(opts).then(
-      (availability) => {
-        if (!isCurrent(expected)) {
-          return;
-        }
-        if (availability === "unavailable") {
-          pending = null;
-          update({ status: "unavailable" });
-          return;
-        }
-        if (availability === "available") {
-          return startCreate(false, expected).then(
-            () => undefined,
-            () => undefined,
-          );
-        }
-        pending = null;
-      },
-      (error) => {
-        if (!isCurrent(expected)) {
-          return;
-        }
-        pending = null;
+    try {
+      const availability = await namespace.availability(options);
+      if (signal.aborted) {
+        return;
+      }
+      if (availability === "unavailable") {
+        update({ status: "unavailable" });
+        return;
+      }
+      if (availability === "available") {
+        await provision(signal, false);
+      }
+    } catch (error) {
+      if (signal.aborted) {
+        return;
+      }
+      update({ status: "error", progress: 0, error: wrap(error) });
+    }
+  }
+
+  /**
+   * Create the underlying instance. `showDownloadUI` flips status to
+   * "downloading" first — used for user-initiated triggers where progress
+   * matters; the silent path keeps an "available" model on "idle" until it
+   * lands as "ready".
+   */
+  async function provision(
+    signal: AbortSignal,
+    showDownloadUI: boolean,
+  ): Promise<void> {
+    if (showDownloadUI) {
+      update({ status: "downloading", progress: 0 });
+    }
+    try {
+      const created = await createInstance<Options, Instance>({
+        name: globalName,
+        options,
+        signal,
+        onProgress: (loaded) => {
+          if (signal.aborted) {
+            return;
+          }
+          update({ progress: loaded });
+        },
+      });
+      if (signal.aborted) {
+        destroyQuietly(created);
+        return;
+      }
+      instance = created;
+      update({
+        status: "ready",
+        progress: 0,
+        error: null,
+        inputQuota: readQuota(created),
+      });
+    } catch (error) {
+      if (signal.aborted) {
+        return;
+      }
+      // Map the primitive's typed rejections back to terminal states;
+      // only genuine create failures land in "error".
+      if (error instanceof UnsupportedError) {
+        update({ status: "unsupported", progress: 0, error: null });
+      } else if (error instanceof UnavailableError) {
+        update({ status: "unavailable", progress: 0, error: null });
+      } else {
         update({ status: "error", progress: 0, error: wrap(error) });
-      },
-    );
-    pending = chain;
+      }
+    }
   }
 
-  function start(
-    nextNamespace: AINamespace<Options, Instance> | undefined,
-    nextOptions: Options | undefined,
-  ): void {
-    controller.abort(abortError("lifecycle reset"));
-    namespace = nextNamespace;
-    options = nextOptions;
-    generation += 1;
-    controller = new AbortController();
-    mounted = true;
-    instance = null;
-    pending = null;
-    snapshot = {
-      status: nextNamespace ? "idle" : "unsupported",
-      progress: 0,
-      error: null,
-      inputQuota: 0,
-    };
-    notify();
-    runAvailabilityChain(generation);
-  }
-
-  function stop(): void {
-    mounted = false;
-    controller.abort(abortError("lifecycle reset"));
-    pending = null;
-    const toDestroy = instance;
-    instance = null;
-    destroyQuietly(toDestroy);
-  }
-
-  async function awaitPending(
-    promise: Promise<unknown>,
+  async function awaitActiveTask(
     callerSignal: AbortSignal | undefined,
   ): Promise<void> {
-    const merged = mergeSignals(controller.signal, callerSignal);
+    if (!activeTask) {
+      return;
+    }
+    const merged = mergeSignals(abortController.signal, callerSignal);
     try {
-      await raceAbort(promise, merged);
+      await raceAbort(activeTask, merged);
     } catch (err) {
       if (merged.aborted) {
         throw err;
@@ -243,90 +197,102 @@ function createStore<
     }
   }
 
-  async function acquire(
-    callerSignal?: AbortSignal,
-  ): Promise<Acquired<Instance>> {
-    for (;;) {
-      switch (snapshot.status) {
-        case "ready": {
-          const merged = mergeSignals(controller.signal, callerSignal);
-          if (merged.aborted) {
-            throw merged.reason;
-          }
-          return { instance: instance!, signal: merged };
-        }
-        case "unsupported":
-          throw new UnsupportedError();
-        case "unavailable":
-          throw new UnavailableError();
-        case "error":
-          throw new NotReadyError(snapshot.error?.cause);
-        case "downloading":
-          await awaitPending(pending!, callerSignal);
-          continue;
-        case "idle": {
-          if (pending) {
-            await awaitPending(pending, callerSignal);
-            continue;
-          }
-          if (!hasUserActivation()) {
-            throw new NoUserActivationError();
-          }
-          void startCreate(true, generation);
-          continue;
-        }
-      }
+  /**
+   * Drive the lifecycle from wherever we are toward a terminal state, then
+   * either return (ready) or throw the matching typed error.
+   */
+  async function ensureReady(callerSignal?: AbortSignal): Promise<void> {
+    // 1. Background availability check may be in flight — wait it out.
+    if (snapshot.status === "idle" && activeTask) {
+      await awaitActiveTask(callerSignal);
     }
+
+    // 2. Still idle means the model needs a user-initiated provision.
+    if (snapshot.status === "idle") {
+      if (!hasUserActivation()) {
+        throw new NoUserActivationError();
+      }
+      activeTask = provision(abortController.signal, true);
+    }
+
+    // 3. Provision in flight (ours, or a concurrent caller's) — wait it out.
+    if (snapshot.status === "downloading" && activeTask) {
+      await awaitActiveTask(callerSignal);
+    }
+
+    // 4. Whatever terminal state we landed in: return or throw.
+    switch (snapshot.status) {
+      case "ready":
+        return;
+      case "unsupported":
+        throw new UnsupportedError();
+      case "unavailable":
+        throw new UnavailableError();
+      case "error":
+        throw new NotReadyError(snapshot.error?.cause);
+    }
+    throw new Error(`Unexpected lifecycle state: ${snapshot.status}`);
   }
 
-  async function prepare(): Promise<void> {
-    // Entering prepare() in "error" clears it and restarts the chain once.
-    // Landing back in "error" (here or mid-drive) rejects — no retry loop.
-    if (snapshot.status === "error") {
-      start(namespace, options);
-    }
-    for (;;) {
-      switch (snapshot.status) {
-        case "ready":
-          return;
-        case "unsupported":
-          throw new UnsupportedError();
-        case "unavailable":
-          throw new UnavailableError();
-        case "error":
-          throw new NotReadyError(snapshot.error?.cause);
-        case "downloading":
-          await awaitPending(pending!, undefined);
-          continue;
-        case "idle": {
-          if (pending) {
-            await awaitPending(pending, undefined);
-            continue;
-          }
-          if (!hasUserActivation()) {
-            throw new NoUserActivationError();
-          }
-          void startCreate(true, generation);
-          continue;
-        }
-      }
-    }
+  function start(
+    nextNamespace: AINamespace<Options, Instance> | undefined,
+    nextOptions: Options | undefined,
+  ): void {
+    abortController.abort(abortError("lifecycle reset"));
+    abortController = new AbortController();
+    namespace = nextNamespace;
+    options = nextOptions;
+    destroyQuietly(instance);
+    instance = null;
+    snapshot = {
+      ...INITIAL,
+      status: nextNamespace ? "idle" : "unsupported",
+    };
+    notify();
+    activeTask = checkAvailability(abortController.signal);
   }
 
-  function subscribe(listener: () => void): () => void {
+  function stop(): void {
+    abortController.abort(abortError("lifecycle unmounted"));
+    activeTask = null;
+    destroyQuietly(instance);
+    instance = null;
+  }
+
+  const subscribe = (listener: () => void): (() => void) => {
     listeners.add(listener);
     return () => {
       listeners.delete(listener);
     };
-  }
+  };
+
+  const prepare = async (): Promise<void> => {
+    // Re-entry from "error" clears and restarts the chain once; landing back
+    // in "error" rejects — no retry loop.
+    if (snapshot.status === "error") {
+      start(namespace, options);
+    }
+    await ensureReady();
+  };
+
+  const acquire = async (
+    callerSignal?: AbortSignal,
+  ): Promise<Acquired<Instance>> => {
+    await ensureReady(callerSignal);
+    const merged = mergeSignals(abortController.signal, callerSignal);
+    if (merged.aborted) {
+      throw merged.reason;
+    }
+    return { instance: instance!, signal: merged };
+  };
 
   return {
     subscribe,
     getSnapshot: () => snapshot,
-    prepare,
-    acquire,
     start,
     stop,
+    prepare,
+    acquire,
   };
 }
 
@@ -335,18 +301,10 @@ export function useLifecycle<
   Options extends object,
   Instance extends DestroyableInstance,
 >(globalName: string, options: Options | undefined): Lifecycle<Instance> {
+  const stableOptions = useStableOptions(options);
   const namespace = (globalThis as Record<string, unknown>)[globalName] as
     | AINamespace<Options, Instance>
     | undefined;
-
-  // setState-in-render to collapse shallow-equal options to a stable reference
-  // (react.dev "store info from previous renders"); the effect re-runs only on real changes.
-  const [stableOptions, setStableOptions] = useState<Options | undefined>(
-    options,
-  );
-  if (!shallowEqualOptions(stableOptions, options)) {
-    setStableOptions(options);
-  }
 
   const [store] = useState(() => createStore<Options, Instance>(globalName));
 
