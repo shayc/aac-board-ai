@@ -1,22 +1,22 @@
 # `built-in-ai`
 
-A thin React layer over the browser's [Built-in AI](https://developer.chrome.com/docs/ai/built-in) APIs — Gemini Nano on Chrome, Phi 4 Mini on Edge. Three hooks plus a few helpers, all sharing one lifecycle state machine.
+A thin React layer over the browser's [Built-in AI](https://developer.chrome.com/docs/ai/built-in) APIs — Gemini Nano on Chrome, Phi 4 Mini on Edge. Three task APIs, each with a React hook and an imperative creator, all sharing one lifecycle state machine.
 
 ```ts
-import { useTranslator } from "@shared/built-in-ai";
+import { useTranslator, createTranslator } from "@shared/built-in-ai";
 ```
 
-## Hooks
+## Surface
 
-| Hook             | Underlying API                                                          |
-| ---------------- | ----------------------------------------------------------------------- |
-| `useRewriter`    | [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)       |
-| `useTranslator`  | [Translator API](https://developer.chrome.com/docs/ai/translator-api)   |
-| `useProofreader` | [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api) |
+| Task API    | React hook       | Imperative creator  | Underlying browser API                                                  |
+| ----------- | ---------------- | ------------------- | ----------------------------------------------------------------------- |
+| Translator  | `useTranslator`  | `createTranslator`  | [Translator API](https://developer.chrome.com/docs/ai/translator-api)   |
+| Rewriter    | `useRewriter`    | `createRewriter`    | [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)       |
+| Proofreader | `useProofreader` | `createProofreader` | [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api) |
 
-Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `translate`, `translateStream`, `measureInput`).
+**Use the hook** when the options are known at render time (e.g. a translator bound to the user's current language pair). **Use the creator** when options are decided mid-flow and a hook can't be driven (queued work, command palettes, one-shot scripts).
 
-`useProofreader` is the one exception: the underlying API exposes neither `measureInputUsage` nor `inputQuota`, so its hook return omits `measureInput` and `inputQuota`.
+Every hook returns the same lifecycle surface plus namespace-specific action methods (e.g. `translate`, `translateStream`, `measureInput`). `useProofreader` is the one exception: the underlying API exposes neither `measureInputUsage` nor `inputQuota`, so its hook return omits `measureInput` and `inputQuota`.
 
 ## Lifecycle
 
@@ -78,6 +78,38 @@ for await (const chunk of translator.translateStream(text, { signal })) {
 }
 ```
 
+## Imperative creators
+
+```ts
+try {
+  await using translator = await createTranslator({
+    sourceLanguage,
+    targetLanguage,
+  });
+  const text = await translator.translate(input);
+} catch (error) {
+  if (!(error instanceof BuiltInAIError)) throw error;
+  // unsupported / unavailable / no-activation — render a fallback.
+}
+```
+
+Each `create*` mirrors the hook lifecycle exactly: same `UnsupportedError` / `UnavailableError` / `NoUserActivationError` conditions, same progress wiring. The returned instance is `AsyncDisposable` — prefer `await using` so the instance is released on scope exit. `.destroy()` is still exposed for callers that need to release the model earlier. Each creator accepts the same options as its hook plus an optional `signal` that cancels both the download (if any) and the underlying `create()` call.
+
+Because a creator requires a user activation when a download is needed, prefer calling it from an event handler — or pre-warm the model via the matching hook elsewhere in the tree before the call site is reached.
+
+## Download progress
+
+- **Per-instance** — read `progress` and `status` from the hook return (or the creator's lifecycle, which writes to the same place). This is the right signal for "this specific translator/rewriter/proofreader is downloading."
+- **Cross-instance** — `useGlobalDownloadProgress(namespace?)` reports the highest in-flight progress across every instance, regardless of which component (or imperative caller) initiated the download. Pass a namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`) to scope to one API, or call with no argument to aggregate across all built-in AI downloads. Useful for a global indicator that lives outside any specific hook call site.
+
+```tsx
+function GlobalDownloadBar() {
+  const progress = useGlobalDownloadProgress();
+  if (progress === 0) return null;
+  return <ProgressBar value={progress} />;
+}
+```
+
 ## Options
 
 Options are compared by **shallow per-key equality**. Memoize array-valued options (`expectedInputLanguages`, etc.) to avoid spurious re-creation. **Changing any option destroys the current instance, aborts in-flight work with `AbortError`, and re-enters the state machine.**
@@ -99,22 +131,4 @@ A per-call `signal` cancels the _caller's_ wait and the underlying action call, 
 
 ## Other exports
 
-- `createTranslator(options)` — imperative `Translator` factory for call sites that decide the language pair mid-flow and can't drive a hook. Mirrors the hook lifecycle: throws `UnsupportedError` / `UnavailableError` / `NoUserActivationError` under the same conditions, and reports progress through the same store the hooks write to. The returned instance is `AsyncDisposable`:
-
-  ```ts
-  try {
-    await using translator = await createTranslator({
-      sourceLanguage,
-      targetLanguage,
-    });
-    const text = await translator.translate(input);
-  } catch (error) {
-    if (!(error instanceof BuiltInAIError)) throw error;
-    // unsupported / unavailable / no-activation — render a fallback.
-  }
-  ```
-
-  `.destroy()` is still exposed for callers that need to release the model before scope exit. Because `createTranslator` requires a user activation when a download is needed, prefer calling it from an event handler (or pre-warm via a hook before the call site is reached).
-
-- `useDownloadProgress(prefix)` — highest in-flight progress (`0..1`) across all instances matching a namespace prefix (e.g. `"Translator"` aggregates every language pair currently downloading).
 - `isSupported(name)` — capability check for a given built-in AI namespace (`"Translator"`, `"Rewriter"`, `"Proofreader"`).

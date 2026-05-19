@@ -22,6 +22,8 @@ export {
 } from "./translator/index.ts";
 
 export {
+  createRewriter,
+  type CreateRewriterOptions,
   useRewriter,
   type RewriteCallOptions,
   type RewriterHookReturn,
@@ -29,6 +31,8 @@ export {
 } from "./rewriter/index.ts";
 
 export {
+  createProofreader,
+  type CreateProofreaderOptions,
   useProofreader,
   type ProofreadCallOptions,
   type ProofreaderHookReturn,
