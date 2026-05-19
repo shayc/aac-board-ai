@@ -56,13 +56,12 @@ Lazy routes are wrapped in `<AsyncBoundary>` (`<Suspense>` + `react-error-bounda
 `AppProviders` composes context in this order, outer to inner:
 
 ```
-SpeechProvider                 // owns the Web Speech API state
-└─ LanguageProvider            // consumes SpeechProvider to map language → voice
-   └─ ThemeProvider            // MUI theme + RTL direction
-      └─ SnackbarProvider      // queued transient feedback
+LanguageProvider               // language preference + default voice selection
+└─ ThemeProvider               // MUI theme + RTL direction
+   └─ SnackbarProvider         // queued transient feedback
 ```
 
-Order is load-bearing. `LanguageProvider` reads `useSpeech()` to discover available voices and pick a default for the current language, so it must sit inside `SpeechProvider`. There is no AI-specific provider; built-in AI state is owned per-hook and aggregated via [`useGlobalDownloadProgress`](../src/shared/built-in-ai/use-global-download-progress.ts), which subscribes to a module-level progress store rather than a React context.
+There is no provider for speech state or AI state. Speech is owned by a module-level [speech-store](../src/shared/speech/speech-store.ts) — `LanguageProvider` reads voices from it via `useVoices()` to pick a default for the current language. Built-in AI state is owned per-hook and aggregated via [`useDownloadProgress`](../src/shared/built-in-ai/use-download-progress.ts), which subscribes to a module-level progress store. Both follow the same pattern: singleton browser state lives in a module store, not in a React context, so updates only re-render the components subscribed to the slice that changed.
 
 **See:** [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
 
@@ -99,7 +98,7 @@ flowchart TD
   E --> F
 ```
 
-IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardViewer`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `useSpeech` / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
+IndexedDB is the convergence point: it's written by import, read by board loading, and re-read after translation caches its results. The board-sets external store is invalidated whenever import or delete completes, and a `BroadcastChannel` propagates the invalidation to every open tab. From `BoardViewer`, tile activations flow through `useButtonActivation` into `useMessage` (localStorage) and `useBoardNavigation`; per-button preview plays directly through `speak()` from the speech-store / `useAudio`, while the message-bar play button uses `useMessagePlayback` — see Speech & audio for playback and Storage for persistence.
 
 **See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-load-board.ts](../src/features/board/use-load-board.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/features/board/use-button-activation.ts](../src/features/board/use-button-activation.ts).
 
@@ -169,7 +168,7 @@ Each AI hook (`useProofreader`, `useRewriter`, `useTranslator`) holds a single l
 
 ### Download-progress aggregation
 
-Built-in AI sessions emit `downloadprogress` events during model download. The lifecycle store in [internal/lifecycle/store.ts](../src/shared/built-in-ai/internal/lifecycle/store.ts) forwards each event to a module-level [progress-store](../src/shared/built-in-ai/internal/progress-store.ts) keyed by namespace. [`useGlobalDownloadProgress(namespace?)`](../src/shared/built-in-ai/use-global-download-progress.ts) reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads triggered by hooks and the imperative `create*` factories alike. `LanguageSettings` and `SpeechSettings` consume `useGlobalDownloadProgress("Translator")` to render their progress messages.
+Built-in AI sessions emit `downloadprogress` events during model download. The lifecycle store in [internal/lifecycle/store.ts](../src/shared/built-in-ai/internal/lifecycle/store.ts) forwards each event to a module-level [progress-store](../src/shared/built-in-ai/internal/progress-store.ts) keyed by namespace. [`useDownloadProgress(namespace?)`](../src/shared/built-in-ai/use-download-progress.ts) reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads triggered by hooks and the imperative `create*` factories alike. `LanguageSettings` and `SpeechSettings` consume `useDownloadProgress("Translator")` to render their progress messages.
 
 ### Where `sharedContext` is actually used
 
@@ -179,18 +178,20 @@ The persisted `ai-shared-context` string is currently passed only through `useSu
 
 `useSuggestions` runs the proofreader and rewriter in parallel against a shared `AbortController`, cancels in-flight calls when the input changes, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
 
-**See:** [src/shared/built-in-ai/](../src/shared/built-in-ai/) (module overview in its [README](../src/shared/built-in-ai/README.md)), [src/shared/built-in-ai/is-supported.ts](../src/shared/built-in-ai/is-supported.ts), [src/shared/built-in-ai/use-global-download-progress.ts](../src/shared/built-in-ai/use-global-download-progress.ts), [src/shared/built-in-ai/translator/use-translator.ts](../src/shared/built-in-ai/translator/use-translator.ts), [src/shared/built-in-ai/rewriter/use-rewriter.ts](../src/shared/built-in-ai/rewriter/use-rewriter.ts), [src/shared/built-in-ai/proofreader/use-proofreader.ts](../src/shared/built-in-ai/proofreader/use-proofreader.ts), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
+**See:** [src/shared/built-in-ai/](../src/shared/built-in-ai/) (module overview in its [README](../src/shared/built-in-ai/README.md)), [src/shared/built-in-ai/is-supported.ts](../src/shared/built-in-ai/is-supported.ts), [src/shared/built-in-ai/use-download-progress.ts](../src/shared/built-in-ai/use-download-progress.ts), [src/shared/built-in-ai/translator/use-translator.ts](../src/shared/built-in-ai/translator/use-translator.ts), [src/shared/built-in-ai/rewriter/use-rewriter.ts](../src/shared/built-in-ai/rewriter/use-rewriter.ts), [src/shared/built-in-ai/proofreader/use-proofreader.ts](../src/shared/built-in-ai/proofreader/use-proofreader.ts), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
 
 ## 9. Speech & audio
 
 Two engines play message parts:
 
-- **`useSpeech` / `useSpeechSynthesis`** — wraps the Web Speech API: voice list (refreshed on `voiceschanged`), per-utterance rate/pitch/volume, promise-returning `speak`. Voices are grouped by language and locale for the language picker.
+- **[`speech-store`](../src/shared/speech/speech-store.ts)** — module-level external store wrapping the Web Speech API. Holds the voice list (refreshed on `voiceschanged`) and per-utterance rate/pitch/volume. Exposes imperative actions (`speak`, `cancel`, `pause`, `resume`, `setRate`, `setPitch`, `setVolume`, `setVoiceURI`) and slice-subscribed hooks (`useVoices`, `useVoiceURI`, `useRate`, `usePitch`, `useVolume`). Actions are module exports, so their identity is permanently stable.
 - **`useAudio`** — plays an OBF sound asset (already a blob URL from the ObjectURL registry) one at a time; `play()` returns a promise that resolves on `ended` or rejects when `stop()` is called.
 
-`useMessagePlayback` interleaves them: it walks each `MessagePart` in order; if the part has a `soundSrc`, it plays the audio; otherwise it speaks the `vocalization ?? label`. Adjacent text parts are merged into a single utterance to avoid clipped speech between words.
+`useMessagePlayback` interleaves them: it walks each `MessagePart` in order; if the part has a `soundSrc`, it plays the audio; otherwise it speaks the `vocalization ?? label` via `speak()`. Adjacent text parts are merged into a single utterance to avoid clipped speech between words.
 
-**See:** [src/shared/speech/use-speech-synthesis.ts](../src/shared/speech/use-speech-synthesis.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts).
+**Slice-stable snapshot.** The store's snapshot pre-computes a `voicesView` object holding `voices` / `locales` / `voicesByLanguage` / `voicesByLocale`. Setting `voiceURI` / `rate` / `pitch` / `volume` produces a new snapshot but preserves the existing `voicesView` reference, so `useVoices()` consumers don't re-render on settings changes. This is what keeps `LanguageProvider` (which only reads voices) from re-rendering during utterances or slider drags — and by extension keeps the board from re-rendering through `useLanguage()`.
+
+**See:** [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts).
 
 ## 10. Internationalization
 
