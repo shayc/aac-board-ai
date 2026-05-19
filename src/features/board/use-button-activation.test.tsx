@@ -1,6 +1,5 @@
-import { SpeechProvider } from "@shared/speech/speech-provider";
+import { __resetSpeechStoreForTests } from "@shared/speech/speech-store";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart, UseMessageReturn } from "./message/use-message";
@@ -11,10 +10,6 @@ import {
   resolveButtonIntent,
   useButtonActivation,
 } from "./use-button-activation";
-
-function SpeechWrapper({ children }: { children: ReactNode }) {
-  return <SpeechProvider>{children}</SpeechProvider>;
-}
 
 function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
   return {
@@ -59,9 +54,8 @@ async function setup(opts: SetupOptions = {}) {
   const playback = opts.playback ?? createPlaybackStub();
   const navigation = opts.navigation ?? createNavigationStub();
 
-  const { result } = await renderHook(
-    () => useButtonActivation({ message, playback, navigation }),
-    { wrapper: SpeechWrapper },
+  const { result } = await renderHook(() =>
+    useButtonActivation({ message, playback, navigation }),
   );
 
   return { result, message, playback, navigation };
@@ -74,6 +68,7 @@ describe("useButtonActivation", () => {
   beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
+    __resetSpeechStoreForTests();
   });
 
   afterEach(() => {

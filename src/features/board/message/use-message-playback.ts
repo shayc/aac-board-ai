@@ -1,5 +1,5 @@
 import { useAudio } from "@shared/hooks/use-audio";
-import { useSpeech } from "@shared/speech/use-speech";
+import { cancel as cancelSpeech, speak } from "@shared/speech/speech-store";
 import { useState } from "react";
 import type { MessagePart } from "./use-message";
 
@@ -17,7 +17,6 @@ export interface UseMessagePlaybackReturn {
 export function useMessagePlayback(
   parts: MessagePart[],
 ): UseMessagePlaybackReturn {
-  const speech = useSpeech();
   const audio = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -32,7 +31,7 @@ export function useMessagePlayback(
         }
 
         if (segment.type === "text") {
-          await speech.speak(segment.data);
+          await speak(segment.data);
         }
       }
     } catch (error) {
@@ -44,7 +43,7 @@ export function useMessagePlayback(
 
   function stop() {
     try {
-      speech.cancel();
+      cancelSpeech();
       audio.stop();
     } catch (error) {
       console.error("Error stopping message:", error);

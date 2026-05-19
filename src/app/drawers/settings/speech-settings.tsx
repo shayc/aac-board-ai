@@ -17,30 +17,32 @@ import {
   normalizeLocaleCode,
 } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
-import { useSpeech } from "@shared/speech/use-speech";
 import {
+  isSpeechSupported,
   PITCH_MAX,
   PITCH_MIN,
   RATE_MAX,
   RATE_MIN,
+  setPitch,
+  setRate,
+  setVoiceURI,
+  setVolume,
+  speak,
+  usePitch,
+  useRate,
+  useVoiceURI,
+  useVoices,
+  useVolume,
   VOLUME_MAX,
   VOLUME_MIN,
-} from "@shared/speech/use-speech-synthesis";
+} from "@shared/speech/speech-store";
 
 export function SpeechSettings() {
-  const {
-    voicesByLocale,
-    voiceURI,
-    setVoiceURI,
-    rate,
-    setRate,
-    pitch,
-    setPitch,
-    volume,
-    setVolume,
-    isSpeechSupported,
-    speak,
-  } = useSpeech();
+  const { voicesByLocale } = useVoices();
+  const voiceURI = useVoiceURI();
+  const rate = useRate();
+  const pitch = usePitch();
+  const volume = useVolume();
 
   const { language } = useLanguage();
   const translatorProgress = useDownloadProgress("Translator");

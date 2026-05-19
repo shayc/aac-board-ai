@@ -1,14 +1,9 @@
-import { SpeechProvider } from "@shared/speech/speech-provider";
+import { __resetSpeechStoreForTests } from "@shared/speech/speech-store";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart } from "./use-message";
 import { useMessagePlayback } from "./use-message-playback";
-
-function SpeechWrapper({ children }: { children: ReactNode }) {
-  return <SpeechProvider>{children}</SpeechProvider>;
-}
 
 describe("useMessagePlayback", () => {
   let speech: ReturnType<typeof stubSpeech>;
@@ -17,6 +12,7 @@ describe("useMessagePlayback", () => {
   beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
+    __resetSpeechStoreForTests();
   });
 
   afterEach(() => {
@@ -29,9 +25,7 @@ describe("useMessagePlayback", () => {
       { id: "2", label: "want" },
     ];
 
-    const { result } = await renderHook(() => useMessagePlayback(parts), {
-      wrapper: SpeechWrapper,
-    });
+    const { result } = await renderHook(() => useMessagePlayback(parts));
 
     await result.current.play();
 
@@ -44,9 +38,7 @@ describe("useMessagePlayback", () => {
       { id: "1", label: "bell", soundSrc: "bell.mp3" },
     ];
 
-    const { result } = await renderHook(() => useMessagePlayback(parts), {
-      wrapper: SpeechWrapper,
-    });
+    const { result } = await renderHook(() => useMessagePlayback(parts));
 
     await result.current.play();
 
@@ -77,9 +69,7 @@ describe("useMessagePlayback", () => {
       return Promise.resolve();
     });
 
-    const { result } = await renderHook(() => useMessagePlayback(parts), {
-      wrapper: SpeechWrapper,
-    });
+    const { result } = await renderHook(() => useMessagePlayback(parts));
 
     await result.current.play();
 
@@ -89,9 +79,7 @@ describe("useMessagePlayback", () => {
   test("drops parts with no audible content", async () => {
     const parts: MessagePart[] = [{ id: "1" }];
 
-    const { result } = await renderHook(() => useMessagePlayback(parts), {
-      wrapper: SpeechWrapper,
-    });
+    const { result } = await renderHook(() => useMessagePlayback(parts));
 
     await result.current.play();
 
@@ -102,9 +90,7 @@ describe("useMessagePlayback", () => {
   test("prefers vocalization over label when both are present", async () => {
     const parts: MessagePart[] = [{ id: "1", label: "I", vocalization: "eye" }];
 
-    const { result } = await renderHook(() => useMessagePlayback(parts), {
-      wrapper: SpeechWrapper,
-    });
+    const { result } = await renderHook(() => useMessagePlayback(parts));
 
     await result.current.play();
 
@@ -121,9 +107,8 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(
-      () => useMessagePlayback(parts),
-      { wrapper: SpeechWrapper },
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
     );
 
     const playPromise = result.current.play();
@@ -146,9 +131,8 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(
-      () => useMessagePlayback(parts),
-      { wrapper: SpeechWrapper },
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
     );
 
     const playPromise = result.current.play();
@@ -176,9 +160,8 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(
-      () => useMessagePlayback(parts),
-      { wrapper: SpeechWrapper },
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
     );
 
     await expect(result.current.play()).resolves.toBeUndefined();
