@@ -4,6 +4,7 @@ import {
   UnavailableError,
   UnsupportedError,
 } from "../../errors.ts";
+import type { BuiltInAIName } from "../../is-supported.ts";
 import {
   clearDownloadProgress,
   setDownloadProgress,
@@ -20,7 +21,7 @@ interface TestInstance {
   marker?: string;
 }
 
-const NAMESPACE = "__TestAI";
+const NAMESPACE = "__TestAI" as BuiltInAIName;
 
 function setUserActivation(isActive: boolean): void {
   Object.defineProperty(navigator, "userActivation", {
