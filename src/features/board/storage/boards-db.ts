@@ -262,7 +262,7 @@ export async function getBoards(
     boardIds.map((id) => db.get("boards", [setId, id])),
   );
 
-  return boards.filter((record): record is BoardRecord => record !== undefined);
+  return boards.filter((record) => record !== undefined);
 }
 
 export async function putAssets(

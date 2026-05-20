@@ -27,7 +27,7 @@ function readBackStack(state: unknown): string[] {
     "backStack" in state &&
     Array.isArray(state.backStack)
   ) {
-    return state.backStack.filter((id): id is string => typeof id === "string");
+    return state.backStack.filter((id) => typeof id === "string");
   }
 
   return [];
