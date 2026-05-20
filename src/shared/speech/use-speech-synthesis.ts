@@ -78,37 +78,39 @@ export function useSpeechSynthesis(): UseSpeechSynthesisReturn {
   }, []);
 
   function speak(text: string) {
-    return new Promise<void>((resolve, reject) => {
-      if (!isSpeechSupported) {
-        reject(new Error("Speech Synthesis is not supported in this browser."));
-        return;
-      }
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
 
-      const utterance = new SpeechSynthesisUtterance(text);
-      const selectedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
+    if (!isSpeechSupported) {
+      reject(new Error("Speech Synthesis is not supported in this browser."));
+      return promise;
+    }
 
-      utterance.voice = selectedVoice ?? null;
-      utterance.pitch = pitch;
-      utterance.rate = rate;
-      utterance.volume = volume;
+    const utterance = new SpeechSynthesisUtterance(text);
+    const selectedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
 
-      utterance.onstart = () => setStatus("speaking");
-      utterance.onresume = () => setStatus("speaking");
-      utterance.onpause = () => setStatus("paused");
+    utterance.voice = selectedVoice ?? null;
+    utterance.pitch = pitch;
+    utterance.rate = rate;
+    utterance.volume = volume;
 
-      utterance.onend = () => {
-        setStatus("idle");
-        resolve();
-      };
+    utterance.onstart = () => setStatus("speaking");
+    utterance.onresume = () => setStatus("speaking");
+    utterance.onpause = () => setStatus("paused");
 
-      utterance.onerror = (event) => {
-        setStatus("idle");
-        reject(new Error(event.error));
-      };
+    utterance.onend = () => {
+      setStatus("idle");
+      resolve();
+    };
 
-      synthesis.cancel();
-      synthesis.speak(utterance);
-    });
+    utterance.onerror = (event) => {
+      setStatus("idle");
+      reject(new Error(event.error));
+    };
+
+    synthesis.cancel();
+    synthesis.speak(utterance);
+
+    return promise;
   }
 
   function cancel() {
