@@ -84,7 +84,7 @@ function LibraryPage() {
               startIcon={<AddIcon />}
               onClick={() => void pickAndImportBoardFiles()}
             >
-              Import board set
+              Import boards
             </Button>
           }
         />
