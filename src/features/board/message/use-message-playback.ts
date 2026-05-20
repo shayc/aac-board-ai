@@ -35,22 +35,18 @@ export function useMessagePlayback(
           await speech.speak(segment.data);
         }
       }
-    } catch (error) {
-      console.error("Error playing message:", error);
+    } catch {
+      // Playback failures (TTS hiccup, cancellation from stop(), etc.) reset
+      // via `finally` — the button returning to idle is the user signal.
     } finally {
       setIsPlaying(false);
     }
   }
 
   function stop() {
-    try {
-      speech.cancel();
-      audio.stop();
-    } catch (error) {
-      console.error("Error stopping message:", error);
-    } finally {
-      setIsPlaying(false);
-    }
+    speech.cancel();
+    audio.stop();
+    setIsPlaying(false);
   }
 
   return {

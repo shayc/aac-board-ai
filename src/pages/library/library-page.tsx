@@ -54,11 +54,12 @@ function LibraryPage() {
     try {
       await removeBoardSet(setId);
       showSnackbar({ message: `"${name}" deleted`, severity: "success" });
-    } catch {
+    } catch (error) {
       showSnackbar({
         message: `Couldn't delete "${name}"`,
         severity: "error",
       });
+      throw error;
     }
   }
 

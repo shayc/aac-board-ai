@@ -1,5 +1,5 @@
 import { normalizeLocaleCode } from "@shared/language/locale";
-import { stripHtmlTags } from "@shared/utils/html";
+import { htmlToText } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
 import { resolveLoadBoardPaths } from "../obf/mapper";
@@ -107,7 +107,7 @@ function buildBoardSetInput(
     rootBoardId,
     author: board?.license?.author_name,
     description: board?.description_html
-      ? stripHtmlTags(board.description_html)
+      ? htmlToText(board.description_html)
       : undefined,
     license: board?.license?.type,
     locale: board?.locale ? normalizeLocaleCode(board.locale) : undefined,

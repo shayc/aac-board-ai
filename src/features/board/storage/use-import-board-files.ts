@@ -11,7 +11,7 @@ export interface UseImportBoardFilesReturn {
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
 
-  async function handleImport() {
+  async function pickAndImportBoardFiles() {
     const files = await openFiles({
       accept: BOARD_FILE_ACCEPT,
       multiple: true,
@@ -33,13 +33,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         message: isPlural ? "Boards imported" : "Board imported",
         severity: "success",
       });
-    } catch {
+    } catch (error) {
       showSnackbar({
         message: isPlural ? "Couldn't import boards" : "Couldn't import board",
         severity: "error",
       });
+      throw error;
     }
   }
 
-  return { pickAndImportBoardFiles: handleImport };
+  return { pickAndImportBoardFiles };
 }

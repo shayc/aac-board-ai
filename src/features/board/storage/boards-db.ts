@@ -138,7 +138,8 @@ export async function upsertBoardSet(
   input: UpsertBoardSetInput,
 ): Promise<void> {
   validateId(input.setId, "setId");
-  const existing = await db.get("boardSets", input.setId);
+  const tx = db.transaction("boardSets", "readwrite");
+  const existing = await tx.store.get(input.setId);
 
   const record: BoardSetRecord = {
     setId: input.setId,
@@ -154,7 +155,8 @@ export async function upsertBoardSet(
     gridColumns: input.gridColumns ?? existing?.gridColumns,
   };
 
-  await db.put("boardSets", record);
+  await tx.store.put(record);
+  await tx.done;
 }
 
 export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
@@ -182,24 +184,15 @@ export async function deleteBoardSet(
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
-  try {
-    // Fire all three deletes without awaiting individually;
-    // they share a single transaction and commit together on tx.done.
-    void tx
-      .objectStore("boards")
-      .delete(IDBKeyRange.bound([setId], [setId, []]));
+  // Fire all three deletes without awaiting individually;
+  // they share a single transaction and commit together on tx.done.
+  void tx.objectStore("boards").delete(IDBKeyRange.bound([setId], [setId, []]));
 
-    void tx
-      .objectStore("assets")
-      .delete(IDBKeyRange.bound([setId], [setId, []]));
+  void tx.objectStore("assets").delete(IDBKeyRange.bound([setId], [setId, []]));
 
-    void tx.objectStore("boardSets").delete(setId);
+  void tx.objectStore("boardSets").delete(setId);
 
-    await tx.done;
-  } catch (error) {
-    tx.abort();
-    throw error;
-  }
+  await tx.done;
 }
 
 export async function putBoards(
@@ -209,33 +202,27 @@ export async function putBoards(
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "boardSets"], "readwrite");
+  const boardStore = tx.objectStore("boards");
 
-  try {
-    const boardStore = tx.objectStore("boards");
-
-    for (const board of boards) {
-      await boardStore.put({
-        setId,
-        boardId: board.boardId,
-        name: board.name,
-        obf: board.obf,
-      });
-    }
-
-    const boardSet = await tx.objectStore("boardSets").get(setId);
-
-    if (boardSet) {
-      const count = await boardStore.index("bySetId").count(setId);
-      await tx
-        .objectStore("boardSets")
-        .put({ ...boardSet, boardCount: count, updatedAt: Date.now() });
-    }
-
-    await tx.done;
-  } catch (error) {
-    tx.abort();
-    throw error;
+  for (const board of boards) {
+    await boardStore.put({
+      setId,
+      boardId: board.boardId,
+      name: board.name,
+      obf: board.obf,
+    });
   }
+
+  const boardSet = await tx.objectStore("boardSets").get(setId);
+
+  if (boardSet) {
+    const count = await boardStore.index("bySetId").count(setId);
+    await tx
+      .objectStore("boardSets")
+      .put({ ...boardSet, boardCount: count, updatedAt: Date.now() });
+  }
+
+  await tx.done;
 }
 
 export async function getBoard(
@@ -248,23 +235,6 @@ export async function getBoard(
   return db.get("boards", [setId, boardId]);
 }
 
-export async function getBoards(
-  db: BoardsDB,
-  setId: string,
-  boardIds: string[],
-): Promise<BoardRecord[]> {
-  validateId(setId, "setId");
-  if (boardIds.length === 0) {
-    return [];
-  }
-
-  const boards = await Promise.all(
-    boardIds.map((id) => db.get("boards", [setId, id])),
-  );
-
-  return boards.filter((record) => record !== undefined);
-}
-
 export async function putAssets(
   db: BoardsDB,
   setId: string,
@@ -272,35 +242,29 @@ export async function putAssets(
 ): Promise<void> {
   validateId(setId, "setId");
   const tx = db.transaction(["assets", "boardSets"], "readwrite");
+  const assetStore = tx.objectStore("assets");
 
-  try {
-    const assetStore = tx.objectStore("assets");
-
-    for (const asset of assets) {
-      const cleanPath = normalizePath(asset.path);
-      await assetStore.put({
-        setId,
-        path: cleanPath,
-        mediaId: asset.mediaId,
-        blob: asset.blob,
-        mime: asset.mime,
-        size: asset.size ?? asset.blob.size,
-      });
-    }
-
-    const boardSet = await tx.objectStore("boardSets").get(setId);
-
-    if (boardSet) {
-      await tx
-        .objectStore("boardSets")
-        .put({ ...boardSet, updatedAt: Date.now() });
-    }
-
-    await tx.done;
-  } catch (error) {
-    tx.abort();
-    throw error;
+  for (const asset of assets) {
+    const cleanPath = normalizePath(asset.path);
+    await assetStore.put({
+      setId,
+      path: cleanPath,
+      mediaId: asset.mediaId,
+      blob: asset.blob,
+      mime: asset.mime,
+      size: asset.size ?? asset.blob.size,
+    });
   }
+
+  const boardSet = await tx.objectStore("boardSets").get(setId);
+
+  if (boardSet) {
+    await tx
+      .objectStore("boardSets")
+      .put({ ...boardSet, updatedAt: Date.now() });
+  }
+
+  await tx.done;
 }
 
 export async function getAssetBlob(
@@ -324,10 +288,11 @@ export async function updateBoardStrings(
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
-  const record = await db.get("boards", [setId, boardId]);
+  const tx = db.transaction("boards", "readwrite");
+  const record = await tx.store.get([setId, boardId]);
 
   if (!record) {
-    throw new Error(`Board not found: ${boardId}`);
+    throw new Error(`Board not found: ${setId}/${boardId}`);
   }
 
   const updatedObf = {
@@ -335,5 +300,6 @@ export async function updateBoardStrings(
     strings: { ...record.obf.strings, [locale]: translations },
   };
 
-  await db.put("boards", { ...record, obf: updatedObf });
+  await tx.store.put({ ...record, obf: updatedObf });
+  await tx.done;
 }

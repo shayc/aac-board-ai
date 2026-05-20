@@ -51,7 +51,6 @@ export function useLoadBoard({
           registryRef.current = registry;
           setBoard(loaded);
           setIsLoading(false);
-          setError(null);
         } else {
           registry.revokeAll();
         }
@@ -106,7 +105,7 @@ async function fetchOBFBoard(
 ): Promise<OBFBoard> {
   const boardData = await getBoard(db, setId, boardId);
   if (!boardData) {
-    throw new Error(`Board not found: ${boardId}`);
+    throw new Error(`Board not found: ${setId}/${boardId}`);
   }
   return boardData.obf;
 }
