@@ -68,7 +68,7 @@ export function BackspaceButton({
           sx={{
             position: "absolute",
             top: 0,
-            left: 0,
+            insetInlineStart: 0,
             zIndex: 1,
             pointerEvents: "none",
           }}

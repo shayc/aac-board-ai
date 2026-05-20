@@ -68,10 +68,10 @@ export function Tile({
           display: variant === "folder" ? "block" : "none",
           position: "absolute",
           top: -2,
-          right: -2,
+          insetInlineEnd: -2,
           width: 0,
           height: 0,
-          borderRight: `32px solid ${borderColor ?? "#000"}`,
+          borderInlineEnd: `32px solid ${borderColor ?? "#000"}`,
           borderBottom: "32px solid transparent",
         },
       })}

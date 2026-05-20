@@ -30,7 +30,7 @@ export function Pictogram({ src, label }: PictogramProps) {
               objectFit: "contain",
               position: "absolute",
               top: 0,
-              left: 0,
+              insetInlineStart: 0,
             }}
           />
         </Box>
