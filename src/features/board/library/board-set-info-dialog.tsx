@@ -1,4 +1,3 @@
-import type { BoardSetRecord } from "@features/board";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
@@ -8,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { getLocaleDisplayName } from "@shared/language/locale";
+import type { BoardSetRecord } from "../storage/boards-db";
 
 export interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;
