@@ -2,7 +2,11 @@ import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { useSpeech } from "@shared/speech/use-speech";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import { getLanguageDirection, getPrimaryLanguage } from "./locale";
+import {
+  getLanguageDirection,
+  getNativeLanguageName,
+  getPrimaryLanguage,
+} from "./locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -19,14 +23,10 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     new Set(locales.map(getPrimaryLanguage)),
   ).filter((langCode) => !UNSUPPORTED_LANGUAGES.includes(langCode));
 
-  const languages = supportedLanguages.map((lang) => {
-    const displayName = new Intl.DisplayNames([lang], { type: "language" });
-
-    return {
-      code: lang,
-      name: displayName.of(lang) ?? lang,
-    };
-  });
+  const languages = supportedLanguages.map((code) => ({
+    code,
+    name: getNativeLanguageName(code),
+  }));
 
   const direction = getLanguageDirection(language);
 

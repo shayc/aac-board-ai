@@ -35,6 +35,22 @@ export function getLocaleDisplayName(code: string): string {
 }
 
 /**
+ * Returns the language name in its own language (endonym),
+ * e.g. "es" → "español", "fr" → "français".
+ */
+export function getNativeLanguageName(code: string): string {
+  const primary = getPrimaryLanguage(code);
+  try {
+    return (
+      new Intl.DisplayNames([primary], { type: "language" }).of(primary) ??
+      primary
+    );
+  } catch {
+    return primary;
+  }
+}
+
+/**
  * Returns the writing direction for a BCP-47 locale code.
  * Falls back to "ltr" for structurally invalid input; unknown
  * but well-formed codes default to "ltr" via Intl.
