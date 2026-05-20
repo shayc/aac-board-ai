@@ -172,7 +172,6 @@ describe("useMessagePlayback", () => {
         } as unknown as SpeechSynthesisErrorEvent);
       });
     });
-    vi.spyOn(console, "error").mockReturnValue(undefined);
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
