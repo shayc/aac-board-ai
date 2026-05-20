@@ -1,5 +1,5 @@
 export { BoardViewer } from "./board-viewer";
-export type { BoardRouteParams } from "./navigation/types";
+export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export {
   getBoardSets,
   importBoardFromUrl,

@@ -2,6 +2,7 @@ import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
+  DEFAULT_SNACKBAR_SEVERITY,
   SnackbarContext,
   type SnackbarContextValue,
   type SnackbarOptions,
@@ -114,7 +115,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       >
         <Alert
           onClose={handleClose}
-          severity={state.current?.severity ?? "info"}
+          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
           variant="filled"
           sx={{ width: "100%" }}
         >
