@@ -16,13 +16,21 @@ export function openFiles({
       input.accept = accept;
     }
 
-    input.addEventListener("change", () => {
-      resolve(input.files ? Array.from(input.files) : []);
-    });
+    input.addEventListener(
+      "change",
+      () => {
+        resolve(input.files ? Array.from(input.files) : []);
+      },
+      { once: true },
+    );
 
-    input.addEventListener("cancel", () => {
-      resolve([]);
-    });
+    input.addEventListener(
+      "cancel",
+      () => {
+        resolve([]);
+      },
+      { once: true },
+    );
 
     input.click();
   });
