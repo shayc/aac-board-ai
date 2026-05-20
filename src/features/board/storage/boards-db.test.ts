@@ -4,7 +4,6 @@ import {
   deleteBoardSet,
   getAssetBlob,
   getBoard,
-  getBoards,
   listBoardSets,
   putAssets,
   putBoards,
@@ -202,44 +201,6 @@ describe("putBoards and getBoard", () => {
     await expect(
       putBoards(db, "", [{ boardId: "b1", name: "B", obf: makeOBFBoard() }]),
     ).rejects.toThrow("Invalid setId");
-  });
-});
-
-describe("getBoards", () => {
-  test("returns matching boards", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
-
-    await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
-      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
-      { boardId: "b3", name: "B3", obf: makeOBFBoard({ id: "b3" }) },
-    ]);
-
-    const boards = await getBoards(db, "set-1", ["b1", "b3"]);
-    expect(boards).toHaveLength(2);
-    expect(boards.map((b) => b.boardId).sort()).toEqual(["b1", "b3"]);
-  });
-
-  test("filters out nonexistent board IDs", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
-
-    await putBoards(db, "set-1", [
-      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
-    ]);
-
-    const boards = await getBoards(db, "set-1", ["b1", "missing"]);
-    expect(boards).toHaveLength(1);
-    expect(boards[0].boardId).toBe("b1");
-  });
-
-  test("returns empty array for empty boardIds input", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
-
-    const boards = await getBoards(db, "set-1", []);
-    expect(boards).toEqual([]);
   });
 });
 
