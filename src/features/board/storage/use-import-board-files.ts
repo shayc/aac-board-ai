@@ -11,7 +11,7 @@ export interface UseImportBoardFilesReturn {
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
 
-  async function handleImport() {
+  async function pickAndImportBoardFiles() {
     const files = await openFiles({
       accept: BOARD_FILE_ACCEPT,
       multiple: true,
@@ -41,5 +41,5 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  return { pickAndImportBoardFiles: handleImport };
+  return { pickAndImportBoardFiles };
 }
