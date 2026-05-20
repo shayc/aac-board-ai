@@ -487,7 +487,6 @@ describe("Grid", () => {
         { id: "3", label: "Item 3" },
       ];
 
-      // Col 0 is empty; first focusable in row 0 is col 1 (Item 2)
       const order = [[null, "2", "3"]];
 
       const screen = await render(
@@ -517,7 +516,6 @@ describe("Grid", () => {
         { id: "2", label: "Item 2" },
       ];
 
-      // Col 2 is empty; last focusable in row 0 is col 1 (Item 2)
       const order = [["1", "2", null]];
 
       const screen = await render(
@@ -548,7 +546,6 @@ describe("Grid", () => {
         { id: "4", label: "Item 4" },
       ];
 
-      // (0,0) is empty; first focusable in grid is (0,1) which is Item 2
       const order = [
         [null, "2"],
         ["3", "4"],
@@ -582,7 +579,6 @@ describe("Grid", () => {
         { id: "3", label: "Item 3" },
       ];
 
-      // (1,1) is empty; last focusable in grid is (1,0) which is Item 3
       const order = [
         ["1", "2"],
         ["3", null],
@@ -701,7 +697,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      // Start at col 1 (Item 2), ArrowRight should move left to col 0 (Item 1)
       item2.element().focus();
       await expect.element(item2).toHaveFocus();
 
@@ -729,7 +724,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      // Start at col 0 (Item 1), ArrowLeft should move right to col 1 (Item 2)
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 

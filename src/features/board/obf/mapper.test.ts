@@ -65,7 +65,6 @@ describe("obfToBoard", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-no-name",
-        // name is optional and omitted
         buttons: [],
         grid: {
           rows: 1,
@@ -414,7 +413,6 @@ describe("obfToBoard", () => {
           columns: 1,
           order: [["btn-1"]],
         },
-        // No images or sounds arrays defined
       };
 
       const board = obfToBoard(obfBoard);
@@ -443,13 +441,11 @@ describe("obfToBoard", () => {
         images: [
           {
             id: "img-empty",
-            // No data, path, or url provided
           },
         ],
         sounds: [
           {
             id: "snd-empty",
-            // No data, path, or url provided
           },
         ],
       };

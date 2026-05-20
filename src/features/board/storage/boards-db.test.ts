@@ -155,7 +155,6 @@ describe("putBoards and getBoard", () => {
     let sets = await listBoardSets(db);
     expect(sets[0].boardCount).toBe(1);
 
-    // Put the same board again (update, not new)
     await putBoards(db, "set-1", [{ boardId: "b1", name: "B1 Updated", obf }]);
 
     sets = await listBoardSets(db);

@@ -1,9 +1,4 @@
 /**
- * Shared test fixtures for use across test files.
- * Centralizes common test data to avoid duplication.
- */
-
-/**
  * Minimal valid 1x1 transparent PNG as data URI.
  * Use this in tests that need an image src to avoid network requests.
  */
