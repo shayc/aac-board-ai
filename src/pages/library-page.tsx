@@ -1,5 +1,8 @@
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import {
+  BoardSetDeleteDialog,
+  BoardSetInfoDialog,
+  BoardSetList,
   removeBoardSet,
   useBoardSets,
   useImportBoardFiles,
@@ -15,9 +18,6 @@ import { PageContainer } from "@shared/components/page-container";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
-import { BoardSetDeleteDialog } from "./components/board-set-delete-dialog";
-import { BoardSetInfoDialog } from "./components/board-set-info-dialog";
-import { BoardSetList } from "./components/board-set-list";
 
 function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();

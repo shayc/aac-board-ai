@@ -1,4 +1,3 @@
-import type { BoardSetRecord } from "@features/board";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -12,6 +11,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { useState } from "react";
+import type { BoardSetRecord } from "../storage/boards-db";
 
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];
