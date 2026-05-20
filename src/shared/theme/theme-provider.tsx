@@ -20,24 +20,27 @@ const rtlCache = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
+const themeOptions = {
+  colorSchemes: {
+    dark: true,
+  },
+  typography: {
+    button: {
+      textTransform: "none",
+    },
+  },
+} as const;
+
+const ltrTheme = createTheme({ ...themeOptions, direction: "ltr" });
+const rtlTheme = createTheme({ ...themeOptions, direction: "rtl" });
+
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { direction } = useLanguage();
-
-  const theme = createTheme({
-    direction,
-    colorSchemes: {
-      dark: true,
-    },
-    typography: {
-      button: {
-        textTransform: "none",
-      },
-    },
-  });
+  const isRtl = direction === "rtl";
 
   return (
-    <CacheProvider value={direction === "rtl" ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={theme} noSsr>
+    <CacheProvider value={isRtl ? rtlCache : ltrCache}>
+      <MUIThemeProvider theme={isRtl ? rtlTheme : ltrTheme} noSsr>
         <CssBaseline />
         {children}
       </MUIThemeProvider>
