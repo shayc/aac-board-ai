@@ -86,9 +86,9 @@ describe("useMessage", () => {
     await rerender();
 
     expect(result.current.parts.length).toBeGreaterThan(1);
-    expect(result.current.parts.every((part) => part.label.length > 0)).toBe(
-      true,
-    );
+    expect(
+      result.current.parts.every((part) => (part.label?.length ?? 0) > 0),
+    ).toBe(true);
   });
 
   test("clears all existing parts when called with an empty string", async () => {

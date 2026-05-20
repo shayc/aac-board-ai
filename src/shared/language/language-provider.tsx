@@ -8,7 +8,7 @@ export interface LanguageProviderProps {
   children: ReactNode;
 }
 
-const UNSUPPORTED_LANGUAGES = ["ca", "ms", "nb", "yue"] as const;
+const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const { locales, voicesByLanguage, setVoiceURI } = useSpeech();
