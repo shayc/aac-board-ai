@@ -456,7 +456,6 @@ describe("withBoardsDB", () => {
       await upsertBoardSet(db, { setId: "temp", name: "Temp" });
     });
 
-    // IDB throws on any transaction after close — proves withBoardsDB closed the DB.
     expect(() => {
       capturedDb!.transaction("boardSets", "readonly");
     }).toThrow();
