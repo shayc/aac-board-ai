@@ -28,13 +28,6 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     colorSchemes: {
       dark: true,
     },
-    components: {
-      MuiTooltip: {
-        defaultProps: {
-          enterDelay: 800,
-        },
-      },
-    },
     typography: {
       button: {
         textTransform: "none",
