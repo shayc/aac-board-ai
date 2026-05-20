@@ -7,23 +7,23 @@ export interface GridItemProps {
 }
 
 export interface GridProps<TItem extends { id: string }> {
+  items: TItem[];
   rows: number;
   columns: number;
-  gap?: number;
   order?: (string | null)[][];
-  items: TItem[];
   renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
   dir?: "ltr" | "rtl";
+  gap?: number;
 }
 
 export function Grid<TItem extends { id: string }>({
+  items,
   rows,
   columns,
-  items,
   order,
-  gap = 2,
   renderItem,
   dir = "ltr",
+  gap = 2,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const gridRef = useRef<HTMLDivElement>(null);

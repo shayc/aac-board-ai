@@ -1,5 +1,5 @@
-import { ErrorState } from "@shared/components/error-state";
-import { LoadingState } from "@shared/components/loading-state";
+import { ErrorState } from "./error-state";
+import { LoadingState } from "./loading-state";
 import { type ReactElement, type ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 

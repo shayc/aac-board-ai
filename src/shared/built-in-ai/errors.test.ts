@@ -9,21 +9,19 @@ import {
 
 describe("built-in AI error hierarchy", () => {
   const cases = [
-    { Ctor: BuiltInAIError, name: "BuiltInAIError" },
-    { Ctor: UnsupportedError, name: "UnsupportedError" },
-    { Ctor: UnavailableError, name: "UnavailableError" },
-    { Ctor: NoUserActivationError, name: "NoUserActivationError" },
-    { Ctor: NotReadyError, name: "NotReadyError" },
+    { ErrorClass: BuiltInAIError, name: "BuiltInAIError" },
+    { ErrorClass: UnsupportedError, name: "UnsupportedError" },
+    { ErrorClass: UnavailableError, name: "UnavailableError" },
+    { ErrorClass: NoUserActivationError, name: "NoUserActivationError" },
+    { ErrorClass: NotReadyError, name: "NotReadyError" },
   ] as const;
 
-  // `instanceof` gates the lifecycle's wrap-or-not decision; `name` surfaces in logs.
-  // Both load-bearing — pin together.
   test.each(cases)(
     "$name extends BuiltInAIError and exposes name=$name",
-    ({ Ctor, name }) => {
-      const err = new Ctor("boom");
-      expect(err).toBeInstanceOf(BuiltInAIError);
-      expect(err.name).toBe(name);
+    ({ ErrorClass, name }) => {
+      const error = new ErrorClass("boom");
+      expect(error).toBeInstanceOf(BuiltInAIError);
+      expect(error.name).toBe(name);
     },
   );
 });

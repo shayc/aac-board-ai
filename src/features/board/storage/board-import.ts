@@ -54,7 +54,7 @@ async function importOBZFile(
   }
 
   if (!rootBoardId) {
-    rootBoardId = manifest.root.split("/").pop()?.replace(".obf", "") ?? "";
+    rootBoardId = manifest.root.split("/").at(-1)?.replace(".obf", "") ?? "";
   }
 
   const rootBoard = boards.get(rootBoardId);

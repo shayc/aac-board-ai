@@ -27,7 +27,6 @@ function shallowEqualOptions<T extends object>(
   return true;
 }
 
-/** Stabilizes the options reference so effects re-run on real changes only. */
 function useStableOptions<T extends object>(
   options: T | undefined,
 ): T | undefined {

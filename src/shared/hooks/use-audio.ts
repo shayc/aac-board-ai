@@ -38,44 +38,45 @@ export function useAudio(): UseAudioReturn {
     return () => cleanup();
   }, []);
 
-  async function play(url: string) {
+  function play(url: string) {
     cleanup();
 
     const audio = new Audio(url);
     audioRef.current = audio;
 
-    return new Promise<void>((resolve, reject) => {
-      rejectRef.current = reject;
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
+    rejectRef.current = reject;
 
-      audio.onplay = () => {
-        setIsPlaying(true);
-        setIsPaused(false);
-      };
+    audio.onplay = () => {
+      setIsPlaying(true);
+      setIsPaused(false);
+    };
 
-      audio.onpause = () => {
-        setIsPaused(true);
-        setIsPlaying(false);
-      };
+    audio.onpause = () => {
+      setIsPaused(true);
+      setIsPlaying(false);
+    };
 
-      audio.onended = () => {
-        setIsPlaying(false);
-        setIsPaused(false);
-        rejectRef.current = null;
-        resolve();
-      };
+    audio.onended = () => {
+      setIsPlaying(false);
+      setIsPaused(false);
+      rejectRef.current = null;
+      resolve();
+    };
 
-      audio.onerror = (error) => {
-        setIsPlaying(false);
-        rejectRef.current = null;
-        reject(new Error(`Audio error: ${(error as Event).type}`));
-      };
+    audio.onerror = (error) => {
+      setIsPlaying(false);
+      rejectRef.current = null;
+      reject(new Error(`Audio error: ${(error as Event).type}`));
+    };
 
-      audio.play().catch((error: unknown) => {
-        setIsPlaying(false);
-        rejectRef.current = null;
-        reject(error instanceof Error ? error : new Error(String(error)));
-      });
+    audio.play().catch((error: unknown) => {
+      setIsPlaying(false);
+      rejectRef.current = null;
+      reject(error instanceof Error ? error : new Error(String(error)));
     });
+
+    return promise;
   }
 
   function stop() {

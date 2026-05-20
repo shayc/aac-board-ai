@@ -184,10 +184,6 @@ export function createStore<
     }
   }
 
-  /**
-   * Drive the lifecycle from wherever we are toward a terminal state, then
-   * either return (ready) or throw the matching typed error.
-   */
   async function ensureReady(callerSignal?: AbortSignal): Promise<void> {
     // 1. Background availability check may be in flight — wait it out.
     if (snapshot.status === "idle") {

@@ -30,7 +30,6 @@ describe("useTranslator", () => {
     );
     await vi.waitFor(() => expect(result.current.status).toBe("ready"));
 
-    // Fake echoes input into the output — resolved value proves the forwarding.
     await expect(result.current.translate("hi")).resolves.toBe("T:hi");
   });
 

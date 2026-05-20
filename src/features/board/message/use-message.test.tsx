@@ -79,6 +79,18 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("I want water");
   });
 
+  test("segments scripts without whitespace into word parts", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setFromText("我想喝水");
+    await rerender();
+
+    expect(result.current.parts.length).toBeGreaterThan(1);
+    expect(result.current.parts.every((part) => part.label.length > 0)).toBe(
+      true,
+    );
+  });
+
   test("clears all existing parts when called with an empty string", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
