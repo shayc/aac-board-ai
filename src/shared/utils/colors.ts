@@ -4,8 +4,8 @@ export function getReadableTextColor(background: string): string {
   const lightText = "#fff";
   const darkText = "#000";
 
-  const whiteRatio = getContrastRatio(lightText, background);
-  const blackRatio = getContrastRatio(darkText, background);
+  const lightRatio = getContrastRatio(lightText, background);
+  const darkRatio = getContrastRatio(darkText, background);
 
-  return whiteRatio >= blackRatio ? lightText : darkText;
+  return lightRatio >= darkRatio ? lightText : darkText;
 }
