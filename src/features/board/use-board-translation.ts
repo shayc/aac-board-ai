@@ -89,7 +89,6 @@ export function useBoardTranslation({
           setTranslatedBoard(board);
           return;
         }
-        console.warn("Board translation failed:", error);
       }
     };
 
@@ -188,7 +187,7 @@ async function persistTranslations(
     await withBoardsDB(async (db) => {
       await updateBoardStrings(db, setId, boardId, language, translations);
     });
-  } catch (err) {
-    console.warn("Failed to persist translations:", err);
+  } catch {
+    // Best-effort cache write — failure only costs a re-translation next load.
   }
 }

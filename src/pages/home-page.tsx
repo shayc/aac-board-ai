@@ -39,7 +39,6 @@ export function HomePage() {
       })
       .catch((err) => {
         if (!cancelled) {
-          console.error(err);
           setError(err);
         }
       });
