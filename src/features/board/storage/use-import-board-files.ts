@@ -33,11 +33,12 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         message: isPlural ? "Boards imported" : "Board imported",
         severity: "success",
       });
-    } catch {
+    } catch (error) {
       showSnackbar({
         message: isPlural ? "Couldn't import boards" : "Couldn't import board",
         severity: "error",
       });
+      throw error;
     }
   }
 
