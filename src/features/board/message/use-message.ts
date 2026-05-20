@@ -37,7 +37,7 @@ export function useMessage(): UseMessageReturn {
         return [part];
       }
 
-      return [...prev.slice(0, -1), { ...lastPart, ...part }];
+      return prev.with(-1, { ...lastPart, ...part });
     });
   }
 
