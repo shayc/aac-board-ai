@@ -292,7 +292,7 @@ export async function updateBoardStrings(
   const record = await tx.store.get([setId, boardId]);
 
   if (!record) {
-    throw new Error(`Board not found: ${boardId}`);
+    throw new Error(`Board not found: ${setId}/${boardId}`);
   }
 
   const updatedObf = {

@@ -92,7 +92,7 @@ export async function importBoardFromUrl(url: string): Promise<ImportResult> {
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch board: ${response.statusText}`);
+    throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
   const blob = await response.blob();
