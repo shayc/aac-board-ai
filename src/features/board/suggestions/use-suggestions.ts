@@ -89,7 +89,6 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
         if (isAbortError(error)) {
           return;
         }
-        console.warn("generateSuggestions failed:", error);
       }
     };
 

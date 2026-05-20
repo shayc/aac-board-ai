@@ -117,8 +117,8 @@ async function hydrateBoard(
   registry: ObjectUrlRegistry,
 ): Promise<OBFBoard> {
   const [images, sounds] = await Promise.all([
-    hydrateAssets(db, setId, board.images, "image", registry),
-    hydrateAssets(db, setId, board.sounds, "sound", registry),
+    hydrateAssets(db, setId, board.images, registry),
+    hydrateAssets(db, setId, board.sounds, registry),
   ]);
 
   return { ...board, images, sounds };
@@ -128,7 +128,6 @@ async function hydrateAssets(
   db: BoardsDB,
   setId: string,
   assets: OBFMedia[] | undefined,
-  kind: "image" | "sound",
   registry: ObjectUrlRegistry,
 ): Promise<OBFMedia[] | undefined> {
   if (!assets?.length) {
@@ -145,11 +144,7 @@ async function hydrateAssets(
         const blob = await getAssetBlob(db, setId, asset.path);
         const url = blob ? registry.create(blob) : null;
         return url ? { ...asset, data: url } : asset;
-      } catch (err) {
-        console.warn(
-          `Failed to load ${kind} ${asset.id} from path ${asset.path}:`,
-          err,
-        );
+      } catch {
         return asset;
       }
     }),
