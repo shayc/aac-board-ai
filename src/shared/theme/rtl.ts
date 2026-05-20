@@ -8,6 +8,5 @@ import type { Theme } from "@mui/material/styles";
  *   <ArrowBackOutlinedIcon sx={flipForRtl} />
  *   <PlayArrowIcon sx={[flipForRtl, { width: 48, height: 48 }]} />
  */
-export const flipForRtl = (theme: Theme) => ({
-  transform: theme.direction === "rtl" ? "scaleX(-1)" : "none",
-});
+export const flipForRtl = (theme: Theme) =>
+  theme.direction === "rtl" ? { transform: "scaleX(-1)" } : {};
