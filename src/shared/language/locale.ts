@@ -39,13 +39,7 @@ export function getLocaleDisplayName(code: string): string {
  */
 export function getLanguageDirection(code: string): "ltr" | "rtl" {
   try {
-    // `getTextInfo()` is not yet declared in TypeScript's bundled lib.
-    type LocaleWithTextInfo = Intl.Locale & {
-      getTextInfo(): { direction?: "ltr" | "rtl" };
-    };
-    const locale = new Intl.Locale(
-      normalizeLocaleCode(code),
-    ) as LocaleWithTextInfo;
+    const locale = new Intl.Locale(normalizeLocaleCode(code));
     return locale.getTextInfo().direction === "rtl" ? "rtl" : "ltr";
   } catch {
     return "ltr";
