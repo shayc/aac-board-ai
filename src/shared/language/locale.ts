@@ -3,13 +3,11 @@
  * (lowercase language subtag, uppercase region subtag, hyphen separator).
  */
 export function normalizeLocaleCode(code: string): string {
-  const [language, region] = code.split(/[_-]/);
-
-  if (!region) {
-    return language.toLowerCase();
+  try {
+    return new Intl.Locale(code.replace(/_/g, "-")).baseName;
+  } catch {
+    return code;
   }
-
-  return `${language.toLowerCase()}-${region.toUpperCase()}`;
 }
 
 /**
@@ -20,14 +18,17 @@ export function getPrimaryLanguage(code: string): string {
   return code.split(/[_-]/)[0].toLowerCase();
 }
 
+const languageDisplayNames = new Intl.DisplayNames(["en"], {
+  type: "language",
+});
+
 /**
  * Returns the display name of a locale code in English.
  * Falls back to the original code if the locale is not recognized.
  */
 export function getLocaleDisplayName(code: string): string {
   try {
-    const displayNames = new Intl.DisplayNames(["en"], { type: "language" });
-    return displayNames.of(normalizeLocaleCode(code)) ?? code;
+    return languageDisplayNames.of(normalizeLocaleCode(code)) ?? code;
   } catch {
     return code;
   }
@@ -35,7 +36,8 @@ export function getLocaleDisplayName(code: string): string {
 
 /**
  * Returns the writing direction for a BCP-47 locale code.
- * Falls back to "ltr" for unrecognized codes.
+ * Falls back to "ltr" for structurally invalid input; unknown
+ * but well-formed codes default to "ltr" via Intl.
  */
 export function getLanguageDirection(code: string): "ltr" | "rtl" {
   try {
