@@ -2,6 +2,7 @@ import { useDeclareHeaderTitle } from "@app/use-header-title";
 import { BoardViewer, useBoard, type BoardRouteParams } from "@features/board";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
+import { Title } from "@shared/components/title";
 import { useParams } from "react-router";
 
 function BoardPage() {
@@ -25,7 +26,7 @@ function BoardPage() {
 
   return (
     <>
-      <title>{board.name}</title>
+      <Title>{board.name}</Title>
       <BoardViewer board={board} />
     </>
   );

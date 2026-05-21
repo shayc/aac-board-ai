@@ -5,13 +5,14 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
+import { Title } from "@shared/components/title";
 
 function AboutPage() {
   useDeclareHeaderTitle("About");
 
   return (
     <>
-      <title>About – AAC Board AI</title>
+      <Title>About</Title>
       <PageContainer>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
