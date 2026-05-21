@@ -1,8 +1,3 @@
-// Speech is a singleton over the Web Speech API with two facets — a platform-
-// provided voice catalog and a user-tunable configuration — plus imperative
-// speak/stop actions. Subscribe via hooks; mutate via module functions.
-// Module-level setters are stable by construction; no memoization needed.
-
 import { getPrimaryLanguage } from "@shared/language/locale";
 import { createExternalStore } from "@shared/utils/external-store";
 import { useSyncExternalStore } from "react";
