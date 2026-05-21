@@ -14,7 +14,7 @@ export const SPEECH_VOLUME_MIN = 0;
 export const SPEECH_VOLUME_MAX = 1;
 const SPEECH_VOLUME_DEFAULT = 1;
 
-const synthesis = globalThis.speechSynthesis;
+const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
 
 type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
@@ -40,7 +40,7 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
 }
 
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
-  buildVoiceCatalog(synthesis.getVoices()),
+  buildVoiceCatalog(synthesis?.getVoices() ?? []),
 );
 
 const speechConfigStore = createExternalStore<SpeechConfig>({
@@ -50,7 +50,7 @@ const speechConfigStore = createExternalStore<SpeechConfig>({
   volume: SPEECH_VOLUME_DEFAULT,
 });
 
-synthesis.addEventListener("voiceschanged", () => {
+synthesis?.addEventListener("voiceschanged", () => {
   voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
 });
 
@@ -75,6 +75,10 @@ export function setVolume(volume: number): void {
 }
 
 export function speak(text: string): Promise<void> {
+  if (!synthesis) {
+    return Promise.resolve();
+  }
+
   const { promise, resolve, reject } = Promise.withResolvers<void>();
 
   const { voices } = voiceCatalogStore.getSnapshot();
@@ -96,7 +100,7 @@ export function speak(text: string): Promise<void> {
 }
 
 export function stop(): void {
-  synthesis.cancel();
+  synthesis?.cancel();
 }
 
 export function getDefaultVoice(
