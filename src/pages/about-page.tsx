@@ -8,7 +8,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
 
-function AboutPage() {
+export const Component = function AboutPage() {
   useDeclareAppHeaderTitle("About");
 
   return (
@@ -89,6 +89,4 @@ function AboutPage() {
       </PageContainer>
     </>
   );
-}
-
-export default AboutPage;
+};

@@ -20,7 +20,7 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
 
-function LibraryPage() {
+export const Component = function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
@@ -130,6 +130,4 @@ function LibraryPage() {
       </PageContainer>
     </>
   );
-}
-
-export default LibraryPage;
+};
