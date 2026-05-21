@@ -48,11 +48,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
       direction="column"
       sx={(theme) => ({
         height: "100%",
-        backgroundRepeat: "no-repeat",
-        backgroundImage:
-          theme.palette.mode === "dark"
-            ? "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)"
-            : "radial-gradient(80% 50% at 50% -20%, rgb(204, 230, 255), transparent)",
+        ...theme.applyStyles("dark", {
+          backgroundRepeat: "no-repeat",
+          backgroundImage:
+            "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+        }),
       })}
     >
       <MessageBar
