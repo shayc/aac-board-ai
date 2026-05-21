@@ -113,6 +113,12 @@ export function stop(): void {
   }
 }
 
+export function getDefaultVoice(
+  voices: SpeechSynthesisVoice[] | undefined,
+): SpeechSynthesisVoice | undefined {
+  return voices?.find((voice) => voice.default) ?? voices?.[0];
+}
+
 export function useVoiceCatalog(): VoiceCatalog {
   return useSyncExternalStore(
     voiceCatalogStore.subscribe,

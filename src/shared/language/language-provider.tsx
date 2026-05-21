@@ -1,5 +1,9 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { setVoiceURI, useVoiceCatalog } from "@shared/speech/speech-store";
+import {
+  getDefaultVoice,
+  setVoiceURI,
+  useVoiceCatalog,
+} from "@shared/speech/speech-store";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
 import {
@@ -38,10 +42,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   useEffect(() => {
-    const defaultVoice =
-      voicesByLanguage[language]?.find((voice) => voice.default) ??
-      voicesByLanguage[language]?.[0];
-
+    const defaultVoice = getDefaultVoice(voicesByLanguage[language]);
     if (defaultVoice) {
       setVoiceURI(defaultVoice.voiceURI);
     }
