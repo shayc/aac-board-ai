@@ -1,4 +1,4 @@
-import { useCustomInstructions } from "@features/board/suggestions/use-custom-instructions";
+import { useCustomInstructions } from "@features/board";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import List from "@mui/material/List";
