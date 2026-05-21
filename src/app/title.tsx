@@ -1,4 +1,4 @@
-const APP_NAME = "AAC Board AI";
+import { APP_NAME } from "@app/app-info";
 
 export interface TitleProps {
   children: string | undefined;

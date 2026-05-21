@@ -1,3 +1,4 @@
+import { Title } from "@app/title";
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
@@ -5,7 +6,6 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
-import { Title } from "@shared/components/title";
 
 function AboutPage() {
   useDeclareHeaderTitle("About");

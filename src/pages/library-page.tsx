@@ -1,3 +1,4 @@
+import { Title } from "@app/title";
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import {
   BoardSetDeleteDialog,
@@ -15,7 +16,6 @@ import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
 import { PageContainer } from "@shared/components/page-container";
-import { Title } from "@shared/components/title";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { generatePath, useNavigate } from "react-router";
