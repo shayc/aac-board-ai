@@ -1,6 +1,6 @@
 import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
-import { getLanguageCode } from "@shared/locale/locale";
+import { getLanguageCode } from "@shared/utils/locale";
 import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
 import type { Board } from "./types";

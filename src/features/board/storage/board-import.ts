@@ -1,4 +1,4 @@
-import { normalizeLocale } from "@shared/locale/locale";
+import { normalizeLocale } from "@shared/utils/locale";
 import { htmlToText } from "@shared/utils/html";
 import { lookup } from "mrmime";
 import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";

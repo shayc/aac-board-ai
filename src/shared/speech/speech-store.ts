@@ -1,4 +1,4 @@
-import { getLanguageCode } from "@shared/locale/locale";
+import { getLanguageCode } from "@shared/utils/locale";
 import { createExternalStore } from "@shared/utils/external-store";
 import { useSyncExternalStore } from "react";
 

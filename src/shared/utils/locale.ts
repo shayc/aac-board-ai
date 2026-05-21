@@ -1,10 +1,16 @@
+// Repairs POSIX-style underscores (`en_US`) that Intl.Locale would otherwise
+// reject, then parses. Single source of truth for input cleanup.
+function parseLocale(locale: string): Intl.Locale {
+  return new Intl.Locale(locale.replace(/_/g, "-"));
+}
+
 /**
  * Normalizes a BCP-47 locale code to canonical casing
  * (lowercase language subtag, uppercase region subtag, hyphen separator).
  */
 export function normalizeLocale(locale: string): string {
   try {
-    return new Intl.Locale(locale.replace(/_/g, "-")).baseName;
+    return parseLocale(locale).baseName;
   } catch {
     return locale;
   }
@@ -58,8 +64,7 @@ export function getNativeLanguageName(locale: string): string {
  */
 export function getTextDirection(locale: string): "ltr" | "rtl" {
   try {
-    const intlLocale = new Intl.Locale(normalizeLocale(locale));
-    return intlLocale.getTextInfo().direction ?? "ltr";
+    return parseLocale(locale).getTextInfo().direction ?? "ltr";
   } catch {
     return "ltr";
   }

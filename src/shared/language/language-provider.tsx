@@ -10,7 +10,7 @@ import {
   getLanguageCode,
   getNativeLanguageName,
   getTextDirection,
-} from "@shared/locale/locale";
+} from "@shared/utils/locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;

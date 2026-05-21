@@ -12,7 +12,7 @@ import {
   createTranslator,
   useGlobalDownloadProgress,
 } from "@shared/built-in-ai";
-import { getLanguageCode } from "@shared/locale/locale";
+import { getLanguageCode } from "@shared/utils/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
   setPitch,

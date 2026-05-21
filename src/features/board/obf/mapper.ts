@@ -1,4 +1,4 @@
-import { normalizeLocale } from "@shared/locale/locale";
+import { normalizeLocale } from "@shared/utils/locale";
 import type {
   OBFBoard,
   OBFButton,
