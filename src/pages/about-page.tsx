@@ -1,6 +1,6 @@
 import { APP_NAME } from "@app/app-info";
 import { Title } from "@app/title";
-import { useDeclareHeaderTitle } from "@app/use-header-title";
+import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
 
 function AboutPage() {
-  useDeclareHeaderTitle("About");
+  useDeclareAppHeaderTitle("About");
 
   return (
     <>

@@ -1,5 +1,5 @@
 import { Title } from "@app/title";
-import { useDeclareHeaderTitle } from "@app/use-header-title";
+import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
 import {
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
@@ -26,7 +26,7 @@ function LibraryPage() {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  useDeclareHeaderTitle("Library");
+  useDeclareAppHeaderTitle("Library");
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);

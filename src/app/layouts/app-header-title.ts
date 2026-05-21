@@ -3,11 +3,11 @@ import { useEffect, useSyncExternalStore } from "react";
 
 const store = createExternalStore("");
 
-export function useHeaderTitle(): string {
+export function useAppHeaderTitle(): string {
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
 
-export function useDeclareHeaderTitle(title: string | undefined): void {
+export function useDeclareAppHeaderTitle(title: string | undefined): void {
   useEffect(() => {
     const next = title ?? "";
     if (store.getSnapshot() !== next) {
