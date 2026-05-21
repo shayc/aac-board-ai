@@ -1,7 +1,8 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
 import { useState } from "react";
-import { getSpokenText, type MessagePart } from "./use-message";
+import { getSpokenText } from "../types";
+import type { MessagePart } from "./use-message";
 
 interface PlaybackSegment {
   type: "text" | "sound";

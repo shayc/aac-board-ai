@@ -1,13 +1,9 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak } from "@shared/speech/speech-store";
-import {
-  getSpokenText,
-  type MessagePart,
-  type UseMessageReturn,
-} from "./message/use-message";
+import type { MessagePart, UseMessageReturn } from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
 import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
-import type { BoardAction, BoardButton } from "./types";
+import { getSpokenText, type BoardAction, type BoardButton } from "./types";
 
 export interface UseButtonActivationOptions {
   message: UseMessageReturn;

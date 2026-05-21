@@ -6,12 +6,6 @@ export type MessagePart = Pick<
   "id" | "label" | "vocalization" | "imageSrc" | "soundSrc"
 >;
 
-export function getSpokenText(
-  part: Pick<MessagePart, "vocalization" | "label">,
-): string | undefined {
-  return part.vocalization ?? part.label;
-}
-
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
