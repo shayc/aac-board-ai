@@ -22,15 +22,15 @@ export function PlayButton({
 
   return (
     <Tooltip title={playButtonLabel}>
-      <Box>
+      <Box sx={{ alignSelf: "center" }}>
         <IconButton
           aria-label={playButtonLabel}
           size="large"
           disabled={disabled}
           onClick={isPlaying ? onStopClick : onPlayClick}
           sx={{
-            width: 104,
-            height: 104,
+            width: 72,
+            height: 72,
             backgroundColor: (theme) => theme.palette.primary.main,
             color: (theme) => theme.palette.primary.contrastText,
             "&:hover": {
@@ -38,11 +38,7 @@ export function PlayButton({
             },
           }}
         >
-          {isPlaying ? (
-            <StopIcon sx={{ width: 48, height: 48 }} />
-          ) : (
-            <PlayArrowIcon sx={[flipForRtl, { width: 48, height: 48 }]} />
-          )}
+          {isPlaying ? <StopIcon /> : <PlayArrowIcon sx={flipForRtl} />}
         </IconButton>
       </Box>
     </Tooltip>
