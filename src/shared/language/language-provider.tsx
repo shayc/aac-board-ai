@@ -10,7 +10,7 @@ import {
   getLanguageCode,
   getNativeLanguageName,
   getTextDirection,
-} from "./locale";
+} from "@shared/locale/locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -23,13 +23,13 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
-  const supportedLanguageCodes = Array.from(
+  const supportedLanguages = Array.from(
     new Set(voiceLocales.map(getLanguageCode)),
-  ).filter((code) => !UNSUPPORTED_LANGUAGES.includes(code));
+  ).filter((language) => !UNSUPPORTED_LANGUAGES.includes(language));
 
-  const languages = supportedLanguageCodes.map((code) => ({
-    code,
-    name: getNativeLanguageName(code),
+  const languages = supportedLanguages.map((language) => ({
+    language,
+    name: getNativeLanguageName(language),
   }));
 
   const direction = getTextDirection(language);

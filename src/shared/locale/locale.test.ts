@@ -1,11 +1,7 @@
 import { describe, expect, test } from "vitest";
-import {
-  getLanguageCode,
-  getTextDirection,
-  normalizeLocaleCode,
-} from "./locale";
+import { getLanguageCode, getTextDirection, normalizeLocale } from "./locale";
 
-describe("normalizeLocaleCode", () => {
+describe("normalizeLocale", () => {
   test.each([
     ["EN", "en"],
     ["fr", "fr"],
@@ -14,7 +10,7 @@ describe("normalizeLocaleCode", () => {
     ["EN-gb", "en-GB"],
     ["zh-TW", "zh-TW"],
   ])("normalizes %s → %s", (input, expected) => {
-    expect(normalizeLocaleCode(input)).toBe(expected);
+    expect(normalizeLocale(input)).toBe(expected);
   });
 });
 

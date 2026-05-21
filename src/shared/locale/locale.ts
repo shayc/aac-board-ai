@@ -2,7 +2,7 @@
  * Normalizes a BCP-47 locale code to canonical casing
  * (lowercase language subtag, uppercase region subtag, hyphen separator).
  */
-export function normalizeLocaleCode(locale: string): string {
+export function normalizeLocale(locale: string): string {
   try {
     return new Intl.Locale(locale.replace(/_/g, "-")).baseName;
   } catch {
@@ -28,7 +28,7 @@ const englishLanguageNames = new Intl.DisplayNames(["en"], {
  */
 export function getEnglishLocaleName(locale: string): string {
   try {
-    return englishLanguageNames.of(normalizeLocaleCode(locale)) ?? locale;
+    return englishLanguageNames.of(normalizeLocale(locale)) ?? locale;
   } catch {
     return locale;
   }
@@ -57,7 +57,7 @@ export function getNativeLanguageName(locale: string): string {
  */
 export function getTextDirection(locale: string): "ltr" | "rtl" {
   try {
-    const intlLocale = new Intl.Locale(normalizeLocaleCode(locale));
+    const intlLocale = new Intl.Locale(normalizeLocale(locale));
     return intlLocale.getTextInfo().direction === "rtl" ? "rtl" : "ltr";
   } catch {
     return "ltr";

@@ -1,6 +1,6 @@
 import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
-import { getLanguageCode, normalizeLocaleCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
+import { getLanguageCode } from "@shared/locale/locale";
 import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
 import type { Board } from "./types";
@@ -31,7 +31,7 @@ export function useBoardTranslation({
     const { signal } = controller;
 
     const run = async () => {
-      const boardLanguage = getLanguageCode(board.locale ?? "en");
+      const boardLanguage = board.locale ? getLanguageCode(board.locale) : "en";
 
       if (boardLanguage === language) {
         setTranslatedBoard(board);
@@ -48,15 +48,12 @@ export function useBoardTranslation({
         return;
       }
 
-      const sourceLanguage = normalizeLocaleCode(boardLanguage);
-      const targetLanguage = normalizeLocaleCode(language);
-
       // Imperative createTranslator (vs. useTranslator) because we only know
       // the language pair after checking for a cached translation above.
       try {
         await using translator = await createTranslator({
-          sourceLanguage,
-          targetLanguage,
+          sourceLanguage: boardLanguage,
+          targetLanguage: language,
           signal,
         });
         if (signal.aborted) {
@@ -177,12 +174,12 @@ function applyTranslations(
 async function persistTranslations(
   setId: string,
   boardId: string,
-  language: string,
+  locale: string,
   translations: Record<string, string>,
 ): Promise<void> {
   try {
     await withBoardsDB(async (db) => {
-      await updateBoardStrings(db, setId, boardId, language, translations);
+      await updateBoardStrings(db, setId, boardId, locale, translations);
     });
   } catch {
     // Best-effort cache write — failure only costs a re-translation next load.

@@ -12,7 +12,7 @@ import {
   createTranslator,
   useGlobalDownloadProgress,
 } from "@shared/built-in-ai";
-import { getLanguageCode, normalizeLocaleCode } from "@shared/language/locale";
+import { getLanguageCode } from "@shared/locale/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
   setPitch,
@@ -75,15 +75,13 @@ export function SpeechSettings() {
 
   async function previewVoice() {
     const defaultGreeting = "Hi, this is my voice!";
-    const sourceLanguage = normalizeLocaleCode("en");
-    const targetLanguage = normalizeLocaleCode(language);
     let greeting = defaultGreeting;
 
-    if (sourceLanguage !== targetLanguage) {
+    if (language !== "en") {
       try {
         await using translator = await createTranslator({
-          sourceLanguage,
-          targetLanguage,
+          sourceLanguage: "en",
+          targetLanguage: language,
         });
         greeting = await translator.translate(defaultGreeting);
       } catch (error) {
