@@ -1,5 +1,6 @@
 import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
   DEFAULT_SNACKBAR_SEVERITY,
@@ -70,6 +71,7 @@ function snackbarReducer(
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -109,14 +111,15 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         autoHideDuration={state.current?.duration ?? 4000}
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{
+          vertical: isSmallScreen ? "bottom" : "top",
+          horizontal: "center",
+        }}
         onClose={handleClose}
         slotProps={{ transition: { onExited: handleExited } }}
       >
         <Alert
-          onClose={handleClose}
           severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
-          variant="filled"
           sx={{ width: "100%" }}
         >
           {state.current?.message}

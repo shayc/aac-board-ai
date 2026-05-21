@@ -58,7 +58,7 @@ export function MessageBar({
           borderRadius: 18,
           overflow: "hidden",
           backgroundColor:
-            theme.palette.mode === "dark" ? "#363b41" : "#e2e6ea",
+            theme.palette.mode === "dark" ? "#383838" : "#ebebeb",
         })}
       >
         <Stack
