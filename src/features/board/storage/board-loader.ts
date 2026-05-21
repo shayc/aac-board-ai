@@ -18,27 +18,16 @@ export interface BoardLoaderData {
   board: Board;
 }
 
-// Module-scoped pointer to the registry the previous loader call created.
-// Revoking on the next loader run (rather than on React unmount) keeps URL
-// lifecycle outside React entirely — required because StrictMode dev double-
-// invokes effect cleanups, which would otherwise revoke URLs the component
-// is still about to render.
+// Revoke on the next loader run, not on unmount — StrictMode double-invokes
+// effect cleanups and would revoke URLs still in use.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
 export async function boardLoader({
   params,
+  request,
 }: LoaderFunctionArgs): Promise<BoardLoaderData> {
   const setId = params.setId ?? "";
   const boardId = params.boardId ?? "";
-  if (!setId || !boardId) {
-    // React Router catches thrown `data()` and routes it to ErrorBoundary as
-    // a route error response — the v7-canonical way to signal an expected 4xx.
-    // eslint-disable-next-line @typescript-eslint/only-throw-error
-    throw data("Missing route params", { status: 400 });
-  }
-
-  previousRegistry?.revokeAll();
-  previousRegistry = null;
 
   const registry = createObjectUrlRegistry();
   try {
@@ -47,7 +36,17 @@ export async function boardLoader({
       const hydrated = await hydrateBoard(db, setId, obf, registry);
       return obfToBoard(hydrated);
     });
+
+    // Don't promote a superseded registry — it would orphan the live one.
+    if (request.signal.aborted) {
+      registry.revokeAll();
+      throw new DOMException("Aborted", "AbortError");
+    }
+
+    const previous = previousRegistry;
     previousRegistry = registry;
+    previous?.revokeAll();
+
     return { setId, board };
   } catch (err) {
     registry.revokeAll();
