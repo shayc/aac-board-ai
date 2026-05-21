@@ -1,3 +1,4 @@
+import { APP_NAME } from "@app/app-info";
 import { Title } from "@app/title";
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -16,7 +17,7 @@ function AboutPage() {
       <PageContainer>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
-            AAC Board AI helps people who can't rely on speech communicate more
+            {APP_NAME} helps people who can't rely on speech communicate more
             easily and naturally. It uses on-device AI to correct grammar,
             adjust tone, and translate messages, keeping interactions private
             and fast.
