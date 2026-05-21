@@ -1,6 +1,10 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak } from "@shared/speech/speech-store";
-import type { MessagePart, UseMessageReturn } from "./message/use-message";
+import {
+  getSpokenText,
+  type MessagePart,
+  type UseMessageReturn,
+} from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
 import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "./types";
@@ -94,7 +98,7 @@ export function useButtonActivation({
       return;
     }
 
-    const text = button.vocalization ?? button.label;
+    const text = getSpokenText(button);
 
     if (text) {
       void speak(text.toLowerCase());
