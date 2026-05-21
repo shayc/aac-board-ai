@@ -16,11 +16,11 @@ const SPEECH_VOLUME_DEFAULT = 1;
 
 const synthesis = globalThis.speechSynthesis;
 
-export interface VoiceCatalog {
+type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
+
+interface VoiceCatalogState {
   voices: SpeechSynthesisVoice[];
-  voicesByLanguage: Partial<Record<string, SpeechSynthesisVoice[]>>;
-  voicesByLocale: Partial<Record<string, SpeechSynthesisVoice[]>>;
-  voiceLocales: string[];
+  voicesByLanguage: VoicesByLanguage;
 }
 
 export interface SpeechConfig {
@@ -30,20 +30,16 @@ export interface SpeechConfig {
   volume: number;
 }
 
-function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalog {
+function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   return {
     voices,
     voicesByLanguage: Object.groupBy(voices, (voice) =>
       getLanguageCode(voice.lang),
     ),
-    voicesByLocale: Object.groupBy(voices, (voice) => voice.lang),
-    voiceLocales: Array.from(new Set(voices.map((voice) => voice.lang))).sort(
-      (a, b) => a.localeCompare(b),
-    ),
   };
 }
 
-const voiceCatalogStore = createExternalStore<VoiceCatalog>(
+const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis.getVoices()),
 );
 
@@ -109,10 +105,10 @@ export function getDefaultVoice(
   return voices?.find((voice) => voice.default) ?? voices?.[0];
 }
 
-export function useVoiceCatalog(): VoiceCatalog {
+export function useVoicesByLanguage(): VoicesByLanguage {
   return useSyncExternalStore(
     voiceCatalogStore.subscribe,
-    voiceCatalogStore.getSnapshot,
+    () => voiceCatalogStore.getSnapshot().voicesByLanguage,
   );
 }
 

@@ -12,7 +12,6 @@ import {
   createTranslator,
   useGlobalDownloadProgress,
 } from "@shared/built-in-ai";
-import { getLanguageCode } from "@shared/utils/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
   setPitch,
@@ -27,11 +26,11 @@ import {
   SPEECH_VOLUME_MAX,
   SPEECH_VOLUME_MIN,
   useSpeechConfig,
-  useVoiceCatalog,
+  useVoicesByLanguage,
 } from "@shared/speech/speech-store";
 
 export function SpeechSettings() {
-  const { voicesByLocale } = useVoiceCatalog();
+  const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
 
   const { language } = useLanguage();
@@ -39,9 +38,13 @@ export function SpeechSettings() {
   const isTranslatorDownloading =
     translatorProgress > 0 && translatorProgress < 1;
 
-  const locales = Object.keys(voicesByLocale)
-    .filter((voiceLocale) => getLanguageCode(voiceLocale) === language)
-    .sort((a, b) => a.localeCompare(b));
+  const voicesByLocale = Object.groupBy(
+    voicesByLanguage[language] ?? [],
+    (voice) => voice.lang,
+  );
+  const locales = Object.keys(voicesByLocale).sort((a, b) =>
+    a.localeCompare(b),
+  );
 
   const hasMultipleLocales = locales.length > 1;
 

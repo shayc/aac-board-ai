@@ -2,15 +2,11 @@ import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import {
   getDefaultVoice,
   setVoiceURI,
-  useVoiceCatalog,
+  useVoicesByLanguage,
 } from "@shared/speech/speech-store";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import {
-  getLanguageCode,
-  getNativeLanguageName,
-  getTextDirection,
-} from "@shared/utils/locale";
+import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -19,18 +15,17 @@ export interface LanguageProviderProps {
 const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const { voiceLocales, voicesByLanguage } = useVoiceCatalog();
+  const voicesByLanguage = useVoicesByLanguage();
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
-  const supportedLanguages = Array.from(
-    new Set(voiceLocales.map(getLanguageCode)),
-  ).filter((language) => !UNSUPPORTED_LANGUAGES.includes(language));
-
-  const languages = supportedLanguages.map((language) => ({
-    language,
-    name: getNativeLanguageName(language),
-  }));
+  const languages = Object.keys(voicesByLanguage)
+    .filter((language) => !UNSUPPORTED_LANGUAGES.includes(language))
+    .sort((a, b) => a.localeCompare(b))
+    .map((language) => ({
+      language,
+      name: getNativeLanguageName(language),
+    }));
 
   const direction = getTextDirection(language);
 
