@@ -27,6 +27,12 @@ export interface BoardButton {
   loadBoard?: BoardLink;
 }
 
+export function getSpokenText(
+  button: Pick<BoardButton, "vocalization" | "label">,
+): string | undefined {
+  return button.vocalization ?? button.label;
+}
+
 export interface BoardLicense {
   type: string;
   authorName?: string;
