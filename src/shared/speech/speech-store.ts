@@ -20,7 +20,7 @@ export interface VoiceCatalog {
   voices: SpeechSynthesisVoice[];
   voicesByLanguage: Partial<Record<string, SpeechSynthesisVoice[]>>;
   voicesByLocale: Partial<Record<string, SpeechSynthesisVoice[]>>;
-  locales: string[];
+  voiceLocales: string[];
 }
 
 export interface SpeechConfig {
@@ -37,7 +37,7 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalog {
       getPrimaryLanguage(voice.lang),
     ),
     voicesByLocale: Object.groupBy(voices, (voice) => voice.lang),
-    locales: Array.from(new Set(voices.map((voice) => voice.lang))).sort(
+    voiceLocales: Array.from(new Set(voices.map((voice) => voice.lang))).sort(
       (a, b) => a.localeCompare(b),
     ),
   };

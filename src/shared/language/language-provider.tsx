@@ -19,15 +19,15 @@ export interface LanguageProviderProps {
 const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const { locales, voicesByLanguage } = useVoiceCatalog();
+  const { voiceLocales, voicesByLanguage } = useVoiceCatalog();
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
-  const supportedLanguages = Array.from(
-    new Set(locales.map(getPrimaryLanguage)),
-  ).filter((langCode) => !UNSUPPORTED_LANGUAGES.includes(langCode));
+  const supportedLanguageCodes = Array.from(
+    new Set(voiceLocales.map(getPrimaryLanguage)),
+  ).filter((code) => !UNSUPPORTED_LANGUAGES.includes(code));
 
-  const languages = supportedLanguages.map((code) => ({
+  const languages = supportedLanguageCodes.map((code) => ({
     code,
     name: getNativeLanguageName(code),
   }));
