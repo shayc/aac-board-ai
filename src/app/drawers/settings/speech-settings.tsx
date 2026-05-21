@@ -12,10 +12,7 @@ import {
   createTranslator,
   useGlobalDownloadProgress,
 } from "@shared/built-in-ai";
-import {
-  getPrimaryLanguage,
-  normalizeLocaleCode,
-} from "@shared/language/locale";
+import { getLanguageCode, normalizeLocaleCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
   setPitch,
@@ -43,7 +40,7 @@ export function SpeechSettings() {
     translatorProgress > 0 && translatorProgress < 1;
 
   const locales = Object.keys(voicesByLocale)
-    .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
+    .filter((voiceLocale) => getLanguageCode(voiceLocale) === language)
     .sort((a, b) => a.localeCompare(b));
 
   const hasMultipleLocales = locales.length > 1;

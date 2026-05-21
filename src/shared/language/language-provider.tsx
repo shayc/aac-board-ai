@@ -7,9 +7,9 @@ import {
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
 import {
-  getLanguageDirection,
+  getLanguageCode,
   getNativeLanguageName,
-  getPrimaryLanguage,
+  getTextDirection,
 } from "./locale";
 
 export interface LanguageProviderProps {
@@ -24,7 +24,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
   const supportedLanguageCodes = Array.from(
-    new Set(voiceLocales.map(getPrimaryLanguage)),
+    new Set(voiceLocales.map(getLanguageCode)),
   ).filter((code) => !UNSUPPORTED_LANGUAGES.includes(code));
 
   const languages = supportedLanguageCodes.map((code) => ({
@@ -32,7 +32,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     name: getNativeLanguageName(code),
   }));
 
-  const direction = getLanguageDirection(language);
+  const direction = getTextDirection(language);
 
   const contextValue: LanguageContextValue = {
     languages,

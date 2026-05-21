@@ -1,4 +1,4 @@
-import { getPrimaryLanguage } from "@shared/language/locale";
+import { getLanguageCode } from "@shared/language/locale";
 import { createExternalStore } from "@shared/utils/external-store";
 import { useSyncExternalStore } from "react";
 
@@ -34,7 +34,7 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalog {
   return {
     voices,
     voicesByLanguage: Object.groupBy(voices, (voice) =>
-      getPrimaryLanguage(voice.lang),
+      getLanguageCode(voice.lang),
     ),
     voicesByLocale: Object.groupBy(voices, (voice) => voice.lang),
     voiceLocales: Array.from(new Set(voices.map((voice) => voice.lang))).sort(

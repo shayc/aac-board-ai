@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
-  getLanguageDirection,
-  getPrimaryLanguage,
+  getLanguageCode,
+  getTextDirection,
   normalizeLocaleCode,
 } from "./locale";
 
@@ -18,18 +18,18 @@ describe("normalizeLocaleCode", () => {
   });
 });
 
-describe("getPrimaryLanguage", () => {
+describe("getLanguageCode", () => {
   test.each([
     ["en", "en"],
     ["en-US", "en"],
     ["pt_BR", "pt"],
     ["EN-GB", "en"],
   ])("extracts primary language from %s → %s", (input, expected) => {
-    expect(getPrimaryLanguage(input)).toBe(expected);
+    expect(getLanguageCode(input)).toBe(expected);
   });
 });
 
-describe("getLanguageDirection", () => {
+describe("getTextDirection", () => {
   test.each([
     ["en", "ltr"],
     ["en-US", "ltr"],
@@ -37,7 +37,7 @@ describe("getLanguageDirection", () => {
     ["zh-TW", "ltr"],
     ["ja", "ltr"],
   ])("returns ltr for LTR locale %s", (input, expected) => {
-    expect(getLanguageDirection(input)).toBe(expected);
+    expect(getTextDirection(input)).toBe(expected);
   });
 
   test.each([
@@ -49,14 +49,14 @@ describe("getLanguageDirection", () => {
     ["sd", "rtl"],
     ["he-IL", "rtl"],
   ])("returns rtl for RTL locale %s", (input, expected) => {
-    expect(getLanguageDirection(input)).toBe(expected);
+    expect(getTextDirection(input)).toBe(expected);
   });
 
   test("falls back to ltr for unrecognized codes", () => {
-    expect(getLanguageDirection("xx")).toBe("ltr");
+    expect(getTextDirection("xx")).toBe("ltr");
   });
 
   test("falls back to ltr for invalid codes", () => {
-    expect(getLanguageDirection("!!!")).toBe("ltr");
+    expect(getTextDirection("!!!")).toBe("ltr");
   });
 });

@@ -1,8 +1,5 @@
 import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
-import {
-  getPrimaryLanguage,
-  normalizeLocaleCode,
-} from "@shared/language/locale";
+import { getLanguageCode, normalizeLocaleCode } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
 import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
@@ -34,7 +31,7 @@ export function useBoardTranslation({
     const { signal } = controller;
 
     const run = async () => {
-      const boardLanguage = getPrimaryLanguage(board.locale ?? "en");
+      const boardLanguage = getLanguageCode(board.locale ?? "en");
 
       if (boardLanguage === language) {
         setTranslatedBoard(board);
@@ -117,7 +114,7 @@ function findTranslationsForLanguage(
   }
 
   for (const [locale, translations] of Object.entries(strings)) {
-    if (getPrimaryLanguage(locale) === language) {
+    if (getLanguageCode(locale) === language) {
       return translations;
     }
   }
