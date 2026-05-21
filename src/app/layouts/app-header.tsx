@@ -1,4 +1,4 @@
-import { useHeaderTitle } from "@app/use-header-title";
+import { useAppHeaderTitle } from "./app-header-title";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -13,7 +13,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const headerTitle = useHeaderTitle();
+  const headerTitle = useAppHeaderTitle();
 
   return (
     <AppBar position="static">
