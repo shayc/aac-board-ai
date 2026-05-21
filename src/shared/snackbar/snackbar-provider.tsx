@@ -119,7 +119,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         slotProps={{ transition: { onExited: handleExited } }}
       >
         <Alert
-          onClose={handleClose}
           severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
           sx={{ width: "100%" }}
         >
