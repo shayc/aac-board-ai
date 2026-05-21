@@ -14,7 +14,6 @@ export const SPEECH_VOLUME_MIN = 0;
 export const SPEECH_VOLUME_MAX = 1;
 const SPEECH_VOLUME_DEFAULT = 1;
 
-export const isSpeechSupported = "speechSynthesis" in globalThis;
 const synthesis = globalThis.speechSynthesis;
 
 export interface VoiceCatalog {
@@ -45,7 +44,7 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalog {
 }
 
 const voiceCatalogStore = createExternalStore<VoiceCatalog>(
-  buildVoiceCatalog(isSpeechSupported ? synthesis.getVoices() : []),
+  buildVoiceCatalog(synthesis.getVoices()),
 );
 
 const speechConfigStore = createExternalStore<SpeechConfig>({
@@ -55,11 +54,9 @@ const speechConfigStore = createExternalStore<SpeechConfig>({
   volume: SPEECH_VOLUME_DEFAULT,
 });
 
-if (isSpeechSupported) {
-  synthesis.addEventListener("voiceschanged", () => {
-    voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
-  });
-}
+synthesis.addEventListener("voiceschanged", () => {
+  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+});
 
 function updateConfig(patch: Partial<SpeechConfig>): void {
   speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
@@ -84,11 +81,6 @@ export function setVolume(volume: number): void {
 export function speak(text: string): Promise<void> {
   const { promise, resolve, reject } = Promise.withResolvers<void>();
 
-  if (!isSpeechSupported) {
-    reject(new Error("Speech synthesis is not supported in this browser."));
-    return promise;
-  }
-
   const { voices } = voiceCatalogStore.getSnapshot();
   const { voiceURI, pitch, rate, volume } = speechConfigStore.getSnapshot();
 
@@ -108,9 +100,7 @@ export function speak(text: string): Promise<void> {
 }
 
 export function stop(): void {
-  if (isSpeechSupported) {
-    synthesis.cancel();
-  }
+  synthesis.cancel();
 }
 
 export function getDefaultVoice(

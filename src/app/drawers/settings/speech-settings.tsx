@@ -18,7 +18,6 @@ import {
 } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
 import {
-  isSpeechSupported,
   setPitch,
   setRate,
   setVolume,
@@ -111,7 +110,6 @@ export function SpeechSettings() {
           labelId="voice-select-label"
           id="voice-select"
           value={voiceURI ?? ""}
-          disabled={!isSpeechSupported}
           onChange={(event) => setVoiceURI(event.target.value || null)}
         >
           {locales.map((voiceLocale) => [
@@ -141,7 +139,6 @@ export function SpeechSettings() {
             min={min}
             max={max}
             step={0.1}
-            disabled={!isSpeechSupported}
             onChange={(_event, newValue) => onChange(newValue)}
           />
         </Stack>
@@ -150,7 +147,7 @@ export function SpeechSettings() {
       <Button
         variant="contained"
         color="primary"
-        disabled={!isSpeechSupported || isTranslatorDownloading}
+        disabled={isTranslatorDownloading}
         sx={{ alignSelf: "flex-start" }}
         onClick={() => void previewVoice()}
       >
