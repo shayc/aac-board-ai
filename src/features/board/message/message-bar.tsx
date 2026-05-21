@@ -47,24 +47,18 @@ export function MessageBar({
   }, [parts]);
 
   return (
-    <Stack direction="row" sx={{ p: 2, gap: 2 }}>
+    <Stack direction="row" sx={{ p: 2 }}>
       <Stack
         direction="row"
         sx={(theme) => ({
+          height: 104,
           flexGrow: 2,
           gap: 2,
           paddingInlineEnd: 2,
           borderRadius: 18,
           overflow: "hidden",
           backgroundColor:
-            theme.palette.mode === "dark"
-              ? theme.palette.grey[800]
-              : theme.palette.grey[200],
-          border: `1px solid ${
-            theme.palette.mode === "dark"
-              ? theme.palette.grey[700]
-              : theme.palette.grey[400]
-          }`,
+            theme.palette.mode === "dark" ? "#363b41" : "#e2e6ea",
         })}
       >
         <Stack
@@ -83,13 +77,12 @@ export function MessageBar({
           onPress={onBackspacePress}
           onLongPress={onBackspaceLongPress}
         />
+        <PlayButton
+          isPlaying={isPlaying}
+          onPlayClick={onPlayClick}
+          onStopClick={onStopClick}
+        />
       </Stack>
-
-      <PlayButton
-        isPlaying={isPlaying}
-        onPlayClick={onPlayClick}
-        onStopClick={onStopClick}
-      />
     </Stack>
   );
 }
