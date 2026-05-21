@@ -1,5 +1,5 @@
 import { useAudio } from "@shared/hooks/use-audio";
-import { useSpeech } from "@shared/speech/use-speech";
+import { speak } from "@shared/speech/speech-store";
 import type { MessagePart, UseMessageReturn } from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
 import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
@@ -25,7 +25,6 @@ export function useButtonActivation({
   playback,
   navigation,
 }: UseButtonActivationOptions): UseButtonActivationReturn {
-  const speech = useSpeech();
   const audio = useAudio();
 
   async function activateButton(button: BoardButton) {
@@ -98,7 +97,7 @@ export function useButtonActivation({
     const text = button.vocalization ?? button.label;
 
     if (text) {
-      void speech.speak(text.toLowerCase());
+      void speak(text.toLowerCase());
     }
   }
 

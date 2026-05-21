@@ -17,30 +17,26 @@ import {
   normalizeLocaleCode,
 } from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
-import { useSpeech } from "@shared/speech/use-speech";
 import {
-  PITCH_MAX,
-  PITCH_MIN,
-  RATE_MAX,
-  RATE_MIN,
-  VOLUME_MAX,
-  VOLUME_MIN,
-} from "@shared/speech/use-speech-synthesis";
+  isSpeechSupported,
+  setSpeechPitch,
+  setSpeechRate,
+  setSpeechVolume,
+  setVoiceURI,
+  speak,
+  SPEECH_PITCH_MAX,
+  SPEECH_PITCH_MIN,
+  SPEECH_RATE_MAX,
+  SPEECH_RATE_MIN,
+  SPEECH_VOLUME_MAX,
+  SPEECH_VOLUME_MIN,
+  useSpeechConfig,
+  useVoiceCatalog,
+} from "@shared/speech/speech-store";
 
 export function SpeechSettings() {
-  const {
-    voicesByLocale,
-    voiceURI,
-    setVoiceURI,
-    rate,
-    setRate,
-    pitch,
-    setPitch,
-    volume,
-    setVolume,
-    isSpeechSupported,
-    speak,
-  } = useSpeech();
+  const { voicesByLocale } = useVoiceCatalog();
+  const { voiceURI, rate, pitch, volume } = useSpeechConfig();
 
   const { language } = useLanguage();
   const translatorProgress = useGlobalDownloadProgress("Translator");
@@ -61,23 +57,23 @@ export function SpeechSettings() {
     {
       label: "Rate",
       value: rate,
-      min: RATE_MIN,
-      max: RATE_MAX,
-      onChange: setRate,
+      min: SPEECH_RATE_MIN,
+      max: SPEECH_RATE_MAX,
+      onChange: setSpeechRate,
     },
     {
       label: "Pitch",
       value: pitch,
-      min: PITCH_MIN,
-      max: PITCH_MAX,
-      onChange: setPitch,
+      min: SPEECH_PITCH_MIN,
+      max: SPEECH_PITCH_MAX,
+      onChange: setSpeechPitch,
     },
     {
       label: "Volume",
       value: volume,
-      min: VOLUME_MIN,
-      max: VOLUME_MAX,
-      onChange: setVolume,
+      min: SPEECH_VOLUME_MIN,
+      max: SPEECH_VOLUME_MAX,
+      onChange: setSpeechVolume,
     },
   ];
 
@@ -114,9 +110,9 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI}
+          value={voiceURI ?? ""}
           disabled={!isSpeechSupported}
-          onChange={(event) => setVoiceURI(event.target.value)}
+          onChange={(event) => setVoiceURI(event.target.value || null)}
         >
           {locales.map((voiceLocale) => [
             hasMultipleLocales && (

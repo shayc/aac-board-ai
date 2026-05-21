@@ -1,5 +1,5 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { useSpeech } from "@shared/speech/use-speech";
+import { setVoiceURI, useVoiceCatalog } from "@shared/speech/speech-store";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
 import {
@@ -15,7 +15,7 @@ export interface LanguageProviderProps {
 const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const { locales, voicesByLanguage, setVoiceURI } = useSpeech();
+  const { locales, voicesByLanguage } = useVoiceCatalog();
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
@@ -45,7 +45,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     if (defaultVoice) {
       setVoiceURI(defaultVoice.voiceURI);
     }
-  }, [language, voicesByLanguage, setVoiceURI]);
+  }, [language, voicesByLanguage]);
 
   useEffect(() => {
     document.documentElement.dir = direction;
