@@ -20,6 +20,7 @@ export function getLanguageCode(locale: string): string {
 
 const englishLanguageNames = new Intl.DisplayNames(["en"], {
   type: "language",
+  languageDisplay: "dialect",
 });
 
 /**
@@ -58,7 +59,7 @@ export function getNativeLanguageName(locale: string): string {
 export function getTextDirection(locale: string): "ltr" | "rtl" {
   try {
     const intlLocale = new Intl.Locale(normalizeLocale(locale));
-    return intlLocale.getTextInfo().direction === "rtl" ? "rtl" : "ltr";
+    return intlLocale.getTextInfo().direction ?? "ltr";
   } catch {
     return "ltr";
   }
