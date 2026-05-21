@@ -1,12 +1,12 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { useSpeech } from "@shared/speech/use-speech";
+import {
+  getDefaultVoice,
+  setVoiceURI,
+  useVoicesByLanguage,
+} from "@shared/speech/speech-store";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import {
-  getLanguageDirection,
-  getNativeLanguageName,
-  getPrimaryLanguage,
-} from "./locale";
+import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -15,20 +15,19 @@ export interface LanguageProviderProps {
 const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const { locales, voicesByLanguage, setVoiceURI } = useSpeech();
+  const voicesByLanguage = useVoicesByLanguage();
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
-  const supportedLanguages = Array.from(
-    new Set(locales.map(getPrimaryLanguage)),
-  ).filter((langCode) => !UNSUPPORTED_LANGUAGES.includes(langCode));
+  const languages = Object.keys(voicesByLanguage)
+    .filter((language) => !UNSUPPORTED_LANGUAGES.includes(language))
+    .sort((a, b) => a.localeCompare(b))
+    .map((language) => ({
+      language,
+      name: getNativeLanguageName(language),
+    }));
 
-  const languages = supportedLanguages.map((code) => ({
-    code,
-    name: getNativeLanguageName(code),
-  }));
-
-  const direction = getLanguageDirection(language);
+  const direction = getTextDirection(language);
 
   const contextValue: LanguageContextValue = {
     languages,
@@ -38,14 +37,11 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   };
 
   useEffect(() => {
-    const defaultVoice =
-      voicesByLanguage[language]?.find((voice) => voice.default) ??
-      voicesByLanguage[language]?.[0];
-
+    const defaultVoice = getDefaultVoice(voicesByLanguage[language]);
     if (defaultVoice) {
       setVoiceURI(defaultVoice.voiceURI);
     }
-  }, [language, voicesByLanguage, setVoiceURI]);
+  }, [language, voicesByLanguage]);
 
   useEffect(() => {
     document.documentElement.dir = direction;

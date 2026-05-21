@@ -12,44 +12,39 @@ import {
   createTranslator,
   useGlobalDownloadProgress,
 } from "@shared/built-in-ai";
-import {
-  getPrimaryLanguage,
-  normalizeLocaleCode,
-} from "@shared/language/locale";
 import { useLanguage } from "@shared/language/use-language";
-import { useSpeech } from "@shared/speech/use-speech";
 import {
-  PITCH_MAX,
-  PITCH_MIN,
-  RATE_MAX,
-  RATE_MIN,
-  VOLUME_MAX,
-  VOLUME_MIN,
-} from "@shared/speech/use-speech-synthesis";
+  setPitch,
+  setRate,
+  setVolume,
+  setVoiceURI,
+  speak,
+  SPEECH_PITCH_MAX,
+  SPEECH_PITCH_MIN,
+  SPEECH_RATE_MAX,
+  SPEECH_RATE_MIN,
+  SPEECH_VOLUME_MAX,
+  SPEECH_VOLUME_MIN,
+  useSpeechConfig,
+  useVoicesByLanguage,
+} from "@shared/speech/speech-store";
 
 export function SpeechSettings() {
-  const {
-    voicesByLocale,
-    voiceURI,
-    setVoiceURI,
-    rate,
-    setRate,
-    pitch,
-    setPitch,
-    volume,
-    setVolume,
-    isSpeechSupported,
-    speak,
-  } = useSpeech();
+  const voicesByLanguage = useVoicesByLanguage();
+  const { voiceURI, rate, pitch, volume } = useSpeechConfig();
 
   const { language } = useLanguage();
   const translatorProgress = useGlobalDownloadProgress("Translator");
   const isTranslatorDownloading =
     translatorProgress > 0 && translatorProgress < 1;
 
-  const locales = Object.keys(voicesByLocale)
-    .filter((voiceLocale) => getPrimaryLanguage(voiceLocale) === language)
-    .sort((a, b) => a.localeCompare(b));
+  const voicesByLocale = Object.groupBy(
+    voicesByLanguage[language] ?? [],
+    (voice) => voice.lang,
+  );
+  const locales = Object.keys(voicesByLocale).sort((a, b) =>
+    a.localeCompare(b),
+  );
 
   const hasMultipleLocales = locales.length > 1;
 
@@ -61,37 +56,35 @@ export function SpeechSettings() {
     {
       label: "Rate",
       value: rate,
-      min: RATE_MIN,
-      max: RATE_MAX,
+      min: SPEECH_RATE_MIN,
+      max: SPEECH_RATE_MAX,
       onChange: setRate,
     },
     {
       label: "Pitch",
       value: pitch,
-      min: PITCH_MIN,
-      max: PITCH_MAX,
+      min: SPEECH_PITCH_MIN,
+      max: SPEECH_PITCH_MAX,
       onChange: setPitch,
     },
     {
       label: "Volume",
       value: volume,
-      min: VOLUME_MIN,
-      max: VOLUME_MAX,
+      min: SPEECH_VOLUME_MIN,
+      max: SPEECH_VOLUME_MAX,
       onChange: setVolume,
     },
   ];
 
   async function previewVoice() {
     const defaultGreeting = "Hi, this is my voice!";
-    const sourceLanguage = normalizeLocaleCode("en");
-    const targetLanguage = normalizeLocaleCode(language);
     let greeting = defaultGreeting;
 
-    if (sourceLanguage !== targetLanguage) {
+    if (language !== "en") {
       try {
         await using translator = await createTranslator({
-          sourceLanguage,
-          targetLanguage,
+          sourceLanguage: "en",
+          targetLanguage: language,
         });
         greeting = await translator.translate(defaultGreeting);
       } catch (error) {
@@ -114,9 +107,8 @@ export function SpeechSettings() {
           label="Voice"
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI}
-          disabled={!isSpeechSupported}
-          onChange={(event) => setVoiceURI(event.target.value)}
+          value={voiceURI ?? ""}
+          onChange={(event) => setVoiceURI(event.target.value || null)}
         >
           {locales.map((voiceLocale) => [
             hasMultipleLocales && (
@@ -145,7 +137,6 @@ export function SpeechSettings() {
             min={min}
             max={max}
             step={0.1}
-            disabled={!isSpeechSupported}
             onChange={(_event, newValue) => onChange(newValue)}
           />
         </Stack>
@@ -154,7 +145,7 @@ export function SpeechSettings() {
       <Button
         variant="contained"
         color="primary"
-        disabled={!isSpeechSupported || isTranslatorDownloading}
+        disabled={isTranslatorDownloading}
         sx={{ alignSelf: "flex-start" }}
         onClick={() => void previewVoice()}
       >
