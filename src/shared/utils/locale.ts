@@ -1,5 +1,3 @@
-// Repairs POSIX-style underscores (`en_US`) that Intl.Locale would otherwise
-// reject, then parses. Single source of truth for input cleanup.
 function parseLocale(locale: string): Intl.Locale {
   return new Intl.Locale(locale.replace(/_/g, "-"));
 }
