@@ -4,15 +4,15 @@ import { useSyncExternalStore } from "react";
 
 export const SPEECH_RATE_MIN = 0.1;
 export const SPEECH_RATE_MAX = 2;
-export const SPEECH_RATE_DEFAULT = 1;
+const SPEECH_RATE_DEFAULT = 1;
 
 export const SPEECH_PITCH_MIN = 0.1;
 export const SPEECH_PITCH_MAX = 2;
-export const SPEECH_PITCH_DEFAULT = 1;
+const SPEECH_PITCH_DEFAULT = 1;
 
 export const SPEECH_VOLUME_MIN = 0;
 export const SPEECH_VOLUME_MAX = 1;
-export const SPEECH_VOLUME_DEFAULT = 1;
+const SPEECH_VOLUME_DEFAULT = 1;
 
 export const isSpeechSupported = "speechSynthesis" in globalThis;
 const synthesis = globalThis.speechSynthesis;
@@ -69,15 +69,15 @@ export function setVoiceURI(voiceURI: string | null): void {
   updateConfig({ voiceURI });
 }
 
-export function setSpeechRate(rate: number): void {
+export function setRate(rate: number): void {
   updateConfig({ rate });
 }
 
-export function setSpeechPitch(pitch: number): void {
+export function setPitch(pitch: number): void {
   updateConfig({ pitch });
 }
 
-export function setSpeechVolume(volume: number): void {
+export function setVolume(volume: number): void {
   updateConfig({ volume });
 }
 
@@ -107,7 +107,7 @@ export function speak(text: string): Promise<void> {
   return promise;
 }
 
-export function stopSpeaking(): void {
+export function stop(): void {
   if (isSpeechSupported) {
     synthesis.cancel();
   }

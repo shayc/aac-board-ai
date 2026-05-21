@@ -19,9 +19,9 @@ import {
 import { useLanguage } from "@shared/language/use-language";
 import {
   isSpeechSupported,
-  setSpeechPitch,
-  setSpeechRate,
-  setSpeechVolume,
+  setPitch,
+  setRate,
+  setVolume,
   setVoiceURI,
   speak,
   SPEECH_PITCH_MAX,
@@ -59,21 +59,21 @@ export function SpeechSettings() {
       value: rate,
       min: SPEECH_RATE_MIN,
       max: SPEECH_RATE_MAX,
-      onChange: setSpeechRate,
+      onChange: setRate,
     },
     {
       label: "Pitch",
       value: pitch,
       min: SPEECH_PITCH_MIN,
       max: SPEECH_PITCH_MAX,
-      onChange: setSpeechPitch,
+      onChange: setPitch,
     },
     {
       label: "Volume",
       value: volume,
       min: SPEECH_VOLUME_MIN,
       max: SPEECH_VOLUME_MAX,
-      onChange: setSpeechVolume,
+      onChange: setVolume,
     },
   ];
 

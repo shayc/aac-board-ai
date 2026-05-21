@@ -1,5 +1,5 @@
 import { useAudio } from "@shared/hooks/use-audio";
-import { speak, stopSpeaking } from "@shared/speech/speech-store";
+import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
 import { useState } from "react";
 import type { MessagePart } from "./use-message";
 
