@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, ScrollRestoration, useLocation } from "react-router";
 
 const FADE_DURATION_MS = 400;
 
@@ -31,6 +31,8 @@ export function AppShell() {
 
   return (
     <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
+      <ScrollRestoration />
+
       <AppHeader
         onMenuClick={() => setIsMenuOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}

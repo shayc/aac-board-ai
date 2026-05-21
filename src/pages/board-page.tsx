@@ -1,35 +1,27 @@
 import { Title } from "@app/title";
 import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
-import { BoardViewer, useBoard, type BoardRouteParams } from "@features/board";
-import { ErrorState } from "@shared/components/error-state";
+import { BoardViewer, type BoardLoaderData } from "@features/board";
+import { useBoardTranslation } from "@features/board/use-board-translation";
 import { LoadingState } from "@shared/components/loading-state";
-import { useParams } from "react-router";
+import { useLoaderData } from "react-router";
 
-function BoardPage() {
-  const { setId = "", boardId = "" } = useParams<BoardRouteParams>();
-  const { board, error } = useBoard({ setId, boardId });
+export const Component = function BoardPage() {
+  const { setId, board } = useLoaderData<BoardLoaderData>();
+  const { translatedBoard } = useBoardTranslation({ setId, board });
 
-  useDeclareAppHeaderTitle(board?.name);
+  // Hooks must run unconditionally — keep the title declaration above the
+  // early return. The untranslated name carries the header until translation
+  // settles, so it never flickers blank.
+  useDeclareAppHeaderTitle(translatedBoard?.name ?? board.name);
 
-  if (error) {
-    return (
-      <ErrorState
-        title="Couldn't load board"
-        description="This board may be missing or corrupted."
-      />
-    );
-  }
-
-  if (!board) {
+  if (!translatedBoard) {
     return <LoadingState message="Loading board..." />;
   }
 
   return (
     <>
-      <Title>{board.name}</Title>
-      <BoardViewer board={board} />
+      <Title>{translatedBoard.name}</Title>
+      <BoardViewer board={translatedBoard} />
     </>
   );
-}
-
-export default BoardPage;
+};
