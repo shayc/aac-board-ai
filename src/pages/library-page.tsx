@@ -9,7 +9,7 @@ import {
   type BoardSetRecord,
 } from "@features/board";
 import AddIcon from "@mui/icons-material/Add";
-import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
+import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/empty-state";
@@ -75,7 +75,7 @@ function LibraryPage() {
     return (
       <PageContainer>
         <EmptyState
-          icon={<CollectionsBookmarkOutlinedIcon />}
+          icon={<FilterNoneOutlinedIcon />}
           title="Your library is empty"
           description="Import communication boards to get started."
           action={

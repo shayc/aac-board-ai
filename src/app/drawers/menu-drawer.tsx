@@ -1,4 +1,4 @@
-import CollectionsBookmarkOutlinedIcon from "@mui/icons-material/CollectionsBookmarkOutlined";
+import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Box from "@mui/material/Box";
@@ -15,7 +15,7 @@ import { Link as RouterLink } from "react-router";
 
 const menuItems = [
   { icon: HomeOutlinedIcon, label: "Home", to: "/" },
-  { icon: CollectionsBookmarkOutlinedIcon, label: "Library", to: "/library" },
+  { icon: FilterNoneOutlinedIcon, label: "Library", to: "/library" },
   { icon: InfoOutlinedIcon, label: "About", to: "/about" },
 ];
 
