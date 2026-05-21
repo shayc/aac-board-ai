@@ -1,7 +1,7 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
 import { useState } from "react";
-import type { MessagePart } from "./use-message";
+import { getSpokenText, type MessagePart } from "./use-message";
 
 interface PlaybackSegment {
   type: "text" | "sound";
@@ -61,7 +61,7 @@ function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
       return { type: "sound" as const, data: part.soundSrc };
     }
 
-    const text = part.vocalization ?? part.label;
+    const text = getSpokenText(part);
     if (text) {
       return { type: "text" as const, data: text };
     }

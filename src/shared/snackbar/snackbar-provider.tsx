@@ -3,11 +3,13 @@ import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
-  DEFAULT_SNACKBAR_SEVERITY,
   SnackbarContext,
   type SnackbarContextValue,
   type SnackbarOptions,
+  type SnackbarSeverity,
 } from "./snackbar-context";
+
+const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 
 export interface SnackbarProviderProps {
   children: ReactNode;

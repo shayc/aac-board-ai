@@ -1,11 +1,6 @@
 import { vi } from "vitest";
 import { makeChunkStream } from "./ai-namespace-fake.ts";
 
-// Context-bearing fakes echo `context` into the output — tests prove forwarding from the resolved value alone.
-interface ContextOpts {
-  context?: string;
-}
-
 export function buildTranslatorInstance() {
   return {
     translate: vi.fn((input: string) => Promise.resolve(`T:${input}`)),
@@ -18,7 +13,7 @@ export function buildTranslatorInstance() {
 
 export function buildRewriterInstance() {
   return {
-    rewrite: vi.fn((input: string, opts?: ContextOpts) =>
+    rewrite: vi.fn((input: string, opts?: RewriterRewriteOptions) =>
       Promise.resolve(`R(${opts?.context ?? ""}):${input}`),
     ),
     rewriteStreaming: vi.fn(() => makeChunkStream(["R:", "alt"])),
