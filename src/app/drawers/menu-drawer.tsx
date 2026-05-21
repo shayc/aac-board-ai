@@ -1,3 +1,4 @@
+import { APP_NAME } from "@app/app-info";
 import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -30,7 +31,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       <Box sx={{ width: 320 }}>
         <Toolbar>
           <Typography variant="h6" component="div" noWrap>
-            AAC Board AI
+            {APP_NAME}
           </Typography>
         </Toolbar>
 

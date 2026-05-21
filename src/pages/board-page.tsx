@@ -1,3 +1,4 @@
+import { Title } from "@app/title";
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import { BoardViewer, useBoard, type BoardRouteParams } from "@features/board";
 import { ErrorState } from "@shared/components/error-state";
@@ -25,7 +26,7 @@ function BoardPage() {
 
   return (
     <>
-      <title>{board.name}</title>
+      <Title>{board.name}</Title>
       <BoardViewer board={board} />
     </>
   );

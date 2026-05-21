@@ -1,3 +1,4 @@
+import { Title } from "@app/title";
 import { useDeclareHeaderTitle } from "@app/use-header-title";
 import {
   BoardSetDeleteDialog,
@@ -94,7 +95,7 @@ function LibraryPage() {
 
   return (
     <>
-      <title>Library – AAC Board AI</title>
+      <Title>Library</Title>
       <PageContainer>
         <Stack
           direction="row"

@@ -1,3 +1,4 @@
+import { APP_NAME } from "@app/app-info";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
@@ -66,7 +67,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             p: 0,
           }}
         >
-          AAC Board AI
+          {APP_NAME}
         </DialogTitle>
 
         <DialogContentText
