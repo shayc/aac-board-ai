@@ -1,7 +1,7 @@
-import { OnboardingDialog } from "@app/dialogs/onboarding-dialog";
-import { useOnboarding } from "@app/dialogs/use-onboarding";
-import { MenuDrawer } from "@app/drawers/menu-drawer";
-import { SettingsDrawer } from "@app/drawers/settings/settings-drawer";
+import { MenuDrawer } from "@app/menu/menu-drawer";
+import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
+import { useOnboarding } from "@app/onboarding/use-onboarding";
+import { SettingsDrawer } from "@app/settings/settings-drawer";
 import { AppHeader } from "@app/layouts/app-header";
 import Box from "@mui/material/Box";
 import Fade from "@mui/material/Fade";
