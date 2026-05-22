@@ -11,14 +11,26 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
 
-const AI_FEATURES = [
-  "Proofreader",
-  "Rewriter",
-  "Translator",
-] as const satisfies readonly BuiltInAIName[];
-
 export function AISettings() {
   const [sharedContext, setSharedContext] = useCustomInstructions();
+
+  const capabilities: {
+    apiName: BuiltInAIName;
+    title: string;
+  }[] = [
+    {
+      apiName: "Proofreader",
+      title: m.aiFeatureProofreading(),
+    },
+    {
+      apiName: "Rewriter",
+      title: m.aiFeatureRewriting(),
+    },
+    {
+      apiName: "Translator",
+      title: m.aiFeatureTranslation(),
+    },
+  ];
 
   return (
     <Stack spacing={3}>
@@ -43,16 +55,16 @@ export function AISettings() {
         </Typography>
 
         <List dense>
-          {AI_FEATURES.map((name) => (
-            <ListItem key={name}>
+          {capabilities.map(({ apiName, title }) => (
+            <ListItem key={apiName} sx={{ px: 0 }}>
               <ListItemIcon sx={{ minWidth: 36 }}>
-                {isSupported(name) ? (
+                {isSupported(apiName) ? (
                   <CheckCircleIcon color="success" fontSize="small" />
                 ) : (
                   <CancelIcon color="error" fontSize="small" />
                 )}
               </ListItemIcon>
-              <ListItemText primary={name} />
+              <ListItemText primary={title} />
             </ListItem>
           ))}
         </List>

@@ -62,6 +62,9 @@
   "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
   "aiCustomInstructionsHelper": "Personalize AI suggestions",
   "aiBuiltInSupport": "Built-in AI support",
+  "aiFeatureProofreading": "Proofreading",
+  "aiFeatureRewriting": "Rewriting",
+  "aiFeatureTranslation": "Translation",
 
   "navBack": "Go back",
   "navHome": "Go home",
