@@ -1,5 +1,4 @@
 import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
-import { Title } from "@app/title";
 import {
   BoardViewer,
   type Board,
@@ -7,6 +6,7 @@ import {
 } from "@features/board";
 import { useBoardTranslation } from "@features/board/use-board-translation";
 import { LoadingState } from "@shared/components/loading-state";
+import { Title } from "@shared/components/title";
 import { useLoaderData, useParams } from "react-router";
 
 export const Component = function BoardPage() {
