@@ -48,4 +48,10 @@ export default defineConfig([
       curly: ["error"],
     },
   },
+  {
+    files: ["src/app/loaders/**/*-loader.ts"],
+    rules: {
+      "@typescript-eslint/only-throw-error": "off",
+    },
+  },
 ]);

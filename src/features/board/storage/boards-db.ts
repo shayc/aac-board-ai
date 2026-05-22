@@ -159,6 +159,14 @@ export async function upsertBoardSet(
   await tx.done;
 }
 
+export async function getBoardSet(
+  db: BoardsDB,
+  setId: string,
+): Promise<BoardSetRecord | undefined> {
+  validateId(setId, "setId");
+  return db.get("boardSets", setId);
+}
+
 export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardSets", "readonly");
   const index = tx.store.index("byUpdatedAt");

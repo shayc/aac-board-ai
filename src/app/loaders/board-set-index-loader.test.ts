@@ -1,17 +1,17 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import type { LoaderFunctionArgs } from "react-router";
 import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/storage/test-helpers";
-import { boardSetRootLoader } from "./board-set-root-loader";
+import type { LoaderFunctionArgs } from "react-router";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { boardSetIndexLoader } from "./board-set-index-loader";
 
 function callLoader(setId: string): Promise<Response> {
   const args = {
     request: new Request("http://localhost/"),
     params: { setId },
   } as unknown as LoaderFunctionArgs;
-  return boardSetRootLoader(args);
+  return boardSetIndexLoader(args);
 }
 
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
@@ -34,7 +34,7 @@ function expectThrownStatus(error: unknown, status: number): void {
   expect(init?.status).toBe(status);
 }
 
-describe("boardSetRootLoader", () => {
+describe("boardSetIndexLoader", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });

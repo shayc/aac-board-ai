@@ -18,7 +18,7 @@ async function resolveInitialBoard(boardUrl: string | null): Promise<string> {
   return generatePath("/sets/:setId/boards/:boardId", { setId, boardId });
 }
 
-export async function homeLoader({
+export async function rootIndexLoader({
   request,
 }: LoaderFunctionArgs): Promise<Response> {
   const boardUrl = new URL(request.url).searchParams.get("board");
