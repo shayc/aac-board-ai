@@ -62,6 +62,9 @@
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
   "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI",
   "aiBuiltInSupport": "תמיכת AI מובנית",
+  "aiFeatureProofreading": "הגהה",
+  "aiFeatureRewriting": "שכתוב",
+  "aiFeatureTranslation": "תרגום",
 
   "navBack": "חזור",
   "navHome": "לעמוד הבית",
