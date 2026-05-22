@@ -1,8 +1,8 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
+import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 
 export interface LanguageProviderProps {
   children: ReactNode;

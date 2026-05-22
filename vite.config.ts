@@ -1,4 +1,5 @@
 /// <reference types="vitest/config" />
+import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -11,6 +12,11 @@ export default defineConfig({
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] }),
+    paraglideVitePlugin({
+      project: "./project.inlang",
+      outdir: "./src/paraglide",
+      strategy: ["baseLocale"],
+    }),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["board.svg", "apple-touch-icon-180x180.png"],
@@ -50,6 +56,7 @@ export default defineConfig({
       "@features": path.resolve(__dirname, "./src/features"),
       "@shared": path.resolve(__dirname, "./src/shared"),
       "@pages": path.resolve(__dirname, "./src/pages"),
+      "@paraglide": path.resolve(__dirname, "./src/paraglide"),
     },
   },
   optimizeDeps: {

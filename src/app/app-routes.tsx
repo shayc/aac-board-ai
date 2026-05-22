@@ -3,6 +3,7 @@ import { boardLoader } from "@app/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/loaders/root-index-loader";
 import Button from "@mui/material/Button";
+import { m } from "@paraglide/messages.js";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
 import {
@@ -18,7 +19,7 @@ function RouteErrorBoundary() {
   const title =
     isRouteErrorResponse(error) && typeof error.data === "string"
       ? error.data
-      : "Something went wrong";
+      : m.errorGenericTitle();
 
   return (
     <ErrorState

@@ -7,12 +7,14 @@
     "module": "ESNext",
     "types": ["vite/client", "dom-chromium-ai"],
     "skipLibCheck": true,
+    "allowJs": true,
 
     "paths": {
       "@app/*": ["./src/app/*"],
       "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
-      "@pages/*": ["./src/pages/*"]
+      "@pages/*": ["./src/pages/*"],
+      "@paraglide/*": ["./src/paraglide/*"]
     },
 
     /* Bundler mode */
