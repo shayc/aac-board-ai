@@ -1,15 +1,10 @@
-import { getBoardSet } from "@features/board";
-import {
-  data,
-  generatePath,
-  redirect,
-  type LoaderFunctionArgs,
-} from "react-router";
+import { boardPath, getBoardSet } from "@features/board";
+import { data, redirect, type LoaderFunctionArgs } from "react-router";
 
 export async function boardSetIndexLoader({
   params,
 }: LoaderFunctionArgs): Promise<Response> {
-  const setId = params.setId ?? "";
+  const setId = params.setId!;
   const set = await getBoardSet(setId);
 
   if (!set) {
@@ -19,10 +14,5 @@ export async function boardSetIndexLoader({
     throw data("Board set incomplete", { status: 422 });
   }
 
-  return redirect(
-    generatePath("/sets/:setId/boards/:boardId", {
-      setId,
-      boardId: set.rootBoardId,
-    }),
-  );
+  return redirect(boardPath({ setId, boardId: set.rootBoardId }));
 }

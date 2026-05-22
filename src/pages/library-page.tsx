@@ -1,6 +1,8 @@
 import { Title } from "@app/title";
 import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
 import {
+  boardPath,
+  boardSetPath,
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
   BoardSetList,
@@ -18,7 +20,7 @@ import { LoadingState } from "@shared/components/loading-state";
 import { PageContainer } from "@shared/components/page-container";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
-import { generatePath, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 
 export const Component = function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
@@ -34,13 +36,13 @@ export const Component = function LibraryPage() {
   function handleSelect(boardSet: BoardSetRecord) {
     if (boardSet.rootBoardId) {
       void navigate(
-        generatePath("/sets/:setId/boards/:boardId", {
+        boardPath({
           setId: boardSet.setId,
           boardId: boardSet.rootBoardId,
         }),
       );
     } else {
-      void navigate(`/sets/${encodeURIComponent(boardSet.setId)}`);
+      void navigate(boardSetPath({ setId: boardSet.setId }));
     }
   }
 
