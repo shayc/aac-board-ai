@@ -1,4 +1,4 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "error_generic_title": "Something went wrong"
+  "errorGenericTitle": "Something went wrong"
 }

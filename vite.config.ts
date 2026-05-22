@@ -56,6 +56,7 @@ export default defineConfig({
       "@features": path.resolve(__dirname, "./src/features"),
       "@shared": path.resolve(__dirname, "./src/shared"),
       "@pages": path.resolve(__dirname, "./src/pages"),
+      "@paraglide": path.resolve(__dirname, "./src/paraglide"),
     },
   },
   optimizeDeps: {

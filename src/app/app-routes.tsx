@@ -3,6 +3,7 @@ import { boardLoader } from "@app/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/loaders/root-index-loader";
 import Button from "@mui/material/Button";
+import { m } from "@paraglide/messages.js";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
 import {
@@ -12,14 +13,13 @@ import {
   useRouteError,
 } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { m } from "../paraglide/messages.js";
 
 function RouteErrorBoundary() {
   const error = useRouteError();
   const title =
     isRouteErrorResponse(error) && typeof error.data === "string"
       ? error.data
-      : m.error_generic_title();
+      : m.errorGenericTitle();
 
   return (
     <ErrorState
