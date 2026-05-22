@@ -6,7 +6,7 @@
 
   "libraryLoading": "טוען לוחות...",
   "libraryEmptyTitle": "הספרייה ריקה",
-  "libraryEmptyDescription": "ייבא לוחות תקשורת כדי להתחיל.",
+  "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
 
   "libraryImport": "ייבא",
   "libraryImportBoards": "ייבא לוחות",
@@ -18,14 +18,14 @@
   "libraryImportFailedBoards": "ייבוא הלוחות נכשל",
 
   "libraryInfo": "פרטים",
-  "libraryDelete": "מחק",
+  "libraryDelete": "מחיקה",
   "libraryCancel": "בטל",
   "libraryClose": "סגור",
 
   "libraryMoreOptions": "אפשרויות נוספות",
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
   "libraryByAuthor": "מאת {author}",
-  "libraryGridDimensions": "רשת {rows}×{columns}",
+  "libraryGridDimensions": "רשת של {rows}×{columns}",
 
   "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
   "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
@@ -49,22 +49,22 @@
 
   "languageLabel": "שפה",
   "languageDownloading": "מוריד שפה",
-  "languageDownloadProgress": "{progress}% הושלמו...",
+  "languageDownloadProgress": "{progress}% הושלם...",
 
   "speechVoice": "קול",
-  "speechRate": "מהירות",
-  "speechPitch": "גובה",
-  "speechVolume": "עוצמה",
-  "speechPreview": "השמע",
+  "speechRate": "קצב דיבור",
+  "speechPitch": "גובה צליל",
+  "speechVolume": "עוצמת שמע",
+  "speechPreview": "השמעה",
   "speechVoicePreview": "שלום, זה הקול שלי!",
 
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
-  "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
+  "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI",
   "aiBuiltInSupport": "תמיכת AI מובנית",
 
   "navBack": "חזור",
-  "navHome": "עבור לבית",
+  "navHome": "לעמוד הבית",
 
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
@@ -86,17 +86,17 @@
   "aboutOpenSourceHeading": "קוד פתוח",
   "aboutViewSource": "צפה בקוד המקור ב-GitHub",
 
-  "onboardingTagline": "תקשר בקלות ובאופן טבעי.",
+  "onboardingTagline": "לתקשר בקלות ובאופן טבעי.",
   "onboardingSmartRewritingTitle": "שכתוב חכם",
-  "onboardingSmartRewritingDescription": "הפוך ביטויים קצרים למשפטים ברורים.",
+  "onboardingSmartRewritingDescription": "הפיכת ביטויים קצרים למשפטים מלאים וברורים.",
   "onboardingTranslationTitle": "תרגום בזמן אמת",
-  "onboardingTranslationDescription": "תרגם הודעות באופן מיידי.",
+  "onboardingTranslationDescription": "תרגום מיידי של הודעות.",
   "onboardingPrivacyTitle": "פרטיות מובנית",
-  "onboardingPrivacyDescription": "עובד גם ללא חיבור, על המכשיר שלך. ללא ענן.",
+  "onboardingPrivacyDescription": "עבודה מקומית על המכשיר, גם ללא חיבור לאינטרנט. המידע לא נשמר בענן.",
   "onboardingContinue": "המשך",
 
   "errorGenericTitle": "משהו השתבש",
-  "errorGoHome": "עבור לבית",
-  "errorBoardSetNotFound": "סט הלוחות לא נמצא",
-  "errorBoardSetIncomplete": "סט הלוחות אינו שלם"
+  "errorGoHome": "חזרה לעמוד הבית",
+  "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
+  "errorBoardSetIncomplete": "ערכת הלוחות אינה מלאה"
 }
