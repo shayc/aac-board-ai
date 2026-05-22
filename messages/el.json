@@ -4,7 +4,7 @@
   "boardLoading": "Loading board...",
   "boardNotFound": "Board not found",
 
-  "libraryLoading": "Loading board sets...",
+  "libraryLoading": "Loading boards...",
   "libraryEmptyTitle": "Your library is empty",
   "libraryEmptyDescription": "Import communication boards to get started.",
 
@@ -51,7 +51,7 @@
   "languageDownloading": "Downloading language",
   "languageDownloadProgress": "{progress}% complete...",
 
-  "voiceLabel": "Voice",
+  "speechVoice": "Voice",
   "speechRate": "Rate",
   "speechPitch": "Pitch",
   "speechVolume": "Volume",

@@ -74,10 +74,10 @@ export function SpeechSettings() {
   return (
     <Stack spacing={3}>
       <FormControl size="small" fullWidth>
-        <InputLabel id="voice-select-label">{m.voiceLabel()}</InputLabel>
+        <InputLabel id="voice-select-label">{m.speechVoice()}</InputLabel>
         <Select
           variant="outlined"
-          label={m.voiceLabel()}
+          label={m.speechVoice()}
           labelId="voice-select-label"
           id="voice-select"
           value={voiceURI ?? ""}

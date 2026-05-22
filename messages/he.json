@@ -51,7 +51,7 @@
   "languageDownloading": "מוריד שפה",
   "languageDownloadProgress": "{progress}% הושלמו...",
 
-  "voiceLabel": "קול",
+  "speechVoice": "קול",
   "speechRate": "מהירות",
   "speechPitch": "גובה",
   "speechVolume": "עוצמה",

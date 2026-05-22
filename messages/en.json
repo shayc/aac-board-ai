@@ -4,7 +4,7 @@
   "boardLoading": "Loading board...",
   "boardNotFound": "Board not found",
 
-  "libraryLoading": "Loading board sets...",
+  "libraryLoading": "Loading boards...",
   "libraryEmptyTitle": "Your library is empty",
   "libraryEmptyDescription": "Import communication boards to get started.",
 
@@ -51,17 +51,17 @@
   "languageDownloading": "Downloading language",
   "languageDownloadProgress": "{progress}% complete...",
 
-  "voiceLabel": "Voice",
+  "speechVoice": "Voice",
   "speechRate": "Rate",
   "speechPitch": "Pitch",
   "speechVolume": "Volume",
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
 
-  "aiCustomInstructions": "Custom Instructions",
+  "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
   "aiCustomInstructionsHelper": "Personalize AI suggestions",
-  "aiBuiltInSupport": "Built-in AI Support",
+  "aiBuiltInSupport": "Built-in AI support",
 
   "navBack": "Go back",
   "navHome": "Go home",
