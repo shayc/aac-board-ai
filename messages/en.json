@@ -74,5 +74,29 @@
   "toneSelection": "Tone selection",
   "toneDirect": "Direct tone",
   "toneProfessional": "Professional tone",
-  "toneFriendly": "Friendly tone"
+  "toneFriendly": "Friendly tone",
+
+  "aboutHeading": "About",
+  "aboutAppDescription": "{appName} helps people who can't rely on speech communicate more easily and naturally. It uses on-device AI to correct grammar, adjust tone, and translate messages, keeping interactions private and fast.",
+  "aboutAcknowledgmentsHeading": "Acknowledgments",
+  "aboutWinnerOf": "Winner of the",
+  "aboutBuiltOn": "Built on the",
+  "aboutFeaturing": "and featuring the",
+  "aboutVocabularyBy": "vocabulary set by",
+  "aboutOpenSourceHeading": "Open source",
+  "aboutViewSource": "View source code on GitHub",
+
+  "onboardingTagline": "Communicate more easily and naturally.",
+  "onboardingSmartRewritingTitle": "Smart rewriting",
+  "onboardingSmartRewritingDescription": "Turn short phrases into clear sentences.",
+  "onboardingTranslationTitle": "Real-time translation",
+  "onboardingTranslationDescription": "Translate messages instantly.",
+  "onboardingPrivacyTitle": "Private by design",
+  "onboardingPrivacyDescription": "Works offline, on your device. No cloud.",
+  "onboardingContinue": "Continue",
+
+  "errorGenericTitle": "Something went wrong",
+  "errorGoHome": "Go home",
+  "errorBoardSetNotFound": "Board set not found",
+  "errorBoardSetIncomplete": "Board set incomplete"
 }

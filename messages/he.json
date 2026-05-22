@@ -74,5 +74,29 @@
   "toneSelection": "בחירת סגנון",
   "toneDirect": "סגנון ישיר",
   "toneProfessional": "סגנון מקצועי",
-  "toneFriendly": "סגנון ידידותי"
+  "toneFriendly": "סגנון ידידותי",
+
+  "aboutHeading": "אודות",
+  "aboutAppDescription": "{appName} עוזר לאנשים שאינם יכולים להסתמך על דיבור לתקשר בקלות ובאופן טבעי. הוא משתמש בבינה מלאכותית על המכשיר כדי לתקן דקדוק, להתאים סגנון ולתרגם הודעות, ושומר על אינטראקציות פרטיות ומהירות.",
+  "aboutAcknowledgmentsHeading": "תודות",
+  "aboutWinnerOf": "הזוכה ב-",
+  "aboutBuiltOn": "מבוסס על",
+  "aboutFeaturing": "ומשלב את אוצר המילים",
+  "aboutVocabularyBy": "מאת",
+  "aboutOpenSourceHeading": "קוד פתוח",
+  "aboutViewSource": "צפה בקוד המקור ב-GitHub",
+
+  "onboardingTagline": "תקשר בקלות ובאופן טבעי.",
+  "onboardingSmartRewritingTitle": "כתיבה חכמה",
+  "onboardingSmartRewritingDescription": "הפוך ביטויים קצרים למשפטים ברורים.",
+  "onboardingTranslationTitle": "תרגום בזמן אמת",
+  "onboardingTranslationDescription": "תרגם הודעות באופן מיידי.",
+  "onboardingPrivacyTitle": "פרטיות מובנית",
+  "onboardingPrivacyDescription": "עובד גם ללא חיבור, על המכשיר שלך. ללא ענן.",
+  "onboardingContinue": "המשך",
+
+  "errorGenericTitle": "משהו השתבש",
+  "errorGoHome": "עבור לבית",
+  "errorBoardSetNotFound": "סט הלוחות לא נמצא",
+  "errorBoardSetIncomplete": "סט הלוחות אינו שלם"
 }

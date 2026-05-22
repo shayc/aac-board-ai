@@ -5,6 +5,7 @@ import { rootIndexLoader } from "@app/loaders/root-index-loader";
 import Button from "@mui/material/Button";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
+import { useLanguage } from "@shared/language/use-language";
 import {
   createBrowserRouter,
   isRouteErrorResponse,
@@ -15,17 +16,18 @@ import { RouterProvider } from "react-router/dom";
 
 function RouteErrorBoundary() {
   const error = useRouteError();
+  const { m } = useLanguage();
   const title =
     isRouteErrorResponse(error) && typeof error.data === "string"
       ? error.data
-      : "Something went wrong";
+      : m.errorGenericTitle();
 
   return (
     <ErrorState
       title={title}
       action={
         <Button component={Link} to="/" variant="contained">
-          Go home
+          {m.errorGoHome()}
         </Button>
       }
     />
