@@ -5,13 +5,24 @@ import { rootIndexLoader } from "@app/loaders/root-index-loader";
 import Button from "@mui/material/Button";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
-import { createBrowserRouter, Link } from "react-router";
+import {
+  createBrowserRouter,
+  isRouteErrorResponse,
+  Link,
+  useRouteError,
+} from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 function RouteErrorBoundary() {
+  const error = useRouteError();
+  const title =
+    isRouteErrorResponse(error) && typeof error.data === "string"
+      ? error.data
+      : "Something went wrong";
+
   return (
     <ErrorState
-      title="Something went wrong"
+      title={title}
       action={
         <Button component={Link} to="/" variant="contained">
           Go home
@@ -24,23 +35,27 @@ function RouteErrorBoundary() {
 const router = createBrowserRouter([
   {
     Component: AppShell,
-    ErrorBoundary: RouteErrorBoundary,
     HydrateFallback: LoadingState,
     children: [
-      { index: true, loader: rootIndexLoader },
       {
-        path: "sets/:setId",
+        ErrorBoundary: RouteErrorBoundary,
         children: [
-          { index: true, loader: boardSetIndexLoader },
+          { index: true, loader: rootIndexLoader },
           {
-            path: "boards/:boardId",
-            loader: boardLoader,
-            lazy: async () => import("@pages/board-page"),
+            path: "sets/:setId",
+            children: [
+              { index: true, loader: boardSetIndexLoader },
+              {
+                path: "boards/:boardId",
+                loader: boardLoader,
+                lazy: async () => import("@pages/board-page"),
+              },
+            ],
           },
+          { path: "library", lazy: async () => import("@pages/library-page") },
+          { path: "about", lazy: async () => import("@pages/about-page") },
         ],
       },
-      { path: "library", lazy: async () => import("@pages/library-page") },
-      { path: "about", lazy: async () => import("@pages/about-page") },
     ],
   },
 ]);
