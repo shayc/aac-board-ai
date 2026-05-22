@@ -1,5 +1,17 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "boardNotFound": "Board not found",
-  "openSettings": "Open settings"
+  "openSettings": "Open settings",
+  "navGoBack": "Go back",
+  "navBack": "Back",
+  "navGoHome": "Go home",
+  "navHome": "Home",
+  "messageBackspace": "Backspace",
+  "messageBackspaceLongPressHint": "Long press to clear message",
+  "messagePlay": "Play message",
+  "messageStop": "Stop playback",
+  "toneSelection": "Tone selection",
+  "toneDirect": "Direct tone",
+  "toneProfessional": "Professional tone",
+  "toneFriendly": "Friendly tone"
 }

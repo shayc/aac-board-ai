@@ -4,6 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
+import { useLanguage } from "@shared/language/use-language";
 import { flipForRtl } from "@shared/theme/rtl";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -34,12 +35,13 @@ export function BackspaceButton({
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
+  const { m } = useLanguage();
   const [progress, setProgress] = useState(0);
 
   const { pressProps } = usePress({ onPress });
 
   const { longPressProps } = useLongPress({
-    accessibilityDescription: "Long press to clear message",
+    accessibilityDescription: m.messageBackspaceLongPressHint(),
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
     onLongPressStart: () => setProgress(100),
@@ -47,11 +49,11 @@ export function BackspaceButton({
   });
 
   return (
-    <Tooltip title="Backspace">
+    <Tooltip title={m.messageBackspace()}>
       <Box sx={{ alignSelf: "center", position: "relative" }}>
         <IconButton
           {...mergeProps(pressProps, longPressProps)}
-          aria-label="Backspace"
+          aria-label={m.messageBackspace()}
           size="large"
           color="inherit"
           disabled={disabled}
