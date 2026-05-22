@@ -5,7 +5,7 @@ import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import Box from "@mui/material/Box";
 import { useState } from "react";
-import { Outlet, ScrollRestoration } from "react-router";
+import { Outlet } from "react-router";
 
 export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,8 +14,6 @@ export function AppShell() {
 
   return (
     <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>
-      <ScrollRestoration />
-
       <AppHeader
         onMenuClick={() => setIsMenuOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
