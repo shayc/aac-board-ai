@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useAppHeaderTitle } from "./app-header-title";
 
 export interface AppHeaderProps {
@@ -15,6 +15,7 @@ export interface AppHeaderProps {
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const headerTitle = useAppHeaderTitle();
+  const { m } = useLanguage();
 
   return (
     <AppBar position="static">

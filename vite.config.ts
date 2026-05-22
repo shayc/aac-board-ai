@@ -15,7 +15,7 @@ export default defineConfig({
     paraglideVitePlugin({
       project: "./project.inlang",
       outdir: "./src/paraglide",
-      strategy: ["baseLocale"],
+      strategy: ["globalVariable", "baseLocale"],
     }),
     VitePWA({
       registerType: "autoUpdate",
