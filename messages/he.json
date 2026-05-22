@@ -1,17 +1,17 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
 
-  "boardLoading": "טוען לוח...",
+  "boardLoading": "טעינת לוח...",
   "boardNotFound": "הלוח לא נמצא",
 
-  "libraryLoading": "טוען לוחות...",
-  "libraryEmptyTitle": "הספרייה ריקה",
+  "libraryLoading": "טעינת לוחות...",
+  "libraryEmptyTitle": "הספרייה שלך ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
 
-  "libraryImport": "ייבא",
-  "libraryImportBoards": "ייבא לוחות",
-  "libraryImportingBoard": "מייבא לוח...",
-  "libraryImportingBoards": "מייבא לוחות...",
+  "libraryImport": "ייבוא",
+  "libraryImportBoards": "ייבוא לוחות",
+  "libraryImportingBoard": "ייבוא לוח...",
+  "libraryImportingBoards": "ייבוא לוחות...",
   "libraryImportedBoard": "הלוח יובא",
   "libraryImportedBoards": "הלוחות יובאו",
   "libraryImportFailedBoard": "ייבוא הלוח נכשל",
@@ -19,13 +19,13 @@
 
   "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",
-  "libraryCancel": "בטל",
-  "libraryClose": "סגור",
+  "libraryCancel": "ביטול",
+  "libraryClose": "סגירה",
 
   "libraryMoreOptions": "אפשרויות נוספות",
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
   "libraryByAuthor": "מאת {author}",
-  "libraryGridDimensions": "רשת של {rows}×{columns}",
+  "libraryGridDimensions": "רשת {rows}×{columns}",
 
   "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
   "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
@@ -33,14 +33,14 @@
   "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
 
   "menuLabel": "תפריט",
-  "menuOpen": "פתח תפריט",
+  "menuOpen": "פתיחת התפריט",
   "menuHome": "בית",
   "menuLibrary": "ספרייה",
   "menuAbout": "אודות",
 
   "settingsTitle": "הגדרות",
-  "settingsOpen": "פתח הגדרות",
-  "settingsClose": "סגור הגדרות",
+  "settingsOpen": "פתיחת הגדרות",
+  "settingsClose": "סגירת הגדרות",
 
   "themeLabel": "ערכת נושא",
   "themeSystem": "מערכת",
@@ -48,7 +48,7 @@
   "themeDark": "כהה",
 
   "languageLabel": "שפה",
-  "languageDownloading": "מוריד שפה",
+  "languageDownloading": "הורדת שפה...",
   "languageDownloadProgress": "{progress}% הושלם...",
 
   "speechVoice": "קול",
@@ -66,13 +66,13 @@
   "aiFeatureRewriting": "שכתוב",
   "aiFeatureTranslation": "תרגום",
 
-  "navBack": "חזור",
+  "navBack": "חזרה",
   "navHome": "לעמוד הבית",
 
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
-  "messagePlay": "השמע הודעה",
-  "messageStop": "עצור",
+  "messagePlay": "השמעת הודעה",
+  "messageStop": "עצירה",
 
   "toneSelection": "בחירת סגנון",
   "toneDirect": "סגנון ישיר",
@@ -80,14 +80,14 @@
   "toneFriendly": "סגנון ידידותי",
 
   "aboutHeading": "אודות",
-  "aboutAppDescription": "{appName} עוזר לאנשים שאינם יכולים להסתמך על דיבור לתקשר בקלות ובאופן טבעי. הוא משתמש בבינה מלאכותית על המכשיר כדי לתקן דקדוק, להתאים סגנון ולתרגם הודעות, ושומר על אינטראקציות פרטיות ומהירות.",
+  "aboutAppDescription": "{appName} מסייע לאנשים שאינם יכולים להסתמך על דיבור לתקשר בקלות ובאופן טבעי. האפליקציה משתמשת בבינה מלאכותית מקומית במכשיר כדי לתקן דקדוק, להתאים את סגנון ההודעה ולתרגם הודעות – תוך שמירה על פרטיות מלאה ומהירות תגובה.",
   "aboutAcknowledgmentsHeading": "תודות",
   "aboutWinnerOf": "הזוכה ב-",
   "aboutBuiltOn": "מבוסס על",
   "aboutFeaturing": "ומשלב את אוצר המילים",
   "aboutVocabularyBy": "מאת",
   "aboutOpenSourceHeading": "קוד פתוח",
-  "aboutViewSource": "צפה בקוד המקור ב-GitHub",
+  "aboutViewSource": "צפייה בקוד המקור ב-GitHub",
 
   "onboardingTagline": "לתקשר בקלות ובאופן טבעי.",
   "onboardingSmartRewritingTitle": "שכתוב חכם",
