@@ -1,10 +1,17 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
 
+  "boardLoading": "Loading board...",
   "boardNotFound": "Board not found",
 
-  "settingsOpen": "Open settings",
+  "menuLabel": "Menu",
+  "menuOpen": "Open menu",
+  "menuHome": "Home",
+  "menuLibrary": "Library",
+  "menuAbout": "About",
+
   "settingsTitle": "Settings",
+  "settingsOpen": "Open settings",
   "settingsClose": "Close settings",
 
   "themeLabel": "Theme",
@@ -28,10 +35,10 @@
   "aiCustomInstructionsHelper": "Personalize AI suggestions",
   "aiBuiltInSupport": "Built-in AI Support",
 
-  "navGoBack": "Go back",
   "navBack": "Back",
-  "navGoHome": "Go home",
+  "navGoBack": "Go back",
   "navHome": "Home",
+  "navGoHome": "Go home",
 
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Long press to clear message",

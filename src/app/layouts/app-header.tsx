@@ -20,9 +20,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Tooltip title="Open menu">
+        <Tooltip title={m.menuOpen()}>
           <IconButton
-            aria-label="Menu"
+            aria-label={m.menuLabel()}
             size="large"
             edge="start"
             color="inherit"
@@ -39,7 +39,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
 
         <Tooltip title={m.settingsOpen()}>
           <IconButton
-            aria-label="Settings"
+            aria-label={m.settingsTitle()}
             size="large"
             edge="end"
             color="inherit"

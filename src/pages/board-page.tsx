@@ -7,17 +7,19 @@ import {
 import { useBoardTranslation } from "@features/board/use-board-translation";
 import { LoadingState } from "@shared/components/loading-state";
 import { Title } from "@shared/components/title";
+import { useLanguage } from "@shared/language/use-language";
 import { useLoaderData, useParams } from "react-router";
 
 export const Component = function BoardPage() {
   const board = useLoaderData<Board>();
   const { setId } = useParams<BoardRouteParams>();
   const { translatedBoard } = useBoardTranslation({ setId: setId!, board });
+  const { m } = useLanguage();
 
   useDeclareAppHeaderTitle(translatedBoard?.name ?? board.name);
 
   if (!translatedBoard) {
-    return <LoadingState message="Loading board..." />;
+    return <LoadingState message={m.boardLoading()} />;
   }
 
   return (

@@ -1,10 +1,17 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
 
+  "boardLoading": "טוען לוח...",
   "boardNotFound": "הלוח לא נמצא",
 
-  "settingsOpen": "פתח הגדרות",
+  "menuLabel": "תפריט",
+  "menuOpen": "פתח תפריט",
+  "menuHome": "בית",
+  "menuLibrary": "ספרייה",
+  "menuAbout": "אודות",
+
   "settingsTitle": "הגדרות",
+  "settingsOpen": "פתח הגדרות",
   "settingsClose": "סגור הגדרות",
 
   "themeLabel": "ערכת נושא",
@@ -28,10 +35,10 @@
   "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
   "aiBuiltInSupport": "תמיכת AI מובנית",
 
-  "navGoBack": "חזרה",
   "navBack": "חזרה",
-  "navGoHome": "מעבר לבית",
+  "navGoBack": "חזרה",
   "navHome": "בית",
+  "navGoHome": "מעבר לבית",
 
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
