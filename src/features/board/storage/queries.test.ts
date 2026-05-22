@@ -1,7 +1,5 @@
 import type { OBFBoard } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import type { LoaderFunctionArgs } from "react-router";
-import { boardLoader, type BoardLoaderData } from "./board-loader";
 import { invalidateBoardSets } from "./board-sets-store";
 import {
   putAssets,
@@ -9,6 +7,7 @@ import {
   upsertBoardSet,
   withBoardsDB,
 } from "./boards-db";
+import { BoardNotFoundError, loadBoard } from "./queries";
 import { resetBoardsDB } from "./test-helpers";
 
 const SET_ID = "loader-test-set";
@@ -17,9 +16,9 @@ const IMAGE_PATH = "images/test.png";
 const REAL_PNG_URL = "/pwa-192x192.png";
 
 // Seed a minimal board with one path-based image, using a real PNG blob so
-// the loader's hydration produces an Image-loadable blob URL. Going direct to
-// the storage layer (vs. importBoardFiles) keeps the test independent of OBZ
-// fixture shape — the only thing under test here is boardLoader's behavior.
+// hydration produces an Image-loadable blob URL. Going direct to the storage
+// layer (vs. importBoardFiles) keeps the test independent of OBZ fixture
+// shape — the only thing under test here is loadBoard's behavior.
 async function seedTestBoard(): Promise<void> {
   const pngResponse = await fetch(REAL_PNG_URL);
   if (!pngResponse.ok) {
@@ -53,31 +52,13 @@ async function seedTestBoard(): Promise<void> {
   await invalidateBoardSets();
 }
 
-function callLoader(setId: string, boardId: string): Promise<BoardLoaderData> {
-  const args = {
-    request: new Request("http://localhost/"),
-    params: { setId, boardId },
-  } as unknown as LoaderFunctionArgs;
-  return boardLoader(args);
-}
-
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   try {
     await promise;
   } catch (err) {
     return err;
   }
-  throw new Error("Expected loader to throw, but it resolved");
-}
-
-// `throw data(...)` produces a DataWithResponseInit instance — the router
-// wraps it into an ErrorResponse only at the boundary. Check the shape
-// directly when calling loaders straight.
-function expectThrownStatus(error: unknown, status: number): void {
-  expect(error).toBeTruthy();
-  expect(error).toHaveProperty("init");
-  const init = (error as { init: ResponseInit | null }).init;
-  expect(init?.status).toBe(status);
+  throw new Error("Expected loadBoard to throw, but it resolved");
 }
 
 // A blob URL is "alive" while its registry hasn't revoked it. Loading it as
@@ -97,7 +78,7 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
   });
 }
 
-describe("boardLoader", () => {
+describe("loadBoard", () => {
   beforeEach(async () => {
     await resetBoardsDB();
     await invalidateBoardSets();
@@ -110,48 +91,47 @@ describe("boardLoader", () => {
   test("returns a hydrated board on the happy path", async () => {
     await seedTestBoard();
 
-    const result = await callLoader(SET_ID, BOARD_ID);
+    const board = await loadBoard(SET_ID, BOARD_ID);
 
-    expect(result.setId).toBe(SET_ID);
-    expect(result.board.id).toBe(BOARD_ID);
+    expect(board.id).toBe(BOARD_ID);
 
-    const imageSrc = result.board.buttons[0].imageSrc;
+    const imageSrc = board.buttons[0].imageSrc;
     expect(imageSrc).toBeDefined();
     expect(imageSrc!.startsWith("blob:")).toBe(true);
     expect(await isObjectUrlAlive(imageSrc!)).toBe(true);
   });
 
-  test("throws 404 when the board is not in IDB", async () => {
+  test("throws BoardNotFoundError when the board is not in IDB", async () => {
     await seedTestBoard();
 
-    const error = await expectThrown(callLoader(SET_ID, "missing-board"));
+    const error = await expectThrown(loadBoard(SET_ID, "missing-board"));
 
-    expectThrownStatus(error, 404);
+    expect(error).toBeInstanceOf(BoardNotFoundError);
   });
 
-  test("revokes the previous registry on the next loader run", async () => {
+  test("revokes the previous registry on the next loadBoard call", async () => {
     await seedTestBoard();
 
-    const first = await callLoader(SET_ID, BOARD_ID);
-    const firstUrl = first.board.buttons[0].imageSrc;
+    const first = await loadBoard(SET_ID, BOARD_ID);
+    const firstUrl = first.buttons[0].imageSrc;
     expect(firstUrl).toBeDefined();
     expect(await isObjectUrlAlive(firstUrl!)).toBe(true);
 
-    const second = await callLoader(SET_ID, BOARD_ID);
-    const secondUrl = second.board.buttons[0].imageSrc;
+    const second = await loadBoard(SET_ID, BOARD_ID);
+    const secondUrl = second.buttons[0].imageSrc;
     expect(secondUrl).toBeDefined();
 
     expect(await isObjectUrlAlive(firstUrl!)).toBe(false);
     expect(await isObjectUrlAlive(secondUrl!)).toBe(true);
   });
 
-  test("a 404 does not poison the module state for a later happy path", async () => {
+  test("a missing-board error does not poison module state for a later success", async () => {
     await seedTestBoard();
 
-    await expectThrown(callLoader(SET_ID, "missing-board"));
+    await expectThrown(loadBoard(SET_ID, "missing-board"));
 
-    const result = await callLoader(SET_ID, BOARD_ID);
-    const url = result.board.buttons[0].imageSrc;
+    const board = await loadBoard(SET_ID, BOARD_ID);
+    const url = board.buttons[0].imageSrc;
 
     expect(url).toBeDefined();
     expect(await isObjectUrlAlive(url!)).toBe(true);

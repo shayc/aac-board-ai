@@ -1,7 +1,7 @@
 import { AppShell } from "@app/layouts/app-shell";
-import { boardSetRootLoader } from "@app/loaders/board-set-root-loader";
-import { homeLoader } from "@app/loaders/home-loader";
-import { boardLoader } from "@features/board";
+import { boardLoader } from "@app/loaders/board-loader";
+import { boardSetIndexLoader } from "@app/loaders/board-set-index-loader";
+import { rootIndexLoader } from "@app/loaders/root-index-loader";
 import Button from "@mui/material/Button";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
@@ -27,11 +27,11 @@ const router = createBrowserRouter([
     ErrorBoundary: RouteErrorBoundary,
     HydrateFallback: LoadingState,
     children: [
-      { index: true, loader: homeLoader },
+      { index: true, loader: rootIndexLoader },
       {
         path: "sets/:setId",
         children: [
-          { index: true, loader: boardSetRootLoader },
+          { index: true, loader: boardSetIndexLoader },
           {
             path: "boards/:boardId",
             loader: boardLoader,

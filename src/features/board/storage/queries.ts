@@ -3,32 +3,40 @@ import {
   type ObjectUrlRegistry,
 } from "@shared/utils/object-url";
 import type { OBFBoard, OBFMedia } from "open-board-format";
-import { data, type LoaderFunctionArgs } from "react-router";
 import { obfToBoard } from "../obf/mapper";
 import type { Board } from "../types";
 import {
   getAssetBlob,
   getBoard,
+  getBoardSet as dbGetBoardSet,
   withBoardsDB,
+  type BoardSetRecord,
   type BoardsDB,
 } from "./boards-db";
 
-export interface BoardLoaderData {
-  setId: string;
-  board: Board;
+export class BoardNotFoundError extends Error {
+  constructor(setId: string, boardId: string) {
+    super(`Board not found: ${setId}/${boardId}`);
+    this.name = "BoardNotFoundError";
+  }
 }
 
-// Revoke on the next loader run, not on unmount — StrictMode double-invokes
-// effect cleanups and would revoke URLs still in use.
+export async function getBoardSet(
+  setId: string,
+): Promise<BoardSetRecord | undefined> {
+  return withBoardsDB((db) => dbGetBoardSet(db, setId));
+}
+
+// Single concurrent caller assumed — the only consumer is boardLoader.
+// Revoke on the next call rather than from the caller: the consumer can't
+// know when its URLs are safe to release; the next load defines that boundary.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
-export async function boardLoader({
-  params,
-  request,
-}: LoaderFunctionArgs): Promise<BoardLoaderData> {
-  const setId = params.setId ?? "";
-  const boardId = params.boardId ?? "";
-
+export async function loadBoard(
+  setId: string,
+  boardId: string,
+  signal?: AbortSignal,
+): Promise<Board> {
   const registry = createObjectUrlRegistry();
   try {
     const board = await withBoardsDB(async (db) => {
@@ -38,7 +46,7 @@ export async function boardLoader({
     });
 
     // Don't promote a superseded registry — it would orphan the live one.
-    if (request.signal.aborted) {
+    if (signal?.aborted) {
       registry.revokeAll();
       throw new DOMException("Aborted", "AbortError");
     }
@@ -47,13 +55,9 @@ export async function boardLoader({
     previousRegistry = registry;
     previous?.revokeAll();
 
-    return { setId, board };
+    return board;
   } catch (err) {
     registry.revokeAll();
-    if (err instanceof Error && err.message.startsWith("Board not found")) {
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
-      throw data("Board not found", { status: 404 });
-    }
     throw err;
   }
 }
@@ -65,7 +69,7 @@ async function fetchOBFBoard(
 ): Promise<OBFBoard> {
   const record = await getBoard(db, setId, boardId);
   if (!record) {
-    throw new Error(`Board not found: ${setId}/${boardId}`);
+    throw new BoardNotFoundError(setId, boardId);
   }
   return record.obf;
 }

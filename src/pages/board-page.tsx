@@ -1,17 +1,19 @@
-import { Title } from "@app/title";
 import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
-import { BoardViewer, type BoardLoaderData } from "@features/board";
+import { Title } from "@app/title";
+import {
+  BoardViewer,
+  type Board,
+  type BoardRouteParams,
+} from "@features/board";
 import { useBoardTranslation } from "@features/board/use-board-translation";
 import { LoadingState } from "@shared/components/loading-state";
-import { useLoaderData } from "react-router";
+import { useLoaderData, useParams } from "react-router";
 
 export const Component = function BoardPage() {
-  const { setId, board } = useLoaderData<BoardLoaderData>();
-  const { translatedBoard } = useBoardTranslation({ setId, board });
+  const board = useLoaderData<Board>();
+  const { setId } = useParams<BoardRouteParams>();
+  const { translatedBoard } = useBoardTranslation({ setId: setId!, board });
 
-  // Hooks must run unconditionally — keep the title declaration above the
-  // early return. The untranslated name carries the header until translation
-  // settles, so it never flickers blank.
   useDeclareAppHeaderTitle(translatedBoard?.name ?? board.name);
 
   if (!translatedBoard) {

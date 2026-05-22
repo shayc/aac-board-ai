@@ -6,7 +6,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/storage/test-helpers";
-import { homeLoader } from "./home-loader";
+import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL = "/src/shared/testing/sample-boards/lots_of_stuff.obz";
 const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
@@ -16,10 +16,10 @@ function callLoader(searchParams = ""): Promise<Response> {
     request: new Request(`http://localhost/${searchParams}`),
     params: {},
   } as unknown as LoaderFunctionArgs;
-  return homeLoader(args);
+  return rootIndexLoader(args);
 }
 
-describe("homeLoader", () => {
+describe("rootIndexLoader", () => {
   beforeEach(async () => {
     await resetBoardsDB();
     // resetBoardsDB clears IDB but the board-sets-store keeps its cached
