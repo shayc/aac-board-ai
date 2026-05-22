@@ -1,15 +1,43 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+
   "boardNotFound": "הלוח לא נמצא",
-  "openSettings": "פתח הגדרות",
+
+  "settingsOpen": "פתח הגדרות",
+  "settingsTitle": "הגדרות",
+  "settingsClose": "סגור הגדרות",
+
+  "themeLabel": "ערכת נושא",
+  "themeSystem": "מערכת",
+  "themeLight": "בהיר",
+  "themeDark": "כהה",
+
+  "languageLabel": "שפה",
+  "languageDownloading": "מוריד שפה",
+  "languageDownloadProgress": "{progress}% הושלמו...",
+
+  "voiceLabel": "קול",
+  "speechRate": "מהירות",
+  "speechPitch": "גובה",
+  "speechVolume": "עוצמה",
+  "speechPreview": "השמע",
+  "speechVoicePreview": "שלום, זה הקול שלי!",
+
+  "aiCustomInstructions": "הוראות מותאמות אישית",
+  "aiCustomInstructionsPlaceholder": "למשל: צינית, מנומסת.",
+  "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
+  "aiBuiltInSupport": "תמיכת AI מובנית",
+
   "navGoBack": "חזרה",
   "navBack": "חזרה",
   "navGoHome": "מעבר לבית",
   "navHome": "בית",
+
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
   "messagePlay": "השמע הודעה",
   "messageStop": "עצור השמעה",
+
   "toneSelection": "בחירת סגנון",
   "toneDirect": "סגנון ישיר",
   "toneProfessional": "סגנון מקצועי",

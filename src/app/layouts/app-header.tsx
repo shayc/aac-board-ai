@@ -37,7 +37,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           {headerTitle}
         </Typography>
 
-        <Tooltip title={m.openSettings()}>
+        <Tooltip title={m.settingsOpen()}>
           <IconButton
             aria-label="Settings"
             size="large"
