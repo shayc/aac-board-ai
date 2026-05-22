@@ -8,7 +8,6 @@
     "types": ["vite/client", "dom-chromium-ai"],
     "skipLibCheck": true,
     "allowJs": true,
-    "checkJs": false,
 
     "paths": {
       "@app/*": ["./src/app/*"],

@@ -1,12 +1,7 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
-import {
-  getLanguageCode,
-  getNativeLanguageName,
-  getTextDirection,
-} from "@shared/utils/locale";
+import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 import { useEffect, type ReactNode } from "react";
-import { isLocale, setLocale } from "../../paraglide/runtime.js";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
 
 export interface LanguageProviderProps {
@@ -30,9 +25,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const direction = getTextDirection(language);
 
-  const paraglideLocale = getLanguageCode(language);
-  const knownLocale = isLocale(paraglideLocale);
-
   const contextValue: LanguageContextValue = {
     languages,
     language,
@@ -53,17 +45,5 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.lang = language;
   }, [direction, language]);
 
-  useEffect(() => {
-    if (knownLocale) {
-      void setLocale(paraglideLocale, { reload: false });
-    }
-  }, [paraglideLocale, knownLocale]);
-
-  return (
-    <LanguageContext value={contextValue}>
-      <div key={paraglideLocale} style={{ display: "contents" }}>
-        {children}
-      </div>
-    </LanguageContext>
-  );
+  return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }
