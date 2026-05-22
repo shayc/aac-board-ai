@@ -43,6 +43,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@eslint/js": "^10.0.1",
+    "@inlang/paraglide-js": "^2.18.1",
     "@rolldown/plugin-babel": "^0.2.3",
     "@types/babel__core": "^7.20.5",
     "@types/dom-chromium-ai": "^0.0.16",

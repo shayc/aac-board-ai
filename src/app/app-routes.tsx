@@ -12,13 +12,14 @@ import {
   useRouteError,
 } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { m } from "../paraglide/messages.js";
 
 function RouteErrorBoundary() {
   const error = useRouteError();
   const title =
     isRouteErrorResponse(error) && typeof error.data === "string"
       ? error.data
-      : "Something went wrong";
+      : m.error_generic_title();
 
   return (
     <ErrorState

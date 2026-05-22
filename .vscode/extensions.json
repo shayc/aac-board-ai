@@ -2,6 +2,7 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "vitest.explorer",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "inlang.vs-code-extension"
   ]
 }
