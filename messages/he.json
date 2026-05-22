@@ -1,13 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-
   "boardLoading": "טעינת לוח...",
   "boardNotFound": "הלוח לא נמצא",
-
   "libraryLoading": "טעינת לוחות...",
   "libraryEmptyTitle": "הספרייה שלך ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
-
   "libraryImport": "ייבוא",
   "libraryImportBoards": "ייבוא לוחות",
   "libraryImportingBoard": "ייבוא לוח...",
@@ -16,48 +13,39 @@
   "libraryImportedBoards": "הלוחות יובאו",
   "libraryImportFailedBoard": "ייבוא הלוח נכשל",
   "libraryImportFailedBoards": "ייבוא הלוחות נכשל",
-
   "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",
   "libraryCancel": "ביטול",
   "libraryClose": "סגירה",
-
   "libraryMoreOptions": "אפשרויות נוספות",
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
   "libraryByAuthor": "מאת {author}",
   "libraryGridDimensions": "רשת {rows}×{columns}",
-
   "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
   "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
   "libraryDeleted": "\"{name}\" נמחק",
   "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
-
   "menuLabel": "תפריט",
   "menuOpen": "פתיחת התפריט",
   "menuHome": "בית",
   "menuLibrary": "ספרייה",
   "menuAbout": "אודות",
-
   "settingsTitle": "הגדרות",
   "settingsOpen": "פתיחת הגדרות",
   "settingsClose": "סגירת הגדרות",
-
   "themeLabel": "ערכת נושא",
   "themeSystem": "מערכת",
   "themeLight": "בהיר",
   "themeDark": "כהה",
-
   "languageLabel": "שפה",
   "languageDownloading": "הורדת שפה...",
   "languageDownloadProgress": "{progress}% הושלם...",
-
   "speechVoice": "קול",
   "speechRate": "קצב דיבור",
   "speechPitch": "גובה צליל",
   "speechVolume": "עוצמת שמע",
   "speechPreview": "השמעה",
   "speechVoicePreview": "שלום, זה הקול שלי!",
-
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
   "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI.",
@@ -65,30 +53,29 @@
   "aiFeatureProofreading": "הגהה",
   "aiFeatureRewriting": "שכתוב",
   "aiFeatureTranslation": "תרגום",
-
   "navBack": "חזרה",
   "navHome": "לעמוד הבית",
-
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה.",
   "messagePlay": "השמעת הודעה",
   "messageStop": "עצירה",
-
   "toneSelection": "בחירת סגנון",
   "toneDirect": "סגנון ישיר",
   "toneProfessional": "סגנון מקצועי",
   "toneFriendly": "סגנון ידידותי",
-
   "aboutHeading": "אודות",
   "aboutAppDescription": "{appName} מסייע לאנשים עם קשיי דיבור לתקשר בקלות ובאופן טבעי. האפליקציה משתמשת בבינה מלאכותית המופעלת ישירות מהמכשיר כדי לתקן את הדקדוק, להתאים את סגנון הניסוח ולתרגם הודעות – תוך שמירה מלאה על הפרטיות ועל מהירות התגובה.",
   "aboutAcknowledgmentsHeading": "תודות והכרה",
-  "aboutWinnerOfChallenge": "האפליקציה זכתה באתגר Google Chrome Built-in AI Challenge 2025.",
-  "aboutBuiltOnObf": "היא מבוססת על פורמט Open Board",
+  "aboutWinnerOfChallengePrefix": "האפליקציה זכתה באתגר ",
+  "aboutWinnerOfChallengeLink": "Google Chrome Built-in AI Challenge 2025",
+  "aboutWinnerOfChallengeSuffix": ". ",
+  "aboutBuiltOnObfPrefix": "היא מבוססת על ",
+  "aboutBuiltOnObfLink": "פורמט Open Board",
+  "aboutBuiltOnObfSuffix": " ",
   "aboutFeaturingQuickCore": "ומשלבת את אוצר המילים Quick Core 24 מבית ",
   "aboutOpenAacLinkText": "OpenAAC",
   "aboutOpenSourceHeading": "קוד פתוח",
   "aboutViewSource": "צפייה בקוד המקור ב-GitHub",
-
   "onboardingTagline": "לתקשר בקלות ובאופן טבעי.",
   "onboardingSmartRewritingTitle": "שכתוב חכם",
   "onboardingSmartRewritingDescription": "הפיכת ביטויים קצרים למשפטים מלאים וברורים.",
@@ -97,7 +84,6 @@
   "onboardingPrivacyTitle": "פרטיות מובנית",
   "onboardingPrivacyDescription": "עבודה מקומית על המכשיר, גם ללא חיבור לאינטרנט. המידע לא נשמר בענן.",
   "onboardingContinue": "המשך",
-
   "errorGenericTitle": "משהו השתבש",
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",

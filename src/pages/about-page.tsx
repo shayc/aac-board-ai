@@ -39,22 +39,26 @@ export const Component = function AboutPage() {
               "& em": { fontStyle: "italic" },
             }}
           >
+            {m.aboutWinnerOfChallengePrefix()}
             <Link
               href="https://developer.chrome.com/blog/ai-challenge-winners-2025/"
               target="_blank"
               rel="noopener noreferrer"
               underline="hover"
             >
-              {m.aboutWinnerOfChallenge()}
-            </Link>{" "}
+              {m.aboutWinnerOfChallengeLink()}
+            </Link>
+            {m.aboutWinnerOfChallengeSuffix()}
+            {m.aboutBuiltOnObfPrefix()}
             <Link
               href="https://www.openboardformat.org/"
               target="_blank"
               rel="noopener noreferrer"
               underline="hover"
             >
-              {m.aboutBuiltOnObf()}
-            </Link>{" "}
+              {m.aboutBuiltOnObfLink()}
+            </Link>
+            {m.aboutBuiltOnObfSuffix()}
             {m.aboutFeaturingQuickCore()}
             <Link
               href="https://www.openaac.org"
