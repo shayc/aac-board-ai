@@ -14,7 +14,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "prepare": "husky"
+    "prepare": "husky && paraglide-js compile --project ./project.inlang --outdir ./src/paraglide"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
