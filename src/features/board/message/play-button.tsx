@@ -3,6 +3,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 
 export interface PlayButtonProps {
@@ -18,7 +19,7 @@ export function PlayButton({
   onPlayClick,
   onStopClick,
 }: PlayButtonProps) {
-  const playButtonLabel = isPlaying ? "Stop playback" : "Play message";
+  const playButtonLabel = isPlaying ? m.messageStop() : m.messagePlay();
 
   return (
     <Tooltip title={playButtonLabel}>

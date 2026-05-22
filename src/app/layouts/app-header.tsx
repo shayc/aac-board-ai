@@ -1,4 +1,3 @@
-import { useAppHeaderTitle } from "./app-header-title";
 import MenuIcon from "@mui/icons-material/Menu";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -6,6 +5,8 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
+import { useAppHeaderTitle } from "./app-header-title";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -18,9 +19,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <Tooltip title="Open menu">
+        <Tooltip title={m.menuOpen()}>
           <IconButton
-            aria-label="Menu"
+            aria-label={m.menuLabel()}
             size="large"
             edge="start"
             color="inherit"
@@ -35,9 +36,9 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           {headerTitle}
         </Typography>
 
-        <Tooltip title="Open settings">
+        <Tooltip title={m.settingsOpen()}>
           <IconButton
-            aria-label="Settings"
+            aria-label={m.settingsTitle()}
             size="large"
             edge="end"
             color="inherit"

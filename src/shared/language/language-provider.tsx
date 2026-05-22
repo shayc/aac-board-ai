@@ -1,3 +1,5 @@
+import { m } from "@paraglide/messages.js";
+import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
@@ -15,6 +17,12 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
+  // Sync Paraglide *during render* (not in an effect) so children and loaders
+  // resolve the right locale on first paint. Unsupported languages degrade to
+  // baseLocale, keeping the UI in English while voice/board content follows
+  // the user's pick.
+  void setLocale(isLocale(language) ? language : baseLocale, { reload: false });
+
   const languages = Object.keys(voicesByLanguage)
     .filter((language) => !UNSUPPORTED_LANGUAGES.includes(language))
     .sort((a, b) => a.localeCompare(b))
@@ -30,6 +38,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     language,
     setLanguage,
     direction,
+    m,
   };
 
   useEffect(() => {

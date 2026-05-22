@@ -5,14 +5,14 @@ import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 
 export interface ErrorStateProps {
-  title?: string;
+  title: string;
   description?: string;
   icon?: ReactNode;
   action?: ReactNode;
 }
 
 export function ErrorState({
-  title = "Something went wrong",
+  title,
   description,
   icon = <ErrorOutlineIcon />,
   action,

@@ -4,6 +4,7 @@ import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
+import { m } from "@paraglide/messages.js";
 import type { SuggestionTone } from "./types";
 
 export interface ToneSelectorProps {
@@ -24,25 +25,25 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   return (
     <ToggleButtonGroup
       exclusive
-      aria-label="Tone selection"
+      aria-label={m.toneSelection()}
       value={tone}
       size="medium"
       onChange={handleChange}
     >
-      <Tooltip title="Direct tone">
-        <ToggleButton value="as-is" aria-label="Direct tone">
+      <Tooltip title={m.toneDirect()}>
+        <ToggleButton value="as-is" aria-label={m.toneDirect()}>
           <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
-      <Tooltip title="Professional tone">
-        <ToggleButton value="more-formal" aria-label="Professional tone">
+      <Tooltip title={m.toneProfessional()}>
+        <ToggleButton value="more-formal" aria-label={m.toneProfessional()}>
           <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
-      <Tooltip title="Friendly tone">
-        <ToggleButton value="more-casual" aria-label="Friendly tone">
+      <Tooltip title={m.toneFriendly()}>
+        <ToggleButton value="more-casual" aria-label={m.toneFriendly()}>
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>

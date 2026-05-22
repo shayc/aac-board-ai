@@ -1,4 +1,5 @@
 import { BoardNotFoundError, loadBoard, type Board } from "@features/board";
+import { m } from "@paraglide/messages.js";
 import { data, type LoaderFunctionArgs } from "react-router";
 
 export async function boardLoader({
@@ -12,7 +13,7 @@ export async function boardLoader({
     return await loadBoard(setId, boardId, request.signal);
   } catch (err) {
     if (err instanceof BoardNotFoundError) {
-      throw data("Board not found", { status: 404 });
+      throw data(m.boardNotFound(), { status: 404 });
     }
     throw err;
   }

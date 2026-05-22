@@ -1,4 +1,5 @@
 import { boardPath, getBoardSet } from "@features/board";
+import { m } from "@paraglide/messages.js";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 
 export async function boardSetIndexLoader({
@@ -8,10 +9,10 @@ export async function boardSetIndexLoader({
   const set = await getBoardSet(setId);
 
   if (!set) {
-    throw data("Board set not found", { status: 404 });
+    throw data(m.errorBoardSetNotFound(), { status: 404 });
   }
   if (!set.rootBoardId) {
-    throw data("Board set incomplete", { status: 422 });
+    throw data(m.errorBoardSetIncomplete(), { status: 422 });
   }
 
   return redirect(boardPath({ setId, boardId: set.rootBoardId }));

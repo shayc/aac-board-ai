@@ -1,4 +1,102 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "errorGenericTitle": "Something went wrong"
+
+  "boardLoading": "Loading board...",
+  "boardNotFound": "Board not found",
+
+  "libraryLoading": "Loading boards...",
+  "libraryEmptyTitle": "Your library is empty",
+  "libraryEmptyDescription": "Import communication boards to get started.",
+
+  "libraryImport": "Import",
+  "libraryImportBoards": "Import boards",
+  "libraryImportingBoard": "Importing board...",
+  "libraryImportingBoards": "Importing boards...",
+  "libraryImportedBoard": "Board imported",
+  "libraryImportedBoards": "Boards imported",
+  "libraryImportFailedBoard": "Couldn't import board",
+  "libraryImportFailedBoards": "Couldn't import boards",
+
+  "libraryInfo": "Info",
+  "libraryDelete": "Delete",
+  "libraryCancel": "Cancel",
+  "libraryClose": "Close",
+
+  "libraryMoreOptions": "More options",
+  "libraryMoreOptionsFor": "More options for {name}",
+  "libraryByAuthor": "By {author}",
+  "libraryGridDimensions": "{rows}×{columns} Grid",
+
+  "libraryDeleteConfirmTitle": "Delete \"{name}\"?",
+  "libraryDeleteIrreversible": "This action cannot be undone.",
+  "libraryDeleted": "\"{name}\" deleted",
+  "libraryDeleteFailed": "Couldn't delete \"{name}\"",
+
+  "menuLabel": "Menu",
+  "menuOpen": "Open menu",
+  "menuHome": "Home",
+  "menuLibrary": "Library",
+  "menuAbout": "About",
+
+  "settingsTitle": "Settings",
+  "settingsOpen": "Open settings",
+  "settingsClose": "Close settings",
+
+  "themeLabel": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+
+  "languageLabel": "Language",
+  "languageDownloading": "Downloading language",
+  "languageDownloadProgress": "{progress}% complete...",
+
+  "speechVoice": "Voice",
+  "speechRate": "Rate",
+  "speechPitch": "Pitch",
+  "speechVolume": "Volume",
+  "speechPreview": "Preview",
+  "speechVoicePreview": "Hi, this is my voice!",
+
+  "aiCustomInstructions": "Custom instructions",
+  "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
+  "aiCustomInstructionsHelper": "Personalize AI suggestions",
+  "aiBuiltInSupport": "Built-in AI support",
+
+  "navBack": "Go back",
+  "navHome": "Go home",
+
+  "messageBackspace": "Backspace",
+  "messageBackspaceLongPressHint": "Long press to clear message",
+  "messagePlay": "Play message",
+  "messageStop": "Stop",
+
+  "toneSelection": "Tone selection",
+  "toneDirect": "Direct tone",
+  "toneProfessional": "Professional tone",
+  "toneFriendly": "Friendly tone",
+
+  "aboutHeading": "About",
+  "aboutAppDescription": "{appName} helps people who can't rely on speech communicate more easily and naturally. It uses on-device AI to correct grammar, adjust tone, and translate messages, keeping interactions private and fast.",
+  "aboutAcknowledgmentsHeading": "Acknowledgments",
+  "aboutWinnerOf": "Winner of the",
+  "aboutBuiltOn": "Built on the",
+  "aboutFeaturing": "and featuring the",
+  "aboutVocabularyBy": "vocabulary set by",
+  "aboutOpenSourceHeading": "Open source",
+  "aboutViewSource": "View source code on GitHub",
+
+  "onboardingTagline": "Communicate more easily and naturally.",
+  "onboardingSmartRewritingTitle": "Smart rewriting",
+  "onboardingSmartRewritingDescription": "Turn short phrases into clear sentences.",
+  "onboardingTranslationTitle": "Real-time translation",
+  "onboardingTranslationDescription": "Translate messages instantly.",
+  "onboardingPrivacyTitle": "Private by design",
+  "onboardingPrivacyDescription": "Works offline, on your device. No cloud.",
+  "onboardingContinue": "Continue",
+
+  "errorGenericTitle": "Something went wrong",
+  "errorGoHome": "Go home",
+  "errorBoardSetNotFound": "Board set not found",
+  "errorBoardSetIncomplete": "Board set incomplete"
 }

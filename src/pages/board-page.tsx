@@ -6,6 +6,7 @@ import {
 } from "@features/board";
 import { useBoardTranslation } from "@features/board/use-board-translation";
 import { LoadingState } from "@shared/components/loading-state";
+import { m } from "@paraglide/messages.js";
 import { Title } from "@shared/components/title";
 import { useLoaderData, useParams } from "react-router";
 
@@ -17,7 +18,7 @@ export const Component = function BoardPage() {
   useDeclareAppHeaderTitle(translatedBoard?.name ?? board.name);
 
   if (!translatedBoard) {
-    return <LoadingState message="Loading board..." />;
+    return <LoadingState message={m.boardLoading()} />;
   }
 
   return (

@@ -1,0 +1,102 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+
+  "boardLoading": "טוען לוח...",
+  "boardNotFound": "הלוח לא נמצא",
+
+  "libraryLoading": "טוען לוחות...",
+  "libraryEmptyTitle": "הספרייה ריקה",
+  "libraryEmptyDescription": "ייבא לוחות תקשורת כדי להתחיל.",
+
+  "libraryImport": "ייבא",
+  "libraryImportBoards": "ייבא לוחות",
+  "libraryImportingBoard": "מייבא לוח...",
+  "libraryImportingBoards": "מייבא לוחות...",
+  "libraryImportedBoard": "הלוח יובא",
+  "libraryImportedBoards": "הלוחות יובאו",
+  "libraryImportFailedBoard": "ייבוא הלוח נכשל",
+  "libraryImportFailedBoards": "ייבוא הלוחות נכשל",
+
+  "libraryInfo": "פרטים",
+  "libraryDelete": "מחק",
+  "libraryCancel": "בטל",
+  "libraryClose": "סגור",
+
+  "libraryMoreOptions": "אפשרויות נוספות",
+  "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
+  "libraryByAuthor": "מאת {author}",
+  "libraryGridDimensions": "רשת {rows}×{columns}",
+
+  "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
+  "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
+  "libraryDeleted": "\"{name}\" נמחק",
+  "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
+
+  "menuLabel": "תפריט",
+  "menuOpen": "פתח תפריט",
+  "menuHome": "בית",
+  "menuLibrary": "ספרייה",
+  "menuAbout": "אודות",
+
+  "settingsTitle": "הגדרות",
+  "settingsOpen": "פתח הגדרות",
+  "settingsClose": "סגור הגדרות",
+
+  "themeLabel": "ערכת נושא",
+  "themeSystem": "מערכת",
+  "themeLight": "בהיר",
+  "themeDark": "כהה",
+
+  "languageLabel": "שפה",
+  "languageDownloading": "מוריד שפה",
+  "languageDownloadProgress": "{progress}% הושלמו...",
+
+  "speechVoice": "קול",
+  "speechRate": "מהירות",
+  "speechPitch": "גובה",
+  "speechVolume": "עוצמה",
+  "speechPreview": "השמע",
+  "speechVoicePreview": "שלום, זה הקול שלי!",
+
+  "aiCustomInstructions": "הוראות מותאמות אישית",
+  "aiCustomInstructionsPlaceholder": "למשל: צינית, מנומסת.",
+  "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
+  "aiBuiltInSupport": "תמיכת AI מובנית",
+
+  "navBack": "חזור",
+  "navHome": "עבור לבית",
+
+  "messageBackspace": "מחק",
+  "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
+  "messagePlay": "השמע הודעה",
+  "messageStop": "עצור",
+
+  "toneSelection": "בחירת סגנון",
+  "toneDirect": "סגנון ישיר",
+  "toneProfessional": "סגנון מקצועי",
+  "toneFriendly": "סגנון ידידותי",
+
+  "aboutHeading": "אודות",
+  "aboutAppDescription": "{appName} עוזר לאנשים שאינם יכולים להסתמך על דיבור לתקשר בקלות ובאופן טבעי. הוא משתמש בבינה מלאכותית על המכשיר כדי לתקן דקדוק, להתאים סגנון ולתרגם הודעות, ושומר על אינטראקציות פרטיות ומהירות.",
+  "aboutAcknowledgmentsHeading": "תודות",
+  "aboutWinnerOf": "הזוכה ב-",
+  "aboutBuiltOn": "מבוסס על",
+  "aboutFeaturing": "ומשלב את אוצר המילים",
+  "aboutVocabularyBy": "מאת",
+  "aboutOpenSourceHeading": "קוד פתוח",
+  "aboutViewSource": "צפה בקוד המקור ב-GitHub",
+
+  "onboardingTagline": "תקשר בקלות ובאופן טבעי.",
+  "onboardingSmartRewritingTitle": "כתיבה חכמה",
+  "onboardingSmartRewritingDescription": "הפוך ביטויים קצרים למשפטים ברורים.",
+  "onboardingTranslationTitle": "תרגום בזמן אמת",
+  "onboardingTranslationDescription": "תרגם הודעות באופן מיידי.",
+  "onboardingPrivacyTitle": "פרטיות מובנית",
+  "onboardingPrivacyDescription": "עובד גם ללא חיבור, על המכשיר שלך. ללא ענן.",
+  "onboardingContinue": "המשך",
+
+  "errorGenericTitle": "משהו השתבש",
+  "errorGoHome": "עבור לבית",
+  "errorBoardSetNotFound": "סט הלוחות לא נמצא",
+  "errorBoardSetIncomplete": "סט הלוחות אינו שלם"
+}

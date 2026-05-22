@@ -7,6 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { isSupported, useGlobalDownloadProgress } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 
@@ -18,10 +19,10 @@ export function LanguageSettings() {
   return (
     <Stack spacing={2}>
       <FormControl size="small" fullWidth>
-        <InputLabel id="language-select-label">Language</InputLabel>
+        <InputLabel id="language-select-label">{m.languageLabel()}</InputLabel>
         <Select
           variant="outlined"
-          label="Language"
+          label={m.languageLabel()}
           labelId="language-select-label"
           id="language-select"
           value={language}
@@ -42,8 +43,12 @@ export function LanguageSettings() {
           variant="outlined"
           icon={<DownloadingIcon fontSize="inherit" />}
         >
-          <AlertTitle>Downloading language</AlertTitle>
-          <Typography>{Math.round(progress * 100)}% complete...</Typography>
+          <AlertTitle>{m.languageDownloading()}</AlertTitle>
+          <Typography>
+            {m.languageDownloadProgress({
+              progress: Math.round(progress * 100),
+            })}
+          </Typography>
         </Alert>
       )}
     </Stack>

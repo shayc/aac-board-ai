@@ -3,6 +3,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 
 export interface NavButtonsProps {
@@ -20,10 +21,10 @@ export function NavButtons({
 }: NavButtonsProps) {
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <Tooltip title="Go back">
+      <Tooltip title={m.navBack()}>
         <span>
           <IconButton
-            aria-label="Back"
+            aria-label={m.navBack()}
             size="large"
             disabled={!canGoBack}
             onClick={onBackClick}
@@ -33,10 +34,10 @@ export function NavButtons({
         </span>
       </Tooltip>
 
-      <Tooltip title="Go home">
+      <Tooltip title={m.navHome()}>
         <span>
           <IconButton
-            aria-label="Home"
+            aria-label={m.navHome()}
             size="large"
             disabled={!canGoHome}
             onClick={onHomeClick}

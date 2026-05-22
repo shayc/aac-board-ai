@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
 
 const AI_FEATURES = [
@@ -27,10 +28,10 @@ export function AISettings() {
           fullWidth
           multiline
           rows={4}
-          label="Custom Instructions"
+          label={m.aiCustomInstructions()}
           slotProps={{ inputLabel: { shrink: true } }}
-          placeholder="e.g., Sarcastic, Polite."
-          helperText="Personalize AI suggestions"
+          placeholder={m.aiCustomInstructionsPlaceholder()}
+          helperText={m.aiCustomInstructionsHelper()}
           value={sharedContext}
           onChange={(e) => setSharedContext(e.target.value)}
         />
@@ -38,7 +39,7 @@ export function AISettings() {
 
       <Stack spacing={1}>
         <Typography variant="body2" color="text.secondary">
-          Built-in AI Support
+          {m.aiBuiltInSupport()}
         </Typography>
 
         <List dense>

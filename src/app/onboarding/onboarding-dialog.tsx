@@ -12,25 +12,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import { m } from "@paraglide/messages.js";
 import type { ReactNode } from "react";
-
-const highlights: { icon: ReactNode; primary: string; secondary: string }[] = [
-  {
-    icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
-    primary: "Smart Rewriting",
-    secondary: "Turn short phrases into clear sentences.",
-  },
-  {
-    icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
-    primary: "Real-time Translation",
-    secondary: "Translate messages instantly.",
-  },
-  {
-    icon: <LockOutlinedIcon color="primary" fontSize="large" />,
-    primary: "Private by Design",
-    secondary: "Works offline, on your device. No cloud.",
-  },
-];
 
 export interface OnboardingDialogProps {
   open: boolean;
@@ -38,6 +21,25 @@ export interface OnboardingDialogProps {
 }
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
+  const highlights: { icon: ReactNode; primary: string; secondary: string }[] =
+    [
+      {
+        icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
+        primary: m.onboardingSmartRewritingTitle(),
+        secondary: m.onboardingSmartRewritingDescription(),
+      },
+      {
+        icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
+        primary: m.onboardingTranslationTitle(),
+        secondary: m.onboardingTranslationDescription(),
+      },
+      {
+        icon: <LockOutlinedIcon color="primary" fontSize="large" />,
+        primary: m.onboardingPrivacyTitle(),
+        secondary: m.onboardingPrivacyDescription(),
+      },
+    ];
+
   return (
     <Dialog
       open={open}
@@ -75,7 +77,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           variant="body1"
           sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
         >
-          Communicate more easily and naturally.
+          {m.onboardingTagline()}
         </DialogContentText>
 
         <List sx={{ py: 0 }}>
@@ -120,7 +122,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             fontSize: "1.1rem",
           }}
         >
-          Continue
+          {m.onboardingContinue()}
         </Button>
       </DialogActions>
     </Dialog>

@@ -12,13 +12,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { Link as RouterLink } from "react-router";
-
-const menuItems = [
-  { icon: HomeOutlinedIcon, label: "Home", to: "/" },
-  { icon: FilterNoneOutlinedIcon, label: "Library", to: "/library" },
-  { icon: InfoOutlinedIcon, label: "About", to: "/about" },
-];
 
 export interface MenuDrawerProps {
   open: boolean;
@@ -26,6 +21,12 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
+  const menuItems = [
+    { icon: HomeOutlinedIcon, label: m.menuHome(), to: "/" },
+    { icon: FilterNoneOutlinedIcon, label: m.menuLibrary(), to: "/library" },
+    { icon: InfoOutlinedIcon, label: m.menuAbout(), to: "/about" },
+  ];
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>

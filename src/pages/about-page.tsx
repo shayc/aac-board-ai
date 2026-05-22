@@ -6,25 +6,23 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
+import { m } from "@paraglide/messages.js";
 import { Title } from "@shared/components/title";
 
 export const Component = function AboutPage() {
-  useDeclareAppHeaderTitle("About");
+  useDeclareAppHeaderTitle(m.aboutHeading());
 
   return (
     <>
-      <Title>About</Title>
+      <Title>{m.aboutHeading()}</Title>
       <PageContainer>
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <Typography variant="body1" component="p">
-            {APP_NAME} helps people who can't rely on speech communicate more
-            easily and naturally. It uses on-device AI to correct grammar,
-            adjust tone, and translate messages, keeping interactions private
-            and fast.
+            {m.aboutAppDescription({ appName: APP_NAME })}
           </Typography>
 
           <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
-            Acknowledgments
+            {m.aboutAcknowledgmentsHeading()}
           </Typography>
 
           <Typography
@@ -41,7 +39,7 @@ export const Component = function AboutPage() {
               "& em": { fontStyle: "italic" },
             }}
           >
-            Winner of the{" "}
+            {m.aboutWinnerOf()}{" "}
             <Link
               href="https://developer.chrome.com/blog/ai-challenge-winners-2025/"
               target="_blank"
@@ -50,7 +48,7 @@ export const Component = function AboutPage() {
             >
               Google Chrome Built-in AI Challenge 2025
             </Link>
-            . Built on the{" "}
+            . {m.aboutBuiltOn()}{" "}
             <Link
               href="https://www.openboardformat.org/"
               target="_blank"
@@ -59,7 +57,7 @@ export const Component = function AboutPage() {
             >
               Open Board Format
             </Link>{" "}
-            and featuring the <em>Quick Core 24</em> vocabulary set by{" "}
+            {m.aboutFeaturing()} <em>Quick Core 24</em> {m.aboutVocabularyBy()}{" "}
             <Link
               href="https://www.openaac.org"
               target="_blank"
@@ -72,7 +70,7 @@ export const Component = function AboutPage() {
           </Typography>
 
           <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
-            Open Source
+            {m.aboutOpenSourceHeading()}
           </Typography>
 
           <Button
@@ -83,7 +81,7 @@ export const Component = function AboutPage() {
             rel="noopener noreferrer"
             sx={{ alignSelf: "flex-start" }}
           >
-            View Source Code on GitHub
+            {m.aboutViewSource()}
           </Button>
         </Stack>
       </PageContainer>
