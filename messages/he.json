@@ -59,7 +59,7 @@
   "speechVoicePreview": "שלום, זה הקול שלי!",
 
   "aiCustomInstructions": "הוראות מותאמות אישית",
-  "aiCustomInstructionsPlaceholder": "למשל: צינית, מנומסת.",
+  "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
   "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
   "aiBuiltInSupport": "תמיכת AI מובנית",
 
@@ -87,7 +87,7 @@
   "aboutViewSource": "צפה בקוד המקור ב-GitHub",
 
   "onboardingTagline": "תקשר בקלות ובאופן טבעי.",
-  "onboardingSmartRewritingTitle": "כתיבה חכמה",
+  "onboardingSmartRewritingTitle": "שכתוב חכם",
   "onboardingSmartRewritingDescription": "הפוך ביטויים קצרים למשפטים ברורים.",
   "onboardingTranslationTitle": "תרגום בזמן אמת",
   "onboardingTranslationDescription": "תרגם הודעות באופן מיידי.",
