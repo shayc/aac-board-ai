@@ -4,6 +4,34 @@
   "boardLoading": "טוען לוח...",
   "boardNotFound": "הלוח לא נמצא",
 
+  "libraryLoading": "טוען לוחות...",
+  "libraryEmptyTitle": "הספרייה ריקה",
+  "libraryEmptyDescription": "ייבא לוחות תקשורת כדי להתחיל.",
+
+  "libraryImport": "ייבא",
+  "libraryImportBoards": "ייבא לוחות",
+  "libraryImportingBoard": "מייבא לוח...",
+  "libraryImportingBoards": "מייבא לוחות...",
+  "libraryImportedBoard": "הלוח יובא",
+  "libraryImportedBoards": "הלוחות יובאו",
+  "libraryImportFailedBoard": "ייבוא הלוח נכשל",
+  "libraryImportFailedBoards": "ייבוא הלוחות נכשל",
+
+  "libraryInfo": "פרטים",
+  "libraryDelete": "מחק",
+  "libraryCancel": "בטל",
+  "libraryClose": "סגור",
+
+  "libraryMoreOptions": "אפשרויות נוספות",
+  "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
+  "libraryByAuthor": "מאת {author}",
+  "libraryGridDimensions": "רשת {rows}×{columns}",
+
+  "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
+  "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
+  "libraryDeleted": "\"{name}\" נמחק",
+  "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
+
   "menuLabel": "תפריט",
   "menuOpen": "פתח תפריט",
   "menuHome": "בית",

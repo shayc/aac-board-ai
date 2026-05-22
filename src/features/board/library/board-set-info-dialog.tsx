@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useLanguage } from "@shared/language/use-language";
 import { getEnglishLocaleName } from "@shared/utils/locale";
 import type { BoardSetRecord } from "../storage/boards-db";
 
@@ -18,6 +19,31 @@ export function BoardSetInfoDialog({
   boardSet,
   onClose,
 }: BoardSetInfoDialogProps) {
+  const { m } = useLanguage();
+
+  function buildChipLabels(boardSet: BoardSetRecord): string[] {
+    const labels: string[] = [];
+
+    if (boardSet.gridRows && boardSet.gridColumns) {
+      labels.push(
+        m.libraryGridDimensions({
+          rows: boardSet.gridRows,
+          columns: boardSet.gridColumns,
+        }),
+      );
+    }
+
+    if (boardSet.locale) {
+      labels.push(getEnglishLocaleName(boardSet.locale));
+    }
+
+    if (boardSet.license) {
+      labels.push(boardSet.license);
+    }
+
+    return labels;
+  }
+
   const chipLabels = boardSet ? buildChipLabels(boardSet) : [];
 
   return (
@@ -32,7 +58,7 @@ export function BoardSetInfoDialog({
         {boardSet?.name}
         {boardSet?.author && (
           <Typography variant="body2" color="text.secondary">
-            By {boardSet.author}
+            {m.libraryByAuthor({ author: boardSet.author })}
           </Typography>
         )}
       </DialogTitle>
@@ -63,26 +89,8 @@ export function BoardSetInfoDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Close</Button>
+        <Button onClick={onClose}>{m.libraryClose()}</Button>
       </DialogActions>
     </Dialog>
   );
-}
-
-function buildChipLabels(boardSet: BoardSetRecord): string[] {
-  const labels: string[] = [];
-
-  if (boardSet.gridRows && boardSet.gridColumns) {
-    labels.push(`${boardSet.gridRows}×${boardSet.gridColumns} Grid`);
-  }
-
-  if (boardSet.locale) {
-    labels.push(getEnglishLocaleName(boardSet.locale));
-  }
-
-  if (boardSet.license) {
-    labels.push(boardSet.license);
-  }
-
-  return labels;
 }

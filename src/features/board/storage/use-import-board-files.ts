@@ -1,3 +1,4 @@
+import { useLanguage } from "@shared/language/use-language";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
 import { importBoardFiles } from "./board-sets-store";
@@ -10,6 +11,7 @@ export interface UseImportBoardFilesReturn {
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
+  const { m } = useLanguage();
 
   async function pickAndImportBoardFiles() {
     const files = await openFiles({
@@ -23,19 +25,25 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
     const isPlural = files.length > 1;
     showSnackbar({
-      message: isPlural ? "Importing boards..." : "Importing board...",
+      message: isPlural
+        ? m.libraryImportingBoards()
+        : m.libraryImportingBoard(),
     });
 
     try {
       await importBoardFiles(files);
 
       showSnackbar({
-        message: isPlural ? "Boards imported" : "Board imported",
+        message: isPlural
+          ? m.libraryImportedBoards()
+          : m.libraryImportedBoard(),
         severity: "success",
       });
     } catch (error) {
       showSnackbar({
-        message: isPlural ? "Couldn't import boards" : "Couldn't import board",
+        message: isPlural
+          ? m.libraryImportFailedBoards()
+          : m.libraryImportFailedBoard(),
         severity: "error",
       });
       throw error;

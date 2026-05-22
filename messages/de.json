@@ -4,6 +4,34 @@
   "boardLoading": "Loading board...",
   "boardNotFound": "Board not found",
 
+  "libraryLoading": "Loading board sets...",
+  "libraryEmptyTitle": "Your library is empty",
+  "libraryEmptyDescription": "Import communication boards to get started.",
+
+  "libraryImport": "Import",
+  "libraryImportBoards": "Import boards",
+  "libraryImportingBoard": "Importing board...",
+  "libraryImportingBoards": "Importing boards...",
+  "libraryImportedBoard": "Board imported",
+  "libraryImportedBoards": "Boards imported",
+  "libraryImportFailedBoard": "Couldn't import board",
+  "libraryImportFailedBoards": "Couldn't import boards",
+
+  "libraryInfo": "Info",
+  "libraryDelete": "Delete",
+  "libraryCancel": "Cancel",
+  "libraryClose": "Close",
+
+  "libraryMoreOptions": "More options",
+  "libraryMoreOptionsFor": "More options for {name}",
+  "libraryByAuthor": "By {author}",
+  "libraryGridDimensions": "{rows}×{columns} Grid",
+
+  "libraryDeleteConfirmTitle": "Delete \"{name}\"?",
+  "libraryDeleteIrreversible": "This action cannot be undone.",
+  "libraryDeleted": "\"{name}\" deleted",
+  "libraryDeleteFailed": "Couldn't delete \"{name}\"",
+
   "menuLabel": "Menu",
   "menuOpen": "Open menu",
   "menuHome": "Home",

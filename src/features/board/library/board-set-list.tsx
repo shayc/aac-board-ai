@@ -10,6 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
+import { useLanguage } from "@shared/language/use-language";
 import { useState } from "react";
 import type { BoardSetRecord } from "../storage/boards-db";
 
@@ -26,12 +27,30 @@ export function BoardSetList({
   onDelete,
   onInfo,
 }: BoardSetListProps) {
+  const { m } = useLanguage();
+
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
     boardSet: BoardSetRecord;
   } | null>(null);
 
   const menuOpen = Boolean(menuAnchor);
+
+  function formatSecondary(boardSet: BoardSetRecord): string {
+    const parts: string[] = [];
+
+    const { gridRows, gridColumns, author } = boardSet;
+
+    if (gridRows && gridColumns) {
+      parts.push(`${gridRows}×${gridColumns}`);
+    }
+
+    if (author) {
+      parts.push(m.libraryByAuthor({ author }));
+    }
+
+    return parts.join(" · ");
+  }
 
   function handleMenuOpen(
     event: React.MouseEvent<HTMLElement>,
@@ -68,10 +87,10 @@ export function BoardSetList({
             key={boardSet.setId}
             disablePadding
             secondaryAction={
-              <Tooltip title="More options">
+              <Tooltip title={m.libraryMoreOptions()}>
                 <IconButton
                   edge="end"
-                  aria-label={`More options for ${boardSet.name}`}
+                  aria-label={m.libraryMoreOptionsFor({ name: boardSet.name })}
                   aria-controls={menuOpen ? "board-set-menu" : undefined}
                   aria-haspopup="menu"
                   aria-expanded={menuOpen ? "true" : undefined}
@@ -102,31 +121,15 @@ export function BoardSetList({
           <ListItemIcon>
             <InfoOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Info</ListItemText>
+          <ListItemText>{m.libraryInfo()}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
+          <ListItemText>{m.libraryDelete()}</ListItemText>
         </MenuItem>
       </Menu>
     </>
   );
-}
-
-function formatSecondary(boardSet: BoardSetRecord): string {
-  const parts: string[] = [];
-
-  const { gridRows, gridColumns, author } = boardSet;
-
-  if (gridRows && gridColumns) {
-    parts.push(`${gridRows}×${gridColumns}`);
-  }
-
-  if (author) {
-    parts.push(`By ${author}`);
-  }
-
-  return parts.join(" · ");
 }

@@ -4,6 +4,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { useLanguage } from "@shared/language/use-language";
 import type { BoardSetRecord } from "../storage/boards-db";
 
 export interface BoardSetDeleteDialogProps {
@@ -17,6 +18,8 @@ export function BoardSetDeleteDialog({
   onConfirm,
   onClose,
 }: BoardSetDeleteDialogProps) {
+  const { m } = useLanguage();
+
   return (
     <Dialog
       open={boardSet !== null}
@@ -25,19 +28,19 @@ export function BoardSetDeleteDialog({
       aria-describedby="delete-dialog-description"
     >
       <DialogTitle id="delete-dialog-title">
-        Delete "{boardSet?.name}"?
+        {boardSet ? m.libraryDeleteConfirmTitle({ name: boardSet.name }) : null}
       </DialogTitle>
 
       <DialogContent>
         <DialogContentText id="delete-dialog-description">
-          This action cannot be undone.
+          {m.libraryDeleteIrreversible()}
         </DialogContentText>
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button onClick={onClose}>{m.libraryCancel()}</Button>
         <Button onClick={onConfirm} color="error">
-          Delete
+          {m.libraryDelete()}
         </Button>
       </DialogActions>
     </Dialog>

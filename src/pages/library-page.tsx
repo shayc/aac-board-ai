@@ -18,6 +18,7 @@ import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
 import { PageContainer } from "@shared/components/page-container";
 import { Title } from "@shared/components/title";
+import { useLanguage } from "@shared/language/use-language";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -26,9 +27,10 @@ export const Component = function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
+  const { m } = useLanguage();
   const navigate = useNavigate();
 
-  useDeclareAppHeaderTitle("Library");
+  useDeclareAppHeaderTitle(m.menuLibrary());
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
@@ -56,10 +58,13 @@ export const Component = function LibraryPage() {
 
     try {
       await removeBoardSet(setId);
-      showSnackbar({ message: `"${name}" deleted`, severity: "success" });
+      showSnackbar({
+        message: m.libraryDeleted({ name }),
+        severity: "success",
+      });
     } catch (error) {
       showSnackbar({
-        message: `Couldn't delete "${name}"`,
+        message: m.libraryDeleteFailed({ name }),
         severity: "error",
       });
       throw error;
@@ -69,7 +74,7 @@ export const Component = function LibraryPage() {
   if (isLoading) {
     return (
       <PageContainer>
-        <LoadingState message="Loading board sets..." />
+        <LoadingState message={m.libraryLoading()} />
       </PageContainer>
     );
   }
@@ -79,15 +84,15 @@ export const Component = function LibraryPage() {
       <PageContainer>
         <EmptyState
           icon={<FilterNoneOutlinedIcon />}
-          title="Your library is empty"
-          description="Import communication boards to get started."
+          title={m.libraryEmptyTitle()}
+          description={m.libraryEmptyDescription()}
           action={
             <Button
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => void pickAndImportBoardFiles()}
             >
-              Import boards
+              {m.libraryImportBoards()}
             </Button>
           }
         />
@@ -97,7 +102,7 @@ export const Component = function LibraryPage() {
 
   return (
     <>
-      <Title>Library</Title>
+      <Title>{m.menuLibrary()}</Title>
       <PageContainer>
         <Stack
           direction="row"
@@ -108,7 +113,7 @@ export const Component = function LibraryPage() {
             startIcon={<AddIcon />}
             onClick={() => void pickAndImportBoardFiles()}
           >
-            Import
+            {m.libraryImport()}
           </Button>
         </Stack>
 
