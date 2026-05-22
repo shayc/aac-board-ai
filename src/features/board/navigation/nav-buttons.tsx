@@ -23,7 +23,7 @@ export function NavButtons({
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
-      <Tooltip title={m.navGoBack()}>
+      <Tooltip title={m.navBack()}>
         <span>
           <IconButton
             aria-label={m.navBack()}
@@ -36,7 +36,7 @@ export function NavButtons({
         </span>
       </Tooltip>
 
-      <Tooltip title={m.navGoHome()}>
+      <Tooltip title={m.navHome()}>
         <span>
           <IconButton
             aria-label={m.navHome()}

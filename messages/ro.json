@@ -63,15 +63,13 @@
   "aiCustomInstructionsHelper": "Personalize AI suggestions",
   "aiBuiltInSupport": "Built-in AI Support",
 
-  "navBack": "Back",
-  "navGoBack": "Go back",
-  "navHome": "Home",
-  "navGoHome": "Go home",
+  "navBack": "Go back",
+  "navHome": "Go home",
 
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Long press to clear message",
   "messagePlay": "Play message",
-  "messageStop": "Stop playback",
+  "messageStop": "Stop",
 
   "toneSelection": "Tone selection",
   "toneDirect": "Direct tone",

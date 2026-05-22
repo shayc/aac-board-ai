@@ -63,15 +63,13 @@
   "aiCustomInstructionsHelper": "התאם הצעות AI אישית",
   "aiBuiltInSupport": "תמיכת AI מובנית",
 
-  "navBack": "חזרה",
-  "navGoBack": "חזרה",
-  "navHome": "בית",
-  "navGoHome": "מעבר לבית",
+  "navBack": "חזור",
+  "navHome": "עבור לבית",
 
   "messageBackspace": "מחק",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
   "messagePlay": "השמע הודעה",
-  "messageStop": "עצור השמעה",
+  "messageStop": "עצור",
 
   "toneSelection": "בחירת סגנון",
   "toneDirect": "סגנון ישיר",
