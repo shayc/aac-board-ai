@@ -48,7 +48,6 @@ export const Component = function AboutPage() {
             >
               {m.aboutWinnerOfChallengeLink()}
             </Link>
-            {m.aboutWinnerOfChallengeSuffix()}
             {m.aboutBuiltOnObfPrefix()}
             <Link
               href="https://www.openboardformat.org/"
@@ -58,7 +57,6 @@ export const Component = function AboutPage() {
             >
               {m.aboutBuiltOnObfLink()}
             </Link>
-            {m.aboutBuiltOnObfSuffix()}
             {m.aboutFeaturingQuickCore()}
             <Link
               href="https://www.openaac.org"
