@@ -1,5 +1,4 @@
 import { APP_NAME } from "@app/app-info";
-import { Title } from "@app/title";
 import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
@@ -7,6 +6,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
+import { Title } from "@shared/components/title";
 
 export const Component = function AboutPage() {
   useDeclareAppHeaderTitle("About");
