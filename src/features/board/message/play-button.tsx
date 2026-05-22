@@ -3,7 +3,7 @@ import StopIcon from "@mui/icons-material/Stop";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 
 export interface PlayButtonProps {
@@ -19,7 +19,6 @@ export function PlayButton({
   onPlayClick,
   onStopClick,
 }: PlayButtonProps) {
-  const { m } = useLanguage();
   const playButtonLabel = isPlaying ? m.messageStop() : m.messagePlay();
 
   return (

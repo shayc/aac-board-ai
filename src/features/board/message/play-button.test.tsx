@@ -31,7 +31,7 @@ describe("PlayButton", () => {
 
     const screen = await render(<PlayButton isPlaying={true} {...handlers} />);
 
-    const button = screen.getByRole("button", { name: "Stop playback" });
+    const button = screen.getByRole("button", { name: "Stop" });
     await button.click();
 
     expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
@@ -50,7 +50,7 @@ describe("PlayButton", () => {
     await screen.rerender(<PlayButton isPlaying={true} {...handlers} />);
 
     await expect
-      .element(screen.getByRole("button", { name: "Stop playback" }))
+      .element(screen.getByRole("button", { name: "Stop" }))
       .toBeVisible();
   });
 
@@ -102,7 +102,7 @@ describe("PlayButton", () => {
         </MUIThemeProvider>,
       );
 
-      const button = screen.getByRole("button", { name: "Stop playback" });
+      const button = screen.getByRole("button", { name: "Stop" });
       const icon = button.element().querySelector("svg");
 
       expect(icon).not.toBeNull();

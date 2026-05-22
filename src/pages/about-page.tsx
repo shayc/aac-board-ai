@@ -6,11 +6,10 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PageContainer } from "@shared/components/page-container";
+import { m } from "@paraglide/messages.js";
 import { Title } from "@shared/components/title";
-import { useLanguage } from "@shared/language/use-language";
 
 export const Component = function AboutPage() {
-  const { m } = useLanguage();
   useDeclareAppHeaderTitle(m.aboutHeading());
 
   return (

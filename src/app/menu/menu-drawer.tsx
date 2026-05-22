@@ -12,7 +12,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { Link as RouterLink } from "react-router";
 
 export interface MenuDrawerProps {
@@ -21,8 +21,6 @@ export interface MenuDrawerProps {
 }
 
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
-  const { m } = useLanguage();
-
   const menuItems = [
     { icon: HomeOutlinedIcon, label: m.menuHome(), to: "/" },
     { icon: FilterNoneOutlinedIcon, label: m.menuLibrary(), to: "/library" },

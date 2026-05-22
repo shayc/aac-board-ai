@@ -4,7 +4,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
 import Tooltip from "@mui/material/Tooltip";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -35,7 +35,6 @@ export function BackspaceButton({
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
-  const { m } = useLanguage();
   const [progress, setProgress] = useState(0);
 
   const { pressProps } = usePress({ onPress });

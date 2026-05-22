@@ -4,11 +4,10 @@ import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import { useColorScheme } from "@mui/material/styles";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 
 export function AppearanceSettings() {
   const { mode, setMode } = useColorScheme();
-  const { m } = useLanguage();
 
   if (!mode) {
     return null;

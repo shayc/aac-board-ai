@@ -1,4 +1,4 @@
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
 import { importBoardFiles } from "./board-sets-store";
@@ -11,7 +11,6 @@ export interface UseImportBoardFilesReturn {
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
-  const { m } = useLanguage();
 
   async function pickAndImportBoardFiles() {
     const files = await openFiles({

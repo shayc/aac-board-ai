@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { getEnglishLocaleName } from "@shared/utils/locale";
 import type { BoardSetRecord } from "../storage/boards-db";
 
@@ -19,8 +19,6 @@ export function BoardSetInfoDialog({
   boardSet,
   onClose,
 }: BoardSetInfoDialogProps) {
-  const { m } = useLanguage();
-
   function buildChipLabels(boardSet: BoardSetRecord): string[] {
     const labels: string[] = [];
 

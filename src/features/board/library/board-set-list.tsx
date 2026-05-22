@@ -10,7 +10,7 @@ import ListItemText from "@mui/material/ListItemText";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { useState } from "react";
 import type { BoardSetRecord } from "../storage/boards-db";
 
@@ -27,8 +27,6 @@ export function BoardSetList({
   onDelete,
   onInfo,
 }: BoardSetListProps) {
-  const { m } = useLanguage();
-
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
     boardSet: BoardSetRecord;

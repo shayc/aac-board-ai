@@ -7,11 +7,12 @@ import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { isSupported, useGlobalDownloadProgress } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 
 export function LanguageSettings() {
-  const { m, languages, language, setLanguage } = useLanguage();
+  const { languages, language, setLanguage } = useLanguage();
   const progress = useGlobalDownloadProgress("Translator");
   const isDownloading = progress > 0;
 

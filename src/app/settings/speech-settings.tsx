@@ -7,6 +7,7 @@ import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import {
   setPitch,
@@ -28,7 +29,7 @@ export function SpeechSettings() {
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
 
-  const { m, language } = useLanguage();
+  const { language } = useLanguage();
 
   const voicesByLocale = Object.groupBy(
     voicesByLanguage[language] ?? [],

@@ -4,7 +4,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import type { BoardSetRecord } from "../storage/boards-db";
 
 export interface BoardSetDeleteDialogProps {
@@ -18,8 +18,6 @@ export function BoardSetDeleteDialog({
   onConfirm,
   onClose,
 }: BoardSetDeleteDialogProps) {
-  const { m } = useLanguage();
-
   return (
     <Dialog
       open={boardSet !== null}

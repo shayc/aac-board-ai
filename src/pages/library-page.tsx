@@ -17,8 +17,8 @@ import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
 import { PageContainer } from "@shared/components/page-container";
+import { m } from "@paraglide/messages.js";
 import { Title } from "@shared/components/title";
-import { useLanguage } from "@shared/language/use-language";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -27,7 +27,6 @@ export const Component = function LibraryPage() {
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
-  const { m } = useLanguage();
   const navigate = useNavigate();
 
   useDeclareAppHeaderTitle(m.menuLibrary());

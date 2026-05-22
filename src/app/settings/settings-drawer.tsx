@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import { AISettings } from "./ai-settings";
 import { AppearanceSettings } from "./appearance-settings";
 import { LanguageSettings } from "./language-settings";
@@ -19,8 +19,6 @@ export interface SettingsDrawerProps {
 }
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
-  const { m } = useLanguage();
-
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Toolbar>

@@ -8,8 +8,8 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
-import { useLanguage } from "@shared/language/use-language";
 
 const AI_FEATURES = [
   "Proofreader",
@@ -18,7 +18,6 @@ const AI_FEATURES = [
 ] as const satisfies readonly BuiltInAIName[];
 
 export function AISettings() {
-  const { m } = useLanguage();
   const [sharedContext, setSharedContext] = useCustomInstructions();
 
   return (

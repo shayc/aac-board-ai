@@ -4,7 +4,7 @@ import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
-import { useLanguage } from "@shared/language/use-language";
+import { m } from "@paraglide/messages.js";
 import type { SuggestionTone } from "./types";
 
 export interface ToneSelectorProps {
@@ -13,8 +13,6 @@ export interface ToneSelectorProps {
 }
 
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
-  const { m } = useLanguage();
-
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
     tone: SuggestionTone | null,
