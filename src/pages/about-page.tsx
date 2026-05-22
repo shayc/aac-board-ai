@@ -39,32 +39,30 @@ export const Component = function AboutPage() {
               "& em": { fontStyle: "italic" },
             }}
           >
-            {m.aboutWinnerOf()}{" "}
             <Link
               href="https://developer.chrome.com/blog/ai-challenge-winners-2025/"
               target="_blank"
               rel="noopener noreferrer"
               underline="hover"
             >
-              Google Chrome Built-in AI Challenge 2025
-            </Link>
-            . {m.aboutBuiltOn()}{" "}
+              {m.aboutWinnerOfChallenge()}
+            </Link>{" "}
             <Link
               href="https://www.openboardformat.org/"
               target="_blank"
               rel="noopener noreferrer"
               underline="hover"
             >
-              Open Board Format
+              {m.aboutBuiltOnObf()}
             </Link>{" "}
-            {m.aboutFeaturing()} <em>Quick Core 24</em> {m.aboutVocabularyBy()}{" "}
+            {m.aboutFeaturingQuickCore()}
             <Link
               href="https://www.openaac.org"
               target="_blank"
               rel="noopener noreferrer"
               underline="hover"
             >
-              OpenAAC
+              {m.aboutOpenAacLinkText()}
             </Link>
             .
           </Typography>

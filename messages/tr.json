@@ -58,10 +58,10 @@
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
 
-  "aiCustomInstructions": "Custom Instructions",
+  "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
-  "aiCustomInstructionsHelper": "Personalize AI suggestions",
-  "aiBuiltInSupport": "Built-in AI Support",
+  "aiCustomInstructionsHelper": "Personalize AI suggestions.",
+  "aiBuiltInSupport": "Built-in AI support",
   "aiFeatureProofreading": "Proofreading",
   "aiFeatureRewriting": "Rewriting",
   "aiFeatureTranslation": "Translation",
@@ -70,7 +70,7 @@
   "navHome": "Go home",
 
   "messageBackspace": "Backspace",
-  "messageBackspaceLongPressHint": "Long press to clear message",
+  "messageBackspaceLongPressHint": "Long press to clear message.",
   "messagePlay": "Play message",
   "messageStop": "Stop",
 
@@ -82,10 +82,10 @@
   "aboutHeading": "About",
   "aboutAppDescription": "{appName} helps people who can't rely on speech communicate more easily and naturally. It uses on-device AI to correct grammar, adjust tone, and translate messages, keeping interactions private and fast.",
   "aboutAcknowledgmentsHeading": "Acknowledgments",
-  "aboutWinnerOf": "Winner of the",
-  "aboutBuiltOn": "Built on the",
-  "aboutFeaturing": "and featuring the",
-  "aboutVocabularyBy": "vocabulary set by",
+  "aboutWinnerOfChallenge": "Winner of the Google Chrome Built-in AI Challenge 2025.",
+  "aboutBuiltOnObf": "Built on the Open Board Format.",
+  "aboutFeaturingQuickCore": "It features the Quick Core 24 vocabulary set by ",
+  "aboutOpenAacLinkText": "OpenAAC",
   "aboutOpenSourceHeading": "Open source",
   "aboutViewSource": "View source code on GitHub",
 

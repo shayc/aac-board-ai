@@ -60,7 +60,7 @@
 
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
-  "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI",
+  "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI.",
   "aiBuiltInSupport": "תמיכת AI מובנית",
   "aiFeatureProofreading": "הגהה",
   "aiFeatureRewriting": "שכתוב",
@@ -70,7 +70,7 @@
   "navHome": "לעמוד הבית",
 
   "messageBackspace": "מחק",
-  "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה",
+  "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה.",
   "messagePlay": "השמעת הודעה",
   "messageStop": "עצירה",
 
@@ -82,10 +82,10 @@
   "aboutHeading": "אודות",
   "aboutAppDescription": "{appName} מסייע לאנשים שאינם יכולים להסתמך על דיבור לתקשר בקלות ובאופן טבעי. האפליקציה משתמשת בבינה מלאכותית מקומית במכשיר כדי לתקן דקדוק, להתאים את סגנון ההודעה ולתרגם הודעות – תוך שמירה על פרטיות מלאה ומהירות תגובה.",
   "aboutAcknowledgmentsHeading": "תודות",
-  "aboutWinnerOf": "הזוכה ב-",
-  "aboutBuiltOn": "מבוסס על",
-  "aboutFeaturing": "ומשלב את אוצר המילים",
-  "aboutVocabularyBy": "מאת",
+  "aboutWinnerOfChallenge": "הזוכה באתגר Google Chrome Built-in AI Challenge 2025.",
+  "aboutBuiltOnObf": "מבוסס על Open Board Format.",
+  "aboutFeaturingQuickCore": "הוא משלב את אוצר המילים Quick Core 24 מאת ",
+  "aboutOpenAacLinkText": "OpenAAC",
   "aboutOpenSourceHeading": "קוד פתוח",
   "aboutViewSource": "צפייה בקוד המקור ב-GitHub",
 
