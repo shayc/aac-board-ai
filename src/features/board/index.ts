@@ -4,12 +4,9 @@ export { BoardSetInfoDialog } from "./library/board-set-info-dialog";
 export { BoardSetList } from "./library/board-set-list";
 export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export { boardPath, boardSetPath } from "./paths";
-export {
-  getBoardSets,
-  importBoardFromUrl,
-  removeBoardSet,
-} from "./storage/board-sets-store";
+export { getBoardSets, removeBoardSet } from "./storage/board-sets-store";
 export type { BoardSetRecord } from "./storage/boards-db";
+export { importBoardFromUrl } from "./storage/import-from-url";
 export { BoardNotFoundError, getBoardSet, loadBoard } from "./storage/queries";
 export { useBoardSets } from "./storage/use-board-sets";
 export { useImportBoardFiles } from "./storage/use-import-board-files";
