@@ -3,6 +3,7 @@ import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 import { useEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
+import { syncUILocale } from "./paraglide-bridge";
 
 export interface LanguageProviderProps {
   children: ReactNode;
@@ -13,7 +14,15 @@ const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const voicesByLanguage = useVoicesByLanguage();
 
-  const [language, setLanguage] = usePersistentState<string>("language", "en");
+  const [language, setLanguageState] = usePersistentState<string>(
+    "language",
+    "en",
+  );
+
+  function setLanguage(next: string): void {
+    syncUILocale(next);
+    setLanguageState(next);
+  }
 
   const languages = Object.keys(voicesByLanguage)
     .filter((language) => !UNSUPPORTED_LANGUAGES.includes(language))
