@@ -50,8 +50,13 @@ const speechConfigStore = createExternalStore<SpeechConfig>({
   volume: SPEECH_VOLUME_DEFAULT,
 });
 
+let voiceLanguage: string | null = null;
+
 synthesis?.addEventListener("voiceschanged", () => {
   voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+  if (voiceLanguage && !speechConfigStore.getSnapshot().voiceURI) {
+    selectDefaultVoiceFor(voiceLanguage);
+  }
 });
 
 function updateConfig(patch: Partial<SpeechConfig>): void {
@@ -60,6 +65,19 @@ function updateConfig(patch: Partial<SpeechConfig>): void {
 
 export function setVoiceURI(voiceURI: string | null): void {
   updateConfig({ voiceURI });
+}
+
+export function setVoiceLanguage(language: string): void {
+  voiceLanguage = language;
+  selectDefaultVoiceFor(language);
+}
+
+function selectDefaultVoiceFor(language: string): void {
+  const voices = voiceCatalogStore.getSnapshot().voicesByLanguage[language];
+  const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
+  if (defaultVoice) {
+    setVoiceURI(defaultVoice.voiceURI);
+  }
 }
 
 export function setRate(rate: number): void {

@@ -1,58 +1,38 @@
-import { m } from "@paraglide/messages.js";
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
-import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
-import { useEffect, type ReactNode } from "react";
+import { setVoiceLanguage } from "@shared/speech/speech-store";
+import { getTextDirection } from "@shared/utils/locale";
+import { useEffect, useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
+import { useSupportedLanguages } from "./use-supported-languages";
 
 export interface LanguageProviderProps {
   children: ReactNode;
 }
 
-const UNSUPPORTED_LANGUAGES: readonly string[] = ["ca", "ms", "nb", "yue"];
-
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const voicesByLanguage = useVoicesByLanguage();
-
   const [language, setLanguage] = usePersistentState<string>("language", "en");
+  const languages = useSupportedLanguages();
+  const direction = getTextDirection(language);
 
-  // Sync Paraglide *during render* (not in an effect) so children and loaders
-  // resolve the right locale on first paint. Unsupported languages degrade to
-  // baseLocale, keeping the UI in English while voice/board content follows
-  // the user's pick.
+  // Sync Paraglide locale during render so children see translated strings on first paint.
   void setLocale(isLocale(language) ? language : baseLocale, { reload: false });
 
-  const languages = Object.keys(voicesByLanguage)
-    .filter((language) => !UNSUPPORTED_LANGUAGES.includes(language))
-    .sort((a, b) => a.localeCompare(b))
-    .map((language) => ({
-      language,
-      name: getNativeLanguageName(language),
-    }));
+  useLayoutEffect(() => {
+    document.documentElement.dir = direction;
+    document.documentElement.lang = language;
+  }, [direction, language]);
 
-  const direction = getTextDirection(language);
+  useEffect(() => {
+    setVoiceLanguage(language);
+  }, [language]);
 
   const contextValue: LanguageContextValue = {
     languages,
     language,
     setLanguage,
     direction,
-    m,
   };
-
-  useEffect(() => {
-    const voices = voicesByLanguage[language];
-    const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
-    if (defaultVoice) {
-      setVoiceURI(defaultVoice.voiceURI);
-    }
-  }, [language, voicesByLanguage]);
-
-  useEffect(() => {
-    document.documentElement.dir = direction;
-    document.documentElement.lang = language;
-  }, [direction, language]);
 
   return <LanguageContext value={contextValue}>{children}</LanguageContext>;
 }
