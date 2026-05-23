@@ -63,7 +63,7 @@ export function useBoardTranslation({
     void run();
 
     return () => controller.abort();
-  }, [language, board, setId]);
+  }, [setId, board, language]);
 
   return { translatedBoard };
 }
