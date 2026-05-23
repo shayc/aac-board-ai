@@ -1,7 +1,7 @@
-import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
+import { createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 import { getLanguageCode } from "@shared/utils/locale";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
 import type { Board } from "./types";
 
@@ -11,12 +11,6 @@ export interface UseBoardTranslationOptions {
 }
 
 export interface UseBoardTranslationReturn {
-  /**
-   * Best-known translation of the current board for the active language.
-   * May lag the `board`/`language` inputs by one frame during transitions:
-   * the previous board stays visible while the next translation resolves,
-   * per the AAC UX rule against flashing source language.
-   */
   translatedBoard: Board;
 }
 
@@ -29,32 +23,18 @@ export function useBoardTranslation({
   const [translatedBoard, setTranslatedBoard] = useState<Board>(
     () => resolveSyncTranslation(board, language) ?? board,
   );
-  const hasRunEffect = useRef(false);
 
   useEffect(() => {
-    const isFirstRun = !hasRunEffect.current;
-    hasRunEffect.current = true;
-
     const controller = new AbortController();
     const { signal } = controller;
 
     const run = async () => {
       const sync = resolveSyncTranslation(board, language);
       if (sync) {
-        // First run already has the sync result as initial state; skip the
-        // redundant setState that would otherwise force a second mount render.
-        if (!isFirstRun) {
-          setTranslatedBoard(sync);
-        }
+        setTranslatedBoard(sync);
         return;
       }
 
-      // No cached translation. Leave current state visible while we
-      // translate — per AAC UX rule, transitions keep the old board
-      // rather than flashing source.
-
-      // Imperative createTranslator (vs. useTranslator) because we only
-      // know the language pair after the sync-translation check above.
       try {
         await using translator = await createTranslator({
           sourceLanguage: getBoardLanguage(board),
@@ -81,10 +61,7 @@ export function useBoardTranslation({
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
-        if (error instanceof BuiltInAIError) {
-          setTranslatedBoard(board);
-          return;
-        }
+        setTranslatedBoard(board);
       }
     };
 
