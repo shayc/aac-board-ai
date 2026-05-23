@@ -46,6 +46,7 @@
 - MUI: Import subpaths (e.g., `@mui/material/Button`) over package root to minimize bundle size.
 - React Compiler: Enabled by default; avoid `useMemo`/`useCallback` micro-optimizations.
 - Syntax: Use braces for `if` statements, even when the body is a single statement.
+- Logic: Prefer early returns over nested or chained ternary operators; extract complex JSX conditions into sub-components.
 - Comments: Prioritize self-documenting code; use inline comments only to explain "why", not "what".
 - Naming: Use meaningful variable names; avoid ambiguous abbreviations.
 
