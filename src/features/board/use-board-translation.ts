@@ -1,17 +1,23 @@
 import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 import { getLanguageCode } from "@shared/utils/locale";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
 import type { Board } from "./types";
 
 export interface UseBoardTranslationOptions {
   setId: string;
-  board: Board | null;
+  board: Board;
 }
 
 export interface UseBoardTranslationReturn {
-  translatedBoard: Board | null;
+  /**
+   * Best-known translation of the current board for the active language.
+   * May lag the `board`/`language` inputs by one frame during transitions:
+   * the previous board stays visible while the next translation resolves,
+   * per the AAC UX rule against flashing source language.
+   */
+  translatedBoard: Board;
 }
 
 export function useBoardTranslation({
@@ -20,39 +26,38 @@ export function useBoardTranslation({
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { language } = useLanguage();
 
-  const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
+  const [translatedBoard, setTranslatedBoard] = useState<Board>(
+    () => resolveSyncTranslation(board, language) ?? board,
+  );
+  const hasRunEffect = useRef(false);
 
   useEffect(() => {
-    if (!board) {
-      return;
-    }
+    const isFirstRun = !hasRunEffect.current;
+    hasRunEffect.current = true;
 
     const controller = new AbortController();
     const { signal } = controller;
 
     const run = async () => {
-      const boardLanguage = board.locale ? getLanguageCode(board.locale) : "en";
-
-      if (boardLanguage === language) {
-        setTranslatedBoard(board);
+      const sync = resolveSyncTranslation(board, language);
+      if (sync) {
+        // First run already has the sync result as initial state; skip the
+        // redundant setState that would otherwise force a second mount render.
+        if (!isFirstRun) {
+          setTranslatedBoard(sync);
+        }
         return;
       }
 
-      const existingTranslations = findTranslationsForLanguage(
-        board.strings,
-        language,
-      );
+      // No cached translation. Leave current state visible while we
+      // translate — per AAC UX rule, transitions keep the old board
+      // rather than flashing source.
 
-      if (existingTranslations) {
-        setTranslatedBoard(applyTranslations(board, existingTranslations));
-        return;
-      }
-
-      // Imperative createTranslator (vs. useTranslator) because we only know
-      // the language pair after checking for a cached translation above.
+      // Imperative createTranslator (vs. useTranslator) because we only
+      // know the language pair after the sync-translation check above.
       try {
         await using translator = await createTranslator({
-          sourceLanguage: boardLanguage,
+          sourceLanguage: getBoardLanguage(board),
           targetLanguage: language,
           signal,
         });
@@ -76,9 +81,6 @@ export function useBoardTranslation({
         if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
-        // Lifecycle gating (unsupported / unavailable / no-activation): the
-        // effect runs outside a user gesture, so a required download cannot
-        // start. Fall back to the untranslated board.
         if (error instanceof BuiltInAIError) {
           setTranslatedBoard(board);
           return;
@@ -96,6 +98,10 @@ export function useBoardTranslation({
   return {
     translatedBoard,
   };
+}
+
+function getBoardLanguage(board: Board): string {
+  return board.locale ? getLanguageCode(board.locale) : "en";
 }
 
 function findTranslationsForLanguage(
@@ -117,6 +123,32 @@ function findTranslationsForLanguage(
   }
 
   return undefined;
+}
+
+function applyTranslations(
+  board: Board,
+  translations: Record<string, string>,
+): Board {
+  const translate = (phrase: string | undefined) =>
+    phrase ? (translations[phrase] ?? phrase) : phrase;
+
+  return {
+    ...board,
+    name: translate(board.name),
+    buttons: board.buttons.map((button) => ({
+      ...button,
+      label: translate(button.label),
+      vocalization: translate(button.vocalization),
+    })),
+  };
+}
+
+function resolveSyncTranslation(board: Board, language: string): Board | null {
+  if (getBoardLanguage(board) === language) {
+    return board;
+  }
+  const cached = findTranslationsForLanguage(board.strings, language);
+  return cached ? applyTranslations(board, cached) : null;
 }
 
 function collectSourcePhrases(board: Board): Set<string> {
@@ -151,24 +183,6 @@ async function translatePhrases(
   );
 
   return Object.fromEntries(entries);
-}
-
-function applyTranslations(
-  board: Board,
-  translations: Record<string, string>,
-): Board {
-  const translate = (phrase: string | undefined) =>
-    phrase ? (translations[phrase] ?? phrase) : phrase;
-
-  return {
-    ...board,
-    name: translate(board.name),
-    buttons: board.buttons.map((button) => ({
-      ...button,
-      label: translate(button.label),
-      vocalization: translate(button.vocalization),
-    })),
-  };
 }
 
 async function persistTranslations(

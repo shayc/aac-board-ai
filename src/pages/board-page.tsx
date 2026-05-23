@@ -11,12 +11,11 @@ export const Component = function BoardPage() {
   const board = useLoaderData<Board>();
   const { setId } = useParams<BoardRouteParams>();
   const { translatedBoard } = useBoardTranslation({ setId: setId!, board });
-  const displayBoard = translatedBoard ?? board;
 
   return (
     <>
-      <PageTitle>{displayBoard.name}</PageTitle>
-      <BoardViewer board={displayBoard} />
+      <PageTitle>{translatedBoard.name}</PageTitle>
+      <BoardViewer board={translatedBoard} />
     </>
   );
 };
