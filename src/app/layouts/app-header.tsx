@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { useCurrentPageTitle } from "./page-title-store";
+import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -14,7 +14,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const headerTitle = useCurrentPageTitle();
+  const headerTitle = usePageTitle();
 
   return (
     <AppBar position="static">

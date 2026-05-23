@@ -3,7 +3,7 @@ import { useEffect, useSyncExternalStore } from "react";
 
 const store = createExternalStore("");
 
-export function useCurrentPageTitle(): string {
+export function usePageTitle(): string {
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
 
