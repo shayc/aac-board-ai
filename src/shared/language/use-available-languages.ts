@@ -2,7 +2,7 @@ import { isSupportedLanguage } from "@shared/built-in-ai/translator/is-supported
 import { useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName } from "@shared/utils/locale";
 
-export function useSupportedLanguages() {
+export function useAvailableLanguages() {
   const voicesByLanguage = useVoicesByLanguage();
 
   return Object.keys(voicesByLanguage)
