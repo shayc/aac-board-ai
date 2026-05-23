@@ -55,8 +55,8 @@ async function seedTestBoard(): Promise<void> {
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   try {
     await promise;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
   throw new Error("Expected loadBoard to throw, but it resolved");
 }

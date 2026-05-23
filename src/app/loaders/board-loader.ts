@@ -11,10 +11,10 @@ export async function boardLoader({
 
   try {
     return await loadBoard(setId, boardId, request.signal);
-  } catch (err) {
-    if (err instanceof BoardNotFoundError) {
+  } catch (error) {
+    if (error instanceof BoardNotFoundError) {
       throw data(m.boardNotFound(), { status: 404 });
     }
-    throw err;
+    throw error;
   }
 }

@@ -56,9 +56,9 @@ export async function loadBoard(
     previous?.revokeAll();
 
     return board;
-  } catch (err) {
+  } catch (error) {
     registry.revokeAll();
-    throw err;
+    throw error;
   }
 }
 
