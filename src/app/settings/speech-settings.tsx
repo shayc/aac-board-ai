@@ -98,9 +98,7 @@ export function SpeechSettings() {
 
       {speechControls.map(({ id, label, value, min, max, onChange }) => (
         <Stack key={id} spacing={0.5}>
-          <Typography variant="body2" color="text.secondary">
-            {label}
-          </Typography>
+          <Typography variant="body2">{label}</Typography>
           <Slider
             aria-label={label}
             valueLabelDisplay="auto"

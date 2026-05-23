@@ -24,16 +24,7 @@ export const Component = function AboutPage() {
         <Typography
           component="p"
           variant="body2"
-          color="text.secondary"
-          sx={{
-            "& a": {
-              color: "primary.main",
-              textDecorationColor: "currentColor",
-              textUnderlineOffset: 4,
-              textDecorationThickness: "from-font",
-            },
-            "& em": { fontStyle: "italic" },
-          }}
+          sx={{ color: "text.secondary" }}
         >
           {m.aboutWinnerOfChallengePrefix()}
           <Link
