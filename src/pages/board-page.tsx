@@ -1,10 +1,10 @@
+import { PageTitle } from "@app/layouts/page-title";
 import {
   BoardViewer,
+  useBoardTranslation,
   type Board,
   type BoardRouteParams,
 } from "@features/board";
-import { useBoardTranslation } from "@features/board/use-board-translation";
-import { PageTitle } from "@app/layouts/page-title";
 import { useLoaderData, useParams } from "react-router";
 
 export const Component = function BoardPage() {

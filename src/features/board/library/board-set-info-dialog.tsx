@@ -55,7 +55,7 @@ export function BoardSetInfoDialog({
       <DialogTitle id="info-dialog-title">
         {boardSet?.name}
         {boardSet?.author && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {m.libraryByAuthor({ author: boardSet.author })}
           </Typography>
         )}
@@ -76,11 +76,7 @@ export function BoardSetInfoDialog({
         )}
 
         {boardSet?.description && (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={{ mt: 2, whiteSpace: "pre-line" }}
-          >
+          <Typography variant="body2" sx={{ mt: 2, whiteSpace: "pre-line" }}>
             {boardSet.description}
           </Typography>
         )}
