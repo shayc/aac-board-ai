@@ -1,7 +1,10 @@
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
 import { isSupportedLanguage } from "@shared/built-in-ai/translator/is-supported-language";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
+import {
+  selectDefaultVoiceFor,
+  useVoicesByLanguage,
+} from "@shared/speech/speech-store";
 import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
 import { useEffect, useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
@@ -32,12 +35,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   }, [direction, language]);
 
   useEffect(() => {
-    const voices = voicesByLanguage[language];
-    const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
-
-    if (defaultVoice) {
-      setVoiceURI(defaultVoice.voiceURI);
-    }
+    selectDefaultVoiceFor(language);
   }, [language, voicesByLanguage]);
 
   const contextValue: LanguageContextValue = {

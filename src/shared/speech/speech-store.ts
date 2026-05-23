@@ -62,6 +62,14 @@ export function setVoiceURI(voiceURI: string | null): void {
   updateConfig({ voiceURI });
 }
 
+export function selectDefaultVoiceFor(language: string): void {
+  const voices = voiceCatalogStore.getSnapshot().voicesByLanguage[language];
+  const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
+  if (defaultVoice) {
+    setVoiceURI(defaultVoice.voiceURI);
+  }
+}
+
 export function setRate(rate: number): void {
   updateConfig({ rate });
 }
