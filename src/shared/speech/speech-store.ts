@@ -1,20 +1,12 @@
-import { getLanguageCode } from "@shared/utils/locale";
 import { createExternalStore } from "@shared/utils/external-store";
+import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
 
-export const SPEECH_RATE_MIN = 0.1;
-export const SPEECH_RATE_MAX = 2;
-const SPEECH_RATE_DEFAULT = 1;
-
-export const SPEECH_PITCH_MIN = 0.1;
-export const SPEECH_PITCH_MAX = 2;
-const SPEECH_PITCH_DEFAULT = 1;
-
-export const SPEECH_VOLUME_MIN = 0;
-export const SPEECH_VOLUME_MAX = 1;
-const SPEECH_VOLUME_DEFAULT = 1;
-
-const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
+export interface SpeechRange {
+  min: number;
+  max: number;
+  fallback: number;
+}
 
 type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
@@ -30,6 +22,43 @@ export interface SpeechConfig {
   volume: number;
 }
 
+export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
+
+const STORAGE_KEY = "speech-config";
+
+const DEFAULT_CONFIG: SpeechConfig = {
+  voiceURI: null,
+  rate: SPEECH_RATE.fallback,
+  pitch: SPEECH_PITCH.fallback,
+  volume: SPEECH_VOLUME.fallback,
+};
+
+function clamp(value: unknown, { min, max, fallback }: SpeechRange): number {
+  return typeof value === "number" && Number.isFinite(value)
+    ? Math.min(Math.max(value, min), max)
+    : fallback;
+}
+
+function loadPersistedConfig(): SpeechConfig {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      return DEFAULT_CONFIG;
+    }
+    const parsed = JSON.parse(raw) as Partial<SpeechConfig>;
+    return {
+      voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
+      rate: clamp(parsed.rate, SPEECH_RATE),
+      pitch: clamp(parsed.pitch, SPEECH_PITCH),
+      volume: clamp(parsed.volume, SPEECH_VOLUME),
+    };
+  } catch {
+    return DEFAULT_CONFIG;
+  }
+}
+
 function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   return {
     voices,
@@ -39,23 +68,26 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
+const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
+
+let voiceLanguage: string | null = null;
+
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis?.getVoices() ?? []),
 );
 
-const speechConfigStore = createExternalStore<SpeechConfig>({
-  voiceURI: null,
-  rate: SPEECH_RATE_DEFAULT,
-  pitch: SPEECH_PITCH_DEFAULT,
-  volume: SPEECH_VOLUME_DEFAULT,
-});
+const speechConfigStore = createExternalStore<SpeechConfig>(
+  loadPersistedConfig(),
+);
 
-let voiceLanguage: string | null = null;
-
-synthesis?.addEventListener("voiceschanged", () => {
-  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
-  if (voiceLanguage && !speechConfigStore.getSnapshot().voiceURI) {
-    selectDefaultVoiceFor(voiceLanguage);
+speechConfigStore.subscribe(() => {
+  try {
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(speechConfigStore.getSnapshot()),
+    );
+  } catch {
+    // Storage failures (quota, private mode) shouldn't break the in-memory store.
   }
 });
 
@@ -63,20 +95,42 @@ function updateConfig(patch: Partial<SpeechConfig>): void {
   speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
 }
 
-export function setVoiceURI(voiceURI: string | null): void {
-  updateConfig({ voiceURI });
-}
-
-export function setVoiceLanguage(language: string): void {
-  voiceLanguage = language;
-  selectDefaultVoiceFor(language);
+function currentVoiceIsValidFor(language: string): boolean {
+  const { voices } = voiceCatalogStore.getSnapshot();
+  const { voiceURI } = speechConfigStore.getSnapshot();
+  if (!voiceURI) {
+    return false;
+  }
+  const match = voices.find((voice) => voice.voiceURI === voiceURI);
+  if (!match) {
+    return false;
+  }
+  return getLanguageCode(match.lang) === language;
 }
 
 function selectDefaultVoiceFor(language: string): void {
   const voices = voiceCatalogStore.getSnapshot().voicesByLanguage[language];
   const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
   if (defaultVoice) {
-    setVoiceURI(defaultVoice.voiceURI);
+    updateConfig({ voiceURI: defaultVoice.voiceURI });
+  }
+}
+
+synthesis?.addEventListener("voiceschanged", () => {
+  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+  if (voiceLanguage && !currentVoiceIsValidFor(voiceLanguage)) {
+    selectDefaultVoiceFor(voiceLanguage);
+  }
+});
+
+export function setVoiceURI(voiceURI: string | null): void {
+  updateConfig({ voiceURI });
+}
+
+export function setVoiceLanguage(language: string): void {
+  voiceLanguage = language;
+  if (!currentVoiceIsValidFor(language)) {
+    selectDefaultVoiceFor(language);
   }
 }
 
@@ -109,7 +163,13 @@ export function speak(text: string): Promise<void> {
   utterance.volume = volume;
 
   utterance.onend = () => resolve();
-  utterance.onerror = (event) => reject(new Error(event.error));
+  utterance.onerror = (event) => {
+    if (event.error === "interrupted") {
+      resolve();
+    } else {
+      reject(new Error(event.error));
+    }
+  };
 
   synthesis.cancel();
   synthesis.speak(utterance);

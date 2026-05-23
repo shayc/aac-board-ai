@@ -1,4 +1,3 @@
-import { useDeclareAppHeaderTitle } from "@app/layouts/app-header-title";
 import {
   boardPath,
   boardSetPath,
@@ -16,9 +15,9 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
-import { PageContainer } from "@shared/components/page-container";
+import { PageContainer } from "@app/layouts/page-container";
+import { PageTitle } from "@app/layouts/page-title";
 import { m } from "@paraglide/messages.js";
-import { Title } from "@shared/components/title";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { useNavigate } from "react-router";
@@ -28,8 +27,6 @@ export const Component = function LibraryPage() {
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
-
-  useDeclareAppHeaderTitle(m.menuLibrary());
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
@@ -73,6 +70,7 @@ export const Component = function LibraryPage() {
   if (isLoading) {
     return (
       <PageContainer>
+        <PageTitle>{m.menuLibrary()}</PageTitle>
         <LoadingState message={m.libraryLoading()} />
       </PageContainer>
     );
@@ -81,6 +79,7 @@ export const Component = function LibraryPage() {
   if (boardSets.length === 0) {
     return (
       <PageContainer>
+        <PageTitle>{m.menuLibrary()}</PageTitle>
         <EmptyState
           icon={<FilterNoneOutlinedIcon />}
           title={m.libraryEmptyTitle()}
@@ -100,40 +99,39 @@ export const Component = function LibraryPage() {
   }
 
   return (
-    <>
-      <Title>{m.menuLibrary()}</Title>
-      <PageContainer>
-        <Stack
-          direction="row"
-          sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
+    <PageContainer>
+      <PageTitle>{m.menuLibrary()}</PageTitle>
+
+      <Stack
+        direction="row"
+        sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
+      >
+        <Button
+          variant="text"
+          startIcon={<AddIcon />}
+          onClick={() => void pickAndImportBoardFiles()}
         >
-          <Button
-            variant="text"
-            startIcon={<AddIcon />}
-            onClick={() => void pickAndImportBoardFiles()}
-          >
-            {m.libraryImportBoards()}
-          </Button>
-        </Stack>
+          {m.libraryImportBoards()}
+        </Button>
+      </Stack>
 
-        <BoardSetList
-          boardSets={boardSets}
-          onSelect={handleSelect}
-          onDelete={setDeleteTarget}
-          onInfo={setInfoTarget}
-        />
+      <BoardSetList
+        boardSets={boardSets}
+        onSelect={handleSelect}
+        onDelete={setDeleteTarget}
+        onInfo={setInfoTarget}
+      />
 
-        <BoardSetInfoDialog
-          boardSet={infoTarget}
-          onClose={() => setInfoTarget(null)}
-        />
+      <BoardSetInfoDialog
+        boardSet={infoTarget}
+        onClose={() => setInfoTarget(null)}
+      />
 
-        <BoardSetDeleteDialog
-          boardSet={deleteTarget}
-          onConfirm={() => void handleDelete()}
-          onClose={() => setDeleteTarget(null)}
-        />
-      </PageContainer>
-    </>
+      <BoardSetDeleteDialog
+        boardSet={deleteTarget}
+        onConfirm={() => void handleDelete()}
+        onClose={() => setDeleteTarget(null)}
+      />
+    </PageContainer>
   );
 };

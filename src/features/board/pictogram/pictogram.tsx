@@ -24,20 +24,20 @@ export function Pictogram({ src, label }: PictogramProps) {
             src={src}
             alt=""
             sx={{
-              pointerEvents: "none",
               width: "100%",
               height: "100%",
               objectFit: "contain",
               position: "absolute",
               top: 0,
               insetInlineStart: 0,
+              pointerEvents: "none",
             }}
           />
         </Box>
       )}
 
       {label && (
-        <Typography noWrap variant={src ? "body2" : "h5"} component="span">
+        <Typography component="span" variant={src ? "body2" : "h5"} noWrap>
           {label}
         </Typography>
       )}

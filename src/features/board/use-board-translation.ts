@@ -1,4 +1,4 @@
-import { BuiltInAIError, createTranslator } from "@shared/built-in-ai";
+import { createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useEffect, useState } from "react";
@@ -7,11 +7,11 @@ import type { Board } from "./types";
 
 export interface UseBoardTranslationOptions {
   setId: string;
-  board: Board | null;
+  board: Board;
 }
 
 export interface UseBoardTranslationReturn {
-  translatedBoard: Board | null;
+  translatedBoard: Board;
 }
 
 export function useBoardTranslation({
@@ -20,45 +20,27 @@ export function useBoardTranslation({
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { language } = useLanguage();
 
-  const [translatedBoard, setTranslatedBoard] = useState<Board | null>(null);
+  const [translatedBoard, setTranslatedBoard] = useState<Board>(
+    () => resolveSyncTranslation(board, language) ?? board,
+  );
 
   useEffect(() => {
-    if (!board) {
-      return;
-    }
-
     const controller = new AbortController();
     const { signal } = controller;
 
     const run = async () => {
-      const boardLanguage = board.locale ? getLanguageCode(board.locale) : "en";
-
-      if (boardLanguage === language) {
-        setTranslatedBoard(board);
+      const cached = resolveSyncTranslation(board, language);
+      if (cached) {
+        setTranslatedBoard(cached);
         return;
       }
 
-      const existingTranslations = findTranslationsForLanguage(
-        board.strings,
-        language,
-      );
-
-      if (existingTranslations) {
-        setTranslatedBoard(applyTranslations(board, existingTranslations));
-        return;
-      }
-
-      // Imperative createTranslator (vs. useTranslator) because we only know
-      // the language pair after checking for a cached translation above.
       try {
         await using translator = await createTranslator({
-          sourceLanguage: boardLanguage,
+          sourceLanguage: getBoardLanguage(board),
           targetLanguage: language,
           signal,
         });
-        if (signal.aborted) {
-          return;
-        }
 
         const phrases = collectSourcePhrases(board);
         const translations = await translatePhrases(
@@ -66,57 +48,68 @@ export function useBoardTranslation({
           translator,
           signal,
         );
+
         if (signal.aborted) {
           return;
         }
 
         void persistTranslations(setId, board.id, language, translations);
         setTranslatedBoard(applyTranslations(board, translations));
-      } catch (error) {
-        if (error instanceof DOMException && error.name === "AbortError") {
-          return;
-        }
-        // Lifecycle gating (unsupported / unavailable / no-activation): the
-        // effect runs outside a user gesture, so a required download cannot
-        // start. Fall back to the untranslated board.
-        if (error instanceof BuiltInAIError) {
-          setTranslatedBoard(board);
-          return;
-        }
+      } catch {
+        // AAC UX: never flash source language on failure.
       }
     };
 
     void run();
 
-    return () => {
-      controller.abort();
-    };
-  }, [language, board, setId]);
+    return () => controller.abort();
+  }, [setId, board, language]);
 
-  return {
-    translatedBoard,
-  };
+  return { translatedBoard };
 }
 
-function findTranslationsForLanguage(
+function resolveSyncTranslation(board: Board, language: string): Board | null {
+  if (getBoardLanguage(board) === language) {
+    return board;
+  }
+  const cached = findTranslations(board.strings, language);
+  return cached ? applyTranslations(board, cached) : null;
+}
+
+function getBoardLanguage(board: Board): string {
+  return board.locale ? getLanguageCode(board.locale) : "en";
+}
+
+function findTranslations(
   strings: Board["strings"],
   language: string,
 ): Record<string, string> | undefined {
   if (!strings) {
-    return undefined;
+    return;
   }
 
-  if (strings[language]) {
-    return strings[language];
-  }
+  const match = Object.entries(strings).find(
+    ([locale]) => getLanguageCode(locale) === language,
+  );
+  return match?.[1];
+}
 
-  for (const [locale, translations] of Object.entries(strings)) {
-    if (getLanguageCode(locale) === language) {
-      return translations;
-    }
-  }
+function applyTranslations(
+  board: Board,
+  translations: Record<string, string>,
+): Board {
+  const lookup = (phrase: string | undefined) =>
+    phrase ? (translations[phrase] ?? phrase) : phrase;
 
-  return undefined;
+  return {
+    ...board,
+    name: lookup(board.name),
+    buttons: board.buttons.map((button) => ({
+      ...button,
+      label: lookup(button.label),
+      vocalization: lookup(button.vocalization),
+    })),
+  };
 }
 
 function collectSourcePhrases(board: Board): Set<string> {
@@ -153,24 +146,6 @@ async function translatePhrases(
   return Object.fromEntries(entries);
 }
 
-function applyTranslations(
-  board: Board,
-  translations: Record<string, string>,
-): Board {
-  const translate = (phrase: string | undefined) =>
-    phrase ? (translations[phrase] ?? phrase) : phrase;
-
-  return {
-    ...board,
-    name: translate(board.name),
-    buttons: board.buttons.map((button) => ({
-      ...button,
-      label: translate(button.label),
-      vocalization: translate(button.vocalization),
-    })),
-  };
-}
-
 async function persistTranslations(
   setId: string,
   boardId: string,
@@ -182,6 +157,6 @@ async function persistTranslations(
       await updateBoardStrings(db, setId, boardId, locale, translations);
     });
   } catch {
-    // Best-effort cache write — failure only costs a re-translation next load.
+    // Failure only costs a re-translation next load.
   }
 }

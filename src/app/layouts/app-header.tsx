@@ -6,7 +6,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { useAppHeaderTitle } from "./app-header-title";
+import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
   onMenuClick: () => void;
@@ -14,7 +14,7 @@ export interface AppHeaderProps {
 }
 
 export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
-  const headerTitle = useAppHeaderTitle();
+  const pageTitle = usePageTitle();
 
   return (
     <AppBar position="static">
@@ -32,8 +32,8 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        <Typography variant="h6" component="h1" noWrap sx={{ flexGrow: 1 }}>
-          {headerTitle}
+        <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
+          {pageTitle}
         </Typography>
 
         <Tooltip title={m.settingsOpen()}>
