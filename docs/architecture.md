@@ -69,7 +69,7 @@ flowchart TD
     R[Route match<br/>/sets/:setId/boards/:boardId] --> L[boardLoader]
     L --> Q[loadBoard]
     Q --> C
-    Q --> O[ObjectUrlRegistry<br/>per-call · module-level swap]
+    Q --> O[ObjectUrlRegistry]
     Q --> M[obfToBoard]
     M --> P[BoardPage<br/>useLoaderData]
   end
@@ -83,11 +83,11 @@ flowchart TD
   end
 ```
 
-**Registry lifecycle.** `loadBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry`; on abort it revokes its own URLs, on success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
+**Registry lifecycle.** `loadBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry` and receives the loader's `request.signal`; if the route is superseded mid-flight (rapid navigation) the registry self-destructs rather than promoting, so the live load's URLs aren't orphaned. On success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
 
 **Anti-flash translation.** `useBoardTranslation` initializes state with a _synchronous_ lookup against `board.strings[language]`, so cached translations land on first paint. On a miss, an effect creates a `Translator`, translates labels and vocalizations in parallel against a shared `AbortController`, persists the result back via `updateBoardStrings`, and applies a derived `Board`. If the Translator is unavailable or rejects, the hook keeps the current board — AAC UX requirement: never flash the source language. The cache write means subsequent loads in any tab hit the cache instead of the model.
 
-**Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots.
+**Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
 **See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
@@ -148,6 +148,8 @@ A board press flows through `useButtonActivation`, which resolves the button int
 | `actions`  | `button.actions` non-empty | Run each `BoardAction` (`:space`, `:speak`, `:home`, `+<text>`, …) in order. |
 | `utter`    | Otherwise                  | Append a `MessagePart`, play the button's audio.                             |
 
+`useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
+
 Adding a new button behavior means extending `BoardAction` in [features/board/types.ts](../src/features/board/types.ts) and handling it in `useButtonActivation.executeAction` — the dispatch surface is closed.
 
 **Message composition.** `useMessage` owns the draft as `MessagePart[]`, persisted to localStorage so a refresh doesn't lose work in progress. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
@@ -159,7 +161,7 @@ Adding a new button behavior means extending `BoardAction` in [features/board/ty
 
 `useMessagePlayback` walks each `MessagePart` in order: if it has a `soundSrc`, play the audio; otherwise speak `getSpokenText(part)` (vocalization, falling back to label). Adjacent text parts are merged into one utterance to avoid clipped speech between words.
 
-**See:** [src/features/board/use-button-activation.ts](../src/features/board/use-button-activation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts).
+**See:** [src/features/board/use-button-activation.ts](../src/features/board/use-button-activation.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts).
 
 ## 7. Built-in AI
 
@@ -173,9 +175,11 @@ The app adapts to the browser's capabilities, not its version. There is no hard-
 
 For instructions to enable Built-in AI in supported browsers, see [Enabling Built-in AI](../README.md#enabling-built-in-ai).
 
+**Model storage is not ours.** Built-in AI models are downloaded and managed by the browser's on-device infrastructure, not by the PWA service worker (§9). A first-time model download requires network; once cached by the browser, the capability is offline too — but installing the PWA does not pre-warm it.
+
 **Capability detection.** `isSupported(name)` returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. Called directly by `AISettings`, `LanguageSettings`, and `useSuggestions` to gate AI affordances at render time. Combine with the hook's `status === "unavailable"` for the full readiness picture.
 
-**Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. The store probes `availability()` on mount; if the model is already local, it auto-provisions silently (no `downloading` flash). If a download is required, `status` stays `idle` until a user activation drives `prepare()` or any action method — actions implicitly call `acquire()`, which waits for `ready` and returns the live instance plus a merged abort signal. Option changes (shallow-equal) tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same `createInstance` path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`src/shared/built-in-ai/README.md`](../src/shared/built-in-ai/README.md).
+**Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`src/shared/built-in-ai/README.md`](../src/shared/built-in-ai/README.md).
 
 **Cross-instance progress.** Each download writes its `event.loaded` to a module-level `progress-store` keyed by `name + options`. `useGlobalDownloadProgress(namespace?)` reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads from every hook and creator. `LanguageSettings` consumes the `"Translator"` slice to render its progress alert.
 
@@ -204,5 +208,7 @@ Powered by `vite-plugin-pwa`:
 - **Installable** on desktop and mobile.
 - **Auto-updating** service worker (`registerType: "autoUpdate"`) — the latest build loads without user action.
 - **Offline-capable** — after the first visit, all app assets are served from the service worker cache. Imported board sets and assets are already in IndexedDB, so the app remains fully functional without a network.
+
+The SW cache covers app shell and assets only; Built-in AI models live in the browser's separate on-device store (§7) and need a one-time network connection to download before they become offline-capable.
 
 Configuration lives in [vite.config.ts](../vite.config.ts) under the `VitePWA()` plugin.
