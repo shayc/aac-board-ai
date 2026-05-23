@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { ErrorState } from "@shared/components/error-state";
 import { LoadingState } from "@shared/components/loading-state";
+import { useLanguage } from "@shared/language/use-language";
 import {
   createBrowserRouter,
   isRouteErrorResponse,
@@ -62,5 +63,8 @@ const router = createBrowserRouter([
 ]);
 
 export function AppRoutes() {
-  return <RouterProvider router={router} />;
+  const { language } = useLanguage();
+
+  // Remount on language change so `m.foo()` calls below re-evaluate.
+  return <RouterProvider key={language} router={router} />;
 }

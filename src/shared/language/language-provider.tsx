@@ -16,10 +16,9 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
-  // Sync Paraglide *during render* (not in an effect) so children and loaders
-  // resolve the right locale on first paint. Unsupported languages degrade to
-  // baseLocale, keeping the UI in English while voice/board content follows
-  // the user's pick.
+  // Sync Paraglide *during render* (not in an effect) so children resolve the
+  // right locale on first paint. Unsupported languages degrade to baseLocale,
+  // keeping the UI in English while voice/board content follows the user's pick.
   void setLocale(isLocale(language) ? language : baseLocale, { reload: false });
 
   const languages = Object.keys(voicesByLanguage)
