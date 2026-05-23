@@ -1,4 +1,3 @@
-import { m } from "@paraglide/messages.js";
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
@@ -38,7 +37,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     language,
     setLanguage,
     direction,
-    m,
   };
 
   useEffect(() => {
