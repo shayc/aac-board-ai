@@ -163,7 +163,13 @@ export function speak(text: string): Promise<void> {
   utterance.volume = volume;
 
   utterance.onend = () => resolve();
-  utterance.onerror = (event) => reject(new Error(event.error));
+  utterance.onerror = (event) => {
+    if (event.error === "interrupted" || event.error === "canceled") {
+      resolve();
+    } else {
+      reject(new Error(event.error));
+    }
+  };
 
   synthesis.cancel();
   synthesis.speak(utterance);
