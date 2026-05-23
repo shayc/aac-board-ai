@@ -7,7 +7,7 @@ export interface PageContainerProps {
 
 export function PageContainer({ children }: PageContainerProps) {
   return (
-    <Container maxWidth="sm" sx={{ py: 6, minHeight: "100%" }}>
+    <Container maxWidth="sm" sx={{ height: "100%" }}>
       {children}
     </Container>
   );
