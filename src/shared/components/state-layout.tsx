@@ -23,12 +23,12 @@ export function StateLayout({
   return (
     <Stack
       sx={{
-        py: 8,
         height: "100%",
+        py: 8,
         alignItems: "center",
         justifyContent: "center",
-        textAlign: "center",
         gap: 2,
+        textAlign: "center",
       }}
     >
       {icon && (
