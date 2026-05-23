@@ -1,4 +1,5 @@
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
+import { isSupportedLanguage } from "@shared/built-in-ai/translator/is-supported-language";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { setVoiceURI, useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName, getTextDirection } from "@shared/utils/locale";
@@ -9,20 +10,13 @@ export interface LanguageProviderProps {
   children: ReactNode;
 }
 
-const TRANSLATOR_UNSUPPORTED_LANGUAGES: readonly string[] = [
-  "ca",
-  "ms",
-  "nb",
-  "yue",
-];
-
 export function LanguageProvider({ children }: LanguageProviderProps) {
   const voicesByLanguage = useVoicesByLanguage();
   const [language, setLanguage] = usePersistentState<string>("language", "en");
 
   const direction = getTextDirection(language);
   const languages = Object.keys(voicesByLanguage)
-    .filter((language) => !TRANSLATOR_UNSUPPORTED_LANGUAGES.includes(language))
+    .filter(isSupportedLanguage)
     .sort((a, b) => a.localeCompare(b))
     .map((language) => ({
       language,
