@@ -164,7 +164,7 @@ export function speak(text: string): Promise<void> {
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {
-    if (event.error === "interrupted" || event.error === "canceled") {
+    if (event.error === "interrupted") {
       resolve();
     } else {
       reject(new Error(event.error));
