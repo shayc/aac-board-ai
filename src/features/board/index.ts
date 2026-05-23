@@ -12,3 +12,4 @@ export { useBoardSets } from "./storage/use-board-sets";
 export { useImportBoardFiles } from "./storage/use-import-board-files";
 export { useCustomInstructions } from "./suggestions/use-custom-instructions";
 export type { Board } from "./types";
+export { useBoardTranslation } from "./use-board-translation";

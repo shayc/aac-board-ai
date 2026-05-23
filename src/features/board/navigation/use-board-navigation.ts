@@ -16,6 +16,8 @@ export interface UseBoardNavigationReturn {
   goHome: () => void;
 }
 
+const MAX_BACK_STACK = 50;
+
 function readBackStack(state: unknown): string[] {
   if (
     state !== null &&
@@ -49,7 +51,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
     }
 
     void navigate(boardPath({ setId, boardId: id }), {
-      state: { backStack: [...backStack, boardId] },
+      state: { backStack: [...backStack, boardId].slice(-MAX_BACK_STACK) },
     });
   }
 
