@@ -4,7 +4,7 @@
 
 ## 1. Overview
 
-A client-side React 19 app that renders [Open Board Format](./third-party/open-board-format.md) (OBF) communication boards from an in-browser IndexedDB store. Imported `.obf` / `.obz` files are parsed and persisted; boards are loaded on demand, optionally translated through the browser's Built-in AI, and rendered as a keyboard-navigable tile grid that drives a message strip with text-to-speech playback. There is no backend — every byte stays on the device.
+A client-side React 19 app for AAC (Augmentative and Alternative Communication): users who cannot rely on speech tap symbol tiles to assemble phrases the device speaks aloud. It renders [Open Board Format](./third-party/open-board-format.md) (OBF) communication boards from an in-browser IndexedDB store — imported `.obf` / `.obz` files are parsed and persisted; boards are loaded on demand, optionally translated through the browser's Built-in AI, and rendered as a keyboard-navigable tile grid that drives a message strip with text-to-speech playback. There is no backend — every byte stays on the device.
 
 Built-in AI is a leaf-level enhancement, not the architecture: when available, it adds proofreading and rewriting suggestions to the message strip, and translation to board labels. Everything else works without it.
 
