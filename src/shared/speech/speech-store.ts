@@ -2,17 +2,15 @@ import { getLanguageCode } from "@shared/utils/locale";
 import { createExternalStore } from "@shared/utils/external-store";
 import { useSyncExternalStore } from "react";
 
-export const SPEECH_RATE_MIN = 0.1;
-export const SPEECH_RATE_MAX = 2;
-const SPEECH_RATE_DEFAULT = 1;
+export interface SpeechRange {
+  min: number;
+  max: number;
+  fallback: number;
+}
 
-export const SPEECH_PITCH_MIN = 0.1;
-export const SPEECH_PITCH_MAX = 2;
-const SPEECH_PITCH_DEFAULT = 1;
-
-export const SPEECH_VOLUME_MIN = 0;
-export const SPEECH_VOLUME_MAX = 1;
-const SPEECH_VOLUME_DEFAULT = 1;
+export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
 
 const STORAGE_KEY = "speech-config";
 
@@ -34,17 +32,12 @@ export interface SpeechConfig {
 
 const DEFAULT_CONFIG: SpeechConfig = {
   voiceURI: null,
-  rate: SPEECH_RATE_DEFAULT,
-  pitch: SPEECH_PITCH_DEFAULT,
-  volume: SPEECH_VOLUME_DEFAULT,
+  rate: SPEECH_RATE.fallback,
+  pitch: SPEECH_PITCH.fallback,
+  volume: SPEECH_VOLUME.fallback,
 };
 
-function clamp(
-  value: unknown,
-  min: number,
-  max: number,
-  fallback: number,
-): number {
+function clamp(value: unknown, { min, max, fallback }: SpeechRange): number {
   return typeof value === "number" && Number.isFinite(value)
     ? Math.min(Math.max(value, min), max)
     : fallback;
@@ -59,24 +52,9 @@ function loadPersistedConfig(): SpeechConfig {
     const parsed = JSON.parse(raw) as Partial<SpeechConfig>;
     return {
       voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
-      rate: clamp(
-        parsed.rate,
-        SPEECH_RATE_MIN,
-        SPEECH_RATE_MAX,
-        SPEECH_RATE_DEFAULT,
-      ),
-      pitch: clamp(
-        parsed.pitch,
-        SPEECH_PITCH_MIN,
-        SPEECH_PITCH_MAX,
-        SPEECH_PITCH_DEFAULT,
-      ),
-      volume: clamp(
-        parsed.volume,
-        SPEECH_VOLUME_MIN,
-        SPEECH_VOLUME_MAX,
-        SPEECH_VOLUME_DEFAULT,
-      ),
+      rate: clamp(parsed.rate, SPEECH_RATE),
+      pitch: clamp(parsed.pitch, SPEECH_PITCH),
+      volume: clamp(parsed.volume, SPEECH_VOLUME),
     };
   } catch {
     return DEFAULT_CONFIG;
