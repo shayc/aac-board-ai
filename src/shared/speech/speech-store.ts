@@ -1,5 +1,5 @@
-import { getLanguageCode } from "@shared/utils/locale";
 import { createExternalStore } from "@shared/utils/external-store";
+import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
 
 export interface SpeechRange {
@@ -7,14 +7,6 @@ export interface SpeechRange {
   max: number;
   fallback: number;
 }
-
-export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
-
-const STORAGE_KEY = "speech-config";
-
-const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
 
 type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
@@ -29,6 +21,12 @@ export interface SpeechConfig {
   pitch: number;
   volume: number;
 }
+
+export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
+
+const STORAGE_KEY = "speech-config";
 
 const DEFAULT_CONFIG: SpeechConfig = {
   voiceURI: null,
@@ -70,6 +68,10 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
+const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
+
+let voiceLanguage: string | null = null;
+
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis?.getVoices() ?? []),
 );
@@ -89,14 +91,9 @@ speechConfigStore.subscribe(() => {
   }
 });
 
-let voiceLanguage: string | null = null;
-
-synthesis?.addEventListener("voiceschanged", () => {
-  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
-  if (voiceLanguage && !currentVoiceIsValidFor(voiceLanguage)) {
-    selectDefaultVoiceFor(voiceLanguage);
-  }
-});
+function updateConfig(patch: Partial<SpeechConfig>): void {
+  speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
+}
 
 function currentVoiceIsValidFor(language: string): boolean {
   const { voices } = voiceCatalogStore.getSnapshot();
@@ -111,9 +108,20 @@ function currentVoiceIsValidFor(language: string): boolean {
   return getLanguageCode(match.lang) === language;
 }
 
-function updateConfig(patch: Partial<SpeechConfig>): void {
-  speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
+function selectDefaultVoiceFor(language: string): void {
+  const voices = voiceCatalogStore.getSnapshot().voicesByLanguage[language];
+  const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
+  if (defaultVoice) {
+    updateConfig({ voiceURI: defaultVoice.voiceURI });
+  }
 }
+
+synthesis?.addEventListener("voiceschanged", () => {
+  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+  if (voiceLanguage && !currentVoiceIsValidFor(voiceLanguage)) {
+    selectDefaultVoiceFor(voiceLanguage);
+  }
+});
 
 export function setVoiceURI(voiceURI: string | null): void {
   updateConfig({ voiceURI });
@@ -123,14 +131,6 @@ export function setVoiceLanguage(language: string): void {
   voiceLanguage = language;
   if (!currentVoiceIsValidFor(language)) {
     selectDefaultVoiceFor(language);
-  }
-}
-
-function selectDefaultVoiceFor(language: string): void {
-  const voices = voiceCatalogStore.getSnapshot().voicesByLanguage[language];
-  const defaultVoice = voices?.find((voice) => voice.default) ?? voices?.[0];
-  if (defaultVoice) {
-    setVoiceURI(defaultVoice.voiceURI);
   }
 }
 
