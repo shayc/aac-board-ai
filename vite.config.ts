@@ -60,7 +60,16 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["@mui/material/*", "@mui/icons-material/*"],
+    include: [
+      "@mui/material/*",
+      "@mui/icons-material/*",
+      "@emotion/cache",
+      "@emotion/react",
+      "@mui/stylis-plugin-rtl",
+      "react-dom/client",
+      "react-router/dom",
+      "stylis",
+    ],
   },
   test: {
     browser: {
