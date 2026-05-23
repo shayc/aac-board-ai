@@ -176,9 +176,9 @@ export function createStore<
     const merged = mergeSignals(abortController.signal, callerSignal);
     try {
       await raceAbort(activeTask, merged);
-    } catch (err) {
+    } catch (error) {
       if (merged.aborted) {
-        throw err;
+        throw error;
       }
       // Underlying rejections settle into snapshot.error; only caller-aborts surface here.
     }

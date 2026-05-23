@@ -3,10 +3,10 @@ import { abortError, mergeSignals, raceAbort } from "./signal.ts";
 
 describe("abortError", () => {
   test("returns a DOMException with name 'AbortError' for a string reason", () => {
-    const err = abortError("nope");
-    expect(err).toBeInstanceOf(DOMException);
-    expect(err.name).toBe("AbortError");
-    expect(err.message).toBe("nope");
+    const error = abortError("nope");
+    expect(error).toBeInstanceOf(DOMException);
+    expect(error.name).toBe("AbortError");
+    expect(error.message).toBe("nope");
   });
 
   test("passes through an existing AbortError unchanged", () => {

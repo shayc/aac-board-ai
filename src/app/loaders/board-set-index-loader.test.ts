@@ -17,8 +17,8 @@ function callLoader(setId: string): Promise<Response> {
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   try {
     await promise;
-  } catch (err) {
-    return err;
+  } catch (error) {
+    return error;
   }
   throw new Error("Expected loader to throw, but it resolved");
 }
