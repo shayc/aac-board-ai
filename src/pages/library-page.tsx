@@ -112,7 +112,7 @@ export const Component = function LibraryPage() {
             startIcon={<AddIcon />}
             onClick={() => void pickAndImportBoardFiles()}
           >
-            {m.libraryImport()}
+            {m.libraryImportBoards()}
           </Button>
         </Stack>
 
