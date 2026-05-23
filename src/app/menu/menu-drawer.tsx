@@ -31,7 +31,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box sx={{ width: 320 }}>
         <Toolbar>
-          <Typography variant="h6" component="div" noWrap>
+          <Typography component="div" variant="h6" noWrap>
             {APP_NAME}
           </Typography>
         </Toolbar>
@@ -42,9 +42,9 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
           {menuItems.map((item) => (
             <ListItem key={item.to} disablePadding>
               <ListItemButton
-                onClick={onClose}
                 component={RouterLink}
                 to={item.to}
+                onClick={onClose}
               >
                 <ListItemIcon>
                   <item.icon />

@@ -13,17 +13,17 @@ export const Component = function AboutPage() {
     <PageContainer>
       <PageTitle>{m.aboutHeading()}</PageTitle>
       <Stack spacing={{ xs: 3, sm: 4 }}>
-        <Typography variant="body1" component="p">
+        <Typography component="p" variant="body1">
           {m.aboutAppDescription({ appName: APP_NAME })}
         </Typography>
 
-        <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
+        <Typography component="h2" variant="h6" sx={{ pt: 2 }}>
           {m.aboutAcknowledgmentsHeading()}
         </Typography>
 
         <Typography
-          variant="body2"
           component="p"
+          variant="body2"
           color="text.secondary"
           sx={{
             "& a": {
