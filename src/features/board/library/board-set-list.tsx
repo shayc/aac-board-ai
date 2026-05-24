@@ -82,8 +82,9 @@ export function BoardSetList({
       <List>
         {boardSets.map((boardSet) => (
           <ListItem
-            key={boardSet.setId}
+            divider
             disablePadding
+            key={boardSet.setId}
             secondaryAction={
               <Tooltip title={m.libraryMoreOptions()}>
                 <IconButton
