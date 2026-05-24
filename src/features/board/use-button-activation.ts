@@ -15,11 +15,6 @@ export interface UseButtonActivationReturn {
   activateButton: (button: BoardButton) => Promise<void>;
 }
 
-export type ButtonIntent =
-  | { kind: "navigate"; boardId: string }
-  | { kind: "actions"; actions: BoardAction[] }
-  | { kind: "utter"; button: BoardButton };
-
 export function useButtonActivation({
   message,
   playback,
@@ -28,97 +23,65 @@ export function useButtonActivation({
   const audio = useAudio();
 
   async function activateButton(button: BoardButton) {
-    const intent = resolveButtonIntent(button);
-
-    switch (intent.kind) {
-      case "navigate":
-        navigation.goToBoard(intent.boardId);
-        return;
-      case "actions":
-        for (const action of intent.actions) {
-          await executeAction(action);
-        }
-        return;
-      case "utter":
-        message.addPart(toMessagePart(intent.button));
-        playButtonAudio(intent.button);
-        return;
-      default: {
-        const _exhaustive: never = intent;
-        throw new Error(
-          `Unhandled button intent: ${JSON.stringify(_exhaustive)}`,
-        );
-      }
-    }
-  }
-
-  async function executeAction(action: BoardAction) {
-    switch (action) {
-      case ":space":
-        message.addSpace();
-        return;
-      case ":backspace":
-        message.removeLastPart();
-        return;
-      case ":speak":
-        await playback.play();
-        return;
-      case ":clear":
-        message.clear();
-        return;
-      case ":home":
-        navigation.goHome();
-        return;
-      default:
-        handleSpellingAction(action);
-    }
-  }
-
-  function handleSpellingAction(action: string) {
-    if (!action.startsWith("+")) {
+    const folderId = button.loadBoard?.id;
+    if (folderId) {
+      navigation.goToBoard(folderId);
       return;
     }
 
-    const text = action.slice(1).trim();
-    const lastPart = message.parts.at(-1);
+    if (button.actions?.length) {
+      for (const action of button.actions) {
+        await runAction(action);
+      }
+      return;
+    }
 
+    message.addPart(asMessagePart(button));
+    utter(button);
+  }
+
+  async function runAction(action: BoardAction) {
+    switch (action.kind) {
+      case "space":
+        return message.addSpace();
+      case "backspace":
+        return message.removeLastPart();
+      case "clear":
+        return message.clear();
+      case "home":
+        return navigation.goHome();
+      case "speak":
+        await playback.play();
+        return;
+      case "spell":
+        return appendToLastPart(action.text);
+    }
+  }
+
+  function appendToLastPart(text: string) {
+    const lastPart = message.parts.at(-1);
     message.updateLastPart({
       id: text,
       label: `${lastPart?.label ?? ""}${text}`,
     });
   }
 
-  function playButtonAudio(button: BoardButton) {
+  function utter(button: BoardButton) {
     if (button.soundSrc) {
       void audio.play(button.soundSrc);
       return;
     }
 
     const text = getSpokenText(button);
-
     if (text) {
       void speak(text.toLowerCase());
     }
   }
 
-  return {
-    activateButton,
-  };
+  return { activateButton };
 }
 
-export function resolveButtonIntent(button: BoardButton): ButtonIntent {
-  if (button.loadBoard?.id) {
-    return { kind: "navigate", boardId: button.loadBoard.id };
-  }
-
-  if (button.actions?.length) {
-    return { kind: "actions", actions: button.actions };
-  }
-
-  return { kind: "utter", button };
-}
-
-function toMessagePart(button: BoardButton): MessagePart {
+function asMessagePart(button: BoardButton): MessagePart {
   return {
     id: button.id,
     label: button.label,

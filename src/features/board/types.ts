@@ -52,8 +52,10 @@ export interface BoardLink {
   dataUrl?: string;
 }
 
-export type BoardAction = SpecialtyAction | SpellingAction;
-
-type SpecialtyAction = ":space" | ":clear" | ":home" | ":speak" | ":backspace";
-
-type SpellingAction = `+${string}`;
+export type BoardAction =
+  | { kind: "space" }
+  | { kind: "backspace" }
+  | { kind: "clear" }
+  | { kind: "home" }
+  | { kind: "speak" }
+  | { kind: "spell"; text: string };
