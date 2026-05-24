@@ -24,7 +24,7 @@ export interface BoardButton {
   backgroundColor?: string;
   borderColor?: string;
   actions?: BoardAction[];
-  loadBoard?: BoardLink;
+  loadBoard?: LoadBoard;
 }
 
 export function getSpokenText(
@@ -44,7 +44,7 @@ export interface BoardLicense {
 
 export type BoardStrings = Record<string, Record<string, string>>;
 
-export interface BoardLink {
+export interface LoadBoard {
   id?: string;
   name?: string;
   url?: string;

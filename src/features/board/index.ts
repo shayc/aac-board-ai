@@ -8,7 +8,11 @@ export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export { boardPath, boardSetPath } from "./paths";
 export { getBoardSets, removeBoardSet } from "./storage/board-sets-store";
 export type { BoardSetRecord } from "./storage/db";
-export { BoardNotFoundError, getBoardSet, loadBoard } from "./storage/queries";
+export {
+  BoardNotFoundError,
+  getBoardSet,
+  hydrateBoard,
+} from "./storage/queries";
 export { useBoardSets } from "./storage/use-board-sets";
 export { useCustomInstructions } from "./suggestions/use-custom-instructions";
 export type { Board } from "./types";

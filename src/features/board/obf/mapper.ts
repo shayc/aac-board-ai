@@ -13,7 +13,7 @@ import type {
   BoardButton,
   BoardGrid,
   BoardLicense,
-  BoardLink,
+  LoadBoard,
 } from "../types";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
@@ -144,7 +144,7 @@ function parseAction(raw: string): BoardAction | null {
   }
 }
 
-function transformLoadBoard(obfLoadBoard: OBFLoadBoard): BoardLink {
+function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
   return {
     id: obfLoadBoard.id,
     name: obfLoadBoard.name,

@@ -176,7 +176,7 @@ describe("useButtonActivation", () => {
     });
   });
 
-  test("treats a loadBoard without an id as not navigable and utters instead", async () => {
+  test("treats a loadBoard without an id as not navigable and speaks instead", async () => {
     const { result, message, navigation } = await setup();
 
     await result.current.activateButton({
@@ -189,7 +189,7 @@ describe("useButtonActivation", () => {
     expect(message.addPart).toHaveBeenCalledTimes(1);
   });
 
-  test("treats an empty actions array as no actions and utters instead", async () => {
+  test("treats an empty actions array as no actions and speaks instead", async () => {
     const { result, message } = await setup();
 
     await result.current.activateButton({

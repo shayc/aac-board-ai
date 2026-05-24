@@ -2,7 +2,7 @@ import type { OBFBoard } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { invalidateBoardSets } from "./board-sets-store";
 import { putAssets, putBoards, upsertBoardSet, withBoardsDB } from "./db";
-import { BoardNotFoundError, loadBoard } from "./queries";
+import { BoardNotFoundError, hydrateBoard } from "./queries";
 import { resetBoardsDB } from "./test-helpers";
 
 const SET_ID = "loader-test-set";
@@ -13,7 +13,7 @@ const REAL_PNG_URL = "/pwa-192x192.png";
 // Seed a minimal board with one path-based image, using a real PNG blob so
 // hydration produces an Image-loadable blob URL. Going direct to the storage
 // layer (vs. importBoardFiles) keeps the test independent of OBZ fixture
-// shape — the only thing under test here is loadBoard's behavior.
+// shape — the only thing under test here is hydrateBoard's behavior.
 async function seedTestBoard(): Promise<void> {
   const pngResponse = await fetch(REAL_PNG_URL);
   if (!pngResponse.ok) {
@@ -53,7 +53,7 @@ async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   } catch (error) {
     return error;
   }
-  throw new Error("Expected loadBoard to throw, but it resolved");
+  throw new Error("Expected hydrateBoard to throw, but it resolved");
 }
 
 // A blob URL is "alive" while its registry hasn't revoked it. Loading it as
@@ -73,7 +73,7 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
   });
 }
 
-describe("loadBoard", () => {
+describe("hydrateBoard", () => {
   beforeEach(async () => {
     await resetBoardsDB();
     await invalidateBoardSets();
@@ -86,7 +86,7 @@ describe("loadBoard", () => {
   test("returns a hydrated board on the happy path", async () => {
     await seedTestBoard();
 
-    const board = await loadBoard(SET_ID, BOARD_ID);
+    const board = await hydrateBoard(SET_ID, BOARD_ID);
 
     expect(board.id).toBe(BOARD_ID);
 
@@ -99,20 +99,20 @@ describe("loadBoard", () => {
   test("throws BoardNotFoundError when the board is not in IDB", async () => {
     await seedTestBoard();
 
-    const error = await expectThrown(loadBoard(SET_ID, "missing-board"));
+    const error = await expectThrown(hydrateBoard(SET_ID, "missing-board"));
 
     expect(error).toBeInstanceOf(BoardNotFoundError);
   });
 
-  test("revokes the previous registry on the next loadBoard call", async () => {
+  test("revokes the previous registry on the next hydrateBoard call", async () => {
     await seedTestBoard();
 
-    const first = await loadBoard(SET_ID, BOARD_ID);
+    const first = await hydrateBoard(SET_ID, BOARD_ID);
     const firstUrl = first.buttons[0].imageSrc;
     expect(firstUrl).toBeDefined();
     expect(await isObjectUrlAlive(firstUrl!)).toBe(true);
 
-    const second = await loadBoard(SET_ID, BOARD_ID);
+    const second = await hydrateBoard(SET_ID, BOARD_ID);
     const secondUrl = second.buttons[0].imageSrc;
     expect(secondUrl).toBeDefined();
 
@@ -123,9 +123,9 @@ describe("loadBoard", () => {
   test("a missing-board error does not poison module state for a later success", async () => {
     await seedTestBoard();
 
-    await expectThrown(loadBoard(SET_ID, "missing-board"));
+    await expectThrown(hydrateBoard(SET_ID, "missing-board"));
 
-    const board = await loadBoard(SET_ID, BOARD_ID);
+    const board = await hydrateBoard(SET_ID, BOARD_ID);
     const url = board.buttons[0].imageSrc;
 
     expect(url).toBeDefined();

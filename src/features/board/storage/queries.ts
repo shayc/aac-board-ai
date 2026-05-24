@@ -32,7 +32,7 @@ export async function getBoardSet(
 // know when its URLs are safe to release; the next load defines that boundary.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
-export async function loadBoard(
+export async function hydrateBoard(
   setId: string,
   boardId: string,
   signal?: AbortSignal,
@@ -41,7 +41,7 @@ export async function loadBoard(
   try {
     const board = await withBoardsDB(async (db) => {
       const obf = await fetchOBFBoard(db, setId, boardId);
-      const hydrated = await hydrateBoard(db, setId, obf, registry);
+      const hydrated = await hydrateOBFBoard(db, setId, obf, registry);
       return obfToBoard(hydrated);
     });
 
@@ -74,7 +74,7 @@ async function fetchOBFBoard(
   return record.obf;
 }
 
-async function hydrateBoard(
+async function hydrateOBFBoard(
   db: BoardsDB,
   setId: string,
   board: OBFBoard,

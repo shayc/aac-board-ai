@@ -37,7 +37,7 @@ export function useButtonActivation({
     }
 
     message.addPart(asMessagePart(button));
-    utter(button);
+    speakButton(button);
   }
 
   async function runAction(action: BoardAction) {
@@ -65,7 +65,7 @@ export function useButtonActivation({
     });
   }
 
-  function utter(button: BoardButton) {
+  function speakButton(button: BoardButton) {
     if (button.soundSrc) {
       void audio.play(button.soundSrc);
       return;
