@@ -2,7 +2,6 @@ import { APP_NAME } from "@app/app-info";
 import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
@@ -28,33 +27,36 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   ];
 
   return (
-    <Drawer anchor="left" open={open} onClose={onClose}>
-      <Box sx={{ width: 320 }}>
-        <Toolbar>
-          <Typography component="div" variant="h6" noWrap>
-            {APP_NAME}
-          </Typography>
-        </Toolbar>
+    <Drawer
+      anchor="left"
+      open={open}
+      onClose={onClose}
+      slotProps={{ paper: { sx: { width: 320 } } }}
+    >
+      <Toolbar>
+        <Typography component="div" variant="h6" noWrap>
+          {APP_NAME}
+        </Typography>
+      </Toolbar>
 
-        <Divider />
+      <Divider />
 
-        <List>
-          {menuItems.map((item) => (
-            <ListItem key={item.to} disablePadding>
-              <ListItemButton
-                component={RouterLink}
-                to={item.to}
-                onClick={onClose}
-              >
-                <ListItemIcon>
-                  <item.icon />
-                </ListItemIcon>
-                <ListItemText primary={item.label} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+      <List>
+        {menuItems.map((item) => (
+          <ListItem key={item.to} disablePadding>
+            <ListItemButton
+              component={RouterLink}
+              to={item.to}
+              onClick={onClose}
+            >
+              <ListItemIcon>
+                <item.icon />
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
     </Drawer>
   );
 }
