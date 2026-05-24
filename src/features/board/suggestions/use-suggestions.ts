@@ -1,7 +1,10 @@
-import { useProofreader, useRewriter } from "@shared/built-in-ai";
+import {
+  useAISharedContext,
+  useProofreader,
+  useRewriter,
+} from "@shared/built-in-ai";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
-import { useCustomInstructions } from "./use-custom-instructions";
 
 export interface UseSuggestionsReturn {
   phrases: string[];
@@ -43,7 +46,7 @@ function isAbortError(error: unknown): boolean {
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
-  const [sharedContext] = useCustomInstructions();
+  const [sharedContext] = useAISharedContext();
   const [tone, setTone] = useState<SuggestionTone>("as-is");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 

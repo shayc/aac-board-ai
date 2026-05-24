@@ -14,6 +14,5 @@ export {
   hydrateBoard,
 } from "./storage/queries";
 export { useBoardSets } from "./storage/use-board-sets";
-export { useCustomInstructions } from "./suggestions/use-custom-instructions";
 export type { Board } from "./types";
 export { useBoardTranslation } from "./use-board-translation";

@@ -10,6 +10,8 @@ export { isSupported, type BuiltInAIName } from "./is-supported";
 
 export type { BaseHookReturn, Status } from "./types";
 
+export { useAISharedContext } from "./use-ai-shared-context";
+
 export { useGlobalDownloadProgress } from "./use-global-download-progress";
 
 export {
