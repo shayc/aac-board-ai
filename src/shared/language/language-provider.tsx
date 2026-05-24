@@ -1,8 +1,8 @@
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
-import { setVoiceLanguage } from "@shared/speech/speech-store";
+import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { getTextDirection } from "@shared/utils/locale";
-import { useEffect, useLayoutEffect, type ReactNode } from "react";
+import { useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
 import { useAvailableLanguages } from "./use-available-languages";
 
@@ -23,9 +23,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.lang = language;
   }, [direction, language]);
 
-  useEffect(() => {
-    setVoiceLanguage(language);
-  }, [language]);
+  useVoiceLanguageSync({ language });
 
   const contextValue: LanguageContextValue = {
     languages,
