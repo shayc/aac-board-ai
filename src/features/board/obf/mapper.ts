@@ -117,9 +117,31 @@ function transformButton(
 }
 
 function collectActions(obfButton: OBFButton): BoardAction[] {
-  return [obfButton.action, ...(obfButton.actions ?? [])].filter(
-    (action): action is BoardAction => Boolean(action),
-  );
+  const raw = [obfButton.action, ...(obfButton.actions ?? [])];
+  return raw.flatMap((value) => {
+    const action = value ? parseAction(value) : null;
+    return action ? [action] : [];
+  });
+}
+
+function parseAction(raw: string): BoardAction | null {
+  if (raw.startsWith("+")) {
+    return { kind: "spell", text: raw.slice(1).trim() };
+  }
+  switch (raw) {
+    case ":space":
+      return { kind: "space" };
+    case ":backspace":
+      return { kind: "backspace" };
+    case ":clear":
+      return { kind: "clear" };
+    case ":home":
+      return { kind: "home" };
+    case ":speak":
+      return { kind: "speak" };
+    default:
+      return null;
+  }
 }
 
 function transformLoadBoard(obfLoadBoard: OBFLoadBoard): BoardLink {

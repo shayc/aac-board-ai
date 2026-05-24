@@ -247,7 +247,32 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([":speak", ":space", ":clear"]);
+      expect(board.buttons[0]?.actions).toEqual([
+        { kind: "speak" },
+        { kind: "space" },
+        { kind: "clear" },
+      ]);
+    });
+
+    test("parses spell actions and drops unknown ones", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-actions-parse",
+        buttons: [
+          {
+            id: "btn-1",
+            label: "Spell",
+            actions: ["+ing", ":unknown", ":home"],
+          },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      };
+
+      const board = obfToBoard(obfBoard);
+      expect(board.buttons[0]?.actions).toEqual([
+        { kind: "spell", text: "ing" },
+        { kind: "home" },
+      ]);
     });
   });
 

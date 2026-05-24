@@ -5,10 +5,7 @@ import type { MessagePart, UseMessageReturn } from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
 import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "./types";
-import {
-  resolveButtonIntent,
-  useButtonActivation,
-} from "./use-button-activation";
+import { useButtonActivation } from "./use-button-activation";
 
 function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
   return {
@@ -91,6 +88,21 @@ describe("useButtonActivation", () => {
     expect(audio.play).not.toHaveBeenCalled();
   });
 
+  test("navigates when loadBoard.id is set even if actions are also present", async () => {
+    const { result, message, playback, navigation } = await setup();
+
+    await result.current.activateButton({
+      id: "btn",
+      label: "Folder",
+      loadBoard: { id: "child-board" },
+      actions: [{ kind: "space" }],
+    });
+
+    expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
+    expect(message.addSpace).not.toHaveBeenCalled();
+    expect(playback.play).not.toHaveBeenCalled();
+  });
+
   test("runs each action in order for an actions array", async () => {
     const callOrder: string[] = [];
     const message = createMessageStub();
@@ -110,45 +122,54 @@ describe("useButtonActivation", () => {
 
     await result.current.activateButton({
       id: "btn",
-      actions: [":space", ":speak", ":clear"],
+      actions: [{ kind: "space" }, { kind: "speak" }, { kind: "clear" }],
     });
 
     expect(callOrder).toEqual(["addSpace", "play", "clear"]);
   });
 
   test.each([
-    [":space", "addSpace"],
-    [":backspace", "removeLastPart"],
-    [":clear", "clear"],
-  ] as const)("maps %s to message.%s", async (action, methodName) => {
+    ["space", "addSpace"],
+    ["backspace", "removeLastPart"],
+    ["clear", "clear"],
+  ] as const)("maps %s to message.%s", async (kind, methodName) => {
     const { result, message } = await setup();
 
-    await result.current.activateButton({ id: "btn", actions: [action] });
+    await result.current.activateButton({ id: "btn", actions: [{ kind }] });
 
     expect(message[methodName]).toHaveBeenCalledTimes(1);
   });
 
-  test("maps :speak to playback.play", async () => {
+  test("maps speak to playback.play", async () => {
     const { result, playback } = await setup();
 
-    await result.current.activateButton({ id: "btn", actions: [":speak"] });
+    await result.current.activateButton({
+      id: "btn",
+      actions: [{ kind: "speak" }],
+    });
 
     expect(playback.play).toHaveBeenCalledTimes(1);
   });
 
-  test("maps :home to navigation.goHome", async () => {
+  test("maps home to navigation.goHome", async () => {
     const { result, navigation } = await setup();
 
-    await result.current.activateButton({ id: "btn", actions: [":home"] });
+    await result.current.activateButton({
+      id: "btn",
+      actions: [{ kind: "home" }],
+    });
 
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
 
-  test("appends a spelling action's text to the last message part's label", async () => {
+  test("appends a spell action's text to the last message part's label", async () => {
     const message = createMessageStub([{ id: "ca", label: "ca" }]);
     const { result } = await setup({ message });
 
-    await result.current.activateButton({ id: "btn", actions: ["+t"] });
+    await result.current.activateButton({
+      id: "btn",
+      actions: [{ kind: "spell", text: "t" }],
+    });
 
     expect(message.updateLastPart).toHaveBeenCalledWith({
       id: "t",
@@ -156,23 +177,29 @@ describe("useButtonActivation", () => {
     });
   });
 
-  test("ignores unrecognized default actions", async () => {
-    const { result, message, playback, navigation } = await setup();
+  test("treats a loadBoard without an id as not navigable and utters instead", async () => {
+    const { result, message, navigation } = await setup();
 
     await result.current.activateButton({
       id: "btn",
-      actions: [":unknown" as BoardAction],
+      label: "hi",
+      loadBoard: { name: "Other" },
     });
 
-    expect(message.addPart).not.toHaveBeenCalled();
-    expect(message.addSpace).not.toHaveBeenCalled();
-    expect(message.removeLastPart).not.toHaveBeenCalled();
-    expect(message.updateLastPart).not.toHaveBeenCalled();
-    expect(message.clear).not.toHaveBeenCalled();
-    expect(playback.play).not.toHaveBeenCalled();
-    expect(navigation.goHome).not.toHaveBeenCalled();
-    expect(speech.speak).not.toHaveBeenCalled();
-    expect(audio.play).not.toHaveBeenCalled();
+    expect(navigation.goToBoard).not.toHaveBeenCalled();
+    expect(message.addPart).toHaveBeenCalledTimes(1);
+  });
+
+  test("treats an empty actions array as no actions and utters instead", async () => {
+    const { result, message } = await setup();
+
+    await result.current.activateButton({
+      id: "btn",
+      label: "hi",
+      actions: [] as BoardAction[],
+    });
+
+    expect(message.addPart).toHaveBeenCalledTimes(1);
   });
 
   test("adds the button as a message part when there are no actions and no loadBoard", async () => {
@@ -237,50 +264,5 @@ describe("useButtonActivation", () => {
     expect(message.addPart).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();
     expect(audio.play).not.toHaveBeenCalled();
-  });
-});
-
-describe("resolveButtonIntent", () => {
-  test("navigate takes precedence over actions and utter when loadBoard.id is set", () => {
-    expect(
-      resolveButtonIntent({
-        id: "btn",
-        label: "Folder",
-        loadBoard: { id: "child-board" },
-        actions: [":space"],
-      }),
-    ).toEqual({ kind: "navigate", boardId: "child-board" });
-  });
-
-  test("treats loadBoard without an id as not navigable", () => {
-    const button: BoardButton = {
-      id: "btn",
-      label: "hi",
-      loadBoard: { name: "Other" },
-    };
-
-    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
-  });
-
-  test("returns actions when there is no loadBoard.id and actions is non-empty", () => {
-    expect(
-      resolveButtonIntent({ id: "btn", actions: [":space", ":speak"] }),
-    ).toEqual({ kind: "actions", actions: [":space", ":speak"] });
-  });
-
-  test("falls through to utter when actions is an empty array", () => {
-    const button: BoardButton = { id: "btn", label: "hi", actions: [] };
-
-    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
-  });
-
-  test("returns utter with the original button when there is no loadBoard.id and no actions", () => {
-    const button: BoardButton = {
-      id: "btn",
-      label: "hi",
-      vocalization: "hello",
-    };
-
-    expect(resolveButtonIntent(button)).toEqual({ kind: "utter", button });
   });
 });
