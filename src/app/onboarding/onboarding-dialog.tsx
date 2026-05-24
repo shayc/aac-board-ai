@@ -57,21 +57,22 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         },
       }}
     >
-      <DialogContent sx={{ pt: 4, pb: 4 }}>
-        <DialogTitle
-          id="welcome-dialog-title"
-          variant="h4"
-          sx={{
-            fontWeight: 800,
-            textAlign: "center",
-            mb: 1,
-            letterSpacing: "-0.02em",
-            p: 0,
-          }}
-        >
-          {APP_NAME}
-        </DialogTitle>
+      <DialogTitle
+        id="welcome-dialog-title"
+        variant="h4"
+        sx={{
+          fontWeight: 800,
+          textAlign: "center",
+          mt: 3,
+          mb: 1,
+          letterSpacing: "-0.02em",
+          p: 0,
+        }}
+      >
+        {APP_NAME}
+      </DialogTitle>
 
+      <DialogContent sx={{ pt: 0, pb: 4 }}>
         <DialogContentText
           id="welcome-dialog-description"
           variant="body1"
