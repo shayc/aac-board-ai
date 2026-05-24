@@ -1,6 +1,6 @@
-import type { Locator } from "@vitest/browser/context";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent, type Locator } from "vitest/browser";
 import { Grid } from "./grid";
 
 function getCellPosition(item: Locator): { row: number; col: number } {
@@ -20,12 +20,23 @@ function getCellPosition(item: Locator): { row: number; col: number } {
   return { row, col };
 }
 
-function press(item: Locator, key: string, modifiers: KeyboardEventInit = {}) {
-  item
-    .element()
-    .dispatchEvent(
-      new KeyboardEvent("keydown", { key, bubbles: true, ...modifiers }),
-    );
+async function press(
+  item: Locator,
+  key: string,
+  modifiers: { ctrlKey?: boolean; metaKey?: boolean; shiftKey?: boolean } = {},
+) {
+  item.element().focus();
+  let sequence = `{${key}}`;
+  if (modifiers.shiftKey) {
+    sequence = `{Shift>}${sequence}{/Shift}`;
+  }
+  if (modifiers.metaKey) {
+    sequence = `{Meta>}${sequence}{/Meta}`;
+  }
+  if (modifiers.ctrlKey) {
+    sequence = `{Control>}${sequence}{/Control}`;
+  }
+  await userEvent.keyboard(sequence);
 }
 
 function expectFocus(item: Locator) {
@@ -309,13 +320,7 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
-      const item1El = item1.element();
-      item1El.dispatchEvent(
-        new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
-      );
+      await press(item1, "ArrowRight");
 
       await expect
         .poll(() => document.activeElement === item2.element())
@@ -346,14 +351,7 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
-      item1
-        .element()
-        .dispatchEvent(
-          new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
-        );
+      await press(item1, "ArrowRight");
 
       await expect
         .poll(() => document.activeElement === item2.element())
@@ -385,14 +383,7 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
-      item1
-        .element()
-        .dispatchEvent(
-          new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }),
-        );
+      await press(item1, "ArrowRight");
 
       await expect
         .poll(() => document.activeElement === item2.element())
@@ -413,14 +404,7 @@ describe("Grid", () => {
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
-      item1
-        .element()
-        .dispatchEvent(
-          new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }),
-        );
+      await press(item1, "ArrowDown");
 
       await expect
         .poll(() => document.activeElement === item1.element())
@@ -449,7 +433,7 @@ describe("Grid", () => {
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
-      press(item3, "Home");
+      await press(item3, "Home");
 
       await expectFocus(item1);
     });
@@ -476,7 +460,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "End");
+      await press(item1, "End");
 
       await expectFocus(item3);
     });
@@ -505,7 +489,7 @@ describe("Grid", () => {
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
-      press(item3, "Home");
+      await press(item3, "Home");
 
       await expectFocus(item2);
     });
@@ -534,7 +518,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "End");
+      await press(item1, "End");
 
       await expectFocus(item2);
     });
@@ -567,7 +551,7 @@ describe("Grid", () => {
       item4.element().focus();
       await expect.element(item4).toHaveFocus();
 
-      press(item4, "Home", { ctrlKey: true });
+      await press(item4, "Home", { ctrlKey: true });
 
       await expectFocus(item2);
     });
@@ -600,7 +584,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "End", { ctrlKey: true });
+      await press(item1, "End", { ctrlKey: true });
 
       await expectFocus(item3);
     });
@@ -641,13 +625,13 @@ describe("Grid", () => {
         item1.element().focus();
         await expect.element(item1).toHaveFocus();
 
-        press(item1, "End", { [modifier]: true });
+        await press(item1, "End", { [modifier]: true });
         await expectFocus(item4);
 
         item4.element().focus();
         await expect.element(item4).toHaveFocus();
 
-        press(item4, "Home", { [modifier]: true });
+        await press(item4, "Home", { [modifier]: true });
         await expectFocus(item1);
       },
     );
@@ -673,7 +657,7 @@ describe("Grid", () => {
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
-      press(item3, "Home", { shiftKey: true });
+      await press(item3, "Home", { shiftKey: true });
 
       await expectFocus(item3);
     });
@@ -700,7 +684,7 @@ describe("Grid", () => {
       item2.element().focus();
       await expect.element(item2).toHaveFocus();
 
-      press(item2, "ArrowRight");
+      await press(item2, "ArrowRight");
 
       await expectFocus(item1);
     });
@@ -727,7 +711,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "ArrowLeft");
+      await press(item1, "ArrowLeft");
 
       await expectFocus(item2);
     });
@@ -760,7 +744,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "ArrowDown");
+      await press(item1, "ArrowDown");
 
       await expectFocus(item2);
     });
@@ -791,7 +775,7 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      press(item1, "Home");
+      await press(item1, "Home");
 
       await expectFocus(item3);
     });
@@ -821,7 +805,7 @@ describe("Grid", () => {
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
-      press(item3, "End");
+      await press(item3, "End");
 
       await expectFocus(item1);
     });
@@ -853,7 +837,7 @@ describe("Grid", () => {
       // macOS Fn+Ctrl+ArrowLeft sends Ctrl+Home. Because ArrowLeft is the
       // forward/end direction in RTL, Ctrl+Home jumps to the last cell in
       // reading order — row max / col max — which is visually bottom-left.
-      press(item1, "Home", { ctrlKey: true });
+      await press(item1, "Home", { ctrlKey: true });
 
       await expectFocus(item4);
     });
@@ -885,7 +869,7 @@ describe("Grid", () => {
       // macOS Fn+Ctrl+ArrowRight sends Ctrl+End. ArrowRight is the
       // backward/start direction in RTL, so Ctrl+End jumps to the first
       // cell in reading order — row 0 / col 0 — which is visually top-right.
-      press(item4, "End", { ctrlKey: true });
+      await press(item4, "End", { ctrlKey: true });
 
       await expectFocus(item1);
     });
