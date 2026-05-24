@@ -1,9 +1,19 @@
 import { normalizeLocale } from "@shared/utils/locale";
 import { htmlToText } from "@shared/utils/html";
 import { lookup } from "mrmime";
-import { loadOBF, loadOBZ, type OBFBoard } from "open-board-format";
+import {
+  loadOBF,
+  loadOBZ,
+  type OBFBoard,
+  type OBFManifest,
+} from "open-board-format";
 import { resolveLoadBoardPaths } from "../obf/mapper";
-import type { BoardsDB, UpsertBoardSetInput } from "./boards-db";
+import type {
+  BoardsDB,
+  UpsertAssetInput,
+  UpsertBoardInput,
+  UpsertBoardSetInput,
+} from "./boards-db";
 import {
   putAssets,
   putBoards,
@@ -44,39 +54,57 @@ async function importOBZFile(
   setId: string,
 ): Promise<ImportResult> {
   const { manifest, boards, resources } = await loadOBZ(file);
+  const boardPathToId = buildBoardPathIndex(manifest);
 
-  let rootBoardId = "";
-  for (const [id, path] of Object.entries(manifest.paths.boards)) {
-    if (path === manifest.root) {
-      rootBoardId = id;
-      break;
-    }
-  }
-
-  if (!rootBoardId) {
-    rootBoardId = manifest.root.split("/").at(-1)?.replace(".obf", "") ?? "";
-  }
-
+  const rootBoardId = resolveRootBoardId(manifest, boardPathToId);
   const rootBoard = boards.get(rootBoardId);
 
   await upsertBoardSet(
     db,
     buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
   );
+  await putBoards(db, setId, buildBoardRecords(boards, boardPathToId));
 
-  const boardPathToId = new Map(
+  const assetRecords = buildAssetRecords(resources);
+  if (assetRecords.length > 0) {
+    await putAssets(db, setId, assetRecords);
+  }
+
+  return { setId, boardId: rootBoardId };
+}
+
+function buildBoardPathIndex(manifest: OBFManifest): Map<string, string> {
+  return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
+}
 
-  const boardRecords = Array.from(boards.entries()).map(([id, board]) => ({
+function resolveRootBoardId(
+  manifest: OBFManifest,
+  boardPathToId: Map<string, string>,
+): string {
+  const fromManifest = boardPathToId.get(manifest.root);
+  if (fromManifest) {
+    return fromManifest;
+  }
+  return manifest.root.split("/").at(-1)?.replace(".obf", "") ?? "";
+}
+
+function buildBoardRecords(
+  boards: Map<string, OBFBoard>,
+  boardPathToId: Map<string, string>,
+): UpsertBoardInput[] {
+  return Array.from(boards.entries()).map(([id, board]) => ({
     boardId: id,
     name: board.name ?? id,
     obf: resolveLoadBoardPaths(board, boardPathToId),
   }));
+}
 
-  await putBoards(db, setId, boardRecords);
-
-  const assetRecords = Array.from(resources.entries())
+function buildAssetRecords(
+  resources: Map<string, Uint8Array>,
+): UpsertAssetInput[] {
+  return Array.from(resources.entries())
     .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
     .map(([path, buffer]) => {
       const mimeType = lookup(path) ?? "application/octet-stream";
@@ -87,12 +115,6 @@ async function importOBZFile(
         blob: new Blob([buffer.buffer as ArrayBuffer], { type: mimeType }),
       };
     });
-
-  if (assetRecords.length > 0) {
-    await putAssets(db, setId, assetRecords);
-  }
-
-  return { setId, boardId: rootBoardId };
 }
 
 function buildBoardSetInput(

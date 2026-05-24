@@ -192,12 +192,12 @@ export async function deleteBoardSet(
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
-  // Fire all three deletes without awaiting individually;
-  // they share a single transaction and commit together on tx.done.
-  void tx.objectStore("boards").delete(IDBKeyRange.bound([setId], [setId, []]));
-
-  void tx.objectStore("assets").delete(IDBKeyRange.bound([setId], [setId, []]));
-
+  // Three deletes share one transaction; tx.done commits them together.
+  // The [] upper bound exploits IDB key ordering — arrays sort after strings,
+  // so [setId, []] is the smallest key greater than every [setId, "..."].
+  const setRange = IDBKeyRange.bound([setId], [setId, []]);
+  void tx.objectStore("boards").delete(setRange);
+  void tx.objectStore("assets").delete(setRange);
   void tx.objectStore("boardSets").delete(setId);
 
   await tx.done;

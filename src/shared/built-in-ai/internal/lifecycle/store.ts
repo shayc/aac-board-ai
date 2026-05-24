@@ -19,8 +19,8 @@ export interface Snapshot {
   inputQuota: number;
 }
 
-export interface Acquired<Instance> {
-  instance: Instance;
+export interface Acquired<Model> {
+  instance: Model;
   signal: AbortSignal;
 }
 
@@ -54,17 +54,14 @@ function destroyQuietly(instance: DestroyableModel | null | undefined): void {
 
 export function createStore<
   Options extends object,
-  Instance extends DestroyableModel,
->(
-  globalName: BuiltInAIName,
-  readQuota: (instance: Instance) => number = () => 0,
-) {
+  Model extends DestroyableModel,
+>(globalName: BuiltInAIName, readQuota: (instance: Model) => number = () => 0) {
   let snapshot: Snapshot = INITIAL;
   const listeners = new Set<() => void>();
 
-  let namespace: AINamespace<Options, Instance> | undefined;
+  let namespace: AINamespace<Options, Model> | undefined;
   let options: Options | undefined;
-  let instance: Instance | null = null;
+  let instance: Model | null = null;
   let abortController = new AbortController();
   let activeTask: Promise<void> | null = null;
 
@@ -129,7 +126,7 @@ export function createStore<
       update({ status: "downloading", progress: 0 });
     }
     try {
-      const created = await createInstance<Options, Instance>({
+      const created = await createInstance<Options, Model>({
         name: globalName,
         options,
         signal,
@@ -218,7 +215,7 @@ export function createStore<
   }
 
   function start(
-    nextNamespace: AINamespace<Options, Instance> | undefined,
+    nextNamespace: AINamespace<Options, Model> | undefined,
     nextOptions: Options | undefined,
   ): void {
     abortController.abort(abortError("lifecycle reset"));
@@ -260,7 +257,7 @@ export function createStore<
 
   const acquire = async (
     callerSignal?: AbortSignal,
-  ): Promise<Acquired<Instance>> => {
+  ): Promise<Acquired<Model>> => {
     await ensureReady(callerSignal);
     const merged = mergeSignals(abortController.signal, callerSignal);
     if (merged.aborted) {
