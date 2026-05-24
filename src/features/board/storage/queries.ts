@@ -3,7 +3,7 @@ import {
   type ObjectUrlRegistry,
 } from "@shared/utils/object-url";
 import type { OBFBoard, OBFMedia } from "open-board-format";
-import { obfToBoard } from "../obf/mapper";
+import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
 import {
   getBoardSet as dbGetBoardSet,

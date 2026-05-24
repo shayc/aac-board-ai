@@ -1,6 +1,6 @@
 import type { OBFBoard } from "open-board-format";
 import { describe, expect, test } from "vitest";
-import { obfToBoard, resolveLoadBoardPaths } from "./mapper";
+import { obfToBoard, resolveLoadBoardPaths } from "./obf-to-board";
 
 describe("obfToBoard", () => {
   test("maps a minimal board (id, buttons, grid)", () => {
