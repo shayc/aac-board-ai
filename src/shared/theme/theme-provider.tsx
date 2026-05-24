@@ -28,6 +28,10 @@ const themeOptions = {
     button: {
       textTransform: "none",
     },
+    h4: {
+      fontWeight: 800,
+      letterSpacing: "-0.02em",
+    },
   },
 } as const;
 

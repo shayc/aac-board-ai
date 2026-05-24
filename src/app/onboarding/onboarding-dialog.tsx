@@ -51,7 +51,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 6,
+            borderRadius: 1.5, // 6px (1.5 * theme.shape.borderRadius)
             p: 1,
           },
         },
@@ -61,11 +61,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         id="welcome-dialog-title"
         variant="h4"
         sx={{
-          fontWeight: 800,
           textAlign: "center",
           mt: 3,
           mb: 1,
-          letterSpacing: "-0.02em",
           p: 0,
         }}
       >
@@ -76,7 +74,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         <DialogContentText
           id="welcome-dialog-description"
           variant="body1"
-          sx={{ textAlign: "center", mb: 3, px: 2, lineHeight: 1.4 }}
+          sx={{ textAlign: "center", mb: 3, px: 2 }}
         >
           {m.onboardingTagline()}
         </DialogContentText>
@@ -97,11 +95,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 slotProps={{
                   primary: {
                     variant: "subtitle1",
-                    sx: { fontWeight: 700, mb: 0 },
+                    sx: { fontWeight: "bold", mb: 0 },
                   },
                   secondary: {
                     variant: "body2",
-                    sx: { lineHeight: 1.3 },
                   },
                 }}
               />
@@ -110,19 +107,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </List>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, py: 4 }}>
-        <Button
-          onClick={onClose}
-          variant="contained"
-          fullWidth
-          size="large"
-          sx={{
-            borderRadius: 4,
-            py: 1.5,
-            fontWeight: 800,
-            fontSize: "1.1rem",
-          }}
-        >
+      <DialogActions sx={{ px: 3, pb: 3 }}>
+        <Button onClick={onClose} variant="contained" fullWidth size="large">
           {m.onboardingContinue()}
         </Button>
       </DialogActions>
