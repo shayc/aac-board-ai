@@ -20,7 +20,7 @@ The codebase is **feature-sliced**. The single feature today is `board`. Layers 
 
 Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts).
 
-**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention; library dialogs, path helpers, and storage queries are all re-exported from the barrel so consumers never need a deeper import.
+**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention; board-set dialogs, path helpers, and storage queries are all re-exported from the barrel so consumers never need a deeper import.
 
 **See:** [tsconfig.app.json](../tsconfig.app.json), [src/features/board/index.ts](../src/features/board/index.ts).
 
