@@ -2,7 +2,7 @@ import { AppShell } from "@app/layouts/app-shell";
 import { boardLoader } from "@app/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/loaders/root-index-loader";
-import { ROUTE_PATTERNS } from "@app/routes";
+import { ROUTE_PATTERNS } from "@app/route-patterns";
 import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { ErrorState } from "@shared/components/error-state";

@@ -1,4 +1,4 @@
-import { boardPath } from "@app/routes";
+import { boardPath } from "@app/route-patterns";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useBoardSets } from "../storage/use-board-sets";
 

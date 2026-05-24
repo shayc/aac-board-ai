@@ -1,4 +1,4 @@
-import { boardPath } from "@app/routes";
+import { boardPath } from "@app/route-patterns";
 import {
   getBoardSets,
   importBoardFromUrl,
