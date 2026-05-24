@@ -1,12 +1,13 @@
 import { APP_NAME } from "@app/app-info";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { PageContainer } from "@app/layouts/page-container";
 import { PageTitle } from "@app/layouts/page-title";
+import { ParaglideMessage } from "@inlang/paraglide-js-react";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { ExternalLink } from "@shared/components/external-link";
 
 export const Component = function AboutPage() {
   return (
@@ -26,34 +27,26 @@ export const Component = function AboutPage() {
           variant="body2"
           sx={{ color: "text.secondary" }}
         >
-          {m.aboutWinnerOfChallengePrefix()}
-          <Link
-            href="https://developer.chrome.com/blog/ai-challenge-winners-2025/"
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
-          >
-            {m.aboutWinnerOfChallengeLink()}
-          </Link>
-          {m.aboutBuiltOnObfPrefix()}
-          <Link
-            href="https://www.openboardformat.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
-          >
-            {m.aboutBuiltOnObfLink()}
-          </Link>
-          {m.aboutFeaturingQuickCore()}
-          <Link
-            href="https://www.openaac.org"
-            target="_blank"
-            rel="noopener noreferrer"
-            underline="hover"
-          >
-            {m.aboutOpenAacLinkText()}
-          </Link>
-          .
+          <ParaglideMessage
+            message={m.aboutAcknowledgments}
+            markup={{
+              challenge: ({ children }) => (
+                <ExternalLink href="https://developer.chrome.com/blog/ai-challenge-winners-2025/">
+                  {children}
+                </ExternalLink>
+              ),
+              obf: ({ children }) => (
+                <ExternalLink href="https://www.openboardformat.org/">
+                  {children}
+                </ExternalLink>
+              ),
+              openaac: ({ children }) => (
+                <ExternalLink href="https://www.openaac.org">
+                  {children}
+                </ExternalLink>
+              ),
+            }}
+          />
         </Typography>
 
         <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
