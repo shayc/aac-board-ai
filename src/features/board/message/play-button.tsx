@@ -32,10 +32,10 @@ export function PlayButton({
           sx={{
             width: 72,
             height: 72,
-            backgroundColor: (theme) => theme.palette.primary.main,
-            color: (theme) => theme.palette.primary.contrastText,
+            bgcolor: "primary.main",
+            color: "primary.contrastText",
             "&:hover": {
-              backgroundColor: (theme) => theme.palette.primary.dark,
+              bgcolor: "primary.dark",
             },
           }}
         >
