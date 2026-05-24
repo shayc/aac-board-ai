@@ -40,10 +40,10 @@ export function MessageBar({
   onPlayClick,
   onStopClick,
 }: MessageBarProps) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return scrollToEnd(scrollerRef.current);
+    return scrollToEnd(scrollContainerRef.current);
   }, [parts]);
 
   return (
@@ -62,7 +62,7 @@ export function MessageBar({
         })}
       >
         <Stack
-          ref={scrollerRef}
+          ref={scrollContainerRef}
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >

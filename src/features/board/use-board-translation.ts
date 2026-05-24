@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { updateBoardStrings, withBoardsDB } from "./storage/db";
 import type { Board } from "./types";
 
+const DEFAULT_BOARD_LANGUAGE = "en";
+
 export interface UseBoardTranslationOptions {
   setId: string;
   board: Board;
@@ -68,16 +70,19 @@ export function useBoardTranslation({
   return { translatedBoard };
 }
 
-function resolveSyncTranslation(board: Board, language: string): Board | null {
+function resolveSyncTranslation(
+  board: Board,
+  language: string,
+): Board | undefined {
   if (getBoardLanguage(board) === language) {
     return board;
   }
   const cached = findTranslations(board.strings, language);
-  return cached ? applyTranslations(board, cached) : null;
+  return cached ? applyTranslations(board, cached) : undefined;
 }
 
 function getBoardLanguage(board: Board): string {
-  return board.locale ? getLanguageCode(board.locale) : "en";
+  return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
 function findTranslations(

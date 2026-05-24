@@ -102,7 +102,7 @@ export function createStore<
         return;
       }
       if (availability === "available") {
-        await provision(signal, false);
+        await provision(signal, { showDownloadUI: false });
       }
     } catch (error) {
       if (signal.aborted) {
@@ -118,9 +118,13 @@ export function createStore<
    * matters; the silent path keeps an "available" model on "idle" until it
    * lands as "ready".
    */
+  interface ProvisionOptions {
+    showDownloadUI: boolean;
+  }
+
   async function provision(
     signal: AbortSignal,
-    showDownloadUI: boolean,
+    { showDownloadUI }: ProvisionOptions,
   ): Promise<void> {
     if (showDownloadUI) {
       update({ status: "downloading", progress: 0 });
@@ -192,7 +196,7 @@ export function createStore<
       if (!hasUserActivation()) {
         throw new NoUserActivationError();
       }
-      activeTask = provision(abortController.signal, true);
+      activeTask = provision(abortController.signal, { showDownloadUI: true });
     }
 
     // 3. Provision in flight (ours, or a concurrent caller's) — wait it out.

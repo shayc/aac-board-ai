@@ -11,8 +11,7 @@ export interface UseMessageReturn {
   text: string;
   addPart: (part: MessagePart) => void;
   addSpace: () => void;
-  setParts: (parts: MessagePart[]) => void;
-  setFromText: (text: string) => void;
+  setFromText: (input: string) => void;
   removeLastPart: () => void;
   updateLastPart: (part: MessagePart) => void;
   clear: () => void;
@@ -52,9 +51,9 @@ export function useMessage(): UseMessageReturn {
     });
   }
 
-  function setFromText(text: string) {
+  function setFromText(input: string) {
     const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
-    const words = Array.from(segmenter.segment(text))
+    const words = Array.from(segmenter.segment(input))
       .filter((segment) => segment.isWordLike)
       .map((segment) => segment.segment);
 
@@ -66,7 +65,6 @@ export function useMessage(): UseMessageReturn {
     text,
     addPart,
     addSpace,
-    setParts,
     setFromText,
     removeLastPart,
     updateLastPart,

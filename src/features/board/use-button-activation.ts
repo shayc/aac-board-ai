@@ -23,9 +23,9 @@ export function useButtonActivation({
   const audio = useAudio();
 
   async function activateButton(button: BoardButton) {
-    const folderId = button.loadBoard?.id;
-    if (folderId) {
-      navigation.goToBoard(folderId);
+    const targetBoardId = button.loadBoard?.id;
+    if (targetBoardId) {
+      navigation.goToBoard(targetBoardId);
       return;
     }
 
@@ -51,8 +51,7 @@ export function useButtonActivation({
       case "home":
         return navigation.goHome();
       case "speak":
-        await playback.play();
-        return;
+        return playback.play();
       case "spell":
         return appendToLastPart(action.text);
     }

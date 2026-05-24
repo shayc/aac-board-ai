@@ -13,7 +13,6 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
     text: parts.map((p) => p.label ?? "").join(" "),
     addPart: vi.fn(),
     addSpace: vi.fn(),
-    setParts: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
     updateLastPart: vi.fn(),
