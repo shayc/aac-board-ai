@@ -1,5 +1,5 @@
-import type { FocusEvent, RefObject } from "react";
-import { useState } from "react";
+import type { DOMAttributes, FocusEvent, RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useKeyboard } from "react-aria";
 
 const CELL = "[role='gridcell']";
@@ -11,22 +11,29 @@ export interface Cell {
 }
 
 export interface UseGridKeyboardNavigationOptions {
-  gridRef: RefObject<HTMLElement | null>;
-  initialActiveCell?: Cell;
+  grid: readonly (readonly unknown[])[];
   dir?: "ltr" | "rtl";
 }
 
+export interface UseGridKeyboardNavigationReturn {
+  rootRef: RefObject<HTMLDivElement | null>;
+  rootProps: DOMAttributes<HTMLElement>;
+  activeCell: Cell;
+}
+
 export function useGridKeyboardNavigation({
-  gridRef,
-  initialActiveCell = { row: 0, col: 0 },
+  grid,
   dir = "ltr",
-}: UseGridKeyboardNavigationOptions) {
-  const [activeCell, setActiveCell] = useState<Cell>(initialActiveCell);
+}: UseGridKeyboardNavigationOptions): UseGridKeyboardNavigationReturn {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [activeCell, setActiveCell] = useState<Cell>(() =>
+    findFirstNonEmptyCell(grid),
+  );
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
-      const grid = gridRef.current;
-      if (!grid) {
+      const root = rootRef.current;
+      if (!root) {
         return;
       }
 
@@ -35,7 +42,7 @@ export function useGridKeyboardNavigation({
         return;
       }
 
-      const next = nextFocus(event, grid, from, dir);
+      const next = nextFocus(event, root, from, dir);
       // Don't preventDefault when we didn't move: let the key reach the
       // browser / other handlers (e.g. Home/End at the row boundary).
       if (!next || sameCell(next.position, from)) {
@@ -55,7 +62,59 @@ export function useGridKeyboardNavigation({
     }
   };
 
-  return { rootProps: { ...keyboardProps, onFocus }, activeCell };
+  // Board navigation unmounts the focused cell; the browser drops focus to <body>.
+  // On grid change, restore to the same row/col, or fall back to the first focusable.
+  // The ref keeps the latest activeCell readable without making the effect depend on
+  // it — we only want to refocus when the grid changes, not on every keyboard move.
+  const activeCellRef = useRef(activeCell);
+  useEffect(() => {
+    activeCellRef.current = activeCell;
+  });
+
+  const previousGridRef = useRef(grid);
+  useEffect(() => {
+    if (previousGridRef.current === grid) {
+      return;
+    }
+    previousGridRef.current = grid;
+
+    if (document.activeElement !== document.body) {
+      return;
+    }
+
+    const root = rootRef.current;
+    if (!root) {
+      return;
+    }
+
+    const { row, col } = activeCellRef.current;
+    const sameCellElement = root.querySelector<HTMLElement>(
+      `${CELL}[aria-rowindex='${row + 1}'][aria-colindex='${col + 1}'] ${FOCUSABLE}`,
+    );
+
+    if (sameCellElement) {
+      sameCellElement.focus();
+      return;
+    }
+
+    const firstFocusable = root.querySelector<HTMLElement>(
+      `${CELL} ${FOCUSABLE}`,
+    );
+    firstFocusable?.focus();
+  }, [grid]);
+
+  return { rootRef, rootProps: { ...keyboardProps, onFocus }, activeCell };
+}
+
+function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      if (grid[row][col]) {
+        return { row, col };
+      }
+    }
+  }
+  return { row: 0, col: 0 };
 }
 
 interface Step {
