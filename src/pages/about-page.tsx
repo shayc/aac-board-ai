@@ -49,10 +49,6 @@ export const Component = function AboutPage() {
           />
         </Typography>
 
-        <Typography variant="h6" component="h2" sx={{ pt: 2 }}>
-          {m.aboutOpenSourceHeading()}
-        </Typography>
-
         <Button
           variant="text"
           startIcon={<GitHubIcon />}

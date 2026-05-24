@@ -66,7 +66,6 @@
   "aboutAppDescription": "{appName} מסייע לאנשים עם קשיי דיבור לתקשר בקלות ובאופן טבעי. האפליקציה משתמשת בבינה מלאכותית המופעלת ישירות מהמכשיר כדי לתקן את הדקדוק, להתאים את סגנון הניסוח ולתרגם הודעות – תוך שמירה מלאה על הפרטיות ועל מהירות התגובה.",
   "aboutAcknowledgmentsHeading": "תודות והכרה",
   "aboutAcknowledgments": "האפליקציה זכתה באתגר {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. היא מבוססת על {#obf}Open Board Format{/obf} ומשלבת את אוצר המילים Quick Core 24 מבית {#openaac}OpenAAC{/openaac}.",
-  "aboutOpenSourceHeading": "קוד פתוח",
   "aboutViewSource": "צפייה בקוד המקור ב-GitHub",
   "onboardingTagline": "לתקשר בקלות ובאופן טבעי.",
   "onboardingSmartRewritingTitle": "שכתוב חכם",
