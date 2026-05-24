@@ -7,7 +7,7 @@
 
 **AAC Board AI** is an Augmentative and Alternative Communication board that helps people who cannot rely on speech communicate more easily and naturally. It is enhanced with **Built-in AI** for on-device proofreading, rewriting, and board translation — keeping interactions private, fast, and reliable offline.
 
-![Screenshot of AAC Board AI](screenshot.jpg)
+![Screenshot of AAC Board AI](screenshot.png)
 
 Try the live demo at [aacboard.app](https://aacboard.app). Core board features work without AI; Built-in AI enhancements require Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
