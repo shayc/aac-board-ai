@@ -5,7 +5,7 @@ import {
   NotReadyError,
   UnavailableError,
   UnsupportedError,
-} from "./errors.ts";
+} from "./errors";
 
 describe("built-in AI error hierarchy", () => {
   const cases = [

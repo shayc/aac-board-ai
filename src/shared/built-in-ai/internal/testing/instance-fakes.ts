@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import { makeChunkStream } from "./ai-namespace-fake.ts";
+import { makeChunkStream } from "./ai-namespace-fake";
 
 export function buildTranslatorInstance() {
   return {

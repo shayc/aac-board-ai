@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildProgressKey } from "./progress-store.ts";
+import { buildProgressKey } from "./progress-store";
 
 describe("buildProgressKey", () => {
   test("returns the bare name when options are empty or undefined", () => {

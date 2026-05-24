@@ -2,15 +2,15 @@ import {
   NoUserActivationError,
   UnavailableError,
   UnsupportedError,
-} from "../../errors.ts";
-import type { BuiltInAIName } from "../../is-supported.ts";
+} from "../../errors";
+import type { BuiltInAIName } from "../../is-supported";
 import {
   buildProgressKey,
   clearDownloadProgress,
   setDownloadProgress,
-} from "../progress-store.ts";
-import { hasUserActivation } from "../user-activation.ts";
-import { getNamespace } from "./types.ts";
+} from "../progress-store";
+import { hasUserActivation } from "../user-activation";
+import { getNamespace } from "./types";
 
 export interface CreateInstanceOptions<O extends object> {
   /** Built-in AI global namespace name (`"Translator"`, `"Rewriter"`, …). */

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { makeAIFake } from "../internal/testing/ai-namespace-fake.ts";
-import { buildProofreaderInstance } from "../internal/testing/instance-fakes.ts";
-import { useProofreader } from "./use-proofreader.ts";
+import { makeAIFake } from "../internal/testing/ai-namespace-fake";
+import { buildProofreaderInstance } from "../internal/testing/instance-fakes";
+import { useProofreader } from "./use-proofreader";
 
 afterEach(() => {
   vi.unstubAllGlobals();

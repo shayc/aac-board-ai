@@ -1,4 +1,4 @@
-import { abortError } from "./signal.ts";
+import { abortError } from "./signal";
 
 export async function* streamChunks(
   stream: ReadableStream<string>,

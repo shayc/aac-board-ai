@@ -10,9 +10,9 @@ import { resetBoardsDB } from "../storage/test-helpers";
 import { writeBoardSetFiles } from "./board-import";
 
 const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
-const OBZ_FIXTURE = "lots_of_stuff.obz";
-const OBF_FIXTURE = "lots_of_stuff.obf";
-const IMPORTED_SET_ID = "lots_of_stuff";
+const OBZ_FIXTURE = "lots-of-stuff.obz";
+const OBF_FIXTURE = "lots-of-stuff.obf";
+const IMPORTED_SET_ID = "lots-of-stuff";
 
 function assertDefined<T>(value: T | undefined | null): asserts value is T {
   expect(value).toBeDefined();
