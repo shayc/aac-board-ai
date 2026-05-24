@@ -1,12 +1,8 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { usePersistentState } from "./use-persistent-state";
 
 const KEY = "test-persistent-state";
-
-afterEach(() => {
-  localStorage.removeItem(KEY);
-});
 
 describe("usePersistentState", () => {
   test("returns initial value when localStorage is empty", async () => {
@@ -92,8 +88,5 @@ describe("usePersistentState", () => {
 
     expect(hookA.result.current[0]).toBe("changed-a");
     expect(hookB.result.current[0]).toBe("b");
-
-    localStorage.removeItem(keyA);
-    localStorage.removeItem(keyB);
   });
 });

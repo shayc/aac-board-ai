@@ -72,6 +72,10 @@ export default defineConfig({
     ],
   },
   test: {
+    setupFiles: ["./src/shared/testing/global-setup.ts"],
+    restoreMocks: true,
+    unstubGlobals: true,
+    unstubEnvs: true,
     browser: {
       enabled: true,
       provider: playwright(),

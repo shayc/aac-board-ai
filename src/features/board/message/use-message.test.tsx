@@ -1,12 +1,6 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useMessage } from "./use-message";
-
-const STORAGE_KEY = "message";
-
-afterEach(() => {
-  localStorage.removeItem(STORAGE_KEY);
-});
 
 describe("useMessage", () => {
   test("builds text from multiple parts joined by spaces", async () => {

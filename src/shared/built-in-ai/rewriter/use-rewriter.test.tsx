@@ -1,12 +1,8 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { makeAIFake } from "../internal/testing/ai-namespace-fake";
 import { buildRewriterInstance } from "../internal/testing/instance-fakes";
 import { useRewriter } from "./use-rewriter";
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
 
 describe("useRewriter", () => {
   test("reaches ready and exposes inputQuota from the instance", async () => {

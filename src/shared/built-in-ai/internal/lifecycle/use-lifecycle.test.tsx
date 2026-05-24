@@ -49,7 +49,6 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  vi.unstubAllGlobals();
   delete (navigator as unknown as { userActivation?: unknown }).userActivation;
 });
 

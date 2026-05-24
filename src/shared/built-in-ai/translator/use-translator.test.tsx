@@ -1,12 +1,8 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { makeAIFake } from "../internal/testing/ai-namespace-fake";
 import { buildTranslatorInstance } from "../internal/testing/instance-fakes";
 import { useTranslator } from "./use-translator";
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
 
 describe("useTranslator", () => {
   test("reaches ready and exposes inputQuota from the instance", async () => {

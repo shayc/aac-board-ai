@@ -1,5 +1,5 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart } from "./use-message";
 import { useMessagePlayback } from "./use-message-playback";
@@ -11,10 +11,6 @@ describe("useMessagePlayback", () => {
   beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   test("speaks consecutive text parts as one merged utterance", async () => {

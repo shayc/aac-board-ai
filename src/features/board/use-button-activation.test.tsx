@@ -1,5 +1,5 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart, UseMessageReturn } from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
@@ -63,10 +63,6 @@ describe("useButtonActivation", () => {
   beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   test("navigates to the linked board and skips message and audio when loadBoard.id is set", async () => {
