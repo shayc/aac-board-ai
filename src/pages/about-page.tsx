@@ -1,11 +1,11 @@
 import { APP_NAME } from "@app/app-info";
+import { PageContainer } from "@app/layouts/page-container";
+import { PageTitle } from "@app/layouts/page-title";
+import { ParaglideMessage } from "@inlang/paraglide-js-react";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { PageContainer } from "@app/layouts/page-container";
-import { PageTitle } from "@app/layouts/page-title";
-import { ParaglideMessage } from "@inlang/paraglide-js-react";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
 
