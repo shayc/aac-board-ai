@@ -1,5 +1,4 @@
 import Stack from "@mui/material/Stack";
-import { useEffect, useRef } from "react";
 import { useGridKeyboardNavigation } from "./use-grid-keyboard-navigation";
 
 export interface GridItemProps {
@@ -26,58 +25,15 @@ export function Grid<TItem extends { id: string }>({
   gap = 2,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const previousItemsRef = useRef(items);
-  const initialActiveCell = findFirstNonEmptyCell(grid);
-
-  const { rootProps, activeCell } = useGridKeyboardNavigation({
-    gridRef,
-    initialActiveCell,
+  const { rootRef, rootProps, activeCell } = useGridKeyboardNavigation({
+    grid,
     dir,
   });
-
-  const activeCellRef = useRef(activeCell);
-  useEffect(() => {
-    activeCellRef.current = activeCell;
-  });
-
-  useEffect(() => {
-    if (previousItemsRef.current === items) {
-      return;
-    }
-    previousItemsRef.current = items;
-
-    // Board navigation unmounts the focused cell; the browser drops focus to <body>.
-    // Restore to the same row/col, or fall back to the first focusable cell.
-    if (document.activeElement !== document.body) {
-      return;
-    }
-
-    const root = gridRef.current;
-    if (!root) {
-      return;
-    }
-
-    const { row, col } = activeCellRef.current;
-    const sameCell = root.querySelector<HTMLElement>(
-      `[role='gridcell'][aria-rowindex='${row + 1}'][aria-colindex='${col + 1}'] [tabindex]`,
-    );
-
-    if (sameCell) {
-      sameCell.focus();
-      return;
-    }
-
-    const firstFocusable = root.querySelector<HTMLElement>(
-      "[role='gridcell'] [tabindex]",
-    );
-    firstFocusable?.focus();
-  }, [items]);
 
   return (
     <Stack
       {...rootProps}
-      ref={gridRef}
+      ref={rootRef}
       role="grid"
       aria-rowcount={rows}
       aria-colcount={columns}
@@ -142,18 +98,4 @@ function buildGrid<T extends { id: string }>(
       return items[index];
     }),
   );
-}
-
-function findFirstNonEmptyCell<T>(grid: (T | undefined)[][]): {
-  row: number;
-  col: number;
-} {
-  for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < grid[row].length; col++) {
-      if (grid[row][col]) {
-        return { row, col };
-      }
-    }
-  }
-  return { row: 0, col: 0 };
 }

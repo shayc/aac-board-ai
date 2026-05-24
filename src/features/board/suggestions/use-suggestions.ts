@@ -29,13 +29,13 @@ function collectSuggestions(
   candidates: readonly (string | undefined)[],
   original: string,
 ): string[] {
-  const out = new Set<string>();
+  const accepted = new Set<string>();
   for (const candidate of candidates) {
     if (candidate && isUsefulSuggestion(candidate, original)) {
-      out.add(candidate);
+      accepted.add(candidate);
     }
   }
-  return [...out];
+  return [...accepted];
 }
 
 function isAbortError(error: unknown): boolean {

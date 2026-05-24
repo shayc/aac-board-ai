@@ -40,17 +40,17 @@ function useStableOptions<T extends object>(
 /** Shared lifecycle for every built-in AI namespace. Function refs are stable across renders. */
 export function useLifecycle<
   Options extends object,
-  Instance extends DestroyableModel,
+  Model extends DestroyableModel,
 >(
   globalName: BuiltInAIName,
   options: Options | undefined,
-  readQuota?: (instance: Instance) => number,
+  readQuota?: (instance: Model) => number,
 ) {
   const stableOptions = useStableOptions(options);
-  const namespace = getNamespace<Options, Instance>(globalName);
+  const namespace = getNamespace<Options, Model>(globalName);
 
   const [store] = useState(() =>
-    createStore<Options, Instance>(globalName, readQuota),
+    createStore<Options, Model>(globalName, readQuota),
   );
 
   useEffect(() => {
