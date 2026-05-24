@@ -59,7 +59,7 @@ export function Tile({
             : undefined,
         },
         "&:focus-visible": {
-          outline: `3px solid ${theme.palette.text.primary}`,
+          outline: `3px solid ${theme.vars?.palette.text.primary ?? theme.palette.text.primary}`,
           outlineOffset: 2,
         },
         "&::after": {
