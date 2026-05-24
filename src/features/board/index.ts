@@ -1,9 +1,9 @@
+export { BoardSetDeleteDialog } from "./board-set/delete-dialog";
+export { BoardSetInfoDialog } from "./board-set/info-dialog";
+export { BoardSetList } from "./board-set/list";
 export { BoardViewer } from "./board-viewer";
 export { importBoardFromUrl } from "./import/from-url";
 export { useImportBoardFiles } from "./import/use-import-board-files";
-export { BoardSetDeleteDialog } from "./library/board-set-delete-dialog";
-export { BoardSetInfoDialog } from "./library/board-set-info-dialog";
-export { BoardSetList } from "./library/board-set-list";
 export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export { boardPath, boardSetPath } from "./paths";
 export { getBoardSets, removeBoardSet } from "./storage/board-sets-store";
