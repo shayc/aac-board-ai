@@ -29,6 +29,13 @@ export function useGridKeyboardNavigation({
   const [activeCell, setActiveCell] = useState<Cell>(() =>
     findFirstNonEmptyCell(grid),
   );
+  // Mirror activeCell into a ref so the grid-change effect can read the latest
+  // position without depending on it (we refocus on grid swap, not every keypress).
+  const activeCellRef = useRef(activeCell);
+  const updateActiveCell = (next: Cell) => {
+    activeCellRef.current = next;
+    setActiveCell(next);
+  };
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -43,14 +50,13 @@ export function useGridKeyboardNavigation({
       }
 
       const next = nextFocus(event, root, from, dir);
-      // Don't preventDefault when we didn't move: let the key reach the
-      // browser / other handlers (e.g. Home/End at the row boundary).
+      // Don't preventDefault when we didn't move — let the key fall through (e.g. Home/End at row boundary).
       if (!next || sameCell(next.position, from)) {
         return;
       }
 
       event.preventDefault();
-      setActiveCell(next.position);
+      updateActiveCell(next.position);
       next.element.focus();
     },
   });
@@ -58,19 +64,12 @@ export function useGridKeyboardNavigation({
   const onFocus = (event: FocusEvent<HTMLElement>) => {
     const position = cellOf(event.target);
     if (position) {
-      setActiveCell(position);
+      updateActiveCell(position);
     }
   };
 
-  // Board navigation unmounts the focused cell; the browser drops focus to <body>.
-  // On grid change, restore to the same row/col, or fall back to the first focusable.
-  // The ref keeps the latest activeCell readable without making the effect depend on
-  // it — we only want to refocus when the grid changes, not on every keyboard move.
-  const activeCellRef = useRef(activeCell);
-  useEffect(() => {
-    activeCellRef.current = activeCell;
-  });
-
+  // Board navigation unmounts the focused cell; browser drops focus to <body>.
+  // Restore the same row/col, else the first focusable.
   const previousGridRef = useRef(grid);
   useEffect(() => {
     if (previousGridRef.current === grid) {
@@ -151,12 +150,8 @@ function nextFocus(
       `${scope} ${FOCUSABLE}`,
     );
 
-    // Home/End follow the visual direction of the physical arrow key so
-    // they stay consistent with ArrowLeft/ArrowRight. On macOS Fn+ArrowLeft
-    // sends Home and Fn+Ctrl+ArrowLeft sends Ctrl+Home; both should move
-    // toward the visual-left edge regardless of writing direction. Because
-    // ArrowLeft is the "end" direction in RTL, Home there picks the last
-    // cell in reading order (DOM order), and End picks the first.
+    // Home/End follow the physical arrow direction (macOS Fn+ArrowLeft sends Home).
+    // In RTL, ArrowLeft moves "end-ward", so Home picks the last cell in DOM order.
     const goToFirst =
       dir === "rtl" ? event.key === "End" : event.key === "Home";
 
