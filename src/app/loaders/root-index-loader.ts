@@ -1,5 +1,5 @@
+import { boardPath } from "@app/routes";
 import {
-  boardPath,
   getBoardSets,
   importBoardFromUrl,
   type BoardSetRecord,
