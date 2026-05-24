@@ -1,5 +1,4 @@
-import type { ImportResult } from "./board-import";
-import { importBoardFiles } from "./board-sets-store";
+import { importBoardFiles, type ImportResult } from "./board-import";
 
 export async function importBoardFromUrl(url: string): Promise<ImportResult> {
   const response = await fetch(url);

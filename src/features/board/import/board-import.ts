@@ -1,5 +1,5 @@
-import { normalizeLocale } from "@shared/utils/locale";
 import { htmlToText } from "@shared/utils/html";
+import { normalizeLocale } from "@shared/utils/locale";
 import { lookup } from "mrmime";
 import {
   loadOBF,
@@ -8,18 +8,19 @@ import {
   type OBFManifest,
 } from "open-board-format";
 import { resolveLoadBoardPaths } from "../obf/mapper";
+import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {
   BoardsDB,
   UpsertAssetInput,
   UpsertBoardInput,
   UpsertBoardSetInput,
-} from "./boards-db";
+} from "../storage/db";
 import {
   putAssets,
   putBoards,
   upsertBoardSet,
   withBoardsDB,
-} from "./boards-db";
+} from "../storage/db";
 
 export interface ImportResult {
   setId: string;
@@ -27,6 +28,14 @@ export interface ImportResult {
 }
 
 export async function importBoardFiles(
+  files: File | File[],
+): Promise<ImportResult[]> {
+  const results = await writeBoardSetFiles(files);
+  await notifyBoardSetsChanged();
+  return results;
+}
+
+export async function writeBoardSetFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];

@@ -1,12 +1,7 @@
 import type { OBFBoard } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { invalidateBoardSets } from "./board-sets-store";
-import {
-  putAssets,
-  putBoards,
-  upsertBoardSet,
-  withBoardsDB,
-} from "./boards-db";
+import { putAssets, putBoards, upsertBoardSet, withBoardsDB } from "./db";
 import { BoardNotFoundError, loadBoard } from "./queries";
 import { resetBoardsDB } from "./test-helpers";
 

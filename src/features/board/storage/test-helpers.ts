@@ -4,7 +4,7 @@ import {
   upsertBoardSet,
   type BoardSetRecord,
   type BoardsDB,
-} from "./boards-db";
+} from "./db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 

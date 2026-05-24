@@ -5,7 +5,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
-import type { BoardSetRecord } from "../storage/boards-db";
+import type { BoardSetRecord } from "../storage/db";
 
 export interface BoardSetDeleteDialogProps {
   boardSet: BoardSetRecord | null;

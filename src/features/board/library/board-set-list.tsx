@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useState } from "react";
-import type { BoardSetRecord } from "../storage/boards-db";
+import type { BoardSetRecord } from "../storage/db";
 
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];

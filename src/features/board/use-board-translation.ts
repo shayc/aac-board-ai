@@ -2,7 +2,7 @@ import { createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useEffect, useState } from "react";
-import { updateBoardStrings, withBoardsDB } from "./storage/boards-db";
+import { updateBoardStrings, withBoardsDB } from "./storage/db";
 import type { Board } from "./types";
 
 export interface UseBoardTranslationOptions {

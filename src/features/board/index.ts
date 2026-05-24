@@ -1,15 +1,15 @@
 export { BoardViewer } from "./board-viewer";
+export { importBoardFromUrl } from "./import/from-url";
+export { useImportBoardFiles } from "./import/use-import-board-files";
 export { BoardSetDeleteDialog } from "./library/board-set-delete-dialog";
 export { BoardSetInfoDialog } from "./library/board-set-info-dialog";
 export { BoardSetList } from "./library/board-set-list";
 export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export { boardPath, boardSetPath } from "./paths";
 export { getBoardSets, removeBoardSet } from "./storage/board-sets-store";
-export type { BoardSetRecord } from "./storage/boards-db";
-export { importBoardFromUrl } from "./storage/import-from-url";
+export type { BoardSetRecord } from "./storage/db";
 export { BoardNotFoundError, getBoardSet, loadBoard } from "./storage/queries";
 export { useBoardSets } from "./storage/use-board-sets";
-export { useImportBoardFiles } from "./storage/use-import-board-files";
 export { useCustomInstructions } from "./suggestions/use-custom-instructions";
 export type { Board } from "./types";
 export { useBoardTranslation } from "./use-board-translation";

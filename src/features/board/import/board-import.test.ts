@@ -1,13 +1,13 @@
 import { loadOBF, loadOBZ } from "open-board-format";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { importBoardFiles } from "./board-import";
 import {
   getAssetBlob,
   getBoard,
   listBoardSets,
   withBoardsDB,
-} from "./boards-db";
-import { resetBoardsDB } from "./test-helpers";
+} from "../storage/db";
+import { resetBoardsDB } from "../storage/test-helpers";
+import { writeBoardSetFiles } from "./board-import";
 
 const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBZ_FIXTURE = "lots_of_stuff.obz";
@@ -32,7 +32,7 @@ async function loadFixtureFile(name: string): Promise<File> {
   });
 }
 
-describe("importBoardFiles", () => {
+describe("writeBoardSetFiles", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -45,7 +45,7 @@ describe("importBoardFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    const importResults = await importBoardFiles(fixtureFile);
+    const importResults = await writeBoardSetFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -106,7 +106,7 @@ describe("importBoardFiles", () => {
     assertDefined(sampleAssetEntry);
     const [sampleAssetPath, sampleAssetBytes] = sampleAssetEntry;
 
-    const importResults = await importBoardFiles(fixtureFile);
+    const importResults = await writeBoardSetFiles(fixtureFile);
 
     expect(importResults).toEqual([
       {
