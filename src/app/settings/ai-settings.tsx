@@ -1,4 +1,3 @@
-import { useCustomInstructions } from "@features/board";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import List from "@mui/material/List";
@@ -9,10 +8,14 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
+import {
+  type BuiltInAIName,
+  isSupported,
+  useAISharedContext,
+} from "@shared/built-in-ai";
 
 export function AISettings() {
-  const [sharedContext, setSharedContext] = useCustomInstructions();
+  const [sharedContext, setSharedContext] = useAISharedContext();
 
   const capabilities: {
     apiName: BuiltInAIName;
