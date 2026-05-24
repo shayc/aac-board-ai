@@ -23,29 +23,34 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
 
     const isPlural = files.length > 1;
+    const pickMessage = (single: string, plural: string) =>
+      isPlural ? plural : single;
+
     showSnackbar({
-      message: isPlural
-        ? m.libraryImportingBoards()
-        : m.libraryImportingBoard(),
+      message: pickMessage(
+        m.libraryImportingBoard(),
+        m.libraryImportingBoards(),
+      ),
     });
 
     try {
       await importBoardFiles(files);
 
       showSnackbar({
-        message: isPlural
-          ? m.libraryImportedBoards()
-          : m.libraryImportedBoard(),
+        message: pickMessage(
+          m.libraryImportedBoard(),
+          m.libraryImportedBoards(),
+        ),
         severity: "success",
       });
-    } catch (error) {
+    } catch {
       showSnackbar({
-        message: isPlural
-          ? m.libraryImportFailedBoards()
-          : m.libraryImportFailedBoard(),
+        message: pickMessage(
+          m.libraryImportFailedBoard(),
+          m.libraryImportFailedBoards(),
+        ),
         severity: "error",
       });
-      throw error;
     }
   }
 
