@@ -56,7 +56,7 @@ export function MessageBar({
             flexGrow: 2,
             gap: 2,
             paddingInlineEnd: 2,
-            borderRadius: 4, // 16px (4 * theme.shape.borderRadius)
+            borderRadius: 16,
             overflow: "hidden",
             bgcolor: "grey.200",
           },
