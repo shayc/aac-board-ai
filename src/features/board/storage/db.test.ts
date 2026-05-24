@@ -11,7 +11,7 @@ import {
   upsertBoardSet,
   withBoardsDB,
   type BoardsDB,
-} from "./boards-db";
+} from "./db";
 import { openCleanBoardsDB } from "./test-helpers";
 
 function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {

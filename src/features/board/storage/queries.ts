@@ -6,13 +6,13 @@ import type { OBFBoard, OBFMedia } from "open-board-format";
 import { obfToBoard } from "../obf/mapper";
 import type { Board } from "../types";
 import {
+  getBoardSet as dbGetBoardSet,
   getAssetBlob,
   getBoard,
-  getBoardSet as dbGetBoardSet,
   withBoardsDB,
   type BoardSetRecord,
   type BoardsDB,
-} from "./boards-db";
+} from "./db";
 
 export class BoardNotFoundError extends Error {
   constructor(setId: string, boardId: string) {

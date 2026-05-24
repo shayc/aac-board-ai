@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import type { LoaderFunctionArgs } from "react-router";
 import { invalidateBoardSets } from "@features/board/storage/board-sets-store";
-import { listBoardSets, withBoardsDB } from "@features/board/storage/boards-db";
+import { listBoardSets, withBoardsDB } from "@features/board/storage/db";
 import {
   resetBoardsDB,
   seedBoardSets,

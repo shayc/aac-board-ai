@@ -1,14 +1,10 @@
 import { createExternalStore } from "@shared/utils/external-store";
 import {
-  importBoardFiles as writeBoardFiles,
-  type ImportResult,
-} from "./board-import";
-import {
   deleteBoardSet,
   listBoardSets,
   withBoardsDB,
   type BoardSetRecord,
-} from "./boards-db";
+} from "./db";
 
 export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
@@ -49,7 +45,7 @@ function ensureLoaded(): void {
   }
 }
 
-async function reloadAndBroadcast(): Promise<void> {
+export async function notifyBoardSetsChanged(): Promise<void> {
   await invalidateBoardSets();
   boardSetsSyncChannel.postMessage("invalidate");
 }
@@ -80,17 +76,9 @@ export async function invalidateBoardSets(): Promise<void> {
   await pendingLoad;
 }
 
-export async function importBoardFiles(
-  files: File | File[],
-): Promise<ImportResult[]> {
-  const results = await writeBoardFiles(files);
-  await reloadAndBroadcast();
-  return results;
-}
-
 export async function removeBoardSet(setId: string): Promise<void> {
   await withBoardsDB((db) => deleteBoardSet(db, setId));
-  await reloadAndBroadcast();
+  await notifyBoardSetsChanged();
 }
 
 boardSetsSyncChannel.addEventListener("message", () => {

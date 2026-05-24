@@ -1,7 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles } from "./board-sets-store";
+import { importBoardFiles } from "./board-import";
 
 const BOARD_FILE_ACCEPT = ".obz,.obf,application/zip,application/json";
 
