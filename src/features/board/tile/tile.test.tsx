@@ -51,7 +51,7 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Colored" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.backgroundColor).toBe("rgb(0, 0, 0)");
+    expect(["rgb(0, 0, 0)", "oklab(0 0 0)"]).toContain(styles.backgroundColor);
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 

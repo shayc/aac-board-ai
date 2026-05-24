@@ -1,5 +1,4 @@
 import Button from "@mui/material/Button";
-import { darken } from "@mui/material/styles";
 import { getReadableTextColor } from "@shared/utils/colors";
 import { Pictogram } from "../pictogram/pictogram";
 
@@ -51,12 +50,12 @@ export function Tile({
         }),
         "&:hover": {
           backgroundColor: backgroundColor
-            ? darken(backgroundColor, 0.2)
+            ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
             : undefined,
         },
         "&:active": {
           backgroundColor: backgroundColor
-            ? darken(backgroundColor, 0.3)
+            ? `color-mix(in srgb, ${backgroundColor}, black 30%)`
             : undefined,
         },
         "&:focus-visible": {
