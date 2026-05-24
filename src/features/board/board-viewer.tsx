@@ -46,14 +46,15 @@ export function BoardViewer({ board }: BoardViewerProps) {
   return (
     <Stack
       direction="column"
-      sx={(theme) => ({
-        height: "100%",
-        ...theme.applyStyles("dark", {
-          backgroundRepeat: "no-repeat",
-          backgroundImage:
-            "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
-        }),
-      })}
+      sx={[
+        { height: "100%" },
+        (theme) =>
+          theme.applyStyles("dark", {
+            backgroundRepeat: "no-repeat",
+            backgroundImage:
+              "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+          }),
+      ]}
     >
       <MessageBar
         parts={message.parts}
