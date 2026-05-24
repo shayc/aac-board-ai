@@ -1,5 +1,5 @@
-import { createInstance } from "../internal/lifecycle/create-instance.ts";
-import type { TranslatorOptions } from "./use-translator.ts";
+import { createInstance } from "../internal/lifecycle/create-instance";
+import type { TranslatorOptions } from "./use-translator";
 
 /**
  * Options for {@link createTranslator}. Mirrors {@link TranslatorOptions} plus

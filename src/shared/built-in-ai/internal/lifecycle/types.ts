@@ -1,4 +1,4 @@
-import type { BuiltInAIName } from "../../is-supported.ts";
+import type { BuiltInAIName } from "../../is-supported";
 
 /** @internal */
 export interface AINamespace<Options, Model extends DestroyableModel> {

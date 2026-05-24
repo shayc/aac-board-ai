@@ -8,7 +8,7 @@ import {
 } from "@features/board/storage/test-helpers";
 import { rootIndexLoader } from "./root-index-loader";
 
-const FIXTURE_BOARD_URL = "/src/shared/testing/sample-boards/lots_of_stuff.obz";
+const FIXTURE_BOARD_URL = "/src/shared/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
 
 function callLoader(searchParams = ""): Promise<Response> {

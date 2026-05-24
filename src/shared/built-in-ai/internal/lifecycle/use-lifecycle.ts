@@ -1,7 +1,7 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
-import type { BuiltInAIName } from "../../is-supported.ts";
-import { createStore } from "./store.ts";
-import { getNamespace } from "./types.ts";
+import type { BuiltInAIName } from "../../is-supported";
+import { createStore } from "./store";
+import { getNamespace } from "./types";
 
 function shallowEqualOptions<T extends object>(
   a: T | undefined,

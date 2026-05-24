@@ -3,14 +3,14 @@ import {
   NoUserActivationError,
   UnavailableError,
   UnsupportedError,
-} from "../../errors.ts";
-import type { BuiltInAIName } from "../../is-supported.ts";
+} from "../../errors";
+import type { BuiltInAIName } from "../../is-supported";
 import {
   clearDownloadProgress,
   setDownloadProgress,
   snapshotProgressFor,
-} from "../progress-store.ts";
-import { createInstance } from "./create-instance.ts";
+} from "../progress-store";
+import { createInstance } from "./create-instance";
 
 interface TestOptions {
   mode?: string;

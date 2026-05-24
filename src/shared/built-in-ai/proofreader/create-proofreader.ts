@@ -1,5 +1,5 @@
-import { createInstance } from "../internal/lifecycle/create-instance.ts";
-import type { ProofreaderOptions } from "./use-proofreader.ts";
+import { createInstance } from "../internal/lifecycle/create-instance";
+import type { ProofreaderOptions } from "./use-proofreader";
 
 /**
  * Options for {@link createProofreader}. Mirrors {@link ProofreaderOptions} plus

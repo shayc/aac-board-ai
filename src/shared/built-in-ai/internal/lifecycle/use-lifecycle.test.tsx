@@ -15,11 +15,11 @@ import {
   NotReadyError,
   UnavailableError,
   UnsupportedError,
-} from "../../errors.ts";
-import type { BuiltInAIName } from "../../is-supported.ts";
-import { snapshotProgressFor } from "../progress-store.ts";
-import { makeAIFake } from "../testing/ai-namespace-fake.ts";
-import { useLifecycle } from "./use-lifecycle.ts";
+} from "../../errors";
+import type { BuiltInAIName } from "../../is-supported";
+import { snapshotProgressFor } from "../progress-store";
+import { makeAIFake } from "../testing/ai-namespace-fake";
+import { useLifecycle } from "./use-lifecycle";
 
 interface TestOptions {
   mode?: string;

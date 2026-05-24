@@ -4,13 +4,13 @@ import {
   NotReadyError,
   UnavailableError,
   UnsupportedError,
-} from "../../errors.ts";
-import type { BuiltInAIName } from "../../is-supported.ts";
-import type { Status } from "../../types.ts";
-import { abortError, mergeSignals, raceAbort } from "../signal.ts";
-import { hasUserActivation } from "../user-activation.ts";
-import { createInstance } from "./create-instance.ts";
-import type { AINamespace } from "./types.ts";
+} from "../../errors";
+import type { BuiltInAIName } from "../../is-supported";
+import type { Status } from "../../types";
+import { abortError, mergeSignals, raceAbort } from "../signal";
+import { hasUserActivation } from "../user-activation";
+import { createInstance } from "./create-instance";
+import type { AINamespace } from "./types";
 
 export interface Snapshot {
   status: Status;

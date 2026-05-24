@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { abortError, mergeSignals, raceAbort } from "./signal.ts";
+import { abortError, mergeSignals, raceAbort } from "./signal";
 
 describe("abortError", () => {
   test("returns a DOMException with name 'AbortError' for a string reason", () => {
