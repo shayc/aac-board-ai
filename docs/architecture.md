@@ -89,7 +89,7 @@ flowchart TD
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
-**See:** [src/features/board/storage/board-import.ts](../src/features/board/storage/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
+**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
 ## 5. State & persistence
 
@@ -105,7 +105,7 @@ Database `aac-boards-db`, version 1.
 | `boards`     | `[setId, boardId]` | `bySetId`                      | `BoardRecord` — the OBF JSON for one board. |
 | `assets`     | `[setId, path]`    | `bySetId`, `bySetIdAndMediaId` | `AssetRecord` — image/sound `Blob`s.        |
 
-Access goes through helpers in `boards-db.ts`. `withBoardsDB(op)` opens the DB, runs the callback, and closes — connections are not pooled because the working set is small and per-operation latency is dominated by the work itself. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
+Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs the callback, and closes — connections are not pooled because the working set is small and per-operation latency is dominated by the work itself. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
 
 ### localStorage
 
@@ -136,7 +136,7 @@ Via `usePersistentState`.
 
 External stores are preferred over context where state outlives any single component, is driven by browser events outside React, or needs cross-tab visibility. Components subscribe through `useSyncExternalStore`.
 
-**See:** [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/hooks/use-persistent-state.ts](../src/shared/hooks/use-persistent-state.ts).
+**See:** [src/features/board/storage/db.ts](../src/features/board/storage/db.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/hooks/use-persistent-state.ts](../src/shared/hooks/use-persistent-state.ts).
 
 ## 6. Interaction & speech
 
