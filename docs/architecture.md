@@ -22,6 +22,8 @@ Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored i
 
 **Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention; board-set dialogs, path helpers, and storage queries are all re-exported from the barrel so consumers never need a deeper import.
 
+**Tests.** Co-located as `*.test.ts` / `*.test.tsx` next to the file under test.
+
 **See:** [tsconfig.app.json](../tsconfig.app.json), [src/features/board/index.ts](../src/features/board/index.ts).
 
 ## 3. App shell & routing
@@ -50,7 +52,7 @@ LanguageProvider              // selected language + Paraglide locale
    └─ SnackbarProvider        // queued transient feedback
 ```
 
-Order is load-bearing: `ThemeProvider` reads `direction` from `useLanguage()` to pick the LTR or RTL emotion cache and theme. Speech is not a provider — it lives in a module-level store (§6). `LanguageProvider` drives that store via `setVoiceLanguage(language)` in an effect, and also synchronizes Paraglide's runtime locale during render so the first paint after a language change is already translated.
+Order is load-bearing: `ThemeProvider` reads `direction` from `useLanguage()` to pick the LTR or RTL emotion cache and theme. Speech is not a provider — it lives in a module-level store (§6). `LanguageProvider` keeps that store in sync via `useVoiceLanguageSync`, which auto-selects a default voice for the active language whenever the current voice doesn't match. It also synchronizes Paraglide's runtime locale during render so the first paint after a language change is already translated.
 
 **See:** [src/app/app-routes.tsx](../src/app/app-routes.tsx), [src/app/loaders/](../src/app/loaders/), [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
 
@@ -67,11 +69,10 @@ flowchart TD
 
   subgraph Load
     R[Route match<br/>/sets/:setId/boards/:boardId] --> L[boardLoader]
-    L --> Q[loadBoard]
+    L --> Q[loadBoard<br/>hydrate assets · obfToBoard]
     Q --> C
     Q --> O[ObjectUrlRegistry]
-    Q --> M[obfToBoard]
-    M --> P[BoardPage<br/>useLoaderData]
+    Q --> P[BoardPage<br/>useLoaderData]
   end
 
   subgraph Render
@@ -109,8 +110,6 @@ Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs th
 
 ### localStorage
 
-Via `usePersistentState`.
-
 | Key                 | Holds                                   | Owner                                                                                 |
 | ------------------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
 | `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)                      |
@@ -118,6 +117,8 @@ Via `usePersistentState`.
 | `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)                                  |
 | `ai-shared-context` | User-supplied custom prompt for AI.     | [useCustomInstructions](../src/features/board/suggestions/use-custom-instructions.ts) |
 | `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)                              |
+
+Most keys flow through `usePersistentState`. `speech-config` is the exception: `speech-store` owns it directly and subscribes itself to persist on every change, because the store also drives an external-store API consumed via `useSyncExternalStore` (§6).
 
 ### Runtime stores
 
@@ -142,21 +143,34 @@ External stores are preferred over context where state outlives any single compo
 
 A board press flows through `useButtonActivation`, which resolves the button into one of three intents and dispatches accordingly:
 
-| Intent     | Trigger                    | Effect                                                                       |
-| ---------- | -------------------------- | ---------------------------------------------------------------------------- |
-| `navigate` | `button.loadBoard?.id`     | `useBoardNavigation.goToBoard(id)`.                                          |
-| `actions`  | `button.actions` non-empty | Run each `BoardAction` (`:space`, `:speak`, `:home`, `+<text>`, …) in order. |
-| `utter`    | Otherwise                  | Append a `MessagePart`, play the button's audio.                             |
+| Intent     | Trigger                    | Effect                                           |
+| ---------- | -------------------------- | ------------------------------------------------ |
+| `navigate` | `button.loadBoard?.id`     | `useBoardNavigation.goToBoard(id)`.              |
+| `actions`  | `button.actions` non-empty | Run each `BoardAction` in order (table below).   |
+| `utter`    | Otherwise                  | Append a `MessagePart`, play the button's audio. |
+
+`BoardAction` is a closed discriminated union dispatched by `kind` in `runAction`:
+
+| `kind`      | Effect                                             |
+| ----------- | -------------------------------------------------- |
+| `space`     | Append an empty `MessagePart`.                     |
+| `backspace` | Remove the last `MessagePart`.                     |
+| `clear`     | Empty the message.                                 |
+| `home`      | `useBoardNavigation.goHome()`.                     |
+| `speak`     | Play the current message via `useMessagePlayback`. |
+| `spell`     | Append `action.text` to the last part's label.     |
+
+OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([mapper.ts](../src/features/board/obf/mapper.ts)); downstream code never sees the source strings.
 
 `useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
 
-Adding a new button behavior means extending `BoardAction` in [features/board/types.ts](../src/features/board/types.ts) and handling it in `useButtonActivation.executeAction` — the dispatch surface is closed.
+Adding a new button behavior means extending `BoardAction` in [features/board/types.ts](../src/features/board/types.ts) and handling it in `useButtonActivation.runAction` — the dispatch surface is closed.
 
 **Message composition.** `useMessage` owns the draft as `MessagePart[]`, persisted to localStorage so a refresh doesn't lose work in progress. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
 
 **Playback.** Two engines, interleaved by `useMessagePlayback`:
 
-- **Speech** — `speech-store` is a module-level store with an imperative API: `speak(text)`, `stop()`, plus setters for voice / rate / pitch / volume. Internally it holds a voice catalog refreshed on `voiceschanged` and a config persisted to `speech-config`. When `LanguageProvider` calls `setVoiceLanguage(language)`, or the catalog refreshes with an incompatible voice, a default voice for the active language is auto-selected. Read-only hooks `useVoicesByLanguage` and `useSpeechConfig` back the settings UI.
+- **Speech** — `speech-store` is a module-level store with an imperative API: `speak(text)`, `stop()`, plus `setVoiceURI` / `setRate` / `setPitch` / `setVolume`. Internally it holds a voice catalog refreshed on `voiceschanged` and a config persisted to `speech-config`. `useVoiceLanguageSync` (called from `LanguageProvider`) watches the catalog and the active language and auto-selects a fallback voice whenever the current `voiceURI` doesn't match an installed voice for that language. Read-only hooks `useVoicesByLanguage` and `useSpeechConfig` back the settings UI.
 - **Audio** — `useAudio` plays one OBF sound asset at a time; `play()` is promise-returning, resolving on `ended` or rejecting when `stop()` is called.
 
 `useMessagePlayback` walks each `MessagePart` in order: if it has a `soundSrc`, play the audio; otherwise speak `getSpokenText(part)` (vocalization, falling back to label). Adjacent text parts are merged into one utterance to avoid clipped speech between words.
@@ -177,7 +191,7 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 **Model storage is not ours.** Built-in AI models are downloaded and managed by the browser's on-device infrastructure, not by the PWA service worker (§9). A first-time model download requires network; once cached by the browser, the capability is offline too — but installing the PWA does not pre-warm it.
 
-**Capability detection.** `isSupported(name)` returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. Called directly by `AISettings`, `LanguageSettings`, and `useSuggestions` to gate AI affordances at render time. Combine with the hook's `status === "unavailable"` for the full readiness picture.
+**Capability detection.** `isSupported(name)` returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. `AISettings` and `LanguageSettings` call it directly to gate AI affordances at render time. Hook consumers (e.g. `useSuggestions`) usually skip the standalone check and read `status` instead — `"unsupported"` covers the missing-global case, and the other terminals (`"unavailable"`, `"error"`) cover the rest of the readiness picture.
 
 **Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`src/shared/built-in-ai/README.md`](../src/shared/built-in-ai/README.md).
 
