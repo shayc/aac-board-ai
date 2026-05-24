@@ -1,9 +1,5 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { isSupported } from "./is-supported";
-
-afterEach(() => {
-  vi.unstubAllGlobals();
-});
 
 describe("isSupported", () => {
   test("returns true when the global namespace exists", () => {

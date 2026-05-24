@@ -1,5 +1,4 @@
 import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -20,7 +19,12 @@ export interface SettingsDrawerProps {
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   return (
-    <Drawer anchor="right" open={open} onClose={onClose}>
+    <Drawer
+      anchor="right"
+      open={open}
+      onClose={onClose}
+      slotProps={{ paper: { sx: { width: 320 } } }}
+    >
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           {m.settingsTitle()}
@@ -39,22 +43,20 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Box sx={{ width: 320, px: 3, pb: 3 }}>
-        <Stack>
-          <AppearanceSettings />
+      <Stack sx={{ px: 3, pb: 3 }}>
+        <AppearanceSettings />
 
-          <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 3 }} />
 
-          <Stack spacing={3}>
-            <LanguageSettings />
-            <SpeechSettings />
-          </Stack>
-
-          <Divider sx={{ my: 3 }} />
-
-          <AISettings />
+        <Stack spacing={3}>
+          <LanguageSettings />
+          <SpeechSettings />
         </Stack>
-      </Box>
+
+        <Divider sx={{ my: 3 }} />
+
+        <AISettings />
+      </Stack>
     </Drawer>
   );
 }

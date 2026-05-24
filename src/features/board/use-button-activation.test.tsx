@@ -1,5 +1,5 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart, UseMessageReturn } from "./message/use-message";
 import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
@@ -63,10 +63,6 @@ describe("useButtonActivation", () => {
   beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   test("navigates to the linked board and skips message and audio when loadBoard.id is set", async () => {
@@ -176,7 +172,7 @@ describe("useButtonActivation", () => {
     });
   });
 
-  test("treats a loadBoard without an id as not navigable and utters instead", async () => {
+  test("treats a loadBoard without an id as not navigable and speaks instead", async () => {
     const { result, message, navigation } = await setup();
 
     await result.current.activateButton({
@@ -189,7 +185,7 @@ describe("useButtonActivation", () => {
     expect(message.addPart).toHaveBeenCalledTimes(1);
   });
 
-  test("treats an empty actions array as no actions and utters instead", async () => {
+  test("treats an empty actions array as no actions and speaks instead", async () => {
     const { result, message } = await setup();
 
     await result.current.activateButton({

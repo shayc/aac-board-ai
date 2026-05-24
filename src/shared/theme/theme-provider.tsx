@@ -21,7 +21,11 @@ const rtlCache = createCache({
 });
 
 const themeOptions = {
+  cssVariables: {
+    colorSchemeSelector: "class",
+  },
   colorSchemes: {
+    light: true,
     dark: true,
   },
   typography: {
@@ -40,7 +44,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   return (
     <CacheProvider value={isRtl ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={isRtl ? rtlTheme : ltrTheme} noSsr>
+      <MUIThemeProvider theme={isRtl ? rtlTheme : ltrTheme}>
         <CssBaseline />
         {children}
       </MUIThemeProvider>

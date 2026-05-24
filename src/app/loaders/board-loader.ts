@@ -1,4 +1,4 @@
-import { BoardNotFoundError, loadBoard, type Board } from "@features/board";
+import { BoardNotFoundError, hydrateBoard, type Board } from "@features/board";
 import { m } from "@paraglide/messages.js";
 import { data, type LoaderFunctionArgs } from "react-router";
 
@@ -10,7 +10,7 @@ export async function boardLoader({
   const boardId = params.boardId!;
 
   try {
-    return await loadBoard(setId, boardId, request.signal);
+    return await hydrateBoard(setId, boardId, request.signal);
   } catch (error) {
     if (error instanceof BoardNotFoundError) {
       throw data(m.boardNotFound(), { status: 404 });

@@ -1,13 +1,9 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
 describe("speech-store without Web Speech API", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.stubGlobal("speechSynthesis", undefined);
-  });
-
-  afterEach(() => {
-    vi.unstubAllGlobals();
   });
 
   test("speak() resolves silently instead of throwing", async () => {

@@ -44,9 +44,9 @@ export function useBoardTranslation({
           signal,
         });
 
-        const phrases = collectSourcePhrases(board);
+        const translatableStrings = collectTranslatableStrings(board);
         const translations = await translatePhrases(
-          phrases,
+          translatableStrings,
           translator,
           signal,
         );
@@ -117,32 +117,32 @@ function applyTranslations(
   };
 }
 
-function collectSourcePhrases(board: Board): Set<string> {
-  const phrases = new Set<string>();
+function collectTranslatableStrings(board: Board): Set<string> {
+  const translatableStrings = new Set<string>();
 
   if (board.name) {
-    phrases.add(board.name);
+    translatableStrings.add(board.name);
   }
 
   for (const button of board.buttons) {
     if (button.label) {
-      phrases.add(button.label);
+      translatableStrings.add(button.label);
     }
     if (button.vocalization) {
-      phrases.add(button.vocalization);
+      translatableStrings.add(button.vocalization);
     }
   }
 
-  return phrases;
+  return translatableStrings;
 }
 
 async function translatePhrases(
-  phrases: Set<string>,
+  translatableStrings: Set<string>,
   translator: Translator,
   signal: AbortSignal,
 ): Promise<Record<string, string>> {
   const entries = await Promise.all(
-    Array.from(phrases).map(async (phrase) => {
+    Array.from(translatableStrings).map(async (phrase) => {
       const translated = await translator.translate(phrase, { signal });
       return [phrase, translated] as const;
     }),

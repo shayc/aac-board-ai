@@ -122,6 +122,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       >
         <Alert
           severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
+          onClose={handleClose}
           sx={{ width: "100%" }}
         >
           {state.current?.message}

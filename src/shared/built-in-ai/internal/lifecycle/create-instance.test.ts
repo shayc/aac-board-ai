@@ -31,7 +31,6 @@ function setUserActivation(isActive: boolean): void {
 }
 
 afterEach(() => {
-  vi.unstubAllGlobals();
   delete (navigator as unknown as { userActivation?: unknown }).userActivation;
 });
 
