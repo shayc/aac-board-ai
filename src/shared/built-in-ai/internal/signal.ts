@@ -25,18 +25,24 @@ export function raceAbort<T>(
   if (signal.aborted) {
     return Promise.reject(toError(signal.reason));
   }
-  return new Promise<T>((resolve, reject) => {
-    const onAbort = () => reject(toError(signal.reason));
-    signal.addEventListener("abort", onAbort, { once: true });
-    promise.then(
-      (v) => {
-        signal.removeEventListener("abort", onAbort);
-        resolve(v);
-      },
-      (e: unknown) => {
-        signal.removeEventListener("abort", onAbort);
-        reject(toError(e));
-      },
-    );
+
+  const { promise: result, resolve, reject } = Promise.withResolvers<T>();
+  const cleanup = new AbortController();
+
+  signal.addEventListener("abort", () => reject(toError(signal.reason)), {
+    signal: cleanup.signal,
   });
+
+  promise.then(
+    (value) => {
+      cleanup.abort();
+      resolve(value);
+    },
+    (error: unknown) => {
+      cleanup.abort();
+      reject(toError(error));
+    },
+  );
+
+  return result;
 }

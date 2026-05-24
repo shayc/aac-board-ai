@@ -83,10 +83,28 @@ describe("raceAbort", () => {
     );
   });
 
-  test("removes its abort listener once the promise resolves", async () => {
+  test("aborts its cleanup signal once the promise resolves", async () => {
     const { signal } = new AbortController();
-    const removeSpy = vi.spyOn(signal, "removeEventListener");
+    const addSpy = vi.spyOn(signal, "addEventListener");
+
     await raceAbort(Promise.resolve("ok"), signal);
-    expect(removeSpy).toHaveBeenCalledWith("abort", expect.any(Function));
+
+    const options = addSpy.mock.calls[0]?.[2] as
+      | AddEventListenerOptions
+      | undefined;
+    expect(options?.signal?.aborted).toBe(true);
+  });
+
+  test("aborts its cleanup signal once the promise rejects", async () => {
+    const { signal } = new AbortController();
+    const addSpy = vi.spyOn(signal, "addEventListener");
+    const inner = new Error("inner");
+
+    await expect(raceAbort(Promise.reject(inner), signal)).rejects.toBe(inner);
+
+    const options = addSpy.mock.calls[0]?.[2] as
+      | AddEventListenerOptions
+      | undefined;
+    expect(options?.signal?.aborted).toBe(true);
   });
 });
