@@ -47,7 +47,6 @@ export async function hydrateBoard(
 
     // Don't promote a superseded registry — it would orphan the live one.
     if (signal?.aborted) {
-      registry.revokeAll();
       throw new DOMException("Aborted", "AbortError");
     }
 
