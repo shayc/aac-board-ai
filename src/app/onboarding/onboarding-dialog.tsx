@@ -51,7 +51,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 1.5, // 6px (1.5 * theme.shape.borderRadius)
+            borderRadius: 6,
             p: 1,
           },
         },
@@ -108,7 +108,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       </DialogContent>
 
       <DialogActions sx={{ px: 3, pb: 3 }}>
-        <Button onClick={onClose} variant="contained" fullWidth size="large">
+        <Button
+          onClick={onClose}
+          variant="contained"
+          fullWidth
+          size="large"
+          sx={{ borderRadius: 6 }}
+        >
           {m.onboardingContinue()}
         </Button>
       </DialogActions>
