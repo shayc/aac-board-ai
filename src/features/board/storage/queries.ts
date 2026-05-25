@@ -58,9 +58,7 @@ export async function hydrateBoard(
     });
 
     // Don't promote a superseded registry — it would orphan the live one.
-    if (signal?.aborted) {
-      throw new DOMException("Aborted", "AbortError");
-    }
+    signal?.throwIfAborted();
 
     const previous = previousRegistry;
     previousRegistry = registry;
