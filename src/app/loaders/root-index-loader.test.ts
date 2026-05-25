@@ -59,22 +59,6 @@ describe("rootIndexLoader", () => {
     expect(response.headers.get("Location")).toBe("/sets/set-2/boards/root-2");
   });
 
-  test("skips sets without a rootBoardId and falls through to the default board", async () => {
-    const probe = await fetch(DEFAULT_BOARD_PATH);
-    if (!probe.ok) {
-      throw new Error(`Default board fixture missing at ${DEFAULT_BOARD_PATH}`);
-    }
-
-    await seedBoardSets([{ setId: "set-broken" }]);
-
-    const response = await callLoader();
-
-    expect(response.status).toBe(302);
-    expect(response.headers.get("Location")).toMatch(
-      /^\/sets\/[^/]+\/boards\/[^/]+$/,
-    );
-  });
-
   test("imports the default board when no param is given and IDB is empty", async () => {
     const probe = await fetch(DEFAULT_BOARD_PATH);
     if (!probe.ok) {

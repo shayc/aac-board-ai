@@ -12,9 +12,6 @@ export async function boardSetIndexLoader({
   if (!set) {
     throw data(m.errorBoardSetNotFound(), { status: 404 });
   }
-  if (!set.rootBoardId) {
-    throw data(m.errorBoardSetIncomplete(), { status: 422 });
-  }
 
   return redirect(boardPath({ setId, boardId: set.rootBoardId }));
 }

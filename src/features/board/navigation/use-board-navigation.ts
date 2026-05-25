@@ -37,13 +37,12 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
 
   const { setId, boardId } = useParams<BoardRouteParams>();
   const { boardSets } = useBoardSets();
-  const rootBoardId =
-    boardSets.find((set) => set.setId === setId)?.rootBoardId ?? "";
+  const rootBoardId = boardSets.find((set) => set.setId === setId)?.rootBoardId;
 
   const backStack = readBackStack(location.state);
 
   const canGoBack = backStack.length > 0;
-  const canGoHome = rootBoardId !== "";
+  const canGoHome = Boolean(rootBoardId);
 
   function goToBoard(id: string) {
     if (!setId || !id || id === boardId) {

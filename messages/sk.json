@@ -77,6 +77,5 @@
   "onboardingContinue": "Continue",
   "errorGenericTitle": "Something went wrong",
   "errorGoHome": "Go home",
-  "errorBoardSetNotFound": "Board set not found",
-  "errorBoardSetIncomplete": "Board set incomplete"
+  "errorBoardSetNotFound": "Board set not found"
 }

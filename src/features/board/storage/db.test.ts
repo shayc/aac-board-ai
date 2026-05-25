@@ -11,8 +11,15 @@ import {
   upsertBoardSet,
   withBoardsDB,
   type BoardsDB,
+  type UpsertBoardSetInput,
 } from "./db";
 import { openCleanBoardsDB } from "./test-helpers";
+
+function makeBoardSetInput(
+  overrides: Partial<UpsertBoardSetInput> = {},
+): UpsertBoardSetInput {
+  return { setId: "set-1", name: "Set", rootBoardId: "root-1", ...overrides };
+}
 
 function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   return {
@@ -43,7 +50,7 @@ describe("upsertBoardSet", () => {
   test("inserts a new board set", async () => {
     const db = await openTestDB();
 
-    await upsertBoardSet(db, { setId: "set-1", name: "My Set" });
+    await upsertBoardSet(db, makeBoardSetInput({ name: "My Set" }));
 
     const sets = await listBoardSets(db);
     expect(sets).toHaveLength(1);
@@ -52,31 +59,14 @@ describe("upsertBoardSet", () => {
     expect(sets[0].boardCount).toBe(0);
   });
 
-  test("updates an existing board set preserving rootBoardId", async () => {
-    const db = await openTestDB();
-
-    await upsertBoardSet(db, {
-      setId: "set-1",
-      name: "Original",
-      rootBoardId: "root-1",
-    });
-
-    await upsertBoardSet(db, { setId: "set-1", name: "Updated" });
-
-    const sets = await listBoardSets(db);
-    expect(sets).toHaveLength(1);
-    expect(sets[0].name).toBe("Updated");
-    expect(sets[0].rootBoardId).toBe("root-1");
-  });
-
   test("preserves boardCount on upsert", async () => {
     const db = await openTestDB();
 
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
     const obf = makeOBFBoard({ id: "b1" });
     await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
 
-    await upsertBoardSet(db, { setId: "set-1", name: "Set Renamed" });
+    await upsertBoardSet(db, makeBoardSetInput({ name: "Set Renamed" }));
 
     const sets = await listBoardSets(db);
     expect(sets[0].boardCount).toBe(1);
@@ -86,7 +76,7 @@ describe("upsertBoardSet", () => {
     const db = await openTestDB();
 
     await expect(
-      upsertBoardSet(db, { setId: "", name: "Bad" }),
+      upsertBoardSet(db, makeBoardSetInput({ setId: "", name: "Bad" })),
     ).rejects.toThrow("Invalid setId");
   });
 
@@ -94,7 +84,10 @@ describe("upsertBoardSet", () => {
     const db = await openTestDB();
 
     await expect(
-      upsertBoardSet(db, { setId: "x".repeat(256), name: "Bad" }),
+      upsertBoardSet(
+        db,
+        makeBoardSetInput({ setId: "x".repeat(256), name: "Bad" }),
+      ),
     ).rejects.toThrow("Invalid setId");
   });
 });
@@ -110,8 +103,8 @@ describe("listBoardSets", () => {
   test("returns sets sorted by updatedAt descending", async () => {
     const db = await openTestDB();
 
-    await upsertBoardSet(db, { setId: "old", name: "Old" });
-    await upsertBoardSet(db, { setId: "new", name: "New" });
+    await upsertBoardSet(db, makeBoardSetInput({ setId: "old", name: "Old" }));
+    await upsertBoardSet(db, makeBoardSetInput({ setId: "new", name: "New" }));
 
     // Force deterministic ordering via raw puts
     const tx = db.transaction("boardSets", "readwrite");
@@ -132,7 +125,7 @@ describe("listBoardSets", () => {
 describe("putBoards and getBoard", () => {
   test("stores and retrieves a board", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const obf = makeOBFBoard({ id: "b1", name: "Board One" });
     await putBoards(db, "set-1", [{ boardId: "b1", name: "Board One", obf }]);
@@ -146,7 +139,7 @@ describe("putBoards and getBoard", () => {
 
   test("counts only unique boards", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const obf = makeOBFBoard({ id: "b1" });
     await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
@@ -162,7 +155,7 @@ describe("putBoards and getBoard", () => {
 
   test("counts multiple boards correctly", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const boards = [
       { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
@@ -178,7 +171,7 @@ describe("putBoards and getBoard", () => {
 
   test("returns undefined for nonexistent board", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const board = await getBoard(db, "set-1", "nonexistent");
     expect(board).toBeUndefined();
@@ -207,7 +200,7 @@ describe("putBoards and getBoard", () => {
 describe("putAssets and getAssetBlob", () => {
   test("stores and retrieves an asset blob", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = new Blob(["hello"], { type: "text/plain" });
     await putAssets(db, "set-1", [
@@ -221,7 +214,7 @@ describe("putAssets and getAssetBlob", () => {
 
   test("normalizes paths with backslashes", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = new Blob(["data"]);
     await putAssets(db, "set-1", [{ path: "images\\photo.png", blob }]);
@@ -232,7 +225,7 @@ describe("putAssets and getAssetBlob", () => {
 
   test("normalizes paths with leading slashes", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = new Blob(["data"]);
     await putAssets(db, "set-1", [{ path: "/images/photo.png", blob }]);
@@ -243,7 +236,7 @@ describe("putAssets and getAssetBlob", () => {
 
   test("normalizes paths with double slashes", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = new Blob(["data"]);
     await putAssets(db, "set-1", [{ path: "images//photo.png", blob }]);
@@ -254,7 +247,7 @@ describe("putAssets and getAssetBlob", () => {
 
   test("returns undefined for nonexistent asset", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = await getAssetBlob(db, "set-1", "nope.png");
     expect(blob).toBeUndefined();
@@ -262,7 +255,7 @@ describe("putAssets and getAssetBlob", () => {
 
   test("stores asset size from blob when not explicitly provided", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const blob = new Blob(["12345"]);
     await putAssets(db, "set-1", [{ path: "file.bin", blob }]);
@@ -276,7 +269,7 @@ describe("putAssets and getAssetBlob", () => {
 describe("updateBoardStrings", () => {
   test("adds localized strings to a board", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const obf = makeOBFBoard({ id: "b1" });
     await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
@@ -294,7 +287,7 @@ describe("updateBoardStrings", () => {
 
   test("preserves existing locale strings when adding a new locale", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const obf = makeOBFBoard({
       id: "b1",
@@ -313,7 +306,7 @@ describe("updateBoardStrings", () => {
 
   test("replaces all strings when updating an existing locale", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     const obf = makeOBFBoard({ id: "b1" });
     await putBoards(db, "set-1", [{ boardId: "b1", name: "B1", obf }]);
@@ -330,7 +323,7 @@ describe("updateBoardStrings", () => {
 
   test("throws when board does not exist", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     await expect(
       updateBoardStrings(db, "set-1", "nonexistent", "es", {}),
@@ -341,7 +334,7 @@ describe("updateBoardStrings", () => {
 describe("deleteBoardSet", () => {
   test("removes the board set record", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     await deleteBoardSet(db, "set-1");
 
@@ -351,7 +344,7 @@ describe("deleteBoardSet", () => {
 
   test("cascade-deletes all boards in the set", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     await putBoards(db, "set-1", [
       { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
@@ -366,7 +359,7 @@ describe("deleteBoardSet", () => {
 
   test("cascade-deletes all assets in the set", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set" });
+    await upsertBoardSet(db, makeBoardSetInput());
 
     await putAssets(db, "set-1", [
       { path: "img1.png", blob: new Blob(["a"]) },
@@ -381,8 +374,11 @@ describe("deleteBoardSet", () => {
 
   test("does not affect other board sets", async () => {
     const db = await openTestDB();
-    await upsertBoardSet(db, { setId: "set-1", name: "Set 1" });
-    await upsertBoardSet(db, { setId: "set-2", name: "Set 2" });
+    await upsertBoardSet(db, makeBoardSetInput({ name: "Set 1" }));
+    await upsertBoardSet(
+      db,
+      makeBoardSetInput({ setId: "set-2", name: "Set 2" }),
+    );
 
     await putBoards(db, "set-1", [
       { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
@@ -414,7 +410,10 @@ describe("withBoardsDB", () => {
 
     await withBoardsDB(async (db) => {
       capturedDb = db;
-      await upsertBoardSet(db, { setId: "temp", name: "Temp" });
+      await upsertBoardSet(
+        db,
+        makeBoardSetInput({ setId: "temp", name: "Temp" }),
+      );
     });
 
     expect(() => {

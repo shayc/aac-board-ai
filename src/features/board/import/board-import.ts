@@ -96,7 +96,9 @@ function resolveRootBoardId(
   if (fromManifest) {
     return fromManifest;
   }
-  return manifest.root.split("/").at(-1)?.replace(".obf", "") ?? "";
+  throw new Error(
+    `Manifest root "${manifest.root}" does not match any board in manifest.paths.boards`,
+  );
 }
 
 function buildBoardRecords(
