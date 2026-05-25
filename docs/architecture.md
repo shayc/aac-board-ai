@@ -54,7 +54,7 @@ LanguageProvider              // selected language + Paraglide locale
 
 Order is load-bearing: `ThemeProvider` reads `direction` from `useLanguage()` to pick the LTR or RTL emotion cache and theme. Speech is not a provider — it lives in a module-level store (§6). `LanguageProvider` keeps that store in sync via `useVoiceLanguageSync`, which auto-selects a default voice for the active language whenever the current voice doesn't match. It also synchronizes Paraglide's runtime locale during render so the first paint after a language change is already translated.
 
-**See:** [src/app/app-routes.tsx](../src/app/app-routes.tsx), [src/app/loaders/](../src/app/loaders/), [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
+**See:** [src/app/app-router.tsx](../src/app/app-router.tsx), [src/app/loaders/](../src/app/loaders/), [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
 
 ## 4. Loading a board
 
@@ -110,13 +110,13 @@ Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs th
 
 ### localStorage
 
-| Key                 | Holds                                   | Owner                                                                                 |
-| ------------------- | --------------------------------------- | ------------------------------------------------------------------------------------- |
-| `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)                      |
-| `message`           | Current `MessagePart[]` draft.          | [useMessage](../src/features/board/message/use-message.ts)                            |
-| `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)                                  |
-| `ai-shared-context` | User-supplied custom prompt for AI.     | [useCustomInstructions](../src/features/board/suggestions/use-custom-instructions.ts) |
-| `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)                              |
+| Key                 | Holds                                   | Owner                                                                    |
+| ------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)         |
+| `message`           | Current `MessagePart[]` draft.          | [useMessage](../src/features/board/message/use-message.ts)               |
+| `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)                     |
+| `ai-shared-context` | User-supplied custom prompt for AI.     | [useAISharedContext](../src/shared/built-in-ai/use-ai-shared-context.ts) |
+| `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)                 |
 
 Most keys flow through `usePersistentState`. `speech-config` is the exception: `speech-store` owns it directly and subscribes itself to persist on every change, because the store also drives an external-store API consumed via `useSyncExternalStore` (§6).
 
@@ -160,7 +160,7 @@ A board press flows through `useButtonActivation`, which resolves the button int
 | `speak`     | Play the current message via `useMessagePlayback`. |
 | `spell`     | Append `action.text` to the last part's label.     |
 
-OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([mapper.ts](../src/features/board/obf/mapper.ts)); downstream code never sees the source strings.
+OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
 
 `useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
 
