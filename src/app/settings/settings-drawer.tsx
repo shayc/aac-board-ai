@@ -23,9 +23,19 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       anchor="right"
       open={open}
       onClose={onClose}
-      slotProps={{ paper: { sx: { width: 320 } } }}
+      slotProps={{
+        paper: {
+          sx: { width: "calc(320px + env(safe-area-inset-right))" },
+        },
+      }}
     >
-      <Toolbar>
+      <Toolbar
+        sx={(theme) => ({
+          [theme.breakpoints.up("sm")]: {
+            pr: "env(safe-area-inset-right)",
+          },
+        })}
+      >
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
           {m.settingsTitle()}
         </Typography>
@@ -43,7 +53,16 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Stack sx={{ px: 3, pb: 3 }}>
+      <Stack
+        sx={[
+          { px: 3, pb: 3 },
+          (theme) => ({
+            [theme.breakpoints.up("sm")]: {
+              pr: "env(safe-area-inset-right)",
+            },
+          }),
+        ]}
+      >
         <AppearanceSettings />
 
         <Divider sx={{ my: 3 }} />

@@ -54,6 +54,12 @@ export function BoardViewer({ board }: BoardViewerProps) {
             backgroundImage:
               "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
           }),
+        (theme) => ({
+          [theme.breakpoints.up("sm")]: {
+            pl: "env(safe-area-inset-left)",
+            pr: "env(safe-area-inset-right)",
+          },
+        }),
       ]}
     >
       <MessageBar
