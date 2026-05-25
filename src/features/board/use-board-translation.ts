@@ -2,7 +2,7 @@ import { createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useEffect, useState } from "react";
-import { updateBoardStrings, withBoardsDB } from "./storage/db";
+import { persistBoardTranslations } from "./storage/queries";
 import type { Board } from "./types";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
@@ -158,9 +158,7 @@ async function persistTranslations(
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await withBoardsDB(async (db) => {
-      await updateBoardStrings(db, setId, boardId, locale, translations);
-    });
+    await persistBoardTranslations(setId, boardId, locale, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }
