@@ -24,7 +24,7 @@ export interface Acquired<Model> {
   signal: AbortSignal;
 }
 
-const INITIAL: Snapshot = {
+const INITIAL_SNAPSHOT: Snapshot = {
   status: "idle",
   progress: 0,
   error: null,
@@ -56,7 +56,7 @@ export function createStore<
   Options extends object,
   Model extends DestroyableModel,
 >(globalName: BuiltInAIName, readQuota: (instance: Model) => number = () => 0) {
-  let snapshot: Snapshot = INITIAL;
+  let snapshot: Snapshot = INITIAL_SNAPSHOT;
   const listeners = new Set<() => void>();
 
   let namespace: AINamespace<Options, Model> | undefined;
@@ -229,7 +229,7 @@ export function createStore<
     destroyQuietly(instance);
     instance = null;
     snapshot = {
-      ...INITIAL,
+      ...INITIAL_SNAPSHOT,
       status: nextNamespace ? "idle" : "unsupported",
     };
     notify();
