@@ -25,7 +25,16 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       onClose={onClose}
       slotProps={{
         paper: {
-          sx: { width: "calc(320px + env(safe-area-inset-right))" },
+          sx: [
+            {
+              width: "calc(320px + env(safe-area-inset-right))",
+            },
+            (theme) => ({
+              [theme.breakpoints.up("sm")]: {
+                pr: 3,
+              },
+            }),
+          ],
         },
       }}
     >
