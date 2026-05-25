@@ -17,7 +17,16 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   const pageTitle = usePageTitle();
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="static"
+      sx={(theme) => ({
+        [theme.breakpoints.down("md")]: {
+          "@media (orientation: landscape)": {
+            display: "none",
+          },
+        },
+      })}
+    >
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
