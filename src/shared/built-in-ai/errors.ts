@@ -1,7 +1,7 @@
 /**
- * Base class for every error thrown by this package's lifecycle. Use
- * `instanceof BuiltInAIError` to separate library errors from browser API
- * rejections (e.g. `AbortError`) that pass through unchanged.
+ * Base for the typed subclasses below, and the concrete wrapper for unmapped
+ * rejections (inspect `.cause`). `instanceof BuiltInAIError` separates library
+ * errors from pass-through browser rejections like `AbortError`.
  */
 export class BuiltInAIError extends Error {
   override name = "BuiltInAIError";

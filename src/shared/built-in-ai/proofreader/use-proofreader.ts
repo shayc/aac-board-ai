@@ -8,7 +8,10 @@ import type { BaseHookReturn } from "../types";
  *
  * @see https://developer.chrome.com/docs/ai/proofreader-api
  */
-export type ProofreaderOptions = ProofreaderCreateCoreOptions;
+export type ProofreaderOptions = Omit<
+  ProofreaderCreateOptions,
+  "signal" | "monitor"
+>;
 
 /** Per-call options for {@link useProofreader} action methods. */
 export type ProofreadCallOptions = ProofreaderProofreadOptions;

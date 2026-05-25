@@ -267,7 +267,11 @@ export function createStore<
     if (merged.aborted) {
       throw merged.reason;
     }
-    return { instance: instance!, signal: merged };
+    // start()/stop() during the await nulls instance under a fresh (unaborted) controller.
+    if (!instance) {
+      throw new NotReadyError();
+    }
+    return { instance, signal: merged };
   };
 
   return {
