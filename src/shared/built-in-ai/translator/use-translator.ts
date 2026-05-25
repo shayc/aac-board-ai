@@ -9,7 +9,10 @@ import type { BaseHookReturn } from "../types";
  *
  * @see https://developer.chrome.com/docs/ai/translator-api
  */
-export type TranslatorOptions = TranslatorCreateCoreOptions;
+export type TranslatorOptions = Omit<
+  TranslatorCreateOptions,
+  "signal" | "monitor"
+>;
 
 /** Per-call options for {@link useTranslator} action methods. */
 export type TranslateCallOptions = TranslatorTranslateOptions;
