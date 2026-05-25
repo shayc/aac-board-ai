@@ -9,6 +9,7 @@ import {
   getBoardSet as dbGetBoardSet,
   getAssetBlob,
   getBoard,
+  updateBoardStrings,
   withBoardsDB,
   type BoardSetRecord,
   type BoardsDB,
@@ -25,6 +26,17 @@ export async function getBoardSet(
   setId: string,
 ): Promise<BoardSetRecord | undefined> {
   return withBoardsDB((db) => dbGetBoardSet(db, setId));
+}
+
+export async function persistBoardTranslations(
+  setId: string,
+  boardId: string,
+  locale: string,
+  translations: Record<string, string>,
+): Promise<void> {
+  await withBoardsDB((db) =>
+    updateBoardStrings(db, setId, boardId, locale, translations),
+  );
 }
 
 // Single concurrent caller assumed — the only consumer is boardLoader.
