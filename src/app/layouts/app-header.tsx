@@ -19,22 +19,17 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
   return (
     <AppBar
       position="static"
-      sx={(theme) => ({
-        [theme.breakpoints.down("md")]: {
-          "@media (orientation: landscape)": {
-            display: "none",
+      sx={[
+        (theme) => ({
+          [theme.breakpoints.down("md")]: {
+            "@media (orientation: landscape)": {
+              display: "none",
+            },
           },
-        },
-      })}
+        }),
+      ]}
     >
-      <Toolbar
-        sx={(theme) => ({
-          [theme.breakpoints.up("sm")]: {
-            pl: "env(safe-area-inset-left)",
-            pr: "env(safe-area-inset-right)",
-          },
-        })}
-      >
+      <Toolbar>
         <Tooltip title={m.menuOpen()}>
           <IconButton
             aria-label={m.menuLabel()}
