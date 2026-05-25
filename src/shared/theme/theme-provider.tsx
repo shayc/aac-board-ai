@@ -33,6 +33,15 @@ const themeOptions = {
       textTransform: "none",
     },
   },
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        html: {
+          overscrollBehaviorY: "none",
+        },
+      },
+    },
+  },
 } as const;
 
 const ltrTheme = createTheme({ ...themeOptions, direction: "ltr" });
