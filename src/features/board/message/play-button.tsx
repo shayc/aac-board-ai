@@ -34,7 +34,11 @@ export function PlayButton({
             height: 72,
           }}
         >
-          {isPlaying ? <StopIcon /> : <PlayArrowIcon sx={flipForRtl} />}
+          {isPlaying ? (
+            <StopIcon sx={{ fontSize: 36 }} />
+          ) : (
+            <PlayArrowIcon sx={[flipForRtl, { fontSize: 36 }]} />
+          )}
         </Fab>
       </Box>
     </Tooltip>
