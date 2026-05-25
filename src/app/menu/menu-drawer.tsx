@@ -31,9 +31,19 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       anchor="left"
       open={open}
       onClose={onClose}
-      slotProps={{ paper: { sx: { width: 320 } } }}
+      slotProps={{
+        paper: {
+          sx: { width: "calc(320px + env(safe-area-inset-left))" },
+        },
+      }}
     >
-      <Toolbar>
+      <Toolbar
+        sx={(theme) => ({
+          [theme.breakpoints.up("sm")]: {
+            pl: "env(safe-area-inset-left)",
+          },
+        })}
+      >
         <Typography component="div" variant="h6" noWrap>
           {APP_NAME}
         </Typography>
@@ -41,7 +51,13 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
 
       <Divider />
 
-      <List>
+      <List
+        sx={(theme) => ({
+          [theme.breakpoints.up("sm")]: {
+            pl: "env(safe-area-inset-left)",
+          },
+        })}
+      >
         {menuItems.map((item) => (
           <ListItem key={item.to} disablePadding>
             <ListItemButton

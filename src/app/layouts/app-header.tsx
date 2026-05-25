@@ -18,7 +18,14 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
 
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar
+        sx={(theme) => ({
+          [theme.breakpoints.up("sm")]: {
+            pl: "env(safe-area-inset-left)",
+            pr: "env(safe-area-inset-right)",
+          },
+        })}
+      >
         <Tooltip title={m.menuOpen()}>
           <IconButton
             aria-label={m.menuLabel()}
