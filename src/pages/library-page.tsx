@@ -74,6 +74,7 @@ export const Component = function LibraryPage() {
     return (
       <PageContainer>
         <PageTitle>{m.menuLibrary()}</PageTitle>
+
         <EmptyState
           icon={<FilterNoneOutlinedIcon />}
           title={m.libraryEmptyTitle()}
@@ -98,7 +99,7 @@ export const Component = function LibraryPage() {
 
       <Stack
         direction="row"
-        sx={{ alignItems: "center", justifyContent: "flex-end", mb: 2 }}
+        sx={{ alignItems: "center", justifyContent: "flex-end", pt: 4 }}
       >
         <Button
           variant="text"

@@ -3,7 +3,6 @@ import { PageContainer } from "@app/layouts/page-container";
 import { PageTitle } from "@app/layouts/page-title";
 import { ParaglideMessage } from "@inlang/paraglide-js-react";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
@@ -13,7 +12,8 @@ export const Component = function AboutPage() {
   return (
     <PageContainer>
       <PageTitle>{m.aboutHeading()}</PageTitle>
-      <Stack spacing={{ xs: 3, sm: 4 }}>
+
+      <Stack spacing={{ xs: 3, sm: 4 }} sx={{ pt: 4 }}>
         <Typography component="p" variant="body1">
           {m.aboutAppDescription({ appName: APP_NAME })}
         </Typography>
@@ -49,16 +49,13 @@ export const Component = function AboutPage() {
           />
         </Typography>
 
-        <Button
-          variant="text"
-          startIcon={<GitHubIcon />}
+        <ExternalLink
           href="https://github.com/shayc/aac-board-ai"
-          target="_blank"
-          rel="noopener noreferrer"
-          sx={{ alignSelf: "flex-start" }}
+          sx={{ display: "inline-flex", gap: 1 }}
         >
+          <GitHubIcon />
           {m.aboutViewSource()}
-        </Button>
+        </ExternalLink>
       </Stack>
     </PageContainer>
   );
