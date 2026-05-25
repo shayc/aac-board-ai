@@ -14,4 +14,4 @@ export {
 } from "./storage/queries";
 export { useBoardSets } from "./storage/use-board-sets";
 export type { Board } from "./types";
-export { useBoardTranslation } from "./use-board-translation";
+export { useBoardTranslation } from "./translation/use-board-translation";
