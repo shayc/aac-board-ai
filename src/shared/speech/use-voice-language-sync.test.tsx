@@ -3,8 +3,18 @@ import { renderHook } from "vitest-browser-react";
 import { getSpeechConfig, setVoiceURI } from "./speech-store";
 import { useVoiceLanguageSync } from "./use-voice-language-sync";
 
-function makeVoice(lang: string, uri: string): SpeechSynthesisVoice {
-  return { lang, voiceURI: uri, name: uri, localService: true, default: false };
+function makeVoice(
+  lang: string,
+  uri: string,
+  isDefault = false,
+): SpeechSynthesisVoice {
+  return {
+    lang,
+    voiceURI: uri,
+    name: uri,
+    localService: true,
+    default: isDefault,
+  };
 }
 
 describe("useVoiceLanguageSync", () => {
@@ -43,5 +53,19 @@ describe("useVoiceLanguageSync", () => {
 
     // Effect runs but sees a matching voice and returns early without writing.
     expect(getSpeechConfig().voiceURI).toBe("en-voice");
+  });
+
+  test("prefers the default voice when multiple voices exist for the language", async () => {
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("en-US", "en-non-default"),
+      makeVoice("en-US", "en-default", true),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+
+    await renderHook(() => useVoiceLanguageSync({ language: "en" }));
+
+    await vi.waitFor(() => {
+      expect(getSpeechConfig().voiceURI).toBe("en-default");
+    });
   });
 });
