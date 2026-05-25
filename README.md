@@ -69,6 +69,7 @@ Open [http://localhost:5173](http://localhost:5173)
 ## Development
 
 ```bash
+npx playwright install  # One-time: install Chromium for tests
 npm run dev             # Start dev server
 npm run lint            # Lint
 npm test                # Run tests
