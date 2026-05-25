@@ -13,7 +13,7 @@ export const Component = function AboutPage() {
     <PageContainer>
       <PageTitle>{m.aboutHeading()}</PageTitle>
 
-      <Stack spacing={{ xs: 3, sm: 4 }} sx={{ pt: 4 }}>
+      <Stack spacing={{ xs: 3, sm: 4 }} sx={{ pt: 6 }}>
         <Typography component="p" variant="body1">
           {m.aboutAppDescription({ appName: APP_NAME })}
         </Typography>

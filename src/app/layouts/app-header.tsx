@@ -43,7 +43,7 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
           </IconButton>
         </Tooltip>
 
-        <Typography component="h1" variant="h6" noWrap sx={{ flexGrow: 1 }}>
+        <Typography noWrap component="h1" variant="h6" sx={{ flexGrow: 1 }}>
           {pageTitle}
         </Typography>
 
