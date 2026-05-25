@@ -40,7 +40,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
-            pl: 3,
+            pl: `calc(${theme.spacing(2)} + env(safe-area-inset-left))`,
           },
         })}
       >
