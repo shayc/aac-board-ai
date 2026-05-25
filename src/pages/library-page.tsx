@@ -99,7 +99,7 @@ export const Component = function LibraryPage() {
 
       <Stack
         direction="row"
-        sx={{ alignItems: "center", justifyContent: "flex-end", pt: 4 }}
+        sx={{ alignItems: "center", justifyContent: "flex-end", pt: 3, pb: 2 }}
       >
         <Button
           variant="text"
