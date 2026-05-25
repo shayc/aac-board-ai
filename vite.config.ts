@@ -19,7 +19,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["board.svg", "apple-touch-icon-180x180.png"],
+      includeAssets: ["board.svg"],
       manifest: {
         name: "AAC Board AI",
         short_name: "AAC Board",
