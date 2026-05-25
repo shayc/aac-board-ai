@@ -77,6 +77,5 @@
   "onboardingContinue": "המשך",
   "errorGenericTitle": "משהו השתבש",
   "errorGoHome": "חזרה לעמוד הבית",
-  "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardSetIncomplete": "ערכת הלוחות אינה מלאה"
+  "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה"
 }

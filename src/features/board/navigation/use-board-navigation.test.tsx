@@ -80,14 +80,6 @@ describe("useBoardNavigation", () => {
       expect(result.current.nav.canGoHome).toBe(true);
     });
 
-    test("is false when the board set has no root board", async () => {
-      await seedBoardSets([{ setId: "set-1" }]);
-
-      const { result } = await setup();
-
-      expect(result.current.nav.canGoHome).toBe(false);
-    });
-
     test("is false when the board set is missing", async () => {
       await seedBoardSets([]);
 

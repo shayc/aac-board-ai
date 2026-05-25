@@ -1,6 +1,6 @@
 import { PageContainer } from "@app/layouts/page-container";
 import { PageTitle } from "@app/layouts/page-title";
-import { boardPath, boardSetPath } from "@app/route-patterns";
+import { boardPath } from "@app/route-patterns";
 import {
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
@@ -31,16 +31,12 @@ export const Component = function LibraryPage() {
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   function handleSelect(boardSet: BoardSetRecord) {
-    if (boardSet.rootBoardId) {
-      void navigate(
-        boardPath({
-          setId: boardSet.setId,
-          boardId: boardSet.rootBoardId,
-        }),
-      );
-    } else {
-      void navigate(boardSetPath({ setId: boardSet.setId }));
-    }
+    void navigate(
+      boardPath({
+        setId: boardSet.setId,
+        boardId: boardSet.rootBoardId,
+      }),
+    );
   }
 
   async function handleDelete() {

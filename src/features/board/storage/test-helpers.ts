@@ -33,6 +33,7 @@ export async function openCleanBoardsDB(): Promise<BoardsDB> {
 
 export interface SeedBoardSet extends Partial<BoardSetRecord> {
   setId: string;
+  rootBoardId: string;
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {

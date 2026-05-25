@@ -1,18 +1,8 @@
 import { boardPath } from "@app/route-patterns";
-import {
-  getBoardSets,
-  importBoardFromUrl,
-  type BoardSetRecord,
-} from "@features/board";
+import { getBoardSets, importBoardFromUrl } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
-
-function hasRootBoard(
-  set: BoardSetRecord,
-): set is BoardSetRecord & { rootBoardId: string } {
-  return Boolean(set.rootBoardId);
-}
 
 async function resolveInitialRedirectPath(
   boardUrl: string | null,
@@ -22,7 +12,7 @@ async function resolveInitialRedirectPath(
     return boardPath({ setId, boardId });
   }
 
-  const existing = (await getBoardSets()).find(hasRootBoard);
+  const [existing] = await getBoardSets();
   if (existing) {
     return boardPath({ setId: existing.setId, boardId: existing.rootBoardId });
   }

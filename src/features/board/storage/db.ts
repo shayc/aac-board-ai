@@ -5,7 +5,7 @@ import type { OBFBoard } from "open-board-format";
 export interface BoardSetRecord {
   setId: string;
   name: string;
-  rootBoardId?: string;
+  rootBoardId: string;
   updatedAt: number;
   boardCount: number;
   author?: string;
@@ -35,7 +35,7 @@ export interface AssetRecord {
 export interface UpsertBoardSetInput {
   setId: string;
   name: string;
-  rootBoardId?: string;
+  rootBoardId: string;
   author?: string;
   description?: string;
   license?: string;
@@ -144,7 +144,7 @@ export async function upsertBoardSet(
   const record: BoardSetRecord = {
     setId: input.setId,
     name: input.name,
-    rootBoardId: input.rootBoardId ?? existing?.rootBoardId,
+    rootBoardId: input.rootBoardId,
     updatedAt: Date.now(),
     boardCount: existing?.boardCount ?? 0,
     author: input.author ?? existing?.author,

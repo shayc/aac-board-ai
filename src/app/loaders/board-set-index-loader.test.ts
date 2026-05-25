@@ -59,12 +59,4 @@ describe("boardSetIndexLoader", () => {
 
     expectThrownStatus(error, 404);
   });
-
-  test("throws 422 when the board set has no root board", async () => {
-    await seedBoardSets([{ setId: "set-1" }]);
-
-    const error = await expectThrown(callLoader("set-1"));
-
-    expectThrownStatus(error, 422);
-  });
 });
