@@ -35,9 +35,9 @@ export function PlayButton({
           }}
         >
           {isPlaying ? (
-            <StopIcon sx={{ fontSize: 36 }} />
+            <StopIcon sx={{ fontSize: 32 }} />
           ) : (
-            <PlayArrowIcon sx={[flipForRtl, { fontSize: 36 }]} />
+            <PlayArrowIcon sx={[flipForRtl, { fontSize: 32 }]} />
           )}
         </Fab>
       </Box>
