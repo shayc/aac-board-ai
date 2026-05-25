@@ -1,4 +1,5 @@
-import { boardPath, getBoardSet } from "@features/board";
+import { boardPath } from "@app/route-patterns";
+import { getBoardSet } from "@features/board";
 import { m } from "@paraglide/messages.js";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 

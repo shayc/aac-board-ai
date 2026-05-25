@@ -1,5 +1,5 @@
+import { boardPath } from "@app/route-patterns";
 import { useLocation, useNavigate, useParams } from "react-router";
-import { boardPath } from "../paths";
 import { useBoardSets } from "../storage/use-board-sets";
 
 export interface BoardRouteParams {
