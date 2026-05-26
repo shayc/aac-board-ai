@@ -1,4 +1,3 @@
-/// <reference types="vitest/config" />
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
@@ -6,6 +5,7 @@ import { playwright } from "@vitest/browser-playwright";
 import path from "path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+import { coverageConfigDefaults } from "vitest/config";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -81,6 +81,9 @@ export default defineConfig({
       provider: playwright(),
       // https://vitest.dev/guide/browser/playwright
       instances: [{ browser: "chromium" }],
+    },
+    coverage: {
+      exclude: [...coverageConfigDefaults.exclude, "src/paraglide/**"],
     },
   },
 });
