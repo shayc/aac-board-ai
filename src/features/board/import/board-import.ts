@@ -6,7 +6,7 @@ import {
   loadOBZ,
   type OBFBoard,
   type OBFManifest,
-} from "open-board-format";
+} from "@shayc/open-board-format";
 import { resolveLoadBoardPaths } from "../obf/obf-to-board";
 import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {

@@ -1,6 +1,6 @@
+import type { OBFBoard } from "@shayc/open-board-format";
 import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
-import type { OBFBoard } from "open-board-format";
 
 // Stored records
 

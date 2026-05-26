@@ -1,4 +1,4 @@
-import type { OBFBoard } from "open-board-format";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { invalidateBoardSets } from "./board-sets-store";
 import { putAssets, putBoards, upsertBoardSet, withBoardsDB } from "./db";

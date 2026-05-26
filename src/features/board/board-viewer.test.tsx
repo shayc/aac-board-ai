@@ -1,6 +1,6 @@
 import { AppProviders } from "@app/app-providers";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import type { OBFBoard } from "open-board-format";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";

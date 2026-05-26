@@ -1,4 +1,4 @@
-import { loadOBF, loadOBZ } from "open-board-format";
+import { loadOBF, loadOBZ } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
   getAssetBlob,
