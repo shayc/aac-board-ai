@@ -110,13 +110,13 @@ Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs th
 
 ### localStorage
 
-| Key                 | Holds                                   | Owner                                                                    |
-| ------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
-| `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)         |
-| `message`           | Current `MessagePart[]` draft.          | [useMessage](../src/features/board/message/use-message.ts)               |
-| `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)                     |
-| `ai-shared-context` | User-supplied custom prompt for AI.     | [useAISharedContext](../src/shared/built-in-ai/use-ai-shared-context.ts) |
-| `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)                 |
+| Key                 | Holds                                   | Owner                                                              |
+| ------------------- | --------------------------------------- | ------------------------------------------------------------------ |
+| `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)   |
+| `message`           | Current `MessagePart[]` draft.          | [useMessage](../src/features/board/message/use-message.ts)         |
+| `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)               |
+| `ai-shared-context` | User-supplied custom prompt for AI.     | [useAISharedContext](../src/shared/hooks/use-ai-shared-context.ts) |
+| `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)           |
 
 Most keys flow through `usePersistentState`. `speech-config` is the exception: `speech-store` owns it directly and subscribes itself to persist on every change, because the store also drives an external-store API consumed via `useSyncExternalStore` (§6).
 
@@ -193,7 +193,7 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 **Capability detection.** `isSupported(name)` returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. `AISettings` and `LanguageSettings` call it directly to gate AI affordances at render time. Hook consumers (e.g. `useSuggestions`) usually skip the standalone check and read `status` instead — `"unsupported"` covers the missing-global case, and the other terminals (`"unavailable"`, `"error"`) cover the rest of the readiness picture.
 
-**Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`src/shared/built-in-ai/README.md`](../src/shared/built-in-ai/README.md).
+**Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai#readme).
 
 **Cross-instance progress.** Each download writes its `event.loaded` to a module-level `progress-store` keyed by `name + options`. `useGlobalDownloadProgress(namespace?)` reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads from every hook and creator. `LanguageSettings` consumes the `"Translator"` slice to render its progress alert.
 
@@ -201,7 +201,7 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 **Suggestions composition.** `useSuggestions` runs the proofreader and rewriter in parallel against a shared `AbortController`, cancels in-flight calls when the input changes, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
 
-**See:** [src/shared/built-in-ai/README.md](../src/shared/built-in-ai/README.md), [src/shared/built-in-ai/is-supported.ts](../src/shared/built-in-ai/is-supported.ts), [src/shared/built-in-ai/use-global-download-progress.ts](../src/shared/built-in-ai/use-global-download-progress.ts), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
+**See:** [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai#readme), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
 
 ## 8. Internationalization
 

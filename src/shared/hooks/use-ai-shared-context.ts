@@ -1,7 +1,7 @@
 import {
   type UsePersistentStateReturn,
   usePersistentState,
-} from "@shared/hooks/use-persistent-state";
+} from "./use-persistent-state";
 
 const STORAGE_KEY = "ai-shared-context";
 
