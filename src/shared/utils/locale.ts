@@ -1,3 +1,8 @@
+const englishLanguageNames = new Intl.DisplayNames(["en"], {
+  type: "language",
+  languageDisplay: "dialect",
+});
+
 function parseLocale(locale: string): Intl.Locale {
   return new Intl.Locale(locale.replace(/_/g, "-"));
 }
@@ -21,11 +26,6 @@ export function normalizeLocale(locale: string): string {
 export function getLanguageCode(locale: string): string {
   return locale.split(/[_-]/)[0].toLowerCase();
 }
-
-const englishLanguageNames = new Intl.DisplayNames(["en"], {
-  type: "language",
-  languageDisplay: "dialect",
-});
 
 /**
  * Returns the display name of a locale code in English.

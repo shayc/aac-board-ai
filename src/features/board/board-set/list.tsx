@@ -21,6 +21,22 @@ export interface BoardSetListProps {
   onInfo: (boardSet: BoardSetRecord) => void;
 }
 
+function formatSecondary(boardSet: BoardSetRecord): string {
+  const parts: string[] = [];
+
+  const { gridRows, gridColumns, author } = boardSet;
+
+  if (gridRows && gridColumns) {
+    parts.push(`${gridRows}×${gridColumns}`);
+  }
+
+  if (author) {
+    parts.push(m.libraryByAuthor({ author }));
+  }
+
+  return parts.join(" · ");
+}
+
 export function BoardSetList({
   boardSets,
   onSelect,
@@ -33,22 +49,6 @@ export function BoardSetList({
   } | null>(null);
 
   const menuOpen = Boolean(menuAnchor);
-
-  function formatSecondary(boardSet: BoardSetRecord): string {
-    const parts: string[] = [];
-
-    const { gridRows, gridColumns, author } = boardSet;
-
-    if (gridRows && gridColumns) {
-      parts.push(`${gridRows}×${gridColumns}`);
-    }
-
-    if (author) {
-      parts.push(m.libraryByAuthor({ author }));
-    }
-
-    return parts.join(" · ");
-  }
 
   function handleMenuOpen(
     event: React.MouseEvent<HTMLElement>,

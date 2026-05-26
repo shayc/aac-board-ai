@@ -11,10 +11,6 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 
-export interface SnackbarProviderProps {
-  children: ReactNode;
-}
-
 interface SnackbarMessage extends SnackbarOptions {
   key: number;
 }
@@ -68,6 +64,10 @@ function snackbarReducer(
       return { ...state, current: undefined };
     }
   }
+}
+
+export interface SnackbarProviderProps {
+  children: ReactNode;
 }
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {

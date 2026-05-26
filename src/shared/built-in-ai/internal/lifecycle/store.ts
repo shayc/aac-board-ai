@@ -24,6 +24,10 @@ export interface Acquired<Model> {
   signal: AbortSignal;
 }
 
+interface ProvisionOptions {
+  showDownloadUI: boolean;
+}
+
 const INITIAL_SNAPSHOT: Snapshot = {
   status: "idle",
   progress: 0,
@@ -118,10 +122,6 @@ export function createStore<
    * matters; the silent path keeps an "available" model on "idle" until it
    * lands as "ready".
    */
-  interface ProvisionOptions {
-    showDownloadUI: boolean;
-  }
-
   async function provision(
     signal: AbortSignal,
     { showDownloadUI }: ProvisionOptions,
