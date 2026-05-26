@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
   clearDownloadProgress,
@@ -32,16 +32,13 @@ describe("useGlobalDownloadProgress", () => {
     expect(result.current).toBe(0);
 
     setDownloadProgress("Translator:en:fr", 0.25);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.25);
+    await vi.waitFor(() => expect(result.current).toBe(0.25));
 
     setDownloadProgress("Translator:en:de", 0.7);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.7);
+    await vi.waitFor(() => expect(result.current).toBe(0.7));
 
     clearDownloadProgress("Translator:en:de");
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.25);
+    await vi.waitFor(() => expect(result.current).toBe(0.25));
   });
 
   test("matches an exact namespace key as well as `namespace:…` keys", async () => {
@@ -50,8 +47,7 @@ describe("useGlobalDownloadProgress", () => {
     );
 
     setDownloadProgress("Translator", 0.5);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.5);
+    await vi.waitFor(() => expect(result.current).toBe(0.5));
   });
 
   test("ignores keys outside the requested namespace", async () => {
@@ -59,9 +55,12 @@ describe("useGlobalDownloadProgress", () => {
       useGlobalDownloadProgress("Translator"),
     );
 
+    // A higher-value write in a different namespace must not leak in: a
+    // smaller-value write in our namespace should still be the reported value.
+    // If filtering were broken, the hook would report 0.9 (the highest in flight).
     setDownloadProgress("Rewriter", 0.9);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0);
+    setDownloadProgress("Translator", 0.3);
+    await vi.waitFor(() => expect(result.current).toBe(0.3));
   });
 
   test("with no argument, aggregates across every namespace", async () => {
@@ -69,19 +68,15 @@ describe("useGlobalDownloadProgress", () => {
     expect(result.current).toBe(0);
 
     setDownloadProgress("Translator:en:fr", 0.2);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.2);
+    await vi.waitFor(() => expect(result.current).toBe(0.2));
 
     setDownloadProgress("Rewriter", 0.6);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.6);
+    await vi.waitFor(() => expect(result.current).toBe(0.6));
 
     setDownloadProgress("Proofreader", 0.8);
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.8);
+    await vi.waitFor(() => expect(result.current).toBe(0.8));
 
     clearDownloadProgress("Proofreader");
-    await new Promise((r) => setTimeout(r, 0));
-    expect(result.current).toBe(0.6);
+    await vi.waitFor(() => expect(result.current).toBe(0.6));
   });
 });
