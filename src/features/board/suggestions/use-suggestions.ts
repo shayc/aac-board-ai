@@ -1,8 +1,5 @@
-import {
-  useAISharedContext,
-  useProofreader,
-  useRewriter,
-} from "@shared/built-in-ai";
+import { useProofreader, useRewriter } from "@shared/built-in-ai";
+import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 

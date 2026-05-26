@@ -3,7 +3,7 @@
 A thin React layer over the browser's [Built-in AI](https://developer.chrome.com/docs/ai/built-in) APIs — Gemini Nano on Chrome, Phi 4 Mini on Edge. Three task APIs, each with a React hook and an imperative creator, all sharing one lifecycle state machine.
 
 ```ts
-import { useTranslator, createTranslator } from "@shared/built-in-ai";
+import { useTranslator, createTranslator } from "@shayc/react-built-in-ai";
 ```
 
 ## Surface

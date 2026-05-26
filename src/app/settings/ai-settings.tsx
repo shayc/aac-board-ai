@@ -8,11 +8,8 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import {
-  type BuiltInAIName,
-  isSupported,
-  useAISharedContext,
-} from "@shared/built-in-ai";
+import { type BuiltInAIName, isSupported } from "@shared/built-in-ai";
+import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
 
 export function AISettings() {
   const [sharedContext, setSharedContext] = useAISharedContext();
