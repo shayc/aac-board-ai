@@ -42,6 +42,20 @@ export function SpeechSettings() {
     type: "language",
   });
 
+  function renderLocaleOptions(voiceLocale: string) {
+    const header = hasMultipleLocales && (
+      <ListSubheader key={`header-${voiceLocale}`}>
+        {languageNames.of(voiceLocale) ?? voiceLocale}
+      </ListSubheader>
+    );
+    const items = (voicesByLocale[voiceLocale] ?? []).map((voice) => (
+      <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+        {voice.name}
+      </MenuItem>
+    ));
+    return [header, ...items];
+  }
+
   const speechControls = [
     {
       id: "rate",
@@ -81,18 +95,7 @@ export function SpeechSettings() {
           value={voiceURI ?? ""}
           onChange={(event) => setVoiceURI(event.target.value || null)}
         >
-          {locales.map((voiceLocale) => [
-            hasMultipleLocales && (
-              <ListSubheader key={`header-${voiceLocale}`}>
-                {languageNames.of(voiceLocale) ?? voiceLocale}
-              </ListSubheader>
-            ),
-            ...(voicesByLocale[voiceLocale] ?? []).map((voice) => (
-              <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
-                {voice.name}
-              </MenuItem>
-            )),
-          ])}
+          {locales.map(renderLocaleOptions)}
         </Select>
       </FormControl>
 
