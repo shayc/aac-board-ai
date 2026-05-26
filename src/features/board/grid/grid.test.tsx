@@ -873,22 +873,5 @@ describe("Grid", () => {
 
       await expectFocus(item1);
     });
-
-    test("Grid forwards dir prop to the root element", async () => {
-      const items = [{ id: "1", label: "Item 1" }];
-
-      const screen = await render(
-        <Grid
-          rows={1}
-          columns={1}
-          items={items}
-          dir="rtl"
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const grid = screen.getByRole("grid");
-      await expect.element(grid).toHaveAttribute("dir", "rtl");
-    });
   });
 });

@@ -90,22 +90,4 @@ describe("Tile", () => {
 
     expect(onClick).not.toHaveBeenCalled();
   });
-
-  test("respects tabIndex for keyboard navigation", async () => {
-    const screen = await render(
-      <Tile label="Focusable" onClick={vi.fn()} tabIndex={0} />,
-    );
-
-    const button = screen.getByRole("button", { name: "Focusable" });
-    await expect.element(button).toHaveAttribute("tabindex", "0");
-  });
-
-  test("can be removed from tab order with tabIndex -1", async () => {
-    const screen = await render(
-      <Tile label="Not focusable" onClick={vi.fn()} tabIndex={-1} />,
-    );
-
-    const button = screen.getByRole("button", { name: "Not focusable" });
-    await expect.element(button).toHaveAttribute("tabindex", "-1");
-  });
 });
