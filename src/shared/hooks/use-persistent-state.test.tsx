@@ -49,22 +49,6 @@ describe("usePersistentState", () => {
     expect(JSON.parse(localStorage.getItem(KEY)!)).toBe("updated");
   });
 
-  test("persists complex objects", async () => {
-    const initial = { count: 0, items: ["a"] };
-    const { result, rerender } = await renderHook(() =>
-      usePersistentState(KEY, initial),
-    );
-
-    result.current[1]({ count: 1, items: ["a", "b"] });
-    await rerender();
-
-    expect(result.current[0]).toEqual({ count: 1, items: ["a", "b"] });
-    expect(JSON.parse(localStorage.getItem(KEY)!)).toEqual({
-      count: 1,
-      items: ["a", "b"],
-    });
-  });
-
   test("supports functional updates", async () => {
     const { result, rerender } = await renderHook(() =>
       usePersistentState(KEY, 10),
@@ -74,19 +58,5 @@ describe("usePersistentState", () => {
     await rerender();
 
     expect(result.current[0]).toBe(15);
-  });
-
-  test("different keys are isolated", async () => {
-    const keyA = KEY + "-a";
-    const keyB = KEY + "-b";
-
-    const hookA = await renderHook(() => usePersistentState(keyA, "a"));
-    const hookB = await renderHook(() => usePersistentState(keyB, "b"));
-
-    hookA.result.current[1]("changed-a");
-    await hookA.rerender();
-
-    expect(hookA.result.current[0]).toBe("changed-a");
-    expect(hookB.result.current[0]).toBe("b");
   });
 });

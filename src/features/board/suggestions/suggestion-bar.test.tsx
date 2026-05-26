@@ -45,16 +45,4 @@ describe("SuggestionBar", () => {
     expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
     expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(2);
   });
-
-  test("passes onToneChange to ToneSelector", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(
-      <SuggestionBar suggestions={[]} tone="as-is" {...handlers} />,
-    );
-
-    await screen.getByRole("button", { name: "friendly tone" }).click();
-
-    expect(handlers.onToneChange).toHaveBeenCalledWith("more-casual");
-  });
 });

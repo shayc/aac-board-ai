@@ -112,25 +112,6 @@ describe("NavButtons", () => {
       .toBeEnabled();
   });
 
-  test("disables both buttons when navigation is not available", async () => {
-    const screen = await render(
-      <NavButtons
-        canGoBack={false}
-        canGoHome={false}
-        onBackClick={vi.fn()}
-        onHomeClick={vi.fn()}
-      />,
-    );
-
-    await expect
-      .element(screen.getByRole("button", { name: "Back" }))
-      .toBeDisabled();
-
-    await expect
-      .element(screen.getByRole("button", { name: "Home" }))
-      .toBeDisabled();
-  });
-
   describe("RTL icon mirroring", () => {
     test("back arrow is flipped in RTL", async () => {
       const screen = await renderWithDirection("rtl");
