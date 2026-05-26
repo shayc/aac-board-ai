@@ -27,6 +27,22 @@ export interface BoardButton {
   loadBoard?: LoadBoard;
 }
 
+export interface LoadBoard {
+  id?: string;
+  name?: string;
+  url?: string;
+  path?: string;
+  dataUrl?: string;
+}
+
+export type BoardAction =
+  | { kind: "space" }
+  | { kind: "backspace" }
+  | { kind: "clear" }
+  | { kind: "home" }
+  | { kind: "speak" }
+  | { kind: "spell"; text: string };
+
 export function getSpokenText(
   button: Pick<BoardButton, "vocalization" | "label">,
 ): string | undefined {
@@ -43,19 +59,3 @@ export interface BoardLicense {
 }
 
 export type BoardStrings = Record<string, Record<string, string>>;
-
-export interface LoadBoard {
-  id?: string;
-  name?: string;
-  url?: string;
-  path?: string;
-  dataUrl?: string;
-}
-
-export type BoardAction =
-  | { kind: "space" }
-  | { kind: "backspace" }
-  | { kind: "clear" }
-  | { kind: "home" }
-  | { kind: "speak" }
-  | { kind: "spell"; text: string };

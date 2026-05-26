@@ -1,5 +1,5 @@
 import type { OBFBoard } from "open-board-format";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   deleteBoardSet,
   getAssetBlob,
@@ -101,19 +101,16 @@ describe("listBoardSets", () => {
   });
 
   test("returns sets sorted by updatedAt descending", async () => {
+    // Each Date.now() call advances by 1000ms, so every upsertBoardSet gets
+    // a strictly increasing timestamp regardless of how many times the source
+    // reads Date.now() internally.
+    let now = 1000;
+    vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
+
     const db = await openTestDB();
 
     await upsertBoardSet(db, makeBoardSetInput({ setId: "old", name: "Old" }));
     await upsertBoardSet(db, makeBoardSetInput({ setId: "new", name: "New" }));
-
-    // Force deterministic ordering via raw puts
-    const tx = db.transaction("boardSets", "readwrite");
-    const store = tx.objectStore("boardSets");
-    const oldRec = (await store.get("old"))!;
-    const newRec = (await store.get("new"))!;
-    await store.put({ ...oldRec, updatedAt: 1000 });
-    await store.put({ ...newRec, updatedAt: 2000 });
-    await tx.done;
 
     const sets = await listBoardSets(db);
     expect(sets).toHaveLength(2);
@@ -212,38 +209,24 @@ describe("putAssets and getAssetBlob", () => {
     expect(await retrieved!.text()).toBe("hello");
   });
 
-  test("normalizes paths with backslashes", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, makeBoardSetInput());
+  test.each([
+    { rawPath: "images\\photo.png", description: "backslashes" },
+    { rawPath: "/images/photo.png", description: "leading slashes" },
+    { rawPath: "images//photo.png", description: "double slashes" },
+  ])(
+    "normalizes $description so the asset is retrievable by canonical path",
+    async ({ rawPath }) => {
+      const db = await openTestDB();
+      await upsertBoardSet(db, makeBoardSetInput());
 
-    const blob = new Blob(["data"]);
-    await putAssets(db, "set-1", [{ path: "images\\photo.png", blob }]);
+      const blob = new Blob(["data"]);
+      await putAssets(db, "set-1", [{ path: rawPath, blob }]);
 
-    const retrieved = await getAssetBlob(db, "set-1", "images/photo.png");
-    expect(retrieved).not.toBeNull();
-  });
-
-  test("normalizes paths with leading slashes", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, makeBoardSetInput());
-
-    const blob = new Blob(["data"]);
-    await putAssets(db, "set-1", [{ path: "/images/photo.png", blob }]);
-
-    const retrieved = await getAssetBlob(db, "set-1", "images/photo.png");
-    expect(retrieved).not.toBeNull();
-  });
-
-  test("normalizes paths with double slashes", async () => {
-    const db = await openTestDB();
-    await upsertBoardSet(db, makeBoardSetInput());
-
-    const blob = new Blob(["data"]);
-    await putAssets(db, "set-1", [{ path: "images//photo.png", blob }]);
-
-    const retrieved = await getAssetBlob(db, "set-1", "images/photo.png");
-    expect(retrieved).not.toBeNull();
-  });
+      const retrieved = await getAssetBlob(db, "set-1", "images/photo.png");
+      expect(retrieved).toBeInstanceOf(Blob);
+      expect(await retrieved!.text()).toBe("data");
+    },
+  );
 
   test("returns undefined for nonexistent asset", async () => {
     const db = await openTestDB();
@@ -260,9 +243,9 @@ describe("putAssets and getAssetBlob", () => {
     const blob = new Blob(["12345"]);
     await putAssets(db, "set-1", [{ path: "file.bin", blob }]);
 
-    const retrieved = await getAssetBlob(db, "set-1", "file.bin");
-    expect(retrieved).not.toBeNull();
-    expect(retrieved!.size).toBe(5);
+    const record = await db.get("assets", ["set-1", "file.bin"]);
+    expect(record).toBeDefined();
+    expect(record!.size).toBe(5);
   });
 });
 
