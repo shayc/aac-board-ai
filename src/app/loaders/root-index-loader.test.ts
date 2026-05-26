@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import type { LoaderFunctionArgs } from "react-router";
 import { invalidateBoardSets } from "@features/board/storage/board-sets-store";
 import { listBoardSets, withBoardsDB } from "@features/board/storage/db";
@@ -26,10 +26,6 @@ describe("rootIndexLoader", () => {
     // snapshot from prior tests — explicitly invalidate so getBoardSets()
     // reads fresh from the now-empty DB.
     await invalidateBoardSets();
-  });
-
-  afterEach(async () => {
-    await resetBoardsDB();
   });
 
   test("imports the URL from ?board and redirects to its board route", async () => {

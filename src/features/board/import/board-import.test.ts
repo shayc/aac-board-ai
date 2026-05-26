@@ -1,5 +1,5 @@
 import { loadOBF, loadOBZ } from "open-board-format";
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import {
   getAssetBlob,
   getBoard,
@@ -34,10 +34,6 @@ async function loadFixtureFile(name: string): Promise<File> {
 
 describe("writeBoardSetFiles", () => {
   beforeEach(async () => {
-    await resetBoardsDB();
-  });
-
-  afterEach(async () => {
     await resetBoardsDB();
   });
 
