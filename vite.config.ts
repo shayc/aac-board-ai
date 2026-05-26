@@ -2,7 +2,7 @@ import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
-import path from "path";
+import path from "node:path";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults } from "vitest/config";
@@ -54,17 +54,17 @@ export default defineConfig({
     alias: {
       "@app": path.resolve(__dirname, "./src/app"),
       "@features": path.resolve(__dirname, "./src/features"),
-      "@shared": path.resolve(__dirname, "./src/shared"),
       "@pages": path.resolve(__dirname, "./src/pages"),
       "@paraglide": path.resolve(__dirname, "./src/paraglide"),
+      "@shared": path.resolve(__dirname, "./src/shared"),
     },
   },
   optimizeDeps: {
     include: [
-      "@mui/material/*",
-      "@mui/icons-material/*",
       "@emotion/cache",
       "@emotion/react",
+      "@mui/icons-material/*",
+      "@mui/material/*",
       "@mui/stylis-plugin-rtl",
       "react-dom/client",
       "react-router/dom",

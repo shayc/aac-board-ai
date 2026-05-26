@@ -34,10 +34,6 @@ export function useAudio(): UseAudioReturn {
     audioRef.current = null;
   }
 
-  useEffect(() => {
-    return () => cleanup();
-  }, []);
-
   function play(url: string) {
     cleanup();
 
@@ -84,6 +80,10 @@ export function useAudio(): UseAudioReturn {
     setIsPlaying(false);
     setIsPaused(false);
   }
+
+  useEffect(() => {
+    return () => cleanup();
+  }, []);
 
   return { play, stop, isPlaying, isPaused };
 }

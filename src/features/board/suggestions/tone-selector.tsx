@@ -15,10 +15,10 @@ export interface ToneSelectorProps {
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    tone: SuggestionTone | null,
+    nextTone: SuggestionTone | null,
   ) => {
-    if (tone) {
-      onChange(tone);
+    if (nextTone) {
+      onChange(nextTone);
     }
   };
 

@@ -11,9 +11,9 @@ export interface UseMessageReturn {
   text: string;
   addPart: (part: MessagePart) => void;
   addSpace: () => void;
+  updateLastPart: (part: MessagePart) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
-  updateLastPart: (part: MessagePart) => void;
   clear: () => void;
 }
 
@@ -25,8 +25,11 @@ export function useMessage(): UseMessageReturn {
     setParts((prev) => [...prev, part]);
   }
 
-  function removeLastPart() {
-    setParts((prev) => prev.slice(0, -1));
+  function addSpace() {
+    addPart({
+      id: crypto.randomUUID(),
+      label: "",
+    });
   }
 
   function updateLastPart(part: MessagePart) {
@@ -40,17 +43,6 @@ export function useMessage(): UseMessageReturn {
     });
   }
 
-  function clear() {
-    setParts([]);
-  }
-
-  function addSpace() {
-    addPart({
-      id: crypto.randomUUID(),
-      label: "",
-    });
-  }
-
   function setFromText(input: string) {
     const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
     const words = Array.from(segmenter.segment(input))
@@ -60,14 +52,22 @@ export function useMessage(): UseMessageReturn {
     setParts(words.map((word) => ({ id: crypto.randomUUID(), label: word })));
   }
 
+  function removeLastPart() {
+    setParts((prev) => prev.slice(0, -1));
+  }
+
+  function clear() {
+    setParts([]);
+  }
+
   return {
     parts,
     text,
     addPart,
     addSpace,
+    updateLastPart,
     setFromText,
     removeLastPart,
-    updateLastPart,
     clear,
   };
 }

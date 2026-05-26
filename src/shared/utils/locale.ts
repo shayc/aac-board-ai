@@ -1,3 +1,8 @@
+const englishLanguageNames = new Intl.DisplayNames(["en"], {
+  type: "language",
+  languageDisplay: "dialect",
+});
+
 function parseLocale(locale: string): Intl.Locale {
   return new Intl.Locale(locale.replace(/_/g, "-"));
 }
@@ -22,10 +27,18 @@ export function getLanguageCode(locale: string): string {
   return locale.split(/[_-]/)[0].toLowerCase();
 }
 
-const englishLanguageNames = new Intl.DisplayNames(["en"], {
-  type: "language",
-  languageDisplay: "dialect",
-});
+/**
+ * Returns the writing direction for a BCP-47 locale code.
+ * Falls back to "ltr" for structurally invalid input; unknown
+ * but well-formed codes default to "ltr" via Intl.
+ */
+export function getTextDirection(locale: string): "ltr" | "rtl" {
+  try {
+    return parseLocale(locale).getTextInfo().direction ?? "ltr";
+  } catch {
+    return "ltr";
+  }
+}
 
 /**
  * Returns the display name of a locale code in English.
@@ -52,18 +65,5 @@ export function getNativeLanguageName(locale: string): string {
     );
   } catch {
     return language;
-  }
-}
-
-/**
- * Returns the writing direction for a BCP-47 locale code.
- * Falls back to "ltr" for structurally invalid input; unknown
- * but well-formed codes default to "ltr" via Intl.
- */
-export function getTextDirection(locale: string): "ltr" | "rtl" {
-  try {
-    return parseLocale(locale).getTextInfo().direction ?? "ltr";
-  } catch {
-    return "ltr";
   }
 }

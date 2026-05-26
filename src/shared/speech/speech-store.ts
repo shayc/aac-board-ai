@@ -8,18 +8,18 @@ export interface SpeechRange {
   fallback: number;
 }
 
-type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
-
-interface VoiceCatalogState {
-  voices: SpeechSynthesisVoice[];
-  voicesByLanguage: VoicesByLanguage;
-}
-
 export interface SpeechConfig {
   voiceURI: string | null;
   rate: number;
   pitch: number;
   volume: number;
+}
+
+type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
+
+interface VoiceCatalogState {
+  voices: SpeechSynthesisVoice[];
+  voicesByLanguage: VoicesByLanguage;
 }
 
 export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
@@ -68,11 +68,17 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
+// Module init
+
 const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
 
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis?.getVoices() ?? []),
 );
+
+synthesis?.addEventListener("voiceschanged", () => {
+  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+});
 
 const speechConfigStore = createExternalStore<SpeechConfig>(
   loadPersistedConfig(),
@@ -92,10 +98,6 @@ speechConfigStore.subscribe(() => {
 function updateConfig(patch: Partial<SpeechConfig>): void {
   speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
 }
-
-synthesis?.addEventListener("voiceschanged", () => {
-  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
-});
 
 export function getSpeechConfig(): SpeechConfig {
   return speechConfigStore.getSnapshot();
@@ -125,12 +127,12 @@ export function speak(text: string): Promise<void> {
   const { promise, resolve, reject } = Promise.withResolvers<void>();
 
   const { voices } = voiceCatalogStore.getSnapshot();
-  const { voiceURI, pitch, rate, volume } = speechConfigStore.getSnapshot();
+  const { voiceURI, rate, pitch, volume } = speechConfigStore.getSnapshot();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;
-  utterance.pitch = pitch;
   utterance.rate = rate;
+  utterance.pitch = pitch;
   utterance.volume = volume;
 
   utterance.onend = () => resolve();

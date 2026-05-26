@@ -21,6 +21,24 @@ export interface UseGridKeyboardNavigationReturn {
   activeCell: Cell;
 }
 
+interface Step {
+  row: -1 | 0 | 1;
+  col: -1 | 0 | 1;
+}
+
+interface FocusTarget {
+  element: HTMLElement;
+  position: Cell;
+}
+
+interface KeyboardKey {
+  key: string;
+  ctrlKey: boolean;
+  metaKey: boolean;
+  shiftKey: boolean;
+  altKey: boolean;
+}
+
 export function useGridKeyboardNavigation({
   grid,
   dir = "ltr",
@@ -114,24 +132,6 @@ function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
     }
   }
   return { row: 0, col: 0 };
-}
-
-interface Step {
-  row: -1 | 0 | 1;
-  col: -1 | 0 | 1;
-}
-
-interface FocusTarget {
-  element: HTMLElement;
-  position: Cell;
-}
-
-interface KeyboardKey {
-  key: string;
-  ctrlKey: boolean;
-  metaKey: boolean;
-  shiftKey: boolean;
-  altKey: boolean;
 }
 
 function nextFocus(

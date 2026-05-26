@@ -1,4 +1,5 @@
 import { APP_NAME } from "@app/app-info";
+import { ABOUT_PATH, LIBRARY_PATH } from "@app/route-patterns";
 import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -22,8 +23,8 @@ export interface MenuDrawerProps {
 export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
   const menuItems = [
     { icon: HomeOutlinedIcon, label: m.menuHome(), to: "/" },
-    { icon: FilterNoneOutlinedIcon, label: m.menuLibrary(), to: "/library" },
-    { icon: InfoOutlinedIcon, label: m.menuAbout(), to: "/about" },
+    { icon: FilterNoneOutlinedIcon, label: m.menuLibrary(), to: LIBRARY_PATH },
+    { icon: InfoOutlinedIcon, label: m.menuAbout(), to: ABOUT_PATH },
   ];
 
   return (

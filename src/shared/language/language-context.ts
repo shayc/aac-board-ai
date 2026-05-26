@@ -1,9 +1,9 @@
 import { createContext } from "react";
 
 export interface LanguageContextValue {
-  languages: { language: string; name: string }[];
   language: string;
   setLanguage: (language: string) => void;
+  languages: { language: string; name: string }[];
   direction: "ltr" | "rtl";
 }
 

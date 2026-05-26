@@ -7,10 +7,6 @@ export function abortError(reason?: unknown): DOMException {
       );
 }
 
-function toError(reason: unknown): Error {
-  return reason instanceof Error ? reason : abortError(reason);
-}
-
 export function mergeSignals(
   ...signals: readonly (AbortSignal | undefined)[]
 ): AbortSignal {
@@ -45,4 +41,8 @@ export function raceAbort<T>(
   );
 
   return result;
+}
+
+function toError(reason: unknown): Error {
+  return reason instanceof Error ? reason : abortError(reason);
 }

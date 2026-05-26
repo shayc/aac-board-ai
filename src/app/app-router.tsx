@@ -54,8 +54,14 @@ const router = createBrowserRouter([
               },
             ],
           },
-          { path: "library", lazy: async () => import("@pages/library-page") },
-          { path: "about", lazy: async () => import("@pages/about-page") },
+          {
+            path: ROUTE_PATTERNS.LIBRARY,
+            lazy: async () => import("@pages/library-page"),
+          },
+          {
+            path: ROUTE_PATTERNS.ABOUT,
+            lazy: async () => import("@pages/about-page"),
+          },
         ],
       },
     ],

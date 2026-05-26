@@ -13,6 +13,9 @@ export interface BoardSetsSnapshot {
 }
 
 const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
+boardSetsSyncChannel.addEventListener("message", () => {
+  void invalidateBoardSets();
+});
 
 const store = createExternalStore<BoardSetsSnapshot>({
   boardSets: [],
@@ -45,6 +48,11 @@ function ensureLoaded(): void {
   }
 }
 
+export async function invalidateBoardSets(): Promise<void> {
+  pendingLoad = loadBoardSets();
+  await pendingLoad;
+}
+
 export async function notifyBoardSetsChanged(): Promise<void> {
   await invalidateBoardSets();
   boardSetsSyncChannel.postMessage("invalidate");
@@ -71,16 +79,7 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
   return store.getSnapshot().boardSets;
 }
 
-export async function invalidateBoardSets(): Promise<void> {
-  pendingLoad = loadBoardSets();
-  await pendingLoad;
-}
-
 export async function removeBoardSet(setId: string): Promise<void> {
   await withBoardsDB((db) => deleteBoardSet(db, setId));
   await notifyBoardSetsChanged();
 }
-
-boardSetsSyncChannel.addEventListener("message", () => {
-  void invalidateBoardSets();
-});

@@ -2,6 +2,8 @@ import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 import type { OBFBoard } from "open-board-format";
 
+// Stored records
+
 export interface BoardSetRecord {
   setId: string;
   name: string;
@@ -32,6 +34,8 @@ export interface AssetRecord {
   size?: number;
 }
 
+// Input shapes
+
 export interface UpsertBoardSetInput {
   setId: string;
   name: string;
@@ -58,6 +62,8 @@ export interface UpsertAssetInput {
   mediaId?: string;
 }
 
+// Schema
+
 export interface BoardsDBSchema extends DBSchema {
   boardSets: {
     key: string;
@@ -81,6 +87,8 @@ export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 const DB_NAME = "aac-boards-db";
 const DB_VERSION = 1;
 
+// Helpers
+
 function normalizePath(rawPath: string): string {
   if (!rawPath) {
     throw new Error("Path cannot be empty");
@@ -99,6 +107,8 @@ function validateId(id: string, fieldName: string): void {
     throw new Error(`Invalid ${fieldName}: must be 1-255 characters`);
   }
 }
+
+// Connection
 
 export async function openBoardsDB(): Promise<BoardsDB> {
   const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
@@ -132,6 +142,8 @@ export async function withBoardsDB<T>(
     db.close();
   }
 }
+
+// Board sets — upsert / get / list / delete
 
 export async function upsertBoardSet(
   db: BoardsDB,
@@ -203,6 +215,8 @@ export async function deleteBoardSet(
   await tx.done;
 }
 
+// Boards — put / get / updateStrings
+
 export async function putBoards(
   db: BoardsDB,
   setId: string,
@@ -242,6 +256,33 @@ export async function getBoard(
   validateId(boardId, "boardId");
   return db.get("boards", [setId, boardId]);
 }
+
+export async function updateBoardStrings(
+  db: BoardsDB,
+  setId: string,
+  boardId: string,
+  locale: string,
+  translations: Record<string, string>,
+): Promise<void> {
+  validateId(setId, "setId");
+  validateId(boardId, "boardId");
+  const tx = db.transaction("boards", "readwrite");
+  const record = await tx.store.get([setId, boardId]);
+
+  if (!record) {
+    throw new Error(`Board not found: ${setId}/${boardId}`);
+  }
+
+  const updatedObf = {
+    ...record.obf,
+    strings: { ...record.obf.strings, [locale]: translations },
+  };
+
+  await tx.store.put({ ...record, obf: updatedObf });
+  await tx.done;
+}
+
+// Assets — put / get
 
 export async function putAssets(
   db: BoardsDB,
@@ -285,29 +326,4 @@ export async function getAssetBlob(
   const asset = await db.get("assets", [setId, cleanPath]);
 
   return asset?.blob;
-}
-
-export async function updateBoardStrings(
-  db: BoardsDB,
-  setId: string,
-  boardId: string,
-  locale: string,
-  translations: Record<string, string>,
-): Promise<void> {
-  validateId(setId, "setId");
-  validateId(boardId, "boardId");
-  const tx = db.transaction("boards", "readwrite");
-  const record = await tx.store.get([setId, boardId]);
-
-  if (!record) {
-    throw new Error(`Board not found: ${setId}/${boardId}`);
-  }
-
-  const updatedObf = {
-    ...record.obf,
-    strings: { ...record.obf.strings, [locale]: translations },
-  };
-
-  await tx.store.put({ ...record, obf: updatedObf });
-  await tx.done;
 }

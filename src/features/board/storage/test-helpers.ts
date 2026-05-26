@@ -8,6 +8,11 @@ import {
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
+export interface SeedBoardSet extends Partial<BoardSetRecord> {
+  setId: string;
+  rootBoardId: string;
+}
+
 async function clearAllStores(db: BoardsDB): Promise<void> {
   const tx = db.transaction(STORE_NAMES, "readwrite");
   for (const name of STORE_NAMES) {
@@ -29,11 +34,6 @@ export async function openCleanBoardsDB(): Promise<BoardsDB> {
   const db = await openBoardsDB();
   await clearAllStores(db);
   return db;
-}
-
-export interface SeedBoardSet extends Partial<BoardSetRecord> {
-  setId: string;
-  rootBoardId: string;
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {

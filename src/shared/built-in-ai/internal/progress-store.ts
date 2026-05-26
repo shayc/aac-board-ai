@@ -1,17 +1,17 @@
 const progressByKey = new Map<string, number>();
 const listeners = new Set<() => void>();
 
+function notify(): void {
+  for (const listener of listeners) {
+    listener();
+  }
+}
+
 export function subscribeProgress(listener: () => void): () => void {
   listeners.add(listener);
   return () => {
     listeners.delete(listener);
   };
-}
-
-function notify(): void {
-  for (const listener of listeners) {
-    listener();
-  }
 }
 
 export function setDownloadProgress(key: string, progress: number): void {

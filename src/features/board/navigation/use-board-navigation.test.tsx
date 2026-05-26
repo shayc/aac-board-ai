@@ -16,6 +16,8 @@ import {
   type UseBoardNavigationReturn,
 } from "./use-board-navigation";
 
+const DEFAULT_PATH = "/sets/set-1/boards/board-1";
+
 interface NavState {
   backStack: string[];
 }
@@ -27,7 +29,7 @@ interface NavTestHook {
 }
 
 function setup(
-  pathname = "/sets/set-1/boards/board-1",
+  pathname = DEFAULT_PATH,
   state?: NavState,
 ): Promise<RenderHookResult<NavTestHook, unknown>> {
   return renderHook(
@@ -121,9 +123,7 @@ describe("useBoardNavigation", () => {
 
       await act(() => result.current.nav.goToBoard(""));
 
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-1",
-      );
+      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
       expect(result.current.location.state).toBeNull();
     });
 
@@ -155,9 +155,7 @@ describe("useBoardNavigation", () => {
 
       await act(() => result.current.nav.goBack());
 
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-1",
-      );
+      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
     });
 
     test("does nothing when backStack is empty", async () => {
@@ -165,9 +163,7 @@ describe("useBoardNavigation", () => {
 
       await act(() => result.current.nav.goBack());
 
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-1",
-      );
+      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
     });
 
     test("does nothing when setId is missing from the route", async () => {
@@ -224,9 +220,7 @@ describe("useBoardNavigation", () => {
 
       await act(() => result.current.nav.goHome());
 
-      expect(result.current.location.pathname).toBe(
-        "/sets/set-1/boards/board-1",
-      );
+      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
     });
 
     test("does nothing when setId is missing from the route", async () => {
