@@ -1,14 +1,18 @@
-import Container from "@mui/material/Container";
+import Container, { type ContainerProps } from "@mui/material/Container";
 import type { ReactNode } from "react";
 
 export interface PageContainerProps {
   children: ReactNode;
+  maxWidth?: ContainerProps["maxWidth"];
 }
 
-export function PageContainer({ children }: PageContainerProps) {
+export function PageContainer({
+  children,
+  maxWidth = "md",
+}: PageContainerProps) {
   return (
     <Container
-      maxWidth="md"
+      maxWidth={maxWidth}
       sx={[
         { height: "100%" },
         (theme) => ({

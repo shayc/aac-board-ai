@@ -10,15 +10,15 @@ import { ExternalLink } from "@shared/components/external-link";
 
 export const Component = function AboutPage() {
   return (
-    <PageContainer>
+    <PageContainer maxWidth="sm">
       <PageTitle>{m.aboutHeading()}</PageTitle>
 
-      <Stack spacing={{ xs: 3, sm: 4 }} sx={{ pt: 6 }}>
-        <Typography component="p" variant="body1">
+      <Stack spacing={{ xs: 3, sm: 4 }}>
+        <Typography component="p" variant="h6" sx={{ pt: 6 }}>
           {m.aboutAppDescription({ appName: APP_NAME })}
         </Typography>
 
-        <Typography component="h2" variant="h6" sx={{ pt: 2 }}>
+        <Typography component="h2" variant="h6">
           {m.aboutAcknowledgmentsHeading()}
         </Typography>
 
