@@ -1,5 +1,5 @@
-import { createTranslator } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
+import { createTranslator } from "@shayc/react-built-in-ai";
 import { useEffect, useState } from "react";
 import { persistBoardTranslations } from "../storage/queries";
 import type { Board } from "../types";

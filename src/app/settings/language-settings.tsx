@@ -8,8 +8,11 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { isSupported, useGlobalDownloadProgress } from "@shared/built-in-ai";
 import { useLanguage } from "@shared/language/use-language";
+import {
+  isSupported,
+  useGlobalDownloadProgress,
+} from "@shayc/react-built-in-ai";
 
 export function LanguageSettings() {
   const { languages, language, setLanguage } = useLanguage();
