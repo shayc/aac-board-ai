@@ -1,4 +1,4 @@
-import type { OBFBoard } from "open-board-format";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import {
   deleteBoardSet,

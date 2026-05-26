@@ -6,7 +6,7 @@ import type {
   OBFLicense,
   OBFLoadBoard,
   OBFMedia,
-} from "open-board-format";
+} from "@shayc/open-board-format";
 import type {
   Board,
   BoardAction,
