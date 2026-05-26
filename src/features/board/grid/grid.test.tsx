@@ -39,12 +39,6 @@ async function press(
   await userEvent.keyboard(sequence);
 }
 
-function expectFocus(item: Locator) {
-  return expect
-    .poll(() => document.activeElement === item.element())
-    .toBe(true);
-}
-
 describe("Grid", () => {
   describe("default grid construction (order not provided)", () => {
     test("renders items in row-major order when order is not provided", async () => {
@@ -254,15 +248,9 @@ describe("Grid", () => {
       const item2Button = screen.getByRole("button", { name: "Item 2" });
       const item3Button = screen.getByRole("button", { name: "Item 3" });
 
-      await expect
-        .poll(() => item1Button.element().getAttribute("tabindex"))
-        .toBe("0");
-      await expect
-        .poll(() => item2Button.element().getAttribute("tabindex"))
-        .toBe("-1");
-      await expect
-        .poll(() => item3Button.element().getAttribute("tabindex"))
-        .toBe("-1");
+      await expect.element(item1Button).toHaveAttribute("tabindex", "0");
+      await expect.element(item2Button).toHaveAttribute("tabindex", "-1");
+      await expect.element(item3Button).toHaveAttribute("tabindex", "-1");
     });
 
     test("makes first non-empty cell tabbable when (0,0) is empty", async () => {
@@ -292,12 +280,8 @@ describe("Grid", () => {
       expect(getCellPosition(item2)).toEqual({ row: 0, col: 1 });
       expect(getCellPosition(item1)).toEqual({ row: 1, col: 0 });
 
-      await expect
-        .poll(() => item2.element().getAttribute("tabindex"))
-        .toBe("0");
-      await expect
-        .poll(() => item1.element().getAttribute("tabindex"))
-        .toBe("-1");
+      await expect.element(item2).toHaveAttribute("tabindex", "0");
+      await expect.element(item1).toHaveAttribute("tabindex", "-1");
     });
 
     test("moves focus with arrow keys to the next focusable cell", async () => {
@@ -322,9 +306,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowRight");
 
-      await expect
-        .poll(() => document.activeElement === item2.element())
-        .toBe(true);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("falls back to the nearest diagonal cell when the arrow's line is empty", async () => {
@@ -353,9 +335,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowRight");
 
-      await expect
-        .poll(() => document.activeElement === item2.element())
-        .toBe(true);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("prefers an in-line cell over a diagonal one", async () => {
@@ -385,9 +365,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowRight");
 
-      await expect
-        .poll(() => document.activeElement === item2.element())
-        .toBe(true);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("stays in place when no focusable cell exists in the arrow's direction", async () => {
@@ -406,9 +384,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowDown");
 
-      await expect
-        .poll(() => document.activeElement === item1.element())
-        .toBe(true);
+      await expect.element(item1).toHaveFocus();
     });
 
     test("Home moves focus to the first focusable cell in the current row", async () => {
@@ -435,7 +411,7 @@ describe("Grid", () => {
 
       await press(item3, "Home");
 
-      await expectFocus(item1);
+      await expect.element(item1).toHaveFocus();
     });
 
     test("End moves focus to the last focusable cell in the current row", async () => {
@@ -462,7 +438,7 @@ describe("Grid", () => {
 
       await press(item1, "End");
 
-      await expectFocus(item3);
+      await expect.element(item3).toHaveFocus();
     });
 
     test("Home skips empty cells and lands on the first focusable cell in the row", async () => {
@@ -491,7 +467,7 @@ describe("Grid", () => {
 
       await press(item3, "Home");
 
-      await expectFocus(item2);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("End skips empty cells and lands on the last focusable cell in the row", async () => {
@@ -520,7 +496,7 @@ describe("Grid", () => {
 
       await press(item1, "End");
 
-      await expectFocus(item2);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("Ctrl+Home focuses the first focusable cell in the grid even when (0,0) is empty", async () => {
@@ -553,7 +529,7 @@ describe("Grid", () => {
 
       await press(item4, "Home", { ctrlKey: true });
 
-      await expectFocus(item2);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("Ctrl+End focuses the last focusable cell in the grid even when the last cell is empty", async () => {
@@ -586,7 +562,7 @@ describe("Grid", () => {
 
       await press(item1, "End", { ctrlKey: true });
 
-      await expectFocus(item3);
+      await expect.element(item3).toHaveFocus();
     });
 
     test.each([
@@ -626,13 +602,13 @@ describe("Grid", () => {
         await expect.element(item1).toHaveFocus();
 
         await press(item1, "End", { [modifier]: true });
-        await expectFocus(item4);
+        await expect.element(item4).toHaveFocus();
 
         item4.element().focus();
         await expect.element(item4).toHaveFocus();
 
         await press(item4, "Home", { [modifier]: true });
-        await expectFocus(item1);
+        await expect.element(item1).toHaveFocus();
       },
     );
 
@@ -659,7 +635,7 @@ describe("Grid", () => {
 
       await press(item3, "Home", { shiftKey: true });
 
-      await expectFocus(item3);
+      await expect.element(item3).toHaveFocus();
     });
 
     test("RTL: ArrowRight moves to the previous column", async () => {
@@ -686,7 +662,7 @@ describe("Grid", () => {
 
       await press(item2, "ArrowRight");
 
-      await expectFocus(item1);
+      await expect.element(item1).toHaveFocus();
     });
 
     test("RTL: ArrowLeft moves to the next column", async () => {
@@ -713,7 +689,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowLeft");
 
-      await expectFocus(item2);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("RTL: ArrowUp and ArrowDown are unaffected by direction", async () => {
@@ -746,7 +722,7 @@ describe("Grid", () => {
 
       await press(item1, "ArrowDown");
 
-      await expectFocus(item2);
+      await expect.element(item2).toHaveFocus();
     });
 
     test("RTL: Home moves to the visually-left edge (highest aria-colindex)", async () => {
@@ -777,7 +753,7 @@ describe("Grid", () => {
 
       await press(item1, "Home");
 
-      await expectFocus(item3);
+      await expect.element(item3).toHaveFocus();
     });
 
     test("RTL: End moves to the visually-right edge (lowest aria-colindex)", async () => {
@@ -807,7 +783,7 @@ describe("Grid", () => {
 
       await press(item3, "End");
 
-      await expectFocus(item1);
+      await expect.element(item1).toHaveFocus();
     });
 
     test("RTL: Ctrl+Home moves to the visually bottom-left cell of the grid", async () => {
@@ -839,7 +815,7 @@ describe("Grid", () => {
       // reading order — row max / col max — which is visually bottom-left.
       await press(item1, "Home", { ctrlKey: true });
 
-      await expectFocus(item4);
+      await expect.element(item4).toHaveFocus();
     });
 
     test("RTL: Ctrl+End moves to the visually top-right cell of the grid", async () => {
@@ -871,7 +847,7 @@ describe("Grid", () => {
       // cell in reading order — row 0 / col 0 — which is visually top-right.
       await press(item4, "End", { ctrlKey: true });
 
-      await expectFocus(item1);
+      await expect.element(item1).toHaveFocus();
     });
   });
 });

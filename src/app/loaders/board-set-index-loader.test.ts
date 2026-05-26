@@ -3,7 +3,7 @@ import {
   seedBoardSets,
 } from "@features/board/storage/test-helpers";
 import type { LoaderFunctionArgs } from "react-router";
-import { afterEach, beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetIndexLoader } from "./board-set-index-loader";
 
 function callLoader(setId: string): Promise<Response> {
@@ -14,32 +14,8 @@ function callLoader(setId: string): Promise<Response> {
   return boardSetIndexLoader(args);
 }
 
-async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
-  try {
-    await promise;
-  } catch (error) {
-    return error;
-  }
-  throw new Error("Expected loader to throw, but it resolved");
-}
-
-// `throw data(...)` produces a DataWithResponseInit instance — checking its
-// shape directly. `isRouteErrorResponse` only matches the router's internal
-// ErrorResponse wrapper, which is applied at the boundary, not at the throw
-// site reached by direct loader calls.
-function expectThrownStatus(error: unknown, status: number): void {
-  expect(error).toBeTruthy();
-  expect(error).toHaveProperty("init");
-  const init = (error as { init: ResponseInit | null }).init;
-  expect(init?.status).toBe(status);
-}
-
 describe("boardSetIndexLoader", () => {
   beforeEach(async () => {
-    await resetBoardsDB();
-  });
-
-  afterEach(async () => {
     await resetBoardsDB();
   });
 
@@ -55,8 +31,12 @@ describe("boardSetIndexLoader", () => {
   test("throws 404 when the board set is missing", async () => {
     await seedBoardSets([]);
 
-    const error = await expectThrown(callLoader("missing-set"));
-
-    expectThrownStatus(error, 404);
+    // `throw data(...)` produces a DataWithResponseInit instance — checking its
+    // `init` shape directly. `isRouteErrorResponse` only matches the router's
+    // internal ErrorResponse wrapper, which is applied at the boundary, not at
+    // the throw site reached by direct loader calls.
+    await expect(callLoader("missing-set")).rejects.toMatchObject({
+      init: { status: 404 },
+    });
   });
 });

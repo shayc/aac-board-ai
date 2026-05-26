@@ -66,6 +66,17 @@ describe("Tile", () => {
     expect(styles.borderColor).toBe("rgb(0, 255, 0)");
   });
 
+  test("defaults borderColor to backgroundColor when borderColor is omitted", async () => {
+    const screen = await render(
+      <Tile label="Match" backgroundColor="#ff0000" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Match" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.borderColor).toBe("rgb(255, 0, 0)");
+  });
+
   test("calls onClick when clicked", async () => {
     const onClick = vi.fn();
 
