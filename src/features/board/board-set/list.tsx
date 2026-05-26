@@ -17,8 +17,8 @@ import type { BoardSetRecord } from "../storage/db";
 export interface BoardSetListProps {
   boardSets: BoardSetRecord[];
   onSelect: (boardSet: BoardSetRecord) => void;
-  onDelete: (boardSet: BoardSetRecord) => void;
   onInfo: (boardSet: BoardSetRecord) => void;
+  onDelete: (boardSet: BoardSetRecord) => void;
 }
 
 function formatSecondary(boardSet: BoardSetRecord): string {
@@ -40,8 +40,8 @@ function formatSecondary(boardSet: BoardSetRecord): string {
 export function BoardSetList({
   boardSets,
   onSelect,
-  onDelete,
   onInfo,
+  onDelete,
 }: BoardSetListProps) {
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;

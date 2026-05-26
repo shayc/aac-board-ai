@@ -26,9 +26,9 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
   useVoiceLanguageSync({ language });
 
   const contextValue: LanguageContextValue = {
-    languages,
     language,
     setLanguage,
+    languages,
     direction,
   };
 

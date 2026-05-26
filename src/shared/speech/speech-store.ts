@@ -127,12 +127,12 @@ export function speak(text: string): Promise<void> {
   const { promise, resolve, reject } = Promise.withResolvers<void>();
 
   const { voices } = voiceCatalogStore.getSnapshot();
-  const { voiceURI, pitch, rate, volume } = speechConfigStore.getSnapshot();
+  const { voiceURI, rate, pitch, volume } = speechConfigStore.getSnapshot();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;
-  utterance.pitch = pitch;
   utterance.rate = rate;
+  utterance.pitch = pitch;
   utterance.volume = volume;
 
   utterance.onend = () => resolve();
