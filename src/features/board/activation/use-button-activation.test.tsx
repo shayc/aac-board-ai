@@ -1,10 +1,10 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import type { MessagePart, UseMessageReturn } from "./message/use-message";
-import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
-import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
-import type { BoardAction, BoardButton } from "./types";
+import type { MessagePart, UseMessageReturn } from "../message/use-message";
+import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
+import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
+import type { BoardAction, BoardButton } from "../types";
 import { useButtonActivation } from "./use-button-activation";
 
 function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {

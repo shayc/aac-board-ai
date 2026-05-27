@@ -141,13 +141,15 @@ External stores are preferred over context where state outlives any single compo
 
 ## 6. Interaction & speech
 
-A board press flows through `useButtonActivation`, which resolves the button into one of three intents and dispatches accordingly:
+A board press flows through `resolveButtonIntent` (called by `useButtonActivation`), which evaluates the button into an array of `ButtonIntent` objects. The hook then loops through the intents and executes their side-effects:
 
-| Intent     | Trigger                    | Effect                                           |
-| ---------- | -------------------------- | ------------------------------------------------ |
-| `navigate` | `button.loadBoard?.id`     | `useBoardNavigation.goToBoard(id)`.              |
-| `actions`  | `button.actions` non-empty | Run each `BoardAction` in order (table below).   |
-| `utter`    | Otherwise                  | Append a `MessagePart`, play the button's audio. |
+| Intent Type | Execution Effect                                         |
+| ----------- | -------------------------------------------------------- |
+| `navigate`  | `useBoardNavigation.goToBoard(targetBoardId)`.           |
+| `runAction` | Run the corresponding `BoardAction` (table below).       |
+| `compose`   | Append a `MessagePart` to the message strip.             |
+| `playAudio` | Play the button's sound asset via `useAudio()`.          |
+| `speakText` | Read the button's vocalization/label via `speech-store`. |
 
 `BoardAction` is a closed discriminated union dispatched by `kind` in `runAction`:
 
@@ -164,7 +166,7 @@ OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF 
 
 `useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
 
-Adding a new button behavior means extending `BoardAction` in [features/board/types.ts](../src/features/board/types.ts) and handling it in `useButtonActivation.runAction` — the dispatch surface is closed.
+Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) and handling it in `useButtonActivation`'s execution loop — the dispatch surface is closed.
 
 **Message composition.** `useMessage` owns the draft as `MessagePart[]`, persisted to localStorage so a refresh doesn't lose work in progress. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
 
@@ -175,7 +177,7 @@ Adding a new button behavior means extending `BoardAction` in [features/board/ty
 
 `useMessagePlayback` walks each `MessagePart` in order: if it has a `soundSrc`, play the audio; otherwise speak `getSpokenText(part)` (vocalization, falling back to label). Adjacent text parts are merged into one utterance to avoid clipped speech between words.
 
-**See:** [src/features/board/use-button-activation.ts](../src/features/board/use-button-activation.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts).
+**See:** [src/features/board/activation/use-button-activation.ts](../src/features/board/activation/use-button-activation.ts), [src/features/board/activation/intent-resolver.ts](../src/features/board/activation/intent-resolver.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts).
 
 ## 7. Built-in AI
 

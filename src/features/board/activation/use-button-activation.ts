@@ -1,9 +1,10 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak } from "@shared/speech/speech-store";
-import type { MessagePart, UseMessageReturn } from "./message/use-message";
-import type { UseMessagePlaybackReturn } from "./message/use-message-playback";
-import type { UseBoardNavigationReturn } from "./navigation/use-board-navigation";
-import { getSpokenText, type BoardAction, type BoardButton } from "./types";
+import { resolveButtonIntent } from "./intent-resolver";
+import type { UseMessageReturn } from "../message/use-message";
+import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
+import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
+import type { BoardAction, BoardButton } from "../types";
 
 export interface UseButtonActivationOptions {
   message: UseMessageReturn;
@@ -23,21 +24,27 @@ export function useButtonActivation({
   const audio = useAudio();
 
   async function activateButton(button: BoardButton) {
-    const targetBoardId = button.loadBoard?.id;
-    if (targetBoardId) {
-      navigation.goToBoard(targetBoardId);
-      return;
-    }
+    const intents = resolveButtonIntent(button);
 
-    if (button.actions?.length) {
-      for (const action of button.actions) {
-        await runAction(action);
+    for (const intent of intents) {
+      switch (intent.kind) {
+        case "navigate":
+          navigation.goToBoard(intent.targetBoardId);
+          break;
+        case "compose":
+          message.addPart(intent.part);
+          break;
+        case "playAudio":
+          void audio.play(intent.src);
+          break;
+        case "speakText":
+          void speak(intent.text);
+          break;
+        case "runAction":
+          await runAction(intent.action);
+          break;
       }
-      return;
     }
-
-    message.addPart(asMessagePart(button));
-    speakButton(button);
   }
 
   async function runAction(action: BoardAction) {
@@ -65,27 +72,5 @@ export function useButtonActivation({
     });
   }
 
-  function speakButton(button: BoardButton) {
-    if (button.soundSrc) {
-      void audio.play(button.soundSrc);
-      return;
-    }
-
-    const text = getSpokenText(button);
-    if (text) {
-      void speak(text.toLowerCase());
-    }
-  }
-
   return { activateButton };
-}
-
-function asMessagePart(button: BoardButton): MessagePart {
-  return {
-    id: button.id,
-    label: button.label,
-    vocalization: button.vocalization,
-    imageSrc: button.imageSrc,
-    soundSrc: button.soundSrc,
-  };
 }
