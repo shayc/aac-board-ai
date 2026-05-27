@@ -1,10 +1,10 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak } from "@shared/speech/speech-store";
-import { resolveButtonIntent } from "./intent-resolver";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "../types";
+import { resolveButtonIntent } from "./intent-resolver";
 
 export interface UseButtonActivationOptions {
   message: UseMessageReturn;
@@ -43,6 +43,13 @@ export function useButtonActivation({
         case "runAction":
           await runAction(intent.action);
           break;
+
+        default: {
+          const _exhaustiveCheck: never = intent;
+          throw new Error(
+            `Unhandled intent kind: ${JSON.stringify(_exhaustiveCheck)}`,
+          );
+        }
       }
     }
   }
@@ -61,6 +68,13 @@ export function useButtonActivation({
         return playback.play();
       case "spell":
         return appendToLastPart(action.text);
+
+      default: {
+        const _exhaustiveCheck: never = action;
+        throw new Error(
+          `Unhandled action kind: ${JSON.stringify(_exhaustiveCheck)}`,
+        );
+      }
     }
   }
 
