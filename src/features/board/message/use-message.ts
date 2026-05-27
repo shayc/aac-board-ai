@@ -11,6 +11,7 @@ export interface UseMessageReturn {
   text: string;
   addPart: (part: MessagePart) => void;
   addSpace: () => void;
+  appendText: (text: string) => void;
   updateLastPart: (part: MessagePart) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
@@ -29,6 +30,20 @@ export function useMessage(): UseMessageReturn {
     addPart({
       id: crypto.randomUUID(),
       label: "",
+    });
+  }
+
+  function appendText(text: string) {
+    setParts((prev) => {
+      const lastPart = prev.at(-1);
+      if (!lastPart) {
+        return [{ id: crypto.randomUUID(), label: text }];
+      }
+
+      return prev.with(-1, {
+        ...lastPart,
+        label: `${lastPart.label ?? ""}${text}`,
+      });
     });
   }
 
@@ -65,6 +80,7 @@ export function useMessage(): UseMessageReturn {
     text,
     addPart,
     addSpace,
+    appendText,
     updateLastPart,
     setFromText,
     removeLastPart,
