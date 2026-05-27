@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useLanguage } from "@shared/language/use-language";
+import { useButtonActivation } from "./activation/use-button-activation";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { MessageBar } from "./message/message-bar";
 import { useMessage } from "./message/use-message";
@@ -11,7 +12,6 @@ import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import { Tile } from "./tile/tile";
 import type { Board, BoardButton } from "./types";
-import { useButtonActivation } from "./use-button-activation";
 
 export interface BoardViewerProps {
   board: Board;
