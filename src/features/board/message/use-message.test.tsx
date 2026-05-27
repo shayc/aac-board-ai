@@ -48,6 +48,48 @@ describe("useMessage", () => {
     expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
   });
 
+  test("appends text to the last part without mangling its id", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.addPart({ id: "abc-123", label: "ca", imageSrc: "img.png" });
+    await rerender();
+
+    result.current.appendText("t");
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(1);
+    expect(result.current.parts[0]).toEqual({
+      id: "abc-123",
+      label: "cat",
+      imageSrc: "img.png",
+    });
+  });
+
+  test("appends text as a new part when the message is empty", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.appendText("h");
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(1);
+    expect(result.current.parts[0].label).toBe("h");
+    expect(result.current.parts[0].id).toBeTruthy();
+  });
+
+  test("accumulates rapid appends into a single part", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.addPart({ id: "p1", label: "" });
+    await rerender();
+
+    result.current.appendText("h");
+    result.current.appendText("i");
+    await rerender();
+
+    expect(result.current.parts).toHaveLength(1);
+    expect(result.current.parts[0]).toEqual({ id: "p1", label: "hi" });
+  });
+
   test("removes the last-added part", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 

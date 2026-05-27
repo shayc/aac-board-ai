@@ -13,6 +13,7 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
     text: parts.map((p) => p.label ?? "").join(" "),
     addPart: vi.fn(),
     addSpace: vi.fn(),
+    appendText: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
     updateLastPart: vi.fn(),
@@ -157,7 +158,7 @@ describe("useButtonActivation", () => {
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
 
-  test("appends a spell action's text to the last message part's label", async () => {
+  test("delegates a spell action's text to the message's appendText", async () => {
     const message = createMessageStub([{ id: "ca", label: "ca" }]);
     const { result } = await setup({ message });
 
@@ -166,10 +167,7 @@ describe("useButtonActivation", () => {
       actions: [{ kind: "spell", text: "t" }],
     });
 
-    expect(message.updateLastPart).toHaveBeenCalledWith({
-      id: "t",
-      label: "cat",
-    });
+    expect(message.appendText).toHaveBeenCalledWith("t");
   });
 
   test("treats a loadBoard without an id as not navigable and speaks instead", async () => {

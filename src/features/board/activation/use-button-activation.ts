@@ -56,6 +56,8 @@ export function useButtonActivation({
 
   async function runAction(action: BoardAction) {
     switch (action.kind) {
+      case "spell":
+        return message.appendText(action.text);
       case "space":
         return message.addSpace();
       case "backspace":
@@ -66,8 +68,6 @@ export function useButtonActivation({
         return navigation.goHome();
       case "speak":
         return playback.play();
-      case "spell":
-        return appendToLastPart(action.text);
 
       default: {
         const _exhaustiveCheck: never = action;
@@ -76,14 +76,6 @@ export function useButtonActivation({
         );
       }
     }
-  }
-
-  function appendToLastPart(text: string) {
-    const lastPart = message.parts.at(-1);
-    message.updateLastPart({
-      id: text,
-      label: `${lastPart?.label ?? ""}${text}`,
-    });
   }
 
   return { activateButton };
