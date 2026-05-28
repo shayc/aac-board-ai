@@ -1,5 +1,5 @@
 import Stack from "@mui/material/Stack";
-import { useGridKeyboardNavigation } from "./use-grid-keyboard-navigation";
+import { useGridKeyboard } from "./use-grid-keyboard";
 
 export interface GridItemProps {
   tabIndex: number;
@@ -25,7 +25,7 @@ export function Grid<TItem extends { id: string }>({
   gap = 2,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, activeCell } = useGridKeyboardNavigation({
+  const { rootRef, rootProps, activeCell } = useGridKeyboard({
     grid,
     dir,
   });

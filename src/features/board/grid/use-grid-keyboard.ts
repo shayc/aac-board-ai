@@ -10,12 +10,12 @@ export interface Cell {
   col: number;
 }
 
-export interface UseGridKeyboardNavigationOptions {
+export interface UseGridKeyboardOptions {
   grid: readonly (readonly unknown[])[];
   dir?: "ltr" | "rtl";
 }
 
-export interface UseGridKeyboardNavigationReturn {
+export interface UseGridKeyboardReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
   activeCell: Cell;
@@ -39,10 +39,10 @@ interface KeyboardKey {
   altKey: boolean;
 }
 
-export function useGridKeyboardNavigation({
+export function useGridKeyboard({
   grid,
   dir = "ltr",
-}: UseGridKeyboardNavigationOptions): UseGridKeyboardNavigationReturn {
+}: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [activeCell, setActiveCell] = useState<Cell>(() =>
     findFirstNonEmptyCell(grid),
