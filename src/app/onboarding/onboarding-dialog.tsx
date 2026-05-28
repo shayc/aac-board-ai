@@ -12,6 +12,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import type { ReactNode } from "react";
 
@@ -21,6 +22,8 @@ export interface OnboardingDialogProps {
 }
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
+  const fullScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
   const highlights: { icon: ReactNode; primary: string; secondary: string }[] =
     [
       {
@@ -44,6 +47,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
+      fullScreen={fullScreen}
       fullWidth
       maxWidth="xs"
       aria-labelledby="welcome-dialog-title"
@@ -51,7 +55,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       slotProps={{
         paper: {
           sx: {
-            borderRadius: 6,
+            borderRadius: fullScreen ? 0 : 6,
             p: 1,
           },
         },
