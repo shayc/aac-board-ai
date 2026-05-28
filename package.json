@@ -35,13 +35,13 @@
     "@mui/material": "^9.0.1",
     "@mui/stylis-plugin-rtl": "^9.0.1",
     "@shayc/open-board-format": "^0.1.7",
-    "@shayc/react-built-in-ai": "^0.3.0",
+    "@shayc/react-built-in-ai": "^0.3.1",
     "idb": "^8.0.3",
     "mrmime": "^2.0.1",
     "react": "^19.2.6",
-    "react-aria": "^3.48.0",
+    "react-aria": "^3.49.0",
     "react-dom": "^19.2.6",
-    "react-router": "^7.15.1"
+    "react-router": "^7.16.0"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
