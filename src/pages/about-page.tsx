@@ -14,7 +14,7 @@ export const Component = function AboutPage() {
       <PageTitle>{m.aboutHeading()}</PageTitle>
 
       <Stack spacing={{ xs: 3, sm: 4 }}>
-        <Typography component="p" variant="body1" sx={{ pt: 6 }}>
+        <Typography component="p" variant="body1" sx={{ pt: { xs: 4, sm: 6 } }}>
           {m.aboutAppDescription({ appName: APP_NAME })}
         </Typography>
 
