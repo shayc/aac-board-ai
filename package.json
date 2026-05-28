@@ -34,7 +34,7 @@
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
     "@mui/stylis-plugin-rtl": "^9.0.1",
-    "@shayc/open-board-format": "^0.1.2",
+    "@shayc/open-board-format": "^0.1.3",
     "@shayc/react-built-in-ai": "^0.2.1",
     "idb": "^8.0.3",
     "mrmime": "^2.0.1",
