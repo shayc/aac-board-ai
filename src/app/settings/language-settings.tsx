@@ -17,7 +17,6 @@ import {
 export function LanguageSettings() {
   const { languages, language, setLanguage } = useLanguage();
   const progress = useGlobalDownloadProgress("Translator");
-  const isDownloading = progress > 0;
 
   return (
     <Stack spacing={2}>
@@ -40,7 +39,7 @@ export function LanguageSettings() {
         </Select>
       </FormControl>
 
-      {isDownloading && (
+      {progress !== null && (
         <Alert
           severity="info"
           variant="outlined"
