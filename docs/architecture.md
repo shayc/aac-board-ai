@@ -69,7 +69,7 @@ flowchart TD
 
   subgraph Load
     R[Route match<br/>/sets/:setId/boards/:boardId] --> L[boardLoader]
-    L --> Q[loadBoard<br/>hydrate assets · obfToBoard]
+    L --> Q[hydrateBoard<br/>hydrate assets · obfToBoard]
     Q --> C
     Q --> O[ObjectUrlRegistry]
     Q --> P[BoardPage<br/>useLoaderData]
@@ -84,13 +84,13 @@ flowchart TD
   end
 ```
 
-**Registry lifecycle.** `loadBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry` and receives the loader's `request.signal`; if the route is superseded mid-flight (rapid navigation) the registry self-destructs rather than promoting, so the live load's URLs aren't orphaned. On success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
+**Registry lifecycle.** `hydrateBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry` and receives the loader's `request.signal`; if the route is superseded mid-flight (rapid navigation) the registry self-destructs rather than promoting, so the live load's URLs aren't orphaned. On success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
 
 **Anti-flash translation.** `useBoardTranslation` initializes state with a _synchronous_ lookup against `board.strings[language]`, so cached translations land on first paint. On a miss, an effect creates a `Translator`, translates labels and vocalizations in parallel against a shared `AbortController`, persists the result back via `updateBoardStrings`, and applies a derived `Board`. If the Translator is unavailable or rejects, the hook keeps the current board — AAC UX requirement: never flash the source language. The cache write means subsequent loads in any tab hit the cache instead of the model.
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
-**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
+**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
 ## 5. State & persistence
 
@@ -215,7 +215,7 @@ Two layers, different mechanisms by design: the strings the app owns are pre-tra
 
 **Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLocaleName`, `getNativeLanguageName`.
 
-**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/use-board-translation.ts](../src/features/board/use-board-translation.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
+**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
 
 ## 9. PWA & offline
 
