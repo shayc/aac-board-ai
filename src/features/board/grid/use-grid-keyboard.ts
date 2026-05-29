@@ -59,17 +59,21 @@ export function useGridKeyboard({
     onKeyDown: (event) => {
       const root = rootRef.current;
       if (!root) {
+        event.continuePropagation();
         return;
       }
 
       const from = cellOf(event.target as Element | null);
       if (!from) {
+        event.continuePropagation();
         return;
       }
 
       const next = nextFocus(event, root, from, dir);
-      // Don't preventDefault when we didn't move — let the key fall through (e.g. Home/End at row boundary).
+      // react-aria stops propagation by default; only an arrow/Home/End move is
+      // ours, so let every other key bubble up to the board-root handler.
       if (!next || sameCell(next.position, from)) {
+        event.continuePropagation();
         return;
       }
 
