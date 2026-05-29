@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import { useLanguage } from "@shared/language/use-language";
 import { useButtonActivation } from "./activation/use-button-activation";
 import { Grid, type GridItemProps } from "./grid/grid";
+import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
 import { useMessage } from "./message/use-message";
 import { useMessagePlayback } from "./message/use-message-playback";
@@ -30,6 +31,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
     navigation,
   });
 
+  const keyboard = useBoardKeyboard({ message, playback });
+
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
       key={button.id}
@@ -45,6 +48,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
   return (
     <Stack
+      {...keyboard.rootProps}
       direction="column"
       sx={[
         { height: "100%" },
