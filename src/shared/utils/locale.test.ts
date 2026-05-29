@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import {
-  getEnglishLocaleName,
+  getEnglishLanguageName,
   getLanguageCode,
   getNativeLanguageName,
   getTextDirection,
@@ -59,13 +59,13 @@ describe("getTextDirection", () => {
   });
 });
 
-describe("getEnglishLocaleName", () => {
+describe("getEnglishLanguageName", () => {
   test("uses dialect form for region-qualified locales", () => {
-    expect(getEnglishLocaleName("en-US")).toBe("American English");
+    expect(getEnglishLanguageName("en-US")).toBe("American English");
   });
 
   test("returns plain language name when no region is given", () => {
-    expect(getEnglishLocaleName("es")).toBe("Spanish");
+    expect(getEnglishLanguageName("es")).toBe("Spanish");
   });
 });
 

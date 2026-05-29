@@ -5,7 +5,7 @@ import {
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
   BoardSetList,
-  removeBoardSet,
+  deleteBoardSet,
   useBoardSets,
   useImportBoardFiles,
   type BoardSetRecord,
@@ -48,7 +48,7 @@ export const Component = function LibraryPage() {
     setDeleteTarget(null);
 
     try {
-      await removeBoardSet(setId);
+      await deleteBoardSet(setId);
       showSnackbar({
         message: m.libraryDeleted({ name }),
         severity: "success",

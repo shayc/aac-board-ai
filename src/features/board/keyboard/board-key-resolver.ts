@@ -1,8 +1,8 @@
 export type BoardKeyAction =
   | { kind: "backspace" }
   | { kind: "clear" }
-  | { kind: "speak" }
-  | { kind: "cancel" };
+  | { kind: "play" }
+  | { kind: "stop" };
 
 export interface KeyEventLike {
   key: string;
@@ -17,12 +17,12 @@ export interface KeyEventLike {
  */
 export function resolveBoardKey(
   event: KeyEventLike,
-  isSpeaking: boolean,
+  isPlaying: boolean,
 ): BoardKeyAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      // While speaking, ⌘+Enter is inert — don't stack a second playback.
-      return isSpeaking ? null : { kind: "speak" };
+      // While playing, ⌘+Enter is inert — don't stack a second playback.
+      return isPlaying ? null : { kind: "play" };
     }
     if (event.key === "Backspace") {
       return { kind: "clear" };
@@ -31,7 +31,7 @@ export function resolveBoardKey(
   }
 
   if (event.key === "Escape") {
-    return isSpeaking ? { kind: "cancel" } : null;
+    return isPlaying ? { kind: "stop" } : null;
   }
   if (event.key === "Backspace") {
     return { kind: "backspace" };

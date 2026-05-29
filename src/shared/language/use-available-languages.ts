@@ -11,7 +11,7 @@ export function useAvailableLanguages() {
     .filter((code) => !UNTRANSLATABLE_LANGUAGES.has(code))
     .sort((a, b) => a.localeCompare(b))
     .map((code) => ({
-      language: code,
+      code,
       name: getNativeLanguageName(code),
     }));
 }

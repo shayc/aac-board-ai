@@ -4,10 +4,9 @@ import { useState } from "react";
 import { getSpokenText } from "../types";
 import type { MessagePart } from "./use-message";
 
-interface PlaybackSegment {
-  type: "text" | "sound";
-  data: string;
-}
+type PlaybackSegment =
+  | { kind: "sound"; src: string }
+  | { kind: "text"; text: string };
 
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;
@@ -27,12 +26,12 @@ export function useMessagePlayback(
       const segments = convertPartsToSegments(parts);
 
       for (const segment of segments) {
-        if (segment.type === "sound") {
-          await audio.play(segment.data);
+        if (segment.kind === "sound") {
+          await audio.play(segment.src);
         }
 
-        if (segment.type === "text") {
-          await speak(segment.data);
+        if (segment.kind === "text") {
+          await speak(segment.text);
         }
       }
     } catch {
@@ -59,12 +58,12 @@ export function useMessagePlayback(
 function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
   const segments = parts.flatMap((part) => {
     if (part.soundSrc) {
-      return { type: "sound" as const, data: part.soundSrc };
+      return { kind: "sound" as const, src: part.soundSrc };
     }
 
     const text = getSpokenText(part);
     if (text) {
-      return { type: "text" as const, data: text };
+      return { kind: "text" as const, text };
     }
 
     return [];
@@ -78,10 +77,10 @@ function mergeTextSegments(segments: PlaybackSegment[]): PlaybackSegment[] {
 
   for (const segment of segments) {
     const previous = result.at(-1);
-    const canMerge = previous?.type === "text" && segment.type === "text";
+    const canMerge = previous?.kind === "text" && segment.kind === "text";
 
     if (canMerge) {
-      previous.data = `${previous.data} ${segment.data}`.replace(/\s+/g, " ");
+      previous.text = `${previous.text} ${segment.text}`.replace(/\s+/g, " ");
     } else {
       result.push({ ...segment });
     }

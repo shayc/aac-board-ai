@@ -62,12 +62,14 @@ export function useAudio(): UseAudioReturn {
 
     audio.onerror = (error) => {
       setIsPlaying(false);
+      setIsPaused(false);
       rejectRef.current = null;
       reject(new Error(`Audio error: ${(error as Event).type}`));
     };
 
     audio.play().catch((error: unknown) => {
       setIsPlaying(false);
+      setIsPaused(false);
       rejectRef.current = null;
       reject(error instanceof Error ? error : new Error(String(error)));
     });

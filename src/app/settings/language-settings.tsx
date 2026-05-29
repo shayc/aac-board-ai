@@ -31,8 +31,8 @@ export function LanguageSettings() {
           disabled={!isSupported("Translator")}
           onChange={(event) => setLanguage(event.target.value)}
         >
-          {languages.map(({ language, name }) => (
-            <MenuItem key={language} value={language}>
+          {languages.map(({ code, name }) => (
+            <MenuItem key={code} value={code}>
               {name}
             </MenuItem>
           ))}
