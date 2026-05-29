@@ -4,7 +4,7 @@ export { BoardSetList } from "./board-set/list";
 export { BoardViewer } from "./board-viewer";
 export { importBoardFromUrl } from "./import/from-url";
 export { useImportBoardFiles } from "./import/use-import-board-files";
-export { getBoardSets, removeBoardSet } from "./storage/board-sets-store";
+export { getBoardSets, deleteBoardSet } from "./storage/board-sets-store";
 export {
   BoardNotFoundError,
   getBoardSet,

@@ -38,10 +38,10 @@ export function useBoardKeyboard({
         case "clear":
           message.clear();
           break;
-        case "speak":
+        case "play":
           void playback.play();
           break;
-        case "cancel":
+        case "stop":
           playback.stop();
           break;
         default: {

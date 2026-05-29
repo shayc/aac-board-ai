@@ -29,12 +29,12 @@ describe("resolveBoardKey", () => {
     expect(
       resolveBoardKey(key({ key: "Enter", metaKey: true }), false),
     ).toEqual({
-      kind: "speak",
+      kind: "play",
     });
     expect(
       resolveBoardKey(key({ key: "Enter", ctrlKey: true }), false),
     ).toEqual({
-      kind: "speak",
+      kind: "play",
     });
     expect(
       resolveBoardKey(key({ key: "Enter", metaKey: true }), true),
@@ -43,7 +43,7 @@ describe("resolveBoardKey", () => {
 
   test("Escape cancels only while speaking", () => {
     expect(resolveBoardKey(key({ key: "Escape" }), true)).toEqual({
-      kind: "cancel",
+      kind: "stop",
     });
     expect(resolveBoardKey(key({ key: "Escape" }), false)).toBeNull();
   });

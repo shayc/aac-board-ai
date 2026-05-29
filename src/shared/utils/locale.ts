@@ -41,10 +41,11 @@ export function getTextDirection(locale: string): "ltr" | "rtl" {
 }
 
 /**
- * Returns the display name of a locale code in English.
+ * Returns the language name of a locale code in English
+ * (e.g. "he-IL" → "Hebrew").
  * Falls back to the original code if the locale is not recognized.
  */
-export function getEnglishLocaleName(locale: string): string {
+export function getEnglishLanguageName(locale: string): string {
   try {
     return englishLanguageNames.of(normalizeLocale(locale)) ?? locale;
   } catch {

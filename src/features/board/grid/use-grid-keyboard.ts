@@ -140,7 +140,7 @@ function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
 
 function nextFocus(
   event: KeyboardKey,
-  grid: HTMLElement,
+  root: HTMLElement,
   from: Cell,
   dir: "ltr" | "rtl",
 ): FocusTarget | null {
@@ -150,7 +150,7 @@ function nextFocus(
     }
     const wholeGrid = event.ctrlKey || event.metaKey;
     const scope = wholeGrid ? CELL : `${CELL}[aria-rowindex='${from.row + 1}']`;
-    const candidates = grid.querySelectorAll<HTMLElement>(
+    const candidates = root.querySelectorAll<HTMLElement>(
       `${scope} ${FOCUSABLE}`,
     );
 
@@ -176,7 +176,7 @@ function nextFocus(
   }
 
   const step = arrowStep(event.key, dir);
-  return step ? nearestInDirection(grid, from, step) : null;
+  return step ? nearestInDirection(root, from, step) : null;
 }
 
 function arrowStep(key: string, dir: "ltr" | "rtl"): Step | null {
@@ -198,14 +198,14 @@ function arrowStep(key: string, dir: "ltr" | "rtl"): Step | null {
 // Among cells in the step's half-plane, prefer the most in-line tile
 // (smallest cross-axis distance), then the closest along the primary axis.
 function nearestInDirection(
-  grid: HTMLElement,
+  root: HTMLElement,
   from: Cell,
   step: Step,
 ): FocusTarget | null {
   let best: { target: FocusTarget; primary: number; cross: number } | null =
     null;
 
-  for (const cell of grid.querySelectorAll<HTMLElement>(CELL)) {
+  for (const cell of root.querySelectorAll<HTMLElement>(CELL)) {
     const position = positionOf(cell);
     const element = cell.querySelector<HTMLElement>(FOCUSABLE);
     if (!position || !element) {
