@@ -182,7 +182,6 @@ describe("useBoardTranslation", () => {
       resolve(`es:${input}`);
     }
 
-    // The stale "es" resolution must not clobber the "de" board.
     await vi.waitFor(() => {
       expect(result.current.translation.translatedBoard.name).toBe("de:Food");
     });
