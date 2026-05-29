@@ -4,48 +4,37 @@ import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 
 export interface UseSuggestionsReturn {
-  phrases: string[];
   isSupported: boolean;
+  phrases: string[];
   tone: SuggestionTone;
   setTone: (tone: SuggestionTone) => void;
 }
 
 const UNDERSCORED_WORD_PATTERN = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
-function isUsefulSuggestion(suggestion: string, original: string): boolean {
-  if (!suggestion || suggestion === original) {
-    return false;
-  }
-  if (UNDERSCORED_WORD_PATTERN.test(suggestion)) {
-    return false;
-  }
-  if (suggestion.includes('"')) {
-    return false;
-  }
-  return true;
+function isCleanPhrase(suggestion: string): boolean {
+  return (
+    !UNDERSCORED_WORD_PATTERN.test(suggestion) && !suggestion.includes('"')
+  );
 }
 
-function collectSuggestions(
+function cleanSuggestions(
   candidates: readonly (string | undefined)[],
-  original: string,
 ): string[] {
-  const accepted = new Set<string>();
+  const cleaned = new Set<string>();
+
   for (const candidate of candidates) {
-    if (candidate && isUsefulSuggestion(candidate, original)) {
-      accepted.add(candidate);
+    if (candidate && isCleanPhrase(candidate)) {
+      cleaned.add(candidate);
     }
   }
-  return [...accepted];
-}
 
-function isAbortError(error: unknown): boolean {
-  return error instanceof DOMException && error.name === "AbortError";
+  return [...cleaned];
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const [sharedContext] = useAISharedContext();
   const [tone, setTone] = useState<SuggestionTone>("as-is");
-  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const { status: proofreaderStatus, proofread } = useProofreader();
   const { status: rewriterStatus, rewrite } = useRewriter({
@@ -55,10 +44,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     format: "plain-text",
   });
 
+  const isProofreaderSupported = proofreaderStatus !== "unsupported";
+  const isRewriterSupported = rewriterStatus !== "unsupported";
+  const isSupported = isProofreaderSupported || isRewriterSupported;
+
   const isProofreaderReady = proofreaderStatus === "ready";
   const isRewriterReady = rewriterStatus === "ready";
-  const isSupported =
-    proofreaderStatus !== "unsupported" || rewriterStatus !== "unsupported";
+
+  const [suggestions, setSuggestions] = useState<string[]>([]);
 
   useEffect(() => {
     if (!isProofreaderReady && !isRewriterReady) {
@@ -80,25 +73,22 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
         }
 
         setSuggestions(
-          collectSuggestions(
-            [proofreadResult?.correctedInput, rewritten],
-            text,
+          cleanSuggestions([proofreadResult?.correctedInput, rewritten]).filter(
+            (suggestion) => suggestion !== text,
           ),
         );
-      } catch (error) {
-        if (isAbortError(error)) {
-          return;
-        }
+      } catch {
+        // Suggestion failures (engine error, or abort from cleanup) leave the prior suggestions in place.
       }
     };
 
     void generateSuggestions();
     return () => controller.abort();
-  }, [text, isProofreaderReady, proofread, isRewriterReady, rewrite]);
+  }, [text, isProofreaderReady, isRewriterReady, proofread, rewrite]);
 
   return {
-    phrases: suggestions,
     isSupported,
+    phrases: suggestions,
     tone,
     setTone,
   };
