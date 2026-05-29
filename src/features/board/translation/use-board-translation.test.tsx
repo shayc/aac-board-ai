@@ -148,4 +148,43 @@ describe("useBoardTranslation", () => {
       targetLanguage: "de",
     });
   });
+
+  test("ignores a stale translation when the UI language changes mid-flight", async () => {
+    const board = makeBoard();
+    // Each translate call hangs until resolved by hand, so the test controls
+    // which language's batch settles first.
+    const calls: { input: string; resolve: (value: string) => void }[] = [];
+    stubTranslator(
+      (input) =>
+        new Promise<string>((resolve) => {
+          calls.push({ input, resolve });
+        }),
+    );
+
+    const { result } = await setup(board, "es");
+
+    // The "es" batch is in flight: one pending translate per unique string.
+    await vi.waitFor(() => {
+      expect(calls).toHaveLength(3);
+    });
+
+    // Switching language aborts the "es" run and starts a fresh "de" one.
+    result.current.setLanguage("de");
+    await vi.waitFor(() => {
+      expect(calls).toHaveLength(6);
+    });
+
+    // Settle the fresh "de" batch first, then let the aborted "es" batch resolve.
+    for (const { input, resolve } of calls.slice(3)) {
+      resolve(`de:${input}`);
+    }
+    for (const { input, resolve } of calls.slice(0, 3)) {
+      resolve(`es:${input}`);
+    }
+
+    // The stale "es" resolution must not clobber the "de" board.
+    await vi.waitFor(() => {
+      expect(result.current.translation.translatedBoard.name).toBe("de:Food");
+    });
+  });
 });
