@@ -137,6 +137,8 @@ export function speak(text: string): Promise<void> {
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {
+    // Each speak() and stop() calls synthesis.cancel(), so "interrupted" is the
+    // expected end of a superseded utterance — resolve it rather than reject.
     if (event.error === "interrupted") {
       resolve();
     } else {
