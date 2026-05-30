@@ -136,7 +136,6 @@ describe("useBoardTranslation", () => {
 
     const { result } = await setup(board);
 
-    // Starts in English, matching the board — so it goes untranslated.
     expect(result.current.translation.translatedBoard).toBe(board);
     expect(translate).not.toHaveBeenCalled();
 

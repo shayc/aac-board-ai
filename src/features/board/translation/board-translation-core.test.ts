@@ -64,8 +64,8 @@ describe("board-translation-core", () => {
 
     expect(translated.name).toBe("Mi Tablero");
     expect(translated.buttons[0].label).toBe("Hola");
-    expect(translated.buttons[0].vocalization).toBe("Hello there"); // Missing translation falls back to original
-    expect(translated.buttons[1].label).toBeUndefined(); // Undefined stays undefined
+    expect(translated.buttons[0].vocalization).toBe("Hello there");
+    expect(translated.buttons[1].label).toBeUndefined();
   });
 
   test("collectTranslatableStrings() extracts all unique UI text", () => {
