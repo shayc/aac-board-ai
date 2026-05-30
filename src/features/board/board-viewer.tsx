@@ -68,6 +68,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
     >
       <MessageBar
         parts={message.parts}
+        activePartId={playback.activePartId}
         isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}

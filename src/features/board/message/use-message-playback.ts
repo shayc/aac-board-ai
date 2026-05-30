@@ -1,15 +1,17 @@
 import { useAudio } from "@shared/hooks/use-audio";
 import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { getSpokenText } from "../types";
+import { createPartTracker, type SpokenPart } from "./create-part-tracker";
 import type { MessagePart } from "./use-message";
 
 type PlaybackSegment =
-  | { kind: "sound"; src: string }
-  | { kind: "text"; text: string };
+  | { kind: "sound"; src: string; partId: string }
+  | { kind: "text"; parts: SpokenPart[] };
 
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;
+  activePartId: string | null;
   play: () => Promise<void>;
   stop: () => void;
 }
@@ -19,72 +21,91 @@ export function useMessagePlayback(
 ): UseMessagePlaybackReturn {
   const audio = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activePartId, setActivePartId] = useState<string | null>(null);
+  // Bumped by stop() (and each play()) to invalidate an in-flight loop: a
+  // superseded utterance resolves via cancel(), so without this the loop would
+  // march on to the next segment after the user stopped.
+  const playbackGenerationRef = useRef(0);
 
   async function play() {
+    const generation = ++playbackGenerationRef.current;
+
     try {
       setIsPlaying(true);
       const segments = convertPartsToSegments(parts);
 
       for (const segment of segments) {
+        if (playbackGenerationRef.current !== generation) {
+          return;
+        }
+
         if (segment.kind === "sound") {
+          setActivePartId(segment.partId);
           await audio.play(segment.src);
         }
 
         if (segment.kind === "text") {
-          await speak(segment.text);
+          const tracker = createPartTracker(segment.parts);
+          setActivePartId(tracker.firstId);
+          await speak(tracker.text, {
+            onBoundary: (charIndex) => {
+              // A boundary event can arrive after stop()/cancel(); ignore it so
+              // it can't re-highlight a part the user already stopped.
+              if (playbackGenerationRef.current === generation) {
+                setActivePartId(tracker.partAt(charIndex));
+              }
+            },
+          });
         }
       }
     } catch {
       // Playback failures (TTS hiccup, cancellation from stop(), etc.) reset
       // via `finally` — the button returning to idle is the user signal.
     } finally {
-      setIsPlaying(false);
+      if (playbackGenerationRef.current === generation) {
+        setIsPlaying(false);
+        setActivePartId(null);
+      }
     }
   }
 
   function stop() {
+    playbackGenerationRef.current++;
     stopSpeaking();
     audio.stop();
     setIsPlaying(false);
+    setActivePartId(null);
   }
 
   return {
     isPlaying,
+    activePartId,
     play,
     stop,
   };
 }
 
 function convertPartsToSegments(parts: MessagePart[]): PlaybackSegment[] {
-  const segments = parts.flatMap((part) => {
+  const segments: PlaybackSegment[] = [];
+
+  for (const part of parts) {
     if (part.soundSrc) {
-      return { kind: "sound" as const, src: part.soundSrc };
+      segments.push({ kind: "sound", src: part.soundSrc, partId: part.id });
+      continue;
     }
 
     const text = getSpokenText(part);
-    if (text) {
-      return { kind: "text" as const, text };
+    if (!text) {
+      continue;
     }
 
-    return [];
-  });
-
-  return mergeTextSegments(segments);
-}
-
-function mergeTextSegments(segments: PlaybackSegment[]): PlaybackSegment[] {
-  const result: PlaybackSegment[] = [];
-
-  for (const segment of segments) {
-    const previous = result.at(-1);
-    const canMerge = previous?.kind === "text" && segment.kind === "text";
-
-    if (canMerge) {
-      previous.text = `${previous.text} ${segment.text}`.replace(/\s+/g, " ");
+    const previous = segments.at(-1);
+    if (previous?.kind === "text") {
+      previous.parts.push({ id: part.id, text });
     } else {
-      result.push({ ...segment });
+      segments.push({ kind: "text", parts: [{ id: part.id, text }] });
     }
   }
 
-  return result;
+  return segments;
 }

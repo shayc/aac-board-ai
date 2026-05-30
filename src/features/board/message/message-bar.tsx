@@ -7,6 +7,7 @@ import type { MessagePart } from "./use-message";
 
 export interface MessageBarProps {
   parts: MessagePart[];
+  activePartId: string | null;
   isPlaying: boolean;
   onBackspacePress: () => void;
   onBackspaceLongPress: () => void;
@@ -34,6 +35,7 @@ function scrollToEnd(container: HTMLElement | null): () => void {
 
 export function MessageBar({
   parts,
+  activePartId,
   isPlaying,
   onBackspacePress,
   onBackspaceLongPress,
@@ -69,7 +71,16 @@ export function MessageBar({
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
           {parts.map((part, index) => (
-            <Stack key={index} direction="row">
+            <Stack
+              key={index}
+              direction="row"
+              sx={{
+                px: 1,
+                borderRadius: 8,
+                bgcolor:
+                  part.id === activePartId ? "action.selected" : "transparent",
+              }}
+            >
               <Pictogram label={part.label} src={part.imageSrc} />
             </Stack>
           ))}

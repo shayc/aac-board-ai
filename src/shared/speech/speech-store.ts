@@ -15,6 +15,10 @@ export interface SpeechConfig {
   volume: number;
 }
 
+export interface SpeakOptions {
+  onBoundary?: (charIndex: number) => void;
+}
+
 type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
 interface VoiceCatalogState {
@@ -119,7 +123,10 @@ export function setVolume(volume: number): void {
   updateConfig({ volume });
 }
 
-export function speak(text: string): Promise<void> {
+export function speak(
+  text: string,
+  { onBoundary }: SpeakOptions = {},
+): Promise<void> {
   if (!synthesis) {
     return Promise.resolve();
   }
@@ -134,6 +141,10 @@ export function speak(text: string): Promise<void> {
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;
+
+  if (onBoundary) {
+    utterance.onboundary = (event) => onBoundary(event.charIndex);
+  }
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {

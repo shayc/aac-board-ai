@@ -163,4 +163,139 @@ describe("useMessagePlayback", () => {
 
     expect(result.current.isPlaying).toBe(false);
   });
+
+  test("has no active part before playback starts", async () => {
+    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+
+    const { result } = await renderHook(() => useMessagePlayback(parts));
+
+    expect(result.current.activePartId).toBeNull();
+  });
+
+  test("highlights the part at the current speech boundary, then clears it", async () => {
+    let fireBoundary: ((charIndex: number) => void) | undefined;
+    let endSpeak: (() => void) | undefined;
+    speech.speak.mockImplementationOnce((utterance) => {
+      fireBoundary = (charIndex) => {
+        utterance.onboundary?.({ charIndex } as SpeechSynthesisEvent);
+      };
+
+      endSpeak = () => {
+        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+      };
+    });
+
+    const parts: MessagePart[] = [
+      { id: "1", label: "I" },
+      { id: "2", label: "want" },
+    ];
+
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
+    );
+
+    const playPromise = result.current.play();
+    await rerender();
+
+    fireBoundary?.(2); // "want" begins at offset 2 in "I want"
+    await rerender();
+    expect(result.current.activePartId).toBe("2");
+
+    endSpeak?.();
+    await playPromise;
+    await rerender();
+    expect(result.current.activePartId).toBeNull();
+  });
+
+  test("clears the active part on stop", async () => {
+    let resolveSpeak: (() => void) | undefined;
+    speech.speak.mockImplementationOnce((utterance) => {
+      utterance.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
+      resolveSpeak = () => {
+        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+      };
+    });
+
+    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
+    );
+
+    const playPromise = result.current.play();
+    await rerender();
+    expect(result.current.activePartId).toBe("1");
+
+    result.current.stop();
+    await rerender();
+    expect(result.current.activePartId).toBeNull();
+
+    resolveSpeak?.();
+    await playPromise;
+  });
+
+  test("does not advance to later segments after stop", async () => {
+    let resolveFirstSpeak: (() => void) | undefined;
+    speech.speak.mockImplementationOnce((utterance) => {
+      resolveFirstSpeak = () => {
+        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+      };
+    });
+
+    const parts: MessagePart[] = [
+      { id: "1", label: "before" },
+      { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { id: "3", label: "after" },
+    ];
+
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
+    );
+
+    const playPromise = result.current.play();
+    await rerender();
+
+    result.current.stop();
+    resolveFirstSpeak?.(); // let the awaited first utterance resolve
+    await playPromise;
+    await rerender();
+
+    expect(speech.speak).toHaveBeenCalledTimes(1); // only "before", not "after"
+    expect(audio.play).not.toHaveBeenCalled(); // the sound segment is skipped
+    expect(result.current.activePartId).toBeNull();
+  });
+
+  test("ignores a boundary event that arrives after stop", async () => {
+    let fireBoundary: ((charIndex: number) => void) | undefined;
+    let resolveSpeak: (() => void) | undefined;
+    speech.speak.mockImplementationOnce((utterance) => {
+      fireBoundary = (charIndex) => {
+        utterance.onboundary?.({ charIndex } as SpeechSynthesisEvent);
+      };
+
+      resolveSpeak = () => {
+        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+      };
+    });
+
+    const parts: MessagePart[] = [
+      { id: "1", label: "I" },
+      { id: "2", label: "want" },
+    ];
+
+    const { result, rerender } = await renderHook(() =>
+      useMessagePlayback(parts),
+    );
+
+    const playPromise = result.current.play();
+    await rerender();
+
+    result.current.stop();
+    fireBoundary?.(2); // late event for the canceled utterance
+    await rerender();
+    expect(result.current.activePartId).toBeNull();
+
+    resolveSpeak?.();
+    await playPromise;
+  });
 });
