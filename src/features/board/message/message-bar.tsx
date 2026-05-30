@@ -15,19 +15,16 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
-function scrollToEnd(container: HTMLElement | null): () => void {
-  const lastChild = container?.lastElementChild;
-
-  if (!lastChild) {
+function scrollElementIntoView(
+  element: Element | undefined,
+  inline: ScrollLogicalPosition,
+): () => void {
+  if (!element) {
     return () => undefined;
   }
 
   const frameId = requestAnimationFrame(() => {
-    lastChild.scrollIntoView({
-      block: "nearest",
-      inline: "end",
-      behavior: "instant",
-    });
+    element.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
   });
 
   return () => cancelAnimationFrame(frameId);
@@ -45,8 +42,24 @@ export function MessageBar({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return scrollToEnd(scrollContainerRef.current);
+    return scrollElementIntoView(
+      scrollContainerRef.current?.lastElementChild ?? undefined,
+      "end",
+    );
   }, [parts]);
+
+  useEffect(() => {
+    if (activePartId === null) {
+      return;
+    }
+
+    const index = parts.findIndex((part) => part.id === activePartId);
+
+    return scrollElementIntoView(
+      scrollContainerRef.current?.children[index],
+      "nearest",
+    );
+  }, [activePartId, parts]);
 
   return (
     <Stack direction="row" sx={{ p: 2 }}>
