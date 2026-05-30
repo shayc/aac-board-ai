@@ -70,8 +70,6 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
-// Module init
-
 const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
 
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(

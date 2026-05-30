@@ -23,7 +23,6 @@ describe("useVoiceLanguageSync", () => {
       makeVoice("en-US", "en-voice"),
       makeVoice("he-IL", "he-voice"),
     ]);
-    // Rebuild the in-memory catalog from the stubbed voices.
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
     setVoiceURI(null);
   });
@@ -51,7 +50,6 @@ describe("useVoiceLanguageSync", () => {
 
     await renderHook(() => useVoiceLanguageSync({ language: "en" }));
 
-    // Effect runs but sees a matching voice and returns early without writing.
     expect(getSpeechConfig().voiceURI).toBe("en-voice");
   });
 

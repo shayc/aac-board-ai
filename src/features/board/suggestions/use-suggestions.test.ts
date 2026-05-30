@@ -134,18 +134,15 @@ describe("useSuggestions", () => {
       { initialProps: { text: "old" } },
     );
 
-    // First request is in flight once the proofreader has provisioned.
     await vi.waitFor(() => {
       expect(resolvers.has("old")).toBe(true);
     });
 
-    // Changing the text aborts the "old" run and starts a fresh one.
     await rerender({ text: "new" });
     await vi.waitFor(() => {
       expect(resolvers.has("new")).toBe(true);
     });
 
-    // Resolve the current request first, then let the aborted one settle.
     resolvers.get("new")?.(makeProofreadResult("corrected new"));
     resolvers.get("old")?.(makeProofreadResult("corrected old"));
 
