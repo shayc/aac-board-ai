@@ -11,6 +11,7 @@ function callLoader(setId: string): Promise<Response> {
     request: new Request("http://localhost/"),
     params: { setId },
   } as unknown as LoaderFunctionArgs;
+
   return boardSetIndexLoader(args);
 }
 

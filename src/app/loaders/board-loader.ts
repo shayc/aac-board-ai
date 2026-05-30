@@ -15,6 +15,7 @@ export async function boardLoader({
     if (error instanceof BoardNotFoundError) {
       throw data(m.boardNotFound(), { status: 404 });
     }
+
     throw error;
   }
 }

@@ -32,6 +32,7 @@ export async function importBoardFiles(
 ): Promise<ImportResult[]> {
   const results = await writeBoardSetFiles(files);
   await notifyBoardSetsChanged();
+
   return results;
 }
 
@@ -96,6 +97,7 @@ function resolveRootBoardId(
   if (fromManifest) {
     return fromManifest;
   }
+
   throw new Error(
     `Manifest root "${manifest.root}" does not match any board in manifest.paths.boards`,
   );

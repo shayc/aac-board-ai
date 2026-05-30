@@ -27,6 +27,7 @@ describe("useAudio", () => {
         this.dispatchEvent(new Event("pause"));
         this.dispatchEvent(new Event("error"));
       });
+
       return Promise.resolve();
     });
 

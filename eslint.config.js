@@ -33,6 +33,14 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
+      "padding-line-between-statements": [
+        "error",
+        // Always require a blank line before returns
+        { blankLine: "always", prev: "*", next: "return" },
+
+        // Always require a blank line after block-like statements (if, for, switch, etc.)
+        { blankLine: "always", prev: ["block", "block-like"], next: "*" },
+      ],
       "react-x/no-array-index-key": "off",
       "no-restricted-imports": [
         "error",

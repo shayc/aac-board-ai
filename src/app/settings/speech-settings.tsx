@@ -53,6 +53,7 @@ export function SpeechSettings() {
         {voice.name}
       </MenuItem>
     ));
+
     return [header, ...items];
   }
 

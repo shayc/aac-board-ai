@@ -111,6 +111,7 @@ describe("useButtonActivation", () => {
     const playback = createPlaybackStub();
     playback.play = vi.fn(() => {
       callOrder.push("play");
+
       return Promise.resolve();
     });
 

@@ -19,6 +19,7 @@ async function seedTestBoard(): Promise<void> {
   if (!pngResponse.ok) {
     throw new Error(`Could not fetch ${REAL_PNG_URL} for fixture image`);
   }
+
   const pngBlob = await pngResponse.blob();
 
   const obfBoard: OBFBoard = {
@@ -53,6 +54,7 @@ async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   } catch (error) {
     return error;
   }
+
   throw new Error("Expected hydrateBoard to throw, but it resolved");
 }
 
@@ -67,6 +69,7 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
       img.onerror = null;
       resolve(result);
     };
+
     img.onload = () => settle(true);
     img.onerror = () => settle(false);
     img.src = url;

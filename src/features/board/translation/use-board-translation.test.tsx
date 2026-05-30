@@ -31,6 +31,7 @@ function makeBoard(overrides: Partial<Board> = {}): Board {
 function useTranslationHarness(options: UseBoardTranslationOptions) {
   const translation = useBoardTranslation(options);
   const { setLanguage } = useLanguage();
+
   return { translation, setLanguage };
 }
 
@@ -39,6 +40,7 @@ function setup(board: Board, language?: string) {
     // LanguageProvider seeds its state from this key on mount.
     localStorage.setItem("language", JSON.stringify(language));
   }
+
   return renderHook(() => useTranslationHarness({ setId: "set-1", board }), {
     wrapper: LanguageProvider,
   });
@@ -178,6 +180,7 @@ describe("useBoardTranslation", () => {
     for (const { input, resolve } of calls.slice(3)) {
       resolve(`de:${input}`);
     }
+
     for (const { input, resolve } of calls.slice(0, 3)) {
       resolve(`es:${input}`);
     }

@@ -60,6 +60,7 @@ describe("useMessagePlayback", () => {
         this.dispatchEvent(new Event("play"));
         this.dispatchEvent(new Event("ended"));
       });
+
       return Promise.resolve();
     });
 

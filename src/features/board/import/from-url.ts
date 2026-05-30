@@ -16,5 +16,6 @@ export async function importBoardFromUrl(url: string): Promise<ImportResult> {
   });
 
   const [result] = await importBoardFiles(file);
+
   return result;
 }

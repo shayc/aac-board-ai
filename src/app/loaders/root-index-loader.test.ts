@@ -16,6 +16,7 @@ function callLoader(searchParams = ""): Promise<Response> {
     request: new Request(`http://localhost/${searchParams}`),
     params: {},
   } as unknown as LoaderFunctionArgs;
+
   return rootIndexLoader(args);
 }
 

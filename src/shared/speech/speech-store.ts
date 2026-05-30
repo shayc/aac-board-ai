@@ -47,7 +47,9 @@ function loadPersistedConfig(): SpeechConfig {
     if (!raw) {
       return DEFAULT_CONFIG;
     }
+
     const parsed = JSON.parse(raw) as Partial<SpeechConfig>;
+
     return {
       voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
       rate: clamp(parsed.rate, SPEECH_RATE),

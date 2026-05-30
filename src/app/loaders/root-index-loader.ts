@@ -9,6 +9,7 @@ async function resolveInitialRedirectPath(
 ): Promise<string> {
   if (boardUrl) {
     const { setId, boardId } = await importBoardFromUrl(boardUrl);
+
     return boardPath({ setId, boardId });
   }
 
@@ -18,6 +19,7 @@ async function resolveInitialRedirectPath(
   }
 
   const { setId, boardId } = await importBoardFromUrl(DEFAULT_BOARD_URL);
+
   return boardPath({ setId, boardId });
 }
 
@@ -26,5 +28,6 @@ export async function rootIndexLoader({
 }: LoaderFunctionArgs): Promise<Response> {
   const boardUrl = new URL(request.url).searchParams.get("board");
   const path = await resolveInitialRedirectPath(boardUrl);
+
   return redirect(path);
 }

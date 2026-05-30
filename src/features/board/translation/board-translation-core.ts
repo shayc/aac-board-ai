@@ -10,7 +10,9 @@ export function resolveSyncTranslation(
   if (getBoardLanguage(board) === language) {
     return board;
   }
+
   const cached = findTranslations(board.strings, language);
+
   return cached ? applyTranslations(board, cached) : undefined;
 }
 
@@ -29,6 +31,7 @@ export function findTranslations(
   const match = Object.entries(strings).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
+
   return match?.[1];
 }
 
@@ -61,6 +64,7 @@ export function collectTranslatableStrings(board: Board): Set<string> {
     if (button.label) {
       translatableStrings.add(button.label);
     }
+
     if (button.vocalization) {
       translatableStrings.add(button.vocalization);
     }

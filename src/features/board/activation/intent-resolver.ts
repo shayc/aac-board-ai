@@ -14,6 +14,7 @@ export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
   const targetBoardId = button.loadBoard?.id;
   if (targetBoardId) {
     intents.push({ kind: "navigate", targetBoardId });
+
     return intents;
   }
 
@@ -21,6 +22,7 @@ export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
     for (const action of button.actions) {
       intents.push({ kind: "runAction", action });
     }
+
     return intents;
   }
 

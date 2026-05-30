@@ -27,6 +27,7 @@ export function useBoardKeyboard({
       // react-aria stops propagation by default; let keys we don't claim bubble.
       if (!action) {
         event.continuePropagation();
+
         return;
       }
 

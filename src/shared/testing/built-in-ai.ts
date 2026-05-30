@@ -44,6 +44,7 @@ function installNamespace(
   );
 
   vi.stubGlobal(name, { availability, create });
+
   return { create, availability };
 }
 
@@ -58,6 +59,7 @@ export function stubProofreader(
 ): ProofreaderStub {
   const action = vi.fn(proofread);
   const spies = installNamespace("Proofreader", () => ({ proofread: action }));
+
   return { proofread: action, ...spies };
 }
 
@@ -66,6 +68,7 @@ export function stubRewriter(
 ): RewriterStub {
   const action = vi.fn(rewrite);
   const spies = installNamespace("Rewriter", () => ({ rewrite: action }));
+
   return { rewrite: action, ...spies };
 }
 
@@ -74,6 +77,7 @@ export function stubTranslator(
 ): TranslatorStub {
   const action = vi.fn(translate);
   const spies = installNamespace("Translator", () => ({ translate: action }));
+
   return { translate: action, ...spies };
 }
 

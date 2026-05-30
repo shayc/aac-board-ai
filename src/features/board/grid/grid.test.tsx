@@ -30,12 +30,15 @@ async function press(
   if (modifiers.shiftKey) {
     sequence = `{Shift>}${sequence}{/Shift}`;
   }
+
   if (modifiers.metaKey) {
     sequence = `{Meta>}${sequence}{/Meta}`;
   }
+
   if (modifiers.ctrlKey) {
     sequence = `{Control>}${sequence}{/Control}`;
   }
+
   await userEvent.keyboard(sequence);
 }
 
