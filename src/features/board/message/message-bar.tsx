@@ -89,7 +89,7 @@ export function MessageBar({
               direction="row"
               sx={{
                 px: 1,
-                borderRadius: 8,
+                borderRadius: 4,
                 bgcolor:
                   part.id === activePartId ? "action.selected" : "transparent",
               }}
