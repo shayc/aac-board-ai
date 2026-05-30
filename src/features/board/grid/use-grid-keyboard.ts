@@ -60,12 +60,14 @@ export function useGridKeyboard({
       const root = rootRef.current;
       if (!root) {
         event.continuePropagation();
+
         return;
       }
 
       const from = cellOf(event.target as Element | null);
       if (!from) {
         event.continuePropagation();
+
         return;
       }
 
@@ -74,6 +76,7 @@ export function useGridKeyboard({
       // ours, so let every other key bubble up to the board-root handler.
       if (!next || sameCell(next.position, from)) {
         event.continuePropagation();
+
         return;
       }
 
@@ -97,6 +100,7 @@ export function useGridKeyboard({
     if (previousGridRef.current === grid) {
       return;
     }
+
     previousGridRef.current = grid;
 
     if (document.activeElement !== document.body) {
@@ -115,6 +119,7 @@ export function useGridKeyboard({
 
     if (sameCellElement) {
       sameCellElement.focus();
+
       return;
     }
 
@@ -135,6 +140,7 @@ function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
       }
     }
   }
+
   return { row: 0, col: 0 };
 }
 
@@ -148,6 +154,7 @@ function nextFocus(
     if (event.shiftKey || event.altKey) {
       return null;
     }
+
     const wholeGrid = event.ctrlKey || event.metaKey;
     const scope = wholeGrid ? CELL : `${CELL}[aria-rowindex='${from.row + 1}']`;
     const candidates = root.querySelectorAll<HTMLElement>(
@@ -168,6 +175,7 @@ function nextFocus(
     }
 
     const position = cellOf(element);
+
     return position ? { element, position } : null;
   }
 
@@ -176,6 +184,7 @@ function nextFocus(
   }
 
   const step = arrowStep(event.key, dir);
+
   return step ? nearestInDirection(root, from, step) : null;
 }
 
@@ -245,11 +254,13 @@ function positionOf(cell: Element | null): Cell | null {
   if (!cell) {
     return null;
   }
+
   const row = Number.parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
   const col = Number.parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
   if (Number.isNaN(row) || Number.isNaN(col)) {
     return null;
   }
+
   return { row, col };
 }
 

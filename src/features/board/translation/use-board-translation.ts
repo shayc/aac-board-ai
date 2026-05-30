@@ -37,6 +37,7 @@ export function useBoardTranslation({
       const cached = resolveSyncTranslation(board, language);
       if (cached) {
         setTranslatedBoard(cached);
+
         return;
       }
 
@@ -81,6 +82,7 @@ async function translatePhrases(
   const entries = await Promise.all(
     Array.from(translatableStrings).map(async (phrase) => {
       const translated = await translator.translate(phrase, { signal });
+
       return [phrase, translated] as const;
     }),
   );

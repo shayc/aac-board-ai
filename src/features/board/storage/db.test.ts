@@ -43,6 +43,7 @@ afterEach(() => {
 
 async function openTestDB(): Promise<BoardsDB> {
   db = await openCleanBoardsDB();
+
   return db;
 }
 

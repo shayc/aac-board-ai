@@ -18,6 +18,7 @@ async function clearAllStores(db: BoardsDB): Promise<void> {
   for (const name of STORE_NAMES) {
     await tx.objectStore(name).clear();
   }
+
   await tx.done;
 }
 
@@ -33,6 +34,7 @@ export async function resetBoardsDB(): Promise<void> {
 export async function openCleanBoardsDB(): Promise<BoardsDB> {
   const db = await openBoardsDB();
   await clearAllStores(db);
+
   return db;
 }
 
@@ -45,5 +47,6 @@ export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   } finally {
     db.close();
   }
+
   await invalidateBoardSets();
 }

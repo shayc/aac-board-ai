@@ -10,5 +10,6 @@ export function PageTitle({ children }: PageTitleProps) {
   if (!children) {
     return null;
   }
+
   return <title>{`${children} | ${APP_NAME}`}</title>;
 }

@@ -176,6 +176,7 @@ export async function getBoardSet(
   setId: string,
 ): Promise<BoardSetRecord | undefined> {
   validateId(setId, "setId");
+
   return db.get("boardSets", setId);
 }
 
@@ -194,6 +195,7 @@ export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   }
 
   await tx.done;
+
   return boardSets;
 }
 
@@ -254,6 +256,7 @@ export async function getBoard(
 ): Promise<BoardRecord | undefined> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
+
   return db.get("boards", [setId, boardId]);
 }
 

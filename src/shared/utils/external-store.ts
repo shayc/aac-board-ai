@@ -16,6 +16,7 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
 
   function subscribe(listener: () => void) {
     listeners.add(listener);
+
     return () => {
       listeners.delete(listener);
     };

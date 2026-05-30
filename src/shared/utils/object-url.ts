@@ -10,6 +10,7 @@ export function createObjectUrlRegistry(): ObjectUrlRegistry {
     create(blob: Blob): string {
       const url = URL.createObjectURL(blob);
       urls.add(url);
+
       return url;
     },
 
@@ -17,6 +18,7 @@ export function createObjectUrlRegistry(): ObjectUrlRegistry {
       for (const url of urls) {
         URL.revokeObjectURL(url);
       }
+
       urls.clear();
     },
   };

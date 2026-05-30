@@ -24,15 +24,18 @@ export function resolveBoardKey(
       // While playing, ⌘+Enter is inert — don't stack a second playback.
       return isPlaying ? null : { kind: "play" };
     }
+
     if (event.key === "Backspace") {
       return { kind: "clear" };
     }
+
     return null;
   }
 
   if (event.key === "Escape") {
     return isPlaying ? { kind: "stop" } : null;
   }
+
   if (event.key === "Backspace") {
     return { kind: "backspace" };
   }

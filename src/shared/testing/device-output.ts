@@ -15,6 +15,7 @@ export function stubSpeech(): {
       });
     });
   const cancel = vi.spyOn(speechSynthesis, "cancel").mockReturnValue(undefined);
+
   return { speak, cancel };
 }
 
@@ -29,10 +30,12 @@ export function stubAudio(): {
         this.dispatchEvent(new Event("play"));
         this.dispatchEvent(new Event("ended"));
       });
+
       return Promise.resolve();
     });
   const pause = vi
     .spyOn(HTMLAudioElement.prototype, "pause")
     .mockReturnValue(undefined);
+
   return { play, pause };
 }

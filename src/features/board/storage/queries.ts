@@ -54,6 +54,7 @@ export async function hydrateBoard(
     const board = await withBoardsDB(async (db) => {
       const obf = await fetchOBFBoard(db, setId, boardId);
       const hydrated = await hydrateOBFBoard(db, setId, obf, registry);
+
       return obfToBoard(hydrated);
     });
 
@@ -80,6 +81,7 @@ async function fetchOBFBoard(
   if (!record) {
     throw new BoardNotFoundError(setId, boardId);
   }
+
   return record.obf;
 }
 
@@ -93,6 +95,7 @@ async function hydrateOBFBoard(
     hydrateAssets(db, setId, board.images, registry),
     hydrateAssets(db, setId, board.sounds, registry),
   ]);
+
   return { ...board, images, sounds };
 }
 
@@ -115,6 +118,7 @@ async function hydrateAssets(
       try {
         const blob = await getAssetBlob(db, setId, asset.path);
         const url = blob ? registry.create(blob) : null;
+
         return url ? { ...asset, data: url } : asset;
       } catch {
         return asset;

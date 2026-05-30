@@ -87,6 +87,7 @@ function buildGrid<T extends { id: string }>(
 
       return Array.from({ length: columns }, (_, c) => {
         const id = orderRow[c] ?? undefined;
+
         return id ? itemsById.get(id) : undefined;
       });
     });
@@ -95,6 +96,7 @@ function buildGrid<T extends { id: string }>(
   return Array.from({ length: rows }, (_, r) =>
     Array.from({ length: columns }, (_, c) => {
       const index = r * columns + c;
+
       return items[index];
     }),
   );

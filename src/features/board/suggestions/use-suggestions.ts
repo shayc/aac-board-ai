@@ -83,6 +83,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     };
 
     void generateSuggestions();
+
     return () => controller.abort();
   }, [text, isProofreaderReady, isRewriterReady, proofread, rewrite]);
 

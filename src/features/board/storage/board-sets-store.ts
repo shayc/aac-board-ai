@@ -61,11 +61,13 @@ export async function notifyBoardSetsChanged(): Promise<void> {
 export function subscribeBoardSets(listener: () => void): () => void {
   const unsubscribe = store.subscribe(listener);
   ensureLoaded();
+
   return unsubscribe;
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
   ensureLoaded();
+
   return store.getSnapshot();
 }
 
