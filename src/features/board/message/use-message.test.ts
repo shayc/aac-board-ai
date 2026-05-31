@@ -101,16 +101,44 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("I want water");
   });
 
-  test("segments scripts without whitespace into word parts", async () => {
+  test("keeps trailing punctuation attached to its word for TTS prosody", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.setFromText("我想喝水");
+    result.current.setFromText("How are you?");
     await rerender();
 
-    expect(result.current.parts.length).toBeGreaterThan(1);
-    expect(
-      result.current.parts.every((part) => (part.label?.length ?? 0) > 0),
-    ).toBe(true);
+    expect(result.current.parts.map((part) => part.label)).toEqual([
+      "How",
+      "are",
+      "you?",
+    ]);
+    expect(result.current.text).toBe("How are you?");
+  });
+
+  test("attaches commas and periods to the preceding word", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setFromText("Hello, world.");
+    await rerender();
+
+    expect(result.current.parts.map((part) => part.label)).toEqual([
+      "Hello,",
+      "world.",
+    ]);
+  });
+
+  test("keeps hyphenated and abbreviated words whole", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setFromText("a well-being U.S.A. day");
+    await rerender();
+
+    expect(result.current.parts.map((part) => part.label)).toEqual([
+      "a",
+      "well-being",
+      "U.S.A.",
+      "day",
+    ]);
   });
 
   test("clears all existing parts when called with an empty string", async () => {
