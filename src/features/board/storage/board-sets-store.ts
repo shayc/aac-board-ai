@@ -32,8 +32,9 @@ async function loadBoardSets(): Promise<void> {
     store.setState({ boardSets, isLoading: false, error: null });
     hasLoaded = true;
   } catch (error) {
+    const { boardSets } = store.getSnapshot();
     store.setState({
-      boardSets: [],
+      boardSets,
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
     });
