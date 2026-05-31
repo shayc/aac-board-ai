@@ -1,4 +1,4 @@
-import { createPersistedStore } from "@shared/utils/create-persisted-store";
+import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
 export interface PlaybackSettings {

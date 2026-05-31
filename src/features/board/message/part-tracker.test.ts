@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { createPartTracker, type SpokenPart } from "./create-part-tracker";
+import { createPartTracker, type SpokenPart } from "./part-tracker";
 
 describe("createPartTracker", () => {
   test("joins parts into one space-separated utterance", () => {

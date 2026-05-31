@@ -2,7 +2,7 @@ import { useAudio } from "@shared/hooks/use-audio";
 import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
 import { getSpokenText } from "../types";
-import { createPartTracker, type SpokenPart } from "./create-part-tracker";
+import { createPartTracker, type SpokenPart } from "./part-tracker";
 import type { MessagePart } from "./use-message";
 
 type PlaybackSegment =

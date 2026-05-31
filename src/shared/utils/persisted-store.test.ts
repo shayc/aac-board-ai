@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { createPersistedStore } from "./create-persisted-store";
+import { createPersistedStore } from "./persisted-store";
 
 interface Counter {
   count: number;

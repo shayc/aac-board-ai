@@ -1,4 +1,4 @@
-import { createPersistedStore } from "@shared/utils/create-persisted-store";
+import { createPersistedStore } from "@shared/utils/persisted-store";
 import { createExternalStore } from "@shared/utils/external-store";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
