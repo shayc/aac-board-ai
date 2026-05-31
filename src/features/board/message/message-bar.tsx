@@ -54,6 +54,9 @@ export function MessageBar({
     }
 
     const index = parts.findIndex((part) => part.id === activePartId);
+    if (index === -1) {
+      return;
+    }
 
     return scrollElementIntoView(
       scrollContainerRef.current?.children[index],
