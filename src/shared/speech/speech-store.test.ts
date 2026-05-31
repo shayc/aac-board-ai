@@ -10,9 +10,4 @@ describe("speech-store without Web Speech API", () => {
     const { speak } = await import("./speech-store");
     await expect(speak("hello")).resolves.toBeUndefined();
   });
-
-  test("stop() is a no-op instead of throwing", async () => {
-    const { stop } = await import("./speech-store");
-    expect(() => stop()).not.toThrow();
-  });
 });

@@ -17,6 +17,7 @@ export interface SpeechConfig {
 }
 
 export interface SpeakOptions {
+  signal?: AbortSignal;
   onBoundary?: (charIndex: number) => void;
 }
 
@@ -98,9 +99,9 @@ export function setVolume(volume: number): void {
 
 export function speak(
   text: string,
-  { onBoundary }: SpeakOptions = {},
+  { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
-  if (!synthesis) {
+  if (!synthesis || signal?.aborted) {
     return Promise.resolve();
   }
 
@@ -116,12 +117,18 @@ export function speak(
   utterance.volume = volume;
 
   if (onBoundary) {
-    utterance.onboundary = (event) => onBoundary(event.charIndex);
+    // A boundary can arrive after the signal aborts; drop it so a stopped
+    // utterance can't keep reporting progress.
+    utterance.onboundary = (event) => {
+      if (!signal?.aborted) {
+        onBoundary(event.charIndex);
+      }
+    };
   }
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {
-    // Each speak() and stop() calls synthesis.cancel(), so "interrupted" is the
+    // Aborting (and each new speak()) calls cancel(), so "interrupted" is the
     // expected end of a superseded utterance — resolve it rather than reject.
     if (event.error === "interrupted") {
       resolve();
@@ -130,14 +137,20 @@ export function speak(
     }
   };
 
+  // Stopping is a clean end, not a failure: cancel the utterance and resolve.
+  signal?.addEventListener(
+    "abort",
+    () => {
+      synthesis.cancel();
+      resolve();
+    },
+    { once: true },
+  );
+
   synthesis.cancel();
   synthesis.speak(utterance);
 
   return promise;
-}
-
-export function stop(): void {
-  synthesis?.cancel();
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {
