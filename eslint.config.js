@@ -58,9 +58,13 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/app/loaders/**/*-loader.ts"],
+    files: ["src/shared/**/*.{ts,tsx}"],
     rules: {
-      "@typescript-eslint/only-throw-error": "off",
+      "no-restricted-imports": restrictImports({
+        group: ["@app/*", "@features/*", "@pages/*"],
+        message:
+          "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
+      }),
     },
   },
   {
@@ -85,16 +89,6 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/shared/**/*.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": restrictImports({
-        group: ["@app/*", "@features/*", "@pages/*"],
-        message:
-          "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
-      }),
-    },
-  },
-  {
     files: ["src/app/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
@@ -102,6 +96,12 @@ export default defineConfig([
         message:
           "A feature's internals are private — use its barrel (@features/board) or test entry (@features/board/testing).",
       }),
+    },
+  },
+  {
+    files: ["src/app/loaders/**/*-loader.ts"],
+    rules: {
+      "@typescript-eslint/only-throw-error": "off",
     },
   },
 ]);
