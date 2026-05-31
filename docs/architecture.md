@@ -18,9 +18,9 @@ The codebase is **feature-sliced**. The single feature today is `board`. Layers 
 - `@shared/*` — cross-cutting code (Built-in AI hooks, speech, language, snackbar, theme, utilities). No knowledge of features.
 - `@paraglide/*` — generated UI translations (build artifact, never edited by hand).
 
-Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts).
+Aliases are declared in [tsconfig.app.json](../tsconfig.app.json) and mirrored in [vite.config.ts](../vite.config.ts). These import rules are enforced by `no-restricted-imports` in [eslint.config.js](../eslint.config.js), not left to convention.
 
-**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts). Reaching into `storage/`, `obf/`, or other internals from outside the feature is disallowed by convention; board-set dialogs, path helpers, and storage queries are all re-exported from the barrel so consumers never need a deeper import.
+**Public-barrel rule.** UI layers consume the board feature through [`@features/board`](../src/features/board/index.ts); board-set dialogs, path helpers, and storage queries are all re-exported from the barrel so consumers never need a deeper import. Tests that need to seed or reset feature state use the sanctioned [`@features/board/testing`](../src/features/board/testing.ts) entry — the only other path `@app`/`@pages` may reach. Everything deeper (`storage/`, `obf/`, …) is internal.
 
 **Tests.** Co-located as `*.test.ts` / `*.test.tsx` next to the file under test.
 
