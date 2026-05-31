@@ -1,11 +1,10 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
 import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "../types";
-import { useButtonActivation } from "./use-button-activation";
+import { createButtonActivation } from "./button-activation";
 
 function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
   return {
@@ -45,19 +44,17 @@ interface SetupOptions {
   navigation?: UseBoardNavigationReturn;
 }
 
-async function setup(opts: SetupOptions = {}) {
+function setup(opts: SetupOptions = {}) {
   const message = opts.message ?? createMessageStub();
   const playback = opts.playback ?? createPlaybackStub();
   const navigation = opts.navigation ?? createNavigationStub();
 
-  const { result } = await renderHook(() =>
-    useButtonActivation({ message, playback, navigation }),
-  );
+  const activation = createButtonActivation({ message, playback, navigation });
 
-  return { result, message, playback, navigation };
+  return { activation, message, playback, navigation };
 }
 
-describe("useButtonActivation", () => {
+describe("createButtonActivation", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
@@ -67,7 +64,7 @@ describe("useButtonActivation", () => {
   });
 
   test("navigates to the linked board and skips message and audio when loadBoard.id is set", async () => {
-    const { result, message, playback, navigation } = await setup();
+    const { activation, message, playback, navigation } = setup();
 
     const button: BoardButton = {
       id: "btn",
@@ -75,7 +72,7 @@ describe("useButtonActivation", () => {
       loadBoard: { id: "child-board" },
     };
 
-    await result.current.activateButton(button);
+    await activation.activateButton(button);
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(message.addPart).not.toHaveBeenCalled();
@@ -85,9 +82,9 @@ describe("useButtonActivation", () => {
   });
 
   test("navigates when loadBoard.id is set even if actions are also present", async () => {
-    const { result, message, playback, navigation } = await setup();
+    const { activation, message, playback, navigation } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "Folder",
       loadBoard: { id: "child-board" },
@@ -115,9 +112,9 @@ describe("useButtonActivation", () => {
       return Promise.resolve();
     });
 
-    const { result } = await setup({ message, playback });
+    const { activation } = setup({ message, playback });
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       actions: [{ kind: "space" }, { kind: "speak" }, { kind: "clear" }],
     });
@@ -130,17 +127,17 @@ describe("useButtonActivation", () => {
     ["backspace", "removeLastPart"],
     ["clear", "clear"],
   ] as const)("maps %s to message.%s", async (kind, methodName) => {
-    const { result, message } = await setup();
+    const { activation, message } = setup();
 
-    await result.current.activateButton({ id: "btn", actions: [{ kind }] });
+    await activation.activateButton({ id: "btn", actions: [{ kind }] });
 
     expect(message[methodName]).toHaveBeenCalledTimes(1);
   });
 
   test("maps speak to playback.play", async () => {
-    const { result, playback } = await setup();
+    const { activation, playback } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       actions: [{ kind: "speak" }],
     });
@@ -149,9 +146,9 @@ describe("useButtonActivation", () => {
   });
 
   test("maps home to navigation.goHome", async () => {
-    const { result, navigation } = await setup();
+    const { activation, navigation } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       actions: [{ kind: "home" }],
     });
@@ -161,9 +158,9 @@ describe("useButtonActivation", () => {
 
   test("delegates a spell action's text to the message's appendText", async () => {
     const message = createMessageStub([{ id: "ca", label: "ca" }]);
-    const { result } = await setup({ message });
+    const { activation } = setup({ message });
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       actions: [{ kind: "spell", text: "t" }],
     });
@@ -172,9 +169,9 @@ describe("useButtonActivation", () => {
   });
 
   test("treats a loadBoard without an id as not navigable and speaks instead", async () => {
-    const { result, message, navigation } = await setup();
+    const { activation, message, navigation } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "hi",
       loadBoard: { name: "Other" },
@@ -185,9 +182,9 @@ describe("useButtonActivation", () => {
   });
 
   test("treats an empty actions array as no actions and speaks instead", async () => {
-    const { result, message } = await setup();
+    const { activation, message } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "hi",
       actions: [] as BoardAction[],
@@ -197,9 +194,9 @@ describe("useButtonActivation", () => {
   });
 
   test("adds the button as a message part when there are no actions and no loadBoard", async () => {
-    const { result, message } = await setup();
+    const { activation, message } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "hi",
       vocalization: "hello",
@@ -215,9 +212,9 @@ describe("useButtonActivation", () => {
   });
 
   test("plays the button's soundSrc rather than speaking when both are present", async () => {
-    const { result } = await setup();
+    const { activation } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "bell",
       soundSrc: "bell.mp3",
@@ -228,9 +225,9 @@ describe("useButtonActivation", () => {
   });
 
   test("speaks the lowercased vocalization when no soundSrc", async () => {
-    const { result } = await setup();
+    const { activation } = setup();
 
-    await result.current.activateButton({
+    await activation.activateButton({
       id: "btn",
       label: "I",
       vocalization: "Hello",
@@ -241,18 +238,18 @@ describe("useButtonActivation", () => {
   });
 
   test("falls back to the lowercased label when vocalization is absent", async () => {
-    const { result } = await setup();
+    const { activation } = setup();
 
-    await result.current.activateButton({ id: "btn", label: "Goodbye" });
+    await activation.activateButton({ id: "btn", label: "Goodbye" });
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("goodbye");
   });
 
   test("stays silent when the button has neither sound nor any speakable text", async () => {
-    const { result, message } = await setup();
+    const { activation, message } = setup();
 
-    await result.current.activateButton({ id: "btn" });
+    await activation.activateButton({ id: "btn" });
 
     expect(message.addPart).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();

@@ -1,4 +1,4 @@
-import { useAudio } from "@shared/hooks/use-audio";
+import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
@@ -6,23 +6,21 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { BoardAction, BoardButton } from "../types";
 import { resolveButtonIntent } from "./intent-resolver";
 
-export interface UseButtonActivationOptions {
+export interface ButtonActivationOptions {
   message: UseMessageReturn;
   playback: UseMessagePlaybackReturn;
   navigation: UseBoardNavigationReturn;
 }
 
-export interface UseButtonActivationReturn {
+export interface ButtonActivation {
   activateButton: (button: BoardButton) => Promise<void>;
 }
 
-export function useButtonActivation({
+export function createButtonActivation({
   message,
   playback,
   navigation,
-}: UseButtonActivationOptions): UseButtonActivationReturn {
-  const audio = useAudio();
-
+}: ButtonActivationOptions): ButtonActivation {
   async function activateButton(button: BoardButton) {
     const intents = resolveButtonIntent(button);
 
@@ -35,7 +33,7 @@ export function useButtonActivation({
           message.addPart(intent.content);
           break;
         case "playAudio":
-          void audio.play(intent.src);
+          void playAudio(intent.src);
           break;
         case "speakText":
           void speak(intent.text);

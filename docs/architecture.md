@@ -140,14 +140,14 @@ External stores are preferred over context where state outlives any single compo
 
 ## 6. Interaction & speech
 
-A board press flows through `resolveButtonIntent` (called by `useButtonActivation`), which evaluates the button into an array of `ButtonIntent` objects. The hook then loops through the intents and executes their side-effects:
+A board press flows through `resolveButtonIntent` (called by `createButtonActivation`), which evaluates the button into an array of `ButtonIntent` objects. It then loops through the intents and executes their side-effects:
 
 | Intent Type | Execution Effect                                         |
 | ----------- | -------------------------------------------------------- |
 | `navigate`  | `useBoardNavigation.goToBoard(targetBoardId)`.           |
 | `runAction` | Run the corresponding `BoardAction` (table below).       |
 | `compose`   | Append a `MessagePart` to the message strip.             |
-| `playAudio` | Play the button's sound asset via `useAudio()`.          |
+| `playAudio` | Play the button's sound asset via `playAudio()`.         |
 | `speakText` | Read the button's vocalization/label via `speech-store`. |
 
 `BoardAction` is a closed discriminated union dispatched by `kind` in `runAction`:
@@ -165,18 +165,18 @@ OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF 
 
 `useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
 
-Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) and handling it in `useButtonActivation`'s execution loop — the dispatch surface is closed.
+Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) and handling it in `createButtonActivation`'s execution loop — the dispatch surface is closed.
 
 **Message composition.** `useMessage` owns the draft as `MessagePart[]` in component state — ephemeral by design: it survives in-board navigation (same route, no remount) but resets on reload, because a half-composed utterance is current speech, not a saved document. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
 
 **Playback.** Two engines, interleaved by `useMessagePlayback`:
 
 - **Speech** — `speech-store` is a module-level store with an imperative API: `speak(text)`, `stop()`, plus `setVoiceURI` / `setRate` / `setPitch` / `setVolume`. Internally it holds a voice catalog refreshed on `voiceschanged` and a config persisted to `speech-config`. `useVoiceLanguageSync` (called from `LanguageProvider`) watches the catalog and the active language and auto-selects a fallback voice whenever the current `voiceURI` doesn't match an installed voice for that language. Read-only hooks `useVoicesByLanguage` and `useSpeechConfig` back the settings UI.
-- **Audio** — `useAudio` plays one OBF sound asset at a time; `play()` is promise-returning, resolving on `ended` or rejecting when `stop()` is called.
+- **Audio** — `playAudio(url, { signal })` is a module-level controller mirroring `speak()`: one `<audio>` element app-wide, single-flight (a new clip stops the current). It resolves on `ended` or when superseded/aborted, and rejects only on a genuine media error — so a clip cut short never surfaces as an unhandled rejection.
 
 `useMessagePlayback` walks each `MessagePart` in order: if it has a `soundSrc`, play the audio; otherwise speak `getSpokenText(part)` (vocalization, falling back to label). Adjacent text parts are merged into one utterance to avoid clipped speech between words.
 
-**See:** [src/features/board/activation/use-button-activation.ts](../src/features/board/activation/use-button-activation.ts), [src/features/board/activation/intent-resolver.ts](../src/features/board/activation/intent-resolver.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/hooks/use-audio.ts](../src/shared/hooks/use-audio.ts).
+**See:** [src/features/board/activation/button-activation.ts](../src/features/board/activation/button-activation.ts), [src/features/board/activation/intent-resolver.ts](../src/features/board/activation/intent-resolver.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/audio/play-audio.ts](../src/shared/audio/play-audio.ts).
 
 ## 7. Built-in AI
 
