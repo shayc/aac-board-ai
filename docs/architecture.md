@@ -113,7 +113,6 @@ Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs th
 | Key                 | Holds                                   | Owner                                                              |
 | ------------------- | --------------------------------------- | ------------------------------------------------------------------ |
 | `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)   |
-| `message`           | Current `MessagePart[]` draft.          | [useMessage](../src/features/board/message/use-message.ts)         |
 | `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)               |
 | `ai-shared-context` | User-supplied custom prompt for AI.     | [useAISharedContext](../src/shared/hooks/use-ai-shared-context.ts) |
 | `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)           |
@@ -168,7 +167,7 @@ OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF 
 
 Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) and handling it in `useButtonActivation`'s execution loop — the dispatch surface is closed.
 
-**Message composition.** `useMessage` owns the draft as `MessagePart[]`, persisted to localStorage so a refresh doesn't lose work in progress. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
+**Message composition.** `useMessage` owns the draft as `MessagePart[]` in component state — ephemeral by design: it survives in-board navigation (same route, no remount) but resets on reload, because a half-composed utterance is current speech, not a saved document. The derived `text` (`parts.map(p => p.label).join(" ")`) is what `useSuggestions` consumes.
 
 **Playback.** Two engines, interleaved by `useMessagePlayback`:
 
