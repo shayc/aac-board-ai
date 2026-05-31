@@ -52,12 +52,13 @@ export function useMessage(): UseMessageReturn {
   }
 
   function setFromText(input: string) {
-    const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
-    const words = Array.from(segmenter.segment(input))
-      .filter((segment) => segment.isWordLike)
-      .map((segment) => segment.segment);
-
-    setParts(words.map((word) => createPart({ label: word })));
+    setParts(
+      input
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((word) => createPart({ label: word })),
+    );
   }
 
   function removeLastPart() {
