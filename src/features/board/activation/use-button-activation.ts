@@ -32,7 +32,7 @@ export function useButtonActivation({
           navigation.goToBoard(intent.targetBoardId);
           break;
         case "compose":
-          message.addPart(intent.part);
+          message.addPart(intent.content);
           break;
         case "playAudio":
           void audio.play(intent.src);

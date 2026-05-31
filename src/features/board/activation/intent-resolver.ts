@@ -1,9 +1,9 @@
-import type { MessagePart } from "../message/use-message";
+import type { MessagePartContent } from "../message/use-message";
 import { getSpokenText, type BoardAction, type BoardButton } from "../types";
 
 export type ButtonIntent =
   | { kind: "navigate"; targetBoardId: string }
-  | { kind: "compose"; part: MessagePart }
+  | { kind: "compose"; content: MessagePartContent }
   | { kind: "playAudio"; src: string }
   | { kind: "speakText"; text: string }
   | { kind: "runAction"; action: BoardAction };
@@ -26,7 +26,7 @@ export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
     return intents;
   }
 
-  intents.push({ kind: "compose", part: asMessagePart(button) });
+  intents.push({ kind: "compose", content: toPartContent(button) });
 
   if (button.soundSrc) {
     intents.push({ kind: "playAudio", src: button.soundSrc });
@@ -40,9 +40,8 @@ export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
   return intents;
 }
 
-function asMessagePart(button: BoardButton): MessagePart {
+function toPartContent(button: BoardButton): MessagePartContent {
   return {
-    id: button.id,
     label: button.label,
     vocalization: button.vocalization,
     imageSrc: button.imageSrc,

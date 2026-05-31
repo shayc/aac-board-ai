@@ -83,9 +83,9 @@ export function MessageBar({
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
-          {parts.map((part, index) => (
+          {parts.map((part) => (
             <Stack
-              key={index}
+              key={part.id}
               direction="row"
               sx={{
                 px: 1,

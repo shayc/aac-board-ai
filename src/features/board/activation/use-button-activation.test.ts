@@ -207,7 +207,6 @@ describe("useButtonActivation", () => {
     });
 
     expect(message.addPart).toHaveBeenCalledWith({
-      id: "btn",
       label: "hi",
       vocalization: "hello",
       imageSrc: "img.png",

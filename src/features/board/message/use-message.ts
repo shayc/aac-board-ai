@@ -1,43 +1,49 @@
 import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import type { BoardButton } from "../types";
 
-export type MessagePart = Pick<
+export type MessagePartContent = Pick<
   BoardButton,
-  "id" | "label" | "vocalization" | "imageSrc" | "soundSrc"
+  "label" | "vocalization" | "imageSrc" | "soundSrc"
 >;
+
+// A part's content is copied from a button, but its identity is ours, minted at
+// creation — the button's id isn't unique across occurrences (same button added
+// twice, or colliding ids across boards), so it can't serve as part identity.
+export type MessagePart = { id: string } & MessagePartContent;
 
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
-  addPart: (part: MessagePart) => void;
+  addPart: (content: MessagePartContent) => void;
   addSpace: () => void;
   appendText: (text: string) => void;
-  updateLastPart: (part: MessagePart) => void;
+  updateLastPart: (content: MessagePartContent) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
   clear: () => void;
+}
+
+function createPart(content: MessagePartContent): MessagePart {
+  return { ...content, id: crypto.randomUUID() };
 }
 
 export function useMessage(): UseMessageReturn {
   const [parts, setParts] = usePersistentState<MessagePart[]>("message", []);
   const text = parts.map((part) => part.label).join(" ");
 
-  function addPart(part: MessagePart) {
-    setParts((prev) => [...prev, part]);
+  function addPart(content: MessagePartContent) {
+    setParts((prev) => [...prev, createPart(content)]);
   }
 
   function addSpace() {
-    addPart({
-      id: crypto.randomUUID(),
-      label: "",
-    });
+    addPart({ label: "" });
   }
 
   function appendText(text: string) {
     setParts((prev) => {
       const lastPart = prev.at(-1);
       if (!lastPart) {
-        return [{ id: crypto.randomUUID(), label: text }];
+        return [createPart({ label: text })];
       }
 
       return prev.with(-1, {
@@ -47,14 +53,14 @@ export function useMessage(): UseMessageReturn {
     });
   }
 
-  function updateLastPart(part: MessagePart) {
+  function updateLastPart(content: MessagePartContent) {
     setParts((prev) => {
       const lastPart = prev.at(-1);
       if (!lastPart) {
-        return [part];
+        return [createPart(content)];
       }
 
-      return prev.with(-1, { ...lastPart, ...part });
+      return prev.with(-1, { ...lastPart, ...content });
     });
   }
 
@@ -64,7 +70,7 @@ export function useMessage(): UseMessageReturn {
       .filter((segment) => segment.isWordLike)
       .map((segment) => segment.segment);
 
-    setParts(words.map((word) => ({ id: crypto.randomUUID(), label: word })));
+    setParts(words.map((word) => createPart({ label: word })));
   }
 
   function removeLastPart() {
