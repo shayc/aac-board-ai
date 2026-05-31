@@ -17,7 +17,6 @@ export interface UseMessageReturn {
   addPart: (content: MessagePartContent) => void;
   addSpace: () => void;
   appendText: (text: string) => void;
-  updateLastPart: (content: MessagePartContent) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
   clear: () => void;
@@ -53,17 +52,6 @@ export function useMessage(): UseMessageReturn {
     });
   }
 
-  function updateLastPart(content: MessagePartContent) {
-    setParts((prev) => {
-      const lastPart = prev.at(-1);
-      if (!lastPart) {
-        return [createPart(content)];
-      }
-
-      return prev.with(-1, { ...lastPart, ...content });
-    });
-  }
-
   function setFromText(input: string) {
     const segmenter = new Intl.Segmenter(undefined, { granularity: "word" });
     const words = Array.from(segmenter.segment(input))
@@ -87,7 +75,6 @@ export function useMessage(): UseMessageReturn {
     addPart,
     addSpace,
     appendText,
-    updateLastPart,
     setFromText,
     removeLastPart,
     clear,

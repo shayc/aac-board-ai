@@ -16,7 +16,6 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
     appendText: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
-    updateLastPart: vi.fn(),
     clear: vi.fn(),
   };
 }

@@ -31,36 +31,6 @@ describe("useMessage", () => {
     expect(first.id).not.toBe(second.id);
   });
 
-  test("merges into existing last part preserving id and untouched fields", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.addPart({ label: "first" });
-    await rerender();
-    result.current.addPart({ label: "he", imageSrc: "img.png" });
-    await rerender();
-
-    const lastId = result.current.parts[1].id;
-
-    result.current.updateLastPart({ label: "hello" });
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(2);
-    expect(result.current.parts[1].id).toBe(lastId);
-    expect(result.current.parts[1].label).toBe("hello");
-    expect(result.current.parts[1].imageSrc).toBe("img.png");
-  });
-
-  test("inserts a new part as the first element when the message is empty", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.updateLastPart({ label: "first" });
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0].label).toBe("first");
-    expect(result.current.parts[0].id).toBeTruthy();
-  });
-
   test("appends text to the last part without mangling its id", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
