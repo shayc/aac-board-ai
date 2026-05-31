@@ -1,4 +1,4 @@
-import { usePersistentState } from "@shared/hooks/use-persistent-state";
+import { useState } from "react";
 import type { BoardButton } from "../types";
 
 export type MessagePartContent = Pick<
@@ -6,9 +6,8 @@ export type MessagePartContent = Pick<
   "label" | "vocalization" | "imageSrc" | "soundSrc"
 >;
 
-// A part's content is copied from a button, but its identity is ours, minted at
-// creation — the button's id isn't unique across occurrences (same button added
-// twice, or colliding ids across boards), so it can't serve as part identity.
+// Identity is ours, minted at creation — a button's id can't serve, since it isn't
+// unique across occurrences (same button added twice, or ids colliding across boards).
 export type MessagePart = { id: string } & MessagePartContent;
 
 export interface UseMessageReturn {
@@ -27,7 +26,7 @@ function createPart(content: MessagePartContent): MessagePart {
 }
 
 export function useMessage(): UseMessageReturn {
-  const [parts, setParts] = usePersistentState<MessagePart[]>("message", []);
+  const [parts, setParts] = useState<MessagePart[]>([]);
   const text = parts.map((part) => part.label).join(" ");
 
   function addPart(content: MessagePartContent) {

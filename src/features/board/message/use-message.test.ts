@@ -124,20 +124,4 @@ describe("useMessage", () => {
 
     expect(result.current.parts).toHaveLength(0);
   });
-
-  test("persists parts across unmount and remount", async () => {
-    const first = await renderHook(() => useMessage());
-
-    first.result.current.addPart({ label: "hello" });
-    await first.rerender();
-    first.result.current.addPart({ label: "world" });
-    await first.rerender();
-
-    await first.unmount();
-
-    const second = await renderHook(() => useMessage());
-
-    expect(second.result.current.parts).toHaveLength(2);
-    expect(second.result.current.text).toBe("hello world");
-  });
 });
