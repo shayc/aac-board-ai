@@ -11,11 +11,11 @@ import tseslint from "typescript-eslint";
 
 const muiSubpaths = {
   regex: "^@mui/(?!stylis-plugin-rtl)[^/]+$",
-  message: "Import from subpaths, e.g. @mui/material/Button",
+  message:
+    "@mui package roots are barrels — use a subpath, e.g. @mui/material/Button.",
 };
 
-// no-restricted-imports replaces (not merges) across overrides, so every block
-// builds its patterns here — keeping muiSubpaths in one place it can't be dropped.
+// Re-seed in every block: no-restricted-imports replaces (not merges) across configs.
 const restrictImports = (...patterns) => [
   "error",
   { patterns: [muiSubpaths, ...patterns] },
@@ -47,15 +47,14 @@ export default defineConfig([
     rules: {
       "padding-line-between-statements": [
         "error",
-        // Always require a blank line before returns
+        // A blank line precedes each return.
         { blankLine: "always", prev: "*", next: "return" },
-
-        // Always require a blank line after block-like statements (if, for, switch, etc.)
+        // A blank line follows each block (if/for/switch/…).
         { blankLine: "always", prev: ["block", "block-like"], next: "*" },
       ],
       "react-x/no-array-index-key": "off",
       "no-restricted-imports": restrictImports(),
-      curly: ["error"],
+      curly: "error",
     },
   },
   {
@@ -64,26 +63,24 @@ export default defineConfig([
       "@typescript-eslint/only-throw-error": "off",
     },
   },
-
-  // Layer boundaries (architecture.md §2).
   {
     files: ["src/features/**/*.{ts,tsx}"],
     ignores: ["src/features/**/*.test.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
-        group: ["@app", "@app/*", "@features", "@features/*"],
+        group: ["@app/*", "@features/*"],
         message:
-          "A feature must not import @app or another feature — use @shared or relative paths within the feature.",
+          "A feature is isolated from @app and other features — use @shared or relative paths within the feature.",
       }),
     },
   },
   {
-    // Feature tests may compose the real app shell, but still never another feature.
     files: ["src/features/**/*.test.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
-        group: ["@features", "@features/*"],
-        message: "Even in tests, a feature must not import another feature.",
+        group: ["@features/*"],
+        message:
+          "Even in tests, a feature is isolated from other features — use @shared or relative paths within the feature.",
       }),
     },
   },
@@ -91,27 +88,19 @@ export default defineConfig([
     files: ["src/shared/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
-        group: [
-          "@app",
-          "@app/*",
-          "@features",
-          "@features/*",
-          "@pages",
-          "@pages/*",
-        ],
-        message: "@shared is a leaf layer — no @app, @features, or @pages.",
+        group: ["@app/*", "@features/*", "@pages/*"],
+        message:
+          "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
       }),
     },
   },
   {
-    // @app / @pages consume a feature through its barrel (@features/board) or its
-    // sanctioned test entry (@features/board/testing) — never deeper internals.
     files: ["src/app/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
         regex: "^@features/[^/]+/(?!testing$).+",
         message:
-          "Consume features through their barrel (@features/board) or test entry (@features/board/testing), not internal paths.",
+          "A feature's internals are private — use its barrel (@features/board) or test entry (@features/board/testing).",
       }),
     },
   },
