@@ -29,6 +29,8 @@ export async function resetBoardsDB(): Promise<void> {
   } finally {
     db.close();
   }
+
+  await invalidateBoardSets();
 }
 
 export async function openCleanBoardsDB(): Promise<BoardsDB> {

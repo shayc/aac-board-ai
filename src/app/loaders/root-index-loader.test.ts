@@ -1,11 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import type { LoaderFunctionArgs } from "react-router";
-import { invalidateBoardSets } from "@features/board/storage/board-sets-store";
-import { listBoardSets, withBoardsDB } from "@features/board/storage/db";
-import {
-  resetBoardsDB,
-  seedBoardSets,
-} from "@features/board/storage/test-helpers";
+import { getBoardSets } from "@features/board";
+import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL = "/src/shared/testing/sample-boards/lots-of-stuff.obz";
@@ -23,10 +19,6 @@ function callLoader(searchParams = ""): Promise<Response> {
 describe("rootIndexLoader", () => {
   beforeEach(async () => {
     await resetBoardsDB();
-    // resetBoardsDB clears IDB but the board-sets-store keeps its cached
-    // snapshot from prior tests — explicitly invalidate so getBoardSets()
-    // reads fresh from the now-empty DB.
-    await invalidateBoardSets();
   });
 
   test("imports the URL from ?board and redirects to its board route", async () => {
@@ -38,12 +30,12 @@ describe("rootIndexLoader", () => {
     const location = response.headers.get("Location");
     expect(location).toMatch(/^\/sets\/[^/]+\/boards\/[^/]+$/);
 
-    const sets = await withBoardsDB((db) => listBoardSets(db));
+    const sets = await getBoardSets();
     expect(sets).toHaveLength(1);
   });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
-    // seedBoardSets inserts sequentially; listBoardSets orders by updatedAt
+    // seedBoardSets inserts sequentially; sets come back ordered by updatedAt
     // descending, so set-2 (inserted last) ends up first.
     await seedBoardSets([
       { setId: "set-1", rootBoardId: "root-1" },
@@ -69,7 +61,7 @@ describe("rootIndexLoader", () => {
       /^\/sets\/[^/]+\/boards\/[^/]+$/,
     );
 
-    const sets = await withBoardsDB((db) => listBoardSets(db));
+    const sets = await getBoardSets();
     expect(sets).toHaveLength(1);
   });
 });

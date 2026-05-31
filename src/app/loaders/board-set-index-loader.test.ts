@@ -1,7 +1,4 @@
-import {
-  resetBoardsDB,
-  seedBoardSets,
-} from "@features/board/storage/test-helpers";
+import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetIndexLoader } from "./board-set-index-loader";
