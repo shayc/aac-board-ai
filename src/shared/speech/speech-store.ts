@@ -1,3 +1,4 @@
+import { createPersistedStore } from "@shared/utils/create-persisted-store";
 import { createExternalStore } from "@shared/utils/external-store";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
@@ -30,39 +31,21 @@ export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
 export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
 export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
 
-const STORAGE_KEY = "speech-config";
-
-const DEFAULT_CONFIG: SpeechConfig = {
-  voiceURI: null,
-  rate: SPEECH_RATE.fallback,
-  pitch: SPEECH_PITCH.fallback,
-  volume: SPEECH_VOLUME.fallback,
-};
-
 function clamp(value: unknown, { min, max, fallback }: SpeechRange): number {
   return typeof value === "number" && Number.isFinite(value)
     ? Math.min(Math.max(value, min), max)
     : fallback;
 }
 
-function loadPersistedConfig(): SpeechConfig {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return DEFAULT_CONFIG;
-    }
+function parseConfig(raw: unknown): SpeechConfig {
+  const parsed = (raw ?? {}) as Partial<SpeechConfig>;
 
-    const parsed = JSON.parse(raw) as Partial<SpeechConfig>;
-
-    return {
-      voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
-      rate: clamp(parsed.rate, SPEECH_RATE),
-      pitch: clamp(parsed.pitch, SPEECH_PITCH),
-      volume: clamp(parsed.volume, SPEECH_VOLUME),
-    };
-  } catch {
-    return DEFAULT_CONFIG;
-  }
+  return {
+    voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
+    rate: clamp(parsed.rate, SPEECH_RATE),
+    pitch: clamp(parsed.pitch, SPEECH_PITCH),
+    volume: clamp(parsed.volume, SPEECH_VOLUME),
+  };
 }
 
 function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
@@ -84,20 +67,10 @@ synthesis?.addEventListener("voiceschanged", () => {
   voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
 });
 
-const speechConfigStore = createExternalStore<SpeechConfig>(
-  loadPersistedConfig(),
+const speechConfigStore = createPersistedStore<SpeechConfig>(
+  "speech-config",
+  parseConfig,
 );
-
-speechConfigStore.subscribe(() => {
-  try {
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(speechConfigStore.getSnapshot()),
-    );
-  } catch {
-    // Storage failures (quota, private mode) shouldn't break the in-memory store.
-  }
-});
 
 function updateConfig(patch: Partial<SpeechConfig>): void {
   speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });

@@ -45,6 +45,7 @@
   "speechVolume": "עוצמת שמע",
   "speechPreview": "השמעה",
   "speechVoicePreview": "שלום, זה הקול שלי!",
+  "playbackHighlight": "הדגשה בעת השמעה",
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
   "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI.",

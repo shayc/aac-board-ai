@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useLanguage } from "@shared/language/use-language";
+import { usePlaybackSettings } from "@shared/playback/playback-settings";
 import { useButtonActivation } from "./activation/use-button-activation";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
@@ -20,6 +21,7 @@ export interface BoardViewerProps {
 
 export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
+  const { highlightActivePart } = usePlaybackSettings();
   const message = useMessage();
   const playback = useMessagePlayback(message.parts);
   const suggestions = useSuggestions(message.text);
@@ -68,7 +70,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
     >
       <MessageBar
         parts={message.parts}
-        activePartId={playback.activePartId}
+        activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}
