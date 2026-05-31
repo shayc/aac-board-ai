@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { useButtonActivation } from "./activation/use-button-activation";
@@ -102,10 +103,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
       <Box sx={{ flexGrow: 1, height: 0, overflow: "auto" }}>
         <Grid<BoardButton>
+          ariaLabel={board.name ?? m.boardGridLabel()}
+          items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}
           order={board.grid.order}
-          items={board.buttons}
           renderItem={renderTile}
           dir={direction}
         />

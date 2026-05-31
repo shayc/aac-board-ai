@@ -6,6 +6,7 @@ export interface GridItemProps {
 }
 
 export interface GridProps<TItem extends { id: string }> {
+  ariaLabel?: string;
   items: TItem[];
   rows: number;
   columns: number;
@@ -16,6 +17,7 @@ export interface GridProps<TItem extends { id: string }> {
 }
 
 export function Grid<TItem extends { id: string }>({
+  ariaLabel,
   items,
   rows,
   columns,
@@ -35,6 +37,7 @@ export function Grid<TItem extends { id: string }>({
       {...rootProps}
       ref={rootRef}
       role="grid"
+      aria-label={ariaLabel}
       aria-rowcount={rows}
       aria-colcount={columns}
       direction="column"
