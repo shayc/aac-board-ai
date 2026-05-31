@@ -23,6 +23,7 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
 function createPlaybackStub(): UseMessagePlaybackReturn {
   return {
     isPlaying: false,
+    activePartId: null,
     play: vi.fn(() => Promise.resolve()),
     stop: vi.fn(),
   };
