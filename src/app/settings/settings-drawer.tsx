@@ -10,6 +10,7 @@ import { m } from "@paraglide/messages.js";
 import { AISettings } from "./ai-settings";
 import { AppearanceSettings } from "./appearance-settings";
 import { LanguageSettings } from "./language-settings";
+import { PlaybackSettings } from "./playback-settings";
 import { SpeechSettings } from "./speech-settings";
 
 export interface SettingsDrawerProps {
@@ -80,6 +81,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           <LanguageSettings />
           <SpeechSettings />
         </Stack>
+
+        <Divider sx={{ my: 3 }} />
+
+        <PlaybackSettings />
 
         <Divider sx={{ my: 3 }} />
 

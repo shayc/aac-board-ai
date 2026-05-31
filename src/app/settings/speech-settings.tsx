@@ -1,20 +1,14 @@
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
-import {
-  setHighlightActivePart,
-  usePlaybackSettings,
-} from "@shared/playback/playback-settings";
 import {
   setPitch,
   setRate,
@@ -31,7 +25,6 @@ import {
 export function SpeechSettings() {
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
-  const { highlightActivePart } = usePlaybackSettings();
 
   const { language } = useLanguage();
 
@@ -130,16 +123,6 @@ export function SpeechSettings() {
       >
         {m.speechPreview()}
       </Button>
-
-      <FormControlLabel
-        control={
-          <Switch
-            checked={highlightActivePart}
-            onChange={(event) => setHighlightActivePart(event.target.checked)}
-          />
-        }
-        label={m.playbackHighlight()}
-      />
     </Stack>
   );
 }
