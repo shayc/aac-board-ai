@@ -1,5 +1,4 @@
-import { boardPath } from "@app/route-patterns";
-import { getBoardSets, importBoardFromUrl } from "@features/board";
+import { boardPath, getBoardSets, importBoardFromUrl } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;

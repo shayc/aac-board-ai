@@ -1,10 +1,10 @@
 import { PageContainer } from "@app/layouts/page-container";
 import { PageTitle } from "@app/layouts/page-title";
-import { boardPath } from "@app/route-patterns";
 import {
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
   BoardSetList,
+  boardPath,
   deleteBoardSet,
   useBoardSets,
   useImportBoardFiles,
