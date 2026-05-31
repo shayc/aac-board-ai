@@ -45,6 +45,7 @@
   "speechVolume": "Volume",
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
+  "playbackHighlight": "Highlight while playing",
   "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
   "aiCustomInstructionsHelper": "Personalize AI suggestions.",
