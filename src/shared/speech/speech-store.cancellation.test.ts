@@ -44,6 +44,27 @@ describe("speak() under cancellation", () => {
     expect(cancelSpy).toHaveBeenCalled();
   });
 
+  test.each(["canceled", "interrupted"] as const)(
+    "resolves when a superseded utterance reports '%s'",
+    async (error) => {
+      const promise = speak("hello");
+
+      spokenUtterance?.onerror?.({ error } as SpeechSynthesisErrorEvent);
+
+      await expect(promise).resolves.toBeUndefined();
+    },
+  );
+
+  test("rejects when the utterance reports a genuine failure", async () => {
+    const promise = speak("hello");
+
+    spokenUtterance?.onerror?.({
+      error: "synthesis-failed",
+    } as SpeechSynthesisErrorEvent);
+
+    await expect(promise).rejects.toThrow("synthesis-failed");
+  });
+
   test("stops reporting boundaries once the signal aborts", () => {
     const controller = new AbortController();
     const onBoundary = vi.fn();
