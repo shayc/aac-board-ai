@@ -853,4 +853,24 @@ describe("Grid", () => {
       await expect.element(item1).toHaveFocus();
     });
   });
+
+  describe("accessibility", () => {
+    test("exposes ariaLabel as the grid's accessible name", async () => {
+      const items = [{ id: "1", label: "Item 1" }];
+
+      const screen = await render(
+        <Grid
+          ariaLabel="Core words"
+          items={items}
+          rows={1}
+          columns={1}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />,
+      );
+
+      await expect
+        .element(screen.getByRole("grid", { name: "Core words" }))
+        .toBeVisible();
+    });
+  });
 });

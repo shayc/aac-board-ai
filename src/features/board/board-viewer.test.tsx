@@ -18,6 +18,18 @@ const TWO_TILE_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
 };
 
+function renderBoardViewer(obfBoard: OBFBoard) {
+  return render(
+    <MemoryRouter>
+      <AppProviders>
+        <div style={{ height: "100vh" }}>
+          <BoardViewer board={obfToBoard(obfBoard)} />
+        </div>
+      </AppProviders>
+    </MemoryRouter>,
+  );
+}
+
 describe("BoardViewer", () => {
   let speech: ReturnType<typeof stubSpeech>;
 
@@ -27,15 +39,7 @@ describe("BoardViewer", () => {
   });
 
   test("composing tiles and pressing play speaks the merged message", async () => {
-    const screen = await render(
-      <MemoryRouter>
-        <AppProviders>
-          <div style={{ height: "100vh" }}>
-            <BoardViewer board={obfToBoard(TWO_TILE_BOARD)} />
-          </div>
-        </AppProviders>
-      </MemoryRouter>,
-    );
+    const screen = await renderBoardViewer(TWO_TILE_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
@@ -48,5 +52,23 @@ describe("BoardViewer", () => {
       expect(speech.speak.mock.calls).toHaveLength(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
     });
+  });
+
+  test("names the tile grid with the board's name", async () => {
+    const namedBoard: OBFBoard = { ...TWO_TILE_BOARD, name: "Core words" };
+
+    const screen = await renderBoardViewer(namedBoard);
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Core words" }))
+      .toBeVisible();
+  });
+
+  test("falls back to a generic grid name when the board is unnamed", async () => {
+    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Communication board" }))
+      .toBeVisible();
   });
 });
