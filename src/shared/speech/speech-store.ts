@@ -142,7 +142,6 @@ export function speak(
     }
   };
 
-  // Stopping is a clean end, not a failure: cancel the utterance and resolve.
   signal?.addEventListener(
     "abort",
     () => {
