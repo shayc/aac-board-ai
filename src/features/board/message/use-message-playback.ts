@@ -1,4 +1,4 @@
-import { useAudio } from "@shared/hooks/use-audio";
+import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
 import { getSpokenText } from "../types";
@@ -23,11 +23,10 @@ export interface UseMessagePlaybackReturn {
 export function useMessagePlayback(
   parts: MessagePart[],
 ): UseMessagePlaybackReturn {
-  const audio = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [activePartId, setActivePartId] = useState<string | null>(null);
   // The token for the current playback. stop() (and each new play()) aborts it,
-  // which silences the in-flight utterance and ends the loop below.
+  // which stops the in-flight step and ends the loop below.
   const playbackRef = useRef<AbortController | null>(null);
 
   async function play() {
@@ -47,7 +46,7 @@ export function useMessagePlayback(
         switch (step.kind) {
           case "sound":
             setActivePartId(step.partId);
-            await audio.play(step.src);
+            await playAudio(step.src, { signal });
             break;
 
           case "speech": {
@@ -82,7 +81,6 @@ export function useMessagePlayback(
 
   function stop() {
     playbackRef.current?.abort();
-    audio.stop();
     setIsPlaying(false);
     setActivePartId(null);
   }

@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
-import { useButtonActivation } from "./activation/use-button-activation";
+import { createButtonActivation } from "./activation/button-activation";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
@@ -28,7 +28,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
 
-  const { activateButton } = useButtonActivation({
+  const { activateButton } = createButtonActivation({
     message,
     playback,
     navigation,
