@@ -133,9 +133,10 @@ export function speak(
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {
-    // Aborting (and each new speak()) calls cancel(), so "interrupted" is the
-    // expected end of a superseded utterance — resolve it rather than reject.
-    if (event.error === "interrupted") {
+    // Aborting (and each new speak()) calls cancel(), which ends a superseded
+    // utterance as "canceled" (still queued) or "interrupted" (mid-speech) —
+    // both expected, so resolve rather than reject.
+    if (event.error === "canceled" || event.error === "interrupted") {
       resolve();
     } else {
       reject(new Error(event.error));
