@@ -24,7 +24,7 @@ describe("createPartTracker", () => {
     const tracker = createPartTracker([{ id: "1", text: "good   morning" }]);
 
     expect(tracker.text).toBe("good morning");
-    expect(tracker.partAt(5)).toBe("1"); // "morning" lands inside the same part
+    expect(tracker.partIdAt(5)).toBe("1"); // "morning" lands inside the same part
   });
 
   test("maps a boundary offset to the part that owns it", () => {
@@ -33,8 +33,8 @@ describe("createPartTracker", () => {
       { id: "2", text: "want" },
     ]);
 
-    expect(tracker.partAt(0)).toBe("1"); // "I"
-    expect(tracker.partAt(2)).toBe("2"); // "want"
+    expect(tracker.partIdAt(0)).toBe("1"); // "I"
+    expect(tracker.partIdAt(2)).toBe("2"); // "want"
   });
 
   test("keeps a multi-word part active across its inner word boundaries", () => {
@@ -43,15 +43,15 @@ describe("createPartTracker", () => {
       { id: "2", text: "everyone" },
     ]);
 
-    expect(tracker.partAt(0)).toBe("1"); // "good"
-    expect(tracker.partAt(5)).toBe("1"); // "morning", still part 1
-    expect(tracker.partAt(13)).toBe("2"); // "everyone"
+    expect(tracker.partIdAt(0)).toBe("1"); // "good"
+    expect(tracker.partIdAt(5)).toBe("1"); // "morning", still part 1
+    expect(tracker.partIdAt(13)).toBe("2"); // "everyone"
   });
 
   test("returns null for an offset past the end of the utterance", () => {
     const tracker = createPartTracker([{ id: "1", text: "hi" }]);
 
-    expect(tracker.partAt(99)).toBeNull();
+    expect(tracker.partIdAt(99)).toBeNull();
   });
 
   test("exposes the first part id as the pre-boundary fallback", () => {

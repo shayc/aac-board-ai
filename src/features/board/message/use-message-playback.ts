@@ -52,7 +52,7 @@ export function useMessagePlayback(
               // A boundary event can arrive after stop()/cancel(); ignore it so
               // it can't re-highlight a part the user already stopped.
               if (playbackGenerationRef.current === generation) {
-                setActivePartId(tracker.partAt(charIndex));
+                setActivePartId(tracker.partIdAt(charIndex));
               }
             },
           });
