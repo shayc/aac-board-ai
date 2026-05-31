@@ -97,6 +97,19 @@ export function setVolume(volume: number): void {
   updateConfig({ volume });
 }
 
+function buildUtterance(text: string): SpeechSynthesisUtterance {
+  const { voices } = voiceCatalogStore.getSnapshot();
+  const { voiceURI, rate, pitch, volume } = speechConfigStore.getSnapshot();
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;
+  utterance.rate = rate;
+  utterance.pitch = pitch;
+  utterance.volume = volume;
+
+  return utterance;
+}
+
 export function speak(
   text: string,
   { signal, onBoundary }: SpeakOptions = {},
@@ -106,15 +119,7 @@ export function speak(
   }
 
   const { promise, resolve, reject } = Promise.withResolvers<void>();
-
-  const { voices } = voiceCatalogStore.getSnapshot();
-  const { voiceURI, rate, pitch, volume } = speechConfigStore.getSnapshot();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;
-  utterance.rate = rate;
-  utterance.pitch = pitch;
-  utterance.volume = volume;
+  const utterance = buildUtterance(text);
 
   if (onBoundary) {
     // A boundary can arrive after the signal aborts; drop it so a stopped
