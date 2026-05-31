@@ -1,5 +1,5 @@
 import { useAudio } from "@shared/hooks/use-audio";
-import { speak, stop as stopSpeaking } from "@shared/speech/speech-store";
+import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
 import { getSpokenText } from "../types";
 import {
@@ -26,19 +26,21 @@ export function useMessagePlayback(
   const audio = useAudio();
   const [isPlaying, setIsPlaying] = useState(false);
   const [activePartId, setActivePartId] = useState<string | null>(null);
-  // Bumped by stop() (and each play()) to invalidate an in-flight loop: a
-  // superseded utterance resolves via cancel(), so without this the loop would
-  // march on to the next step after the user stopped.
-  const playbackGenerationRef = useRef(0);
+  // The token for the current playback. stop() (and each new play()) aborts it,
+  // which silences the in-flight utterance and ends the loop below.
+  const playbackRef = useRef<AbortController | null>(null);
 
   async function play() {
-    const generation = ++playbackGenerationRef.current;
+    playbackRef.current?.abort();
+    const controller = new AbortController();
+    playbackRef.current = controller;
+    const { signal } = controller;
 
     try {
       setIsPlaying(true);
 
       for (const step of planPlayback(parts)) {
-        if (playbackGenerationRef.current !== generation) {
+        if (signal.aborted) {
           return;
         }
 
@@ -52,13 +54,9 @@ export function useMessagePlayback(
             const { tracker } = step;
             setActivePartId(tracker.firstId);
             await speak(tracker.text, {
-              onBoundary: (charIndex) => {
-                // A boundary event can arrive after stop()/cancel(); ignore it
-                // so it can't re-highlight a part the user already stopped.
-                if (playbackGenerationRef.current === generation) {
-                  setActivePartId(tracker.partIdAt(charIndex));
-                }
-              },
+              signal,
+              onBoundary: (charIndex) =>
+                setActivePartId(tracker.partIdAt(charIndex)),
             });
             break;
           }
@@ -72,10 +70,10 @@ export function useMessagePlayback(
         }
       }
     } catch {
-      // Playback failures (TTS hiccup, cancellation from stop(), etc.) reset
-      // via `finally` — the button returning to idle is the user signal.
+      // A genuine playback failure (a TTS hiccup, a missing sound) resets via
+      // `finally` — the button returning to idle is feedback enough.
     } finally {
-      if (playbackGenerationRef.current === generation) {
+      if (!signal.aborted) {
         setIsPlaying(false);
         setActivePartId(null);
       }
@@ -83,8 +81,7 @@ export function useMessagePlayback(
   }
 
   function stop() {
-    playbackGenerationRef.current++;
-    stopSpeaking();
+    playbackRef.current?.abort();
     audio.stop();
     setIsPlaying(false);
     setActivePartId(null);
