@@ -7,6 +7,7 @@ import type { MessagePart } from "./use-message";
 
 export interface MessageBarProps {
   parts: MessagePart[];
+  activePartId: string | null;
   isPlaying: boolean;
   onBackspacePress: () => void;
   onBackspaceLongPress: () => void;
@@ -14,19 +15,16 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
-function scrollToEnd(container: HTMLElement | null): () => void {
-  const lastChild = container?.lastElementChild;
-
-  if (!lastChild) {
+function scrollElementIntoView(
+  element: Element | undefined,
+  inline: ScrollLogicalPosition,
+): () => void {
+  if (!element) {
     return () => undefined;
   }
 
   const frameId = requestAnimationFrame(() => {
-    lastChild.scrollIntoView({
-      block: "nearest",
-      inline: "end",
-      behavior: "instant",
-    });
+    element.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
   });
 
   return () => cancelAnimationFrame(frameId);
@@ -34,6 +32,7 @@ function scrollToEnd(container: HTMLElement | null): () => void {
 
 export function MessageBar({
   parts,
+  activePartId,
   isPlaying,
   onBackspacePress,
   onBackspaceLongPress,
@@ -43,8 +42,24 @@ export function MessageBar({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return scrollToEnd(scrollContainerRef.current);
+    return scrollElementIntoView(
+      scrollContainerRef.current?.lastElementChild ?? undefined,
+      "end",
+    );
   }, [parts]);
+
+  useEffect(() => {
+    if (activePartId === null) {
+      return;
+    }
+
+    const index = parts.findIndex((part) => part.id === activePartId);
+
+    return scrollElementIntoView(
+      scrollContainerRef.current?.children[index],
+      "nearest",
+    );
+  }, [activePartId, parts]);
 
   return (
     <Stack direction="row" sx={{ p: 2 }}>
@@ -68,8 +83,17 @@ export function MessageBar({
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
-          {parts.map((part, index) => (
-            <Stack key={index} direction="row">
+          {parts.map((part) => (
+            <Stack
+              key={part.id}
+              direction="row"
+              sx={{
+                px: 1,
+                borderRadius: 4,
+                bgcolor:
+                  part.id === activePartId ? "action.selected" : "transparent",
+              }}
+            >
               <Pictogram label={part.label} src={part.imageSrc} />
             </Stack>
           ))}

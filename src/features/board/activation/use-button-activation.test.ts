@@ -16,7 +16,6 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
     appendText: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
-    updateLastPart: vi.fn(),
     clear: vi.fn(),
   };
 }
@@ -24,6 +23,7 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
 function createPlaybackStub(): UseMessagePlaybackReturn {
   return {
     isPlaying: false,
+    activePartId: null,
     play: vi.fn(() => Promise.resolve()),
     stop: vi.fn(),
   };
@@ -207,7 +207,6 @@ describe("useButtonActivation", () => {
     });
 
     expect(message.addPart).toHaveBeenCalledWith({
-      id: "btn",
       label: "hi",
       vocalization: "hello",
       imageSrc: "img.png",

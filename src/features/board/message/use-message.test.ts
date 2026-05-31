@@ -6,63 +6,46 @@ describe("useMessage", () => {
   test("builds text from multiple parts joined by spaces", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "1", label: "I" });
+    result.current.addPart({ label: "I" });
     await rerender();
-    result.current.addPart({ id: "2", label: "want" });
+    result.current.addPart({ label: "want" });
     await rerender();
-    result.current.addPart({ id: "3", label: "water" });
+    result.current.addPart({ label: "water" });
     await rerender();
 
     expect(result.current.parts).toHaveLength(3);
     expect(result.current.text).toBe("I want water");
   });
 
-  test("merges into existing last part preserving untouched fields", async () => {
+  test("mints a distinct id for each part even with identical content", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "1", label: "first" });
+    result.current.addPart({ label: "cat" });
     await rerender();
-    result.current.addPart({
-      id: "2",
-      label: "he",
-      imageSrc: "img.png",
-    });
+    result.current.addPart({ label: "cat" });
     await rerender();
 
-    result.current.updateLastPart({ id: "2", label: "hello" });
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(2);
-    expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
-    expect(result.current.parts[1].label).toBe("hello");
-    expect(result.current.parts[1].imageSrc).toBe("img.png");
-  });
-
-  test("inserts a new part as the first element when the message is empty", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.updateLastPart({ id: "1", label: "first" });
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0]).toEqual({ id: "1", label: "first" });
+    const [first, second] = result.current.parts;
+    expect(first.id).toBeTruthy();
+    expect(second.id).toBeTruthy();
+    expect(first.id).not.toBe(second.id);
   });
 
   test("appends text to the last part without mangling its id", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "abc-123", label: "ca", imageSrc: "img.png" });
+    result.current.addPart({ label: "ca", imageSrc: "img.png" });
     await rerender();
+
+    const partId = result.current.parts[0].id;
 
     result.current.appendText("t");
     await rerender();
 
     expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0]).toEqual({
-      id: "abc-123",
-      label: "cat",
-      imageSrc: "img.png",
-    });
+    expect(result.current.parts[0].id).toBe(partId);
+    expect(result.current.parts[0].label).toBe("cat");
+    expect(result.current.parts[0].imageSrc).toBe("img.png");
   });
 
   test("appends text as a new part when the message is empty", async () => {
@@ -79,23 +62,26 @@ describe("useMessage", () => {
   test("accumulates rapid appends into a single part", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "p1", label: "" });
+    result.current.addPart({ label: "" });
     await rerender();
+
+    const partId = result.current.parts[0].id;
 
     result.current.appendText("h");
     result.current.appendText("i");
     await rerender();
 
     expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0]).toEqual({ id: "p1", label: "hi" });
+    expect(result.current.parts[0].id).toBe(partId);
+    expect(result.current.parts[0].label).toBe("hi");
   });
 
   test("removes the last-added part", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "1", label: "hello" });
+    result.current.addPart({ label: "hello" });
     await rerender();
-    result.current.addPart({ id: "2", label: "world" });
+    result.current.addPart({ label: "world" });
     await rerender();
 
     result.current.removeLastPart();
@@ -130,7 +116,7 @@ describe("useMessage", () => {
   test("clears all existing parts when called with an empty string", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ id: "1", label: "existing" });
+    result.current.addPart({ label: "existing" });
     await rerender();
 
     result.current.setFromText("");
@@ -142,9 +128,9 @@ describe("useMessage", () => {
   test("persists parts across unmount and remount", async () => {
     const first = await renderHook(() => useMessage());
 
-    first.result.current.addPart({ id: "1", label: "hello" });
+    first.result.current.addPart({ label: "hello" });
     await first.rerender();
-    first.result.current.addPart({ id: "2", label: "world" });
+    first.result.current.addPart({ label: "world" });
     await first.rerender();
 
     await first.unmount();

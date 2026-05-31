@@ -37,8 +37,7 @@ describe("resolveButtonIntent", () => {
     expect(intents).toEqual([
       {
         kind: "compose",
-        part: {
-          id: "b1",
+        content: {
           label: "apple",
           vocalization: undefined,
           imageSrc: undefined,
@@ -59,8 +58,7 @@ describe("resolveButtonIntent", () => {
     expect(intents).toEqual([
       {
         kind: "compose",
-        part: {
-          id: "b1",
+        content: {
           label: "Apple",
           vocalization: "Eat apple",
           imageSrc: undefined,
@@ -79,8 +77,7 @@ describe("resolveButtonIntent", () => {
     expect(intents).toEqual([
       {
         kind: "compose",
-        part: {
-          id: "b1",
+        content: {
           label: undefined,
           vocalization: undefined,
           imageSrc: undefined,
