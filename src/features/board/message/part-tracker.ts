@@ -5,7 +5,6 @@ export interface SpokenPart {
 
 export interface PartTracker {
   text: string;
-  firstId: string | null;
   partIdAt: (charIndex: number) => string | null;
 }
 
@@ -32,7 +31,6 @@ export function createPartTracker(parts: SpokenPart[]): PartTracker {
 
   return {
     text,
-    firstId: parts[0]?.id ?? null,
     partIdAt: (charIndex) =>
       spans.find((span) => charIndex >= span.start && charIndex < span.end)
         ?.id ?? null,

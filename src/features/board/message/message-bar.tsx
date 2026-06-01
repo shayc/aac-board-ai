@@ -86,19 +86,25 @@ export function MessageBar({
           direction="row"
           sx={{ flexGrow: 1, padding: 2, gap: 1, overflow: "auto" }}
         >
-          {parts.map((part) => (
-            <Stack
-              key={part.id}
-              direction="row"
-              sx={{
-                borderRadius: 4,
-                bgcolor:
-                  part.id === activePartId ? "action.selected" : "transparent",
-              }}
-            >
-              <Pictogram label={part.label} src={part.imageSrc} />
-            </Stack>
-          ))}
+          {parts.map((part) => {
+            const isActive = part.id === activePartId;
+
+            return (
+              <Stack
+                key={part.id}
+                direction="row"
+                sx={(theme) => ({
+                  borderRadius: 4,
+                  outlineOffset: 2,
+                  outline: isActive
+                    ? `2px solid ${theme.vars?.palette.primary.main ?? theme.palette.primary.main}`
+                    : "none",
+                })}
+              >
+                <Pictogram label={part.label} src={part.imageSrc} />
+              </Stack>
+            );
+          })}
         </Stack>
 
         <BackspaceButton

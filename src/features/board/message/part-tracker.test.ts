@@ -53,17 +53,4 @@ describe("createPartTracker", () => {
 
     expect(tracker.partIdAt(99)).toBeNull();
   });
-
-  test("exposes the first part id as the fallback when no boundaries fire", () => {
-    const tracker = createPartTracker([
-      { id: "1", text: "hi" },
-      { id: "2", text: "there" },
-    ]);
-
-    expect(tracker.firstId).toBe("1");
-  });
-
-  test("has no first part for an empty message", () => {
-    expect(createPartTracker([]).firstId).toBeNull();
-  });
 });
