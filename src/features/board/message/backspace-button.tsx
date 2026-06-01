@@ -62,6 +62,7 @@ export function BackspaceButton({
         </IconButton>
 
         <StyledCircularProgress
+          aria-hidden
           variant="determinate"
           value={progress}
           active={progress > 0}
