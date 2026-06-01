@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
   "libraryEmptyDescription": "Εισαγάγετε πίνακες επικοινωνίας για να ξεκινήσετε.",
   "libraryImportBoards": "Εισαγωγή πινάκων",
-  "libraryImportingBoard": "Εισαγωγή πίνακα...",
-  "libraryImportingBoards": "Εισαγωγή πινάκων...",
-  "libraryImportedBoard": "Ο πίνακας εισήχθη",
-  "libraryImportedBoards": "Οι πίνακες εισήχθησαν",
-  "libraryImportFailedBoard": "Δεν ήταν δυνατή η εισαγωγή του πίνακα",
-  "libraryImportFailedBoards": "Δεν ήταν δυνατή η εισαγωγή των πινάκων",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Εισαγωγή πίνακα...",
+        "countPlural=*": "Εισαγωγή πινάκων..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ο πίνακας εισήχθη",
+        "countPlural=*": "Οι πίνακες εισήχθησαν"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του πίνακα",
+        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των πινάκων"
+      }
+    }
+  ],
   "libraryInfo": "Πληροφορίες",
   "libraryDelete": "Διαγραφή",
   "libraryCancel": "Άκυρο",

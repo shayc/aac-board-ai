@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "A biblioteca está vazia",
   "libraryEmptyDescription": "Importe pranchas de comunicação para começar.",
   "libraryImportBoards": "Importar pranchas",
-  "libraryImportingBoard": "Importando prancha...",
-  "libraryImportingBoards": "Importando pranchas...",
-  "libraryImportedBoard": "Prancha importada",
-  "libraryImportedBoards": "Pranchas importadas",
-  "libraryImportFailedBoard": "Não foi possível importar a prancha",
-  "libraryImportFailedBoards": "Não foi possível importar as pranchas",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importando prancha...",
+        "countPlural=*": "Importando pranchas..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Prancha importada",
+        "countPlural=*": "Pranchas importadas"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Não foi possível importar a prancha",
+        "countPlural=*": "Não foi possível importar as pranchas"
+      }
+    }
+  ],
   "libraryInfo": "Informações",
   "libraryDelete": "Excluir",
   "libraryCancel": "Cancelar",

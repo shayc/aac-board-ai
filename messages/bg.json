@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Библиотеката е празна",
   "libraryEmptyDescription": "Импортирайте комуникационни дъски, за да започнете.",
   "libraryImportBoards": "Импортиране на дъски",
-  "libraryImportingBoard": "Импортиране на дъската...",
-  "libraryImportingBoards": "Импортиране на дъските...",
-  "libraryImportedBoard": "Дъската е импортирана",
-  "libraryImportedBoards": "Дъските са импортирани",
-  "libraryImportFailedBoard": "Дъската не може да бъде импортирана",
-  "libraryImportFailedBoards": "Дъските не могат да бъдат импортирани",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Импортиране на дъската...",
+        "countPlural=*": "Импортиране на дъските..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дъската е импортирана",
+        "countPlural=*": "Дъските са импортирани"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дъската не може да бъде импортирана",
+        "countPlural=*": "Дъските не могат да бъдат импортирани"
+      }
+    }
+  ],
   "libraryInfo": "Информация",
   "libraryDelete": "Изтриване",
   "libraryCancel": "Отказ",

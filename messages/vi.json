@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Thư viện trống",
   "libraryEmptyDescription": "Nhập các bảng giao tiếp để bắt đầu.",
   "libraryImportBoards": "Nhập bảng",
-  "libraryImportingBoard": "Đang nhập bảng...",
-  "libraryImportingBoards": "Đang nhập các bảng...",
-  "libraryImportedBoard": "Đã nhập bảng",
-  "libraryImportedBoards": "Đã nhập các bảng",
-  "libraryImportFailedBoard": "Không thể nhập bảng",
-  "libraryImportFailedBoards": "Không thể nhập các bảng",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Đang nhập bảng...",
+        "countPlural=*": "Đang nhập các bảng..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Đã nhập bảng",
+        "countPlural=*": "Đã nhập các bảng"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Không thể nhập bảng",
+        "countPlural=*": "Không thể nhập các bảng"
+      }
+    }
+  ],
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",
   "libraryCancel": "Hủy",

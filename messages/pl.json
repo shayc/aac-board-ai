@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Biblioteka jest pusta",
   "libraryEmptyDescription": "Zaimportuj tablice komunikacyjne, aby rozpocząć.",
   "libraryImportBoards": "Importuj tablice",
-  "libraryImportingBoard": "Importowanie tablicy...",
-  "libraryImportingBoards": "Importowanie tablic...",
-  "libraryImportedBoard": "Zaimportowano tablicę",
-  "libraryImportedBoards": "Zaimportowano tablice",
-  "libraryImportFailedBoard": "Nie udało się zaimportować tablicy",
-  "libraryImportFailedBoards": "Nie udało się zaimportować tablic",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importowanie tablicy...",
+        "countPlural=*": "Importowanie tablic..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Zaimportowano tablicę",
+        "countPlural=*": "Zaimportowano tablice"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Nie udało się zaimportować tablicy",
+        "countPlural=*": "Nie udało się zaimportować tablic"
+      }
+    }
+  ],
   "libraryInfo": "Informacje",
   "libraryDelete": "Usuń",
   "libraryCancel": "Anuluj",

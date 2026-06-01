@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za začetek uvozite komunikacijske table.",
   "libraryImportBoards": "Uvozi table",
-  "libraryImportingBoard": "Uvažanje table...",
-  "libraryImportingBoards": "Uvažanje tabel...",
-  "libraryImportedBoard": "Tabla uvožena",
-  "libraryImportedBoards": "Table uvožene",
-  "libraryImportFailedBoard": "Table ni bilo mogoče uvoziti",
-  "libraryImportFailedBoards": "Tabel ni bilo mogoče uvoziti",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Uvažanje table...",
+        "countPlural=*": "Uvažanje tabel..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabla uvožena",
+        "countPlural=*": "Table uvožene"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Table ni bilo mogoče uvoziti",
+        "countPlural=*": "Tabel ni bilo mogoče uvoziti"
+      }
+    }
+  ],
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",
   "libraryCancel": "Prekliči",

@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Biblioteket är tomt",
   "libraryEmptyDescription": "Importera kommunikationstavlor för att komma igång.",
   "libraryImportBoards": "Importera tavlor",
-  "libraryImportingBoard": "Importerar tavla...",
-  "libraryImportingBoards": "Importerar tavlor...",
-  "libraryImportedBoard": "Tavla importerad",
-  "libraryImportedBoards": "Tavlor importerade",
-  "libraryImportFailedBoard": "Det gick inte att importera tavlan",
-  "libraryImportFailedBoards": "Det gick inte att importera tavlorna",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importerar tavla...",
+        "countPlural=*": "Importerar tavlor..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavla importerad",
+        "countPlural=*": "Tavlor importerade"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Det gick inte att importera tavlan",
+        "countPlural=*": "Det gick inte att importera tavlorna"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",
   "libraryCancel": "Avbryt",

@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "ライブラリは空です",
   "libraryEmptyDescription": "コミュニケーションボードをインポートして始めましょう。",
   "libraryImportBoards": "ボードをインポート",
-  "libraryImportingBoard": "ボードをインポートしています…",
-  "libraryImportingBoards": "ボードをインポートしています…",
-  "libraryImportedBoard": "ボードをインポートしました",
-  "libraryImportedBoards": "ボードをインポートしました",
-  "libraryImportFailedBoard": "ボードをインポートできませんでした",
-  "libraryImportFailedBoards": "ボードをインポートできませんでした",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードをインポートしています…",
+        "countPlural=*": "ボードをインポートしています…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードをインポートしました",
+        "countPlural=*": "ボードをインポートしました"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードをインポートできませんでした",
+        "countPlural=*": "ボードをインポートできませんでした"
+      }
+    }
+  ],
   "libraryInfo": "情報",
   "libraryDelete": "削除",
   "libraryCancel": "キャンセル",

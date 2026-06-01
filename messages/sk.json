@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Knižnica je prázdna",
   "libraryEmptyDescription": "Začnite importovaním komunikačných tabuliek.",
   "libraryImportBoards": "Importovať tabuľky",
-  "libraryImportingBoard": "Importovanie tabuľky...",
-  "libraryImportingBoards": "Importovanie tabuliek...",
-  "libraryImportedBoard": "Tabuľka importovaná",
-  "libraryImportedBoards": "Tabuľky importované",
-  "libraryImportFailedBoard": "Tabuľku sa nepodarilo importovať",
-  "libraryImportFailedBoards": "Tabuľky sa nepodarilo importovať",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importovanie tabuľky...",
+        "countPlural=*": "Importovanie tabuliek..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabuľka importovaná",
+        "countPlural=*": "Tabuľky importované"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabuľku sa nepodarilo importovať",
+        "countPlural=*": "Tabuľky sa nepodarilo importovať"
+      }
+    }
+  ],
   "libraryInfo": "Informácie",
   "libraryDelete": "Odstrániť",
   "libraryCancel": "Zrušiť",

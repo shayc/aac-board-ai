@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Biblioteca este goală",
   "libraryEmptyDescription": "Importă table de comunicare pentru a începe.",
   "libraryImportBoards": "Importă table",
-  "libraryImportingBoard": "Se importă tabla...",
-  "libraryImportingBoards": "Se importă tablele...",
-  "libraryImportedBoard": "Tablă importată",
-  "libraryImportedBoards": "Table importate",
-  "libraryImportFailedBoard": "Tabla nu a putut fi importată",
-  "libraryImportFailedBoards": "Tablele nu au putut fi importate",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Se importă tabla...",
+        "countPlural=*": "Se importă tablele..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tablă importată",
+        "countPlural=*": "Table importate"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabla nu a putut fi importată",
+        "countPlural=*": "Tablele nu au putut fi importate"
+      }
+    }
+  ],
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",
   "libraryCancel": "Anulează",

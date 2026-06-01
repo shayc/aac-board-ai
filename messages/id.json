@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Pustaka kosong",
   "libraryEmptyDescription": "Impor papan komunikasi untuk memulai.",
   "libraryImportBoards": "Impor papan",
-  "libraryImportingBoard": "Mengimpor papan...",
-  "libraryImportingBoards": "Mengimpor papan...",
-  "libraryImportedBoard": "Papan diimpor",
-  "libraryImportedBoards": "Papan diimpor",
-  "libraryImportFailedBoard": "Tidak dapat mengimpor papan",
-  "libraryImportFailedBoards": "Tidak dapat mengimpor papan",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Mengimpor papan...",
+        "countPlural=*": "Mengimpor papan..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Papan diimpor",
+        "countPlural=*": "Papan diimpor"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tidak dapat mengimpor papan",
+        "countPlural=*": "Tidak dapat mengimpor papan"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",
   "libraryCancel": "Batal",

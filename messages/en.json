@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Library is empty",
   "libraryEmptyDescription": "Import communication boards to get started.",
   "libraryImportBoards": "Import boards",
-  "libraryImportingBoard": "Importing board...",
-  "libraryImportingBoards": "Importing boards...",
-  "libraryImportedBoard": "Board imported",
-  "libraryImportedBoards": "Boards imported",
-  "libraryImportFailedBoard": "Couldn't import board",
-  "libraryImportFailedBoards": "Couldn't import boards",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importing board...",
+        "countPlural=*": "Importing boards..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Board imported",
+        "countPlural=*": "Boards imported"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Couldn't import board",
+        "countPlural=*": "Couldn't import boards"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Delete",
   "libraryCancel": "Cancel",

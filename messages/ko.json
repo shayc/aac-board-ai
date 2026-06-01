@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
   "libraryEmptyDescription": "의사소통 보드를 가져와 시작하세요.",
   "libraryImportBoards": "보드 가져오기",
-  "libraryImportingBoard": "보드를 가져오는 중…",
-  "libraryImportingBoards": "보드를 가져오는 중…",
-  "libraryImportedBoard": "보드를 가져왔습니다",
-  "libraryImportedBoards": "보드를 가져왔습니다",
-  "libraryImportFailedBoard": "보드를 가져올 수 없습니다",
-  "libraryImportFailedBoards": "보드를 가져올 수 없습니다",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "보드를 가져오는 중…",
+        "countPlural=*": "보드를 가져오는 중…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "보드를 가져왔습니다",
+        "countPlural=*": "보드를 가져왔습니다"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "보드를 가져올 수 없습니다",
+        "countPlural=*": "보드를 가져올 수 없습니다"
+      }
+    }
+  ],
   "libraryInfo": "정보",
   "libraryDelete": "삭제",
   "libraryCancel": "취소",

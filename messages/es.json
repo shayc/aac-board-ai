@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "La biblioteca está vacía",
   "libraryEmptyDescription": "Importa tableros de comunicación para empezar.",
   "libraryImportBoards": "Importar tableros",
-  "libraryImportingBoard": "Importando tablero...",
-  "libraryImportingBoards": "Importando tableros...",
-  "libraryImportedBoard": "Tablero importado",
-  "libraryImportedBoards": "Tableros importados",
-  "libraryImportFailedBoard": "No se pudo importar el tablero",
-  "libraryImportFailedBoards": "No se pudieron importar los tableros",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importando tablero...",
+        "countPlural=*": "Importando tableros..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tablero importado",
+        "countPlural=*": "Tableros importados"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "No se pudo importar el tablero",
+        "countPlural=*": "No se pudieron importar los tableros"
+      }
+    }
+  ],
   "libraryInfo": "Información",
   "libraryDelete": "Eliminar",
   "libraryCancel": "Cancelar",

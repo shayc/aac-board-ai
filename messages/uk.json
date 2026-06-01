@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Бібліотека порожня",
   "libraryEmptyDescription": "Імпортуйте комунікаційні дошки, щоб почати.",
   "libraryImportBoards": "Імпортувати дошки",
-  "libraryImportingBoard": "Імпортування дошки...",
-  "libraryImportingBoards": "Імпортування дошок...",
-  "libraryImportedBoard": "Дошку імпортовано",
-  "libraryImportedBoards": "Дошки імпортовано",
-  "libraryImportFailedBoard": "Не вдалося імпортувати дошку",
-  "libraryImportFailedBoards": "Не вдалося імпортувати дошки",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Імпортування дошки...",
+        "countPlural=*": "Імпортування дошок..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дошку імпортовано",
+        "countPlural=*": "Дошки імпортовано"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Не вдалося імпортувати дошку",
+        "countPlural=*": "Не вдалося імпортувати дошки"
+      }
+    }
+  ],
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",
   "libraryCancel": "Скасувати",

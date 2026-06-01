@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
   "libraryEmptyDescription": "தொடங்க தொடர்பு பலகைகளை இறக்குமதி செய்யுங்கள்.",
   "libraryImportBoards": "பலகைகளை இறக்குமதி செய்",
-  "libraryImportingBoard": "பலகை இறக்குமதி செய்யப்படுகிறது…",
-  "libraryImportingBoards": "பலகைகள் இறக்குமதி செய்யப்படுகின்றன…",
-  "libraryImportedBoard": "பலகை இறக்குமதி செய்யப்பட்டது",
-  "libraryImportedBoards": "பலகைகள் இறக்குமதி செய்யப்பட்டன",
-  "libraryImportFailedBoard": "பலகையை இறக்குமதி செய்ய முடியவில்லை",
-  "libraryImportFailedBoards": "பலகைகளை இறக்குமதி செய்ய முடியவில்லை",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "பலகை இறக்குமதி செய்யப்படுகிறது…",
+        "countPlural=*": "பலகைகள் இறக்குமதி செய்யப்படுகின்றன…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "பலகை இறக்குமதி செய்யப்பட்டது",
+        "countPlural=*": "பலகைகள் இறக்குமதி செய்யப்பட்டன"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "பலகையை இறக்குமதி செய்ய முடியவில்லை",
+        "countPlural=*": "பலகைகளை இறக்குமதி செய்ய முடியவில்லை"
+      }
+    }
+  ],
   "libraryInfo": "தகவல்",
   "libraryDelete": "நீக்கு",
   "libraryCancel": "ரத்துசெய்",

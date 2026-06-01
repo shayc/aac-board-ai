@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
   "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಸಂವಹನ ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
   "libraryImportBoards": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
-  "libraryImportingBoard": "ಬೋರ್ಡ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
-  "libraryImportingBoards": "ಬೋರ್ಡ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…",
-  "libraryImportedBoard": "ಬೋರ್ಡ್ ಆಮದಾಗಿದೆ",
-  "libraryImportedBoards": "ಬೋರ್ಡ್‌ಗಳು ಆಮದಾಗಿವೆ",
-  "libraryImportFailedBoard": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "libraryImportFailedBoards": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
+        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದಾಗಿದೆ",
+        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದಾಗಿವೆ"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+      }
+    }
+  ],
   "libraryInfo": "ಮಾಹಿತಿ",
   "libraryDelete": "ಅಳಿಸಿ",
   "libraryCancel": "ರದ್ದುಮಾಡಿ",

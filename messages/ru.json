@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Библиотека пуста",
   "libraryEmptyDescription": "Импортируйте коммуникационные доски, чтобы начать.",
   "libraryImportBoards": "Импортировать доски",
-  "libraryImportingBoard": "Импорт доски...",
-  "libraryImportingBoards": "Импорт досок...",
-  "libraryImportedBoard": "Доска импортирована",
-  "libraryImportedBoards": "Доски импортированы",
-  "libraryImportFailedBoard": "Не удалось импортировать доску",
-  "libraryImportFailedBoards": "Не удалось импортировать доски",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Импорт доски...",
+        "countPlural=*": "Импорт досок..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Доска импортирована",
+        "countPlural=*": "Доски импортированы"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Не удалось импортировать доску",
+        "countPlural=*": "Не удалось импортировать доски"
+      }
+    }
+  ],
   "libraryInfo": "Сведения",
   "libraryDelete": "Удалить",
   "libraryCancel": "Отмена",

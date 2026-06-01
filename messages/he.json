@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "הספרייה ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
   "libraryImportBoards": "ייבוא לוחות",
-  "libraryImportingBoard": "ייבוא לוח...",
-  "libraryImportingBoards": "ייבוא לוחות...",
-  "libraryImportedBoard": "הלוח יובא",
-  "libraryImportedBoards": "הלוחות יובאו",
-  "libraryImportFailedBoard": "ייבוא הלוח נכשל",
-  "libraryImportFailedBoards": "ייבוא הלוחות נכשל",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ייבוא לוח...",
+        "countPlural=*": "ייבוא לוחות..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "הלוח יובא",
+        "countPlural=*": "הלוחות יובאו"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ייבוא הלוח נכשל",
+        "countPlural=*": "ייבוא הלוחות נכשל"
+      }
+    }
+  ],
   "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",
   "libraryCancel": "ביטול",
