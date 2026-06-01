@@ -48,10 +48,12 @@ export function Tile({
         transition: theme.transitions.create("background-color", {
           duration: theme.transitions.duration.short,
         }),
-        "&:hover": {
-          backgroundColor: backgroundColor
-            ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
-            : undefined,
+        "@media (hover: hover)": {
+          "&:hover": {
+            backgroundColor: backgroundColor
+              ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
+              : undefined,
+          },
         },
         "&:active": {
           backgroundColor: backgroundColor
