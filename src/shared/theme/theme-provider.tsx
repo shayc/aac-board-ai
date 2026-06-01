@@ -28,9 +28,6 @@ const themeOptions = {
     colorSchemeSelector: "class",
   },
   colorSchemes: {
-    // Safari 26 samples <body>, which CssBaseline paints from background.default —
-    // so the page default is the chrome color; the reading surface is #root, not
-    // a palette surface.
     light: { palette: { background: { default: SHELL_LIGHT } } },
     dark: { palette: { background: { default: SHELL_DARK } } },
   },
@@ -60,8 +57,7 @@ const themeOptions = {
             color: palette.text.primary,
             backgroundImage: "none",
             borderBottom: `1px solid ${palette.divider}`,
-            // MUI sets a competing dark background at higher specificity via
-            // applyStyles; match it so the bar follows the shell in dark.
+            // applyStyles beats MUI's higher-specificity dark background; a plain value loses.
             ...theme.applyStyles("dark", {
               backgroundColor: SHELL_DARK,
               borderBottom: "none",
@@ -72,7 +68,6 @@ const themeOptions = {
     },
     MuiDrawer: {
       styleOverrides: {
-        // Override MUI's lighter dark elevation overlay so drawers match the chrome.
         paper: ({ theme }) => ({
           ...theme.applyStyles("dark", {
             backgroundColor: SHELL_DARK,
