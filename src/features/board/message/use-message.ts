@@ -1,3 +1,4 @@
+import { randomId } from "@shared/utils/random-id";
 import { useState } from "react";
 import type { BoardButton } from "../types";
 
@@ -22,7 +23,7 @@ export interface UseMessageReturn {
 }
 
 function createPart(content: MessagePartContent): MessagePart {
-  return { ...content, id: crypto.randomUUID() };
+  return { ...content, id: randomId() };
 }
 
 export function useMessage(): UseMessageReturn {
