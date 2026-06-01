@@ -57,10 +57,8 @@ const themeOptions = {
             color: palette.text.primary,
             backgroundImage: "none",
             borderBottom: `1px solid ${palette.divider}`,
-            // applyStyles beats MUI's higher-specificity dark background; a plain value loses.
             ...theme.applyStyles("dark", {
               backgroundColor: SHELL_DARK,
-              borderBottom: "none",
             }),
           };
         },
