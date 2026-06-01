@@ -64,6 +64,7 @@ const themeOptions = {
             // applyStyles; match it so the bar follows the shell in dark.
             ...theme.applyStyles("dark", {
               backgroundColor: SHELL_DARK,
+              borderBottom: "none",
             }),
           };
         },
