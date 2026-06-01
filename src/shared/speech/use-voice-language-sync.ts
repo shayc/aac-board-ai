@@ -1,3 +1,8 @@
+import {
+  getLanguageCode,
+  getPreferredRegion,
+  getRegionCode,
+} from "@shared/utils/locale";
 import { useEffect } from "react";
 import {
   getSpeechConfig,
@@ -7,6 +12,24 @@ import {
 
 export interface UseVoiceLanguageSyncOptions {
   language: string;
+}
+
+/**
+ * The user's own region for a language, drawn from OS/browser preferences
+ * (e.g. a Canadian's "fr-CA" → "CA"). Undefined when none of the preferred
+ * locales name a region for this language.
+ */
+function getUserRegionForLanguage(language: string): string | undefined {
+  for (const tag of navigator.languages) {
+    if (getLanguageCode(tag) === language) {
+      const region = getRegionCode(tag);
+      if (region) {
+        return region;
+      }
+    }
+  }
+
+  return undefined;
 }
 
 export function useVoiceLanguageSync({
@@ -28,7 +51,15 @@ export function useVoiceLanguageSync({
       return;
     }
 
-    const fallbackVoice = voices.find((voice) => voice.default) ?? voices[0];
+    const preferredRegion =
+      getUserRegionForLanguage(language) ?? getPreferredRegion(language);
+    const regionVoices = voices.filter(
+      (voice) => getRegionCode(voice.lang) === preferredRegion,
+    );
+    const candidates = regionVoices.length > 0 ? regionVoices : voices;
+
+    const fallbackVoice =
+      candidates.find((voice) => voice.default) ?? candidates[0];
     if (fallbackVoice) {
       setVoiceURI(fallbackVoice.voiceURI);
     }
