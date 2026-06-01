@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "লাইব্রেরি খালি",
   "libraryEmptyDescription": "শুরু করতে যোগাযোগ বোর্ড আমদানি করুন।",
   "libraryImportBoards": "বোর্ড আমদানি করুন",
-  "libraryImportingBoard": "বোর্ড আমদানি করা হচ্ছে…",
-  "libraryImportingBoards": "বোর্ড আমদানি করা হচ্ছে…",
-  "libraryImportedBoard": "বোর্ড আমদানি করা হয়েছে",
-  "libraryImportedBoards": "বোর্ড আমদানি করা হয়েছে",
-  "libraryImportFailedBoard": "বোর্ড আমদানি করা যায়নি",
-  "libraryImportFailedBoards": "বোর্ড আমদানি করা যায়নি",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "বোর্ড আমদানি করা হচ্ছে…",
+        "countPlural=*": "বোর্ড আমদানি করা হচ্ছে…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "বোর্ড আমদানি করা হয়েছে",
+        "countPlural=*": "বোর্ড আমদানি করা হয়েছে"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "বোর্ড আমদানি করা যায়নি",
+        "countPlural=*": "বোর্ড আমদানি করা যায়নি"
+      }
+    }
+  ],
   "libraryInfo": "তথ্য",
   "libraryDelete": "মুছুন",
   "libraryCancel": "বাতিল করুন",

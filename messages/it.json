@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "La libreria è vuota",
   "libraryEmptyDescription": "Importa tabelle di comunicazione per iniziare.",
   "libraryImportBoards": "Importa tabelle",
-  "libraryImportingBoard": "Importazione tabella...",
-  "libraryImportingBoards": "Importazione tabelle...",
-  "libraryImportedBoard": "Tabella importata",
-  "libraryImportedBoards": "Tabelle importate",
-  "libraryImportFailedBoard": "Impossibile importare la tabella",
-  "libraryImportFailedBoards": "Impossibile importare le tabelle",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importazione tabella...",
+        "countPlural=*": "Importazione tabelle..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabella importata",
+        "countPlural=*": "Tabelle importate"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Impossibile importare la tabella",
+        "countPlural=*": "Impossibile importare le tabelle"
+      }
+    }
+  ],
   "libraryInfo": "Informazioni",
   "libraryDelete": "Elimina",
   "libraryCancel": "Annulla",

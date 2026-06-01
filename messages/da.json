@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Biblioteket er tomt",
   "libraryEmptyDescription": "Importér kommunikationstavler for at komme i gang.",
   "libraryImportBoards": "Importér tavler",
-  "libraryImportingBoard": "Importerer tavle...",
-  "libraryImportingBoards": "Importerer tavler...",
-  "libraryImportedBoard": "Tavle importeret",
-  "libraryImportedBoards": "Tavler importeret",
-  "libraryImportFailedBoard": "Tavlen kunne ikke importeres",
-  "libraryImportFailedBoards": "Tavlerne kunne ikke importeres",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importerer tavle...",
+        "countPlural=*": "Importerer tavler..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavle importeret",
+        "countPlural=*": "Tavler importeret"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavlen kunne ikke importeres",
+        "countPlural=*": "Tavlerne kunne ikke importeres"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Slet",
   "libraryCancel": "Annullér",

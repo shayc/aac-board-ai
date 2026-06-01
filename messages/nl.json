@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "De bibliotheek is leeg",
   "libraryEmptyDescription": "Importeer communicatieborden om te beginnen.",
   "libraryImportBoards": "Borden importeren",
-  "libraryImportingBoard": "Bord importeren...",
-  "libraryImportingBoards": "Borden importeren...",
-  "libraryImportedBoard": "Bord geïmporteerd",
-  "libraryImportedBoards": "Borden geïmporteerd",
-  "libraryImportFailedBoard": "Kan bord niet importeren",
-  "libraryImportFailedBoards": "Kan borden niet importeren",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Bord importeren...",
+        "countPlural=*": "Borden importeren..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Bord geïmporteerd",
+        "countPlural=*": "Borden geïmporteerd"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Kan bord niet importeren",
+        "countPlural=*": "Kan borden niet importeren"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Verwijderen",
   "libraryCancel": "Annuleren",

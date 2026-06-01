@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Kirjasto on tyhjä",
   "libraryEmptyDescription": "Tuo kommunikointitauluja päästäksesi alkuun.",
   "libraryImportBoards": "Tuo tauluja",
-  "libraryImportingBoard": "Tuodaan taulua...",
-  "libraryImportingBoards": "Tuodaan tauluja...",
-  "libraryImportedBoard": "Taulu tuotu",
-  "libraryImportedBoards": "Taulut tuotu",
-  "libraryImportFailedBoard": "Taulun tuonti epäonnistui",
-  "libraryImportFailedBoards": "Taulujen tuonti epäonnistui",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tuodaan taulua...",
+        "countPlural=*": "Tuodaan tauluja..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Taulu tuotu",
+        "countPlural=*": "Taulut tuotu"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Taulun tuonti epäonnistui",
+        "countPlural=*": "Taulujen tuonti epäonnistui"
+      }
+    }
+  ],
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",
   "libraryCancel": "Peruuta",

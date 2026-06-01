@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "المكتبة فارغة",
   "libraryEmptyDescription": "استورد لوحات تواصل للبدء.",
   "libraryImportBoards": "استيراد لوحات",
-  "libraryImportingBoard": "جارٍ استيراد اللوحة...",
-  "libraryImportingBoards": "جارٍ استيراد اللوحات...",
-  "libraryImportedBoard": "تم استيراد اللوحة",
-  "libraryImportedBoards": "تم استيراد اللوحات",
-  "libraryImportFailedBoard": "تعذّر استيراد اللوحة",
-  "libraryImportFailedBoards": "تعذّر استيراد اللوحات",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "جارٍ استيراد اللوحة...",
+        "countPlural=*": "جارٍ استيراد اللوحات..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "تم استيراد اللوحة",
+        "countPlural=*": "تم استيراد اللوحات"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "تعذّر استيراد اللوحة",
+        "countPlural=*": "تعذّر استيراد اللوحات"
+      }
+    }
+  ],
   "libraryInfo": "معلومات",
   "libraryDelete": "حذف",
   "libraryCancel": "إلغاء",

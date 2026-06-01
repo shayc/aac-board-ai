@@ -22,33 +22,22 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       return;
     }
 
-    const isPlural = files.length > 1;
-    const pickMessage = (single: string, plural: string) =>
-      isPlural ? plural : single;
+    const count = files.length;
 
     showSnackbar({
-      message: pickMessage(
-        m.libraryImportingBoard(),
-        m.libraryImportingBoards(),
-      ),
+      message: m.libraryImportingBoards({ count }),
     });
 
     try {
       await importBoardFiles(files);
 
       showSnackbar({
-        message: pickMessage(
-          m.libraryImportedBoard(),
-          m.libraryImportedBoards(),
-        ),
+        message: m.libraryImportedBoards({ count }),
         severity: "success",
       });
     } catch {
       showSnackbar({
-        message: pickMessage(
-          m.libraryImportFailedBoard(),
-          m.libraryImportFailedBoards(),
-        ),
+        message: m.libraryImportFailedBoards({ count }),
         severity: "error",
       });
     }

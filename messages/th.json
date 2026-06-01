@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "คลังว่างเปล่า",
   "libraryEmptyDescription": "นำเข้าบอร์ดสื่อสารเพื่อเริ่มต้น",
   "libraryImportBoards": "นำเข้าบอร์ด",
-  "libraryImportingBoard": "กำลังนำเข้าบอร์ด...",
-  "libraryImportingBoards": "กำลังนำเข้าบอร์ด...",
-  "libraryImportedBoard": "นำเข้าบอร์ดแล้ว",
-  "libraryImportedBoards": "นำเข้าบอร์ดแล้ว",
-  "libraryImportFailedBoard": "นำเข้าบอร์ดไม่สำเร็จ",
-  "libraryImportFailedBoards": "นำเข้าบอร์ดไม่สำเร็จ",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "กำลังนำเข้าบอร์ด...",
+        "countPlural=*": "กำลังนำเข้าบอร์ด..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "นำเข้าบอร์ดแล้ว",
+        "countPlural=*": "นำเข้าบอร์ดแล้ว"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "นำเข้าบอร์ดไม่สำเร็จ",
+        "countPlural=*": "นำเข้าบอร์ดไม่สำเร็จ"
+      }
+    }
+  ],
   "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",
   "libraryCancel": "ยกเลิก",

@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "A könyvtár üres",
   "libraryEmptyDescription": "Az induláshoz importálj kommunikációs táblákat.",
   "libraryImportBoards": "Táblák importálása",
-  "libraryImportingBoard": "Tábla importálása...",
-  "libraryImportingBoards": "Táblák importálása...",
-  "libraryImportedBoard": "Tábla importálva",
-  "libraryImportedBoards": "Táblák importálva",
-  "libraryImportFailedBoard": "A tábla importálása nem sikerült",
-  "libraryImportFailedBoards": "A táblák importálása nem sikerült",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tábla importálása...",
+        "countPlural=*": "Táblák importálása..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tábla importálva",
+        "countPlural=*": "Táblák importálva"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "A tábla importálása nem sikerült",
+        "countPlural=*": "A táblák importálása nem sikerült"
+      }
+    }
+  ],
   "libraryInfo": "Információ",
   "libraryDelete": "Törlés",
   "libraryCancel": "Mégse",

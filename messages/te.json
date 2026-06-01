@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
   "libraryEmptyDescription": "ప్రారంభించడానికి సంభాషణ బోర్డులను దిగుమతి చేయండి.",
   "libraryImportBoards": "బోర్డులను దిగుమతి చేయి",
-  "libraryImportingBoard": "బోర్డు దిగుమతి అవుతోంది…",
-  "libraryImportingBoards": "బోర్డులు దిగుమతి అవుతున్నాయి…",
-  "libraryImportedBoard": "బోర్డు దిగుమతి చేయబడింది",
-  "libraryImportedBoards": "బోర్డులు దిగుమతి చేయబడ్డాయి",
-  "libraryImportFailedBoard": "బోర్డును దిగుమతి చేయలేకపోయాం",
-  "libraryImportFailedBoards": "బోర్డులను దిగుమతి చేయలేకపోయాం",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు దిగుమతి అవుతోంది…",
+        "countPlural=*": "బోర్డులు దిగుమతి అవుతున్నాయి…"
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు దిగుమతి చేయబడింది",
+        "countPlural=*": "బోర్డులు దిగుమతి చేయబడ్డాయి"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డును దిగుమతి చేయలేకపోయాం",
+        "countPlural=*": "బోర్డులను దిగుమతి చేయలేకపోయాం"
+      }
+    }
+  ],
   "libraryInfo": "సమాచారం",
   "libraryDelete": "తొలగించు",
   "libraryCancel": "రద్దు చేయి",

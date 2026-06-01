@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Kitaplık boş",
   "libraryEmptyDescription": "Başlamak için iletişim panoları içe aktarın.",
   "libraryImportBoards": "Panoları içe aktar",
-  "libraryImportingBoard": "Pano içe aktarılıyor...",
-  "libraryImportingBoards": "Panolar içe aktarılıyor...",
-  "libraryImportedBoard": "Pano içe aktarıldı",
-  "libraryImportedBoards": "Panolar içe aktarıldı",
-  "libraryImportFailedBoard": "Pano içe aktarılamadı",
-  "libraryImportFailedBoards": "Panolar içe aktarılamadı",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano içe aktarılıyor...",
+        "countPlural=*": "Panolar içe aktarılıyor..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano içe aktarıldı",
+        "countPlural=*": "Panolar içe aktarıldı"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano içe aktarılamadı",
+        "countPlural=*": "Panolar içe aktarılamadı"
+      }
+    }
+  ],
   "libraryInfo": "Bilgi",
   "libraryDelete": "Sil",
   "libraryCancel": "İptal",

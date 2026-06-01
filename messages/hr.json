@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za početak uvezite komunikacijske ploče.",
   "libraryImportBoards": "Uvezi ploče",
-  "libraryImportingBoard": "Uvoz ploče...",
-  "libraryImportingBoards": "Uvoz ploča...",
-  "libraryImportedBoard": "Ploča uvezena",
-  "libraryImportedBoards": "Ploče uvezene",
-  "libraryImportFailedBoard": "Ploču nije moguće uvesti",
-  "libraryImportFailedBoards": "Ploče nije moguće uvesti",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Uvoz ploče...",
+        "countPlural=*": "Uvoz ploča..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ploča uvezena",
+        "countPlural=*": "Ploče uvezene"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ploču nije moguće uvesti",
+        "countPlural=*": "Ploče nije moguće uvesti"
+      }
+    }
+  ],
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",
   "libraryCancel": "Odustani",

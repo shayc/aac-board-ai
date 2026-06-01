@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "La bibliothèque est vide",
   "libraryEmptyDescription": "Importez des tableaux de communication pour commencer.",
   "libraryImportBoards": "Importer des tableaux",
-  "libraryImportingBoard": "Importation du tableau...",
-  "libraryImportingBoards": "Importation des tableaux...",
-  "libraryImportedBoard": "Tableau importé",
-  "libraryImportedBoards": "Tableaux importés",
-  "libraryImportFailedBoard": "Impossible d'importer le tableau",
-  "libraryImportFailedBoards": "Impossible d'importer les tableaux",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Importation du tableau...",
+        "countPlural=*": "Importation des tableaux..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tableau importé",
+        "countPlural=*": "Tableaux importés"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Impossible d'importer le tableau",
+        "countPlural=*": "Impossible d'importer les tableaux"
+      }
+    }
+  ],
   "libraryInfo": "Infos",
   "libraryDelete": "Supprimer",
   "libraryCancel": "Annuler",

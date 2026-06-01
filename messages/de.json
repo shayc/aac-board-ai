@@ -7,12 +7,36 @@
   "libraryEmptyTitle": "Die Bibliothek ist leer",
   "libraryEmptyDescription": "Importiere Kommunikationstafeln, um loszulegen.",
   "libraryImportBoards": "Tafeln importieren",
-  "libraryImportingBoard": "Tafel wird importiert...",
-  "libraryImportingBoards": "Tafeln werden importiert...",
-  "libraryImportedBoard": "Tafel importiert",
-  "libraryImportedBoards": "Tafeln importiert",
-  "libraryImportFailedBoard": "Tafel konnte nicht importiert werden",
-  "libraryImportFailedBoards": "Tafeln konnten nicht importiert werden",
+  "libraryImportingBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tafel wird importiert...",
+        "countPlural=*": "Tafeln werden importiert..."
+      }
+    }
+  ],
+  "libraryImportedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tafel importiert",
+        "countPlural=*": "Tafeln importiert"
+      }
+    }
+  ],
+  "libraryImportFailedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tafel konnte nicht importiert werden",
+        "countPlural=*": "Tafeln konnten nicht importiert werden"
+      }
+    }
+  ],
   "libraryInfo": "Info",
   "libraryDelete": "Löschen",
   "libraryCancel": "Abbrechen",
