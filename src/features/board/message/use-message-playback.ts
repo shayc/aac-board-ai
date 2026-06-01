@@ -51,7 +51,6 @@ export function useMessagePlayback(
 
           case "speech": {
             const { tracker } = step;
-            setActivePartId(tracker.firstId);
             await speak(tracker.text, {
               signal,
               onBoundary: (charIndex) =>
