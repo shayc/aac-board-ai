@@ -3,13 +3,31 @@ import babel from "@rolldown/plugin-babel";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults } from "vitest/config";
+import {
+  CONTENT_DARK,
+  CONTENT_LIGHT,
+  SHELL_DARK,
+  SHELL_LIGHT,
+} from "./src/shared/theme/theme-colors";
+
+// Share theme-colors.ts with index.html's static styles instead of duplicating hex.
+const themeColorHtmlPlugin: Plugin = {
+  name: "theme-color-html",
+  transformIndexHtml: (html) =>
+    html
+      .replaceAll("__SHELL_LIGHT__", SHELL_LIGHT)
+      .replaceAll("__SHELL_DARK__", SHELL_DARK)
+      .replaceAll("__CONTENT_LIGHT__", CONTENT_LIGHT)
+      .replaceAll("__CONTENT_DARK__", CONTENT_DARK),
+};
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    themeColorHtmlPlugin,
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     paraglideVitePlugin({
@@ -27,8 +45,8 @@ export default defineConfig({
           "AAC Board AI helps people who can't speak communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
         start_url: "/",
         display: "standalone",
-        theme_color: "#222222",
-        background_color: "#222222",
+        theme_color: SHELL_DARK,
+        background_color: SHELL_DARK,
         icons: [
           {
             src: "pwa-192x192.png",

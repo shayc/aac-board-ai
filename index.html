@@ -14,6 +14,21 @@
       content="AAC Board AI helps people who can't speak communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device."
     />
 
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Injected from theme-colors.ts. Static so the Safari chrome (<body>) and
+         content surface (#root) are correct on first paint, before MUI's JS runs. -->
+    <style>
+      body {
+        margin: 0;
+        background-color: light-dark(__SHELL_LIGHT__, __SHELL_DARK__);
+      }
+      #root {
+        min-height: 100svh;
+        background-color: light-dark(__CONTENT_LIGHT__, __CONTENT_DARK__);
+      }
+    </style>
+
     <link rel="icon" type="image/svg+xml" href="/board.svg" />
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
   </head>
