@@ -114,6 +114,6 @@ While I'm thrilled if you find this code useful, this repository serves as my pe
 
 ---
 
-<footer align="center">
+<div align="center">
   <small>Designed by a Human. Assembled by AI.</small>
-</footer>
+</div>
