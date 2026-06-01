@@ -6,7 +6,31 @@ import {
 } from "@shared/testing/built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useSuggestions } from "./use-suggestions";
+import { phrasesFor, useSuggestions } from "./use-suggestions";
+
+describe("phrasesFor", () => {
+  test("returns the phrases when they were generated for the current text", () => {
+    expect(
+      phrasesFor("want eat", {
+        forText: "want eat",
+        phrases: ["I want to eat."],
+      }),
+    ).toEqual(["I want to eat."]);
+  });
+
+  test("returns empty once the text has moved on from what was generated", () => {
+    expect(
+      phrasesFor("want eat now", {
+        forText: "want eat",
+        phrases: ["I want to eat."],
+      }),
+    ).toEqual([]);
+  });
+
+  test("returns empty before anything has been generated", () => {
+    expect(phrasesFor("want eat", null)).toEqual([]);
+  });
+});
 
 describe("useSuggestions", () => {
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
@@ -149,5 +173,33 @@ describe("useSuggestions", () => {
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["corrected new"]);
     });
+  });
+
+  test("clears stale suggestions immediately when the text changes, before new ones resolve", async () => {
+    const resolvers = new Map<string, (result: ProofreadResult) => void>();
+    stubProofreader(
+      (input) =>
+        new Promise<ProofreadResult>((resolve) => {
+          resolvers.set(input, resolve);
+        }),
+    );
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result, rerender } = await renderHook(
+      ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
+      { initialProps: { text: "old" } },
+    );
+
+    await vi.waitFor(() => {
+      expect(resolvers.has("old")).toBe(true);
+    });
+    resolvers.get("old")?.(makeProofreadResult("corrected old"));
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["corrected old"]);
+    });
+
+    // Changing the message must drop the prior suggestions even while the next request is in flight.
+    await rerender({ text: "new" });
+    expect(result.current.phrases).toEqual([]);
   });
 });

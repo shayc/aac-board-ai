@@ -1,5 +1,10 @@
 import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
-import { useProofreader, useRewriter } from "@shayc/react-built-in-ai";
+import {
+  type ProofreaderHookReturn,
+  type RewriterHookReturn,
+  useProofreader,
+  useRewriter,
+} from "@shayc/react-built-in-ai";
 import { useEffect, useState } from "react";
 import type { SuggestionTone } from "./types";
 
@@ -32,6 +37,39 @@ function cleanSuggestions(
   return [...cleaned];
 }
 
+interface SuggestionEngines {
+  proofread?: ProofreaderHookReturn["proofread"];
+  rewrite?: RewriterHookReturn["rewrite"];
+}
+
+// Runs whichever engines are ready; an absent engine simply contributes nothing.
+async function generateSuggestions(
+  text: string,
+  { proofread, rewrite }: SuggestionEngines,
+  signal: AbortSignal,
+): Promise<string[]> {
+  const [proofreadResult, rewritten] = await Promise.all([
+    proofread?.(text, { signal }),
+    rewrite?.(text, { signal }),
+  ]);
+
+  return cleanSuggestions([proofreadResult?.correctedInput, rewritten]).filter(
+    (suggestion) => suggestion !== text,
+  );
+}
+
+export interface GeneratedSuggestions {
+  forText: string;
+  phrases: string[];
+}
+
+export function phrasesFor(
+  text: string,
+  generated: GeneratedSuggestions | null,
+): string[] {
+  return generated?.forText === text ? generated.phrases : [];
+}
+
 export function useSuggestions(text: string): UseSuggestionsReturn {
   const [sharedContext] = useAISharedContext();
   const [tone, setTone] = useState<SuggestionTone>("as-is");
@@ -51,7 +89,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const isProofreaderReady = proofreaderStatus === "ready";
   const isRewriterReady = rewriterStatus === "ready";
 
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [generated, setGenerated] = useState<GeneratedSuggestions | null>(null);
 
   useEffect(() => {
     if (!isProofreaderReady && !isRewriterReady) {
@@ -61,35 +99,29 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     const controller = new AbortController();
     const { signal } = controller;
 
-    const generateSuggestions = async () => {
-      try {
-        const [proofreadResult, rewritten] = await Promise.all([
-          isProofreaderReady ? proofread(text, { signal }) : undefined,
-          isRewriterReady ? rewrite(text, { signal }) : undefined,
-        ]);
-
-        if (signal.aborted) {
-          return;
-        }
-
-        setSuggestions(
-          cleanSuggestions([proofreadResult?.correctedInput, rewritten]).filter(
-            (suggestion) => suggestion !== text,
-          ),
-        );
-      } catch {
-        // Suggestion failures (engine error, or abort from cleanup) leave the prior suggestions in place.
-      }
+    const engines: SuggestionEngines = {
+      proofread: isProofreaderReady ? proofread : undefined,
+      rewrite: isRewriterReady ? rewrite : undefined,
     };
 
-    void generateSuggestions();
+    void (async () => {
+      try {
+        const phrases = await generateSuggestions(text, engines, signal);
+
+        if (!signal.aborted) {
+          setGenerated({ forText: text, phrases });
+        }
+      } catch {
+        // Aborted (message changed) or engine error: the prior result stays tagged to its old text and is gated out by phrasesFor.
+      }
+    })();
 
     return () => controller.abort();
   }, [text, isProofreaderReady, isRewriterReady, proofread, rewrite]);
 
   return {
     isSupported,
-    phrases: suggestions,
+    phrases: phrasesFor(text, generated),
     tone,
     setTone,
   };
