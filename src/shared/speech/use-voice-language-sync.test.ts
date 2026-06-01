@@ -1,7 +1,14 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { getSpeechConfig, setVoiceURI } from "./speech-store";
 import { useVoiceLanguageSync } from "./use-voice-language-sync";
+
+function stubLanguages(languages: readonly string[]): void {
+  Object.defineProperty(navigator, "languages", {
+    configurable: true,
+    get: () => languages,
+  });
+}
 
 function makeVoice(
   lang: string,
@@ -25,6 +32,11 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
     setVoiceURI(null);
+  });
+
+  afterEach(() => {
+    // Drop the instance override so the real navigator.languages getter returns.
+    Reflect.deleteProperty(navigator, "languages");
   });
 
   test("selects a voice in the new language when language changes", async () => {
@@ -64,6 +76,66 @@ describe("useVoiceLanguageSync", () => {
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("en-default");
+    });
+  });
+
+  test("prefers the language's canonical region over the browser default flag", async () => {
+    stubLanguages(["en-US"]);
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("fr-CA", "fr-ca-default", true),
+      makeVoice("fr-FR", "fr-fr-voice"),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+
+    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+
+    await vi.waitFor(() => {
+      expect(getSpeechConfig().voiceURI).toBe("fr-fr-voice");
+    });
+  });
+
+  test("prefers the user's OS region over the language's home region", async () => {
+    stubLanguages(["fr-CA"]);
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("fr-FR", "fr-fr-voice"),
+      makeVoice("fr-CA", "fr-ca-voice"),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+
+    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+
+    await vi.waitFor(() => {
+      expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
+    });
+  });
+
+  test("skips a region-less preferred locale and uses the next one for the language", async () => {
+    stubLanguages(["fr", "fr-CA"]);
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("fr-FR", "fr-fr-voice"),
+      makeVoice("fr-CA", "fr-ca-voice"),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+
+    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+
+    await vi.waitFor(() => {
+      expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
+    });
+  });
+
+  test("falls back to the default voice when no voice matches the canonical region", async () => {
+    stubLanguages(["en-US"]);
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("fr-CA", "fr-ca-voice"),
+      makeVoice("fr-BE", "fr-be-default", true),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+
+    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+
+    await vi.waitFor(() => {
+      expect(getSpeechConfig().voiceURI).toBe("fr-be-default");
     });
   });
 });

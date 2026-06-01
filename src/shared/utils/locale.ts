@@ -28,6 +28,30 @@ export function getLanguageCode(locale: string): string {
 }
 
 /**
+ * Returns the uppercase region subtag of a locale code, or undefined when
+ * none is present (e.g. "fr-CA" → "CA", "fr" → undefined).
+ */
+export function getRegionCode(locale: string): string | undefined {
+  try {
+    return parseLocale(locale).region;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Returns the region most associated with a language via CLDR likely-subtags
+ * (e.g. "fr" → "FR", "en" → "US"). Undefined for unrecognized input.
+ */
+export function getPreferredRegion(language: string): string | undefined {
+  try {
+    return parseLocale(language).maximize().region;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Returns the writing direction for a BCP-47 locale code.
  * Falls back to "ltr" for structurally invalid input; unknown
  * but well-formed codes default to "ltr" via Intl.
