@@ -35,12 +35,12 @@ export function Tile({
         display: "grid",
         alignItems: "stretch",
         justifyContent: "stretch",
-        textTransform: "none",
         padding: "4px 4px 0 4px",
-        position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",
+        position: "relative",
+        textTransform: "none",
         color: backgroundColor
           ? getReadableTextColor(backgroundColor)
           : "inherit",
@@ -48,10 +48,12 @@ export function Tile({
         transition: theme.transitions.create("background-color", {
           duration: theme.transitions.duration.short,
         }),
-        "&:hover": {
-          backgroundColor: backgroundColor
-            ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
-            : undefined,
+        "@media (hover: hover)": {
+          "&:hover": {
+            backgroundColor: backgroundColor
+              ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
+              : undefined,
+          },
         },
         "&:active": {
           backgroundColor: backgroundColor
