@@ -10,7 +10,7 @@ import { ExternalLink } from "@shared/components/external-link";
 
 export const Component = function AboutPage() {
   return (
-    <PageContainer maxWidth="sm">
+    <PageContainer>
       <PageTitle>{m.aboutHeading()}</PageTitle>
 
       <Stack spacing={{ xs: 3, sm: 4 }}>

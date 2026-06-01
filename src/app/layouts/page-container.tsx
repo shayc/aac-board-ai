@@ -8,7 +8,7 @@ export interface PageContainerProps {
 
 export function PageContainer({
   children,
-  maxWidth = "md",
+  maxWidth = "sm",
 }: PageContainerProps) {
   return (
     <Container
