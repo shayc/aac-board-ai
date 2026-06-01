@@ -35,12 +35,12 @@ export function Tile({
         display: "grid",
         alignItems: "stretch",
         justifyContent: "stretch",
-        textTransform: "none",
         padding: "4px 4px 0 4px",
-        position: "relative",
         border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",
+        position: "relative",
+        textTransform: "none",
         color: backgroundColor
           ? getReadableTextColor(backgroundColor)
           : "inherit",
