@@ -8,9 +8,9 @@ import {
 } from "vitest";
 import { speak } from "./speech-store";
 
-// A live speechSynthesis is required here, so these tests live apart from the
-// no-API suite — that one needs the module first imported while the global is
-// stubbed away, which any import in the same file would defeat.
+// Kept separate from the no-API suite: that suite must import speech-store only
+// after stubbing speechSynthesis away, which a static import in a shared file
+// would defeat.
 describe("speak() under cancellation", () => {
   let speakSpy: MockInstance<SpeechSynthesis["speak"]>;
   let cancelSpy: MockInstance<SpeechSynthesis["cancel"]>;
