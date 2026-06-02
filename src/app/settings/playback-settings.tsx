@@ -11,15 +11,13 @@ export function PlaybackSettings() {
 
   return (
     <FormControlLabel
+      label={m.playbackHighlight()}
       control={
         <Switch
           checked={highlightActivePart}
           onChange={(event) => setHighlightActivePart(event.target.checked)}
         />
       }
-      label={m.playbackHighlight()}
-      labelPlacement="start"
-      sx={{ justifyContent: "space-between" }}
     />
   );
 }
