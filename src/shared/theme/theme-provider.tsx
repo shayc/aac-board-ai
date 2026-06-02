@@ -26,6 +26,8 @@ const rtlCache = createCache({
 const themeOptions = {
   cssVariables: {
     colorSchemeSelector: "class",
+    // index.html owns color-scheme; MUI only emits the palette vars.
+    disableCssColorScheme: true,
   },
   colorSchemes: {
     light: { palette: { background: { default: SHELL_LIGHT } } },
@@ -52,14 +54,12 @@ const themeOptions = {
         root: ({ theme }) => {
           const palette = theme.vars?.palette ?? theme.palette;
 
+          // Stock AppBar paints the primary color; repaint it as the shell surface.
           return {
-            backgroundColor: SHELL_LIGHT,
+            backgroundColor: palette.background.default,
             color: palette.text.primary,
             backgroundImage: "none",
             borderBottom: `1px solid ${palette.divider}`,
-            ...theme.applyStyles("dark", {
-              backgroundColor: SHELL_DARK,
-            }),
           };
         },
       },
