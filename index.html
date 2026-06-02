@@ -15,9 +15,13 @@
 
     <meta name="color-scheme" content="light dark" />
 
-    <!-- Injected from theme-colors.ts. Static so the Safari chrome (<body>) and
-         content surface (#root) are correct on first paint, before MUI's JS runs. -->
     <style>
+      html.light {
+        color-scheme: light;
+      }
+      html.dark {
+        color-scheme: dark;
+      }
       body {
         margin: 0;
         background-color: light-dark(__SHELL_LIGHT__, __SHELL_DARK__);
@@ -27,6 +31,18 @@
         background-color: light-dark(__CONTENT_LIGHT__, __CONTENT_DARK__);
       }
     </style>
+
+    <!-- Set the theme class before first paint so MUI adopts it without a flash. -->
+    <script>
+      {
+        const mode = localStorage.getItem("mui-mode") ?? "system";
+        const dark =
+          mode === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+            : mode === "dark";
+        document.documentElement.classList.add(dark ? "dark" : "light");
+      }
+    </script>
 
     <link rel="icon" type="image/svg+xml" href="/board.svg" />
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />
