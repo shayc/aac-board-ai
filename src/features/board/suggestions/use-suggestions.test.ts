@@ -6,32 +6,7 @@ import {
 } from "@shared/testing/built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { phrasesFor, useSuggestions } from "./use-suggestions";
-
-describe("phrasesFor", () => {
-  test("derives the cleaned phrases from each engine slot for the current text", () => {
-    expect(
-      phrasesFor("want eat", {
-        forText: "want eat",
-        corrected: "I want to eat.",
-        rewritten: "I would like to eat.",
-      }),
-    ).toEqual(["I want to eat.", "I would like to eat."]);
-  });
-
-  test("returns empty once the text has moved on from what was generated", () => {
-    expect(
-      phrasesFor("want eat now", {
-        forText: "want eat",
-        corrected: "I want to eat.",
-      }),
-    ).toEqual([]);
-  });
-
-  test("returns empty before anything has been generated", () => {
-    expect(phrasesFor("want eat", null)).toEqual([]);
-  });
-});
+import { useSuggestions } from "./use-suggestions";
 
 describe("useSuggestions", () => {
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
@@ -143,6 +118,32 @@ describe("useSuggestions", () => {
     await vi.waitFor(() => {
       const tones = create.mock.calls.map((call) => call.at(0)?.tone);
       expect(tones).toContain("more-formal");
+    });
+  });
+
+  test("drops the stale rewrite when the tone changes, until the new tone resolves", async () => {
+    const pending: ((rewritten: string) => void)[] = [];
+    stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
+    stubBuiltInAIUnsupported("Proofreader");
+
+    const { result } = await renderHook(() => useSuggestions("hi"));
+
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+    pending[0]("casual hi");
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["casual hi"]);
+    });
+
+    // Switching tone must drop the prior rewrite while the new one is in flight.
+    result.current.setTone("more-formal");
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual([]);
+    });
+
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
+    pending[1]("formal hi");
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["formal hi"]);
     });
   });
 
