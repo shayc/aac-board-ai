@@ -95,6 +95,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
           <SuggestionBar
             suggestions={suggestions.phrases}
             tone={suggestions.tone}
+            canChangeTone={suggestions.isRewriterSupported}
             onToneChange={suggestions.setTone}
             onSuggestionClick={message.setFromText}
           />

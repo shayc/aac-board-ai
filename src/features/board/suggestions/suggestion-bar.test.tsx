@@ -15,7 +15,12 @@ describe("SuggestionBar", () => {
     const suggestions = ["Hello", "How are you?", "Thank you"];
 
     const screen = await render(
-      <SuggestionBar suggestions={suggestions} tone="as-is" {...handlers} />,
+      <SuggestionBar
+        suggestions={suggestions}
+        tone="as-is"
+        canChangeTone
+        {...handlers}
+      />,
     );
 
     for (const suggestion of suggestions) {
@@ -30,7 +35,12 @@ describe("SuggestionBar", () => {
     const suggestions = ["Hello", "Goodbye"];
 
     const screen = await render(
-      <SuggestionBar suggestions={suggestions} tone="as-is" {...handlers} />,
+      <SuggestionBar
+        suggestions={suggestions}
+        tone="as-is"
+        canChangeTone
+        {...handlers}
+      />,
     );
 
     const firstChip = screen.getByRole("button", { name: "Hello" });
@@ -44,5 +54,39 @@ describe("SuggestionBar", () => {
 
     expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
     expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(2);
+  });
+
+  test("shows the tone selector when tone can be changed", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <SuggestionBar
+        suggestions={["Hello"]}
+        tone="as-is"
+        canChangeTone
+        {...handlers}
+      />,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "direct tone" }))
+      .toBeVisible();
+  });
+
+  test("hides the tone selector when tone cannot be changed", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <SuggestionBar
+        suggestions={["Hello"]}
+        tone="as-is"
+        canChangeTone={false}
+        {...handlers}
+      />,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "direct tone" }))
+      .not.toBeInTheDocument();
   });
 });

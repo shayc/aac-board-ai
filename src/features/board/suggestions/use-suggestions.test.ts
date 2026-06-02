@@ -9,20 +9,21 @@ import { renderHook } from "vitest-browser-react";
 import { phrasesFor, useSuggestions } from "./use-suggestions";
 
 describe("phrasesFor", () => {
-  test("returns the phrases when they were generated for the current text", () => {
+  test("derives the cleaned phrases from each engine slot for the current text", () => {
     expect(
       phrasesFor("want eat", {
         forText: "want eat",
-        phrases: ["I want to eat."],
+        corrected: "I want to eat.",
+        rewritten: "I would like to eat.",
       }),
-    ).toEqual(["I want to eat."]);
+    ).toEqual(["I want to eat.", "I would like to eat."]);
   });
 
   test("returns empty once the text has moved on from what was generated", () => {
     expect(
       phrasesFor("want eat now", {
         forText: "want eat",
-        phrases: ["I want to eat."],
+        corrected: "I want to eat.",
       }),
     ).toEqual([]);
   });
@@ -44,7 +45,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("reports supported when only one capability is available", async () => {
+  test("reports per-engine support when only one capability is available", async () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
@@ -52,6 +53,8 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
+      expect(result.current.isProofreaderSupported).toBe(true);
+      expect(result.current.isRewriterSupported).toBe(false);
     });
   });
 
