@@ -5,6 +5,8 @@ import type { SuggestionTone } from "./types";
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
+  isProofreaderSupported: boolean;
+  isRewriterSupported: boolean;
   phrases: string[];
   tone: SuggestionTone;
   setTone: (tone: SuggestionTone) => void;
@@ -120,6 +122,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   return {
     isSupported,
+    isProofreaderSupported,
+    isRewriterSupported,
     phrases: phrasesFor(text, generated),
     tone,
     setTone,

@@ -7,6 +7,7 @@ import type { SuggestionTone } from "./types";
 export interface SuggestionBarProps {
   suggestions: string[];
   tone: SuggestionTone;
+  canChangeTone: boolean;
   onToneChange: (tone: SuggestionTone) => void;
   onSuggestionClick: (suggestion: string) => void;
 }
@@ -14,6 +15,7 @@ export interface SuggestionBarProps {
 export function SuggestionBar({
   suggestions,
   tone,
+  canChangeTone,
   onToneChange,
   onSuggestionClick,
 }: SuggestionBarProps) {
@@ -39,7 +41,7 @@ export function SuggestionBar({
         ))}
       </Box>
 
-      <ToneSelector tone={tone} onChange={onToneChange} />
+      {canChangeTone && <ToneSelector tone={tone} onChange={onToneChange} />}
     </Stack>
   );
 }

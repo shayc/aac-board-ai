@@ -45,7 +45,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("reports supported when only one capability is available", async () => {
+  test("reports per-engine support when only one capability is available", async () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
@@ -53,6 +53,8 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
+      expect(result.current.isProofreaderSupported).toBe(true);
+      expect(result.current.isRewriterSupported).toBe(false);
     });
   });
 
