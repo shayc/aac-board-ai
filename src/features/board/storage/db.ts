@@ -36,7 +36,6 @@ export interface UpsertBoardSetInput {
   setId: string;
   name: string;
   rootBoardId: string;
-  boardCount?: number;
   author?: string;
   description?: string;
   license?: string;
@@ -147,7 +146,7 @@ export async function upsertBoardSet(
     name: input.name,
     rootBoardId: input.rootBoardId,
     updatedAt: Date.now(),
-    boardCount: input.boardCount ?? existing?.boardCount ?? 0,
+    boardCount: existing?.boardCount ?? 0,
     author: input.author ?? existing?.author,
     description: input.description ?? existing?.description,
     license: input.license ?? existing?.license,

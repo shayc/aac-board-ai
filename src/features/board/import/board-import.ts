@@ -1,6 +1,5 @@
 import { htmlToText } from "@shared/utils/html";
 import { normalizeLocale } from "@shared/utils/locale";
-import { randomId } from "@shared/utils/random-id";
 import { lookup } from "mrmime";
 import {
   loadOBF,
@@ -17,7 +16,6 @@ import type {
   UpsertBoardSetInput,
 } from "../storage/db";
 import {
-  listBoardSets,
   putAssets,
   putBoards,
   upsertBoardSet,
@@ -44,20 +42,15 @@ export async function writeBoardSetFiles(
   const fileList = Array.isArray(files) ? files : [files];
 
   return withBoardsDB(async (db) => {
-    // A board set's identity is a fresh random id, so re-importing never
-    // silently overwrites an unrelated set. Names can still collide, so we
-    // disambiguate display names against existing sets and earlier files in
-    // this batch (e.g. "Core" → "Core (2)").
-    const takenNames = new Set(
-      (await listBoardSets(db)).map((set) => set.name),
-    );
     const results: ImportResult[] = [];
 
     for (const file of fileList) {
+      const setId = deriveSetId(file.name);
+
       if (file.name.toLowerCase().endsWith(".obz")) {
-        results.push(await importOBZFile(db, file, takenNames));
+        results.push(await importOBZFile(db, file, setId));
       } else {
-        results.push(await importOBFFile(db, file, takenNames));
+        results.push(await importOBFFile(db, file, setId));
       }
     }
 
@@ -65,50 +58,27 @@ export async function writeBoardSetFiles(
   });
 }
 
-function reserveUniqueName(base: string, takenNames: Set<string>): string {
-  let name = base;
-  for (let suffix = 2; takenNames.has(name); suffix++) {
-    name = `${base} (${suffix})`;
-  }
-
-  takenNames.add(name);
-
-  return name;
-}
-
 async function importOBZFile(
   db: BoardsDB,
   file: File,
-  takenNames: Set<string>,
+  setId: string,
 ): Promise<ImportResult> {
-  const setId = randomId();
   const { manifest, boards, resources } = await loadOBZ(file);
   const boardPathToId = buildBoardPathIndex(manifest);
 
   const rootBoardId = resolveRootBoardId(manifest, boardPathToId);
   const rootBoard = boards.get(rootBoardId);
 
-  const boardRecords = buildBoardRecords(boards, boardPathToId);
-  const assetRecords = buildAssetRecords(resources);
-  const name = reserveUniqueName(rootBoard?.name ?? file.name, takenNames);
+  await upsertBoardSet(
+    db,
+    buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
+  );
+  await putBoards(db, setId, buildBoardRecords(boards, boardPathToId));
 
-  // Write the boardSet record last: listBoardSets reads only that store, so a
-  // failure mid-import leaves nothing visible rather than a board whose
-  // pictograms never landed.
+  const assetRecords = buildAssetRecords(resources);
   if (assetRecords.length > 0) {
     await putAssets(db, setId, assetRecords);
   }
-  await putBoards(db, setId, boardRecords);
-  await upsertBoardSet(
-    db,
-    buildBoardSetInput(
-      setId,
-      rootBoard,
-      rootBoardId,
-      name,
-      boardRecords.length,
-    ),
-  );
 
   return { setId, boardId: rootBoardId };
 }
@@ -164,14 +134,12 @@ function buildBoardSetInput(
   setId: string,
   board: OBFBoard | undefined,
   rootBoardId: string,
-  name: string,
-  boardCount: number,
+  fallbackSetName: string,
 ): UpsertBoardSetInput {
   return {
     setId,
-    name,
+    name: board?.name ?? fallbackSetName,
     rootBoardId,
-    boardCount,
     author: board?.license?.author_name,
     description: board?.description_html
       ? htmlToText(board.description_html)
@@ -186,13 +154,15 @@ function buildBoardSetInput(
 async function importOBFFile(
   db: BoardsDB,
   file: File,
-  takenNames: Set<string>,
+  setId: string,
 ): Promise<ImportResult> {
-  const setId = randomId();
   const board = await loadOBF(file);
-  const name = reserveUniqueName(board.name ?? file.name, takenNames);
 
-  // boardSet record written last; see importOBZFile.
+  await upsertBoardSet(
+    db,
+    buildBoardSetInput(setId, board, board.id, file.name),
+  );
+
   await putBoards(db, setId, [
     {
       boardId: board.id,
@@ -200,7 +170,10 @@ async function importOBFFile(
       obf: board,
     },
   ]);
-  await upsertBoardSet(db, buildBoardSetInput(setId, board, board.id, name, 1));
 
   return { setId, boardId: board.id };
+}
+
+function deriveSetId(filename: string): string {
+  return filename.replace(/\.(obz|obf)$/i, "").toLowerCase();
 }
