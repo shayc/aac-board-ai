@@ -10,17 +10,11 @@ import {
 import { resolveLoadBoardPaths } from "../obf/obf-to-board";
 import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {
-  BoardsDB,
   UpsertAssetInput,
   UpsertBoardInput,
   UpsertBoardSetInput,
 } from "../storage/db";
-import {
-  putAssets,
-  putBoards,
-  upsertBoardSet,
-  withBoardsDB,
-} from "../storage/db";
+import { putAssets, putBoards, upsertBoardSet } from "../storage/db";
 
 export interface ImportResult {
   setId: string;
@@ -40,29 +34,22 @@ export async function writeBoardSetFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
+  const results: ImportResult[] = [];
 
-  return withBoardsDB(async (db) => {
-    const results: ImportResult[] = [];
+  for (const file of fileList) {
+    const setId = deriveSetId(file.name);
 
-    for (const file of fileList) {
-      const setId = deriveSetId(file.name);
-
-      if (file.name.toLowerCase().endsWith(".obz")) {
-        results.push(await importOBZFile(db, file, setId));
-      } else {
-        results.push(await importOBFFile(db, file, setId));
-      }
+    if (file.name.toLowerCase().endsWith(".obz")) {
+      results.push(await importOBZFile(file, setId));
+    } else {
+      results.push(await importOBFFile(file, setId));
     }
+  }
 
-    return results;
-  });
+  return results;
 }
 
-async function importOBZFile(
-  db: BoardsDB,
-  file: File,
-  setId: string,
-): Promise<ImportResult> {
+async function importOBZFile(file: File, setId: string): Promise<ImportResult> {
   const { manifest, boards, resources } = await loadOBZ(file);
   const boardPathToId = buildBoardPathIndex(manifest);
 
@@ -70,14 +57,13 @@ async function importOBZFile(
   const rootBoard = boards.get(rootBoardId);
 
   await upsertBoardSet(
-    db,
     buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
   );
-  await putBoards(db, setId, buildBoardRecords(boards, boardPathToId));
+  await putBoards(setId, buildBoardRecords(boards, boardPathToId));
 
   const assetRecords = buildAssetRecords(resources);
   if (assetRecords.length > 0) {
-    await putAssets(db, setId, assetRecords);
+    await putAssets(setId, assetRecords);
   }
 
   return { setId, boardId: rootBoardId };
@@ -151,19 +137,12 @@ function buildBoardSetInput(
   };
 }
 
-async function importOBFFile(
-  db: BoardsDB,
-  file: File,
-  setId: string,
-): Promise<ImportResult> {
+async function importOBFFile(file: File, setId: string): Promise<ImportResult> {
   const board = await loadOBF(file);
 
-  await upsertBoardSet(
-    db,
-    buildBoardSetInput(setId, board, board.id, file.name),
-  );
+  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, file.name));
 
-  await putBoards(db, setId, [
+  await putBoards(setId, [
     {
       boardId: board.id,
       name: board.name ?? board.id,

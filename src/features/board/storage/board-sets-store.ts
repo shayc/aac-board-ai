@@ -2,7 +2,6 @@ import { createExternalStore } from "@shared/utils/external-store";
 import {
   deleteBoardSet as deleteBoardSetRecord,
   listBoardSets,
-  withBoardsDB,
   type BoardSetRecord,
 } from "./db";
 
@@ -28,7 +27,7 @@ let pendingLoad: Promise<void> | null = null;
 
 async function loadBoardSets(): Promise<void> {
   try {
-    const boardSets = await withBoardsDB((db) => listBoardSets(db));
+    const boardSets = await listBoardSets();
     store.setState({ boardSets, isLoading: false, error: null });
     hasLoaded = true;
   } catch (error) {
@@ -83,6 +82,6 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function deleteBoardSet(setId: string): Promise<void> {
-  await withBoardsDB((db) => deleteBoardSetRecord(db, setId));
+  await deleteBoardSetRecord(setId);
   await notifyBoardSetsChanged();
 }

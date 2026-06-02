@@ -1,5 +1,4 @@
 export {
-  openCleanBoardsDB,
   resetBoardsDB,
   seedBoardSets,
   type SeedBoardSet,

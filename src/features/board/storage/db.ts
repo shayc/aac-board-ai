@@ -100,8 +100,32 @@ function validateId(id: string, fieldName: string): void {
   }
 }
 
-export async function openBoardsDB(): Promise<BoardsDB> {
-  const db = await openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
+let connection: Promise<BoardsDB> | null = null;
+
+// One long-lived connection per page: callers reach the store through these
+// functions, not a passed-in handle. A failed open clears the cache so the
+// next call retries rather than handing back the same rejected promise.
+export function getBoardsDB(): Promise<BoardsDB> {
+  connection ??= openConnection().catch((error: unknown) => {
+    connection = null;
+    throw error;
+  });
+
+  return connection;
+}
+
+export async function closeBoardsDB(): Promise<void> {
+  const pending = connection;
+  connection = null;
+  try {
+    (await pending)?.close();
+  } catch {
+    // Open never succeeded — nothing to close.
+  }
+}
+
+function openConnection(): Promise<BoardsDB> {
+  return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db) {
       const boardSets = db.createObjectStore("boardSets", { keyPath: "setId" });
       boardSets.createIndex("byUpdatedAt", "updatedAt");
@@ -118,26 +142,13 @@ export async function openBoardsDB(): Promise<BoardsDB> {
       assets.createIndex("bySetIdAndMediaId", ["setId", "mediaId"]);
     },
   });
-
-  return db;
-}
-
-export async function withBoardsDB<T>(
-  operation: (db: BoardsDB) => Promise<T>,
-): Promise<T> {
-  const db = await openBoardsDB();
-  try {
-    return await operation(db);
-  } finally {
-    db.close();
-  }
 }
 
 export async function upsertBoardSet(
-  db: BoardsDB,
   input: UpsertBoardSetInput,
 ): Promise<void> {
   validateId(input.setId, "setId");
+  const db = await getBoardsDB();
   const tx = db.transaction("boardSets", "readwrite");
   const existing = await tx.store.get(input.setId);
 
@@ -160,15 +171,16 @@ export async function upsertBoardSet(
 }
 
 export async function getBoardSet(
-  db: BoardsDB,
   setId: string,
 ): Promise<BoardSetRecord | undefined> {
   validateId(setId, "setId");
+  const db = await getBoardsDB();
 
   return db.get("boardSets", setId);
 }
 
-export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
+export async function listBoardSets(): Promise<BoardSetRecord[]> {
+  const db = await getBoardsDB();
   const tx = db.transaction("boardSets", "readonly");
   const index = tx.store.index("byUpdatedAt");
 
@@ -185,11 +197,9 @@ export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   return boardSets;
 }
 
-export async function deleteBoardSet(
-  db: BoardsDB,
-  setId: string,
-): Promise<void> {
+export async function deleteBoardSet(setId: string): Promise<void> {
   validateId(setId, "setId");
+  const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
   // The [] upper bound exploits IDB key ordering — arrays sort after strings,
@@ -203,11 +213,11 @@ export async function deleteBoardSet(
 }
 
 export async function putBoards(
-  db: BoardsDB,
   setId: string,
   boards: UpsertBoardInput[],
 ): Promise<void> {
   validateId(setId, "setId");
+  const db = await getBoardsDB();
   const tx = db.transaction(["boards", "boardSets"], "readwrite");
   const boardStore = tx.objectStore("boards");
 
@@ -233,18 +243,17 @@ export async function putBoards(
 }
 
 export async function getBoard(
-  db: BoardsDB,
   setId: string,
   boardId: string,
 ): Promise<BoardRecord | undefined> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
+  const db = await getBoardsDB();
 
   return db.get("boards", [setId, boardId]);
 }
 
 export async function updateBoardStrings(
-  db: BoardsDB,
   setId: string,
   boardId: string,
   locale: string,
@@ -252,6 +261,7 @@ export async function updateBoardStrings(
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
+  const db = await getBoardsDB();
   const tx = db.transaction("boards", "readwrite");
   const record = await tx.store.get([setId, boardId]);
 
@@ -269,11 +279,11 @@ export async function updateBoardStrings(
 }
 
 export async function putAssets(
-  db: BoardsDB,
   setId: string,
   assets: UpsertAssetInput[],
 ): Promise<void> {
   validateId(setId, "setId");
+  const db = await getBoardsDB();
   const tx = db.transaction(["assets", "boardSets"], "readwrite");
   const assetStore = tx.objectStore("assets");
 
@@ -301,11 +311,11 @@ export async function putAssets(
 }
 
 export async function getAssetBlob(
-  db: BoardsDB,
   setId: string,
   path: string,
 ): Promise<Blob | undefined> {
   validateId(setId, "setId");
+  const db = await getBoardsDB();
   const cleanPath = normalizePath(path);
   const asset = await db.get("assets", [setId, cleanPath]);
 
