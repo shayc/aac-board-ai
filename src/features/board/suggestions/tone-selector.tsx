@@ -12,6 +12,12 @@ export interface ToneSelectorProps {
   onChange: (tone: SuggestionTone) => void;
 }
 
+const TONE_VALUES = {
+  direct: "as-is",
+  professional: "more-formal",
+  friendly: "more-casual",
+} as const satisfies Record<string, SuggestionTone>;
+
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
@@ -31,19 +37,25 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
       onChange={handleChange}
     >
       <Tooltip title={m.toneDirect()}>
-        <ToggleButton value="as-is" aria-label={m.toneDirect()}>
+        <ToggleButton value={TONE_VALUES.direct} aria-label={m.toneDirect()}>
           <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title={m.toneProfessional()}>
-        <ToggleButton value="more-formal" aria-label={m.toneProfessional()}>
+        <ToggleButton
+          value={TONE_VALUES.professional}
+          aria-label={m.toneProfessional()}
+        >
           <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title={m.toneFriendly()}>
-        <ToggleButton value="more-casual" aria-label={m.toneFriendly()}>
+        <ToggleButton
+          value={TONE_VALUES.friendly}
+          aria-label={m.toneFriendly()}
+        >
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
