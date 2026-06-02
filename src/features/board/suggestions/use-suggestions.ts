@@ -42,7 +42,6 @@ interface SuggestionEngines {
   rewrite?: RewriterHookReturn["rewrite"];
 }
 
-// Runs whichever engines are ready; an absent engine simply contributes nothing.
 async function generateSuggestions(
   text: string,
   { proofread, rewrite }: SuggestionEngines,
@@ -58,7 +57,7 @@ async function generateSuggestions(
   );
 }
 
-export interface GeneratedSuggestions {
+interface GeneratedSuggestions {
   forText: string;
   phrases: string[];
 }
@@ -92,17 +91,21 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const [generated, setGenerated] = useState<GeneratedSuggestions | null>(null);
 
   useEffect(() => {
-    if (!isProofreaderReady && !isRewriterReady) {
+    if (!text.trim()) {
       return;
     }
 
-    const controller = new AbortController();
-    const { signal } = controller;
+    if (!isProofreaderReady && !isRewriterReady) {
+      return;
+    }
 
     const engines: SuggestionEngines = {
       proofread: isProofreaderReady ? proofread : undefined,
       rewrite: isRewriterReady ? rewrite : undefined,
     };
+
+    const controller = new AbortController();
+    const { signal } = controller;
 
     void (async () => {
       try {
@@ -112,7 +115,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
           setGenerated({ forText: text, phrases });
         }
       } catch {
-        // Aborted (message changed) or engine error: the prior result stays tagged to its old text and is gated out by phrasesFor.
+        // Abort or engine error: keep the prior result as-is — phrasesFor surfaces it only while its text still matches.
       }
     })();
 
