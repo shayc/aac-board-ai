@@ -1,7 +1,7 @@
-import { StateLayout, type StateLayoutProps } from "./state-layout";
+import { StatusLayout, type StatusLayoutProps } from "./status-layout";
 
-export type EmptyStateProps = Omit<StateLayoutProps, "kind">;
+export type EmptyStateProps = Omit<StatusLayoutProps, "kind">;
 
 export function EmptyState(props: EmptyStateProps) {
-  return <StateLayout kind="empty" {...props} />;
+  return <StatusLayout kind="empty" {...props} />;
 }

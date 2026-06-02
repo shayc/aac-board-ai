@@ -3,21 +3,21 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { ReactNode } from "react";
 
-export interface StateLayoutProps {
+export interface StatusLayoutProps {
   kind: "empty" | "error";
+  icon?: ReactNode;
   title: string;
   description?: string;
-  icon?: ReactNode;
   action?: ReactNode;
 }
 
-export function StateLayout({
+export function StatusLayout({
   kind,
+  icon,
   title,
   description,
-  icon,
   action,
-}: StateLayoutProps) {
+}: StatusLayoutProps) {
   const iconColor = kind === "error" ? "error.main" : "text.disabled";
 
   return (
