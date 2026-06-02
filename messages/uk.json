@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Завантаження...",
   "boardLoading": "Завантаження дошки...",
   "boardNotFound": "Дошку не знайдено",
   "boardGridLabel": "Комунікаційна дошка",

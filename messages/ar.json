@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "جارٍ التحميل...",
   "boardLoading": "جارٍ تحميل اللوحة...",
   "boardNotFound": "اللوحة غير موجودة",
   "boardGridLabel": "لوحة تواصل",

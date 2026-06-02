@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Đang tải...",
   "boardLoading": "Đang tải bảng...",
   "boardNotFound": "Không tìm thấy bảng",
   "boardGridLabel": "Bảng giao tiếp",

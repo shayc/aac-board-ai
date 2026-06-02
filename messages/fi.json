@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Ladataan...",
   "boardLoading": "Ladataan taulua...",
   "boardNotFound": "Taulua ei löytynyt",
   "boardGridLabel": "Kommunikointitaulu",

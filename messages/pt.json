@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Carregando...",
   "boardLoading": "Carregando prancha...",
   "boardNotFound": "Prancha não encontrada",
   "boardGridLabel": "Prancha de comunicação",
