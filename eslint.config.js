@@ -45,13 +45,6 @@ export default defineConfig([
       globals: globals.browser,
     },
     rules: {
-      "padding-line-between-statements": [
-        "error",
-        // A blank line precedes each return.
-        { blankLine: "always", prev: "*", next: "return" },
-        // A blank line follows each block (if/for/switch/…).
-        { blankLine: "always", prev: ["block", "block-like"], next: "*" },
-      ],
       "react-x/no-array-index-key": "off",
       "no-restricted-imports": restrictImports(),
       curly: "error",
