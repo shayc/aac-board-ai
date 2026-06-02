@@ -9,24 +9,18 @@ export type ButtonIntent =
   | { kind: "runAction"; action: BoardAction };
 
 export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
-  const intents: ButtonIntent[] = [];
-
   const targetBoardId = button.loadBoard?.id;
   if (targetBoardId) {
-    intents.push({ kind: "navigate", targetBoardId });
-
-    return intents;
+    return [{ kind: "navigate", targetBoardId }];
   }
 
   if (button.actions?.length) {
-    for (const action of button.actions) {
-      intents.push({ kind: "runAction", action });
-    }
-
-    return intents;
+    return button.actions.map((action) => ({ kind: "runAction", action }));
   }
 
-  intents.push({ kind: "compose", content: toPartContent(button) });
+  const intents: ButtonIntent[] = [
+    { kind: "compose", content: toPartContent(button) },
+  ];
 
   if (button.soundSrc) {
     intents.push({ kind: "playAudio", src: button.soundSrc });
