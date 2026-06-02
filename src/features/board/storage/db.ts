@@ -172,8 +172,6 @@ export async function listBoardSets(db: BoardsDB): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardSets", "readonly");
   const index = tx.store.index("byUpdatedAt");
 
-  // Manual cursor iteration is required to retrieve records in reverse chronological order;
-  // IDB's getAll() does not support a direction argument.
   const boardSets: BoardSetRecord[] = [];
   let cursor = await index.openCursor(undefined, "prev");
 
@@ -194,7 +192,6 @@ export async function deleteBoardSet(
   validateId(setId, "setId");
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
 
-  // Three deletes share one transaction; tx.done commits them together.
   // The [] upper bound exploits IDB key ordering — arrays sort after strings,
   // so [setId, []] is the smallest key greater than every [setId, "..."].
   const setRange = IDBKeyRange.bound([setId], [setId, []]);

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Indlæser...",
   "boardLoading": "Indlæser tavle...",
   "boardNotFound": "Tavlen blev ikke fundet",
   "boardGridLabel": "Kommunikationstavle",

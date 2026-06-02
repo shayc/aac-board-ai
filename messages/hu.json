@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Betöltés...",
   "boardLoading": "Tábla betöltése...",
   "boardNotFound": "A tábla nem található",
   "boardGridLabel": "Kommunikációs tábla",

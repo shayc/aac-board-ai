@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "ஏற்றப்படுகிறது…",
   "boardLoading": "பலகை ஏற்றப்படுகிறது…",
   "boardNotFound": "பலகை கிடைக்கவில்லை",
   "boardGridLabel": "தொடர்பு பலகை",

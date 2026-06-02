@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Chargement...",
   "boardLoading": "Chargement du tableau...",
   "boardNotFound": "Tableau introuvable",
   "boardGridLabel": "Tableau de communication",

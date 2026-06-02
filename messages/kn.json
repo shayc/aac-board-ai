@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "boardLoading": "ಬೋರ್ಡ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "boardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",

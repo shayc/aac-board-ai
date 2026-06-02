@@ -122,8 +122,6 @@ export function speak(
   const utterance = buildUtterance(text);
 
   if (onBoundary) {
-    // A boundary can arrive after the signal aborts; drop it so a stopped
-    // utterance can't keep reporting progress.
     utterance.onboundary = (event) => {
       if (!signal?.aborted) {
         onBoundary(event.charIndex);
@@ -133,9 +131,6 @@ export function speak(
 
   utterance.onend = () => resolve();
   utterance.onerror = (event) => {
-    // Aborting (and each new speak()) calls cancel(), which ends a superseded
-    // utterance as "canceled" (still queued) or "interrupted" (mid-speech) —
-    // both expected, so resolve rather than reject.
     if (event.error === "canceled" || event.error === "interrupted") {
       resolve();
     } else {

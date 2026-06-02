@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Nalaganje...",
   "boardLoading": "Nalaganje table...",
   "boardNotFound": "Table ni mogoče najti",
   "boardGridLabel": "Komunikacijska tabla",

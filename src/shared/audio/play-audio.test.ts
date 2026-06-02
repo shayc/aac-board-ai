@@ -2,8 +2,6 @@ import { stubAudio } from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test } from "vitest";
 import { playAudio } from "./play-audio";
 
-// A play() that starts but never reaches "ended", so the clip stays in flight
-// until something supersedes or aborts it.
 function pendingPlayback(audio: ReturnType<typeof stubAudio>) {
   audio.play.mockImplementation(function (this: HTMLAudioElement) {
     queueMicrotask(() => this.dispatchEvent(new Event("play")));

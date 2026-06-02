@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Laden...",
   "boardLoading": "Bord laden...",
   "boardNotFound": "Bord niet gevonden",
   "boardGridLabel": "Communicatiebord",

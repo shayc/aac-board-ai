@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Yükleniyor...",
   "boardLoading": "Pano yükleniyor...",
   "boardNotFound": "Pano bulunamadı",
   "boardGridLabel": "İletişim panosu",

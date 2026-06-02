@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Načítava sa...",
   "boardLoading": "Načítava sa tabuľka...",
   "boardNotFound": "Tabuľka sa nenašla",
   "boardGridLabel": "Komunikačná tabuľka",

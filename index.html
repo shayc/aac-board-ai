@@ -27,7 +27,7 @@
         background-color: light-dark(__SHELL_LIGHT__, __SHELL_DARK__);
       }
       #root {
-        min-height: 100svh;
+        height: 100svh;
         background-color: light-dark(__CONTENT_LIGHT__, __CONTENT_DARK__);
       }
     </style>
@@ -36,11 +36,11 @@
     <script>
       {
         const mode = localStorage.getItem("mui-mode") ?? "system";
-        const dark =
+        const isDark =
           mode === "system"
             ? matchMedia("(prefers-color-scheme: dark)").matches
             : mode === "dark";
-        document.documentElement.classList.add(dark ? "dark" : "light");
+        document.documentElement.classList.add(isDark ? "dark" : "light");
       }
     </script>
 

@@ -1,12 +1,8 @@
 import { type Mock, vi } from "vitest";
 
-// Stubs the browser Built-in AI globals (Proofreader/Rewriter/Translator) that
-// @shayc/react-built-in-ai reads off globalThis. These APIs are absent in CI
-// Chromium and back a multi-gigabyte on-device model, so we replace them at the
-// global boundary and let the real library hooks and lifecycle run against a
-// fake model. availability() resolves "available", so the lifecycle provisions
-// silently (idle → ready) with no download or user-activation gate. Vitest's
-// `unstubGlobals` config restores the globals before each test.
+// Stubs the Built-in AI globals (Proofreader/Rewriter/Translator) that
+// @shayc/react-built-in-ai reads off globalThis. They're absent in CI Chromium,
+// so we fake them at the global boundary.
 
 type AINamespace = "Proofreader" | "Rewriter" | "Translator";
 

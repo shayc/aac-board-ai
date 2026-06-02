@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "טעינה...",
   "boardLoading": "טעינת לוח...",
   "boardNotFound": "הלוח לא נמצא",
   "boardGridLabel": "לוח תקשורת",

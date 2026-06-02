@@ -8,9 +8,9 @@ import {
 } from "vitest";
 import { speak } from "./speech-store";
 
-// A live speechSynthesis is required here, so these tests live apart from the
-// no-API suite — that one needs the module first imported while the global is
-// stubbed away, which any import in the same file would defeat.
+// Kept separate from the no-API suite: that suite must import speech-store only
+// after stubbing speechSynthesis away, which a static import in a shared file
+// would defeat.
 describe("speak() under cancellation", () => {
   let speakSpy: MockInstance<SpeechSynthesis["speak"]>;
   let cancelSpy: MockInstance<SpeechSynthesis["cancel"]>;
@@ -44,6 +44,19 @@ describe("speak() under cancellation", () => {
     expect(cancelSpy).toHaveBeenCalled();
   });
 
+  test("stops reporting boundaries once the signal aborts", () => {
+    const controller = new AbortController();
+    const onBoundary = vi.fn();
+    void speak("good morning", { signal: controller.signal, onBoundary });
+
+    spokenUtterance?.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
+    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
+
+    controller.abort();
+    spokenUtterance?.onboundary?.({ charIndex: 5 } as SpeechSynthesisEvent);
+    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
+  });
+
   test.each(["canceled", "interrupted"] as const)(
     "resolves when a superseded utterance reports '%s'",
     async (error) => {
@@ -63,18 +76,5 @@ describe("speak() under cancellation", () => {
     } as SpeechSynthesisErrorEvent);
 
     await expect(promise).rejects.toThrow("synthesis-failed");
-  });
-
-  test("stops reporting boundaries once the signal aborts", () => {
-    const controller = new AbortController();
-    const onBoundary = vi.fn();
-    void speak("good morning", { signal: controller.signal, onBoundary });
-
-    spokenUtterance?.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
-    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
-
-    controller.abort();
-    spokenUtterance?.onboundary?.({ charIndex: 5 } as SpeechSynthesisEvent);
-    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
   });
 });

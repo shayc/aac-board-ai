@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "লোড হচ্ছে…",
   "boardLoading": "বোর্ড লোড হচ্ছে…",
   "boardNotFound": "বোর্ড পাওয়া যায়নি",
   "boardGridLabel": "যোগাযোগ বোর্ড",

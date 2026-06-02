@@ -1,11 +1,11 @@
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import { StateLayout, type StateLayoutProps } from "./state-layout";
+import { StatusLayout, type StatusLayoutProps } from "./status-layout";
 
-export type ErrorStateProps = Omit<StateLayoutProps, "kind">;
+export type ErrorStateProps = Omit<StatusLayoutProps, "kind">;
 
 export function ErrorState({
   icon = <ErrorOutlineIcon />,
   ...props
 }: ErrorStateProps) {
-  return <StateLayout kind="error" icon={icon} {...props} />;
+  return <StatusLayout kind="error" icon={icon} {...props} />;
 }

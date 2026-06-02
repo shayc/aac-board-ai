@@ -84,12 +84,12 @@ export function Grid<TItem extends { id: string }>({
   );
 }
 
-function buildGrid<T extends { id: string }>(
-  items: readonly T[],
+function buildGrid<TItem extends { id: string }>(
+  items: readonly TItem[],
   rows: number,
   columns: number,
   order?: (string | null)[][],
-): (T | undefined)[][] {
+): (TItem | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
 

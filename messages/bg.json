@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Зареждане...",
   "boardLoading": "Зареждане на дъската...",
   "boardNotFound": "Дъската не е намерена",
   "boardGridLabel": "Комуникационна дъска",

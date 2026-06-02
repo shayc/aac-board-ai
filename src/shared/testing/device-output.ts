@@ -1,8 +1,5 @@
 import { type MockInstance, vi } from "vitest";
 
-// Stubs fire onend/ended via microtask so awaited callers can settle in tests.
-// cancel/pause are no-op spies: suppress real side effects (a real pause fires onpause, flipping React state) and let tests assert the calls.
-
 export function stubSpeech(): {
   speak: MockInstance<SpeechSynthesis["speak"]>;
   cancel: MockInstance<SpeechSynthesis["cancel"]>;

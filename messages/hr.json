@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "loading": "Učitavanje...",
   "boardLoading": "Učitavanje ploče...",
   "boardNotFound": "Ploča nije pronađena",
   "boardGridLabel": "Komunikacijska ploča",
