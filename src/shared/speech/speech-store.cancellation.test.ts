@@ -44,6 +44,19 @@ describe("speak() under cancellation", () => {
     expect(cancelSpy).toHaveBeenCalled();
   });
 
+  test("stops reporting boundaries once the signal aborts", () => {
+    const controller = new AbortController();
+    const onBoundary = vi.fn();
+    void speak("good morning", { signal: controller.signal, onBoundary });
+
+    spokenUtterance?.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
+    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
+
+    controller.abort();
+    spokenUtterance?.onboundary?.({ charIndex: 5 } as SpeechSynthesisEvent);
+    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
+  });
+
   test.each(["canceled", "interrupted"] as const)(
     "resolves when a superseded utterance reports '%s'",
     async (error) => {
@@ -63,18 +76,5 @@ describe("speak() under cancellation", () => {
     } as SpeechSynthesisErrorEvent);
 
     await expect(promise).rejects.toThrow("synthesis-failed");
-  });
-
-  test("stops reporting boundaries once the signal aborts", () => {
-    const controller = new AbortController();
-    const onBoundary = vi.fn();
-    void speak("good morning", { signal: controller.signal, onBoundary });
-
-    spokenUtterance?.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
-    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
-
-    controller.abort();
-    spokenUtterance?.onboundary?.({ charIndex: 5 } as SpeechSynthesisEvent);
-    expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
   });
 });

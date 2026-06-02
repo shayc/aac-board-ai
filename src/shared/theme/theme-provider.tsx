@@ -54,7 +54,6 @@ const themeOptions = {
         root: ({ theme }) => {
           const palette = theme.vars?.palette ?? theme.palette;
 
-          // Stock AppBar paints the primary color; repaint it as the shell surface.
           return {
             backgroundColor: palette.background.default,
             color: palette.text.primary,
