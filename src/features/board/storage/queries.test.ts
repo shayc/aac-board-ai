@@ -1,7 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { invalidateBoardSets } from "./board-sets-store";
-import { putAssets, putBoards, upsertBoardSet, withBoardsDB } from "./db";
+import { putAssets, putBoards, upsertBoardSet } from "./db";
 import { BoardNotFoundError, hydrateBoard } from "./queries";
 import { resetBoardsDB } from "./test-helpers";
 
@@ -31,19 +31,17 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   };
 
-  await withBoardsDB(async (db) => {
-    await upsertBoardSet(db, {
-      setId: SET_ID,
-      name: "Loader Test",
-      rootBoardId: BOARD_ID,
-    });
-    await putBoards(db, SET_ID, [
-      { boardId: BOARD_ID, name: "Test Board", obf: obfBoard },
-    ]);
-    await putAssets(db, SET_ID, [
-      { path: IMAGE_PATH, blob: pngBlob, mime: "image/png" },
-    ]);
+  await upsertBoardSet({
+    setId: SET_ID,
+    name: "Loader Test",
+    rootBoardId: BOARD_ID,
   });
+  await putBoards(SET_ID, [
+    { boardId: BOARD_ID, name: "Test Board", obf: obfBoard },
+  ]);
+  await putAssets(SET_ID, [
+    { path: IMAGE_PATH, blob: pngBlob, mime: "image/png" },
+  ]);
 
   await invalidateBoardSets();
 }
