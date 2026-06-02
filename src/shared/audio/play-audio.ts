@@ -27,6 +27,7 @@ export function playAudio(
     audio.onended = null;
     audio.onerror = null;
     audio.pause();
+    signal?.removeEventListener("abort", stop);
 
     if (stopCurrent === stop) {
       stopCurrent = null;
