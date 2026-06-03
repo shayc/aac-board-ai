@@ -13,6 +13,7 @@ import type {
   BoardButton,
   BoardGrid,
   BoardLicense,
+  BoardStrings,
   LoadBoard,
 } from "../types";
 import { parseAction } from "./parse-action";
@@ -30,44 +31,11 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),
     grid: transformGrid(obfBoard.grid),
-    strings: obfBoard.strings
-      ? Object.fromEntries(
-          Object.entries(obfBoard.strings).map(([locale, translations]) => [
-            normalizeLocale(locale),
-            translations,
-          ]),
-        )
-      : undefined,
+    strings: transformStrings(obfBoard.strings),
+    license: obfBoard.license ? transformLicense(obfBoard.license) : undefined,
   };
 
-  if (obfBoard.license) {
-    board.license = transformLicense(obfBoard.license);
-  }
-
   return board;
-}
-
-export function resolveLoadBoardPaths(
-  obfBoard: OBFBoard,
-  boardIdByPath: Map<string, string>,
-): OBFBoard {
-  const buttons = obfBoard.buttons.map((obfButton) => {
-    if (!obfButton.load_board?.path || obfButton.load_board.id) {
-      return obfButton;
-    }
-
-    const targetBoardId = boardIdByPath.get(obfButton.load_board.path);
-    if (!targetBoardId) {
-      return obfButton;
-    }
-
-    return {
-      ...obfButton,
-      load_board: { ...obfButton.load_board, id: targetBoardId },
-    };
-  });
-
-  return { ...obfBoard, buttons };
 }
 
 function buildMediaSourceMap(
@@ -135,6 +103,21 @@ function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
     dataUrl: obfLoadBoard.data_url,
     path: obfLoadBoard.path,
   };
+}
+
+function transformStrings(
+  strings: OBFBoard["strings"],
+): BoardStrings | undefined {
+  if (!strings) {
+    return undefined;
+  }
+
+  return Object.fromEntries(
+    Object.entries(strings).map(([locale, translations]) => [
+      normalizeLocale(locale),
+      translations,
+    ]),
+  );
 }
 
 function transformGrid(obfGrid: OBFGrid): BoardGrid {
