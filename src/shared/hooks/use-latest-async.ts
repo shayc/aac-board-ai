@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 
-export interface UseFreshResultOptions<T> {
+export interface UseLatestAsyncOptions<T> {
   enabled: boolean;
   deps: readonly (string | number | boolean)[];
   fetch: (signal: AbortSignal) => Promise<T>;
 }
 
-export function useFreshResult<T>({
+export function useLatestAsync<T>({
   enabled,
   deps,
   fetch,
-}: UseFreshResultOptions<T>): T | undefined {
+}: UseLatestAsyncOptions<T>): T | undefined {
   const signature = deps.join("\0");
 
   const fetchRef = useRef(fetch);

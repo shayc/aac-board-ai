@@ -7,7 +7,6 @@ import {
   type OBFBoard,
   type OBFManifest,
 } from "@shayc/open-board-format";
-import { resolveLoadBoardPaths } from "../obf/obf-to-board";
 import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {
   UpsertAssetInput,
@@ -24,13 +23,13 @@ export interface ImportResult {
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
-  const results = await writeBoardSetFiles(files);
+  const results = await importFilesAsBoardSets(files);
   await notifyBoardSetsChanged();
 
   return results;
 }
 
-export async function writeBoardSetFiles(
+export async function importFilesAsBoardSets(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
@@ -73,6 +72,29 @@ function buildBoardPathIndex(manifest: OBFManifest): Map<string, string> {
   return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
+}
+
+export function resolveLoadBoardPaths(
+  obfBoard: OBFBoard,
+  boardIdByPath: Map<string, string>,
+): OBFBoard {
+  const buttons = obfBoard.buttons.map((obfButton) => {
+    if (!obfButton.load_board?.path || obfButton.load_board.id) {
+      return obfButton;
+    }
+
+    const targetBoardId = boardIdByPath.get(obfButton.load_board.path);
+    if (!targetBoardId) {
+      return obfButton;
+    }
+
+    return {
+      ...obfButton,
+      load_board: { ...obfButton.load_board, id: targetBoardId },
+    };
+  });
+
+  return { ...obfBoard, buttons };
 }
 
 function resolveRootBoardId(

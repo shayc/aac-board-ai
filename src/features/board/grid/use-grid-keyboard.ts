@@ -12,7 +12,7 @@ export interface Cell {
 
 export interface UseGridKeyboardOptions {
   grid: readonly (readonly unknown[])[];
-  dir?: "ltr" | "rtl";
+  dir: "ltr" | "rtl";
 }
 
 export interface UseGridKeyboardReturn {
@@ -41,7 +41,7 @@ interface KeyboardKey {
 
 export function useGridKeyboard({
   grid,
-  dir = "ltr",
+  dir,
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [activeCell, setActiveCell] = useState<Cell>(() =>

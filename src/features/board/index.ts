@@ -9,12 +9,9 @@ export {
   BOARD_SET_PATTERN,
   boardPath,
 } from "./navigation/board-paths";
+export { BoardNotFoundError, hydrateBoard } from "./storage/board-hydration";
 export { deleteBoardSet, getBoardSets } from "./storage/board-sets-store";
-export {
-  BoardNotFoundError,
-  getBoardSet,
-  hydrateBoard,
-} from "./storage/queries";
+export { getBoardSet } from "./storage/db";
 export { useBoardSets } from "./storage/use-board-sets";
 export { useBoardTranslation } from "./translation/use-board-translation";
 

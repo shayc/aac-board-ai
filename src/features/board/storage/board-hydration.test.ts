@@ -1,8 +1,8 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
+import { BoardNotFoundError, hydrateBoard } from "./board-hydration";
 import { invalidateBoardSets } from "./board-sets-store";
 import { putAssets, putBoards, upsertBoardSet } from "./db";
-import { BoardNotFoundError, hydrateBoard } from "./queries";
 import { resetBoardsDB } from "./test-helpers";
 
 const SET_ID = "loader-test-set";

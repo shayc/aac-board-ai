@@ -5,13 +5,7 @@ import {
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
-import {
-  getBoardSet as dbGetBoardSet,
-  getAssetBlob,
-  getBoard,
-  updateBoardStrings,
-  type BoardSetRecord,
-} from "./db";
+import { getAssetBlob, getBoard } from "./db";
 
 export class BoardNotFoundError extends Error {
   constructor(setId: string, boardId: string) {
@@ -22,21 +16,6 @@ export class BoardNotFoundError extends Error {
 
 // Single concurrent caller assumed — the only consumer is boardLoader.
 let previousRegistry: ObjectUrlRegistry | null = null;
-
-export async function getBoardSet(
-  setId: string,
-): Promise<BoardSetRecord | undefined> {
-  return dbGetBoardSet(setId);
-}
-
-export async function persistBoardTranslations(
-  setId: string,
-  boardId: string,
-  locale: string,
-  translations: Record<string, string>,
-): Promise<void> {
-  await updateBoardStrings(setId, boardId, locale, translations);
-}
 
 export async function hydrateBoard(
   setId: string,

@@ -1,11 +1,11 @@
 import { describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useFreshResult } from "./use-fresh-result";
+import { useLatestAsync } from "./use-latest-async";
 
-describe("useFreshResult", () => {
+describe("useLatestAsync", () => {
   test("returns the value once the fetch resolves", async () => {
     const { result } = await renderHook(() =>
-      useFreshResult({
+      useLatestAsync({
         enabled: true,
         deps: ["a"],
         fetch: () => Promise.resolve("value-a"),
@@ -19,7 +19,7 @@ describe("useFreshResult", () => {
     const fetch = vi.fn(() => Promise.resolve("value"));
 
     const { result } = await renderHook(() =>
-      useFreshResult({ enabled: false, deps: ["a"], fetch }),
+      useLatestAsync({ enabled: false, deps: ["a"], fetch }),
     );
 
     expect(result.current).toBeUndefined();
@@ -30,7 +30,7 @@ describe("useFreshResult", () => {
     const fetch = vi.fn(() => Promise.resolve("once"));
 
     const { result } = await renderHook(() =>
-      useFreshResult({ enabled: true, deps: [], fetch }),
+      useLatestAsync({ enabled: true, deps: [], fetch }),
     );
 
     await vi.waitFor(() => expect(result.current).toBe("once"));
@@ -41,7 +41,7 @@ describe("useFreshResult", () => {
     const pending: ((value: string) => void)[] = [];
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
-        useFreshResult({
+        useLatestAsync({
           enabled: true,
           deps: [id],
           fetch: () => new Promise<string>((r) => pending.push(r)),
@@ -65,7 +65,7 @@ describe("useFreshResult", () => {
     const pending = new Map<string, (value: string) => void>();
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
-        useFreshResult({
+        useLatestAsync({
           enabled: true,
           deps: [id],
           fetch: () => new Promise<string>((r) => pending.set(id, r)),

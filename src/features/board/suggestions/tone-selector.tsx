@@ -5,23 +5,22 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
-import type { SuggestionTone } from "./types";
 
 export interface ToneSelectorProps {
-  tone: SuggestionTone;
-  onChange: (tone: SuggestionTone) => void;
+  tone: RewriterTone;
+  onChange: (tone: RewriterTone) => void;
 }
 
 const TONE_VALUES = {
   direct: "as-is",
   professional: "more-formal",
   friendly: "more-casual",
-} as const satisfies Record<string, SuggestionTone>;
+} as const satisfies Record<string, RewriterTone>;
 
 export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
-    nextTone: SuggestionTone | null,
+    nextTone: RewriterTone | null,
   ) => {
     if (nextTone) {
       onChange(nextTone);

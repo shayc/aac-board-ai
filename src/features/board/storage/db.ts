@@ -194,7 +194,7 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   return boardSets;
 }
 
-export async function deleteBoardSet(setId: string): Promise<void> {
+export async function deleteBoardSetRecord(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
@@ -253,7 +253,7 @@ export async function getBoard(
 export async function updateBoardStrings(
   setId: string,
   boardId: string,
-  locale: string,
+  language: string,
   translations: Record<string, string>,
 ): Promise<void> {
   validateId(setId, "setId");
@@ -268,7 +268,7 @@ export async function updateBoardStrings(
 
   const updatedObf = {
     ...record.obf,
-    strings: { ...record.obf.strings, [locale]: translations },
+    strings: { ...record.obf.strings, [language]: translations },
   };
 
   await tx.store.put({ ...record, obf: updatedObf });

@@ -1,14 +1,14 @@
 import { useLanguage } from "@shared/language/use-language";
 import { createTranslator } from "@shayc/react-built-in-ai";
 import { useEffect, useState } from "react";
-import { persistBoardTranslations } from "../storage/queries";
+import { updateBoardStrings } from "../storage/db";
 import type { Board } from "../types";
 import {
   applyTranslations,
   collectTranslatableStrings,
   getBoardLanguage,
   resolveSyncTranslation,
-} from "./board-translation-core";
+} from "./board-translation";
 
 export interface UseBoardTranslationOptions {
   setId: string;
@@ -93,11 +93,11 @@ async function translatePhrases(
 async function persistTranslations(
   setId: string,
   boardId: string,
-  locale: string,
+  language: string,
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await persistBoardTranslations(setId, boardId, locale, translations);
+    await updateBoardStrings(setId, boardId, language, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }
