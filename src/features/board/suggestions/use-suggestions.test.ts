@@ -1,18 +1,28 @@
+import { setAISharedContext } from "@shared/hooks/use-ai-shared-context";
+import { LanguageProvider } from "@shared/language/language-provider";
 import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
   stubProofreader,
   stubRewriter,
 } from "@shared/testing/built-in-ai";
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useSuggestions } from "./use-suggestions";
 
+function renderSuggestions(text: string) {
+  return renderHook(() => useSuggestions(text), { wrapper: LanguageProvider });
+}
+
 describe("useSuggestions", () => {
+  beforeEach(() => {
+    setAISharedContext("");
+  });
+
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
     stubBuiltInAIUnsupported("Proofreader", "Rewriter");
 
-    const { result } = await renderHook(() => useSuggestions("want eat"));
+    const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(false);
@@ -24,7 +34,7 @@ describe("useSuggestions", () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
-    const { result } = await renderHook(() => useSuggestions("want eat"));
+    const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
@@ -37,7 +47,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => makeProofreadResult("I want to eat."));
     stubRewriter(() => "I would like to eat.");
 
-    const { result } = await renderHook(() => useSuggestions("want eat"));
+    const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([
@@ -51,7 +61,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => makeProofreadResult("Hello."));
     stubRewriter(() => "Hello.");
 
-    const { result } = await renderHook(() => useSuggestions("helo"));
+    const { result } = await renderSuggestions("helo");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["Hello."]);
@@ -62,7 +72,7 @@ describe("useSuggestions", () => {
     stubProofreader((input) => makeProofreadResult(input));
     stubRewriter(() => "Something different.");
 
-    const { result } = await renderHook(() => useSuggestions("unchanged"));
+    const { result } = await renderSuggestions("unchanged");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["Something different."]);
@@ -76,7 +86,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => makeProofreadResult(rejected));
     stubRewriter(() => accepted);
 
-    const { result } = await renderHook(() => useSuggestions("seed"));
+    const { result } = await renderSuggestions("seed");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([accepted]);
@@ -84,14 +94,11 @@ describe("useSuggestions", () => {
   });
 
   test("passes the persisted shared context to the rewriter", async () => {
-    localStorage.setItem(
-      "ai-shared-context",
-      JSON.stringify("Talk like a pirate"),
-    );
+    setAISharedContext("Talk like a pirate");
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
 
-    await renderHook(() => useSuggestions("ahoy"));
+    await renderSuggestions("ahoy");
 
     await vi.waitFor(() => {
       expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
@@ -103,11 +110,46 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("provisions both engines with the message language", async () => {
+    const { create: createRewriter } = stubRewriter();
+    const { create: createProofreader } = stubProofreader();
+
+    await renderSuggestions("hello");
+
+    await vi.waitFor(() => {
+      expect(createRewriter.mock.calls.at(0)?.at(0)).toMatchObject({
+        expectedInputLanguages: ["en"],
+        expectedContextLanguages: ["en"],
+        outputLanguage: "en",
+      });
+      expect(createProofreader.mock.calls.at(0)?.at(0)).toMatchObject({
+        expectedInputLanguages: ["en"],
+      });
+    });
+  });
+
+  test("uses the selected language rather than English", async () => {
+    // LanguageProvider seeds its state from this key on mount.
+    localStorage.setItem("language", JSON.stringify("he"));
+    const { create } = stubRewriter();
+    stubBuiltInAIUnsupported("Proofreader");
+
+    await renderSuggestions("שלום");
+
+    await vi.waitFor(() => {
+      expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
+        expectedInputLanguages: ["he"],
+        expectedContextLanguages: ["he"],
+        outputLanguage: "he",
+      });
+    });
+  });
+
   test("re-provisions the rewriter with the new tone when the tone changes", async () => {
     const { create } = stubRewriter((input) => `rewritten ${input}`);
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderHook(() => useSuggestions("hi"));
+    const { result } = await renderSuggestions("hi");
 
     await vi.waitFor(() => {
       expect(create.mock.calls.at(0)?.at(0)).toMatchObject({ tone: "as-is" });
@@ -126,7 +168,7 @@ describe("useSuggestions", () => {
     stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderHook(() => useSuggestions("hi"));
+    const { result } = await renderSuggestions("hi");
 
     await vi.waitFor(() => expect(pending).toHaveLength(1));
     pending[0]("casual hi");
@@ -159,7 +201,7 @@ describe("useSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
-      { initialProps: { text: "old" } },
+      { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
     await vi.waitFor(() => {
@@ -191,7 +233,7 @@ describe("useSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
-      { initialProps: { text: "old" } },
+      { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
     await vi.waitFor(() => {

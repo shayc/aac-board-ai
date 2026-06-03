@@ -8,11 +8,14 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
+import {
+  setAISharedContext,
+  useAISharedContext,
+} from "@shared/hooks/use-ai-shared-context";
 import { type BuiltInAIName, isSupported } from "@shayc/react-built-in-ai";
 
 export function AISettings() {
-  const [sharedContext, setSharedContext] = useAISharedContext();
+  const sharedContext = useAISharedContext();
 
   const capabilities: {
     apiName: BuiltInAIName;
@@ -45,7 +48,7 @@ export function AISettings() {
           placeholder={m.aiCustomInstructionsPlaceholder()}
           helperText={m.aiCustomInstructionsHelper()}
           value={sharedContext}
-          onChange={(e) => setSharedContext(e.target.value)}
+          onChange={(e) => setAISharedContext(e.target.value)}
         />
       )}
 

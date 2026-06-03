@@ -1,9 +1,13 @@
 import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
+import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
+import { useLanguage } from "@shared/language/use-language";
 import { useProofreader, useRewriter } from "@shayc/react-built-in-ai";
 import { useState } from "react";
 import { toPhrases } from "./to-phrases";
 import type { SuggestionTone } from "./types";
 import { useFreshResult } from "./use-fresh-result";
+
+const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
@@ -15,15 +19,25 @@ export interface UseSuggestionsReturn {
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
-  const [sharedContext] = useAISharedContext();
+  const sharedContext = useAISharedContext();
+  const debouncedSharedContext = useDebouncedValue(
+    sharedContext,
+    SHARED_CONTEXT_DEBOUNCE_MS,
+  );
   const [tone, setTone] = useState<SuggestionTone>("as-is");
+  const { language } = useLanguage();
 
-  const proofreader = useProofreader();
+  const proofreader = useProofreader({
+    expectedInputLanguages: [language],
+  });
   const rewriter = useRewriter({
     tone,
-    sharedContext,
+    sharedContext: debouncedSharedContext,
     length: "shorter",
     format: "plain-text",
+    expectedInputLanguages: [language],
+    expectedContextLanguages: [language],
+    outputLanguage: language,
   });
 
   const isProofreaderSupported = proofreader.status !== "unsupported";
@@ -33,7 +47,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const corrected = useFreshResult({
     enabled: hasText && proofreader.status === "ready",
-    deps: [text],
+    deps: [text, language],
     fetch: (signal) =>
       proofreader
         .proofread(text, { signal })
@@ -43,7 +57,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const rewritten = useFreshResult({
     enabled: hasText && rewriter.status === "ready",
-    deps: [text, tone, sharedContext],
+    deps: [text, tone, debouncedSharedContext, language],
     fetch: (signal) =>
       rewriter.rewrite(text, { signal }).catch(() => undefined),
   });
