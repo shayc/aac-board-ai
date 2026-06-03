@@ -14,7 +14,7 @@ import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import { Tile } from "./tile/tile";
-import type { Board, BoardButton } from "./types";
+import { getNavigationTargetId, type Board, type BoardButton } from "./types";
 
 export interface BoardViewerProps {
   board: Board;
@@ -43,7 +43,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       imageSrc={button.imageSrc}
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
-      variant={button.loadBoard ? "folder" : undefined}
+      variant={getNavigationTargetId(button) ? "folder" : undefined}
       onClick={() => void activateButton(button)}
       {...props}
     />

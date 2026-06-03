@@ -57,5 +57,11 @@ export type BoardStrings = Record<string, Record<string, string>>;
 export function getSpokenText(
   button: Pick<BoardButton, "vocalization" | "label">,
 ): string | undefined {
-  return button.vocalization ?? button.label;
+  return (button.vocalization ?? button.label)?.toLowerCase();
+}
+
+export function getNavigationTargetId(
+  button: Pick<BoardButton, "loadBoard">,
+): string | undefined {
+  return button.loadBoard?.id;
 }

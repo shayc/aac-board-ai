@@ -1,5 +1,10 @@
 import type { MessagePartContent } from "../message/use-message";
-import { getSpokenText, type BoardAction, type BoardButton } from "../types";
+import {
+  getNavigationTargetId,
+  getSpokenText,
+  type BoardAction,
+  type BoardButton,
+} from "../types";
 
 export type ButtonIntent =
   | { kind: "navigate"; targetBoardId: string }
@@ -9,7 +14,7 @@ export type ButtonIntent =
   | { kind: "runAction"; action: BoardAction };
 
 export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
-  const targetBoardId = button.loadBoard?.id;
+  const targetBoardId = getNavigationTargetId(button);
   if (targetBoardId) {
     return [{ kind: "navigate", targetBoardId }];
   }
@@ -27,7 +32,7 @@ export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
   } else {
     const text = getSpokenText(button);
     if (text) {
-      intents.push({ kind: "speakText", text: text.toLowerCase() });
+      intents.push({ kind: "speakText", text });
     }
   }
 
