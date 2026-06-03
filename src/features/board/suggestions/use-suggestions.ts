@@ -3,9 +3,8 @@ import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLanguage } from "@shared/language/use-language";
 import { useProofreader, useRewriter } from "@shayc/react-built-in-ai";
 import { useState } from "react";
+import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { toPhrases } from "./to-phrases";
-import type { SuggestionTone } from "./types";
-import { useFreshResult } from "./use-fresh-result";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -14,8 +13,8 @@ export interface UseSuggestionsReturn {
   isProofreaderSupported: boolean;
   isRewriterSupported: boolean;
   phrases: string[];
-  tone: SuggestionTone;
-  setTone: (tone: SuggestionTone) => void;
+  tone: RewriterTone;
+  setTone: (tone: RewriterTone) => void;
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
@@ -24,7 +23,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     sharedContext,
     SHARED_CONTEXT_DEBOUNCE_MS,
   );
-  const [tone, setTone] = useState<SuggestionTone>("as-is");
+  const [tone, setTone] = useState<RewriterTone>("as-is");
   const { language } = useLanguage();
 
   const proofreader = useProofreader({
@@ -45,7 +44,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const hasText = text.trim().length > 0;
 
-  const corrected = useFreshResult({
+  const corrected = useLatestAsync({
     enabled: hasText && proofreader.status === "ready",
     deps: [text, language],
     fetch: (signal) =>
@@ -55,7 +54,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
         .catch(() => undefined),
   });
 
-  const rewritten = useFreshResult({
+  const rewritten = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
     deps: [text, tone, debouncedSharedContext, language],
     fetch: (signal) =>
