@@ -24,7 +24,7 @@ describe("useMessagePlayback", () => {
     await result.current.play();
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0][0].text).toBe("I want");
+    expect(speech.speak.mock.calls[0][0].text).toBe("i want");
   });
 
   test("plays a sound part as audio rather than speaking it", async () => {
@@ -197,7 +197,7 @@ describe("useMessagePlayback", () => {
     const playPromise = result.current.play();
     await rerender();
 
-    fireBoundary?.(2); // "want" begins at offset 2 in "I want"
+    fireBoundary?.(2); // "want" begins at offset 2 in "i want"
     await rerender();
     expect(result.current.activePartId).toBe("2");
 

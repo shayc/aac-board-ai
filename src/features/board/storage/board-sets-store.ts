@@ -38,10 +38,12 @@ async function loadBoardSets(): Promise<void> {
   }
 }
 
-function ensureLoaded(): void {
+function ensureLoaded(): Promise<void> {
   if (!hasLoaded && !pendingLoad) {
     pendingLoad = loadBoardSets();
   }
+
+  return pendingLoad ?? Promise.resolve();
 }
 
 export async function invalidateBoardSets(): Promise<void> {
@@ -56,23 +58,19 @@ export async function notifyBoardSetsChanged(): Promise<void> {
 
 export function subscribeBoardSets(listener: () => void): () => void {
   const unsubscribe = store.subscribe(listener);
-  ensureLoaded();
+  void ensureLoaded();
 
   return unsubscribe;
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
-  ensureLoaded();
+  void ensureLoaded();
 
   return store.getSnapshot();
 }
 
 export async function getBoardSets(): Promise<BoardSetRecord[]> {
-  if (pendingLoad) {
-    await pendingLoad;
-  } else if (!hasLoaded) {
-    await loadBoardSets();
-  }
+  await ensureLoaded();
 
   return store.getSnapshot().boardSets;
 }
