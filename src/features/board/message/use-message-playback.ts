@@ -89,8 +89,6 @@ export function useMessagePlayback(
   };
 }
 
-// Consecutive spoken parts merge into one utterance for prosody; building each
-// run's tracker here keeps play() a plain interpreter over the steps.
 function planPlayback(parts: MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];

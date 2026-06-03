@@ -85,9 +85,6 @@ describe("listBoardSets", () => {
   });
 
   test("returns sets sorted by updatedAt descending", async () => {
-    // Each Date.now() call advances by 1000ms, so every upsertBoardSet gets
-    // a strictly increasing timestamp regardless of how many times the source
-    // reads Date.now() internally.
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
