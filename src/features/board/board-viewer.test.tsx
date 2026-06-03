@@ -1,4 +1,5 @@
 import { AppProviders } from "@app/app-providers";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
@@ -70,5 +71,11 @@ describe("BoardViewer", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
       .toBeVisible();
+  });
+
+  test("has no accessibility violations", async () => {
+    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+
+    await expectNoA11yViolations(screen.container);
   });
 });
