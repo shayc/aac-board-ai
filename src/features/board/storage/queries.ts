@@ -21,8 +21,6 @@ export class BoardNotFoundError extends Error {
 }
 
 // Single concurrent caller assumed — the only consumer is boardLoader.
-// Revoke on the next call rather than from the caller: the consumer can't
-// know when its URLs are safe to release; the next load defines that boundary.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
 export async function getBoardSet(
