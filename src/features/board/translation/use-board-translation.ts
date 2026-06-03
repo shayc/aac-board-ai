@@ -8,7 +8,7 @@ import {
   collectTranslatableStrings,
   getBoardLanguage,
   resolveSyncTranslation,
-} from "./board-translation-core";
+} from "./board-translation";
 
 export interface UseBoardTranslationOptions {
   setId: string;
@@ -93,11 +93,11 @@ async function translatePhrases(
 async function persistTranslations(
   setId: string,
   boardId: string,
-  locale: string,
+  language: string,
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await updateBoardStrings(setId, boardId, locale, translations);
+    await updateBoardStrings(setId, boardId, language, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }
