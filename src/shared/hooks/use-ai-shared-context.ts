@@ -1,10 +1,14 @@
-import {
-  type UsePersistentStateReturn,
-  usePersistentState,
-} from "./use-persistent-state";
+import { createPersistedStore } from "@shared/utils/persisted-store";
+import { useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "ai-shared-context";
+const store = createPersistedStore<string>("ai-shared-context", (raw) =>
+  typeof raw === "string" ? raw : "",
+);
 
-export function useAISharedContext(): UsePersistentStateReturn<string> {
-  return usePersistentState<string>(STORAGE_KEY, "");
+export function setAISharedContext(sharedContext: string): void {
+  store.setState(sharedContext);
+}
+
+export function useAISharedContext(): string {
+  return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
