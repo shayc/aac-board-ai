@@ -1,7 +1,7 @@
 import { useLanguage } from "@shared/language/use-language";
 import { createTranslator } from "@shayc/react-built-in-ai";
 import { useEffect, useState } from "react";
-import { persistBoardTranslations } from "../storage/queries";
+import { updateBoardStrings } from "../storage/db";
 import type { Board } from "../types";
 import {
   applyTranslations,
@@ -97,7 +97,7 @@ async function persistTranslations(
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await persistBoardTranslations(setId, boardId, locale, translations);
+    await updateBoardStrings(setId, boardId, locale, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }

@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   closeBoardsDB,
-  deleteBoardSet,
+  deleteBoardSetRecord,
   getAssetBlob,
   getBoard,
   getBoardsDB,
@@ -278,11 +278,11 @@ describe("updateBoardStrings", () => {
   });
 });
 
-describe("deleteBoardSet", () => {
+describe("deleteBoardSetRecord", () => {
   test("removes the board set record", async () => {
     await upsertBoardSet(makeBoardSetInput());
 
-    await deleteBoardSet("set-1");
+    await deleteBoardSetRecord("set-1");
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(0);
@@ -296,7 +296,7 @@ describe("deleteBoardSet", () => {
       { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
     ]);
 
-    await deleteBoardSet("set-1");
+    await deleteBoardSetRecord("set-1");
 
     expect(await getBoard("set-1", "b1")).toBeUndefined();
     expect(await getBoard("set-1", "b2")).toBeUndefined();
@@ -310,7 +310,7 @@ describe("deleteBoardSet", () => {
       { path: "img2.png", blob: new Blob(["b"]) },
     ]);
 
-    await deleteBoardSet("set-1");
+    await deleteBoardSetRecord("set-1");
 
     expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
@@ -327,7 +327,7 @@ describe("deleteBoardSet", () => {
       { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
     ]);
 
-    await deleteBoardSet("set-1");
+    await deleteBoardSetRecord("set-1");
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
@@ -338,7 +338,7 @@ describe("deleteBoardSet", () => {
   });
 
   test("rejects empty setId", async () => {
-    await expect(deleteBoardSet("")).rejects.toThrow("Invalid setId");
+    await expect(deleteBoardSetRecord("")).rejects.toThrow("Invalid setId");
   });
 });
 

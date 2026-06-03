@@ -194,7 +194,7 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   return boardSets;
 }
 
-export async function deleteBoardSet(setId: string): Promise<void> {
+export async function deleteBoardSetRecord(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
