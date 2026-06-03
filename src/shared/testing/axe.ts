@@ -11,7 +11,7 @@ export async function expectNoA11yViolations(
     const nodes = violation.nodes
       .map((node) => node.target.join(" "))
       .join("\n    ");
-    return `${violation.id} (${violation.impact}): ${violation.help}\n  ${violation.helpUrl}\n    ${nodes}`;
+    return `${violation.id} (${violation.impact ?? "unknown"}): ${violation.help}\n  ${violation.helpUrl}\n    ${nodes}`;
   });
 
   expect(violations.length, report.join("\n\n")).toBe(0);
