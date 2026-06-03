@@ -26,8 +26,6 @@ function makeBoard(overrides: Partial<Board> = {}): Board {
   };
 }
 
-// Exposes the real LanguageContext setter so a test can switch UI language the
-// same way the app does — through the provider, not by mocking the context.
 function useTranslationHarness(options: UseBoardTranslationOptions) {
   const translation = useBoardTranslation(options);
   const { setLanguage } = useLanguage();
@@ -37,7 +35,6 @@ function useTranslationHarness(options: UseBoardTranslationOptions) {
 
 function setup(board: Board, language?: string) {
   if (language) {
-    // LanguageProvider seeds its state from this key on mount.
     localStorage.setItem("language", JSON.stringify(language));
   }
 
@@ -65,8 +62,6 @@ describe("useBoardTranslation", () => {
 
     const { result } = await setup(board, "es");
 
-    // No async wait: the cache hit must land in the initial render to avoid
-    // flashing the source language.
     const { translatedBoard } = result.current.translation;
     expect(translatedBoard.name).toBe("Comida");
     expect(translatedBoard.buttons[0].label).toBe("comer");
@@ -95,8 +90,6 @@ describe("useBoardTranslation", () => {
       targetLanguage: "es",
     });
 
-    // One translate call per unique translatable string ("eat" appears as both
-    // label and vocalization but is deduped).
     const inputs = translate.mock.calls.map((call) => call.at(0));
     expect(inputs).toHaveLength(3);
     expect(inputs).toContain("Food");
@@ -110,7 +103,6 @@ describe("useBoardTranslation", () => {
 
     const { result } = await setup(board, "es");
 
-    // AAC UX guarantee: never flash the source language — the board stays put.
     await vi.waitFor(() => {
       expect(result.current.translation.translatedBoard).toBe(board);
     });
@@ -152,8 +144,6 @@ describe("useBoardTranslation", () => {
 
   test("ignores a stale translation when the UI language changes mid-flight", async () => {
     const board = makeBoard();
-    // Each translate call hangs until resolved by hand, so the test controls
-    // which language's batch settles first.
     const calls: { input: string; resolve: (value: string) => void }[] = [];
     stubTranslator(
       (input) =>
@@ -164,18 +154,15 @@ describe("useBoardTranslation", () => {
 
     const { result } = await setup(board, "es");
 
-    // The "es" batch is in flight: one pending translate per unique string.
     await vi.waitFor(() => {
       expect(calls).toHaveLength(3);
     });
 
-    // Switching language aborts the "es" run and starts a fresh "de" one.
     result.current.setLanguage("de");
     await vi.waitFor(() => {
       expect(calls).toHaveLength(6);
     });
 
-    // Settle the fresh "de" batch first, then let the aborted "es" batch resolve.
     for (const { input, resolve } of calls.slice(3)) {
       resolve(`de:${input}`);
     }

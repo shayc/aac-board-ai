@@ -10,10 +10,6 @@ const BOARD_ID = "loader-test-board";
 const IMAGE_PATH = "images/test.png";
 const REAL_PNG_URL = "/pwa-192x192.png";
 
-// Seed a minimal board with one path-based image, using a real PNG blob so
-// hydration produces an Image-loadable blob URL. Going direct to the storage
-// layer (vs. importBoardFiles) keeps the test independent of OBZ fixture
-// shape — the only thing under test here is hydrateBoard's behavior.
 async function seedTestBoard(): Promise<void> {
   const pngResponse = await fetch(REAL_PNG_URL);
   if (!pngResponse.ok) {
@@ -56,9 +52,6 @@ async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
   throw new Error("Expected hydrateBoard to throw, but it resolved");
 }
 
-// A blob URL is "alive" while its registry hasn't revoked it. Loading it as
-// an Image is the most reliable cross-browser probe — the fixture asset is a
-// PNG, so a live URL fires `load` and a revoked one fires `error`.
 function isObjectUrlAlive(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const img = new Image();

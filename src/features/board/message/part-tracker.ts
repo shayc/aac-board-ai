@@ -14,7 +14,6 @@ interface PartSpan {
   end: number;
 }
 
-// Joined into one utterance for prosody, so charIndex is the only thread back to a part.
 export function createPartTracker(parts: SpokenPart[]): PartTracker {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];

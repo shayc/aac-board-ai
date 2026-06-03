@@ -21,7 +21,6 @@ export function resolveBoardKey(
 ): BoardKeyAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      // While playing, ⌘+Enter is inert — don't stack a second playback.
       return isPlaying ? null : { kind: "play" };
     }
 
