@@ -76,14 +76,14 @@ function buildBoardPathIndex(manifest: OBFManifest): Map<string, string> {
 
 export function resolveLoadBoardPaths(
   obfBoard: OBFBoard,
-  boardIdByPath: Map<string, string>,
+  boardPathToId: Map<string, string>,
 ): OBFBoard {
   const buttons = obfBoard.buttons.map((obfButton) => {
     if (!obfButton.load_board?.path || obfButton.load_board.id) {
       return obfButton;
     }
 
-    const targetBoardId = boardIdByPath.get(obfButton.load_board.path);
+    const targetBoardId = boardPathToId.get(obfButton.load_board.path);
     if (!targetBoardId) {
       return obfButton;
     }
