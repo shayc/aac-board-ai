@@ -7,7 +7,7 @@ import {
   listBoardSets,
 } from "../storage/db";
 import { resetBoardsDB } from "../storage/test-helpers";
-import { writeBoardSetFiles } from "./board-import";
+import { importFilesAsBoardSets } from "./board-import";
 
 const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
@@ -32,7 +32,7 @@ async function loadFixtureFile(name: string): Promise<File> {
   });
 }
 
-describe("writeBoardSetFiles", () => {
+describe("importFilesAsBoardSets", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -41,7 +41,7 @@ describe("writeBoardSetFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    const importResults = await writeBoardSetFiles(fixtureFile);
+    const importResults = await importFilesAsBoardSets(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -101,7 +101,7 @@ describe("writeBoardSetFiles", () => {
     assertDefined(sampleAssetEntry);
     const [sampleAssetPath, sampleAssetBytes] = sampleAssetEntry;
 
-    const importResults = await writeBoardSetFiles(fixtureFile);
+    const importResults = await importFilesAsBoardSets(fixtureFile);
 
     expect(importResults).toEqual([
       {

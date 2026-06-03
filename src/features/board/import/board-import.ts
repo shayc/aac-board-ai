@@ -24,13 +24,13 @@ export interface ImportResult {
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
-  const results = await writeBoardSetFiles(files);
+  const results = await importFilesAsBoardSets(files);
   await notifyBoardSetsChanged();
 
   return results;
 }
 
-export async function writeBoardSetFiles(
+export async function importFilesAsBoardSets(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
