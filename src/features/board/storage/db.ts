@@ -102,9 +102,6 @@ function validateId(id: string, fieldName: string): void {
 
 let connection: Promise<BoardsDB> | null = null;
 
-// One long-lived connection per page: callers reach the store through these
-// functions, not a passed-in handle. A failed open clears the cache so the
-// next call retries rather than handing back the same rejected promise.
 export function getBoardsDB(): Promise<BoardsDB> {
   connection ??= openConnection().catch((error: unknown) => {
     connection = null;

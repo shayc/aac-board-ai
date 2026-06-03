@@ -25,8 +25,6 @@ export function useMessagePlayback(
 ): UseMessagePlaybackReturn {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activePartId, setActivePartId] = useState<string | null>(null);
-  // The token for the current playback. stop() (and each new play()) aborts it,
-  // which stops the in-flight step and ends the loop below.
   const playbackRef = useRef<AbortController | null>(null);
 
   async function play() {
@@ -68,8 +66,7 @@ export function useMessagePlayback(
         }
       }
     } catch {
-      // A genuine playback failure (a TTS hiccup, a missing sound) resets via
-      // `finally` — the button returning to idle is feedback enough.
+      // Failure is surfaced by the reset in finally.
     } finally {
       if (!signal.aborted) {
         setIsPlaying(false);

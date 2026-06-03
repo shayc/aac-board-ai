@@ -129,7 +129,6 @@ describe("useSuggestions", () => {
   });
 
   test("uses the selected language rather than English", async () => {
-    // LanguageProvider seeds its state from this key on mount.
     localStorage.setItem("language", JSON.stringify("he"));
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
@@ -244,7 +243,6 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["corrected old"]);
     });
 
-    // Changing the message must drop the prior suggestions even while the next request is in flight.
     await rerender({ text: "new" });
     expect(result.current.phrases).toEqual([]);
   });

@@ -748,9 +748,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      // In RTL, Item 1 (col 0) is visually rightmost and Item 3 (col 2) is
-      // visually leftmost. macOS sends Home for Fn+ArrowLeft, so Home should
-      // move toward the visual left to stay consistent with ArrowLeft.
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
@@ -779,8 +776,6 @@ describe("Grid", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      // End (Fn+ArrowRight on macOS) mirrors ArrowRight: moves toward the
-      // visual right, which is col 0 (Item 1) in RTL.
       item3.element().focus();
       await expect.element(item3).toHaveFocus();
 
@@ -813,9 +808,6 @@ describe("Grid", () => {
       item1.element().focus();
       await expect.element(item1).toHaveFocus();
 
-      // macOS Fn+Ctrl+ArrowLeft sends Ctrl+Home. Because ArrowLeft is the
-      // forward/end direction in RTL, Ctrl+Home jumps to the last cell in
-      // reading order — row max / col max — which is visually bottom-left.
       await press(item1, "Home", { ctrlKey: true });
 
       await expect.element(item4).toHaveFocus();
@@ -845,9 +837,6 @@ describe("Grid", () => {
       item4.element().focus();
       await expect.element(item4).toHaveFocus();
 
-      // macOS Fn+Ctrl+ArrowRight sends Ctrl+End. ArrowRight is the
-      // backward/start direction in RTL, so Ctrl+End jumps to the first
-      // cell in reading order — row 0 / col 0 — which is visually top-right.
       await press(item4, "End", { ctrlKey: true });
 
       await expect.element(item1).toHaveFocus();

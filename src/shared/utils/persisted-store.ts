@@ -1,8 +1,5 @@
 import { createExternalStore, type ExternalStore } from "./external-store";
 
-// An external store seeded from localStorage and written back on every change.
-// `parse` receives the JSON-parsed value (or undefined when absent/corrupt) and
-// must return a complete, validated state — it owns defaulting and clamping.
 export function createPersistedStore<T>(
   storageKey: string,
   parse: (raw: unknown) => T,

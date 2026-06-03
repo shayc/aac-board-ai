@@ -47,8 +47,6 @@ export function useGridKeyboard({
   const [activeCell, setActiveCell] = useState<Cell>(() =>
     findFirstNonEmptyCell(grid),
   );
-  // Mirror activeCell into a ref so the grid-change effect can read the latest
-  // position without depending on it (we refocus on grid swap, not every keypress).
   const activeCellRef = useRef(activeCell);
   const updateActiveCell = (next: Cell) => {
     activeCellRef.current = next;
@@ -72,8 +70,6 @@ export function useGridKeyboard({
       }
 
       const next = nextFocus(event, root, from, dir);
-      // react-aria stops propagation by default; only an arrow/Home/End move is
-      // ours, so let every other key bubble up to the board-root handler.
       if (!next || sameCell(next.position, from)) {
         event.continuePropagation();
 
@@ -93,8 +89,6 @@ export function useGridKeyboard({
     }
   };
 
-  // Board navigation unmounts the focused cell; browser drops focus to <body>.
-  // Restore the same row/col, else the first focusable.
   const previousGridRef = useRef(grid);
   useEffect(() => {
     if (previousGridRef.current === grid) {
@@ -161,8 +155,6 @@ function nextFocus(
       `${scope} ${FOCUSABLE}`,
     );
 
-    // Home/End follow the physical arrow direction (macOS Fn+ArrowLeft sends Home).
-    // In RTL, ArrowLeft moves "end-ward", so Home picks the last cell in DOM order.
     const goToFirst =
       dir === "rtl" ? event.key === "End" : event.key === "Home";
 
@@ -204,8 +196,6 @@ function arrowStep(key: string, dir: "ltr" | "rtl"): Step | null {
   }
 }
 
-// Among cells in the step's half-plane, prefer the most in-line tile
-// (smallest cross-axis distance), then the closest along the primary axis.
 function nearestInDirection(
   root: HTMLElement,
   from: Cell,

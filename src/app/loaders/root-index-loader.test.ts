@@ -35,8 +35,6 @@ describe("rootIndexLoader", () => {
   });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
-    // seedBoardSets inserts sequentially; sets come back ordered by updatedAt
-    // descending, so set-2 (inserted last) ends up first.
     await seedBoardSets([
       { setId: "set-1", rootBoardId: "root-1" },
       { setId: "set-2", rootBoardId: "root-2" },
