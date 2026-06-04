@@ -4,9 +4,10 @@ export function ExternalLink(props: Omit<LinkProps, "target" | "rel">) {
   return (
     <Link
       {...props}
-      underline="always"
       target="_blank"
       rel="noopener noreferrer"
+      underline="always"
+      sx={{ whiteSpace: "nowrap" }}
     />
   );
 }
