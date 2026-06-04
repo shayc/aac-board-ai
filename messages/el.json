@@ -93,7 +93,7 @@
   "aboutAppDescription": "Το {appName} βοηθά τους ανθρώπους που δεν μπορούν να βασιστούν στην ομιλία να επικοινωνούν πιο εύκολα και φυσικά. Χρησιμοποιεί AI στη συσκευή για να διορθώνει τη γραμματική, να προσαρμόζει τον τόνο και να μεταφράζει μηνύματα άμεσα και ιδιωτικά.",
   "aboutAcknowledgmentsHeading": "Ευχαριστίες",
   "aboutAcknowledgments": "Νικητής του {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Βασισμένο στο {#obf}Open Board Format{/obf} και περιλαμβάνει το λεξιλόγιο Quick Core 24 του {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Προβολή πηγαίου κώδικα στο GitHub",
+  "aboutViewSource": "Προβολή στο GitHub",
   "onboardingTagline": "Επικοινωνήστε πιο εύκολα και φυσικά.",
   "onboardingSmartRewritingTitle": "Έξυπνη αναδιατύπωση",
   "onboardingSmartRewritingDescription": "Μετατρέψτε σύντομες φράσεις σε σαφείς προτάσεις.",

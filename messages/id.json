@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} membantu orang yang tidak dapat mengandalkan ucapan untuk berkomunikasi dengan lebih mudah dan alami. Aplikasi ini menggunakan AI di perangkat untuk mengoreksi tata bahasa, menyesuaikan nada, dan menerjemahkan pesan secara instan dan pribadi.",
   "aboutAcknowledgmentsHeading": "Ucapan terima kasih",
   "aboutAcknowledgments": "Pemenang {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Dibuat di atas {#obf}Open Board Format{/obf} dan menyertakan kosakata Quick Core 24 dari {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Lihat kode sumber di GitHub",
+  "aboutViewSource": "Lihat di GitHub",
   "onboardingTagline": "Berkomunikasi dengan lebih mudah dan alami.",
   "onboardingSmartRewritingTitle": "Penulisan ulang cerdas",
   "onboardingSmartRewritingDescription": "Ubah frasa singkat menjadi kalimat yang jelas.",

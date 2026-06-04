@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} pomaže osobama koje se ne mogu osloniti na govor da komuniciraju lakše i prirodnije. Koristi umjetnu inteligenciju na uređaju za ispravljanje gramatike, prilagodbu tona te trenutačan i privatan prijevod poruka.",
   "aboutAcknowledgmentsHeading": "Zahvale",
   "aboutAcknowledgments": "Pobjednik natjecanja {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Izgrađeno na formatu {#obf}Open Board Format{/obf} i uključuje rječnik Quick Core 24 organizacije {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Pogledaj izvorni kôd na GitHubu",
+  "aboutViewSource": "Pogledaj na GitHubu",
   "onboardingTagline": "Komunicirajte lakše i prirodnije.",
   "onboardingSmartRewritingTitle": "Pametno preoblikovanje",
   "onboardingSmartRewritingDescription": "Pretvorite kratke izraze u jasne rečenice.",

@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} は、発話に頼れない人々がより簡単に自然にコミュニケーションできるよう支援します。デバイス上の AI を使用して、文法を修正し、トーンを調整し、メッセージを即座に、プライベートに翻訳します。",
   "aboutAcknowledgmentsHeading": "謝辞",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} の受賞作品です。{#obf}Open Board Format{/obf} を基盤として構築され、{#openaac}OpenAAC{/openaac} の Quick Core 24 語彙を含んでいます。",
-  "aboutViewSource": "GitHub でソースコードを見る",
+  "aboutViewSource": "GitHub で見る",
   "onboardingTagline": "より簡単に、より自然にコミュニケーション。",
   "onboardingSmartRewritingTitle": "スマートリライト",
   "onboardingSmartRewritingDescription": "短いフレーズを明確な文に変換します。",

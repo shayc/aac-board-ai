@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} помага на хората, които не могат да разчитат на речта, да общуват по-лесно и по-естествено. Използва ИИ директно на устройството, за да коригира граматиката, да настройва тона и да превежда съобщенията мигновено и поверително.",
   "aboutAcknowledgmentsHeading": "Благодарности",
   "aboutAcknowledgments": "Победител в {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Изградено върху {#obf}Open Board Format{/obf} и включва речника Quick Core 24 от {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Преглед на изходния код в GitHub",
+  "aboutViewSource": "Преглед в GitHub",
   "onboardingTagline": "Общувайте по-лесно и по-естествено.",
   "onboardingSmartRewritingTitle": "Интелигентно преписване",
   "onboardingSmartRewritingDescription": "Превърнете кратки фрази в ясни изречения.",

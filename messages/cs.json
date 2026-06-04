@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} pomáhá lidem, kteří se nemohou spolehnout na řeč, komunikovat snáze a přirozeněji. Využívá AI přímo v zařízení k opravě gramatiky, úpravě tónu a okamžitému a soukromému překladu zpráv.",
   "aboutAcknowledgmentsHeading": "Poděkování",
   "aboutAcknowledgments": "Vítěz soutěže {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Postaveno na formátu {#obf}Open Board Format{/obf} a obsahuje slovní zásobu Quick Core 24 od {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Zobrazit zdrojový kód na GitHubu",
+  "aboutViewSource": "Zobrazit na GitHubu",
   "onboardingTagline": "Komunikujte snáze a přirozeněji.",
   "onboardingSmartRewritingTitle": "Chytrý přepis",
   "onboardingSmartRewritingDescription": "Proměňte krátké fráze v jasné věty.",

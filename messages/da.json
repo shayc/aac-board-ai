@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} hjælper mennesker, der ikke kan stole på tale, med at kommunikere lettere og mere naturligt. Appen bruger AI på enheden til at rette grammatik, justere tonen og oversætte beskeder med det samme og privat.",
   "aboutAcknowledgmentsHeading": "Tak til",
   "aboutAcknowledgments": "Vinder af {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Bygget på {#obf}Open Board Format{/obf} og indeholder Quick Core 24-ordforrådet fra {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Se kildekoden på GitHub",
+  "aboutViewSource": "Se på GitHub",
   "onboardingTagline": "Kommunikér lettere og mere naturligt.",
   "onboardingSmartRewritingTitle": "Smart omskrivning",
   "onboardingSmartRewritingDescription": "Forvandl korte sætninger til klare sætninger.",

@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} ajută persoanele care nu se pot baza pe vorbire să comunice mai ușor și mai natural. Folosește AI pe dispozitiv pentru a corecta gramatica, a ajusta tonul și a traduce mesajele instantaneu și privat.",
   "aboutAcknowledgmentsHeading": "Mulțumiri",
   "aboutAcknowledgments": "Câștigător al {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Construit pe {#obf}Open Board Format{/obf} și include vocabularul Quick Core 24 de la {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Vezi codul sursă pe GitHub",
+  "aboutViewSource": "Vezi pe GitHub",
   "onboardingTagline": "Comunică mai ușor și mai natural.",
   "onboardingSmartRewritingTitle": "Rescriere inteligentă",
   "onboardingSmartRewritingDescription": "Transformă expresiile scurte în propoziții clare.",

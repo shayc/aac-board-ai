@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} 帮助无法依靠言语的人更轻松、更自然地沟通。它使用设备端 AI 来纠正语法、调整语气，并即时、私密地翻译消息。",
   "aboutAcknowledgmentsHeading": "致谢",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} 的获奖作品。基于 {#obf}Open Board Format{/obf} 构建，并包含 {#openaac}OpenAAC{/openaac} 的 Quick Core 24 词汇表。",
-  "aboutViewSource": "在 GitHub 上查看源代码",
+  "aboutViewSource": "在 GitHub 上查看",
   "onboardingTagline": "更轻松、更自然地沟通。",
   "onboardingSmartRewritingTitle": "智能改写",
   "onboardingSmartRewritingDescription": "将简短的短语转化为清晰的句子。",

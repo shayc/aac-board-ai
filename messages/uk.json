@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} допомагає людям, які не можуть покладатися на мовлення, спілкуватися легше та природніше. Застосунок використовує ШІ безпосередньо на пристрої, щоб виправляти граматику, коригувати тон і миттєво та конфіденційно перекладати повідомлення.",
   "aboutAcknowledgmentsHeading": "Подяки",
   "aboutAcknowledgments": "Переможець {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Створено на основі {#obf}Open Board Format{/obf} і містить словник Quick Core 24 від {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Переглянути вихідний код на GitHub",
+  "aboutViewSource": "Переглянути на GitHub",
   "onboardingTagline": "Спілкуйтеся легше та природніше.",
   "onboardingSmartRewritingTitle": "Розумне переписування",
   "onboardingSmartRewritingDescription": "Перетворюйте короткі фрази на зрозумілі речення.",

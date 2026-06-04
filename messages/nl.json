@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} helpt mensen die niet op spraak kunnen vertrouwen om gemakkelijker en natuurlijker te communiceren. De app gebruikt AI op het apparaat om grammatica te corrigeren, de toon aan te passen en berichten direct en privé te vertalen.",
   "aboutAcknowledgmentsHeading": "Met dank aan",
   "aboutAcknowledgments": "Winnaar van de {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Gebouwd op het {#obf}Open Board Format{/obf} en bevat de Quick Core 24-woordenschat van {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Broncode bekijken op GitHub",
+  "aboutViewSource": "Bekijken op GitHub",
   "onboardingTagline": "Communiceer gemakkelijker en natuurlijker.",
   "onboardingSmartRewritingTitle": "Slim herschrijven",
   "onboardingSmartRewritingDescription": "Zet korte zinnen om in heldere zinnen.",
