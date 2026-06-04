@@ -1,3 +1,4 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionBar } from "./suggestion-bar";
@@ -88,5 +89,20 @@ describe("SuggestionBar", () => {
     await expect
       .element(screen.getByRole("button", { name: "direct tone" }))
       .not.toBeInTheDocument();
+  });
+
+  test("has no accessibility violations", async () => {
+    const handlers = createHandlers();
+
+    const screen = await render(
+      <SuggestionBar
+        suggestions={["Hello", "How are you?", "Thank you"]}
+        tone="as-is"
+        canChangeTone
+        {...handlers}
+      />,
+    );
+
+    await expectNoA11yViolations(screen.container);
   });
 });
