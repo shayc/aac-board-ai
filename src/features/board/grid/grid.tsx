@@ -1,8 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
-const MIN_TILE_PX = 80;
-const PADDING = 2;
+const MIN_CELL_PX = 72;
 
 export interface GridItemProps {
   tabIndex: number;
@@ -10,7 +9,7 @@ export interface GridItemProps {
 
 export interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
-  items: TItem[];
+  items: readonly TItem[];
   rows: number;
   columns: number;
   order?: (string | null)[][];
@@ -47,8 +46,8 @@ export function Grid<TItem extends { id: string }>({
       dir={dir}
       sx={(theme) => ({
         minHeight: "100%",
-        minWidth: `calc(${columns} * ${MIN_TILE_PX}px + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`,
-        p: PADDING,
+        minWidth: `calc(${columns} * ${MIN_CELL_PX}px + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(gap * 2)})`,
+        p: gap,
         gap,
       })}
     >
@@ -69,7 +68,7 @@ export function Grid<TItem extends { id: string }>({
                 role="gridcell"
                 aria-rowindex={rowIndex + 1}
                 aria-colindex={colIndex + 1}
-                sx={{ flex: 1, minWidth: MIN_TILE_PX, minHeight: MIN_TILE_PX }}
+                sx={{ flex: 1, minWidth: MIN_CELL_PX, minHeight: MIN_CELL_PX }}
               >
                 {item &&
                   renderItem(item, {
@@ -97,7 +96,7 @@ function buildGrid<TItem extends { id: string }>(
       const orderRow = order[r] ?? [];
 
       return Array.from({ length: columns }, (_, c) => {
-        const id = orderRow[c] ?? undefined;
+        const id = orderRow[c];
 
         return id ? itemsById.get(id) : undefined;
       });
