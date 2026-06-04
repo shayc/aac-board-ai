@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} ช่วยให้ผู้ที่ไม่สามารถพึ่งพาการพูดสื่อสารได้ง่ายและเป็นธรรมชาติมากขึ้น โดยใช้ AI บนอุปกรณ์เพื่อแก้ไขไวยากรณ์ ปรับโทน และแปลข้อความได้ทันทีและเป็นส่วนตัว",
   "aboutAcknowledgmentsHeading": "กิตติกรรมประกาศ",
   "aboutAcknowledgments": "ผู้ชนะ {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} พัฒนาบน {#obf}Open Board Format{/obf} และมีคลังคำศัพท์ Quick Core 24 ของ {#openaac}OpenAAC{/openaac}",
-  "aboutViewSource": "ดูซอร์สโค้ดบน GitHub",
+  "aboutViewSource": "ดูบน GitHub",
   "onboardingTagline": "สื่อสารได้ง่ายและเป็นธรรมชาติมากขึ้น",
   "onboardingSmartRewritingTitle": "การเขียนใหม่อัจฉริยะ",
   "onboardingSmartRewritingDescription": "เปลี่ยนวลีสั้นๆ ให้เป็นประโยคที่ชัดเจน",

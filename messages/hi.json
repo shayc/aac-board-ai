@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} उन लोगों की मदद करता है जो बोलने पर निर्भर नहीं रह सकते, ताकि वे अधिक आसानी और स्वाभाविक रूप से संवाद कर सकें। यह व्याकरण सुधारने, टोन समायोजित करने और संदेशों का तुरंत व निजी रूप से अनुवाद करने के लिए डिवाइस पर मौजूद AI का उपयोग करता है।",
   "aboutAcknowledgmentsHeading": "आभार",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} का विजेता। {#obf}Open Board Format{/obf} पर निर्मित और इसमें {#openaac}OpenAAC{/openaac} की Quick Core 24 शब्दावली शामिल है।",
-  "aboutViewSource": "GitHub पर सोर्स कोड देखें",
+  "aboutViewSource": "GitHub पर देखें",
   "onboardingTagline": "अधिक आसानी और स्वाभाविक रूप से संवाद करें।",
   "onboardingSmartRewritingTitle": "स्मार्ट पुनर्लेखन",
   "onboardingSmartRewritingDescription": "छोटे वाक्यांशों को स्पष्ट वाक्यों में बदलें।",

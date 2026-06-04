@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} এমন মানুষদের সাহায্য করে যারা কথার উপর নির্ভর করতে পারেন না, যাতে তাঁরা আরও সহজে ও স্বাভাবিকভাবে যোগাযোগ করতে পারেন। এটি ব্যাকরণ সংশোধন, টোন সমন্বয় এবং বার্তা তাৎক্ষণিকভাবে ও গোপনীয়ভাবে অনুবাদ করতে ডিভাইসে থাকা AI ব্যবহার করে।",
   "aboutAcknowledgmentsHeading": "কৃতজ্ঞতা স্বীকার",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}-এর বিজয়ী। {#obf}Open Board Format{/obf}-এর উপর নির্মিত এবং এতে {#openaac}OpenAAC{/openaac}-এর Quick Core 24 শব্দভাণ্ডার অন্তর্ভুক্ত রয়েছে।",
-  "aboutViewSource": "GitHub-এ সোর্স কোড দেখুন",
+  "aboutViewSource": "GitHub-এ দেখুন",
   "onboardingTagline": "আরও সহজে ও স্বাভাবিকভাবে যোগাযোগ করুন।",
   "onboardingSmartRewritingTitle": "স্মার্ট পুনর্লিখন",
   "onboardingSmartRewritingDescription": "ছোট বাক্যাংশকে স্পষ্ট বাক্যে রূপান্তর করুন।",

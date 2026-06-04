@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName}, konuşmaya güvenemeyen kişilerin daha kolay ve doğal bir şekilde iletişim kurmasına yardımcı olur. Dil bilgisini düzeltmek, tonu ayarlamak ve mesajları anında ve gizli biçimde çevirmek için cihaz üzerinde çalışan yapay zekayı kullanır.",
   "aboutAcknowledgmentsHeading": "Teşekkürler",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} kazananı. {#obf}Open Board Format{/obf} üzerine geliştirildi ve {#openaac}OpenAAC{/openaac} tarafından sunulan Quick Core 24 sözcük dağarcığını içerir.",
-  "aboutViewSource": "Kaynak kodu GitHub'da görüntüle",
+  "aboutViewSource": "GitHub'da görüntüle",
   "onboardingTagline": "Daha kolay ve doğal iletişim kurun.",
   "onboardingSmartRewritingTitle": "Akıllı yeniden yazma",
   "onboardingSmartRewritingDescription": "Kısa ifadeleri açık cümlelere dönüştürün.",

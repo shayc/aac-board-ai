@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} hilft Menschen, die sich nicht auf Sprache verlassen können, einfacher und natürlicher zu kommunizieren. Die App nutzt KI direkt auf dem Gerät, um Grammatik zu korrigieren, den Ton anzupassen und Nachrichten sofort und privat zu übersetzen.",
   "aboutAcknowledgmentsHeading": "Danksagungen",
   "aboutAcknowledgments": "Gewinner der {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Entwickelt auf Basis des {#obf}Open Board Format{/obf} und enthält das Quick-Core-24-Vokabular von {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Quellcode auf GitHub ansehen",
+  "aboutViewSource": "Auf GitHub ansehen",
   "onboardingTagline": "Kommuniziere einfacher und natürlicher.",
   "onboardingSmartRewritingTitle": "Intelligentes Umformulieren",
   "onboardingSmartRewritingDescription": "Verwandle kurze Wendungen in klare Sätze.",

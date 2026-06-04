@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName}은(는) 말에 의존할 수 없는 사람들이 더 쉽고 자연스럽게 의사소통할 수 있도록 돕습니다. 기기 내 AI를 사용해 문법을 교정하고, 어조를 조정하며, 메시지를 즉시 비공개로 번역합니다.",
   "aboutAcknowledgmentsHeading": "감사의 말",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} 수상작입니다. {#obf}Open Board Format{/obf}을 기반으로 제작되었으며 {#openaac}OpenAAC{/openaac}의 Quick Core 24 어휘를 포함합니다.",
-  "aboutViewSource": "GitHub에서 소스 코드 보기",
+  "aboutViewSource": "GitHub에서 보기",
   "onboardingTagline": "더 쉽고 자연스럽게 의사소통하세요.",
   "onboardingSmartRewritingTitle": "스마트 다시 쓰기",
   "onboardingSmartRewritingDescription": "짧은 문구를 명확한 문장으로 바꿉니다.",

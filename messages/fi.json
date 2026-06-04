@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} auttaa ihmisiä, jotka eivät voi luottaa puheeseen, kommunikoimaan helpommin ja luonnollisemmin. Se käyttää laitteessa toimivaa tekoälyä kieliopin korjaamiseen, sävyn säätämiseen ja viestien kääntämiseen välittömästi ja yksityisesti.",
   "aboutAcknowledgmentsHeading": "Kiitokset",
   "aboutAcknowledgments": "Kilpailun {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} voittaja. Rakennettu {#obf}Open Board Format{/obf} -muodon päälle ja sisältää {#openaac}OpenAAC{/openaac}:n Quick Core 24 -sanaston.",
-  "aboutViewSource": "Näytä lähdekoodi GitHubissa",
+  "aboutViewSource": "Näytä GitHubissa",
   "onboardingTagline": "Kommunikoi helpommin ja luonnollisemmin.",
   "onboardingSmartRewritingTitle": "Älykäs uudelleenkirjoitus",
   "onboardingSmartRewritingDescription": "Muunna lyhyet ilmaukset selkeiksi lauseiksi.",

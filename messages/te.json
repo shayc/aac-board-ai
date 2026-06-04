@@ -93,7 +93,7 @@
   "aboutAppDescription": "మాట్లాడటంపై ఆధారపడలేని వ్యక్తులు మరింత సులభంగా, సహజంగా సంభాషించడానికి {appName} సహాయపడుతుంది. వ్యాకరణాన్ని సరిచేయడానికి, టోన్‌ను సర్దుబాటు చేయడానికి, సందేశాలను తక్షణమే, గోప్యంగా అనువదించడానికి ఇది పరికరంలోని AIని ఉపయోగిస్తుంది.",
   "aboutAcknowledgmentsHeading": "కృతజ్ఞతలు",
   "aboutAcknowledgments": "{#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} విజేత. {#obf}Open Board Format{/obf}పై నిర్మించబడింది మరియు {#openaac}OpenAAC{/openaac} యొక్క Quick Core 24 పదజాలాన్ని కలిగి ఉంది.",
-  "aboutViewSource": "GitHubలో సోర్స్ కోడ్‌ను చూడండి",
+  "aboutViewSource": "GitHubలో చూడండి",
   "onboardingTagline": "మరింత సులభంగా, సహజంగా సంభాషించండి.",
   "onboardingSmartRewritingTitle": "స్మార్ట్ రీరైటింగ్",
   "onboardingSmartRewritingDescription": "చిన్న పదబంధాలను స్పష్టమైన వాక్యాలుగా మార్చండి.",

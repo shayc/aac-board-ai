@@ -93,7 +93,7 @@
   "aboutAppDescription": "{appName} giúp những người không thể dựa vào lời nói giao tiếp dễ dàng và tự nhiên hơn. Ứng dụng sử dụng AI trên thiết bị để sửa ngữ pháp, điều chỉnh giọng điệu và dịch tin nhắn ngay lập tức và riêng tư.",
   "aboutAcknowledgmentsHeading": "Lời cảm ơn",
   "aboutAcknowledgments": "Người chiến thắng {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Được xây dựng trên {#obf}Open Board Format{/obf} và bao gồm bộ từ vựng Quick Core 24 của {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Xem mã nguồn trên GitHub",
+  "aboutViewSource": "Xem trên GitHub",
   "onboardingTagline": "Giao tiếp dễ dàng và tự nhiên hơn.",
   "onboardingSmartRewritingTitle": "Viết lại thông minh",
   "onboardingSmartRewritingDescription": "Biến những cụm từ ngắn thành câu rõ ràng.",

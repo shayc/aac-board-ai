@@ -93,7 +93,7 @@
   "aboutAppDescription": "O {appName} ajuda pessoas que não podem depender da fala a se comunicarem de forma mais fácil e natural. Ele usa IA no dispositivo para corrigir a gramática, ajustar o tom e traduzir mensagens de forma instantânea e privada.",
   "aboutAcknowledgmentsHeading": "Agradecimentos",
   "aboutAcknowledgments": "Vencedor do {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. Desenvolvido sobre o {#obf}Open Board Format{/obf} e inclui o vocabulário Quick Core 24 do {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "Ver o código-fonte no GitHub",
+  "aboutViewSource": "Ver no GitHub",
   "onboardingTagline": "Comunique-se de forma mais fácil e natural.",
   "onboardingSmartRewritingTitle": "Reescrita inteligente",
   "onboardingSmartRewritingDescription": "Transforme frases curtas em frases claras.",

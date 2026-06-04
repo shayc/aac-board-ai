@@ -93,7 +93,7 @@
   "aboutAppDescription": "A(z) {appName} segít azoknak, akik nem támaszkodhatnak a beszédre, hogy könnyebben és természetesebben kommunikáljanak. Az eszközön futó MI-t használja a nyelvtan javítására, a hangnem beállítására, valamint az üzenetek azonnali és privát fordítására.",
   "aboutAcknowledgmentsHeading": "Köszönetnyilvánítás",
   "aboutAcknowledgments": "A(z) {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge} győztese. A(z) {#obf}Open Board Format{/obf} alapra épül, és tartalmazza a(z) {#openaac}OpenAAC{/openaac} Quick Core 24 szókészletét.",
-  "aboutViewSource": "Forráskód megtekintése a GitHubon",
+  "aboutViewSource": "Megtekintés a GitHubon",
   "onboardingTagline": "Kommunikálj könnyebben és természetesebben.",
   "onboardingSmartRewritingTitle": "Okos átfogalmazás",
   "onboardingSmartRewritingDescription": "Alakítsd a rövid kifejezéseket világos mondatokká.",
