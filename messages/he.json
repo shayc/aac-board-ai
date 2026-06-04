@@ -23,8 +23,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "הלוח יובא",
-        "countPlural=*": "הלוחות יובאו"
+        "countPlural=one": "הלוח יובא בהצלחה",
+        "countPlural=*": "הלוחות יובאו בהצלחה"
       }
     }
   ],
@@ -81,7 +81,7 @@
   "aiFeatureTranslation": "תרגום",
   "navBack": "חזרה",
   "navHome": "לעמוד הבית",
-  "messageBackspace": "מחק",
+  "messageBackspace": "מחיקה",
   "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה.",
   "messagePlay": "השמעת הודעה",
   "messageStop": "עצירה",
@@ -90,10 +90,10 @@
   "toneProfessional": "סגנון מקצועי",
   "toneFriendly": "סגנון ידידותי",
   "aboutHeading": "אודות",
-  "aboutAppDescription": "{appName} מסייע לאנשים שאינם יכולים להסתמך על דיבור לתקשר בצורה קלה וטבעית יותר. המערכת משתמשת בבינה מלאכותית המופעלת ישירות על המכשיר (On-device AI) כדי לתקן שגיאות דקדוק, להתאים את טון הדיבור ולתרגם הודעות באופן מיידי ובפרטיות מלאה.",
-  "aboutAcknowledgmentsHeading": "תודות והערכה",
-  "aboutAcknowledgments": "הזוכה באתגר {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. פותח על בסיס פורמט {#obf}Open Board Format{/obf} וכולל את אוצר המילים Quick Core 24 של {#openaac}OpenAAC{/openaac}.",
-  "aboutViewSource": "צפה ב-GitHub",
+  "aboutAppDescription": "{appName} מסייע לאנשים שאינם יכולים להסתמך על דיבור לתקשר בצורה קלה וטבעית יותר. המערכת משתמשת בבינה מלאכותית המופעלת ישירות על המכשיר (On-device AI) כדי לתקן שגיאות דקדוק, להתאים את טון הדיבור ולתרגם הודעות באופן מיידי – תוך שמירה מלאה על הפרטיות.",
+  "aboutAcknowledgmentsHeading": "תודות והוקרה",
+  "aboutAcknowledgments": "פרויקט זה זכה באתגר {#challenge}Google Chrome Built-in AI Challenge 2025{/challenge}. האפליקציה פותחה על בסיס {#obf}Open Board Format{/obf}, וכוללת את אוצר המילים Quick Core 24 של {#openaac}OpenAAC{/openaac}.",
+  "aboutViewSource": "צפייה ב-GitHub",
   "onboardingTagline": "לתקשר בקלות ובאופן טבעי.",
   "onboardingSmartRewritingTitle": "שכתוב חכם",
   "onboardingSmartRewritingDescription": "הפיכת ביטויים קצרים למשפטים מלאים וברורים.",
