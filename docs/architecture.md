@@ -40,7 +40,7 @@ The app runs React Router in data mode: routes carry loaders, page modules expor
 
 `HydrateFallback={LoadingState}` lives on the root route. A `RouteErrorBoundary` is nested _inside_ `<AppShell>` so the header, drawers, and menu stay mounted when a page throws — a 404 or import failure replaces only the `<Outlet>`.
 
-**App shell.** `<AppShell>` is the layout shared by every route: header, menu drawer, settings drawer, onboarding dialog, and an `<Outlet>` for the active page. Onboarding shows on first visit, gated by the `hasSeenOnboarding` localStorage key through `useOnboarding`. The settings drawer composes four panels from [src/app/settings/](../src/app/settings/) — `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `AISettings`. Add a setting by adding a panel.
+**App shell.** `<AppShell>` is the layout shared by every route: header, menu drawer, settings drawer, onboarding dialog, and an `<Outlet>` for the active page. Onboarding shows on first visit, gated by the `hasSeenOnboarding` localStorage key through `useOnboarding`. The settings drawer composes five panels from [src/app/settings/](../src/app/settings/) — `AppearanceSettings`, `LanguageSettings`, `SpeechSettings`, `PlaybackSettings`, `AISettings`. Add a setting by adding a panel.
 
 **Page title.** Each page declares its title with `<PageTitle>{name}</PageTitle>`; `AppHeader` reads it via `usePageTitle()` from a module-level external store. Decoupling the chrome from page identity means the header doesn't have to know which route is mounted, and pages that want no title simply don't render the component.
 
@@ -90,7 +90,7 @@ flowchart TD
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
-**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/queries.ts](../src/features/board/storage/queries.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
+**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-hydration.ts](../src/features/board/storage/board-hydration.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
 ## 5. State & persistence
 
@@ -106,7 +106,7 @@ Database `aac-boards-db`, version 1.
 | `boards`     | `[setId, boardId]` | `bySetId`                      | `BoardRecord` — the OBF JSON for one board. |
 | `assets`     | `[setId, path]`    | `bySetId`, `bySetIdAndMediaId` | `AssetRecord` — image/sound `Blob`s.        |
 
-Access goes through helpers in `db.ts`. `withBoardsDB(op)` opens the DB, runs the callback, and closes — connections are not pooled because the working set is small and per-operation latency is dominated by the work itself. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
+Access goes through helpers in `db.ts`, which share one lazily-opened connection cached at module scope (`getBoardsDB()` / `closeBoardsDB()`) rather than reopening per call. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
 
 ### localStorage
 
@@ -127,12 +127,11 @@ Most keys flow through `usePersistentState`. `speech-config` is the exception: `
 | `LanguageContext` | Available languages, selected language, `setLanguage`. |
 | `SnackbarContext` | `showSnackbar` + queued `<Snackbar>` UI.               |
 
-| External store     | Provides                                                               |
-| ------------------ | ---------------------------------------------------------------------- |
-| `board-sets-store` | Board-set list + cross-tab sync (§4).                                  |
-| `speech-store`     | Voice catalog (driven by `voiceschanged`) + speech config (§6).        |
-| `page-title-store` | Current page title; written by `<PageTitle>`, read by `AppHeader`.     |
-| `progress-store`   | In-flight Built-in AI download progress, keyed by name + options (§7). |
+| External store     | Provides                                                           |
+| ------------------ | ------------------------------------------------------------------ |
+| `board-sets-store` | Board-set list + cross-tab sync (§4).                              |
+| `speech-store`     | Voice catalog (driven by `voiceschanged`) + speech config (§6).    |
+| `page-title-store` | Current page title; written by `<PageTitle>`, read by `AppHeader`. |
 
 External stores are preferred over context where state outlives any single component, is driven by browser events outside React, or needs cross-tab visibility. Components subscribe through `useSyncExternalStore`.
 
@@ -196,11 +195,11 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 **Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai#readme).
 
-**Cross-instance progress.** Each download writes its `event.loaded` to a module-level `progress-store` keyed by `name + options`. `useGlobalDownloadProgress(namespace?)` reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads from every hook and creator. `LanguageSettings` consumes the `"Translator"` slice to render its progress alert.
+**Cross-instance progress.** Inside the package, each download writes its `event.loaded` to a module-level progress store keyed by `name + options`. `useGlobalDownloadProgress(namespace?)` reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads from every hook and creator. `LanguageSettings` consumes the `"Translator"` slice to render its progress alert.
 
 **Where `sharedContext` is used.** The persisted `ai-shared-context` string flows only through `useSuggestions` into `useRewriter({ sharedContext })`. The translator and proofreader hooks do not consume it.
 
-**Suggestions composition.** `useSuggestions` runs the proofreader and rewriter in parallel against a shared `AbortController`, cancels in-flight calls when the input changes, dedupes results, and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
+**Suggestions composition.** `useSuggestions` runs the proofreader and rewriter independently — each cancels its own in-flight request when its input changes — then dedupes the results and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
 
 **See:** [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai#readme), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
 
@@ -212,7 +211,7 @@ Two layers, different mechanisms by design: the strings the app owns are pre-tra
 
 **Board translation (Translator API).** When the user's selected language differs from a board's locale, `useBoardTranslation` resolves a translated `Board` (§4). OBF (`board.locale`) and the Web Speech API (`voice.lang`) both use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags; the app splits them into a `locale` (full tag, e.g. `"en-US"`) and a `language` (primary subtag, e.g. `"en"`). The language picker is derived from installed TTS voices intersected with Translator-supported languages — no point offering a language the user can neither hear nor see translated.
 
-**Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLocaleName`, `getNativeLanguageName`.
+**Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLanguageName`, `getNativeLanguageName`.
 
 **See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
 
