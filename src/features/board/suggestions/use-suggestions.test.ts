@@ -162,6 +162,28 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("changing tone re-invokes only the rewriter, leaving the proofreader untouched", async () => {
+    const { proofread, create: createProofreader } = stubProofreader();
+    const { create: createRewriter } = stubRewriter();
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(proofread).toHaveBeenCalledTimes(1);
+    });
+    expect(createProofreader).toHaveBeenCalledTimes(1);
+
+    result.current.setTone("more-formal");
+
+    await vi.waitFor(() => {
+      const tones = createRewriter.mock.calls.map((call) => call.at(0)?.tone);
+      expect(tones).toContain("more-formal");
+    });
+
+    expect(proofread).toHaveBeenCalledTimes(1);
+    expect(createProofreader).toHaveBeenCalledTimes(1);
+  });
+
   test("drops the stale rewrite when the tone changes, until the new tone resolves", async () => {
     const pending: ((rewritten: string) => void)[] = [];
     stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
