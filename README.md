@@ -80,7 +80,7 @@ npm run build           # Typecheck + production build
 ## Technical stack
 
 - **UI:** React 19 (with the React Compiler), TypeScript, Material UI, React Router
-- **AI:** Gemini Nano (Chrome) / Phi-4 Mini (Edge), via browser-native APIs
+- **AI:** Proofreader, Rewriter & Translator APIs (browser-native, on-device)
 - **Speech:** Web Speech API
 - **Storage:** IndexedDB (offline-first PWA shell)
 - **Data:** open-board-format (OBF/OBZ file parsing)
