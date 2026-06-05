@@ -1,10 +1,6 @@
 import type { MessagePartContent } from "../message/use-message";
-import {
-  getNavigationTargetId,
-  getSpokenText,
-  type BoardAction,
-  type BoardButton,
-} from "../types";
+import { getNavigationTargetId, getSpokenText } from "../board-button";
+import type { BoardAction, BoardButton } from "../types";
 
 export type ButtonIntent =
   | { kind: "navigate"; targetBoardId: string }

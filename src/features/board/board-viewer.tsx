@@ -14,7 +14,8 @@ import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import { Tile } from "./tile/tile";
-import { getNavigationTargetId, type Board, type BoardButton } from "./types";
+import { getNavigationTargetId } from "./board-button";
+import type { Board, BoardButton } from "./types";
 
 export interface BoardViewerProps {
   board: Board;
