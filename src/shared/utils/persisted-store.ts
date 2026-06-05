@@ -1,5 +1,7 @@
 import { createExternalStore, type ExternalStore } from "./external-store";
 
+const PERSIST_DEBOUNCE_MS = 200;
+
 export function createPersistedStore<T>(
   storageKey: string,
   parse: (raw: unknown) => T,
@@ -16,12 +18,16 @@ export function createPersistedStore<T>(
 
   const store = createExternalStore<T>(load());
 
+  let writeTimer: ReturnType<typeof setTimeout> | undefined;
   store.subscribe(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
-    } catch {
-      // Storage failures (quota, private mode) shouldn't break the in-memory store.
-    }
+    clearTimeout(writeTimer);
+    writeTimer = setTimeout(() => {
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
+      } catch {
+        // Storage failures (quota, private mode) shouldn't break the in-memory store.
+      }
+    }, PERSIST_DEBOUNCE_MS);
   });
 
   return store;

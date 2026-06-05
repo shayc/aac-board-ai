@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { createPersistedStore } from "./persisted-store";
 
 interface Counter {
@@ -38,11 +38,42 @@ describe("createPersistedStore", () => {
     expect(store.getSnapshot()).toEqual({ count: 0 });
   });
 
-  test("writes the snapshot back to localStorage on setState", () => {
-    const store = createPersistedStore("counter", parseCounter);
+  test("writes the snapshot back to localStorage after a debounce", () => {
+    vi.useFakeTimers();
+    try {
+      const store = createPersistedStore("counter", parseCounter);
 
-    store.setState({ count: 9 });
+      store.setState({ count: 9 });
+      expect(localStorage.getItem("counter")).toBeNull();
 
-    expect(localStorage.getItem("counter")).toBe(JSON.stringify({ count: 9 }));
+      vi.runAllTimers();
+      expect(localStorage.getItem("counter")).toBe(
+        JSON.stringify({ count: 9 }),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  test("coalesces a burst of setStates into a single write", () => {
+    vi.useFakeTimers();
+    try {
+      const store = createPersistedStore("counter", parseCounter);
+      const setItem = vi.spyOn(Storage.prototype, "setItem");
+
+      store.setState({ count: 1 });
+      store.setState({ count: 2 });
+      store.setState({ count: 3 });
+      vi.runAllTimers();
+
+      expect(setItem).toHaveBeenCalledTimes(1);
+      expect(localStorage.getItem("counter")).toBe(
+        JSON.stringify({ count: 3 }),
+      );
+
+      setItem.mockRestore();
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
