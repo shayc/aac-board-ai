@@ -110,14 +110,15 @@ Access goes through helpers in `db.ts`, which share one lazily-opened connection
 
 ### localStorage
 
-| Key                 | Holds                                   | Owner                                                              |
-| ------------------- | --------------------------------------- | ------------------------------------------------------------------ |
-| `language`          | Selected primary language subtag.       | [LanguageProvider](../src/shared/language/language-provider.tsx)   |
-| `speech-config`     | Selected voice + rate / pitch / volume. | [speech-store](../src/shared/speech/speech-store.ts)               |
-| `ai-shared-context` | User-supplied custom prompt for AI.     | [useAISharedContext](../src/shared/hooks/use-ai-shared-context.ts) |
-| `hasSeenOnboarding` | Boolean — has the welcome dialog shown. | [useOnboarding](../src/app/onboarding/use-onboarding.ts)           |
+| Key                 | Holds                                         | Owner                                                              |
+| ------------------- | --------------------------------------------- | ------------------------------------------------------------------ |
+| `language`          | Selected primary language subtag.             | [LanguageProvider](../src/shared/language/language-provider.tsx)   |
+| `speech-config`     | Selected voice + rate / pitch / volume.       | [speech-store](../src/shared/speech/speech-store.ts)               |
+| `playback-config`   | Highlight-active-part toggle during playback. | [playback-store](../src/shared/playback/playback-store.ts)         |
+| `ai-shared-context` | User-supplied custom prompt for AI.           | [useAISharedContext](../src/shared/hooks/use-ai-shared-context.ts) |
+| `hasSeenOnboarding` | Boolean — has the welcome dialog shown.       | [useOnboarding](../src/app/onboarding/use-onboarding.ts)           |
 
-Most keys flow through `usePersistentState`. `speech-config` is the exception: `speech-store` owns it directly and subscribes itself to persist on every change, because the store also drives an external-store API consumed via `useSyncExternalStore` (§6).
+Two keys (`language`, `hasSeenOnboarding`) flow through `usePersistentState`. The other three (`speech-config`, `ai-shared-context`, `playback-config`) are owned directly by external stores via `createPersistedStore`, which self-subscribes to persist on every change — because each store also drives an external-store API consumed via `useSyncExternalStore` (§6).
 
 ### Runtime stores
 
@@ -162,7 +163,7 @@ A board press flows through `resolveButtonIntent` (called by `createButtonActiva
 
 OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
 
-`useBoardNavigation` carries a `backStack: string[]` on `location.state` so `Back` returns to the previously-visited board in the set rather than the prior browser-history entry.
+`useBoardNavigation` tracks an in-set `backStack: string[]` on `location.state`. `Back` itself is `navigate(-1)`; the stack drives `canGoBack` so the button is offered only when there's a prior in-set board to return to, and `Home` clears it (via a `replace`) so Back isn't offered into the replaced entry.
 
 Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) and handling it in `createButtonActivation`'s execution loop — the dispatch surface is closed.
 
@@ -209,7 +210,7 @@ Two layers, different mechanisms by design: the strings the app owns are pre-tra
 
 **UI translation (Paraglide).** UI strings live in [`messages/<locale>.json`](../messages/) and are compiled to [`src/paraglide/`](../src/paraglide/) at install/build by the inlang Paraglide plugin (configured in [vite.config.ts](../vite.config.ts) and [project.inlang/settings.json](../project.inlang/settings.json)). Components import `m` from `@paraglide/messages.js` and call `m.foo()` — no runtime fetching, no async loading. `LanguageProvider` syncs the runtime locale during render with `setLocale(..., { reload: false })`, so the first paint after a language change is already translated. Base locale is `en`; Hebrew (`he`) is the second fully-localized locale and drives right-to-left layout via `getTextDirection`. Other locales fall back to the base. Sentences with inline links use `<ParaglideMessage>` from `@inlang/paraglide-js-react` with `{#tag}…{/tag}` placeholders in the message string, so translators can reorder clauses around the links — see [about-page.tsx](../src/pages/about-page.tsx).
 
-**Board translation (Translator API).** When the user's selected language differs from a board's locale, `useBoardTranslation` resolves a translated `Board` (§4). OBF (`board.locale`) and the Web Speech API (`voice.lang`) both use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags; the app splits them into a `locale` (full tag, e.g. `"en-US"`) and a `language` (primary subtag, e.g. `"en"`). The language picker is derived from installed TTS voices intersected with Translator-supported languages — no point offering a language the user can neither hear nor see translated.
+**Board translation (Translator API).** When the user's selected language differs from a board's locale, `useBoardTranslation` resolves a translated `Board` (§4). OBF (`board.locale`) and the Web Speech API (`voice.lang`) both use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags; the app splits them into a `locale` (full tag, e.g. `"en-US"`) and a `language` (primary subtag, e.g. `"en"`). The language picker is derived from installed TTS voices, minus a small denylist of languages the Translator API can't handle (`ca`, `ms`, `nb`, `yue` in [use-available-languages.ts](../src/shared/language/use-available-languages.ts)) — no point offering a language the user can neither hear nor see translated.
 
 **Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLanguageName`, `getNativeLanguageName`.
 
