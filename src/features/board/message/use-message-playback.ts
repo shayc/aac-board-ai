@@ -3,15 +3,15 @@ import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
 import { getSpokenText } from "../board-button";
 import {
-  createPartTracker,
-  type PartTracker,
+  createSpokenPartTracker,
   type SpokenPart,
-} from "./part-tracker";
+  type SpokenPartTracker,
+} from "./spoken-part-tracker";
 import type { MessagePart } from "./use-message";
 
 type PlaybackStep =
   | { kind: "sound"; partId: string; src: string }
-  | { kind: "speech"; tracker: PartTracker };
+  | { kind: "speech"; tracker: SpokenPartTracker };
 
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;
@@ -98,7 +98,7 @@ function planPlayback(parts: MessagePart[]): PlaybackStep[] {
       return;
     }
 
-    steps.push({ kind: "speech", tracker: createPartTracker(spokenRun) });
+    steps.push({ kind: "speech", tracker: createSpokenPartTracker(spokenRun) });
     spokenRun = [];
   }
 

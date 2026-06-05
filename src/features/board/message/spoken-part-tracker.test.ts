@@ -1,14 +1,17 @@
 import { describe, expect, test } from "vitest";
-import { createPartTracker, type SpokenPart } from "./part-tracker";
+import {
+  createSpokenPartTracker,
+  type SpokenPart,
+} from "./spoken-part-tracker";
 
-describe("createPartTracker", () => {
+describe("createSpokenPartTracker", () => {
   test("joins parts into one space-separated utterance", () => {
     const parts: SpokenPart[] = [
       { id: "1", text: "I" },
       { id: "2", text: "want" },
     ];
 
-    expect(createPartTracker(parts).text).toBe("I want");
+    expect(createSpokenPartTracker(parts).text).toBe("I want");
   });
 
   test("trims surrounding whitespace from each part before joining", () => {
@@ -17,18 +20,20 @@ describe("createPartTracker", () => {
       { id: "2", text: "want " },
     ];
 
-    expect(createPartTracker(parts).text).toBe("I want");
+    expect(createSpokenPartTracker(parts).text).toBe("I want");
   });
 
   test("collapses internal whitespace within a part", () => {
-    const tracker = createPartTracker([{ id: "1", text: "good   morning" }]);
+    const tracker = createSpokenPartTracker([
+      { id: "1", text: "good   morning" },
+    ]);
 
     expect(tracker.text).toBe("good morning");
     expect(tracker.partIdAt(5)).toBe("1"); // "morning" lands inside the same part
   });
 
   test("maps a boundary offset to the part that owns it", () => {
-    const tracker = createPartTracker([
+    const tracker = createSpokenPartTracker([
       { id: "1", text: "I" },
       { id: "2", text: "want" },
     ]);
@@ -38,7 +43,7 @@ describe("createPartTracker", () => {
   });
 
   test("keeps a multi-word part active across its inner word boundaries", () => {
-    const tracker = createPartTracker([
+    const tracker = createSpokenPartTracker([
       { id: "1", text: "good morning" },
       { id: "2", text: "everyone" },
     ]);
@@ -49,7 +54,7 @@ describe("createPartTracker", () => {
   });
 
   test("returns null for an offset past the end of the utterance", () => {
-    const tracker = createPartTracker([{ id: "1", text: "hi" }]);
+    const tracker = createSpokenPartTracker([{ id: "1", text: "hi" }]);
 
     expect(tracker.partIdAt(99)).toBeNull();
   });
