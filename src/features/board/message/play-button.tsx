@@ -25,7 +25,7 @@ export function PlayButton({
     <Tooltip title={playButtonLabel}>
       <Box sx={{ alignSelf: "center" }}>
         <Fab
-          color="primary"
+          color={isPlaying ? "default" : "primary"}
           disabled={disabled}
           aria-label={playButtonLabel}
           onClick={isPlaying ? onStopClick : onPlayClick}
