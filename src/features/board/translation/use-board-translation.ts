@@ -6,8 +6,9 @@ import type { Board } from "../types";
 import {
   applyTranslations,
   collectTranslatableStrings,
-  getBoardLanguage,
   findTranslatedBoard,
+  getBoardLanguage,
+  hasTranslatedBoard,
 } from "./board-translation";
 
 export interface UseBoardTranslationOptions {
@@ -20,9 +21,9 @@ export interface UseBoardTranslationReturn {
 }
 
 interface AsyncTranslation {
-  board: Board;
+  sourceBoard: Board;
   language: string;
-  result: Board;
+  translatedBoard: Board;
 }
 
 export function useBoardTranslation({
@@ -33,15 +34,18 @@ export function useBoardTranslation({
   const [asyncTranslation, setAsyncTranslation] =
     useState<AsyncTranslation | null>(null);
 
-  const found = findTranslatedBoard(board, language);
-  const asyncResult =
-    asyncTranslation?.board === board && asyncTranslation.language === language
-      ? asyncTranslation.result
-      : undefined;
-  const translatedBoard = found ?? asyncResult ?? board;
+  const existingTranslation = findTranslatedBoard(board, language);
+  const isAsyncTranslationCurrent =
+    asyncTranslation?.sourceBoard === board &&
+    asyncTranslation.language === language;
+  const freshTranslation = isAsyncTranslationCurrent
+    ? asyncTranslation.translatedBoard
+    : undefined;
+
+  const translatedBoard = existingTranslation ?? freshTranslation ?? board;
 
   useEffect(() => {
-    if (findTranslatedBoard(board, language)) {
+    if (hasTranslatedBoard(board, language)) {
       return;
     }
 
@@ -69,9 +73,9 @@ export function useBoardTranslation({
 
         void persistTranslations(setId, board.id, language, translations);
         setAsyncTranslation({
-          board,
+          sourceBoard: board,
           language,
-          result: applyTranslations(board, translations),
+          translatedBoard: applyTranslations(board, translations),
         });
       } catch {
         // Translation unavailable — fall through to the source board.
