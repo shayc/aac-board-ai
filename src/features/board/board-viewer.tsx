@@ -8,7 +8,7 @@ import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
 import { useMessage } from "./message/use-message";
-import { useMessagePlayback } from "./message/use-message-playback";
+import { useMessagePlayback } from "./message/playback/use-message-playback";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";

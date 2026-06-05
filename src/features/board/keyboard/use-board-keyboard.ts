@@ -1,7 +1,7 @@
 import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
+import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { UseMessageReturn } from "../message/use-message";
-import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
 import { resolveBoardKey } from "./board-key-resolver";
 
 export interface UseBoardKeyboardOptions {

@@ -1,7 +1,7 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import type { MessagePart } from "./use-message";
+import type { MessagePart } from "../use-message";
 import { useMessagePlayback } from "./use-message-playback";
 
 describe("useMessagePlayback", () => {

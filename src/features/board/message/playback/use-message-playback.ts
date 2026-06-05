@@ -1,17 +1,8 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
-import { getSpokenText } from "../board-button";
-import {
-  createPartTracker,
-  type PartTracker,
-  type SpokenPart,
-} from "./part-tracker";
-import type { MessagePart } from "./use-message";
-
-type PlaybackStep =
-  | { kind: "sound"; partId: string; src: string }
-  | { kind: "speech"; tracker: PartTracker };
+import type { MessagePart } from "../use-message";
+import { planPlayback } from "./plan-playback";
 
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;
@@ -87,35 +78,4 @@ export function useMessagePlayback(
     play,
     stop,
   };
-}
-
-function planPlayback(parts: MessagePart[]): PlaybackStep[] {
-  const steps: PlaybackStep[] = [];
-  let spokenRun: SpokenPart[] = [];
-
-  function flushSpeech() {
-    if (spokenRun.length === 0) {
-      return;
-    }
-
-    steps.push({ kind: "speech", tracker: createPartTracker(spokenRun) });
-    spokenRun = [];
-  }
-
-  for (const part of parts) {
-    if (part.soundSrc) {
-      flushSpeech();
-      steps.push({ kind: "sound", partId: part.id, src: part.soundSrc });
-      continue;
-    }
-
-    const text = getSpokenText(part);
-    if (text) {
-      spokenRun.push({ id: part.id, text });
-    }
-  }
-
-  flushSpeech();
-
-  return steps;
 }

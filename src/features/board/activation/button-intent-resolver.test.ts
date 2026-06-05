@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { resolveButtonIntent } from "./intent-resolver";
+import { resolveButtonIntent } from "./button-intent-resolver";
 import type { BoardButton } from "../types";
 
 describe("resolveButtonIntent", () => {

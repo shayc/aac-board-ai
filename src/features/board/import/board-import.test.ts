@@ -5,7 +5,7 @@ import {
   getBoard,
   getBoardsDB,
   listBoardSets,
-} from "../storage/db";
+} from "../storage/boards-db";
 import { resetBoardsDB } from "../storage/test-helpers";
 import { importFilesAsBoardSets, resolveLoadBoardPaths } from "./board-import";
 

@@ -1,5 +1,5 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import { updateBoardStrings } from "../storage/db";
+import { updateBoardStrings } from "../storage/boards-db";
 import type { Board } from "../types";
 import {
   applyTranslations,

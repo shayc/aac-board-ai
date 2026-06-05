@@ -12,7 +12,7 @@ import {
   updateBoardStrings,
   upsertBoardSet,
   type UpsertBoardSetInput,
-} from "./db";
+} from "./boards-db";
 import { clearBoardsDB } from "./test-helpers";
 
 function makeBoardSetInput(

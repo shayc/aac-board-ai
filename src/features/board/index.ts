@@ -2,7 +2,7 @@ export { BoardSetDeleteDialog } from "./board-set/delete-dialog";
 export { BoardSetInfoDialog } from "./board-set/info-dialog";
 export { BoardSetList } from "./board-set/list";
 export { BoardViewer } from "./board-viewer";
-export { importBoardFromUrl } from "./import/from-url";
+export { importBoardFromUrl } from "./import/import-from-url";
 export { useImportBoardFiles } from "./import/use-import-board-files";
 export {
   BOARD_PATTERN,
@@ -11,10 +11,10 @@ export {
 } from "./navigation/board-paths";
 export { BoardNotFoundError, hydrateBoard } from "./storage/board-hydration";
 export { deleteBoardSet, getBoardSets } from "./storage/board-sets-store";
-export { getBoardSet } from "./storage/db";
+export { getBoardSet } from "./storage/boards-db";
 export { useBoardSets } from "./storage/use-board-sets";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardRouteParams } from "./navigation/use-board-navigation";
-export type { BoardSetRecord } from "./storage/db";
+export type { BoardSetRecord } from "./storage/boards-db";
 export type { Board } from "./types";
