@@ -13,7 +13,7 @@ export { BoardNotFoundError, hydrateBoard } from "./storage/board-hydration";
 export { deleteBoardSet, getBoardSets } from "./storage/board-sets-store";
 export { getBoardSet } from "./storage/db";
 export { useBoardSets } from "./storage/use-board-sets";
-export { useBoardTranslation } from "./translation/use-board-translation";
+export { resolveTranslatedBoard } from "./translation/translate-board";
 
 export type { BoardRouteParams } from "./navigation/use-board-navigation";
 export type { BoardSetRecord } from "./storage/db";

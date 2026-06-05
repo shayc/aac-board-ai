@@ -72,25 +72,24 @@ flowchart TD
     L --> Q[hydrateBoard<br/>hydrate assets · obfToBoard]
     Q --> C
     Q --> O[ObjectUrlRegistry]
-    Q --> P[BoardPage<br/>useLoaderData]
+    Q --> T[resolveTranslatedBoard]
+    T -. miss .-> X[Translator API]
+    X -. persist .-> C
+    T --> P[BoardPage<br/>useLoaderData]
   end
 
   subgraph Render
-    P --> T[useBoardTranslation]
-    T -. cache hit .-> V[BoardViewer]
-    T -. miss .-> X[Translator API]
-    X --> T
-    T -. persist .-> C
+    P --> V[BoardViewer]
   end
 ```
 
 **Registry lifecycle.** `hydrateBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry` and receives the loader's `request.signal`; if the route is superseded mid-flight (rapid navigation) the registry self-destructs rather than promoting, so the live load's URLs aren't orphaned. On success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
 
-**Anti-flash translation.** `useBoardTranslation` initializes state with a _synchronous_ lookup against `board.strings[language]`, so cached translations land on first paint. On a miss, an effect creates a `Translator`, translates labels and vocalizations in parallel against a shared `AbortController`, persists the result back via `updateBoardStrings`, and applies a derived `Board`. If the Translator is unavailable or rejects, the hook keeps the current board — AAC UX requirement: never flash the source language. The cache write means subsequent loads in any tab hit the cache instead of the model.
+**Anti-flash translation.** Translation happens in the loader, not after render: `boardLoader` calls `resolveTranslatedBoard`, which returns the board already in the active UI language _before_ `BoardPage` paints. A synchronous lookup against `board.strings[language]` covers cached translations; on a miss it creates a `Translator`, translates labels and vocalizations in parallel under the loader's `request.signal`, persists the result via `updateBoardStrings`, and applies the translated `Board`. If the Translator is unavailable or rejects, it returns the source board — pictograms carry the meaning. Because translation is part of loading, React Router holds the previous board on screen until the next one resolves, so no untranslated frame is ever rendered — the AAC UX requirement to never flash the source language. A language change isn't a navigation, so `useRevalidateOnLanguageChange` (in `AppShell`) calls `revalidate()` to re-run the loader and re-translate the board on screen. The cache write means subsequent loads in any tab hit the cache instead of the model.
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
-**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-hydration.ts](../src/features/board/storage/board-hydration.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
+**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-hydration.ts](../src/features/board/storage/board-hydration.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/translate-board.ts](../src/features/board/translation/translate-board.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
 ## 5. State & persistence
 
@@ -210,11 +209,11 @@ Two layers, different mechanisms by design: the strings the app owns are pre-tra
 
 **UI translation (Paraglide).** UI strings live in [`messages/<locale>.json`](../messages/) and are compiled to [`src/paraglide/`](../src/paraglide/) at install/build by the inlang Paraglide plugin (configured in [vite.config.ts](../vite.config.ts) and [project.inlang/settings.json](../project.inlang/settings.json)). Components import `m` from `@paraglide/messages.js` and call `m.foo()` — no runtime fetching, no async loading. `LanguageProvider` syncs the runtime locale during render with `setLocale(..., { reload: false })`, so the first paint after a language change is already translated. Base locale is `en`; Hebrew (`he`) is the second fully-localized locale and drives right-to-left layout via `getTextDirection`. Other locales fall back to the base. Sentences with inline links use `<ParaglideMessage>` from `@inlang/paraglide-js-react` with `{#tag}…{/tag}` placeholders in the message string, so translators can reorder clauses around the links — see [about-page.tsx](../src/pages/about-page.tsx).
 
-**Board translation (Translator API).** When the user's selected language differs from a board's locale, `useBoardTranslation` resolves a translated `Board` (§4). OBF (`board.locale`) and the Web Speech API (`voice.lang`) both use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags; the app splits them into a `locale` (full tag, e.g. `"en-US"`) and a `language` (primary subtag, e.g. `"en"`). The language picker is derived from installed TTS voices, minus a small denylist of languages the Translator API can't handle (`ca`, `ms`, `nb`, `yue` in [use-available-languages.ts](../src/shared/language/use-available-languages.ts)) — no point offering a language the user can neither hear nor see translated.
+**Board translation (Translator API).** When the user's selected language differs from a board's locale, `boardLoader` resolves a translated `Board` via `resolveTranslatedBoard` (§4). OBF (`board.locale`) and the Web Speech API (`voice.lang`) both use [BCP-47](https://www.rfc-editor.org/info/bcp47) tags; the app splits them into a `locale` (full tag, e.g. `"en-US"`) and a `language` (primary subtag, e.g. `"en"`). The language picker is derived from installed TTS voices, minus a small denylist of languages the Translator API can't handle (`ca`, `ms`, `nb`, `yue` in [use-available-languages.ts](../src/shared/language/use-available-languages.ts)) — no point offering a language the user can neither hear nor see translated.
 
 **Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLanguageName`, `getNativeLanguageName`.
 
-**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/use-board-translation.ts](../src/features/board/translation/use-board-translation.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
+**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/translate-board.ts](../src/features/board/translation/translate-board.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
 
 ## 9. PWA & offline
 
