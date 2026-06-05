@@ -3,7 +3,7 @@ import type { Board } from "../types";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
-export function resolveSyncTranslation(
+export function findTranslatedBoard(
   board: Board,
   language: string,
 ): Board | undefined {

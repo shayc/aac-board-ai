@@ -7,7 +7,7 @@ import {
   applyTranslations,
   collectTranslatableStrings,
   getBoardLanguage,
-  resolveSyncTranslation,
+  findTranslatedBoard,
 } from "./board-translation";
 
 export interface UseBoardTranslationOptions {
@@ -19,28 +19,36 @@ export interface UseBoardTranslationReturn {
   translatedBoard: Board;
 }
 
+interface AsyncTranslation {
+  board: Board;
+  language: string;
+  result: Board;
+}
+
 export function useBoardTranslation({
   setId,
   board,
 }: UseBoardTranslationOptions): UseBoardTranslationReturn {
   const { language } = useLanguage();
+  const [asyncTranslation, setAsyncTranslation] =
+    useState<AsyncTranslation | null>(null);
 
-  const [translatedBoard, setTranslatedBoard] = useState<Board>(
-    () => resolveSyncTranslation(board, language) ?? board,
-  );
+  const found = findTranslatedBoard(board, language);
+  const asyncResult =
+    asyncTranslation?.board === board && asyncTranslation.language === language
+      ? asyncTranslation.result
+      : undefined;
+  const translatedBoard = found ?? asyncResult ?? board;
 
   useEffect(() => {
+    if (findTranslatedBoard(board, language)) {
+      return;
+    }
+
     const controller = new AbortController();
     const { signal } = controller;
 
     const run = async () => {
-      const cached = resolveSyncTranslation(board, language);
-      if (cached) {
-        setTranslatedBoard(cached);
-
-        return;
-      }
-
       try {
         await using translator = await createTranslator({
           sourceLanguage: getBoardLanguage(board),
@@ -60,9 +68,13 @@ export function useBoardTranslation({
         }
 
         void persistTranslations(setId, board.id, language, translations);
-        setTranslatedBoard(applyTranslations(board, translations));
+        setAsyncTranslation({
+          board,
+          language,
+          result: applyTranslations(board, translations),
+        });
       } catch {
-        // AAC UX: never flash source language on failure.
+        // Translation unavailable — fall through to the source board.
       }
     };
 

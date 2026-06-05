@@ -175,4 +175,34 @@ describe("useBoardTranslation", () => {
       expect(result.current.translation.translatedBoard.name).toBe("de:Food");
     });
   });
+
+  test("shows the source board on a cache miss until the translation resolves", async () => {
+    const board = makeBoard({
+      strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
+    });
+    const calls: { input: string; resolve: (value: string) => void }[] = [];
+    stubTranslator(
+      (input) =>
+        new Promise<string>((resolve) => {
+          calls.push({ input, resolve });
+        }),
+    );
+
+    const { result } = await setup(board, "es");
+    expect(result.current.translation.translatedBoard.name).toBe("Comida");
+
+    result.current.setLanguage("de");
+
+    await vi.waitFor(() => {
+      expect(calls).toHaveLength(3);
+    });
+    expect(result.current.translation.translatedBoard.name).toBe("Food");
+
+    for (const { input, resolve } of calls) {
+      resolve(`de:${input}`);
+    }
+    await vi.waitFor(() => {
+      expect(result.current.translation.translatedBoard.name).toBe("de:Food");
+    });
+  });
 });
