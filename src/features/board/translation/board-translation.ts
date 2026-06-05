@@ -16,13 +16,6 @@ export function findTranslatedBoard(
   return cached ? applyTranslations(board, cached) : undefined;
 }
 
-export function hasTranslatedBoard(board: Board, language: string): boolean {
-  return (
-    getBoardLanguage(board) === language ||
-    Boolean(findTranslations(board.strings, language))
-  );
-}
-
 export function getBoardLanguage(board: Board): string {
   return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
 }
