@@ -6,7 +6,7 @@ import {
   collectTranslatableStrings,
   findTranslatedBoard,
   getBoardLanguage,
-} from "./board-translation";
+} from "./translation-cache";
 
 export async function resolveTranslatedBoard(
   setId: string,

@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { putBoards } from "../storage/db";
 import { resetBoardsDB, seedBoardSets } from "../storage/test-helpers";
 import type { Board } from "../types";
-import { resolveTranslatedBoard } from "./translate-board";
+import { resolveTranslatedBoard } from "./resolve-translated-board";
 
 function makeBoard(overrides: Partial<Board> = {}): Board {
   return {

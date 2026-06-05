@@ -5,7 +5,7 @@ import {
   findTranslations,
   getBoardLanguage,
   findTranslatedBoard,
-} from "./board-translation";
+} from "./translation-cache";
 import type { Board } from "../types";
 
 const mockBoard: Board = {
@@ -37,7 +37,7 @@ const mockBoard: Board = {
   },
 };
 
-describe("board-translation", () => {
+describe("translation-cache", () => {
   test("getBoardLanguage() extracts the base language code", () => {
     expect(getBoardLanguage(mockBoard)).toBe("en");
     expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
