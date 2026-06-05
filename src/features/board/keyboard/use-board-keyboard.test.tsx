@@ -1,5 +1,5 @@
-import { AppProviders } from "@app/app-providers";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
+import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
