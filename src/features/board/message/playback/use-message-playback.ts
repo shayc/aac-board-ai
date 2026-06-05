@@ -1,8 +1,8 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
+import type { MessagePart } from "../use-message";
 import { planPlayback } from "./plan-playback";
-import type { MessagePart } from "./use-message";
 
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;

@@ -1,10 +1,10 @@
-import { getSpokenText } from "../board-button";
+import { getSpokenText } from "../../board-button";
+import type { MessagePart } from "../use-message";
 import {
   createSpokenPartTracker,
   type SpokenPart,
   type SpokenPartTracker,
 } from "./spoken-part-tracker";
-import type { MessagePart } from "./use-message";
 
 export type PlaybackStep =
   | { kind: "sound"; partId: string; src: string }

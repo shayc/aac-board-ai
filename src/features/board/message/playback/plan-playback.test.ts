@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
+import type { MessagePart } from "../use-message";
 import { planPlayback } from "./plan-playback";
-import type { MessagePart } from "./use-message";
 
 describe("planPlayback", () => {
   test("returns no steps for an empty message", () => {

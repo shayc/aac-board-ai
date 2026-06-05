@@ -1,7 +1,7 @@
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
-import type { UseMessagePlaybackReturn } from "../message/use-message-playback";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "../types";
 import { createButtonActivation } from "./button-activation";
