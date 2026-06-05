@@ -162,6 +162,26 @@ describe("importFilesAsBoardSets", () => {
     expect(storedAsset).toBeInstanceOf(Blob);
     expect(storedAsset?.size).toBe(sampleAssetBytes.byteLength);
   });
+
+  test("detects an OBZ archive by content even when its name is not .obz", async () => {
+    const obzFile = await loadFixtureFile(OBZ_FIXTURE);
+    const archive = await loadOBZ(obzFile);
+    const zipNamedFile = new File([obzFile], "lots-of-stuff.zip", {
+      type: "application/zip",
+    });
+
+    const importResults = await importFilesAsBoardSets(zipNamedFile);
+
+    expect(importResults).toHaveLength(1);
+    expect(importResults[0].setId).toBe(IMPORTED_SET_ID);
+
+    const boardSets = await listBoardSets();
+    expect(archive.boards.size).toBeGreaterThan(1);
+    expect(boardSets[0]).toMatchObject({
+      setId: IMPORTED_SET_ID,
+      boardCount: archive.boards.size,
+    });
+  });
 });
 
 describe("resolveLoadBoardPaths", () => {
