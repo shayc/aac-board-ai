@@ -26,14 +26,10 @@ export async function resolveTranslatedBoard(
       signal,
     });
 
-    const translatableStrings = collectTranslatableStrings(board);
-    const translations = await translatePhrases(
-      translatableStrings,
-      translator,
-      signal,
-    );
+    const phrases = collectTranslatableStrings(board);
+    const translations = await translatePhrases(phrases, translator, signal);
 
-    await persistTranslations(setId, board.id, language, translations);
+    void persistTranslations(setId, board.id, language, translations);
 
     return applyTranslations(board, translations);
   } catch {
@@ -44,12 +40,12 @@ export async function resolveTranslatedBoard(
 }
 
 async function translatePhrases(
-  translatableStrings: Set<string>,
+  phrases: Set<string>,
   translator: Translator,
   signal?: AbortSignal,
 ): Promise<Record<string, string>> {
   const entries = await Promise.all(
-    Array.from(translatableStrings).map(async (phrase) => {
+    Array.from(phrases).map(async (phrase) => {
       const translated = await translator.translate(phrase, { signal });
 
       return [phrase, translated] as const;
