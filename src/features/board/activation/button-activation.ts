@@ -4,7 +4,7 @@ import type { UseMessagePlaybackReturn } from "../message/playback/use-message-p
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardAction, BoardButton } from "../types";
-import { resolveButtonIntent } from "./intent-resolver";
+import { resolveButtonIntent } from "./button-intent-resolver";
 
 export interface ButtonActivationOptions {
   message: UseMessageReturn;
