@@ -3,7 +3,8 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
 import { importBoardFiles } from "./board-import";
 
-const BOARD_FILE_ACCEPT = ".obz,.obf,application/zip,application/json";
+const BOARD_FILE_ACCEPT =
+  ".obz,.obf,.zip,.json,application/zip,application/json,application/octet-stream";
 
 export interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
