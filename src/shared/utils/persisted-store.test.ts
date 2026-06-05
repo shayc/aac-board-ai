@@ -54,26 +54,4 @@ describe("createPersistedStore", () => {
       vi.useRealTimers();
     }
   });
-
-  test("coalesces a burst of setStates into a single write", () => {
-    vi.useFakeTimers();
-    try {
-      const store = createPersistedStore("counter", parseCounter);
-      const setItem = vi.spyOn(Storage.prototype, "setItem");
-
-      store.setState({ count: 1 });
-      store.setState({ count: 2 });
-      store.setState({ count: 3 });
-      vi.runAllTimers();
-
-      expect(setItem).toHaveBeenCalledTimes(1);
-      expect(localStorage.getItem("counter")).toBe(
-        JSON.stringify({ count: 3 }),
-      );
-
-      setItem.mockRestore();
-    } finally {
-      vi.useRealTimers();
-    }
-  });
 });

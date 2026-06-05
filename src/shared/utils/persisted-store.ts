@@ -1,3 +1,4 @@
+import { debounce } from "./debounce";
 import { createExternalStore, type ExternalStore } from "./external-store";
 
 const PERSIST_DEBOUNCE_MS = 200;
@@ -18,17 +19,15 @@ export function createPersistedStore<T>(
 
   const store = createExternalStore<T>(load());
 
-  let writeTimer: ReturnType<typeof setTimeout> | undefined;
-  store.subscribe(() => {
-    clearTimeout(writeTimer);
-    writeTimer = setTimeout(() => {
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
-      } catch {
-        // Storage failures (quota, private mode) shouldn't break the in-memory store.
-      }
-    }, PERSIST_DEBOUNCE_MS);
-  });
+  const persist = () => {
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
+    } catch {
+      // Storage failures (quota, private mode) shouldn't break the in-memory store.
+    }
+  };
+
+  store.subscribe(debounce(persist, PERSIST_DEBOUNCE_MS));
 
   return store;
 }
