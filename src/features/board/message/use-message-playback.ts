@@ -1,7 +1,7 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import { useRef, useState } from "react";
-import { getSpokenText } from "../types";
+import { getSpokenText } from "../board-button";
 import {
   createPartTracker,
   type PartTracker,
