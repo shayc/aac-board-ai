@@ -2,7 +2,7 @@ export { BoardSetDeleteDialog } from "./board-set/delete-dialog";
 export { BoardSetInfoDialog } from "./board-set/info-dialog";
 export { BoardSetList } from "./board-set/list";
 export { BoardViewer } from "./board-viewer";
-export { importBoardFromUrl } from "./import/from-url";
+export { importBoardFromUrl } from "./import/import-from-url";
 export { useImportBoardFiles } from "./import/use-import-board-files";
 export {
   BOARD_PATTERN,
