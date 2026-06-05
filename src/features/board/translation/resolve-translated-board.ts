@@ -20,18 +20,22 @@ export async function resolveTranslatedBoard(
   }
 
   try {
-    await using translator = await createTranslator({
+    const translator = await createTranslator({
       sourceLanguage: getBoardLanguage(board),
       targetLanguage: language,
       signal,
     });
 
-    const phrases = collectTranslatableStrings(board);
-    const translations = await translatePhrases(phrases, translator, signal);
+    try {
+      const phrases = collectTranslatableStrings(board);
+      const translations = await translatePhrases(phrases, translator, signal);
 
-    void persistTranslations(setId, board.id, language, translations);
+      void persistTranslations(setId, board.id, language, translations);
 
-    return applyTranslations(board, translations);
+      return applyTranslations(board, translations);
+    } finally {
+      translator.destroy();
+    }
   } catch {
     // Translator unavailable or aborted — render the source board; its
     // pictograms carry the meaning until a translation lands.
