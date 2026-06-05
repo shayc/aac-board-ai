@@ -26,7 +26,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     id: obfBoard.id,
     name: obfBoard.name,
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
-    descriptionHTML: obfBoard.description_html,
+    descriptionHtml: obfBoard.description_html,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),

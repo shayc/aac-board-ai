@@ -4,7 +4,7 @@ export interface Board {
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
-  descriptionHTML?: string;
+  descriptionHtml?: string;
   license?: BoardLicense;
   strings?: BoardStrings;
 }
