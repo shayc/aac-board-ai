@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
   parsePlaybackConfig,
@@ -36,8 +36,10 @@ describe("playback-store", () => {
     await rerender();
 
     expect(result.current.highlightActivePart).toBe(true);
-    expect(localStorage.getItem("playback-config")).toBe(
-      JSON.stringify({ highlightActivePart: true }),
+    await vi.waitFor(() =>
+      expect(localStorage.getItem("playback-config")).toBe(
+        JSON.stringify({ highlightActivePart: true }),
+      ),
     );
   });
 });

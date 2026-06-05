@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { createPersistedStore } from "./persisted-store";
 
 interface Counter {
@@ -38,11 +38,20 @@ describe("createPersistedStore", () => {
     expect(store.getSnapshot()).toEqual({ count: 0 });
   });
 
-  test("writes the snapshot back to localStorage on setState", () => {
-    const store = createPersistedStore("counter", parseCounter);
+  test("writes the snapshot back to localStorage after a debounce", () => {
+    vi.useFakeTimers();
+    try {
+      const store = createPersistedStore("counter", parseCounter);
 
-    store.setState({ count: 9 });
+      store.setState({ count: 9 });
+      expect(localStorage.getItem("counter")).toBeNull();
 
-    expect(localStorage.getItem("counter")).toBe(JSON.stringify({ count: 9 }));
+      vi.runAllTimers();
+      expect(localStorage.getItem("counter")).toBe(
+        JSON.stringify({ count: 9 }),
+      );
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });
