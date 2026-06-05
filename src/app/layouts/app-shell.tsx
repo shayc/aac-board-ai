@@ -4,6 +4,7 @@ import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import Box from "@mui/material/Box";
+import { useRevalidateOnLanguageChange } from "@shared/language/use-revalidate-on-language-change";
 import { useState } from "react";
 import { Outlet } from "react-router";
 
@@ -11,6 +12,8 @@ export function AppShell() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
+
+  useRevalidateOnLanguageChange();
 
   return (
     <Box sx={{ height: "100svh", display: "flex", flexDirection: "column" }}>

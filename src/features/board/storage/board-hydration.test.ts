@@ -121,4 +121,38 @@ describe("hydrateBoard", () => {
     expect(url).toBeDefined();
     expect(await isObjectUrlAlive(url!)).toBe(true);
   });
+
+  test("self-destructs without promoting when the signal is already aborted", async () => {
+    await seedTestBoard();
+
+    const live = await hydrateBoard(SET_ID, BOARD_ID);
+    const liveUrl = live.buttons[0].imageSrc;
+    expect(liveUrl).toBeDefined();
+    expect(await isObjectUrlAlive(liveUrl!)).toBe(true);
+
+    const aborted = new AbortController();
+    aborted.abort();
+    const error = await expectThrown(
+      hydrateBoard(SET_ID, BOARD_ID, aborted.signal),
+    );
+
+    expect((error as Error).name).toBe("AbortError");
+    // A superseded load self-destructs instead of promoting, so the live load's
+    // URLs aren't orphaned.
+    expect(await isObjectUrlAlive(liveUrl!)).toBe(true);
+  });
+
+  test("a later load still hydrates after an aborted one", async () => {
+    await seedTestBoard();
+
+    const aborted = new AbortController();
+    aborted.abort();
+    await expectThrown(hydrateBoard(SET_ID, BOARD_ID, aborted.signal));
+
+    const board = await hydrateBoard(SET_ID, BOARD_ID);
+    const url = board.buttons[0].imageSrc;
+
+    expect(url).toBeDefined();
+    expect(await isObjectUrlAlive(url!)).toBe(true);
+  });
 });

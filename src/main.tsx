@@ -1,5 +1,5 @@
-import { AppProviders } from "@app/app-providers";
 import { AppRouter } from "@app/app-router";
+import { AppProviders } from "@shared/providers/app-providers";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";

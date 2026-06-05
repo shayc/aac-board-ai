@@ -62,22 +62,11 @@ export default defineConfig([
   },
   {
     files: ["src/features/**/*.{ts,tsx}"],
-    ignores: ["src/features/**/*.test.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
-        group: ["@app/*", "@features/*"],
+        group: ["@app/*", "@features/*", "@pages/*"],
         message:
-          "A feature is isolated from @app and other features — use @shared or relative paths within the feature.",
-      }),
-    },
-  },
-  {
-    files: ["src/features/**/*.test.{ts,tsx}"],
-    rules: {
-      "no-restricted-imports": restrictImports({
-        group: ["@features/*"],
-        message:
-          "Even in tests, a feature is isolated from other features — use @shared or relative paths within the feature.",
+          "A feature is isolated from @app, @pages, and other features — use @shared (e.g. @shared/testing) or relative paths within the feature.",
       }),
     },
   },
