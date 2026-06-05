@@ -12,7 +12,7 @@ Built-in AI is a leaf-level enhancement, not the architecture: when available, i
 
 The codebase is **feature-sliced**. The single feature today is `board`. Layers and import rules:
 
-- `@app/*` — app shell, providers, routing, top-level dialogs/drawers.
+- `@app/*` — app shell, routing, top-level dialogs/drawers.
 - `@features/*` — self-contained feature modules. May import from `@shared/*`. Must **not** import from `@app/*` or from each other.
 - `@pages/*` — route components. Compose features and shared UI.
 - `@shared/*` — cross-cutting code (Built-in AI hooks, speech, language, snackbar, theme, utilities). No knowledge of features.
@@ -54,7 +54,7 @@ LanguageProvider              // selected language + Paraglide locale
 
 Order is load-bearing: `ThemeProvider` reads `direction` from `useLanguage()` to pick the LTR or RTL emotion cache and theme. Speech is not a provider — it lives in a module-level store (§6). `LanguageProvider` keeps that store in sync via `useVoiceLanguageSync`, which auto-selects a default voice for the active language whenever the current voice doesn't match. It also synchronizes Paraglide's runtime locale during render so the first paint after a language change is already translated.
 
-**See:** [src/app/app-router.tsx](../src/app/app-router.tsx), [src/app/loaders/](../src/app/loaders/), [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/app/app-providers.tsx](../src/app/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
+**See:** [src/app/app-router.tsx](../src/app/app-router.tsx), [src/app/loaders/](../src/app/loaders/), [src/app/layouts/app-shell.tsx](../src/app/layouts/app-shell.tsx), [src/shared/providers/app-providers.tsx](../src/shared/providers/app-providers.tsx), [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx).
 
 ## 4. Loading a board
 
