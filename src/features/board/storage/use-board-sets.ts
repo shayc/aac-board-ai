@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { getBoardSetsSnapshot, subscribeBoardSets } from "./board-sets-store";
-import type { BoardSetRecord } from "./db";
+import type { BoardSetRecord } from "./boards-db";
 
 export interface UseBoardSetsReturn {
   boardSets: BoardSetRecord[];

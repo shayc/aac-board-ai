@@ -12,8 +12,8 @@ import type {
   UpsertAssetInput,
   UpsertBoardInput,
   UpsertBoardSetInput,
-} from "../storage/db";
-import { putAssets, putBoards, upsertBoardSet } from "../storage/db";
+} from "../storage/boards-db";
+import { putAssets, putBoards, upsertBoardSet } from "../storage/boards-db";
 
 export interface ImportResult {
   setId: string;
