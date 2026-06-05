@@ -2,10 +2,10 @@ import { htmlToText } from "@shared/utils/html";
 import { normalizeLocale } from "@shared/utils/locale";
 import { lookup } from "mrmime";
 import {
-  loadOBF,
-  loadOBZ,
+  loadBoard,
   type OBFBoard,
   type OBFManifest,
+  type ParsedOBZ,
 } from "@shayc/open-board-format";
 import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {
@@ -37,26 +37,31 @@ export async function importFilesAsBoardSets(
 
   for (const file of fileList) {
     const setId = deriveSetId(file.name);
+    const loaded = await loadBoard(file);
 
-    if (file.name.toLowerCase().endsWith(".obz")) {
-      results.push(await importOBZFile(file, setId));
-    } else {
-      results.push(await importOBFFile(file, setId));
-    }
+    results.push(
+      loaded.format === "obz"
+        ? await importOBZArchive(loaded.archive, setId, file.name)
+        : await importOBFBoard(loaded.board, setId, file.name),
+    );
   }
 
   return results;
 }
 
-async function importOBZFile(file: File, setId: string): Promise<ImportResult> {
-  const { manifest, boards, resources } = await loadOBZ(file);
+async function importOBZArchive(
+  archive: ParsedOBZ,
+  setId: string,
+  fileName: string,
+): Promise<ImportResult> {
+  const { manifest, boards, resources } = archive;
   const boardPathToId = buildBoardPathIndex(manifest);
 
   const rootBoardId = resolveRootBoardId(manifest, boardPathToId);
   const rootBoard = boards.get(rootBoardId);
 
   await upsertBoardSet(
-    buildBoardSetInput(setId, rootBoard, rootBoardId, file.name),
+    buildBoardSetInput(setId, rootBoard, rootBoardId, fileName),
   );
   await putBoards(setId, buildBoardRecords(boards, boardPathToId));
 
@@ -159,10 +164,12 @@ function buildBoardSetInput(
   };
 }
 
-async function importOBFFile(file: File, setId: string): Promise<ImportResult> {
-  const board = await loadOBF(file);
-
-  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, file.name));
+async function importOBFBoard(
+  board: OBFBoard,
+  setId: string,
+  fileName: string,
+): Promise<ImportResult> {
+  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, fileName));
 
   await putBoards(setId, [
     {
@@ -176,5 +183,5 @@ async function importOBFFile(file: File, setId: string): Promise<ImportResult> {
 }
 
 function deriveSetId(filename: string): string {
-  return filename.replace(/\.(obz|obf)$/i, "").toLowerCase();
+  return filename.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 }
