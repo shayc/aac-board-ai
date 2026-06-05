@@ -25,10 +25,12 @@ export async function hydrateBoard(
   const registry = createObjectUrlRegistry();
   try {
     const obf = await fetchOBFBoard(setId, boardId);
+
+    signal?.throwIfAborted();
+
     const hydrated = await hydrateOBFBoard(setId, obf, registry);
     const board = obfToBoard(hydrated);
 
-    // Don't promote a superseded registry — it would orphan the live one.
     signal?.throwIfAborted();
 
     const previous = previousRegistry;
