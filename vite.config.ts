@@ -45,6 +45,15 @@ export default defineConfig({
           "AAC Board AI helps people who can't speak communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
         start_url: "/",
         display: "standalone",
+        file_handlers: [
+          {
+            action: "/",
+            accept: {
+              "application/zip": [".obz", ".zip"],
+              "application/json": [".obf", ".json"],
+            },
+          },
+        ],
         theme_color: SHELL_DARK,
         background_color: CONTENT_DARK,
         icons: [
