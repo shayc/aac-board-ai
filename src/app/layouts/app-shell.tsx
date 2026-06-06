@@ -3,7 +3,11 @@ import { MenuDrawer } from "@app/menu/menu-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
-import { BoardFileDropOverlay, useBoardFileDrop } from "@features/board";
+import {
+  BoardFileDropOverlay,
+  useBoardFileDrop,
+  useFileHandlerLaunch,
+} from "@features/board";
 import Box from "@mui/material/Box";
 import { useRevalidateOnLanguageChange } from "@shared/language/use-revalidate-on-language-change";
 import { useState } from "react";
@@ -15,6 +19,7 @@ export function AppShell() {
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
 
+  useFileHandlerLaunch();
   useRevalidateOnLanguageChange();
 
   return (
