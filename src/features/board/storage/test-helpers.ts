@@ -1,4 +1,4 @@
-import { invalidateBoardSets } from "./board-sets-store";
+import { invalidateBoardSets } from "../board-sets/board-sets-store";
 import { getBoardsDB, upsertBoardSet, type BoardSetRecord } from "./boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;

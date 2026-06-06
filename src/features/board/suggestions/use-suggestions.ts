@@ -1,9 +1,9 @@
 import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
+import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import { useProofreader, useRewriter } from "@shayc/react-built-in-ai";
 import { useState } from "react";
-import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { toPhrases } from "./to-phrases";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
@@ -23,12 +23,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     sharedContext,
     SHARED_CONTEXT_DEBOUNCE_MS,
   );
+
   const [tone, setTone] = useState<RewriterTone>("as-is");
   const { language } = useLanguage();
 
   const proofreader = useProofreader({
     expectedInputLanguages: [language],
   });
+
   const rewriter = useRewriter({
     tone,
     sharedContext: debouncedSharedContext,
