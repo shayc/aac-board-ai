@@ -89,7 +89,7 @@ flowchart TD
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
-**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-hydration.ts](../src/features/board/storage/board-hydration.ts), [src/features/board/storage/board-sets-store.ts](../src/features/board/storage/board-sets-store.ts), [src/features/board/translation/translate-board.ts](../src/features/board/translation/translate-board.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
+**See:** [src/features/board/import/board-import.ts](../src/features/board/import/board-import.ts), [src/features/board/storage/board-hydration.ts](../src/features/board/storage/board-hydration.ts), [src/features/board/board-sets/board-sets-store.ts](../src/features/board/board-sets/board-sets-store.ts), [src/features/board/translation/resolve-translated-board.ts](../src/features/board/translation/resolve-translated-board.ts), [src/app/loaders/board-loader.ts](../src/app/loaders/board-loader.ts).
 
 ## 5. State & persistence
 
@@ -99,25 +99,25 @@ Three layers, by lifetime.
 
 Database `aac-boards-db`, version 1.
 
-| Object store | Key                | Indexes                        | Holds                                       |
-| ------------ | ------------------ | ------------------------------ | ------------------------------------------- |
-| `boardSets`  | `setId`            | `byUpdatedAt`                  | `BoardSetRecord` — metadata per import.     |
-| `boards`     | `[setId, boardId]` | `bySetId`                      | `BoardRecord` — the OBF JSON for one board. |
-| `assets`     | `[setId, path]`    | `bySetId`, `bySetIdAndMediaId` | `AssetRecord` — image/sound `Blob`s.        |
+| Object store | Key                | Indexes       | Holds                                       |
+| ------------ | ------------------ | ------------- | ------------------------------------------- |
+| `boardSets`  | `setId`            | `byUpdatedAt` | `BoardSetRecord` — metadata per import.     |
+| `boards`     | `[setId, boardId]` | `bySetId`     | `BoardRecord` — the OBF JSON for one board. |
+| `assets`     | `[setId, path]`    | `bySetId`     | `AssetRecord` — image/sound `Blob`s.        |
 
-Access goes through helpers in `db.ts`, which share one lazily-opened connection cached at module scope (`getBoardsDB()` / `closeBoardsDB()`) rather than reopening per call. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
+Access goes through helpers in `boards-db.ts`, which share one lazily-opened connection cached at module scope (`getBoardsDB()` / `closeBoardsDB()`) rather than reopening per call. Deletes use a bound `IDBKeyRange` to remove all rows for a `setId` in a single transaction.
 
 ### localStorage
 
 | Key                 | Holds                                         | Owner                                                              |
 | ------------------- | --------------------------------------------- | ------------------------------------------------------------------ |
-| `language`          | Selected primary language subtag.             | [LanguageProvider](../src/shared/language/language-provider.tsx)   |
+| `language`          | Selected primary language subtag.             | [language-store](../src/shared/language/language-store.ts)         |
 | `speech-config`     | Selected voice + rate / pitch / volume.       | [speech-store](../src/shared/speech/speech-store.ts)               |
 | `playback-config`   | Highlight-active-part toggle during playback. | [playback-store](../src/shared/playback/playback-store.ts)         |
 | `ai-shared-context` | User-supplied custom prompt for AI.           | [useAISharedContext](../src/shared/hooks/use-ai-shared-context.ts) |
 | `hasSeenOnboarding` | Boolean — has the welcome dialog shown.       | [useOnboarding](../src/app/onboarding/use-onboarding.ts)           |
 
-Two keys (`language`, `hasSeenOnboarding`) flow through `usePersistentState`. The other three (`speech-config`, `ai-shared-context`, `playback-config`) are owned directly by external stores via `createPersistedStore`, which self-subscribes to persist on every change — because each store also drives an external-store API consumed via `useSyncExternalStore` (§6).
+Only `hasSeenOnboarding` flows through `usePersistentState`. The other four (`language`, `speech-config`, `ai-shared-context`, `playback-config`) are owned directly by external stores via `createPersistedStore`, which self-subscribes to persist on every change — because each store also drives an external-store API consumed via `useSyncExternalStore` (§6).
 
 ### Runtime stores
 
@@ -135,7 +135,7 @@ Two keys (`language`, `hasSeenOnboarding`) flow through `usePersistentState`. Th
 
 External stores are preferred over context where state outlives any single component, is driven by browser events outside React, or needs cross-tab visibility. Components subscribe through `useSyncExternalStore`.
 
-**See:** [src/features/board/storage/db.ts](../src/features/board/storage/db.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/hooks/use-persistent-state.ts](../src/shared/hooks/use-persistent-state.ts).
+**See:** [src/features/board/storage/boards-db.ts](../src/features/board/storage/boards-db.ts), [src/shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [src/shared/hooks/use-persistent-state.ts](../src/shared/hooks/use-persistent-state.ts).
 
 ## 6. Interaction & speech
 
@@ -160,7 +160,7 @@ A board press flows through `resolveButtonIntent` (called by `createButtonActiva
 | `speak`     | Play the current message via `useMessagePlayback`. |
 | `spell`     | Append `action.text` to the last part's label.     |
 
-OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
+OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([parse-action.ts](../src/features/board/obf/parse-action.ts), invoked by [obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
 
 `useBoardNavigation` tracks an in-set `backStack: string[]` on `location.state`. `Back` itself is `navigate(-1)`; the stack drives `canGoBack` so the button is offered only when there's a prior in-set board to return to, and `Home` clears it (via a `replace`) so Back isn't offered into the replaced entry.
 
@@ -175,7 +175,7 @@ Adding a new button behavior means extending `ButtonIntent` (or `BoardAction`) a
 
 `useMessagePlayback` walks each `MessagePart` in order: if it has a `soundSrc`, play the audio; otherwise speak `getSpokenText(part)` (vocalization, falling back to label). Adjacent text parts are merged into one utterance to avoid clipped speech between words.
 
-**See:** [src/features/board/activation/button-activation.ts](../src/features/board/activation/button-activation.ts), [src/features/board/activation/intent-resolver.ts](../src/features/board/activation/intent-resolver.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/use-message-playback.ts](../src/features/board/message/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/audio/play-audio.ts](../src/shared/audio/play-audio.ts).
+**See:** [src/features/board/activation/button-activation.ts](../src/features/board/activation/button-activation.ts), [src/features/board/activation/button-intent-resolver.ts](../src/features/board/activation/button-intent-resolver.ts), [src/features/board/navigation/use-board-navigation.ts](../src/features/board/navigation/use-board-navigation.ts), [src/features/board/message/use-message.ts](../src/features/board/message/use-message.ts), [src/features/board/message/playback/use-message-playback.ts](../src/features/board/message/playback/use-message-playback.ts), [src/shared/speech/speech-store.ts](../src/shared/speech/speech-store.ts), [src/shared/audio/play-audio.ts](../src/shared/audio/play-audio.ts).
 
 ## 7. Built-in AI
 
@@ -213,7 +213,7 @@ Two layers, different mechanisms by design: the strings the app owns are pre-tra
 
 **Locale helpers.** In [src/shared/utils/locale.ts](../src/shared/utils/locale.ts): `normalizeLocale` (canonical casing), `getLanguageCode` (locale → primary subtag), `getTextDirection`, `getEnglishLanguageName`, `getNativeLanguageName`.
 
-**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/translate-board.ts](../src/features/board/translation/translate-board.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
+**See:** [src/shared/language/language-provider.tsx](../src/shared/language/language-provider.tsx), [src/features/board/translation/resolve-translated-board.ts](../src/features/board/translation/resolve-translated-board.ts), [src/shared/utils/locale.ts](../src/shared/utils/locale.ts).
 
 ## 9. PWA & offline
 
