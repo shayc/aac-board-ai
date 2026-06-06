@@ -3,7 +3,7 @@ import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { getTextDirection } from "@shared/utils/locale";
 import { useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import { setStoredLanguage, useStoredLanguage } from "./stored-language";
+import { setStoredLanguage, useStoredLanguage } from "./language-store";
 import { useAvailableLanguages } from "./use-available-languages";
 
 export interface LanguageProviderProps {

@@ -4,7 +4,7 @@ import {
   getStoredLanguage,
   parseStoredLanguage,
   setStoredLanguage,
-} from "./stored-language";
+} from "./language-store";
 
 describe("parseStoredLanguage", () => {
   test("passes a non-empty string through unchanged", () => {
@@ -22,7 +22,7 @@ describe("parseStoredLanguage", () => {
   });
 });
 
-describe("stored-language store", () => {
+describe("language store", () => {
   beforeEach(() => {
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
