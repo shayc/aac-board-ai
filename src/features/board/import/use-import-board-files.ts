@@ -36,11 +36,13 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         message: m.libraryImportedBoards({ count }),
         severity: "success",
       });
-    } catch {
+    } catch (error) {
       showSnackbar({
         message: m.libraryImportFailedBoards({ count }),
         severity: "error",
       });
+
+      throw error;
     }
   }
 
