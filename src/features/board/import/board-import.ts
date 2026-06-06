@@ -151,8 +151,8 @@ function buildBoardSetInput(
 ): UpsertBoardSetInput {
   return {
     setId,
-    rootBoardId,
     name: board?.name ?? fallbackSetName,
+    rootBoardId,
     author: board?.license?.author_name,
     description: board?.description_html
       ? htmlToText(board.description_html)
