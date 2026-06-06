@@ -48,7 +48,7 @@ export function AISettings() {
           placeholder={m.aiCustomInstructionsPlaceholder()}
           helperText={m.aiCustomInstructionsHelper()}
           value={sharedContext}
-          onChange={(e) => setAISharedContext(e.target.value)}
+          onChange={(event) => setAISharedContext(event.target.value)}
         />
       )}
 

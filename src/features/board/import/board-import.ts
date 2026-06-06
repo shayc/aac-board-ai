@@ -23,15 +23,6 @@ export interface ImportResult {
 export async function importBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
-  const results = await importFilesAsBoardSets(files);
-  await notifyBoardSetsChanged();
-
-  return results;
-}
-
-export async function importFilesAsBoardSets(
-  files: File | File[],
-): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
   const results: ImportResult[] = [];
 
@@ -45,6 +36,8 @@ export async function importFilesAsBoardSets(
         : await importOBFBoard(loaded.board, setId, file.name),
     );
   }
+
+  await notifyBoardSetsChanged();
 
   return results;
 }
