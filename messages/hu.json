@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",
   "libraryDelete": "Törlés",
   "libraryCancel": "Mégse",

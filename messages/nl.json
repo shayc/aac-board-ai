@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Zet bordbestanden neer om te importeren",
   "libraryInfo": "Info",
   "libraryDelete": "Verwijderen",
   "libraryCancel": "Annuleren",

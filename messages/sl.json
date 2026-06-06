@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",
   "libraryCancel": "Prekliči",

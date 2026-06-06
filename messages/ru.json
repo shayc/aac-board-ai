@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Отпустите файлы досок для импорта",
   "libraryInfo": "Сведения",
   "libraryDelete": "Удалить",
   "libraryCancel": "Отмена",

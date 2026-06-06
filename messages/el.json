@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
   "libraryDelete": "Διαγραφή",
   "libraryCancel": "Άκυρο",

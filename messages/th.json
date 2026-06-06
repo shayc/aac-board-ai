@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",
   "libraryCancel": "ยกเลิก",

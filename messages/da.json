@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Slip tavlefiler for at importere",
   "libraryInfo": "Info",
   "libraryDelete": "Slet",
   "libraryCancel": "Annullér",

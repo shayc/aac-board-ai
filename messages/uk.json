@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Відпустіть файли дошок для імпорту",
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",
   "libraryCancel": "Скасувати",

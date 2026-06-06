@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",
   "libraryCancel": "Hủy",

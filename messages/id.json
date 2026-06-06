@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",
   "libraryCancel": "Batal",
