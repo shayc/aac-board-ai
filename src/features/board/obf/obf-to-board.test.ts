@@ -227,7 +227,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.actions).toEqual([]);
     });
 
-    test("merges action + actions in order", () => {
+    test("uses actions and ignores the action fallback when both are present", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-2",
@@ -248,10 +248,21 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
       expect(board.buttons[0]?.actions).toEqual([
-        { kind: "speak" },
         { kind: "space" },
         { kind: "clear" },
       ]);
+    });
+
+    test("falls back to the single action when actions is absent", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-2-fallback",
+        buttons: [{ id: "btn-1", label: "Speak", action: ":speak" }],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      };
+
+      const board = obfToBoard(obfBoard);
+      expect(board.buttons[0]?.actions).toEqual([{ kind: "speak" }]);
     });
 
     test("parses spell actions and drops unknown ones", () => {
