@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
   "libraryDelete": "Delete",
   "libraryCancel": "Cancel",

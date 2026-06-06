@@ -1,24 +1,18 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
-import { importBoardFiles } from "./board-import";
-
-const BOARD_FILE_ACCEPT =
-  ".obz,.obf,.zip,.json,application/zip,application/json,application/octet-stream";
+import { BOARD_FILE_ACCEPT } from "./board-file-types";
+import { importBoardFiles as importBoardFilesToStorage } from "./board-import";
 
 export interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
+  importBoardFiles: (files: File[]) => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
 
-  async function pickAndImportBoardFiles() {
-    const files = await openFiles({
-      accept: BOARD_FILE_ACCEPT,
-      multiple: true,
-    });
-
+  async function importBoardFiles(files: File[]) {
     if (files.length === 0) {
       return;
     }
@@ -30,7 +24,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      await importBoardFiles(files);
+      await importBoardFilesToStorage(files);
 
       showSnackbar({
         message: m.libraryImportedBoards({ count }),
@@ -46,5 +40,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  return { pickAndImportBoardFiles };
+  async function pickAndImportBoardFiles() {
+    const files = await openFiles({
+      accept: BOARD_FILE_ACCEPT,
+      multiple: true,
+    });
+
+    await importBoardFiles(files);
+  }
+
+  return { pickAndImportBoardFiles, importBoardFiles };
 }
