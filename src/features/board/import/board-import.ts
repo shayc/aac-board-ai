@@ -1,12 +1,12 @@
 import { htmlToText } from "@shared/utils/html";
 import { normalizeLocale } from "@shared/utils/locale";
-import { lookup } from "mrmime";
 import {
   loadBoard,
   type OBFBoard,
   type OBFManifest,
   type ParsedOBZ,
 } from "@shayc/open-board-format";
+import { lookup } from "mrmime";
 import { notifyBoardSetsChanged } from "../storage/board-sets-store";
 import type {
   UpsertAssetInput,
