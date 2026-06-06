@@ -1,4 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { listBoardSets } from "../storage/boards-db";
@@ -13,20 +14,25 @@ function DropHarness() {
   const { isDraggingFiles, dropHandlers } = useBoardFileDrop();
 
   return (
-    <div data-testid="zone" {...dropHandlers}>
-      {isDraggingFiles ? "active" : "idle"}
-    </div>
+    <>
+      <div data-testid="zone" {...dropHandlers}>
+        {isDraggingFiles ? "active" : "idle"}
+      </div>
+      <div data-testid="path">{useLocation().pathname}</div>
+    </>
   );
 }
 
 async function renderDropZone() {
   const screen = await render(
     <AppProviders>
-      <DropHarness />
+      <MemoryRouter>
+        <DropHarness />
+      </MemoryRouter>
     </AppProviders>,
   );
 
-  return screen.getByTestId("zone").element();
+  return { screen, zone: screen.getByTestId("zone").element() };
 }
 
 function dataTransferWithFiles(...files: File[]): DataTransfer {
@@ -75,7 +81,7 @@ describe("useBoardFileDrop", () => {
   });
 
   test("shows the overlay while files are dragged over and hides it on drop", async () => {
-    const zone = await renderDropZone();
+    const { zone } = await renderDropZone();
     const dataTransfer = dataTransferWithFiles(new File([""], "notes.txt"));
 
     fireDrag(zone, "dragenter", dataTransfer);
@@ -86,7 +92,7 @@ describe("useBoardFileDrop", () => {
   });
 
   test("ignores drags that carry no files", async () => {
-    const zone = await renderDropZone();
+    const { zone } = await renderDropZone();
     const dataTransfer = new DataTransfer();
     dataTransfer.setData("text/plain", "hello");
 
@@ -96,7 +102,7 @@ describe("useBoardFileDrop", () => {
   });
 
   test("stays visible while crossing nested elements (no flicker)", async () => {
-    const zone = await renderDropZone();
+    const { zone } = await renderDropZone();
     const dataTransfer = dataTransferWithFiles(new File([""], "notes.txt"));
     const insideApp = zone;
 
@@ -112,7 +118,7 @@ describe("useBoardFileDrop", () => {
   });
 
   test("hides immediately when the drag leaves the window", async () => {
-    const zone = await renderDropZone();
+    const { zone } = await renderDropZone();
     const dataTransfer = dataTransferWithFiles(new File([""], "notes.txt"));
     const leftWindow = null;
 
@@ -124,8 +130,8 @@ describe("useBoardFileDrop", () => {
     await expect.element(zone).toHaveTextContent("idle");
   });
 
-  test("imports a dropped board file", async () => {
-    const zone = await renderDropZone();
+  test("imports a dropped board file and opens it", async () => {
+    const { zone, screen } = await renderDropZone();
     const boardFile = await loadFixtureFile(OBF_FIXTURE);
 
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile));
@@ -135,5 +141,9 @@ describe("useBoardFileDrop", () => {
       expect(boardSets).toHaveLength(1);
       expect(boardSets[0]?.setId).toBe(IMPORTED_SET_ID);
     });
+
+    await expect
+      .element(screen.getByTestId("path"))
+      .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
   });
 });

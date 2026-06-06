@@ -3,7 +3,7 @@ import { isBoardFile } from "./board-file-types";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useFileHandlerLaunch(): void {
-  const { importBoardFiles } = useImportBoardFiles();
+  const { importAndOpenBoardFiles } = useImportBoardFiles();
 
   useEffect(() => {
     const queue = window.launchQueue;
@@ -13,8 +13,8 @@ export function useFileHandlerLaunch(): void {
 
     queue.setConsumer(({ files }) => {
       void Promise.all(files.map((handle) => handle.getFile())).then((opened) =>
-        importBoardFiles(opened.filter(isBoardFile)),
+        importAndOpenBoardFiles(opened.filter(isBoardFile)),
       );
     });
-  }, [importBoardFiles]);
+  }, [importAndOpenBoardFiles]);
 }

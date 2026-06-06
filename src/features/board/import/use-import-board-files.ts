@@ -1,20 +1,27 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
+import { useNavigate } from "react-router";
+import { boardSetPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-types";
-import { importBoardFiles as importBoardFilesToStorage } from "./board-import";
+import {
+  importBoardFiles as importBoardFilesToStorage,
+  type ImportResult,
+} from "./board-import";
 
 export interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
-  importBoardFiles: (files: File[]) => Promise<void>;
+  importBoardFiles: (files: File[]) => Promise<ImportResult[]>;
+  importAndOpenBoardFiles: (files: File[]) => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
-  async function importBoardFiles(files: File[]) {
+  async function importBoardFiles(files: File[]): Promise<ImportResult[]> {
     if (files.length === 0) {
-      return;
+      return [];
     }
 
     const count = files.length;
@@ -24,12 +31,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      await importBoardFilesToStorage(files);
+      const results = await importBoardFilesToStorage(files);
 
       showSnackbar({
         message: m.libraryImportedBoards({ count }),
         severity: "success",
       });
+
+      return results;
     } catch (error) {
       showSnackbar({
         message: m.libraryImportFailedBoards({ count }),
@@ -37,6 +46,15 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       });
 
       throw error;
+    }
+  }
+
+  async function importAndOpenBoardFiles(files: File[]) {
+    const results = await importBoardFiles(files);
+
+    if (results.length === 1) {
+      const [result] = results;
+      void navigate(boardSetPath(result));
     }
   }
 
@@ -49,5 +67,9 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     await importBoardFiles(files);
   }
 
-  return { pickAndImportBoardFiles, importBoardFiles };
+  return {
+    pickAndImportBoardFiles,
+    importBoardFiles,
+    importAndOpenBoardFiles,
+  };
 }

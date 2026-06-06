@@ -4,7 +4,7 @@ import {
   BoardSetDeleteDialog,
   BoardSetInfoDialog,
   BoardSetList,
-  boardPath,
+  boardSetPath,
   deleteBoardSet,
   useBoardSets,
   useImportBoardFiles,
@@ -31,12 +31,7 @@ export const Component = function LibraryPage() {
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   function handleSelect(boardSet: BoardSetRecord) {
-    void navigate(
-      boardPath({
-        setId: boardSet.setId,
-        boardId: boardSet.rootBoardId,
-      }),
-    );
+    void navigate(boardSetPath(boardSet));
   }
 
   async function handleDelete() {

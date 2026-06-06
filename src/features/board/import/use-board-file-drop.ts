@@ -19,7 +19,7 @@ function containsFiles(event: DragEvent<HTMLElement>): boolean {
 }
 
 export function useBoardFileDrop(): UseBoardFileDropReturn {
-  const { importBoardFiles } = useImportBoardFiles();
+  const { importAndOpenBoardFiles } = useImportBoardFiles();
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
   const dragDepth = useRef(0);
 
@@ -67,7 +67,7 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
     clearDrag();
 
     const files = Array.from(event.dataTransfer.files).filter(isBoardFile);
-    void importBoardFiles(files);
+    void importAndOpenBoardFiles(files);
   }
 
   return {

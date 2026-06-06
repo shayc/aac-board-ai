@@ -46,7 +46,7 @@ describe("importFilesAsBoardSets", () => {
     expect(importResults).toEqual([
       {
         setId: IMPORTED_SET_ID,
-        boardId: board.id,
+        rootBoardId: board.id,
       },
     ]);
 
@@ -106,7 +106,7 @@ describe("importFilesAsBoardSets", () => {
     expect(importResults).toEqual([
       {
         setId: IMPORTED_SET_ID,
-        boardId: rootBoardId,
+        rootBoardId,
       },
     ]);
 
