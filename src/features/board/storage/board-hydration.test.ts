@@ -1,7 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
+import { invalidateBoardSets } from "../board-sets/board-sets-store";
 import { BoardNotFoundError, hydrateBoard } from "./board-hydration";
-import { invalidateBoardSets } from "./board-sets-store";
 import { putAssets, putBoards, upsertBoardSet } from "./boards-db";
 import { resetBoardsDB } from "./test-helpers";
 

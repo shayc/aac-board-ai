@@ -7,7 +7,7 @@ import {
   type ParsedOBZ,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { notifyBoardSetsChanged } from "../storage/board-sets-store";
+import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
 import type {
   UpsertAssetInput,
   UpsertBoardInput,

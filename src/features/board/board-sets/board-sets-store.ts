@@ -3,7 +3,7 @@ import {
   deleteBoardSetRecord,
   listBoardSets,
   type BoardSetRecord,
-} from "./boards-db";
+} from "../storage/boards-db";
 
 export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
