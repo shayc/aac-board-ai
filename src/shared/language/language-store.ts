@@ -1,7 +1,7 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-export const LANGUAGE_STORAGE_KEY = "language";
+const LANGUAGE_STORAGE_KEY = "language";
 export const DEFAULT_LANGUAGE = "en";
 
 export function parseStoredLanguage(raw: unknown): string {
