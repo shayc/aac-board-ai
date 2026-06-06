@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Släpp tavelfiler för att importera",
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",
   "libraryCancel": "Avbryt",

@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
   "libraryInfo": "معلومات",
   "libraryDelete": "حذف",
   "libraryCancel": "إلغاء",

@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
   "libraryInfo": "जानकारी",
   "libraryDelete": "हटाएँ",
   "libraryCancel": "रद्द करें",

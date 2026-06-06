@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",
   "libraryDelete": "删除",
   "libraryCancel": "取消",

@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
   "libraryInfo": "Infos",
   "libraryDelete": "Supprimer",
   "libraryCancel": "Annuler",

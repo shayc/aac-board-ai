@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Pustite súbory tabuliek na import",
   "libraryInfo": "Informácie",
   "libraryDelete": "Odstrániť",
   "libraryCancel": "Zrušiť",

@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",
   "libraryCancel": "Anulează",

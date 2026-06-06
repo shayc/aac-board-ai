@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
   "libraryInfo": "তথ্য",
   "libraryDelete": "মুছুন",
   "libraryCancel": "বাতিল করুন",

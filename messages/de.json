@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
   "libraryInfo": "Info",
   "libraryDelete": "Löschen",
   "libraryCancel": "Abbrechen",

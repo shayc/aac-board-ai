@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Solte arquivos de pranchas para importar",
   "libraryInfo": "Informações",
   "libraryDelete": "Excluir",
   "libraryCancel": "Cancelar",

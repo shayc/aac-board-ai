@@ -38,6 +38,7 @@
       }
     }
   ],
+  "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",
   "libraryCancel": "Peruuta",
