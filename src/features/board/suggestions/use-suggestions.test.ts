@@ -73,6 +73,17 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("dedupes proofread and rewrite outputs that differ only in case", async () => {
+    stubProofreader(() => makeProofreadResult("My movies"));
+    stubRewriter(() => "my movies");
+
+    const { result } = await renderSuggestions("movies");
+
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["My movies"]);
+    });
+  });
+
   test("drops a candidate that is identical to the original text", async () => {
     stubProofreader((input) => makeProofreadResult(input));
     stubRewriter(() => "Something different.");
