@@ -4,17 +4,25 @@ function isClean(phrase: string): boolean {
   return !UNDERSCORED_WORD.test(phrase) && !phrase.includes('"');
 }
 
+function normalize(phrase: string): string {
+  return phrase.trim().toLowerCase();
+}
+
 export function toPhrases(
   text: string,
   candidates: readonly (string | undefined)[],
 ): string[] {
-  const phrases = new Set<string>();
+  const seen = new Set<string>([normalize(text)]);
 
-  for (const candidate of candidates) {
-    if (candidate && candidate !== text && isClean(candidate)) {
-      phrases.add(candidate);
+  return candidates.filter((candidate): candidate is string => {
+    if (!candidate || !isClean(candidate)) {
+      return false;
     }
-  }
-
-  return [...phrases];
+    const key = normalize(candidate);
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 }
