@@ -86,10 +86,10 @@ function transformButton(
 }
 
 function collectActions(obfButton: OBFButton): BoardAction[] {
-  const raw = [obfButton.action, ...(obfButton.actions ?? [])];
+  const raw = obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 
   return raw.flatMap((value) => {
-    const action = value ? parseAction(value) : null;
+    const action = parseAction(value);
 
     return action ? [action] : [];
   });

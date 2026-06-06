@@ -7,9 +7,12 @@ import type { BoardAction, BoardButton } from "../types";
 import { resolveButtonIntent } from "./button-intent-resolver";
 
 export interface ButtonActivationOptions {
-  message: UseMessageReturn;
-  playback: UseMessagePlaybackReturn;
-  navigation: UseBoardNavigationReturn;
+  message: Pick<
+    UseMessageReturn,
+    "addPart" | "appendText" | "addSpace" | "removeLastPart" | "clear"
+  >;
+  playback: Pick<UseMessagePlaybackReturn, "play">;
+  navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
 export interface ButtonActivation {

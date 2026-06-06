@@ -68,8 +68,6 @@ export function subscribeBoardSets(listener: () => void): () => void {
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
-  void ensureLoaded();
-
   return store.getSnapshot();
 }
 
