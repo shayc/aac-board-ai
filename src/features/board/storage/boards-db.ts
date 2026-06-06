@@ -135,6 +135,9 @@ function openConnection(): Promise<BoardsDB> {
       });
       assets.createIndex("bySetId", "setId");
     },
+    terminated() {
+      connection = null;
+    },
   });
 }
 
@@ -178,17 +181,11 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   const tx = db.transaction("boardSets", "readonly");
   const index = tx.store.index("byUpdatedAt");
 
-  const boardSets: BoardSetRecord[] = [];
-  let cursor = await index.openCursor(undefined, "prev");
-
-  while (cursor) {
-    boardSets.push(cursor.value);
-    cursor = await cursor.continue();
-  }
+  const boardSets = await index.getAll();
 
   await tx.done;
 
-  return boardSets;
+  return boardSets.reverse();
 }
 
 export async function deleteBoardSetRecord(setId: string): Promise<void> {
@@ -215,14 +212,16 @@ export async function putBoards(
   const tx = db.transaction(["boards", "boardSets"], "readwrite");
   const boardStore = tx.objectStore("boards");
 
-  for (const board of boards) {
-    await boardStore.put({
-      setId,
-      boardId: board.boardId,
-      name: board.name,
-      obf: board.obf,
-    });
-  }
+  await Promise.all(
+    boards.map((board) =>
+      boardStore.put({
+        setId,
+        boardId: board.boardId,
+        name: board.name,
+        obf: board.obf,
+      }),
+    ),
+  );
 
   const boardSet = await tx.objectStore("boardSets").get(setId);
 
@@ -281,16 +280,17 @@ export async function putAssets(
   const tx = db.transaction(["assets", "boardSets"], "readwrite");
   const assetStore = tx.objectStore("assets");
 
-  for (const asset of assets) {
-    const cleanPath = normalizePath(asset.path);
-    await assetStore.put({
-      setId,
-      path: cleanPath,
-      blob: asset.blob,
-      mime: asset.mime,
-      size: asset.size ?? asset.blob.size,
-    });
-  }
+  await Promise.all(
+    assets.map((asset) =>
+      assetStore.put({
+        setId,
+        path: normalizePath(asset.path),
+        blob: asset.blob,
+        mime: asset.mime,
+        size: asset.size ?? asset.blob.size,
+      }),
+    ),
+  );
 
   const boardSet = await tx.objectStore("boardSets").get(setId);
 
