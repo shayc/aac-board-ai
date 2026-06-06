@@ -55,7 +55,7 @@ async function importOBZArchive(
   fileName: string,
 ): Promise<ImportResult> {
   const { manifest, boards, resources } = archive;
-  const boardPathToId = buildBoardPathIndex(manifest);
+  const boardPathToId = buildBoardPathToId(manifest);
 
   const rootBoardId = resolveRootBoardId(manifest, boardPathToId);
   const rootBoard = boards.get(rootBoardId);
@@ -63,43 +63,43 @@ async function importOBZArchive(
   await upsertBoardSet(
     buildBoardSetInput(setId, rootBoard, rootBoardId, fileName),
   );
-  await putBoards(setId, buildBoardRecords(boards, boardPathToId));
+  await putBoards(setId, buildBoardInputs(boards, boardPathToId));
 
-  const assetRecords = buildAssetRecords(resources);
-  if (assetRecords.length > 0) {
-    await putAssets(setId, assetRecords);
+  const assetInputs = buildAssetInputs(resources);
+  if (assetInputs.length > 0) {
+    await putAssets(setId, assetInputs);
   }
 
   return { setId, boardId: rootBoardId };
 }
 
-function buildBoardPathIndex(manifest: OBFManifest): Map<string, string> {
+function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
   return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
 }
 
 export function resolveLoadBoardPaths(
-  obfBoard: OBFBoard,
+  board: OBFBoard,
   boardPathToId: Map<string, string>,
 ): OBFBoard {
-  const buttons = obfBoard.buttons.map((obfButton) => {
-    if (!obfButton.load_board?.path || obfButton.load_board.id) {
-      return obfButton;
+  const buttons = board.buttons.map((button) => {
+    if (!button.load_board?.path || button.load_board.id) {
+      return button;
     }
 
-    const targetBoardId = boardPathToId.get(obfButton.load_board.path);
+    const targetBoardId = boardPathToId.get(button.load_board.path);
     if (!targetBoardId) {
-      return obfButton;
+      return button;
     }
 
     return {
-      ...obfButton,
-      load_board: { ...obfButton.load_board, id: targetBoardId },
+      ...button,
+      load_board: { ...button.load_board, id: targetBoardId },
     };
   });
 
-  return { ...obfBoard, buttons };
+  return { ...board, buttons };
 }
 
 function resolveRootBoardId(
@@ -116,7 +116,7 @@ function resolveRootBoardId(
   );
 }
 
-function buildBoardRecords(
+function buildBoardInputs(
   boards: Map<string, OBFBoard>,
   boardPathToId: Map<string, string>,
 ): UpsertBoardInput[] {
@@ -127,7 +127,7 @@ function buildBoardRecords(
   }));
 }
 
-function buildAssetRecords(
+function buildAssetInputs(
   resources: Map<string, Uint8Array>,
 ): UpsertAssetInput[] {
   return Array.from(resources.entries())
@@ -138,7 +138,7 @@ function buildAssetRecords(
       return {
         path,
         mime: mimeType,
-        blob: new Blob([buffer.buffer as ArrayBuffer], { type: mimeType }),
+        blob: new Blob([buffer as Uint8Array<ArrayBuffer>], { type: mimeType }),
       };
     });
 }
