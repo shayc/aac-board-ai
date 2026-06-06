@@ -48,11 +48,12 @@ export const Component = function LibraryPage() {
         message: m.libraryDeleted({ name }),
         severity: "success",
       });
-    } catch {
+    } catch (error) {
       showSnackbar({
         message: m.libraryDeleteFailed({ name }),
         severity: "error",
       });
+      throw error;
     }
   }
 

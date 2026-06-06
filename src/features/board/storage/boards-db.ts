@@ -26,7 +26,6 @@ export interface BoardRecord {
 export interface AssetRecord {
   setId: string;
   path: string;
-  mediaId?: string;
   blob: Blob;
   mime?: string;
   size?: number;
@@ -55,7 +54,6 @@ export interface UpsertAssetInput {
   blob: Blob;
   mime?: string;
   size?: number;
-  mediaId?: string;
 }
 
 export interface BoardsDBSchema extends DBSchema {
@@ -72,7 +70,7 @@ export interface BoardsDBSchema extends DBSchema {
   assets: {
     key: [string, string];
     value: AssetRecord;
-    indexes: { bySetId: string; bySetIdAndMediaId: [string, string] };
+    indexes: { bySetId: string };
   };
 }
 
@@ -136,7 +134,6 @@ function openConnection(): Promise<BoardsDB> {
         keyPath: ["setId", "path"],
       });
       assets.createIndex("bySetId", "setId");
-      assets.createIndex("bySetIdAndMediaId", ["setId", "mediaId"]);
     },
   });
 }
@@ -289,7 +286,6 @@ export async function putAssets(
     await assetStore.put({
       setId,
       path: cleanPath,
-      mediaId: asset.mediaId,
       blob: asset.blob,
       mime: asset.mime,
       size: asset.size ?? asset.blob.size,
