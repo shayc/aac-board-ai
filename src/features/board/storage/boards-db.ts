@@ -56,7 +56,7 @@ export interface UpsertAssetInput {
   size?: number;
 }
 
-export interface BoardsDBSchema extends DBSchema {
+interface BoardsDBSchema extends DBSchema {
   boardSets: {
     key: string;
     value: BoardSetRecord;
