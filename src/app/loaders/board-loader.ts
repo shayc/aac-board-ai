@@ -5,7 +5,7 @@ import {
   type Board,
 } from "@features/board";
 import { m } from "@paraglide/messages.js";
-import { getStoredLanguage } from "@shared/language/stored-language";
+import { getStoredLanguage } from "@shared/language/language-store";
 import { data, type LoaderFunctionArgs } from "react-router";
 
 export async function boardLoader({

@@ -29,8 +29,6 @@ describe("boardSetIndexLoader", () => {
   test("throws 404 when the board set is missing", async () => {
     await seedBoardSets([]);
 
-    // isRouteErrorResponse only matches after the router wraps the throw at the
-    // route boundary, which a direct loader call skips — so assert the init shape.
     await expect(callLoader("missing-set")).rejects.toMatchObject({
       init: { status: 404 },
     });

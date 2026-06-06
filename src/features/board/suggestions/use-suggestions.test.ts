@@ -3,7 +3,7 @@ import { LanguageProvider } from "@shared/language/language-provider";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
-} from "@shared/language/stored-language";
+} from "@shared/language/language-store";
 import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
