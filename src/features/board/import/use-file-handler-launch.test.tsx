@@ -1,4 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { listBoardSets } from "../storage/boards-db";
@@ -12,7 +13,7 @@ const IMPORTED_SET_ID = "lots-of-stuff";
 function LaunchHarness() {
   useFileHandlerLaunch();
 
-  return null;
+  return <div data-testid="path">{useLocation().pathname}</div>;
 }
 
 function stubLaunchQueue() {
@@ -45,10 +46,12 @@ async function loadFixtureFile(name: string): Promise<File> {
   });
 }
 
-async function renderLaunchHandler() {
-  await render(
+function renderLaunchHandler() {
+  return render(
     <AppProviders>
-      <LaunchHarness />
+      <MemoryRouter>
+        <LaunchHarness />
+      </MemoryRouter>
     </AppProviders>,
   );
 }
@@ -61,14 +64,15 @@ describe("useFileHandlerLaunch", () => {
   test("does nothing when the browser has no launch queue", async () => {
     vi.stubGlobal("launchQueue", undefined);
 
-    await renderLaunchHandler();
+    const screen = await renderLaunchHandler();
 
     expect(await listBoardSets()).toHaveLength(0);
+    await expect.element(screen.getByTestId("path")).toHaveTextContent(/^\/$/);
   });
 
-  test("resolves file handles and imports only the board files", async () => {
+  test("imports only the board files and opens the result", async () => {
     const launch = stubLaunchQueue();
-    await renderLaunchHandler();
+    const screen = await renderLaunchHandler();
 
     launch(
       fileHandle(new File([""], "notes.txt")),
@@ -80,5 +84,9 @@ describe("useFileHandlerLaunch", () => {
       expect(boardSets).toHaveLength(1);
       expect(boardSets[0]?.setId).toBe(IMPORTED_SET_ID);
     });
+
+    await expect
+      .element(screen.getByTestId("path"))
+      .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
   });
 });

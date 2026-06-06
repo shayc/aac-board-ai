@@ -1,6 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useBoardSets } from "../board-sets/use-board-sets";
-import { boardPath } from "./board-paths";
+import { boardPath, boardSetPath } from "./board-paths";
 
 export interface BoardRouteParams {
   [key: string]: string;
@@ -67,7 +67,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    void navigate(boardPath({ setId, boardId: rootBoardId }), {
+    void navigate(boardSetPath({ setId, rootBoardId }), {
       state: { backStack: [] },
       replace: true,
     });

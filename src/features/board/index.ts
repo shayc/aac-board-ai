@@ -13,6 +13,7 @@ export {
   BOARD_PATTERN,
   BOARD_SET_PATTERN,
   boardPath,
+  boardSetPath,
 } from "./navigation/board-paths";
 export { BoardNotFoundError, hydrateBoard } from "./storage/board-hydration";
 export { getBoardSet } from "./storage/boards-db";

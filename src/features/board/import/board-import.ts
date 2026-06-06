@@ -17,7 +17,7 @@ import { putAssets, putBoards, upsertBoardSet } from "../storage/boards-db";
 
 export interface ImportResult {
   setId: string;
-  boardId: string;
+  rootBoardId: string;
 }
 
 export async function importBoardFiles(
@@ -70,7 +70,7 @@ async function importOBZArchive(
     await putAssets(setId, assetInputs);
   }
 
-  return { setId, boardId: rootBoardId };
+  return { setId, rootBoardId };
 }
 
 function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
@@ -179,7 +179,7 @@ async function importOBFBoard(
     },
   ]);
 
-  return { setId, boardId: board.id };
+  return { setId, rootBoardId: board.id };
 }
 
 function deriveSetId(filename: string): string {

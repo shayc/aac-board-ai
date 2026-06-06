@@ -1,4 +1,8 @@
-import { boardPath, getBoardSets, importBoardFromUrl } from "@features/board";
+import {
+  boardSetPath,
+  getBoardSets,
+  importBoardFromUrl,
+} from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
@@ -7,19 +11,15 @@ async function resolveInitialRedirectPath(
   boardUrl: string | null,
 ): Promise<string> {
   if (boardUrl) {
-    const { setId, boardId } = await importBoardFromUrl(boardUrl);
-
-    return boardPath({ setId, boardId });
+    return boardSetPath(await importBoardFromUrl(boardUrl));
   }
 
   const [existing] = await getBoardSets();
   if (existing) {
-    return boardPath({ setId: existing.setId, boardId: existing.rootBoardId });
+    return boardSetPath(existing);
   }
 
-  const { setId, boardId } = await importBoardFromUrl(DEFAULT_BOARD_URL);
-
-  return boardPath({ setId, boardId });
+  return boardSetPath(await importBoardFromUrl(DEFAULT_BOARD_URL));
 }
 
 export async function rootIndexLoader({

@@ -1,4 +1,4 @@
-import { boardPath, getBoardSet } from "@features/board";
+import { boardSetPath, getBoardSet } from "@features/board";
 import { m } from "@paraglide/messages.js";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 
@@ -12,5 +12,5 @@ export async function boardSetIndexLoader({
     throw data(m.errorBoardSetNotFound(), { status: 404 });
   }
 
-  return redirect(boardPath({ setId, boardId: set.rootBoardId }));
+  return redirect(boardSetPath(set));
 }
