@@ -1,10 +1,9 @@
 import { baseLocale, isLocale, setLocale } from "@paraglide/runtime";
-import { usePersistentState } from "@shared/hooks/use-persistent-state";
 import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { getTextDirection } from "@shared/utils/locale";
 import { useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext, type LanguageContextValue } from "./language-context";
-import { DEFAULT_LANGUAGE, LANGUAGE_STORAGE_KEY } from "./stored-language";
+import { setStoredLanguage, useStoredLanguage } from "./stored-language";
 import { useAvailableLanguages } from "./use-available-languages";
 
 export interface LanguageProviderProps {
@@ -12,10 +11,7 @@ export interface LanguageProviderProps {
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const [language, setLanguage] = usePersistentState<string>(
-    LANGUAGE_STORAGE_KEY,
-    DEFAULT_LANGUAGE,
-  );
+  const language = useStoredLanguage();
   const languages = useAvailableLanguages();
   const direction = getTextDirection(language);
 
@@ -31,7 +27,7 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   const contextValue: LanguageContextValue = {
     language,
-    setLanguage,
+    setLanguage: setStoredLanguage,
     languages,
     direction,
   };

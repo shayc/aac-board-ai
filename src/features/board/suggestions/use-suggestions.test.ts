@@ -1,6 +1,10 @@
 import { setAISharedContext } from "@shared/hooks/use-ai-shared-context";
 import { LanguageProvider } from "@shared/language/language-provider";
 import {
+  DEFAULT_LANGUAGE,
+  setStoredLanguage,
+} from "@shared/language/stored-language";
+import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
   stubProofreader,
@@ -17,6 +21,7 @@ function renderSuggestions(text: string) {
 describe("useSuggestions", () => {
   beforeEach(() => {
     setAISharedContext("");
+    setStoredLanguage(DEFAULT_LANGUAGE);
   });
 
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
@@ -129,7 +134,7 @@ describe("useSuggestions", () => {
   });
 
   test("uses the selected language rather than English", async () => {
-    localStorage.setItem("language", JSON.stringify("he"));
+    setStoredLanguage("he");
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
 
