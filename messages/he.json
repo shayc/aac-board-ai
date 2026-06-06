@@ -38,7 +38,7 @@
       }
     }
   ],
-  "libraryDropToImport": "שחרר קובצי לוחות כדי לייבא",
+  "libraryDropToImport": "גרור לוחות לכאן כדי לייבא",
   "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",
   "libraryCancel": "ביטול",
@@ -65,7 +65,7 @@
   "themeDark": "כהה",
   "languageLabel": "שפה",
   "languageDownloading": "הורדת שפה...",
-  "languageDownloadProgress": "{progress}% הושלם...",
+  "languageDownloadProgress": "הושלמו {progress}%...",
   "speechVoice": "קול",
   "speechRate": "קצב דיבור",
   "speechPitch": "גובה צליל",
@@ -83,7 +83,7 @@
   "navBack": "חזרה",
   "navHome": "לעמוד הבית",
   "messageBackspace": "מחיקה",
-  "messageBackspaceLongPressHint": "לחיצה ארוכה למחיקת ההודעה.",
+  "messageBackspaceLongPressHint": "לחיצה ארוכה לניקוי ההודעה.",
   "messagePlay": "השמעת הודעה",
   "messageStop": "עצירה",
   "toneSelection": "בחירת סגנון",
