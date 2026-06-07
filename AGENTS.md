@@ -24,6 +24,7 @@
 - `src/features/`: feature modules
 - `src/pages/`: routes/pages
 - `src/shared/`: shared code
+- See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.
 
 ## Testing Instructions
 
