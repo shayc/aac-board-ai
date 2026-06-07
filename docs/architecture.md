@@ -1,6 +1,8 @@
 # Architecture
 
-> **Audience:** contributors and coding agents making non-trivial changes to this repo. For a project introduction, see the [README](../README.md).
+> **TL;DR** — A local-first React 19 PWA for AAC: tap symbol tiles to assemble phrases the device speaks aloud. Open Board Format boards live in IndexedDB, speech uses the Web Speech API, and Built-in AI adds optional translation, proofreading, and rewriting. No backend — every byte stays on the device.
+
+**Scope:** how the app is shaped and why — module layout, boundaries, and the invariants you can't infer from a single file. **Not in scope:** setup and contribution flow (see the [README](../README.md)), component/API reference, and the rationale behind individual decisions. **Audience:** contributors and coding agents making non-trivial changes to this repo.
 
 ## 1. Overview
 
