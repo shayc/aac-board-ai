@@ -141,9 +141,8 @@ flowchart LR
 
 ## Codemap
 
-A map of the country, not an atlas of its states — this names coarse modules and
-what they do, not how each works inside. Names are **symbol-searchable**, not
-hyperlinked, so a moved file never breaks this table.
+Coarse modules and what they do, not how each works inside. Names are
+**symbol-searchable**, not hyperlinked, so a moved file never breaks this table.
 
 | Module                                                                   | What it does                                                                                                                 |
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
@@ -176,8 +175,7 @@ Built-in AI). The app never reaches past them.
 
 ## Data and state model
 
-State is the thing SPA newcomers misplace, so the rule is written down. **Five
-kinds**, each with one home:
+State has **five kinds**, each with one home:
 
 1. **Source of truth — IndexedDB.** Three object stores: `boardSets` (metadata),
    `boards` (one raw `OBFBoard` per board), `assets` (image/sound blobs by path).
@@ -204,8 +202,7 @@ language, theme, and the snackbar.
 
 ## Invariants
 
-Rules that constrain every file but are visible in none — several are _absences_,
-which you could only confirm by reading the whole tree:
+Rules that constrain every file but are visible in none — several are _absences_:
 
 - **No backend, no telemetry, no tracking.** Nothing the user types or imports
   leaves the device. This is a safety property, not a preference.
@@ -244,8 +241,7 @@ which you could only confirm by reading the whole tree:
 
 ## Boundaries
 
-Good boundaries are invisibly thin in the code, so they're stated here. Each is the
-one place to change a concern:
+Each is the one place to change a concern:
 
 - **Storage boundary — `src/features/board/storage/`.** Swap the database here and
   nowhere else.
@@ -302,7 +298,7 @@ record. Revisit one only if its rationale stops holding.
 
 ## Risks and technical debt
 
-The known fragilities, consolidated so they're scannable rather than scattered:
+The known fragilities:
 
 - **Built-in AI is Chrome/Edge-only.** The headline help — sentence expansion, tone,
   translation — is absent on most browsers today. Progressive enhancement absorbs it,
