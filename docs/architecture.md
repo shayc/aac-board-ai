@@ -144,21 +144,12 @@ A board press flows through `resolveButtonIntent` (called by `createButtonActiva
 | Intent Type | Execution Effect                                         |
 | ----------- | -------------------------------------------------------- |
 | `navigate`  | `useBoardNavigation.goToBoard(targetBoardId)`.           |
-| `runAction` | Run the corresponding `BoardAction` (table below).       |
+| `runAction` | Run the corresponding `BoardAction` (see below).         |
 | `compose`   | Append a `MessagePart` to the message strip.             |
 | `playAudio` | Play the button's sound asset via `playAudio()`.         |
 | `speakText` | Read the button's vocalization/label via `speech-store`. |
 
-`BoardAction` is a closed discriminated union dispatched by `kind` in `runAction`:
-
-| `kind`      | Effect                                             |
-| ----------- | -------------------------------------------------- |
-| `space`     | Append an empty `MessagePart`.                     |
-| `backspace` | Remove the last `MessagePart`.                     |
-| `clear`     | Empty the message.                                 |
-| `home`      | `useBoardNavigation.goHome()`.                     |
-| `speak`     | Play the current message via `useMessagePlayback`. |
-| `spell`     | Append `action.text` to the last part's label.     |
+`BoardAction` is a closed discriminated union ([types.ts](../src/features/board/types.ts)) dispatched by `kind` in `runAction` ([button-activation.ts](../src/features/board/activation/button-activation.ts)).
 
 OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([parse-action.ts](../src/features/board/obf/parse-action.ts), invoked by [obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
 
