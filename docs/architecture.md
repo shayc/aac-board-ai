@@ -1,6 +1,8 @@
 # Architecture
 
-> **Audience:** contributors and coding agents making non-trivial changes to this repo. For a project introduction, see the [README](../README.md).
+> **TL;DR** — A local-first React 19 PWA for AAC: tap symbol tiles to assemble phrases the device speaks aloud. Open Board Format boards live in IndexedDB, speech uses the Web Speech API, and Built-in AI adds optional translation, proofreading, and rewriting. No backend — every byte stays on the device.
+
+**Scope:** how the app is shaped and why — module layout, boundaries, and the invariants you can't infer from a single file. **Not in scope:** setup and contribution flow (see the [README](../README.md)), component/API reference, and the rationale behind individual decisions. **Audience:** contributors and coding agents making non-trivial changes to this repo.
 
 ## 1. Overview
 
@@ -85,7 +87,11 @@ flowchart TD
 
 **Registry lifecycle.** `hydrateBoard` is the sole owner of asset blob URLs. Each call creates its own `ObjectUrlRegistry` and receives the loader's `request.signal`; if the route is superseded mid-flight (rapid navigation) the registry self-destructs rather than promoting, so the live load's URLs aren't orphaned. On success it promotes itself to a module-level `previousRegistry` and revokes the prior one. The boundary lives in the loader, not React, because under data mode there is no component unmount to hook into — the next load is what defines "safe to release."
 
-**Anti-flash translation.** Translation happens in the loader, not after render: `boardLoader` calls `resolveTranslatedBoard`, which returns the board already in the active UI language _before_ `BoardPage` paints. A synchronous lookup against `board.strings[language]` covers cached translations; on a miss it creates a `Translator`, translates labels and vocalizations in parallel under the loader's `request.signal`, persists the result via `updateBoardStrings`, and applies the translated `Board`. If the Translator is unavailable or rejects, it returns the source board — pictograms carry the meaning. Because translation is part of loading, React Router holds the previous board on screen until the next one resolves, so no untranslated frame is ever rendered — the AAC UX requirement to never flash the source language. A language change isn't a navigation, so `useRevalidateOnLanguageChange` (in `AppShell`) calls `revalidate()` to re-run the loader and re-translate the board on screen. The cache write means subsequent loads in any tab hit the cache instead of the model.
+**Anti-flash translation.** Translation happens in the loader, not after render: `boardLoader` calls `resolveTranslatedBoard`, which returns the board already in the active UI language _before_ `BoardPage` paints. A synchronous lookup against `board.strings[language]` covers cached translations; on a miss it creates a `Translator`, translates labels and vocalizations in parallel under the loader's `request.signal`, persists the result via `updateBoardStrings`, and applies the translated `Board`. If the Translator is unavailable or rejects, it returns the source board — pictograms carry the meaning. Because the translation is persisted, subsequent loads in any tab hit the cache instead of the model.
+
+Because translation is part of loading, React Router holds the previous board on screen until the next one resolves, so no untranslated frame is ever rendered — the AAC UX requirement to never flash the source language.
+
+A language change isn't a navigation, so `useRevalidateOnLanguageChange` (in `AppShell`) calls `revalidate()` to re-run the loader and re-translate the board on screen.
 
 **Cross-tab invalidation.** Imports and deletes update IndexedDB, refresh the local `board-sets-store` snapshot, and post to a `BroadcastChannel("board-sets-sync")`; other tabs receive the message and refresh their own snapshots. The channel and its listener live at module scope in `board-sets-store.ts` — one per tab, registered at import time, never tied to a component mount.
 
@@ -144,21 +150,12 @@ A board press flows through `resolveButtonIntent` (called by `createButtonActiva
 | Intent Type | Execution Effect                                         |
 | ----------- | -------------------------------------------------------- |
 | `navigate`  | `useBoardNavigation.goToBoard(targetBoardId)`.           |
-| `runAction` | Run the corresponding `BoardAction` (table below).       |
+| `runAction` | Run the corresponding `BoardAction` (see below).         |
 | `compose`   | Append a `MessagePart` to the message strip.             |
 | `playAudio` | Play the button's sound asset via `playAudio()`.         |
 | `speakText` | Read the button's vocalization/label via `speech-store`. |
 
-`BoardAction` is a closed discriminated union dispatched by `kind` in `runAction`:
-
-| `kind`      | Effect                                             |
-| ----------- | -------------------------------------------------- |
-| `space`     | Append an empty `MessagePart`.                     |
-| `backspace` | Remove the last `MessagePart`.                     |
-| `clear`     | Empty the message.                                 |
-| `home`      | `useBoardNavigation.goHome()`.                     |
-| `speak`     | Play the current message via `useMessagePlayback`. |
-| `spell`     | Append `action.text` to the last part's label.     |
+`BoardAction` is a closed discriminated union ([types.ts](../src/features/board/types.ts)) dispatched by `kind` in `runAction` ([button-activation.ts](../src/features/board/activation/button-activation.ts)).
 
 OBF's raw `:space` / `+<text>` notation is parsed into `BoardAction` at the OBF boundary ([parse-action.ts](../src/features/board/obf/parse-action.ts), invoked by [obf-to-board.ts](../src/features/board/obf/obf-to-board.ts)); downstream code never sees the source strings.
 
@@ -193,13 +190,11 @@ For instructions to enable Built-in AI in supported browsers, see [Enabling Buil
 
 **Capability detection.** `isSupported(name)` returns whether the matching global (`"Translator"`, `"Rewriter"`, `"Proofreader"`) is present on `self`. `AISettings` and `LanguageSettings` call it directly to gate AI affordances at render time. Hook consumers (e.g. `useSuggestions`) usually skip the standalone check and read `status` instead — `"unsupported"` covers the missing-global case, and the other terminals (`"unavailable"`, `"error"`) cover the rest of the readiness picture.
 
-**Lifecycle state machine.** Each hook owns a per-call-site store that walks `idle → downloading → ready`, with terminal `unsupported` / `unavailable` / `error`. If the model is already local, the store auto-provisions silently (no `downloading` flash); if a download is required, `status` stays `idle` until a user gesture starts it. Option changes tear down the instance, abort in-flight work, and re-enter the machine. Imperative `create*` factories share the same internal path, so a download started outside the React tree still surfaces through the same progress channel. **Full API surface, error model, and examples:** [`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai#readme).
+**Provisioning.** A model that's already on the device provisions silently; one that needs downloading keeps `status` at `idle` until a user gesture starts it, so AI affordances never trigger a download on their own. The full lifecycle state machine, error model, and API surface live in [`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai#readme).
 
-**Cross-instance progress.** Inside the package, each download writes its `event.loaded` to a module-level progress store keyed by `name + options`. `useGlobalDownloadProgress(namespace?)` reads the highest in-flight value via `useSyncExternalStore`, aggregating downloads from every hook and creator. `LanguageSettings` consumes the `"Translator"` slice to render its progress alert.
+**Download progress.** `LanguageSettings` renders a progress alert for the Translator model download, reading an aggregate that the package sums across every concurrent hook and creator via `useGlobalDownloadProgress`.
 
-**Where `sharedContext` is used.** The persisted `ai-shared-context` string flows only through `useSuggestions` into `useRewriter({ sharedContext })`. The translator and proofreader hooks do not consume it.
-
-**Suggestions composition.** `useSuggestions` runs the proofreader and rewriter independently — each cancels its own in-flight request when its input changes — then dedupes the results and filters out low-quality outputs (entries with underscored tokens or stray quote marks).
+**Suggestions composition.** `useSuggestions` runs the proofreader and rewriter independently — each cancels its own in-flight request when its input changes — then dedupes the results and filters out low-quality outputs (entries with underscored tokens or stray quote marks). The persisted `ai-shared-context` string (§5) flows only here, into `useRewriter({ sharedContext })`; the translator and proofreader never receive it.
 
 **See:** [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai#readme), [src/features/board/suggestions/use-suggestions.ts](../src/features/board/suggestions/use-suggestions.ts).
 
