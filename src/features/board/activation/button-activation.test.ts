@@ -157,8 +157,7 @@ describe("createButtonActivation", () => {
   });
 
   test("delegates a spell action's text to the message's appendText", async () => {
-    const message = createMessageStub([{ id: "ca", label: "ca" }]);
-    const { activation } = setup({ message });
+    const { activation, message } = setup();
 
     await activation.activateButton({
       id: "btn",
