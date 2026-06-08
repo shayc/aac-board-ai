@@ -1,6 +1,9 @@
-import { usePersistentState } from "@shared/hooks/use-persistent-state";
+import { createPersistedStore } from "@shared/utils/persisted-store";
+import { useSyncExternalStore } from "react";
 
-const STORAGE_KEY = "hasSeenOnboarding";
+const store = createPersistedStore<boolean>("hasSeenOnboarding", (raw) =>
+  typeof raw === "boolean" ? raw : false,
+);
 
 export interface UseOnboardingReturn {
   shouldShow: boolean;
@@ -8,10 +11,10 @@ export interface UseOnboardingReturn {
 }
 
 export function useOnboarding(): UseOnboardingReturn {
-  const [hasSeen, setHasSeen] = usePersistentState(STORAGE_KEY, false);
+  const hasSeen = useSyncExternalStore(store.subscribe, store.getSnapshot);
 
   return {
     shouldShow: !hasSeen,
-    dismiss: () => setHasSeen(true),
+    dismiss: () => store.setState(true),
   };
 }
