@@ -57,20 +57,13 @@ export const Component = function LibraryPage() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <PageContainer>
-        <PageTitle>{m.menuLibrary()}</PageTitle>
+  return (
+    <PageContainer>
+      <PageTitle>{m.menuLibrary()}</PageTitle>
+
+      {isLoading ? (
         <LoadingState message={m.libraryLoading()} />
-      </PageContainer>
-    );
-  }
-
-  if (boardSets.length === 0) {
-    return (
-      <PageContainer>
-        <PageTitle>{m.menuLibrary()}</PageTitle>
-
+      ) : boardSets.length === 0 ? (
         <EmptyState
           icon={<FilterNoneOutlinedIcon />}
           title={m.libraryEmptyTitle()}
@@ -85,44 +78,45 @@ export const Component = function LibraryPage() {
             </Button>
           }
         />
-      </PageContainer>
-    );
-  }
+      ) : (
+        <>
+          <Stack
+            direction="row"
+            sx={{
+              alignItems: "center",
+              justifyContent: "flex-end",
+              pt: 3,
+              pb: 2,
+            }}
+          >
+            <Button
+              variant="text"
+              startIcon={<AddIcon />}
+              onClick={() => void pickAndImportBoardFiles()}
+            >
+              {m.libraryImportBoards()}
+            </Button>
+          </Stack>
 
-  return (
-    <PageContainer>
-      <PageTitle>{m.menuLibrary()}</PageTitle>
+          <BoardSetList
+            boardSets={boardSets}
+            onSelect={handleSelect}
+            onDelete={setDeleteTarget}
+            onInfo={setInfoTarget}
+          />
 
-      <Stack
-        direction="row"
-        sx={{ alignItems: "center", justifyContent: "flex-end", pt: 3, pb: 2 }}
-      >
-        <Button
-          variant="text"
-          startIcon={<AddIcon />}
-          onClick={() => void pickAndImportBoardFiles()}
-        >
-          {m.libraryImportBoards()}
-        </Button>
-      </Stack>
+          <BoardSetInfoDialog
+            boardSet={infoTarget}
+            onClose={() => setInfoTarget(null)}
+          />
 
-      <BoardSetList
-        boardSets={boardSets}
-        onSelect={handleSelect}
-        onDelete={setDeleteTarget}
-        onInfo={setInfoTarget}
-      />
-
-      <BoardSetInfoDialog
-        boardSet={infoTarget}
-        onClose={() => setInfoTarget(null)}
-      />
-
-      <BoardSetDeleteDialog
-        boardSet={deleteTarget}
-        onConfirm={() => void handleDelete()}
-        onClose={() => setDeleteTarget(null)}
-      />
+          <BoardSetDeleteDialog
+            boardSet={deleteTarget}
+            onConfirm={() => void handleDelete()}
+            onClose={() => setDeleteTarget(null)}
+          />
+        </>
+      )}
     </PageContainer>
   );
 };
