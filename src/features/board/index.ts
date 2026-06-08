@@ -14,8 +14,8 @@ export {
   BOARD_SET_PATTERN,
   boardSetPath,
 } from "./navigation/board-paths";
-export { BoardNotFoundError, hydrateBoard } from "./storage/board-hydration";
-export { getBoardSet } from "./storage/boards-db";
+export { hydrateBoard } from "./storage/board-hydration";
+export { BoardNotFoundError, getBoardSet } from "./storage/boards-db";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardSetRecord } from "./storage/boards-db";

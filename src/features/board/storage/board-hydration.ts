@@ -5,14 +5,7 @@ import {
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
-import { getAssetBlob, getBoard } from "./boards-db";
-
-export class BoardNotFoundError extends Error {
-  constructor(setId: string, boardId: string) {
-    super(`Board not found: ${setId}/${boardId}`);
-    this.name = "BoardNotFoundError";
-  }
-}
+import { BoardNotFoundError, getAssetBlob, getBoard } from "./boards-db";
 
 // Single concurrent caller assumed — the only consumer is boardLoader.
 let previousRegistry: ObjectUrlRegistry | null = null;

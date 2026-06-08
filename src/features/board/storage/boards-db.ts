@@ -31,6 +31,13 @@ export interface AssetRecord {
   size?: number;
 }
 
+export class BoardNotFoundError extends Error {
+  constructor(setId: string, boardId: string) {
+    super(`Board not found: ${setId}/${boardId}`);
+    this.name = "BoardNotFoundError";
+  }
+}
+
 export interface UpsertBoardSetInput {
   setId: string;
   name: string;
@@ -259,7 +266,7 @@ export async function updateBoardStrings(
   const record = await tx.store.get([setId, boardId]);
 
   if (!record) {
-    throw new Error(`Board not found: ${setId}/${boardId}`);
+    throw new BoardNotFoundError(setId, boardId);
   }
 
   const updatedObf = {
