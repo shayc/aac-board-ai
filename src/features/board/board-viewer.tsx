@@ -1,20 +1,20 @@
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { createButtonActivation } from "./activation/button-activation";
-import { Grid, type GridItemProps } from "./grid/grid";
+import { getNavigationTargetId } from "./board-button";
+import { type GridItemProps } from "./grid/grid";
+import { ScrollSnapGrid } from "./grid/scroll-snap-grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
-import { useMessage } from "./message/use-message";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
+import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import { Tile } from "./tile/tile";
-import { getNavigationTargetId } from "./board-button";
 import type { Board, BoardButton } from "./types";
 
 export interface BoardViewerProps {
@@ -103,17 +103,15 @@ export function BoardViewer({ board }: BoardViewerProps) {
         )}
       </Stack>
 
-      <Box sx={{ flexGrow: 1, height: 0, overflow: "auto" }}>
-        <Grid<BoardButton>
-          ariaLabel={board.name ?? m.boardGridLabel()}
-          items={board.buttons}
-          rows={board.grid.rows}
-          columns={board.grid.columns}
-          order={board.grid.order}
-          renderItem={renderTile}
-          dir={direction}
-        />
-      </Box>
+      <ScrollSnapGrid<BoardButton>
+        ariaLabel={board.name ?? m.boardGridLabel()}
+        items={board.buttons}
+        rows={board.grid.rows}
+        columns={board.grid.columns}
+        order={board.grid.order}
+        renderItem={renderTile}
+        dir={direction}
+      />
     </Stack>
   );
 }

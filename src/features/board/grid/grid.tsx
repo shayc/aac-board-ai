@@ -1,7 +1,6 @@
 import Stack from "@mui/material/Stack";
+import { MIN_CELL_PX } from "./grid-metrics";
 import { useGridKeyboard } from "./use-grid-keyboard";
-
-const MIN_CELL_PX = 72;
 
 export interface GridItemProps {
   tabIndex: number;
