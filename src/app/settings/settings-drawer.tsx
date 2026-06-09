@@ -26,6 +26,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       onClose={onClose}
       slotProps={{
         paper: {
+          "aria-label": m.settingsTitle(),
           sx: [
             {
               width: "calc(320px + env(safe-area-inset-right))",

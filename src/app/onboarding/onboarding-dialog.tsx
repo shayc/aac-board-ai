@@ -99,6 +99,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 slotProps={{
                   primary: {
                     variant: "subtitle1",
+                    // subtitle1 maps to <h6>; these are list titles, not headings.
+                    component: "span",
                     sx: { fontWeight: "bold", mb: 0 },
                   },
                   secondary: {

@@ -62,9 +62,17 @@ export function AISettings() {
             <ListItem key={apiName} sx={{ px: 0 }}>
               <ListItemIcon sx={{ minWidth: 36 }}>
                 {isSupported(apiName) ? (
-                  <CheckCircleIcon color="success" fontSize="small" />
+                  <CheckCircleIcon
+                    color="success"
+                    fontSize="small"
+                    titleAccess={m.aiStatusAvailable()}
+                  />
                 ) : (
-                  <CancelIcon color="error" fontSize="small" />
+                  <CancelIcon
+                    color="error"
+                    fontSize="small"
+                    titleAccess={m.aiStatusUnavailable()}
+                  />
                 )}
               </ListItemIcon>
               <ListItemText primary={title} />
