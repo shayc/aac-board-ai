@@ -105,6 +105,71 @@ describe("useLatestAsync", () => {
     await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
   });
 
+  test("exposes a non-abort rejection as error state", async () => {
+    const { result } = await renderHook(() =>
+      useLatestAsync({
+        enabled: true,
+        deps: ["a"],
+        fetch: () => Promise.reject(new Error("model exploded")),
+      }),
+    );
+
+    await vi.waitFor(() => {
+      expect(result.current.error?.message).toBe("model exploded");
+    });
+    expect(result.current.value).toBeUndefined();
+    expect(result.current.isPending).toBe(false);
+  });
+
+  test("clears the error the instant deps change, and recovers on success", async () => {
+    const { result, rerender } = await renderHook(
+      ({ id }: { id: string } = { id: "a" }) =>
+        useLatestAsync({
+          enabled: true,
+          deps: [id],
+          fetch: () =>
+            id === "a"
+              ? Promise.reject(new Error("bad round"))
+              : Promise.resolve("good round"),
+        }),
+      { initialProps: { id: "a" } },
+    );
+
+    await vi.waitFor(() => {
+      expect(result.current.error?.message).toBe("bad round");
+    });
+
+    await rerender({ id: "b" });
+    expect(result.current.error).toBeUndefined();
+
+    await vi.waitFor(() => {
+      expect(result.current.value).toBe("good round");
+    });
+    expect(result.current.error).toBeUndefined();
+  });
+
+  test("stays silent when the rejection comes from its own abort", async () => {
+    const { result, rerender } = await renderHook(
+      ({ enabled }: { enabled: boolean } = { enabled: true }) =>
+        useLatestAsync({
+          enabled,
+          deps: ["a"],
+          fetch: (signal) =>
+            new Promise<string>((_resolve, reject) => {
+              signal.addEventListener("abort", () => {
+                reject(new DOMException("Aborted", "AbortError"));
+              });
+            }),
+        }),
+      { initialProps: { enabled: true } },
+    );
+
+    await rerender({ enabled: false });
+
+    expect(result.current.error).toBeUndefined();
+    expect(result.current.value).toBeUndefined();
+  });
+
   test("ignores a stale in-flight result that resolves after deps moved on", async () => {
     const pending = new Map<string, (value: string) => void>();
     const { result, rerender } = await renderHook(
