@@ -40,5 +40,13 @@ describe("AppShell", () => {
     await expect
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .not.toBeInTheDocument();
+
+    // The dismissal persists on a debounce after this test ends, and test
+    // files share localStorage. Wait it out and clear, or the flag leaks
+    // into other files' import-time store reads.
+    await vi.waitFor(() => {
+      expect(localStorage.getItem("hasSeenOnboarding")).toBe("true");
+    });
+    localStorage.clear();
   });
 });
