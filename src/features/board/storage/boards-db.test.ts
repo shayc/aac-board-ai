@@ -76,6 +76,12 @@ describe("upsertBoardSet", () => {
       ),
     ).rejects.toThrow("Invalid setId");
   });
+
+  test("rejects empty rootBoardId", async () => {
+    await expect(
+      upsertBoardSet(makeBoardSetInput({ rootBoardId: "" })),
+    ).rejects.toThrow("Invalid rootBoardId");
+  });
 });
 
 describe("listBoardSets", () => {
@@ -162,6 +168,20 @@ describe("putBoards and getBoard", () => {
     await expect(
       putBoards("", [{ boardId: "b1", name: "B", obf: makeOBFBoard() }]),
     ).rejects.toThrow("Invalid setId");
+  });
+
+  test("rejects empty boardId", async () => {
+    await expect(
+      putBoards("set-1", [{ boardId: "", name: "B", obf: makeOBFBoard() }]),
+    ).rejects.toThrow("Invalid boardId");
+  });
+
+  test("rejects boardId longer than 255 characters", async () => {
+    await expect(
+      putBoards("set-1", [
+        { boardId: "x".repeat(256), name: "B", obf: makeOBFBoard() },
+      ]),
+    ).rejects.toThrow("Invalid boardId");
   });
 });
 
