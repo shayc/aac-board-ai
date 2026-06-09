@@ -121,6 +121,7 @@ describe("useSuggestions", () => {
     });
     expect(result.current.rewriterError).toBeUndefined();
     expect(result.current.isPending).toBe(false);
+    expect(result.current.hasFailure).toBe(false);
   });
 
   test("surfaces failures from both engines with no phrases", async () => {
@@ -134,6 +135,34 @@ describe("useSuggestions", () => {
       expect(result.current.rewriterError?.message).toBe("rewrite down");
     });
     expect(result.current.phrases).toEqual([]);
+    expect(result.current.hasFailure).toBe(true);
+  });
+
+  test("stays quiet when a rejection is an abort by name", async () => {
+    stubRewriter(() =>
+      Promise.reject(new DOMException("Aborted", "AbortError")),
+    );
+    stubBuiltInAIUnsupported("Proofreader");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.rewriterError?.name).toBe("AbortError");
+    });
+    expect(result.current.hasFailure).toBe(false);
+  });
+
+  test("asks for activation when the model needs a user-gesture download", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.needsActivation).toBe(true);
+    });
+    expect(result.current.hasFailure).toBe(false);
   });
 
   test("passes the persisted shared context to the rewriter", async () => {

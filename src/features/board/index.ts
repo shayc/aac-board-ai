@@ -16,6 +16,11 @@ export {
 } from "./navigation/board-paths";
 export { hydrateBoard } from "./storage/board-hydration";
 export { BoardNotFoundError, getBoardSet } from "./storage/boards-db";
+export {
+  proofreaderLanguageOptions,
+  rewriterLanguageOptions,
+} from "./suggestions/engine-language-options";
+export { useEngineAvailability } from "./suggestions/use-engine-availability";
 export { warmUpSuggestionModels } from "./suggestions/warm-up-suggestion-models";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 

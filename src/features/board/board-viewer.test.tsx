@@ -1,4 +1,8 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import {
+  stubBuiltInAIUnsupported,
+  stubProofreader,
+} from "@shared/testing/built-in-ai";
 import { TEST_IMAGE_SRC } from "@shared/testing/fixtures";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import { AppProviders } from "@shared/providers/app-providers";
@@ -87,6 +91,20 @@ describe("BoardViewer", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
       .toBeVisible();
+  });
+
+  test("tapping the enable chip starts the suggestion model download", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+
+    await screen.getByRole("button", { name: "Enable suggestions" }).click();
+
+    await vi.waitFor(() => {
+      expect(proofreader.create).toHaveBeenCalled();
+    });
   });
 
   test("has no accessibility violations", async () => {

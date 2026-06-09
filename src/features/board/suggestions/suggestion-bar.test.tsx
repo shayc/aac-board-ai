@@ -1,28 +1,32 @@
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { SuggestionBar } from "./suggestion-bar";
+import { SuggestionBar, type SuggestionBarProps } from "./suggestion-bar";
 
-function createHandlers() {
+function makeProps(
+  overrides: Partial<SuggestionBarProps> = {},
+): SuggestionBarProps {
   return {
+    suggestions: [],
+    isPending: false,
+    downloadProgress: null,
+    needsActivation: false,
+    hasFailure: false,
+    tone: "as-is",
+    canChangeTone: true,
     onSuggestionClick: vi.fn(),
     onToneChange: vi.fn(),
+    onEnable: vi.fn(),
+    ...overrides,
   };
 }
 
 describe("SuggestionBar", () => {
   test("renders a chip for each suggestion", async () => {
-    const handlers = createHandlers();
     const suggestions = ["Hello", "How are you?", "Thank you"];
 
     const screen = await render(
-      <SuggestionBar
-        suggestions={suggestions}
-        isPending={false}
-        tone="as-is"
-        canChangeTone
-        {...handlers}
-      />,
+      <SuggestionBar {...makeProps({ suggestions })} />,
     );
 
     for (const suggestion of suggestions) {
@@ -33,43 +37,23 @@ describe("SuggestionBar", () => {
   });
 
   test("calls onSuggestionClick with the correct value when a suggestion chip is clicked", async () => {
-    const handlers = createHandlers();
-    const suggestions = ["Hello", "Goodbye"];
+    const props = makeProps({ suggestions: ["Hello", "Goodbye"] });
+    const screen = await render(<SuggestionBar {...props} />);
 
-    const screen = await render(
-      <SuggestionBar
-        suggestions={suggestions}
-        isPending={false}
-        tone="as-is"
-        canChangeTone
-        {...handlers}
-      />,
-    );
+    await screen.getByRole("button", { name: "Hello" }).click();
 
-    const firstChip = screen.getByRole("button", { name: "Hello" });
-    await firstChip.click();
+    expect(props.onSuggestionClick).toHaveBeenCalledWith("Hello");
+    expect(props.onSuggestionClick).toHaveBeenCalledTimes(1);
 
-    expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Hello");
-    expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(1);
+    await screen.getByRole("button", { name: "Goodbye" }).click();
 
-    const secondChip = screen.getByRole("button", { name: "Goodbye" });
-    await secondChip.click();
-
-    expect(handlers.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
-    expect(handlers.onSuggestionClick).toHaveBeenCalledTimes(2);
+    expect(props.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
+    expect(props.onSuggestionClick).toHaveBeenCalledTimes(2);
   });
 
   test("shows the tone selector when tone can be changed", async () => {
-    const handlers = createHandlers();
-
     const screen = await render(
-      <SuggestionBar
-        suggestions={["Hello"]}
-        isPending={false}
-        tone="as-is"
-        canChangeTone
-        {...handlers}
-      />,
+      <SuggestionBar {...makeProps({ suggestions: ["Hello"] })} />,
     );
 
     await expect
@@ -78,15 +62,9 @@ describe("SuggestionBar", () => {
   });
 
   test("hides the tone selector when tone cannot be changed", async () => {
-    const handlers = createHandlers();
-
     const screen = await render(
       <SuggestionBar
-        suggestions={["Hello"]}
-        isPending={false}
-        tone="as-is"
-        canChangeTone={false}
-        {...handlers}
+        {...makeProps({ suggestions: ["Hello"], canChangeTone: false })}
       />,
     );
 
@@ -95,16 +73,44 @@ describe("SuggestionBar", () => {
       .not.toBeInTheDocument();
   });
 
-  test("has no accessibility violations", async () => {
-    const handlers = createHandlers();
+  test("offers an enable chip when activation is needed, ahead of any download state", async () => {
+    const props = makeProps({ needsActivation: true, downloadProgress: 0.5 });
+    const screen = await render(<SuggestionBar {...props} />);
 
+    await screen.getByRole("button", { name: "Enable suggestions" }).click();
+
+    expect(props.onEnable).toHaveBeenCalledOnce();
+    await expect
+      .element(screen.getByText("Downloading AI model… 50%"))
+      .not.toBeInTheDocument();
+  });
+
+  test("shows download progress while the model downloads", async () => {
+    const screen = await render(
+      <SuggestionBar {...makeProps({ downloadProgress: 0.43 })} />,
+    );
+
+    await expect
+      .element(screen.getByText("Downloading AI model… 43%"))
+      .toBeVisible();
+  });
+
+  test("announces unavailability after a failed round", async () => {
+    const screen = await render(
+      <SuggestionBar {...makeProps({ hasFailure: true })} />,
+    );
+
+    await expect
+      .element(screen.getByText("Suggestions unavailable"))
+      .toBeVisible();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("has no accessibility violations", async () => {
     const screen = await render(
       <SuggestionBar
-        suggestions={["Hello", "How are you?", "Thank you"]}
-        isPending={false}
-        tone="as-is"
-        canChangeTone
-        {...handlers}
+        {...makeProps({ suggestions: ["Hello", "How are you?", "Thank you"] })}
       />,
     );
 

@@ -96,10 +96,14 @@ export function BoardViewer({ board }: BoardViewerProps) {
           <SuggestionBar
             suggestions={suggestions.phrases}
             isPending={suggestions.isProofreaderPending}
+            downloadProgress={suggestions.downloadProgress}
+            needsActivation={suggestions.needsActivation}
+            hasFailure={suggestions.hasFailure}
             tone={suggestions.tone}
             canChangeTone={suggestions.isRewriterSupported}
             onSuggestionClick={message.setFromText}
             onToneChange={suggestions.setTone}
+            onEnable={suggestions.enable}
           />
         )}
       </Stack>
