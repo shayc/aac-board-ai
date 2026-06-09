@@ -111,6 +111,14 @@ export default defineConfig({
     },
     coverage: {
       exclude: [...coverageConfigDefaults.exclude, "src/paraglide/**"],
+      // Regression floor ~2 points under the measured baseline; ratchet up
+      // alongside meaningful coverage gains, never down.
+      thresholds: {
+        statements: 87,
+        branches: 76,
+        functions: 89,
+        lines: 91,
+      },
     },
   },
 });
