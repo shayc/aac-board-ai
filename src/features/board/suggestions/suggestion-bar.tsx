@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { LoadingDots } from "@shared/components/loading-dots";
 import { ToneSelector } from "./tone-selector";
 
 export interface SuggestionBarProps {
@@ -39,6 +40,8 @@ export function SuggestionBar({
           />
         ))}
       </Box>
+
+      <LoadingDots />
 
       {canChangeTone && <ToneSelector tone={tone} onChange={onToneChange} />}
     </Stack>
