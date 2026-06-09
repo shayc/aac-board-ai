@@ -12,6 +12,9 @@ export interface UseSuggestionsReturn {
   isSupported: boolean;
   isProofreaderSupported: boolean;
   isRewriterSupported: boolean;
+  isPending: boolean;
+  isProofreaderPending: boolean;
+  isRewriterPending: boolean;
   phrases: string[];
   tone: RewriterTone;
   setTone: (tone: RewriterTone) => void;
@@ -67,7 +70,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     isSupported: isProofreaderSupported || isRewriterSupported,
     isProofreaderSupported,
     isRewriterSupported,
-    phrases: toPhrases(text, [corrected, rewritten]),
+    isPending: corrected.isPending || rewritten.isPending,
+    isProofreaderPending: corrected.isPending,
+    isRewriterPending: rewritten.isPending,
+    phrases: toPhrases(text, [corrected.value, rewritten.value]),
     tone,
     setTone,
   };

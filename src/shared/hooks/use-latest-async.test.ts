@@ -12,7 +12,7 @@ describe("useLatestAsync", () => {
       }),
     );
 
-    await vi.waitFor(() => expect(result.current).toBe("value-a"));
+    await vi.waitFor(() => expect(result.current.value).toBe("value-a"));
   });
 
   test("stands down without fetching when not enabled", async () => {
@@ -22,7 +22,8 @@ describe("useLatestAsync", () => {
       useLatestAsync({ enabled: false, deps: ["a"], fetch }),
     );
 
-    expect(result.current).toBeUndefined();
+    expect(result.current.value).toBeUndefined();
+    expect(result.current.isPending).toBe(false);
     expect(fetch).not.toHaveBeenCalled();
   });
 
@@ -33,8 +34,51 @@ describe("useLatestAsync", () => {
       useLatestAsync({ enabled: true, deps: [], fetch }),
     );
 
-    await vi.waitFor(() => expect(result.current).toBe("once"));
+    await vi.waitFor(() => expect(result.current.value).toBe("once"));
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  test("is pending from mount until the fetch resolves", async () => {
+    const pending: ((value: string) => void)[] = [];
+    const { result } = await renderHook(() =>
+      useLatestAsync({
+        enabled: true,
+        deps: ["a"],
+        fetch: () => new Promise<string>((r) => pending.push(r)),
+      }),
+    );
+
+    expect(result.current.isPending).toBe(true);
+    expect(result.current.value).toBeUndefined();
+
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+    pending[0]("value-a");
+
+    await vi.waitFor(() => {
+      expect(result.current.value).toBe("value-a");
+      expect(result.current.isPending).toBe(false);
+    });
+  });
+
+  test("returns to pending the instant deps change, until the next resolves", async () => {
+    const pending: ((value: string) => void)[] = [];
+    const { result, rerender } = await renderHook(
+      ({ id }: { id: string } = { id: "a" }) =>
+        useLatestAsync({
+          enabled: true,
+          deps: [id],
+          fetch: () => new Promise<string>((r) => pending.push(r)),
+        }),
+      { initialProps: { id: "a" } },
+    );
+
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+    pending[0]("value-a");
+    await vi.waitFor(() => expect(result.current.isPending).toBe(false));
+
+    await rerender({ id: "b" });
+    expect(result.current.isPending).toBe(true);
+    expect(result.current.value).toBeUndefined();
   });
 
   test("hides the previous value the instant deps change, until the next resolves", async () => {
@@ -51,14 +95,14 @@ describe("useLatestAsync", () => {
 
     await vi.waitFor(() => expect(pending).toHaveLength(1));
     pending[0]("value-a");
-    await vi.waitFor(() => expect(result.current).toBe("value-a"));
+    await vi.waitFor(() => expect(result.current.value).toBe("value-a"));
 
     await rerender({ id: "b" });
-    expect(result.current).toBeUndefined();
+    expect(result.current.value).toBeUndefined();
 
     await vi.waitFor(() => expect(pending).toHaveLength(2));
     pending[1]("value-b");
-    await vi.waitFor(() => expect(result.current).toBe("value-b"));
+    await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
   });
 
   test("ignores a stale in-flight result that resolves after deps moved on", async () => {
@@ -80,6 +124,6 @@ describe("useLatestAsync", () => {
     pending.get("b")?.("value-b");
     pending.get("a")?.("value-a");
 
-    await vi.waitFor(() => expect(result.current).toBe("value-b"));
+    await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
   });
 });

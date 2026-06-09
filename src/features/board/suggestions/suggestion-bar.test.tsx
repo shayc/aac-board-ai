@@ -18,6 +18,7 @@ describe("SuggestionBar", () => {
     const screen = await render(
       <SuggestionBar
         suggestions={suggestions}
+        isPending={false}
         tone="as-is"
         canChangeTone
         {...handlers}
@@ -38,6 +39,7 @@ describe("SuggestionBar", () => {
     const screen = await render(
       <SuggestionBar
         suggestions={suggestions}
+        isPending={false}
         tone="as-is"
         canChangeTone
         {...handlers}
@@ -63,6 +65,7 @@ describe("SuggestionBar", () => {
     const screen = await render(
       <SuggestionBar
         suggestions={["Hello"]}
+        isPending={false}
         tone="as-is"
         canChangeTone
         {...handlers}
@@ -80,6 +83,7 @@ describe("SuggestionBar", () => {
     const screen = await render(
       <SuggestionBar
         suggestions={["Hello"]}
+        isPending={false}
         tone="as-is"
         canChangeTone={false}
         {...handlers}
@@ -97,6 +101,7 @@ describe("SuggestionBar", () => {
     const screen = await render(
       <SuggestionBar
         suggestions={["Hello", "How are you?", "Thank you"]}
+        isPending={false}
         tone="as-is"
         canChangeTone
         {...handlers}

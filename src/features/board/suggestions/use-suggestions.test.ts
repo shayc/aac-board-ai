@@ -226,6 +226,28 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("reports isPending while a suggestion is in flight and clears it once resolved", async () => {
+    const pending: ((rewritten: string) => void)[] = [];
+    stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
+    stubBuiltInAIUnsupported("Proofreader");
+
+    const { result } = await renderSuggestions("hi");
+
+    await vi.waitFor(() => {
+      expect(result.current.isPending).toBe(true);
+      expect(result.current.isRewriterPending).toBe(true);
+    });
+
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+    pending[0]("casual hi");
+
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["casual hi"]);
+      expect(result.current.isPending).toBe(false);
+      expect(result.current.isRewriterPending).toBe(false);
+    });
+  });
+
   test("ignores a stale in-flight result when the text changes mid-flight", async () => {
     const resolvers = new Map<string, (result: ProofreadResult) => void>();
     stubProofreader(
