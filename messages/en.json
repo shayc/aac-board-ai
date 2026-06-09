@@ -80,6 +80,7 @@
   "aiStatusAvailable": "Available",
   "aiStatusUnavailable": "Unavailable",
   "aiStatusDownloading": "Downloading… {progress}%",
+  "aiStatusDownloadRequired": "Download required",
   "aiDownloadAction": "Download",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model… {progress}%",

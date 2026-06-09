@@ -62,32 +62,7 @@ function engineView(
   return { kind: "unavailable" };
 }
 
-function statusIcon(view: CapabilityView) {
-  const newLocal = "unavailable";
-  switch (view.kind) {
-    case "available":
-      return (
-        <CheckCircleIcon
-          color="success"
-          fontSize="small"
-          titleAccess={m.aiStatusAvailable()}
-        />
-      );
-    case "downloading":
-    case "needs-download":
-      return <DownloadingIcon color="action" fontSize="small" />;
-    case newLocal:
-      return (
-        <CancelIcon
-          color="error"
-          fontSize="small"
-          titleAccess={m.aiStatusUnavailable()}
-        />
-      );
-  }
-}
-
-function statusLabel(view: CapabilityView): string | null {
+function statusLabel(view: CapabilityView): string {
   switch (view.kind) {
     case "available":
       return m.aiStatusAvailable();
@@ -96,9 +71,26 @@ function statusLabel(view: CapabilityView): string | null {
         progress: Math.round(view.progress * 100),
       });
     case "needs-download":
-      return null;
+      return m.aiStatusDownloadRequired();
     case "unavailable":
       return m.aiStatusUnavailable();
+  }
+}
+
+function statusIcon(view: CapabilityView) {
+  const title = statusLabel(view);
+  switch (view.kind) {
+    case "available":
+      return (
+        <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
+      );
+    case "downloading":
+    case "needs-download":
+      return (
+        <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
+      );
+    case "unavailable":
+      return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
   }
 }
 

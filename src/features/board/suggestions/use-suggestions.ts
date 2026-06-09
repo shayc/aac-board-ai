@@ -4,6 +4,7 @@ import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import {
   MissingUserActivationError,
+  useGlobalDownloadProgress,
   useProofreader,
   useRewriter,
 } from "@shayc/react-built-in-ai";
@@ -79,11 +80,16 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     fetch: (signal) => rewriter.rewrite(text, { signal }),
   });
 
-  const isDownloading =
-    proofreader.status === "downloading" || rewriter.status === "downloading";
-  const downloadProgress = isDownloading
-    ? Math.max(proofreader.progress, rewriter.progress)
-    : null;
+  // The global store also sees downloads the onboarding warm-up started, which
+  // the hook instances can't. Math.min so the shown percentage never jumps
+  // backwards when the faster of two concurrent downloads finishes.
+  const proofreaderDownload = useGlobalDownloadProgress("Proofreader");
+  const rewriterDownload = useGlobalDownloadProgress("Rewriter");
+  const downloadProgress =
+    proofreaderDownload !== null && rewriterDownload !== null
+      ? Math.min(proofreaderDownload, rewriterDownload)
+      : (proofreaderDownload ?? rewriterDownload);
+  const isDownloading = downloadProgress !== null;
 
   const proofreaderAvailability = useEngineAvailability(
     "Proofreader",
@@ -115,15 +121,20 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isPending = corrected.isPending || rewritten.isPending;
 
-  // Partial failure stays silent: as long as one engine produced a phrase,
-  // which engine made it is not the user's problem.
+  const proofreaderCannotHelp = !isProofreaderSupported || isProofreaderBroken;
+  const rewriterCannotHelp = !isRewriterSupported || isRewriterBroken;
+
+  // Failure is announced only when no supported engine remains operational; a
+  // healthy engine that merely had nothing to suggest stays silent.
   const hasFailure =
     hasText &&
     phrases.length === 0 &&
     !isPending &&
     !needsActivation &&
     !isDownloading &&
-    (isProofreaderBroken || isRewriterBroken);
+    (isProofreaderBroken || isRewriterBroken) &&
+    proofreaderCannotHelp &&
+    rewriterCannotHelp;
 
   const enable = () => {
     if (proofreader.status !== "ready") {

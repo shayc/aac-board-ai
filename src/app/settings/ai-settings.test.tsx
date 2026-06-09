@@ -69,6 +69,7 @@ describe("AISettings", () => {
 
     const download = screen.getByRole("button", { name: "Download" });
     await expect.element(download).toBeVisible();
+    expect(countIcons(screen, "Download required")).toBe(1);
 
     await download.click();
 

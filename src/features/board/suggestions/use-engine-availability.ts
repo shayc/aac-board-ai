@@ -11,13 +11,17 @@ export type SuggestionEngineName = "Proofreader" | "Rewriter";
 // a user gesture may start one), and their snapshot can't tell that apart
 // from a probe still in flight. This probe makes "downloadable" observable so
 // the UI can offer the gesture.
+interface ProbeResult {
+  name: SuggestionEngineName;
+  language: string;
+  value: Availability;
+}
+
 export function useEngineAvailability(
   name: SuggestionEngineName,
   language: string,
 ): Availability | undefined {
-  const [availability, setAvailability] = useState<Availability | undefined>(
-    () => (isSupported(name) ? undefined : "unavailable"),
-  );
+  const [probe, setProbe] = useState<ProbeResult | null>(null);
 
   useEffect(() => {
     if (!isSupported(name)) {
@@ -26,15 +30,15 @@ export function useEngineAvailability(
 
     let cancelled = false;
 
-    const probe =
+    const request =
       name === "Proofreader"
         ? Proofreader.availability(proofreaderLanguageOptions(language))
         : Rewriter.availability(rewriterLanguageOptions(language));
 
-    probe
+    request
       .then((value) => {
         if (!cancelled) {
-          setAvailability(value);
+          setProbe({ name, language, value });
         }
       })
       .catch(() => undefined);
@@ -44,5 +48,12 @@ export function useEngineAvailability(
     };
   }, [name, language]);
 
-  return availability;
+  if (!isSupported(name)) {
+    return "unavailable";
+  }
+
+  // An answer probed for another (name, language) is stale, not an answer.
+  return probe?.name === name && probe.language === language
+    ? probe.value
+    : undefined;
 }
