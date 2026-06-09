@@ -26,6 +26,8 @@ export function SuggestionBar({
       direction="row"
       sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
     >
+      {isPending && <DotsProgress />}
+
       <Box
         sx={{
           display: "flex",
@@ -43,7 +45,6 @@ export function SuggestionBar({
         ))}
       </Box>
 
-      {isPending && <DotsProgress />}
       {canChangeTone && <ToneSelector tone={tone} onChange={onToneChange} />}
     </Stack>
   );

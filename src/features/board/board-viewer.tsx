@@ -95,7 +95,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
         {suggestions.isSupported && (
           <SuggestionBar
             suggestions={suggestions.phrases}
-            isPending={suggestions.isPending}
+            isPending={suggestions.isProofreaderPending}
             tone={suggestions.tone}
             canChangeTone={suggestions.isRewriterSupported}
             onSuggestionClick={message.setFromText}
