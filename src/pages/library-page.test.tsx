@@ -32,18 +32,6 @@ describe("LibraryPage", () => {
       .toBeInTheDocument();
   });
 
-  test("lists the stored board sets", async () => {
-    await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
-      { setId: "core-words", rootBoardId: "root", name: "Core Words" },
-    ]);
-
-    const screen = await renderLibraryPage();
-
-    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
-    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-  });
-
   test("deletes a set after confirmation and announces it", async () => {
     await seedBoardSets([
       { setId: "animals", rootBoardId: "root", name: "Animals" },
@@ -88,13 +76,16 @@ describe("LibraryPage", () => {
       .not.toBeInTheDocument();
   });
 
-  test("has no a11y violations with a populated list", async () => {
+  test("lists the stored board sets with no a11y violations", async () => {
     await seedBoardSets([
       { setId: "animals", rootBoardId: "root", name: "Animals" },
+      { setId: "core-words", rootBoardId: "root", name: "Core Words" },
     ]);
 
     const screen = await renderLibraryPage();
+
     await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);
   });

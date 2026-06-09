@@ -16,7 +16,7 @@ function renderMenuDrawer(onClose = vi.fn()) {
 }
 
 describe("MenuDrawer", () => {
-  test("offers the app navigation when open", async () => {
+  test("offers the app navigation when open, with no a11y violations", async () => {
     const screen = await renderMenuDrawer();
 
     await expect
@@ -32,7 +32,7 @@ describe("MenuDrawer", () => {
     await expectNoA11yViolations(document.body);
   });
 
-  test("navigating closes the drawer", async () => {
+  test("selecting a destination invokes onClose", async () => {
     const onClose = vi.fn();
     const screen = await renderMenuDrawer(onClose);
 

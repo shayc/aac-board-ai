@@ -49,12 +49,12 @@ describe("SpeechSettings", () => {
     await expect
       .element(screen.getByRole("option", { name: "Samantha" }))
       .toBeInTheDocument();
-    expect(screen.container.ownerDocument.body.textContent).not.toContain(
-      "American English",
-    );
+    await expect
+      .element(screen.getByText("American English"))
+      .not.toBeInTheDocument();
   });
 
-  test("renders the speech sliders and preview action", async () => {
+  test("renders the speech sliders and preview action with no a11y violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
     const screen = await renderSpeechSettings();

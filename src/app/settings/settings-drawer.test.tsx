@@ -5,7 +5,7 @@ import { render } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
-  test("renders every settings section when open", async () => {
+  test("renders every settings section when open, with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
         <SettingsDrawer open onClose={vi.fn()} />
@@ -30,7 +30,7 @@ describe("SettingsDrawer", () => {
     await expectNoA11yViolations(document.body);
   });
 
-  test("close button reports back", async () => {
+  test("close button invokes onClose", async () => {
     const onClose = vi.fn();
     const screen = await render(
       <AppProviders>

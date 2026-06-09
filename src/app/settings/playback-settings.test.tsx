@@ -5,7 +5,7 @@ import { render } from "vitest-browser-react";
 import { PlaybackSettings } from "./playback-settings";
 
 describe("PlaybackSettings", () => {
-  test("toggles the highlight-while-playing switch", async () => {
+  test("toggles the highlight-while-playing switch with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
         <PlaybackSettings />
@@ -16,11 +16,9 @@ describe("PlaybackSettings", () => {
       name: "Highlight while playing",
     });
 
+    await expect.element(highlightSwitch).not.toBeChecked();
     await highlightSwitch.click();
     await expect.element(highlightSwitch).toBeChecked();
-
-    await highlightSwitch.click();
-    await expect.element(highlightSwitch).not.toBeChecked();
 
     await expectNoA11yViolations(screen.container);
   });

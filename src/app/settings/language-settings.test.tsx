@@ -27,7 +27,7 @@ describe("LanguageSettings", () => {
       .toHaveAttribute("aria-disabled", "true");
   });
 
-  test("enables the language select when the Translator is available", async () => {
+  test("enables the language select when the Translator is available, with no a11y violations", async () => {
     stubTranslator();
 
     const screen = await renderLanguageSettings();

@@ -19,28 +19,36 @@ function renderAISettings() {
 }
 
 describe("AISettings", () => {
-  test("marks every capability unavailable without Built-in AI", async () => {
+  test("announces every capability as unavailable without Built-in AI", async () => {
     stubBuiltInAIUnsupported("Proofreader", "Rewriter", "Translator");
 
     const screen = await renderAISettings();
 
     await expect.element(screen.getByText("Proofreading")).toBeInTheDocument();
-    expect(screen.getByTestId("CancelIcon").elements()).toHaveLength(3);
-    expect(screen.getByTestId("CheckCircleIcon").elements()).toHaveLength(0);
-    expect(screen.container.ownerDocument.body.textContent).not.toContain(
-      "Custom instructions",
-    );
+    expect(
+      screen.getByRole("img", { name: "Unavailable", exact: true }).elements(),
+    ).toHaveLength(3);
+    expect(
+      screen.getByRole("img", { name: "Available", exact: true }).elements(),
+    ).toHaveLength(0);
+    await expect
+      .element(screen.getByRole("textbox", { name: "Custom instructions" }))
+      .not.toBeInTheDocument();
   });
 
-  test("marks capabilities available and offers custom instructions when supported", async () => {
+  test("announces capabilities as available and offers custom instructions when supported, with no a11y violations", async () => {
     stubProofreader();
     stubRewriter();
     stubTranslator();
 
     const screen = await renderAISettings();
 
-    expect(screen.getByTestId("CheckCircleIcon").elements()).toHaveLength(3);
-    expect(screen.getByTestId("CancelIcon").elements()).toHaveLength(0);
+    expect(
+      screen.getByRole("img", { name: "Available", exact: true }).elements(),
+    ).toHaveLength(3);
+    expect(
+      screen.getByRole("img", { name: "Unavailable", exact: true }).elements(),
+    ).toHaveLength(0);
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();

@@ -5,7 +5,7 @@ import { render } from "vitest-browser-react";
 import { AppearanceSettings } from "./appearance-settings";
 
 describe("AppearanceSettings", () => {
-  test("offers the three theme modes with system preselected", async () => {
+  test("offers the three theme modes with system preselected, with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
         <AppearanceSettings />
@@ -15,6 +15,9 @@ describe("AppearanceSettings", () => {
     await expect
       .element(screen.getByRole("radio", { name: "System" }))
       .toBeChecked();
+    await expect
+      .element(screen.getByRole("radio", { name: "Light" }))
+      .not.toBeChecked();
 
     await screen.getByRole("radio", { name: "Dark" }).click();
 

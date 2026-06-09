@@ -29,6 +29,10 @@ describe("useRevalidateOnLanguageChange", () => {
     expect(loader).toHaveBeenCalledTimes(1);
 
     setStoredLanguage("en");
+    // Flush a render round trip so a wrongly-triggered revalidation would land.
+    await expect.element(screen.getByText("probe ready")).toBeInTheDocument();
+    expect(loader).toHaveBeenCalledTimes(1);
+
     setStoredLanguage("es");
 
     await vi.waitFor(() => {

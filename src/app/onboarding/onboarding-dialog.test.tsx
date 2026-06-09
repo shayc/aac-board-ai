@@ -13,33 +13,25 @@ function renderDialog(onClose: () => void) {
 }
 
 describe("OnboardingDialog", () => {
-  test("renders the welcome content when open", async () => {
+  test("renders the welcome content with no a11y violations", async () => {
     const screen = await renderDialog(vi.fn());
 
     await expect
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
-      .toBeInTheDocument();
+      .toBeVisible();
     await expect
       .element(screen.getByText("Communicate more easily and naturally."))
       .toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
   });
 
-  test("continue dismisses the dialog", async () => {
+  test("continue invokes onClose", async () => {
     const onClose = vi.fn();
     const screen = await renderDialog(onClose);
 
     await screen.getByRole("button", { name: "Continue" }).click();
 
     expect(onClose).toHaveBeenCalledOnce();
-  });
-
-  test("has no a11y violations", async () => {
-    const screen = await renderDialog(vi.fn());
-
-    await expect
-      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
-      .toBeVisible();
-
-    await expectNoA11yViolations(document.body);
   });
 });
