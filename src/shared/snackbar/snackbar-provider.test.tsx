@@ -44,18 +44,16 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
   });
 
-  test("queues a second message until the first is dismissed", async () => {
+  test("a new message replaces the current one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", duration: LONG_DURATION },
       "show-second": { message: "second", duration: LONG_DURATION },
     });
 
     await screen.getByRole("button", { name: "show-first" }).click();
-    await screen.getByRole("button", { name: "show-second" }).click();
-
     await expect.element(screen.getByRole("alert")).toHaveTextContent("first");
 
-    await screen.getByRole("button", { name: "Close" }).click();
+    await screen.getByRole("button", { name: "show-second" }).click();
 
     await expect.element(screen.getByRole("alert")).toHaveTextContent("second");
   });
@@ -63,20 +61,23 @@ describe("SnackbarProvider", () => {
   test("ignores clickaway so the message stays visible", async () => {
     const screen = await renderSnackbars({
       "show-sticky": { message: "sticky", duration: LONG_DURATION },
-      "show-queued": { message: "queued", duration: LONG_DURATION },
     });
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
-    await screen.getByRole("button", { name: "show-queued" }).click();
 
     await screen.getByRole("button", { name: "outside" }).click();
 
-    // Had clickaway dismissed "sticky", "queued" would already be promoted
-    // and the explicit close below would dismiss the wrong message.
+    // A clickaway-triggered close would unmount the alert once its exit
+    // transition ends, so prove it outlives that window: the disappearance
+    // matcher must time out.
+    await expect(
+      expect
+        .element(screen.getByRole("alert"), { timeout: 500 })
+        .not.toBeInTheDocument(),
+    ).rejects.toThrow();
+
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
-    await screen.getByRole("button", { name: "Close" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("queued");
   });
 
   test("has no a11y violations with an open snackbar", async () => {
