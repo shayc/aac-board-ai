@@ -16,6 +16,24 @@ export function stubSpeech(): {
   return { speak, cancel };
 }
 
+export interface StubVoice {
+  voiceURI: string;
+  name: string;
+  lang: string;
+}
+
+export function stubVoices(voices: StubVoice[]): void {
+  const synthesisVoices = voices.map((voice) => ({
+    default: false,
+    localService: true,
+    ...voice,
+  }));
+
+  vi.spyOn(speechSynthesis, "getVoices").mockReturnValue(synthesisVoices);
+  // The speech store rebuilds its voice catalog on this event.
+  speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+}
+
 export function stubAudio(): {
   play: MockInstance<HTMLAudioElement["play"]>;
   pause: MockInstance<HTMLAudioElement["pause"]>;
