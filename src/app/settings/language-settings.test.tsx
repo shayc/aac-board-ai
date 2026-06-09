@@ -4,6 +4,7 @@ import {
   stubBuiltInAIUnsupported,
   stubTranslator,
 } from "@shared/testing/built-in-ai";
+import { stubVoices } from "@shared/testing/device-output";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { LanguageSettings } from "./language-settings";
@@ -28,6 +29,8 @@ describe("LanguageSettings", () => {
   });
 
   test("enables the language select when the Translator is available, with no a11y violations", async () => {
+    // The language list derives from TTS voices, which headless CI lacks.
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
     stubTranslator();
 
     const screen = await renderLanguageSettings();
