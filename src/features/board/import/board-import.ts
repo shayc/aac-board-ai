@@ -176,5 +176,7 @@ async function importOBFBoard(
 }
 
 function deriveSetId(filename: string): string {
-  return filename.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
+  const stem = filename.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
+
+  return stem.slice(0, 255) || "imported-board";
 }
