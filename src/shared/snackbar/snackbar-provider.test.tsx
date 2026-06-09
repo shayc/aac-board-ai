@@ -36,14 +36,6 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
 }
 
 describe("SnackbarProvider", () => {
-  test("shows a message from the string overload", async () => {
-    const screen = await renderSnackbars({ "show-saved": "Saved" });
-
-    await screen.getByRole("button", { name: "show-saved" }).click();
-
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
-  });
-
   test("a new message replaces the current one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", duration: LONG_DURATION },
@@ -80,13 +72,11 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
-  test("has no a11y violations with an open snackbar", async () => {
-    const screen = await renderSnackbars({
-      "show-message": { message: "Saved", duration: LONG_DURATION },
-    });
+  test("shows a plain-string message with no a11y violations", async () => {
+    const screen = await renderSnackbars({ "show-saved": "Saved" });
 
-    await screen.getByRole("button", { name: "show-message" }).click();
-    await expect.element(screen.getByRole("alert")).toBeVisible();
+    await screen.getByRole("button", { name: "show-saved" }).click();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
 
     await expectNoA11yViolations(document.body);
   });
