@@ -182,6 +182,28 @@ describe("importBoardFiles", () => {
       boardCount: archive.boards.size,
     });
   });
+
+  test("falls back to a default setId when the filename is only an extension", async () => {
+    const obzFile = await loadFixtureFile(OBZ_FIXTURE);
+    const extensionOnlyFile = new File([obzFile], ".obz", {
+      type: "application/octet-stream",
+    });
+
+    const importResults = await importBoardFiles(extensionOnlyFile);
+
+    expect(importResults[0].setId).toBe("imported-board");
+  });
+
+  test("clamps the derived setId to 255 characters", async () => {
+    const obfFile = await loadFixtureFile(OBF_FIXTURE);
+    const longNamedFile = new File([obfFile], `${"x".repeat(300)}.obf`, {
+      type: "application/octet-stream",
+    });
+
+    const importResults = await importBoardFiles(longNamedFile);
+
+    expect(importResults[0].setId).toBe("x".repeat(255));
+  });
 });
 
 describe("resolveLoadBoardPaths", () => {

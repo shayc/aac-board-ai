@@ -152,6 +152,7 @@ export async function upsertBoardSet(
   input: UpsertBoardSetInput,
 ): Promise<void> {
   validateId(input.setId, "setId");
+  validateId(input.rootBoardId, "rootBoardId");
   const db = await getBoardsDB();
   const tx = db.transaction("boardSets", "readwrite");
   const existing = await tx.store.get(input.setId);
@@ -215,6 +216,9 @@ export async function putBoards(
   boards: UpsertBoardInput[],
 ): Promise<void> {
   validateId(setId, "setId");
+  for (const board of boards) {
+    validateId(board.boardId, "boardId");
+  }
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "boardSets"], "readwrite");
   const boardStore = tx.objectStore("boards");
