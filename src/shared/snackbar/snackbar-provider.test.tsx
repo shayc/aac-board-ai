@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
@@ -77,6 +77,13 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-saved" }).click();
     await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+
+    // Axe computes color contrast against blended colors while the Grow
+    // transition is still animating opacity, so wait for it to settle.
+    await vi.waitFor(() => {
+      const alert = screen.getByRole("alert").element();
+      expect(getComputedStyle(alert).opacity).toBe("1");
+    });
 
     await expectNoA11yViolations(document.body);
   });
