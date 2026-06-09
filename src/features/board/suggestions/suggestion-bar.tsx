@@ -3,13 +3,11 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { SuggestionStatus } from "./suggestion-status";
 import { ToneSelector } from "./tone-selector";
+import type { SuggestionStatusView } from "./use-suggestions";
 
 export interface SuggestionBarProps {
   suggestions: string[];
-  isPending: boolean;
-  downloadProgress: number | null;
-  needsActivation: boolean;
-  hasFailure: boolean;
+  status: SuggestionStatusView;
   tone: RewriterTone;
   canChangeTone: boolean;
   onSuggestionClick: (suggestion: string) => void;
@@ -19,10 +17,7 @@ export interface SuggestionBarProps {
 
 export function SuggestionBar({
   suggestions,
-  isPending,
-  downloadProgress,
-  needsActivation,
-  hasFailure,
+  status,
   tone,
   canChangeTone,
   onSuggestionClick,
@@ -34,13 +29,7 @@ export function SuggestionBar({
       direction="row"
       sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
     >
-      <SuggestionStatus
-        isPending={isPending}
-        downloadProgress={downloadProgress}
-        needsActivation={needsActivation}
-        hasFailure={hasFailure}
-        onEnable={onEnable}
-      />
+      <SuggestionStatus status={status} onEnable={onEnable} />
 
       <Box
         sx={{

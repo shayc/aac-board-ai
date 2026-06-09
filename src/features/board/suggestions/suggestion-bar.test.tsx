@@ -8,10 +8,7 @@ function makeProps(
 ): SuggestionBarProps {
   return {
     suggestions: [],
-    isPending: false,
-    downloadProgress: null,
-    needsActivation: false,
-    hasFailure: false,
+    status: null,
     tone: "as-is",
     canChangeTone: true,
     onSuggestionClick: vi.fn(),
@@ -73,21 +70,20 @@ describe("SuggestionBar", () => {
       .not.toBeInTheDocument();
   });
 
-  test("offers an enable chip when activation is needed, ahead of any download state", async () => {
-    const props = makeProps({ needsActivation: true, downloadProgress: 0.5 });
+  test("offers an enable chip when activation is needed", async () => {
+    const props = makeProps({ status: { kind: "needs-activation" } });
     const screen = await render(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Enable suggestions" }).click();
 
     expect(props.onEnable).toHaveBeenCalledOnce();
-    await expect
-      .element(screen.getByText("Downloading AI model… 50%"))
-      .not.toBeInTheDocument();
   });
 
   test("shows download progress while the model downloads", async () => {
     const screen = await render(
-      <SuggestionBar {...makeProps({ downloadProgress: 0.43 })} />,
+      <SuggestionBar
+        {...makeProps({ status: { kind: "downloading", progress: 0.43 } })}
+      />,
     );
 
     await expect
@@ -97,7 +93,7 @@ describe("SuggestionBar", () => {
 
   test("announces unavailability after a failed round", async () => {
     const screen = await render(
-      <SuggestionBar {...makeProps({ hasFailure: true })} />,
+      <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );
 
     await expect

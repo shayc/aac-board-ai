@@ -18,6 +18,13 @@ import { useEngineAvailability } from "./use-engine-availability";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
+export type SuggestionStatusView =
+  | { kind: "needs-activation" }
+  | { kind: "downloading"; progress: number }
+  | { kind: "pending" }
+  | { kind: "unavailable" }
+  | null;
+
 export interface UseSuggestionsReturn {
   isSupported: boolean;
   isProofreaderSupported: boolean;
@@ -27,9 +34,7 @@ export interface UseSuggestionsReturn {
   isRewriterPending: boolean;
   proofreaderError: Error | undefined;
   rewriterError: Error | undefined;
-  downloadProgress: number | null;
-  needsActivation: boolean;
-  hasFailure: boolean;
+  status: SuggestionStatusView;
   enable: () => void;
   phrases: string[];
   tone: RewriterTone;
@@ -62,6 +67,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isProofreaderSupported = proofreader.status !== "unsupported";
   const isRewriterSupported = rewriter.status !== "unsupported";
+  const isSupported = isProofreaderSupported || isRewriterSupported;
 
   const hasText = text.trim().length > 0;
 
@@ -81,15 +87,11 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   });
 
   // The global store also sees downloads the onboarding warm-up started, which
-  // the hook instances can't. Math.min so the shown percentage never jumps
-  // backwards when the faster of two concurrent downloads finishes.
-  const proofreaderDownload = useGlobalDownloadProgress("Proofreader");
-  const rewriterDownload = useGlobalDownloadProgress("Rewriter");
-  const downloadProgress =
-    proofreaderDownload !== null && rewriterDownload !== null
-      ? Math.min(proofreaderDownload, rewriterDownload)
-      : (proofreaderDownload ?? rewriterDownload);
-  const isDownloading = downloadProgress !== null;
+  // the hook instances can't.
+  const downloadProgress = useGlobalDownloadProgress([
+    "Proofreader",
+    "Rewriter",
+  ]);
 
   const proofreaderAvailability = useEngineAvailability(
     "Proofreader",
@@ -121,20 +123,26 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isPending = corrected.isPending || rewritten.isPending;
 
-  const proofreaderCannotHelp = !isProofreaderSupported || isProofreaderBroken;
-  const rewriterCannotHelp = !isRewriterSupported || isRewriterBroken;
+  const hasWorkingEngine =
+    (isProofreaderSupported && !isProofreaderBroken) ||
+    (isRewriterSupported && !isRewriterBroken);
 
-  // Failure is announced only when no supported engine remains operational; a
-  // healthy engine that merely had nothing to suggest stays silent.
-  const hasFailure =
-    hasText &&
-    phrases.length === 0 &&
-    !isPending &&
-    !needsActivation &&
-    !isDownloading &&
-    (isProofreaderBroken || isRewriterBroken) &&
-    proofreaderCannotHelp &&
-    rewriterCannotHelp;
+  const status = ((): SuggestionStatusView => {
+    if (needsActivation) {
+      return { kind: "needs-activation" };
+    }
+    if (downloadProgress !== null) {
+      return { kind: "downloading", progress: downloadProgress };
+    }
+    if (isPending && phrases.length === 0) {
+      return { kind: "pending" };
+    }
+    // A healthy engine that merely had nothing to suggest keeps the bar quiet.
+    if (isSupported && hasText && phrases.length === 0 && !hasWorkingEngine) {
+      return { kind: "unavailable" };
+    }
+    return null;
+  })();
 
   const enable = () => {
     if (proofreader.status !== "ready") {
@@ -146,7 +154,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   };
 
   return {
-    isSupported: isProofreaderSupported || isRewriterSupported,
+    isSupported,
     isProofreaderSupported,
     isRewriterSupported,
     isPending,
@@ -154,9 +162,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     isRewriterPending: rewritten.isPending,
     proofreaderError: corrected.error,
     rewriterError: rewritten.error,
-    downloadProgress,
-    needsActivation,
-    hasFailure,
+    status,
     enable,
     phrases,
     tone,

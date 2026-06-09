@@ -3,63 +3,57 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { DotsProgress } from "@shared/components/dots-progress";
+import type { ReactElement } from "react";
+import type { SuggestionStatusView } from "./use-suggestions";
 
 export interface SuggestionStatusProps {
-  isPending: boolean;
-  downloadProgress: number | null;
-  needsActivation: boolean;
-  hasFailure: boolean;
+  status: SuggestionStatusView;
   onEnable: () => void;
 }
 
+// The explicit return type makes TS2366 reject a switch that misses a kind.
 export function SuggestionStatus({
-  isPending,
-  downloadProgress,
-  needsActivation,
-  hasFailure,
+  status,
   onEnable,
-}: SuggestionStatusProps) {
-  if (needsActivation) {
-    return (
-      <Chip
-        label={m.suggestionsEnable()}
-        variant="outlined"
-        color="primary"
-        onClick={onEnable}
-      />
-    );
+}: SuggestionStatusProps): ReactElement | null {
+  if (status === null) {
+    return null;
   }
 
-  if (downloadProgress !== null) {
-    return (
-      <Stack
-        direction="row"
-        sx={{ alignItems: "center", gap: 1, whiteSpace: "nowrap" }}
-      >
-        <DotsProgress />
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {m.suggestionsDownloading({
-            progress: Math.round(downloadProgress * 100),
-          })}
+  switch (status.kind) {
+    case "needs-activation":
+      return (
+        <Chip
+          label={m.suggestionsEnable()}
+          variant="outlined"
+          color="primary"
+          onClick={onEnable}
+        />
+      );
+    case "downloading":
+      return (
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", gap: 1, whiteSpace: "nowrap" }}
+        >
+          <DotsProgress />
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {m.suggestionsDownloading({
+              progress: Math.round(status.progress * 100),
+            })}
+          </Typography>
+        </Stack>
+      );
+    case "pending":
+      return <DotsProgress />;
+    case "unavailable":
+      return (
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", whiteSpace: "nowrap" }}
+        >
+          {m.suggestionsUnavailable()}
         </Typography>
-      </Stack>
-    );
+      );
   }
-
-  if (isPending) {
-    return <DotsProgress />;
-  }
-
-  if (hasFailure) {
-    return (
-      <Typography
-        variant="body2"
-        sx={{ color: "text.secondary", whiteSpace: "nowrap" }}
-      >
-        {m.suggestionsUnavailable()}
-      </Typography>
-    );
-  }
-
-  return null;
 }

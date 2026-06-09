@@ -121,7 +121,7 @@ describe("useSuggestions", () => {
     });
     expect(result.current.rewriterError).toBeUndefined();
     expect(result.current.isPending).toBe(false);
-    expect(result.current.hasFailure).toBe(false);
+    expect(result.current.status).toBeNull();
   });
 
   test("surfaces failures from both engines with no phrases", async () => {
@@ -135,7 +135,7 @@ describe("useSuggestions", () => {
       expect(result.current.rewriterError?.message).toBe("rewrite down");
     });
     expect(result.current.phrases).toEqual([]);
-    expect(result.current.hasFailure).toBe(true);
+    expect(result.current.status).toEqual({ kind: "unavailable" });
   });
 
   test("stays silent when the healthy engine has nothing to suggest and the other is broken", async () => {
@@ -148,7 +148,7 @@ describe("useSuggestions", () => {
       expect(result.current.rewriterError?.message).toBe("rewrite down");
     });
     expect(result.current.phrases).toEqual([]);
-    expect(result.current.hasFailure).toBe(false);
+    expect(result.current.status).toBeNull();
   });
 
   test("stays quiet when a rejection is an abort by name", async () => {
@@ -162,7 +162,7 @@ describe("useSuggestions", () => {
     await vi.waitFor(() => {
       expect(result.current.rewriterError?.name).toBe("AbortError");
     });
-    expect(result.current.hasFailure).toBe(false);
+    expect(result.current.status).toBeNull();
   });
 
   test("asks for activation when the model needs a user-gesture download", async () => {
@@ -173,9 +173,8 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.needsActivation).toBe(true);
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
     });
-    expect(result.current.hasFailure).toBe(false);
   });
 
   test("forgets the previous language's availability while the new probe is in flight", async () => {
@@ -190,13 +189,13 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.needsActivation).toBe(true);
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
     });
 
     setStoredLanguage("he");
 
     await vi.waitFor(() => {
-      expect(result.current.needsActivation).toBe(false);
+      expect(result.current.status).toBeNull();
     });
   });
 
@@ -327,6 +326,7 @@ describe("useSuggestions", () => {
     await vi.waitFor(() => {
       expect(result.current.isPending).toBe(true);
       expect(result.current.isRewriterPending).toBe(true);
+      expect(result.current.status).toEqual({ kind: "pending" });
     });
 
     await vi.waitFor(() => expect(pending).toHaveLength(1));
@@ -336,6 +336,7 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["casual hi"]);
       expect(result.current.isPending).toBe(false);
       expect(result.current.isRewriterPending).toBe(false);
+      expect(result.current.status).toBeNull();
     });
   });
 
