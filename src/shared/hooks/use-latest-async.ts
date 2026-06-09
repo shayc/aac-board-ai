@@ -6,11 +6,16 @@ export interface UseLatestAsyncOptions<T> {
   fetch: (signal: AbortSignal) => Promise<T>;
 }
 
+export interface UseLatestAsyncReturn<T> {
+  value: T | undefined;
+  isPending: boolean;
+}
+
 export function useLatestAsync<T>({
   enabled,
   deps,
   fetch,
-}: UseLatestAsyncOptions<T>): T | undefined {
+}: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
   const signature = deps.join("\0");
 
   const fetchRef = useRef(fetch);
@@ -45,5 +50,9 @@ export function useLatestAsync<T>({
     return () => controller.abort();
   }, [enabled, signature]);
 
-  return enabled && result?.signature === signature ? result.value : undefined;
+  return {
+    value:
+      enabled && result?.signature === signature ? result.value : undefined,
+    isPending: enabled && result?.signature !== signature,
+  };
 }

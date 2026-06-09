@@ -4,17 +4,17 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { createButtonActivation } from "./activation/button-activation";
+import { getNavigationTargetId } from "./board-button";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
-import { useMessage } from "./message/use-message";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
+import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import { Tile } from "./tile/tile";
-import { getNavigationTargetId } from "./board-button";
 import type { Board, BoardButton } from "./types";
 
 export interface BoardViewerProps {
@@ -95,10 +95,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
         {suggestions.isSupported && (
           <SuggestionBar
             suggestions={suggestions.phrases}
+            isPending={suggestions.isPending}
             tone={suggestions.tone}
             canChangeTone={suggestions.isRewriterSupported}
-            onToneChange={suggestions.setTone}
             onSuggestionClick={message.setFromText}
+            onToneChange={suggestions.setTone}
           />
         )}
       </Stack>
