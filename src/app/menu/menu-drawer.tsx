@@ -34,6 +34,7 @@ export function MenuDrawer({ open, onClose }: MenuDrawerProps) {
       onClose={onClose}
       slotProps={{
         paper: {
+          "aria-label": m.menuLabel(),
           sx: { width: "calc(320px + env(safe-area-inset-left))" },
         },
       }}
