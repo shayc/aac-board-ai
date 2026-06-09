@@ -16,6 +16,7 @@ export {
 } from "./navigation/board-paths";
 export { hydrateBoard } from "./storage/board-hydration";
 export { BoardNotFoundError, getBoardSet } from "./storage/boards-db";
+export { warmUpSuggestionModels } from "./suggestions/warm-up-suggestion-models";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardSetRecord } from "./storage/boards-db";

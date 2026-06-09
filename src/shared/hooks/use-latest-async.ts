@@ -8,8 +8,13 @@ export interface UseLatestAsyncOptions<T> {
 
 export interface UseLatestAsyncReturn<T> {
   value: T | undefined;
+  error: Error | undefined;
   isPending: boolean;
 }
+
+type SettledRound<T> =
+  | { signature: string; status: "resolved"; value: T }
+  | { signature: string; status: "rejected"; error: Error };
 
 export function useLatestAsync<T>({
   enabled,
@@ -23,7 +28,7 @@ export function useLatestAsync<T>({
     fetchRef.current = fetch;
   });
 
-  const [result, setResult] = useState<{ signature: string; value: T }>();
+  const [round, setRound] = useState<SettledRound<T>>();
 
   useEffect(() => {
     if (!enabled) {
@@ -37,22 +42,28 @@ export function useLatestAsync<T>({
       .current(signal)
       .then((value) => {
         if (!signal.aborted) {
-          setResult({ signature, value });
+          setRound({ signature, status: "resolved", value });
         }
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         if (signal.aborted) {
           return;
         }
-        throw error;
+        setRound({
+          signature,
+          status: "rejected",
+          error: error instanceof Error ? error : new Error(String(error)),
+        });
       });
 
     return () => controller.abort();
   }, [enabled, signature]);
 
+  const settled = enabled && round?.signature === signature ? round : undefined;
+
   return {
-    value:
-      enabled && result?.signature === signature ? result.value : undefined,
-    isPending: enabled && result?.signature !== signature,
+    value: settled?.status === "resolved" ? settled.value : undefined,
+    error: settled?.status === "rejected" ? settled.error : undefined,
+    isPending: enabled && round?.signature !== signature,
   };
 }

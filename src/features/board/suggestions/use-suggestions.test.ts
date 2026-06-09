@@ -109,6 +109,33 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("surfaces a proofread failure while the rewrite still suggests", async () => {
+    stubProofreader(() => Promise.reject(new Error("input too long")));
+    stubRewriter(() => "I would like to eat.");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.proofreaderError?.message).toBe("input too long");
+      expect(result.current.phrases).toEqual(["I would like to eat."]);
+    });
+    expect(result.current.rewriterError).toBeUndefined();
+    expect(result.current.isPending).toBe(false);
+  });
+
+  test("surfaces failures from both engines with no phrases", async () => {
+    stubProofreader(() => Promise.reject(new Error("proofread down")));
+    stubRewriter(() => Promise.reject(new Error("rewrite down")));
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.proofreaderError?.message).toBe("proofread down");
+      expect(result.current.rewriterError?.message).toBe("rewrite down");
+    });
+    expect(result.current.phrases).toEqual([]);
+  });
+
   test("passes the persisted shared context to the rewriter", async () => {
     setAISharedContext("Talk like a pirate");
     const { create } = stubRewriter();

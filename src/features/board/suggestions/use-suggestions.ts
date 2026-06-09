@@ -15,6 +15,8 @@ export interface UseSuggestionsReturn {
   isPending: boolean;
   isProofreaderPending: boolean;
   isRewriterPending: boolean;
+  proofreaderError: Error | undefined;
+  rewriterError: Error | undefined;
   phrases: string[];
   tone: RewriterTone;
   setTone: (tone: RewriterTone) => void;
@@ -55,15 +57,13 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     fetch: (signal) =>
       proofreader
         .proofread(text, { signal })
-        .then((result) => result.correctedInput)
-        .catch(() => undefined),
+        .then((result) => result.correctedInput),
   });
 
   const rewritten = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
     deps: [text, tone, debouncedSharedContext, language],
-    fetch: (signal) =>
-      rewriter.rewrite(text, { signal }).catch(() => undefined),
+    fetch: (signal) => rewriter.rewrite(text, { signal }),
   });
 
   return {
@@ -73,6 +73,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     isPending: corrected.isPending || rewritten.isPending,
     isProofreaderPending: corrected.isPending,
     isRewriterPending: rewritten.isPending,
+    proofreaderError: corrected.error,
+    rewriterError: rewritten.error,
     phrases: toPhrases(text, [corrected.value, rewritten.value]),
     tone,
     setTone,
