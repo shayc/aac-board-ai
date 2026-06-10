@@ -14,10 +14,6 @@ import {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
 } from "@shared/built-in-ai/engine-language-options";
-import {
-  deriveEngineView,
-  type EngineView,
-} from "@shared/built-in-ai/engine-view";
 import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import {
   setAISharedContext,
@@ -28,39 +24,42 @@ import {
   isSupported,
   useProofreader,
   useRewriter,
+  type Status,
 } from "@shayc/react-built-in-ai";
 
-function statusLabel(view: EngineView): string {
-  switch (view.kind) {
+function statusLabel(status: Status, progress: number): string {
+  switch (status) {
     case "ready":
       return m.aiStatusAvailable();
     case "downloading":
       return m.aiStatusDownloading({
-        progress: Math.round(view.progress * 100),
+        progress: Math.round(progress * 100),
       });
-    case "awaits-gesture":
+    case "downloadable":
       return m.aiStatusDownloadRequired();
-    case "initializing":
+    case "idle":
     case "unavailable":
+    case "error":
     case "unsupported":
       return m.aiStatusUnavailable();
   }
 }
 
-function statusIcon(view: EngineView) {
-  const title = statusLabel(view);
-  switch (view.kind) {
+function statusIcon(status: Status, progress: number) {
+  const title = statusLabel(status, progress);
+  switch (status) {
     case "ready":
       return (
         <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
       );
     case "downloading":
-    case "awaits-gesture":
+    case "downloadable":
       return (
         <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
       );
-    case "initializing":
+    case "idle":
     case "unavailable":
+    case "error":
     case "unsupported":
       return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
   }
@@ -71,29 +70,29 @@ export function AISettings() {
   const { language } = useLanguage();
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
   const rewriter = useRewriter(rewriterLanguageOptions(language));
-  const proofreaderView = deriveEngineView(proofreader);
-  const rewriterView = deriveEngineView(rewriter);
 
   const capabilities: {
     title: string;
-    view: EngineView;
+    status: Status;
+    progress: number;
     onDownload?: () => void;
   }[] = [
     {
       title: m.aiFeatureProofreading(),
-      view: proofreaderView,
+      status: proofreader.status,
+      progress: proofreader.progress,
       onDownload: () => prepareQuietly(proofreader),
     },
     {
       title: m.aiFeatureRewriting(),
-      view: rewriterView,
+      status: rewriter.status,
+      progress: rewriter.progress,
       onDownload: () => prepareQuietly(rewriter),
     },
     {
       title: m.aiFeatureTranslation(),
-      view: isSupported("Translator")
-        ? { kind: "ready" }
-        : { kind: "unsupported" },
+      status: isSupported("Translator") ? "ready" : "unsupported",
+      progress: 0,
     },
   ];
 
@@ -120,12 +119,12 @@ export function AISettings() {
         </Typography>
 
         <List dense>
-          {capabilities.map(({ title, view, onDownload }) => (
+          {capabilities.map(({ title, status, progress, onDownload }) => (
             <ListItem
               key={title}
               sx={{ px: 0 }}
               secondaryAction={
-                view.kind === "awaits-gesture" &&
+                status === "downloadable" &&
                 onDownload && (
                   <Button size="small" onClick={onDownload}>
                     {m.aiDownloadAction()}
@@ -134,9 +133,12 @@ export function AISettings() {
               }
             >
               <ListItemIcon sx={{ minWidth: 36 }}>
-                {statusIcon(view)}
+                {statusIcon(status, progress)}
               </ListItemIcon>
-              <ListItemText primary={title} secondary={statusLabel(view)} />
+              <ListItemText
+                primary={title}
+                secondary={statusLabel(status, progress)}
+              />
             </ListItem>
           ))}
         </List>

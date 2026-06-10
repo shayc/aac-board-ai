@@ -1,4 +1,4 @@
-import type { EngineView } from "@shared/built-in-ai/engine-view";
+import type { Status } from "@shayc/react-built-in-ai";
 
 export type SuggestionStatusView =
   | { kind: "needs-activation" }
@@ -8,7 +8,7 @@ export type SuggestionStatusView =
   | null;
 
 export interface EngineCondition {
-  view: EngineView;
+  status: Status;
   requestFailed: boolean;
 }
 
@@ -27,12 +27,12 @@ export function deriveSuggestionStatus({
   isPending,
   phraseCount,
 }: SuggestionStatusInput): SuggestionStatusView {
-  const supported = engines.filter(({ view }) => view.kind !== "unsupported");
+  const supported = engines.filter(({ status }) => status !== "unsupported");
   if (supported.length === 0) {
     return null;
   }
 
-  if (supported.some(({ view }) => view.kind === "awaits-gesture")) {
+  if (supported.some(({ status }) => status === "downloadable")) {
     return { kind: "needs-activation" };
   }
 
@@ -46,7 +46,8 @@ export function deriveSuggestionStatus({
 
   // A healthy engine that merely had nothing to suggest keeps the bar quiet.
   const hasWorkingEngine = supported.some(
-    ({ view, requestFailed }) => view.kind !== "unavailable" && !requestFailed,
+    ({ status, requestFailed }) =>
+      status !== "unavailable" && status !== "error" && !requestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingEngine) {
     return { kind: "unavailable" };

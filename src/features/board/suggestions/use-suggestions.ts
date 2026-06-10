@@ -2,7 +2,6 @@ import {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
 } from "@shared/built-in-ai/engine-language-options";
-import { deriveEngineView } from "@shared/built-in-ai/engine-view";
 import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
@@ -59,9 +58,6 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     ...rewriterLanguageOptions(language),
   });
 
-  const proofreaderView = deriveEngineView(proofreader);
-  const rewriterView = deriveEngineView(rewriter);
-
   const hasText = text.trim().length > 0;
 
   const corrected = useLatestAsync({
@@ -92,11 +88,11 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const status = deriveSuggestionStatus({
     engines: [
       {
-        view: proofreaderView,
+        status: proofreader.status,
         requestFailed: isNonAbortError(corrected.error),
       },
       {
-        view: rewriterView,
+        status: rewriter.status,
         requestFailed: isNonAbortError(rewritten.error),
       },
     ],
@@ -107,16 +103,16 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   });
 
   const enable = () => {
-    if (proofreaderView.kind === "awaits-gesture") {
+    if (proofreader.status === "downloadable") {
       prepareQuietly(proofreader);
     }
-    if (rewriterView.kind === "awaits-gesture") {
+    if (rewriter.status === "downloadable") {
       prepareQuietly(rewriter);
     }
   };
 
-  const isProofreaderSupported = proofreaderView.kind !== "unsupported";
-  const isRewriterSupported = rewriterView.kind !== "unsupported";
+  const isProofreaderSupported = proofreader.status !== "unsupported";
+  const isRewriterSupported = rewriter.status !== "unsupported";
 
   return {
     isSupported: isProofreaderSupported || isRewriterSupported,
