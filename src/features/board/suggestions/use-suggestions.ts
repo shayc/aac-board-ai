@@ -18,6 +18,7 @@ import {
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
 import { deriveEngineView } from "./engine-view";
+import { prepareQuietly } from "./prepare-quietly";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -103,10 +104,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const enable = () => {
     if (proofreaderView.kind === "awaits-gesture") {
-      void proofreader.prepare().catch(() => undefined);
+      prepareQuietly(proofreader);
     }
     if (rewriterView.kind === "awaits-gesture") {
-      void rewriter.prepare().catch(() => undefined);
+      prepareQuietly(rewriter);
     }
   };
 
