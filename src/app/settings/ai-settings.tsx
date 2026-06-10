@@ -11,6 +11,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
   deriveEngineView,
+  prepareQuietly,
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
   type EngineView,
@@ -79,12 +80,12 @@ export function AISettings() {
     {
       title: m.aiFeatureProofreading(),
       view: proofreaderView,
-      onDownload: () => void proofreader.prepare().catch(() => undefined),
+      onDownload: () => prepareQuietly(proofreader),
     },
     {
       title: m.aiFeatureRewriting(),
       view: rewriterView,
-      onDownload: () => void rewriter.prepare().catch(() => undefined),
+      onDownload: () => prepareQuietly(rewriter),
     },
     {
       title: m.aiFeatureTranslation(),

@@ -21,6 +21,7 @@ export {
   rewriterLanguageOptions,
 } from "./suggestions/engine-language-options";
 export { deriveEngineView } from "./suggestions/engine-view";
+export { prepareQuietly } from "./suggestions/prepare-quietly";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardSetRecord } from "./storage/boards-db";
