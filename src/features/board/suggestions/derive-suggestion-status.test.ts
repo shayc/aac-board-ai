@@ -1,17 +1,17 @@
+import type { Status } from "@shayc/react-built-in-ai";
 import { describe, expect, test } from "vitest";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusInput,
 } from "./derive-suggestion-status";
-import type { EngineView } from "./engine-view";
 
 function makeInput(
   overrides: Partial<SuggestionStatusInput> = {},
 ): SuggestionStatusInput {
   return {
     engines: [
-      { view: { kind: "ready" }, roundFailed: false },
-      { view: { kind: "ready" }, roundFailed: false },
+      { status: "ready", requestFailed: false },
+      { status: "ready", requestFailed: false },
     ],
     downloadProgress: null,
     hasText: false,
@@ -21,8 +21,8 @@ function makeInput(
   };
 }
 
-function engines(...views: EngineView[]) {
-  return views.map((view) => ({ view, roundFailed: false }));
+function engines(...statuses: Status[]) {
+  return statuses.map((status) => ({ status, requestFailed: false }));
 }
 
 describe("deriveSuggestionStatus", () => {
@@ -32,7 +32,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("stays quiet when no engine is supported", () => {
     const input = makeInput({
-      engines: engines({ kind: "unsupported" }, { kind: "unsupported" }),
+      engines: engines("unsupported", "unsupported"),
       hasText: true,
     });
 
@@ -41,7 +41,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("asks for activation ahead of any download state", () => {
     const input = makeInput({
-      engines: engines({ kind: "awaits-gesture" }, { kind: "ready" }),
+      engines: engines("downloadable", "ready"),
       downloadProgress: 0.5,
     });
 
@@ -70,18 +70,18 @@ describe("deriveSuggestionStatus", () => {
 
   test("announces unavailability only when every engine is out and nothing was suggested", () => {
     const input = makeInput({
-      engines: engines({ kind: "unavailable" }, { kind: "unavailable" }),
+      engines: engines("unavailable", "error"),
       hasText: true,
     });
 
     expect(deriveSuggestionStatus(input)).toEqual({ kind: "unavailable" });
   });
 
-  test("counts a failed round as a broken engine", () => {
+  test("counts a failed request as a broken engine", () => {
     const input = makeInput({
       engines: [
-        { view: { kind: "ready" }, roundFailed: true },
-        { view: { kind: "unavailable" }, roundFailed: false },
+        { status: "ready", requestFailed: true },
+        { status: "unavailable", requestFailed: false },
       ],
       hasText: true,
     });
@@ -92,8 +92,8 @@ describe("deriveSuggestionStatus", () => {
   test("partial failure stays silent while one engine still works", () => {
     const input = makeInput({
       engines: [
-        { view: { kind: "ready" }, roundFailed: true },
-        { view: { kind: "ready" }, roundFailed: false },
+        { status: "ready", requestFailed: true },
+        { status: "ready", requestFailed: false },
       ],
       hasText: true,
     });
@@ -101,9 +101,9 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toBeNull();
   });
 
-  test("an initializing engine is not a failure", () => {
+  test("an engine still probing availability is not a failure", () => {
     const input = makeInput({
-      engines: engines({ kind: "initializing" }, { kind: "unavailable" }),
+      engines: engines("idle", "unavailable"),
       hasText: true,
     });
 

@@ -1,4 +1,9 @@
-import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
+import {
+  proofreaderLanguageOptions,
+  rewriterLanguageOptions,
+} from "@shared/built-in-ai/engine-language-options";
+import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
+import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
@@ -9,16 +14,10 @@ import {
 } from "@shayc/react-built-in-ai";
 import { useState } from "react";
 import {
-  proofreaderLanguageOptions,
-  rewriterLanguageOptions,
-} from "./engine-language-options";
-import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { deriveEngineView } from "./engine-view";
-import { prepareQuietly } from "./prepare-quietly";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -35,7 +34,7 @@ export interface UseSuggestionsReturn {
   setTone: (tone: RewriterTone) => void;
 }
 
-function isRealError(error: Error | undefined): boolean {
+function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
 
@@ -58,9 +57,6 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     format: "plain-text",
     ...rewriterLanguageOptions(language),
   });
-
-  const proofreaderView = deriveEngineView(proofreader);
-  const rewriterView = deriveEngineView(rewriter);
 
   const hasText = text.trim().length > 0;
 
@@ -91,8 +87,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const status = deriveSuggestionStatus({
     engines: [
-      { view: proofreaderView, roundFailed: isRealError(corrected.error) },
-      { view: rewriterView, roundFailed: isRealError(rewritten.error) },
+      {
+        status: proofreader.status,
+        requestFailed: isNonAbortError(corrected.error),
+      },
+      {
+        status: rewriter.status,
+        requestFailed: isNonAbortError(rewritten.error),
+      },
     ],
     downloadProgress,
     hasText,
@@ -101,16 +103,16 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   });
 
   const enable = () => {
-    if (proofreaderView.kind === "awaits-gesture") {
+    if (proofreader.status === "downloadable") {
       prepareQuietly(proofreader);
     }
-    if (rewriterView.kind === "awaits-gesture") {
+    if (rewriter.status === "downloadable") {
       prepareQuietly(rewriter);
     }
   };
 
-  const isProofreaderSupported = proofreaderView.kind !== "unsupported";
-  const isRewriterSupported = rewriterView.kind !== "unsupported";
+  const isProofreaderSupported = proofreader.status !== "unsupported";
+  const isRewriterSupported = rewriter.status !== "unsupported";
 
   return {
     isSupported: isProofreaderSupported || isRewriterSupported,

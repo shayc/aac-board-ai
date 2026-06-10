@@ -7,11 +7,11 @@ function makeProps(
   overrides: Partial<SuggestionBarProps> = {},
 ): SuggestionBarProps {
   return {
-    suggestions: [],
+    phrases: [],
     status: null,
     tone: "as-is",
     canChangeTone: true,
-    onSuggestionClick: vi.fn(),
+    onPhraseClick: vi.fn(),
     onToneChange: vi.fn(),
     onEnable: vi.fn(),
     ...overrides,
@@ -19,38 +19,36 @@ function makeProps(
 }
 
 describe("SuggestionBar", () => {
-  test("renders a chip for each suggestion", async () => {
-    const suggestions = ["Hello", "How are you?", "Thank you"];
+  test("renders a chip for each phrase", async () => {
+    const phrases = ["Hello", "How are you?", "Thank you"];
 
-    const screen = await render(
-      <SuggestionBar {...makeProps({ suggestions })} />,
-    );
+    const screen = await render(<SuggestionBar {...makeProps({ phrases })} />);
 
-    for (const suggestion of suggestions) {
+    for (const phrase of phrases) {
       await expect
-        .element(screen.getByRole("button", { name: suggestion }))
+        .element(screen.getByRole("button", { name: phrase }))
         .toBeVisible();
     }
   });
 
-  test("calls onSuggestionClick with the correct value when a suggestion chip is clicked", async () => {
-    const props = makeProps({ suggestions: ["Hello", "Goodbye"] });
+  test("calls onPhraseClick with the correct value when a phrase chip is clicked", async () => {
+    const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await render(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Hello" }).click();
 
-    expect(props.onSuggestionClick).toHaveBeenCalledWith("Hello");
-    expect(props.onSuggestionClick).toHaveBeenCalledTimes(1);
+    expect(props.onPhraseClick).toHaveBeenCalledWith("Hello");
+    expect(props.onPhraseClick).toHaveBeenCalledTimes(1);
 
     await screen.getByRole("button", { name: "Goodbye" }).click();
 
-    expect(props.onSuggestionClick).toHaveBeenCalledWith("Goodbye");
-    expect(props.onSuggestionClick).toHaveBeenCalledTimes(2);
+    expect(props.onPhraseClick).toHaveBeenCalledWith("Goodbye");
+    expect(props.onPhraseClick).toHaveBeenCalledTimes(2);
   });
 
   test("shows the tone selector when tone can be changed", async () => {
     const screen = await render(
-      <SuggestionBar {...makeProps({ suggestions: ["Hello"] })} />,
+      <SuggestionBar {...makeProps({ phrases: ["Hello"] })} />,
     );
 
     await expect
@@ -61,7 +59,7 @@ describe("SuggestionBar", () => {
   test("hides the tone selector when tone cannot be changed", async () => {
     const screen = await render(
       <SuggestionBar
-        {...makeProps({ suggestions: ["Hello"], canChangeTone: false })}
+        {...makeProps({ phrases: ["Hello"], canChangeTone: false })}
       />,
     );
 
@@ -91,7 +89,7 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("announces unavailability after a failed round", async () => {
+  test("announces unavailability after a failed request", async () => {
     const screen = await render(
       <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );
@@ -106,7 +104,7 @@ describe("SuggestionBar", () => {
   test("has no accessibility violations", async () => {
     const screen = await render(
       <SuggestionBar
-        {...makeProps({ suggestions: ["Hello", "How are you?", "Thank you"] })}
+        {...makeProps({ phrases: ["Hello", "How are you?", "Thank you"] })}
       />,
     );
 
