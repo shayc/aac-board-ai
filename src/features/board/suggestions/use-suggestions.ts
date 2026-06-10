@@ -17,7 +17,7 @@ import {
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { useEngineView } from "./use-engine-view";
+import { deriveEngineView } from "./engine-view";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -60,8 +60,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     ...rewriterLanguageOptions(language),
   });
 
-  const proofreaderView = useEngineView("Proofreader", language, proofreader);
-  const rewriterView = useEngineView("Rewriter", language, rewriter);
+  const proofreaderView = deriveEngineView(proofreader);
+  const rewriterView = deriveEngineView(rewriter);
 
   const hasText = text.trim().length > 0;
 

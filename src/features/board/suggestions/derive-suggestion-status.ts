@@ -1,4 +1,4 @@
-import type { EngineView } from "./use-engine-view";
+import type { EngineView } from "./engine-view";
 
 export type SuggestionStatusView =
   | { kind: "needs-activation" }

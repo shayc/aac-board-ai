@@ -3,7 +3,7 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatusInput,
 } from "./derive-suggestion-status";
-import type { EngineView } from "./use-engine-view";
+import type { EngineView } from "./engine-view";
 
 function makeInput(
   overrides: Partial<SuggestionStatusInput> = {},

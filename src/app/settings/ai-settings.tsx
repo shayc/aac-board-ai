@@ -10,9 +10,9 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import {
+  deriveEngineView,
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
-  useEngineView,
   type EngineView,
 } from "@features/board";
 import { m } from "@paraglide/messages.js";
@@ -68,8 +68,8 @@ export function AISettings() {
   const { language } = useLanguage();
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
   const rewriter = useRewriter(rewriterLanguageOptions(language));
-  const proofreaderView = useEngineView("Proofreader", language, proofreader);
-  const rewriterView = useEngineView("Rewriter", language, rewriter);
+  const proofreaderView = deriveEngineView(proofreader);
+  const rewriterView = deriveEngineView(rewriter);
 
   const capabilities: {
     title: string;
