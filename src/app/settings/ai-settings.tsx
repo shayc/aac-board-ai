@@ -26,6 +26,7 @@ import {
   useRewriter,
   type Status,
 } from "@shayc/react-built-in-ai";
+import type { ReactElement } from "react";
 
 function statusLabel(status: Status, progress: number): string {
   switch (status) {
@@ -45,7 +46,7 @@ function statusLabel(status: Status, progress: number): string {
   }
 }
 
-function statusIcon(status: Status, progress: number) {
+function statusIcon(status: Status, progress: number): ReactElement {
   const title = statusLabel(status, progress);
   switch (status) {
     case "ready":
