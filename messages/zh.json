@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "翻译",
   "navBack": "返回",
   "navHome": "返回主页",
-  "messageBackspace": "退格",
+  "messageBackspace": "删除",
   "messageBackspaceLongPressHint": "长按可清空消息。",
   "messagePlay": "播放消息",
   "messageStop": "停止",

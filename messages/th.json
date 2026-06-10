@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "การแปล",
   "navBack": "กลับ",
   "navHome": "ไปที่หน้าแรก",
-  "messageBackspace": "ลบย้อนกลับ",
+  "messageBackspace": "ลบ",
   "messageBackspaceLongPressHint": "กดค้างเพื่อล้างข้อความ",
   "messagePlay": "เล่นข้อความ",
   "messageStop": "หยุด",

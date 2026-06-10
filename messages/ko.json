@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "번역",
   "navBack": "뒤로",
   "navHome": "홈으로",
-  "messageBackspace": "백스페이스",
+  "messageBackspace": "지우기",
   "messageBackspaceLongPressHint": "길게 눌러 메시지를 지웁니다.",
   "messagePlay": "메시지 재생",
   "messageStop": "중지",
