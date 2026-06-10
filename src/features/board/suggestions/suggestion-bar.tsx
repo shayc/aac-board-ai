@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { SuggestionStatus } from "./suggestion-status";
 import { ToneSelector } from "./tone-selector";
-import type { SuggestionStatusView } from "./use-suggestions";
+import type { SuggestionStatusView } from "./suggestion-status-view";
 
 export interface SuggestionBarProps {
   suggestions: string[];

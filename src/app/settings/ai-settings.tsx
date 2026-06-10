@@ -12,7 +12,8 @@ import Typography from "@mui/material/Typography";
 import {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
-  useEngineAvailability,
+  useEngineView,
+  type EngineView,
 } from "@features/board";
 import { m } from "@paraglide/messages.js";
 import {
@@ -22,74 +23,42 @@ import {
 import { useLanguage } from "@shared/language/use-language";
 import {
   isSupported,
-  MissingUserActivationError,
   useProofreader,
   useRewriter,
-  type BaseHookReturn,
 } from "@shayc/react-built-in-ai";
 
-type CapabilityView =
-  | { kind: "available" }
-  | { kind: "downloading"; progress: number }
-  | { kind: "needs-download"; onDownload: () => void }
-  | { kind: "unavailable" };
-
-function engineView(
-  engine: BaseHookReturn,
-  availability: Availability | undefined,
-): CapabilityView {
-  if (engine.status === "ready") {
-    return { kind: "available" };
-  }
-
-  if (engine.status === "downloading") {
-    return { kind: "downloading", progress: engine.progress };
-  }
-
-  // Idle + downloadable means the lifecycle is parked awaiting the user
-  // gesture Chrome requires before a model download.
-  const awaitsGesture =
-    (engine.status === "idle" && availability === "downloadable") ||
-    engine.error instanceof MissingUserActivationError;
-
-  if (awaitsGesture) {
-    return {
-      kind: "needs-download",
-      onDownload: () => void engine.prepare().catch(() => undefined),
-    };
-  }
-
-  return { kind: "unavailable" };
-}
-
-function statusLabel(view: CapabilityView): string {
+function statusLabel(view: EngineView): string {
   switch (view.kind) {
-    case "available":
+    case "ready":
       return m.aiStatusAvailable();
     case "downloading":
       return m.aiStatusDownloading({
         progress: Math.round(view.progress * 100),
       });
-    case "needs-download":
+    case "awaits-gesture":
       return m.aiStatusDownloadRequired();
+    case "initializing":
     case "unavailable":
+    case "unsupported":
       return m.aiStatusUnavailable();
   }
 }
 
-function statusIcon(view: CapabilityView) {
+function statusIcon(view: EngineView) {
   const title = statusLabel(view);
   switch (view.kind) {
-    case "available":
+    case "ready":
       return (
         <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
       );
     case "downloading":
-    case "needs-download":
+    case "awaits-gesture":
       return (
         <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
       );
+    case "initializing":
     case "unavailable":
+    case "unsupported":
       return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
   }
 }
@@ -99,26 +68,29 @@ export function AISettings() {
   const { language } = useLanguage();
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
   const rewriter = useRewriter(rewriterLanguageOptions(language));
-  const proofreaderAvailability = useEngineAvailability(
-    "Proofreader",
-    language,
-  );
-  const rewriterAvailability = useEngineAvailability("Rewriter", language);
+  const proofreaderView = useEngineView("Proofreader", language, proofreader);
+  const rewriterView = useEngineView("Rewriter", language, rewriter);
 
-  const capabilities: { title: string; view: CapabilityView }[] = [
+  const capabilities: {
+    title: string;
+    view: EngineView;
+    onDownload?: () => void;
+  }[] = [
     {
       title: m.aiFeatureProofreading(),
-      view: engineView(proofreader, proofreaderAvailability),
+      view: proofreaderView,
+      onDownload: () => void proofreader.prepare().catch(() => undefined),
     },
     {
       title: m.aiFeatureRewriting(),
-      view: engineView(rewriter, rewriterAvailability),
+      view: rewriterView,
+      onDownload: () => void rewriter.prepare().catch(() => undefined),
     },
     {
       title: m.aiFeatureTranslation(),
       view: isSupported("Translator")
-        ? { kind: "available" }
-        : { kind: "unavailable" },
+        ? { kind: "ready" }
+        : { kind: "unsupported" },
     },
   ];
 
@@ -145,13 +117,14 @@ export function AISettings() {
         </Typography>
 
         <List dense>
-          {capabilities.map(({ title, view }) => (
+          {capabilities.map(({ title, view, onDownload }) => (
             <ListItem
               key={title}
               sx={{ px: 0 }}
               secondaryAction={
-                view.kind === "needs-download" && (
-                  <Button size="small" onClick={view.onDownload}>
+                view.kind === "awaits-gesture" &&
+                onDownload && (
+                  <Button size="small" onClick={onDownload}>
                     {m.aiDownloadAction()}
                   </Button>
                 )

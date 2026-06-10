@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { DotsProgress } from "@shared/components/dots-progress";
 import type { ReactElement } from "react";
-import type { SuggestionStatusView } from "./use-suggestions";
+import type { SuggestionStatusView } from "./suggestion-status-view";
 
 export interface SuggestionStatusProps {
   status: SuggestionStatusView;

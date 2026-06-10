@@ -3,7 +3,6 @@ import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import {
-  MissingUserActivationError,
   useGlobalDownloadProgress,
   useProofreader,
   useRewriter,
@@ -13,17 +12,14 @@ import {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
 } from "./engine-language-options";
+import {
+  deriveSuggestionStatus,
+  type SuggestionStatusView,
+} from "./suggestion-status-view";
 import { toPhrases } from "./to-phrases";
-import { useEngineAvailability } from "./use-engine-availability";
+import { useEngineView } from "./use-suggestion-engine";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
-
-export type SuggestionStatusView =
-  | { kind: "needs-activation" }
-  | { kind: "downloading"; progress: number }
-  | { kind: "pending" }
-  | { kind: "unavailable" }
-  | null;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
@@ -41,6 +37,8 @@ export interface UseSuggestionsReturn {
   setTone: (tone: RewriterTone) => void;
 }
 
+// Distinguishes real call failures from cancellations, wherever the abort
+// originated.
 function isRealError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
@@ -65,9 +63,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     ...rewriterLanguageOptions(language),
   });
 
-  const isProofreaderSupported = proofreader.status !== "unsupported";
-  const isRewriterSupported = rewriter.status !== "unsupported";
-  const isSupported = isProofreaderSupported || isRewriterSupported;
+  const proofreaderView = useEngineView("Proofreader", language, proofreader);
+  const rewriterView = useEngineView("Rewriter", language, rewriter);
 
   const hasText = text.trim().length > 0;
 
@@ -93,68 +90,34 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     "Rewriter",
   ]);
 
-  const proofreaderAvailability = useEngineAvailability(
-    "Proofreader",
-    language,
-  );
-  const rewriterAvailability = useEngineAvailability("Rewriter", language);
-
-  // Idle + downloadable means the lifecycle is parked waiting for the user
-  // gesture Chrome requires before a model download.
-  const needsActivation =
-    (proofreader.status === "idle" &&
-      proofreaderAvailability === "downloadable") ||
-    (rewriter.status === "idle" && rewriterAvailability === "downloadable") ||
-    proofreader.error instanceof MissingUserActivationError ||
-    rewriter.error instanceof MissingUserActivationError;
-
-  const isProofreaderBroken =
-    isProofreaderSupported &&
-    (proofreader.status === "error" ||
-      proofreader.status === "unavailable" ||
-      isRealError(corrected.error));
-  const isRewriterBroken =
-    isRewriterSupported &&
-    (rewriter.status === "error" ||
-      rewriter.status === "unavailable" ||
-      isRealError(rewritten.error));
-
   const phrases = toPhrases(text, [corrected.value, rewritten.value]);
-
   const isPending = corrected.isPending || rewritten.isPending;
 
-  const hasWorkingEngine =
-    (isProofreaderSupported && !isProofreaderBroken) ||
-    (isRewriterSupported && !isRewriterBroken);
-
-  const status = ((): SuggestionStatusView => {
-    if (needsActivation) {
-      return { kind: "needs-activation" };
-    }
-    if (downloadProgress !== null) {
-      return { kind: "downloading", progress: downloadProgress };
-    }
-    if (isPending && phrases.length === 0) {
-      return { kind: "pending" };
-    }
-    // A healthy engine that merely had nothing to suggest keeps the bar quiet.
-    if (isSupported && hasText && phrases.length === 0 && !hasWorkingEngine) {
-      return { kind: "unavailable" };
-    }
-    return null;
-  })();
+  const status = deriveSuggestionStatus({
+    engines: [
+      { view: proofreaderView, roundFailed: isRealError(corrected.error) },
+      { view: rewriterView, roundFailed: isRealError(rewritten.error) },
+    ],
+    downloadProgress,
+    hasText,
+    isPending,
+    phraseCount: phrases.length,
+  });
 
   const enable = () => {
-    if (proofreader.status !== "ready") {
+    if (proofreaderView.kind === "awaits-gesture") {
       void proofreader.prepare().catch(() => undefined);
     }
-    if (rewriter.status !== "ready") {
+    if (rewriterView.kind === "awaits-gesture") {
       void rewriter.prepare().catch(() => undefined);
     }
   };
 
+  const isProofreaderSupported = proofreaderView.kind !== "unsupported";
+  const isRewriterSupported = rewriterView.kind !== "unsupported";
+
   return {
-    isSupported,
+    isSupported: isProofreaderSupported || isRewriterSupported,
     isProofreaderSupported,
     isRewriterSupported,
     isPending,
