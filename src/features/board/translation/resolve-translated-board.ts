@@ -37,8 +37,10 @@ export async function resolveTranslatedBoard(
       translator.destroy();
     }
   } catch {
-    // Translator unavailable or aborted — render the source board; its
-    // pictograms carry the meaning until a translation lands.
+    // Deliberately total: the board must render no matter what — pictograms
+    // carry the meaning. With no telemetry, rethrowing a bug here would only
+    // trade the user's communication surface for an error page nobody hears
+    // about.
     return board;
   }
 }
