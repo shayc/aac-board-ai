@@ -4,7 +4,7 @@ import {
 } from "@shared/built-in-ai/engine-language-options";
 import { deriveEngineView } from "@shared/built-in-ai/engine-view";
 import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
-import { useAISharedContext } from "@shared/built-in-ai/use-ai-shared-context";
+import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";

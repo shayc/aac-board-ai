@@ -1,4 +1,4 @@
-import { setAISharedContext } from "@shared/built-in-ai/use-ai-shared-context";
+import { setAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { LanguageProvider } from "@shared/language/language-provider";
 import {
   DEFAULT_LANGUAGE,

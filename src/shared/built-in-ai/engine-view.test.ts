@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { deriveEngineView, type EngineSnapshot } from "./engine-view";
 
 function makeEngine(overrides: Partial<EngineSnapshot> = {}): EngineSnapshot {
-  return { status: "idle", progress: 0, error: null, ...overrides };
+  return { status: "idle", progress: 0, ...overrides };
 }
 
 describe("deriveEngineView", () => {

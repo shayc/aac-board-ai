@@ -22,7 +22,7 @@ import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import {
   setAISharedContext,
   useAISharedContext,
-} from "@shared/built-in-ai/use-ai-shared-context";
+} from "@shared/built-in-ai/shared-context-store";
 import { useLanguage } from "@shared/language/use-language";
 import {
   isSupported,

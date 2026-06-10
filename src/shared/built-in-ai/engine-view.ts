@@ -8,10 +8,7 @@ export type EngineView =
   | { kind: "unavailable" }
   | { kind: "unsupported" };
 
-export type EngineSnapshot = Pick<
-  BaseHookReturn,
-  "status" | "progress" | "error"
->;
+export type EngineSnapshot = Pick<BaseHookReturn, "status" | "progress">;
 
 export function deriveEngineView(engine: EngineSnapshot): EngineView {
   switch (engine.status) {
