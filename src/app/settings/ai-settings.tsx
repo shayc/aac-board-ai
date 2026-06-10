@@ -1,5 +1,7 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import DownloadingIcon from "@mui/icons-material/Downloading";
+import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -7,31 +9,88 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import {
+  deriveEngineView,
+  proofreaderLanguageOptions,
+  rewriterLanguageOptions,
+  type EngineView,
+} from "@features/board";
 import { m } from "@paraglide/messages.js";
 import {
   setAISharedContext,
   useAISharedContext,
 } from "@shared/hooks/use-ai-shared-context";
-import { type BuiltInAIName, isSupported } from "@shayc/react-built-in-ai";
+import { useLanguage } from "@shared/language/use-language";
+import {
+  isSupported,
+  useProofreader,
+  useRewriter,
+} from "@shayc/react-built-in-ai";
+
+function statusLabel(view: EngineView): string {
+  switch (view.kind) {
+    case "ready":
+      return m.aiStatusAvailable();
+    case "downloading":
+      return m.aiStatusDownloading({
+        progress: Math.round(view.progress * 100),
+      });
+    case "awaits-gesture":
+      return m.aiStatusDownloadRequired();
+    case "initializing":
+    case "unavailable":
+    case "unsupported":
+      return m.aiStatusUnavailable();
+  }
+}
+
+function statusIcon(view: EngineView) {
+  const title = statusLabel(view);
+  switch (view.kind) {
+    case "ready":
+      return (
+        <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
+      );
+    case "downloading":
+    case "awaits-gesture":
+      return (
+        <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
+      );
+    case "initializing":
+    case "unavailable":
+    case "unsupported":
+      return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
+  }
+}
 
 export function AISettings() {
   const sharedContext = useAISharedContext();
+  const { language } = useLanguage();
+  const proofreader = useProofreader(proofreaderLanguageOptions(language));
+  const rewriter = useRewriter(rewriterLanguageOptions(language));
+  const proofreaderView = deriveEngineView(proofreader);
+  const rewriterView = deriveEngineView(rewriter);
 
   const capabilities: {
-    apiName: BuiltInAIName;
     title: string;
+    view: EngineView;
+    onDownload?: () => void;
   }[] = [
     {
-      apiName: "Proofreader",
       title: m.aiFeatureProofreading(),
+      view: proofreaderView,
+      onDownload: () => void proofreader.prepare().catch(() => undefined),
     },
     {
-      apiName: "Rewriter",
       title: m.aiFeatureRewriting(),
+      view: rewriterView,
+      onDownload: () => void rewriter.prepare().catch(() => undefined),
     },
     {
-      apiName: "Translator",
       title: m.aiFeatureTranslation(),
+      view: isSupported("Translator")
+        ? { kind: "ready" }
+        : { kind: "unsupported" },
     },
   ];
 
@@ -58,24 +117,23 @@ export function AISettings() {
         </Typography>
 
         <List dense>
-          {capabilities.map(({ apiName, title }) => (
-            <ListItem key={apiName} sx={{ px: 0 }}>
+          {capabilities.map(({ title, view, onDownload }) => (
+            <ListItem
+              key={title}
+              sx={{ px: 0 }}
+              secondaryAction={
+                view.kind === "awaits-gesture" &&
+                onDownload && (
+                  <Button size="small" onClick={onDownload}>
+                    {m.aiDownloadAction()}
+                  </Button>
+                )
+              }
+            >
               <ListItemIcon sx={{ minWidth: 36 }}>
-                {isSupported(apiName) ? (
-                  <CheckCircleIcon
-                    color="success"
-                    fontSize="small"
-                    titleAccess={m.aiStatusAvailable()}
-                  />
-                ) : (
-                  <CancelIcon
-                    color="error"
-                    fontSize="small"
-                    titleAccess={m.aiStatusUnavailable()}
-                  />
-                )}
+                {statusIcon(view)}
               </ListItemIcon>
-              <ListItemText primary={title} />
+              <ListItemText primary={title} secondary={statusLabel(view)} />
             </ListItem>
           ))}
         </List>

@@ -7,7 +7,6 @@ import {
   BoardFileDropOverlay,
   useBoardFileDrop,
   useFileHandlerLaunch,
-  warmUpSuggestionModels,
 } from "@features/board";
 import Box from "@mui/material/Box";
 import { useRevalidateOnLanguageChange } from "@shared/language/use-revalidate-on-language-change";
@@ -46,11 +45,7 @@ export function AppShell() {
 
       <OnboardingDialog
         open={onboarding.shouldShow}
-        onClose={() => {
-          // Dismissal is a user gesture, which model downloads require.
-          warmUpSuggestionModels();
-          onboarding.dismiss();
-        }}
+        onClose={onboarding.dismiss}
       />
 
       <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />

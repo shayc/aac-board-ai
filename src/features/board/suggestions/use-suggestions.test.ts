@@ -120,7 +120,7 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["I would like to eat."]);
     });
     expect(result.current.rewriterError).toBeUndefined();
-    expect(result.current.isPending).toBe(false);
+    expect(result.current.status).toBeNull();
   });
 
   test("surfaces failures from both engines with no phrases", async () => {
@@ -134,6 +134,68 @@ describe("useSuggestions", () => {
       expect(result.current.rewriterError?.message).toBe("rewrite down");
     });
     expect(result.current.phrases).toEqual([]);
+    expect(result.current.status).toEqual({ kind: "unavailable" });
+  });
+
+  test("stays silent when the healthy engine has nothing to suggest and the other is broken", async () => {
+    stubProofreader((input) => makeProofreadResult(input));
+    stubRewriter(() => Promise.reject(new Error("rewrite down")));
+
+    const { result } = await renderSuggestions("unchanged");
+
+    await vi.waitFor(() => {
+      expect(result.current.rewriterError?.message).toBe("rewrite down");
+    });
+    expect(result.current.phrases).toEqual([]);
+    expect(result.current.status).toBeNull();
+  });
+
+  test("stays quiet when a rejection is an abort by name", async () => {
+    stubRewriter(() =>
+      Promise.reject(new DOMException("Aborted", "AbortError")),
+    );
+    stubBuiltInAIUnsupported("Proofreader");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.rewriterError?.name).toBe("AbortError");
+    });
+    expect(result.current.status).toBeNull();
+  });
+
+  test("asks for activation when the model needs a user-gesture download", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
+    });
+  });
+
+  test("forgets the previous language's availability while the new probe is in flight", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockImplementation((options) =>
+      (options?.expectedInputLanguages as string[] | undefined)?.[0] === "en"
+        ? Promise.resolve("downloadable")
+        : new Promise<Availability>(() => undefined),
+    );
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
+    });
+
+    setStoredLanguage("he");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toBeNull();
+    });
   });
 
   test("passes the persisted shared context to the rewriter", async () => {
@@ -253,7 +315,7 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("reports isPending while a suggestion is in flight and clears it once resolved", async () => {
+  test("reports a pending status while a suggestion is in flight and clears it once resolved", async () => {
     const pending: ((rewritten: string) => void)[] = [];
     stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
     stubBuiltInAIUnsupported("Proofreader");
@@ -261,8 +323,7 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("hi");
 
     await vi.waitFor(() => {
-      expect(result.current.isPending).toBe(true);
-      expect(result.current.isRewriterPending).toBe(true);
+      expect(result.current.status).toEqual({ kind: "pending" });
     });
 
     await vi.waitFor(() => expect(pending).toHaveLength(1));
@@ -270,8 +331,7 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["casual hi"]);
-      expect(result.current.isPending).toBe(false);
-      expect(result.current.isRewriterPending).toBe(false);
+      expect(result.current.status).toBeNull();
     });
   });
 

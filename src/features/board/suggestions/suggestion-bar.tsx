@@ -1,32 +1,35 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { DotsProgress } from "@shared/components/dots-progress";
+import { SuggestionStatus } from "./suggestion-status";
 import { ToneSelector } from "./tone-selector";
+import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 export interface SuggestionBarProps {
   suggestions: string[];
-  isPending: boolean;
+  status: SuggestionStatusView;
   tone: RewriterTone;
   canChangeTone: boolean;
   onSuggestionClick: (suggestion: string) => void;
   onToneChange: (tone: RewriterTone) => void;
+  onEnable: () => void;
 }
 
 export function SuggestionBar({
   suggestions,
-  isPending,
+  status,
   tone,
   canChangeTone,
   onSuggestionClick,
   onToneChange,
+  onEnable,
 }: SuggestionBarProps) {
   return (
     <Stack
       direction="row"
       sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
     >
-      {isPending && <DotsProgress />}
+      <SuggestionStatus status={status} onEnable={onEnable} />
 
       <Box
         sx={{
