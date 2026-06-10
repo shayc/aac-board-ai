@@ -3,7 +3,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { DotsProgress } from "@shared/components/dots-progress";
-import type { ReactElement } from "react";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 export interface SuggestionStatusProps {
@@ -11,11 +10,7 @@ export interface SuggestionStatusProps {
   onEnable: () => void;
 }
 
-// The explicit return type makes TS2366 reject a switch that misses a kind.
-export function SuggestionStatus({
-  status,
-  onEnable,
-}: SuggestionStatusProps): ReactElement | null {
+export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
   if (status === null) {
     return null;
   }
@@ -55,5 +50,7 @@ export function SuggestionStatus({
           {m.suggestionsUnavailable()}
         </Typography>
       );
+    default:
+      return status satisfies never;
   }
 }
