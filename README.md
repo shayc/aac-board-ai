@@ -51,6 +51,7 @@ chrome://flags/#rewriter-api-for-gemini-nano
 **Edge:**
 
 ```
+edge://flags/#edge-proofreader-api
 edge://flags/#edge-llm-rewriter-api-for-phi-mini
 ```
 
