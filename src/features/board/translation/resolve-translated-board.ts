@@ -1,4 +1,4 @@
-import { BuiltInAIError, createTranslator } from "@shayc/react-built-in-ai";
+import { createTranslator } from "@shayc/react-built-in-ai";
 import { updateBoardStrings } from "../storage/boards-db";
 import type { Board } from "../types";
 import {
@@ -36,15 +36,12 @@ export async function resolveTranslatedBoard(
     } finally {
       translator.destroy();
     }
-  } catch (error) {
-    // Platform failures (Translator unavailable, aborted navigation, download
-    // errors) render the source board — its pictograms carry the meaning
-    // until a translation lands. Anything else is a bug and must surface.
-    if (error instanceof BuiltInAIError || error instanceof DOMException) {
-      return board;
-    }
-
-    throw error;
+  } catch {
+    // Deliberately total: the board must render no matter what — pictograms
+    // carry the meaning. With no telemetry, rethrowing a bug here would only
+    // trade the user's communication surface for an error page nobody hears
+    // about.
+    return board;
   }
 }
 

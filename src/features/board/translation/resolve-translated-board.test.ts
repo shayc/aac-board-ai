@@ -134,14 +134,14 @@ describe("resolveTranslatedBoard", () => {
     expect(result).toBe(board);
   });
 
-  test("lets a programming bug propagate instead of swallowing it", async () => {
+  test("falls back even on unexpected errors so the board always renders", async () => {
     const board = makeBoard();
     stubTranslator(() => {
       throw new TypeError("undefined is not a function");
     });
 
-    await expect(resolveTranslatedBoard("set-1", board, "es")).rejects.toThrow(
-      TypeError,
-    );
+    const result = await resolveTranslatedBoard("set-1", board, "es");
+
+    expect(result).toBe(board);
   });
 });
