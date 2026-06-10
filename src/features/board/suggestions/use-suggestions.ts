@@ -1,4 +1,10 @@
-import { useAISharedContext } from "@shared/hooks/use-ai-shared-context";
+import {
+  proofreaderLanguageOptions,
+  rewriterLanguageOptions,
+} from "@shared/built-in-ai/engine-language-options";
+import { deriveEngineView } from "@shared/built-in-ai/engine-view";
+import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
+import { useAISharedContext } from "@shared/built-in-ai/use-ai-shared-context";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
@@ -9,16 +15,10 @@ import {
 } from "@shayc/react-built-in-ai";
 import { useState } from "react";
 import {
-  proofreaderLanguageOptions,
-  rewriterLanguageOptions,
-} from "./engine-language-options";
-import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { deriveEngineView } from "./engine-view";
-import { prepareQuietly } from "./prepare-quietly";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -35,7 +35,7 @@ export interface UseSuggestionsReturn {
   setTone: (tone: RewriterTone) => void;
 }
 
-function isRealError(error: Error | undefined): boolean {
+function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
 
@@ -91,8 +91,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const status = deriveSuggestionStatus({
     engines: [
-      { view: proofreaderView, roundFailed: isRealError(corrected.error) },
-      { view: rewriterView, roundFailed: isRealError(rewritten.error) },
+      {
+        view: proofreaderView,
+        requestFailed: isNonAbortError(corrected.error),
+      },
+      {
+        view: rewriterView,
+        requestFailed: isNonAbortError(rewritten.error),
+      },
     ],
     downloadProgress,
     hasText,

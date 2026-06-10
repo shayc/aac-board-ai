@@ -6,21 +6,21 @@ import { ToneSelector } from "./tone-selector";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 export interface SuggestionBarProps {
-  suggestions: string[];
+  phrases: string[];
   status: SuggestionStatusView;
   tone: RewriterTone;
   canChangeTone: boolean;
-  onSuggestionClick: (suggestion: string) => void;
+  onPhraseClick: (phrase: string) => void;
   onToneChange: (tone: RewriterTone) => void;
   onEnable: () => void;
 }
 
 export function SuggestionBar({
-  suggestions,
+  phrases,
   status,
   tone,
   canChangeTone,
-  onSuggestionClick,
+  onPhraseClick,
   onToneChange,
   onEnable,
 }: SuggestionBarProps) {
@@ -39,11 +39,11 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
-        {suggestions.map((suggestion) => (
+        {phrases.map((phrase) => (
           <Chip
-            key={suggestion}
-            label={suggestion}
-            onClick={() => onSuggestionClick(suggestion)}
+            key={phrase}
+            label={phrase}
+            onClick={() => onPhraseClick(phrase)}
           />
         ))}
       </Box>

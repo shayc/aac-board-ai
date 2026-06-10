@@ -9,18 +9,20 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
 import {
-  deriveEngineView,
-  prepareQuietly,
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
+} from "@shared/built-in-ai/engine-language-options";
+import {
+  deriveEngineView,
   type EngineView,
-} from "@features/board";
-import { m } from "@paraglide/messages.js";
+} from "@shared/built-in-ai/engine-view";
+import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import {
   setAISharedContext,
   useAISharedContext,
-} from "@shared/hooks/use-ai-shared-context";
+} from "@shared/built-in-ai/use-ai-shared-context";
 import { useLanguage } from "@shared/language/use-language";
 import {
   isSupported,

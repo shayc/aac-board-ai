@@ -1,12 +1,18 @@
-export interface ProofreaderLanguageOptions {
-  expectedInputLanguages: string[];
-}
+import type {
+  ProofreaderOptions,
+  RewriterOptions,
+} from "@shayc/react-built-in-ai";
 
-export interface RewriterLanguageOptions {
-  expectedInputLanguages: string[];
-  expectedContextLanguages: string[];
-  outputLanguage: string;
-}
+export type ProofreaderLanguageOptions = Required<
+  Pick<ProofreaderOptions, "expectedInputLanguages">
+>;
+
+export type RewriterLanguageOptions = Required<
+  Pick<
+    RewriterOptions,
+    "expectedInputLanguages" | "expectedContextLanguages" | "outputLanguage"
+  >
+>;
 
 export function proofreaderLanguageOptions(
   language: string,

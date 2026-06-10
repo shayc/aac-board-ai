@@ -3,15 +3,15 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatusInput,
 } from "./derive-suggestion-status";
-import type { EngineView } from "./engine-view";
+import type { EngineView } from "@shared/built-in-ai/engine-view";
 
 function makeInput(
   overrides: Partial<SuggestionStatusInput> = {},
 ): SuggestionStatusInput {
   return {
     engines: [
-      { view: { kind: "ready" }, roundFailed: false },
-      { view: { kind: "ready" }, roundFailed: false },
+      { view: { kind: "ready" }, requestFailed: false },
+      { view: { kind: "ready" }, requestFailed: false },
     ],
     downloadProgress: null,
     hasText: false,
@@ -22,7 +22,7 @@ function makeInput(
 }
 
 function engines(...views: EngineView[]) {
-  return views.map((view) => ({ view, roundFailed: false }));
+  return views.map((view) => ({ view, requestFailed: false }));
 }
 
 describe("deriveSuggestionStatus", () => {
@@ -77,11 +77,11 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toEqual({ kind: "unavailable" });
   });
 
-  test("counts a failed round as a broken engine", () => {
+  test("counts a failed request as a broken engine", () => {
     const input = makeInput({
       engines: [
-        { view: { kind: "ready" }, roundFailed: true },
-        { view: { kind: "unavailable" }, roundFailed: false },
+        { view: { kind: "ready" }, requestFailed: true },
+        { view: { kind: "unavailable" }, requestFailed: false },
       ],
       hasText: true,
     });
@@ -92,8 +92,8 @@ describe("deriveSuggestionStatus", () => {
   test("partial failure stays silent while one engine still works", () => {
     const input = makeInput({
       engines: [
-        { view: { kind: "ready" }, roundFailed: true },
-        { view: { kind: "ready" }, roundFailed: false },
+        { view: { kind: "ready" }, requestFailed: true },
+        { view: { kind: "ready" }, requestFailed: false },
       ],
       hasText: true,
     });
