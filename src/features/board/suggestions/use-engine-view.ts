@@ -1,11 +1,15 @@
 import {
+  isSupported,
   MissingUserActivationError,
   type BaseHookReturn,
 } from "@shayc/react-built-in-ai";
+import { useEffect, useState } from "react";
 import {
-  useEngineAvailability,
-  type SuggestionEngineName,
-} from "./use-engine-availability";
+  proofreaderLanguageOptions,
+  rewriterLanguageOptions,
+} from "./engine-language-options";
+
+export type SuggestionEngineName = "Proofreader" | "Rewriter";
 
 export type EngineView =
   | { kind: "ready" }
@@ -56,4 +60,51 @@ export function useEngineView(
   const availability = useEngineAvailability(name, language);
 
   return deriveEngineView(engine, availability);
+}
+
+interface ProbeResult {
+  name: SuggestionEngineName;
+  language: string;
+  value: Availability;
+}
+
+function useEngineAvailability(
+  name: SuggestionEngineName,
+  language: string,
+): Availability | undefined {
+  const [probe, setProbe] = useState<ProbeResult | null>(null);
+
+  useEffect(() => {
+    if (!isSupported(name)) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const request =
+      name === "Proofreader"
+        ? Proofreader.availability(proofreaderLanguageOptions(language))
+        : Rewriter.availability(rewriterLanguageOptions(language));
+
+    request
+      .then((value) => {
+        if (!cancelled) {
+          setProbe({ name, language, value });
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [name, language]);
+
+  if (!isSupported(name)) {
+    return "unavailable";
+  }
+
+  // An answer probed for another (name, language) is stale, not an answer.
+  return probe?.name === name && probe.language === language
+    ? probe.value
+    : undefined;
 }

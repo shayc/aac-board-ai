@@ -15,9 +15,9 @@ import {
 import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
-} from "./suggestion-status-view";
+} from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { useEngineView } from "./use-suggestion-engine";
+import { useEngineView } from "./use-engine-view";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -25,9 +25,6 @@ export interface UseSuggestionsReturn {
   isSupported: boolean;
   isProofreaderSupported: boolean;
   isRewriterSupported: boolean;
-  isPending: boolean;
-  isProofreaderPending: boolean;
-  isRewriterPending: boolean;
   proofreaderError: Error | undefined;
   rewriterError: Error | undefined;
   status: SuggestionStatusView;
@@ -120,9 +117,6 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     isSupported: isProofreaderSupported || isRewriterSupported,
     isProofreaderSupported,
     isRewriterSupported,
-    isPending,
-    isProofreaderPending: corrected.isPending,
-    isRewriterPending: rewritten.isPending,
     proofreaderError: corrected.error,
     rewriterError: rewritten.error,
     status,

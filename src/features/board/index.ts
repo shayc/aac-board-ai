@@ -20,10 +20,9 @@ export {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
 } from "./suggestions/engine-language-options";
-export { useEngineView } from "./suggestions/use-suggestion-engine";
-export { warmUpSuggestionModels } from "./suggestions/warm-up-suggestion-models";
+export { useEngineView } from "./suggestions/use-engine-view";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardSetRecord } from "./storage/boards-db";
-export type { EngineView } from "./suggestions/use-suggestion-engine";
+export type { EngineView } from "./suggestions/use-engine-view";
 export type { Board } from "./types";

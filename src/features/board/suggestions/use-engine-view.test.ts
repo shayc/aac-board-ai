@@ -1,6 +1,6 @@
 import { MissingUserActivationError } from "@shayc/react-built-in-ai";
 import { describe, expect, test } from "vitest";
-import { deriveEngineView, type EngineSnapshot } from "./use-suggestion-engine";
+import { deriveEngineView, type EngineSnapshot } from "./use-engine-view";
 
 function makeEngine(overrides: Partial<EngineSnapshot> = {}): EngineSnapshot {
   return { status: "idle", progress: 0, error: null, ...overrides };

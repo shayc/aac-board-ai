@@ -2,8 +2,8 @@ import { describe, expect, test } from "vitest";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusInput,
-} from "./suggestion-status-view";
-import type { EngineView } from "./use-suggestion-engine";
+} from "./derive-suggestion-status";
+import type { EngineView } from "./use-engine-view";
 
 function makeInput(
   overrides: Partial<SuggestionStatusInput> = {},

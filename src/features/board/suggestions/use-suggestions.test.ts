@@ -120,7 +120,6 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["I would like to eat."]);
     });
     expect(result.current.rewriterError).toBeUndefined();
-    expect(result.current.isPending).toBe(false);
     expect(result.current.status).toBeNull();
   });
 
@@ -316,7 +315,7 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("reports isPending while a suggestion is in flight and clears it once resolved", async () => {
+  test("reports a pending status while a suggestion is in flight and clears it once resolved", async () => {
     const pending: ((rewritten: string) => void)[] = [];
     stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
     stubBuiltInAIUnsupported("Proofreader");
@@ -324,8 +323,6 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("hi");
 
     await vi.waitFor(() => {
-      expect(result.current.isPending).toBe(true);
-      expect(result.current.isRewriterPending).toBe(true);
       expect(result.current.status).toEqual({ kind: "pending" });
     });
 
@@ -334,8 +331,6 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["casual hi"]);
-      expect(result.current.isPending).toBe(false);
-      expect(result.current.isRewriterPending).toBe(false);
       expect(result.current.status).toBeNull();
     });
   });
