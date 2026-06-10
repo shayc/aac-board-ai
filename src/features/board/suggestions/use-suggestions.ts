@@ -35,8 +35,6 @@ export interface UseSuggestionsReturn {
   setTone: (tone: RewriterTone) => void;
 }
 
-// Distinguishes real call failures from cancellations, wherever the abort
-// originated.
 function isRealError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
@@ -81,8 +79,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     fetch: (signal) => rewriter.rewrite(text, { signal }),
   });
 
-  // The global store also sees downloads the onboarding warm-up started, which
-  // the hook instances can't.
+  // Settings' Download action provisions its own hook instances; only the
+  // global store sees the downloads they start.
   const downloadProgress = useGlobalDownloadProgress([
     "Proofreader",
     "Rewriter",

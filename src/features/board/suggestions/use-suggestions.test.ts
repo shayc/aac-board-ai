@@ -302,7 +302,6 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["casual hi"]);
     });
 
-    // Switching tone must drop the prior rewrite while the new one is in flight.
     result.current.setTone("more-formal");
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([]);

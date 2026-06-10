@@ -13,9 +13,6 @@ export type EngineSnapshot = Pick<
   "status" | "progress" | "error"
 >;
 
-// Interprets the library lifecycle for humans: app vocabulary over machine
-// states. "downloadable" means the fetch awaits the user gesture Chrome
-// requires, so it maps to the bar's enable affordance.
 export function deriveEngineView(engine: EngineSnapshot): EngineView {
   switch (engine.status) {
     case "unsupported":
