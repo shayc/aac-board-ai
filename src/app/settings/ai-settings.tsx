@@ -26,9 +26,8 @@ import {
   useRewriter,
   type Status,
 } from "@shayc/react-built-in-ai";
-import type { ReactElement } from "react";
 
-function statusLabel(status: Status, progress: number): string {
+function statusLabel(status: Status, progress: number) {
   switch (status) {
     case "ready":
       return m.aiStatusAvailable();
@@ -43,10 +42,12 @@ function statusLabel(status: Status, progress: number): string {
     case "error":
     case "unsupported":
       return m.aiStatusUnavailable();
+    default:
+      return status satisfies never;
   }
 }
 
-function statusIcon(status: Status, progress: number): ReactElement {
+function statusIcon(status: Status, progress: number) {
   const title = statusLabel(status, progress);
   switch (status) {
     case "ready":
@@ -63,6 +64,8 @@ function statusIcon(status: Status, progress: number): ReactElement {
     case "error":
     case "unsupported":
       return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
+    default:
+      return status satisfies never;
   }
 }
 
