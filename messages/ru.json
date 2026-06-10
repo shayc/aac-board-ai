@@ -38,7 +38,7 @@
       }
     }
   ],
-  "libraryDropToImport": "Отпустите файлы досок для импорта",
+  "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Сведения",
   "libraryDelete": "Удалить",
   "libraryCancel": "Отмена",
@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "Перевод",
   "navBack": "Назад",
   "navHome": "На главную",
-  "messageBackspace": "Backspace",
+  "messageBackspace": "Стереть",
   "messageBackspaceLongPressHint": "Удерживайте, чтобы очистить сообщение.",
   "messagePlay": "Воспроизвести сообщение",
   "messageStop": "Остановить",

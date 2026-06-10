@@ -38,7 +38,7 @@
       }
     }
   ],
-  "libraryDropToImport": "Відпустіть файли дошок для імпорту",
+  "libraryDropToImport": "Перетягніть файли дошок для імпорту",
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",
   "libraryCancel": "Скасувати",
@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "Переклад",
   "navBack": "Назад",
   "navHome": "На головну",
-  "messageBackspace": "Backspace",
+  "messageBackspace": "Стерти",
   "messageBackspaceLongPressHint": "Утримуйте, щоб очистити повідомлення.",
   "messagePlay": "Відтворити повідомлення",
   "messageStop": "Зупинити",

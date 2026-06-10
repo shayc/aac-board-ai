@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "翻訳",
   "navBack": "戻る",
   "navHome": "ホームに戻る",
-  "messageBackspace": "バックスペース",
+  "messageBackspace": "消去",
   "messageBackspaceLongPressHint": "長押しでメッセージを消去します。",
   "messagePlay": "メッセージを再生",
   "messageStop": "停止",

@@ -90,7 +90,7 @@
   "aiFeatureTranslation": "Traducción",
   "navBack": "Volver",
   "navHome": "Ir al inicio",
-  "messageBackspace": "Retroceso",
+  "messageBackspace": "Borrar",
   "messageBackspaceLongPressHint": "Mantén pulsado para borrar el mensaje.",
   "messagePlay": "Reproducir mensaje",
   "messageStop": "Detener",
