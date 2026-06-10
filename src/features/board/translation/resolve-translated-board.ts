@@ -1,4 +1,4 @@
-import { createTranslator } from "@shayc/react-built-in-ai";
+import { BuiltInAIError, createTranslator } from "@shayc/react-built-in-ai";
 import { updateBoardStrings } from "../storage/boards-db";
 import type { Board } from "../types";
 import {
@@ -36,10 +36,15 @@ export async function resolveTranslatedBoard(
     } finally {
       translator.destroy();
     }
-  } catch {
-    // Translator unavailable or aborted — render the source board; its
-    // pictograms carry the meaning until a translation lands.
-    return board;
+  } catch (error) {
+    // Platform failures (Translator unavailable, aborted navigation, download
+    // errors) render the source board — its pictograms carry the meaning
+    // until a translation lands. Anything else is a bug and must surface.
+    if (error instanceof BuiltInAIError || error instanceof DOMException) {
+      return board;
+    }
+
+    throw error;
   }
 }
 
