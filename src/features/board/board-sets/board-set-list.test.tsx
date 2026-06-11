@@ -1,7 +1,7 @@
-import type { BoardSetRecord } from "../storage/boards-db";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { BoardSetList } from "./list";
+import type { BoardSetRecord } from "../storage/boards-db";
+import { BoardSetList } from "./board-set-list";
 
 function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
   return {

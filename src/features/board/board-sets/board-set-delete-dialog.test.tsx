@@ -1,7 +1,7 @@
 import type { BoardSetRecord } from "../storage/boards-db";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { BoardSetDeleteDialog } from "./delete-dialog";
+import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 
 function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
   return {
