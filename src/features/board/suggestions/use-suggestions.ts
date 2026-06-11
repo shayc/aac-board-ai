@@ -23,10 +23,7 @@ const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
-  isProofreaderSupported: boolean;
-  isRewriterSupported: boolean;
-  proofreaderError: Error | undefined;
-  rewriterError: Error | undefined;
+  canChangeTone: boolean;
   status: SuggestionStatusView;
   enable: () => void;
   phrases: string[];
@@ -106,20 +103,19 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     if (proofreader.status === "downloadable") {
       prepareQuietly(proofreader);
     }
+
     if (rewriter.status === "downloadable") {
       prepareQuietly(rewriter);
     }
   };
 
-  const isProofreaderSupported = proofreader.status !== "unsupported";
-  const isRewriterSupported = rewriter.status !== "unsupported";
+  const isSupported =
+    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
+  const canChangeTone = rewriter.status !== "unsupported";
 
   return {
-    isSupported: isProofreaderSupported || isRewriterSupported,
-    isProofreaderSupported,
-    isRewriterSupported,
-    proofreaderError: corrected.error,
-    rewriterError: rewritten.error,
+    isSupported,
+    canChangeTone,
     status,
     enable,
     phrases,

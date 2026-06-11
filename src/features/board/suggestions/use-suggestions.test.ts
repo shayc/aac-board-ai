@@ -35,7 +35,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("reports per-engine support when only one capability is available", async () => {
+  test("stays supported but locks the tone when only the proofreader is available", async () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
@@ -43,8 +43,7 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
-      expect(result.current.isProofreaderSupported).toBe(true);
-      expect(result.current.isRewriterSupported).toBe(false);
+      expect(result.current.canChangeTone).toBe(false);
     });
   });
 
@@ -109,59 +108,69 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("surfaces a proofread failure while the rewrite still suggests", async () => {
+  test("still suggests the rewrite when the proofread fails", async () => {
     stubProofreader(() => Promise.reject(new Error("input too long")));
     stubRewriter(() => "I would like to eat.");
 
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.proofreaderError?.message).toBe("input too long");
       expect(result.current.phrases).toEqual(["I would like to eat."]);
+      expect(result.current.status).toBeNull();
     });
-    expect(result.current.rewriterError).toBeUndefined();
-    expect(result.current.status).toBeNull();
   });
 
-  test("surfaces failures from both engines with no phrases", async () => {
+  test("reports unavailable when both engines fail", async () => {
     stubProofreader(() => Promise.reject(new Error("proofread down")));
     stubRewriter(() => Promise.reject(new Error("rewrite down")));
 
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.proofreaderError?.message).toBe("proofread down");
-      expect(result.current.rewriterError?.message).toBe("rewrite down");
+      expect(result.current.status).toEqual({ kind: "unavailable" });
     });
     expect(result.current.phrases).toEqual([]);
-    expect(result.current.status).toEqual({ kind: "unavailable" });
   });
 
   test("stays silent when the healthy engine has nothing to suggest and the other is broken", async () => {
+    const rejecters: ((error: Error) => void)[] = [];
     stubProofreader((input) => makeProofreadResult(input));
-    stubRewriter(() => Promise.reject(new Error("rewrite down")));
+    stubRewriter(
+      () => new Promise<string>((_, reject) => rejecters.push(reject)),
+    );
 
     const { result } = await renderSuggestions("unchanged");
 
     await vi.waitFor(() => {
-      expect(result.current.rewriterError?.message).toBe("rewrite down");
+      expect(rejecters).toHaveLength(1);
+      expect(result.current.status).toEqual({ kind: "pending" });
+    });
+    rejecters[0](new Error("rewrite down"));
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toBeNull();
     });
     expect(result.current.phrases).toEqual([]);
-    expect(result.current.status).toBeNull();
   });
 
   test("stays quiet when a rejection is an abort by name", async () => {
-    stubRewriter(() =>
-      Promise.reject(new DOMException("Aborted", "AbortError")),
+    const rejecters: ((error: Error) => void)[] = [];
+    stubRewriter(
+      () => new Promise<string>((_, reject) => rejecters.push(reject)),
     );
     stubBuiltInAIUnsupported("Proofreader");
 
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.rewriterError?.name).toBe("AbortError");
+      expect(rejecters).toHaveLength(1);
+      expect(result.current.status).toEqual({ kind: "pending" });
     });
-    expect(result.current.status).toBeNull();
+    rejecters[0](new DOMException("Aborted", "AbortError"));
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toBeNull();
+    });
   });
 
   test("asks for activation when the model needs a user-gesture download", async () => {
