@@ -97,7 +97,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
             phrases={suggestions.phrases}
             status={suggestions.status}
             tone={suggestions.tone}
-            canChangeTone={suggestions.isRewriterSupported}
+            canChangeTone={suggestions.canChangeTone}
             onPhraseClick={message.setFromText}
             onToneChange={suggestions.setTone}
             onEnable={suggestions.enable}
