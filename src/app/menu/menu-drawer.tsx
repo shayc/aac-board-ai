@@ -1,5 +1,5 @@
 import { APP_NAME } from "@app/app-info";
-import { ABOUT_PATH, LIBRARY_PATH } from "@app/route-patterns";
+import { ABOUT_PATH, LIBRARY_PATH } from "@app/routing/route-patterns";
 import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";

@@ -81,7 +81,7 @@ export default defineConfig([
     },
   },
   {
-    files: ["src/app/loaders/**/*-loader.ts"],
+    files: ["src/app/routing/loaders/**/*-loader.ts"],
     rules: {
       "@typescript-eslint/only-throw-error": "off",
     },
