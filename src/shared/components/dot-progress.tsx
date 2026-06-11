@@ -1,22 +1,30 @@
 import Box from "@mui/material/Box";
 import { orange } from "@mui/material/colors";
+import { keyframes } from "@mui/material/styles";
 
 export const DOT_PROGRESS_SIZE = 10;
+
+const pulse = keyframes`
+  0%, 100% {
+    transform: scale(0.85);
+    opacity: 0.3;
+  }
+  35% {
+    transform: scale(1);
+    opacity: 1;
+  }
+`;
 
 export function DotProgress() {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         width: DOT_PROGRESS_SIZE,
         aspectRatio: "1",
         borderRadius: "50%",
-        backgroundColor: orange[400],
-        animation: "dot-progress 0.4s ease-in-out infinite alternate",
-        "@keyframes dot-progress": {
-          from: { opacity: 0.2 },
-          to: { opacity: 1 },
-        },
-      }}
+        backgroundColor: orange[500],
+        animation: `${pulse} 1.2s ${theme.transitions.easing.easeInOut} infinite`,
+      })}
     />
   );
 }
