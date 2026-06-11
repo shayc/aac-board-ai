@@ -1,3 +1,4 @@
+import { assertNever } from "@shared/utils/assert-never";
 import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
@@ -44,12 +45,8 @@ export function useBoardKeyboard({
         case "stop":
           playback.stop();
           break;
-        default: {
-          const _exhaustiveCheck: never = action;
-          throw new Error(
-            `Unhandled board key action: ${JSON.stringify(_exhaustiveCheck)}`,
-          );
-        }
+        default:
+          assertNever(action);
       }
     },
   });
