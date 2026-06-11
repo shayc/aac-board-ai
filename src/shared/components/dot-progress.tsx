@@ -22,7 +22,7 @@ export function DotProgress() {
         width: DOT_PROGRESS_SIZE,
         aspectRatio: "1",
         borderRadius: "50%",
-        backgroundColor: orange[400],
+        backgroundColor: orange[500],
         animation: `${pulse} 1.2s ${theme.transitions.easing.easeInOut} infinite`,
       })}
     />
