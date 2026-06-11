@@ -6,11 +6,11 @@ export const DOT_PROGRESS_SIZE = 10;
 
 const pulse = keyframes`
   0%, 100% {
-    transform: scale(0.95);
+    transform: scale(0.85);
     opacity: 0.3;
   }
   35% {
-    transform: scale(1.1);
+    transform: scale(1);
     opacity: 1;
   }
 `;
@@ -18,13 +18,13 @@ const pulse = keyframes`
 export function DotProgress() {
   return (
     <Box
-      sx={{
+      sx={(theme) => ({
         width: DOT_PROGRESS_SIZE,
         aspectRatio: "1",
         borderRadius: "50%",
         backgroundColor: orange[400],
-        animation: `${pulse} 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite`,
-      }}
+        animation: `${pulse} 1.2s ${theme.transitions.easing.easeInOut} infinite`,
+      })}
     />
   );
 }
