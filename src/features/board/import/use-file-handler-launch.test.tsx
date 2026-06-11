@@ -1,4 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { loadFixtureFile } from "@shared/testing/fixtures";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -6,7 +7,6 @@ import { listBoardSets } from "../storage/boards-db";
 import { resetBoardsDB } from "../storage/test-helpers";
 import { useFileHandlerLaunch } from "./use-file-handler-launch";
 
-const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
@@ -30,20 +30,6 @@ function stubLaunchQueue() {
 
 function fileHandle(file: File): FileSystemFileHandle {
   return { getFile: () => Promise.resolve(file) } as FileSystemFileHandle;
-}
-
-async function loadFixtureFile(name: string): Promise<File> {
-  const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to load test fixture: ${response.status}`);
-  }
-
-  const blob = await response.blob();
-
-  return new File([blob], name, {
-    type: blob.type || "application/octet-stream",
-  });
 }
 
 function renderLaunchHandler() {

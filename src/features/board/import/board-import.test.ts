@@ -1,3 +1,4 @@
+import { loadFixtureFile } from "@shared/testing/fixtures";
 import { loadOBF, loadOBZ, type OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
@@ -9,27 +10,12 @@ import {
 import { resetBoardsDB } from "../storage/test-helpers";
 import { importBoardFiles, resolveLoadBoardPaths } from "./board-import";
 
-const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
 function assertDefined<T>(value: T | undefined | null): asserts value is T {
   expect(value).toBeDefined();
-}
-
-async function loadFixtureFile(name: string): Promise<File> {
-  const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
-
-  if (!response.ok) {
-    throw new Error(`Failed to load test fixture: ${response.status}`);
-  }
-
-  const blob = await response.blob();
-
-  return new File([blob], name, {
-    type: blob.type || "application/octet-stream",
-  });
 }
 
 describe("importBoardFiles", () => {
