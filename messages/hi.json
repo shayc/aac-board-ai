@@ -92,6 +92,7 @@
   "navHome": "होम पर जाएँ",
   "messageBackspace": "मिटाएं",
   "messageBackspaceLongPressHint": "संदेश साफ़ करने के लिए देर तक दबाएँ।",
+  "messageBackspaceTooltip": "मिटाएं · सब साफ़ करने के लिए देर तक दबाएँ",
   "messagePlay": "संदेश चलाएँ",
   "messageStop": "रोकें",
   "toneSelection": "टोन चयन",

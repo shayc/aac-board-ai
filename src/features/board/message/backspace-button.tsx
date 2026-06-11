@@ -48,7 +48,7 @@ export function BackspaceButton({
   });
 
   return (
-    <Tooltip title={m.messageBackspace()}>
+    <Tooltip title={m.messageBackspaceTooltip()}>
       <Box sx={{ alignSelf: "center", position: "relative" }}>
         <IconButton
           {...mergeProps(pressProps, longPressProps)}

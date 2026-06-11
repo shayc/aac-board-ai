@@ -92,6 +92,7 @@
   "navHome": "Aller à l'accueil",
   "messageBackspace": "Effacer",
   "messageBackspaceLongPressHint": "Appui long pour effacer le message.",
+  "messageBackspaceTooltip": "Effacer · Appui long pour tout effacer",
   "messagePlay": "Lire le message",
   "messageStop": "Arrêter",
   "toneSelection": "Sélection du ton",

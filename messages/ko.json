@@ -92,6 +92,7 @@
   "navHome": "홈으로",
   "messageBackspace": "지우기",
   "messageBackspaceLongPressHint": "길게 눌러 메시지를 지웁니다.",
+  "messageBackspaceTooltip": "지우기 · 길게 눌러 모두 지우기",
   "messagePlay": "메시지 재생",
   "messageStop": "중지",
   "toneSelection": "어조 선택",

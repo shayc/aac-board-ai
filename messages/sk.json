@@ -92,6 +92,7 @@
   "navHome": "Prejsť domov",
   "messageBackspace": "Vymazať",
   "messageBackspaceLongPressHint": "Dlhým stlačením vymažete správu.",
+  "messageBackspaceTooltip": "Vymazať · Podržaním vymažete všetko",
   "messagePlay": "Prehrať správu",
   "messageStop": "Zastaviť",
   "toneSelection": "Výber tónu",

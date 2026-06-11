@@ -92,6 +92,7 @@
   "navHome": "الانتقال إلى الرئيسية",
   "messageBackspace": "مسح",
   "messageBackspaceLongPressHint": "اضغط مطوّلًا لمسح الرسالة.",
+  "messageBackspaceTooltip": "مسح · اضغط مطوّلًا لمسح الكل",
   "messagePlay": "تشغيل الرسالة",
   "messageStop": "إيقاف",
   "toneSelection": "اختيار النبرة",

@@ -92,6 +92,7 @@
   "navHome": "Zur Startseite",
   "messageBackspace": "Löschen",
   "messageBackspaceLongPressHint": "Lange drücken, um die Nachricht zu löschen.",
+  "messageBackspaceTooltip": "Löschen · Halten, um alles zu löschen",
   "messagePlay": "Nachricht abspielen",
   "messageStop": "Stopp",
   "toneSelection": "Tonauswahl",

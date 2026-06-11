@@ -92,6 +92,7 @@
   "navHome": "Μετάβαση στην αρχική",
   "messageBackspace": "Διαγραφή",
   "messageBackspaceLongPressHint": "Πατήστε παρατεταμένα για εκκαθάριση του μηνύματος.",
+  "messageBackspaceTooltip": "Διαγραφή · Πατήστε παρατεταμένα για εκκαθάριση",
   "messagePlay": "Αναπαραγωγή μηνύματος",
   "messageStop": "Διακοπή",
   "toneSelection": "Επιλογή τόνου",

@@ -92,6 +92,7 @@
   "navHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "messageBackspace": "ಅಳಿಸು",
   "messageBackspaceLongPressHint": "ಸಂದೇಶವನ್ನು ತೆರವುಗೊಳಿಸಲು ದೀರ್ಘವಾಗಿ ಒತ್ತಿರಿ.",
+  "messageBackspaceTooltip": "ಅಳಿಸು · ಎಲ್ಲವನ್ನೂ ತೆರವುಗೊಳಿಸಲು ದೀರ್ಘವಾಗಿ ಒತ್ತಿರಿ",
   "messagePlay": "ಸಂದೇಶವನ್ನು ಪ್ಲೇ ಮಾಡಿ",
   "messageStop": "ನಿಲ್ಲಿಸಿ",
   "toneSelection": "ಧಾಟಿ ಆಯ್ಕೆ",

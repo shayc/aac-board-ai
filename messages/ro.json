@@ -92,6 +92,7 @@
   "navHome": "Mergi la pagina principală",
   "messageBackspace": "Șterge",
   "messageBackspaceLongPressHint": "Apasă lung pentru a șterge mesajul.",
+  "messageBackspaceTooltip": "Șterge · Apasă lung pentru a șterge tot",
   "messagePlay": "Redă mesajul",
   "messageStop": "Oprește",
   "toneSelection": "Selectarea tonului",

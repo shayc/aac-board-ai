@@ -92,6 +92,7 @@
   "navHome": "Vai alla home",
   "messageBackspace": "Cancella",
   "messageBackspaceLongPressHint": "Tieni premuto per cancellare il messaggio.",
+  "messageBackspaceTooltip": "Cancella · Tieni premuto per cancellare tutto",
   "messagePlay": "Riproduci messaggio",
   "messageStop": "Interrompi",
   "toneSelection": "Selezione del tono",
