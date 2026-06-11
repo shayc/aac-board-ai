@@ -23,7 +23,7 @@ export function DotProgress() {
         aspectRatio: "1",
         borderRadius: "50%",
         backgroundColor: orange[500],
-        animation: `${pulse} 1.2s ${theme.transitions.easing.easeInOut} infinite`,
+        animation: `${pulse} 1s ${theme.transitions.easing.easeInOut} infinite`,
       })}
     />
   );

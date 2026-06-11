@@ -36,7 +36,9 @@ export function SuggestionBar({
 
       <Box
         sx={{
+          height: "100%",
           display: "flex",
+          alignItems: "center",
           gap: 2,
           marginInlineEnd: "auto",
           overflowX: "auto",
