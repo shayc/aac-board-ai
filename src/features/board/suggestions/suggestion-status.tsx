@@ -1,8 +1,8 @@
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { DotProgress } from "@shared/components/dot-progress";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
+import { PendingDot } from "./pending-dot";
 
 export interface SuggestionStatusProps {
   status: SuggestionStatusView;
@@ -10,7 +10,15 @@ export interface SuggestionStatusProps {
 }
 
 export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
-  if (status === null) {
+  return (
+    statusMessage(status, onEnable) ?? (
+      <PendingDot show={status?.kind === "pending"} />
+    )
+  );
+}
+
+function statusMessage(status: SuggestionStatusView, onEnable: () => void) {
+  if (status === null || status.kind === "pending") {
     return null;
   }
 
@@ -32,8 +40,6 @@ export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
           })}
         </Typography>
       );
-    case "pending":
-      return <DotProgress />;
     case "unavailable":
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>

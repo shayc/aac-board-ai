@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { DOT_PROGRESS_SIZE } from "@shared/components/dot-progress";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 import { SuggestionStatus } from "./suggestion-status";
 import { ToneSelector } from "./tone-selector";
@@ -30,9 +29,7 @@ export function SuggestionBar({
       direction="row"
       sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
     >
-      <Box sx={{ minWidth: DOT_PROGRESS_SIZE }}>
-        <SuggestionStatus status={status} onEnable={onEnable} />
-      </Box>
+      <SuggestionStatus status={status} onEnable={onEnable} />
 
       <Box
         sx={{

@@ -10,7 +10,7 @@ export interface LoadingStateProps {
 
 export function LoadingState({ message = m.loading() }: LoadingStateProps) {
   return (
-    <Fade in timeout={400} style={{ transitionDelay: "500ms" }}>
+    <Fade in timeout={400} style={{ transitionDelay: "300ms" }}>
       <Stack
         sx={{
           height: "100%",
