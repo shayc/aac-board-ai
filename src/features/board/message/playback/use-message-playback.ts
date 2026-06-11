@@ -1,5 +1,6 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
+import { assertNever } from "@shared/utils/assert-never";
 import { useRef, useState } from "react";
 import type { MessagePart } from "../use-message";
 import { planPlayback } from "./plan-playback";
@@ -48,12 +49,8 @@ export function useMessagePlayback(
             break;
           }
 
-          default: {
-            const _exhaustiveCheck: never = step;
-            throw new Error(
-              `Unhandled playback step: ${JSON.stringify(_exhaustiveCheck)}`,
-            );
-          }
+          default:
+            assertNever(step);
         }
       }
     } catch {

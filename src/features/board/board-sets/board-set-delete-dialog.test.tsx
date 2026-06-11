@@ -1,18 +1,7 @@
-import type { BoardSetRecord } from "../storage/boards-db";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
-
-function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
-  return {
-    setId: "set-1",
-    name: "My Board",
-    rootBoardId: "root",
-    updatedAt: 0,
-    boardCount: 1,
-    ...overrides,
-  };
-}
+import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetDeleteDialog", () => {
   test("shows the board set name and an irreversible warning when open", async () => {

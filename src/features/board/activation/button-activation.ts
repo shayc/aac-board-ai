@@ -1,5 +1,6 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
+import { assertNever } from "@shared/utils/assert-never";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
@@ -45,12 +46,8 @@ export function createButtonActivation({
           await runAction(intent.action);
           break;
 
-        default: {
-          const _exhaustiveCheck: never = intent;
-          throw new Error(
-            `Unhandled intent kind: ${JSON.stringify(_exhaustiveCheck)}`,
-          );
-        }
+        default:
+          assertNever(intent);
       }
     }
   }
@@ -70,12 +67,8 @@ export function createButtonActivation({
       case "speak":
         return playback.play();
 
-      default: {
-        const _exhaustiveCheck: never = action;
-        throw new Error(
-          `Unhandled action kind: ${JSON.stringify(_exhaustiveCheck)}`,
-        );
-      }
+      default:
+        assertNever(action);
     }
   }
 
