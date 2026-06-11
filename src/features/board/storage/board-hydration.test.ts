@@ -8,7 +8,7 @@ import {
   putBoards,
   upsertBoardSet,
 } from "./boards-db";
-import { resetBoardsDB } from "./test-helpers";
+import { resetBoardsDB } from "./test-utils";
 
 const SET_ID = "loader-test-set";
 const BOARD_ID = "loader-test-board";

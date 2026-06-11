@@ -1,18 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import type { BoardSetRecord } from "../storage/boards-db";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
-
-function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
-  return {
-    setId: "set-1",
-    name: "My Board",
-    rootBoardId: "root",
-    updatedAt: 0,
-    boardCount: 1,
-    ...overrides,
-  };
-}
+import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetInfoDialog", () => {
   test("shows the name and author", async () => {

@@ -4,7 +4,7 @@ import {
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { putBoards } from "../storage/boards-db";
-import { resetBoardsDB, seedBoardSets } from "../storage/test-helpers";
+import { resetBoardsDB, seedBoardSets } from "../storage/test-utils";
 import type { Board } from "../types";
 import { resolveTranslatedBoard } from "./resolve-translated-board";
 

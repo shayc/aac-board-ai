@@ -7,7 +7,7 @@ import {
   getBoardsDB,
   listBoardSets,
 } from "../storage/boards-db";
-import { resetBoardsDB } from "../storage/test-helpers";
+import { resetBoardsDB } from "../storage/test-utils";
 import { importBoardFiles, resolveLoadBoardPaths } from "./board-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";

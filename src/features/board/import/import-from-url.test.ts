@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { resetBoardsDB } from "../storage/test-helpers";
+import { resetBoardsDB } from "../storage/test-utils";
 import { importBoardFromUrl } from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";

@@ -5,24 +5,9 @@ import {
 } from "@shared/testing/built-in-ai";
 import { TEST_IMAGE_SRC } from "@shared/testing/fixtures";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
-import { MemoryRouter } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
-import { BoardViewer } from "./board-viewer";
-import { obfToBoard } from "./obf/obf-to-board";
-
-const TWO_TILE_BOARD: OBFBoard = {
-  format: "open-board-0.1",
-  id: "test-board",
-  locale: "en",
-  buttons: [
-    { id: "btn-1", label: "hello" },
-    { id: "btn-2", label: "world" },
-  ],
-  grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
-};
+import { renderBoardViewer, TWO_TILE_BOARD } from "./test-utils";
 
 const PICTOGRAM_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -38,18 +23,6 @@ const PICTOGRAM_BOARD: OBFBoard = {
     { id: "img-2", data: TEST_IMAGE_SRC },
   ],
 };
-
-function renderBoardViewer(obfBoard: OBFBoard) {
-  return render(
-    <MemoryRouter>
-      <AppProviders>
-        <div style={{ height: "100vh" }}>
-          <BoardViewer board={obfToBoard(obfBoard)} />
-        </div>
-      </AppProviders>
-    </MemoryRouter>,
-  );
-}
 
 describe("BoardViewer", () => {
   let speech: ReturnType<typeof stubSpeech>;

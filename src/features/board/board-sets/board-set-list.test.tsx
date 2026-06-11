@@ -1,18 +1,7 @@
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import type { BoardSetRecord } from "../storage/boards-db";
 import { BoardSetList } from "./board-set-list";
-
-function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
-  return {
-    setId: "set-1",
-    name: "My Board",
-    rootBoardId: "root",
-    updatedAt: 0,
-    boardCount: 1,
-    ...overrides,
-  };
-}
+import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetList", () => {
   test("renders an item per board set with its name and grid/author summary", async () => {

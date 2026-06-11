@@ -4,7 +4,7 @@ import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { listBoardSets } from "../storage/boards-db";
-import { resetBoardsDB } from "../storage/test-helpers";
+import { resetBoardsDB } from "../storage/test-utils";
 import { useBoardFileDrop } from "./use-board-file-drop";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";

@@ -13,7 +13,7 @@ import {
   upsertBoardSet,
   type UpsertBoardSetInput,
 } from "./boards-db";
-import { clearBoardsDB } from "./test-helpers";
+import { clearBoardsDB } from "./test-utils";
 
 function makeBoardSetInput(
   overrides: Partial<UpsertBoardSetInput> = {},
