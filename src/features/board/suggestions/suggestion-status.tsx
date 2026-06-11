@@ -1,5 +1,4 @@
 import Chip from "@mui/material/Chip";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { DotProgress } from "@shared/components/dot-progress";
@@ -27,26 +26,17 @@ export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
       );
     case "downloading":
       return (
-        <Stack
-          direction="row"
-          sx={{ alignItems: "center", gap: 1, whiteSpace: "nowrap" }}
-        >
-          <DotProgress />
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {m.suggestionsDownloading({
-              progress: Math.round(status.progress * 100),
-            })}
-          </Typography>
-        </Stack>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          {m.suggestionsDownloading({
+            progress: Math.round(status.progress * 100),
+          })}
+        </Typography>
       );
     case "pending":
       return <DotProgress />;
     case "unavailable":
       return (
-        <Typography
-          variant="body2"
-          sx={{ color: "text.secondary", whiteSpace: "nowrap" }}
-        >
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {m.suggestionsUnavailable()}
         </Typography>
       );
