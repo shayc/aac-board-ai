@@ -40,7 +40,7 @@ export function deriveSuggestionStatus({
     return { kind: "downloading", progress: downloadProgress };
   }
 
-  if (isPending && phraseCount === 0) {
+  if (isPending) {
     return { kind: "pending" };
   }
 

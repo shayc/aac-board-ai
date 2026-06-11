@@ -59,13 +59,13 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("shows pending only while no phrases have arrived", () => {
+  test("shows pending while any request is in flight, even with phrases showing", () => {
     expect(deriveSuggestionStatus(makeInput({ isPending: true }))).toEqual({
       kind: "pending",
     });
     expect(
       deriveSuggestionStatus(makeInput({ isPending: true, phraseCount: 1 })),
-    ).toBeNull();
+    ).toEqual({ kind: "pending" });
   });
 
   test("announces unavailability only when every engine is out and nothing was suggested", () => {
