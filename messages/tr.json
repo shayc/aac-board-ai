@@ -92,6 +92,7 @@
   "navHome": "Ana sayfaya git",
   "messageBackspace": "Geri sil",
   "messageBackspaceLongPressHint": "Mesajı temizlemek için uzun basın.",
+  "messageBackspaceTooltip": "Geri sil · Tümünü temizlemek için uzun basın",
   "messagePlay": "Mesajı oynat",
   "messageStop": "Durdur",
   "toneSelection": "Ton seçimi",

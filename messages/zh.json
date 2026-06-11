@@ -92,6 +92,7 @@
   "navHome": "返回主页",
   "messageBackspace": "删除",
   "messageBackspaceLongPressHint": "长按可清空消息。",
+  "messageBackspaceTooltip": "删除 · 长按清空",
   "messagePlay": "播放消息",
   "messageStop": "停止",
   "toneSelection": "语气选择",

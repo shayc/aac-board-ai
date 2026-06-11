@@ -92,6 +92,7 @@
   "navHome": "Ugrás a kezdőlapra",
   "messageBackspace": "Törlés",
   "messageBackspaceLongPressHint": "Tartsd lenyomva az üzenet törléséhez.",
+  "messageBackspaceTooltip": "Törlés · Tartsd lenyomva a teljes törléshez",
   "messagePlay": "Üzenet lejátszása",
   "messageStop": "Leállítás",
   "toneSelection": "Hangnem kiválasztása",

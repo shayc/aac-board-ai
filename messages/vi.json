@@ -92,6 +92,7 @@
   "navHome": "Về trang chủ",
   "messageBackspace": "Xóa",
   "messageBackspaceLongPressHint": "Nhấn giữ để xóa tin nhắn.",
+  "messageBackspaceTooltip": "Xóa · Nhấn giữ để xóa tất cả",
   "messagePlay": "Phát tin nhắn",
   "messageStop": "Dừng",
   "toneSelection": "Lựa chọn giọng điệu",

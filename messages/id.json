@@ -92,6 +92,7 @@
   "navHome": "Ke beranda",
   "messageBackspace": "Hapus",
   "messageBackspaceLongPressHint": "Tekan lama untuk menghapus pesan.",
+  "messageBackspaceTooltip": "Hapus · Tekan lama untuk menghapus semua",
   "messagePlay": "Putar pesan",
   "messageStop": "Hentikan",
   "toneSelection": "Pemilihan nada",

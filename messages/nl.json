@@ -92,6 +92,7 @@
   "navHome": "Naar start",
   "messageBackspace": "Wissen",
   "messageBackspaceLongPressHint": "Houd ingedrukt om het bericht te wissen.",
+  "messageBackspaceTooltip": "Wissen · Houd ingedrukt om alles te wissen",
   "messagePlay": "Bericht afspelen",
   "messageStop": "Stoppen",
   "toneSelection": "Toonselectie",

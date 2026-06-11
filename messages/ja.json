@@ -92,6 +92,7 @@
   "navHome": "ホームに戻る",
   "messageBackspace": "消去",
   "messageBackspaceLongPressHint": "長押しでメッセージを消去します。",
+  "messageBackspaceTooltip": "消去・長押しで全消去",
   "messagePlay": "メッセージを再生",
   "messageStop": "停止",
   "toneSelection": "トーンの選択",

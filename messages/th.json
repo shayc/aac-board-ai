@@ -92,6 +92,7 @@
   "navHome": "ไปที่หน้าแรก",
   "messageBackspace": "ลบ",
   "messageBackspaceLongPressHint": "กดค้างเพื่อล้างข้อความ",
+  "messageBackspaceTooltip": "ลบ · กดค้างเพื่อล้างทั้งหมด",
   "messagePlay": "เล่นข้อความ",
   "messageStop": "หยุด",
   "toneSelection": "การเลือกโทน",

@@ -92,6 +92,7 @@
   "navHome": "Przejdź do strony głównej",
   "messageBackspace": "Usuń",
   "messageBackspaceLongPressHint": "Przytrzymaj, aby wyczyścić wiadomość.",
+  "messageBackspaceTooltip": "Usuń · Przytrzymaj, aby wyczyścić",
   "messagePlay": "Odtwórz wiadomość",
   "messageStop": "Zatrzymaj",
   "toneSelection": "Wybór tonu",
