@@ -1,7 +1,7 @@
+export { BoardSetDeleteDialog } from "./board-sets/board-set-delete-dialog";
+export { BoardSetInfoDialog } from "./board-sets/board-set-info-dialog";
+export { BoardSetList } from "./board-sets/board-set-list";
 export { deleteBoardSet, getBoardSets } from "./board-sets/board-sets-store";
-export { BoardSetDeleteDialog } from "./board-sets/delete-dialog";
-export { BoardSetInfoDialog } from "./board-sets/info-dialog";
-export { BoardSetList } from "./board-sets/list";
 export { useBoardSets } from "./board-sets/use-board-sets";
 export { BoardViewer } from "./board-viewer";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";

@@ -1,7 +1,7 @@
-import type { BoardSetRecord } from "../storage/boards-db";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { BoardSetInfoDialog } from "./info-dialog";
+import type { BoardSetRecord } from "../storage/boards-db";
+import { BoardSetInfoDialog } from "./board-set-info-dialog";
 
 function makeBoardSet(overrides: Partial<BoardSetRecord> = {}): BoardSetRecord {
   return {
