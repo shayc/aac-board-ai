@@ -97,7 +97,7 @@ worker caches the shell so the app loads offline after first visit.
 flowchart LR
     UI["UI layer<br/>React 19 · MUI/Emotion · react-aria"]
 
-    UI --> LD["Route loaders<br/>app/loaders"]
+    UI --> LD["Route loaders<br/>app/routing/loaders"]
     LD --> STG["Storage<br/>features/board/storage (idb)"]
     STG --> DB[("IndexedDB<br/>boardSets · boards · assets")]
 
@@ -148,7 +148,7 @@ Coarse modules and what they do, not how each works inside. Names are
 | ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | `src/main.tsx`                                                           | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                  |
 | `src/app/`                                                               | Composition root: router, route loaders, app shell, header, menu/settings drawers, onboarding.                               |
-| `src/app/loaders/`                                                       | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                             |
+| `src/app/routing/loaders/`                                               | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                             |
 | `src/pages/`                                                             | Route entry components (`board-page`, `library-page`, `about-page`), each code-split via React Router's `lazy` route import. |
 | `src/features/board/`                                                    | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                             |
 | `src/features/board/grid·tile·pictogram/`                                | Render the tile grid and each pictogram.                                                                                     |
@@ -258,7 +258,7 @@ Each is the one place to change a concern:
   short resolves rather than throwing.
 - **i18n boundary — Paraglide `m` + `src/shared/language/`.** The only source of UI
   strings and the active locale.
-- **Routing / data boundary — `src/app/loaders/` + React Router.** The only path
+- **Routing / data boundary — `src/app/routing/loaders/` + React Router.** The only path
   from storage into the render tree.
 
 ## Cross-cutting concerns

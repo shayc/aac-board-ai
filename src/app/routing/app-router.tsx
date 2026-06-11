@@ -1,4 +1,4 @@
-import { appRoutes } from "@app/app-routes";
+import { appRoutes } from "@app/routing/app-routes";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
