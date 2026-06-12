@@ -66,6 +66,24 @@ async function importOBZArchive(
   return { setId, rootBoardId };
 }
 
+async function importOBFBoard(
+  board: OBFBoard,
+  setId: string,
+  fileName: string,
+): Promise<ImportResult> {
+  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, fileName));
+
+  await putBoards(setId, [
+    {
+      boardId: board.id,
+      name: board.name ?? board.id,
+      obf: board,
+    },
+  ]);
+
+  return { setId, rootBoardId: board.id };
+}
+
 function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
   return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
@@ -155,24 +173,6 @@ function buildBoardSetInput(
     gridRows: board?.grid.rows,
     gridColumns: board?.grid.columns,
   };
-}
-
-async function importOBFBoard(
-  board: OBFBoard,
-  setId: string,
-  fileName: string,
-): Promise<ImportResult> {
-  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, fileName));
-
-  await putBoards(setId, [
-    {
-      boardId: board.id,
-      name: board.name ?? board.id,
-      obf: board,
-    },
-  ]);
-
-  return { setId, rootBoardId: board.id };
 }
 
 function deriveSetId(filename: string): string {
