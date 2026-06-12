@@ -15,7 +15,7 @@
     "format": "prettier --write .",
     "preview": "vite preview",
     "test": "vitest run",
-    "coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage",
     "prepare": "husky && paraglide-js compile --project ./project.inlang --outdir ./src/paraglide --strategy globalVariable baseLocale"
   },
   "lint-staged": {
