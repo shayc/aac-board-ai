@@ -47,15 +47,10 @@ async function importOBZArchive(
   setId: string,
   fileName: string,
 ): Promise<ImportResult> {
-  const { manifest, boards, resources } = archive;
+  const { manifest, boards, rootBoard, resources } = archive;
   const boardPathToId = buildBoardPathToId(manifest);
 
-  const rootBoardId = resolveRootBoardId(manifest, boardPathToId);
-  const rootBoard = boards.get(rootBoardId);
-
-  await upsertBoardSet(
-    buildBoardSetInput(setId, rootBoard, rootBoardId, fileName),
-  );
+  await upsertBoardSet(buildBoardSetInput(setId, rootBoard, fileName));
   await putBoards(setId, buildBoardInputs(boards, boardPathToId));
 
   const assetInputs = buildAssetInputs(resources);
@@ -63,7 +58,7 @@ async function importOBZArchive(
     await putAssets(setId, assetInputs);
   }
 
-  return { setId, rootBoardId };
+  return { setId, rootBoardId: rootBoard.id };
 }
 
 async function importOBFBoard(
@@ -71,7 +66,7 @@ async function importOBFBoard(
   setId: string,
   fileName: string,
 ): Promise<ImportResult> {
-  await upsertBoardSet(buildBoardSetInput(setId, board, board.id, fileName));
+  await upsertBoardSet(buildBoardSetInput(setId, board, fileName));
 
   await putBoards(setId, [
     {
@@ -113,20 +108,6 @@ export function resolveLoadBoardPaths(
   return { ...board, buttons };
 }
 
-function resolveRootBoardId(
-  manifest: OBFManifest,
-  boardPathToId: Map<string, string>,
-): string {
-  const fromManifest = boardPathToId.get(manifest.root);
-  if (fromManifest) {
-    return fromManifest;
-  }
-
-  throw new Error(
-    `Manifest root "${manifest.root}" does not match any board in manifest.paths.boards`,
-  );
-}
-
 function buildBoardInputs(
   boards: Map<string, OBFBoard>,
   boardPathToId: Map<string, string>,
@@ -156,22 +137,21 @@ function buildAssetInputs(
 
 function buildBoardSetInput(
   setId: string,
-  board: OBFBoard | undefined,
-  rootBoardId: string,
+  board: OBFBoard,
   fallbackSetName: string,
 ): UpsertBoardSetInput {
   return {
     setId,
-    name: board?.name ?? fallbackSetName,
-    rootBoardId,
-    author: board?.license?.author_name,
-    description: board?.description_html
+    name: board.name ?? fallbackSetName,
+    rootBoardId: board.id,
+    author: board.license?.author_name,
+    description: board.description_html
       ? htmlToText(board.description_html)
       : undefined,
-    license: board?.license?.type,
-    locale: board?.locale ? normalizeLocale(board.locale) : undefined,
-    gridRows: board?.grid.rows,
-    gridColumns: board?.grid.columns,
+    license: board.license?.type,
+    locale: board.locale ? normalizeLocale(board.locale) : undefined,
+    gridRows: board.grid.rows,
+    gridColumns: board.grid.columns,
   };
 }
 

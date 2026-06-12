@@ -69,15 +69,7 @@ describe("importBoardFiles", () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     const archive = await loadOBZ(fixtureFile);
 
-    const pathToId = new Map(
-      Object.entries(archive.manifest.paths.boards).map(([id, path]) => [
-        path,
-        id,
-      ]),
-    );
-
-    const rootBoardId = pathToId.get(archive.manifest.root);
-    assertDefined(rootBoardId);
+    const rootBoardId = archive.rootBoard.id;
 
     const assetEntries = Array.from(archive.resources.entries()).filter(
       ([path]) => !path.endsWith(".obf") && path !== "manifest.json",
@@ -131,6 +123,13 @@ describe("importBoardFiles", () => {
     );
 
     expect(boardLinks.length).toBeGreaterThan(0);
+
+    const pathToId = new Map(
+      Object.entries(archive.manifest.paths.boards).map(([id, path]) => [
+        path,
+        id,
+      ]),
+    );
 
     for (const link of boardLinks) {
       const expectedChildBoardId = pathToId.get(link.path);
