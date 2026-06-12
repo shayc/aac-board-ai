@@ -3,7 +3,7 @@ import {
   stubTranslator,
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { putBoards } from "../storage/boards-db";
+import { getBoard, putBoards } from "../storage/boards-db";
 import { resetBoardsDB, seedBoardSets } from "../storage/test-utils";
 import type { Board } from "../types";
 import { resolveTranslatedBoard } from "./resolve-translated-board";
@@ -93,11 +93,20 @@ describe("resolveTranslatedBoard", () => {
 
     await resolveTranslatedBoard("set-1", makeBoard(), "es");
 
-    const cached = makeBoard({
-      strings: { "es-ES": { Food: "[es] Food", eat: "[es] eat" } },
-    });
+    const persistedStrings = {
+      es: { Food: "[es] Food", eat: "[es] eat", drink: "[es] drink" },
+    };
+
+    await expect
+      .poll(async () => (await getBoard("set-1", "board-1"))?.obf.strings)
+      .toEqual(persistedStrings);
+
     const { create } = stubTranslator();
-    const result = await resolveTranslatedBoard("set-1", cached, "es");
+    const result = await resolveTranslatedBoard(
+      "set-1",
+      makeBoard({ strings: persistedStrings }),
+      "es",
+    );
 
     expect(result.name).toBe("[es] Food");
     expect(create).not.toHaveBeenCalled();
