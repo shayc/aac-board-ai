@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
@@ -20,6 +21,19 @@ import type { Board, BoardButton } from "./types";
 export interface BoardViewerProps {
   board: Board;
 }
+
+const rootSx = (theme: Theme) => ({
+  height: "100%",
+  ...theme.applyStyles("dark", {
+    backgroundRepeat: "no-repeat",
+    backgroundImage:
+      "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+  }),
+  [theme.breakpoints.up("sm")]: {
+    pl: "env(safe-area-inset-left)",
+    pr: "env(safe-area-inset-right)",
+  },
+});
 
 export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
@@ -51,25 +65,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   );
 
   return (
-    <Stack
-      {...keyboard.rootProps}
-      direction="column"
-      sx={[
-        { height: "100%" },
-        (theme) =>
-          theme.applyStyles("dark", {
-            backgroundRepeat: "no-repeat",
-            backgroundImage:
-              "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
-          }),
-        (theme) => ({
-          [theme.breakpoints.up("sm")]: {
-            pl: "env(safe-area-inset-left)",
-            pr: "env(safe-area-inset-right)",
-          },
-        }),
-      ]}
-    >
+    <Stack {...keyboard.rootProps} direction="column" sx={rootSx}>
       <MessageBar
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}

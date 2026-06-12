@@ -5,8 +5,19 @@ import {
   findTranslations,
   getBoardLanguage,
   findTranslatedBoard,
-} from "./translation-cache";
+} from "./board-strings";
 import type { Board } from "../types";
+
+const mockStrings = {
+  "es-ES": {
+    "My Board": "Mi Tablero",
+    Hello: "Hola",
+    "Hello there": "Hola a todos",
+  },
+  "fr-CA": {
+    Hello: "Bonjour",
+  },
+};
 
 const mockBoard: Board = {
   id: "board-1",
@@ -25,19 +36,10 @@ const mockBoard: Board = {
     },
   ],
   locale: "en-US",
-  strings: {
-    "es-ES": {
-      "My Board": "Mi Tablero",
-      Hello: "Hola",
-      "Hello there": "Hola a todos",
-    },
-    "fr-CA": {
-      Hello: "Bonjour",
-    },
-  },
+  strings: mockStrings,
 };
 
-describe("translation-cache", () => {
+describe("board-strings", () => {
   test("getBoardLanguage() extracts the base language code", () => {
     expect(getBoardLanguage(mockBoard)).toBe("en");
     expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
@@ -46,10 +48,10 @@ describe("translation-cache", () => {
 
   test("findTranslations() matches language codes correctly", () => {
     expect(findTranslations(mockBoard.strings, "es")).toEqual(
-      mockBoard.strings!["es-ES"],
+      mockStrings["es-ES"],
     );
     expect(findTranslations(mockBoard.strings, "fr")).toEqual(
-      mockBoard.strings!["fr-CA"],
+      mockStrings["fr-CA"],
     );
     expect(findTranslations(mockBoard.strings, "de")).toBeUndefined();
     expect(findTranslations(undefined, "es")).toBeUndefined();
