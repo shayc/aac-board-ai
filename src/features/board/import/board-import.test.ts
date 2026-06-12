@@ -124,17 +124,19 @@ describe("importBoardFiles", () => {
     const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
     assertDefined(storedRootBoard);
 
-    const linkedButtons = storedRootBoard.obf.buttons.filter((button) =>
-      Boolean(button.load_board?.path),
+    const boardLinks = storedRootBoard.obf.buttons.flatMap((button) =>
+      button.load_board?.path
+        ? [{ path: button.load_board.path, id: button.load_board.id }]
+        : [],
     );
 
-    expect(linkedButtons.length).toBeGreaterThan(0);
+    expect(boardLinks.length).toBeGreaterThan(0);
 
-    for (const button of linkedButtons) {
-      const expectedChildBoardId = pathToId.get(button.load_board!.path!);
+    for (const link of boardLinks) {
+      const expectedChildBoardId = pathToId.get(link.path);
       assertDefined(expectedChildBoardId);
 
-      expect(button.load_board?.id).toBe(expectedChildBoardId);
+      expect(link.id).toBe(expectedChildBoardId);
 
       const storedChildBoard = await getBoard(
         IMPORTED_SET_ID,

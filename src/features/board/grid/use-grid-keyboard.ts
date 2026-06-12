@@ -44,13 +44,13 @@ export function useGridKeyboard({
   dir,
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [activeCell, setActiveCell] = useState<Cell>(() =>
+  const [rememberedCell, setRememberedCell] = useState<Cell>(() =>
     findFirstNonEmptyCell(grid),
   );
-  const activeCellRef = useRef(activeCell);
-  const updateActiveCell = (next: Cell) => {
-    activeCellRef.current = next;
-    setActiveCell(next);
+  const rememberedCellRef = useRef(rememberedCell);
+  const rememberCell = (next: Cell) => {
+    rememberedCellRef.current = next;
+    setRememberedCell(next);
   };
 
   const { keyboardProps } = useKeyboard({
@@ -77,7 +77,7 @@ export function useGridKeyboard({
       }
 
       event.preventDefault();
-      updateActiveCell(next.position);
+      rememberCell(next.position);
       next.element.focus();
     },
   });
@@ -85,7 +85,7 @@ export function useGridKeyboard({
   const onFocus = (event: FocusEvent<HTMLElement>) => {
     const position = cellOf(event.target);
     if (position) {
-      updateActiveCell(position);
+      rememberCell(position);
     }
   };
 
@@ -106,32 +106,17 @@ export function useGridKeyboard({
       return;
     }
 
-    const { row, col } = activeCellRef.current;
-    const sameCellElement = root.querySelector<HTMLElement>(
-      `${CELL}[aria-rowindex='${row + 1}'][aria-colindex='${col + 1}'] ${FOCUSABLE}`,
-    );
-
-    if (sameCellElement) {
-      sameCellElement.focus();
-
-      return;
-    }
-
-    const firstFocusable = root.querySelector<HTMLElement>(
-      `${CELL} ${FOCUSABLE}`,
-    );
-    firstFocusable?.focus();
+    const target =
+      findFocusableInCell(root, rememberedCellRef.current) ??
+      findFirstFocusable(root);
+    target?.focus();
   }, [grid]);
 
-  const tabStopCell = grid[activeCell.row]?.[activeCell.col]
-    ? activeCell
+  const activeCell = grid[rememberedCell.row]?.[rememberedCell.col]
+    ? rememberedCell
     : findFirstNonEmptyCell(grid);
 
-  return {
-    rootRef,
-    rootProps: { ...keyboardProps, onFocus },
-    activeCell: tabStopCell,
-  };
+  return { rootRef, rootProps: { ...keyboardProps, onFocus }, activeCell };
 }
 
 function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
@@ -146,6 +131,19 @@ function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
   return { row: 0, col: 0 };
 }
 
+function findFocusableInCell(
+  root: HTMLElement,
+  cell: Cell,
+): HTMLElement | null {
+  return root.querySelector<HTMLElement>(
+    `${CELL}[aria-rowindex='${cell.row + 1}'][aria-colindex='${cell.col + 1}'] ${FOCUSABLE}`,
+  );
+}
+
+function findFirstFocusable(root: HTMLElement): HTMLElement | null {
+  return root.querySelector<HTMLElement>(`${CELL} ${FOCUSABLE}`);
+}
+
 function nextFocus(
   event: KeyboardKey,
   root: HTMLElement,
@@ -157,8 +155,10 @@ function nextFocus(
       return null;
     }
 
-    const wholeGrid = event.ctrlKey || event.metaKey;
-    const scope = wholeGrid ? CELL : `${CELL}[aria-rowindex='${from.row + 1}']`;
+    const spansWholeGrid = event.ctrlKey || event.metaKey;
+    const scope = spansWholeGrid
+      ? CELL
+      : `${CELL}[aria-rowindex='${from.row + 1}']`;
     const candidates = root.querySelectorAll<HTMLElement>(
       `${scope} ${FOCUSABLE}`,
     );

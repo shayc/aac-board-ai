@@ -23,6 +23,11 @@ export function Tile({
   tabIndex,
   onClick,
 }: TileProps) {
+  const darkened = (percent: number) =>
+    backgroundColor
+      ? `color-mix(in srgb, ${backgroundColor}, black ${percent}%)`
+      : undefined;
+
   return (
     <Button
       tabIndex={tabIndex}
@@ -49,32 +54,25 @@ export function Tile({
           duration: theme.transitions.duration.short,
         }),
         "@media (hover: hover)": {
-          "&:hover": {
-            backgroundColor: backgroundColor
-              ? `color-mix(in srgb, ${backgroundColor}, black 20%)`
-              : undefined,
-          },
+          "&:hover": { backgroundColor: darkened(20) },
         },
-        "&:active": {
-          backgroundColor: backgroundColor
-            ? `color-mix(in srgb, ${backgroundColor}, black 30%)`
-            : undefined,
-        },
+        "&:active": { backgroundColor: darkened(30) },
         "&:focus-visible": {
           outline: `3px solid ${theme.vars?.palette.text.primary ?? theme.palette.text.primary}`,
           outlineOffset: 2,
         },
-        "&::after": {
-          content: '""',
-          display: variant === "folder" ? "block" : "none",
-          position: "absolute",
-          top: -2,
-          insetInlineEnd: -2,
-          width: 0,
-          height: 0,
-          borderInlineEnd: `32px solid ${borderColor ?? "#000"}`,
-          borderBottom: "32px solid transparent",
-        },
+        ...(variant === "folder" && {
+          "&::after": {
+            content: '""',
+            position: "absolute",
+            top: -2,
+            insetInlineEnd: -2,
+            width: 0,
+            height: 0,
+            borderInlineEnd: `32px solid ${borderColor ?? "#000"}`,
+            borderBottom: "32px solid transparent",
+          },
+        }),
       })}
     >
       <Pictogram label={label} src={imageSrc} />
