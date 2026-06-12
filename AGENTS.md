@@ -5,6 +5,7 @@
 - Client-side AAC (communication board) web app.
 - Stack: React 19 + TypeScript + Vite; MUI; React Router.
 - Built-in AI is progressive enhancement; core app must work when AI APIs are unavailable.
+- Accessibility is the top quality goal (AAC users depend on it), then offline reliability and privacy.
 
 ## Commands
 
@@ -13,9 +14,13 @@
 - Lint: `npm run lint`
 - Format: `npm run format`
 - Test: `npm test`
+- Test one file: `npm test -- <file-or-pattern>`
+- Lint specific files: `npm run lint -- <files>`
 - Coverage: `npm run coverage`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
+- CI (Node 24) runs install → Playwright install → lint → test → build.
+- Pre-commit: `lint-staged` runs ESLint `--fix` + Prettier on staged files.
 
 ## Project Structure
 
@@ -39,55 +44,44 @@
   - **Interactive:** Prove a behavior (interaction → observable result).
   - **Presentational:** Render-only assertions for accessibility, content, and visibility.
 
-## Code Style & Architecture Guidelines
+## Code Style
 
-> **Scope Note:** The formatting and structural design rules below apply strictly to new code or lines you are actively modifying. Do not apply them globally to untouched background files.
+Prettier and ESLint own formatting and mechanical rules; the guidance below covers what tooling can't check. Apply it to code you write or touch, not to untouched files.
 
-### 1. Visual Layout & Density
+### Layout & Control Flow
 
-- **Paragraphs of Logic:** Group related statements together and use single blank lines to separate logical steps within a function.
-- **Line Breathing:** Break long, dense variable assignments or chained methods into multi-line blocks with consistent indentation.
-- **Explicit Braces:** Always use braces `{}` for `if` statements, even for single-line bodies.
+- Group related statements into paragraphs separated by single blank lines.
+- Use early returns and guard clauses; keep the happy path at the left margin.
+- Extract dense conditionals and nested ternaries into named locals or helper functions.
+- Extract complex conditional JSX and nested mapping loops into sub-components.
 
-### 2. Branching & Flattening
+### Naming
 
-- **Structural Flattening:** Maximize scannability by using early returns and guard clauses. Keep the "happy path" flush against the left margin instead of nesting logic inside deep `if/else` blocks.
-- **Untangle Cleverness:** Eliminate hyper-dense one-liners and multi-layered nested ternaries. If a conditional operation requires deep evaluation, extract it into a descriptive local variable or a helper function.
-- **JSX Extraction:** Extract complex visual layout conditions or nested mapping loops out of the main return statement into standalone sub-components.
+- All files and folders under `src/` are kebab-case.
+- No filler words (`data`, `info`, `manager`) or cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
+- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs.
+- Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
+- Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
 
-### 3. Naming & Type Integrity
+### Abstraction & Data Flow
 
-- **Eradicate Vagueness:** Banish broad filler words (`data`, `info`, `manager`) and cryptic abbreviations (`usr`, `idx`, `amt`) unless they are standard loop counters.
-- **Strict Grammar:** Collections must be plural nouns (`activeUsers`). Booleans must pose a clear true/false question (`isFeatureEnabled`). Functions must start with strong, active verbs.
-- **The Silhouette Rule:** Avoid local variables within the same scope that differ by only a single character (`item` vs `items`) or introduce property stuttering (`suggestions.suggestions` should be `suggestions.phrases`).
-- **Omit Redundant Context:** Eliminate parent naming prefixes inside narrow scopes (e.g., inside a `User` type definition, use `name` instead of `userName`).
-- **Strict Typing:** Maintain strict type accuracy across the application. The `any` type is banned unless explicitly requested or handling raw external data edges.
-- **Lint Integrity:** Fix the underlying issue a lint rule flags; never silence it with an `eslint-disable` comment.
+- Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
+- Pass components and functions only the leaf data they use — not a whole `User` for `user.avatarUrl`.
+- Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
+- Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`, `@paraglide/*`).
+- User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text.
+- The React Compiler is enabled: write Compiler-native code; don't add `useMemo`/`useCallback` for performance.
 
-### 4. Architecture & Dependencies
+### Comments
 
-- **The Iceberg Rule:** Match your function's level of abstraction. Encapsulate low-level mechanics (the mechanics of "how") inside descriptive helper utilities, leaving the main execution body as a clean, high-level summary of "what" is happening.
-- **Strict Need-to-Know:** Components and functions must only accept the exact leaf data they require to execute. Do not pass a whole `User` object if the component only renders `user.avatarUrl`.
-- **Shorten the Chain:** Avoid long chains of dot-notation (`order.customer.address.city`) that couple code tightly to deeply nested data shapes. Move derivations closer to the data source.
-- **Import Paths & Performance:** Use configured path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`). Import MUI subpaths directly (e.g., `@mui/material/Button`) rather than from the package root to minimize bundle footprint.
-- **No Micro-Optimization:** The React Compiler is enabled; do not use `useMemo` or `useCallback` for micro-optimizations.
-
-### 5. Commentary & Language
-
-- **Context Over Code:** Delete comments that merely restate what the code execution does. Inline comments must strictly document non-obvious business requirements, edge cases, or technical "whys".
-- **Documentation Cleanliness:** Maintain correct grammar, punctuation, and capitalization across all inline comments.
-
-## Workflow (Git/PR)
-
-- CI (Node 24): `npm ci` → Playwright install → lint → test → build.
-- Pre-commit: `lint-staged` runs ESLint `--fix` + Prettier on staged files.
+- Comments document non-obvious whys — business requirements, edge cases — never what the code does.
 
 ## Boundaries (Safety Rules)
 
 ### Always
 
 - Keep changes closely scoped; avoid sweeping refactors or structural reformatting outside the task.
-- Verify changes by running `npm run lint`, `npm test`, and `npm run build` locally before pushing or marking a task complete.
+- Verify changes by running `npm run lint`, `npm test`, and `npm run build` before pushing or marking a task complete.
 - Follow existing module boundaries and adjacent file design patterns.
 
 ### Ask First
@@ -101,5 +95,5 @@
 
 - Commit secrets, environment tokens, or private API keys.
 - Suppress linting directives, bypass typechecking, or drop tests to force a build through.
-- Manually edit or commit generated build artifacts (`dist/`, `coverage/`).
+- Manually edit or commit generated artifacts (`dist/`, `coverage/`, `src/paraglide/`).
 - Introduce telemetry, analytics, tracking scripts, or any data-exfiltration path.
