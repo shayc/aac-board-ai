@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { createMemoryRouter, RouterProvider } from "react-router";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { AppShell } from "./app-shell";
 
@@ -33,12 +33,8 @@ describe("AppShell", () => {
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .not.toBeInTheDocument();
 
-    // The dismissal persists on a debounce after this test ends, and test
-    // files share localStorage. Wait it out and clear, or the flag leaks
-    // into other files' import-time store reads.
-    await vi.waitFor(() => {
-      expect(localStorage.getItem("hasSeenOnboarding")).toBe("true");
-    });
+    // Test files share localStorage; clear or the flag leaks into other
+    // files' import-time store reads.
     localStorage.clear();
   });
 });

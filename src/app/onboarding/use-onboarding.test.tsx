@@ -1,4 +1,4 @@
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { useOnboarding } from "./use-onboarding";
 
@@ -27,9 +27,6 @@ describe("useOnboarding", () => {
       .element(second.getByText("onboarding hidden"))
       .toBeInTheDocument();
 
-    // Persistence is debounced, so poll for the write.
-    await vi.waitFor(() => {
-      expect(localStorage.getItem("hasSeenOnboarding")).toBe("true");
-    });
+    expect(localStorage.getItem("hasSeenOnboarding")).toBe("true");
   });
 });
