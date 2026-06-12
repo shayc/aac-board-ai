@@ -186,9 +186,9 @@ State has **five kinds**, each with one home:
 3. **Reactive cross-cutting stores** — built on `createExternalStore` +
    `useSyncExternalStore`: the **board-set catalog** and the **TTS voice catalog**.
    These change outside React (DB writes, the browser's `voiceschanged` event).
-4. **Persisted settings** — `createPersistedStore` (localStorage, debounced so a
-   slider drag coalesces into one write): selected **language**, speech config
-   (voice/rate/pitch/volume), playback config, and AI shared context. Theme mode
+4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
+   change): selected **language**, speech config (voice/rate/pitch/volume),
+   playback config, and AI shared context. Theme mode
    persists separately as MUI's `mui-mode`, read pre-paint in `index.html`.
 5. **Local component state** — the in-progress message (`useMessage`), playback
    progress, grid focus, selected tone. Never promoted to a global store.

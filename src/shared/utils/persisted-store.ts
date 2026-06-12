@@ -1,7 +1,4 @@
-import { debounce } from "./debounce";
 import { createExternalStore, type ExternalStore } from "./external-store";
-
-const PERSIST_DEBOUNCE_MS = 200;
 
 export function createPersistedStore<T>(
   storageKey: string,
@@ -27,7 +24,7 @@ export function createPersistedStore<T>(
     }
   };
 
-  store.subscribe(debounce(persist, PERSIST_DEBOUNCE_MS));
+  store.subscribe(persist);
 
   return store;
 }
