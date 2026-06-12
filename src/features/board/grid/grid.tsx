@@ -2,6 +2,7 @@ import Stack from "@mui/material/Stack";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_PX = 72;
+const PADDING = 2;
 
 export interface GridItemProps {
   tabIndex: number;
@@ -44,8 +45,8 @@ export function Grid<TItem extends { id: string }>({
       dir={dir}
       sx={(theme) => ({
         minHeight: "100%",
-        minWidth: `calc(${columns} * ${MIN_CELL_PX}px + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(gap * 2)})`,
-        p: gap,
+        minWidth: `calc(${columns} * ${MIN_CELL_PX}px + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`,
+        p: PADDING,
         gap,
       })}
     >
