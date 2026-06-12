@@ -5,6 +5,7 @@
 - Client-side AAC (communication board) web app.
 - Stack: React 19 + TypeScript + Vite; MUI; React Router.
 - Built-in AI is progressive enhancement; core app must work when AI APIs are unavailable.
+- Accessibility is the top quality goal (AAC users depend on it), then offline reliability and privacy.
 
 ## Commands
 
@@ -13,6 +14,8 @@
 - Lint: `npm run lint`
 - Format: `npm run format`
 - Test: `npm test`
+- Test one file: `npm test -- <file-or-pattern>`
+- Lint specific files: `npm run lint -- <files>`
 - Coverage: `npm run coverage`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
@@ -54,6 +57,7 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 
 ### Naming
 
+- All files and folders under `src/` are kebab-case.
 - No filler words (`data`, `info`, `manager`) or cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
 - Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs.
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
@@ -64,7 +68,8 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 - Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
 - Pass components and functions only the leaf data they use — not a whole `User` for `user.avatarUrl`.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
-- Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`).
+- Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`, `@paraglide/*`).
+- User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text.
 - The React Compiler is enabled: write Compiler-native code; don't add `useMemo`/`useCallback` for performance.
 
 ### Comments
@@ -90,5 +95,5 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 
 - Commit secrets, environment tokens, or private API keys.
 - Suppress linting directives, bypass typechecking, or drop tests to force a build through.
-- Manually edit or commit generated build artifacts (`dist/`, `coverage/`).
+- Manually edit or commit generated artifacts (`dist/`, `coverage/`, `src/paraglide/`).
 - Introduce telemetry, analytics, tracking scripts, or any data-exfiltration path.
