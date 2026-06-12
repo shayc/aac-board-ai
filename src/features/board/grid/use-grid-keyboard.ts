@@ -123,7 +123,15 @@ export function useGridKeyboard({
     firstFocusable?.focus();
   }, [grid]);
 
-  return { rootRef, rootProps: { ...keyboardProps, onFocus }, activeCell };
+  const tabStopCell = grid[activeCell.row]?.[activeCell.col]
+    ? activeCell
+    : findFirstNonEmptyCell(grid);
+
+  return {
+    rootRef,
+    rootProps: { ...keyboardProps, onFocus },
+    activeCell: tabStopCell,
+  };
 }
 
 function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {

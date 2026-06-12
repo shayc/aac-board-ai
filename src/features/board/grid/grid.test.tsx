@@ -287,6 +287,42 @@ describe("Grid", () => {
       await expect.element(item1).toHaveAttribute("tabindex", "-1");
     });
 
+    test("keeps a tab stop when the grid changes and the active cell becomes empty while focus is outside the grid", async () => {
+      const renderItem = (
+        item: { id: string; label: string },
+        props: { tabIndex: number },
+      ) => <button {...props}>{item.label}</button>;
+
+      const oldItems = [
+        { id: "1", label: "Item 1" },
+        { id: "2", label: "Item 2" },
+        { id: "3", label: "Item 3" },
+        { id: "4", label: "Item 4" },
+      ];
+      const newItems = [{ id: "5", label: "Item 5" }];
+
+      const screen = await render(
+        <div>
+          <button>Outside</button>
+          <Grid rows={2} columns={2} items={oldItems} renderItem={renderItem} />
+        </div>,
+      );
+
+      screen.getByRole("button", { name: "Item 4" }).element().focus();
+      screen.getByRole("button", { name: "Outside" }).element().focus();
+
+      await screen.rerender(
+        <div>
+          <button>Outside</button>
+          <Grid rows={2} columns={2} items={newItems} renderItem={renderItem} />
+        </div>,
+      );
+
+      const item5 = screen.getByRole("button", { name: "Item 5" });
+
+      await expect.element(item5).toHaveAttribute("tabindex", "0");
+    });
+
     test("moves focus with arrow keys to the next focusable cell", async () => {
       const items = [
         { id: "1", label: "Item 1" },
