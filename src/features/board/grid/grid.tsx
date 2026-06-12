@@ -12,7 +12,7 @@ export interface GridProps<TItem extends { id: string }> {
   items: readonly TItem[];
   rows: number;
   columns: number;
-  order?: (string | null)[][];
+  order?: readonly (readonly (string | null)[])[];
   renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
@@ -40,8 +40,6 @@ export function Grid<TItem extends { id: string }>({
       ref={rootRef}
       role="grid"
       aria-label={ariaLabel}
-      aria-rowcount={rows}
-      aria-colcount={columns}
       direction="column"
       dir={dir}
       sx={(theme) => ({
@@ -87,7 +85,7 @@ function buildGrid<TItem extends { id: string }>(
   items: readonly TItem[],
   rows: number,
   columns: number,
-  order?: (string | null)[][],
+  order?: readonly (readonly (string | null)[])[],
 ): (TItem | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
