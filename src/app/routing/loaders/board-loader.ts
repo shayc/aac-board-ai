@@ -12,8 +12,10 @@ export async function boardLoader({
   params,
   request,
 }: LoaderFunctionArgs): Promise<Board> {
-  const setId = params.setId!;
-  const boardId = params.boardId!;
+  const { setId, boardId } = params;
+  if (!setId || !boardId) {
+    throw data(m.boardNotFound(), { status: 404 });
+  }
 
   try {
     const board = await hydrateBoard(setId, boardId, request.signal);

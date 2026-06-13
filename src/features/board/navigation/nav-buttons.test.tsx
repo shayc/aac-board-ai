@@ -3,6 +3,7 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { describe, expect, test, vi } from "vitest";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { NavButtons } from "./nav-buttons";
 
@@ -119,9 +120,9 @@ describe("NavButtons", () => {
       const backButton = screen.getByRole("button", { name: "Back" });
       const icon = backButton.element().querySelector("svg");
 
-      expect(icon).not.toBeNull();
+      assertDefined(icon);
       // Browsers resolve scaleX(-1) to its matrix equivalent
-      const styles = getComputedStyle(icon!);
+      const styles = getComputedStyle(icon);
       expect(styles.transform).toBe("matrix(-1, 0, 0, 1, 0, 0)");
     });
 
@@ -131,8 +132,8 @@ describe("NavButtons", () => {
       const backButton = screen.getByRole("button", { name: "Back" });
       const icon = backButton.element().querySelector("svg");
 
-      expect(icon).not.toBeNull();
-      const styles = getComputedStyle(icon!);
+      assertDefined(icon);
+      const styles = getComputedStyle(icon);
       expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
     });
 
@@ -142,8 +143,8 @@ describe("NavButtons", () => {
       const homeButton = screen.getByRole("button", { name: "Home" });
       const icon = homeButton.element().querySelector("svg");
 
-      expect(icon).not.toBeNull();
-      const styles = getComputedStyle(icon!);
+      assertDefined(icon);
+      const styles = getComputedStyle(icon);
       expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
     });
   });

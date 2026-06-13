@@ -5,8 +5,8 @@ import { data, redirect, type LoaderFunctionArgs } from "react-router";
 export async function boardSetIndexLoader({
   params,
 }: LoaderFunctionArgs): Promise<Response> {
-  const setId = params.setId!;
-  const set = await getBoardSet(setId);
+  const { setId } = params;
+  const set = setId ? await getBoardSet(setId) : undefined;
 
   if (!set) {
     throw data(m.errorBoardSetNotFound(), { status: 404 });

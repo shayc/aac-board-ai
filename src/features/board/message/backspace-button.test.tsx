@@ -3,6 +3,7 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { BackspaceButton } from "./backspace-button";
 
@@ -76,9 +77,9 @@ describe("BackspaceButton", () => {
       const button = screen.getByRole("button", { name: "Backspace" });
       const icon = button.element().querySelector("svg");
 
-      expect(icon).not.toBeNull();
+      assertDefined(icon);
       // Browsers resolve scaleX(-1) to its matrix equivalent
-      const styles = getComputedStyle(icon!);
+      const styles = getComputedStyle(icon);
       expect(styles.transform).toBe("matrix(-1, 0, 0, 1, 0, 0)");
     });
 
@@ -95,8 +96,8 @@ describe("BackspaceButton", () => {
       const button = screen.getByRole("button", { name: "Backspace" });
       const icon = button.element().querySelector("svg");
 
-      expect(icon).not.toBeNull();
-      const styles = getComputedStyle(icon!);
+      assertDefined(icon);
+      const styles = getComputedStyle(icon);
       expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
     });
   });
