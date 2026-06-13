@@ -1,4 +1,5 @@
 import { loadFixtureFile } from "@shared/testing/fixtures";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { loadOBF, loadOBZ, type OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
@@ -13,10 +14,6 @@ import { importBoardFiles, resolveLoadBoardPaths } from "./board-import";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
-
-function assertDefined<T>(value: T | undefined | null): asserts value is T {
-  expect(value).toBeDefined();
-}
 
 describe("importBoardFiles", () => {
   beforeEach(async () => {

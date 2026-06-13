@@ -1,5 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { assertDefined } from "@shared/testing/assert-defined";
 import {
   closeBoardsDB,
   deleteBoardSetRecord,
@@ -112,10 +113,10 @@ describe("putBoards and getBoard", () => {
     await putBoards("set-1", [{ boardId: "b1", name: "Board One", obf }]);
 
     const board = await getBoard("set-1", "b1");
-    expect(board).toBeDefined();
-    expect(board!.boardId).toBe("b1");
-    expect(board!.name).toBe("Board One");
-    expect(board!.obf.id).toBe("b1");
+    assertDefined(board);
+    expect(board.boardId).toBe("b1");
+    expect(board.name).toBe("Board One");
+    expect(board.obf.id).toBe("b1");
   });
 
   test("counts only unique boards", async () => {
@@ -160,8 +161,8 @@ describe("putBoards and getBoard", () => {
     await putBoards("orphan-set", [{ boardId: "b1", name: "B1", obf }]);
 
     const board = await getBoard("orphan-set", "b1");
-    expect(board).toBeDefined();
-    expect(board!.boardId).toBe("b1");
+    assertDefined(board);
+    expect(board.boardId).toBe("b1");
   });
 
   test("rejects empty setId", async () => {
@@ -196,7 +197,8 @@ describe("putAssets and getAssetBlob", () => {
 
     const retrieved = await getAssetBlob("set-1", "images/logo.png");
     expect(retrieved).toBeInstanceOf(Blob);
-    expect(await retrieved!.text()).toBe("hello");
+    assertDefined(retrieved);
+    expect(await retrieved.text()).toBe("hello");
   });
 
   test.each([
@@ -213,7 +215,8 @@ describe("putAssets and getAssetBlob", () => {
 
       const retrieved = await getAssetBlob("set-1", "images/photo.png");
       expect(retrieved).toBeInstanceOf(Blob);
-      expect(await retrieved!.text()).toBe("data");
+      assertDefined(retrieved);
+      expect(await retrieved.text()).toBe("data");
     },
   );
 
@@ -232,8 +235,8 @@ describe("putAssets and getAssetBlob", () => {
 
     const db = await getBoardsDB();
     const record = await db.get("assets", ["set-1", "file.bin"]);
-    expect(record).toBeDefined();
-    expect(record!.size).toBe(5);
+    assertDefined(record);
+    expect(record.size).toBe(5);
   });
 });
 
@@ -250,7 +253,8 @@ describe("updateBoardStrings", () => {
     });
 
     const board = await getBoard("set-1", "b1");
-    expect(board!.obf.strings).toEqual({
+    assertDefined(board);
+    expect(board.obf.strings).toEqual({
       es: { hello: "hola", world: "mundo" },
     });
   });
@@ -267,7 +271,8 @@ describe("updateBoardStrings", () => {
     await updateBoardStrings("set-1", "b1", "es", { hello: "hola" });
 
     const board = await getBoard("set-1", "b1");
-    expect(board!.obf.strings).toEqual({
+    assertDefined(board);
+    expect(board.obf.strings).toEqual({
       fr: { hello: "bonjour" },
       es: { hello: "hola" },
     });
@@ -286,7 +291,8 @@ describe("updateBoardStrings", () => {
     await updateBoardStrings("set-1", "b1", "es", { hello: "ey" });
 
     const board = await getBoard("set-1", "b1");
-    expect(board!.obf.strings).toEqual({ es: { hello: "ey" } });
+    assertDefined(board);
+    expect(board.obf.strings).toEqual({ es: { hello: "ey" } });
   });
 
   test("throws when board does not exist", async () => {
