@@ -3,19 +3,6 @@ import type { Board } from "../types";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
-export function findTranslatedBoard(
-  board: Board,
-  language: string,
-): Board | undefined {
-  if (getBoardLanguage(board) === language) {
-    return board;
-  }
-
-  const cached = findTranslations(board.strings, language);
-
-  return cached ? applyTranslations(board, cached) : undefined;
-}
-
 export function getBoardLanguage(board: Board): string {
   return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
 }
@@ -45,6 +32,7 @@ export function applyTranslations(
   return {
     ...board,
     name: lookup(board.name),
+    description: lookup(board.description),
     buttons: board.buttons.map((button) => ({
       ...button,
       label: lookup(button.label),
@@ -58,6 +46,10 @@ export function collectTranslatableStrings(board: Board): Set<string> {
 
   if (board.name) {
     translatableStrings.add(board.name);
+  }
+
+  if (board.description) {
+    translatableStrings.add(board.description);
   }
 
   for (const button of board.buttons) {

@@ -5,7 +5,7 @@
   "boardGridLabel": "Коммуникационная доска",
   "libraryLoading": "Загрузка досок...",
   "libraryEmptyTitle": "Библиотека пуста",
-  "libraryEmptyDescription": "Импортируйте коммуникационные доски, чтобы начать.",
+  "libraryEmptyDescription": "Импортируйте доски, чтобы начать.",
   "libraryImportBoards": "Импортировать доски",
   "libraryImportingBoards": [
     {

@@ -1,4 +1,5 @@
 import { normalizeLocale } from "@shared/utils/locale";
+import { htmlToText } from "@shared/utils/html";
 import type {
   OBFBoard,
   OBFButton,
@@ -26,7 +27,9 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     id: obfBoard.id,
     name: obfBoard.name,
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
-    descriptionHtml: obfBoard.description_html,
+    description: obfBoard.description_html
+      ? htmlToText(obfBoard.description_html)
+      : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),

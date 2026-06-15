@@ -8,13 +8,12 @@ import {
   useImportBoardFiles,
   type BoardSetRecord,
 } from "@features/board";
-import AddIcon from "@mui/icons-material/Add";
-import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
-import Button from "@mui/material/Button";
+import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
-import Stack from "@mui/material/Stack";
+import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { EmptyState } from "@shared/components/empty-state";
@@ -83,9 +82,19 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
           },
         })}
       >
-        <Typography component="div" variant="h6" noWrap>
+        <Typography component="div" variant="h6" noWrap sx={{ flexGrow: 1 }}>
           {m.libraryHeading()}
         </Typography>
+
+        <Tooltip title={m.libraryImportBoards()}>
+          <IconButton
+            aria-label={m.libraryImportBoards()}
+            edge="end"
+            onClick={() => void pickAndImportBoardFiles()}
+          >
+            <LibraryAddOutlinedIcon />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
 
       <Divider />
@@ -94,38 +103,11 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
         <LoadingState message={m.libraryLoading()} />
       ) : boardSets.length === 0 ? (
         <EmptyState
-          icon={<FilterNoneOutlinedIcon />}
           title={m.libraryEmptyTitle()}
           description={m.libraryEmptyDescription()}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => void pickAndImportBoardFiles()}
-            >
-              {m.libraryImportBoards()}
-            </Button>
-          }
         />
       ) : (
         <>
-          <Stack
-            direction="row"
-            sx={{
-              alignItems: "center",
-              justifyContent: "flex-start",
-              p: 2,
-            }}
-          >
-            <Button
-              variant="text"
-              startIcon={<AddIcon />}
-              onClick={() => void pickAndImportBoardFiles()}
-            >
-              {m.libraryImportBoards()}
-            </Button>
-          </Stack>
-
           <BoardSetList
             boardSets={boardSets}
             onSelect={handleSelect}

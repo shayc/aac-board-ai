@@ -5,7 +5,7 @@
   "boardGridLabel": "Komunikační tabulka",
   "libraryLoading": "Načítání tabulek...",
   "libraryEmptyTitle": "Knihovna je prázdná",
-  "libraryEmptyDescription": "Začněte importem komunikačních tabulek.",
+  "libraryEmptyDescription": "Začněte importem tabulek.",
   "libraryImportBoards": "Importovat tabulky",
   "libraryImportingBoards": [
     {

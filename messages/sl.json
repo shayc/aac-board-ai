@@ -5,7 +5,7 @@
   "boardGridLabel": "Komunikacijska tabla",
   "libraryLoading": "Nalaganje tabel...",
   "libraryEmptyTitle": "Knjižnica je prazna",
-  "libraryEmptyDescription": "Za začetek uvozite komunikacijske table.",
+  "libraryEmptyDescription": "Za začetek uvozite table.",
   "libraryImportBoards": "Uvozi table",
   "libraryImportingBoards": [
     {

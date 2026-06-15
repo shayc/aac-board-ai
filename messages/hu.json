@@ -5,7 +5,7 @@
   "boardGridLabel": "Kommunikációs tábla",
   "libraryLoading": "Táblák betöltése...",
   "libraryEmptyTitle": "A könyvtár üres",
-  "libraryEmptyDescription": "Az induláshoz importálj kommunikációs táblákat.",
+  "libraryEmptyDescription": "Az induláshoz importálj táblákat.",
   "libraryImportBoards": "Táblák importálása",
   "libraryImportingBoards": [
     {

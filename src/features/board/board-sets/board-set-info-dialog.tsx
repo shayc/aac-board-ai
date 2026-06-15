@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { getEnglishLanguageName } from "@shared/utils/locale";
 import type { BoardSetRecord } from "../storage/boards-db";
+import { useTranslatedBoardSetMeta } from "./use-translated-board-set-meta";
 
 export interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;
@@ -43,6 +44,7 @@ export function BoardSetInfoDialog({
   onClose,
 }: BoardSetInfoDialogProps) {
   const chipLabels = boardSet ? buildChipLabels(boardSet) : [];
+  const meta = useTranslatedBoardSetMeta(boardSet);
 
   return (
     <Dialog
@@ -53,7 +55,7 @@ export function BoardSetInfoDialog({
       maxWidth="sm"
     >
       <DialogTitle id="info-dialog-title">
-        {boardSet?.name}
+        {meta?.name}
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {m.libraryByAuthor({ author: boardSet.author })}
@@ -75,9 +77,9 @@ export function BoardSetInfoDialog({
           </Stack>
         )}
 
-        {boardSet?.description && (
+        {meta?.description && (
           <Typography variant="body2" sx={{ mt: 2, whiteSpace: "pre-line" }}>
-            {boardSet.description}
+            {meta.description}
           </Typography>
         )}
       </DialogContent>

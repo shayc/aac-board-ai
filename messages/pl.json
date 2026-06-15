@@ -5,7 +5,7 @@
   "boardGridLabel": "Tablica komunikacyjna",
   "libraryLoading": "Ładowanie tablic...",
   "libraryEmptyTitle": "Biblioteka jest pusta",
-  "libraryEmptyDescription": "Zaimportuj tablice komunikacyjne, aby rozpocząć.",
+  "libraryEmptyDescription": "Zaimportuj tablice, aby rozpocząć.",
   "libraryImportBoards": "Importuj tablice",
   "libraryImportingBoards": [
     {

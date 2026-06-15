@@ -26,7 +26,7 @@ describe("obfToBoard", () => {
   });
 
   describe("board fields", () => {
-    test("maps optional top-level fields (locale, descriptionHtml)", () => {
+    test("maps optional top-level fields (locale, description)", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-top-level",
@@ -44,7 +44,7 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.locale).toBe("en-US");
-      expect(board.descriptionHtml).toBe("<p>Board description</p>");
+      expect(board.description).toBe("Board description");
     });
 
     test("normalizes the locale to BCP-47 casing on import", () => {

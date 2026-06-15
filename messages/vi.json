@@ -5,7 +5,7 @@
   "boardGridLabel": "Bảng giao tiếp",
   "libraryLoading": "Đang tải các bảng...",
   "libraryEmptyTitle": "Thư viện trống",
-  "libraryEmptyDescription": "Nhập các bảng giao tiếp để bắt đầu.",
+  "libraryEmptyDescription": "Nhập các bảng để bắt đầu.",
   "libraryImportBoards": "Nhập bảng",
   "libraryImportingBoards": [
     {

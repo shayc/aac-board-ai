@@ -63,12 +63,14 @@ export function BoardSetList({
 
   return (
     <>
-      <List>
+      <List sx={{ p: 1 }}>
         {boardSets.map((boardSet) => (
           <ListItem
             disablePadding
             key={boardSet.setId}
             sx={(theme) => ({
+              borderRadius: 6,
+              overflow: "hidden",
               "@media (hover: hover)": {
                 "& .MuiListItem-secondaryAction": {
                   opacity:
@@ -99,7 +101,14 @@ export function BoardSetList({
             }
           >
             <ListItemButton onClick={() => onSelect(boardSet)}>
-              <ListItemText primary={boardSet.name} />
+              <ListItemText
+                primary={boardSet.name}
+                sx={{
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "ellipsis",
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}

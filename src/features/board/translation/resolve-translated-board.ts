@@ -4,7 +4,7 @@ import type { Board } from "../types";
 import {
   applyTranslations,
   collectTranslatableStrings,
-  findTranslatedBoard,
+  findTranslations,
   getBoardLanguage,
 } from "./board-strings";
 
@@ -14,9 +14,17 @@ export async function resolveTranslatedBoard(
   language: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const existing = findTranslatedBoard(board, language);
-  if (existing) {
-    return existing;
+  if (getBoardLanguage(board) === language) {
+    return board;
+  }
+
+  const cached = findTranslations(board.strings, language) ?? {};
+  const missing = Array.from(collectTranslatableStrings(board)).filter(
+    (phrase) => !(phrase in cached),
+  );
+
+  if (missing.length === 0) {
+    return applyTranslations(board, cached);
   }
 
   try {
@@ -27,8 +35,12 @@ export async function resolveTranslatedBoard(
     });
 
     try {
-      const phrases = collectTranslatableStrings(board);
-      const translations = await translatePhrases(phrases, translator, signal);
+      const fresh = await translatePhrases(
+        new Set(missing),
+        translator,
+        signal,
+      );
+      const translations = { ...cached, ...fresh };
 
       void persistTranslations(setId, board.id, language, translations);
 
@@ -41,7 +53,9 @@ export async function resolveTranslatedBoard(
     // carry the meaning. With no telemetry, rethrowing a bug here would only
     // trade the user's communication surface for an error page nobody hears
     // about.
-    return board;
+    return Object.keys(cached).length > 0
+      ? applyTranslations(board, cached)
+      : board;
   }
 }
 

@@ -5,7 +5,7 @@
   "boardGridLabel": "Communication board",
   "libraryLoading": "Loading boards...",
   "libraryEmptyTitle": "Library is empty",
-  "libraryEmptyDescription": "Import communication boards to get started.",
+  "libraryEmptyDescription": "Import boards to get started.",
   "libraryImportBoards": "Import boards",
   "libraryImportingBoards": [
     {

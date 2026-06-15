@@ -5,7 +5,7 @@
   "boardGridLabel": "Tablero de comunicación",
   "libraryLoading": "Cargando tableros...",
   "libraryEmptyTitle": "La biblioteca está vacía",
-  "libraryEmptyDescription": "Importa tableros de comunicación para empezar.",
+  "libraryEmptyDescription": "Importa tableros para empezar.",
   "libraryImportBoards": "Importar tableros",
   "libraryImportingBoards": [
     {

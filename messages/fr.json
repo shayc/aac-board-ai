@@ -5,7 +5,7 @@
   "boardGridLabel": "Tableau de communication",
   "libraryLoading": "Chargement des tableaux...",
   "libraryEmptyTitle": "La bibliothèque est vide",
-  "libraryEmptyDescription": "Importez des tableaux de communication pour commencer.",
+  "libraryEmptyDescription": "Importez des tableaux pour commencer.",
   "libraryImportBoards": "Importer des tableaux",
   "libraryImportingBoards": [
     {

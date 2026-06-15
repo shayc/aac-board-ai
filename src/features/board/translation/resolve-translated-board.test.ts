@@ -52,6 +52,23 @@ describe("resolveTranslatedBoard", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  test("translates only the phrases missing from a partial cache", async () => {
+    const board = makeBoard({
+      description: "All about food",
+      strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
+    });
+    const { create, translate } = stubTranslator((input) => `[es] ${input}`);
+
+    const result = await resolveTranslatedBoard("set-1", board, "es");
+
+    expect(result.description).toBe("[es] All about food");
+    expect(result.name).toBe("Comida");
+    expect(create).toHaveBeenCalledOnce();
+
+    const inputs = translate.mock.calls.map((call) => call.at(0));
+    expect(inputs).toEqual(["All about food"]);
+  });
+
   test("translates via the Translator API on a cache miss", async () => {
     const board = makeBoard();
     const { create, translate } = stubTranslator((input) => `[es] ${input}`);

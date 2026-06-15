@@ -5,7 +5,7 @@
   "boardGridLabel": "コミュニケーションボード",
   "libraryLoading": "ボードを読み込んでいます…",
   "libraryEmptyTitle": "ライブラリは空です",
-  "libraryEmptyDescription": "コミュニケーションボードをインポートして始めましょう。",
+  "libraryEmptyDescription": "ボードをインポートして始めましょう。",
   "libraryImportBoards": "ボードをインポート",
   "libraryImportingBoards": [
     {
