@@ -9,11 +9,11 @@ import { m } from "@paraglide/messages.js";
 import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
-  onMenuClick: () => void;
+  onLibraryClick: () => void;
   onSettingsClick: () => void;
 }
 
-export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
+export function AppHeader({ onLibraryClick, onSettingsClick }: AppHeaderProps) {
   const pageTitle = usePageTitle();
 
   return (
@@ -30,13 +30,13 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
       ]}
     >
       <Toolbar>
-        <Tooltip title={m.menuOpen()}>
+        <Tooltip title={m.libraryOpen()}>
           <IconButton
-            aria-label={m.menuLabel()}
+            aria-label={m.libraryHeading()}
             size="large"
             edge="start"
             color="inherit"
-            onClick={onMenuClick}
+            onClick={onLibraryClick}
             sx={{ marginInlineEnd: 2 }}
           >
             <MenuIcon />

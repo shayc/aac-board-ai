@@ -21,22 +21,6 @@ export interface BoardSetListProps {
   onDelete: (boardSet: BoardSetRecord) => void;
 }
 
-function formatSecondary(boardSet: BoardSetRecord): string {
-  const parts: string[] = [];
-
-  const { gridRows, gridColumns, author } = boardSet;
-
-  if (gridRows && gridColumns) {
-    parts.push(`${gridRows}×${gridColumns}`);
-  }
-
-  if (author) {
-    parts.push(m.libraryByAuthor({ author }));
-  }
-
-  return parts.join(" · ");
-}
-
 export function BoardSetList({
   boardSets,
   onSelect,
@@ -82,9 +66,23 @@ export function BoardSetList({
       <List>
         {boardSets.map((boardSet) => (
           <ListItem
-            divider
             disablePadding
             key={boardSet.setId}
+            sx={(theme) => ({
+              "@media (hover: hover)": {
+                "& .MuiListItem-secondaryAction": {
+                  opacity:
+                    menuAnchor?.boardSet.setId === boardSet.setId ? 1 : 0,
+                  transition: theme.transitions.create("opacity", {
+                    duration: theme.transitions.duration.shorter,
+                  }),
+                },
+                "&:hover .MuiListItem-secondaryAction, &:focus-within .MuiListItem-secondaryAction":
+                  {
+                    opacity: 1,
+                  },
+              },
+            })}
             secondaryAction={
               <Tooltip title={m.libraryMoreOptions()}>
                 <IconButton
@@ -101,10 +99,7 @@ export function BoardSetList({
             }
           >
             <ListItemButton onClick={() => onSelect(boardSet)}>
-              <ListItemText
-                primary={boardSet.name}
-                secondary={formatSecondary(boardSet)}
-              />
+              <ListItemText primary={boardSet.name} />
             </ListItemButton>
           </ListItem>
         ))}

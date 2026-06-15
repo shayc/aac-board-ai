@@ -3,7 +3,6 @@ import { boardLoader } from "@app/routing/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/routing/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
 import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
-import { ROUTE_PATTERNS } from "@app/routing/route-patterns";
 import { BOARD_PATTERN, BOARD_SET_PATTERN } from "@features/board";
 import { LoadingState } from "@shared/components/loading-state";
 import { type RouteObject } from "react-router";
@@ -27,14 +26,6 @@ export const appRoutes: RouteObject[] = [
                 lazy: async () => import("@pages/board-page"),
               },
             ],
-          },
-          {
-            path: ROUTE_PATTERNS.LIBRARY,
-            lazy: async () => import("@pages/library-page"),
-          },
-          {
-            path: ROUTE_PATTERNS.ABOUT,
-            lazy: async () => import("@pages/about-page"),
           },
         ],
       },

@@ -4,17 +4,11 @@ import { BoardSetList } from "./board-set-list";
 import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetList", () => {
-  test("renders an item per board set with its name and grid/author summary", async () => {
+  test("renders an item per board set with its name", async () => {
     const screen = await render(
       <BoardSetList
         boardSets={[
-          makeBoardSet({
-            setId: "a",
-            name: "Core Words",
-            gridRows: 2,
-            gridColumns: 3,
-            author: "Jane",
-          }),
+          makeBoardSet({ setId: "a", name: "Core Words" }),
           makeBoardSet({ setId: "b", name: "Animals" }),
         ]}
         onSelect={vi.fn()}
@@ -24,7 +18,6 @@ describe("BoardSetList", () => {
     );
 
     await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-    await expect.element(screen.getByText("2×3 · By Jane")).toBeInTheDocument();
     await expect.element(screen.getByText("Animals")).toBeInTheDocument();
   });
 

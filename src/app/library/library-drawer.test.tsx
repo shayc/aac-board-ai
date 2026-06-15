@@ -2,27 +2,27 @@ import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { MemoryRouter } from "react-router";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { Component as LibraryPage } from "./library-page";
+import { LibraryDrawer } from "./library-drawer";
 
-function renderLibraryPage() {
+function renderLibraryDrawer(onClose = vi.fn()) {
   return render(
     <MemoryRouter>
       <AppProviders>
-        <LibraryPage />
+        <LibraryDrawer open onClose={onClose} />
       </AppProviders>
     </MemoryRouter>,
   );
 }
 
-describe("LibraryPage", () => {
+describe("LibraryDrawer", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
 
   test("shows the empty state with an import action when no sets exist", async () => {
-    const screen = await renderLibraryPage();
+    const screen = await renderLibraryDrawer();
 
     await expect
       .element(screen.getByText("Library is empty"))
@@ -32,12 +32,37 @@ describe("LibraryPage", () => {
       .toBeInTheDocument();
   });
 
-  test("deletes a set after confirmation and announces it", async () => {
+  test("shows the board library when open, with no a11y violations", async () => {
     await seedBoardSets([
       { setId: "animals", rootBoardId: "root", name: "Animals" },
     ]);
 
-    const screen = await renderLibraryPage();
+    const screen = await renderLibraryDrawer();
+
+    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
+  });
+
+  test("invokes onClose when a board set is selected", async () => {
+    const onClose = vi.fn();
+    await seedBoardSets([
+      { setId: "animals", rootBoardId: "root", name: "Animals" },
+    ]);
+
+    const screen = await renderLibraryDrawer(onClose);
+
+    await screen.getByRole("button", { name: "Animals", exact: true }).click();
+
+    expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  test("removes a set after the delete is confirmed", async () => {
+    await seedBoardSets([
+      { setId: "animals", rootBoardId: "root", name: "Animals" },
+    ]);
+
+    const screen = await renderLibraryDrawer();
 
     await screen
       .getByRole("button", { name: "More options for Animals" })
@@ -50,9 +75,6 @@ describe("LibraryPage", () => {
     await screen.getByRole("button", { name: "Delete" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('"Animals" deleted');
-    await expect
       .element(screen.getByText("Library is empty"))
       .toBeInTheDocument();
   });
@@ -62,7 +84,7 @@ describe("LibraryPage", () => {
       { setId: "animals", rootBoardId: "root", name: "Animals" },
     ]);
 
-    const screen = await renderLibraryPage();
+    const screen = await renderLibraryDrawer();
 
     await screen
       .getByRole("button", { name: "More options for Animals" })
@@ -74,19 +96,5 @@ describe("LibraryPage", () => {
     await expect
       .element(screen.getByText('Delete "Animals"?'))
       .not.toBeInTheDocument();
-  });
-
-  test("lists the stored board sets with no a11y violations", async () => {
-    await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
-      { setId: "core-words", rootBoardId: "root", name: "Core Words" },
-    ]);
-
-    const screen = await renderLibraryPage();
-
-    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
-    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-
-    await expectNoA11yViolations(document.body);
   });
 });

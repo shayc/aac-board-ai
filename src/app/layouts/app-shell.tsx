@@ -1,5 +1,5 @@
 import { AppHeader } from "@app/layouts/app-header";
-import { MenuDrawer } from "@app/menu/menu-drawer";
+import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
@@ -14,7 +14,7 @@ import { useState } from "react";
 import { Outlet } from "react-router";
 
 export function AppShell() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
@@ -28,7 +28,7 @@ export function AppShell() {
       {...fileDrop.dropHandlers}
     >
       <AppHeader
-        onMenuClick={() => setIsMenuOpen(true)}
+        onLibraryClick={() => setIsLibraryOpen(true)}
         onSettingsClick={() => setIsSettingsOpen(true)}
       />
 
@@ -36,7 +36,10 @@ export function AppShell() {
         <Outlet />
       </Box>
 
-      <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <LibraryDrawer
+        open={isLibraryOpen}
+        onClose={() => setIsLibraryOpen(false)}
+      />
 
       <SettingsDrawer
         open={isSettingsOpen}
