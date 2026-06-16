@@ -19,22 +19,7 @@ export interface BoardSetListProps {
   onSelect: (boardSet: BoardSetRecord) => void;
   onInfo: (boardSet: BoardSetRecord) => void;
   onDelete: (boardSet: BoardSetRecord) => void;
-}
-
-function formatSecondary(boardSet: BoardSetRecord): string {
-  const parts: string[] = [];
-
-  const { gridRows, gridColumns, author } = boardSet;
-
-  if (gridRows && gridColumns) {
-    parts.push(`${gridRows}×${gridColumns}`);
-  }
-
-  if (author) {
-    parts.push(m.libraryByAuthor({ author }));
-  }
-
-  return parts.join(" · ");
+  selectedSetId?: string;
 }
 
 export function BoardSetList({
@@ -42,6 +27,7 @@ export function BoardSetList({
   onSelect,
   onInfo,
   onDelete,
+  selectedSetId,
 }: BoardSetListProps) {
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
@@ -79,10 +65,9 @@ export function BoardSetList({
 
   return (
     <>
-      <List>
+      <List sx={{ px: 1 }}>
         {boardSets.map((boardSet) => (
           <ListItem
-            divider
             disablePadding
             key={boardSet.setId}
             secondaryAction={
@@ -100,11 +85,12 @@ export function BoardSetList({
               </Tooltip>
             }
           >
-            <ListItemButton onClick={() => onSelect(boardSet)}>
-              <ListItemText
-                primary={boardSet.name}
-                secondary={formatSecondary(boardSet)}
-              />
+            <ListItemButton
+              selected={boardSet.setId === selectedSetId}
+              onClick={() => onSelect(boardSet)}
+              sx={{ borderRadius: 6 }}
+            >
+              <ListItemText primary={boardSet.name} />
             </ListItemButton>
           </ListItem>
         ))}

@@ -1,4 +1,4 @@
-import { MENU_DRAWER_WIDTH } from "@app/menu/menu-drawer";
+import { LIBRARY_DRAWER_WIDTH } from "@app/library/library-drawer";
 import Box from "@mui/material/Box";
 import type { ReactNode } from "react";
 
@@ -17,9 +17,10 @@ export function ContentColumn({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        marginLeft: shifted ? MENU_DRAWER_WIDTH : 0,
+        width: shifted ? `calc(100% - ${LIBRARY_DRAWER_WIDTH})` : "100%",
+        marginLeft: shifted ? LIBRARY_DRAWER_WIDTH : 0,
         transition: theme.transitions.create(
-          "margin",
+          ["margin", "width"],
           shifted
             ? {
                 easing: theme.transitions.easing.easeOut,

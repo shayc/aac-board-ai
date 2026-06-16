@@ -1,5 +1,6 @@
 export { BoardSetDeleteDialog } from "./board-sets/board-set-delete-dialog";
 export { BoardSetInfoDialog } from "./board-sets/board-set-info-dialog";
+export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { BoardSetList } from "./board-sets/board-set-list";
 export { deleteBoardSet, getBoardSets } from "./board-sets/board-sets-store";
 export { useBoardSets } from "./board-sets/use-board-sets";
