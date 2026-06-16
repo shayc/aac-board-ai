@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
-const MIN_CELL_PX = 72;
+const MIN_CELL_PX = 96;
 const PADDING = 2;
 
 export interface GridItemProps {
