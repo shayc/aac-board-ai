@@ -9,15 +9,15 @@ import { m } from "@paraglide/messages.js";
 import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
-  onMenuClick: () => void;
+  onLibraryClick: () => void;
   onSettingsClick: () => void;
-  menuButtonHidden?: boolean;
+  libraryButtonHidden?: boolean;
 }
 
 export function AppHeader({
-  onMenuClick,
+  onLibraryClick,
   onSettingsClick,
-  menuButtonHidden = false,
+  libraryButtonHidden = false,
 }: AppHeaderProps) {
   const pageTitle = usePageTitle();
 
@@ -35,14 +35,14 @@ export function AppHeader({
       ]}
     >
       <Toolbar>
-        {!menuButtonHidden && (
-          <Tooltip title={m.menuOpen()}>
+        {!libraryButtonHidden && (
+          <Tooltip title={m.libraryOpen()}>
             <IconButton
-              aria-label={m.menuLabel()}
+              aria-label={m.libraryTitle()}
               size="large"
               edge="start"
               color="inherit"
-              onClick={onMenuClick}
+              onClick={onLibraryClick}
               sx={{ marginInlineEnd: 2 }}
             >
               <MenuIcon />

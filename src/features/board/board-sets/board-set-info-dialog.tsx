@@ -83,7 +83,7 @@ export function BoardSetInfoDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>{m.libraryClose()}</Button>
+        <Button onClick={onClose}>{m.close()}</Button>
       </DialogActions>
     </Dialog>
   );

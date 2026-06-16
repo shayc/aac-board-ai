@@ -144,30 +144,30 @@ flowchart LR
 Coarse modules and what they do, not how each works inside. Names are
 **symbol-searchable**, not hyperlinked, so a moved file never breaks this table.
 
-| Module                                                                   | What it does                                                                                                                 |
-| ------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| `src/main.tsx`                                                           | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                  |
-| `src/app/`                                                               | Composition root: router, route loaders, app shell, header, menu/settings drawers, onboarding.                               |
-| `src/app/routing/loaders/`                                               | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                             |
-| `src/pages/`                                                             | Route entry components (`board-page`, `library-page`, `about-page`), each code-split via React Router's `lazy` route import. |
-| `src/features/board/`                                                    | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                             |
-| `src/features/board/grid·tile·pictogram/`                                | Render the tile grid and each pictogram.                                                                                     |
-| `src/features/board/activation/`                                         | Tap → typed intent → dispatch. Search `resolveButtonIntent`, `createButtonActivation`.                                       |
-| `src/features/board/message/`                                            | The message bar: accumulate parts, then `planPlayback` → TTS with per-part highlighting.                                     |
-| `src/features/board/navigation/`                                         | Board-to-board navigation over the router. Search `useBoardNavigation`, `boardPath`.                                         |
-| `src/features/board/keyboard/` + `grid/use-grid-keyboard.ts`             | Keyboard as a first-class input surface: grid navigation (`useGridKeyboard`) and message editing (`useBoardKeyboard`).       |
-| `src/features/board/obf/`                                                | **OBF → in-memory `Board`** mapping and action parsing. The format _read_ seam. Search `obfToBoard`, `parseAction`.          |
-| `src/features/board/import/`                                             | File / drag-drop / URL / file-handler import → parse → write IndexedDB. The format _write_ seam. Search `importBoardFiles`.  |
-| `src/features/board/storage/`                                            | **The only reader/writer of IndexedDB.** `boards-db.ts` (idb) + `board-hydration.ts` (blobs → object URLs).                  |
-| `src/features/board/board-sets/`                                         | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                             |
-| `src/features/board/suggestions/`                                        | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                             |
-| `src/features/board/translation/`                                        | Board translation (Translator) + in-memory/IndexedDB cache. Search `resolveTranslatedBoard`.                                 |
-| `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                        |
-| `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                     |
-| `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                        |
-| `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: store primitives, status UI, snackbar, app providers.                                                 |
-| `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                            |
-| `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                 |
+| Module                                                                   | What it does                                                                                                                |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `src/main.tsx`                                                           | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                 |
+| `src/app/`                                                               | Composition root: router, route loaders, app shell, header, library/settings drawers, onboarding.                           |
+| `src/app/routing/loaders/`                                               | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                            |
+| `src/pages/`                                                             | Route entry components, each code-split via React Router's `lazy` route import.                                             |
+| `src/features/board/`                                                    | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                            |
+| `src/features/board/grid·tile·pictogram/`                                | Render the tile grid and each pictogram.                                                                                    |
+| `src/features/board/activation/`                                         | Tap → typed intent → dispatch. Search `resolveButtonIntent`, `createButtonActivation`.                                      |
+| `src/features/board/message/`                                            | The message bar: accumulate parts, then `planPlayback` → TTS with per-part highlighting.                                    |
+| `src/features/board/navigation/`                                         | Board-to-board navigation over the router. Search `useBoardNavigation`, `boardPath`.                                        |
+| `src/features/board/keyboard/` + `grid/use-grid-keyboard.ts`             | Keyboard as a first-class input surface: grid navigation (`useGridKeyboard`) and message editing (`useBoardKeyboard`).      |
+| `src/features/board/obf/`                                                | **OBF → in-memory `Board`** mapping and action parsing. The format _read_ seam. Search `obfToBoard`, `parseAction`.         |
+| `src/features/board/import/`                                             | File / drag-drop / URL / file-handler import → parse → write IndexedDB. The format _write_ seam. Search `importBoardFiles`. |
+| `src/features/board/storage/`                                            | **The only reader/writer of IndexedDB.** `boards-db.ts` (idb) + `board-hydration.ts` (blobs → object URLs).                 |
+| `src/features/board/board-sets/`                                         | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                            |
+| `src/features/board/suggestions/`                                        | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                            |
+| `src/features/board/translation/`                                        | Board translation (Translator) + in-memory/IndexedDB cache. Search `resolveTranslatedBoard`.                                |
+| `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                       |
+| `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                    |
+| `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                       |
+| `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: store primitives, status UI, snackbar, app providers.                                                |
+| `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                           |
+| `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                |
 
 Two libraries the author maintains carry the heaviest seams: **`@shayc/open-board-format`**
 (OBF/OBZ parsing) and **`@shayc/react-built-in-ai`** (React hooks over Chrome's
