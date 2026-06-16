@@ -1,3 +1,4 @@
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
@@ -26,8 +27,8 @@ function statusMessage(status: SuggestionStatusView, onEnable: () => void) {
     case "needs-activation":
       return (
         <Chip
+          icon={<AutoAwesomeIcon />}
           label={m.suggestionsEnable()}
-          variant="outlined"
           color="primary"
           onClick={onEnable}
         />
