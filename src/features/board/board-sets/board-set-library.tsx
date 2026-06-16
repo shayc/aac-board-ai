@@ -1,4 +1,4 @@
-import AddIcon from "@mui/icons-material/Add";
+import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -78,7 +78,7 @@ export function BoardSetLibrary({
           action={
             <Button
               variant="contained"
-              startIcon={<AddIcon />}
+              startIcon={<LibraryAddOutlinedIcon />}
               onClick={() => void pickAndImportBoardFiles()}
             >
               {m.libraryImportBoards()}
@@ -102,7 +102,7 @@ export function BoardSetLibrary({
       >
         <Button
           variant="text"
-          startIcon={<AddIcon />}
+          startIcon={<LibraryAddOutlinedIcon />}
           onClick={() => void pickAndImportBoardFiles()}
         >
           {m.libraryImportBoards()}
