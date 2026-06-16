@@ -1,5 +1,6 @@
 import { AppHeader } from "@app/layouts/app-header";
-import { MENU_DRAWER_WIDTH, MenuDrawer } from "@app/menu/menu-drawer";
+import { ContentColumn } from "@app/layouts/content-column";
+import { MenuDrawer } from "@app/menu/menu-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
@@ -34,27 +35,7 @@ export function AppShell() {
         variant={isPersistentMenu ? "persistent" : "temporary"}
       />
 
-      <Box
-        sx={(theme) => ({
-          flexGrow: 1,
-          minWidth: 0,
-          display: "flex",
-          flexDirection: "column",
-          marginLeft: isMenuPushingContent ? MENU_DRAWER_WIDTH : 0,
-          transition: theme.transitions.create(
-            "margin",
-            isMenuPushingContent
-              ? {
-                  easing: theme.transitions.easing.easeOut,
-                  duration: theme.transitions.duration.enteringScreen,
-                }
-              : {
-                  easing: theme.transitions.easing.sharp,
-                  duration: theme.transitions.duration.leavingScreen,
-                },
-          ),
-        })}
-      >
+      <ContentColumn shifted={isMenuPushingContent}>
         <AppHeader
           menuButtonHidden={isMenuPushingContent}
           onMenuClick={() => setIsMenuOpen(true)}
@@ -64,7 +45,7 @@ export function AppShell() {
         <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
           <Outlet />
         </Box>
-      </Box>
+      </ContentColumn>
 
       <SettingsDrawer
         open={isSettingsOpen}
