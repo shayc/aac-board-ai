@@ -1,5 +1,4 @@
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
-import FilterNoneOutlinedIcon from "@mui/icons-material/FilterNoneOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -72,7 +71,6 @@ export function BoardSetLibrary({
     return (
       <Box sx={{ px: 2, height: "100%" }}>
         <EmptyState
-          icon={<FilterNoneOutlinedIcon />}
           title={m.libraryEmptyTitle()}
           description={m.libraryEmptyDescription()}
           action={
