@@ -41,14 +41,18 @@ export function AppShell() {
           display: "flex",
           flexDirection: "column",
           marginLeft: isMenuPushingContent ? MENU_DRAWER_WIDTH : 0,
-          transition: theme.transitions.create("margin", {
-            easing: isMenuPushingContent
-              ? theme.transitions.easing.easeOut
-              : theme.transitions.easing.sharp,
-            duration: isMenuPushingContent
-              ? theme.transitions.duration.enteringScreen
-              : theme.transitions.duration.leavingScreen,
-          }),
+          transition: theme.transitions.create(
+            "margin",
+            isMenuPushingContent
+              ? {
+                  easing: theme.transitions.easing.easeOut,
+                  duration: theme.transitions.duration.enteringScreen,
+                }
+              : {
+                  easing: theme.transitions.easing.sharp,
+                  duration: theme.transitions.duration.leavingScreen,
+                },
+          ),
         })}
       >
         <AppHeader

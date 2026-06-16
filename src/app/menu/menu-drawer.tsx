@@ -31,6 +31,8 @@ export function MenuDrawer({
   onClose,
   variant = "temporary",
 }: MenuDrawerProps) {
+  const closeOnNavigate = variant === "temporary" ? onClose : undefined;
+
   const menuItems = [
     { icon: HomeOutlinedIcon, label: m.menuHome(), to: "/" },
     { icon: FilterNoneOutlinedIcon, label: m.menuLibrary(), to: LIBRARY_PATH },
@@ -82,7 +84,7 @@ export function MenuDrawer({
             <ListItemButton
               component={RouterLink}
               to={item.to}
-              onClick={variant === "persistent" ? undefined : onClose}
+              onClick={closeOnNavigate}
             >
               <ListItemIcon>
                 <item.icon />
