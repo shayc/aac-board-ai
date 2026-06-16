@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\" என்பதை நீக்க முடியவில்லை",
   "menuLabel": "மெனு",
   "menuOpen": "மெனுவைத் திற",
+  "menuClose": "மெனுவை மூடு",
   "menuHome": "முகப்பு",
   "menuLibrary": "நூலகம்",
   "menuAbout": "பற்றி",

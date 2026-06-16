@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "„{name}” nu a putut fi ștearsă",
   "menuLabel": "Meniu",
   "menuOpen": "Deschide meniul",
+  "menuClose": "Închide meniul",
   "menuHome": "Acasă",
   "menuLibrary": "Bibliotecă",
   "menuAbout": "Despre",

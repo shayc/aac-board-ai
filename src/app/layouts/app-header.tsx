@@ -11,9 +11,14 @@ import { usePageTitle } from "./page-title-store";
 export interface AppHeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
+  menuButtonHidden?: boolean;
 }
 
-export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
+export function AppHeader({
+  onMenuClick,
+  onSettingsClick,
+  menuButtonHidden = false,
+}: AppHeaderProps) {
   const pageTitle = usePageTitle();
 
   return (
@@ -30,18 +35,20 @@ export function AppHeader({ onMenuClick, onSettingsClick }: AppHeaderProps) {
       ]}
     >
       <Toolbar>
-        <Tooltip title={m.menuOpen()}>
-          <IconButton
-            aria-label={m.menuLabel()}
-            size="large"
-            edge="start"
-            color="inherit"
-            onClick={onMenuClick}
-            sx={{ marginInlineEnd: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Tooltip>
+        {!menuButtonHidden && (
+          <Tooltip title={m.menuOpen()}>
+            <IconButton
+              aria-label={m.menuLabel()}
+              size="large"
+              edge="start"
+              color="inherit"
+              onClick={onMenuClick}
+              sx={{ marginInlineEnd: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Tooltip>
+        )}
 
         <Typography noWrap component="h1" variant="h6" sx={{ flexGrow: 1 }}>
           {pageTitle}

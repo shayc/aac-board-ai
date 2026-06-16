@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Tidak dapat menghapus \"{name}\"",
   "menuLabel": "Menu",
   "menuOpen": "Buka menu",
+  "menuClose": "Tutup menu",
   "menuHome": "Beranda",
   "menuLibrary": "Pustaka",
   "menuAbout": "Tentang",

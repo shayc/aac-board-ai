@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Não foi possível excluir \"{name}\"",
   "menuLabel": "Menu",
   "menuOpen": "Abrir menu",
+  "menuClose": "Fechar menu",
   "menuHome": "Início",
   "menuLibrary": "Biblioteca",
   "menuAbout": "Sobre",

@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "„{name}“ se nepodařilo smazat",
   "menuLabel": "Nabídka",
   "menuOpen": "Otevřít nabídku",
+  "menuClose": "Zavřít nabídku",
   "menuHome": "Domů",
   "menuLibrary": "Knihovna",
   "menuAbout": "O aplikaci",

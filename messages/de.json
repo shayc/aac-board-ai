@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "„{name}“ konnte nicht gelöscht werden",
   "menuLabel": "Menü",
   "menuOpen": "Menü öffnen",
+  "menuClose": "Menü schließen",
   "menuHome": "Start",
   "menuLibrary": "Bibliothek",
   "menuAbout": "Über",

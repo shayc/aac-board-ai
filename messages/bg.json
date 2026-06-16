@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "„{name}“ не може да бъде изтрита",
   "menuLabel": "Меню",
   "menuOpen": "Отваряне на менюто",
+  "menuClose": "Затваряне на менюто",
   "menuHome": "Начало",
   "menuLibrary": "Библиотека",
   "menuAbout": "Относно",

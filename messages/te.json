@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\"ను తొలగించలేకపోయాం",
   "menuLabel": "మెను",
   "menuOpen": "మెను తెరువు",
+  "menuClose": "మెను మూసివేయి",
   "menuHome": "హోమ్",
   "menuLibrary": "లైబ్రరీ",
   "menuAbout": "గురించి",

@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\"을(를) 삭제할 수 없습니다",
   "menuLabel": "메뉴",
   "menuOpen": "메뉴 열기",
+  "menuClose": "메뉴 닫기",
   "menuHome": "홈",
   "menuLibrary": "라이브러리",
   "menuAbout": "정보",
