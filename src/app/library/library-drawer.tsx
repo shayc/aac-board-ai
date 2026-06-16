@@ -17,12 +17,15 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { useNavigate } from "react-router";
+
+export const LIBRARY_DRAWER_WIDTH = "calc(320px + env(safe-area-inset-left))";
 
 export interface LibraryDrawerProps {
   open: boolean;
@@ -35,11 +38,15 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
+  const isDocked = useMediaQuery((theme) => theme.breakpoints.up("md"));
+
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   function handleSelect(boardSet: BoardSetRecord) {
-    onClose();
+    if (!isDocked) {
+      onClose();
+    }
     void navigate(boardSetPath(boardSet));
   }
 
@@ -68,12 +75,15 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
   return (
     <Drawer
       anchor="left"
+      variant={isDocked ? "persistent" : "temporary"}
       open={open}
       onClose={onClose}
+      sx={isDocked ? { width: LIBRARY_DRAWER_WIDTH, flexShrink: 0 } : undefined}
       slotProps={{
         paper: {
+          component: "nav",
           "aria-label": m.libraryHeading(),
-          sx: { width: "calc(320px + env(safe-area-inset-left))" },
+          sx: { width: LIBRARY_DRAWER_WIDTH },
         },
       }}
     >

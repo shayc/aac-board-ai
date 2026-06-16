@@ -2,7 +2,8 @@ import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { MemoryRouter } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { LibraryDrawer } from "./library-drawer";
 
@@ -19,6 +20,10 @@ function renderLibraryDrawer(onClose = vi.fn()) {
 describe("LibraryDrawer", () => {
   beforeEach(async () => {
     await resetBoardsDB();
+  });
+
+  afterEach(async () => {
+    await page.viewport(1280, 720);
   });
 
   test("shows the empty state with an import action when no sets exist", async () => {
@@ -44,7 +49,22 @@ describe("LibraryDrawer", () => {
     await expectNoA11yViolations(document.body);
   });
 
-  test("invokes onClose when a board set is selected", async () => {
+  test("keeps the docked drawer open when a board set is selected", async () => {
+    await page.viewport(1280, 720);
+    const onClose = vi.fn();
+    await seedBoardSets([
+      { setId: "animals", rootBoardId: "root", name: "Animals" },
+    ]);
+
+    const screen = await renderLibraryDrawer(onClose);
+
+    await screen.getByRole("button", { name: "Animals", exact: true }).click();
+
+    expect(onClose).not.toHaveBeenCalled();
+  });
+
+  test("closes the overlay drawer when a board set is selected", async () => {
+    await page.viewport(390, 844);
     const onClose = vi.fn();
     await seedBoardSets([
       { setId: "animals", rootBoardId: "root", name: "Animals" },

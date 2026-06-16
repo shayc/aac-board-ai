@@ -71,7 +71,7 @@ export function BoardSetList({
             sx={(theme) => ({
               borderRadius: 6,
               overflow: "hidden",
-              "@media (hover: hover)": {
+              [`${theme.breakpoints.up("md")} and (hover: hover)`]: {
                 "& .MuiListItem-secondaryAction": {
                   opacity:
                     menuAnchor?.boardSet.setId === boardSet.setId ? 1 : 0,
