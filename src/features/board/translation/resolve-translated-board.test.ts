@@ -170,4 +170,21 @@ describe("resolveTranslatedBoard", () => {
 
     expect(result).toBe(board);
   });
+
+  test("keeps the cached translations when the platform fails to fill the gaps", async () => {
+    const board = makeBoard({
+      description: "All about food",
+      strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
+    });
+    stubTranslator(() =>
+      Promise.reject(new DOMException("model failure", "UnknownError")),
+    );
+
+    const result = await resolveTranslatedBoard("set-1", board, "es");
+
+    expect(result.name).toBe("Comida");
+    expect(result.buttons[0].label).toBe("comer");
+    expect(result.buttons[1].label).toBe("beber");
+    expect(result.description).toBe("All about food");
+  });
 });

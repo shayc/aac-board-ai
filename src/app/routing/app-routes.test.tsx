@@ -19,8 +19,8 @@ beforeAll(async () => {
   ({ appRoutes } = await import("./app-routes"));
 });
 
-async function renderApp() {
-  const router = createMemoryRouter(appRoutes, { initialEntries: ["/"] });
+async function renderApp(entry = "/") {
+  const router = createMemoryRouter(appRoutes, { initialEntries: [entry] });
 
   return render(
     <AppProviders>
@@ -69,6 +69,14 @@ describe("app flow", () => {
 
   test("empty database: imports and opens the bundled starter board", async () => {
     const screen = await renderApp();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Quick Core 24" }))
+      .toBeVisible();
+  });
+
+  test("a removed or unknown route redirects to the board instead of erroring", async () => {
+    const screen = await renderApp("/library");
 
     await expect
       .element(screen.getByRole("grid", { name: "Quick Core 24" }))

@@ -8,7 +8,9 @@ import {
   useImportBoardFiles,
   type BoardSetRecord,
 } from "@features/board";
+import CloseIcon from "@mui/icons-material/Close";
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
+import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -82,17 +84,19 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
           },
         })}
       >
-        <Typography component="div" variant="h6" noWrap sx={{ flexGrow: 1 }}>
+        <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
           {m.libraryHeading()}
         </Typography>
 
-        <Tooltip title={m.libraryImportBoards()}>
+        <Tooltip title={m.libraryClose()}>
           <IconButton
-            aria-label={m.libraryImportBoards()}
+            aria-label={m.libraryClose()}
+            size="large"
             edge="end"
-            onClick={() => void pickAndImportBoardFiles()}
+            color="inherit"
+            onClick={onClose}
           >
-            <LibraryAddOutlinedIcon />
+            <CloseIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>
@@ -105,9 +109,27 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
         <EmptyState
           title={m.libraryEmptyTitle()}
           description={m.libraryEmptyDescription()}
+          action={
+            <Button
+              variant="contained"
+              startIcon={<LibraryAddOutlinedIcon />}
+              onClick={() => void pickAndImportBoardFiles()}
+            >
+              {m.libraryImportBoards()}
+            </Button>
+          }
         />
       ) : (
         <>
+          <Button
+            variant="text"
+            startIcon={<LibraryAddOutlinedIcon />}
+            onClick={() => void pickAndImportBoardFiles()}
+            sx={{ alignSelf: "flex-start", m: 1 }}
+          >
+            {m.libraryImportBoards()}
+          </Button>
+
           <BoardSetList
             boardSets={boardSets}
             onSelect={handleSelect}
