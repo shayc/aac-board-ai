@@ -52,7 +52,7 @@ export function AppShell() {
         })}
       >
         <AppHeader
-          showMenuButton={!isMenuPushingContent}
+          menuButtonHidden={isMenuPushingContent}
           onMenuClick={() => setIsMenuOpen(true)}
           onSettingsClick={() => setIsSettingsOpen(true)}
         />

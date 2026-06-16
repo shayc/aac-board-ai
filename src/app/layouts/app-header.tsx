@@ -11,13 +11,13 @@ import { usePageTitle } from "./page-title-store";
 export interface AppHeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
-  showMenuButton?: boolean;
+  menuButtonHidden?: boolean;
 }
 
 export function AppHeader({
   onMenuClick,
   onSettingsClick,
-  showMenuButton = true,
+  menuButtonHidden = false,
 }: AppHeaderProps) {
   const pageTitle = usePageTitle();
 
@@ -35,7 +35,7 @@ export function AppHeader({
       ]}
     >
       <Toolbar>
-        {showMenuButton && (
+        {!menuButtonHidden && (
           <Tooltip title={m.menuOpen()}>
             <IconButton
               aria-label={m.menuLabel()}
