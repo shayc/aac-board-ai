@@ -60,19 +60,19 @@ export function AppShell() {
         <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
           <Outlet />
         </Box>
-
-        <SettingsDrawer
-          open={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-        />
-
-        <OnboardingDialog
-          open={onboarding.shouldShow}
-          onClose={onboarding.dismiss}
-        />
-
-        <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
       </Box>
+
+      <SettingsDrawer
+        open={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
+      <OnboardingDialog
+        open={onboarding.shouldShow}
+        onClose={onboarding.dismiss}
+      />
+
+      <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
     </Box>
   );
 }
