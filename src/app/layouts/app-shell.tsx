@@ -36,10 +36,9 @@ export function AppShell() {
 
       <Box
         sx={(theme) => ({
-          flexGrow: 1,
-          minWidth: 0,
           display: "flex",
           flexDirection: "column",
+          flexGrow: 1,
           marginLeft: isMenuPushingContent ? MENU_DRAWER_WIDTH : 0,
           transition: theme.transitions.create(
             "margin",
