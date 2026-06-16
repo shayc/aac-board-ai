@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Det gick inte att ta bort ”{name}”",
   "menuLabel": "Meny",
   "menuOpen": "Öppna meny",
+  "menuClose": "Stäng meny",
   "menuHome": "Start",
   "menuLibrary": "Bibliotek",
   "menuAbout": "Om",

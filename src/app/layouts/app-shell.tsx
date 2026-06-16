@@ -1,5 +1,5 @@
 import { AppHeader } from "@app/layouts/app-header";
-import { MenuDrawer } from "@app/menu/menu-drawer";
+import { MENU_DRAWER_WIDTH, MenuDrawer } from "@app/menu/menu-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
@@ -9,6 +9,7 @@ import {
   useFileHandlerLaunch,
 } from "@features/board";
 import Box from "@mui/material/Box";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useRevalidateOnLanguageChange } from "@shared/language/use-revalidate-on-language-change";
 import { useState } from "react";
 import { Outlet } from "react-router";
@@ -19,36 +20,59 @@ export function AppShell() {
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
 
+  const isPersistentMenu = useMediaQuery((theme) => theme.breakpoints.up("md"));
+  const isMenuPushingContent = isPersistentMenu && isMenuOpen;
+
   useFileHandlerLaunch();
   useRevalidateOnLanguageChange();
 
   return (
-    <Box
-      sx={{ height: "100svh", display: "flex", flexDirection: "column" }}
-      {...fileDrop.dropHandlers}
-    >
-      <AppHeader
-        onMenuClick={() => setIsMenuOpen(true)}
-        onSettingsClick={() => setIsSettingsOpen(true)}
+    <Box sx={{ height: "100svh", display: "flex" }} {...fileDrop.dropHandlers}>
+      <MenuDrawer
+        open={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        variant={isPersistentMenu ? "persistent" : "temporary"}
       />
 
-      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
-        <Outlet />
+      <Box
+        sx={(theme) => ({
+          flexGrow: 1,
+          minWidth: 0,
+          display: "flex",
+          flexDirection: "column",
+          marginLeft: isMenuPushingContent ? MENU_DRAWER_WIDTH : 0,
+          transition: theme.transitions.create("margin", {
+            easing: isMenuPushingContent
+              ? theme.transitions.easing.easeOut
+              : theme.transitions.easing.sharp,
+            duration: isMenuPushingContent
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen,
+          }),
+        })}
+      >
+        <AppHeader
+          showMenuButton={!isMenuPushingContent}
+          onMenuClick={() => setIsMenuOpen(true)}
+          onSettingsClick={() => setIsSettingsOpen(true)}
+        />
+
+        <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
+          <Outlet />
+        </Box>
+
+        <SettingsDrawer
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+
+        <OnboardingDialog
+          open={onboarding.shouldShow}
+          onClose={onboarding.dismiss}
+        />
+
+        <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
       </Box>
-
-      <MenuDrawer open={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-      <SettingsDrawer
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
-
-      <OnboardingDialog
-        open={onboarding.shouldShow}
-        onClose={onboarding.dismiss}
-      />
-
-      <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
     </Box>
   );
 }

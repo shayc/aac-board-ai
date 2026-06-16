@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
   "menuLabel": "ಮೆನು",
   "menuOpen": "ಮೆನು ತೆರೆಯಿರಿ",
+  "menuClose": "ಮೆನು ಮುಚ್ಚಿ",
   "menuHome": "ಮುಖಪುಟ",
   "menuLibrary": "ಗ್ರಂಥಾಲಯ",
   "menuAbout": "ಕುರಿತು",

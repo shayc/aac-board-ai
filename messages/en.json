@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Couldn't delete \"{name}\"",
   "menuLabel": "Menu",
   "menuOpen": "Open menu",
+  "menuClose": "Close menu",
   "menuHome": "Home",
   "menuLibrary": "Library",
   "menuAbout": "About",

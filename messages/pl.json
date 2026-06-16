@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Nie udało się usunąć „{name}”",
   "menuLabel": "Menu",
   "menuOpen": "Otwórz menu",
+  "menuClose": "Zamknij menu",
   "menuHome": "Strona główna",
   "menuLibrary": "Biblioteka",
   "menuAbout": "O aplikacji",

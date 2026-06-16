@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\" को हटाया नहीं जा सका",
   "menuLabel": "मेन्यू",
   "menuOpen": "मेन्यू खोलें",
+  "menuClose": "मेन्यू बंद करें",
   "menuHome": "होम",
   "menuLibrary": "लाइब्रेरी",
   "menuAbout": "परिचय",

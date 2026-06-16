@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Не вдалося видалити «{name}»",
   "menuLabel": "Меню",
   "menuOpen": "Відкрити меню",
+  "menuClose": "Закрити меню",
   "menuHome": "Головна",
   "menuLibrary": "Бібліотека",
   "menuAbout": "Про застосунок",

@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "A(z) „{name}” törlése nem sikerült",
   "menuLabel": "Menü",
   "menuOpen": "Menü megnyitása",
+  "menuClose": "Menü bezárása",
   "menuHome": "Kezdőlap",
   "menuLibrary": "Könyvtár",
   "menuAbout": "Névjegy",

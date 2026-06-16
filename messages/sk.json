@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "„{name}“ sa nepodarilo odstrániť",
   "menuLabel": "Ponuka",
   "menuOpen": "Otvoriť ponuku",
+  "menuClose": "Zavrieť ponuku",
   "menuHome": "Domov",
   "menuLibrary": "Knižnica",
   "menuAbout": "O aplikácii",

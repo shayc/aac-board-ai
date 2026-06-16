@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Không thể xóa \"{name}\"",
   "menuLabel": "Menu",
   "menuOpen": "Mở menu",
+  "menuClose": "Đóng menu",
   "menuHome": "Trang chủ",
   "menuLibrary": "Thư viện",
   "menuAbout": "Giới thiệu",

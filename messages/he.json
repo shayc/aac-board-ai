@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
   "menuLabel": "תפריט",
   "menuOpen": "פתיחת התפריט",
+  "menuClose": "סגירת התפריט",
   "menuHome": "בית",
   "menuLibrary": "ספרייה",
   "menuAbout": "אודות",

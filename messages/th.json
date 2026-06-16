@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "ลบ \"{name}\" ไม่สำเร็จ",
   "menuLabel": "เมนู",
   "menuOpen": "เปิดเมนู",
+  "menuClose": "ปิดเมนู",
   "menuHome": "หน้าแรก",
   "menuLibrary": "คลัง",
   "menuAbout": "เกี่ยวกับ",

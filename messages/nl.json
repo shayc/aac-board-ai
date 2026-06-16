@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Kan \"{name}\" niet verwijderen",
   "menuLabel": "Menu",
   "menuOpen": "Menu openen",
+  "menuClose": "Menu sluiten",
   "menuHome": "Start",
   "menuLibrary": "Bibliotheek",
   "menuAbout": "Over",

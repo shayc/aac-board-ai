@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Kohteen ”{name}” poisto epäonnistui",
   "menuLabel": "Valikko",
   "menuOpen": "Avaa valikko",
+  "menuClose": "Sulje valikko",
   "menuHome": "Etusivu",
   "menuLibrary": "Kirjasto",
   "menuAbout": "Tietoja",

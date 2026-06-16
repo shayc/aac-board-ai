@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "无法删除“{name}”",
   "menuLabel": "菜单",
   "menuOpen": "打开菜单",
+  "menuClose": "关闭菜单",
   "menuHome": "主页",
   "menuLibrary": "板库",
   "menuAbout": "关于",

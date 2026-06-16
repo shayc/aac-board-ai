@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "تعذّر حذف \"{name}\"",
   "menuLabel": "القائمة",
   "menuOpen": "فتح القائمة",
+  "menuClose": "إغلاق القائمة",
   "menuHome": "الرئيسية",
   "menuLibrary": "المكتبة",
   "menuAbout": "حول",

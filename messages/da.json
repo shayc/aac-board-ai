@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\" kunne ikke slettes",
   "menuLabel": "Menu",
   "menuOpen": "Åbn menu",
+  "menuClose": "Luk menu",
   "menuHome": "Start",
   "menuLibrary": "Bibliotek",
   "menuAbout": "Om",

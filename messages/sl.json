@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "»{name}« ni bilo mogoče izbrisati",
   "menuLabel": "Meni",
   "menuOpen": "Odpri meni",
+  "menuClose": "Zapri meni",
   "menuHome": "Domov",
   "menuLibrary": "Knjižnica",
   "menuAbout": "O aplikaciji",

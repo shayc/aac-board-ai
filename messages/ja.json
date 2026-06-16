@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "「{name}」を削除できませんでした",
   "menuLabel": "メニュー",
   "menuOpen": "メニューを開く",
+  "menuClose": "メニューを閉じる",
   "menuHome": "ホーム",
   "menuLibrary": "ライブラリ",
   "menuAbout": "このアプリについて",

@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "\"{name}\" silinemedi",
   "menuLabel": "Menü",
   "menuOpen": "Menüyü aç",
+  "menuClose": "Menüyü kapat",
   "menuHome": "Ana sayfa",
   "menuLibrary": "Kitaplık",
   "menuAbout": "Hakkında",

@@ -53,6 +53,7 @@
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του «{name}»",
   "menuLabel": "Μενού",
   "menuOpen": "Άνοιγμα μενού",
+  "menuClose": "Κλείσιμο μενού",
   "menuHome": "Αρχική",
   "menuLibrary": "Βιβλιοθήκη",
   "menuAbout": "Σχετικά",
