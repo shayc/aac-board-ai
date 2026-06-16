@@ -22,18 +22,7 @@ export function AppHeader({
   const pageTitle = usePageTitle();
 
   return (
-    <AppBar
-      position="static"
-      sx={[
-        (theme) => ({
-          [theme.breakpoints.down("md")]: {
-            "@media (orientation: landscape)": {
-              display: "none",
-            },
-          },
-        }),
-      ]}
-    >
+    <AppBar position="static">
       <Toolbar>
         {!libraryButtonHidden && (
           <Tooltip title={m.libraryOpen()}>
