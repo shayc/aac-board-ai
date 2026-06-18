@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "\"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",
+  "librarySourceCode": "সোর্স কোড",
   "settingsTitle": "সেটিংস",
   "settingsOpen": "সেটিংস খুলুন",
   "settingsClose": "সেটিংস বন্ধ করুন",

@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Impossible de supprimer « {name} »",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",
+  "librarySourceCode": "Code source",
   "settingsTitle": "Paramètres",
   "settingsOpen": "Ouvrir les paramètres",
   "settingsClose": "Fermer les paramètres",

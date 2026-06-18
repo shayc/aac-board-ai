@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Kan \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",
+  "librarySourceCode": "Broncode",
   "settingsTitle": "Instellingen",
   "settingsOpen": "Instellingen openen",
   "settingsClose": "Instellingen sluiten",

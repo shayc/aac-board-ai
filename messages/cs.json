@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "„{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",
+  "librarySourceCode": "Zdrojový kód",
   "settingsTitle": "Nastavení",
   "settingsOpen": "Otevřít nastavení",
   "settingsClose": "Zavřít nastavení",

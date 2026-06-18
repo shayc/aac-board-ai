@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "\"{name}\" kunne ikke slettes",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",
+  "librarySourceCode": "Kildekode",
   "settingsTitle": "Indstillinger",
   "settingsOpen": "Åbn indstillinger",
   "settingsClose": "Luk indstillinger",

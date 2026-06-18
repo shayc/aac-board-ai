@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Impossibile eliminare \"{name}\"",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",
+  "librarySourceCode": "Codice sorgente",
   "settingsTitle": "Impostazioni",
   "settingsOpen": "Apri impostazioni",
   "settingsClose": "Chiudi impostazioni",

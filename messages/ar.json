@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "تعذّر حذف \"{name}\"",
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",
+  "librarySourceCode": "الكود المصدري",
   "settingsTitle": "الإعدادات",
   "settingsOpen": "فتح الإعدادات",
   "settingsClose": "إغلاق الإعدادات",

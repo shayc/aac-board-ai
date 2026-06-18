@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "\"{name}\" को हटाया नहीं जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",
+  "librarySourceCode": "सोर्स कोड",
   "settingsTitle": "सेटिंग्स",
   "settingsOpen": "सेटिंग्स खोलें",
   "settingsClose": "सेटिंग्स बंद करें",
