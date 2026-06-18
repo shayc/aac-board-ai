@@ -99,6 +99,7 @@ export function LibraryDrawer({
         component="footer"
         sx={(theme) => ({
           p: 2,
+          textAlign: "center",
           [theme.breakpoints.up("sm")]: {
             pl: `calc(${theme.spacing(2)} + env(safe-area-inset-left))`,
           },
