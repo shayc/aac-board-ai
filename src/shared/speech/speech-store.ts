@@ -121,8 +121,27 @@ export function speak(
     return Promise.resolve();
   }
 
-  const { promise, resolve, reject } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<void>();
   const utterance = buildUtterance(text);
+  let settled = false;
+
+  const onAbort = () => {
+    synthesis.cancel();
+    finish();
+  };
+
+  function finish() {
+    if (settled) {
+      return;
+    }
+
+    settled = true;
+    utterance.onend = null;
+    utterance.onerror = null;
+    utterance.onboundary = null;
+    signal?.removeEventListener("abort", onAbort);
+    resolve();
+  }
 
   if (onBoundary) {
     utterance.onboundary = (event) => {
@@ -132,23 +151,9 @@ export function speak(
     };
   }
 
-  utterance.onend = () => resolve();
-  utterance.onerror = (event) => {
-    if (event.error === "canceled" || event.error === "interrupted") {
-      resolve();
-    } else {
-      reject(new Error(event.error));
-    }
-  };
-
-  signal?.addEventListener(
-    "abort",
-    () => {
-      synthesis.cancel();
-      resolve();
-    },
-    { once: true },
-  );
+  utterance.onend = finish;
+  utterance.onerror = finish;
+  signal?.addEventListener("abort", onAbort, { once: true });
 
   synthesis.cancel();
   synthesis.speak(utterance);

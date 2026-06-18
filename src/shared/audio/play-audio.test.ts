@@ -53,21 +53,21 @@ describe("playAudio", () => {
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("rejects when the element reports a media error", async () => {
+  test("resolves when the element reports a media error", async () => {
     audio.play.mockImplementation(function (this: HTMLAudioElement) {
       queueMicrotask(() => this.dispatchEvent(new Event("error")));
 
       return Promise.resolve();
     });
 
-    await expect(playAudio("boom.mp3")).rejects.toThrow();
+    await expect(playAudio("boom.mp3")).resolves.toBeUndefined();
   });
 
-  test("rejects when playback is blocked", async () => {
+  test("resolves when playback is blocked", async () => {
     audio.play.mockImplementation(() =>
       Promise.reject(new Error("NotAllowedError")),
     );
 
-    await expect(playAudio("a.mp3")).rejects.toThrow("NotAllowedError");
+    await expect(playAudio("a.mp3")).resolves.toBeUndefined();
   });
 });

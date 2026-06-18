@@ -14,11 +14,11 @@ export function playAudio(
 
   stopCurrent?.();
 
-  const { promise, resolve, reject } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<void>();
   const audio = new Audio(url);
   let settled = false;
 
-  function finish(outcome: () => void) {
+  function finish() {
     if (settled) {
       return;
     }
@@ -27,34 +27,22 @@ export function playAudio(
     audio.onended = null;
     audio.onerror = null;
     audio.pause();
-    signal?.removeEventListener("abort", stop);
+    signal?.removeEventListener("abort", finish);
 
-    if (stopCurrent === stop) {
+    if (stopCurrent === finish) {
       stopCurrent = null;
     }
 
-    outcome();
+    resolve();
   }
 
-  function stop() {
-    finish(resolve);
-  }
+  audio.onended = finish;
+  audio.onerror = finish;
 
-  audio.onended = () => finish(resolve);
-  audio.onerror = () => {
-    finish(() =>
-      reject(new Error(audio.error?.message ?? "audio playback failed")),
-    );
-  };
+  signal?.addEventListener("abort", finish, { once: true });
+  stopCurrent = finish;
 
-  signal?.addEventListener("abort", stop, { once: true });
-  stopCurrent = stop;
-
-  audio.play().catch((error: unknown) => {
-    finish(() =>
-      reject(error instanceof Error ? error : new Error(String(error))),
-    );
-  });
+  audio.play().catch(finish);
 
   return promise;
 }

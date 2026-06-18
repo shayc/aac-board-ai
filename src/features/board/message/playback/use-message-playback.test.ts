@@ -143,7 +143,7 @@ describe("useMessagePlayback", () => {
     await playPromise;
   });
 
-  test("swallows playback errors and still resets isPlaying to false", async () => {
+  test("resets isPlaying to false after a speech error", async () => {
     speech.speak.mockImplementationOnce((utterance) => {
       queueMicrotask(() => {
         utterance.onerror?.({
