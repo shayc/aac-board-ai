@@ -3,7 +3,7 @@ import { createExternalStore } from "@shared/utils/external-store";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
 
-export interface SpeechRange {
+export interface SpeechParamSpec {
   min: number;
   max: number;
   fallback: number;
@@ -28,18 +28,21 @@ interface VoiceCatalogState {
   voicesByLanguage: VoicesByLanguage;
 }
 
-export const SPEECH_RATE: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_PITCH: SpeechRange = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_VOLUME: SpeechRange = { min: 0, max: 1, fallback: 1 };
+export const SPEECH_RATE: SpeechParamSpec = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_PITCH: SpeechParamSpec = { min: 0.1, max: 2, fallback: 1 };
+export const SPEECH_VOLUME: SpeechParamSpec = { min: 0, max: 1, fallback: 1 };
 
-function clamp(value: unknown, { min, max, fallback }: SpeechRange): number {
+function clamp(
+  value: unknown,
+  { min, max, fallback }: SpeechParamSpec,
+): number {
   return typeof value === "number" && Number.isFinite(value)
     ? Math.min(Math.max(value, min), max)
     : fallback;
 }
 
 function parseConfig(raw: unknown): SpeechConfig {
-  const parsed = (raw ?? {}) as Partial<SpeechConfig>;
+  const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
     voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
@@ -118,8 +121,27 @@ export function speak(
     return Promise.resolve();
   }
 
-  const { promise, resolve, reject } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<void>();
   const utterance = buildUtterance(text);
+  let settled = false;
+
+  const onAbort = () => {
+    synthesis.cancel();
+    finish();
+  };
+
+  function finish() {
+    if (settled) {
+      return;
+    }
+
+    settled = true;
+    utterance.onend = null;
+    utterance.onerror = null;
+    utterance.onboundary = null;
+    signal?.removeEventListener("abort", onAbort);
+    resolve();
+  }
 
   if (onBoundary) {
     utterance.onboundary = (event) => {
@@ -129,23 +151,9 @@ export function speak(
     };
   }
 
-  utterance.onend = () => resolve();
-  utterance.onerror = (event) => {
-    if (event.error === "canceled" || event.error === "interrupted") {
-      resolve();
-    } else {
-      reject(new Error(event.error));
-    }
-  };
-
-  signal?.addEventListener(
-    "abort",
-    () => {
-      synthesis.cancel();
-      resolve();
-    },
-    { once: true },
-  );
+  utterance.onend = finish;
+  utterance.onerror = finish;
+  signal?.addEventListener("abort", onAbort, { once: true });
 
   synthesis.cancel();
   synthesis.speak(utterance);

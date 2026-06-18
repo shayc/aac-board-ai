@@ -253,6 +253,20 @@ describe("obfToBoard", () => {
       ]);
     });
 
+    test("treats an explicit empty actions array as no actions, ignoring action", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-actions-empty-array",
+        buttons: [
+          { id: "btn-1", label: "Speak", action: ":speak", actions: [] },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      };
+
+      const board = obfToBoard(obfBoard);
+      expect(board.buttons[0]?.actions).toEqual([]);
+    });
+
     test("falls back to the single action when actions is absent", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",

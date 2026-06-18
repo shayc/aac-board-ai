@@ -57,8 +57,8 @@ describe("speak() under cancellation", () => {
     expect(onBoundary).toHaveBeenCalledExactlyOnceWith(0);
   });
 
-  test.each(["canceled", "interrupted"] as const)(
-    "resolves when a superseded utterance reports '%s'",
+  test.each(["canceled", "interrupted", "synthesis-failed"] as const)(
+    "resolves when the utterance reports '%s' (speech is best-effort)",
     async (error) => {
       const promise = speak("hello");
 
@@ -67,14 +67,4 @@ describe("speak() under cancellation", () => {
       await expect(promise).resolves.toBeUndefined();
     },
   );
-
-  test("rejects when the utterance reports a genuine failure", async () => {
-    const promise = speak("hello");
-
-    spokenUtterance?.onerror?.({
-      error: "synthesis-failed",
-    } as SpeechSynthesisErrorEvent);
-
-    await expect(promise).rejects.toThrow("synthesis-failed");
-  });
 });

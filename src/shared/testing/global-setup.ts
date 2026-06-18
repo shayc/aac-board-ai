@@ -1,6 +1,9 @@
-import { beforeEach } from "vitest";
+import { afterEach, beforeEach } from "vitest";
 
-beforeEach(() => {
+function clearStorage() {
   localStorage.clear();
   sessionStorage.clear();
-});
+}
+
+beforeEach(clearStorage);
+afterEach(clearStorage);

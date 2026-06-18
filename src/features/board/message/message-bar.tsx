@@ -71,7 +71,7 @@ export function MessageBar({
         sx={[
           {
             height: 104,
-            flexGrow: 2,
+            flexGrow: 1,
             gap: 2,
             paddingInlineEnd: 2,
             borderRadius: 16,

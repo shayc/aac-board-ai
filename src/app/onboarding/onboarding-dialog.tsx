@@ -24,24 +24,31 @@ export interface OnboardingDialogProps {
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const fullScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const highlights: { icon: ReactNode; primary: string; secondary: string }[] =
-    [
-      {
-        icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
-        primary: m.onboardingSmartRewritingTitle(),
-        secondary: m.onboardingSmartRewritingDescription(),
-      },
-      {
-        icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
-        primary: m.onboardingTranslationTitle(),
-        secondary: m.onboardingTranslationDescription(),
-      },
-      {
-        icon: <LockOutlinedIcon color="primary" fontSize="large" />,
-        primary: m.onboardingPrivacyTitle(),
-        secondary: m.onboardingPrivacyDescription(),
-      },
-    ];
+  const highlights: {
+    id: string;
+    icon: ReactNode;
+    primary: string;
+    secondary: string;
+  }[] = [
+    {
+      id: "rewriting",
+      icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
+      primary: m.onboardingSmartRewritingTitle(),
+      secondary: m.onboardingSmartRewritingDescription(),
+    },
+    {
+      id: "translation",
+      icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
+      primary: m.onboardingTranslationTitle(),
+      secondary: m.onboardingTranslationDescription(),
+    },
+    {
+      id: "privacy",
+      icon: <LockOutlinedIcon color="primary" fontSize="large" />,
+      primary: m.onboardingPrivacyTitle(),
+      secondary: m.onboardingPrivacyDescription(),
+    },
+  ];
 
   return (
     <Dialog
@@ -50,8 +57,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       fullScreen={fullScreen}
       fullWidth
       maxWidth="xs"
-      aria-labelledby="welcome-dialog-title"
-      aria-describedby="welcome-dialog-description"
+      aria-labelledby="onboarding-dialog-title"
+      aria-describedby="onboarding-dialog-description"
       slotProps={{
         paper: {
           sx: {
@@ -62,7 +69,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       }}
     >
       <DialogTitle
-        id="welcome-dialog-title"
+        id="onboarding-dialog-title"
         variant="h4"
         sx={{
           textAlign: "center",
@@ -76,7 +83,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
       <DialogContent sx={{ pt: 0, pb: 4 }}>
         <DialogContentText
-          id="welcome-dialog-description"
+          id="onboarding-dialog-description"
           variant="body1"
           sx={{ textAlign: "center", mb: 3, px: 2 }}
         >
@@ -86,7 +93,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         <List sx={{ py: 0 }}>
           {highlights.map((highlight) => (
             <ListItem
-              key={highlight.primary}
+              key={highlight.id}
               disableGutters
               sx={{ alignItems: "flex-start" }}
             >

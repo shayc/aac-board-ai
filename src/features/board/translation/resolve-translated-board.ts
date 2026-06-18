@@ -19,6 +19,11 @@ export async function resolveTranslatedBoard(
     return existing;
   }
 
+  const phrases = collectTranslatableStrings(board);
+  if (phrases.size === 0) {
+    return board;
+  }
+
   try {
     const translator = await createTranslator({
       sourceLanguage: getBoardLanguage(board),
@@ -27,7 +32,6 @@ export async function resolveTranslatedBoard(
     });
 
     try {
-      const phrases = collectTranslatableStrings(board);
       const translations = await translatePhrases(phrases, translator, signal);
 
       void persistTranslations(setId, board.id, language, translations);
@@ -37,10 +41,8 @@ export async function resolveTranslatedBoard(
       translator.destroy();
     }
   } catch {
-    // Deliberately total: the board must render no matter what — pictograms
-    // carry the meaning. With no telemetry, rethrowing a bug here would only
-    // trade the user's communication surface for an error page nobody hears
-    // about.
+    // Total by design: translation is an enhancement, not a requirement —
+    // pictograms carry the meaning, so a failure must never block the board.
     return board;
   }
 }

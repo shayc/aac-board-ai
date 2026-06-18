@@ -32,9 +32,5 @@ describe("AppShell", () => {
     await expect
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .not.toBeInTheDocument();
-
-    // Test files share localStorage; clear or the flag leaks into other
-    // files' import-time store reads.
-    localStorage.clear();
   });
 });

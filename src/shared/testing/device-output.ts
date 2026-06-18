@@ -16,6 +16,12 @@ export function stubSpeech(): {
   return { speak, cancel };
 }
 
+export function preventSpeechEnd(
+  speak: MockInstance<SpeechSynthesis["speak"]>,
+): void {
+  speak.mockImplementation(() => undefined);
+}
+
 export interface StubVoice {
   voiceURI: string;
   name: string;

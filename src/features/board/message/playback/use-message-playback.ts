@@ -53,8 +53,6 @@ export function useMessagePlayback(
             assertNever(step);
         }
       }
-    } catch {
-      // Failure is surfaced by the reset in finally.
     } finally {
       if (!signal.aborted) {
         setIsPlaying(false);

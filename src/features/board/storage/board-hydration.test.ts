@@ -41,9 +41,7 @@ async function seedTestBoard(): Promise<void> {
   await putBoards(SET_ID, [
     { boardId: BOARD_ID, name: "Test Board", obf: obfBoard },
   ]);
-  await putAssets(SET_ID, [
-    { path: IMAGE_PATH, blob: pngBlob, mime: "image/png" },
-  ]);
+  await putAssets(SET_ID, [{ path: IMAGE_PATH, blob: pngBlob }]);
 
   await invalidateBoardSets();
 }

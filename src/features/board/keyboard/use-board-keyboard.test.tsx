@@ -1,4 +1,8 @@
-import { stubAudio, stubSpeech } from "@shared/testing/device-output";
+import {
+  preventSpeechEnd,
+  stubAudio,
+  stubSpeech,
+} from "@shared/testing/device-output";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { renderBoardViewer, TWO_TILE_BOARD } from "../test-utils";
@@ -59,5 +63,24 @@ describe("board keyboard shortcuts", () => {
       expect(speech.speak.mock.calls).toHaveLength(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
     });
+  });
+
+  test("Escape stops playback in progress", async () => {
+    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    preventSpeechEnd(speech.speak);
+
+    await screen.getByRole("button", { name: "Play message" }).click();
+    await expect
+      .element(screen.getByRole("button", { name: "Stop" }))
+      .toBeVisible();
+
+    screen.getByRole("button", { name: "world" }).element().focus();
+    await userEvent.keyboard("{Escape}");
+
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeVisible();
   });
 });

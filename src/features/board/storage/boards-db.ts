@@ -27,8 +27,6 @@ export interface AssetRecord {
   setId: string;
   path: string;
   blob: Blob;
-  mime?: string;
-  size?: number;
 }
 
 export class BoardNotFoundError extends Error {
@@ -59,8 +57,6 @@ export interface UpsertBoardInput {
 export interface UpsertAssetInput {
   path: string;
   blob: Blob;
-  mime?: string;
-  size?: number;
 }
 
 interface BoardsDBSchema extends DBSchema {
@@ -99,9 +95,13 @@ function normalizePath(rawPath: string): string {
   return normalized;
 }
 
+const MAX_ID_LENGTH = 255;
+
 function validateId(id: string, fieldName: string): void {
-  if (!id || id.length > 255) {
-    throw new Error(`Invalid ${fieldName}: must be 1-255 characters`);
+  if (!id || id.length > MAX_ID_LENGTH) {
+    throw new Error(
+      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
+    );
   }
 }
 
@@ -186,12 +186,7 @@ export async function getBoardSet(
 
 export async function listBoardSets(): Promise<BoardSetRecord[]> {
   const db = await getBoardsDB();
-  const tx = db.transaction("boardSets", "readonly");
-  const index = tx.store.index("byUpdatedAt");
-
-  const boardSets = await index.getAll();
-
-  await tx.done;
+  const boardSets = await db.getAllFromIndex("boardSets", "byUpdatedAt");
 
   return boardSets.reverse();
 }
@@ -297,8 +292,6 @@ export async function putAssets(
         setId,
         path: normalizePath(asset.path),
         blob: asset.blob,
-        mime: asset.mime,
-        size: asset.size ?? asset.blob.size,
       }),
     ),
   );
