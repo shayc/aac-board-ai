@@ -47,7 +47,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           },
         })}
       >
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
           {m.settingsTitle()}
         </Typography>
 

@@ -23,8 +23,8 @@ export function LibraryDrawer({
   variant = "temporary",
 }: LibraryDrawerProps) {
   const navigate = useNavigate();
-  const activeSetId = useMatches().find((match) => match.params.setId)?.params
-    .setId;
+  const activeMatch = useMatches().find((match) => match.params.setId);
+  const activeSetId = activeMatch?.params.setId;
 
   const closeOnNavigate = variant === "temporary" ? onClose : undefined;
 
@@ -52,7 +52,7 @@ export function LibraryDrawer({
           },
         })}
       >
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
+        <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
           {m.libraryTitle()}
         </Typography>
 
