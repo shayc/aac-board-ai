@@ -5,7 +5,7 @@ import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
 import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
 import { BOARD_PATTERN, BOARD_SET_PATTERN } from "@features/board";
 import { LoadingState } from "@shared/components/loading-state";
-import { type RouteObject } from "react-router";
+import type { RouteObject } from "react-router";
 
 export const appRoutes: RouteObject[] = [
   {
@@ -23,7 +23,7 @@ export const appRoutes: RouteObject[] = [
               {
                 path: BOARD_PATTERN,
                 loader: boardLoader,
-                lazy: async () => import("@pages/board-page"),
+                lazy: () => import("@pages/board-page"),
               },
             ],
           },
