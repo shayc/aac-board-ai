@@ -129,7 +129,6 @@ function buildAssetInputs(
 
       return {
         path,
-        mime: mimeType,
         blob: new Blob([buffer as Uint8Array<ArrayBuffer>], { type: mimeType }),
       };
     });

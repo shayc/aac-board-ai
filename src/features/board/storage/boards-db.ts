@@ -27,8 +27,6 @@ export interface AssetRecord {
   setId: string;
   path: string;
   blob: Blob;
-  mime?: string;
-  size?: number;
 }
 
 export class BoardNotFoundError extends Error {
@@ -59,8 +57,6 @@ export interface UpsertBoardInput {
 export interface UpsertAssetInput {
   path: string;
   blob: Blob;
-  mime?: string;
-  size?: number;
 }
 
 interface BoardsDBSchema extends DBSchema {
@@ -296,8 +292,6 @@ export async function putAssets(
         setId,
         path: normalizePath(asset.path),
         blob: asset.blob,
-        mime: asset.mime,
-        size: asset.size ?? asset.blob.size,
       }),
     ),
   );

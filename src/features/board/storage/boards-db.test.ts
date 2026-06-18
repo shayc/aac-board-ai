@@ -191,9 +191,7 @@ describe("putAssets and getAssetBlob", () => {
     await upsertBoardSet(makeBoardSetInput());
 
     const blob = new Blob(["hello"], { type: "text/plain" });
-    await putAssets("set-1", [
-      { path: "images/logo.png", blob, mime: "image/png" },
-    ]);
+    await putAssets("set-1", [{ path: "images/logo.png", blob }]);
 
     const retrieved = await getAssetBlob("set-1", "images/logo.png");
     expect(retrieved).toBeInstanceOf(Blob);
@@ -225,18 +223,6 @@ describe("putAssets and getAssetBlob", () => {
 
     const blob = await getAssetBlob("set-1", "nope.png");
     expect(blob).toBeUndefined();
-  });
-
-  test("stores asset size from blob when not explicitly provided", async () => {
-    await upsertBoardSet(makeBoardSetInput());
-
-    const blob = new Blob(["12345"]);
-    await putAssets("set-1", [{ path: "file.bin", blob }]);
-
-    const db = await getBoardsDB();
-    const record = await db.get("assets", ["set-1", "file.bin"]);
-    assertDefined(record);
-    expect(record.size).toBe(5);
   });
 });
 
