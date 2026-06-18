@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
+  "librarySourceCode": "Πηγαίος κώδικας",
   "settingsTitle": "Ρυθμίσεις",
   "settingsOpen": "Άνοιγμα ρυθμίσεων",
   "settingsClose": "Κλείσιμο ρυθμίσεων",

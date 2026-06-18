@@ -1,6 +1,8 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import { BoardSetLibrary, boardSetPath } from "@features/board";
+import { ExternalLink } from "@shared/components/external-link";
 import CloseIcon from "@mui/icons-material/Close";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -91,6 +93,27 @@ export function LibraryDrawer({
             closeOnNavigate?.();
           }}
         />
+      </Box>
+
+      <Box
+        component="footer"
+        sx={(theme) => ({
+          p: 2,
+          [theme.breakpoints.up("sm")]: {
+            pl: `calc(${theme.spacing(2)} + env(safe-area-inset-left))`,
+          },
+        })}
+      >
+        <ExternalLink
+          href="https://github.com/shayc/aac-board-ai"
+          color="text.secondary"
+        >
+          <GitHubIcon
+            fontSize="small"
+            sx={{ verticalAlign: "text-bottom", mr: 1 }}
+          />
+          {m.librarySourceCode()}
+        </ExternalLink>
       </Box>
     </Drawer>
   );

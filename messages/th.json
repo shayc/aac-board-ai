@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "ลบ \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
+  "librarySourceCode": "ซอร์สโค้ด",
   "settingsTitle": "การตั้งค่า",
   "settingsOpen": "เปิดการตั้งค่า",
   "settingsClose": "ปิดการตั้งค่า",

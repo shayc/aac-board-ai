@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",
+  "librarySourceCode": "ソースコード",
   "settingsTitle": "設定",
   "settingsOpen": "設定を開く",
   "settingsClose": "設定を閉じる",

@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "»{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",
+  "librarySourceCode": "Izvorna koda",
   "settingsTitle": "Nastavitve",
   "settingsOpen": "Odpri nastavitve",
   "settingsClose": "Zapri nastavitve",

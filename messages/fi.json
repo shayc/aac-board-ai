@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Kohteen ”{name}” poisto epäonnistui",
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",
+  "librarySourceCode": "Lähdekoodi",
   "settingsTitle": "Asetukset",
   "settingsOpen": "Avaa asetukset",
   "settingsClose": "Sulje asetukset",

@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "\"{name}\" silinemedi",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
+  "librarySourceCode": "Kaynak kodu",
   "settingsTitle": "Ayarlar",
   "settingsOpen": "Ayarları aç",
   "settingsClose": "Ayarları kapat",

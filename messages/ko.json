@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "\"{name}\"을(를) 삭제할 수 없습니다",
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",
+  "librarySourceCode": "소스 코드",
   "settingsTitle": "설정",
   "settingsOpen": "설정 열기",
   "settingsClose": "설정 닫기",

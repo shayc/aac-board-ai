@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Не вдалося видалити «{name}»",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",
+  "librarySourceCode": "Вихідний код",
   "settingsTitle": "Налаштування",
   "settingsOpen": "Відкрити налаштування",
   "settingsClose": "Закрити налаштування",

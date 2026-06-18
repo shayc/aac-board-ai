@@ -25,7 +25,7 @@ AI-expanded output: "I would like to eat pizza later, please."
 
 - **Individuals using AAC** — Communicate faster without typing complete sentences tile by tile.
 - **Speech-language pathologists and educators** — Deploy on school networks without cloud data agreements, subscriptions, or continuous internet access.
-- **Caregivers and families** — Install a customizable communication board onto personal tablets or phones.
+- **Caregivers and families** — Install a ready-to-use communication board on personal tablets or phones, with adjustable voice, language, and appearance.
 - **Developers** — Read an open-source reference implementation of browser-native, on-device language models in a real React 19 app.
 
 ## Key features

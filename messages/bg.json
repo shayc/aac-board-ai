@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "„{name}“ не може да бъде изтрита",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",
+  "librarySourceCode": "Изходен код",
   "settingsTitle": "Настройки",
   "settingsOpen": "Отваряне на настройките",
   "settingsClose": "Затваряне на настройките",

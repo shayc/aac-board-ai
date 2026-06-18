@@ -54,6 +54,7 @@
   "libraryDeleteFailed": "Não foi possível excluir \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
+  "librarySourceCode": "Código-fonte",
   "settingsTitle": "Configurações",
   "settingsOpen": "Abrir configurações",
   "settingsClose": "Fechar configurações",
