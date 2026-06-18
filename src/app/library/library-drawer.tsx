@@ -1,3 +1,4 @@
+import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import { BoardSetLibrary, boardSetPath } from "@features/board";
 import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
@@ -9,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useMatches, useNavigate } from "react-router";
 
-export const LIBRARY_DRAWER_WIDTH = "calc(320px + env(safe-area-inset-left))";
+export const LIBRARY_DRAWER_WIDTH = `calc(${DRAWER_BASE_WIDTH} + env(safe-area-inset-left))`;
 
 export interface LibraryDrawerProps {
   open: boolean;

@@ -1,4 +1,6 @@
+import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import CloseIcon from "@mui/icons-material/Close";
+import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -29,7 +31,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           "aria-label": m.settingsTitle(),
           sx: [
             {
-              width: "calc(320px + env(safe-area-inset-right))",
+              width: `calc(${DRAWER_BASE_WIDTH} + env(safe-area-inset-right))`,
             },
             (theme) => ({
               [theme.breakpoints.up("sm")]: {
@@ -64,7 +66,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Stack
+      <Box
         sx={[
           { px: 3, pb: 3 },
           (theme) => ({
@@ -90,7 +92,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <AISettings />
-      </Stack>
+      </Box>
     </Drawer>
   );
 }
