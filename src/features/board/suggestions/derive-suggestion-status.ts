@@ -13,7 +13,7 @@ export interface EngineCondition {
 }
 
 export interface SuggestionStatusInput {
-  engines: EngineCondition[];
+  engines: readonly EngineCondition[];
   downloadProgress: number | null;
   hasText: boolean;
   isPending: boolean;
