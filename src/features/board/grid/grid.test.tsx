@@ -949,36 +949,40 @@ describe("Grid", () => {
 
       return {
         cellWidth: cellEl.getBoundingClientRect().width,
+        expectedWidth: expectedCellWidth(containerWidth, columns),
         overflows: scroller.scrollWidth > scroller.clientWidth + 1,
       };
     };
 
     test("enlarges cells past the floor to fill the width when a wide board overflows", async () => {
-      const { cellWidth, overflows } = await renderSizedGrid(1000, 20);
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        1000,
+        20,
+      );
 
       expect(cellWidth).toBeGreaterThan(MIN_CELL);
-      expect(Math.abs(cellWidth - expectedCellWidth(1000, 20))).toBeLessThan(
-        1.5,
-      );
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
 
     test("grows cells to fill the width when the whole board fits", async () => {
-      const { cellWidth, overflows } = await renderSizedGrid(1000, 4);
-
-      expect(Math.abs(cellWidth - expectedCellWidth(1000, 4))).toBeLessThan(
-        1.5,
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        1000,
+        4,
       );
+
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(false);
     });
 
     test("settles on three columns at a phone width, never below the 96px floor", async () => {
-      const { cellWidth, overflows } = await renderSizedGrid(375, 20);
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        375,
+        20,
+      );
 
       expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
-      expect(Math.abs(cellWidth - expectedCellWidth(375, 20))).toBeLessThan(
-        1.5,
-      );
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
   });
