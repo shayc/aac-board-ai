@@ -91,7 +91,6 @@
   "navHome": "Go home",
   "messageBackspace": "Backspace",
   "messageBackspaceLongPressHint": "Long press to clear message.",
-  "messageBackspaceTooltip": "Backspace · Hold to clear",
   "messagePlay": "Play message",
   "messageStop": "Stop",
   "toneSelection": "Tone selection",

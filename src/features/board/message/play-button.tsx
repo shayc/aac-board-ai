@@ -1,8 +1,6 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import Box from "@mui/material/Box";
 import Fab from "@mui/material/Fab";
-import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 
@@ -22,25 +20,22 @@ export function PlayButton({
   const playButtonLabel = isPlaying ? m.messageStop() : m.messagePlay();
 
   return (
-    <Tooltip title={playButtonLabel}>
-      <Box sx={{ alignSelf: "center" }}>
-        <Fab
-          color={isPlaying ? "default" : "primary"}
-          disabled={disabled}
-          aria-label={playButtonLabel}
-          onClick={isPlaying ? onStopClick : onPlayClick}
-          sx={{
-            width: 72,
-            height: 72,
-          }}
-        >
-          {isPlaying ? (
-            <StopIcon sx={{ fontSize: 32 }} />
-          ) : (
-            <PlayArrowIcon sx={[flipForRtl, { fontSize: 32 }]} />
-          )}
-        </Fab>
-      </Box>
-    </Tooltip>
+    <Fab
+      color={isPlaying ? "default" : "primary"}
+      disabled={disabled}
+      aria-label={playButtonLabel}
+      onClick={isPlaying ? onStopClick : onPlayClick}
+      sx={{
+        alignSelf: "center",
+        width: 72,
+        height: 72,
+      }}
+    >
+      {isPlaying ? (
+        <StopIcon sx={{ fontSize: 32 }} />
+      ) : (
+        <PlayArrowIcon sx={[flipForRtl, { fontSize: 32 }]} />
+      )}
+    </Fab>
   );
 }
