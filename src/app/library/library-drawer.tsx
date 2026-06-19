@@ -88,10 +88,6 @@ export function LibraryDrawer({
             void navigate(boardSetPath(boardSet));
             closeOnNavigate?.();
           }}
-          onActiveSetDeleted={() => {
-            void navigate("/");
-            closeOnNavigate?.();
-          }}
         />
       </Box>
 
