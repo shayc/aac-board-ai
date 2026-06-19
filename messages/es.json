@@ -91,7 +91,6 @@
   "navHome": "Ir al inicio",
   "messageBackspace": "Borrar",
   "messageBackspaceLongPressHint": "Mantén pulsado para borrar el mensaje.",
-  "messageBackspaceTooltip": "Borrar · Mantén pulsado para borrar todo",
   "messagePlay": "Reproducir mensaje",
   "messageStop": "Detener",
   "toneSelection": "Selección de tono",

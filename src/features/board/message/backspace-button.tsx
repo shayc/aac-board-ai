@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
-import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 import { useState } from "react";
@@ -48,34 +47,32 @@ export function BackspaceButton({
   });
 
   return (
-    <Tooltip title={m.messageBackspaceTooltip()}>
-      <Box sx={{ alignSelf: "center", position: "relative" }}>
-        <IconButton
-          {...mergeProps(pressProps, longPressProps)}
-          aria-label={m.messageBackspace()}
-          size="large"
-          color="inherit"
-          disabled={disabled}
-          sx={{ width: 72, height: 72 }}
-        >
-          <BackspaceOutlinedIcon sx={flipForRtl} />
-        </IconButton>
+    <Box sx={{ alignSelf: "center", position: "relative" }}>
+      <IconButton
+        {...mergeProps(pressProps, longPressProps)}
+        aria-label={m.messageBackspace()}
+        size="large"
+        color="inherit"
+        disabled={disabled}
+        sx={{ width: 72, height: 72 }}
+      >
+        <BackspaceOutlinedIcon sx={flipForRtl} />
+      </IconButton>
 
-        <StyledCircularProgress
-          aria-hidden
-          variant="determinate"
-          value={progress}
-          active={progress > 0}
-          size={72}
-          sx={{
-            position: "absolute",
-            top: 0,
-            insetInlineStart: 0,
-            zIndex: 1,
-            pointerEvents: "none",
-          }}
-        />
-      </Box>
-    </Tooltip>
+      <StyledCircularProgress
+        aria-hidden
+        variant="determinate"
+        value={progress}
+        active={progress > 0}
+        size={72}
+        sx={{
+          position: "absolute",
+          top: 0,
+          insetInlineStart: 0,
+          zIndex: 1,
+          pointerEvents: "none",
+        }}
+      />
+    </Box>
   );
 }
