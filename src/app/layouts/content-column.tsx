@@ -13,25 +13,13 @@ export function ContentColumn({
 }: ContentColumnProps) {
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
         width: shifted ? `calc(100% - ${LIBRARY_DRAWER_WIDTH})` : "100%",
         marginLeft: shifted ? LIBRARY_DRAWER_WIDTH : 0,
-        transition: theme.transitions.create(
-          ["margin", "width"],
-          shifted
-            ? {
-                easing: theme.transitions.easing.easeOut,
-                duration: theme.transitions.duration.enteringScreen,
-              }
-            : {
-                easing: theme.transitions.easing.sharp,
-                duration: theme.transitions.duration.leavingScreen,
-              },
-        ),
-      })}
+      }}
     >
       {children}
     </Box>

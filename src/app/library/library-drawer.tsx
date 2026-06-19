@@ -37,6 +37,7 @@ export function LibraryDrawer({
       open={open}
       onClose={onClose}
       variant={variant}
+      transitionDuration={variant === "persistent" ? 0 : undefined}
       slotProps={{
         paper: {
           "aria-label": m.libraryTitle(),
