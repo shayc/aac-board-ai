@@ -900,7 +900,7 @@ describe("Grid", () => {
     });
   });
 
-  describe("responsive cell sizing", () => {
+  describe("responsive column sizing", () => {
     const PAD = 16;
     const GAP = 8;
     const MIN_CELL = 96;
@@ -983,6 +983,93 @@ describe("Grid", () => {
 
       expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
       expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
+      expect(overflows).toBe(true);
+    });
+  });
+
+  describe("responsive row sizing", () => {
+    const PAD = 16;
+    const GAP = 8;
+    const MIN_CELL = 96;
+
+    const expectedCellHeight = (containerHeight: number, rows: number) => {
+      const fit = Math.floor(
+        (containerHeight - 2 * PAD + GAP) / (MIN_CELL + GAP),
+      );
+      const visible = Math.min(rows, Math.max(1, fit));
+
+      return (containerHeight - 2 * PAD - (visible - 1) * GAP) / visible;
+    };
+
+    const renderSizedGrid = async (containerHeight: number, rows: number) => {
+      const items = Array.from({ length: rows }, (_, i) => ({
+        id: String(i + 1),
+        label: `Item ${i + 1}`,
+      }));
+
+      const screen = await render(
+        <>
+          <CssBaseline />
+          <div style={{ width: "400px", height: `${containerHeight}px` }}>
+            <Grid
+              rows={rows}
+              columns={1}
+              items={items}
+              renderItem={(item, props) => (
+                <button {...props}>{item.label}</button>
+              )}
+            />
+          </div>
+        </>,
+      );
+
+      const gridEl = screen.getByRole("grid").element();
+      const cellEl = gridEl.querySelector("[role='gridcell']");
+      if (!(cellEl instanceof HTMLElement)) {
+        throw new Error("grid rendered no cell");
+      }
+
+      const scroller = gridEl.parentElement;
+      if (!scroller) {
+        throw new Error("grid has no scroll container");
+      }
+
+      return {
+        cellHeight: cellEl.getBoundingClientRect().height,
+        expectedHeight: expectedCellHeight(containerHeight, rows),
+        overflows: scroller.scrollHeight > scroller.clientHeight + 1,
+      };
+    };
+
+    test("enlarges cells past the floor to fill the height when a tall board overflows", async () => {
+      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
+        1000,
+        20,
+      );
+
+      expect(cellHeight).toBeGreaterThan(MIN_CELL);
+      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
+      expect(overflows).toBe(true);
+    });
+
+    test("grows cells to fill the height when the whole board fits", async () => {
+      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
+        1000,
+        4,
+      );
+
+      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
+      expect(overflows).toBe(false);
+    });
+
+    test("settles on whole rows at a short height, never below the 96px floor", async () => {
+      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
+        375,
+        20,
+      );
+
+      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
   });

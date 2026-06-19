@@ -46,9 +46,10 @@ export function Grid<TItem extends { id: string }>({
       sx={(theme) => ({
         height: "100%",
         overflow: "auto",
-        containerType: "inline-size",
-        scrollSnapType: "x mandatory",
+        containerType: "size",
+        scrollSnapType: "both mandatory",
         scrollPaddingInline: theme.spacing(PADDING),
+        scrollPaddingBlock: theme.spacing(PADDING),
       })}
     >
       <Stack
@@ -58,10 +59,22 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--visible-cols": visibleColumns(theme, columns, gap),
-          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--visible-cols) - 1) * ${theme.spacing(gap)}) / var(--visible-cols))`,
-          minHeight: "100%",
-          minWidth: gridMinWidth(theme, columns, gap, "var(--cell-width)"),
+          "--visible-cols": visibleTracks(theme, columns, gap, "100cqi"),
+          "--visible-rows": visibleTracks(theme, rows, gap, "100cqb"),
+          "--cell-width": trackSize(
+            theme,
+            "100cqi",
+            gap,
+            "var(--visible-cols)",
+          ),
+          "--cell-height": trackSize(
+            theme,
+            "100cqb",
+            gap,
+            "var(--visible-rows)",
+          ),
+          minWidth: gridExtent(theme, columns, gap, "var(--cell-width)"),
+          minHeight: gridExtent(theme, rows, gap, "var(--cell-height)"),
           p: PADDING,
           gap,
         })}
@@ -71,7 +84,7 @@ export function Grid<TItem extends { id: string }>({
             key={rowIndex}
             role="row"
             direction="row"
-            sx={{ flexGrow: 1, gap }}
+            sx={{ flex: 1, minHeight: "var(--cell-height)", gap }}
           >
             {row.map((item, colIndex) => {
               const isActive =
@@ -133,18 +146,32 @@ function buildGrid<TItem extends { id: string }>(
   );
 }
 
-function visibleColumns(theme: Theme, columns: number, gap: number): string {
-  const inner = `100cqi - ${theme.spacing(PADDING * 2)}`;
+function visibleTracks(
+  theme: Theme,
+  count: number,
+  gap: number,
+  extent: string,
+): string {
+  const inner = `${extent} - ${theme.spacing(PADDING * 2)}`;
   const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
 
-  return `min(${columns}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
+  return `min(${count}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
 }
 
-function gridMinWidth(
+function trackSize(
   theme: Theme,
-  columns: number,
+  extent: string,
   gap: number,
-  cellWidth: string,
+  visible: string,
 ): string {
-  return `calc(${columns} * ${cellWidth} + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
+  return `calc((${extent} - ${theme.spacing(PADDING * 2)} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
+}
+
+function gridExtent(
+  theme: Theme,
+  count: number,
+  gap: number,
+  cellSize: string,
+): string {
+  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
 }
