@@ -1,4 +1,4 @@
-import MenuIcon from "@mui/icons-material/Menu";
+import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
@@ -34,7 +34,7 @@ export function AppHeader({
               onClick={onLibraryClick}
               sx={{ marginInlineEnd: 2 }}
             >
-              <MenuIcon />
+              <GridViewOutlinedIcon />
             </IconButton>
           </Tooltip>
         )}
