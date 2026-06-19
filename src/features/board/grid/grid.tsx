@@ -32,7 +32,7 @@ export function Grid<TItem extends { id: string }>({
   order,
   renderItem,
   dir = "ltr",
-  gap = 2,
+  gap = 1,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const { rootRef, rootProps, activeCell } = useGridKeyboard({
