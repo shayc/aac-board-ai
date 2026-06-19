@@ -902,7 +902,7 @@ describe("Grid", () => {
 
   describe("responsive cell sizing", () => {
     const PAD = 16;
-    const GAP = 16;
+    const GAP = 8;
     const MIN_CELL = 96;
 
     const expectedCellWidth = (containerWidth: number, columns: number) => {
