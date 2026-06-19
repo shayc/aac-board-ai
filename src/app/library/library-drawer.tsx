@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useMatches, useNavigate } from "react-router";
 
@@ -30,6 +31,8 @@ export function LibraryDrawer({
   const activeSetId = activeMatch?.params.setId;
 
   const closeOnNavigate = variant === "temporary" ? onClose : undefined;
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const animated = variant === "temporary" && !reducedMotion;
 
   return (
     <Drawer
@@ -37,7 +40,7 @@ export function LibraryDrawer({
       open={open}
       onClose={onClose}
       variant={variant}
-      transitionDuration={variant === "persistent" ? 0 : undefined}
+      transitionDuration={animated ? undefined : 0}
       slotProps={{
         paper: {
           "aria-label": m.libraryTitle(),
