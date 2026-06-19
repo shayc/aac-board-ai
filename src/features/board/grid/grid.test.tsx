@@ -1,3 +1,4 @@
+import CssBaseline from "@mui/material/CssBaseline";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent, type Locator } from "vitest/browser";
@@ -896,6 +897,93 @@ describe("Grid", () => {
       await expect
         .element(screen.getByRole("grid", { name: "Core words" }))
         .toBeVisible();
+    });
+  });
+
+  describe("responsive cell sizing", () => {
+    const PAD = 16;
+    const GAP = 16;
+    const MIN_CELL = 96;
+
+    const expectedCellWidth = (containerWidth: number, columns: number) => {
+      const fit = Math.floor(
+        (containerWidth - 2 * PAD + GAP) / (MIN_CELL + GAP),
+      );
+      const visible = Math.min(columns, Math.max(1, fit));
+
+      return (containerWidth - 2 * PAD - (visible - 1) * GAP) / visible;
+    };
+
+    const renderSizedGrid = async (containerWidth: number, columns: number) => {
+      const items = Array.from({ length: columns }, (_, i) => ({
+        id: String(i + 1),
+        label: `Item ${i + 1}`,
+      }));
+
+      const screen = await render(
+        <>
+          <CssBaseline />
+          <div style={{ width: `${containerWidth}px`, height: "400px" }}>
+            <Grid
+              rows={1}
+              columns={columns}
+              items={items}
+              renderItem={(item, props) => (
+                <button {...props}>{item.label}</button>
+              )}
+            />
+          </div>
+        </>,
+      );
+
+      const gridEl = screen.getByRole("grid").element();
+      const cellEl = gridEl.querySelector("[role='gridcell']");
+      if (!(cellEl instanceof HTMLElement)) {
+        throw new Error("grid rendered no cell");
+      }
+
+      const scroller = gridEl.parentElement;
+      if (!scroller) {
+        throw new Error("grid has no scroll container");
+      }
+
+      return {
+        cellWidth: cellEl.getBoundingClientRect().width,
+        expectedWidth: expectedCellWidth(containerWidth, columns),
+        overflows: scroller.scrollWidth > scroller.clientWidth + 1,
+      };
+    };
+
+    test("enlarges cells past the floor to fill the width when a wide board overflows", async () => {
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        1000,
+        20,
+      );
+
+      expect(cellWidth).toBeGreaterThan(MIN_CELL);
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
+      expect(overflows).toBe(true);
+    });
+
+    test("grows cells to fill the width when the whole board fits", async () => {
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        1000,
+        4,
+      );
+
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
+      expect(overflows).toBe(false);
+    });
+
+    test("settles on three columns at a phone width, never below the 96px floor", async () => {
+      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
+        375,
+        20,
+      );
+
+      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
+      expect(overflows).toBe(true);
     });
   });
 });

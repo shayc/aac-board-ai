@@ -1,8 +1,13 @@
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import type { Theme } from "@mui/material/styles";
+import type { ReactNode } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
-const MIN_CELL_PX = 96;
+const MIN_CELL_SIZE = "96px";
 const PADDING = 2;
+
+type GridOrder = readonly (readonly (string | null)[])[];
 
 export interface GridItemProps {
   tabIndex: number;
@@ -13,8 +18,8 @@ export interface GridProps<TItem extends { id: string }> {
   items: readonly TItem[];
   rows: number;
   columns: number;
-  order?: readonly (readonly (string | null)[])[];
-  renderItem: (item: TItem, props: GridItemProps) => React.ReactNode;
+  order?: GridOrder;
+  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
 }
@@ -36,49 +41,63 @@ export function Grid<TItem extends { id: string }>({
   });
 
   return (
-    <Stack
-      {...rootProps}
-      ref={rootRef}
-      role="grid"
-      aria-label={ariaLabel}
-      direction="column"
+    <Box
       dir={dir}
-      sx={(theme) => ({
-        minHeight: "100%",
-        minWidth: `calc(${columns} * ${MIN_CELL_PX}px + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`,
-        p: PADDING,
-        gap,
-      })}
+      sx={{
+        height: "100%",
+        overflow: "auto",
+        containerType: "inline-size",
+      }}
     >
-      {grid.map((row, rowIndex) => (
-        <Stack
-          key={rowIndex}
-          role="row"
-          direction="row"
-          sx={{ flexGrow: 1, gap }}
-        >
-          {row.map((item, colIndex) => {
-            const isActive =
-              rowIndex === activeCell.row && colIndex === activeCell.col;
+      <Stack
+        {...rootProps}
+        ref={rootRef}
+        role="grid"
+        aria-label={ariaLabel}
+        direction="column"
+        sx={(theme) => ({
+          "--visible-cols": visibleColumns(theme, columns, gap),
+          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--visible-cols) - 1) * ${theme.spacing(gap)}) / var(--visible-cols))`,
+          minHeight: "100%",
+          minWidth: gridMinWidth(theme, columns, gap, "var(--cell-width)"),
+          p: PADDING,
+          gap,
+        })}
+      >
+        {grid.map((row, rowIndex) => (
+          <Stack
+            key={rowIndex}
+            role="row"
+            direction="row"
+            sx={{ flexGrow: 1, gap }}
+          >
+            {row.map((item, colIndex) => {
+              const isActive =
+                rowIndex === activeCell.row && colIndex === activeCell.col;
 
-            return (
-              <Stack
-                key={colIndex}
-                role="gridcell"
-                aria-rowindex={rowIndex + 1}
-                aria-colindex={colIndex + 1}
-                sx={{ flex: 1, minWidth: MIN_CELL_PX, minHeight: MIN_CELL_PX }}
-              >
-                {item &&
-                  renderItem(item, {
-                    tabIndex: isActive ? 0 : -1,
-                  })}
-              </Stack>
-            );
-          })}
-        </Stack>
-      ))}
-    </Stack>
+              return (
+                <Stack
+                  key={colIndex}
+                  role="gridcell"
+                  aria-rowindex={rowIndex + 1}
+                  aria-colindex={colIndex + 1}
+                  sx={{
+                    flex: 1,
+                    minWidth: "var(--cell-width)",
+                    minHeight: MIN_CELL_SIZE,
+                  }}
+                >
+                  {item &&
+                    renderItem(item, {
+                      tabIndex: isActive ? 0 : -1,
+                    })}
+                </Stack>
+              );
+            })}
+          </Stack>
+        ))}
+      </Stack>
+    </Box>
   );
 }
 
@@ -86,7 +105,7 @@ function buildGrid<TItem extends { id: string }>(
   items: readonly TItem[],
   rows: number,
   columns: number,
-  order?: readonly (readonly (string | null)[])[],
+  order?: GridOrder,
 ): (TItem | undefined)[][] {
   if (order?.length) {
     const itemsById = new Map(items.map((item) => [item.id, item]));
@@ -109,4 +128,20 @@ function buildGrid<TItem extends { id: string }>(
       return items[index];
     }),
   );
+}
+
+function visibleColumns(theme: Theme, columns: number, gap: number): string {
+  const inner = `100cqi - ${theme.spacing(PADDING * 2)}`;
+  const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
+
+  return `min(${columns}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
+}
+
+function gridMinWidth(
+  theme: Theme,
+  columns: number,
+  gap: number,
+  cellWidth: string,
+): string {
+  return `calc(${columns} * ${cellWidth} + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
 }
