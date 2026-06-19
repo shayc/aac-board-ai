@@ -42,7 +42,7 @@ export function Tile({
         alignItems: "stretch",
         justifyContent: "stretch",
         padding: "4px 4px 0 4px",
-        border: `2px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
+        border: `4px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",
         position: "relative",
@@ -59,12 +59,11 @@ export function Tile({
         },
         "&:active": { backgroundColor: darkened(30) },
         "&:focus-visible": {
-          outline: `3px solid ${
+          outline: `4px solid ${
             theme.vars
               ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
               : alpha(theme.palette.text.primary, 0.8)
           }`,
-          outlineOffset: 2,
         },
         ...(variant === "folder" && {
           "&::after": {

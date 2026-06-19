@@ -32,7 +32,7 @@ export function Grid<TItem extends { id: string }>({
   order,
   renderItem,
   dir = "ltr",
-  gap = 2,
+  gap = 1,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const { rootRef, rootProps, activeCell } = useGridKeyboard({
@@ -43,11 +43,13 @@ export function Grid<TItem extends { id: string }>({
   return (
     <Box
       dir={dir}
-      sx={{
+      sx={(theme) => ({
         height: "100%",
         overflow: "auto",
-        containerType: "inline-size",
-      }}
+        containerType: "size",
+        scrollSnapType: "both mandatory",
+        scrollPadding: theme.spacing(PADDING),
+      })}
     >
       <Stack
         {...rootProps}
@@ -56,10 +58,22 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--visible-cols": visibleColumns(theme, columns, gap),
-          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--visible-cols) - 1) * ${theme.spacing(gap)}) / var(--visible-cols))`,
-          minHeight: "100%",
-          minWidth: gridMinWidth(theme, columns, gap, "var(--cell-width)"),
+          "--visible-cols": visibleTracks(theme, "100cqi", gap, columns),
+          "--visible-rows": visibleTracks(theme, "100cqb", gap, rows),
+          "--cell-width": trackSize(
+            theme,
+            "100cqi",
+            gap,
+            "var(--visible-cols)",
+          ),
+          "--cell-height": trackSize(
+            theme,
+            "100cqb",
+            gap,
+            "var(--visible-rows)",
+          ),
+          minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
+          minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
           p: PADDING,
           gap,
         })}
@@ -69,7 +83,7 @@ export function Grid<TItem extends { id: string }>({
             key={rowIndex}
             role="row"
             direction="row"
-            sx={{ flexGrow: 1, gap }}
+            sx={{ flex: 1, minHeight: "var(--cell-height)", gap }}
           >
             {row.map((item, colIndex) => {
               const isActive =
@@ -85,6 +99,7 @@ export function Grid<TItem extends { id: string }>({
                     flex: 1,
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
+                    scrollSnapAlign: "start",
                   }}
                 >
                   {item &&
@@ -130,18 +145,32 @@ function buildGrid<TItem extends { id: string }>(
   );
 }
 
-function visibleColumns(theme: Theme, columns: number, gap: number): string {
-  const inner = `100cqi - ${theme.spacing(PADDING * 2)}`;
+function visibleTracks(
+  theme: Theme,
+  extent: string,
+  gap: number,
+  count: number,
+): string {
+  const inner = `${extent} - ${theme.spacing(PADDING * 2)}`;
   const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
 
-  return `min(${columns}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
+  return `min(${count}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
 }
 
-function gridMinWidth(
+function trackSize(
   theme: Theme,
-  columns: number,
+  extent: string,
   gap: number,
-  cellWidth: string,
+  visible: string,
 ): string {
-  return `calc(${columns} * ${cellWidth} + ${columns - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
+  return `calc((${extent} - ${theme.spacing(PADDING * 2)} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
+}
+
+function gridExtent(
+  theme: Theme,
+  cellSize: string,
+  gap: number,
+  count: number,
+): string {
+  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
 }
