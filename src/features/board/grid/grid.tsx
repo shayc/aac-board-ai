@@ -43,11 +43,13 @@ export function Grid<TItem extends { id: string }>({
   return (
     <Box
       dir={dir}
-      sx={{
+      sx={(theme) => ({
         height: "100%",
         overflow: "auto",
         containerType: "inline-size",
-      }}
+        scrollSnapType: "x mandatory",
+        scrollPaddingInline: theme.spacing(PADDING),
+      })}
     >
       <Stack
         {...rootProps}
@@ -85,6 +87,7 @@ export function Grid<TItem extends { id: string }>({
                     flex: 1,
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
+                    scrollSnapAlign: "start",
                   }}
                 >
                   {item &&
