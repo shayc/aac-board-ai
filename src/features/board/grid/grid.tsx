@@ -6,7 +6,6 @@ import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_SIZE = "96px";
 const PADDING = 2;
-const MOBILE_COLUMNS = 3;
 
 type GridOrder = readonly (readonly (string | null)[])[];
 
@@ -57,12 +56,10 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--cell-min-width": MIN_CELL_SIZE,
-          [theme.breakpoints.down("sm")]: {
-            "--cell-min-width": mobileCellWidth(theme, gap),
-          },
+          "--cols": visibleColumns(theme, columns, gap),
+          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--cols) - 1) * ${theme.spacing(gap)}) / var(--cols))`,
           minHeight: "100%",
-          minWidth: gridMinWidth(theme, columns, gap, "var(--cell-min-width)"),
+          minWidth: gridMinWidth(theme, columns, gap, "var(--cell-width)"),
           p: PADDING,
           gap,
         })}
@@ -86,7 +83,7 @@ export function Grid<TItem extends { id: string }>({
                   aria-colindex={colIndex + 1}
                   sx={{
                     flex: 1,
-                    minWidth: "var(--cell-min-width)",
+                    minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
                   }}
                 >
@@ -133,8 +130,11 @@ function buildGrid<TItem extends { id: string }>(
   );
 }
 
-function mobileCellWidth(theme: Theme, gap: number): string {
-  return `calc((100cqi - ${theme.spacing(PADDING * 2)} - ${theme.spacing(gap * (MOBILE_COLUMNS - 1))}) / ${MOBILE_COLUMNS})`;
+function visibleColumns(theme: Theme, columns: number, gap: number): string {
+  const inner = `100cqi - ${theme.spacing(PADDING * 2)}`;
+  const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
+
+  return `min(${columns}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
 }
 
 function gridMinWidth(
