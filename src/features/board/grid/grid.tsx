@@ -56,8 +56,8 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--cols": visibleColumns(theme, columns, gap),
-          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--cols) - 1) * ${theme.spacing(gap)}) / var(--cols))`,
+          "--visible-cols": visibleColumns(theme, columns, gap),
+          "--cell-width": `calc((100cqi - ${theme.spacing(PADDING * 2)} - (var(--visible-cols) - 1) * ${theme.spacing(gap)}) / var(--visible-cols))`,
           minHeight: "100%",
           minWidth: gridMinWidth(theme, columns, gap, "var(--cell-width)"),
           p: PADDING,
