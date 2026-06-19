@@ -48,8 +48,7 @@ export function Grid<TItem extends { id: string }>({
         overflow: "auto",
         containerType: "size",
         scrollSnapType: "both mandatory",
-        scrollPaddingInline: theme.spacing(PADDING),
-        scrollPaddingBlock: theme.spacing(PADDING),
+        scrollPadding: theme.spacing(PADDING),
       })}
     >
       <Stack
@@ -59,8 +58,8 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--visible-cols": visibleTracks(theme, columns, gap, "100cqi"),
-          "--visible-rows": visibleTracks(theme, rows, gap, "100cqb"),
+          "--visible-cols": visibleTracks(theme, "100cqi", gap, columns),
+          "--visible-rows": visibleTracks(theme, "100cqb", gap, rows),
           "--cell-width": trackSize(
             theme,
             "100cqi",
@@ -73,8 +72,8 @@ export function Grid<TItem extends { id: string }>({
             gap,
             "var(--visible-rows)",
           ),
-          minWidth: gridExtent(theme, columns, gap, "var(--cell-width)"),
-          minHeight: gridExtent(theme, rows, gap, "var(--cell-height)"),
+          minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
+          minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
           p: PADDING,
           gap,
         })}
@@ -148,9 +147,9 @@ function buildGrid<TItem extends { id: string }>(
 
 function visibleTracks(
   theme: Theme,
-  count: number,
-  gap: number,
   extent: string,
+  gap: number,
+  count: number,
 ): string {
   const inner = `${extent} - ${theme.spacing(PADDING * 2)}`;
   const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
@@ -169,9 +168,9 @@ function trackSize(
 
 function gridExtent(
   theme: Theme,
-  count: number,
-  gap: number,
   cellSize: string,
+  gap: number,
+  count: number,
 ): string {
   return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
 }
