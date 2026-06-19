@@ -75,7 +75,7 @@
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: ציני, מנומס.",
   "aiCustomInstructionsHelper": "התאמה אישית של הצעות ה-AI.",
-  "aiBuiltInSupport": "תמיכת AI מובנית",
+  "aiBuiltInSupport": "תמיכה ב-AI מובנה",
   "aiStatusAvailable": "זמין",
   "aiStatusUnavailable": "לא זמין",
   "aiStatusDownloading": "בהורדה… {progress}%",
