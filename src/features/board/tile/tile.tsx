@@ -59,11 +59,12 @@ export function Tile({
         },
         "&:active": { backgroundColor: darkened(30) },
         "&:focus-visible": {
-          outline: `4px solid ${
+          outline: `3px solid ${
             theme.vars
               ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
               : alpha(theme.palette.text.primary, 0.8)
           }`,
+          outlineOffset: 2,
         },
         ...(variant === "folder" && {
           "&::after": {
