@@ -1,6 +1,5 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import { BoardSetLibrary, boardSetPath } from "@features/board";
-import { ExternalLink } from "@shared/components/external-link";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
@@ -11,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { ExternalLink } from "@shared/components/external-link";
 import { useMatches, useNavigate } from "react-router";
 
 export const LIBRARY_DRAWER_WIDTH = `calc(${DRAWER_BASE_WIDTH} + env(safe-area-inset-left))`;
