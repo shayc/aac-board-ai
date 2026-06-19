@@ -18,13 +18,11 @@ import { useBoardSets } from "./use-board-sets";
 export interface BoardSetLibraryProps {
   onSelect: (boardSet: BoardSetRecord) => void;
   activeSetId?: string;
-  onActiveSetDeleted?: () => void;
 }
 
 export function BoardSetLibrary({
   onSelect,
   activeSetId,
-  onActiveSetDeleted,
 }: BoardSetLibraryProps) {
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
@@ -47,10 +45,6 @@ export function BoardSetLibrary({
         message: m.libraryDeleted({ name }),
         severity: "success",
       });
-
-      if (setId === activeSetId) {
-        onActiveSetDeleted?.();
-      }
     } catch {
       showSnackbar({
         message: m.libraryDeleteFailed({ name }),
