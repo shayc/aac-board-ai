@@ -101,7 +101,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
         )}
       </Stack>
 
-      <Box sx={{ flexGrow: 1, height: 0, overflow: "auto" }}>
+      <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
           ariaLabel={board.name ?? m.boardGridLabel()}
           items={board.buttons}
