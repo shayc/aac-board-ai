@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "ライブラリは空です",
   "libraryEmptyDescription": "コミュニケーションボードをインポートして始めましょう。",
   "libraryImportBoards": "ボードをインポート",
+  "libraryBoards": "ボード",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

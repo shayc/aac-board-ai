@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Бібліотека порожня",
   "libraryEmptyDescription": "Імпортуйте комунікаційні дошки, щоб почати.",
   "libraryImportBoards": "Імпортувати дошки",
+  "libraryBoards": "Дошки",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Библиотеката е празна",
   "libraryEmptyDescription": "Импортирайте комуникационни дъски, за да започнете.",
   "libraryImportBoards": "Импортиране на дъски",
+  "libraryBoards": "Дъски",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

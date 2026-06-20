@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "הספרייה ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
   "libraryImportBoards": "ייבוא לוחות",
+  "libraryBoards": "לוחות",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

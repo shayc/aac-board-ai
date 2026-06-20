@@ -8,6 +8,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import ListSubheader from "@mui/material/ListSubheader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
@@ -68,6 +69,12 @@ export function BoardSetList({
   return (
     <>
       <List
+        aria-labelledby="board-set-list-subheader"
+        subheader={
+          <ListSubheader id="board-set-list-subheader">
+            {m.libraryBoards()}
+          </ListSubheader>
+        }
         sx={(theme) => ({
           px: 1,
           "@media (hover: hover)": {

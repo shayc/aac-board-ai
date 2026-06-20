@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Die Bibliothek ist leer",
   "libraryEmptyDescription": "Importiere Kommunikationstafeln, um loszulegen.",
   "libraryImportBoards": "Tafeln importieren",
+  "libraryBoards": "Tafeln",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

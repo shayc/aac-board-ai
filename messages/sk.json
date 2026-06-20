@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Knižnica je prázdna",
   "libraryEmptyDescription": "Začnite importovaním komunikačných tabuliek.",
   "libraryImportBoards": "Importovať tabuľky",
+  "libraryBoards": "Tabuľky",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Biblioteka jest pusta",
   "libraryEmptyDescription": "Zaimportuj tablice komunikacyjne, aby rozpocząć.",
   "libraryImportBoards": "Importuj tablice",
+  "libraryBoards": "Tablice",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "La bibliothèque est vide",
   "libraryEmptyDescription": "Importez des tableaux de communication pour commencer.",
   "libraryImportBoards": "Importer des tableaux",
+  "libraryBoards": "Tableaux",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Kitaplık boş",
   "libraryEmptyDescription": "Başlamak için iletişim panoları içe aktarın.",
   "libraryImportBoards": "Panoları içe aktar",
+  "libraryBoards": "Panolar",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
   "libraryEmptyDescription": "Εισαγάγετε πίνακες επικοινωνίας για να ξεκινήσετε.",
   "libraryImportBoards": "Εισαγωγή πινάκων",
+  "libraryBoards": "Πίνακες",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

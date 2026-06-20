@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "लाइब्रेरी खाली है",
   "libraryEmptyDescription": "शुरू करने के लिए संचार बोर्ड आयात करें।",
   "libraryImportBoards": "बोर्ड आयात करें",
+  "libraryBoards": "बोर्ड",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

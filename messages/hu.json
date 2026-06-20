@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "A könyvtár üres",
   "libraryEmptyDescription": "Az induláshoz importálj kommunikációs táblákat.",
   "libraryImportBoards": "Táblák importálása",
+  "libraryBoards": "Táblák",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

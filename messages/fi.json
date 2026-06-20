@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Kirjasto on tyhjä",
   "libraryEmptyDescription": "Tuo kommunikointitauluja päästäksesi alkuun.",
   "libraryImportBoards": "Tuo tauluja",
+  "libraryBoards": "Taulut",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
