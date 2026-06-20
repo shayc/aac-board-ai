@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
-import type { ReactNode } from "react";
+import { useImperativeHandle, useRef } from "react";
+import type { ReactNode, Ref } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_SIZE = "96px";
@@ -13,6 +14,10 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
+export interface GridHandle {
+  scrollToStart: () => void;
+}
+
 export interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
   items: readonly TItem[];
@@ -22,6 +27,7 @@ export interface GridProps<TItem extends { id: string }> {
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
+  ref?: Ref<GridHandle>;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -33,6 +39,7 @@ export function Grid<TItem extends { id: string }>({
   renderItem,
   dir = "ltr",
   gap = 1,
+  ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
   const { rootRef, rootProps, activeCell } = useGridKeyboard({
@@ -40,8 +47,20 @@ export function Grid<TItem extends { id: string }>({
     dir,
   });
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  useImperativeHandle(
+    ref,
+    () => ({
+      scrollToStart() {
+        scrollContainerRef.current?.scrollTo({ top: 0, left: 0 });
+      },
+    }),
+    [],
+  );
+
   return (
     <Box
+      ref={scrollContainerRef}
       dir={dir}
       sx={(theme) => ({
         height: "100%",
