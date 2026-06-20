@@ -55,7 +55,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const gridRef = useRef<GridHandle>(null);
 
   const handleHomeClick = () => {
-    if (navigation.isOnHome) {
+    if (navigation.isHome) {
       gridRef.current?.scrollToStart();
     } else {
       navigation.goHome();

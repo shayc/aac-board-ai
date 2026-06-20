@@ -32,6 +32,7 @@ function createNavigationStub(): UseBoardNavigationReturn {
   return {
     canGoBack: false,
     canGoHome: true,
+    isHome: false,
     goToBoard: vi.fn(),
     goBack: vi.fn(),
     goHome: vi.fn(),
