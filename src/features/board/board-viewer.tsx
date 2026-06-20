@@ -1,12 +1,13 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import { useRef } from "react";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./board-button";
-import { Grid, type GridItemProps } from "./grid/grid";
+import { Grid, type GridHandle, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
@@ -51,6 +52,16 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
 
+  const gridRef = useRef<GridHandle>(null);
+
+  const handleHomeClick = () => {
+    if (navigation.isOnHome) {
+      gridRef.current?.scrollToStart();
+    } else {
+      navigation.goHome();
+    }
+  };
+
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
       key={button.id}
@@ -85,7 +96,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
           canGoBack={navigation.canGoBack}
           canGoHome={navigation.canGoHome}
           onBackClick={navigation.goBack}
-          onHomeClick={navigation.goHome}
+          onHomeClick={handleHomeClick}
         />
 
         {suggestions.isSupported && (
@@ -110,6 +121,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
           order={board.grid.order}
           renderItem={renderTile}
           dir={direction}
+          ref={gridRef}
         />
       </Box>
     </Stack>
