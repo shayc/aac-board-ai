@@ -76,6 +76,20 @@ const themeOptions = {
         }),
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 24,
+        },
+      },
+    },
+    MuiListItemButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 24,
+        },
+      },
+    },
   },
 } satisfies ThemeOptions;
 
