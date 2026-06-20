@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
   "libraryEmptyDescription": "의사소통 보드를 가져와 시작하세요.",
   "libraryImportBoards": "보드 가져오기",
+  "libraryBoards": "보드",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

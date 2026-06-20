@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
   "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಸಂವಹನ ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
   "libraryImportBoards": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
+  "libraryBoards": "ಬೋರ್ಡ್‌ಗಳು",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

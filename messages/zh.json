@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "板库为空",
   "libraryEmptyDescription": "导入沟通板即可开始。",
   "libraryImportBoards": "导入沟通板",
+  "libraryBoards": "沟通板",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

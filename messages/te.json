@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
   "libraryEmptyDescription": "ప్రారంభించడానికి సంభాషణ బోర్డులను దిగుమతి చేయండి.",
   "libraryImportBoards": "బోర్డులను దిగుమతి చేయి",
+  "libraryBoards": "బోర్డులు",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

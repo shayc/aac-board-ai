@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Библиотека пуста",
   "libraryEmptyDescription": "Импортируйте коммуникационные доски, чтобы начать.",
   "libraryImportBoards": "Импортировать доски",
+  "libraryBoards": "Доски",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

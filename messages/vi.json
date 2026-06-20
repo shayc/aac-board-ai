@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Thư viện trống",
   "libraryEmptyDescription": "Nhập các bảng giao tiếp để bắt đầu.",
   "libraryImportBoards": "Nhập bảng",
+  "libraryBoards": "Bảng",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

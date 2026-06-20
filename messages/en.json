@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Library is empty",
   "libraryEmptyDescription": "Import communication boards to get started.",
   "libraryImportBoards": "Import boards",
+  "libraryBoards": "Boards",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

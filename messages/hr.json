@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za početak uvezite komunikacijske ploče.",
   "libraryImportBoards": "Uvezi ploče",
+  "libraryBoards": "Ploče",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

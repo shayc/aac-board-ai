@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "คลังว่างเปล่า",
   "libraryEmptyDescription": "นำเข้าบอร์ดสื่อสารเพื่อเริ่มต้น",
   "libraryImportBoards": "นำเข้าบอร์ด",
+  "libraryBoards": "บอร์ด",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

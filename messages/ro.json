@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Biblioteca este goală",
   "libraryEmptyDescription": "Importă table de comunicare pentru a începe.",
   "libraryImportBoards": "Importă table",
+  "libraryBoards": "Table",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

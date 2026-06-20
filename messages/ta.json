@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
   "libraryEmptyDescription": "தொடங்க தொடர்பு பலகைகளை இறக்குமதி செய்யுங்கள்.",
   "libraryImportBoards": "பலகைகளை இறக்குமதி செய்",
+  "libraryBoards": "பலகைகள்",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

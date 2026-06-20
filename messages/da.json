@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Biblioteket er tomt",
   "libraryEmptyDescription": "Importér kommunikationstavler for at komme i gang.",
   "libraryImportBoards": "Importér tavler",
+  "libraryBoards": "Tavler",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

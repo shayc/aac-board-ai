@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "A biblioteca está vazia",
   "libraryEmptyDescription": "Importe pranchas de comunicação para começar.",
   "libraryImportBoards": "Importar pranchas",
+  "libraryBoards": "Pranchas",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

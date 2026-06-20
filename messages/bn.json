@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "লাইব্রেরি খালি",
   "libraryEmptyDescription": "শুরু করতে যোগাযোগ বোর্ড আমদানি করুন।",
   "libraryImportBoards": "বোর্ড আমদানি করুন",
+  "libraryBoards": "বোর্ড",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

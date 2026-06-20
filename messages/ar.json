@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "المكتبة فارغة",
   "libraryEmptyDescription": "استورد لوحات تواصل للبدء.",
   "libraryImportBoards": "استيراد لوحات",
+  "libraryBoards": "لوحات",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

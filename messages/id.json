@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "Pustaka kosong",
   "libraryEmptyDescription": "Impor papan komunikasi untuk memulai.",
   "libraryImportBoards": "Impor papan",
+  "libraryBoards": "Papan",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

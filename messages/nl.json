@@ -9,6 +9,7 @@
   "libraryEmptyTitle": "De bibliotheek is leeg",
   "libraryEmptyDescription": "Importeer communicatieborden om te beginnen.",
   "libraryImportBoards": "Borden importeren",
+  "libraryBoards": "Borden",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
