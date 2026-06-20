@@ -11,7 +11,7 @@ export interface BoardRouteParams {
 export interface UseBoardNavigationReturn {
   canGoBack: boolean;
   canGoHome: boolean;
-  isOnHome: boolean;
+  isHome: boolean;
   goToBoard: (id: string) => void;
   goBack: () => void;
   goHome: () => void;
@@ -44,7 +44,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
 
   const canGoBack = backStack.length > 0;
   const canGoHome = Boolean(rootBoardId);
-  const isOnHome = rootBoardId !== undefined && boardId === rootBoardId;
+  const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
   function goToBoard(id: string) {
     if (!setId || !id || id === boardId) {
@@ -78,7 +78,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   return {
     canGoBack,
     canGoHome,
-    isOnHome,
+    isHome,
     goToBoard,
     goBack,
     goHome,
