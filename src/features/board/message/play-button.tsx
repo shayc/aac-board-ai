@@ -26,9 +26,10 @@ export function PlayButton({
       aria-label={playButtonLabel}
       onClick={isPlaying ? onStopClick : onPlayClick}
       sx={{
-        alignSelf: "center",
         width: 72,
         height: 72,
+        flexShrink: 0,
+        alignSelf: "center",
       }}
     >
       {isPlaying ? (
