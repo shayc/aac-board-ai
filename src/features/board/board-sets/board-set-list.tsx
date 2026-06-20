@@ -113,7 +113,6 @@ export function BoardSetList({
               <ListItemButton
                 selected={boardSet.setId === selectedSetId}
                 onClick={() => onSelect(boardSet)}
-                sx={{ borderRadius: 6 }}
               >
                 <ListItemText
                   primary={

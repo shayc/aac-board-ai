@@ -1,7 +1,11 @@
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
@@ -83,23 +87,16 @@ export function BoardSetLibrary({
 
   return (
     <>
-      <Stack
-        direction="row"
-        sx={{
-          alignItems: "center",
-          justifyContent: "flex-start",
-          px: 2,
-          pt: 1,
-        }}
-      >
-        <Button
-          variant="text"
-          startIcon={<LibraryAddOutlinedIcon />}
-          onClick={() => void pickAndImportBoardFiles()}
-        >
-          {m.libraryImportBoards()}
-        </Button>
-      </Stack>
+      <List sx={{ px: 1, mb: 2 }}>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => void pickAndImportBoardFiles()}>
+            <ListItemIcon>
+              <LibraryAddOutlinedIcon />
+            </ListItemIcon>
+            <ListItemText primary={m.libraryImportBoards()} />
+          </ListItemButton>
+        </ListItem>
+      </List>
 
       <BoardSetList
         boardSets={boardSets}
