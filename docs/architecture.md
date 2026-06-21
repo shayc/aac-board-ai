@@ -233,11 +233,12 @@ Rules that constrain every file but are visible in none — several are _absence
   memoization; manual hooks are a rare escape hatch, not the default.
 - **Theme values have a single source** (`theme-colors.ts`), shared into `index.html`
   by a Vite plugin; light/dark is a class toggled _pre-paint_ to avoid a flash.
-- **Board media object URLs have a single owner** — the hydration registry in
-  `board-hydration.ts`. A visible board's URLs are never revoked out from under it: a
-  load superseded mid-flight (rapid navigation) discards its own URLs instead of
-  replacing the live ones. The lifecycle lives in the loader because data mode has no
-  component unmount to hook into.
+- **Board media object URLs have a single owner** — a module-level registry in
+  `board-hydration.ts`, not the loader. A visible board's URLs are never revoked out
+  from under it: a load superseded mid-flight (rapid navigation) discards its own URLs
+  instead of replacing the live ones. The registry is a global because data mode has no
+  component unmount to hook into; it stays safe only because the loader is its sole,
+  serially-invoked caller — an assumption held by a comment, not the types.
 
 ## Boundaries
 
