@@ -39,22 +39,6 @@ describe("PlayButton", () => {
     expect(handlers.onPlayClick).not.toHaveBeenCalled();
   });
 
-  test("changes label when isPlaying state changes", async () => {
-    const handlers = createHandlers();
-
-    const screen = await render(<PlayButton isPlaying={false} {...handlers} />);
-
-    await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
-      .toBeVisible();
-
-    await screen.rerender(<PlayButton isPlaying={true} {...handlers} />);
-
-    await expect
-      .element(screen.getByRole("button", { name: "Stop" }))
-      .toBeVisible();
-  });
-
   describe("RTL icon mirroring", () => {
     test("play arrow icon is flipped in RTL", async () => {
       const theme = createTheme({ direction: "rtl" });

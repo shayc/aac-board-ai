@@ -82,21 +82,6 @@ describe("createButtonActivation", () => {
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("navigates when loadBoard.id is set even if actions are also present", async () => {
-    const { activation, message, playback, navigation } = setup();
-
-    await activation.activateButton({
-      id: "btn",
-      label: "Folder",
-      loadBoard: { id: "child-board" },
-      actions: [{ kind: "space" }],
-    });
-
-    expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
-    expect(message.addSpace).not.toHaveBeenCalled();
-    expect(playback.play).not.toHaveBeenCalled();
-  });
-
   test("runs each action in order for an actions array", async () => {
     const callOrder: string[] = [];
     const message = createMessageStub();

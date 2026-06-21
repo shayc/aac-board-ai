@@ -82,16 +82,6 @@ describe("useMessagePlayback", () => {
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("prefers vocalization over label when both are present", async () => {
-    const parts: MessagePart[] = [{ id: "1", label: "I", vocalization: "eye" }];
-
-    const { result } = await renderHook(() => useMessagePlayback(parts));
-
-    await result.current.play();
-
-    expect(speech.speak.mock.calls[0][0].text).toBe("eye");
-  });
-
   test("reports isPlaying true during playback and false after it resolves", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {

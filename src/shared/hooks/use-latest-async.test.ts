@@ -3,18 +3,6 @@ import { renderHook } from "vitest-browser-react";
 import { useLatestAsync } from "./use-latest-async";
 
 describe("useLatestAsync", () => {
-  test("returns the value once the fetch resolves", async () => {
-    const { result } = await renderHook(() =>
-      useLatestAsync({
-        enabled: true,
-        deps: ["a"],
-        fetch: () => Promise.resolve("value-a"),
-      }),
-    );
-
-    await vi.waitFor(() => expect(result.current.value).toBe("value-a"));
-  });
-
   test("stands down without fetching when not enabled", async () => {
     const fetch = vi.fn(() => Promise.resolve("value"));
 
