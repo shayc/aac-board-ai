@@ -15,29 +15,6 @@ export interface BoardSetInfoDialogProps {
   onClose: () => void;
 }
 
-function buildChipLabels(boardSet: BoardSetRecord): string[] {
-  const labels: string[] = [];
-
-  if (boardSet.gridRows && boardSet.gridColumns) {
-    labels.push(
-      m.libraryGridDimensions({
-        rows: boardSet.gridRows,
-        columns: boardSet.gridColumns,
-      }),
-    );
-  }
-
-  if (boardSet.locale) {
-    labels.push(getEnglishLanguageName(boardSet.locale));
-  }
-
-  if (boardSet.license) {
-    labels.push(boardSet.license);
-  }
-
-  return labels;
-}
-
 export function BoardSetInfoDialog({
   boardSet,
   onClose,
@@ -87,4 +64,27 @@ export function BoardSetInfoDialog({
       </DialogActions>
     </Dialog>
   );
+}
+
+function buildChipLabels(boardSet: BoardSetRecord): string[] {
+  const labels: string[] = [];
+
+  if (boardSet.gridRows && boardSet.gridColumns) {
+    labels.push(
+      m.libraryGridDimensions({
+        rows: boardSet.gridRows,
+        columns: boardSet.gridColumns,
+      }),
+    );
+  }
+
+  if (boardSet.locale) {
+    labels.push(getEnglishLanguageName(boardSet.locale));
+  }
+
+  if (boardSet.license) {
+    labels.push(boardSet.license);
+  }
+
+  return labels;
 }

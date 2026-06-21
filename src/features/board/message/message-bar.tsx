@@ -15,21 +15,6 @@ export interface MessageBarProps {
   onStopClick: () => void;
 }
 
-function scrollElementIntoView(
-  element: Element | undefined,
-  inline: ScrollLogicalPosition,
-): () => void {
-  if (!element) {
-    return () => undefined;
-  }
-
-  const frameId = requestAnimationFrame(() => {
-    element.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
-  });
-
-  return () => cancelAnimationFrame(frameId);
-}
-
 export function MessageBar({
   parts,
   activePartId,
@@ -119,4 +104,19 @@ export function MessageBar({
       </Stack>
     </Stack>
   );
+}
+
+function scrollElementIntoView(
+  element: Element | undefined,
+  inline: ScrollLogicalPosition,
+): () => void {
+  if (!element) {
+    return () => undefined;
+  }
+
+  const frameId = requestAnimationFrame(() => {
+    element.scrollIntoView({ block: "nearest", inline, behavior: "instant" });
+  });
+
+  return () => cancelAnimationFrame(frameId);
 }

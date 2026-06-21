@@ -32,40 +32,6 @@ const initialState: SnackbarState = {
   open: false,
 };
 
-function snackbarReducer(
-  state: SnackbarState,
-  action: SnackbarAction,
-): SnackbarState {
-  switch (action.type) {
-    case "show": {
-      if (state.current) {
-        return {
-          ...state,
-          queue: [...state.queue, action.message],
-          open: false,
-        };
-      }
-
-      return { ...state, current: action.message, open: true };
-    }
-
-    case "close":
-      return { ...state, open: false };
-
-    case "exited": {
-      if (state.queue.length > 0) {
-        return {
-          current: state.queue[0],
-          queue: state.queue.slice(1),
-          open: true,
-        };
-      }
-
-      return { ...state, current: undefined };
-    }
-  }
-}
-
 export interface SnackbarProviderProps {
   children: ReactNode;
 }
@@ -131,4 +97,38 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function snackbarReducer(
+  state: SnackbarState,
+  action: SnackbarAction,
+): SnackbarState {
+  switch (action.type) {
+    case "show": {
+      if (state.current) {
+        return {
+          ...state,
+          queue: [...state.queue, action.message],
+          open: false,
+        };
+      }
+
+      return { ...state, current: action.message, open: true };
+    }
+
+    case "close":
+      return { ...state, open: false };
+
+    case "exited": {
+      if (state.queue.length > 0) {
+        return {
+          current: state.queue[0],
+          queue: state.queue.slice(1),
+          open: true,
+        };
+      }
+
+      return { ...state, current: undefined };
+    }
+  }
 }

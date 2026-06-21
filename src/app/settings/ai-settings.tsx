@@ -27,48 +27,6 @@ import {
   type Status,
 } from "@shayc/react-built-in-ai";
 
-function statusLabel(status: Status, progress: number) {
-  switch (status) {
-    case "ready":
-      return m.aiStatusAvailable();
-    case "downloading":
-      return m.aiStatusDownloading({
-        progress: Math.round(progress * 100),
-      });
-    case "downloadable":
-      return m.aiStatusDownloadRequired();
-    case "idle":
-    case "unavailable":
-    case "error":
-    case "unsupported":
-      return m.aiStatusUnavailable();
-    default:
-      return status satisfies never;
-  }
-}
-
-function statusIcon(status: Status, progress: number) {
-  const title = statusLabel(status, progress);
-  switch (status) {
-    case "ready":
-      return (
-        <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
-      );
-    case "downloading":
-    case "downloadable":
-      return (
-        <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
-      );
-    case "idle":
-    case "unavailable":
-    case "error":
-    case "unsupported":
-      return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
-    default:
-      return status satisfies never;
-  }
-}
-
 export function AISettings() {
   const sharedContext = useAISharedContext();
   const { language } = useLanguage();
@@ -149,4 +107,46 @@ export function AISettings() {
       </Stack>
     </Stack>
   );
+}
+
+function statusLabel(status: Status, progress: number) {
+  switch (status) {
+    case "ready":
+      return m.aiStatusAvailable();
+    case "downloading":
+      return m.aiStatusDownloading({
+        progress: Math.round(progress * 100),
+      });
+    case "downloadable":
+      return m.aiStatusDownloadRequired();
+    case "idle":
+    case "unavailable":
+    case "error":
+    case "unsupported":
+      return m.aiStatusUnavailable();
+    default:
+      return status satisfies never;
+  }
+}
+
+function statusIcon(status: Status, progress: number) {
+  const title = statusLabel(status, progress);
+  switch (status) {
+    case "ready":
+      return (
+        <CheckCircleIcon color="success" fontSize="small" titleAccess={title} />
+      );
+    case "downloading":
+    case "downloadable":
+      return (
+        <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
+      );
+    case "idle":
+    case "unavailable":
+    case "error":
+    case "unsupported":
+      return <CancelIcon color="error" fontSize="small" titleAccess={title} />;
+    default:
+      return status satisfies never;
+  }
 }
