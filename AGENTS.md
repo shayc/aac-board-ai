@@ -17,7 +17,7 @@
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → lint → test → build.
+- CI (Node 24) runs install → Playwright install → lint → test:coverage → build (CI enforces coverage floors; `npm test` runs the same suite without them).
 - Pre-commit: `lint-staged` runs ESLint `--fix` + Prettier on staged files.
 
 ## Project Structure
