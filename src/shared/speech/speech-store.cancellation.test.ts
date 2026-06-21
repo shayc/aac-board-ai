@@ -34,14 +34,15 @@ describe("speak() under cancellation", () => {
     expect(speakSpy).not.toHaveBeenCalled();
   });
 
-  test("resolves and cancels the utterance when the signal aborts", async () => {
+  test("resolves and cancels the in-progress utterance when the signal aborts", async () => {
     const controller = new AbortController();
     const promise = speak("hello", { signal: controller.signal });
 
+    const cancelsBeforeAbort = cancelSpy.mock.calls.length;
     controller.abort();
+    expect(cancelSpy.mock.calls.length).toBeGreaterThan(cancelsBeforeAbort);
 
     await expect(promise).resolves.toBeUndefined();
-    expect(cancelSpy).toHaveBeenCalled();
   });
 
   test("stops reporting boundaries once the signal aborts", () => {
