@@ -68,77 +68,78 @@ export function BoardSetList({
 
   return (
     <>
-      <List
-        aria-labelledby="board-set-list-subheader"
-        subheader={
-          <ListSubheader id="board-set-list-subheader">
-            {m.libraryBoards()}
-          </ListSubheader>
-        }
-        sx={(theme) => ({
-          px: 1,
-          "@media (hover: hover)": {
-            [theme.breakpoints.up("md")]: {
-              "& .MuiListItemSecondaryAction-root": {
-                opacity: 0,
-                pointerEvents: "none",
-                transition: theme.transitions.create("opacity", {
-                  duration: theme.transitions.duration.shortest,
-                }),
+      <Box component="nav" aria-labelledby="board-set-list-subheader">
+        <List
+          subheader={
+            <ListSubheader id="board-set-list-subheader">
+              {m.libraryBoards()}
+            </ListSubheader>
+          }
+          sx={(theme) => ({
+            px: 1,
+            "@media (hover: hover)": {
+              [theme.breakpoints.up("md")]: {
+                "& .MuiListItemSecondaryAction-root": {
+                  opacity: 0,
+                  pointerEvents: "none",
+                  transition: theme.transitions.create("opacity", {
+                    duration: theme.transitions.duration.shortest,
+                  }),
+                },
+                "& .MuiListItem-root:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
+                  { opacity: 1, pointerEvents: "auto" },
               },
-              "& .MuiListItem-root:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
-                { opacity: 1, pointerEvents: "auto" },
             },
-          },
-        })}
-      >
-        {boardSets.map((boardSet) => {
-          const isMenuOpen = activeMenuSetId === boardSet.setId;
+          })}
+        >
+          {boardSets.map((boardSet) => {
+            const isMenuOpen = activeMenuSetId === boardSet.setId;
 
-          return (
-            <ListItem
-              disablePadding
-              key={boardSet.setId}
-              data-menu-open={isMenuOpen || undefined}
-              secondaryAction={
-                <Tooltip title={m.libraryMoreOptions()}>
-                  <IconButton
-                    edge="end"
-                    aria-label={m.libraryMoreOptionsFor({
-                      name: boardSet.name,
-                    })}
-                    aria-controls={isMenuOpen ? "board-set-menu" : undefined}
-                    aria-haspopup="menu"
-                    aria-expanded={isMenuOpen ? "true" : undefined}
-                    onClick={(event) => handleMenuOpen(event, boardSet)}
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
-                </Tooltip>
-              }
-            >
-              <ListItemButton
-                selected={boardSet.setId === selectedSetId}
-                onClick={() => onSelect(boardSet)}
-              >
-                <ListItemText
-                  primary={
-                    <Box
-                      sx={{
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
+            return (
+              <ListItem
+                disablePadding
+                key={boardSet.setId}
+                data-menu-open={isMenuOpen || undefined}
+                secondaryAction={
+                  <Tooltip title={m.libraryMoreOptions()}>
+                    <IconButton
+                      edge="end"
+                      aria-label={m.libraryMoreOptionsFor({
+                        name: boardSet.name,
+                      })}
+                      aria-controls={isMenuOpen ? "board-set-menu" : undefined}
+                      aria-haspopup="menu"
+                      aria-expanded={isMenuOpen ? "true" : undefined}
+                      onClick={(event) => handleMenuOpen(event, boardSet)}
                     >
-                      {boardSet.name}
-                    </Box>
-                  }
-                />
-              </ListItemButton>
-            </ListItem>
-          );
-        })}
-      </List>
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Tooltip>
+                }
+              >
+                <ListItemButton
+                  selected={boardSet.setId === selectedSetId}
+                  onClick={() => onSelect(boardSet)}
+                >
+                  <ListItemText
+                    primary={
+                      <Box
+                        sx={{
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {boardSet.name}
+                      </Box>
+                    }
+                  />
+                </ListItemButton>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
 
       <Menu
         id="board-set-menu"
