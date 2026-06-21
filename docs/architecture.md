@@ -161,7 +161,7 @@ hyperlinked, so a moved file never breaks this table.
 | `src/features/board/storage/`                                            | **The only reader/writer of IndexedDB.** `boards-db.ts` (idb) + `board-hydration.ts` (blobs → object URLs).                 |
 | `src/features/board/board-sets/`                                         | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                            |
 | `src/features/board/suggestions/`                                        | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                            |
-| `src/features/board/translation/`                                        | Board translation (Translator) + in-memory/IndexedDB cache. Search `resolveTranslatedBoard`.                                |
+| `src/features/board/translation/`                                        | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                   |
 | `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                       |
 | `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                    |
 | `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                       |
