@@ -6,11 +6,11 @@ export async function boardSetIndexLoader({
   params,
 }: LoaderFunctionArgs): Promise<Response> {
   const { setId } = params;
-  const set = setId ? await getBoardSet(setId) : undefined;
+  const boardSet = setId ? await getBoardSet(setId) : undefined;
 
-  if (!set) {
+  if (!boardSet) {
     throw data(m.errorBoardSetNotFound(), { status: 404 });
   }
 
-  return redirect(boardSetPath(set));
+  return redirect(boardSetPath(boardSet));
 }

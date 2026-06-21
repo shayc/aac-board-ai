@@ -9,15 +9,15 @@ import { m } from "@paraglide/messages.js";
 import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
+  libraryButtonHidden?: boolean;
   onLibraryClick: () => void;
   onSettingsClick: () => void;
-  libraryButtonHidden?: boolean;
 }
 
 export function AppHeader({
+  libraryButtonHidden = false,
   onLibraryClick,
   onSettingsClick,
-  libraryButtonHidden = false,
 }: AppHeaderProps) {
   const pageTitle = usePageTitle();
 

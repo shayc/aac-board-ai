@@ -38,7 +38,9 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
 
   const { setId, boardId } = useParams<BoardRouteParams>();
   const { boardSets } = useBoardSets();
-  const rootBoardId = boardSets.find((set) => set.setId === setId)?.rootBoardId;
+  const rootBoardId = boardSets.find(
+    (boardSet) => boardSet.setId === setId,
+  )?.rootBoardId;
 
   const backStack = readBackStack(location.state);
 

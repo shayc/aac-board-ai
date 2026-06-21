@@ -20,13 +20,13 @@ import { deleteBoardSet } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
 
 export interface BoardSetLibraryProps {
+  selectedSetId?: string;
   onSelect: (boardSet: BoardSetRecord) => void;
-  activeSetId?: string;
 }
 
 export function BoardSetLibrary({
+  selectedSetId,
   onSelect,
-  activeSetId,
 }: BoardSetLibraryProps) {
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
@@ -100,7 +100,7 @@ export function BoardSetLibrary({
 
       <BoardSetList
         boardSets={boardSets}
-        selectedSetId={activeSetId}
+        selectedSetId={selectedSetId}
         onSelect={onSelect}
         onDelete={setDeleteTarget}
         onInfo={setInfoTarget}

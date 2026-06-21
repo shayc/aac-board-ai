@@ -14,9 +14,9 @@ async function resolveInitialRedirectPath(
     return boardSetPath(await importBoardFromUrl(boardUrl));
   }
 
-  const [existing] = await getBoardSets();
-  if (existing) {
-    return boardSetPath(existing);
+  const [boardSet] = await getBoardSets();
+  if (boardSet) {
+    return boardSetPath(boardSet);
   }
 
   return boardSetPath(await importBoardFromUrl(DEFAULT_BOARD_URL));
