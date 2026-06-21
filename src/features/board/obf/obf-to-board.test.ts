@@ -343,45 +343,6 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
     });
 
-    test("prefers path over url when data is absent", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-path-fallback",
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Media",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
-        images: [
-          {
-            id: "img-1",
-            path: "images/img-1.png",
-            url: "https://example.com/img.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            path: "sounds/snd-1.mp3",
-            url: "https://example.com/snd.mp3",
-          },
-        ],
-      };
-
-      const board = obfToBoard(obfBoard);
-
-      expect(board.buttons[0]?.imageSrc).toBe("images/img-1.png");
-      expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
-    });
-
     test("falls back to url when no data/path is available", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",

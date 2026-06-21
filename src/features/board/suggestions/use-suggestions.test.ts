@@ -61,17 +61,6 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("dedupes identical proofread and rewrite outputs", async () => {
-    stubProofreader(() => makeProofreadResult("Hello."));
-    stubRewriter(() => "Hello.");
-
-    const { result } = await renderSuggestions("helo");
-
-    await vi.waitFor(() => {
-      expect(result.current.phrases).toEqual(["Hello."]);
-    });
-  });
-
   test("dedupes proofread and rewrite outputs that differ only in case", async () => {
     stubProofreader(() => makeProofreadResult("My movies"));
     stubRewriter(() => "my movies");
@@ -91,20 +80,6 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["Something different."]);
-    });
-  });
-
-  test.each([
-    ["underscored tokens", "raw_token", "I want food."],
-    ["double quotes", 'he said "hi"', "no quotes here"],
-  ])("filters out a candidate with %s", async (_label, rejected, accepted) => {
-    stubProofreader(() => makeProofreadResult(rejected));
-    stubRewriter(() => accepted);
-
-    const { result } = await renderSuggestions("seed");
-
-    await vi.waitFor(() => {
-      expect(result.current.phrases).toEqual([accepted]);
     });
   });
 

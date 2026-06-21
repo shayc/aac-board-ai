@@ -87,7 +87,7 @@ export function LibraryDrawer({
         })}
       >
         <BoardSetLibrary
-          activeSetId={activeSetId}
+          selectedSetId={activeSetId}
           onSelect={(boardSet) => {
             void navigate(boardSetPath(boardSet));
             closeOnNavigate?.();

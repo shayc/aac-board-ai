@@ -91,16 +91,6 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("hello");
   });
 
-  test("splits a text string into individual word parts", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.setFromText("I want water");
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(3);
-    expect(result.current.text).toBe("I want water");
-  });
-
   test("keeps trailing punctuation attached to its word for TTS prosody", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 

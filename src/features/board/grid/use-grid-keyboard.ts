@@ -82,7 +82,7 @@ export function useGridKeyboard({
     },
   });
 
-  const onFocus = (event: FocusEvent<HTMLElement>) => {
+  const handleFocus = (event: FocusEvent<HTMLElement>) => {
     const position = cellOf(event.target);
     if (position) {
       rememberCell(position);
@@ -116,7 +116,11 @@ export function useGridKeyboard({
     ? rememberedCell
     : findFirstNonEmptyCell(grid);
 
-  return { rootRef, rootProps: { ...keyboardProps, onFocus }, activeCell };
+  return {
+    rootRef,
+    rootProps: { ...keyboardProps, onFocus: handleFocus },
+    activeCell,
+  };
 }
 
 function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {

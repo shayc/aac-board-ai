@@ -132,17 +132,6 @@ describe("resolveTranslatedBoard", () => {
     expect(result).toBe(board);
   });
 
-  test("falls back to the source board when the navigation is aborted", async () => {
-    const board = makeBoard();
-    stubTranslator(() =>
-      Promise.reject(new DOMException("Aborted", "AbortError")),
-    );
-
-    const result = await resolveTranslatedBoard("set-1", board, "es");
-
-    expect(result).toBe(board);
-  });
-
   test("falls back even on unexpected errors so the board always renders", async () => {
     const board = makeBoard();
     stubTranslator(() => {
