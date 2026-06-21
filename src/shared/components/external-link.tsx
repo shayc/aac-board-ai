@@ -1,6 +1,8 @@
 import Link, { type LinkProps } from "@mui/material/Link";
 
-export function ExternalLink(props: Omit<LinkProps, "target" | "rel">) {
+export type ExternalLinkProps = Omit<LinkProps, "target" | "rel">;
+
+export function ExternalLink(props: ExternalLinkProps) {
   return (
     <Link
       {...props}
