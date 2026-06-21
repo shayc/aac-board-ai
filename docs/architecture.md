@@ -67,7 +67,7 @@ The app is a browser SPA that leans entirely on Web Platform capabilities. Its o
 flowchart TB
     user["AAC user · carer · SLP / educator"]
 
-    subgraph platform["Browser platform (Chrome · Edge · others)"]
+    subgraph platform["Browser platform"]
         idb[("IndexedDB")]
         speech["Web Speech API"]
         ai["Built-in AI<br/>Proofreader · Rewriter · Translator"]
@@ -77,7 +77,7 @@ flowchart TB
     host["Static host (Netlify)"]
     boards["OBF / OBZ board files<br/>(local disk · any URL)"]
 
-    user -->|taps tiles, edits, imports| app
+    user -->|taps tiles, imports| app
     app -->|reads / writes boards| idb
     app -->|speaks message| speech
     app -.->|feature-detected| ai
@@ -90,8 +90,8 @@ at runtime, absent on most browsers, and never required for core use.
 
 ## Containers and runtime
 
-Inside the single SPA, each capability sits behind its own module. A PWA service
-worker caches the shell so the app loads offline after first visit.
+The app is one SPA; inside it, each capability sits behind its own module. A PWA
+service worker caches the shell so the app loads offline after first visit.
 
 ```mermaid
 flowchart LR
@@ -141,8 +141,8 @@ flowchart LR
 
 ## Codemap
 
-Coarse modules and what they do, not how each works inside. Names are
-**symbol-searchable**, not hyperlinked, so a moved file never breaks this table.
+Coarse modules and what they do. Names are **symbol-searchable**, not
+hyperlinked, so a moved file never breaks this table.
 
 | Module                                                                   | What it does                                                                                                                |
 | ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
@@ -165,7 +165,7 @@ Coarse modules and what they do, not how each works inside. Names are
 | `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                       |
 | `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                    |
 | `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                       |
-| `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: store primitives, status UI, snackbar, app providers.                                                |
+| `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: status UI, snackbar, app providers.                                                                  |
 | `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                           |
 | `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                |
 
