@@ -7,7 +7,7 @@
 
 **AAC Board AI** is an Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It uses **Built-in AI** for on-device grammar correction, tone adjustment, and translation — keeping interactions private, fast, and reliable offline.
 
-![Demo of AAC Board AI](demo.gif)
+![Animated demo: tapping the tiles "want", "eat", "pizza", then accepting the suggestion "I want to eat pizza" and hearing it spoken aloud](demo.gif)
 
 Try the live app at [aacboard.app](https://aacboard.app). Core board features work in any modern browser; Built-in AI enhancements require Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
@@ -19,8 +19,9 @@ Standard AAC boards produce telegraphic output — tapping tiles one at a time y
 User taps:          [ want ] → [ eat ] → [ pizza ]
 Raw text:           "want eat pizza"
 Grammar-corrected:  "I want to eat pizza" ← keeps the user's words
-Friendly tone:      "I'm craving pizza!"  ← optional, user taps to accept
 ```
+
+Optional tone variants (direct, professional, friendly) are offered the same way — as suggestions the user can tap to accept, never applied automatically.
 
 ## Who it's for
 
