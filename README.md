@@ -7,7 +7,7 @@
 
 **AAC Board AI** is an Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It uses **Built-in AI** for on-device grammar correction, tone adjustment, and translation — keeping interactions private, fast, and reliable offline.
 
-![Screenshot of AAC Board AI](screenshot.png)
+![Demo of AAC Board AI](demo.gif)
 
 Try the live app at [aacboard.app](https://aacboard.app). Core board features work in any modern browser; Built-in AI enhancements require Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
