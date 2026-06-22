@@ -11,14 +11,15 @@
 
 Try the live app at [aacboard.app](https://aacboard.app). Core board features work in any modern browser; Built-in AI enhancements require Chrome or Edge with [Built-in AI enabled](#enabling-built-in-ai).
 
-## From taps to sentences
+## From taps to clearer messages
 
-Standard AAC boards require selecting tiles one at a time, which often produces telegraphic output. AAC Board AI expands those short inputs into natural sentences locally, on-device:
+Standard AAC boards produce telegraphic output — tapping tiles one at a time yields "want eat pizza." AAC Board AI cleans that up on-device: a grammar-corrected version that keeps the user's own words, plus optional tone variants (direct, professional, or friendly). Each suggestion is a button the user taps to accept:
 
 ```
-User selects:       [ Want ] → [ Eat ] → [ Pizza ] → [ Later ]
-Standard output:    "Want eat pizza later."
-AI-expanded output: "I would like to eat pizza later, please."
+User taps:          [ want ] → [ eat ] → [ pizza ]
+Raw text:           "want eat pizza"
+Grammar-corrected:  "I want to eat pizza" ← keeps the user's words
+Friendly tone:      "I'm craving pizza!"  ← optional, user taps to accept
 ```
 
 ## Who it's for
@@ -29,7 +30,7 @@ AI-expanded output: "I would like to eat pizza later, please."
 
 ## Key features
 
-- **Grammar Correction** — Turns telegraphic text into clear sentences ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
+- **Grammar Correction** — Fixes grammar while keeping the user's own wording ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
 - **Tone Adjustment** — Rewrites messages in direct, professional, or friendly tones ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
 - **Translation** — Translates board labels and vocalizations between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** — Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
