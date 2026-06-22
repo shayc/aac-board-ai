@@ -69,7 +69,13 @@ export function MessageBar({
         <Stack
           ref={scrollContainerRef}
           direction="row"
-          sx={{ flexGrow: 1, p: 2, gap: 1, overflow: "auto" }}
+          sx={{
+            flexGrow: 1,
+            p: 2,
+            gap: 1,
+            overflow: "auto",
+            userSelect: "text",
+          }}
         >
           {parts.map((part) => {
             const isActive = part.id === activePartId;

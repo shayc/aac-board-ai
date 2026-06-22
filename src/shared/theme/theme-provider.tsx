@@ -44,6 +44,9 @@ const themeOptions = {
         html: {
           overscrollBehaviorY: "none",
         },
+        body: {
+          userSelect: "none",
+        },
       },
     },
     MuiAppBar: {
