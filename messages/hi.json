@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "जैसे, व्यंग्यात्मक, विनम्र।",
   "aiCustomInstructionsHelper": "AI सुझावों को वैयक्तिकृत करें।",
   "aiBuiltInSupport": "अंतर्निहित AI समर्थन",
+  "aiBuiltInSupportHelp": "डेस्कटॉप Google Chrome या Microsoft Edge आवश्यक है, जिसमें प्रायोगिक फ़्लैग सक्षम हों।",
   "aiStatusAvailable": "उपलब्ध",
   "aiStatusUnavailable": "अनुपलब्ध",
   "aiStatusDownloading": "डाउनलोड हो रहा है… {progress}%",

@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "z. B. Sarkastisch, Höflich.",
   "aiCustomInstructionsHelper": "Personalisiere die KI-Vorschläge.",
   "aiBuiltInSupport": "Integrierte KI-Unterstützung",
+  "aiBuiltInSupportHelp": "Erfordert die Desktop-Version von Google Chrome oder Microsoft Edge mit aktivierten experimentellen Flags.",
   "aiStatusAvailable": "Verfügbar",
   "aiStatusUnavailable": "Nicht verfügbar",
   "aiStatusDownloading": "Wird heruntergeladen… {progress}%",

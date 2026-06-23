@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "напр. Саркастичен, Учтив.",
   "aiCustomInstructionsHelper": "Персонализирайте предложенията на ИИ.",
   "aiBuiltInSupport": "Вградена поддръжка на ИИ",
+  "aiBuiltInSupportHelp": "Изисква настолната версия на Google Chrome или Microsoft Edge с включени експериментални флагове.",
   "aiStatusAvailable": "Налично",
   "aiStatusUnavailable": "Не е налично",
   "aiStatusDownloading": "Изтегляне… {progress}%",

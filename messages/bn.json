@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "যেমন, ব্যঙ্গাত্মক, ভদ্র।",
   "aiCustomInstructionsHelper": "AI পরামর্শ ব্যক্তিগতকৃত করুন।",
   "aiBuiltInSupport": "অন্তর্নির্মিত AI সমর্থন",
+  "aiBuiltInSupportHelp": "পরীক্ষামূলক ফ্ল্যাগ সক্ষম করা ডেস্কটপ Google Chrome বা Microsoft Edge প্রয়োজন।",
   "aiStatusAvailable": "উপলব্ধ",
   "aiStatusUnavailable": "অনুপলব্ধ",
   "aiStatusDownloading": "ডাউনলোড হচ্ছে… {progress}%",

@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "例：皮肉っぽく、丁寧に。",
   "aiCustomInstructionsHelper": "AI の提案をカスタマイズします。",
   "aiBuiltInSupport": "組み込み AI のサポート",
+  "aiBuiltInSupportHelp": "デスクトップ版の Google Chrome または Microsoft Edge で試験運用版のフラグを有効にする必要があります。",
   "aiStatusAvailable": "利用可能",
   "aiStatusUnavailable": "利用不可",
   "aiStatusDownloading": "ダウンロード中… {progress}%",

@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "npr. Sarkastičan, Pristojan.",
   "aiCustomInstructionsHelper": "Prilagodite prijedloge umjetne inteligencije.",
   "aiBuiltInSupport": "Ugrađena podrška za umjetnu inteligenciju",
+  "aiBuiltInSupportHelp": "Zahtijeva stolnu verziju preglednika Google Chrome ili Microsoft Edge s omogućenim eksperimentalnim zastavicama.",
   "aiStatusAvailable": "Dostupno",
   "aiStatusUnavailable": "Nedostupno",
   "aiStatusDownloading": "Preuzimanje… {progress} %",

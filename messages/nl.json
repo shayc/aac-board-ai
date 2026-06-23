@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "bijv. Sarcastisch, Beleefd.",
   "aiCustomInstructionsHelper": "Personaliseer de AI-suggesties.",
   "aiBuiltInSupport": "Ingebouwde AI-ondersteuning",
+  "aiBuiltInSupportHelp": "Vereist de desktopversie van Google Chrome of Microsoft Edge met experimentele vlaggen ingeschakeld.",
   "aiStatusAvailable": "Beschikbaar",
   "aiStatusUnavailable": "Niet beschikbaar",
   "aiStatusDownloading": "Downloaden… {progress}%",

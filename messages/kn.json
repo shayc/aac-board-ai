@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "ಉದಾ., ವ್ಯಂಗ್ಯ, ಸಭ್ಯ.",
   "aiCustomInstructionsHelper": "AI ಸಲಹೆಗಳನ್ನು ವೈಯಕ್ತೀಕರಿಸಿ.",
   "aiBuiltInSupport": "ಅಂತರ್ನಿರ್ಮಿತ AI ಬೆಂಬಲ",
+  "aiBuiltInSupportHelp": "ಡೆಸ್ಕ್‌ಟಾಪ್ Google Chrome ಅಥವಾ Microsoft Edge ಅಗತ್ಯವಿದೆ, ಪ್ರಾಯೋಗಿಕ ಫ್ಲ್ಯಾಗ್‌ಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿರಬೇಕು.",
   "aiStatusAvailable": "ಲಭ್ಯವಿದೆ",
   "aiStatusUnavailable": "ಲಭ್ಯವಿಲ್ಲ",
   "aiStatusDownloading": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",

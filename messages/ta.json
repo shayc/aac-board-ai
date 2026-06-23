@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "எ.கா., கிண்டலான, பணிவான.",
   "aiCustomInstructionsHelper": "AI பரிந்துரைகளைத் தனிப்பயனாக்கு.",
   "aiBuiltInSupport": "உள்ளமைந்த AI ஆதரவு",
+  "aiBuiltInSupportHelp": "சோதனை ஃபிளாக்குகள் இயக்கப்பட்ட டெஸ்க்டாப் Google Chrome அல்லது Microsoft Edge தேவை.",
   "aiStatusAvailable": "கிடைக்கிறது",
   "aiStatusUnavailable": "கிடைக்கவில்லை",
   "aiStatusDownloading": "பதிவிறக்கப்படுகிறது… {progress}%",

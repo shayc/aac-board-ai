@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "ad es. Sarcastico, Cortese.",
   "aiCustomInstructionsHelper": "Personalizza i suggerimenti dell'IA.",
   "aiBuiltInSupport": "Supporto IA integrata",
+  "aiBuiltInSupportHelp": "Richiede Google Chrome o Microsoft Edge per desktop con i flag sperimentali abilitati.",
   "aiStatusAvailable": "Disponibile",
   "aiStatusUnavailable": "Non disponibile",
   "aiStatusDownloading": "Download… {progress}%",

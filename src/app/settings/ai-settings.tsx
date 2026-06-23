@@ -1,13 +1,16 @@
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadingIcon from "@mui/icons-material/Downloading";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import {
@@ -26,8 +29,10 @@ import {
   useRewriter,
   type Status,
 } from "@shayc/react-built-in-ai";
+import { useState } from "react";
 
 export function AISettings() {
+  const [helpOpen, setHelpOpen] = useState(false);
   const sharedContext = useAISharedContext();
   const { language } = useLanguage();
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
@@ -76,9 +81,26 @@ export function AISettings() {
       )}
 
       <Stack spacing={1}>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {m.aiBuiltInSupport()}
-        </Typography>
+        <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {m.aiBuiltInSupport()}
+          </Typography>
+
+          <Tooltip
+            title={m.aiBuiltInSupportHelp()}
+            open={helpOpen}
+            onOpen={() => setHelpOpen(true)}
+            onClose={() => setHelpOpen(false)}
+          >
+            <IconButton
+              aria-label={m.aiBuiltInSupportHelp()}
+              size="small"
+              onClick={() => setHelpOpen(true)}
+            >
+              <InfoOutlinedIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Stack>
 
         <List dense>
           {capabilities.map(({ title, status, progress, onDownload }) => (
