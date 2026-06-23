@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "pl. Szarkasztikus, Udvarias.",
   "aiCustomInstructionsHelper": "Személyre szabhatod az MI-javaslatokat.",
   "aiBuiltInSupport": "Beépített MI-támogatás",
+  "aiBuiltInSupportHelp": "Az asztali Google Chrome vagy Microsoft Edge szükséges, engedélyezett kísérleti jelzőkkel.",
   "aiStatusAvailable": "Elérhető",
   "aiStatusUnavailable": "Nem érhető el",
   "aiStatusDownloading": "Letöltés… {progress}%",

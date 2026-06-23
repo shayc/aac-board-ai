@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "ex.: Sarcástico, Educado.",
   "aiCustomInstructionsHelper": "Personalize as sugestões da IA.",
   "aiBuiltInSupport": "Suporte a IA integrada",
+  "aiBuiltInSupportHelp": "Requer o Google Chrome ou Microsoft Edge para computador com sinalizadores experimentais ativados.",
   "aiStatusAvailable": "Disponível",
   "aiStatusUnavailable": "Indisponível",
   "aiStatusDownloading": "Baixando… {progress}%",

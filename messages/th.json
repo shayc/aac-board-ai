@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "เช่น ประชดประชัน สุภาพ",
   "aiCustomInstructionsHelper": "ปรับแต่งคำแนะนำของ AI ให้เป็นส่วนตัว",
   "aiBuiltInSupport": "การรองรับ AI ในตัว",
+  "aiBuiltInSupportHelp": "ต้องใช้ Google Chrome หรือ Microsoft Edge บนเดสก์ท็อปโดยเปิดใช้งานแฟล็กทดลอง",
   "aiStatusAvailable": "พร้อมใช้งาน",
   "aiStatusUnavailable": "ไม่พร้อมใช้งาน",
   "aiStatusDownloading": "กำลังดาวน์โหลด… {progress}%",

@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "ví dụ: Châm biếm, Lịch sự.",
   "aiCustomInstructionsHelper": "Cá nhân hóa gợi ý của AI.",
   "aiBuiltInSupport": "Hỗ trợ AI tích hợp",
+  "aiBuiltInSupportHelp": "Yêu cầu Google Chrome hoặc Microsoft Edge phiên bản máy tính với cờ thử nghiệm được bật.",
   "aiStatusAvailable": "Khả dụng",
   "aiStatusUnavailable": "Không khả dụng",
   "aiStatusDownloading": "Đang tải xuống… {progress}%",

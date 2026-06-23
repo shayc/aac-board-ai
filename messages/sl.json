@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "npr. Sarkastičen, Vljuden.",
   "aiCustomInstructionsHelper": "Prilagodite predloge UI.",
   "aiBuiltInSupport": "Vgrajena podpora za UI",
+  "aiBuiltInSupportHelp": "Zahteva namizno različico Google Chrome ali Microsoft Edge z omogočenimi eksperimentalnimi zastavicami.",
   "aiStatusAvailable": "Na voljo",
   "aiStatusUnavailable": "Ni na voljo",
   "aiStatusDownloading": "Prenašanje… {progress} %",

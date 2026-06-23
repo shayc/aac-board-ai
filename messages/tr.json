@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "ör. Alaycı, Kibar.",
   "aiCustomInstructionsHelper": "Yapay zeka önerilerini kişiselleştirin.",
   "aiBuiltInSupport": "Yerleşik yapay zeka desteği",
+  "aiBuiltInSupportHelp": "Masaüstü Google Chrome veya Microsoft Edge'de deneysel işaretlerin etkinleştirilmesi gerekir.",
   "aiStatusAvailable": "Kullanılabilir",
   "aiStatusUnavailable": "Kullanılamıyor",
   "aiStatusDownloading": "İndiriliyor… %{progress}",

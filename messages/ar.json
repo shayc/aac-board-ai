@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "مثل: ساخر، مهذّب.",
   "aiCustomInstructionsHelper": "خصّص اقتراحات الذكاء الاصطناعي.",
   "aiBuiltInSupport": "دعم الذكاء الاصطناعي المدمج",
+  "aiBuiltInSupportHelp": "يتطلب إصدار سطح المكتب من Google Chrome أو Microsoft Edge مع تفعيل العلامات التجريبية.",
   "aiStatusAvailable": "متاح",
   "aiStatusUnavailable": "غير متاح",
   "aiStatusDownloading": "جارٍ التنزيل… {progress}%",

@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "예: 냉소적으로, 공손하게.",
   "aiCustomInstructionsHelper": "AI 제안을 개인화하세요.",
   "aiBuiltInSupport": "내장 AI 지원",
+  "aiBuiltInSupportHelp": "데스크톱용 Google Chrome 또는 Microsoft Edge에서 실험용 플래그를 사용 설정해야 합니다.",
   "aiStatusAvailable": "사용 가능",
   "aiStatusUnavailable": "사용 불가",
   "aiStatusDownloading": "다운로드 중… {progress}%",

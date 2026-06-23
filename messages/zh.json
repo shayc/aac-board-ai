@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "例如：讽刺、礼貌。",
   "aiCustomInstructionsHelper": "个性化 AI 建议。",
   "aiBuiltInSupport": "内置 AI 支持",
+  "aiBuiltInSupportHelp": "需要桌面版 Google Chrome 或 Microsoft Edge 并启用实验性标志。",
   "aiStatusAvailable": "可用",
   "aiStatusUnavailable": "不可用",
   "aiStatusDownloading": "正在下载… {progress}%",

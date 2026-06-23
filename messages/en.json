@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "e.g., Sarcastic, Polite.",
   "aiCustomInstructionsHelper": "Personalize AI suggestions.",
   "aiBuiltInSupport": "Built-in AI support",
+  "aiBuiltInSupportHelp": "Requires desktop Google Chrome or Microsoft Edge with experimental flags enabled.",
   "aiStatusAvailable": "Available",
   "aiStatusUnavailable": "Unavailable",
   "aiStatusDownloading": "Downloading… {progress}%",

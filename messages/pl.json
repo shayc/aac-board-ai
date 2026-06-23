@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "np. Sarkastyczny, Uprzejmy.",
   "aiCustomInstructionsHelper": "Spersonalizuj sugestie AI.",
   "aiBuiltInSupport": "Wbudowana obsługa AI",
+  "aiBuiltInSupportHelp": "Wymaga przeglądarki Google Chrome lub Microsoft Edge na komputery z włączonymi flagami eksperymentalnymi.",
   "aiStatusAvailable": "Dostępne",
   "aiStatusUnavailable": "Niedostępne",
   "aiStatusDownloading": "Pobieranie… {progress}%",

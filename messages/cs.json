@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "např. Sarkastický, Zdvořilý.",
   "aiCustomInstructionsHelper": "Přizpůsobte si návrhy AI.",
   "aiBuiltInSupport": "Vestavěná podpora AI",
+  "aiBuiltInSupportHelp": "Vyžaduje desktopový Google Chrome nebo Microsoft Edge se zapnutými experimentálními příznaky.",
   "aiStatusAvailable": "K dispozici",
   "aiStatusUnavailable": "Není k dispozici",
   "aiStatusDownloading": "Stahování… {progress} %",

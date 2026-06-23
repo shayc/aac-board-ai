@@ -77,6 +77,7 @@
   "aiCustomInstructionsPlaceholder": "esim. Sarkastinen, Kohtelias.",
   "aiCustomInstructionsHelper": "Mukauta tekoälyn ehdotuksia.",
   "aiBuiltInSupport": "Sisäänrakennettu tekoälytuki",
+  "aiBuiltInSupportHelp": "Vaatii Google Chromen tai Microsoft Edgen työpöytäversion, jossa kokeelliset liput ovat käytössä.",
   "aiStatusAvailable": "Saatavilla",
   "aiStatusUnavailable": "Ei saatavilla",
   "aiStatusDownloading": "Ladataan… {progress} %",
