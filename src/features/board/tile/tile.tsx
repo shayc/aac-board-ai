@@ -24,11 +24,6 @@ export function Tile({
   tabIndex,
   onClick,
 }: TileProps) {
-  const darkened = (percent: number) =>
-    backgroundColor
-      ? `color-mix(in srgb, ${backgroundColor}, black ${percent}%)`
-      : undefined;
-
   return (
     <Button
       tabIndex={tabIndex}
@@ -51,13 +46,13 @@ export function Tile({
           ? getReadableTextColor(backgroundColor)
           : "inherit",
         backgroundColor,
-        transition: theme.transitions.create("background-color", {
+        transition: theme.transitions.create("filter", {
           duration: theme.transitions.duration.short,
         }),
         "@media (hover: hover)": {
-          "&:hover": { backgroundColor: darkened(20) },
+          "&:hover": { filter: "brightness(0.8)" },
         },
-        "&:active": { backgroundColor: darkened(30) },
+        "&:active": { filter: "brightness(0.7)" },
         "&:focus-visible": {
           outline: `3px solid ${
             theme.vars
