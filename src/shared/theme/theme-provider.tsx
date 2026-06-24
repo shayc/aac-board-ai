@@ -79,6 +79,13 @@ const themeOptions = {
         }),
       },
     },
+    MuiDialog: {
+      styleOverrides: {
+        paper: ({ ownerState }) => ({
+          ...(!ownerState.fullScreen && { borderRadius: 32 }),
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

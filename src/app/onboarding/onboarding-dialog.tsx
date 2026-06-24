@@ -62,7 +62,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       slotProps={{
         paper: {
           sx: {
-            borderRadius: fullScreen ? 0 : 6,
             p: 1,
           },
         },
