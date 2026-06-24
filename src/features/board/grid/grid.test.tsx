@@ -1140,6 +1140,7 @@ describe("Grid", () => {
       expect(marginLeft(visible)).toBeLessThan(1);
       expect(Math.abs(marginLeft(1) - pitch)).toBeLessThan(1.5);
       expect(Math.abs(marginLeft(visible + 1) - pitch)).toBeLessThan(1.5);
+      expect(getComputedStyle(cells[0]).scrollSnapStop).toBe("always");
     });
 
     test("pulls each row back to its page's leading edge", async () => {
