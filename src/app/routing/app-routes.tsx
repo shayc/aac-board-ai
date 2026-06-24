@@ -10,10 +10,10 @@ import type { RouteObject } from "react-router";
 export const appRoutes: RouteObject[] = [
   {
     Component: AppShell,
-    HydrateFallback: LoadingState,
     children: [
       {
         ErrorBoundary: RouteErrorBoundary,
+        HydrateFallback: LoadingState,
         children: [
           { index: true, loader: rootIndexLoader },
           {

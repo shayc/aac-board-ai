@@ -119,7 +119,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </List>
       </DialogContent>
 
-      <DialogActions sx={{ px: 3, pb: 3 }}>
+      <DialogActions>
         <Button onClick={onClose} variant="contained" fullWidth size="large">
           {m.onboardingContinue()}
         </Button>
