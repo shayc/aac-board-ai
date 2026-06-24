@@ -17,7 +17,8 @@ export function ContentColumn({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        marginInlineStart: shifted ? LIBRARY_DRAWER_WIDTH : 0,
+        width: shifted ? `calc(100% - ${LIBRARY_DRAWER_WIDTH})` : "100%",
+        marginLeft: shifted ? LIBRARY_DRAWER_WIDTH : 0,
       }}
     >
       {children}
