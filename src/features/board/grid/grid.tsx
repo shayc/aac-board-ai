@@ -114,12 +114,26 @@ export function Grid<TItem extends { id: string }>({
                   role="gridcell"
                   aria-rowindex={rowIndex + 1}
                   aria-colindex={colIndex + 1}
-                  sx={{
+                  sx={(theme) => ({
                     flex: 1,
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
                     scrollSnapAlign: "start",
-                  }}
+                    scrollMarginBlockStart: pageOffset(
+                      theme,
+                      rowIndex,
+                      "--visible-rows",
+                      "--cell-height",
+                      gap,
+                    ),
+                    scrollMarginInlineStart: pageOffset(
+                      theme,
+                      colIndex,
+                      "--visible-cols",
+                      "--cell-width",
+                      gap,
+                    ),
+                  })}
                 >
                   {item &&
                     renderItem(item, {
@@ -162,6 +176,16 @@ function buildGrid<TItem extends { id: string }>(
       return items[index];
     }),
   );
+}
+
+function pageOffset(
+  theme: Theme,
+  index: number,
+  countVar: string,
+  cellSizeVar: string,
+  gap: number,
+): string {
+  return `calc(mod(${index}, var(${countVar})) * (var(${cellSizeVar}) + ${theme.spacing(gap)}))`;
 }
 
 function visibleTracks(
