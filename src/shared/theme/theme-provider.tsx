@@ -86,6 +86,13 @@ const themeOptions = {
         }),
       },
     },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: 16,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
