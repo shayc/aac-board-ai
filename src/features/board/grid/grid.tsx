@@ -119,6 +119,7 @@ export function Grid<TItem extends { id: string }>({
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
                     scrollSnapAlign: "start",
+                    scrollSnapStop: "always",
                     scrollMarginBlockStart: pageOffset(
                       theme,
                       rowIndex,
