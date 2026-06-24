@@ -1073,4 +1073,92 @@ describe("Grid", () => {
       expect(overflows).toBe(true);
     });
   });
+
+  describe("page snapping", () => {
+    const PAD = 16;
+    const GAP = 8;
+    const MIN_CELL = 96;
+
+    const visibleCount = (extent: number, count: number) =>
+      Math.min(
+        count,
+        Math.max(1, Math.floor((extent - 2 * PAD + GAP) / (MIN_CELL + GAP))),
+      );
+
+    const cellPitch = (extent: number, count: number) => {
+      const visible = visibleCount(extent, count);
+
+      return (extent - 2 * PAD - (visible - 1) * GAP) / visible + GAP;
+    };
+
+    const renderLine = async (
+      style: { width: string; height: string },
+      rows: number,
+      columns: number,
+    ) => {
+      const items = Array.from({ length: rows * columns }, (_, i) => ({
+        id: String(i + 1),
+        label: `Item ${i + 1}`,
+      }));
+
+      const screen = await render(
+        <>
+          <CssBaseline />
+          <div style={style}>
+            <Grid
+              rows={rows}
+              columns={columns}
+              items={items}
+              renderItem={(item, props) => (
+                <button {...props}>{item.label}</button>
+              )}
+            />
+          </div>
+        </>,
+      );
+
+      return screen
+        .getByRole("grid")
+        .element()
+        .querySelectorAll<HTMLElement>("[role='gridcell']");
+    };
+
+    test("pulls each column back to its page's leading edge", async () => {
+      const width = 1000;
+      const columns = 20;
+      const cells = await renderLine(
+        { width: `${width}px`, height: "400px" },
+        1,
+        columns,
+      );
+      const visible = visibleCount(width, columns);
+      const pitch = cellPitch(width, columns);
+      const marginLeft = (col: number) =>
+        parseFloat(getComputedStyle(cells[col]).scrollMarginLeft);
+
+      expect(marginLeft(0)).toBeLessThan(1);
+      expect(marginLeft(visible)).toBeLessThan(1);
+      expect(Math.abs(marginLeft(1) - pitch)).toBeLessThan(1.5);
+      expect(Math.abs(marginLeft(visible + 1) - pitch)).toBeLessThan(1.5);
+    });
+
+    test("pulls each row back to its page's leading edge", async () => {
+      const height = 1000;
+      const rows = 20;
+      const cells = await renderLine(
+        { width: "400px", height: `${height}px` },
+        rows,
+        1,
+      );
+      const visible = visibleCount(height, rows);
+      const pitch = cellPitch(height, rows);
+      const marginTop = (row: number) =>
+        parseFloat(getComputedStyle(cells[row]).scrollMarginTop);
+
+      expect(marginTop(0)).toBeLessThan(1);
+      expect(marginTop(visible)).toBeLessThan(1);
+      expect(Math.abs(marginTop(1) - pitch)).toBeLessThan(1.5);
+      expect(Math.abs(marginTop(visible + 1) - pitch)).toBeLessThan(1.5);
+    });
+  });
 });
