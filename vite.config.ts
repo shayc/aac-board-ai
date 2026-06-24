@@ -98,6 +98,28 @@ export default defineConfig({
       "stylis",
     ],
   },
+  build: {
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "react",
+              test: /node_modules\/(react|react-dom|scheduler)\//,
+              priority: 30,
+            },
+            {
+              name: "mui",
+              test: /node_modules\/(@mui|@emotion|stylis)\//,
+              priority: 20,
+            },
+            { name: "shayc", test: /node_modules\/@shayc\//, priority: 20 },
+            { name: "vendor", test: /node_modules\//, priority: 10 },
+          ],
+        },
+      },
+    },
+  },
   test: {
     setupFiles: ["./src/shared/testing/global-setup.ts"],
     restoreMocks: true,
