@@ -85,6 +85,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         id="onboarding-dialog-title"
         variant="h4"
         sx={{
+          fontWeight: "bold",
           textAlign: "center",
         }}
       >
