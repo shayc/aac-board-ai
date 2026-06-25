@@ -6,7 +6,7 @@ import type { ReactNode, Ref } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_SIZE = "96px";
-const PADDING = 2;
+const PADDING = 3;
 
 type GridOrder = readonly (readonly (string | null)[])[];
 
