@@ -20,7 +20,7 @@ describe("OnboardingDialog", () => {
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .toBeVisible();
     await expect
-      .element(screen.getByText("Communicate more easily and naturally."))
+      .element(screen.getByText("Smart Rewriting"))
       .toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);

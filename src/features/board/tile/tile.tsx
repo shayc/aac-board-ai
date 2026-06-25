@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
-import { getReadableTextColor } from "@shared/utils/colors";
 import { Pictogram } from "../pictogram/pictogram";
 
 export interface TileProps {
@@ -43,7 +42,7 @@ export function Tile({
         position: "relative",
         textTransform: "none",
         color: backgroundColor
-          ? getReadableTextColor(backgroundColor)
+          ? `contrast-color(${backgroundColor})`
           : "inherit",
         backgroundColor,
         transition: theme.transitions.create("filter", {

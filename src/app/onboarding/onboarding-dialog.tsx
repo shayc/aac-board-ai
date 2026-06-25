@@ -2,11 +2,11 @@ import { APP_NAME } from "@app/app-info";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -32,19 +32,19 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   }[] = [
     {
       id: "rewriting",
-      icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="large" />,
+      icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,
       primary: m.onboardingSmartRewritingTitle(),
       secondary: m.onboardingSmartRewritingDescription(),
     },
     {
       id: "translation",
-      icon: <TranslateOutlinedIcon color="primary" fontSize="large" />,
+      icon: <TranslateOutlinedIcon color="primary" fontSize="inherit" />,
       primary: m.onboardingTranslationTitle(),
       secondary: m.onboardingTranslationDescription(),
     },
     {
       id: "privacy",
-      icon: <LockOutlinedIcon color="primary" fontSize="large" />,
+      icon: <LockOutlinedIcon color="primary" fontSize="inherit" />,
       primary: m.onboardingPrivacyTitle(),
       secondary: m.onboardingPrivacyDescription(),
     },
@@ -58,7 +58,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       fullWidth
       maxWidth="xs"
       aria-labelledby="onboarding-dialog-title"
-      aria-describedby="onboarding-dialog-description"
       slotProps={{
         paper: {
           sx: {
@@ -67,36 +66,36 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         },
       }}
     >
+      <Box
+        component="img"
+        src="/board.svg"
+        alt=""
+        sx={{
+          width: 80,
+          height: 80,
+          mx: "auto",
+          mt: 4,
+          mb: 2,
+          display: "block",
+          borderRadius: "22%",
+        }}
+      />
+
       <DialogTitle
         id="onboarding-dialog-title"
         variant="h4"
         sx={{
           textAlign: "center",
-          mt: 3,
-          mb: 1,
-          p: 0,
         }}
       >
         {APP_NAME}
       </DialogTitle>
 
-      <DialogContent sx={{ pt: 0, pb: 4 }}>
-        <DialogContentText
-          id="onboarding-dialog-description"
-          variant="body1"
-          sx={{ textAlign: "center", mb: 3, px: 2 }}
-        >
-          {m.onboardingTagline()}
-        </DialogContentText>
-
-        <List sx={{ py: 0 }}>
+      <DialogContent>
+        <List>
           {highlights.map((highlight) => (
-            <ListItem
-              key={highlight.id}
-              disableGutters
-              sx={{ alignItems: "flex-start" }}
-            >
-              <ListItemIcon sx={{ minWidth: 44, mt: 1.5 }}>
+            <ListItem key={highlight.id} sx={{ alignItems: "flex-start" }}>
+              <ListItemIcon sx={{ fontSize: "40px", mr: 2, mt: 1.75 }}>
                 {highlight.icon}
               </ListItemIcon>
               <ListItemText
@@ -104,13 +103,11 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 secondary={highlight.secondary}
                 slotProps={{
                   primary: {
-                    variant: "subtitle1",
-                    // subtitle1 maps to <h6>; these are list titles, not headings.
+                    variant: "h6",
                     component: "span",
-                    sx: { fontWeight: "bold", mb: 0 },
                   },
                   secondary: {
-                    variant: "body2",
+                    variant: "body1",
                   },
                 }}
               />
@@ -119,8 +116,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </List>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} variant="contained" fullWidth size="large">
+      <DialogActions sx={{ p: 3 }}>
+        <Button fullWidth variant="contained" size="large" onClick={onClose}>
           {m.onboardingContinue()}
         </Button>
       </DialogActions>
