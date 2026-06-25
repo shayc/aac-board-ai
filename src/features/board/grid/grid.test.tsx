@@ -901,7 +901,7 @@ describe("Grid", () => {
   });
 
   describe("responsive column sizing", () => {
-    const PAD = 16;
+    const PAD = 24;
     const GAP = 8;
     const MIN_CELL = 96;
 
@@ -988,7 +988,7 @@ describe("Grid", () => {
   });
 
   describe("responsive row sizing", () => {
-    const PAD = 16;
+    const PAD = 24;
     const GAP = 8;
     const MIN_CELL = 96;
 
@@ -1074,8 +1074,8 @@ describe("Grid", () => {
     });
   });
 
-  describe("page snapping", () => {
-    const PAD = 16;
+  describe("scroll snapping", () => {
+    const PAD = 24;
     const GAP = 8;
     const MIN_CELL = 96;
 
@@ -1143,7 +1143,7 @@ describe("Grid", () => {
       expect(getComputedStyle(cells[0]).scrollSnapStop).toBe("always");
     });
 
-    test("pulls each row back to its page's leading edge", async () => {
+    test("snaps to each row's top with no per-page vertical offset", async () => {
       const height = 1000;
       const rows = 20;
       const cells = await renderLine(
@@ -1152,14 +1152,13 @@ describe("Grid", () => {
         1,
       );
       const visible = visibleCount(height, rows);
-      const pitch = cellPitch(height, rows);
       const marginTop = (row: number) =>
         parseFloat(getComputedStyle(cells[row]).scrollMarginTop);
 
-      expect(marginTop(0)).toBeLessThan(1);
-      expect(marginTop(visible)).toBeLessThan(1);
-      expect(Math.abs(marginTop(1) - pitch)).toBeLessThan(1.5);
-      expect(Math.abs(marginTop(visible + 1) - pitch)).toBeLessThan(1.5);
+      for (const row of [0, 1, visible, visible + 1]) {
+        expect(marginTop(row)).toBeLessThan(1);
+      }
+      expect(getComputedStyle(cells[1]).scrollSnapStop).toBe("always");
     });
   });
 });
