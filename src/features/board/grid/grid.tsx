@@ -66,7 +66,7 @@ export function Grid<TItem extends { id: string }>({
         height: "100%",
         overflow: "auto",
         containerType: "size",
-        scrollSnapType: "both mandatory",
+        scrollSnapType: "inline mandatory",
         scrollPadding: theme.spacing(PADDING),
       })}
     >
@@ -118,7 +118,7 @@ export function Grid<TItem extends { id: string }>({
                     flex: 1,
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
-                    scrollSnapAlign: "start",
+                    scrollSnapAlign: "none start",
                     scrollSnapStop: "always",
                     scrollMarginInlineStart: pageOffset(
                       theme,
