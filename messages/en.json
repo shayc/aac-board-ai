@@ -104,7 +104,7 @@
   "onboardingTranslationTitle": "Translation",
   "onboardingTranslationDescription": "Translate boards locally to communicate in multiple languages.",
   "onboardingPrivacyTitle": "Private & Offline",
-  "onboardingPrivacyDescription": "Core features run entirely on your device with zero data tracking and no cloud dependencies.",
+  "onboardingPrivacyDescription": "Runs entirely on your device with zero data tracking and no cloud dependencies.",
   "onboardingContinue": "Continue",
   "errorGenericTitle": "Something went wrong",
   "errorGoHome": "Go home",

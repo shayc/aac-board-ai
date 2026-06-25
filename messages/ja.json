@@ -104,7 +104,7 @@
   "onboardingTranslationTitle": "翻訳",
   "onboardingTranslationDescription": "ボードをデバイス上で翻訳し、複数の言語でコミュニケーションできます。",
   "onboardingPrivacyTitle": "プライベート＆オフライン",
-  "onboardingPrivacyDescription": "主要機能はすべてお使いのデバイス上で動作し、データの追跡やクラウドへの依存は一切ありません。",
+  "onboardingPrivacyDescription": "すべてお使いのデバイス上で動作し、データの追跡やクラウドへの依存は一切ありません。",
   "onboardingContinue": "続ける",
   "errorGenericTitle": "問題が発生しました",
   "errorGoHome": "ホームに戻る",

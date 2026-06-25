@@ -104,7 +104,7 @@
   "onboardingTranslationTitle": "번역",
   "onboardingTranslationDescription": "보드를 기기에서 번역하여 여러 언어로 소통하세요.",
   "onboardingPrivacyTitle": "비공개 및 오프라인",
-  "onboardingPrivacyDescription": "핵심 기능이 전적으로 기기에서 실행되며, 데이터 추적이 전혀 없고 클라우드에 의존하지 않습니다.",
+  "onboardingPrivacyDescription": "전적으로 기기에서 실행되며, 데이터 추적이 전혀 없고 클라우드에 의존하지 않습니다.",
   "onboardingContinue": "계속",
   "errorGenericTitle": "문제가 발생했습니다",
   "errorGoHome": "홈으로",
