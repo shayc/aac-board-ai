@@ -6,7 +6,6 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -58,7 +57,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       fullWidth
       maxWidth="xs"
       aria-labelledby="onboarding-dialog-title"
-      aria-describedby="onboarding-dialog-description"
       slotProps={{
         paper: {
           sx: {
@@ -81,14 +79,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       </DialogTitle>
 
       <DialogContent sx={{ pt: 0, pb: 4 }}>
-        <DialogContentText
-          id="onboarding-dialog-description"
-          variant="body1"
-          sx={{ textAlign: "center", mb: 3, px: 2 }}
-        >
-          {m.onboardingTagline()}
-        </DialogContentText>
-
         <List sx={{ py: 0 }}>
           {highlights.map((highlight) => (
             <ListItem
@@ -105,7 +95,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 slotProps={{
                   primary: {
                     variant: "subtitle1",
-                    // subtitle1 maps to <h6>; these are list titles, not headings.
                     component: "span",
                     sx: { fontWeight: "bold", mb: 0 },
                   },
@@ -119,8 +108,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         </List>
       </DialogContent>
 
-      <DialogActions>
-        <Button onClick={onClose} variant="contained" fullWidth size="large">
+      <DialogActions sx={{ p: 3 }}>
+        <Button fullWidth variant="contained" size="large" onClick={onClose}>
           {m.onboardingContinue()}
         </Button>
       </DialogActions>
