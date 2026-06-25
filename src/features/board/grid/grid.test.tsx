@@ -427,60 +427,6 @@ describe("Grid", () => {
       await expect.element(item1).toHaveFocus();
     });
 
-    test("Home moves focus to the first focusable cell in the current row", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-        { id: "3", label: "Item 3" },
-      ];
-
-      const screen = await render(
-        <Grid
-          rows={1}
-          columns={3}
-          items={items}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-
-      item3.element().focus();
-      await expect.element(item3).toHaveFocus();
-
-      await press(item3, "Home");
-
-      await expect.element(item1).toHaveFocus();
-    });
-
-    test("End moves focus to the last focusable cell in the current row", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-        { id: "3", label: "Item 3" },
-      ];
-
-      const screen = await render(
-        <Grid
-          rows={1}
-          columns={3}
-          items={items}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
-      await press(item1, "End");
-
-      await expect.element(item3).toHaveFocus();
-    });
-
     test("Home skips empty cells and lands on the first focusable cell in the row", async () => {
       const items = [
         { id: "2", label: "Item 2" },
@@ -1117,16 +1063,23 @@ describe("Grid", () => {
         </>,
       );
 
-      return screen
-        .getByRole("grid")
-        .element()
-        .querySelectorAll<HTMLElement>("[role='gridcell']");
+      const grid = screen.getByRole("grid").element();
+      const container = grid.parentElement;
+
+      if (!(container instanceof HTMLElement)) {
+        throw new Error("grid scroll container not found");
+      }
+
+      return {
+        container,
+        cells: grid.querySelectorAll<HTMLElement>("[role='gridcell']"),
+      };
     };
 
-    test("pulls each column back to its page's leading edge", async () => {
+    test("pulls each column back to its page's leading edge, vertical free", async () => {
       const width = 1000;
       const columns = 20;
-      const cells = await renderLine(
+      const { container, cells } = await renderLine(
         { width: `${width}px`, height: "400px" },
         1,
         columns,
@@ -1140,25 +1093,10 @@ describe("Grid", () => {
       expect(marginLeft(visible)).toBeLessThan(1);
       expect(Math.abs(marginLeft(1) - pitch)).toBeLessThan(1.5);
       expect(Math.abs(marginLeft(visible + 1) - pitch)).toBeLessThan(1.5);
-      expect(getComputedStyle(cells[0]).scrollSnapStop).toBe("always");
-    });
-
-    test("snaps to each row's top with no per-page vertical offset", async () => {
-      const height = 1000;
-      const rows = 20;
-      const cells = await renderLine(
-        { width: "400px", height: `${height}px` },
-        rows,
-        1,
+      expect(getComputedStyle(container).scrollSnapType).toBe(
+        "inline mandatory",
       );
-      const visible = visibleCount(height, rows);
-      const marginTop = (row: number) =>
-        parseFloat(getComputedStyle(cells[row]).scrollMarginTop);
-
-      for (const row of [0, 1, visible, visible + 1]) {
-        expect(marginTop(row)).toBeLessThan(1);
-      }
-      expect(getComputedStyle(cells[1]).scrollSnapStop).toBe("always");
+      expect(getComputedStyle(cells[1]).scrollSnapAlign).toBe("none start");
     });
   });
 });
