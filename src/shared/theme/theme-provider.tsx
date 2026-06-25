@@ -81,9 +81,9 @@ const themeOptions = {
     },
     MuiDialog: {
       styleOverrides: {
-        paper: ({ ownerState }) => ({
-          ...(!ownerState.fullScreen && { borderRadius: 32 }),
-        }),
+        paper: {
+          borderRadius: 32,
+        },
       },
     },
     MuiDialogActions: {
