@@ -50,7 +50,7 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack direction="row" sx={{ p: 2 }}>
+    <Stack direction="row" sx={{ p: 3 }}>
       <Stack
         direction="row"
         sx={[
