@@ -29,7 +29,9 @@ export function PlayButton({
         width: 72,
         height: 72,
         flexShrink: 0,
-        m: 2,
+        my: 2,
+        marginInlineStart: 0,
+        marginInlineEnd: 2,
         alignSelf: "center",
       }}
     >
