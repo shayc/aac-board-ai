@@ -24,6 +24,7 @@ import {
 import { toPhrases } from "./to-phrases";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
+const TONE_DEBOUNCE_MS = 400;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
@@ -47,12 +48,13 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   );
 
   const [tone, setTone] = useState<RewriterTone>("as-is");
+  const debouncedTone = useDebouncedValue(tone, TONE_DEBOUNCE_MS);
   const { language } = useLanguage();
 
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
 
   const rewriter = useRewriter({
-    tone,
+    tone: debouncedTone,
     sharedContext: debouncedSharedContext,
     length: "shorter",
     format: "plain-text",
@@ -72,7 +74,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const rewritten = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
-    deps: [text, tone, debouncedSharedContext, language],
+    deps: [text, debouncedTone, debouncedSharedContext, language],
     fetch: (signal) => rewriter.rewrite(text, { signal }),
   });
 

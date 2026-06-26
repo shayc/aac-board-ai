@@ -52,7 +52,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByRole("button", { name: "direct tone" }))
+      .element(screen.getByRole("radio", { name: "direct tone" }))
       .toBeVisible();
   });
 
@@ -64,7 +64,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByRole("button", { name: "direct tone" }))
+      .element(screen.getByRole("radio", { name: "direct tone" }))
       .not.toBeInTheDocument();
   });
 
@@ -75,7 +75,7 @@ describe("SuggestionBar", () => {
     });
     const screen = await render(<SuggestionBar {...props} />);
 
-    const professional = screen.getByRole("button", {
+    const professional = screen.getByRole("radio", {
       name: "professional tone",
     });
     await expect.element(professional).toBeVisible();

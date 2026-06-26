@@ -1,8 +1,8 @@
 import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
-import ToggleButton from "@mui/material/ToggleButton";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 
@@ -12,60 +12,76 @@ export interface ToneSelectorProps {
   onChange: (tone: RewriterTone) => void;
 }
 
-const TONE_VALUES = {
-  direct: "as-is",
-  professional: "more-formal",
-  friendly: "more-casual",
-} as const satisfies Record<string, RewriterTone>;
+const TONES = [
+  { value: "as-is", label: m.toneDirect, Icon: ShortTextOutlinedIcon },
+  {
+    value: "more-formal",
+    label: m.toneProfessional,
+    Icon: BusinessCenterOutlinedIcon,
+  },
+  {
+    value: "more-casual",
+    label: m.toneFriendly,
+    Icon: SentimentSatisfiedAltIcon,
+  },
+] as const satisfies readonly {
+  value: RewriterTone;
+  label: () => string;
+  Icon: typeof ShortTextOutlinedIcon;
+}[];
 
 export function ToneSelector({
   tone,
   disabled = false,
   onChange,
 }: ToneSelectorProps) {
-  const handleChange = (
-    _event: React.MouseEvent<HTMLElement>,
-    nextTone: RewriterTone | null,
-  ) => {
-    if (!nextTone) {
-      return;
-    }
-
-    onChange(nextTone);
-  };
-
   return (
-    <ToggleButtonGroup
+    <RadioGroup
       aria-label={m.toneSelection()}
+      row
       value={tone}
-      onChange={handleChange}
-      exclusive
-      disabled={disabled}
-      size="medium"
+      onChange={(_event, value) => onChange(value as RewriterTone)}
+      sx={(theme) => ({
+        display: "inline-flex",
+        border: `1px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.23)}`,
+        borderRadius: 7,
+        overflow: "hidden",
+      })}
     >
-      <Tooltip title={m.toneDirect()}>
-        <ToggleButton aria-label={m.toneDirect()} value={TONE_VALUES.direct}>
-          <ShortTextOutlinedIcon fontSize="medium" />
-        </ToggleButton>
-      </Tooltip>
-
-      <Tooltip title={m.toneProfessional()}>
-        <ToggleButton
-          aria-label={m.toneProfessional()}
-          value={TONE_VALUES.professional}
-        >
-          <BusinessCenterOutlinedIcon fontSize="medium" />
-        </ToggleButton>
-      </Tooltip>
-
-      <Tooltip title={m.toneFriendly()}>
-        <ToggleButton
-          aria-label={m.toneFriendly()}
-          value={TONE_VALUES.friendly}
-        >
-          <SentimentSatisfiedAltIcon fontSize="medium" />
-        </ToggleButton>
-      </Tooltip>
-    </ToggleButtonGroup>
+      {TONES.map(({ value, label, Icon }) => (
+        <Tooltip key={value} title={label()}>
+          <Radio
+            slotProps={{ input: { "aria-label": label() } }}
+            value={value}
+            disabled={disabled}
+            disableRipple
+            icon={<Icon fontSize="medium" />}
+            checkedIcon={<Icon fontSize="medium" />}
+            sx={(theme) => ({
+              padding: 1.5,
+              color: "action.active",
+              "&:hover": {
+                backgroundColor: "action.hover",
+                "@media (hover: none)": { backgroundColor: "transparent" },
+              },
+              "&.Mui-checked": {
+                color: "text.primary",
+                backgroundColor: "action.selected",
+                "&:hover": {
+                  backgroundColor: theme.alpha(
+                    (theme.vars ?? theme).palette.text.primary,
+                    `${(theme.vars ?? theme).palette.action.selectedOpacity} + ${(theme.vars ?? theme).palette.action.hoverOpacity}`,
+                  ),
+                  "@media (hover: none)": {
+                    backgroundColor: "action.selected",
+                  },
+                },
+              },
+              "&.Mui-disabled": { color: "action.disabled" },
+            })}
+          />
+        </Tooltip>
+      ))}
+    </RadioGroup>
   );
 }
