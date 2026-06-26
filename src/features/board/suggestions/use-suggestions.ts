@@ -76,6 +76,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     fetch: (signal) => rewriter.rewrite(text, { signal }),
   });
 
+  // Settings' Download action provisions its own hook instances; only the
+  // global store sees the downloads they start.
   const downloadProgress = useGlobalDownloadProgress([
     "Proofreader",
     "Rewriter",
