@@ -35,7 +35,7 @@ export function Tile({
         display: "grid",
         alignItems: "stretch",
         justifyContent: "stretch",
-        padding: "4px 4px 0 4px",
+        p: 1,
         border: `4px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",

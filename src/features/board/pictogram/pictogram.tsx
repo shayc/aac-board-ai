@@ -18,7 +18,14 @@ export function Pictogram({ src, label }: PictogramProps) {
       }}
     >
       {src && (
-        <Box sx={{ flexGrow: 1, position: "relative", minWidth: "64px" }}>
+        <Box
+          sx={{
+            height: "58px",
+            aspectRatio: "1 / 1",
+            flexGrow: 1,
+            position: "relative",
+          }}
+        >
           <Box
             component="img"
             src={src}
@@ -37,7 +44,12 @@ export function Pictogram({ src, label }: PictogramProps) {
       )}
 
       {label && (
-        <Typography component="span" variant={src ? "body2" : "h5"} noWrap>
+        <Typography
+          noWrap
+          component="span"
+          variant={src ? "body2" : "h5"}
+          sx={{ lineHeight: 1 }}
+        >
           {label}
         </Typography>
       )}

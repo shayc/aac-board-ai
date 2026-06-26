@@ -55,10 +55,8 @@ export function MessageBar({
         direction="row"
         sx={[
           {
-            height: 104,
             flexGrow: 1,
             gap: 2,
-            paddingInlineEnd: 2,
             borderRadius: 16,
             overflow: "hidden",
             bgcolor: "grey.200",
@@ -71,10 +69,10 @@ export function MessageBar({
           direction="row"
           sx={{
             flexGrow: 1,
-            p: 2,
-            gap: 1,
+            alignItems: "center",
+            py: 1,
+            px: 2,
             overflow: "auto",
-            userSelect: "text",
           }}
         >
           {parts.map((part) => {
@@ -85,8 +83,9 @@ export function MessageBar({
                 key={part.id}
                 direction="row"
                 sx={(theme) => ({
+                  p: 1,
                   borderRadius: 4,
-                  outlineOffset: 2,
+                  outlineOffset: -2,
                   outline: isActive
                     ? `2px solid ${theme.vars?.palette.primary.main ?? theme.palette.primary.main}`
                     : "none",
