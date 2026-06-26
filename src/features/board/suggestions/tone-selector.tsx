@@ -8,6 +8,7 @@ import { m } from "@paraglide/messages.js";
 
 export interface ToneSelectorProps {
   tone: RewriterTone;
+  disabled?: boolean;
   onChange: (tone: RewriterTone) => void;
 }
 
@@ -17,7 +18,11 @@ const TONE_VALUES = {
   friendly: "more-casual",
 } as const satisfies Record<string, RewriterTone>;
 
-export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
+export function ToneSelector({
+  tone,
+  disabled = false,
+  onChange,
+}: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
     nextTone: RewriterTone | null,
@@ -29,11 +34,12 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
 
   return (
     <ToggleButtonGroup
-      exclusive
       aria-label={m.toneSelection()}
       value={tone}
-      size="medium"
       onChange={handleChange}
+      exclusive
+      disabled={disabled}
+      size="medium"
     >
       <Tooltip title={m.toneDirect()}>
         <ToggleButton value={TONE_VALUES.direct} aria-label={m.toneDirect()}>

@@ -35,7 +35,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("stays supported but locks the tone when only the proofreader is available", async () => {
+  test("stays supported but hides the tone control when only the proofreader is available", async () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
@@ -43,7 +43,7 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
-      expect(result.current.canChangeTone).toBe(false);
+      expect(result.current.toneControlState).toBe("hidden");
     });
   });
 
