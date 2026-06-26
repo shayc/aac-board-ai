@@ -7,13 +7,13 @@ function makeProps(
   overrides: Partial<SuggestionBarProps> = {},
 ): SuggestionBarProps {
   return {
-    phrases: [],
     status: null,
+    phrases: [],
+    toneControlState: "enabled",
     tone: "as-is",
-    canChangeTone: true,
+    onEnable: vi.fn(),
     onPhraseClick: vi.fn(),
     onToneChange: vi.fn(),
-    onEnable: vi.fn(),
     ...overrides,
   };
 }
@@ -56,16 +56,30 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("hides the tone selector when tone cannot be changed", async () => {
+  test("hides the tone selector when the tone control is hidden", async () => {
     const screen = await render(
       <SuggestionBar
-        {...makeProps({ phrases: ["Hello"], canChangeTone: false })}
+        {...makeProps({ phrases: ["Hello"], toneControlState: "hidden" })}
       />,
     );
 
     await expect
       .element(screen.getByRole("button", { name: "direct tone" }))
       .not.toBeInTheDocument();
+  });
+
+  test("shows but disables the tone selector while the rewriter is not ready", async () => {
+    const props = makeProps({
+      phrases: ["Hello"],
+      toneControlState: "disabled",
+    });
+    const screen = await render(<SuggestionBar {...props} />);
+
+    const professional = screen.getByRole("button", {
+      name: "professional tone",
+    });
+    await expect.element(professional).toBeVisible();
+    await expect.element(professional).toBeDisabled();
   });
 
   test("offers an enable chip when activation is needed", async () => {

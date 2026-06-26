@@ -8,6 +8,7 @@ import { m } from "@paraglide/messages.js";
 
 export interface ToneSelectorProps {
   tone: RewriterTone;
+  disabled?: boolean;
   onChange: (tone: RewriterTone) => void;
 }
 
@@ -17,34 +18,41 @@ const TONE_VALUES = {
   friendly: "more-casual",
 } as const satisfies Record<string, RewriterTone>;
 
-export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
+export function ToneSelector({
+  tone,
+  disabled = false,
+  onChange,
+}: ToneSelectorProps) {
   const handleChange = (
     _event: React.MouseEvent<HTMLElement>,
     nextTone: RewriterTone | null,
   ) => {
-    if (nextTone) {
-      onChange(nextTone);
+    if (!nextTone) {
+      return;
     }
+
+    onChange(nextTone);
   };
 
   return (
     <ToggleButtonGroup
-      exclusive
       aria-label={m.toneSelection()}
       value={tone}
-      size="medium"
       onChange={handleChange}
+      exclusive
+      disabled={disabled}
+      size="medium"
     >
       <Tooltip title={m.toneDirect()}>
-        <ToggleButton value={TONE_VALUES.direct} aria-label={m.toneDirect()}>
+        <ToggleButton aria-label={m.toneDirect()} value={TONE_VALUES.direct}>
           <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title={m.toneProfessional()}>
         <ToggleButton
-          value={TONE_VALUES.professional}
           aria-label={m.toneProfessional()}
+          value={TONE_VALUES.professional}
         >
           <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
@@ -52,8 +60,8 @@ export function ToneSelector({ tone, onChange }: ToneSelectorProps) {
 
       <Tooltip title={m.toneFriendly()}>
         <ToggleButton
-          value={TONE_VALUES.friendly}
           aria-label={m.toneFriendly()}
+          value={TONE_VALUES.friendly}
         >
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>

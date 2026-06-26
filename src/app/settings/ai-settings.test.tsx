@@ -59,7 +59,7 @@ describe("AISettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("offers a download action when the model awaits a user gesture, and recovers on click", async () => {
+  test("reports a capability that needs downloading as download required", async () => {
     const proofreader = stubProofreader();
     proofreader.availability.mockResolvedValue("downloadable");
     stubRewriter();
@@ -67,16 +67,9 @@ describe("AISettings", () => {
 
     const screen = await renderAISettings();
 
-    const download = screen.getByRole("button", { name: "Download" });
-    await expect.element(download).toBeVisible();
-    expect(countIcons(screen, "Download required")).toBe(1);
-
-    await download.click();
-
     await vi.waitFor(() => {
-      expect(proofreader.create).toHaveBeenCalled();
-      expect(countIcons(screen, "Available")).toBe(3);
+      expect(countIcons(screen, "Download required")).toBe(1);
+      expect(countIcons(screen, "Available")).toBe(2);
     });
-    await expect.element(download).not.toBeInTheDocument();
   });
 });

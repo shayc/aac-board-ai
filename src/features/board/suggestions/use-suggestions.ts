@@ -17,18 +17,22 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
+import {
+  deriveToneControlState,
+  type ToneControlState,
+} from "./derive-tone-control-state";
 import { toPhrases } from "./to-phrases";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
-  canChangeTone: boolean;
   status: SuggestionStatusView;
-  enable: () => void;
   phrases: string[];
+  toneControlState: ToneControlState;
   tone: RewriterTone;
   setTone: (tone: RewriterTone) => void;
+  enable: () => void;
 }
 
 function isNonAbortError(error: Error | undefined): boolean {
@@ -111,15 +115,15 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isSupported =
     proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
-  const canChangeTone = rewriter.status !== "unsupported";
+  const toneControlState = deriveToneControlState(rewriter.status);
 
   return {
     isSupported,
-    canChangeTone,
     status,
-    enable,
     phrases,
+    toneControlState,
     tone,
     setTone,
+    enable,
   };
 }

@@ -45,4 +45,14 @@ describe("ToneSelector", () => {
 
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  test("disables the buttons when disabled", async () => {
+    const screen = await render(
+      <ToneSelector tone="as-is" disabled onChange={vi.fn()} />,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "professional tone" }))
+      .toBeDisabled();
+  });
 });
