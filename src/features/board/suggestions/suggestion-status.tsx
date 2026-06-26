@@ -30,6 +30,7 @@ function statusMessage(status: SuggestionStatusView, onEnable: () => void) {
           icon={<AutoAwesomeIcon />}
           label={m.suggestionsEnable()}
           color="primary"
+          variant="outlined"
           onClick={onEnable}
         />
       );
