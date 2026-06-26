@@ -12,23 +12,11 @@ export interface ToneSelectorProps {
   onChange: (tone: RewriterTone) => void;
 }
 
-const TONE_OPTIONS = [
-  { value: "as-is", label: m.toneDirect, Icon: ShortTextOutlinedIcon },
-  {
-    value: "more-formal",
-    label: m.toneProfessional,
-    Icon: BusinessCenterOutlinedIcon,
-  },
-  {
-    value: "more-casual",
-    label: m.toneFriendly,
-    Icon: SentimentSatisfiedAltIcon,
-  },
-] as const satisfies readonly {
-  value: RewriterTone;
-  label: () => string;
-  Icon: typeof ShortTextOutlinedIcon;
-}[];
+const TONE_VALUES = {
+  direct: "as-is",
+  professional: "more-formal",
+  friendly: "more-casual",
+} as const satisfies Record<string, RewriterTone>;
 
 export function ToneSelector({
   tone,
@@ -55,21 +43,29 @@ export function ToneSelector({
       disabled={disabled}
       size="medium"
     >
-      {TONE_OPTIONS.map(({ value, label, Icon }) => {
-        const button = (
-          <ToggleButton key={value} aria-label={label()} value={value}>
-            <Icon fontSize="medium" />
-          </ToggleButton>
-        );
+      <Tooltip title={m.toneDirect()}>
+        <ToggleButton aria-label={m.toneDirect()} value={TONE_VALUES.direct}>
+          <ShortTextOutlinedIcon fontSize="medium" />
+        </ToggleButton>
+      </Tooltip>
 
-        return disabled ? (
-          button
-        ) : (
-          <Tooltip key={value} title={label()}>
-            {button}
-          </Tooltip>
-        );
-      })}
+      <Tooltip title={m.toneProfessional()}>
+        <ToggleButton
+          aria-label={m.toneProfessional()}
+          value={TONE_VALUES.professional}
+        >
+          <BusinessCenterOutlinedIcon fontSize="medium" />
+        </ToggleButton>
+      </Tooltip>
+
+      <Tooltip title={m.toneFriendly()}>
+        <ToggleButton
+          aria-label={m.toneFriendly()}
+          value={TONE_VALUES.friendly}
+        >
+          <SentimentSatisfiedAltIcon fontSize="medium" />
+        </ToggleButton>
+      </Tooltip>
     </ToggleButtonGroup>
   );
 }
