@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
-import { useImperativeHandle, useRef } from "react";
 import type { ReactNode, Ref } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
@@ -14,10 +13,6 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
-export interface GridHandle {
-  scrollToStart: () => void;
-}
-
 export interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
   items: readonly TItem[];
@@ -27,7 +22,7 @@ export interface GridProps<TItem extends { id: string }> {
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
-  ref?: Ref<GridHandle>;
+  ref?: Ref<HTMLDivElement>;
 }
 
 export function Grid<TItem extends { id: string }>({
@@ -47,26 +42,15 @@ export function Grid<TItem extends { id: string }>({
     dir,
   });
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  useImperativeHandle(
-    ref,
-    () => ({
-      scrollToStart() {
-        scrollContainerRef.current?.scrollTo({ top: 0, left: 0 });
-      },
-    }),
-    [],
-  );
-
   return (
     <Box
-      ref={scrollContainerRef}
+      ref={ref}
       dir={dir}
       sx={(theme) => ({
         height: "100%",
         overflow: "auto",
         containerType: "size",
-        scrollSnapType: "inline mandatory",
+        scrollSnapType: "both proximity",
         scrollPadding: theme.spacing(PADDING),
       })}
     >
@@ -114,20 +98,12 @@ export function Grid<TItem extends { id: string }>({
                   role="gridcell"
                   aria-rowindex={rowIndex + 1}
                   aria-colindex={colIndex + 1}
-                  sx={(theme) => ({
+                  sx={{
                     flex: 1,
                     minWidth: "var(--cell-width)",
                     minHeight: MIN_CELL_SIZE,
-                    scrollSnapAlign: "none start",
-                    scrollSnapStop: "always",
-                    scrollMarginInlineStart: pageOffset(
-                      theme,
-                      colIndex,
-                      "--visible-cols",
-                      "--cell-width",
-                      gap,
-                    ),
-                  })}
+                    scrollSnapAlign: "start",
+                  }}
                 >
                   {item &&
                     renderItem(item, {
@@ -170,16 +146,6 @@ function buildGrid<TItem extends { id: string }>(
       return items[index];
     }),
   );
-}
-
-function pageOffset(
-  theme: Theme,
-  index: number,
-  countVar: string,
-  cellSizeVar: string,
-  gap: number,
-): string {
-  return `calc(mod(${index}, var(${countVar})) * (var(${cellSizeVar}) + ${theme.spacing(gap)}))`;
 }
 
 function visibleTracks(

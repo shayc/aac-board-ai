@@ -1021,22 +1021,6 @@ describe("Grid", () => {
   });
 
   describe("scroll snapping", () => {
-    const PAD = 24;
-    const GAP = 8;
-    const MIN_CELL = 96;
-
-    const visibleCount = (extent: number, count: number) =>
-      Math.min(
-        count,
-        Math.max(1, Math.floor((extent - 2 * PAD + GAP) / (MIN_CELL + GAP))),
-      );
-
-    const cellPitch = (extent: number, count: number) => {
-      const visible = visibleCount(extent, count);
-
-      return (extent - 2 * PAD - (visible - 1) * GAP) / visible + GAP;
-    };
-
     const renderLine = async (
       style: { width: string; height: string },
       rows: number,
@@ -1076,27 +1060,27 @@ describe("Grid", () => {
       };
     };
 
-    test("pulls each column back to its page's leading edge, vertical free", async () => {
-      const width = 1000;
-      const columns = 20;
+    test("configures both-axis proximity snapping, cells aligned to start", async () => {
       const { container, cells } = await renderLine(
-        { width: `${width}px`, height: "400px" },
+        { width: "1000px", height: "400px" },
         1,
-        columns,
+        20,
       );
-      const visible = visibleCount(width, columns);
-      const pitch = cellPitch(width, columns);
-      const marginLeft = (col: number) =>
-        parseFloat(getComputedStyle(cells[col]).scrollMarginLeft);
 
-      expect(marginLeft(0)).toBeLessThan(1);
-      expect(marginLeft(visible)).toBeLessThan(1);
-      expect(Math.abs(marginLeft(1) - pitch)).toBeLessThan(1.5);
-      expect(Math.abs(marginLeft(visible + 1) - pitch)).toBeLessThan(1.5);
-      expect(getComputedStyle(container).scrollSnapType).toBe(
-        "inline mandatory",
+      expect(getComputedStyle(container).scrollSnapType).toBe("both");
+      expect(getComputedStyle(cells[1]).scrollSnapAlign).toBe("start");
+    });
+
+    test("snaps per cell, not per page (no scroll-margin offset)", async () => {
+      const { cells } = await renderLine(
+        { width: "1000px", height: "400px" },
+        1,
+        20,
       );
-      expect(getComputedStyle(cells[1]).scrollSnapAlign).toBe("none start");
+
+      expect(
+        parseFloat(getComputedStyle(cells[5]).scrollMarginLeft),
+      ).toBeLessThan(1);
     });
   });
 });
