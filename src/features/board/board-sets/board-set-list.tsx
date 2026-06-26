@@ -103,10 +103,10 @@ export function BoardSetList({
                 secondaryAction={
                   <Tooltip title={m.libraryMoreOptions()}>
                     <IconButton
-                      edge="end"
                       aria-label={m.libraryMoreOptionsFor({
                         name: boardSet.name,
                       })}
+                      edge="end"
                       aria-controls={isMenuOpen ? "board-set-menu" : undefined}
                       aria-haspopup="menu"
                       aria-expanded={isMenuOpen ? "true" : undefined}

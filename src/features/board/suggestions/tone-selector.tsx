@@ -42,15 +42,15 @@ export function ToneSelector({
       size="medium"
     >
       <Tooltip title={m.toneDirect()}>
-        <ToggleButton value={TONE_VALUES.direct} aria-label={m.toneDirect()}>
+        <ToggleButton aria-label={m.toneDirect()} value={TONE_VALUES.direct}>
           <ShortTextOutlinedIcon fontSize="medium" />
         </ToggleButton>
       </Tooltip>
 
       <Tooltip title={m.toneProfessional()}>
         <ToggleButton
-          value={TONE_VALUES.professional}
           aria-label={m.toneProfessional()}
+          value={TONE_VALUES.professional}
         >
           <BusinessCenterOutlinedIcon fontSize="medium" />
         </ToggleButton>
@@ -58,8 +58,8 @@ export function ToneSelector({
 
       <Tooltip title={m.toneFriendly()}>
         <ToggleButton
-          value={TONE_VALUES.friendly}
           aria-label={m.toneFriendly()}
+          value={TONE_VALUES.friendly}
         >
           <SentimentSatisfiedAltIcon fontSize="medium" />
         </ToggleButton>
