@@ -14,13 +14,14 @@ export function Pictogram({ src, label }: PictogramProps) {
         flexDirection: "column",
         textAlign: "center",
         justifyContent: "center",
+        gap: 1,
         overflow: "hidden",
       }}
     >
       {src && (
         <Box
           sx={{
-            height: "58px",
+            height: "50px",
             aspectRatio: "1 / 1",
             flexGrow: 1,
             position: "relative",
