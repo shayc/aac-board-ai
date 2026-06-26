@@ -7,7 +7,7 @@ import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./board-button";
-import { Grid, type GridHandle, type GridItemProps } from "./grid/grid";
+import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { MessageBar } from "./message/message-bar";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
@@ -52,11 +52,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
 
-  const gridRef = useRef<GridHandle>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const handleHomeClick = () => {
     if (navigation.isHome) {
-      gridRef.current?.scrollToStart();
+      gridRef.current?.scrollTo({ top: 0, left: 0 });
     } else {
       navigation.goHome();
     }
