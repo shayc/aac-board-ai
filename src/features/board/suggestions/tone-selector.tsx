@@ -43,6 +43,7 @@ export function ToneSelector({
       onChange={(_event, value) => onChange(value as RewriterTone)}
       sx={(theme) => ({
         display: "inline-flex",
+        flexShrink: 0,
         border: `1px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.23)}`,
         borderRadius: 7,
         overflow: "hidden",
