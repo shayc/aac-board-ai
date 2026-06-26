@@ -78,6 +78,7 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 
 ### Always
 
+- Develop exclusively in feature branches cut from `main` using an intent-based prefix (`feat/`, `fix/`, `refactor/`).
 - Keep changes closely scoped; avoid sweeping refactors or structural reformatting outside the task.
 - Verify changes by running `npm run lint`, `npm test`, and `npm run build` before pushing or marking a task complete.
 - Follow existing module boundaries and adjacent file design patterns.
@@ -91,6 +92,7 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 
 ### Never
 
+- Commit or push directly to the `main` branch.
 - Commit secrets, environment tokens, or private API keys.
 - Suppress linting directives, bypass typechecking, or drop tests to force a build through.
 - Manually edit or commit generated artifacts (`dist/`, `coverage/`, `src/paraglide/`).
