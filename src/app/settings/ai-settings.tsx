@@ -2,7 +2,6 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -17,7 +16,6 @@ import {
   proofreaderLanguageOptions,
   rewriterLanguageOptions,
 } from "@shared/built-in-ai/engine-language-options";
-import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import {
   setAISharedContext,
   useAISharedContext,
@@ -41,25 +39,18 @@ export function AISettings() {
   const capabilities: {
     title: string;
     status: Status;
-    progress: number;
-    onDownload?: () => void;
   }[] = [
     {
       title: m.aiFeatureProofreading(),
       status: proofreader.status,
-      progress: proofreader.progress,
-      onDownload: () => prepareQuietly(proofreader),
     },
     {
       title: m.aiFeatureRewriting(),
       status: rewriter.status,
-      progress: rewriter.progress,
-      onDownload: () => prepareQuietly(rewriter),
     },
     {
       title: m.aiFeatureTranslation(),
       status: isSupported("Translator") ? "ready" : "unsupported",
-      progress: 0,
     },
   ];
 
@@ -103,26 +94,12 @@ export function AISettings() {
         </Stack>
 
         <List dense>
-          {capabilities.map(({ title, status, progress, onDownload }) => (
-            <ListItem
-              key={title}
-              sx={{ px: 0 }}
-              secondaryAction={
-                status === "downloadable" &&
-                onDownload && (
-                  <Button size="small" onClick={onDownload}>
-                    {m.aiDownloadAction()}
-                  </Button>
-                )
-              }
-            >
+          {capabilities.map(({ title, status }) => (
+            <ListItem key={title} sx={{ px: 0 }}>
               <ListItemIcon sx={{ minWidth: 36 }}>
-                {statusIcon(status, progress)}
+                {statusIcon(status)}
               </ListItemIcon>
-              <ListItemText
-                primary={title}
-                secondary={statusLabel(status, progress)}
-              />
+              <ListItemText primary={title} secondary={statusLabel(status)} />
             </ListItem>
           ))}
         </List>
@@ -131,14 +108,11 @@ export function AISettings() {
   );
 }
 
-function statusLabel(status: Status, progress: number) {
+function statusLabel(status: Status) {
   switch (status) {
     case "ready":
       return m.aiStatusAvailable();
     case "downloading":
-      return m.aiStatusDownloading({
-        progress: Math.round(progress * 100),
-      });
     case "downloadable":
       return m.aiStatusDownloadRequired();
     case "idle":
@@ -151,8 +125,8 @@ function statusLabel(status: Status, progress: number) {
   }
 }
 
-function statusIcon(status: Status, progress: number) {
-  const title = statusLabel(status, progress);
+function statusIcon(status: Status) {
+  const title = statusLabel(status);
   switch (status) {
     case "ready":
       return (
