@@ -17,7 +17,7 @@ export async function hydrateBoard(
 ): Promise<Board> {
   const registry = createObjectUrlRegistry();
   try {
-    const obf = await fetchOBFBoard(setId, boardId);
+    const obf = await readOBFBoard(setId, boardId);
 
     signal?.throwIfAborted();
 
@@ -37,10 +37,7 @@ export async function hydrateBoard(
   }
 }
 
-async function fetchOBFBoard(
-  setId: string,
-  boardId: string,
-): Promise<OBFBoard> {
+async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
   const record = await getBoard(setId, boardId);
   if (!record) {
     throw new BoardNotFoundError(setId, boardId);

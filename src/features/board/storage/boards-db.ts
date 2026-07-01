@@ -170,7 +170,7 @@ function boardSetRange(setId: string): IDBKeyRange {
   return IDBKeyRange.bound([setId], [setId, []]);
 }
 
-export async function deleteBoardSetRecord(setId: string): Promise<void> {
+export async function deleteBoardSetData(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
