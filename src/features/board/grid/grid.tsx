@@ -5,7 +5,8 @@ import type { ReactNode, Ref } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_SIZE = "96px";
-const PADDING = 3;
+const PAD = "var(--pad)";
+const PAD_TOTAL = `calc(2 * ${PAD})`;
 
 type GridOrder = readonly (readonly (string | null)[])[];
 
@@ -47,11 +48,15 @@ export function Grid<TItem extends { id: string }>({
       ref={ref}
       dir={dir}
       sx={(theme) => ({
+        "--pad": theme.spacing(3),
         height: "100%",
         overflow: "auto",
         containerType: "size",
         scrollSnapType: "both proximity",
-        scrollPadding: theme.spacing(PADDING),
+        scrollPadding: PAD,
+        [theme.breakpoints.down("sm")]: {
+          "--pad": theme.spacing(2),
+        },
       })}
     >
       <Stack
@@ -77,7 +82,7 @@ export function Grid<TItem extends { id: string }>({
           ),
           minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
           minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
-          p: PADDING,
+          p: PAD,
           gap,
         })}
       >
@@ -154,7 +159,7 @@ function visibleTracks(
   gap: number,
   count: number,
 ): string {
-  const inner = `${extent} - ${theme.spacing(PADDING * 2)}`;
+  const inner = `${extent} - ${PAD_TOTAL}`;
   const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
 
   return `min(${count}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
@@ -166,7 +171,7 @@ function trackSize(
   gap: number,
   visible: string,
 ): string {
-  return `calc((${extent} - ${theme.spacing(PADDING * 2)} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
+  return `calc((${extent} - ${PAD_TOTAL} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
 }
 
 function gridExtent(
@@ -175,5 +180,5 @@ function gridExtent(
   gap: number,
   count: number,
 ): string {
-  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${theme.spacing(PADDING * 2)})`;
+  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${PAD_TOTAL})`;
 }
