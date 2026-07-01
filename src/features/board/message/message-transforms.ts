@@ -16,7 +16,7 @@ export function addSpaceToParts(parts: MessagePart[]): MessagePart[] {
   return addPartToParts(parts, { label: "" });
 }
 
-export function appendTextToParts(
+export function appendTextToLastPart(
   parts: MessagePart[],
   text: string,
 ): MessagePart[] {

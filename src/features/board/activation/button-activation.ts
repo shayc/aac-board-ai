@@ -4,7 +4,7 @@ import { assertNever } from "@shared/utils/assert-never";
 import {
   addPartToParts,
   addSpaceToParts,
-  appendTextToParts,
+  appendTextToLastPart,
   removeLastPartFromParts,
 } from "../message/message-transforms";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
@@ -51,7 +51,7 @@ export function createButtonActivation({
         case "runAction":
           switch (intent.action.kind) {
             case "spell":
-              parts = appendTextToParts(parts, intent.action.text);
+              parts = appendTextToLastPart(parts, intent.action.text);
               break;
             case "space":
               parts = addSpaceToParts(parts);
