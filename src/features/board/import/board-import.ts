@@ -21,7 +21,7 @@ export interface ImportResult {
   replacedExisting: boolean;
 }
 
-export async function importBoardFiles(
+export async function persistBoardFiles(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
