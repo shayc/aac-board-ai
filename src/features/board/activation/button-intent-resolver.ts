@@ -9,7 +9,7 @@ export type ButtonIntent =
   | { kind: "speakText"; text: string }
   | { kind: "runAction"; action: BoardAction };
 
-export function resolveButtonIntent(button: BoardButton): ButtonIntent[] {
+export function resolveButtonIntents(button: BoardButton): ButtonIntent[] {
   const targetBoardId = getNavigationTargetId(button);
   if (targetBoardId) {
     return [{ kind: "navigate", targetBoardId }];

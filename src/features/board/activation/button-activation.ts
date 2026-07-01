@@ -11,7 +11,7 @@ import type { UseMessagePlaybackReturn } from "../message/playback/use-message-p
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardButton } from "../types";
-import { resolveButtonIntent } from "./button-intent-resolver";
+import { resolveButtonIntents } from "./button-intent-resolver";
 
 export interface ButtonActivationOptions {
   message: Pick<UseMessageReturn, "parts" | "setParts">;
@@ -29,7 +29,7 @@ export function createButtonActivation({
   navigation,
 }: ButtonActivationOptions): ButtonActivation {
   function activateButton(button: BoardButton) {
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
 
     let parts = message.parts;
     let partsToSpeak: MessagePart[] | null = null;
