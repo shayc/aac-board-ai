@@ -3,7 +3,6 @@
   "loading": "Đang tải...",
   "close": "Đóng",
   "boardLoading": "Đang tải bảng...",
-  "boardNotFound": "Không tìm thấy bảng",
   "boardGridLabel": "Bảng giao tiếp",
   "libraryLoading": "Đang tải các bảng...",
   "libraryEmptyTitle": "Thư viện trống",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Tiếp tục",
   "errorGenericTitle": "Đã xảy ra lỗi",
   "errorGoHome": "Về trang chủ",
-  "errorBoardSetNotFound": "Không tìm thấy bộ bảng"
+  "errorBoardNotFound": "Không tìm thấy bảng",
+  "errorBoardSetNotFound": "Không tìm thấy bảng"
 }

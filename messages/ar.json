@@ -3,7 +3,6 @@
   "loading": "جارٍ التحميل...",
   "close": "إغلاق",
   "boardLoading": "جارٍ تحميل اللوحة...",
-  "boardNotFound": "اللوحة غير موجودة",
   "boardGridLabel": "لوحة تواصل",
   "libraryLoading": "جارٍ تحميل اللوحات...",
   "libraryEmptyTitle": "المكتبة فارغة",
@@ -117,5 +116,6 @@
   "onboardingContinue": "متابعة",
   "errorGenericTitle": "حدث خطأ ما",
   "errorGoHome": "الانتقال إلى الرئيسية",
-  "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة"
+  "errorBoardNotFound": "اللوحة غير موجودة",
+  "errorBoardSetNotFound": "اللوحة غير موجودة"
 }

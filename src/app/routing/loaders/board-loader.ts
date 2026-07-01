@@ -14,7 +14,7 @@ export async function boardLoader({
 }: LoaderFunctionArgs): Promise<Board> {
   const { setId, boardId } = params;
   if (!setId || !boardId) {
-    throw data(m.boardNotFound(), { status: 404 });
+    throw data(m.errorBoardNotFound(), { status: 404 });
   }
 
   try {
@@ -24,7 +24,7 @@ export async function boardLoader({
     return await resolveTranslatedBoard(setId, board, language, request.signal);
   } catch (error) {
     if (error instanceof BoardNotFoundError) {
-      throw data(m.boardNotFound(), { status: 404 });
+      throw data(m.errorBoardNotFound(), { status: 404 });
     }
 
     throw error;

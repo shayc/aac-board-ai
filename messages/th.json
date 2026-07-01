@@ -3,7 +3,6 @@
   "loading": "กำลังโหลด...",
   "close": "ปิด",
   "boardLoading": "กำลังโหลดบอร์ด...",
-  "boardNotFound": "ไม่พบบอร์ด",
   "boardGridLabel": "บอร์ดสื่อสาร",
   "libraryLoading": "กำลังโหลดบอร์ด...",
   "libraryEmptyTitle": "คลังว่างเปล่า",
@@ -117,5 +116,6 @@
   "onboardingContinue": "ดำเนินการต่อ",
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
   "errorGoHome": "ไปที่หน้าแรก",
-  "errorBoardSetNotFound": "ไม่พบชุดบอร์ด"
+  "errorBoardNotFound": "ไม่พบบอร์ด",
+  "errorBoardSetNotFound": "ไม่พบบอร์ด"
 }

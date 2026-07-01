@@ -3,7 +3,6 @@
   "loading": "正在加载……",
   "close": "关闭",
   "boardLoading": "正在加载沟通板……",
-  "boardNotFound": "未找到沟通板",
   "boardGridLabel": "沟通板",
   "libraryLoading": "正在加载沟通板……",
   "libraryEmptyTitle": "板库为空",
@@ -117,5 +116,6 @@
   "onboardingContinue": "继续",
   "errorGenericTitle": "出了点问题",
   "errorGoHome": "返回主页",
-  "errorBoardSetNotFound": "未找到沟通板集"
+  "errorBoardNotFound": "未找到沟通板",
+  "errorBoardSetNotFound": "未找到沟通板"
 }

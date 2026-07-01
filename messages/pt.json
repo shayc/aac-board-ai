@@ -3,7 +3,6 @@
   "loading": "Carregando...",
   "close": "Fechar",
   "boardLoading": "Carregando prancha...",
-  "boardNotFound": "Prancha não encontrada",
   "boardGridLabel": "Prancha de comunicação",
   "libraryLoading": "Carregando pranchas...",
   "libraryEmptyTitle": "A biblioteca está vazia",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo deu errado",
   "errorGoHome": "Ir para o início",
-  "errorBoardSetNotFound": "Conjunto de pranchas não encontrado"
+  "errorBoardNotFound": "Prancha não encontrada",
+  "errorBoardSetNotFound": "Prancha não encontrada"
 }

@@ -3,7 +3,6 @@
   "loading": "Caricamento...",
   "close": "Chiudi",
   "boardLoading": "Caricamento tabella...",
-  "boardNotFound": "Tabella non trovata",
   "boardGridLabel": "Tabella di comunicazione",
   "libraryLoading": "Caricamento tabelle...",
   "libraryEmptyTitle": "La libreria è vuota",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Continua",
   "errorGenericTitle": "Qualcosa è andato storto",
   "errorGoHome": "Vai alla home",
-  "errorBoardSetNotFound": "Set di tabelle non trovato"
+  "errorBoardNotFound": "Tabella non trovata",
+  "errorBoardSetNotFound": "Tabella non trovata"
 }

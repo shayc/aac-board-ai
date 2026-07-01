@@ -3,7 +3,6 @@
   "loading": "Načítání...",
   "close": "Zavřít",
   "boardLoading": "Načítání tabulky...",
-  "boardNotFound": "Tabulka nebyla nalezena",
   "boardGridLabel": "Komunikační tabulka",
   "libraryLoading": "Načítání tabulek...",
   "libraryEmptyTitle": "Knihovna je prázdná",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Pokračovat",
   "errorGenericTitle": "Něco se pokazilo",
   "errorGoHome": "Přejít domů",
-  "errorBoardSetNotFound": "Sada tabulek nebyla nalezena"
+  "errorBoardNotFound": "Tabulka nebyla nalezena",
+  "errorBoardSetNotFound": "Tabulka nebyla nalezena"
 }

@@ -3,7 +3,6 @@
   "loading": "Memuat...",
   "close": "Tutup",
   "boardLoading": "Memuat papan...",
-  "boardNotFound": "Papan tidak ditemukan",
   "boardGridLabel": "Papan komunikasi",
   "libraryLoading": "Memuat papan...",
   "libraryEmptyTitle": "Pustaka kosong",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Lanjutkan",
   "errorGenericTitle": "Terjadi kesalahan",
   "errorGoHome": "Ke beranda",
-  "errorBoardSetNotFound": "Set papan tidak ditemukan"
+  "errorBoardNotFound": "Papan tidak ditemukan",
+  "errorBoardSetNotFound": "Papan tidak ditemukan"
 }

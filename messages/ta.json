@@ -3,7 +3,6 @@
   "loading": "ஏற்றப்படுகிறது…",
   "close": "மூடு",
   "boardLoading": "பலகை ஏற்றப்படுகிறது…",
-  "boardNotFound": "பலகை கிடைக்கவில்லை",
   "boardGridLabel": "தொடர்பு பலகை",
   "libraryLoading": "பலகைகள் ஏற்றப்படுகின்றன…",
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
@@ -117,5 +116,6 @@
   "onboardingContinue": "தொடரவும்",
   "errorGenericTitle": "ஏதோ தவறு நடந்தது",
   "errorGoHome": "முகப்புக்குச் செல்",
-  "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை"
+  "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
+  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை"
 }

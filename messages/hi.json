@@ -3,7 +3,6 @@
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",
   "boardLoading": "बोर्ड लोड हो रहा है…",
-  "boardNotFound": "बोर्ड नहीं मिला",
   "boardGridLabel": "संचार बोर्ड",
   "libraryLoading": "बोर्ड लोड हो रहे हैं…",
   "libraryEmptyTitle": "लाइब्रेरी खाली है",
@@ -117,5 +116,6 @@
   "onboardingContinue": "जारी रखें",
   "errorGenericTitle": "कुछ गलत हो गया",
   "errorGoHome": "होम पर जाएँ",
-  "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला"
+  "errorBoardNotFound": "बोर्ड नहीं मिला",
+  "errorBoardSetNotFound": "बोर्ड नहीं मिला"
 }

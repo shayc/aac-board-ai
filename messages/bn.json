@@ -3,7 +3,6 @@
   "loading": "লোড হচ্ছে…",
   "close": "বন্ধ করুন",
   "boardLoading": "বোর্ড লোড হচ্ছে…",
-  "boardNotFound": "বোর্ড পাওয়া যায়নি",
   "boardGridLabel": "যোগাযোগ বোর্ড",
   "libraryLoading": "বোর্ড লোড হচ্ছে…",
   "libraryEmptyTitle": "লাইব্রেরি খালি",
@@ -117,5 +116,6 @@
   "onboardingContinue": "চালিয়ে যান",
   "errorGenericTitle": "কিছু একটা ভুল হয়েছে",
   "errorGoHome": "হোমে যান",
-  "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি"
+  "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
+  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি"
 }

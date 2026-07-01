@@ -3,7 +3,6 @@
   "loading": "Načítava sa...",
   "close": "Zavrieť",
   "boardLoading": "Načítava sa tabuľka...",
-  "boardNotFound": "Tabuľka sa nenašla",
   "boardGridLabel": "Komunikačná tabuľka",
   "libraryLoading": "Načítavajú sa tabuľky...",
   "libraryEmptyTitle": "Knižnica je prázdna",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Pokračovať",
   "errorGenericTitle": "Niečo sa pokazilo",
   "errorGoHome": "Prejsť domov",
-  "errorBoardSetNotFound": "Súprava tabuliek sa nenašla"
+  "errorBoardNotFound": "Tabuľka sa nenašla",
+  "errorBoardSetNotFound": "Tabuľka sa nenašla"
 }

@@ -3,7 +3,6 @@
   "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "close": "ಮುಚ್ಚಿ",
   "boardLoading": "ಬೋರ್ಡ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
-  "boardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",
   "libraryLoading": "ಬೋರ್ಡ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
@@ -117,5 +116,6 @@
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",
   "errorGenericTitle": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
-  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ"
+  "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
+  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ"
 }

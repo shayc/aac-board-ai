@@ -3,7 +3,6 @@
   "loading": "Učitavanje...",
   "close": "Zatvori",
   "boardLoading": "Učitavanje ploče...",
-  "boardNotFound": "Ploča nije pronađena",
   "boardGridLabel": "Komunikacijska ploča",
   "libraryLoading": "Učitavanje ploča...",
   "libraryEmptyTitle": "Knjižnica je prazna",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Nastavi",
   "errorGenericTitle": "Nešto je pošlo po zlu",
   "errorGoHome": "Idi na početnu",
-  "errorBoardSetNotFound": "Komplet ploča nije pronađen"
+  "errorBoardNotFound": "Ploča nije pronađena",
+  "errorBoardSetNotFound": "Ploča nije pronađena"
 }

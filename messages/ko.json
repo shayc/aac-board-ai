@@ -3,7 +3,6 @@
   "loading": "불러오는 중…",
   "close": "닫기",
   "boardLoading": "보드를 불러오는 중…",
-  "boardNotFound": "보드를 찾을 수 없음",
   "boardGridLabel": "의사소통 보드",
   "libraryLoading": "보드를 불러오는 중…",
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
@@ -117,5 +116,6 @@
   "onboardingContinue": "계속",
   "errorGenericTitle": "문제가 발생했습니다",
   "errorGoHome": "홈으로",
-  "errorBoardSetNotFound": "보드 세트를 찾을 수 없습니다"
+  "errorBoardNotFound": "보드를 찾을 수 없음",
+  "errorBoardSetNotFound": "보드를 찾을 수 없음"
 }

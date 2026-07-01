@@ -3,7 +3,6 @@
   "loading": "Se încarcă...",
   "close": "Închide",
   "boardLoading": "Se încarcă tabla...",
-  "boardNotFound": "Tabla nu a fost găsită",
   "boardGridLabel": "Tablă de comunicare",
   "libraryLoading": "Se încarcă tablele...",
   "libraryEmptyTitle": "Biblioteca este goală",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Continuă",
   "errorGenericTitle": "Ceva nu a mers bine",
   "errorGoHome": "Mergi la pagina principală",
-  "errorBoardSetNotFound": "Setul de table nu a fost găsit"
+  "errorBoardNotFound": "Tabla nu a fost găsită",
+  "errorBoardSetNotFound": "Tabla nu a fost găsită"
 }

@@ -3,7 +3,6 @@
   "loading": "Laden...",
   "close": "Sluiten",
   "boardLoading": "Bord laden...",
-  "boardNotFound": "Bord niet gevonden",
   "boardGridLabel": "Communicatiebord",
   "libraryLoading": "Borden laden...",
   "libraryEmptyTitle": "De bibliotheek is leeg",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Doorgaan",
   "errorGenericTitle": "Er is iets misgegaan",
   "errorGoHome": "Naar start",
-  "errorBoardSetNotFound": "Bordenset niet gevonden"
+  "errorBoardNotFound": "Bord niet gevonden",
+  "errorBoardSetNotFound": "Bord niet gevonden"
 }

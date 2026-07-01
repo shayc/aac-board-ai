@@ -3,7 +3,6 @@
   "loading": "Betöltés...",
   "close": "Bezárás",
   "boardLoading": "Tábla betöltése...",
-  "boardNotFound": "A tábla nem található",
   "boardGridLabel": "Kommunikációs tábla",
   "libraryLoading": "Táblák betöltése...",
   "libraryEmptyTitle": "A könyvtár üres",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Folytatás",
   "errorGenericTitle": "Hiba történt",
   "errorGoHome": "Ugrás a kezdőlapra",
-  "errorBoardSetNotFound": "A táblakészlet nem található"
+  "errorBoardNotFound": "A tábla nem található",
+  "errorBoardSetNotFound": "A tábla nem található"
 }

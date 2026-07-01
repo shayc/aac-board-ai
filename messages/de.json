@@ -3,7 +3,6 @@
   "loading": "Wird geladen...",
   "close": "Schließen",
   "boardLoading": "Tafel wird geladen...",
-  "boardNotFound": "Tafel nicht gefunden",
   "boardGridLabel": "Kommunikationstafel",
   "libraryLoading": "Tafeln werden geladen...",
   "libraryEmptyTitle": "Die Bibliothek ist leer",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Weiter",
   "errorGenericTitle": "Etwas ist schiefgelaufen",
   "errorGoHome": "Zur Startseite",
-  "errorBoardSetNotFound": "Tafelsatz nicht gefunden"
+  "errorBoardNotFound": "Tafel nicht gefunden",
+  "errorBoardSetNotFound": "Tafel nicht gefunden"
 }

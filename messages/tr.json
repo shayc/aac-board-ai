@@ -3,7 +3,6 @@
   "loading": "Yükleniyor...",
   "close": "Kapat",
   "boardLoading": "Pano yükleniyor...",
-  "boardNotFound": "Pano bulunamadı",
   "boardGridLabel": "İletişim panosu",
   "libraryLoading": "Panolar yükleniyor...",
   "libraryEmptyTitle": "Kitaplık boş",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Devam et",
   "errorGenericTitle": "Bir şeyler ters gitti",
   "errorGoHome": "Ana sayfaya git",
-  "errorBoardSetNotFound": "Pano seti bulunamadı"
+  "errorBoardNotFound": "Pano bulunamadı",
+  "errorBoardSetNotFound": "Pano bulunamadı"
 }

@@ -3,7 +3,6 @@
   "loading": "Ładowanie...",
   "close": "Zamknij",
   "boardLoading": "Ładowanie tablicy...",
-  "boardNotFound": "Nie znaleziono tablicy",
   "boardGridLabel": "Tablica komunikacyjna",
   "libraryLoading": "Ładowanie tablic...",
   "libraryEmptyTitle": "Biblioteka jest pusta",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Kontynuuj",
   "errorGenericTitle": "Coś poszło nie tak",
   "errorGoHome": "Przejdź do strony głównej",
-  "errorBoardSetNotFound": "Nie znaleziono zestawu tablic"
+  "errorBoardNotFound": "Nie znaleziono tablicy",
+  "errorBoardSetNotFound": "Nie znaleziono tablicy"
 }

@@ -3,7 +3,6 @@
   "loading": "Loading...",
   "close": "Close",
   "boardLoading": "Loading board...",
-  "boardNotFound": "Board not found",
   "boardGridLabel": "Communication board",
   "libraryLoading": "Loading boards...",
   "libraryEmptyTitle": "Library is empty",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Continue",
   "errorGenericTitle": "Something went wrong",
   "errorGoHome": "Go home",
-  "errorBoardSetNotFound": "Board set not found"
+  "errorBoardNotFound": "Board not found",
+  "errorBoardSetNotFound": "Board not found"
 }

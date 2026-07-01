@@ -3,7 +3,6 @@
   "loading": "Φόρτωση...",
   "close": "Κλείσιμο",
   "boardLoading": "Φόρτωση πίνακα...",
-  "boardNotFound": "Ο πίνακας δεν βρέθηκε",
   "boardGridLabel": "Πίνακας επικοινωνίας",
   "libraryLoading": "Φόρτωση πινάκων...",
   "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Συνέχεια",
   "errorGenericTitle": "Κάτι πήγε στραβά",
   "errorGoHome": "Μετάβαση στην αρχική",
-  "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε"
+  "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
+  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε"
 }

@@ -3,7 +3,6 @@
   "loading": "Indlæser...",
   "close": "Luk",
   "boardLoading": "Indlæser tavle...",
-  "boardNotFound": "Tavlen blev ikke fundet",
   "boardGridLabel": "Kommunikationstavle",
   "libraryLoading": "Indlæser tavler...",
   "libraryEmptyTitle": "Biblioteket er tomt",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Fortsæt",
   "errorGenericTitle": "Noget gik galt",
   "errorGoHome": "Gå til start",
-  "errorBoardSetNotFound": "Tavlesættet blev ikke fundet"
+  "errorBoardNotFound": "Tavlen blev ikke fundet",
+  "errorBoardSetNotFound": "Tavlen blev ikke fundet"
 }

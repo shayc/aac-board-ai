@@ -3,7 +3,6 @@
   "loading": "Nalaganje...",
   "close": "Zapri",
   "boardLoading": "Nalaganje table...",
-  "boardNotFound": "Table ni mogoče najti",
   "boardGridLabel": "Komunikacijska tabla",
   "libraryLoading": "Nalaganje tabel...",
   "libraryEmptyTitle": "Knjižnica je prazna",
@@ -117,5 +116,6 @@
   "onboardingContinue": "Nadaljuj",
   "errorGenericTitle": "Nekaj je šlo narobe",
   "errorGoHome": "Pojdi domov",
-  "errorBoardSetNotFound": "Nabora tabel ni mogoče najti"
+  "errorBoardNotFound": "Table ni mogoče najti",
+  "errorBoardSetNotFound": "Table ni mogoče najti"
 }
