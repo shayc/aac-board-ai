@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Elérhető",
   "aiStatusUnavailable": "Nem érhető el",
   "aiStatusDownloadRequired": "Letöltés szükséges",
+  "aiStatusDownloading": "Letöltés…",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",
   "suggestionsUnavailable": "A javaslatok nem érhetők el",

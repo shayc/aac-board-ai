@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Beschikbaar",
   "aiStatusUnavailable": "Niet beschikbaar",
   "aiStatusDownloadRequired": "Download vereist",
+  "aiStatusDownloading": "Downloaden…",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
   "suggestionsUnavailable": "Suggesties niet beschikbaar",

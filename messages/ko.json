@@ -91,6 +91,7 @@
   "aiStatusAvailable": "사용 가능",
   "aiStatusUnavailable": "사용 불가",
   "aiStatusDownloadRequired": "다운로드 필요",
+  "aiStatusDownloading": "다운로드 중…",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
   "suggestionsUnavailable": "제안을 사용할 수 없음",

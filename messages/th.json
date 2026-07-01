@@ -91,6 +91,7 @@
   "aiStatusAvailable": "พร้อมใช้งาน",
   "aiStatusUnavailable": "ไม่พร้อมใช้งาน",
   "aiStatusDownloadRequired": "ต้องดาวน์โหลดก่อน",
+  "aiStatusDownloading": "กำลังดาวน์โหลด…",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsUnavailable": "คำแนะนำไม่พร้อมใช้งาน",

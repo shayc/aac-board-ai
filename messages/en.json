@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Available",
   "aiStatusUnavailable": "Unavailable",
   "aiStatusDownloadRequired": "Download required",
+  "aiStatusDownloading": "Downloading…",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model… {progress}%",
   "suggestionsUnavailable": "Suggestions unavailable",

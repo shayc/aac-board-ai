@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Доступно",
   "aiStatusUnavailable": "Недоступно",
   "aiStatusDownloadRequired": "Требуется загрузка",
+  "aiStatusDownloading": "Загрузка…",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
   "suggestionsUnavailable": "Предложения недоступны",

@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Disponibil",
   "aiStatusUnavailable": "Indisponibil",
   "aiStatusDownloadRequired": "Necesită descărcare",
+  "aiStatusDownloading": "Se descarcă…",
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI… {progress}%",
   "suggestionsUnavailable": "Sugestiile nu sunt disponibile",

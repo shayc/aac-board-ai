@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Disponível",
   "aiStatusUnavailable": "Indisponível",
   "aiStatusDownloadRequired": "Download necessário",
+  "aiStatusDownloading": "Baixando…",
   "suggestionsEnable": "Ativar sugestões",
   "suggestionsDownloading": "Baixando modelo de IA… {progress}%",
   "suggestionsUnavailable": "Sugestões indisponíveis",

@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Διαθέσιμο",
   "aiStatusUnavailable": "Μη διαθέσιμο",
   "aiStatusDownloadRequired": "Απαιτείται λήψη",
+  "aiStatusDownloading": "Λήψη…",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
   "suggestionsUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες",

@@ -91,6 +91,7 @@
   "aiStatusAvailable": "K dispozici",
   "aiStatusUnavailable": "Není k dispozici",
   "aiStatusDownloadRequired": "Vyžaduje stažení",
+  "aiStatusDownloading": "Stahování…",
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI… {progress} %",
   "suggestionsUnavailable": "Návrhy nejsou k dispozici",

@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Saatavilla",
   "aiStatusUnavailable": "Ei saatavilla",
   "aiStatusDownloadRequired": "Lataus vaaditaan",
+  "aiStatusDownloading": "Ladataan…",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsUnavailable": "Ehdotukset eivät ole saatavilla",

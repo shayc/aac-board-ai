@@ -91,6 +91,7 @@
   "aiStatusAvailable": "利用可能",
   "aiStatusUnavailable": "利用不可",
   "aiStatusDownloadRequired": "ダウンロードが必要",
+  "aiStatusDownloading": "ダウンロード中…",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsUnavailable": "提案は利用できません",

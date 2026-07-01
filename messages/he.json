@@ -91,6 +91,7 @@
   "aiStatusAvailable": "זמין",
   "aiStatusUnavailable": "לא זמין",
   "aiStatusDownloadRequired": "נדרשת הורדה",
+  "aiStatusDownloading": "הורדה…",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
   "suggestionsUnavailable": "ההצעות אינן זמינות",

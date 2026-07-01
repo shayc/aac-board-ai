@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Verfügbar",
   "aiStatusUnavailable": "Nicht verfügbar",
   "aiStatusDownloadRequired": "Download erforderlich",
+  "aiStatusDownloading": "Wird heruntergeladen…",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
   "suggestionsUnavailable": "Vorschläge nicht verfügbar",

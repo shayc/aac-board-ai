@@ -91,6 +91,7 @@
   "aiStatusAvailable": "ಲಭ್ಯವಿದೆ",
   "aiStatusUnavailable": "ಲಭ್ಯವಿಲ್ಲ",
   "aiStatusDownloadRequired": "ಡೌನ್‌ಲೋಡ್ ಅಗತ್ಯವಿದೆ",
+  "aiStatusDownloading": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "suggestionsEnable": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "suggestionsDownloading": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",
   "suggestionsUnavailable": "ಸಲಹೆಗಳು ಲಭ್ಯವಿಲ್ಲ",

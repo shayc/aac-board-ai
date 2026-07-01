@@ -91,6 +91,7 @@
   "aiStatusAvailable": "উপলব্ধ",
   "aiStatusUnavailable": "অনুপলব্ধ",
   "aiStatusDownloadRequired": "ডাউনলোড প্রয়োজন",
+  "aiStatusDownloading": "ডাউনলোড হচ্ছে…",
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
   "suggestionsUnavailable": "পরামর্শ উপলব্ধ নয়",

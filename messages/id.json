@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Tersedia",
   "aiStatusUnavailable": "Tidak tersedia",
   "aiStatusDownloadRequired": "Perlu diunduh",
+  "aiStatusDownloading": "Mengunduh…",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",
   "suggestionsUnavailable": "Saran tidak tersedia",

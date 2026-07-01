@@ -113,6 +113,7 @@ function statusLabel(status: Status) {
     case "ready":
       return m.aiStatusAvailable();
     case "downloading":
+      return m.aiStatusDownloading();
     case "downloadable":
       return m.aiStatusDownloadRequired();
     case "idle":

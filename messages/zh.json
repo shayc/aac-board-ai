@@ -91,6 +91,7 @@
   "aiStatusAvailable": "可用",
   "aiStatusUnavailable": "不可用",
   "aiStatusDownloadRequired": "需要下载",
+  "aiStatusDownloading": "正在下载…",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsUnavailable": "建议不可用",

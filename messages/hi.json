@@ -91,6 +91,7 @@
   "aiStatusAvailable": "उपलब्ध",
   "aiStatusUnavailable": "अनुपलब्ध",
   "aiStatusDownloadRequired": "डाउनलोड आवश्यक है",
+  "aiStatusDownloading": "डाउनलोड हो रहा है…",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
   "suggestionsUnavailable": "सुझाव उपलब्ध नहीं हैं",

@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Dostupno",
   "aiStatusUnavailable": "Nedostupno",
   "aiStatusDownloadRequired": "Potrebno je preuzimanje",
+  "aiStatusDownloading": "Preuzimanje…",
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela… {progress} %",
   "suggestionsUnavailable": "Prijedlozi nisu dostupni",

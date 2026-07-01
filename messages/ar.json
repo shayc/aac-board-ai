@@ -91,6 +91,7 @@
   "aiStatusAvailable": "متاح",
   "aiStatusUnavailable": "غير متاح",
   "aiStatusDownloadRequired": "يلزم التنزيل",
+  "aiStatusDownloading": "جارٍ التنزيل…",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",
   "suggestionsUnavailable": "الاقتراحات غير متاحة",

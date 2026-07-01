@@ -91,6 +91,7 @@
   "aiStatusAvailable": "கிடைக்கிறது",
   "aiStatusUnavailable": "கிடைக்கவில்லை",
   "aiStatusDownloadRequired": "பதிவிறக்கம் தேவை",
+  "aiStatusDownloading": "பதிவிறக்கப்படுகிறது…",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsUnavailable": "பரிந்துரைகள் கிடைக்கவில்லை",

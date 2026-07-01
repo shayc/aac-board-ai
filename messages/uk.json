@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Доступно",
   "aiStatusUnavailable": "Недоступно",
   "aiStatusDownloadRequired": "Потрібне завантаження",
+  "aiStatusDownloading": "Завантаження…",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",
   "suggestionsUnavailable": "Пропозиції недоступні",

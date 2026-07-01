@@ -91,6 +91,7 @@
   "aiStatusAvailable": "అందుబాటులో ఉంది",
   "aiStatusUnavailable": "అందుబాటులో లేదు",
   "aiStatusDownloadRequired": "డౌన్‌లోడ్ అవసరం",
+  "aiStatusDownloading": "డౌన్‌లోడ్ అవుతోంది…",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
   "suggestionsUnavailable": "సూచనలు అందుబాటులో లేవు",

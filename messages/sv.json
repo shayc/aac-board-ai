@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Tillgänglig",
   "aiStatusUnavailable": "Inte tillgänglig",
   "aiStatusDownloadRequired": "Nedladdning krävs",
+  "aiStatusDownloading": "Laddar ner…",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",
   "suggestionsUnavailable": "Förslag är inte tillgängliga",

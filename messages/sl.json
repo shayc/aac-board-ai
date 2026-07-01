@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Na voljo",
   "aiStatusUnavailable": "Ni na voljo",
   "aiStatusDownloadRequired": "Potreben je prenos",
+  "aiStatusDownloading": "Prenašanje…",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsUnavailable": "Predlogi niso na voljo",

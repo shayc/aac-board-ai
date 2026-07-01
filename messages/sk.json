@@ -91,6 +91,7 @@
   "aiStatusAvailable": "K dispozícii",
   "aiStatusUnavailable": "Nie je k dispozícii",
   "aiStatusDownloadRequired": "Vyžaduje sa stiahnutie",
+  "aiStatusDownloading": "Sťahovanie…",
   "suggestionsEnable": "Zapnúť návrhy",
   "suggestionsDownloading": "Sťahovanie modelu AI… {progress} %",
   "suggestionsUnavailable": "Návrhy nie sú k dispozícii",

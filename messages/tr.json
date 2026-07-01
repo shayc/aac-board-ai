@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Kullanılabilir",
   "aiStatusUnavailable": "Kullanılamıyor",
   "aiStatusDownloadRequired": "İndirme gerekli",
+  "aiStatusDownloading": "İndiriliyor…",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",
   "suggestionsUnavailable": "Öneriler kullanılamıyor",

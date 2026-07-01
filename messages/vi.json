@@ -91,6 +91,7 @@
   "aiStatusAvailable": "Khả dụng",
   "aiStatusUnavailable": "Không khả dụng",
   "aiStatusDownloadRequired": "Cần tải xuống",
+  "aiStatusDownloading": "Đang tải xuống…",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
   "suggestionsUnavailable": "Gợi ý không khả dụng",
