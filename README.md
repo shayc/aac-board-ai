@@ -13,7 +13,7 @@ Try the live app at [aacboard.app](https://aacboard.app). Core board features wo
 
 ## From taps to clearer messages
 
-Standard AAC boards produce telegraphic output — tapping tiles one at a time yields "want eat pizza." AAC Board AI cleans that up on-device: a grammar-corrected version that keeps the user's own words, plus optional tone variants (direct, professional, or friendly). Each suggestion is a button the user taps to accept:
+Standard AAC boards produce telegraphic output — tapping tiles one at a time yields "want eat pizza." AAC Board AI cleans that up on-device: a grammar-corrected version that keeps the user's own words. Each suggestion is a button the user taps to accept:
 
 ```
 User taps:          [ want ] → [ eat ] → [ pizza ]
@@ -71,7 +71,7 @@ Open [http://localhost:5173](http://localhost:5173)
 ## Development
 
 ```bash
-npx playwright install  # One-time: install Chromium for tests
+npx playwright install chromium  # One-time: install Chromium for tests
 npm run dev             # Start dev server
 npm run dev:host        # Dev server, accessible from other devices on your network
 npm run lint            # Lint

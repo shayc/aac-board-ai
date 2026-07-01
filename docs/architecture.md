@@ -165,6 +165,7 @@ hyperlinked, so a moved file never breaks this table.
 | `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                       |
 | `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                    |
 | `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                       |
+| `src/shared/built-in-ai/`                                                | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.    |
 | `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: status UI, snackbar, app providers.                                                                  |
 | `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                           |
 | `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                |
