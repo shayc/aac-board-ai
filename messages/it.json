@@ -3,7 +3,6 @@
   "loading": "Caricamento...",
   "close": "Chiudi",
   "boardLoading": "Caricamento tabella...",
-  "boardNotFound": "Tabella non trovata",
   "boardGridLabel": "Tabella di comunicazione",
   "libraryLoading": "Caricamento tabelle...",
   "libraryEmptyTitle": "La libreria è vuota",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Disponibile",
   "aiStatusUnavailable": "Non disponibile",
   "aiStatusDownloadRequired": "Download richiesto",
+  "aiStatusDownloading": "Download…",
   "suggestionsEnable": "Attiva i suggerimenti",
   "suggestionsDownloading": "Download del modello IA… {progress}%",
   "suggestionsUnavailable": "Suggerimenti non disponibili",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Continua",
   "errorGenericTitle": "Qualcosa è andato storto",
   "errorGoHome": "Vai alla home",
-  "errorBoardSetNotFound": "Set di tabelle non trovato"
+  "errorBoardNotFound": "Tabella non trovata",
+  "errorBoardSetNotFound": "Tabella non trovata"
 }

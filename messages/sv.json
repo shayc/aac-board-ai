@@ -3,7 +3,6 @@
   "loading": "Laddar...",
   "close": "Stäng",
   "boardLoading": "Laddar tavla...",
-  "boardNotFound": "Tavlan hittades inte",
   "boardGridLabel": "Kommunikationstavla",
   "libraryLoading": "Laddar tavlor...",
   "libraryEmptyTitle": "Biblioteket är tomt",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Tillgänglig",
   "aiStatusUnavailable": "Inte tillgänglig",
   "aiStatusDownloadRequired": "Nedladdning krävs",
+  "aiStatusDownloading": "Laddar ner…",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",
   "suggestionsUnavailable": "Förslag är inte tillgängliga",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Fortsätt",
   "errorGenericTitle": "Något gick fel",
   "errorGoHome": "Till startsidan",
-  "errorBoardSetNotFound": "Taveluppsättningen hittades inte"
+  "errorBoardNotFound": "Tavlan hittades inte",
+  "errorBoardSetNotFound": "Tavlan hittades inte"
 }

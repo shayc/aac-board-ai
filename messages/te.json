@@ -3,7 +3,6 @@
   "loading": "లోడ్ అవుతోంది…",
   "close": "మూసివేయి",
   "boardLoading": "బోర్డు లోడ్ అవుతోంది…",
-  "boardNotFound": "బోర్డు కనుగొనబడలేదు",
   "boardGridLabel": "సంభాషణ బోర్డు",
   "libraryLoading": "బోర్డులు లోడ్ అవుతున్నాయి…",
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "అందుబాటులో ఉంది",
   "aiStatusUnavailable": "అందుబాటులో లేదు",
   "aiStatusDownloadRequired": "డౌన్‌లోడ్ అవసరం",
+  "aiStatusDownloading": "డౌన్‌లోడ్ అవుతోంది…",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
   "suggestionsUnavailable": "సూచనలు అందుబాటులో లేవు",
@@ -116,5 +116,6 @@
   "onboardingContinue": "కొనసాగించు",
   "errorGenericTitle": "ఏదో తప్పు జరిగింది",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
-  "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు"
+  "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
+  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు"
 }

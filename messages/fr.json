@@ -3,7 +3,6 @@
   "loading": "Chargement...",
   "close": "Fermer",
   "boardLoading": "Chargement du tableau...",
-  "boardNotFound": "Tableau introuvable",
   "boardGridLabel": "Tableau de communication",
   "libraryLoading": "Chargement des tableaux...",
   "libraryEmptyTitle": "La bibliothèque est vide",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Disponible",
   "aiStatusUnavailable": "Indisponible",
   "aiStatusDownloadRequired": "Téléchargement requis",
+  "aiStatusDownloading": "Téléchargement…",
   "suggestionsEnable": "Activer les suggestions",
   "suggestionsDownloading": "Téléchargement du modèle d'IA… {progress} %",
   "suggestionsUnavailable": "Suggestions indisponibles",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Continuer",
   "errorGenericTitle": "Une erreur s'est produite",
   "errorGoHome": "Aller à l'accueil",
-  "errorBoardSetNotFound": "Ensemble de tableaux introuvable"
+  "errorBoardNotFound": "Tableau introuvable",
+  "errorBoardSetNotFound": "Tableau introuvable"
 }

@@ -3,7 +3,6 @@
   "loading": "Ladataan...",
   "close": "Sulje",
   "boardLoading": "Ladataan taulua...",
-  "boardNotFound": "Taulua ei löytynyt",
   "boardGridLabel": "Kommunikointitaulu",
   "libraryLoading": "Ladataan tauluja...",
   "libraryEmptyTitle": "Kirjasto on tyhjä",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Saatavilla",
   "aiStatusUnavailable": "Ei saatavilla",
   "aiStatusDownloadRequired": "Lataus vaaditaan",
+  "aiStatusDownloading": "Ladataan…",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsUnavailable": "Ehdotukset eivät ole saatavilla",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Jatka",
   "errorGenericTitle": "Jokin meni pieleen",
   "errorGoHome": "Siirry etusivulle",
-  "errorBoardSetNotFound": "Taulukokoelmaa ei löytynyt"
+  "errorBoardNotFound": "Taulua ei löytynyt",
+  "errorBoardSetNotFound": "Taulua ei löytynyt"
 }

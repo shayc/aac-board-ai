@@ -43,7 +43,7 @@ export function getRegionCode(locale: string): string | undefined {
  * Returns the region most associated with a language via CLDR likely-subtags
  * (e.g. "fr" → "FR", "en" → "US"). Undefined for unrecognized input.
  */
-export function getPreferredRegion(language: string): string | undefined {
+export function getLikelyRegion(language: string): string | undefined {
   try {
     return parseLocale(language).maximize().region;
   } catch {

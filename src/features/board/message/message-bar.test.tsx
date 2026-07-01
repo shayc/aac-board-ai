@@ -175,7 +175,7 @@ describe("MessageBar", () => {
         <MessageBar {...createProps({ isPlaying: true, onStopClick })} />,
       );
 
-      await screen.getByRole("button", { name: "Stop" }).click();
+      await screen.getByRole("button", { name: "Stop message" }).click();
 
       expect(onStopClick).toHaveBeenCalledTimes(1);
     });

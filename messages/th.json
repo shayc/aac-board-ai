@@ -3,7 +3,6 @@
   "loading": "กำลังโหลด...",
   "close": "ปิด",
   "boardLoading": "กำลังโหลดบอร์ด...",
-  "boardNotFound": "ไม่พบบอร์ด",
   "boardGridLabel": "บอร์ดสื่อสาร",
   "libraryLoading": "กำลังโหลดบอร์ด...",
   "libraryEmptyTitle": "คลังว่างเปล่า",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "พร้อมใช้งาน",
   "aiStatusUnavailable": "ไม่พร้อมใช้งาน",
   "aiStatusDownloadRequired": "ต้องดาวน์โหลดก่อน",
+  "aiStatusDownloading": "กำลังดาวน์โหลด…",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsUnavailable": "คำแนะนำไม่พร้อมใช้งาน",
@@ -116,5 +116,6 @@
   "onboardingContinue": "ดำเนินการต่อ",
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
   "errorGoHome": "ไปที่หน้าแรก",
-  "errorBoardSetNotFound": "ไม่พบชุดบอร์ด"
+  "errorBoardNotFound": "ไม่พบบอร์ด",
+  "errorBoardSetNotFound": "ไม่พบบอร์ด"
 }

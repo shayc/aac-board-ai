@@ -73,7 +73,7 @@ describe("board keyboard shortcuts", () => {
 
     await screen.getByRole("button", { name: "Play message" }).click();
     await expect
-      .element(screen.getByRole("button", { name: "Stop" }))
+      .element(screen.getByRole("button", { name: "Stop message" }))
       .toBeVisible();
 
     screen.getByRole("button", { name: "world" }).element().focus();

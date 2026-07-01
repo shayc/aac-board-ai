@@ -3,7 +3,6 @@
   "loading": "ஏற்றப்படுகிறது…",
   "close": "மூடு",
   "boardLoading": "பலகை ஏற்றப்படுகிறது…",
-  "boardNotFound": "பலகை கிடைக்கவில்லை",
   "boardGridLabel": "தொடர்பு பலகை",
   "libraryLoading": "பலகைகள் ஏற்றப்படுகின்றன…",
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "கிடைக்கிறது",
   "aiStatusUnavailable": "கிடைக்கவில்லை",
   "aiStatusDownloadRequired": "பதிவிறக்கம் தேவை",
+  "aiStatusDownloading": "பதிவிறக்கப்படுகிறது…",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsUnavailable": "பரிந்துரைகள் கிடைக்கவில்லை",
@@ -116,5 +116,6 @@
   "onboardingContinue": "தொடரவும்",
   "errorGenericTitle": "ஏதோ தவறு நடந்தது",
   "errorGoHome": "முகப்புக்குச் செல்",
-  "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை"
+  "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
+  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை"
 }

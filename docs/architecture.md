@@ -41,9 +41,9 @@ Assumes React, TypeScript, and the Web Platform; no AAC background needed (see t
 
 ## Overview
 
-The problem: give someone who can't speak a fast, reliable way to communicate by
-tapping pictogram tiles, and read the result aloud — fully offline, in any
-language and text direction.
+The problem: give someone who cannot rely on speech a fast, reliable way to
+communicate by tapping pictogram tiles, and read the result aloud — fully
+offline, in any language and text direction.
 
 Standard AAC boards force tile-by-tile selection that yields telegraphic output
 ("want eat pizza later"). This app's distinguishing move is to expand those short
@@ -165,6 +165,7 @@ hyperlinked, so a moved file never breaks this table.
 | `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                       |
 | `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                    |
 | `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                       |
+| `src/shared/built-in-ai/`                                                | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.    |
 | `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: status UI, snackbar, app providers.                                                                  |
 | `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                           |
 | `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                |

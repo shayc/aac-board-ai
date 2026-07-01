@@ -1,17 +1,17 @@
 import { playAudio } from "@shared/audio/play-audio";
-import { speak } from "@shared/speech/speech-store";
+import { speak } from "@shared/speech/speak";
 import { assertNever } from "@shared/utils/assert-never";
 import {
   addPartToParts,
   addSpaceToParts,
-  appendTextToParts,
+  appendTextToLastPart,
   removeLastPartFromParts,
 } from "../message/message-transforms";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
 import type { BoardButton } from "../types";
-import { resolveButtonIntent } from "./button-intent-resolver";
+import { resolveButtonIntents } from "./button-intent-resolver";
 
 export interface ButtonActivationOptions {
   message: Pick<UseMessageReturn, "parts" | "setParts">;
@@ -29,7 +29,7 @@ export function createButtonActivation({
   navigation,
 }: ButtonActivationOptions): ButtonActivation {
   function activateButton(button: BoardButton) {
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
 
     let parts = message.parts;
     let partsToSpeak: MessagePart[] | null = null;
@@ -51,7 +51,7 @@ export function createButtonActivation({
         case "runAction":
           switch (intent.action.kind) {
             case "spell":
-              parts = appendTextToParts(parts, intent.action.text);
+              parts = appendTextToLastPart(parts, intent.action.text);
               break;
             case "space":
               parts = addSpaceToParts(parts);

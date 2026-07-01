@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   applyTranslations,
-  collectTranslatableStrings,
+  collectTranslatablePhrases,
   findTranslations,
   getBoardLanguage,
   findTranslatedBoard,
@@ -70,13 +70,13 @@ describe("board-strings", () => {
     expect(translated.buttons[1].label).toBeUndefined();
   });
 
-  test("collectTranslatableStrings() extracts all unique UI text", () => {
-    const strings = collectTranslatableStrings(mockBoard);
+  test("collectTranslatablePhrases() extracts all unique UI text", () => {
+    const phrases = collectTranslatablePhrases(mockBoard);
 
-    expect(strings.size).toBe(3);
-    expect(strings.has("My Board")).toBe(true);
-    expect(strings.has("Hello")).toBe(true);
-    expect(strings.has("Hello there")).toBe(true);
+    expect(phrases.size).toBe(3);
+    expect(phrases.has("My Board")).toBe(true);
+    expect(phrases.has("Hello")).toBe(true);
+    expect(phrases.has("Hello there")).toBe(true);
   });
 
   test("findTranslatedBoard() returns early if languages match", () => {

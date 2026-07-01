@@ -3,7 +3,6 @@
   "loading": "Загрузка...",
   "close": "Закрыть",
   "boardLoading": "Загрузка доски...",
-  "boardNotFound": "Доска не найдена",
   "boardGridLabel": "Коммуникационная доска",
   "libraryLoading": "Загрузка досок...",
   "libraryEmptyTitle": "Библиотека пуста",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Доступно",
   "aiStatusUnavailable": "Недоступно",
   "aiStatusDownloadRequired": "Требуется загрузка",
+  "aiStatusDownloading": "Загрузка…",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
   "suggestionsUnavailable": "Предложения недоступны",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Продолжить",
   "errorGenericTitle": "Что-то пошло не так",
   "errorGoHome": "На главную",
-  "errorBoardSetNotFound": "Набор досок не найден"
+  "errorBoardNotFound": "Доска не найдена",
+  "errorBoardSetNotFound": "Доска не найдена"
 }

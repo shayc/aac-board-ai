@@ -1,8 +1,8 @@
 import { describe, expect, test } from "vitest";
-import { resolveButtonIntent } from "./button-intent-resolver";
+import { resolveButtonIntents } from "./button-intent-resolver";
 import type { BoardButton } from "../types";
 
-describe("resolveButtonIntent", () => {
+describe("resolveButtonIntents", () => {
   test("returns navigate intent if loadBoard is present with id", () => {
     const button: BoardButton = {
       id: "b1",
@@ -10,7 +10,7 @@ describe("resolveButtonIntent", () => {
       actions: [{ kind: "space" }],
       soundSrc: "beep.mp3",
     };
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
     expect(intents).toEqual([{ kind: "navigate", targetBoardId: "board2" }]);
   });
 
@@ -20,7 +20,7 @@ describe("resolveButtonIntent", () => {
       actions: [{ kind: "space" }, { kind: "home" }],
       soundSrc: "beep.mp3",
     };
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       { kind: "runAction", action: { kind: "space" } },
       { kind: "runAction", action: { kind: "home" } },
@@ -33,7 +33,7 @@ describe("resolveButtonIntent", () => {
       label: "apple",
       soundSrc: "apple.mp3",
     };
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
         kind: "compose",
@@ -54,7 +54,7 @@ describe("resolveButtonIntent", () => {
       label: "Apple",
       vocalization: "Eat apple",
     };
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
         kind: "compose",
@@ -73,7 +73,7 @@ describe("resolveButtonIntent", () => {
     const button: BoardButton = {
       id: "b1",
     };
-    const intents = resolveButtonIntent(button);
+    const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
         kind: "compose",

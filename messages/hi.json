@@ -3,7 +3,6 @@
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",
   "boardLoading": "बोर्ड लोड हो रहा है…",
-  "boardNotFound": "बोर्ड नहीं मिला",
   "boardGridLabel": "संचार बोर्ड",
   "libraryLoading": "बोर्ड लोड हो रहे हैं…",
   "libraryEmptyTitle": "लाइब्रेरी खाली है",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "उपलब्ध",
   "aiStatusUnavailable": "अनुपलब्ध",
   "aiStatusDownloadRequired": "डाउनलोड आवश्यक है",
+  "aiStatusDownloading": "डाउनलोड हो रहा है…",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
   "suggestionsUnavailable": "सुझाव उपलब्ध नहीं हैं",
@@ -116,5 +116,6 @@
   "onboardingContinue": "जारी रखें",
   "errorGenericTitle": "कुछ गलत हो गया",
   "errorGoHome": "होम पर जाएँ",
-  "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला"
+  "errorBoardNotFound": "बोर्ड नहीं मिला",
+  "errorBoardSetNotFound": "बोर्ड नहीं मिला"
 }

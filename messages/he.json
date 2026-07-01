@@ -3,7 +3,6 @@
   "loading": "טעינה...",
   "close": "סגירה",
   "boardLoading": "טעינת לוח...",
-  "boardNotFound": "הלוח לא נמצא",
   "boardGridLabel": "לוח תקשורת",
   "libraryLoading": "טעינת לוחות...",
   "libraryEmptyTitle": "הספרייה ריקה",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "זמין",
   "aiStatusUnavailable": "לא זמין",
   "aiStatusDownloadRequired": "נדרשת הורדה",
+  "aiStatusDownloading": "הורדה…",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
   "suggestionsUnavailable": "ההצעות אינן זמינות",
@@ -116,5 +116,6 @@
   "onboardingContinue": "המשך",
   "errorGenericTitle": "משהו השתבש",
   "errorGoHome": "חזרה לעמוד הבית",
-  "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה"
+  "errorBoardNotFound": "הלוח לא נמצא",
+  "errorBoardSetNotFound": "הלוח לא נמצא"
 }

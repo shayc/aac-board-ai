@@ -9,12 +9,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
+import { speak } from "@shared/speech/speak";
 import {
   setPitch,
   setRate,
   setVolume,
   setVoiceURI,
-  speak,
   SPEECH_PITCH,
   SPEECH_RATE,
   SPEECH_VOLUME,

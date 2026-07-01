@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   addPartToParts,
   addSpaceToParts,
-  appendTextToParts,
+  appendTextToLastPart,
   removeLastPartFromParts,
 } from "./message-transforms";
 import type { MessagePart } from "./use-message";
@@ -42,9 +42,9 @@ describe("addSpaceToParts", () => {
   });
 });
 
-describe("appendTextToParts", () => {
+describe("appendTextToLastPart", () => {
   test("appends text as a new part when the message is empty", () => {
-    const parts = appendTextToParts([], "h");
+    const parts = appendTextToLastPart([], "h");
 
     expect(parts).toHaveLength(1);
     expect(parts[0].label).toBe("h");
@@ -56,7 +56,7 @@ describe("appendTextToParts", () => {
       { id: "1", label: "ca", imageSrc: "img.png" },
     ];
 
-    const parts = appendTextToParts(original, "t");
+    const parts = appendTextToLastPart(original, "t");
 
     expect(parts).toHaveLength(1);
     expect(parts[0].id).toBe("1");
@@ -65,8 +65,8 @@ describe("appendTextToParts", () => {
   });
 
   test("accumulates rapid appends into a single part", () => {
-    const afterFirst = appendTextToParts([{ id: "1", label: "" }], "h");
-    const afterSecond = appendTextToParts(afterFirst, "i");
+    const afterFirst = appendTextToLastPart([{ id: "1", label: "" }], "h");
+    const afterSecond = appendTextToLastPart(afterFirst, "i");
 
     expect(afterSecond).toHaveLength(1);
     expect(afterSecond[0].id).toBe("1");
@@ -76,7 +76,7 @@ describe("appendTextToParts", () => {
   test("leaves the input array untouched", () => {
     const original: MessagePart[] = [{ id: "1", label: "ca" }];
 
-    appendTextToParts(original, "t");
+    appendTextToLastPart(original, "t");
 
     expect(original[0].label).toBe("ca");
   });

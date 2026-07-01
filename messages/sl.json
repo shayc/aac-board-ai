@@ -3,7 +3,6 @@
   "loading": "Nalaganje...",
   "close": "Zapri",
   "boardLoading": "Nalaganje table...",
-  "boardNotFound": "Table ni mogoče najti",
   "boardGridLabel": "Komunikacijska tabla",
   "libraryLoading": "Nalaganje tabel...",
   "libraryEmptyTitle": "Knjižnica je prazna",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Na voljo",
   "aiStatusUnavailable": "Ni na voljo",
   "aiStatusDownloadRequired": "Potreben je prenos",
+  "aiStatusDownloading": "Prenašanje…",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsUnavailable": "Predlogi niso na voljo",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Nadaljuj",
   "errorGenericTitle": "Nekaj je šlo narobe",
   "errorGoHome": "Pojdi domov",
-  "errorBoardSetNotFound": "Nabora tabel ni mogoče najti"
+  "errorBoardNotFound": "Table ni mogoče najti",
+  "errorBoardSetNotFound": "Table ni mogoče najti"
 }

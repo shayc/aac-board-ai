@@ -32,7 +32,7 @@ describe("PlayButton", () => {
 
     const screen = await render(<PlayButton isPlaying={true} {...handlers} />);
 
-    const button = screen.getByRole("button", { name: "Stop" });
+    const button = screen.getByRole("button", { name: "Stop message" });
     await button.click();
 
     expect(handlers.onStopClick).toHaveBeenCalledTimes(1);
@@ -87,7 +87,7 @@ describe("PlayButton", () => {
         </MUIThemeProvider>,
       );
 
-      const button = screen.getByRole("button", { name: "Stop" });
+      const button = screen.getByRole("button", { name: "Stop message" });
       const icon = button.element().querySelector("svg");
 
       assertDefined(icon);

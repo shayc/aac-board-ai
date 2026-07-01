@@ -3,7 +3,6 @@
   "loading": "Cargando...",
   "close": "Cerrar",
   "boardLoading": "Cargando tablero...",
-  "boardNotFound": "Tablero no encontrado",
   "boardGridLabel": "Tablero de comunicación",
   "libraryLoading": "Cargando tableros...",
   "libraryEmptyTitle": "La biblioteca está vacía",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Disponible",
   "aiStatusUnavailable": "No disponible",
   "aiStatusDownloadRequired": "Se requiere descarga",
+  "aiStatusDownloading": "Descargando…",
   "suggestionsEnable": "Activar sugerencias",
   "suggestionsDownloading": "Descargando modelo de IA… {progress}%",
   "suggestionsUnavailable": "Sugerencias no disponibles",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo salió mal",
   "errorGoHome": "Ir al inicio",
-  "errorBoardSetNotFound": "Conjunto de tableros no encontrado"
+  "errorBoardNotFound": "Tablero no encontrado",
+  "errorBoardSetNotFound": "Tablero no encontrado"
 }

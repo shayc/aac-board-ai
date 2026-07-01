@@ -53,22 +53,22 @@ export function applyTranslations(
   };
 }
 
-export function collectTranslatableStrings(board: Board): Set<string> {
-  const translatableStrings = new Set<string>();
+export function collectTranslatablePhrases(board: Board): Set<string> {
+  const translatablePhrases = new Set<string>();
 
   if (board.name) {
-    translatableStrings.add(board.name);
+    translatablePhrases.add(board.name);
   }
 
   for (const button of board.buttons) {
     if (button.label) {
-      translatableStrings.add(button.label);
+      translatablePhrases.add(button.label);
     }
 
     if (button.vocalization) {
-      translatableStrings.add(button.vocalization);
+      translatablePhrases.add(button.vocalization);
     }
   }
 
-  return translatableStrings;
+  return translatablePhrases;
 }

@@ -3,7 +3,6 @@
   "loading": "Зареждане...",
   "close": "Затваряне",
   "boardLoading": "Зареждане на дъската...",
-  "boardNotFound": "Дъската не е намерена",
   "boardGridLabel": "Комуникационна дъска",
   "libraryLoading": "Зареждане на дъските...",
   "libraryEmptyTitle": "Библиотеката е празна",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Налично",
   "aiStatusUnavailable": "Не е налично",
   "aiStatusDownloadRequired": "Изисква се изтегляне",
+  "aiStatusDownloading": "Изтегляне…",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
   "suggestionsUnavailable": "Предложенията не са налични",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Продължаване",
   "errorGenericTitle": "Нещо се обърка",
   "errorGoHome": "Към началото",
-  "errorBoardSetNotFound": "Наборът от дъски не е намерен"
+  "errorBoardNotFound": "Дъската не е намерена",
+  "errorBoardSetNotFound": "Дъската не е намерена"
 }

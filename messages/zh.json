@@ -3,7 +3,6 @@
   "loading": "正在加载……",
   "close": "关闭",
   "boardLoading": "正在加载沟通板……",
-  "boardNotFound": "未找到沟通板",
   "boardGridLabel": "沟通板",
   "libraryLoading": "正在加载沟通板……",
   "libraryEmptyTitle": "板库为空",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "可用",
   "aiStatusUnavailable": "不可用",
   "aiStatusDownloadRequired": "需要下载",
+  "aiStatusDownloading": "正在下载…",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsUnavailable": "建议不可用",
@@ -116,5 +116,6 @@
   "onboardingContinue": "继续",
   "errorGenericTitle": "出了点问题",
   "errorGoHome": "返回主页",
-  "errorBoardSetNotFound": "未找到沟通板集"
+  "errorBoardNotFound": "未找到沟通板",
+  "errorBoardSetNotFound": "未找到沟通板"
 }

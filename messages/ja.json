@@ -3,7 +3,6 @@
   "loading": "読み込んでいます…",
   "close": "閉じる",
   "boardLoading": "ボードを読み込んでいます…",
-  "boardNotFound": "ボードが見つかりません",
   "boardGridLabel": "コミュニケーションボード",
   "libraryLoading": "ボードを読み込んでいます…",
   "libraryEmptyTitle": "ライブラリは空です",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "利用可能",
   "aiStatusUnavailable": "利用不可",
   "aiStatusDownloadRequired": "ダウンロードが必要",
+  "aiStatusDownloading": "ダウンロード中…",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsUnavailable": "提案は利用できません",
@@ -116,5 +116,6 @@
   "onboardingContinue": "続ける",
   "errorGenericTitle": "問題が発生しました",
   "errorGoHome": "ホームに戻る",
-  "errorBoardSetNotFound": "ボードセットが見つかりません"
+  "errorBoardNotFound": "ボードが見つかりません",
+  "errorBoardSetNotFound": "ボードが見つかりません"
 }

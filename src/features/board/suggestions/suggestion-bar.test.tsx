@@ -99,7 +99,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByText("Downloading AI model… 43%"))
+      .element(screen.getByText("Downloading AI model... 43%"))
       .toBeVisible();
   });
 

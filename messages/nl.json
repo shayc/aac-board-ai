@@ -3,7 +3,6 @@
   "loading": "Laden...",
   "close": "Sluiten",
   "boardLoading": "Bord laden...",
-  "boardNotFound": "Bord niet gevonden",
   "boardGridLabel": "Communicatiebord",
   "libraryLoading": "Borden laden...",
   "libraryEmptyTitle": "De bibliotheek is leeg",
@@ -91,6 +90,7 @@
   "aiStatusAvailable": "Beschikbaar",
   "aiStatusUnavailable": "Niet beschikbaar",
   "aiStatusDownloadRequired": "Download vereist",
+  "aiStatusDownloading": "Downloaden…",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
   "suggestionsUnavailable": "Suggesties niet beschikbaar",
@@ -116,5 +116,6 @@
   "onboardingContinue": "Doorgaan",
   "errorGenericTitle": "Er is iets misgegaan",
   "errorGoHome": "Naar start",
-  "errorBoardSetNotFound": "Bordenset niet gevonden"
+  "errorBoardNotFound": "Bord niet gevonden",
+  "errorBoardSetNotFound": "Bord niet gevonden"
 }

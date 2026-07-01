@@ -29,7 +29,7 @@ describe("BoardSetInfoDialog", () => {
       />,
     );
 
-    await expect.element(screen.getByText("2×3 Grid")).toBeInTheDocument();
+    await expect.element(screen.getByText("2×3 grid")).toBeInTheDocument();
     await expect.element(screen.getByText("English")).toBeInTheDocument();
     await expect.element(screen.getByText("CC BY-SA 4.0")).toBeInTheDocument();
   });
