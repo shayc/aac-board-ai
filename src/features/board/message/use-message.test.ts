@@ -142,4 +142,16 @@ describe("useMessage", () => {
 
     expect(result.current.parts).toHaveLength(0);
   });
+
+  test("setParts replaces the parts wholesale", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.addPart({ label: "existing" });
+    await rerender();
+
+    result.current.setParts([{ id: "1", label: "replaced" }]);
+    await rerender();
+
+    expect(result.current.parts).toEqual([{ id: "1", label: "replaced" }]);
+  });
 });

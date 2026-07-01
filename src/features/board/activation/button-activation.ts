@@ -1,23 +1,26 @@
 import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speech-store";
 import { assertNever } from "@shared/utils/assert-never";
+import {
+  addPartToParts,
+  addSpaceToParts,
+  appendTextToParts,
+  removeLastPartFromParts,
+} from "../message/message-transforms";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
-import type { UseMessageReturn } from "../message/use-message";
+import type { MessagePart, UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
-import type { BoardAction, BoardButton } from "../types";
+import type { BoardButton } from "../types";
 import { resolveButtonIntent } from "./button-intent-resolver";
 
 export interface ButtonActivationOptions {
-  message: Pick<
-    UseMessageReturn,
-    "addPart" | "appendText" | "addSpace" | "removeLastPart" | "clear"
-  >;
+  message: Pick<UseMessageReturn, "parts" | "setParts">;
   playback: Pick<UseMessagePlaybackReturn, "play">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
 export interface ButtonActivation {
-  activateButton: (button: BoardButton) => Promise<void>;
+  activateButton: (button: BoardButton) => void;
 }
 
 export function createButtonActivation({
@@ -25,8 +28,11 @@ export function createButtonActivation({
   playback,
   navigation,
 }: ButtonActivationOptions): ButtonActivation {
-  async function activateButton(button: BoardButton) {
+  function activateButton(button: BoardButton) {
     const intents = resolveButtonIntent(button);
+
+    let parts = message.parts;
+    let partsToSpeak: MessagePart[] | null = null;
 
     for (const intent of intents) {
       switch (intent.kind) {
@@ -34,7 +40,7 @@ export function createButtonActivation({
           navigation.goToBoard(intent.targetBoardId);
           break;
         case "compose":
-          message.addPart(intent.content);
+          parts = addPartToParts(parts, intent.content);
           break;
         case "playAudio":
           void playAudio(intent.src);
@@ -43,32 +49,41 @@ export function createButtonActivation({
           void speak(intent.text);
           break;
         case "runAction":
-          await runAction(intent.action);
+          switch (intent.action.kind) {
+            case "spell":
+              parts = appendTextToParts(parts, intent.action.text);
+              break;
+            case "space":
+              parts = addSpaceToParts(parts);
+              break;
+            case "backspace":
+              parts = removeLastPartFromParts(parts);
+              break;
+            case "clear":
+              parts = [];
+              break;
+            case "home":
+              navigation.goHome();
+              break;
+            case "speak":
+              partsToSpeak = parts;
+              break;
+
+            default:
+              assertNever(intent.action);
+          }
           break;
 
         default:
           assertNever(intent);
       }
     }
-  }
 
-  async function runAction(action: BoardAction) {
-    switch (action.kind) {
-      case "spell":
-        return message.appendText(action.text);
-      case "space":
-        return message.addSpace();
-      case "backspace":
-        return message.removeLastPart();
-      case "clear":
-        return message.clear();
-      case "home":
-        return navigation.goHome();
-      case "speak":
-        return playback.play();
-
-      default:
-        assertNever(action);
+    if (parts !== message.parts) {
+      message.setParts(parts);
+    }
+    if (partsToSpeak) {
+      void playback.play(partsToSpeak);
     }
   }
 

@@ -6,7 +6,7 @@ import type { UseMessageReturn } from "../message/use-message";
 import { resolveBoardKey } from "./board-key-resolver";
 
 export interface UseBoardKeyboardOptions {
-  message: Pick<UseMessageReturn, "removeLastPart" | "clear">;
+  message: Pick<UseMessageReturn, "parts" | "removeLastPart" | "clear">;
   playback: Pick<UseMessagePlaybackReturn, "play" | "stop" | "isPlaying">;
 }
 
@@ -40,7 +40,7 @@ export function useBoardKeyboard({
           message.clear();
           break;
         case "play":
-          void playback.play();
+          void playback.play(message.parts);
           break;
         case "stop":
           playback.stop();

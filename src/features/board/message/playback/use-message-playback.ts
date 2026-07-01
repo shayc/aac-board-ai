@@ -8,18 +8,16 @@ import { planPlayback } from "./plan-playback";
 export interface UseMessagePlaybackReturn {
   isPlaying: boolean;
   activePartId: string | null;
-  play: () => Promise<void>;
+  play: (parts: MessagePart[]) => Promise<void>;
   stop: () => void;
 }
 
-export function useMessagePlayback(
-  parts: MessagePart[],
-): UseMessagePlaybackReturn {
+export function useMessagePlayback(): UseMessagePlaybackReturn {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activePartId, setActivePartId] = useState<string | null>(null);
   const playbackRef = useRef<AbortController | null>(null);
 
-  async function play() {
+  async function play(parts: MessagePart[]) {
     playbackRef.current?.abort();
     const controller = new AbortController();
     playbackRef.current = controller;

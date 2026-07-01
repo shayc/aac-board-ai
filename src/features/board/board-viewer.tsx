@@ -40,7 +40,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const { highlightActivePart } = usePlaybackConfig();
   const message = useMessage();
-  const playback = useMessagePlayback(message.parts);
+  const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
 
@@ -70,7 +70,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
       variant={getNavigationTargetId(button) ? "folder" : undefined}
-      onClick={() => void activateButton(button)}
+      onClick={() => activateButton(button)}
       {...props}
     />
   );
@@ -83,7 +83,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
         isPlaying={playback.isPlaying}
         onBackspacePress={message.removeLastPart}
         onBackspaceLongPress={message.clear}
-        onPlayClick={() => void playback.play()}
+        onPlayClick={() => void playback.play(message.parts)}
         onStopClick={playback.stop}
       />
 

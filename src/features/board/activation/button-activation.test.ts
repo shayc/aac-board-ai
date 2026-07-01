@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
 import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
-import type { BoardAction, BoardButton } from "../types";
+import type { BoardButton } from "../types";
 import { createButtonActivation } from "./button-activation";
 
 function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
@@ -15,6 +15,7 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
     appendText: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
+    setParts: vi.fn(),
     clear: vi.fn(),
   };
 }
@@ -64,7 +65,7 @@ describe("createButtonActivation", () => {
     audio = stubAudio();
   });
 
-  test("navigates to the linked board and skips message and audio when loadBoard.id is set", async () => {
+  test("navigates to the linked board and skips message and audio when loadBoard.id is set", () => {
     const { activation, message, playback, navigation } = setup();
 
     const button: BoardButton = {
@@ -73,133 +74,181 @@ describe("createButtonActivation", () => {
       loadBoard: { id: "child-board" },
     };
 
-    await activation.activateButton(button);
+    activation.activateButton(button);
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
-    expect(message.addPart).not.toHaveBeenCalled();
+    expect(message.setParts).not.toHaveBeenCalled();
     expect(playback.play).not.toHaveBeenCalled();
     expect(speech.speak).not.toHaveBeenCalled();
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("runs each action in order for an actions array", async () => {
-    const callOrder: string[] = [];
-    const message = createMessageStub();
-    message.addSpace = vi.fn(() => {
-      callOrder.push("addSpace");
-    });
-    message.clear = vi.fn(() => {
-      callOrder.push("clear");
-    });
-    const playback = createPlaybackStub();
-    playback.play = vi.fn(() => {
-      callOrder.push("play");
-
-      return Promise.resolve();
-    });
-
-    const { activation } = setup({ message, playback });
-
-    await activation.activateButton({
-      id: "btn",
-      actions: [{ kind: "space" }, { kind: "speak" }, { kind: "clear" }],
-    });
-
-    expect(callOrder).toEqual(["addSpace", "play", "clear"]);
-  });
-
-  test.each([
-    ["space", "addSpace"],
-    ["backspace", "removeLastPart"],
-    ["clear", "clear"],
-  ] as const)("maps %s to message.%s", async (kind, methodName) => {
-    const { activation, message } = setup();
-
-    await activation.activateButton({ id: "btn", actions: [{ kind }] });
-
-    expect(message[methodName]).toHaveBeenCalledTimes(1);
-  });
-
-  test("maps speak to playback.play", async () => {
-    const { activation, playback } = setup();
-
-    await activation.activateButton({
-      id: "btn",
-      actions: [{ kind: "speak" }],
-    });
-
-    expect(playback.play).toHaveBeenCalledTimes(1);
-  });
-
-  test("maps home to navigation.goHome", async () => {
+  test("maps home to navigation.goHome", () => {
     const { activation, navigation } = setup();
 
-    await activation.activateButton({
-      id: "btn",
-      actions: [{ kind: "home" }],
-    });
+    activation.activateButton({ id: "btn", actions: [{ kind: "home" }] });
 
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
 
-  test("delegates a spell action's text to the message's appendText", async () => {
-    const { activation, message } = setup();
+  test("spell appends the text via setParts", () => {
+    const message = createMessageStub([]);
+    const { activation } = setup({ message });
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       actions: [{ kind: "spell", text: "t" }],
     });
 
-    expect(message.appendText).toHaveBeenCalledWith("t");
+    expect(message.setParts).toHaveBeenCalledTimes(1);
+    const [committed] = vi.mocked(message.setParts).mock.calls[0];
+    expect(committed).toHaveLength(1);
+    expect(committed[0].label).toBe("t");
+    expect(committed[0].id).toBeTruthy();
   });
 
-  test("treats a loadBoard without an id as not navigable and speaks instead", async () => {
+  test("space appends an empty-label part via setParts", () => {
+    const message = createMessageStub([]);
+    const { activation } = setup({ message });
+
+    activation.activateButton({ id: "btn", actions: [{ kind: "space" }] });
+
+    expect(message.setParts).toHaveBeenCalledTimes(1);
+    const [committed] = vi.mocked(message.setParts).mock.calls[0];
+    expect(committed).toHaveLength(1);
+    expect(committed[0].label).toBe("");
+    expect(committed[0].id).toBeTruthy();
+  });
+
+  test("backspace removes the last part via setParts", () => {
+    const message = createMessageStub([
+      { id: "1", label: "hello" },
+      { id: "2", label: "world" },
+    ]);
+    const { activation } = setup({ message });
+
+    activation.activateButton({ id: "btn", actions: [{ kind: "backspace" }] });
+
+    expect(message.setParts).toHaveBeenCalledWith([
+      { id: "1", label: "hello" },
+    ]);
+  });
+
+  test("clear empties the message via setParts", () => {
+    const message = createMessageStub([{ id: "1", label: "hello" }]);
+    const { activation } = setup({ message });
+
+    activation.activateButton({ id: "btn", actions: [{ kind: "clear" }] });
+
+    expect(message.setParts).toHaveBeenCalledWith([]);
+  });
+
+  test("spelling then speaking speaks a message that includes the spelled letter", () => {
+    const message = createMessageStub([]);
+    const playback = createPlaybackStub();
+    const { activation } = setup({ message, playback });
+
+    activation.activateButton({
+      id: "btn",
+      actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
+    });
+
+    expect(playback.play).toHaveBeenCalledTimes(1);
+    const [spokenParts] = vi.mocked(playback.play).mock.calls[0];
+    expect(spokenParts).toHaveLength(1);
+    expect(spokenParts[0].label).toBe("s");
+    expect(spokenParts[0].id).toBeTruthy();
+  });
+
+  test("speaking then clearing speaks the pre-clear message and commits an empty message", () => {
+    const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const message = createMessageStub(initialParts);
+    const playback = createPlaybackStub();
+    const { activation } = setup({ message, playback });
+
+    activation.activateButton({
+      id: "btn",
+      actions: [{ kind: "speak" }, { kind: "clear" }],
+    });
+
+    expect(playback.play).toHaveBeenCalledWith(initialParts);
+    expect(message.setParts).toHaveBeenCalledWith([]);
+  });
+
+  test("a mutation-only sequence commits parts once and never plays", () => {
+    const message = createMessageStub([]);
+    const playback = createPlaybackStub();
+    const { activation } = setup({ message, playback });
+
+    activation.activateButton({ id: "btn", actions: [{ kind: "space" }] });
+
+    expect(message.setParts).toHaveBeenCalledTimes(1);
+    expect(playback.play).not.toHaveBeenCalled();
+  });
+
+  test("a speak-only sequence plays without committing any parts", () => {
+    const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const message = createMessageStub(initialParts);
+    const playback = createPlaybackStub();
+    const { activation } = setup({ message, playback });
+
+    activation.activateButton({ id: "btn", actions: [{ kind: "speak" }] });
+
+    expect(playback.play).toHaveBeenCalledWith(initialParts);
+    expect(message.setParts).not.toHaveBeenCalled();
+  });
+
+  test("treats a loadBoard without an id as not navigable and speaks instead", () => {
     const { activation, message, navigation } = setup();
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       label: "hi",
       loadBoard: { name: "Other" },
     });
 
     expect(navigation.goToBoard).not.toHaveBeenCalled();
-    expect(message.addPart).toHaveBeenCalledTimes(1);
+    expect(message.setParts).toHaveBeenCalledTimes(1);
   });
 
-  test("treats an empty actions array as no actions and speaks instead", async () => {
+  test("treats an empty actions array as no actions and speaks instead", () => {
     const { activation, message } = setup();
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       label: "hi",
-      actions: [] as BoardAction[],
+      actions: [],
     });
 
-    expect(message.addPart).toHaveBeenCalledTimes(1);
+    expect(message.setParts).toHaveBeenCalledTimes(1);
   });
 
-  test("adds the button as a message part when there are no actions and no loadBoard", async () => {
-    const { activation, message } = setup();
+  test("adds the button as a message part when there are no actions and no loadBoard", () => {
+    const message = createMessageStub([]);
+    const { activation } = setup({ message });
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       label: "hi",
       vocalization: "hello",
       imageSrc: "img.png",
     });
 
-    expect(message.addPart).toHaveBeenCalledWith({
+    expect(message.setParts).toHaveBeenCalledTimes(1);
+    const [committed] = vi.mocked(message.setParts).mock.calls[0];
+    expect(committed).toHaveLength(1);
+    expect(committed[0]).toMatchObject({
       label: "hi",
       vocalization: "hello",
       imageSrc: "img.png",
-      soundSrc: undefined,
     });
+    expect(committed[0].id).toBeTruthy();
   });
 
-  test("plays the button's soundSrc rather than speaking when both are present", async () => {
+  test("plays the button's soundSrc rather than speaking when both are present", () => {
     const { activation } = setup();
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       label: "bell",
       soundSrc: "bell.mp3",
@@ -209,10 +258,10 @@ describe("createButtonActivation", () => {
     expect(speech.speak).not.toHaveBeenCalled();
   });
 
-  test("speaks the lowercased vocalization when no soundSrc", async () => {
+  test("speaks the lowercased vocalization when no soundSrc", () => {
     const { activation } = setup();
 
-    await activation.activateButton({
+    activation.activateButton({
       id: "btn",
       label: "I",
       vocalization: "Hello",
@@ -222,21 +271,21 @@ describe("createButtonActivation", () => {
     expect(speech.speak.mock.calls[0][0].text).toBe("hello");
   });
 
-  test("falls back to the lowercased label when vocalization is absent", async () => {
+  test("falls back to the lowercased label when vocalization is absent", () => {
     const { activation } = setup();
 
-    await activation.activateButton({ id: "btn", label: "Goodbye" });
+    activation.activateButton({ id: "btn", label: "Goodbye" });
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("goodbye");
   });
 
-  test("stays silent when the button has neither sound nor any speakable text", async () => {
+  test("stays silent when the button has neither sound nor any speakable text", () => {
     const { activation, message } = setup();
 
-    await activation.activateButton({ id: "btn" });
+    activation.activateButton({ id: "btn" });
 
-    expect(message.addPart).toHaveBeenCalledTimes(1);
+    expect(message.setParts).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();
     expect(audio.play).not.toHaveBeenCalled();
   });

@@ -1,6 +1,11 @@
-import { randomId } from "@shared/utils/random-id";
 import { useState } from "react";
 import type { BoardButton } from "../types";
+import {
+  addPartToParts,
+  addSpaceToParts,
+  appendTextToParts,
+  removeLastPartFromParts,
+} from "./message-transforms";
 
 export type MessagePartContent = Pick<
   BoardButton,
@@ -19,11 +24,8 @@ export interface UseMessageReturn {
   appendText: (text: string) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
+  setParts: (parts: MessagePart[]) => void;
   clear: () => void;
-}
-
-function createPart(content: MessagePartContent): MessagePart {
-  return { ...content, id: randomId() };
 }
 
 export function useMessage(): UseMessageReturn {
@@ -31,25 +33,15 @@ export function useMessage(): UseMessageReturn {
   const text = parts.map((part) => part.label).join(" ");
 
   function addPart(content: MessagePartContent) {
-    setParts((prev) => [...prev, createPart(content)]);
+    setParts((prev) => addPartToParts(prev, content));
   }
 
   function addSpace() {
-    addPart({ label: "" });
+    setParts((prev) => addSpaceToParts(prev));
   }
 
   function appendText(text: string) {
-    setParts((prev) => {
-      const lastPart = prev.at(-1);
-      if (!lastPart) {
-        return [createPart({ label: text })];
-      }
-
-      return prev.with(-1, {
-        ...lastPart,
-        label: `${lastPart.label ?? ""}${text}`,
-      });
-    });
+    setParts((prev) => appendTextToParts(prev, text));
   }
 
   function setFromText(input: string) {
@@ -58,12 +50,15 @@ export function useMessage(): UseMessageReturn {
         .trim()
         .split(/\s+/)
         .filter(Boolean)
-        .map((word) => createPart({ label: word })),
+        .reduce<MessagePart[]>(
+          (prev, word) => addPartToParts(prev, { label: word }),
+          [],
+        ),
     );
   }
 
   function removeLastPart() {
-    setParts((prev) => prev.slice(0, -1));
+    setParts((prev) => removeLastPartFromParts(prev));
   }
 
   function clear() {
@@ -78,6 +73,7 @@ export function useMessage(): UseMessageReturn {
     appendText,
     setFromText,
     removeLastPart,
+    setParts,
     clear,
   };
 }
