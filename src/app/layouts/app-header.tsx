@@ -27,7 +27,7 @@ export function AppHeader({
         {!libraryButtonHidden && (
           <Tooltip title={m.libraryOpen()}>
             <IconButton
-              aria-label={m.libraryTitle()}
+              aria-label={m.libraryOpen()}
               size="large"
               edge="start"
               color="inherit"
@@ -45,7 +45,7 @@ export function AppHeader({
 
         <Tooltip title={m.settingsOpen()}>
           <IconButton
-            aria-label={m.settingsTitle()}
+            aria-label={m.settingsOpen()}
             size="large"
             edge="end"
             color="inherit"
