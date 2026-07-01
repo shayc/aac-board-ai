@@ -90,7 +90,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       <Stack
         direction="row"
         spacing={2}
-        sx={{ justifyContent: "space-between", px: 3 }}
+        sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
         <NavButtons
           canGoBack={navigation.canGoBack}
