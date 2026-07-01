@@ -16,11 +16,6 @@ export interface SpeechConfig {
   volume: number;
 }
 
-export interface SpeakOptions {
-  signal?: AbortSignal;
-  onBoundary?: (charIndex: number) => void;
-}
-
 type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
 interface VoiceCatalogState {
@@ -61,7 +56,8 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
-const synthesis: SpeechSynthesis | undefined = globalThis.speechSynthesis;
+export const synthesis: SpeechSynthesis | undefined =
+  globalThis.speechSynthesis;
 
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis?.getVoices() ?? []),
@@ -100,65 +96,8 @@ export function setVolume(volume: number): void {
   updateConfig({ volume });
 }
 
-function buildUtterance(text: string): SpeechSynthesisUtterance {
-  const { voices } = voiceCatalogStore.getSnapshot();
-  const { voiceURI, rate, pitch, volume } = speechConfigStore.getSnapshot();
-
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;
-  utterance.rate = rate;
-  utterance.pitch = pitch;
-  utterance.volume = volume;
-
-  return utterance;
-}
-
-export function speak(
-  text: string,
-  { signal, onBoundary }: SpeakOptions = {},
-): Promise<void> {
-  if (!synthesis || signal?.aborted) {
-    return Promise.resolve();
-  }
-
-  const { promise, resolve } = Promise.withResolvers<void>();
-  const utterance = buildUtterance(text);
-  let settled = false;
-
-  const onAbort = () => {
-    synthesis.cancel();
-    finish();
-  };
-
-  function finish() {
-    if (settled) {
-      return;
-    }
-
-    settled = true;
-    utterance.onend = null;
-    utterance.onerror = null;
-    utterance.onboundary = null;
-    signal?.removeEventListener("abort", onAbort);
-    resolve();
-  }
-
-  if (onBoundary) {
-    utterance.onboundary = (event) => {
-      if (!signal?.aborted) {
-        onBoundary(event.charIndex);
-      }
-    };
-  }
-
-  utterance.onend = finish;
-  utterance.onerror = finish;
-  signal?.addEventListener("abort", onAbort, { once: true });
-
-  synthesis.cancel();
-  synthesis.speak(utterance);
-
-  return promise;
+export function getVoices(): SpeechSynthesisVoice[] {
+  return voiceCatalogStore.getSnapshot().voices;
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {

@@ -6,9 +6,9 @@ import {
   test,
   vi,
 } from "vitest";
-import { speak } from "./speech-store";
+import { speak } from "./speak";
 
-// Kept separate from the no-API suite: that suite must import speech-store only
+// Kept separate from the no-API suite: that suite must import speak only
 // after stubbing speechSynthesis away, which a static import in a shared file
 // would defeat.
 describe("speak() under cancellation", () => {

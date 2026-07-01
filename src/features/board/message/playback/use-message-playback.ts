@@ -1,5 +1,5 @@
 import { playAudio } from "@shared/audio/play-audio";
-import { speak } from "@shared/speech/speech-store";
+import { speak } from "@shared/speech/speak";
 import { assertNever } from "@shared/utils/assert-never";
 import { useRef, useState } from "react";
 import type { MessagePart } from "../use-message";
