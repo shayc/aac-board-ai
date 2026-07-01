@@ -10,9 +10,6 @@ function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
   return {
     parts,
     text: parts.map((p) => p.label ?? "").join(" "),
-    addPart: vi.fn(),
-    addSpace: vi.fn(),
-    appendText: vi.fn(),
     setFromText: vi.fn(),
     removeLastPart: vi.fn(),
     setParts: vi.fn(),
@@ -158,12 +155,20 @@ describe("createButtonActivation", () => {
     expect(spokenParts).toHaveLength(1);
     expect(spokenParts[0].label).toBe("s");
     expect(spokenParts[0].id).toBeTruthy();
+    expect(message.setParts).toHaveBeenCalledWith(spokenParts);
   });
 
-  test("speaking then clearing speaks the pre-clear message and commits an empty message", () => {
+  test("speaking then clearing keeps the message until playback ends, then commits the clear", async () => {
     const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
     const message = createMessageStub(initialParts);
     const playback = createPlaybackStub();
+    let resolvePlay: (() => void) | undefined;
+    playback.play = vi.fn(
+      () =>
+        new Promise<void>((resolve) => {
+          resolvePlay = resolve;
+        }),
+    );
     const { activation } = setup({ message, playback });
 
     activation.activateButton({
@@ -172,21 +177,35 @@ describe("createButtonActivation", () => {
     });
 
     expect(playback.play).toHaveBeenCalledWith(initialParts);
-    expect(message.setParts).toHaveBeenCalledWith([]);
+    expect(message.setParts).not.toHaveBeenCalled();
+
+    resolvePlay?.();
+    await vi.waitFor(() => {
+      expect(message.setParts).toHaveBeenCalledWith([]);
+    });
   });
 
-  test("a mutation-only sequence commits parts once and never plays", () => {
+  test("a mutation-only sequence folds every mutation into one commit and never plays", () => {
     const message = createMessageStub([]);
     const playback = createPlaybackStub();
     const { activation } = setup({ message, playback });
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "space" }] });
+    activation.activateButton({
+      id: "btn",
+      actions: [
+        { kind: "spell", text: "h" },
+        { kind: "spell", text: "i" },
+        { kind: "space" },
+      ],
+    });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
+    const [committed] = vi.mocked(message.setParts).mock.calls[0];
+    expect(committed.map((part) => part.label)).toEqual(["hi", ""]);
     expect(playback.play).not.toHaveBeenCalled();
   });
 
-  test("a speak-only sequence plays without committing any parts", () => {
+  test("a speak-only sequence plays without committing any parts", async () => {
     const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
     const message = createMessageStub(initialParts);
     const playback = createPlaybackStub();
@@ -195,6 +214,9 @@ describe("createButtonActivation", () => {
     activation.activateButton({ id: "btn", actions: [{ kind: "speak" }] });
 
     expect(playback.play).toHaveBeenCalledWith(initialParts);
+
+    await Promise.resolve();
+
     expect(message.setParts).not.toHaveBeenCalled();
   });
 

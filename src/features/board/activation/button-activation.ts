@@ -79,11 +79,20 @@ export function createButtonActivation({
       }
     }
 
-    if (parts !== message.parts) {
-      message.setParts(parts);
-    }
     if (partsToSpeak) {
-      void playback.play(partsToSpeak);
+      if (partsToSpeak !== message.parts) {
+        message.setParts(partsToSpeak);
+      }
+      // Post-speak mutations (":speak" then ":clear") commit after the
+      // utterance, so the spoken message stays visible while it plays.
+      const partsAfterSpeak = parts;
+      void playback.play(partsToSpeak).then(() => {
+        if (partsAfterSpeak !== partsToSpeak) {
+          message.setParts(partsAfterSpeak);
+        }
+      });
+    } else if (parts !== message.parts) {
+      message.setParts(parts);
     }
   }
 
