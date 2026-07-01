@@ -30,6 +30,16 @@
       }
     }
   ],
+  "libraryReplacedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "แทนที่บอร์ดแล้ว",
+        "countPlural=*": "แทนที่บอร์ดแล้ว"
+      }
+    }
+  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

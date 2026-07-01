@@ -3,12 +3,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { invalidateBoardSets } from "../board-sets/board-sets-store";
 import { hydrateBoard } from "./board-hydration";
-import {
-  BoardNotFoundError,
-  putAssets,
-  putBoards,
-  upsertBoardSet,
-} from "./boards-db";
+import { BoardNotFoundError, replaceBoardSet } from "./boards-db";
 import { resetBoardsDB } from "./test-utils";
 
 const SET_ID = "loader-test-set";
@@ -33,15 +28,11 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   };
 
-  await upsertBoardSet({
-    setId: SET_ID,
-    name: "Loader Test",
-    rootBoardId: BOARD_ID,
+  await replaceBoardSet({
+    boardSet: { setId: SET_ID, name: "Loader Test", rootBoardId: BOARD_ID },
+    boards: [{ boardId: BOARD_ID, name: "Test Board", obf: obfBoard }],
+    assets: [{ path: IMAGE_PATH, blob: pngBlob }],
   });
-  await putBoards(SET_ID, [
-    { boardId: BOARD_ID, name: "Test Board", obf: obfBoard },
-  ]);
-  await putAssets(SET_ID, [{ path: IMAGE_PATH, blob: pngBlob }]);
 
   await invalidateBoardSets();
 }

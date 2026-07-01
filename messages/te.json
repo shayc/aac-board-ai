@@ -30,6 +30,16 @@
       }
     }
   ],
+  "libraryReplacedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు భర్తీ చేయబడింది",
+        "countPlural=*": "బోర్డులు భర్తీ చేయబడ్డాయి"
+      }
+    }
+  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

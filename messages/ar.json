@@ -30,6 +30,16 @@
       }
     }
   ],
+  "libraryReplacedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "تم استبدال اللوحة",
+        "countPlural=*": "تم استبدال اللوحات"
+      }
+    }
+  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

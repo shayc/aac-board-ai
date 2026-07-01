@@ -30,6 +30,7 @@ describe("importBoardFiles", () => {
       {
         setId: IMPORTED_SET_ID,
         rootBoardId: board.id,
+        replacedExisting: false,
       },
     ]);
 
@@ -82,6 +83,7 @@ describe("importBoardFiles", () => {
       {
         setId: IMPORTED_SET_ID,
         rootBoardId,
+        replacedExisting: false,
       },
     ]);
 
@@ -187,6 +189,31 @@ describe("importBoardFiles", () => {
     const importResults = await importBoardFiles(longNamedFile);
 
     expect(importResults[0].setId).toBe("x".repeat(255));
+  });
+
+  test("re-importing the same filename replaces the existing set", async () => {
+    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const first = await importBoardFiles(fixtureFile);
+    expect(first[0].replacedExisting).toBe(false);
+
+    const second = await importBoardFiles(fixtureFile);
+    expect(second[0].replacedExisting).toBe(true);
+
+    const boardSets = await listBoardSets();
+    expect(boardSets).toHaveLength(1);
+  });
+
+  test("a failure partway through a multi-file import still leaves the earlier set visible", async () => {
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const corruptFile = new File(["not valid json"], "corrupt.obf", {
+      type: "application/json",
+    });
+
+    await expect(importBoardFiles([goodFile, corruptFile])).rejects.toThrow();
+
+    const boardSets = await listBoardSets();
+    expect(boardSets.map((set) => set.setId)).toContain(IMPORTED_SET_ID);
   });
 });
 

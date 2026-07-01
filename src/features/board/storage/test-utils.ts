@@ -1,5 +1,5 @@
 import { invalidateBoardSets } from "../board-sets/board-sets-store";
-import { getBoardsDB, upsertBoardSet, type BoardSetRecord } from "./boards-db";
+import { getBoardsDB, replaceBoardSet, type BoardSetRecord } from "./boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
@@ -26,7 +26,11 @@ export async function resetBoardsDB(): Promise<void> {
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   await clearBoardsDB();
   for (const record of records) {
-    await upsertBoardSet({ name: record.setId, ...record });
+    await replaceBoardSet({
+      boardSet: { name: record.setId, ...record },
+      boards: [],
+      assets: [],
+    });
   }
 
   await invalidateBoardSets();

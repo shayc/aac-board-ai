@@ -3,8 +3,8 @@ import {
   stubTranslator,
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { getBoard, putBoards } from "../storage/boards-db";
-import { resetBoardsDB, seedBoardSets } from "../storage/test-utils";
+import { getBoard, replaceBoardSet } from "../storage/boards-db";
+import { resetBoardsDB } from "../storage/test-utils";
 import type { Board } from "../types";
 import { resolveTranslatedBoard } from "./resolve-translated-board";
 
@@ -76,19 +76,22 @@ describe("resolveTranslatedBoard", () => {
   });
 
   test("persists a fresh translation so the next load hits the cache", async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "board-1" }]);
-    await putBoards("set-1", [
-      {
-        boardId: "board-1",
-        name: "Food",
-        obf: {
-          format: "open-board-0.1",
-          id: "board-1",
-          buttons: [],
-          grid: { rows: 1, columns: 1, order: [[null]] },
+    await replaceBoardSet({
+      boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
+      boards: [
+        {
+          boardId: "board-1",
+          name: "Food",
+          obf: {
+            format: "open-board-0.1",
+            id: "board-1",
+            buttons: [],
+            grid: { rows: 1, columns: 1, order: [[null]] },
+          },
         },
-      },
-    ]);
+      ],
+      assets: [],
+    });
     stubTranslator((input) => `[es] ${input}`);
 
     await resolveTranslatedBoard("set-1", makeBoard(), "es");
