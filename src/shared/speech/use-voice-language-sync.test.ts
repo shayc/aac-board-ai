@@ -79,7 +79,7 @@ describe("useVoiceLanguageSync", () => {
     });
   });
 
-  test("prefers the language's canonical region over the browser default flag", async () => {
+  test("prefers the language's likely region over the browser default flag", async () => {
     stubLanguages(["en-US"]);
     vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
       makeVoice("fr-CA", "fr-ca-default", true),
@@ -94,7 +94,7 @@ describe("useVoiceLanguageSync", () => {
     });
   });
 
-  test("prefers the user's OS region over the language's home region", async () => {
+  test("prefers the user's OS region over the language's likely region", async () => {
     stubLanguages(["fr-CA"]);
     vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
       makeVoice("fr-FR", "fr-fr-voice"),
@@ -124,7 +124,7 @@ describe("useVoiceLanguageSync", () => {
     });
   });
 
-  test("falls back to the default voice when no voice matches the canonical region", async () => {
+  test("falls back to the default voice when no voice matches the likely region", async () => {
     stubLanguages(["en-US"]);
     vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
       makeVoice("fr-CA", "fr-ca-voice"),

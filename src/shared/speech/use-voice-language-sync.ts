@@ -1,6 +1,6 @@
 import {
   getLanguageCode,
-  getPreferredRegion,
+  getLikelyRegion,
   getRegionCode,
 } from "@shared/utils/locale";
 import { useEffect } from "react";
@@ -52,7 +52,7 @@ export function useVoiceLanguageSync({
     }
 
     const preferredRegion =
-      getUserRegionForLanguage(language) ?? getPreferredRegion(language);
+      getUserRegionForLanguage(language) ?? getLikelyRegion(language);
     const regionVoices = voices.filter(
       (voice) => getRegionCode(voice.lang) === preferredRegion,
     );
