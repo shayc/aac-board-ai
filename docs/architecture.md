@@ -41,9 +41,9 @@ Assumes React, TypeScript, and the Web Platform; no AAC background needed (see t
 
 ## Overview
 
-The problem: give someone who can't speak a fast, reliable way to communicate by
-tapping pictogram tiles, and read the result aloud — fully offline, in any
-language and text direction.
+The problem: give someone who cannot rely on speech a fast, reliable way to
+communicate by tapping pictogram tiles, and read the result aloud — fully
+offline, in any language and text direction.
 
 Standard AAC boards force tile-by-tile selection that yields telegraphic output
 ("want eat pizza later"). This app's distinguishing move is to expand those short
