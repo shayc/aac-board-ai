@@ -1,6 +1,6 @@
-import { randomId } from "@shared/utils/random-id";
 import { useState } from "react";
 import type { BoardButton } from "../types";
+import { createPart, removeLastPartFromParts } from "./message-transforms";
 
 export type MessagePartContent = Pick<
   BoardButton,
@@ -14,43 +14,15 @@ export type MessagePart = { id: string } & MessagePartContent;
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
-  addPart: (content: MessagePartContent) => void;
-  addSpace: () => void;
-  appendText: (text: string) => void;
   setFromText: (input: string) => void;
   removeLastPart: () => void;
+  setParts: (parts: MessagePart[]) => void;
   clear: () => void;
-}
-
-function createPart(content: MessagePartContent): MessagePart {
-  return { ...content, id: randomId() };
 }
 
 export function useMessage(): UseMessageReturn {
   const [parts, setParts] = useState<MessagePart[]>([]);
   const text = parts.map((part) => part.label).join(" ");
-
-  function addPart(content: MessagePartContent) {
-    setParts((prev) => [...prev, createPart(content)]);
-  }
-
-  function addSpace() {
-    addPart({ label: "" });
-  }
-
-  function appendText(text: string) {
-    setParts((prev) => {
-      const lastPart = prev.at(-1);
-      if (!lastPart) {
-        return [createPart({ label: text })];
-      }
-
-      return prev.with(-1, {
-        ...lastPart,
-        label: `${lastPart.label ?? ""}${text}`,
-      });
-    });
-  }
 
   function setFromText(input: string) {
     setParts(
@@ -63,7 +35,7 @@ export function useMessage(): UseMessageReturn {
   }
 
   function removeLastPart() {
-    setParts((prev) => prev.slice(0, -1));
+    setParts((prev) => removeLastPartFromParts(prev));
   }
 
   function clear() {
@@ -73,11 +45,9 @@ export function useMessage(): UseMessageReturn {
   return {
     parts,
     text,
-    addPart,
-    addSpace,
-    appendText,
     setFromText,
     removeLastPart,
+    setParts,
     clear,
   };
 }

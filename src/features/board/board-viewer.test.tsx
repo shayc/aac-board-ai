@@ -9,6 +9,14 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderBoardViewer, TWO_TILE_BOARD } from "./test-utils";
 
+const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "spell-then-speak-board",
+  locale: "en",
+  buttons: [{ id: "btn-1", label: "S", actions: ["+s", ":speak"] }],
+  grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+};
+
 const PICTOGRAM_BOARD: OBFBoard = {
   format: "open-board-0.1",
   id: "pictogram-board",
@@ -45,6 +53,17 @@ describe("BoardViewer", () => {
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
+    });
+  });
+
+  test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
+    const screen = await renderBoardViewer(SPELL_THEN_SPEAK_BOARD);
+
+    await screen.getByRole("button", { name: "S", exact: true }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.speak.mock.calls).toHaveLength(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("s");
     });
   });
 

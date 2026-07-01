@@ -6,11 +6,7 @@ describe("useMessage", () => {
   test("builds text from multiple parts joined by spaces", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ label: "I" });
-    await rerender();
-    result.current.addPart({ label: "want" });
-    await rerender();
-    result.current.addPart({ label: "water" });
+    result.current.setFromText("I want water");
     await rerender();
 
     expect(result.current.parts).toHaveLength(3);
@@ -20,9 +16,7 @@ describe("useMessage", () => {
   test("mints a distinct id for each part even with identical content", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ label: "cat" });
-    await rerender();
-    result.current.addPart({ label: "cat" });
+    result.current.setFromText("cat cat");
     await rerender();
 
     const [first, second] = result.current.parts;
@@ -31,57 +25,10 @@ describe("useMessage", () => {
     expect(first.id).not.toBe(second.id);
   });
 
-  test("appends text to the last part without mangling its id", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.addPart({ label: "ca", imageSrc: "img.png" });
-    await rerender();
-
-    const partId = result.current.parts[0].id;
-
-    result.current.appendText("t");
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0].id).toBe(partId);
-    expect(result.current.parts[0].label).toBe("cat");
-    expect(result.current.parts[0].imageSrc).toBe("img.png");
-  });
-
-  test("appends text as a new part when the message is empty", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.appendText("h");
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0].label).toBe("h");
-    expect(result.current.parts[0].id).toBeTruthy();
-  });
-
-  test("accumulates rapid appends into a single part", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.addPart({ label: "" });
-    await rerender();
-
-    const partId = result.current.parts[0].id;
-
-    result.current.appendText("h");
-    result.current.appendText("i");
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(1);
-    expect(result.current.parts[0].id).toBe(partId);
-    expect(result.current.parts[0].label).toBe("hi");
-  });
-
   test("removes the last-added part", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ label: "hello" });
-    await rerender();
-    result.current.addPart({ label: "world" });
+    result.current.setFromText("hello world");
     await rerender();
 
     result.current.removeLastPart();
@@ -134,12 +81,24 @@ describe("useMessage", () => {
   test("clears all existing parts when called with an empty string", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
-    result.current.addPart({ label: "existing" });
+    result.current.setFromText("existing");
     await rerender();
 
     result.current.setFromText("");
     await rerender();
 
     expect(result.current.parts).toHaveLength(0);
+  });
+
+  test("setParts replaces the parts wholesale", async () => {
+    const { result, rerender } = await renderHook(() => useMessage());
+
+    result.current.setFromText("existing");
+    await rerender();
+
+    result.current.setParts([{ id: "1", label: "replaced" }]);
+    await rerender();
+
+    expect(result.current.parts).toEqual([{ id: "1", label: "replaced" }]);
   });
 });
