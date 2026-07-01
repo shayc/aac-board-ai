@@ -31,7 +31,7 @@ export function speak(
   let settled = false;
 
   const onAbort = () => {
-    synthesis.cancel();
+    synthesis?.cancel();
     finish();
   };
 
