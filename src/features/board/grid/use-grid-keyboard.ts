@@ -31,7 +31,7 @@ interface FocusTarget {
   position: Cell;
 }
 
-interface KeyboardKey {
+interface KeyEventLike {
   key: string;
   ctrlKey: boolean;
   metaKey: boolean;
@@ -149,7 +149,7 @@ function findFirstFocusable(root: HTMLElement): HTMLElement | null {
 }
 
 function nextFocus(
-  event: KeyboardKey,
+  event: KeyEventLike,
   root: HTMLElement,
   from: Cell,
   dir: "ltr" | "rtl",

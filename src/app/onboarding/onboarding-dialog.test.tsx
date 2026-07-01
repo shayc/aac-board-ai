@@ -13,7 +13,7 @@ function renderDialog(onClose: () => void) {
 }
 
 describe("OnboardingDialog", () => {
-  test("renders the welcome content with no a11y violations", async () => {
+  test("renders the onboarding content with no a11y violations", async () => {
     const screen = await renderDialog(vi.fn());
 
     await expect
