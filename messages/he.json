@@ -35,8 +35,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "הלוח יוחלף בהצלחה",
-        "countPlural=*": "הלוחות יוחלפו בהצלחה"
+        "countPlural=one": "הלוח הוחלף בהצלחה",
+        "countPlural=*": "הלוחות הוחלפו בהצלחה"
       }
     }
   ],
