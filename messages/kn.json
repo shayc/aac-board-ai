@@ -30,6 +30,16 @@
       }
     }
   ],
+  "libraryReplacedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಬೋರ್ಡ್ ಬದಲಾಯಿಸಲಾಗಿದೆ",
+        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಬದಲಾಯಿಸಲಾಗಿವೆ"
+      }
+    }
+  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

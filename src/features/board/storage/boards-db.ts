@@ -148,33 +148,6 @@ function openConnection(): Promise<BoardsDB> {
   });
 }
 
-export async function upsertBoardSet(
-  input: UpsertBoardSetInput,
-): Promise<void> {
-  validateId(input.setId, "setId");
-  validateId(input.rootBoardId, "rootBoardId");
-  const db = await getBoardsDB();
-  const tx = db.transaction("boardSets", "readwrite");
-  const existing = await tx.store.get(input.setId);
-
-  const record: BoardSetRecord = {
-    setId: input.setId,
-    name: input.name,
-    rootBoardId: input.rootBoardId,
-    updatedAt: Date.now(),
-    boardCount: existing?.boardCount ?? 0,
-    author: input.author ?? existing?.author,
-    description: input.description ?? existing?.description,
-    license: input.license ?? existing?.license,
-    locale: input.locale ?? existing?.locale,
-    gridRows: input.gridRows ?? existing?.gridRows,
-    gridColumns: input.gridColumns ?? existing?.gridColumns,
-  };
-
-  await tx.store.put(record);
-  await tx.done;
-}
-
 export async function getBoardSet(
   setId: string,
 ): Promise<BoardSetRecord | undefined> {
@@ -191,54 +164,107 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
+// The [] upper bound exploits IDB key ordering — arrays sort after strings,
+// so [setId, []] is the smallest key greater than every [setId, "..."].
+function boardSetRange(setId: string): IDBKeyRange {
+  return IDBKeyRange.bound([setId], [setId, []]);
+}
+
 export async function deleteBoardSetRecord(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
+  const setRange = boardSetRange(setId);
 
-  // The [] upper bound exploits IDB key ordering — arrays sort after strings,
-  // so [setId, []] is the smallest key greater than every [setId, "..."].
-  const setRange = IDBKeyRange.bound([setId], [setId, []]);
-  void tx.objectStore("boards").delete(setRange);
-  void tx.objectStore("assets").delete(setRange);
-  void tx.objectStore("boardSets").delete(setId);
-
-  await tx.done;
+  await Promise.all([
+    tx.objectStore("boards").delete(setRange),
+    tx.objectStore("assets").delete(setRange),
+    tx.objectStore("boardSets").delete(setId),
+    tx.done,
+  ]);
 }
 
-export async function putBoards(
-  setId: string,
-  boards: UpsertBoardInput[],
-): Promise<void> {
-  validateId(setId, "setId");
+export interface ReplaceBoardSetInput {
+  boardSet: UpsertBoardSetInput;
+  boards: UpsertBoardInput[];
+  assets: UpsertAssetInput[];
+}
+
+export async function replaceBoardSet(
+  input: ReplaceBoardSetInput,
+): Promise<{ replacedExisting: boolean }> {
+  const { boardSet, boards, assets } = input;
+  validateId(boardSet.setId, "setId");
+  validateId(boardSet.rootBoardId, "rootBoardId");
   for (const board of boards) {
     validateId(board.boardId, "boardId");
   }
+
+  const { setId } = boardSet;
   const db = await getBoardsDB();
-  const tx = db.transaction(["boards", "boardSets"], "readwrite");
+  const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
+  const boardSetStore = tx.objectStore("boardSets");
   const boardStore = tx.objectStore("boards");
+  const assetStore = tx.objectStore("assets");
 
-  await Promise.all(
-    boards.map((board) =>
-      boardStore.put({
-        setId,
-        boardId: board.boardId,
-        name: board.name,
-        obf: board.obf,
-      }),
-    ),
-  );
+  const existing = await boardSetStore.get(setId);
+  const setRange = boardSetRange(setId);
 
-  const boardSet = await tx.objectStore("boardSets").get(setId);
+  const record: BoardSetRecord = {
+    setId,
+    name: boardSet.name,
+    rootBoardId: boardSet.rootBoardId,
+    updatedAt: Date.now(),
+    boardCount: boards.length,
+    author: boardSet.author,
+    description: boardSet.description,
+    license: boardSet.license,
+    locale: boardSet.locale,
+    gridRows: boardSet.gridRows,
+    gridColumns: boardSet.gridColumns,
+  };
 
-  if (boardSet) {
-    const count = await boardStore.index("bySetId").count(setId);
-    await tx
-      .objectStore("boardSets")
-      .put({ ...boardSet, boardCount: count, updatedAt: Date.now() });
+  // idb creates tx.done eagerly when the transaction is opened, and requests
+  // already issued before a synchronous put() failure (e.g. a non-cloneable
+  // value) keep running — both must be drained after abort, or they reject
+  // as unhandled rejections once the transaction tears down.
+  const requests: Promise<unknown>[] = [tx.done];
+
+  try {
+    requests.push(boardStore.delete(setRange), assetStore.delete(setRange));
+    for (const board of boards) {
+      requests.push(
+        boardStore.put({
+          setId,
+          boardId: board.boardId,
+          name: board.name,
+          obf: board.obf,
+        }),
+      );
+    }
+    for (const asset of assets) {
+      requests.push(
+        assetStore.put({
+          setId,
+          path: normalizePath(asset.path),
+          blob: asset.blob,
+        }),
+      );
+    }
+    requests.push(boardSetStore.put(record));
+
+    await Promise.all(requests);
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {
+      // Already finished — the transaction aborted itself.
+    }
+    await Promise.allSettled(requests);
+    throw error;
   }
 
-  await tx.done;
+  return { replacedExisting: existing !== undefined };
 }
 
 export async function getBoard(
@@ -274,36 +300,6 @@ export async function updateBoardStrings(
   };
 
   await tx.store.put({ ...record, obf: updatedObf });
-  await tx.done;
-}
-
-export async function putAssets(
-  setId: string,
-  assets: UpsertAssetInput[],
-): Promise<void> {
-  validateId(setId, "setId");
-  const db = await getBoardsDB();
-  const tx = db.transaction(["assets", "boardSets"], "readwrite");
-  const assetStore = tx.objectStore("assets");
-
-  await Promise.all(
-    assets.map((asset) =>
-      assetStore.put({
-        setId,
-        path: normalizePath(asset.path),
-        blob: asset.blob,
-      }),
-    ),
-  );
-
-  const boardSet = await tx.objectStore("boardSets").get(setId);
-
-  if (boardSet) {
-    await tx
-      .objectStore("boardSets")
-      .put({ ...boardSet, updatedAt: Date.now() });
-  }
-
   await tx.done;
 }
 

@@ -30,6 +30,16 @@
       }
     }
   ],
+  "libraryReplacedBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "பலகை மாற்றப்பட்டது",
+        "countPlural=*": "பலகைகள் மாற்றப்பட்டன"
+      }
+    }
+  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

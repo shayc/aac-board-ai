@@ -33,8 +33,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     try {
       const results = await importBoardFilesToStorage(files);
 
+      const replacedExisting = results.some(
+        (result) => result.replacedExisting,
+      );
+
       showSnackbar({
-        message: m.libraryImportedBoards({ count }),
+        message: replacedExisting
+          ? m.libraryReplacedBoards({ count })
+          : m.libraryImportedBoards({ count }),
         severity: "success",
       });
 
