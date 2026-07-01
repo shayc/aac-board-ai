@@ -12,7 +12,7 @@ export interface UseBoardNavigationReturn {
   canGoBack: boolean;
   canGoHome: boolean;
   isHome: boolean;
-  goToBoard: (id: string) => void;
+  goToBoard: (targetBoardId: string) => void;
   goBack: () => void;
   goHome: () => void;
 }
@@ -48,12 +48,12 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const canGoHome = Boolean(rootBoardId);
   const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
-  function goToBoard(id: string) {
-    if (!setId || !id || id === boardId) {
+  function goToBoard(targetBoardId: string) {
+    if (!setId || !targetBoardId || targetBoardId === boardId) {
       return;
     }
 
-    void navigate(boardPath({ setId, boardId: id }), {
+    void navigate(boardPath({ setId, boardId: targetBoardId }), {
       state: { backStack: [...backStack, boardId].slice(-MAX_BACK_STACK) },
     });
   }

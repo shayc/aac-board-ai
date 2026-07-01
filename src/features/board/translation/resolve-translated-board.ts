@@ -3,7 +3,7 @@ import { updateBoardStrings } from "../storage/boards-db";
 import type { Board } from "../types";
 import {
   applyTranslations,
-  collectTranslatableStrings,
+  collectTranslatablePhrases,
   findTranslatedBoard,
   getBoardLanguage,
 } from "./board-strings";
@@ -19,7 +19,7 @@ export async function resolveTranslatedBoard(
     return existing;
   }
 
-  const phrases = collectTranslatableStrings(board);
+  const phrases = collectTranslatablePhrases(board);
   if (phrases.size === 0) {
     return board;
   }
