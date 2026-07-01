@@ -847,7 +847,10 @@ describe("Grid", () => {
   });
 
   describe("responsive column sizing", () => {
-    const PAD = 24;
+    // This suite's test viewport is narrower than the theme's "sm" breakpoint,
+    // so the grid's --pad is theme.spacing(2) here, not the theme.spacing(3)
+    // default used above that breakpoint.
+    const PAD = 16;
     const GAP = 8;
     const MIN_CELL = 96;
 
@@ -934,7 +937,8 @@ describe("Grid", () => {
   });
 
   describe("responsive row sizing", () => {
-    const PAD = 24;
+    // Same narrower-than-"sm" test viewport as the column-sizing suite above.
+    const PAD = 16;
     const GAP = 8;
     const MIN_CELL = 96;
 
