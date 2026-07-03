@@ -81,7 +81,7 @@ describe("AISettings", () => {
     const screen = await renderAISettings();
 
     await expect
-      .element(screen.getByRole("radio", { name: "direct tone" }))
+      .element(screen.getByRole("radio", { name: "direct" }))
       .toBeVisible();
   });
 
@@ -93,7 +93,7 @@ describe("AISettings", () => {
     const screen = await renderAISettings();
 
     await expect
-      .element(screen.getByRole("radio", { name: "direct tone" }))
+      .element(screen.getByRole("radio", { name: "direct" }))
       .not.toBeInTheDocument();
   });
 
@@ -106,7 +106,7 @@ describe("AISettings", () => {
     const screen = await renderAISettings();
 
     const professional = screen.getByRole("radio", {
-      name: "professional tone",
+      name: "professional",
     });
     await expect.element(professional).toBeVisible();
     await expect.element(professional).toBeDisabled();

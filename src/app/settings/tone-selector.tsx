@@ -1,9 +1,8 @@
-import BusinessCenterOutlinedIcon from "@mui/icons-material/BusinessCenterOutlined";
-import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import ShortTextOutlinedIcon from "@mui/icons-material/ShortTextOutlined";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 
 export interface ToneSelectorProps {
@@ -13,22 +12,10 @@ export interface ToneSelectorProps {
 }
 
 const TONES = [
-  { value: "as-is", label: m.toneDirect, Icon: ShortTextOutlinedIcon },
-  {
-    value: "more-formal",
-    label: m.toneProfessional,
-    Icon: BusinessCenterOutlinedIcon,
-  },
-  {
-    value: "more-casual",
-    label: m.toneFriendly,
-    Icon: SentimentSatisfiedAltIcon,
-  },
-] as const satisfies readonly {
-  value: RewriterTone;
-  label: () => string;
-  Icon: typeof ShortTextOutlinedIcon;
-}[];
+  { value: "as-is", label: m.toneDirect },
+  { value: "more-formal", label: m.toneProfessional },
+  { value: "more-casual", label: m.toneFriendly },
+] as const satisfies readonly { value: RewriterTone; label: () => string }[];
 
 export function ToneSelector({
   tone,
@@ -36,53 +23,30 @@ export function ToneSelector({
   onChange,
 }: ToneSelectorProps) {
   return (
-    <RadioGroup
-      aria-label={m.toneSelection()}
-      row
-      value={tone}
-      onChange={(_event, value) => onChange(value as RewriterTone)}
-      sx={(theme) => ({
-        display: "inline-flex",
-        flexShrink: 0,
-        border: `1px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.23)}`,
-        borderRadius: 7,
-        overflow: "hidden",
-      })}
-    >
-      {TONES.map(({ value, label, Icon }) => (
-        <Tooltip key={value} title={label()}>
-          <Radio
-            slotProps={{ input: { "aria-label": label() } }}
+    <FormControl>
+      <FormLabel
+        id="tone-selector"
+        sx={{ typography: "body2", color: "text.secondary" }}
+      >
+        {m.toneSelection()}
+      </FormLabel>
+      <RadioGroup
+        aria-labelledby="tone-selector"
+        name="tone-selector"
+        row
+        value={tone}
+        onChange={(_event, value) => onChange(value as RewriterTone)}
+      >
+        {TONES.map(({ value, label }) => (
+          <FormControlLabel
+            key={value}
             value={value}
+            control={<Radio />}
+            label={label()}
             disabled={disabled}
-            disableRipple
-            icon={<Icon fontSize="medium" />}
-            checkedIcon={<Icon fontSize="medium" />}
-            sx={(theme) => ({
-              padding: 1.5,
-              color: "action.active",
-              "&:hover": {
-                backgroundColor: "action.hover",
-                "@media (hover: none)": { backgroundColor: "transparent" },
-              },
-              "&.Mui-checked": {
-                color: "text.primary",
-                backgroundColor: "action.selected",
-                "&:hover": {
-                  backgroundColor: theme.alpha(
-                    (theme.vars ?? theme).palette.text.primary,
-                    `${(theme.vars ?? theme).palette.action.selectedOpacity} + ${(theme.vars ?? theme).palette.action.hoverOpacity}`,
-                  ),
-                  "@media (hover: none)": {
-                    backgroundColor: "action.selected",
-                  },
-                },
-              },
-              "&.Mui-disabled": { color: "action.disabled" },
-            })}
           />
-        </Tooltip>
-      ))}
-    </RadioGroup>
+        ))}
+      </RadioGroup>
+    </FormControl>
   );
 }
