@@ -5,6 +5,7 @@ import ListItemText from "@mui/material/ListItemText";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useState } from "react";
 import { useSetBoards } from "./use-set-boards";
 
@@ -19,13 +20,14 @@ export function BoardSwitcherPanel({
   selectedBoardId,
   onSelect,
 }: BoardSwitcherPanelProps) {
+  const { language } = useLanguage();
   const { boards, isLoading, error } = useSetBoards({ setId });
   const [query, setQuery] = useState("");
 
-  const normalizedQuery = query.trim().toLocaleLowerCase();
+  const normalizedQuery = query.trim().toLocaleLowerCase(language);
   const filteredBoards = normalizedQuery
     ? boards.filter((board) =>
-        board.name.toLocaleLowerCase().includes(normalizedQuery),
+        board.name.toLocaleLowerCase(language).includes(normalizedQuery),
       )
     : boards;
 
@@ -40,7 +42,7 @@ export function BoardSwitcherPanel({
     >
       <Box sx={{ p: 1, flexShrink: 0 }}>
         <TextField
-          aria-label={m.boardSearch()}
+          slotProps={{ htmlInput: { "aria-label": m.boardSearch() } }}
           type="search"
           autoFocus
           size="small"

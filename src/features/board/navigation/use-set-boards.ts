@@ -31,9 +31,8 @@ export function useSetBoards({
   const records = value ?? [];
 
   const boards = records.map((record) => {
-    const sourceName = record.obf.name ?? record.name;
     const translated = findTranslations(record.obf.strings, language)?.[
-      sourceName
+      record.name
     ];
 
     return { boardId: record.boardId, name: translated ?? record.name };
