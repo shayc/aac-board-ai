@@ -1,5 +1,6 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import CloseIcon from "@mui/icons-material/Close";
+import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -9,6 +10,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { ExternalLink } from "@shared/components/external-link";
 import { AISettings } from "./ai-settings";
 import { AppearanceSettings } from "./appearance-settings";
 import { LanguageSettings } from "./language-settings";
@@ -92,6 +94,17 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <AISettings />
+
+        <ExternalLink
+          href="https://github.com/shayc/aac-board-ai"
+          color="text.secondary"
+        >
+          <GitHubIcon
+            fontSize="small"
+            sx={{ verticalAlign: "text-bottom", mr: 2 }}
+          />
+          {m.librarySourceCode()}
+        </ExternalLink>
       </Box>
     </Drawer>
   );
