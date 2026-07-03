@@ -53,7 +53,7 @@ export function BoardSwitcherPanel({
         />
       </Box>
 
-      <List dense sx={{ flex: 1, overflow: "auto", minHeight: 0 }}>
+      <List dense sx={{ flex: 1, px: 1, overflow: "auto", minHeight: 0 }}>
         {filteredBoards.map((board) => (
           <ListItemButton
             key={board.boardId}
