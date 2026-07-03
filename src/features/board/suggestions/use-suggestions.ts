@@ -4,6 +4,7 @@ import {
 } from "@shared/built-in-ai/engine-language-options";
 import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
+import { useAITone } from "@shared/built-in-ai/tone-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
@@ -12,15 +13,10 @@ import {
   useProofreader,
   useRewriter,
 } from "@shayc/react-built-in-ai";
-import { useState } from "react";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
-import {
-  deriveToneControlState,
-  type ToneControlState,
-} from "./derive-tone-control-state";
 import { toPhrases } from "./to-phrases";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
@@ -30,9 +26,6 @@ export interface UseSuggestionsReturn {
   isSupported: boolean;
   status: SuggestionStatusView;
   phrases: string[];
-  toneControlState: ToneControlState;
-  tone: RewriterTone;
-  setTone: (tone: RewriterTone) => void;
   enable: () => void;
 }
 
@@ -47,7 +40,7 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     SHARED_CONTEXT_DEBOUNCE_MS,
   );
 
-  const [tone, setTone] = useState<RewriterTone>("as-is");
+  const tone = useAITone();
   const debouncedTone = useDebouncedValue(tone, TONE_DEBOUNCE_MS);
   const { language } = useLanguage();
 
@@ -117,15 +110,11 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const isSupported =
     proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
-  const toneControlState = deriveToneControlState(rewriter.status);
 
   return {
     isSupported,
     status,
     phrases,
-    toneControlState,
-    tone,
-    setTone,
     enable,
   };
 }

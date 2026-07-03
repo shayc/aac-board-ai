@@ -72,4 +72,43 @@ describe("AISettings", () => {
       expect(countIcons(screen, "Available")).toBe(2);
     });
   });
+
+  test("shows the tone selector once the rewriter is ready", async () => {
+    stubProofreader();
+    stubRewriter();
+    stubTranslator();
+
+    const screen = await renderAISettings();
+
+    await expect
+      .element(screen.getByRole("radio", { name: "direct tone" }))
+      .toBeVisible();
+  });
+
+  test("hides the tone selector when the rewriter is unsupported", async () => {
+    stubProofreader();
+    stubBuiltInAIUnsupported("Rewriter");
+    stubTranslator();
+
+    const screen = await renderAISettings();
+
+    await expect
+      .element(screen.getByRole("radio", { name: "direct tone" }))
+      .not.toBeInTheDocument();
+  });
+
+  test("shows but disables the tone selector while the rewriter is downloading", async () => {
+    stubProofreader();
+    const rewriter = stubRewriter();
+    rewriter.availability.mockResolvedValue("downloadable");
+    stubTranslator();
+
+    const screen = await renderAISettings();
+
+    const professional = screen.getByRole("radio", {
+      name: "professional tone",
+    });
+    await expect.element(professional).toBeVisible();
+    await expect.element(professional).toBeDisabled();
+  });
 });

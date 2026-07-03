@@ -1,4 +1,5 @@
 import { setAISharedContext } from "@shared/built-in-ai/shared-context-store";
+import { setAITone } from "@shared/built-in-ai/tone-store";
 import { LanguageProvider } from "@shared/language/language-provider";
 import {
   DEFAULT_LANGUAGE,
@@ -21,6 +22,7 @@ function renderSuggestions(text: string) {
 describe("useSuggestions", () => {
   beforeEach(() => {
     setAISharedContext("");
+    setAITone("as-is");
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
 
@@ -35,7 +37,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("stays supported but hides the tone control when only the proofreader is available", async () => {
+  test("stays supported when only the proofreader is available", async () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
@@ -43,7 +45,6 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
-      expect(result.current.toneControlState).toBe("hidden");
     });
   });
 
@@ -237,13 +238,13 @@ describe("useSuggestions", () => {
     const { create } = stubRewriter((input) => `rewritten ${input}`);
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderSuggestions("hi");
+    await renderSuggestions("hi");
 
     await vi.waitFor(() => {
       expect(create.mock.calls.at(0)?.at(0)).toMatchObject({ tone: "as-is" });
     });
 
-    result.current.setTone("more-formal");
+    setAITone("more-formal");
 
     await vi.waitFor(() => {
       const tones = create.mock.calls.map((call) => call.at(0)?.tone);
@@ -255,14 +256,14 @@ describe("useSuggestions", () => {
     const { proofread, create: createProofreader } = stubProofreader();
     const { create: createRewriter } = stubRewriter();
 
-    const { result } = await renderSuggestions("want eat");
+    await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(proofread).toHaveBeenCalledTimes(1);
     });
     expect(createProofreader).toHaveBeenCalledTimes(1);
 
-    result.current.setTone("more-formal");
+    setAITone("more-formal");
 
     await vi.waitFor(() => {
       const tones = createRewriter.mock.calls.map((call) => call.at(0)?.tone);
@@ -286,7 +287,7 @@ describe("useSuggestions", () => {
       expect(result.current.phrases).toEqual(["casual hi"]);
     });
 
-    result.current.setTone("more-formal");
+    setAITone("more-formal");
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([]);
     });

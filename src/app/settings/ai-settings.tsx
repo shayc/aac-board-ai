@@ -20,6 +20,7 @@ import {
   setAISharedContext,
   useAISharedContext,
 } from "@shared/built-in-ai/shared-context-store";
+import { setAITone, useAITone } from "@shared/built-in-ai/tone-store";
 import { useLanguage } from "@shared/language/use-language";
 import {
   isSupported,
@@ -28,13 +29,17 @@ import {
   type Status,
 } from "@shayc/react-built-in-ai";
 import { useState } from "react";
+import { deriveToneControlState } from "./derive-tone-control-state";
+import { ToneSelector } from "./tone-selector";
 
 export function AISettings() {
   const [helpOpen, setHelpOpen] = useState(false);
   const sharedContext = useAISharedContext();
+  const tone = useAITone();
   const { language } = useLanguage();
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
   const rewriter = useRewriter(rewriterLanguageOptions(language));
+  const toneControlState = deriveToneControlState(rewriter.status);
 
   const capabilities: {
     title: string;
@@ -57,18 +62,28 @@ export function AISettings() {
   return (
     <Stack spacing={3}>
       {isSupported("Rewriter") && (
-        <TextField
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={4}
-          label={m.aiCustomInstructions()}
-          slotProps={{ inputLabel: { shrink: true } }}
-          placeholder={m.aiCustomInstructionsPlaceholder()}
-          helperText={m.aiCustomInstructionsHelper()}
-          value={sharedContext}
-          onChange={(event) => setAISharedContext(event.target.value)}
-        />
+        <Stack spacing={1.5}>
+          {toneControlState !== "hidden" && (
+            <ToneSelector
+              tone={tone}
+              disabled={toneControlState === "disabled"}
+              onChange={setAITone}
+            />
+          )}
+
+          <TextField
+            variant="outlined"
+            fullWidth
+            multiline
+            rows={4}
+            label={m.aiCustomInstructions()}
+            slotProps={{ inputLabel: { shrink: true } }}
+            placeholder={m.aiCustomInstructionsPlaceholder()}
+            helperText={m.aiCustomInstructionsHelper()}
+            value={sharedContext}
+            onChange={(event) => setAISharedContext(event.target.value)}
+          />
+        </Stack>
       )}
 
       <Stack spacing={1}>

@@ -9,11 +9,8 @@ function makeProps(
   return {
     status: null,
     phrases: [],
-    toneControlState: "enabled",
-    tone: "as-is",
     onEnable: vi.fn(),
     onPhraseClick: vi.fn(),
-    onToneChange: vi.fn(),
     ...overrides,
   };
 }
@@ -44,42 +41,6 @@ describe("SuggestionBar", () => {
 
     expect(props.onPhraseClick).toHaveBeenCalledWith("Goodbye");
     expect(props.onPhraseClick).toHaveBeenCalledTimes(2);
-  });
-
-  test("shows the tone selector when tone can be changed", async () => {
-    const screen = await render(
-      <SuggestionBar {...makeProps({ phrases: ["Hello"] })} />,
-    );
-
-    await expect
-      .element(screen.getByRole("radio", { name: "direct tone" }))
-      .toBeVisible();
-  });
-
-  test("hides the tone selector when the tone control is hidden", async () => {
-    const screen = await render(
-      <SuggestionBar
-        {...makeProps({ phrases: ["Hello"], toneControlState: "hidden" })}
-      />,
-    );
-
-    await expect
-      .element(screen.getByRole("radio", { name: "direct tone" }))
-      .not.toBeInTheDocument();
-  });
-
-  test("shows but disables the tone selector while the rewriter is not ready", async () => {
-    const props = makeProps({
-      phrases: ["Hello"],
-      toneControlState: "disabled",
-    });
-    const screen = await render(<SuggestionBar {...props} />);
-
-    const professional = screen.getByRole("radio", {
-      name: "professional tone",
-    });
-    await expect.element(professional).toBeVisible();
-    await expect.element(professional).toBeDisabled();
   });
 
   test("offers an enable chip when activation is needed", async () => {

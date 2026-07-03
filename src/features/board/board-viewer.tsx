@@ -103,11 +103,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
           <SuggestionBar
             status={suggestions.status}
             phrases={suggestions.phrases}
-            toneControlState={suggestions.toneControlState}
-            tone={suggestions.tone}
             onEnable={suggestions.enable}
             onPhraseClick={message.setFromText}
-            onToneChange={suggestions.setTone}
           />
         )}
       </Stack>
