@@ -103,7 +103,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("an engine still probing availability is not a failure", () => {
     const input = makeInput({
-      engines: engines("idle", "unavailable"),
+      engines: engines("checking", "unavailable"),
       hasText: true,
     });
 
