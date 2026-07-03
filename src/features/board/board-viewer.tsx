@@ -79,6 +79,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
+        <BackspaceButton
+          onPress={message.removeLastPart}
+          onLongPress={message.clear}
+        />
+
         {suggestions.isSupported && (
           <SuggestionBar
             status={suggestions.status}
@@ -87,11 +92,6 @@ export function BoardViewer({ board }: BoardViewerProps) {
             onPhraseClick={message.setFromText}
           />
         )}
-
-        <BackspaceButton
-          onPress={message.removeLastPart}
-          onLongPress={message.clear}
-        />
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
