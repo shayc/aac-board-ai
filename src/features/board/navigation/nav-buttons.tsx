@@ -5,29 +5,25 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
+import { useBoardNavigation } from "./use-board-navigation";
 
-export interface NavButtonsProps {
-  canGoBack: boolean;
-  canGoHome: boolean;
-  onBackClick: () => void;
-  onHomeClick: () => void;
-}
+export function NavButtons() {
+  const { setId, canGoBack, canGoHome, goBack, goHome } = useBoardNavigation();
 
-export function NavButtons({
-  canGoBack,
-  canGoHome,
-  onBackClick,
-  onHomeClick,
-}: NavButtonsProps) {
+  if (!setId) {
+    return null;
+  }
+
   return (
-    <Box sx={{ display: "flex", gap: 1 }}>
+    <Box sx={{ display: "flex", gap: 1, marginInlineEnd: 1 }}>
       <Tooltip title={m.navBack()}>
         <span>
           <IconButton
             aria-label={m.navBack()}
             size="large"
+            color="inherit"
             disabled={!canGoBack}
-            onClick={onBackClick}
+            onClick={goBack}
           >
             <ArrowBackOutlinedIcon sx={flipForRtl} />
           </IconButton>
@@ -39,8 +35,9 @@ export function NavButtons({
           <IconButton
             aria-label={m.navHome()}
             size="large"
+            color="inherit"
             disabled={!canGoHome}
-            onClick={onHomeClick}
+            onClick={goHome}
           >
             <HomeOutlinedIcon />
           </IconButton>

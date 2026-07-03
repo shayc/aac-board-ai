@@ -2,88 +2,52 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import { describe, expect, test, vi } from "vitest";
+import { MemoryRouter, Route, Routes } from "react-router";
+import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
+import { seedBoardSets } from "../storage/test-utils";
 import { NavButtons } from "./nav-buttons";
 
-function renderWithDirection(
-  direction: "ltr" | "rtl",
-  props: {
-    canGoBack?: boolean;
-    canGoHome?: boolean;
-    onBackClick?: () => void;
-    onHomeClick?: () => void;
+function renderAt(
+  pathname: string,
+  options: {
+    state?: { backStack: string[] };
+    direction?: "ltr" | "rtl";
   } = {},
 ) {
-  const theme = createTheme({ direction });
-  const {
-    canGoBack = true,
-    canGoHome = true,
-    onBackClick = vi.fn(),
-    onHomeClick = vi.fn(),
-  } = props;
+  const theme = createTheme({ direction: options.direction ?? "ltr" });
 
   return render(
     <MUIThemeProvider theme={theme}>
-      <NavButtons
-        canGoBack={canGoBack}
-        canGoHome={canGoHome}
-        onBackClick={onBackClick}
-        onHomeClick={onHomeClick}
-      />
+      <MemoryRouter initialEntries={[{ pathname, state: options.state }]}>
+        <Routes>
+          <Route path="/sets/:setId/boards/:boardId" element={<NavButtons />} />
+        </Routes>
+      </MemoryRouter>
     </MUIThemeProvider>,
   );
 }
 
 describe("NavButtons", () => {
-  test("calls onBackClick when back button is clicked", async () => {
-    const onBackClick = vi.fn();
-    const onHomeClick = vi.fn();
+  beforeEach(async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-1" }]);
+  });
 
-    const screen = await render(
-      <NavButtons
-        canGoBack={true}
-        canGoHome={true}
-        onBackClick={onBackClick}
-        onHomeClick={onHomeClick}
-      />,
-    );
+  test("calls goBack when back button is clicked", async () => {
+    const screen = await renderAt("/sets/set-1/boards/board-2", {
+      state: { backStack: ["root-1"] },
+    });
 
     await screen.getByRole("button", { name: "Back" }).click();
 
-    expect(onBackClick).toHaveBeenCalledOnce();
-    expect(onHomeClick).not.toHaveBeenCalled();
+    await expect
+      .element(screen.getByRole("button", { name: "Home" }))
+      .toBeInTheDocument();
   });
 
-  test("calls onHomeClick when home button is clicked", async () => {
-    const onBackClick = vi.fn();
-    const onHomeClick = vi.fn();
-
-    const screen = await render(
-      <NavButtons
-        canGoBack={true}
-        canGoHome={true}
-        onBackClick={onBackClick}
-        onHomeClick={onHomeClick}
-      />,
-    );
-
-    await screen.getByRole("button", { name: "Home" }).click();
-
-    expect(onHomeClick).toHaveBeenCalledOnce();
-    expect(onBackClick).not.toHaveBeenCalled();
-  });
-
-  test("disables back button when canGoBack is false", async () => {
-    const screen = await render(
-      <NavButtons
-        canGoBack={false}
-        canGoHome={true}
-        onBackClick={vi.fn()}
-        onHomeClick={vi.fn()}
-      />,
-    );
+  test("disables back button when there is no back stack", async () => {
+    const screen = await renderAt("/sets/set-1/boards/root-1");
 
     await expect
       .element(screen.getByRole("button", { name: "Back" }))
@@ -94,28 +58,21 @@ describe("NavButtons", () => {
       .toBeEnabled();
   });
 
-  test("disables home button when canGoHome is false", async () => {
-    const screen = await render(
-      <NavButtons
-        canGoBack={true}
-        canGoHome={false}
-        onBackClick={vi.fn()}
-        onHomeClick={vi.fn()}
-      />,
-    );
+  test("disables home button when the board set has no root board", async () => {
+    await seedBoardSets([]);
+
+    const screen = await renderAt("/sets/set-1/boards/board-1");
 
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
       .toBeDisabled();
-
-    await expect
-      .element(screen.getByRole("button", { name: "Back" }))
-      .toBeEnabled();
   });
 
   describe("RTL icon mirroring", () => {
     test("back arrow is flipped in RTL", async () => {
-      const screen = await renderWithDirection("rtl");
+      const screen = await renderAt("/sets/set-1/boards/root-1", {
+        direction: "rtl",
+      });
 
       const backButton = screen.getByRole("button", { name: "Back" });
       const icon = backButton.element().querySelector("svg");
@@ -127,7 +84,7 @@ describe("NavButtons", () => {
     });
 
     test("back arrow is not flipped in LTR", async () => {
-      const screen = await renderWithDirection("ltr");
+      const screen = await renderAt("/sets/set-1/boards/root-1");
 
       const backButton = screen.getByRole("button", { name: "Back" });
       const icon = backButton.element().querySelector("svg");
@@ -138,7 +95,9 @@ describe("NavButtons", () => {
     });
 
     test("home icon is not flipped in RTL", async () => {
-      const screen = await renderWithDirection("rtl");
+      const screen = await renderAt("/sets/set-1/boards/root-1", {
+        direction: "rtl",
+      });
 
       const homeButton = screen.getByRole("button", { name: "Home" });
       const icon = homeButton.element().querySelector("svg");

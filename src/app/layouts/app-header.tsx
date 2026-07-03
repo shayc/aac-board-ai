@@ -1,4 +1,8 @@
-import { BOARD_ROUTE_PATTERN, BoardSwitcher } from "@features/board";
+import {
+  BOARD_ROUTE_PATTERN,
+  BoardSwitcher,
+  NavButtons,
+} from "@features/board";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -36,12 +40,13 @@ export function AppHeader({
               edge="start"
               color="inherit"
               onClick={onLibraryClick}
-              sx={{ marginInlineEnd: 2 }}
             >
               <GridViewOutlinedIcon />
             </IconButton>
           </Tooltip>
         )}
+
+        <NavButtons />
 
         <Typography
           component="h1"
