@@ -86,7 +86,7 @@ export function MessageBar({
                     : "none",
                 })}
               >
-                <Pictogram label={part.label} src={part.imageSrc} />
+                <Pictogram label={part.label ?? ""} src={part.imageSrc} />
               </Stack>
             );
           })}

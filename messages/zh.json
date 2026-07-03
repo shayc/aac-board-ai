@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "正在加载……",
   "close": "关闭",
-  "boardLoading": "正在加载沟通板……",
   "boardGridLabel": "沟通板",
   "board": "沟通板",
   "libraryLoading": "正在加载沟通板……",

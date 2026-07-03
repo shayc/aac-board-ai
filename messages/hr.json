@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Učitavanje...",
   "close": "Zatvori",
-  "boardLoading": "Učitavanje ploče...",
   "boardGridLabel": "Komunikacijska ploča",
   "board": "Ploča",
   "libraryLoading": "Učitavanje ploča...",

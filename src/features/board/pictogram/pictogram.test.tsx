@@ -5,7 +5,7 @@ import { Pictogram } from "./pictogram";
 
 describe("Pictogram", () => {
   test("renders no content when no src or label is provided", async () => {
-    const screen = await render(<Pictogram />);
+    const screen = await render(<Pictogram label="" />);
 
     expect(screen.container.textContent).toBe("");
     expect(screen.container.querySelector("img")).toBeNull();
@@ -19,7 +19,7 @@ describe("Pictogram", () => {
   });
 
   test("renders image when src is provided", async () => {
-    const screen = await render(<Pictogram src={TEST_IMAGE_SRC} />);
+    const screen = await render(<Pictogram src={TEST_IMAGE_SRC} label="" />);
 
     const img = screen.container.querySelector("img");
     expect(img).not.toBeNull();

@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "ஏற்றப்படுகிறது…",
   "close": "மூடு",
-  "boardLoading": "பலகை ஏற்றப்படுகிறது…",
   "boardGridLabel": "தொடர்பு பலகை",
   "board": "பலகை",
   "libraryLoading": "பலகைகள் ஏற்றப்படுகின்றன…",

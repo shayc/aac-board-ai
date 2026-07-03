@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Загрузка...",
   "close": "Закрыть",
-  "boardLoading": "Загрузка доски...",
   "boardGridLabel": "Коммуникационная доска",
   "board": "Доска",
   "libraryLoading": "Загрузка досок...",

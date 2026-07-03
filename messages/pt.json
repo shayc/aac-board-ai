@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Carregando...",
   "close": "Fechar",
-  "boardLoading": "Carregando prancha...",
   "boardGridLabel": "Prancha de comunicação",
   "board": "Prancha",
   "libraryLoading": "Carregando pranchas...",

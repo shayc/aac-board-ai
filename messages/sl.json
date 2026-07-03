@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Nalaganje...",
   "close": "Zapri",
-  "boardLoading": "Nalaganje table...",
   "boardGridLabel": "Komunikacijska tabla",
   "board": "Tabla",
   "libraryLoading": "Nalaganje tabel...",

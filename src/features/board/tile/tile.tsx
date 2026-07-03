@@ -3,7 +3,7 @@ import { alpha } from "@mui/material/styles";
 import { Pictogram } from "../pictogram/pictogram";
 
 export interface TileProps {
-  label?: string;
+  label: string;
   imageSrc?: string;
   backgroundColor?: string;
   borderColor?: string;

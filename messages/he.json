@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "טעינה...",
   "close": "סגירה",
-  "boardLoading": "טעינת לוח...",
   "boardGridLabel": "לוח תקשורת",
   "board": "לוח",
   "libraryLoading": "טעינת לוחות...",

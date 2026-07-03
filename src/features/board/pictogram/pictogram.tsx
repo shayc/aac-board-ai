@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 
 export interface PictogramProps {
   src?: string;
-  label?: string;
+  label: string;
 }
 
 export function Pictogram({ src, label }: PictogramProps) {
@@ -44,16 +44,14 @@ export function Pictogram({ src, label }: PictogramProps) {
         </Box>
       )}
 
-      {label && (
-        <Typography
-          noWrap
-          component="span"
-          variant={src ? "body2" : "h5"}
-          sx={{ lineHeight: 1 }}
-        >
-          {label}
-        </Typography>
-      )}
+      <Typography
+        noWrap
+        component="span"
+        variant={src ? "body2" : "h5"}
+        sx={{ lineHeight: 1 }}
+      >
+        {label}
+      </Typography>
     </Box>
   );
 }
