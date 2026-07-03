@@ -4,6 +4,8 @@
   "close": "Kapat",
   "boardLoading": "Pano yükleniyor...",
   "boardGridLabel": "İletişim panosu",
+  "boardSearch": "Panoları ara",
+  "boardSearchNoResults": "Hiçbir pano bulunamadı",
   "libraryLoading": "Panolar yükleniyor...",
   "libraryEmptyTitle": "Kitaplık boş",
   "libraryEmptyDescription": "Başlamak için iletişim panoları içe aktarın.",

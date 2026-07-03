@@ -4,6 +4,8 @@
   "close": "إغلاق",
   "boardLoading": "جارٍ تحميل اللوحة...",
   "boardGridLabel": "لوحة تواصل",
+  "boardSearch": "بحث لوحات",
+  "boardSearchNoResults": "لا توجد لوحات",
   "libraryLoading": "جارٍ تحميل اللوحات...",
   "libraryEmptyTitle": "المكتبة فارغة",
   "libraryEmptyDescription": "استورد لوحات تواصل للبدء.",

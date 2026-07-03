@@ -4,6 +4,8 @@
   "close": "Zatvori",
   "boardLoading": "Učitavanje ploče...",
   "boardGridLabel": "Komunikacijska ploča",
+  "boardSearch": "Pretraži ploče",
+  "boardSearchNoResults": "Ploče nisu pronađene",
   "libraryLoading": "Učitavanje ploča...",
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za početak uvezite komunikacijske ploče.",

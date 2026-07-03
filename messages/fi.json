@@ -4,6 +4,8 @@
   "close": "Sulje",
   "boardLoading": "Ladataan taulua...",
   "boardGridLabel": "Kommunikointitaulu",
+  "boardSearch": "Etsi tauluja",
+  "boardSearchNoResults": "Tauluja ei löytynyt",
   "libraryLoading": "Ladataan tauluja...",
   "libraryEmptyTitle": "Kirjasto on tyhjä",
   "libraryEmptyDescription": "Tuo kommunikointitauluja päästäksesi alkuun.",

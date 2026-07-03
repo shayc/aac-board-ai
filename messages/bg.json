@@ -4,6 +4,8 @@
   "close": "Затваряне",
   "boardLoading": "Зареждане на дъската...",
   "boardGridLabel": "Комуникационна дъска",
+  "boardSearch": "Търсене на дъски",
+  "boardSearchNoResults": "Дъски не са намерени",
   "libraryLoading": "Зареждане на дъските...",
   "libraryEmptyTitle": "Библиотеката е празна",
   "libraryEmptyDescription": "Импортирайте комуникационни дъски, за да започнете.",

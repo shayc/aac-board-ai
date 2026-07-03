@@ -4,6 +4,8 @@
   "close": "Đóng",
   "boardLoading": "Đang tải bảng...",
   "boardGridLabel": "Bảng giao tiếp",
+  "boardSearch": "Tìm bảng",
+  "boardSearchNoResults": "Không tìm thấy bảng nào",
   "libraryLoading": "Đang tải các bảng...",
   "libraryEmptyTitle": "Thư viện trống",
   "libraryEmptyDescription": "Nhập các bảng giao tiếp để bắt đầu.",

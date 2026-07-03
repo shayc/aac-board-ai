@@ -4,6 +4,8 @@
   "close": "Închide",
   "boardLoading": "Se încarcă tabla...",
   "boardGridLabel": "Tablă de comunicare",
+  "boardSearch": "Caută table",
+  "boardSearchNoResults": "Tablele nu au fost găsite",
   "libraryLoading": "Se încarcă tablele...",
   "libraryEmptyTitle": "Biblioteca este goală",
   "libraryEmptyDescription": "Importă table de comunicare pentru a începe.",

@@ -12,9 +12,11 @@ export { useFileHandlerLaunch } from "./import/use-file-handler-launch";
 export { useImportBoardFiles } from "./import/use-import-board-files";
 export {
   BOARD_PATTERN,
+  BOARD_ROUTE_PATTERN,
   BOARD_SET_PATTERN,
   boardSetPath,
 } from "./navigation/board-paths";
+export { BoardSwitcher } from "./navigation/board-switcher";
 export { hydrateBoard } from "./storage/board-hydration";
 export { BoardNotFoundError, getBoardSet } from "./storage/boards-db";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";

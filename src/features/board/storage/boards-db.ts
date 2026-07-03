@@ -278,6 +278,13 @@ export async function getBoard(
   return db.get("boards", [setId, boardId]);
 }
 
+export async function listBoards(setId: string): Promise<BoardRecord[]> {
+  validateId(setId, "setId");
+  const db = await getBoardsDB();
+
+  return db.getAllFromIndex("boards", "bySetId", setId);
+}
+
 export async function updateBoardStrings(
   setId: string,
   boardId: string,

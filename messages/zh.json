@@ -4,6 +4,8 @@
   "close": "关闭",
   "boardLoading": "正在加载沟通板……",
   "boardGridLabel": "沟通板",
+  "boardSearch": "搜索沟通板",
+  "boardSearchNoResults": "未找到沟通板",
   "libraryLoading": "正在加载沟通板……",
   "libraryEmptyTitle": "板库为空",
   "libraryEmptyDescription": "导入沟通板即可开始。",

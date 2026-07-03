@@ -4,6 +4,8 @@
   "close": "ปิด",
   "boardLoading": "กำลังโหลดบอร์ด...",
   "boardGridLabel": "บอร์ดสื่อสาร",
+  "boardSearch": "ค้นหาบอร์ด",
+  "boardSearchNoResults": "ไม่พบบอร์ด",
   "libraryLoading": "กำลังโหลดบอร์ด...",
   "libraryEmptyTitle": "คลังว่างเปล่า",
   "libraryEmptyDescription": "นำเข้าบอร์ดสื่อสารเพื่อเริ่มต้น",

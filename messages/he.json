@@ -4,6 +4,8 @@
   "close": "סגירה",
   "boardLoading": "טעינת לוח...",
   "boardGridLabel": "לוח תקשורת",
+  "boardSearch": "חיפוש לוחות",
+  "boardSearchNoResults": "לוחות לא נמצאו",
   "libraryLoading": "טעינת לוחות...",
   "libraryEmptyTitle": "הספרייה ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",

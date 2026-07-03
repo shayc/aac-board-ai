@@ -4,6 +4,8 @@
   "close": "Закрыть",
   "boardLoading": "Загрузка доски...",
   "boardGridLabel": "Коммуникационная доска",
+  "boardSearch": "Искать доски",
+  "boardSearchNoResults": "Доски не найдены",
   "libraryLoading": "Загрузка досок...",
   "libraryEmptyTitle": "Библиотека пуста",
   "libraryEmptyDescription": "Импортируйте коммуникационные доски, чтобы начать.",

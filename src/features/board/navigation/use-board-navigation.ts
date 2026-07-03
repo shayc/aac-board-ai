@@ -1,14 +1,10 @@
-import { useLocation, useNavigate, useParams } from "react-router";
+import { useLocation, useMatch, useNavigate } from "react-router";
 import { useBoardSets } from "../board-sets/use-board-sets";
-import { boardPath, boardSetPath } from "./board-paths";
-
-export interface BoardRouteParams {
-  [key: string]: string;
-  setId: string;
-  boardId: string;
-}
+import { BOARD_ROUTE_PATTERN, boardPath, boardSetPath } from "./board-paths";
 
 export interface UseBoardNavigationReturn {
+  setId: string | undefined;
+  boardId: string | undefined;
   canGoBack: boolean;
   canGoHome: boolean;
   isHome: boolean;
@@ -36,7 +32,8 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { setId, boardId } = useParams<BoardRouteParams>();
+  const match = useMatch(BOARD_ROUTE_PATTERN);
+  const { setId, boardId } = match?.params ?? {};
   const { boardSets } = useBoardSets();
   const rootBoardId = boardSets.find(
     (boardSet) => boardSet.setId === setId,
@@ -78,6 +75,8 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   }
 
   return {
+    setId,
+    boardId,
     canGoBack,
     canGoHome,
     isHome,

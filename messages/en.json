@@ -4,6 +4,8 @@
   "close": "Close",
   "boardLoading": "Loading board...",
   "boardGridLabel": "Communication board",
+  "boardSearch": "Search boards",
+  "boardSearchNoResults": "No boards found",
   "libraryLoading": "Loading boards...",
   "libraryEmptyTitle": "Library is empty",
   "libraryEmptyDescription": "Import communication boards to get started.",

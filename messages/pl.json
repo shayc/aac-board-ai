@@ -4,6 +4,8 @@
   "close": "Zamknij",
   "boardLoading": "Ładowanie tablicy...",
   "boardGridLabel": "Tablica komunikacyjna",
+  "boardSearch": "Szukaj tablic",
+  "boardSearchNoResults": "Nie znaleziono tablic",
   "libraryLoading": "Ładowanie tablic...",
   "libraryEmptyTitle": "Biblioteka jest pusta",
   "libraryEmptyDescription": "Zaimportuj tablice komunikacyjne, aby rozpocząć.",

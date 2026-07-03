@@ -4,6 +4,8 @@
   "close": "Zapri",
   "boardLoading": "Nalaganje table...",
   "boardGridLabel": "Komunikacijska tabla",
+  "boardSearch": "Išči table",
+  "boardSearchNoResults": "Tabel ni mogoče najti",
   "libraryLoading": "Nalaganje tabel...",
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za začetek uvozite komunikacijske table.",
