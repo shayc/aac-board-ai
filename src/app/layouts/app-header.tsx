@@ -48,7 +48,7 @@ export function AppHeader({
           variant="h6"
           sx={{ flexGrow: 1, minWidth: 0 }}
         >
-          {boardMatch ? (
+          {boardMatch && pageTitle ? (
             <BoardSwitcher label={pageTitle} />
           ) : (
             <Box

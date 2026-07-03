@@ -19,7 +19,7 @@ export function BoardSwitcherPanel({
   selectedBoardId,
   onSelect,
 }: BoardSwitcherPanelProps) {
-  const { boards, isLoading } = useSetBoards({ setId });
+  const { boards, isLoading, error } = useSetBoards({ setId });
   const [query, setQuery] = useState("");
 
   const normalizedQuery = query.trim().toLocaleLowerCase();
@@ -40,12 +40,12 @@ export function BoardSwitcherPanel({
     >
       <Box sx={{ p: 1, flexShrink: 0 }}>
         <TextField
+          aria-label={m.boardSearch()}
           type="search"
           autoFocus
           size="small"
           fullWidth
           placeholder={m.boardSearch()}
-          aria-label={m.boardSearch()}
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
@@ -63,7 +63,17 @@ export function BoardSwitcherPanel({
         ))}
       </List>
 
-      {!isLoading && filteredBoards.length === 0 && (
+      {error && (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ px: 2, py: 1 }}
+        >
+          {m.errorGenericTitle()}
+        </Typography>
+      )}
+
+      {!isLoading && !error && filteredBoards.length === 0 && (
         <Typography
           variant="body2"
           color="text.secondary"

@@ -1,28 +1,47 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
-import { listBoards, type BoardRecord } from "../storage/boards-db";
+import { useLanguage } from "@shared/language/use-language";
+import { findTranslations } from "../translation/board-strings";
+import { listBoards } from "../storage/boards-db";
 
 export interface UseSetBoardsOptions {
   setId: string;
 }
 
+export interface BoardSwitcherItem {
+  boardId: string;
+  name: string;
+}
+
 export interface UseSetBoardsReturn {
-  boards: BoardRecord[];
+  boards: BoardSwitcherItem[];
   isLoading: boolean;
+  error: Error | undefined;
 }
 
 export function useSetBoards({
   setId,
 }: UseSetBoardsOptions): UseSetBoardsReturn {
-  const { value, isPending } = useLatestAsync({
+  const { language } = useLanguage();
+  const { value, error, isPending } = useLatestAsync({
     enabled: true,
     deps: [setId],
     fetch: () => listBoards(setId),
   });
 
-  const boards = value ?? [];
+  const records = value ?? [];
+
+  const boards = records.map((record) => {
+    const sourceName = record.obf.name ?? record.name;
+    const translated = findTranslations(record.obf.strings, language)?.[
+      sourceName
+    ];
+
+    return { boardId: record.boardId, name: translated ?? record.name };
+  });
 
   return {
-    boards: [...boards].sort((a, b) => a.name.localeCompare(b.name)),
+    boards: boards.sort((a, b) => a.name.localeCompare(b.name, language)),
     isLoading: isPending,
+    error,
   };
 }

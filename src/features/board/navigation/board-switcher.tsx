@@ -2,6 +2,7 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
+import { useTheme } from "@mui/material/styles";
 import { useId, useState } from "react";
 import { BoardSwitcherPanel } from "./board-switcher-panel";
 import { useBoardNavigation } from "./use-board-navigation";
@@ -14,6 +15,7 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
   const { setId, boardId, goToBoard } = useBoardNavigation();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverId = useId();
+  const inlineStart = useTheme().direction === "rtl" ? "right" : "left";
 
   if (!setId) {
     return null;
@@ -60,7 +62,8 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
         open={open}
         anchorEl={anchorEl}
         onClose={() => setAnchorEl(null)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: inlineStart }}
+        transformOrigin={{ vertical: "top", horizontal: inlineStart }}
         slotProps={{
           paper: {
             sx: {

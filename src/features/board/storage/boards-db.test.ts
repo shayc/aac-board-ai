@@ -13,7 +13,7 @@ import {
   updateBoardStrings,
   type ReplaceBoardSetInput,
 } from "./boards-db";
-import { clearBoardsDB } from "./test-utils";
+import { clearBoardsDB, makeOBFBoard } from "./test-utils";
 
 function makeReplaceInput(
   overrides: Partial<ReplaceBoardSetInput> = {},
@@ -22,20 +22,6 @@ function makeReplaceInput(
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root-1" },
     boards: [],
     assets: [],
-    ...overrides,
-  };
-}
-
-function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
-  return {
-    format: "open-board-0.1",
-    id: "board-1",
-    locale: "en",
-    name: "Test Board",
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    images: [],
-    sounds: [],
     ...overrides,
   };
 }

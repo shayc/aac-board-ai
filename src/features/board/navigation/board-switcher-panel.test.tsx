@@ -1,31 +1,47 @@
-import type { OBFBoard } from "@shayc/open-board-format";
+import { LanguageProvider } from "@shared/language/language-provider";
+import {
+  DEFAULT_LANGUAGE,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { replaceBoardSet } from "../storage/boards-db";
-import { clearBoardsDB } from "../storage/test-utils";
+import { clearBoardsDB, makeOBFBoard } from "../storage/test-utils";
 import { BoardSwitcherPanel } from "./board-switcher-panel";
 
-function makeOBFBoard(id: string): OBFBoard {
-  return {
-    format: "open-board-0.1",
-    id,
-    locale: "en",
-    name: id,
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    images: [],
-    sounds: [],
-  };
+function renderPanel(props: {
+  setId: string;
+  selectedBoardId: string | undefined;
+  onSelect: (boardId: string) => void;
+}) {
+  return render(
+    <LanguageProvider>
+      <BoardSwitcherPanel {...props} />
+    </LanguageProvider>,
+  );
 }
 
 beforeEach(async () => {
+  setStoredLanguage(DEFAULT_LANGUAGE);
   await clearBoardsDB();
   await replaceBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [
-      { boardId: "root", name: "Home", obf: makeOBFBoard("root") },
-      { boardId: "animals", name: "Animals", obf: makeOBFBoard("animals") },
-      { boardId: "food", name: "Food", obf: makeOBFBoard("food") },
+      {
+        boardId: "root",
+        name: "Home",
+        obf: makeOBFBoard({ id: "root", name: "Home" }),
+      },
+      {
+        boardId: "animals",
+        name: "Animals",
+        obf: makeOBFBoard({ id: "animals", name: "Animals" }),
+      },
+      {
+        boardId: "food",
+        name: "Food",
+        obf: makeOBFBoard({ id: "food", name: "Food" }),
+      },
     ],
     assets: [],
   });
@@ -33,13 +49,11 @@ beforeEach(async () => {
 
 describe("BoardSwitcherPanel", () => {
   test("lists the set's boards alphabetically", async () => {
-    const screen = await render(
-      <BoardSwitcherPanel
-        setId="set-1"
-        selectedBoardId="root"
-        onSelect={vi.fn()}
-      />,
-    );
+    const screen = await renderPanel({
+      setId: "set-1",
+      selectedBoardId: "root",
+      onSelect: vi.fn(),
+    });
 
     const items = screen.getByRole("button");
     await expect.element(items.first()).toHaveTextContent("Animals");
@@ -48,13 +62,11 @@ describe("BoardSwitcherPanel", () => {
   });
 
   test("filters by the search query", async () => {
-    const screen = await render(
-      <BoardSwitcherPanel
-        setId="set-1"
-        selectedBoardId="root"
-        onSelect={vi.fn()}
-      />,
-    );
+    const screen = await renderPanel({
+      setId: "set-1",
+      selectedBoardId: "root",
+      onSelect: vi.fn(),
+    });
 
     await screen.getByRole("searchbox").fill("ani");
 
@@ -63,13 +75,11 @@ describe("BoardSwitcherPanel", () => {
   });
 
   test("shows a no-results message when nothing matches", async () => {
-    const screen = await render(
-      <BoardSwitcherPanel
-        setId="set-1"
-        selectedBoardId="root"
-        onSelect={vi.fn()}
-      />,
-    );
+    const screen = await renderPanel({
+      setId: "set-1",
+      selectedBoardId: "root",
+      onSelect: vi.fn(),
+    });
 
     await screen.getByRole("searchbox").fill("zzz");
 
@@ -80,16 +90,52 @@ describe("BoardSwitcherPanel", () => {
 
   test("calls onSelect with the board id when a row is clicked", async () => {
     const onSelect = vi.fn();
-    const screen = await render(
-      <BoardSwitcherPanel
-        setId="set-1"
-        selectedBoardId="root"
-        onSelect={onSelect}
-      />,
-    );
+    const screen = await renderPanel({
+      setId: "set-1",
+      selectedBoardId: "root",
+      onSelect,
+    });
 
     await screen.getByRole("button", { name: "Food" }).click();
 
     expect(onSelect).toHaveBeenCalledExactlyOnceWith("food");
+  });
+
+  test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
+    await replaceBoardSet({
+      boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
+      boards: [
+        {
+          boardId: "root",
+          name: "Home",
+          obf: makeOBFBoard({
+            id: "root",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+        },
+        {
+          boardId: "animals",
+          name: "Animals",
+          obf: makeOBFBoard({ id: "animals", name: "Animals" }),
+        },
+      ],
+      assets: [],
+    });
+
+    setStoredLanguage("es");
+
+    const screen = await renderPanel({
+      setId: "set-2",
+      selectedBoardId: "root",
+      onSelect: vi.fn(),
+    });
+
+    await expect.element(screen.getByText("Inicio")).toBeInTheDocument();
+    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+
+    await screen.getByRole("searchbox").fill("Inicio");
+    await expect.element(screen.getByText("Inicio")).toBeInTheDocument();
+    await expect.element(screen.getByText("Animals")).not.toBeInTheDocument();
   });
 });

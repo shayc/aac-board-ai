@@ -1,33 +1,23 @@
-import type { OBFBoard } from "@shayc/open-board-format";
 import { AppProviders } from "@shared/providers/app-providers";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { replaceBoardSet } from "../storage/boards-db";
-import { clearBoardsDB } from "../storage/test-utils";
+import { clearBoardsDB, makeOBFBoard } from "../storage/test-utils";
 import { BoardSwitcher } from "./board-switcher";
-
-function makeOBFBoard(id: string): OBFBoard {
-  return {
-    format: "open-board-0.1",
-    id,
-    locale: "en",
-    name: id,
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    images: [],
-    sounds: [],
-  };
-}
 
 beforeEach(async () => {
   await clearBoardsDB();
   await replaceBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [
-      { boardId: "root", name: "Home", obf: makeOBFBoard("root") },
-      { boardId: "animals", name: "Animals", obf: makeOBFBoard("animals") },
+      { boardId: "root", name: "Home", obf: makeOBFBoard({ id: "root" }) },
+      {
+        boardId: "animals",
+        name: "Animals",
+        obf: makeOBFBoard({ id: "animals" }),
+      },
     ],
     assets: [],
   });
