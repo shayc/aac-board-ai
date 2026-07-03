@@ -93,6 +93,7 @@ export default defineConfig({
       "@mui/icons-material/*",
       "@mui/material/*",
       "@mui/stylis-plugin-rtl",
+      "@mui/utils/*",
       "react-dom/client",
       "react-router/dom",
       "stylis",

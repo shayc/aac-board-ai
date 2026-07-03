@@ -35,4 +35,33 @@ describe("Pictogram", () => {
     await expect.element(screen.getByText("Action")).toBeVisible();
     expect(screen.container.querySelector("img")).not.toBeNull();
   });
+
+  test("places the label above the image when labelPlacement is top", async () => {
+    const screen = await render(
+      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="top" />,
+    );
+
+    const container = screen.getByText("Action").element().parentElement;
+    if (!container) {
+      throw new Error("Pictogram container not found");
+    }
+    expect(getComputedStyle(container).flexDirection).toBe("column-reverse");
+  });
+
+  test("keeps the label accessible when labelPlacement is hidden", async () => {
+    const screen = await render(
+      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="hidden" />,
+    );
+
+    await expect.element(screen.getByText("Action")).toBeInTheDocument();
+  });
+
+  test("takes no layout space for the label when labelPlacement is hidden", async () => {
+    const screen = await render(
+      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="hidden" />,
+    );
+
+    const label = screen.getByText("Action").element();
+    expect(label.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+  });
 });

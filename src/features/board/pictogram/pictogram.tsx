@@ -1,17 +1,23 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import visuallyHidden from "@mui/utils/visuallyHidden";
 
 export interface PictogramProps {
   src?: string;
   label: string;
+  labelPlacement?: "top" | "bottom" | "hidden";
 }
 
-export function Pictogram({ src, label }: PictogramProps) {
+export function Pictogram({
+  src,
+  label,
+  labelPlacement = "bottom",
+}: PictogramProps) {
   return (
     <Box
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: labelPlacement === "top" ? "column-reverse" : "column",
         textAlign: "center",
         justifyContent: "center",
         gap: 1,
@@ -48,7 +54,7 @@ export function Pictogram({ src, label }: PictogramProps) {
         noWrap
         component="span"
         variant={src ? "body2" : "h5"}
-        sx={{ lineHeight: 1 }}
+        sx={labelPlacement === "hidden" ? visuallyHidden : { lineHeight: 1 }}
       >
         {label}
       </Typography>
