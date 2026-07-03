@@ -3,8 +3,8 @@ import {
   BoardSwitcher,
   NavButtons,
 } from "@features/board";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
@@ -41,7 +41,7 @@ export function AppHeader({
               color="inherit"
               onClick={onLibraryClick}
             >
-              <GridViewOutlinedIcon />
+              <ViewSidebarOutlinedIcon />
             </IconButton>
           </Tooltip>
         )}
