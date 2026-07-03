@@ -2,18 +2,18 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { PlaybackSettings } from "./playback-settings";
+import { BoardSettings } from "./board-settings";
 
-describe("PlaybackSettings", () => {
-  test("toggles the highlight-while-playing switch with no a11y violations", async () => {
+describe("BoardSettings", () => {
+  test("toggles the highlight-while-speaking switch with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
-        <PlaybackSettings />
+        <BoardSettings />
       </AppProviders>,
     );
 
     const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight while playing",
+      name: "Highlight words while speaking",
     });
 
     await expect.element(highlightSwitch).not.toBeChecked();

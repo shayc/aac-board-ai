@@ -1,5 +1,11 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import CloseIcon from "@mui/icons-material/Close";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -9,16 +15,27 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { AISettings } from "./ai-settings";
+import { ExternalLink } from "@shared/components/external-link";
+import { isSupported } from "@shayc/react-built-in-ai";
 import { AppearanceSettings } from "./appearance-settings";
+import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
-import { PlaybackSettings } from "./playback-settings";
 import { SpeechSettings } from "./speech-settings";
+import { SuggestionsSettings } from "./suggestions-settings";
 
 export interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
+
+const sectionHeadingSx = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+  fontWeight: 700,
+  mb: 2,
+  "& > svg": { color: "primary.main" },
+} as const;
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   return (
@@ -76,22 +93,67 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           }),
         ]}
       >
-        <AppearanceSettings />
-
-        <Divider sx={{ my: 3 }} />
-
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <WbSunnyOutlinedIcon fontSize="small" />
+          {m.settingsSectionAppearance()}
+        </Typography>
         <Stack spacing={3}>
+          <AppearanceSettings />
           <LanguageSettings />
-          <SpeechSettings />
         </Stack>
 
         <Divider sx={{ my: 3 }} />
 
-        <PlaybackSettings />
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <GridViewOutlinedIcon fontSize="small" />
+          {m.settingsSectionBoard()}
+        </Typography>
+        <Stack spacing={3}>
+          <BoardSettings />
+        </Stack>
 
         <Divider sx={{ my: 3 }} />
 
-        <AISettings />
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <VolumeUpOutlinedIcon fontSize="small" />
+          {m.settingsSectionSpeech()}
+        </Typography>
+        <Stack spacing={3}>
+          <SpeechSettings />
+        </Stack>
+
+        {isSupported("Rewriter") && (
+          <>
+            <Divider sx={{ my: 3 }} />
+
+            <Typography
+              component="h3"
+              variant="subtitle1"
+              sx={sectionHeadingSx}
+            >
+              <AutoAwesomeIcon fontSize="small" />
+              {m.settingsSectionSuggestions()}
+            </Typography>
+            <SuggestionsSettings />
+          </>
+        )}
+
+        <Divider sx={{ my: 3 }} />
+
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <InfoOutlinedIcon fontSize="small" />
+          {m.settingsSectionAbout()}
+        </Typography>
+        <ExternalLink
+          href="https://github.com/shayc/aac-board-ai"
+          color="text.secondary"
+        >
+          <GitHubIcon
+            fontSize="small"
+            sx={{ verticalAlign: "text-bottom", mr: 2 }}
+          />
+          {m.librarySourceCode()}
+        </ExternalLink>
       </Box>
     </Drawer>
   );
