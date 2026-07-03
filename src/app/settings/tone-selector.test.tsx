@@ -5,9 +5,9 @@ import { ToneSelector } from "./tone-selector";
 
 describe("ToneSelector", () => {
   test.each([
-    ["as-is", "direct tone"],
-    ["more-formal", "professional tone"],
-    ["more-casual", "friendly tone"],
+    ["as-is", "direct"],
+    ["more-formal", "professional"],
+    ["more-casual", "friendly"],
   ] as const)("checks %s as the %s radio", async (tone, label) => {
     const screen = await render(
       <ToneSelector tone={tone} onChange={vi.fn()} />,
@@ -25,7 +25,7 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    await screen.getByRole("radio", { name: "professional tone" }).click();
+    await screen.getByRole("radio", { name: "professional" }).click();
 
     expect(onChange).toHaveBeenCalledWith("more-formal");
     expect(onChange).toHaveBeenCalledTimes(1);
@@ -38,7 +38,7 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    screen.getByRole("radio", { name: "direct tone" }).element().focus();
+    screen.getByRole("radio", { name: "direct" }).element().focus();
     await userEvent.keyboard("{ArrowRight}");
 
     expect(onChange).toHaveBeenCalledWith("more-formal");
@@ -51,7 +51,7 @@ describe("ToneSelector", () => {
       <ToneSelector tone="as-is" onChange={onChange} />,
     );
 
-    await screen.getByRole("radio", { name: "direct tone" }).click();
+    await screen.getByRole("radio", { name: "direct" }).click();
 
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -62,7 +62,7 @@ describe("ToneSelector", () => {
     );
 
     await expect
-      .element(screen.getByRole("radio", { name: "professional tone" }))
+      .element(screen.getByRole("radio", { name: "professional" }))
       .toBeDisabled();
   });
 });
