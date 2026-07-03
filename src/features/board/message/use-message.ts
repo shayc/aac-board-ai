@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { BoardButton } from "../types";
-import { createPart, removeLastPartFromParts } from "./message-transforms";
+import { createPart, dropLastPart } from "./message-transforms";
 
 export type MessagePartContent = Pick<
   BoardButton,
@@ -35,7 +35,7 @@ export function useMessage(): UseMessageReturn {
   }
 
   function removeLastPart() {
-    setParts((prev) => removeLastPartFromParts(prev));
+    setParts((prev) => dropLastPart(prev));
   }
 
   function clear() {

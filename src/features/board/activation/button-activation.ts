@@ -2,10 +2,10 @@ import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speak";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  addPartToParts,
-  addSpaceToParts,
+  appendPart,
+  appendSpace,
   appendTextToLastPart,
-  removeLastPartFromParts,
+  dropLastPart,
 } from "../message/message-transforms";
 import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { MessagePart, UseMessageReturn } from "../message/use-message";
@@ -40,7 +40,7 @@ export function createButtonActivation({
           navigation.goToBoard(intent.targetBoardId);
           break;
         case "compose":
-          parts = addPartToParts(parts, intent.content);
+          parts = appendPart(parts, intent.content);
           break;
         case "playAudio":
           void playAudio(intent.src);
@@ -54,10 +54,10 @@ export function createButtonActivation({
               parts = appendTextToLastPart(parts, intent.action.text);
               break;
             case "space":
-              parts = addSpaceToParts(parts);
+              parts = appendSpace(parts);
               break;
             case "backspace":
-              parts = removeLastPartFromParts(parts);
+              parts = dropLastPart(parts);
               break;
             case "clear":
               parts = [];

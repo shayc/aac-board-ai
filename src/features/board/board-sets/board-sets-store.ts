@@ -13,7 +13,7 @@ export interface BoardSetsSnapshot {
 
 const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
 boardSetsSyncChannel.addEventListener("message", () => {
-  void invalidateBoardSets();
+  void refreshBoardSets();
 });
 
 const store = createExternalStore<BoardSetsSnapshot>({
@@ -50,13 +50,13 @@ function ensureLoaded(): Promise<void> {
   return pendingLoad ?? Promise.resolve();
 }
 
-export async function invalidateBoardSets(): Promise<void> {
+export async function refreshBoardSets(): Promise<void> {
   pendingLoad = loadBoardSets();
   await pendingLoad;
 }
 
 export async function notifyBoardSetsChanged(): Promise<void> {
-  await invalidateBoardSets();
+  await refreshBoardSets();
   boardSetsSyncChannel.postMessage("invalidate");
 }
 

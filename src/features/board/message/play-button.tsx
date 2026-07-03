@@ -17,13 +17,13 @@ export function PlayButton({
   onPlayClick,
   onStopClick,
 }: PlayButtonProps) {
-  const playButtonLabel = isPlaying ? m.messageStop() : m.messagePlay();
+  const label = isPlaying ? m.messageStop() : m.messagePlay();
 
   return (
     <Fab
       color={isPlaying ? "default" : "primary"}
       disabled={disabled}
-      aria-label={playButtonLabel}
+      aria-label={label}
       onClick={isPlaying ? onStopClick : onPlayClick}
       sx={{
         width: 72,

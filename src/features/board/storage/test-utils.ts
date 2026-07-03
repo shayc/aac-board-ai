@@ -1,4 +1,4 @@
-import { invalidateBoardSets } from "../board-sets/board-sets-store";
+import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { getBoardsDB, replaceBoardSet, type BoardSetRecord } from "./boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
@@ -20,7 +20,7 @@ export async function clearBoardsDB(): Promise<void> {
 
 export async function resetBoardsDB(): Promise<void> {
   await clearBoardsDB();
-  await invalidateBoardSets();
+  await refreshBoardSets();
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
@@ -33,5 +33,5 @@ export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
     });
   }
 
-  await invalidateBoardSets();
+  await refreshBoardSets();
 }

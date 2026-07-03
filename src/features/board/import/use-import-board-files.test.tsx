@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
 import { resetBoardsDB } from "../storage/test-utils";
-import { persistBoardFiles } from "./board-import";
+import { importBoardSets } from "./board-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
@@ -43,7 +43,7 @@ describe("useImportBoardFiles", () => {
 
   test("shows the replaced message when the set already exists", async () => {
     const file = await loadFixtureFile(OBF_FIXTURE);
-    await persistBoardFiles(file);
+    await importBoardSets(file);
 
     const screen = await renderImport([file]);
     await screen.getByRole("button", { name: "import" }).click();

@@ -9,13 +9,13 @@ import {
   listBoardSets,
 } from "../storage/boards-db";
 import { resetBoardsDB } from "../storage/test-utils";
-import { persistBoardFiles, resolveLoadBoardPaths } from "./board-import";
+import { importBoardSets, resolveLoadBoardPaths } from "./board-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
-describe("persistBoardFiles", () => {
+describe("importBoardSets", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -24,7 +24,7 @@ describe("persistBoardFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    const importResults = await persistBoardFiles(fixtureFile);
+    const importResults = await importBoardSets(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -77,7 +77,7 @@ describe("persistBoardFiles", () => {
     assertDefined(sampleAssetEntry);
     const [sampleAssetPath, sampleAssetBytes] = sampleAssetEntry;
 
-    const importResults = await persistBoardFiles(fixtureFile);
+    const importResults = await importBoardSets(fixtureFile);
 
     expect(importResults).toEqual([
       {
@@ -156,7 +156,7 @@ describe("persistBoardFiles", () => {
       type: "application/zip",
     });
 
-    const importResults = await persistBoardFiles(zipNamedFile);
+    const importResults = await importBoardSets(zipNamedFile);
 
     expect(importResults).toHaveLength(1);
     expect(importResults[0].setId).toBe(IMPORTED_SET_ID);
@@ -175,7 +175,7 @@ describe("persistBoardFiles", () => {
       type: "application/octet-stream",
     });
 
-    const importResults = await persistBoardFiles(extensionOnlyFile);
+    const importResults = await importBoardSets(extensionOnlyFile);
 
     expect(importResults[0].setId).toBe("imported-board");
   });
@@ -186,7 +186,7 @@ describe("persistBoardFiles", () => {
       type: "application/octet-stream",
     });
 
-    const importResults = await persistBoardFiles(longNamedFile);
+    const importResults = await importBoardSets(longNamedFile);
 
     expect(importResults[0].setId).toBe("x".repeat(255));
   });
@@ -194,10 +194,10 @@ describe("persistBoardFiles", () => {
   test("re-importing the same filename replaces the existing set", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
 
-    const first = await persistBoardFiles(fixtureFile);
+    const first = await importBoardSets(fixtureFile);
     expect(first[0].replacedExisting).toBe(false);
 
-    const second = await persistBoardFiles(fixtureFile);
+    const second = await importBoardSets(fixtureFile);
     expect(second[0].replacedExisting).toBe(true);
 
     const boardSets = await listBoardSets();
@@ -210,7 +210,7 @@ describe("persistBoardFiles", () => {
       type: "application/json",
     });
 
-    await expect(persistBoardFiles([goodFile, corruptFile])).rejects.toThrow();
+    await expect(importBoardSets([goodFile, corruptFile])).rejects.toThrow();
 
     const boardSets = await listBoardSets();
     expect(boardSets.map((set) => set.setId)).toContain(IMPORTED_SET_ID);

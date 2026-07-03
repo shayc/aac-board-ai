@@ -1,4 +1,4 @@
-import { persistBoardFiles, type ImportResult } from "./board-import";
+import { importBoardSets, type ImportResult } from "./board-import";
 
 export async function importBoardFromUrl(url: string): Promise<ImportResult> {
   const response = await fetch(url);
@@ -15,7 +15,7 @@ export async function importBoardFromUrl(url: string): Promise<ImportResult> {
     type: blob.type || "application/octet-stream",
   });
 
-  const [result] = await persistBoardFiles(file);
+  const [result] = await importBoardSets(file);
 
   return result;
 }
