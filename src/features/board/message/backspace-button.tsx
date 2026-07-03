@@ -1,5 +1,5 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
-import IconButton from "@mui/material/IconButton";
+import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -26,13 +26,16 @@ export function BackspaceButton({
   });
 
   return (
-    <IconButton
+    <Button
       {...mergeProps(pressProps, longPressProps)}
       aria-label={m.messageBackspace()}
       size="large"
+      color="inherit"
       disabled={disabled}
+      variant="contained"
+      sx={{ width: 96, borderRadius: 4 }}
     >
       <BackspaceOutlinedIcon sx={flipForRtl} />
-    </IconButton>
+    </Button>
   );
 }
