@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
+import { PendingDot } from "./pending-dot";
 import { SuggestionStatus } from "./suggestion-status";
 
 export interface SuggestionBarProps {
@@ -42,6 +43,10 @@ export function SuggestionBar({
           />
         ))}
       </Box>
+
+      {(status === null || status.kind === "pending") && (
+        <PendingDot show={status?.kind === "pending"} />
+      )}
     </Stack>
   );
 }
