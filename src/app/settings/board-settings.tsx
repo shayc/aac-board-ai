@@ -6,7 +6,7 @@ import {
   usePlaybackConfig,
 } from "@shared/playback/playback-store";
 
-export function PlaybackSettings() {
+export function BoardSettings() {
   const { highlightActivePart } = usePlaybackConfig();
 
   return (

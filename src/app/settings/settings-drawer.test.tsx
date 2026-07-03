@@ -32,15 +32,19 @@ describe("SettingsDrawer", () => {
       .toBeInTheDocument();
 
     await expect
-      .element(screen.getByRole("heading", { name: "Speech" }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("combobox", { name: "Voice" }))
+      .element(screen.getByRole("heading", { name: "Board" }))
       .toBeInTheDocument();
     await expect
       .element(
         screen.getByRole("switch", { name: "Highlight words while speaking" }),
       )
+      .toBeInTheDocument();
+
+    await expect
+      .element(screen.getByRole("heading", { name: "Speech" }))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Voice" }))
       .toBeInTheDocument();
 
     await expect

@@ -1,8 +1,9 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import CloseIcon from "@mui/icons-material/Close";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
 import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import Box from "@mui/material/Box";
@@ -17,8 +18,8 @@ import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
 import { isSupported } from "@shayc/react-built-in-ai";
 import { AppearanceSettings } from "./appearance-settings";
+import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
-import { PlaybackSettings } from "./playback-settings";
 import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
 
@@ -104,12 +105,21 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <GridViewOutlinedIcon fontSize="small" />
+          {m.settingsSectionBoard()}
+        </Typography>
+        <Stack spacing={3}>
+          <BoardSettings />
+        </Stack>
+
+        <Divider sx={{ my: 3 }} />
+
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <VolumeUpOutlinedIcon fontSize="small" />
           {m.settingsSectionSpeech()}
         </Typography>
         <Stack spacing={3}>
           <SpeechSettings />
-          <PlaybackSettings />
         </Stack>
 
         {isSupported("Rewriter") && (
@@ -121,7 +131,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
               variant="subtitle1"
               sx={sectionHeadingSx}
             >
-              <LightbulbOutlinedIcon fontSize="small" />
+              <AutoAwesomeIcon fontSize="small" />
               {m.settingsSectionSuggestions()}
             </Typography>
             <SuggestionsSettings />
