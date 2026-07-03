@@ -18,8 +18,6 @@ function createProps(
     parts: [],
     activePartId: null,
     isPlaying: false,
-    onBackspacePress: vi.fn(),
-    onBackspaceLongPress: vi.fn(),
     onPlayClick: vi.fn(),
     onStopClick: vi.fn(),
     ...overrides,
@@ -144,18 +142,6 @@ describe("MessageBar", () => {
   });
 
   describe("controls", () => {
-    test("delegates a backspace press to onBackspacePress", async () => {
-      const onBackspacePress = vi.fn();
-
-      const screen = await render(
-        <MessageBar {...createProps({ onBackspacePress })} />,
-      );
-
-      await screen.getByRole("button", { name: "Backspace" }).click();
-
-      expect(onBackspacePress).toHaveBeenCalledTimes(1);
-    });
-
     test("delegates play to onPlayClick while idle", async () => {
       const onPlayClick = vi.fn();
 
