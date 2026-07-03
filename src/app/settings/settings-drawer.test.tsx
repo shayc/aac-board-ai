@@ -38,7 +38,9 @@ describe("SettingsDrawer", () => {
       .element(screen.getByRole("combobox", { name: "Voice" }))
       .toBeInTheDocument();
     await expect
-      .element(screen.getByRole("switch", { name: "Highlight while playing" }))
+      .element(
+        screen.getByRole("switch", { name: "Highlight words while speaking" }),
+      )
       .toBeInTheDocument();
 
     await expect
