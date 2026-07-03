@@ -1,3 +1,4 @@
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -120,6 +121,7 @@ export function SpeechSettings() {
       <Button
         variant="contained"
         color="primary"
+        startIcon={<PlayArrowIcon />}
         sx={{ alignSelf: "flex-start" }}
         onClick={() => void speak(m.speechVoicePreview())}
       >

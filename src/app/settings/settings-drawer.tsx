@@ -1,6 +1,10 @@
 import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import LightbulbOutlinedIcon from "@mui/icons-material/LightbulbOutlined";
+import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -12,18 +16,25 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
 import { isSupported } from "@shayc/react-built-in-ai";
-import { SuggestionsSettings } from "./suggestions-settings";
 import { AppearanceSettings } from "./appearance-settings";
 import { LanguageSettings } from "./language-settings";
 import { PlaybackSettings } from "./playback-settings";
 import { SpeechSettings } from "./speech-settings";
+import { SuggestionsSettings } from "./suggestions-settings";
 
 export interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
 
-const sectionHeadingSx = { fontWeight: 700, mb: 2 } as const;
+const sectionHeadingSx = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+  fontWeight: 700,
+  mb: 2,
+  "& > svg": { color: "primary.main" },
+} as const;
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   return (
@@ -81,7 +92,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           }),
         ]}
       >
-        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <WbSunnyOutlinedIcon fontSize="small" />
           {m.settingsSectionAppearance()}
         </Typography>
         <Stack spacing={3}>
@@ -91,7 +103,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Divider sx={{ my: 3 }} />
 
-        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <VolumeUpOutlinedIcon fontSize="small" />
           {m.settingsSectionSpeech()}
         </Typography>
         <Stack spacing={3}>
@@ -105,9 +118,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
             <Typography
               component="h3"
-              variant="subtitle2"
+              variant="subtitle1"
               sx={sectionHeadingSx}
             >
+              <LightbulbOutlinedIcon fontSize="small" />
               {m.settingsSectionSuggestions()}
             </Typography>
             <SuggestionsSettings />
@@ -116,7 +130,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Divider sx={{ my: 3 }} />
 
-        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <InfoOutlinedIcon fontSize="small" />
           {m.settingsSectionAbout()}
         </Typography>
         <ExternalLink

@@ -24,7 +24,6 @@ export function AppearanceSettings() {
       <RadioGroup
         aria-labelledby="theme-toggle"
         name="theme-toggle"
-        row
         value={mode}
         onChange={(event) =>
           setMode(event.target.value as "system" | "light" | "dark")
