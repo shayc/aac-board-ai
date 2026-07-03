@@ -49,27 +49,23 @@ export function AppHeader({
 
         <NavButtons />
 
-        <Typography
-          component="h1"
-          variant="h6"
-          sx={{ flexGrow: 1, minWidth: 0 }}
-        >
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
           {boardMatch && pageTitle ? (
             <BoardSwitcher label={pageTitle} />
           ) : (
-            <Box
-              component="span"
+            <Typography
+              component="h1"
+              variant="h6"
               sx={{
-                display: "block",
                 overflow: "hidden",
                 whiteSpace: "nowrap",
                 textOverflow: "ellipsis",
               }}
             >
               {pageTitle}
-            </Box>
+            </Typography>
           )}
-        </Typography>
+        </Box>
 
         <Tooltip title={m.settingsOpen()}>
           <IconButton
