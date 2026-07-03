@@ -93,6 +93,7 @@
   "aiStatusDownloading": "డౌన్‌లోడ్ అవుతోంది…",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది…",
   "suggestionsUnavailable": "సూచనలు అందుబాటులో లేవు",
   "aiFeatureProofreading": "ప్రూఫ్‌రీడింగ్",
   "aiFeatureRewriting": "తిరిగి రాయడం",

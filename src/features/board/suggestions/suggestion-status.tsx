@@ -37,9 +37,9 @@ function statusMessage(status: SuggestionStatusView, onEnable: () => void) {
     case "downloading":
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {m.suggestionsDownloading({
-            progress: Math.round(status.progress * 100),
-          })}
+          {status.percent === null
+            ? m.suggestionsDownloadingIndeterminate()
+            : m.suggestionsDownloading({ progress: status.percent })}
         </Typography>
       );
     case "unavailable":

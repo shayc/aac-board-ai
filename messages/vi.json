@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Đang tải xuống…",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Đang tải mô hình AI xuống…",
   "suggestionsUnavailable": "Gợi ý không khả dụng",
   "aiFeatureProofreading": "Hiệu đính",
   "aiFeatureRewriting": "Viết lại",

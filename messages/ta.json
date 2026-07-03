@@ -93,6 +93,7 @@
   "aiStatusDownloading": "பதிவிறக்கப்படுகிறது…",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI மாடல் பதிவிறக்கப்படுகிறது…",
   "suggestionsUnavailable": "பரிந்துரைகள் கிடைக்கவில்லை",
   "aiFeatureProofreading": "மெய்ப்புத் திருத்தம்",
   "aiFeatureRewriting": "மறுஎழுத்து",

@@ -93,6 +93,7 @@
   "aiStatusDownloading": "다운로드 중…",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI 모델 다운로드 중…",
   "suggestionsUnavailable": "제안을 사용할 수 없음",
   "aiFeatureProofreading": "교정",
   "aiFeatureRewriting": "다시 쓰기",

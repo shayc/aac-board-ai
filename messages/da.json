@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Downloader…",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Downloader AI-model…",
   "suggestionsUnavailable": "Forslag er ikke tilgængelige",
   "aiFeatureProofreading": "Korrekturlæsning",
   "aiFeatureRewriting": "Omskrivning",

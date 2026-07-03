@@ -55,8 +55,18 @@ describe("deriveSuggestionStatus", () => {
 
     expect(deriveSuggestionStatus(input)).toEqual({
       kind: "downloading",
-      progress: 0.43,
+      percent: 43,
     });
+  });
+
+  test("treats a download without measurable progress as indeterminate", () => {
+    expect(deriveSuggestionStatus(makeInput({ downloadProgress: 0 }))).toEqual({
+      kind: "downloading",
+      percent: null,
+    });
+    expect(
+      deriveSuggestionStatus(makeInput({ downloadProgress: 0.004 })),
+    ).toEqual({ kind: "downloading", percent: null });
   });
 
   test("shows pending while any request is in flight, even with phrases showing", () => {

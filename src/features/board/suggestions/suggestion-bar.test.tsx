@@ -94,12 +94,24 @@ describe("SuggestionBar", () => {
   test("shows download progress while the model downloads", async () => {
     const screen = await render(
       <SuggestionBar
-        {...makeProps({ status: { kind: "downloading", progress: 0.43 } })}
+        {...makeProps({ status: { kind: "downloading", percent: 43 } })}
       />,
     );
 
     await expect
       .element(screen.getByText("Downloading AI model... 43%"))
+      .toBeVisible();
+  });
+
+  test("shows a percentless download message while progress is unknown", async () => {
+    const screen = await render(
+      <SuggestionBar
+        {...makeProps({ status: { kind: "downloading", percent: null } })}
+      />,
+    );
+
+    await expect
+      .element(screen.getByText("Downloading AI model...", { exact: true }))
       .toBeVisible();
   });
 

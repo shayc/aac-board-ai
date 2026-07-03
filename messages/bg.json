@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Изтегляне…",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Изтегляне на модела на ИИ…",
   "suggestionsUnavailable": "Предложенията не са налични",
   "aiFeatureProofreading": "Коректура",
   "aiFeatureRewriting": "Преписване",

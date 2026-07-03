@@ -93,6 +93,7 @@
   "aiStatusDownloading": "ডাউনলোড হচ্ছে…",
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI মডেল ডাউনলোড হচ্ছে…",
   "suggestionsUnavailable": "পরামর্শ উপলব্ধ নয়",
   "aiFeatureProofreading": "প্রুফরিডিং",
   "aiFeatureRewriting": "পুনর্লিখন",

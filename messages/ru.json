@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Загрузка…",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Загрузка модели ИИ…",
   "suggestionsUnavailable": "Предложения недоступны",
   "aiFeatureProofreading": "Корректура",
   "aiFeatureRewriting": "Перефразирование",

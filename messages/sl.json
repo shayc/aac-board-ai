@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Prenašanje…",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
+  "suggestionsDownloadingIndeterminate": "Prenašanje modela UI…",
   "suggestionsUnavailable": "Predlogi niso na voljo",
   "aiFeatureProofreading": "Lektoriranje",
   "aiFeatureRewriting": "Preoblikovanje",

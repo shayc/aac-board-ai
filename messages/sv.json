@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Laddar ner…",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Laddar ner AI-modell…",
   "suggestionsUnavailable": "Förslag är inte tillgängliga",
   "aiFeatureProofreading": "Korrekturläsning",
   "aiFeatureRewriting": "Omskrivning",
