@@ -11,7 +11,8 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
-import { AISettings } from "./ai-settings";
+import { isSupported } from "@shayc/react-built-in-ai";
+import { SuggestionsSettings } from "./suggestions-settings";
 import { AppearanceSettings } from "./appearance-settings";
 import { LanguageSettings } from "./language-settings";
 import { PlaybackSettings } from "./playback-settings";
@@ -21,6 +22,8 @@ export interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
+
+const sectionHeadingSx = { fontWeight: 700, mb: 2 } as const;
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   return (
@@ -78,23 +81,44 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           }),
         ]}
       >
-        <AppearanceSettings />
-
-        <Divider sx={{ my: 3 }} />
-
+        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+          {m.settingsSectionAppearance()}
+        </Typography>
         <Stack spacing={3}>
+          <AppearanceSettings />
           <LanguageSettings />
-          <SpeechSettings />
         </Stack>
 
         <Divider sx={{ my: 3 }} />
 
-        <PlaybackSettings />
+        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+          {m.settingsSectionSpeech()}
+        </Typography>
+        <Stack spacing={3}>
+          <SpeechSettings />
+          <PlaybackSettings />
+        </Stack>
+
+        {isSupported("Rewriter") && (
+          <>
+            <Divider sx={{ my: 3 }} />
+
+            <Typography
+              component="h3"
+              variant="subtitle2"
+              sx={sectionHeadingSx}
+            >
+              {m.settingsSectionSuggestions()}
+            </Typography>
+            <SuggestionsSettings />
+          </>
+        )}
 
         <Divider sx={{ my: 3 }} />
 
-        <AISettings />
-
+        <Typography component="h3" variant="subtitle2" sx={sectionHeadingSx}>
+          {m.settingsSectionAbout()}
+        </Typography>
         <ExternalLink
           href="https://github.com/shayc/aac-board-ai"
           color="text.secondary"

@@ -33,7 +33,6 @@ export function ToneSelector({
       <RadioGroup
         aria-labelledby="tone-selector"
         name="tone-selector"
-        row
         value={tone}
         onChange={(_event, value) => onChange(value as RewriterTone)}
       >
