@@ -45,9 +45,7 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
         option.boardId === selected.boardId
       }
       sx={{ width: 300, maxWidth: "100%" }}
-      renderInput={(params) => (
-        <TextField {...params} label={m.boardSearch()} />
-      )}
+      renderInput={(params) => <TextField {...params} label={m.board()} />}
     />
   );
 }
