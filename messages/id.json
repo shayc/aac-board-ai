@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Memuat...",
   "close": "Tutup",
-  "boardLoading": "Memuat papan...",
   "boardGridLabel": "Papan komunikasi",
   "board": "Papan",
   "libraryLoading": "Memuat papan...",

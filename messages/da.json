@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Indlæser...",
   "close": "Luk",
-  "boardLoading": "Indlæser tavle...",
   "boardGridLabel": "Kommunikationstavle",
   "board": "Tavle",
   "libraryLoading": "Indlæser tavler...",

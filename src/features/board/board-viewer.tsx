@@ -54,7 +54,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
       key={button.id}
-      label={button.label}
+      label={button.label ?? ""}
       imageSrc={button.imageSrc}
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}

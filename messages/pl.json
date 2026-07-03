@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Ładowanie...",
   "close": "Zamknij",
-  "boardLoading": "Ładowanie tablicy...",
   "boardGridLabel": "Tablica komunikacyjna",
   "board": "Tablica",
   "libraryLoading": "Ładowanie tablic...",

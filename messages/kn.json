@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "close": "ಮುಚ್ಚಿ",
-  "boardLoading": "ಬೋರ್ಡ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",
   "board": "ಬೋರ್ಡ್",
   "libraryLoading": "ಬೋರ್ಡ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",

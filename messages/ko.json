@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "불러오는 중…",
   "close": "닫기",
-  "boardLoading": "보드를 불러오는 중…",
   "boardGridLabel": "의사소통 보드",
   "board": "보드",
   "libraryLoading": "보드를 불러오는 중…",

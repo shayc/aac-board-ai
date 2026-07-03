@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",
-  "boardLoading": "बोर्ड लोड हो रहा है…",
   "boardGridLabel": "संचार बोर्ड",
   "board": "बोर्ड",
   "libraryLoading": "बोर्ड लोड हो रहे हैं…",

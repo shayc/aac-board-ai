@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Laddar...",
   "close": "Stäng",
-  "boardLoading": "Laddar tavla...",
   "boardGridLabel": "Kommunikationstavla",
   "board": "Tavla",
   "libraryLoading": "Laddar tavlor...",

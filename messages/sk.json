@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Načítava sa...",
   "close": "Zavrieť",
-  "boardLoading": "Načítava sa tabuľka...",
   "boardGridLabel": "Komunikačná tabuľka",
   "board": "Tabuľka",
   "libraryLoading": "Načítavajú sa tabuľky...",

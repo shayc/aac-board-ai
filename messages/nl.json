@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Laden...",
   "close": "Sluiten",
-  "boardLoading": "Bord laden...",
   "boardGridLabel": "Communicatiebord",
   "board": "Bord",
   "libraryLoading": "Borden laden...",

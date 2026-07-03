@@ -2,7 +2,6 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Yükleniyor...",
   "close": "Kapat",
-  "boardLoading": "Pano yükleniyor...",
   "boardGridLabel": "İletişim panosu",
   "board": "Pano",
   "libraryLoading": "Panolar yükleniyor...",
