@@ -40,6 +40,7 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
         sx={{
           font: "inherit",
           textTransform: "none",
+          px: 2,
           marginInlineStart: -1,
           maxWidth: "100%",
         }}
