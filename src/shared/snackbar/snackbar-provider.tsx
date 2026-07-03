@@ -11,18 +11,18 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 
-interface SnackbarMessage extends SnackbarOptions {
+interface QueuedSnackbar extends SnackbarOptions {
   key: number;
 }
 
 interface SnackbarState {
-  queue: SnackbarMessage[];
-  current: SnackbarMessage | undefined;
+  queue: QueuedSnackbar[];
+  current: QueuedSnackbar | undefined;
   open: boolean;
 }
 
 type SnackbarAction =
-  | { type: "show"; message: SnackbarMessage }
+  | { type: "show"; snackbar: QueuedSnackbar }
   | { type: "close" }
   | { type: "exited" };
 
@@ -45,11 +45,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
-    const message: SnackbarMessage = {
+    const snackbar: QueuedSnackbar = {
       ...snackbarOptions,
       key: nextKeyRef.current++,
     };
-    dispatch({ type: "show", message });
+    dispatch({ type: "show", snackbar });
   };
 
   const handleClose = (
@@ -108,12 +108,12 @@ function snackbarReducer(
       if (state.current) {
         return {
           ...state,
-          queue: [...state.queue, action.message],
+          queue: [...state.queue, action.snackbar],
           open: false,
         };
       }
 
-      return { ...state, current: action.message, open: true };
+      return { ...state, current: action.snackbar, open: true };
     }
 
     case "close":

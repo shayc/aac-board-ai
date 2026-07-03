@@ -1,15 +1,15 @@
 import { describe, expect, test } from "vitest";
 import {
-  addPartToParts,
-  addSpaceToParts,
+  appendPart,
+  appendSpace,
   appendTextToLastPart,
-  removeLastPartFromParts,
+  dropLastPart,
 } from "./message-transforms";
 import type { MessagePart } from "./use-message";
 
-describe("addPartToParts", () => {
+describe("appendPart", () => {
   test("appends a new part with a minted id", () => {
-    const parts = addPartToParts([], { label: "hi" });
+    const parts = appendPart([], { label: "hi" });
 
     expect(parts).toHaveLength(1);
     expect(parts[0].label).toBe("hi");
@@ -17,8 +17,8 @@ describe("addPartToParts", () => {
   });
 
   test("mints a distinct id for each part even with identical content", () => {
-    const first = addPartToParts([], { label: "cat" });
-    const second = addPartToParts(first, { label: "cat" });
+    const first = appendPart([], { label: "cat" });
+    const second = appendPart(first, { label: "cat" });
 
     expect(second[0].id).not.toBe(second[1].id);
   });
@@ -26,16 +26,16 @@ describe("addPartToParts", () => {
   test("leaves the input array untouched", () => {
     const original: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const result = addPartToParts(original, { label: "there" });
+    const result = appendPart(original, { label: "there" });
 
     expect(original).toHaveLength(1);
     expect(result).toHaveLength(2);
   });
 });
 
-describe("addSpaceToParts", () => {
+describe("appendSpace", () => {
   test("appends an empty-label part", () => {
-    const parts = addSpaceToParts([{ id: "1", label: "hi" }]);
+    const parts = appendSpace([{ id: "1", label: "hi" }]);
 
     expect(parts).toHaveLength(2);
     expect(parts[1].label).toBe("");
@@ -82,9 +82,9 @@ describe("appendTextToLastPart", () => {
   });
 });
 
-describe("removeLastPartFromParts", () => {
+describe("dropLastPart", () => {
   test("removes the last part", () => {
-    const parts = removeLastPartFromParts([
+    const parts = dropLastPart([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
     ]);
@@ -93,10 +93,10 @@ describe("removeLastPartFromParts", () => {
   });
 
   test("returns an empty array when there is only one part", () => {
-    expect(removeLastPartFromParts([{ id: "1", label: "hi" }])).toEqual([]);
+    expect(dropLastPart([{ id: "1", label: "hi" }])).toEqual([]);
   });
 
   test("returns an empty array when already empty", () => {
-    expect(removeLastPartFromParts([])).toEqual([]);
+    expect(dropLastPart([])).toEqual([]);
   });
 });

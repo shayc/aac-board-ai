@@ -4,7 +4,7 @@ import { openFiles } from "@shared/utils/file-picker";
 import { useNavigate } from "react-router";
 import { boardSetPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-types";
-import { persistBoardFiles, type ImportResult } from "./board-import";
+import { importBoardSets, type ImportResult } from "./board-import";
 
 export interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
@@ -28,7 +28,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      const results = await persistBoardFiles(files);
+      const results = await importBoardSets(files);
 
       const replacedExisting = results.some(
         (result) => result.replacedExisting,

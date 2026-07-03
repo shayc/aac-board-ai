@@ -5,15 +5,15 @@ export function createPart(content: MessagePartContent): MessagePart {
   return { ...content, id: randomId() };
 }
 
-export function addPartToParts(
+export function appendPart(
   parts: MessagePart[],
   content: MessagePartContent,
 ): MessagePart[] {
   return [...parts, createPart(content)];
 }
 
-export function addSpaceToParts(parts: MessagePart[]): MessagePart[] {
-  return addPartToParts(parts, { label: "" });
+export function appendSpace(parts: MessagePart[]): MessagePart[] {
+  return appendPart(parts, { label: "" });
 }
 
 export function appendTextToLastPart(
@@ -31,6 +31,6 @@ export function appendTextToLastPart(
   });
 }
 
-export function removeLastPartFromParts(parts: MessagePart[]): MessagePart[] {
+export function dropLastPart(parts: MessagePart[]): MessagePart[] {
   return parts.slice(0, -1);
 }

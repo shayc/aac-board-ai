@@ -1,7 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
-import { invalidateBoardSets } from "../board-sets/board-sets-store";
+import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { hydrateBoard } from "./board-hydration";
 import { BoardNotFoundError, replaceBoardSet } from "./boards-db";
 import { resetBoardsDB } from "./test-utils";
@@ -34,7 +34,7 @@ async function seedTestBoard(): Promise<void> {
     assets: [{ path: IMAGE_PATH, blob: pngBlob }],
   });
 
-  await invalidateBoardSets();
+  await refreshBoardSets();
 }
 
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
@@ -65,7 +65,7 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
 describe("hydrateBoard", () => {
   beforeEach(async () => {
     await resetBoardsDB();
-    await invalidateBoardSets();
+    await refreshBoardSets();
   });
 
   test("returns a hydrated board on the happy path", async () => {

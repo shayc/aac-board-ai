@@ -21,7 +21,7 @@ export interface ImportResult {
   replacedExisting: boolean;
 }
 
-export async function persistBoardFiles(
+export async function importBoardSets(
   files: File | File[],
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
@@ -153,8 +153,8 @@ function buildBoardSetInput(
   };
 }
 
-function deriveSetId(filename: string): string {
-  const stem = filename.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
+function deriveSetId(fileName: string): string {
+  const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";
 }
