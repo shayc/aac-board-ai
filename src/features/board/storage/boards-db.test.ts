@@ -7,12 +7,13 @@ import {
   getAssetBlob,
   getBoard,
   getBoardsDB,
+  listBoards,
   listBoardSets,
   replaceBoardSet,
   updateBoardStrings,
   type ReplaceBoardSetInput,
 } from "./boards-db";
-import { clearBoardsDB } from "./test-utils";
+import { clearBoardsDB, makeOBFBoard } from "./test-utils";
 
 function makeReplaceInput(
   overrides: Partial<ReplaceBoardSetInput> = {},
@@ -21,20 +22,6 @@ function makeReplaceInput(
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root-1" },
     boards: [],
     assets: [],
-    ...overrides,
-  };
-}
-
-function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
-  return {
-    format: "open-board-0.1",
-    id: "board-1",
-    locale: "en",
-    name: "Test Board",
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    images: [],
-    sounds: [],
     ...overrides,
   };
 }
@@ -273,6 +260,38 @@ describe("getBoard", () => {
 
     const board = await getBoard("set-1", "nonexistent");
     expect(board).toBeUndefined();
+  });
+});
+
+describe("listBoards", () => {
+  test("returns only the set's boards", async () => {
+    await replaceBoardSet(
+      makeReplaceInput({
+        boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "a" },
+        boards: [
+          { boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) },
+          { boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) },
+        ],
+      }),
+    );
+    await replaceBoardSet(
+      makeReplaceInput({
+        boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "c" },
+        boards: [{ boardId: "c", name: "C", obf: makeOBFBoard({ id: "c" }) }],
+      }),
+    );
+
+    const boards = await listBoards("set-1");
+
+    expect(boards.map((board) => board.boardId).sort()).toEqual(["a", "b"]);
+  });
+
+  test("returns empty array for a set with no boards", async () => {
+    await replaceBoardSet(makeReplaceInput());
+
+    const boards = await listBoards("set-1");
+
+    expect(boards).toEqual([]);
   });
 });
 

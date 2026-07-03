@@ -4,6 +4,8 @@
   "close": "Chiudi",
   "boardLoading": "Caricamento tabella...",
   "boardGridLabel": "Tabella di comunicazione",
+  "boardSearch": "Cerca tabelle",
+  "boardSearchNoResults": "Nessuna tabella trovata",
   "libraryLoading": "Caricamento tabelle...",
   "libraryEmptyTitle": "La libreria è vuota",
   "libraryEmptyDescription": "Importa tabelle di comunicazione per iniziare.",

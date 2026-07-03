@@ -4,6 +4,8 @@
   "close": "Tutup",
   "boardLoading": "Memuat papan...",
   "boardGridLabel": "Papan komunikasi",
+  "boardSearch": "Cari papan",
+  "boardSearchNoResults": "Papan tidak ditemukan",
   "libraryLoading": "Memuat papan...",
   "libraryEmptyTitle": "Pustaka kosong",
   "libraryEmptyDescription": "Impor papan komunikasi untuk memulai.",

@@ -4,6 +4,8 @@
   "close": "Fechar",
   "boardLoading": "Carregando prancha...",
   "boardGridLabel": "Prancha de comunicação",
+  "boardSearch": "Buscar pranchas",
+  "boardSearchNoResults": "Nenhuma prancha encontrada",
   "libraryLoading": "Carregando pranchas...",
   "libraryEmptyTitle": "A biblioteca está vazia",
   "libraryEmptyDescription": "Importe pranchas de comunicação para começar.",

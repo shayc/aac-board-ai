@@ -100,6 +100,13 @@ const themeOptions = {
         },
       },
     },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          borderRadius: 24,
+        },
+      },
+    },
     MuiListItemButton: {
       styleOverrides: {
         root: {

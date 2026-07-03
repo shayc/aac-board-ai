@@ -1,3 +1,4 @@
+import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { getBoardsDB, replaceBoardSet, type BoardSetRecord } from "./boards-db";
 
@@ -6,6 +7,20 @@ const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 export interface SeedBoardSet extends Partial<BoardSetRecord> {
   setId: string;
   rootBoardId: string;
+}
+
+export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
+  return {
+    format: "open-board-0.1",
+    id: "board-1",
+    locale: "en",
+    name: "Test Board",
+    buttons: [],
+    grid: { rows: 1, columns: 1, order: [[null]] },
+    images: [],
+    sounds: [],
+    ...overrides,
+  };
 }
 
 export async function clearBoardsDB(): Promise<void> {

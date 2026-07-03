@@ -28,6 +28,8 @@ function createPlaybackStub(): UseMessagePlaybackReturn {
 
 function createNavigationStub(): UseBoardNavigationReturn {
   return {
+    setId: "set-1",
+    boardId: "board-1",
     canGoBack: false,
     canGoHome: true,
     isHome: false,

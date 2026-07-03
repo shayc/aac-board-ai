@@ -4,6 +4,8 @@
   "close": "ಮುಚ್ಚಿ",
   "boardLoading": "ಬೋರ್ಡ್ ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",
+  "boardSearch": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಹುಡುಕಿ",
+  "boardSearchNoResults": "ಬೋರ್ಡ್‌ಗಳು ಕಂಡುಬಂದಿಲ್ಲ",
   "libraryLoading": "ಬೋರ್ಡ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
   "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಸಂವಹನ ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",

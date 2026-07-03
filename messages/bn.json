@@ -4,6 +4,8 @@
   "close": "বন্ধ করুন",
   "boardLoading": "বোর্ড লোড হচ্ছে…",
   "boardGridLabel": "যোগাযোগ বোর্ড",
+  "boardSearch": "বোর্ড অনুসন্ধান করুন",
+  "boardSearchNoResults": "কোনো বোর্ড পাওয়া যায়নি",
   "libraryLoading": "বোর্ড লোড হচ্ছে…",
   "libraryEmptyTitle": "লাইব্রেরি খালি",
   "libraryEmptyDescription": "শুরু করতে যোগাযোগ বোর্ড আমদানি করুন।",

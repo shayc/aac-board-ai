@@ -4,6 +4,8 @@
   "close": "Sluiten",
   "boardLoading": "Bord laden...",
   "boardGridLabel": "Communicatiebord",
+  "boardSearch": "Borden zoeken",
+  "boardSearchNoResults": "Geen borden gevonden",
   "libraryLoading": "Borden laden...",
   "libraryEmptyTitle": "De bibliotheek is leeg",
   "libraryEmptyDescription": "Importeer communicatieborden om te beginnen.",

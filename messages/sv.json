@@ -4,6 +4,8 @@
   "close": "Stäng",
   "boardLoading": "Laddar tavla...",
   "boardGridLabel": "Kommunikationstavla",
+  "boardSearch": "Sök tavlor",
+  "boardSearchNoResults": "Inga tavlor hittades",
   "libraryLoading": "Laddar tavlor...",
   "libraryEmptyTitle": "Biblioteket är tomt",
   "libraryEmptyDescription": "Importera kommunikationstavlor för att komma igång.",

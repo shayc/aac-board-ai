@@ -4,6 +4,8 @@
   "close": "Bezárás",
   "boardLoading": "Tábla betöltése...",
   "boardGridLabel": "Kommunikációs tábla",
+  "boardSearch": "Táblák keresése",
+  "boardSearchNoResults": "A táblák nem találhatók",
   "libraryLoading": "Táblák betöltése...",
   "libraryEmptyTitle": "A könyvtár üres",
   "libraryEmptyDescription": "Az induláshoz importálj kommunikációs táblákat.",

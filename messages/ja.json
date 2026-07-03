@@ -4,6 +4,8 @@
   "close": "閉じる",
   "boardLoading": "ボードを読み込んでいます…",
   "boardGridLabel": "コミュニケーションボード",
+  "boardSearch": "ボードを検索",
+  "boardSearchNoResults": "ボードが見つかりませんでした",
   "libraryLoading": "ボードを読み込んでいます…",
   "libraryEmptyTitle": "ライブラリは空です",
   "libraryEmptyDescription": "コミュニケーションボードをインポートして始めましょう。",

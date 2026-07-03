@@ -4,6 +4,8 @@
   "close": "Schließen",
   "boardLoading": "Tafel wird geladen...",
   "boardGridLabel": "Kommunikationstafel",
+  "boardSearch": "Tafeln suchen",
+  "boardSearchNoResults": "Keine Tafeln gefunden",
   "libraryLoading": "Tafeln werden geladen...",
   "libraryEmptyTitle": "Die Bibliothek ist leer",
   "libraryEmptyDescription": "Importiere Kommunikationstafeln, um loszulegen.",
