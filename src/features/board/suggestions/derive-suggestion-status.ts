@@ -2,7 +2,7 @@ import type { Status } from "@shayc/react-built-in-ai";
 
 export type SuggestionStatusView =
   | { kind: "needs-activation" }
-  | { kind: "downloading"; progress: number }
+  | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
   | { kind: "unavailable" }
   | null;
@@ -37,7 +37,8 @@ export function deriveSuggestionStatus({
   }
 
   if (downloadProgress !== null) {
-    return { kind: "downloading", progress: downloadProgress };
+    const percent = Math.round(downloadProgress * 100);
+    return { kind: "downloading", percent: percent === 0 ? null : percent };
   }
 
   if (isPending) {

@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Pobieranie…",
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Pobieranie modelu AI…",
   "suggestionsUnavailable": "Sugestie są niedostępne",
   "aiFeatureProofreading": "Korekta",
   "aiFeatureRewriting": "Przeredagowanie",

@@ -93,6 +93,7 @@
   "aiStatusDownloading": "กำลังดาวน์โหลด…",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "กำลังดาวน์โหลดโมเดล AI…",
   "suggestionsUnavailable": "คำแนะนำไม่พร้อมใช้งาน",
   "aiFeatureProofreading": "การตรวจทาน",
   "aiFeatureRewriting": "การเขียนใหม่",

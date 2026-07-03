@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Завантаження…",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Завантаження моделі ШІ…",
   "suggestionsUnavailable": "Пропозиції недоступні",
   "aiFeatureProofreading": "Коректура",
   "aiFeatureRewriting": "Переписування",

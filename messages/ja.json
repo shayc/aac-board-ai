@@ -93,6 +93,7 @@
   "aiStatusDownloading": "ダウンロード中…",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI モデルをダウンロード中…",
   "suggestionsUnavailable": "提案は利用できません",
   "aiFeatureProofreading": "校正",
   "aiFeatureRewriting": "リライト",

@@ -93,6 +93,7 @@
   "aiStatusDownloading": "İndiriliyor…",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",
+  "suggestionsDownloadingIndeterminate": "Yapay zeka modeli indiriliyor…",
   "suggestionsUnavailable": "Öneriler kullanılamıyor",
   "aiFeatureProofreading": "Düzeltme",
   "aiFeatureRewriting": "Yeniden yazma",

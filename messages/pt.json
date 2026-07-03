@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Baixando…",
   "suggestionsEnable": "Ativar sugestões",
   "suggestionsDownloading": "Baixando modelo de IA… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Baixando modelo de IA…",
   "suggestionsUnavailable": "Sugestões indisponíveis",
   "aiFeatureProofreading": "Revisão",
   "aiFeatureRewriting": "Reescrita",

@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Se descarcă…",
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Se descarcă modelul AI…",
   "suggestionsUnavailable": "Sugestiile nu sunt disponibile",
   "aiFeatureProofreading": "Corectură",
   "aiFeatureRewriting": "Rescriere",

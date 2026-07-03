@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Stahování…",
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI… {progress} %",
+  "suggestionsDownloadingIndeterminate": "Stahování modelu AI…",
   "suggestionsUnavailable": "Návrhy nejsou k dispozici",
   "aiFeatureProofreading": "Korektura",
   "aiFeatureRewriting": "Přepis",

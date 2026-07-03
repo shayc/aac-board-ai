@@ -93,6 +93,7 @@
   "aiStatusDownloading": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "suggestionsEnable": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "suggestionsDownloading": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "suggestionsUnavailable": "ಸಲಹೆಗಳು ಲಭ್ಯವಿಲ್ಲ",
   "aiFeatureProofreading": "ಪ್ರೂಫ್‌ರೀಡಿಂಗ್",
   "aiFeatureRewriting": "ಮರುಬರವಣಿಗೆ",

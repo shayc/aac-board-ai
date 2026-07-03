@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Λήψη…",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Λήψη μοντέλου AI…",
   "suggestionsUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες",
   "aiFeatureProofreading": "Διόρθωση",
   "aiFeatureRewriting": "Αναδιατύπωση",

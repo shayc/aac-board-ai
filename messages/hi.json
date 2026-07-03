@@ -93,6 +93,7 @@
   "aiStatusDownloading": "डाउनलोड हो रहा है…",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
+  "suggestionsDownloadingIndeterminate": "AI मॉडल डाउनलोड हो रहा है…",
   "suggestionsUnavailable": "सुझाव उपलब्ध नहीं हैं",
   "aiFeatureProofreading": "प्रूफ़रीडिंग",
   "aiFeatureRewriting": "पुनर्लेखन",

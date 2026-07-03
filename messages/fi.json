@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Ladataan…",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
+  "suggestionsDownloadingIndeterminate": "Ladataan tekoälymallia…",
   "suggestionsUnavailable": "Ehdotukset eivät ole saatavilla",
   "aiFeatureProofreading": "Oikoluku",
   "aiFeatureRewriting": "Uudelleenkirjoitus",

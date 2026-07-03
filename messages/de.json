@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Wird heruntergeladen…",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
+  "suggestionsDownloadingIndeterminate": "KI-Modell wird heruntergeladen…",
   "suggestionsUnavailable": "Vorschläge nicht verfügbar",
   "aiFeatureProofreading": "Korrektur",
   "aiFeatureRewriting": "Umformulierung",

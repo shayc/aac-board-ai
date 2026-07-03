@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Mengunduh…",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Mengunduh model AI…",
   "suggestionsUnavailable": "Saran tidak tersedia",
   "aiFeatureProofreading": "Koreksi",
   "aiFeatureRewriting": "Penulisan ulang",

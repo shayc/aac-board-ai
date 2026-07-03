@@ -93,6 +93,7 @@
   "aiStatusDownloading": "جارٍ التنزيل…",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",
+  "suggestionsDownloadingIndeterminate": "جارٍ تنزيل نموذج الذكاء الاصطناعي…",
   "suggestionsUnavailable": "الاقتراحات غير متاحة",
   "aiFeatureProofreading": "تدقيق لغوي",
   "aiFeatureRewriting": "إعادة صياغة",

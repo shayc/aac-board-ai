@@ -93,6 +93,7 @@
   "aiStatusDownloading": "Letöltés…",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",
+  "suggestionsDownloadingIndeterminate": "MI-modell letöltése…",
   "suggestionsUnavailable": "A javaslatok nem érhetők el",
   "aiFeatureProofreading": "Korrektúra",
   "aiFeatureRewriting": "Átfogalmazás",

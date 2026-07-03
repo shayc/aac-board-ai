@@ -93,6 +93,7 @@
   "aiStatusDownloading": "הורדה…",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
+  "suggestionsDownloadingIndeterminate": "הורדת מודל ה-AI…",
   "suggestionsUnavailable": "ההצעות אינן זמינות",
   "aiFeatureProofreading": "הגהה",
   "aiFeatureRewriting": "שכתוב",
