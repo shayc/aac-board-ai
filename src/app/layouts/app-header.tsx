@@ -34,6 +34,7 @@ export function AppHeader({
               edge="start"
               color="inherit"
               onClick={onLibraryClick}
+              sx={{ marginInlineEnd: 1 }}
             >
               <ViewSidebarOutlinedIcon sx={flipForLtr} />
             </IconButton>
