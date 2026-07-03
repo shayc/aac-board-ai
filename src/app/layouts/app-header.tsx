@@ -12,6 +12,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { flipForLtr } from "@shared/theme/rtl";
 import { useMatch } from "react-router";
 import { usePageTitle } from "./page-title-store";
 
@@ -41,7 +42,7 @@ export function AppHeader({
               color="inherit"
               onClick={onLibraryClick}
             >
-              <ViewSidebarOutlinedIcon />
+              <ViewSidebarOutlinedIcon sx={flipForLtr} />
             </IconButton>
           </Tooltip>
         )}
