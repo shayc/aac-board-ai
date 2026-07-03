@@ -18,6 +18,8 @@ export function SuggestionBar({
   onEnable,
   onPhraseClick,
 }: SuggestionBarProps) {
+  const isPending = status?.kind === "pending";
+
   return (
     <Stack
       direction="row"
@@ -44,9 +46,7 @@ export function SuggestionBar({
         ))}
       </Box>
 
-      {(status === null || status.kind === "pending") && (
-        <PendingDot show={status?.kind === "pending"} />
-      )}
+      {(status === null || isPending) && <PendingDot show={isPending} />}
     </Stack>
   );
 }
