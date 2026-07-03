@@ -116,7 +116,7 @@ function statusLabel(status: Status) {
       return m.aiStatusDownloading();
     case "downloadable":
       return m.aiStatusDownloadRequired();
-    case "idle":
+    case "checking":
     case "unavailable":
     case "error":
     case "unsupported":
@@ -138,7 +138,7 @@ function statusIcon(status: Status) {
       return (
         <DownloadingIcon color="action" fontSize="small" titleAccess={title} />
       );
-    case "idle":
+    case "checking":
     case "unavailable":
     case "error":
     case "unsupported":

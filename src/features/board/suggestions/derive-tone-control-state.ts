@@ -12,7 +12,7 @@ export function deriveToneControlState(status: Status): ToneControlState {
     case "downloading":
       return "disabled";
     case "ready":
-    case "idle":
+    case "checking":
       return "enabled";
     default:
       return status satisfies never;

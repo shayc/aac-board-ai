@@ -20,7 +20,7 @@ describe("deriveToneControlState", () => {
     expect(deriveToneControlState("ready")).toBe("enabled");
   });
 
-  test("keeps the selector enabled while idle so a re-tap survives re-provisioning", () => {
-    expect(deriveToneControlState("idle")).toBe("enabled");
+  test("keeps the selector enabled while checking so a re-tap survives re-provisioning", () => {
+    expect(deriveToneControlState("checking")).toBe("enabled");
   });
 });
