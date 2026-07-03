@@ -1,27 +1,10 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
-import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
-import { styled } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
-import { useState } from "react";
 import { mergeProps, useLongPress, usePress } from "react-aria";
 
-const RING_DELAY_MS = 300;
-const RING_FILL_MS = 300;
-const LONG_PRESS_THRESHOLD_MS = RING_DELAY_MS + RING_FILL_MS;
-
-const StyledCircularProgress = styled(CircularProgress, {
-  shouldForwardProp: (prop) => prop !== "active",
-})<{ active: boolean }>(({ active }) => ({
-  "& svg circle": {
-    transitionProperty: "stroke-dashoffset",
-    transitionDuration: active ? `${RING_FILL_MS}ms` : "0ms",
-    transitionTimingFunction: "linear",
-    transitionDelay: active ? `${RING_DELAY_MS}ms` : "0ms",
-  },
-}));
+const LONG_PRESS_THRESHOLD_MS = 600;
 
 export interface BackspaceButtonProps {
   disabled?: boolean;
@@ -34,45 +17,22 @@ export function BackspaceButton({
   onPress,
   onLongPress,
 }: BackspaceButtonProps) {
-  const [progress, setProgress] = useState(0);
-
   const { pressProps } = usePress({ onPress });
 
   const { longPressProps } = useLongPress({
     accessibilityDescription: m.messageBackspaceLongPressHint(),
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
-    onLongPressStart: () => setProgress(100),
-    onLongPressEnd: () => setTimeout(() => setProgress(0), 100),
   });
 
   return (
-    <Box sx={{ alignSelf: "center", position: "relative" }}>
-      <IconButton
-        {...mergeProps(pressProps, longPressProps)}
-        aria-label={m.messageBackspace()}
-        size="large"
-        color="inherit"
-        disabled={disabled}
-        sx={{ width: 72, height: 72 }}
-      >
-        <BackspaceOutlinedIcon sx={flipForRtl} />
-      </IconButton>
-
-      <StyledCircularProgress
-        aria-hidden
-        variant="determinate"
-        value={progress}
-        active={progress > 0}
-        size={72}
-        sx={{
-          position: "absolute",
-          top: 0,
-          insetInlineStart: 0,
-          zIndex: 1,
-          pointerEvents: "none",
-        }}
-      />
-    </Box>
+    <IconButton
+      {...mergeProps(pressProps, longPressProps)}
+      aria-label={m.messageBackspace()}
+      size="large"
+      disabled={disabled}
+    >
+      <BackspaceOutlinedIcon sx={flipForRtl} />
+    </IconButton>
   );
 }

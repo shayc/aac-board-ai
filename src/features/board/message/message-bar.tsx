@@ -1,7 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { Pictogram } from "../pictogram/pictogram";
-import { BackspaceButton } from "./backspace-button";
 import { PlayButton } from "./play-button";
 import type { MessagePart } from "./use-message";
 
@@ -9,8 +8,6 @@ export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
-  onBackspacePress: () => void;
-  onBackspaceLongPress: () => void;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
@@ -19,8 +16,6 @@ export function MessageBar({
   parts,
   activePartId,
   isPlaying,
-  onBackspacePress,
-  onBackspaceLongPress,
   onPlayClick,
   onStopClick,
 }: MessageBarProps) {
@@ -97,10 +92,6 @@ export function MessageBar({
           })}
         </Stack>
 
-        <BackspaceButton
-          onPress={onBackspacePress}
-          onLongPress={onBackspaceLongPress}
-        />
         <PlayButton
           isPlaying={isPlaying}
           onPlayClick={onPlayClick}

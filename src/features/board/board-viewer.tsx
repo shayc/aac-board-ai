@@ -9,6 +9,7 @@ import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./board-button";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
+import { BackspaceButton } from "./message/backspace-button";
 import { MessageBar } from "./message/message-bar";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
 import { useMessage } from "./message/use-message";
@@ -81,8 +82,6 @@ export function BoardViewer({ board }: BoardViewerProps) {
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
-        onBackspacePress={message.removeLastPart}
-        onBackspaceLongPress={message.clear}
         onPlayClick={() => void playback.play(message.parts)}
         onStopClick={playback.stop}
       />
@@ -107,6 +106,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
             onPhraseClick={message.setFromText}
           />
         )}
+
+        <BackspaceButton
+          onPress={message.removeLastPart}
+          onLongPress={message.clear}
+        />
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
