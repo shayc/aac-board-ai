@@ -4,7 +4,7 @@ import { findTranslations } from "../translation/board-strings";
 import { listBoards } from "../storage/boards-db";
 
 export interface UseSetBoardsOptions {
-  setId: string;
+  setId: string | undefined;
 }
 
 export interface BoardSwitcherItem {
@@ -23,9 +23,10 @@ export function useSetBoards({
 }: UseSetBoardsOptions): UseSetBoardsReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
-    enabled: true,
-    deps: [setId],
-    fetch: () => listBoards(setId),
+    enabled: setId !== undefined,
+    deps: [setId ?? ""],
+    fetch: () =>
+      setId === undefined ? Promise.resolve([]) : listBoards(setId),
   });
 
   const records = value ?? [];
