@@ -20,14 +20,14 @@ export function Pictogram({
         flexDirection: labelPlacement === "top" ? "column-reverse" : "column",
         textAlign: "center",
         justifyContent: "center",
-        gap: 1,
+        gap: 0.5,
         overflow: "hidden",
       }}
     >
       {src && (
         <Box
           sx={{
-            height: "50px",
+            height: "54px",
             aspectRatio: "1 / 1",
             flexGrow: 1,
             position: "relative",
