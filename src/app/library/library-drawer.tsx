@@ -1,4 +1,4 @@
-import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
+import { LIBRARY_DRAWER_WIDTH } from "@app/layouts/drawer-width";
 import { BoardSetLibrary, boardSetPath } from "@features/board";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import Box from "@mui/material/Box";
@@ -10,9 +10,8 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { flipForLtr } from "@shared/theme/rtl";
+import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useMatches, useNavigate } from "react-router";
-
-export const LIBRARY_DRAWER_WIDTH = `calc(${DRAWER_BASE_WIDTH} + env(safe-area-inset-left))`;
 
 export interface LibraryDrawerProps {
   open: boolean;
@@ -54,7 +53,7 @@ export function LibraryDrawer({
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
-            pl: `calc(${theme.spacing(2)} + env(safe-area-inset-left))`,
+            pl: safeAreaGutter(theme.spacing(2), "left"),
           },
         })}
       >
@@ -81,7 +80,7 @@ export function LibraryDrawer({
           minHeight: 0,
           overflow: "auto",
           [theme.breakpoints.up("sm")]: {
-            pl: "env(safe-area-inset-left)",
+            pl: safeAreaInset("left"),
           },
         })}
       >

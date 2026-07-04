@@ -16,6 +16,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
+import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { isSupported } from "@shayc/react-built-in-ai";
 import { AppearanceSettings } from "./appearance-settings";
 import { BoardSettings } from "./board-settings";
@@ -48,7 +49,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           "aria-label": m.settingsTitle(),
           sx: [
             {
-              width: `calc(${DRAWER_BASE_WIDTH} + env(safe-area-inset-right))`,
+              width: safeAreaGutter(DRAWER_BASE_WIDTH, "right"),
             },
             (theme) => ({
               [theme.breakpoints.up("sm")]: {
@@ -62,7 +63,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
-            pr: "env(safe-area-inset-right)",
+            pr: safeAreaInset("right"),
           },
         })}
       >
@@ -88,7 +89,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           { px: 3, pb: 3 },
           (theme) => ({
             [theme.breakpoints.up("sm")]: {
-              pr: "env(safe-area-inset-right)",
+              pr: safeAreaInset("right"),
             },
           }),
         ]}

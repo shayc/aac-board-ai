@@ -6,8 +6,10 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { flipForLtr } from "@shared/theme/rtl";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
@@ -22,10 +24,20 @@ export function AppHeader({
   onSettingsClick,
 }: AppHeaderProps) {
   const pageTitle = usePageTitle();
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar
+        sx={(theme) => ({
+          pl: safeAreaGutter(theme.spacing(2), "left"),
+          pr: safeAreaGutter(theme.spacing(2), "right"),
+          [theme.breakpoints.up("sm")]: {
+            pl: safeAreaGutter(theme.spacing(3), "left"),
+            pr: safeAreaGutter(theme.spacing(3), "right"),
+          },
+        })}
+      >
         {!libraryButtonHidden && (
           <Tooltip title={m.libraryOpen()}>
             <IconButton
@@ -34,14 +46,14 @@ export function AppHeader({
               edge="start"
               color="inherit"
               onClick={onLibraryClick}
-              sx={{ marginInlineEnd: 1 }}
+              sx={{ marginInlineEnd: 2 }}
             >
               <ViewSidebarOutlinedIcon sx={flipForLtr} />
             </IconButton>
           </Tooltip>
         )}
 
-        <NavButtons />
+        {!isSmallScreen && <NavButtons />}
 
         <Box sx={{ flexGrow: 1, minWidth: 0 }}>
           <BoardSwitcher label={pageTitle} />
@@ -54,6 +66,7 @@ export function AppHeader({
             edge="end"
             color="inherit"
             onClick={onSettingsClick}
+            sx={{ marginInlineStart: 2 }}
           >
             <SettingsOutlinedIcon />
           </IconButton>

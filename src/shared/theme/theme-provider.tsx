@@ -100,6 +100,13 @@ const themeOptions = {
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          border: "1px solid",
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
