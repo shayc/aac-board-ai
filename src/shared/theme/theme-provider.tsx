@@ -100,6 +100,21 @@ const themeOptions = {
         },
       },
     },
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme }) => {
+          const borderColor = theme.vars
+            ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
+            : theme.palette.mode === "light"
+              ? "rgba(0, 0, 0, 0.23)"
+              : "rgba(255, 255, 255, 0.23)";
+
+          return {
+            border: `1px solid ${borderColor}`,
+          };
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {

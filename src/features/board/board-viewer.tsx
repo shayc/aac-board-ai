@@ -1,9 +1,11 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { usePlaybackConfig } from "@shared/playback/playback-store";
+import { safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./board-button";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -12,6 +14,7 @@ import { BackspaceButton } from "./message/backspace-button";
 import { MessageBar } from "./message/message-bar";
 import { useMessagePlayback } from "./message/playback/use-message-playback";
 import { useMessage } from "./message/use-message";
+import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
@@ -30,13 +33,14 @@ const rootSx = (theme: Theme) => ({
       "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
   }),
   [theme.breakpoints.up("sm")]: {
-    pl: "env(safe-area-inset-left)",
-    pr: "env(safe-area-inset-right)",
+    pl: safeAreaInset("left"),
+    pr: safeAreaInset("right"),
   },
 });
 
 export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = usePlaybackConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
@@ -105,6 +109,18 @@ export function BoardViewer({ board }: BoardViewerProps) {
           dir={direction}
         />
       </Box>
+
+      {isSmallScreen && (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            pb: safeAreaInset("bottom"),
+          }}
+        >
+          <NavButtons />
+        </Box>
+      )}
     </Stack>
   );
 }

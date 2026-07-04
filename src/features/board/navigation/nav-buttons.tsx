@@ -15,7 +15,7 @@ export function NavButtons() {
   }
 
   return (
-    <Box sx={{ display: "flex", gap: 1, marginInlineEnd: 1 }}>
+    <Box sx={{ display: "flex", gap: 1 }}>
       <Tooltip title={m.navBack()}>
         <span>
           <IconButton
