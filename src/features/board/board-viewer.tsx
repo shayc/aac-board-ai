@@ -113,7 +113,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       {isSmallScreen && (
         <Box
           sx={{
-            height: 56,
+            minHeight: 56,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
