@@ -111,6 +111,7 @@ export function BoardSetList({
                       aria-haspopup="menu"
                       aria-expanded={isMenuOpen ? "true" : undefined}
                       onClick={(event) => handleMenuOpen(event, boardSet)}
+                      sx={{ border: "none" }}
                     >
                       <MoreVertIcon />
                     </IconButton>
