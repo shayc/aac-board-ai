@@ -30,6 +30,10 @@ export function AppHeader({
     <AppBar position="static">
       <Toolbar
         sx={(theme) => ({
+          display: "grid",
+          gridTemplateColumns: "1fr minmax(0, auto) 1fr",
+          alignItems: "center",
+          gap: theme.spacing(2),
           pl: safeAreaGutter(theme.spacing(2), "left"),
           pr: safeAreaGutter(theme.spacing(2), "right"),
           [theme.breakpoints.up("sm")]: {
@@ -38,39 +42,48 @@ export function AppHeader({
           },
         })}
       >
-        {!libraryButtonHidden && (
-          <Tooltip title={m.libraryOpen()}>
-            <IconButton
-              aria-label={m.libraryOpen()}
-              size="large"
-              edge="start"
-              color="inherit"
-              onClick={onLibraryClick}
-              sx={{ marginInlineEnd: 2 }}
-            >
-              <ViewSidebarOutlinedIcon sx={flipForLtr} />
-            </IconButton>
-          </Tooltip>
-        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifySelf: "start",
+            gap: 2,
+          }}
+        >
+          {!libraryButtonHidden && (
+            <Tooltip title={m.libraryOpen()}>
+              <IconButton
+                aria-label={m.libraryOpen()}
+                size="large"
+                edge="start"
+                color="inherit"
+                onClick={onLibraryClick}
+              >
+                <ViewSidebarOutlinedIcon sx={flipForLtr} />
+              </IconButton>
+            </Tooltip>
+          )}
 
-        {!isSmallScreen && <NavButtons />}
+          {!isSmallScreen && <NavButtons />}
+        </Box>
 
-        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+        <Box sx={{ minWidth: 0 }}>
           <BoardSwitcher label={pageTitle} />
         </Box>
 
-        <Tooltip title={m.settingsOpen()}>
-          <IconButton
-            aria-label={m.settingsOpen()}
-            size="large"
-            edge="end"
-            color="inherit"
-            onClick={onSettingsClick}
-            sx={{ marginInlineStart: 2 }}
-          >
-            <SettingsOutlinedIcon />
-          </IconButton>
-        </Tooltip>
+        <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>
+          <Tooltip title={m.settingsOpen()}>
+            <IconButton
+              aria-label={m.settingsOpen()}
+              size="large"
+              edge="end"
+              color="inherit"
+              onClick={onSettingsClick}
+            >
+              <SettingsOutlinedIcon />
+            </IconButton>
+          </Tooltip>
+        </Box>
       </Toolbar>
     </AppBar>
   );
