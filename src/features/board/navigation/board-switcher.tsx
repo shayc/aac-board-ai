@@ -44,8 +44,32 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
       isOptionEqualToValue={(option, selected) =>
         option.boardId === selected.boardId
       }
-      sx={{ width: 300, maxWidth: "100%" }}
-      renderInput={(params) => <TextField {...params} label={m.board()} />}
+      sx={(theme) => ({
+        width: 320,
+        maxWidth: "100%",
+        "& .MuiOutlinedInput-root.MuiInputBase-sizeSmall": {
+          paddingTop: 1,
+          paddingBottom: 1,
+          paddingInlineStart: "10px",
+          borderRadius: 7,
+          fontSize: theme.typography.h6.fontSize,
+        },
+      })}
+      slotProps={{
+        popupIndicator: { sx: { padding: "6px", border: "none" } },
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          slotProps={{
+            ...params.slotProps,
+            htmlInput: {
+              ...params.slotProps?.htmlInput,
+              "aria-label": m.board(),
+            },
+          }}
+        />
+      )}
     />
   );
 }
