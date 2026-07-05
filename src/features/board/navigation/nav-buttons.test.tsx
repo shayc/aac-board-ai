@@ -2,31 +2,40 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import { MemoryRouter, Route, Routes } from "react-router";
+import { createMemoryRouter, type InitialEntry } from "react-router";
+import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { seedBoardSets } from "../testing";
 import { NavButtons } from "./nav-buttons";
 
-function renderAt(
-  pathname: string,
+async function renderAt(
+  initialEntries: InitialEntry[],
   options: {
-    state?: { backStack: string[] };
+    initialIndex?: number;
     direction?: "ltr" | "rtl";
   } = {},
 ) {
   const theme = createTheme({ direction: options.direction ?? "ltr" });
 
-  return render(
+  const router = createMemoryRouter(
+    [
+      {
+        path: "/sets/:setId/boards/:boardId",
+        element: <NavButtons />,
+      },
+    ],
+    { initialEntries, initialIndex: options.initialIndex },
+  );
+
+  const screen = await render(
     <MUIThemeProvider theme={theme}>
-      <MemoryRouter initialEntries={[{ pathname, state: options.state }]}>
-        <Routes>
-          <Route path="/sets/:setId/boards/:boardId" element={<NavButtons />} />
-        </Routes>
-      </MemoryRouter>
+      <RouterProvider router={router} />
     </MUIThemeProvider>,
   );
+
+  return { router, screen };
 }
 
 describe("NavButtons", () => {
@@ -34,20 +43,39 @@ describe("NavButtons", () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-1" }]);
   });
 
-  test("calls goBack when back button is clicked", async () => {
-    const screen = await renderAt("/sets/set-1/boards/board-2", {
-      state: { backStack: ["root-1"] },
-    });
+  test("navigates back to the previous board when the back button is clicked", async () => {
+    const { router, screen } = await renderAt(
+      [
+        "/sets/set-1/boards/root-1",
+        {
+          pathname: "/sets/set-1/boards/board-2",
+          state: { backStack: ["root-1"] },
+        },
+      ],
+      { initialIndex: 1 },
+    );
 
     await screen.getByRole("button", { name: "Back" }).click();
 
     await expect
-      .element(screen.getByRole("button", { name: "Home" }))
-      .toBeInTheDocument();
+      .poll(() => router.state.location.pathname)
+      .toBe("/sets/set-1/boards/root-1");
+  });
+
+  test("navigates home when the home button is clicked", async () => {
+    const { router, screen } = await renderAt([
+      { pathname: "/sets/set-1/boards/board-2", state: { backStack: [] } },
+    ]);
+
+    await screen.getByRole("button", { name: "Home" }).click();
+
+    await expect
+      .poll(() => router.state.location.pathname)
+      .toBe("/sets/set-1/boards/root-1");
   });
 
   test("disables back button when there is no back stack", async () => {
-    const screen = await renderAt("/sets/set-1/boards/root-1");
+    const { screen } = await renderAt(["/sets/set-1/boards/root-1"]);
 
     await expect
       .element(screen.getByRole("button", { name: "Back" }))
@@ -61,7 +89,7 @@ describe("NavButtons", () => {
   test("disables home button when the board set has no root board", async () => {
     await seedBoardSets([]);
 
-    const screen = await renderAt("/sets/set-1/boards/board-1");
+    const { screen } = await renderAt(["/sets/set-1/boards/board-1"]);
 
     await expect
       .element(screen.getByRole("button", { name: "Home" }))
@@ -70,7 +98,7 @@ describe("NavButtons", () => {
 
   describe("RTL icon mirroring", () => {
     test("back arrow is flipped in RTL", async () => {
-      const screen = await renderAt("/sets/set-1/boards/root-1", {
+      const { screen } = await renderAt(["/sets/set-1/boards/root-1"], {
         direction: "rtl",
       });
 
@@ -84,7 +112,7 @@ describe("NavButtons", () => {
     });
 
     test("back arrow is not flipped in LTR", async () => {
-      const screen = await renderAt("/sets/set-1/boards/root-1");
+      const { screen } = await renderAt(["/sets/set-1/boards/root-1"]);
 
       const backButton = screen.getByRole("button", { name: "Back" });
       const icon = backButton.element().querySelector("svg");
@@ -95,7 +123,7 @@ describe("NavButtons", () => {
     });
 
     test("home icon is not flipped in RTL", async () => {
-      const screen = await renderAt("/sets/set-1/boards/root-1", {
+      const { screen } = await renderAt(["/sets/set-1/boards/root-1"], {
         direction: "rtl",
       });
 
