@@ -92,17 +92,38 @@ describe("appendTextToLastPart", () => {
 });
 
 describe("dropLastPart", () => {
-  test("removes the last part", () => {
+  test("removes a single character if the last part is text-only", () => {
     const parts = dropLastPart([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
     ]);
 
+    expect(parts).toEqual([
+      { id: "1", label: "hello" },
+      { id: "2", label: "worl" },
+    ]);
+  });
+
+  test("removes the entire part if it is text-only but has 1 or 0 characters", () => {
+    const parts = dropLastPart([
+      { id: "1", label: "hello" },
+      { id: "2", label: "w" },
+    ]);
+
     expect(parts).toEqual([{ id: "1", label: "hello" }]);
   });
 
-  test("returns an empty array when there is only one part", () => {
-    expect(dropLastPart([{ id: "1", label: "hi" }])).toEqual([]);
+  test("removes the entire part if it is not text-only", () => {
+    const parts = dropLastPart([
+      { id: "1", label: "hello" },
+      { id: "2", label: "world", imageSrc: "img.png" },
+    ]);
+
+    expect(parts).toEqual([{ id: "1", label: "hello" }]);
+  });
+
+  test("returns an empty array when there is only one part and it gets removed", () => {
+    expect(dropLastPart([{ id: "1", label: "h" }])).toEqual([]);
   });
 
   test("returns an empty array when already empty", () => {
