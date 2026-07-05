@@ -51,16 +51,25 @@ describe("appendTextToLastPart", () => {
     expect(parts[0].id).toBeTruthy();
   });
 
-  test("appends text to the last part without mangling its id or other content", () => {
-    const original: MessagePart[] = [
-      { id: "1", label: "ca", imageSrc: "img.png" },
-    ];
+  test("appends text to a purely text-only last part", () => {
+    const original: MessagePart[] = [{ id: "1", label: "ca" }];
 
     const parts = appendTextToLastPart(original, "t");
 
     expect(parts).toHaveLength(1);
     expect(parts[0].id).toBe("1");
     expect(parts[0].label).toBe("cat");
+  });
+
+  test("starts a new part if the last part has media", () => {
+    const original: MessagePart[] = [
+      { id: "1", label: "ca", imageSrc: "img.png" },
+    ];
+
+    const parts = appendTextToLastPart(original, "t");
+
+    expect(parts).toHaveLength(2);
+    expect(parts[1].label).toBe("t");
     expect(parts[0].imageSrc).toBe("img.png");
   });
 
