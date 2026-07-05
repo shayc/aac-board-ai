@@ -119,7 +119,7 @@ describe("createButtonActivation", () => {
     expect(committed[0].id).toBeTruthy();
   });
 
-  test("backspace removes the last part via setParts", () => {
+  test("backspace removes a character from a text-only last part via setParts", () => {
     const message = createMessageStub([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
@@ -130,6 +130,7 @@ describe("createButtonActivation", () => {
 
     expect(message.setParts).toHaveBeenCalledWith([
       { id: "1", label: "hello" },
+      { id: "2", label: "worl" },
     ]);
   });
 

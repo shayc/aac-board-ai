@@ -21,8 +21,14 @@ export function appendTextToLastPart(
   text: string,
 ): MessagePart[] {
   const lastPart = parts.at(-1);
-  if (!lastPart) {
-    return [createPart({ label: text })];
+  const isTextOnly =
+    lastPart &&
+    !lastPart.imageSrc &&
+    !lastPart.soundSrc &&
+    !lastPart.vocalization;
+
+  if (!lastPart || !isTextOnly) {
+    return appendPart(parts, { label: text });
   }
 
   return parts.with(-1, {
@@ -32,5 +38,20 @@ export function appendTextToLastPart(
 }
 
 export function dropLastPart(parts: MessagePart[]): MessagePart[] {
+  const lastPart = parts.at(-1);
+  if (!lastPart) {
+    return parts;
+  }
+
+  const isTextOnly =
+    !lastPart.imageSrc && !lastPart.soundSrc && !lastPart.vocalization;
+
+  if (isTextOnly && lastPart.label && lastPart.label.length > 1) {
+    return parts.with(-1, {
+      ...lastPart,
+      label: lastPart.label.slice(0, -1),
+    });
+  }
+
   return parts.slice(0, -1);
 }

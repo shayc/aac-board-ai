@@ -15,7 +15,7 @@ describe("board keyboard shortcuts", () => {
     stubAudio();
   });
 
-  test("Backspace from a focused tile removes the last message part", async () => {
+  test("Backspace from a focused tile removes a character from a text-only message part", async () => {
     const screen = await renderBoardViewer(TWO_TILE_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
@@ -30,7 +30,7 @@ describe("board keyboard shortcuts", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+      expect(speech.speak.mock.calls[0][0].text).toBe("hello worl");
     });
   });
 
@@ -46,7 +46,7 @@ describe("board keyboard shortcuts", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+      expect(speech.speak.mock.calls[0][0].text).toBe("hello worl");
     });
   });
 
