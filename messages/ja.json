@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "読み込んでいます…",
   "close": "閉じる",
+  "opensInNewTab": "(新しいタブで開きます)",
   "boardGridLabel": "コミュニケーションボード",
   "board": "ボード",
   "libraryLoading": "ボードを読み込んでいます…",

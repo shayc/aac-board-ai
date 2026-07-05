@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Se încarcă...",
   "close": "Închide",
+  "opensInNewTab": "(se deschide într-o filă nouă)",
   "boardGridLabel": "Tablă de comunicare",
   "board": "Tablă",
   "libraryLoading": "Se încarcă tablele...",

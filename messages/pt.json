@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Carregando...",
   "close": "Fechar",
+  "opensInNewTab": "(abre em uma nova aba)",
   "boardGridLabel": "Prancha de comunicação",
   "board": "Prancha",
   "libraryLoading": "Carregando pranchas...",
