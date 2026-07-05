@@ -61,7 +61,6 @@ const themeOptions = {
             backgroundColor: SHELL_LIGHT,
             color: palette.text.primary,
             backgroundImage: "none",
-            borderBottom: `1px solid ${palette.divider}`,
             ...theme.applyStyles("dark", {
               backgroundColor: SHELL_DARK,
             }),
