@@ -1,6 +1,7 @@
 import {
   BoardNotFoundError,
   hydrateBoard,
+  InvalidIdError,
   resolveTranslatedBoard,
   type Board,
 } from "@features/board";
@@ -23,7 +24,10 @@ export async function boardLoader({
 
     return await resolveTranslatedBoard(setId, board, language, request.signal);
   } catch (error) {
-    if (error instanceof BoardNotFoundError) {
+    if (
+      error instanceof BoardNotFoundError ||
+      error instanceof InvalidIdError
+    ) {
       throw data(m.errorBoardNotFound(), { status: 404 });
     }
 

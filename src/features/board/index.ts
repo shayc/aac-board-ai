@@ -19,7 +19,11 @@ export {
 export { BoardSwitcher } from "./navigation/board-switcher";
 export { NavButtons } from "./navigation/nav-buttons";
 export { hydrateBoard } from "./storage/board-hydration";
-export { BoardNotFoundError, getBoardSet } from "./storage/boards-db";
+export {
+  BoardNotFoundError,
+  getBoardSet,
+  InvalidIdError,
+} from "./storage/boards-db";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { BoardSetRecord } from "./storage/boards-db";

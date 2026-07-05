@@ -33,4 +33,12 @@ describe("boardSetIndexLoader", () => {
       init: { status: 404 },
     });
   });
+
+  test("throws 404 for an oversize setId", async () => {
+    await seedBoardSets([]);
+
+    await expect(callLoader("x".repeat(256))).rejects.toMatchObject({
+      init: { status: 404 },
+    });
+  });
 });
