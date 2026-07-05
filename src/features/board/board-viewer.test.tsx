@@ -3,10 +3,10 @@ import {
   stubBuiltInAIUnsupported,
   stubProofreader,
 } from "@shared/testing/built-in-ai";
-import { TEST_IMAGE_SRC } from "@shared/testing/fixtures";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { TEST_IMAGE_SRC } from "./testing";
 import { renderBoardViewer, TWO_TILE_BOARD } from "./test-utils";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {

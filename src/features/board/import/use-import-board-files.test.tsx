@@ -1,9 +1,8 @@
 import { AppProviders } from "@shared/providers/app-providers";
-import { loadFixtureFile } from "@shared/testing/fixtures";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
-import { resetBoardsDB } from "../storage/test-utils";
+import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { importBoardSets } from "./board-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 

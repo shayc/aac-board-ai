@@ -6,7 +6,7 @@ import { MemoryRouter, Route, Routes } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
-import { seedBoardSets } from "../storage/test-utils";
+import { seedBoardSets } from "../testing";
 import { NavButtons } from "./nav-buttons";
 
 function renderAt(

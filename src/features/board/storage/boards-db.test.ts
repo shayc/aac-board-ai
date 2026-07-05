@@ -13,7 +13,7 @@ import {
   updateBoardStrings,
   type ReplaceBoardSetInput,
 } from "./boards-db";
-import { clearBoardsDB, makeOBFBoard } from "./test-utils";
+import { clearBoardsDB, makeOBFBoard } from "../testing";
 
 function makeReplaceInput(
   overrides: Partial<ReplaceBoardSetInput> = {},

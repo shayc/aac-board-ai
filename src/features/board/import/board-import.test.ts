@@ -1,4 +1,3 @@
-import { loadFixtureFile } from "@shared/testing/fixtures";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { loadOBF, loadOBZ, type OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
@@ -8,7 +7,7 @@ import {
   getBoardsDB,
   listBoardSets,
 } from "../storage/boards-db";
-import { resetBoardsDB } from "../storage/test-utils";
+import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   buildAssetInputs,
   importBoardSets,

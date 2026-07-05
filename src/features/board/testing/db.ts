@@ -1,6 +1,10 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
-import { getBoardsDB, replaceBoardSet, type BoardSetRecord } from "./boards-db";
+import {
+  getBoardsDB,
+  replaceBoardSet,
+  type BoardSetRecord,
+} from "../storage/boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 

@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { replaceBoardSet } from "../storage/boards-db";
-import { clearBoardsDB, makeOBFBoard } from "../storage/test-utils";
+import { clearBoardsDB, makeOBFBoard } from "../testing";
 import { BoardSwitcher } from "./board-switcher";
 
 async function renderSwitcher(initialPath: string) {
