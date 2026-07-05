@@ -4,6 +4,8 @@ import Fab from "@mui/material/Fab";
 import { m } from "@paraglide/messages.js";
 import { flipForRtl } from "@shared/theme/rtl";
 
+const iconSx = { fontSize: 32 };
+
 export interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
@@ -36,9 +38,9 @@ export function PlayButton({
       }}
     >
       {isPlaying ? (
-        <StopIcon sx={{ fontSize: 32 }} />
+        <StopIcon sx={iconSx} />
       ) : (
-        <PlayArrowIcon sx={[flipForRtl, { fontSize: 32 }]} />
+        <PlayArrowIcon sx={[flipForRtl, iconSx]} />
       )}
     </Fab>
   );

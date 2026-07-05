@@ -3,13 +3,14 @@ import {
   setStoredLanguage,
 } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
-import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { replaceBoardSet } from "../storage/boards-db";
-import { clearBoardsDB, makeOBFBoard } from "../testing";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSwitcher } from "./board-switcher";
 
 async function renderSwitcher(initialPath: string) {
@@ -17,7 +18,7 @@ async function renderSwitcher(initialPath: string) {
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <BoardSwitcher label="Home" />,
+        element: <BoardSwitcher />,
       },
     ],
     { initialEntries: [initialPath] },
@@ -34,7 +35,7 @@ async function renderSwitcher(initialPath: string) {
 
 beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
-  await clearBoardsDB();
+  await resetBoardsDB();
   await replaceBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [
@@ -77,6 +78,13 @@ describe("BoardSwitcher", () => {
     await expect
       .element(screen.getByRole("option", { name: "Home" }))
       .toHaveAttribute("aria-selected", "true");
+
+    // "region" flags the portaled popup for not being inside a landmark,
+    // which only exists in the full app shell, not this isolated component
+    // render.
+    await expectNoA11yViolations(document.body, {
+      rules: { region: { enabled: false } },
+    });
   });
 
   test("navigates and closes the popup when a board is clicked", async () => {

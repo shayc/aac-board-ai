@@ -133,14 +133,19 @@ export default defineConfig({
       instances: [{ browser: "chromium" }],
     },
     coverage: {
-      exclude: [...coverageConfigDefaults.exclude, "src/paraglide/**"],
+      exclude: [
+        ...coverageConfigDefaults.exclude,
+        "src/paraglide/**",
+        "**/testing/**",
+        "**/test-utils.*",
+      ],
       // Regression floor ~2 points under the measured baseline; ratchet up
       // alongside meaningful coverage gains, never down.
       thresholds: {
-        statements: 87,
-        branches: 76,
-        functions: 89,
-        lines: 91,
+        statements: 89,
+        branches: 78,
+        functions: 92,
+        lines: 93,
       },
     },
   },

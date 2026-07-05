@@ -10,7 +10,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { usePageTitle } from "./page-title-store";
 
 export interface AppHeaderProps {
   libraryButtonHidden?: boolean;
@@ -23,7 +22,6 @@ export function AppHeader({
   onLibraryClick,
   onSettingsClick,
 }: AppHeaderProps) {
-  const pageTitle = usePageTitle();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   return (
@@ -68,7 +66,7 @@ export function AppHeader({
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
-          <BoardSwitcher label={pageTitle} />
+          <BoardSwitcher />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>

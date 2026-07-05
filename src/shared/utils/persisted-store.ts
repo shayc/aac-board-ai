@@ -1,5 +1,13 @@
 import { createExternalStore, type ExternalStore } from "./external-store";
 
+const reloaders = new Set<() => void>();
+
+export function resetPersistedStores(): void {
+  for (const reload of reloaders) {
+    reload();
+  }
+}
+
 export function createPersistedStore<T>(
   storageKey: string,
   parse: (raw: unknown) => T,
@@ -25,6 +33,7 @@ export function createPersistedStore<T>(
   };
 
   store.subscribe(persist);
+  reloaders.add(() => store.setState(load()));
 
   return store;
 }

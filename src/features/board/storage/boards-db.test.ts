@@ -14,7 +14,7 @@ import {
   updateBoardStrings,
   type ReplaceBoardSetInput,
 } from "./boards-db";
-import { clearBoardsDB, makeOBFBoard } from "../testing";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
 
 function makeReplaceInput(
   overrides: Partial<ReplaceBoardSetInput> = {},
@@ -28,7 +28,7 @@ function makeReplaceInput(
 }
 
 beforeEach(async () => {
-  await clearBoardsDB();
+  await resetBoardsDB();
 });
 
 afterEach(closeBoardsDB);
