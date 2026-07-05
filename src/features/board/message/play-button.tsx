@@ -2,7 +2,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Fab from "@mui/material/Fab";
 import { m } from "@paraglide/messages.js";
-import { flipForRtl } from "@shared/theme/rtl";
+
+const iconSx = { fontSize: 32 };
 
 export interface PlayButtonProps {
   disabled?: boolean;
@@ -35,11 +36,7 @@ export function PlayButton({
         alignSelf: "center",
       }}
     >
-      {isPlaying ? (
-        <StopIcon sx={{ fontSize: 32 }} />
-      ) : (
-        <PlayArrowIcon sx={[flipForRtl, { fontSize: 32 }]} />
-      )}
+      {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}
     </Fab>
   );
 }
