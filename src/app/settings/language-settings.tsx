@@ -18,6 +18,10 @@ export function LanguageSettings() {
   const { languages, language, setLanguage } = useLanguage();
   const progress = useGlobalDownloadProgress("Translator");
 
+  if (!isSupported("Translator")) {
+    return null;
+  }
+
   return (
     <Stack spacing={2}>
       <FormControl size="small" fullWidth>
@@ -28,7 +32,6 @@ export function LanguageSettings() {
           labelId="language-select-label"
           id="language-select"
           value={language}
-          disabled={!isSupported("Translator")}
           onChange={(event) => setLanguage(event.target.value)}
         >
           {languages.map(({ code, name }) => (

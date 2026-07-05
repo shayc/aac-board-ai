@@ -18,14 +18,14 @@ function renderLanguageSettings() {
 }
 
 describe("LanguageSettings", () => {
-  test("disables the language select without the Translator", async () => {
+  test("hides the language select without the Translator", async () => {
     stubBuiltInAIUnsupported("Translator");
 
     const screen = await renderLanguageSettings();
 
     await expect
       .element(screen.getByRole("combobox", { name: "Language" }))
-      .toHaveAttribute("aria-disabled", "true");
+      .not.toBeInTheDocument();
   });
 
   test("enables the language select when the Translator is available, with no a11y violations", async () => {
