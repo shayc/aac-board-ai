@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Prilagođene upute",
   "aiCustomInstructionsPlaceholder": "npr. govori sarkastičnim tonom",
   "aiCustomInstructionsHelper": "Oblikujte prijedloge svojim riječima.",
+  "suggestionsUnsupported": "Prijedlozi zahtijevaju ugrađenu AI, postavljenu u Chromeu ili Edgeu za računala.",
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela… {progress} %",
   "suggestionsDownloadingIndeterminate": "Preuzimanje AI modela…",

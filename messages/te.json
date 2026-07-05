@@ -90,6 +90,7 @@
   "aiCustomInstructions": "అనుకూల సూచనలు",
   "aiCustomInstructionsPlaceholder": "ఉదా., వ్యంగ్యమైన స్వరంతో మాట్లాడు",
   "aiCustomInstructionsHelper": "మీ సొంత మాటల్లో సూచనలను రూపొందించండి.",
+  "suggestionsUnsupported": "సూచనలకు అంతర్నిర్మిత AI అవసరం, డెస్క్‌టాప్ Chrome లేదా Edge‌లో సెటప్ చేయాలి.",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది…",

@@ -90,6 +90,7 @@
   "aiCustomInstructions": "ಕಸ್ಟಮ್ ಸೂಚನೆಗಳು",
   "aiCustomInstructionsPlaceholder": "ಉದಾ., ವ್ಯಂಗ್ಯ ಧ್ವನಿಯಲ್ಲಿ ಮಾತನಾಡಿ",
   "aiCustomInstructionsHelper": "ನಿಮ್ಮ ಸ್ವಂತ ಮಾತುಗಳಲ್ಲಿ ಸಲಹೆಗಳನ್ನು ರೂಪಿಸಿ.",
+  "suggestionsUnsupported": "ಸಲಹೆಗಳಿಗೆ ಅಂತರ್ನಿರ್ಮಿತ AI ಅಗತ್ಯವಿದೆ, ಡೆಸ್ಕ್‌ಟಾಪ್ Chrome ಅಥವಾ Edge ನಲ್ಲಿ ಹೊಂದಿಸಲಾಗಿದೆ.",
   "suggestionsEnable": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "suggestionsDownloading": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",

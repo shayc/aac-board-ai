@@ -90,6 +90,7 @@
   "aiCustomInstructions": "คำสั่งที่กำหนดเอง",
   "aiCustomInstructionsPlaceholder": "เช่น พูดด้วยน้ำเสียงประชดประชัน",
   "aiCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",
+  "suggestionsUnsupported": "คำแนะนำต้องใช้ AI ในตัว ซึ่งตั้งค่าไว้ใน Chrome หรือ Edge บนเดสก์ท็อป",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "กำลังดาวน์โหลดโมเดล AI…",

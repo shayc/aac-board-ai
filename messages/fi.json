@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Mukautetut ohjeet",
   "aiCustomInstructionsPlaceholder": "esim. puhu sarkastisella sävyllä",
   "aiCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",
+  "suggestionsUnsupported": "Ehdotukset vaativat sisäänrakennetun tekoälyn, joka on määritetty työpöytäversion Chromessa tai Edgessä.",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsDownloadingIndeterminate": "Ladataan tekoälymallia…",

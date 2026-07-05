@@ -90,6 +90,7 @@
   "aiCustomInstructions": "自定义指令",
   "aiCustomInstructionsPlaceholder": "例如：以讽刺的语气说话",
   "aiCustomInstructionsHelper": "用你自己的话塑造建议。",
+  "suggestionsUnsupported": "建议功能需要内置 AI，需在桌面版 Chrome 或 Edge 中设置。",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsDownloadingIndeterminate": "正在下载 AI 模型…",

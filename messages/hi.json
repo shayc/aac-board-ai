@@ -90,6 +90,7 @@
   "aiCustomInstructions": "कस्टम निर्देश",
   "aiCustomInstructionsPlaceholder": "जैसे, व्यंग्यात्मक लहजे में बोलें",
   "aiCustomInstructionsHelper": "सुझावों को अपने शब्दों में ढालें।",
+  "suggestionsUnsupported": "सुझावों के लिए बिल्ट-इन AI चाहिए, जिसे डेस्कटॉप Chrome या Edge में सेट किया गया हो।",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI मॉडल डाउनलोड हो रहा है…",

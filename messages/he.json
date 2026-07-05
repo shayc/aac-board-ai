@@ -90,6 +90,7 @@
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: דבר בטון סרקסטי",
   "aiCustomInstructionsHelper": "עצבו את ההצעות במילים שלכם.",
+  "suggestionsUnsupported": "ההצעות דורשות בינה מלאכותית מובנית, המוגדרת בגרסת שולחן העבודה של Chrome או Edge.",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "הורדת מודל ה-AI…",

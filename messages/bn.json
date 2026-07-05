@@ -90,6 +90,7 @@
   "aiCustomInstructions": "কাস্টম নির্দেশনা",
   "aiCustomInstructionsPlaceholder": "যেমন, ব্যঙ্গাত্মক সুরে কথা বলুন",
   "aiCustomInstructionsHelper": "নিজের ভাষায় পরামর্শগুলো গঠন করুন।",
+  "suggestionsUnsupported": "পরামর্শের জন্য বিল্ট-ইন AI প্রয়োজন, ডেস্কটপ Chrome বা Edge-এ সেট আপ করুন।",
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI মডেল ডাউনলোড হচ্ছে…",

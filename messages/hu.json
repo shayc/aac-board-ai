@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Egyéni utasítások",
   "aiCustomInstructionsPlaceholder": "pl. beszélj szarkasztikus hangnemben",
   "aiCustomInstructionsHelper": "Alakítsd a javaslatokat a saját szavaiddal.",
+  "suggestionsUnsupported": "A javaslatokhoz beépített AI szükséges, asztali Chrome-ban vagy Edge-ben beállítva.",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",
   "suggestionsDownloadingIndeterminate": "MI-modell letöltése…",

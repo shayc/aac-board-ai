@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Instruksi khusus",
   "aiCustomInstructionsPlaceholder": "mis. berbicara dengan nada sarkastis",
   "aiCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",
+  "suggestionsUnsupported": "Saran memerlukan AI bawaan, yang disiapkan di Chrome atau Edge versi desktop.",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Mengunduh model AI…",

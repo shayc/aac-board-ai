@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Instrucțiuni personalizate",
   "aiCustomInstructionsPlaceholder": "ex. vorbește pe un ton sarcastic",
   "aiCustomInstructionsHelper": "Modelează sugestiile cu propriile tale cuvinte.",
+  "suggestionsUnsupported": "Sugestiile necesită AI integrată, configurată în Chrome sau Edge pentru desktop.",
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Se descarcă modelul AI…",

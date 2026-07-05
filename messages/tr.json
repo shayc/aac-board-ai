@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Özel talimatlar",
   "aiCustomInstructionsPlaceholder": "ör. alaycı bir tonda konuş",
   "aiCustomInstructionsHelper": "Önerileri kendi kelimelerinizle şekillendirin.",
+  "suggestionsUnsupported": "Önerilerin çalışması için masaüstü Chrome veya Edge’de kurulmuş yerleşik AI gerekir.",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",
   "suggestionsDownloadingIndeterminate": "Yapay zeka modeli indiriliyor…",

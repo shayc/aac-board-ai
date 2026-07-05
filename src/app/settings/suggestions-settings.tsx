@@ -1,5 +1,6 @@
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { rewriterLanguageOptions } from "@shared/built-in-ai/engine-language-options";
 import {
@@ -20,7 +21,11 @@ export function SuggestionsSettings() {
   const toneControlState = deriveToneControlState(rewriter.status);
 
   if (!isSupported("Rewriter")) {
-    return null;
+    return (
+      <Typography sx={{ typography: "body2", color: "text.secondary" }}>
+        {m.suggestionsUnsupported()}
+      </Typography>
+    );
   }
 
   return (

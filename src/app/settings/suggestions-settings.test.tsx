@@ -19,11 +19,14 @@ function renderSuggestionsSettings() {
 }
 
 describe("SuggestionsSettings", () => {
-  test("renders nothing when the rewriter is unsupported", async () => {
+  test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
     stubBuiltInAIUnsupported("Proofreader", "Rewriter", "Translator");
 
     const screen = await renderSuggestionsSettings();
 
+    await expect
+      .element(screen.getByText(/Suggestions need built-in AI/i))
+      .toBeVisible();
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .not.toBeInTheDocument();

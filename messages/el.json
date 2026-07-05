@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Προσαρμοσμένες οδηγίες",
   "aiCustomInstructionsPlaceholder": "π.χ. μίλα με σαρκαστικό τόνο",
   "aiCustomInstructionsHelper": "Διαμορφώστε τις προτάσεις με τα δικά σας λόγια.",
+  "suggestionsUnsupported": "Οι προτάσεις απαιτούν ενσωματωμένη AI, ρυθμισμένη σε Chrome ή Edge για υπολογιστή.",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Λήψη μοντέλου AI…",

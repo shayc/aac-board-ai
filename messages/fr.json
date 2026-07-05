@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Instructions personnalisées",
   "aiCustomInstructionsPlaceholder": "p. ex. parler sur un ton sarcastique",
   "aiCustomInstructionsHelper": "Façonnez les suggestions avec vos propres mots.",
+  "suggestionsUnsupported": "Les suggestions nécessitent l’IA intégrée, configurée dans Chrome ou Edge pour ordinateur.",
   "suggestionsEnable": "Activer les suggestions",
   "suggestionsDownloading": "Téléchargement du modèle d'IA… {progress} %",
   "suggestionsDownloadingIndeterminate": "Téléchargement du modèle d'IA…",

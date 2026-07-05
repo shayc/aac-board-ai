@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Пользовательские инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичным тоном",
   "aiCustomInstructionsHelper": "Формулируйте предложения своими словами.",
+  "suggestionsUnsupported": "Для подсказок нужен встроенный ИИ, настроенный в настольной версии Chrome или Edge.",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Загрузка модели ИИ…",
