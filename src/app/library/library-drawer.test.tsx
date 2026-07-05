@@ -62,4 +62,29 @@ describe("LibraryDrawer", () => {
     await expect.element(screen.getByText("board page")).toBeInTheDocument();
     expect(onClose).toHaveBeenCalledOnce();
   });
+
+  test("exposes a complementary landmark when persistent, no a11y violations", async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: "/",
+          element: (
+            <LibraryDrawer open onClose={vi.fn()} variant="persistent" />
+          ),
+        },
+      ],
+      { initialEntries: ["/"] },
+    );
+
+    const screen = await render(
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>,
+    );
+
+    await expect
+      .element(screen.getByRole("complementary", { name: "Library" }))
+      .toBeInTheDocument();
+    await expectNoA11yViolations(document.body);
+  });
 });

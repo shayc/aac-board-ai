@@ -38,6 +38,7 @@ export function LibraryDrawer({
       slotProps={{
         paper: {
           "aria-label": m.libraryTitle(),
+          ...(variant === "persistent" && { component: "aside" }),
           sx: {
             width: LIBRARY_DRAWER_WIDTH,
             display: "flex",
