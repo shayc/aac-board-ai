@@ -2,23 +2,14 @@ import { importBoardFromUrl } from "@features/board";
 import { resetBoardsDB } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio, stubSpeech } from "@shared/testing/device-output";
-import { createMemoryRouter, type RouteObject } from "react-router";
+import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { appRoutes } from "./app-routes";
 
 const OBZ_FIXTURE_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
-
-// The onboarding store reads localStorage when its module first loads, and a
-// previously run test file may have persisted a dismissal. Seeding before a
-// dynamic import pins this file to a first-run state.
-let appRoutes: RouteObject[];
-
-beforeAll(async () => {
-  localStorage.setItem("hasSeenOnboarding", "false");
-  ({ appRoutes } = await import("./app-routes"));
-});
 
 async function renderApp() {
   const router = createMemoryRouter(appRoutes, { initialEntries: ["/"] });
@@ -71,6 +62,7 @@ describe("app flow", () => {
   test("empty database: imports and opens the bundled starter board", async () => {
     const screen = await renderApp();
 
+    await screen.getByRole("button", { name: "Continue" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "Quick Core 24" }))
       .toBeVisible();
