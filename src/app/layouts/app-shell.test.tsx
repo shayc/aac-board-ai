@@ -1,4 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
@@ -20,6 +21,12 @@ function renderAppShell() {
 }
 
 describe("AppShell", () => {
+  test("has no a11y violations", async () => {
+    await renderAppShell();
+
+    await expectNoA11yViolations(document.body);
+  });
+
   test("onboarding shows on first visit and closes on Continue", async () => {
     const screen = await renderAppShell();
 

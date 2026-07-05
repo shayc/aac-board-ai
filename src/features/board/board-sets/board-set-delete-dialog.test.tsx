@@ -1,9 +1,23 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetDeleteDialog", () => {
+  test("has no a11y violations when open", async () => {
+    const screen = await render(
+      <BoardSetDeleteDialog
+        boardSet={makeBoardSet({ name: "Core Words" })}
+        onConfirm={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+    await expectNoA11yViolations(document.body);
+  });
+
   test("shows the board set name and an irreversible warning when open", async () => {
     const screen = await render(
       <BoardSetDeleteDialog

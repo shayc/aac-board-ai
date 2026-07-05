@@ -1,9 +1,34 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetList } from "./board-set-list";
 import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetList", () => {
+  test("has no a11y violations with the row menu open", async () => {
+    const screen = await render(
+      <BoardSetList
+        boardSets={[makeBoardSet({ name: "Core Words" })]}
+        onSelect={vi.fn()}
+        onInfo={vi.fn()}
+        onDelete={vi.fn()}
+      />,
+    );
+
+    await screen
+      .getByRole("button", { name: "More options for Core Words" })
+      .click();
+    await expect
+      .element(screen.getByRole("menuitem", { name: "Info" }))
+      .toBeVisible();
+
+    // "region" flags the portaled menu for not being inside a landmark, which
+    // only exists in the full app shell, not this isolated component render.
+    await expectNoA11yViolations(document.body, {
+      rules: { region: { enabled: false } },
+    });
+  });
+
   test("renders an item per board set with its name", async () => {
     const screen = await render(
       <BoardSetList

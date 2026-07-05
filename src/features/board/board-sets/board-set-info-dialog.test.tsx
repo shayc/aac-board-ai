@@ -1,9 +1,22 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { makeBoardSet } from "./test-utils";
 
 describe("BoardSetInfoDialog", () => {
+  test("has no a11y violations when open", async () => {
+    const screen = await render(
+      <BoardSetInfoDialog
+        boardSet={makeBoardSet({ name: "Core Words", author: "Jane" })}
+        onClose={vi.fn()}
+      />,
+    );
+
+    await expect.element(screen.getByRole("dialog")).toBeVisible();
+    await expectNoA11yViolations(document.body);
+  });
+
   test("shows the name and author", async () => {
     const screen = await render(
       <BoardSetInfoDialog

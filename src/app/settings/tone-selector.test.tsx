@@ -1,9 +1,18 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { ToneSelector } from "./tone-selector";
 
 describe("ToneSelector", () => {
+  test("has no a11y violations", async () => {
+    const screen = await render(
+      <ToneSelector tone="as-is" onChange={vi.fn()} />,
+    );
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test.each([
     ["as-is", "direct"],
     ["more-formal", "professional"],
