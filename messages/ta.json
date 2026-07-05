@@ -90,6 +90,7 @@
   "aiCustomInstructions": "தனிப்பயன் வழிமுறைகள்",
   "aiCustomInstructionsPlaceholder": "எ.கா., கிண்டலான தொனியில் பேசு",
   "aiCustomInstructionsHelper": "உங்கள் சொந்த வார்த்தைகளில் பரிந்துரைகளை வடிவமைக்கவும்.",
+  "suggestionsUnsupported": "பரிந்துரைகளுக்கு உள்ளமைக்கப்பட்ட AI தேவை, டெஸ்க்டாப் Chrome அல்லது Edge-இல் அமைக்கப்பட வேண்டும்.",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI மாடல் பதிவிறக்கப்படுகிறது…",

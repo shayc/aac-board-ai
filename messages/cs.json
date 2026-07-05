@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Vlastní pokyny",
   "aiCustomInstructionsPlaceholder": "např. mluv sarkastickým tónem",
   "aiCustomInstructionsHelper": "Formulujte návrhy vlastními slovy.",
+  "suggestionsUnsupported": "Návrhy vyžadují vestavěnou AI, nastavenou v desktopovém Chrome nebo Edge.",
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Stahování modelu AI…",

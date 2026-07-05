@@ -17,7 +17,6 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { isSupported } from "@shayc/react-built-in-ai";
 import { AppearanceSettings } from "./appearance-settings";
 import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
@@ -123,21 +122,13 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           <SpeechSettings />
         </Stack>
 
-        {isSupported("Rewriter") && (
-          <>
-            <Divider sx={{ my: 3 }} />
+        <Divider sx={{ my: 3 }} />
 
-            <Typography
-              component="h3"
-              variant="subtitle1"
-              sx={sectionHeadingSx}
-            >
-              <AutoAwesomeIcon fontSize="small" />
-              {m.settingsSectionSuggestions()}
-            </Typography>
-            <SuggestionsSettings />
-          </>
-        )}
+        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
+          <AutoAwesomeIcon fontSize="small" />
+          {m.settingsSectionSuggestions()}
+        </Typography>
+        <SuggestionsSettings />
 
         <Divider sx={{ my: 3 }} />
 

@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Navodila po meri",
   "aiCustomInstructionsPlaceholder": "npr. govori sarkastičnim tonom",
   "aiCustomInstructionsHelper": "Oblikujte predloge s svojimi besedami.",
+  "suggestionsUnsupported": "Predlogi zahtevajo vgrajeno umetno inteligenco, nastavljeno v namiznem Chromu ali Edgeu.",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Prenašanje modela UI…",

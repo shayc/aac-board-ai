@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Hướng dẫn tùy chỉnh",
   "aiCustomInstructionsPlaceholder": "ví dụ: nói với giọng điệu châm biếm",
   "aiCustomInstructionsHelper": "Định hình gợi ý theo cách nói của riêng bạn.",
+  "suggestionsUnsupported": "Gợi ý cần AI tích hợp sẵn, được thiết lập trên Chrome hoặc Edge phiên bản máy tính.",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
   "suggestionsDownloadingIndeterminate": "Đang tải mô hình AI xuống…",

@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Instrukcje niestandardowe",
   "aiCustomInstructionsPlaceholder": "np. mów sarkastycznym tonem",
   "aiCustomInstructionsHelper": "Kształtuj sugestie własnymi słowami.",
+  "suggestionsUnsupported": "Sugestie wymagają wbudowanej AI, skonfigurowanej w wersji Chrome lub Edge na komputer.",
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Pobieranie modelu AI…",

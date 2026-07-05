@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Персонализирани инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори със саркастичен тон",
   "aiCustomInstructionsHelper": "Оформете предложенията с ваши думи.",
+  "suggestionsUnsupported": "Предложенията изискват вграден AI, настроен в настолна версия на Chrome или Edge.",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Изтегляне на модела на ИИ…",

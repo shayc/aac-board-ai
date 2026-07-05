@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Tilpassede instruktioner",
   "aiCustomInstructionsPlaceholder": "f.eks. tal i en sarkastisk tone",
   "aiCustomInstructionsHelper": "Form forslagene med dine egne ord.",
+  "suggestionsUnsupported": "Forslag kræver indbygget AI, konfigureret i desktop Chrome eller Edge.",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model… {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloader AI-model…",

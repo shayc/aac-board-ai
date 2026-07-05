@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Vlastné pokyny",
   "aiCustomInstructionsPlaceholder": "napr. hovor sarkastickým tónom",
   "aiCustomInstructionsHelper": "Formulujte návrhy vlastnými slovami.",
+  "suggestionsUnsupported": "Návrhy vyžadujú vstavanú AI nastavenú v desktopovom Chrome alebo Edge.",
   "suggestionsEnable": "Zapnúť návrhy",
   "suggestionsDownloading": "Sťahovanie modelu AI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Sťahovanie modelu AI…",

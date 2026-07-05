@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Benutzerdefinierte Anweisungen",
   "aiCustomInstructionsPlaceholder": "z. B. in sarkastischem Ton sprechen",
   "aiCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",
+  "suggestionsUnsupported": "Vorschläge benötigen integrierte KI, eingerichtet in Desktop-Chrome oder -Edge.",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
   "suggestionsDownloadingIndeterminate": "KI-Modell wird heruntergeladen…",

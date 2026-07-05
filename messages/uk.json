@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Власні інструкції",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичним тоном",
   "aiCustomInstructionsHelper": "Формулюйте пропозиції власними словами.",
+  "suggestionsUnsupported": "Для пропозицій потрібен вбудований ШІ, налаштований у настільній версії Chrome або Edge.",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Завантаження моделі ШІ…",

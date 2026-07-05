@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g. speak in a sarcastic tone",
   "aiCustomInstructionsHelper": "Shape suggestions in your own words.",
+  "suggestionsUnsupported": "Suggestions need built-in AI, set up in desktop Chrome or Edge.",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model... {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloading AI model...",

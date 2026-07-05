@@ -90,6 +90,7 @@
   "aiCustomInstructions": "カスタム指示",
   "aiCustomInstructionsPlaceholder": "例：皮肉っぽい口調で話す",
   "aiCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",
+  "suggestionsUnsupported": "提案には組み込みAIが必要です。デスクトップ版のChromeまたはEdgeで設定してください。",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI モデルをダウンロード中…",

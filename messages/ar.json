@@ -90,6 +90,7 @@
   "aiCustomInstructions": "تعليمات مخصصة",
   "aiCustomInstructionsPlaceholder": "مثل: تحدث بنبرة ساخرة",
   "aiCustomInstructionsHelper": "صِغ الاقتراحات بأسلوبك الخاص.",
+  "suggestionsUnsupported": "تحتاج الاقتراحات إلى ذكاء اصطناعي مدمج، مُعد في نسخة سطح المكتب من Chrome أو Edge.",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",
   "suggestionsDownloadingIndeterminate": "جارٍ تنزيل نموذج الذكاء الاصطناعي…",

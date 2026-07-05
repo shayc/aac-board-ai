@@ -90,6 +90,7 @@
   "aiCustomInstructions": "Aangepaste instructies",
   "aiCustomInstructionsPlaceholder": "bijv. spreek op een sarcastische toon",
   "aiCustomInstructionsHelper": "Geef de suggesties vorm in je eigen woorden.",
+  "suggestionsUnsupported": "Suggesties hebben ingebouwde AI nodig, ingesteld in desktop Chrome of Edge.",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI-model downloaden…",

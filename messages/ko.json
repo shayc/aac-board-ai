@@ -90,6 +90,7 @@
   "aiCustomInstructions": "맞춤 지침",
   "aiCustomInstructionsPlaceholder": "예: 냉소적인 어조로 말하기",
   "aiCustomInstructionsHelper": "자신만의 언어로 제안을 다듬어 보세요.",
+  "suggestionsUnsupported": "제안 기능은 내장 AI가 필요하며, 데스크톱 Chrome 또는 Edge에서 설정해야 합니다.",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI 모델 다운로드 중…",
