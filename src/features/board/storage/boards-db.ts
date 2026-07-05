@@ -36,6 +36,15 @@ export class BoardNotFoundError extends Error {
   }
 }
 
+const MAX_ID_LENGTH = 255;
+
+export class InvalidIdError extends Error {
+  constructor(fieldName: string) {
+    super(`Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`);
+    this.name = "InvalidIdError";
+  }
+}
+
 export interface UpsertBoardSetInput {
   setId: string;
   name: string;
@@ -95,13 +104,9 @@ function normalizePath(rawPath: string): string {
   return normalized;
 }
 
-const MAX_ID_LENGTH = 255;
-
 function validateId(id: string, fieldName: string): void {
   if (!id || id.length > MAX_ID_LENGTH) {
-    throw new Error(
-      `Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`,
-    );
+    throw new InvalidIdError(fieldName);
   }
 }
 
@@ -128,19 +133,31 @@ export async function closeBoardsDB(): Promise<void> {
 
 function openConnection(): Promise<BoardsDB> {
   return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
-    upgrade(db) {
-      const boardSets = db.createObjectStore("boardSets", { keyPath: "setId" });
-      boardSets.createIndex("byUpdatedAt", "updatedAt");
+    upgrade(db, oldVersion) {
+      if (oldVersion < 1) {
+        const boardSets = db.createObjectStore("boardSets", {
+          keyPath: "setId",
+        });
+        boardSets.createIndex("byUpdatedAt", "updatedAt");
 
-      const boards = db.createObjectStore("boards", {
-        keyPath: ["setId", "boardId"],
-      });
-      boards.createIndex("bySetId", "setId");
+        const boards = db.createObjectStore("boards", {
+          keyPath: ["setId", "boardId"],
+        });
+        boards.createIndex("bySetId", "setId");
 
-      const assets = db.createObjectStore("assets", {
-        keyPath: ["setId", "path"],
-      });
-      assets.createIndex("bySetId", "setId");
+        const assets = db.createObjectStore("assets", {
+          keyPath: ["setId", "path"],
+        });
+        assets.createIndex("bySetId", "setId");
+      }
+    },
+    blocked(currentVersion, blockedVersion) {
+      console.warn(
+        `boards-db upgrade to v${blockedVersion} blocked by a tab holding v${currentVersion}`,
+      );
+    },
+    blocking() {
+      void closeBoardsDB();
     },
     terminated() {
       connection = null;

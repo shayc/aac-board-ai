@@ -7,6 +7,7 @@ import {
   getAssetBlob,
   getBoard,
   getBoardsDB,
+  InvalidIdError,
   listBoards,
   listBoardSets,
   replaceBoardSet,
@@ -177,6 +178,16 @@ describe("replaceBoardSet", () => {
         }),
       ),
     ).rejects.toThrow("Invalid setId");
+  });
+
+  test("rejects empty setId with a typed InvalidIdError", async () => {
+    await expect(
+      replaceBoardSet(
+        makeReplaceInput({
+          boardSet: { setId: "", name: "Bad", rootBoardId: "root-1" },
+        }),
+      ),
+    ).rejects.toBeInstanceOf(InvalidIdError);
   });
 
   test("rejects setId longer than 255 characters", async () => {
