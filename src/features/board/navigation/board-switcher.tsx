@@ -53,13 +53,6 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
           {...params}
           slotProps={{
             ...params.slotProps,
-            input: {
-              ...params.slotProps?.input,
-              sx: {
-                paddingTop: 1,
-                paddingBottom: 1,
-              },
-            },
             htmlInput: {
               ...params.slotProps?.htmlInput,
               "aria-label": m.board(),
