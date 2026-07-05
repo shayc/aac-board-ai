@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "กำลังโหลด...",
   "close": "ปิด",
+  "opensInNewTab": "(เปิดในแท็บใหม่)",
   "boardGridLabel": "บอร์ดสื่อสาร",
   "board": "บอร์ด",
   "libraryLoading": "กำลังโหลดบอร์ด...",

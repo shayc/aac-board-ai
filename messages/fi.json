@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Ladataan...",
   "close": "Sulje",
+  "opensInNewTab": "(avautuu uuteen välilehteen)",
   "boardGridLabel": "Kommunikointitaulu",
   "board": "Taulu",
   "libraryLoading": "Ladataan tauluja...",

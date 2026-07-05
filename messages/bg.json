@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Зареждане...",
   "close": "Затваряне",
+  "opensInNewTab": "(отваря се в нов раздел)",
   "boardGridLabel": "Комуникационна дъска",
   "board": "Дъска",
   "libraryLoading": "Зареждане на дъските...",

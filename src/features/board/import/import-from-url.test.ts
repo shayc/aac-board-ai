@@ -1,9 +1,8 @@
-import { loadFixtureFile } from "@shared/testing/fixtures";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { resetBoardsDB } from "../storage/test-utils";
+import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { importBoardFromUrl } from "./import-from-url";
 
-const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
+const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
 describe("importBoardFromUrl", () => {

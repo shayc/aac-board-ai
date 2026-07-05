@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Yükleniyor...",
   "close": "Kapat",
+  "opensInNewTab": "(yeni sekmede açılır)",
   "boardGridLabel": "İletişim panosu",
   "board": "Pano",
   "libraryLoading": "Panolar yükleniyor...",

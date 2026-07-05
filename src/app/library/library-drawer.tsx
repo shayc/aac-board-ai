@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
@@ -29,8 +28,6 @@ export function LibraryDrawer({
   const activeSetId = activeMatch?.params.setId;
 
   const closeOnNavigate = variant === "temporary" ? onClose : undefined;
-  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const animated = !reducedMotion;
 
   return (
     <Drawer
@@ -38,10 +35,10 @@ export function LibraryDrawer({
       open={open}
       onClose={onClose}
       variant={variant}
-      transitionDuration={animated ? undefined : 0}
       slotProps={{
         paper: {
           "aria-label": m.libraryTitle(),
+          ...(variant === "persistent" && { component: "aside" }),
           sx: {
             width: LIBRARY_DRAWER_WIDTH,
             display: "flex",

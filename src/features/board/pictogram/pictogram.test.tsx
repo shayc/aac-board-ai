@@ -1,6 +1,6 @@
-import { TEST_IMAGE_SRC } from "@shared/testing/fixtures";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
+import { TEST_IMAGE_SRC } from "../testing";
 import { Pictogram } from "./pictogram";
 
 describe("Pictogram", () => {

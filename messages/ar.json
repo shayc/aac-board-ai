@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "جارٍ التحميل...",
   "close": "إغلاق",
+  "opensInNewTab": "(يفتح في علامة تبويب جديدة)",
   "boardGridLabel": "لوحة تواصل",
   "board": "لوحة",
   "libraryLoading": "جارٍ تحميل اللوحات...",

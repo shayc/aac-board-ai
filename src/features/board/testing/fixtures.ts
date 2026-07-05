@@ -5,7 +5,7 @@
 export const TEST_IMAGE_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 
-const SAMPLE_BOARDS_DIR = "/src/shared/testing/sample-boards";
+const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 
 /**
  * Loads a board file from sample-boards/ off the test server as a File,

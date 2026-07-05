@@ -45,7 +45,7 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack direction="row" sx={{ p: { xs: 2, sm: 3 } }}>
+    <Stack direction="row" sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}>
       <Stack
         direction="row"
         sx={[

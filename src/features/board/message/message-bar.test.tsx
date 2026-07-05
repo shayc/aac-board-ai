@@ -60,6 +60,17 @@ describe("MessageBar", () => {
     await expect.element(screen.getByText("water")).toBeVisible();
   });
 
+  test("re-enables text selection so the composed message can be copied", async () => {
+    const parts: MessagePart[] = [{ id: "a", label: "I" }];
+
+    const screen = await render(<MessageBar {...createProps({ parts })} />);
+
+    const label = screen.getByText("I").element();
+    const styles = getComputedStyle(label);
+
+    expect(styles.userSelect).toBe("text");
+  });
+
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {
       const screen = await render(

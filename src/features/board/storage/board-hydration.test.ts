@@ -4,7 +4,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { hydrateBoard } from "./board-hydration";
 import { BoardNotFoundError, replaceBoardSet } from "./boards-db";
-import { resetBoardsDB } from "./test-utils";
+import { resetBoardsDB } from "../testing";
 
 const SET_ID = "loader-test-set";
 const BOARD_ID = "loader-test-board";

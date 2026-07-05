@@ -10,7 +10,7 @@ import {
 } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook, type RenderHookResult } from "vitest-browser-react";
-import { seedBoardSets } from "../storage/test-utils";
+import { seedBoardSets } from "../testing";
 import {
   useBoardNavigation,
   type UseBoardNavigationReturn,

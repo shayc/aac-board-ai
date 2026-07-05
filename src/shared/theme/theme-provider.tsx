@@ -7,6 +7,7 @@ import {
   type ThemeOptions,
 } from "@mui/material/styles";
 import rtlPlugin from "@mui/stylis-plugin-rtl";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useLanguage } from "@shared/language/use-language";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
@@ -23,124 +24,141 @@ const rtlCache = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
-const themeOptions = {
-  cssVariables: {
-    colorSchemeSelector: "class",
-    // index.html owns color-scheme; MUI only emits the palette vars.
-    disableCssColorScheme: true,
-  },
-  colorSchemes: {
-    light: { palette: { background: { default: SHELL_LIGHT } } },
-    dark: { palette: { background: { default: SHELL_DARK } } },
-  },
-  typography: {
-    button: {
-      textTransform: "none",
+function getThemeOptions(reducedMotion: boolean) {
+  return {
+    cssVariables: {
+      colorSchemeSelector: "class",
+      // index.html owns color-scheme; MUI only emits the palette vars.
+      disableCssColorScheme: true,
     },
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        html: {
-          overscrollBehaviorY: "none",
-        },
-        body: {
-          userSelect: "none",
-        },
+    colorSchemes: {
+      light: { palette: { background: { default: SHELL_LIGHT } } },
+      dark: { palette: { background: { default: SHELL_DARK } } },
+    },
+    transitions: reducedMotion
+      ? {
+          duration: {
+            shortest: 0,
+            shorter: 0,
+            short: 0,
+            standard: 0,
+            complex: 0,
+            enteringScreen: 0,
+            leavingScreen: 0,
+          },
+        }
+      : undefined,
+    typography: {
+      button: {
+        textTransform: "none",
       },
     },
-    MuiAppBar: {
-      defaultProps: {
-        elevation: 0,
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          html: {
+            overscrollBehaviorY: "none",
+          },
+          body: {
+            userSelect: "none",
+          },
+        },
       },
-      styleOverrides: {
-        root: ({ theme }) => {
-          const palette = theme.vars?.palette ?? theme.palette;
+      MuiAppBar: {
+        defaultProps: {
+          elevation: 0,
+        },
+        styleOverrides: {
+          root: ({ theme }) => {
+            const palette = theme.vars?.palette ?? theme.palette;
 
-          return {
-            backgroundColor: SHELL_LIGHT,
-            color: palette.text.primary,
-            backgroundImage: "none",
+            return {
+              backgroundColor: SHELL_LIGHT,
+              color: palette.text.primary,
+              backgroundImage: "none",
+              ...theme.applyStyles("dark", {
+                backgroundColor: SHELL_DARK,
+              }),
+            };
+          },
+        },
+      },
+      MuiDrawer: {
+        styleOverrides: {
+          paper: ({ theme }) => ({
             ...theme.applyStyles("dark", {
               backgroundColor: SHELL_DARK,
+              backgroundImage: "none",
             }),
-          };
-        },
-      },
-    },
-    MuiDrawer: {
-      styleOverrides: {
-        paper: ({ theme }) => ({
-          ...theme.applyStyles("dark", {
-            backgroundColor: SHELL_DARK,
-            backgroundImage: "none",
           }),
-        }),
-      },
-    },
-    MuiDialog: {
-      styleOverrides: {
-        paper: {
-          borderRadius: 32,
         },
       },
-    },
-    MuiDialogActions: {
-      styleOverrides: {
-        root: {
-          padding: 16,
+      MuiDialog: {
+        styleOverrides: {
+          paper: {
+            borderRadius: 32,
+          },
         },
       },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24,
+      MuiDialogActions: {
+        styleOverrides: {
+          root: {
+            padding: 16,
+          },
         },
       },
-    },
-    MuiIconButton: {
-      styleOverrides: {
-        root: ({ theme }) => {
-          const borderColor = theme.vars
-            ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
-            : theme.palette.mode === "light"
-              ? "rgba(0, 0, 0, 0.23)"
-              : "rgba(255, 255, 255, 0.23)";
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 24,
+          },
+        },
+      },
+      MuiIconButton: {
+        styleOverrides: {
+          root: ({ theme }) => {
+            const borderColor = theme.vars
+              ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
+              : theme.palette.mode === "light"
+                ? "rgba(0, 0, 0, 0.23)"
+                : "rgba(255, 255, 255, 0.23)";
 
-          return {
-            border: `1px solid ${borderColor}`,
-          };
+            return {
+              border: `1px solid ${borderColor}`,
+            };
+          },
+        },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            borderRadius: 24,
+          },
+        },
+      },
+      MuiListItemButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: 24,
+          },
         },
       },
     },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24,
-        },
-      },
-    },
-    MuiListItemButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 24,
-        },
-      },
-    },
-  },
-} satisfies ThemeOptions;
-
-const ltrTheme = createTheme({ ...themeOptions, direction: "ltr" });
-const rtlTheme = createTheme({ ...themeOptions, direction: "rtl" });
+  } satisfies ThemeOptions;
+}
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { direction } = useLanguage();
   const isRtl = direction === "rtl";
+  const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const theme = createTheme({
+    ...getThemeOptions(reducedMotion),
+    direction: isRtl ? "rtl" : "ltr",
+  });
 
   return (
     <CacheProvider value={isRtl ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={isRtl ? rtlTheme : ltrTheme}>
+      <MUIThemeProvider theme={theme}>
         <CssBaseline />
         <ThemeColorMeta />
         {children}

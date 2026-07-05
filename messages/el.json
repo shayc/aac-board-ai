@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Φόρτωση...",
   "close": "Κλείσιμο",
+  "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",
   "boardGridLabel": "Πίνακας επικοινωνίας",
   "board": "Πίνακας",
   "libraryLoading": "Φόρτωση πινάκων...",

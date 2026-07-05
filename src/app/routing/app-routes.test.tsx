@@ -7,7 +7,8 @@ import { RouterProvider } from "react-router/dom";
 import { beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 
-const OBZ_FIXTURE_URL = "/src/shared/testing/sample-boards/lots-of-stuff.obz";
+const OBZ_FIXTURE_URL =
+  "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 
 // The onboarding store reads localStorage when its module first loads, and a
 // previously run test file may have persisted a dismissal. Seeding before a

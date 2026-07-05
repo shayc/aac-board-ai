@@ -2,6 +2,7 @@
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "loading": "Đang tải...",
   "close": "Đóng",
+  "opensInNewTab": "(mở trong tab mới)",
   "boardGridLabel": "Bảng giao tiếp",
   "board": "Bảng",
   "libraryLoading": "Đang tải các bảng...",
