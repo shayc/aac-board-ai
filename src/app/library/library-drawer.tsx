@@ -30,7 +30,7 @@ export function LibraryDrawer({
 
   const closeOnNavigate = variant === "temporary" ? onClose : undefined;
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
-  const animated = variant === "temporary" && !reducedMotion;
+  const animated = !reducedMotion;
 
   return (
     <Drawer

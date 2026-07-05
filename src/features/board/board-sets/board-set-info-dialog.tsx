@@ -7,7 +7,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { getEnglishLanguageName } from "@shared/utils/locale";
 import type { BoardSetRecord } from "../storage/boards-db";
 
 export interface BoardSetInfoDialogProps {
@@ -76,10 +75,6 @@ function buildChipLabels(boardSet: BoardSetRecord): string[] {
         columns: boardSet.gridColumns,
       }),
     );
-  }
-
-  if (boardSet.locale) {
-    labels.push(getEnglishLanguageName(boardSet.locale));
   }
 
   if (boardSet.license) {
