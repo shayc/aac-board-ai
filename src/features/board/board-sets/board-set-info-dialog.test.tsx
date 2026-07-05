@@ -16,7 +16,7 @@ describe("BoardSetInfoDialog", () => {
     await expect.element(screen.getByText("By Jane")).toBeInTheDocument();
   });
 
-  test("builds chips from grid dimensions, locale, and license", async () => {
+  test("builds chips from grid dimensions and license", async () => {
     const screen = await render(
       <BoardSetInfoDialog
         boardSet={makeBoardSet({
@@ -30,7 +30,6 @@ describe("BoardSetInfoDialog", () => {
     );
 
     await expect.element(screen.getByText("2×3 grid")).toBeInTheDocument();
-    await expect.element(screen.getByText("English")).toBeInTheDocument();
     await expect.element(screen.getByText("CC BY-SA 4.0")).toBeInTheDocument();
   });
 
