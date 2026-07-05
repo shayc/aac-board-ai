@@ -131,7 +131,7 @@ an action:
 
 ```mermaid
 flowchart LR
-    tap["tile tap / Enter"] --> resolve["resolveButtonIntent<br/>navigate · compose · speakText · playAudio · runAction"]
+    tap["tile tap / Enter"] --> resolve["resolveButtonIntents<br/>navigate · compose · speakText · playAudio · runAction"]
     resolve --> dispatch["activateButton"]
     dispatch --> msg["append to message bar"]
     dispatch --> goto["navigate to board"]
@@ -152,7 +152,7 @@ hyperlinked, so a moved file never breaks this table.
 | `src/pages/`                                                             | Route entry components, each code-split via React Router's `lazy` route import.                                             |
 | `src/features/board/`                                                    | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                            |
 | `src/features/board/grid·tile·pictogram/`                                | Render the tile grid and each pictogram.                                                                                    |
-| `src/features/board/activation/`                                         | Tap → typed intent → dispatch. Search `resolveButtonIntent`, `createButtonActivation`.                                      |
+| `src/features/board/activation/`                                         | Tap → typed intent → dispatch. Search `resolveButtonIntents`, `createButtonActivation`.                                     |
 | `src/features/board/message/`                                            | The message bar: accumulate parts, then `planPlayback` → TTS with per-part highlighting.                                    |
 | `src/features/board/navigation/`                                         | Board-to-board navigation over the router. Search `useBoardNavigation`, `boardPath`.                                        |
 | `src/features/board/keyboard/` + `grid/use-grid-keyboard.ts`             | Keyboard as a first-class input surface: grid navigation (`useGridKeyboard`) and message editing (`useBoardKeyboard`).      |
@@ -189,10 +189,11 @@ State has **five kinds**, each with one home:
    These change outside React (DB writes, the browser's `voiceschanged` event).
 4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
    change): selected **language**, speech config (voice/rate/pitch/volume),
-   playback config, and AI shared context. Theme mode
-   persists separately as MUI's `mui-mode`, read pre-paint in `index.html`.
+   playback config, AI shared context, AI tone (`tone-store.ts`, key `ai-tone`), and
+   the onboarding-seen flag (`use-onboarding.ts`, key `hasSeenOnboarding`). Theme
+   mode persists separately as MUI's `mui-mode`, read pre-paint in `index.html`.
 5. **Local component state** — the in-progress message (`useMessage`), playback
-   progress, grid focus, selected tone. Never promoted to a global store.
+   progress, grid focus. Never promoted to a global store.
 
 **Cross-tab coherence** rides on `BroadcastChannel` (`board-sets-sync`) — one
 listener per tab, registered at module load and never tied to a component mount, so
