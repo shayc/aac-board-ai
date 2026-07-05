@@ -9,7 +9,11 @@ import {
   listBoardSets,
 } from "../storage/boards-db";
 import { resetBoardsDB } from "../storage/test-utils";
-import { importBoardSets, resolveLoadBoardPaths } from "./board-import";
+import {
+  buildAssetInputs,
+  importBoardSets,
+  resolveLoadBoardPaths,
+} from "./board-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";
@@ -287,5 +291,19 @@ describe("resolveLoadBoardPaths", () => {
 
     expect(result.buttons[0]?.load_board).toBeUndefined();
     expect(result.buttons[0]?.label).toBe("Hello");
+  });
+});
+
+describe("buildAssetInputs", () => {
+  test("excludes OBF and manifest entries regardless of case", () => {
+    const resources = new Map([
+      ["HOME.OBF", new Uint8Array()],
+      ["Manifest.json", new Uint8Array()],
+      ["images/cat.png", new Uint8Array([1, 2, 3])],
+    ]);
+
+    const assets = buildAssetInputs(resources);
+
+    expect(assets.map((asset) => asset.path)).toEqual(["images/cat.png"]);
   });
 });

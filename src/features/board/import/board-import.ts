@@ -118,11 +118,14 @@ function buildBoardInputs(
   }));
 }
 
-function buildAssetInputs(
+export function buildAssetInputs(
   resources: Map<string, Uint8Array>,
 ): UpsertAssetInput[] {
   return Array.from(resources.entries())
-    .filter(([path]) => !path.endsWith(".obf") && path !== "manifest.json")
+    .filter(([path]) => {
+      const lowerPath = path.toLowerCase();
+      return !lowerPath.endsWith(".obf") && lowerPath !== "manifest.json";
+    })
     .map(([path, buffer]) => {
       const mimeType = lookup(path) ?? "application/octet-stream";
 
