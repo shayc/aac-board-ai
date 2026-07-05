@@ -9,7 +9,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { replaceBoardSet } from "../storage/boards-db";
-import { clearBoardsDB, makeOBFBoard } from "../testing";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSwitcher } from "./board-switcher";
 
 async function renderSwitcher(initialPath: string) {
@@ -34,7 +34,7 @@ async function renderSwitcher(initialPath: string) {
 
 beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
-  await clearBoardsDB();
+  await resetBoardsDB();
   await replaceBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [

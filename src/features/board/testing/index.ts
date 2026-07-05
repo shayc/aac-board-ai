@@ -1,5 +1,4 @@
 export {
-  clearBoardsDB,
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,

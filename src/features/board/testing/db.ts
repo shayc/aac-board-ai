@@ -27,7 +27,7 @@ export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   };
 }
 
-export async function clearBoardsDB(): Promise<void> {
+async function clearBoardsDB(): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(STORE_NAMES, "readwrite");
   for (const name of STORE_NAMES) {
@@ -37,6 +37,7 @@ export async function clearBoardsDB(): Promise<void> {
   await tx.done;
 }
 
+/** Standard per-suite IDB reset: clear all board stores and refresh the in-memory board-sets cache. */
 export async function resetBoardsDB(): Promise<void> {
   await clearBoardsDB();
   await refreshBoardSets();
