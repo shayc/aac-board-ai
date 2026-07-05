@@ -18,7 +18,7 @@ async function renderSwitcher(initialPath: string) {
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <BoardSwitcher label="Home" />,
+        element: <BoardSwitcher />,
       },
     ],
     { initialEntries: [initialPath] },

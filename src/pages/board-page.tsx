@@ -1,4 +1,3 @@
-import { PageTitle } from "@app/layouts/page-title";
 import { BoardViewer, type Board } from "@features/board";
 import { useLoaderData } from "react-router";
 
@@ -7,7 +6,7 @@ export const Component = function BoardPage() {
 
   return (
     <>
-      <PageTitle>{board.name}</PageTitle>
+      <title>{board.name}</title>
       <BoardViewer board={board} />
     </>
   );

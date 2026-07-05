@@ -1,16 +1,11 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useState } from "react";
 import { useBoardNavigation } from "./use-board-navigation";
 import { useSetBoards } from "./use-set-boards";
 
-export interface BoardSwitcherProps {
-  label: string;
-}
-
-export function BoardSwitcher({ label }: BoardSwitcherProps) {
+export function BoardSwitcher() {
   const { setId, boardId, goToBoard } = useBoardNavigation();
   const { boards } = useSetBoards({ setId });
   const [inputValue, setInputValue] = useState("");
@@ -18,18 +13,7 @@ export function BoardSwitcher({ label }: BoardSwitcherProps) {
   const selectedBoard = boards.find((board) => board.boardId === boardId);
 
   if (!selectedBoard) {
-    return (
-      <Typography
-        variant="h6"
-        sx={{
-          overflow: "hidden",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-        }}
-      >
-        {label}
-      </Typography>
-    );
+    return null;
   }
 
   return (
