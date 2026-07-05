@@ -66,6 +66,7 @@ export function SpeechSettings() {
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
       onChange: setRate,
+      valueLabelFormat: (value: number) => `${value}x`,
     },
     {
       id: "pitch",
@@ -74,6 +75,7 @@ export function SpeechSettings() {
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
       onChange: setPitch,
+      valueLabelFormat: (value: number) => `${value}x`,
     },
     {
       id: "volume",
@@ -82,6 +84,7 @@ export function SpeechSettings() {
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
       onChange: setVolume,
+      valueLabelFormat: (value: number) => `${Math.round(value * 100)}%`,
     },
   ];
 
@@ -101,22 +104,25 @@ export function SpeechSettings() {
         </Select>
       </FormControl>
 
-      {speechControls.map(({ id, label, value, min, max, onChange }) => (
-        <Stack key={id} spacing={0.5}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {label}
-          </Typography>
-          <Slider
-            aria-label={label}
-            valueLabelDisplay="auto"
-            value={value}
-            min={min}
-            max={max}
-            step={0.1}
-            onChange={(_event, newValue) => onChange(newValue)}
-          />
-        </Stack>
-      ))}
+      {speechControls.map(
+        ({ id, label, value, min, max, onChange, valueLabelFormat }) => (
+          <Stack key={id} spacing={0.5}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {label}
+            </Typography>
+            <Slider
+              aria-label={label}
+              valueLabelDisplay="auto"
+              valueLabelFormat={valueLabelFormat}
+              value={value}
+              min={min}
+              max={max}
+              step={0.1}
+              onChange={(_event, newValue) => onChange(newValue)}
+            />
+          </Stack>
+        ),
+      )}
 
       <Button
         variant="contained"
