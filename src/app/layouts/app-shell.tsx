@@ -3,6 +3,7 @@ import { ContentColumn } from "@app/layouts/content-column";
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
+import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
@@ -11,7 +12,6 @@ import {
 } from "@features/board";
 import Box from "@mui/material/Box";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { useRevalidateOnLanguageChange } from "@shared/language/use-revalidate-on-language-change";
 import { useState } from "react";
 import { Outlet } from "react-router";
 
