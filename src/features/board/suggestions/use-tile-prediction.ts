@@ -1,0 +1,121 @@
+import { languageModelLanguageOptions } from "@shared/built-in-ai/engine-language-options";
+import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
+import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
+import { useLatestAsync } from "@shared/hooks/use-latest-async";
+import { useLanguage } from "@shared/language/use-language";
+import { type Status, useLanguageModel } from "@shayc/react-built-in-ai";
+import { useEffect, useRef } from "react";
+import type { Board } from "../types";
+import { getBoardWords } from "./board-words";
+import {
+  buildPredictionPrompt,
+  PREDICTION_RESPONSE_SCHEMA,
+  PREDICTION_SYSTEM_PROMPT,
+} from "./prediction-prompt";
+import { toPrediction } from "./to-prediction";
+
+const PREDICTION_DEBOUNCE_MS = 400;
+
+export interface UseTilePredictionReturn {
+  status: Status;
+  requestFailed: boolean;
+  isPending: boolean;
+  phrase: string | undefined;
+  enable: () => void;
+}
+
+function isNonAbortError(error: Error | undefined): boolean {
+  return error !== undefined && error.name !== "AbortError";
+}
+
+function modelOptions(language: string) {
+  const initialPrompts: [LanguageModelSystemMessage] = [
+    { role: "system", content: PREDICTION_SYSTEM_PROMPT },
+  ];
+
+  return { initialPrompts, ...languageModelLanguageOptions(language) };
+}
+
+// Predicts the next 1–3 tiles for the message being composed, constrained to
+// the visible board's words. A sibling of the proofread/rewrite engines in
+// useSuggestions; the prediction surfaces as a regular phrase chip.
+export function useTilePrediction(
+  text: string,
+  board: Board,
+): UseTilePredictionReturn {
+  const { language } = useLanguage();
+  const boardWords = getBoardWords(board);
+
+  // Options are captured once at mount (the library's session contract), so the
+  // system prompt survives resets. The session is held in a ref so the
+  // re-provisioning effects can call reset() without re-reading mount options.
+  const model = useLanguageModel(modelOptions(language));
+
+  const modelRef = useRef(model);
+  useEffect(() => {
+    modelRef.current = model;
+  });
+
+  const languageRef = useRef(language);
+  useEffect(() => {
+    if (languageRef.current === language) {
+      return;
+    }
+    languageRef.current = language;
+    modelRef.current.reset(modelOptions(language));
+  }, [language]);
+
+  // Rare drift guards: a fresh session when the context overflows or fills past
+  // the half-way mark. `reset()` reuses the current options, costing at most one
+  // harmless re-prediction. A per-call reset is deliberately avoided — it races
+  // the library's session swap.
+  useEffect(() => {
+    const overflowed = model.overflowCount > 0;
+    const halfFull =
+      model.contextWindow > 0 && model.contextUsage > model.contextWindow / 2;
+    if (overflowed || halfFull) {
+      modelRef.current.reset();
+    }
+  }, [model.overflowCount, model.contextUsage, model.contextWindow]);
+
+  const debouncedText = useDebouncedValue(text, PREDICTION_DEBOUNCE_MS);
+
+  const prediction = useLatestAsync({
+    enabled: model.status === "ready" && boardWords.length > 0,
+    deps: [debouncedText, boardWords.join("\0"), language],
+    fetch: (signal) =>
+      model
+        .prompt(buildPredictionPrompt(debouncedText, boardWords), {
+          responseConstraint: PREDICTION_RESPONSE_SCHEMA,
+          signal,
+        })
+        .then((raw) =>
+          toPrediction({ raw, boardWords, messageText: debouncedText }),
+        ),
+  });
+
+  const enable = () => {
+    if (model.status === "downloadable") {
+      prepareQuietly(model);
+    }
+  };
+
+  // Assemble the chip here, from the SAME debounced text the words were
+  // predicted for — and only while the live text still matches it, so a
+  // half-typed sentence never shows a continuation predicted for an older
+  // prefix. Both `debouncedText` and `prediction.value` advance together, so
+  // pairing them is always coherent.
+  const words = prediction.value ?? [];
+  const phrase =
+    words.length > 0 && text === debouncedText
+      ? [debouncedText.trim(), ...words].filter(Boolean).join(" ")
+      : undefined;
+
+  return {
+    status: model.status,
+    requestFailed: isNonAbortError(prediction.error),
+    isPending: prediction.isPending,
+    phrase,
+    enable,
+  };
+}

@@ -8,15 +8,34 @@ import {
 import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
+  stubLanguageModel,
   stubProofreader,
   stubRewriter,
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import type { Board, BoardButton } from "../types";
 import { useSuggestions } from "./use-suggestions";
 
-function renderSuggestions(text: string) {
-  return renderHook(() => useSuggestions(text), { wrapper: LanguageProvider });
+function makeBoard(words: string[]): Board {
+  const buttons: BoardButton[] = words.map((label, i) => ({
+    id: `b${i}`,
+    label,
+  }));
+
+  return {
+    id: "test-board",
+    grid: { rows: 1, columns: words.length },
+    buttons,
+  };
+}
+
+const FOOD_BOARD = makeBoard(["eat", "drink", "more", "help", "stop"]);
+
+function renderSuggestions(text: string, board: Board = FOOD_BOARD) {
+  return renderHook(() => useSuggestions(text, board), {
+    wrapper: LanguageProvider,
+  });
 }
 
 describe("useSuggestions", () => {
@@ -27,7 +46,7 @@ describe("useSuggestions", () => {
   });
 
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
-    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
+    stubBuiltInAIUnsupported("Proofreader", "Rewriter", "LanguageModel");
 
     const { result } = await renderSuggestions("want eat");
 
@@ -330,7 +349,8 @@ describe("useSuggestions", () => {
     stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
-      ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
+      ({ text }: { text: string } = { text: "old" }) =>
+        useSuggestions(text, FOOD_BOARD),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
@@ -362,7 +382,8 @@ describe("useSuggestions", () => {
     stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
-      ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
+      ({ text }: { text: string } = { text: "old" }) =>
+        useSuggestions(text, FOOD_BOARD),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
@@ -376,5 +397,53 @@ describe("useSuggestions", () => {
 
     await rerender({ text: "new" });
     expect(result.current.phrases).toEqual([]);
+  });
+
+  test("lists the tile prediction last, after the proofread and rewrite", async () => {
+    stubProofreader(() => makeProofreadResult("I want to eat."));
+    stubRewriter(() => "I would like to eat.");
+    stubLanguageModel(() => '{"words":["more"]}');
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual([
+        "I want to eat.",
+        "I would like to eat.",
+        "want eat more",
+      ]);
+    });
+  });
+
+  test("stays supported when only the Prompt API is available", async () => {
+    stubLanguageModel();
+    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.isSupported).toBe(true);
+    });
+  });
+
+  test("enable prepares a downloadable Prompt API session", async () => {
+    const { availability } = stubLanguageModel();
+    availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
+    });
+
+    // Without a real user gesture the download can't start, but enable() must
+    // still drive prepare(), which re-probes the downloadable session.
+    const probesBefore = availability.mock.calls.length;
+    result.current.enable();
+
+    await vi.waitFor(() => {
+      expect(availability.mock.calls.length).toBeGreaterThan(probesBefore);
+    });
   });
 });

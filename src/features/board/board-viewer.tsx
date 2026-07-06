@@ -44,7 +44,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const { highlightActivePart } = usePlaybackConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
-  const suggestions = useSuggestions(message.text);
+  const suggestions = useSuggestions(message.text, board);
   const navigation = useBoardNavigation();
 
   const { activateButton } = createButtonActivation({
