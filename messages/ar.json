@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "تم استبدال اللوحة",
-        "countPlural=*": "تم استبدال اللوحات"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "حدث خطأ ما",
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
-  "errorBoardSetNotFound": "اللوحة غير موجودة"
+  "errorBoardSetNotFound": "اللوحة غير موجودة",
+  "importAlreadyInLibrary": "اللوحة موجودة بالفعل في مكتبتك",
+  "importUrlNotSupported": "لا يمكن استيراد هذا النوع من الروابط",
+  "importTooLarge": "حجم ملف اللوحة كبير جدًا على الاستيراد",
+  "importFailedTitle": "تعذّر استيراد اللوحة",
+  "importRetry": "إعادة المحاولة",
+  "importGoToBoards": "الانتقال إلى لوحاتي"
 }

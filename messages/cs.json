@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabulka nahrazena",
-        "countPlural=*": "Tabulky nahrazeny"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Něco se pokazilo",
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
-  "errorBoardSetNotFound": "Tabulka nebyla nalezena"
+  "errorBoardSetNotFound": "Tabulka nebyla nalezena",
+  "importAlreadyInLibrary": "Tabulka je již ve vaší knihovně",
+  "importUrlNotSupported": "Tento typ odkazu nelze importovat",
+  "importTooLarge": "Soubor tabulky je příliš velký pro import",
+  "importFailedTitle": "Tabulku se nepodařilo importovat",
+  "importRetry": "Zkusit znovu",
+  "importGoToBoards": "Přejít na mé tabulky"
 }

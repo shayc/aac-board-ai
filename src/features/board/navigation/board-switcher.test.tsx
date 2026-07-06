@@ -9,7 +9,7 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { replaceBoardSet } from "../storage/boards-db";
+import { createBoardSet } from "../storage/boards-db";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSwitcher } from "./board-switcher";
 
@@ -36,7 +36,7 @@ async function renderSwitcher(initialPath: string) {
 beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
   await resetBoardsDB();
-  await replaceBoardSet({
+  await createBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [
       {
@@ -157,7 +157,7 @@ describe("BoardSwitcher", () => {
   });
 
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
-    await replaceBoardSet({
+    await createBoardSet({
       boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
       boards: [
         {

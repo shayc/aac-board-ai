@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Papan diganti",
-        "countPlural=*": "Papan diganti"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Terjadi kesalahan",
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
-  "errorBoardSetNotFound": "Papan tidak ditemukan"
+  "errorBoardSetNotFound": "Papan tidak ditemukan",
+  "importAlreadyInLibrary": "Papan sudah ada di pustaka Anda",
+  "importUrlNotSupported": "Jenis tautan ini tidak dapat diimpor",
+  "importTooLarge": "Berkas papan terlalu besar untuk diimpor",
+  "importFailedTitle": "Tidak dapat mengimpor papan",
+  "importRetry": "Coba lagi",
+  "importGoToBoards": "Ke papan saya"
 }

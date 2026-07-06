@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "బోర్డు భర్తీ చేయబడింది",
-        "countPlural=*": "బోర్డులు భర్తీ చేయబడ్డాయి"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "ఏదో తప్పు జరిగింది",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
-  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు"
+  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",
+  "importAlreadyInLibrary": "బోర్డు ఇప్పటికే మీ లైబ్రరీలో ఉంది",
+  "importUrlNotSupported": "ఈ లింక్ రకాన్ని దిగుమతి చేయడం సాధ్యం కాదు",
+  "importTooLarge": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దదిగా ఉంది",
+  "importFailedTitle": "బోర్డును దిగుమతి చేయలేకపోయాం",
+  "importRetry": "మళ్లీ ప్రయత్నించండి",
+  "importGoToBoards": "నా బోర్డులకు వెళ్లండి"
 }

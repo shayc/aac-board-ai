@@ -253,7 +253,14 @@ Each is the one place to change a concern:
   import/export compatibility.
 - **Import boundary (write) — `src/features/board/import/`.** The only place a file
   becomes database records. All four entry points (picker, drag-drop, `?board=` URL,
-  PWA file handler) converge on `importBoardFiles`.
+  PWA file handler) converge on `importBoardSets`. Imports are **insert-only**: every
+  import gets a fresh `crypto.randomUUID()` identity, so no import can ever address,
+  modify, or replace an existing set — a crafted filename or URL can add data but
+  never overwrite it. A SHA-256 `sourceHash` of the imported bytes dedups a
+  byte-identical re-import to the existing set instead of duplicating it. Additive
+  derived data (cached translations via `updateBoardStrings`) preserves `sourceHash`;
+  a future feature that edits source content (labels, grid, images) must clear it, or
+  re-importing the pristine file would wrongly dedup to the edited set.
 - **AI provider boundary — `@shayc/react-built-in-ai`.** App code only consumes its
   hooks; swap models or providers in the library, not in features.
 - **Speech boundary — `src/shared/speech/`.** The only wrapper over the Web Speech
@@ -262,7 +269,13 @@ Each is the one place to change a concern:
 - **i18n boundary — Paraglide `m` + `src/shared/language/`.** The only source of UI
   strings and the active locale.
 - **Routing / data boundary — `src/app/routing/loaders/` + React Router.** The only path
-  from storage into the render tree.
+  from storage into the render tree. No loader creates, replaces, or deletes board
+  sets: the `?board=` URL import and the first-run default-board bootstrap live in
+  `src/pages/root-index-page.tsx`, not `rootIndexLoader` (which only reads/redirects),
+  so a bad or malicious link renders a localized in-app error, never the route error
+  boundary. `boardLoader`'s translation-cache write (`resolveTranslatedBoard` →
+  `updateBoardStrings`) is a pre-existing exception — background derived-data caching
+  triggered by viewing a board, not board-set creation.
 
 ## Cross-cutting concerns
 

@@ -7,7 +7,6 @@ import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { useFileHandlerLaunch } from "./use-file-handler-launch";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
-const IMPORTED_SET_ID = "lots-of-stuff";
 
 function LaunchHarness() {
   useFileHandlerLaunch();
@@ -64,14 +63,16 @@ describe("useFileHandlerLaunch", () => {
       fileHandle(await loadFixtureFile(OBF_FIXTURE)),
     );
 
+    let setId = "";
     await vi.waitFor(async () => {
       const boardSets = await listBoardSets();
       expect(boardSets).toHaveLength(1);
-      expect(boardSets[0]?.setId).toBe(IMPORTED_SET_ID);
+      setId = boardSets[0]?.setId ?? "";
+      expect(setId).not.toBe("");
     });
 
     await expect
       .element(screen.getByTestId("path"))
-      .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
+      .toHaveTextContent(`/sets/${setId}/boards/`);
   });
 });

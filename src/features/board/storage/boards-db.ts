@@ -14,6 +14,15 @@ export interface BoardSetRecord {
   locale?: string;
   gridRows?: number;
   gridColumns?: number;
+  /**
+   * SHA-256 hex of the originally imported file's bytes — "this set's source
+   * content is byte-identical to the file it was imported from." Additive
+   * derived data (e.g. cached translations via `updateBoardStrings`)
+   * preserves it; any future feature that edits source content (button
+   * labels, grid layout, images) must clear it, or re-importing the pristine
+   * file will dedup to the edited set instead of importing a fresh copy.
+   */
+  sourceHash?: string;
 }
 
 export interface BoardRecord {
@@ -45,7 +54,7 @@ export class InvalidIdError extends Error {
   }
 }
 
-export interface UpsertBoardSetInput {
+export interface BoardSetInput {
   setId: string;
   name: string;
   rootBoardId: string;
@@ -55,15 +64,16 @@ export interface UpsertBoardSetInput {
   locale?: string;
   gridRows?: number;
   gridColumns?: number;
+  sourceHash?: string;
 }
 
-export interface UpsertBoardInput {
+export interface BoardInput {
   boardId: string;
   name: string;
   obf: OBFBoard;
 }
 
-export interface UpsertAssetInput {
+export interface AssetInput {
   path: string;
   blob: Blob;
 }
@@ -201,15 +211,15 @@ export async function deleteBoardSetData(setId: string): Promise<void> {
   ]);
 }
 
-export interface ReplaceBoardSetInput {
-  boardSet: UpsertBoardSetInput;
-  boards: UpsertBoardInput[];
-  assets: UpsertAssetInput[];
+export interface CreateBoardSetInput {
+  boardSet: BoardSetInput;
+  boards: BoardInput[];
+  assets: AssetInput[];
 }
 
-export async function replaceBoardSet(
-  input: ReplaceBoardSetInput,
-): Promise<{ replacedExisting: boolean }> {
+export async function createBoardSet(
+  input: CreateBoardSetInput,
+): Promise<void> {
   const { boardSet, boards, assets } = input;
   validateId(boardSet.setId, "setId");
   validateId(boardSet.rootBoardId, "rootBoardId");
@@ -224,9 +234,6 @@ export async function replaceBoardSet(
   const boardStore = tx.objectStore("boards");
   const assetStore = tx.objectStore("assets");
 
-  const existing = await boardSetStore.get(setId);
-  const setRange = boardSetRange(setId);
-
   const record: BoardSetRecord = {
     setId,
     name: boardSet.name,
@@ -239,6 +246,7 @@ export async function replaceBoardSet(
     locale: boardSet.locale,
     gridRows: boardSet.gridRows,
     gridColumns: boardSet.gridColumns,
+    sourceHash: boardSet.sourceHash,
   };
 
   // idb creates tx.done eagerly when the transaction is opened, and requests
@@ -248,7 +256,6 @@ export async function replaceBoardSet(
   const requests: Promise<unknown>[] = [tx.done];
 
   try {
-    requests.push(boardStore.delete(setRange), assetStore.delete(setRange));
     for (const board of boards) {
       requests.push(
         boardStore.put({
@@ -268,7 +275,7 @@ export async function replaceBoardSet(
         }),
       );
     }
-    requests.push(boardSetStore.put(record));
+    requests.push(boardSetStore.add(record));
 
     await Promise.all(requests);
   } catch (error) {
@@ -280,8 +287,15 @@ export async function replaceBoardSet(
     await Promise.allSettled(requests);
     throw error;
   }
+}
 
-  return { replacedExisting: existing !== undefined };
+export async function findBoardSetBySourceHash(
+  sourceHash: string,
+): Promise<BoardSetRecord | undefined> {
+  const db = await getBoardsDB();
+  const boardSets = await db.getAll("boardSets");
+
+  return boardSets.find((boardSet) => boardSet.sourceHash === sourceHash);
 }
 
 export async function getBoard(

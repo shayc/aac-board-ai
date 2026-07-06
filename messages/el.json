@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ο πίνακας αντικαταστάθηκε",
-        "countPlural=*": "Οι πίνακες αντικαταστάθηκαν"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Κάτι πήγε στραβά",
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
-  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε"
+  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",
+  "importAlreadyInLibrary": "Ο πίνακας υπάρχει ήδη στη βιβλιοθήκη σας",
+  "importUrlNotSupported": "Αυτός ο τύπος συνδέσμου δεν μπορεί να εισαχθεί",
+  "importTooLarge": "Το αρχείο του πίνακα είναι πολύ μεγάλο για εισαγωγή",
+  "importFailedTitle": "Δεν ήταν δυνατή η εισαγωγή του πίνακα",
+  "importRetry": "Δοκιμάστε ξανά",
+  "importGoToBoards": "Μετάβαση στους πίνακές μου"
 }

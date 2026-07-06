@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Bord vervangen",
-        "countPlural=*": "Borden vervangen"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Er is iets misgegaan",
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
-  "errorBoardSetNotFound": "Bord niet gevonden"
+  "errorBoardSetNotFound": "Bord niet gevonden",
+  "importAlreadyInLibrary": "Bord staat al in je bibliotheek",
+  "importUrlNotSupported": "Dit linktype kan niet worden geïmporteerd",
+  "importTooLarge": "Bordbestand is te groot om te importeren",
+  "importFailedTitle": "Kan bord niet importeren",
+  "importRetry": "Opnieuw proberen",
+  "importGoToBoards": "Naar mijn borden"
 }

@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tábla lecserélve",
-        "countPlural=*": "Táblák lecserélve"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Hiba történt",
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
-  "errorBoardSetNotFound": "A tábla nem található"
+  "errorBoardSetNotFound": "A tábla nem található",
+  "importAlreadyInLibrary": "A tábla már megvan a könyvtáradban",
+  "importUrlNotSupported": "Ezt a linktípust nem lehet importálni",
+  "importTooLarge": "A táblafájl túl nagy az importáláshoz",
+  "importFailedTitle": "A tábla importálása nem sikerült",
+  "importRetry": "Próbáld újra",
+  "importGoToBoards": "Ugrás a tábláimhoz"
 }

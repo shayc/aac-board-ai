@@ -1,24 +1,26 @@
+import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { assertDefined } from "@shared/testing/assert-defined";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   closeBoardsDB,
+  createBoardSet,
   deleteBoardSetData,
+  findBoardSetBySourceHash,
   getAssetBlob,
   getBoard,
+  getBoardSet,
   getBoardsDB,
   InvalidIdError,
   listBoards,
   listBoardSets,
-  replaceBoardSet,
   updateBoardStrings,
-  type ReplaceBoardSetInput,
+  type CreateBoardSetInput,
 } from "./boards-db";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
 
-function makeReplaceInput(
-  overrides: Partial<ReplaceBoardSetInput> = {},
-): ReplaceBoardSetInput {
+function makeCreateInput(
+  overrides: Partial<CreateBoardSetInput> = {},
+): CreateBoardSetInput {
   return {
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root-1" },
     boards: [],
@@ -33,15 +35,13 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-describe("replaceBoardSet", () => {
+describe("createBoardSet", () => {
   test("inserts a new board set", async () => {
-    const { replacedExisting } = await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-1", name: "My Set", rootBoardId: "root-1" },
       }),
     );
-
-    expect(replacedExisting).toBe(false);
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
@@ -57,7 +57,7 @@ describe("replaceBoardSet", () => {
       { boardId: "b3", name: "B3", obf: makeOBFBoard({ id: "b3" }) },
     ];
 
-    await replaceBoardSet(makeReplaceInput({ boards }));
+    await createBoardSet(makeCreateInput({ boards }));
 
     const sets = await listBoardSets();
     expect(sets[0].boardCount).toBe(3);
@@ -68,8 +68,8 @@ describe("replaceBoardSet", () => {
   });
 
   test("stores and retrieves asset blobs, normalizing paths", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         assets: [
           { path: "images\\photo.png", blob: new Blob(["data"]) },
           { path: "/leading.png", blob: new Blob(["a"]) },
@@ -89,54 +89,54 @@ describe("replaceBoardSet", () => {
     );
   });
 
-  test("replaces an existing set wholesale: dropped boards, assets and metadata are gone", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
-        boardSet: {
-          setId: "set-1",
-          name: "Set v1",
-          rootBoardId: "a",
-          author: "Alice",
-        },
-        boards: [
-          { boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) },
-          { boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) },
-        ],
-        assets: [
-          { path: "x.png", blob: new Blob(["x"]) },
-          { path: "y.png", blob: new Blob(["y"]) },
-        ],
+  test("rejects creating a set whose id already exists", async () => {
+    await createBoardSet(
+      makeCreateInput({
+        boardSet: { setId: "set-1", name: "Set v1", rootBoardId: "a" },
       }),
     );
 
-    const { replacedExisting } = await replaceBoardSet(
-      makeReplaceInput({
-        boardSet: { setId: "set-1", name: "Set v2", rootBoardId: "a" },
-        boards: [{ boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) }],
-        assets: [{ path: "x.png", blob: new Blob(["x"]) }],
-      }),
-    );
-
-    expect(replacedExisting).toBe(true);
+    await expect(
+      createBoardSet(
+        makeCreateInput({
+          boardSet: { setId: "set-1", name: "Set v2", rootBoardId: "b" },
+        }),
+      ),
+    ).rejects.toThrow();
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
-    expect(sets[0].boardCount).toBe(1);
-    expect(sets[0].author).toBeUndefined();
-    expect(sets[0].rootBoardId).toBe("a");
-
-    expect(await getBoard("set-1", "a")).toBeDefined();
-    expect(await getBoard("set-1", "b")).toBeUndefined();
-    expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
-    expect(await getAssetBlob("set-1", "y.png")).toBeUndefined();
+    expect(sets[0].name).toBe("Set v1");
   });
 
-  test("aborts the entire transaction when a board fails to clone, leaving the prior set intact", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+  test("creating a second set never touches an existing one", async () => {
+    await createBoardSet(
+      makeCreateInput({
+        boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "a" },
+        boards: [{ boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) }],
+      }),
+    );
+
+    await createBoardSet(
+      makeCreateInput({
+        boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "b" },
+        boards: [{ boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) }],
+      }),
+    );
+
+    const setOne = await getBoardSet("set-1");
+    expect(setOne?.name).toBe("Set 1");
+    expect(await getBoard("set-1", "a")).toBeDefined();
+    expect(await getBoard("set-1", "b")).toBeUndefined();
+    expect(await getBoard("set-2", "a")).toBeUndefined();
+  });
+
+  test("aborts the entire transaction when a board fails to clone, leaving other sets intact", async () => {
+    await createBoardSet(
+      makeCreateInput({
         boardSet: {
           setId: "set-1",
-          name: "Set v1",
+          name: "Set 1",
           rootBoardId: "a",
           author: "Alice",
         },
@@ -151,9 +151,9 @@ describe("replaceBoardSet", () => {
     } as unknown as OBFBoard;
 
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
-          boardSet: { setId: "set-1", name: "Set v2", rootBoardId: "b" },
+      createBoardSet(
+        makeCreateInput({
+          boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "b" },
           boards: [{ boardId: "b", name: "B", obf: uncloneableObf }],
           assets: [],
         }),
@@ -162,18 +162,18 @@ describe("replaceBoardSet", () => {
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
+    expect(sets[0].setId).toBe("set-1");
     expect(sets[0].author).toBe("Alice");
-    expect(sets[0].rootBoardId).toBe("a");
-    expect(sets[0].boardCount).toBe(1);
 
     expect(await getBoard("set-1", "a")).toBeDefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
+    expect(await getBoard("set-2", "b")).toBeUndefined();
   });
 
   test("rejects empty setId", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boardSet: { setId: "", name: "Bad", rootBoardId: "root-1" },
         }),
       ),
@@ -182,8 +182,8 @@ describe("replaceBoardSet", () => {
 
   test("rejects empty setId with a typed InvalidIdError", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boardSet: { setId: "", name: "Bad", rootBoardId: "root-1" },
         }),
       ),
@@ -192,8 +192,8 @@ describe("replaceBoardSet", () => {
 
   test("rejects setId longer than 255 characters", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boardSet: {
             setId: "x".repeat(256),
             name: "Bad",
@@ -206,8 +206,8 @@ describe("replaceBoardSet", () => {
 
   test("rejects empty rootBoardId", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boardSet: { setId: "set-1", name: "Bad", rootBoardId: "" },
         }),
       ),
@@ -216,8 +216,8 @@ describe("replaceBoardSet", () => {
 
   test("rejects empty boardId", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boards: [{ boardId: "", name: "B", obf: makeOBFBoard() }],
         }),
       ),
@@ -226,14 +226,53 @@ describe("replaceBoardSet", () => {
 
   test("rejects boardId longer than 255 characters", async () => {
     await expect(
-      replaceBoardSet(
-        makeReplaceInput({
+      createBoardSet(
+        makeCreateInput({
           boards: [
             { boardId: "x".repeat(256), name: "B", obf: makeOBFBoard() },
           ],
         }),
       ),
     ).rejects.toThrow("Invalid boardId");
+  });
+});
+
+describe("findBoardSetBySourceHash", () => {
+  test("finds a set by its sourceHash", async () => {
+    await createBoardSet(
+      makeCreateInput({
+        boardSet: {
+          setId: "set-1",
+          name: "Set",
+          rootBoardId: "root-1",
+          sourceHash: "hash-a",
+        },
+      }),
+    );
+
+    const found = await findBoardSetBySourceHash("hash-a");
+    expect(found?.setId).toBe("set-1");
+  });
+
+  test("returns undefined when no set matches the hash", async () => {
+    await createBoardSet(
+      makeCreateInput({
+        boardSet: {
+          setId: "set-1",
+          name: "Set",
+          rootBoardId: "root-1",
+          sourceHash: "hash-a",
+        },
+      }),
+    );
+
+    expect(await findBoardSetBySourceHash("hash-b")).toBeUndefined();
+  });
+
+  test("never matches a set with no sourceHash", async () => {
+    await createBoardSet(makeCreateInput());
+
+    expect(await findBoardSetBySourceHash("hash-a")).toBeUndefined();
   });
 });
 
@@ -247,13 +286,13 @@ describe("listBoardSets", () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "old", name: "Old", rootBoardId: "root-1" },
       }),
     );
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "new", name: "New", rootBoardId: "root-1" },
       }),
     );
@@ -267,7 +306,7 @@ describe("listBoardSets", () => {
 
 describe("getBoard", () => {
   test("returns undefined for nonexistent board", async () => {
-    await replaceBoardSet(makeReplaceInput());
+    await createBoardSet(makeCreateInput());
 
     const board = await getBoard("set-1", "nonexistent");
     expect(board).toBeUndefined();
@@ -276,8 +315,8 @@ describe("getBoard", () => {
 
 describe("listBoards", () => {
   test("returns only the set's boards", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "a" },
         boards: [
           { boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) },
@@ -285,8 +324,8 @@ describe("listBoards", () => {
         ],
       }),
     );
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "c" },
         boards: [{ boardId: "c", name: "C", obf: makeOBFBoard({ id: "c" }) }],
       }),
@@ -298,7 +337,7 @@ describe("listBoards", () => {
   });
 
   test("returns empty array for a set with no boards", async () => {
-    await replaceBoardSet(makeReplaceInput());
+    await createBoardSet(makeCreateInput());
 
     const boards = await listBoards("set-1");
 
@@ -309,8 +348,8 @@ describe("listBoards", () => {
 describe("updateBoardStrings", () => {
   test("adds localized strings to a board", async () => {
     const obf = makeOBFBoard({ id: "b1" });
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boards: [{ boardId: "b1", name: "B1", obf }],
       }),
     );
@@ -332,8 +371,8 @@ describe("updateBoardStrings", () => {
       id: "b1",
       strings: { fr: { hello: "bonjour" } },
     });
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boards: [{ boardId: "b1", name: "B1", obf }],
       }),
     );
@@ -350,8 +389,8 @@ describe("updateBoardStrings", () => {
 
   test("replaces all strings when updating an existing locale", async () => {
     const obf = makeOBFBoard({ id: "b1" });
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boards: [{ boardId: "b1", name: "B1", obf }],
       }),
     );
@@ -368,7 +407,7 @@ describe("updateBoardStrings", () => {
   });
 
   test("throws when board does not exist", async () => {
-    await replaceBoardSet(makeReplaceInput());
+    await createBoardSet(makeCreateInput());
 
     await expect(
       updateBoardStrings("set-1", "nonexistent", "es", {}),
@@ -378,7 +417,7 @@ describe("updateBoardStrings", () => {
 
 describe("deleteBoardSetData", () => {
   test("removes the board set record", async () => {
-    await replaceBoardSet(makeReplaceInput());
+    await createBoardSet(makeCreateInput());
 
     await deleteBoardSetData("set-1");
 
@@ -387,8 +426,8 @@ describe("deleteBoardSetData", () => {
   });
 
   test("cascade-deletes all boards in the set", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boards: [
           { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
           { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
@@ -403,8 +442,8 @@ describe("deleteBoardSetData", () => {
   });
 
   test("cascade-deletes all assets in the set", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         assets: [
           { path: "img1.png", blob: new Blob(["a"]) },
           { path: "img2.png", blob: new Blob(["b"]) },
@@ -419,16 +458,16 @@ describe("deleteBoardSetData", () => {
   });
 
   test("does not affect other board sets", async () => {
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "root-1" },
         boards: [
           { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
         ],
       }),
     );
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "root-1" },
         boards: [
           { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
@@ -465,8 +504,8 @@ describe("getBoardsDB", () => {
     const second = await getBoardsDB();
     expect(second).not.toBe(first);
 
-    await replaceBoardSet(
-      makeReplaceInput({
+    await createBoardSet(
+      makeCreateInput({
         boardSet: { setId: "set-1", name: "Persisted", rootBoardId: "root-1" },
       }),
     );

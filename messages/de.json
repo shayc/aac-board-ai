@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tafel ersetzt",
-        "countPlural=*": "Tafeln ersetzt"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Etwas ist schiefgelaufen",
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
-  "errorBoardSetNotFound": "Tafel nicht gefunden"
+  "errorBoardSetNotFound": "Tafel nicht gefunden",
+  "importAlreadyInLibrary": "Tafel ist bereits in deiner Bibliothek",
+  "importUrlNotSupported": "Dieser Linktyp kann nicht importiert werden",
+  "importTooLarge": "Tafeldatei ist zu groß zum Importieren",
+  "importFailedTitle": "Tafel konnte nicht importiert werden",
+  "importRetry": "Erneut versuchen",
+  "importGoToBoards": "Zu meinen Tafeln"
 }

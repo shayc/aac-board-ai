@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavla ersatt",
-        "countPlural=*": "Tavlor ersatta"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Något gick fel",
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
-  "errorBoardSetNotFound": "Tavlan hittades inte"
+  "errorBoardSetNotFound": "Tavlan hittades inte",
+  "importAlreadyInLibrary": "Tavlan finns redan i ditt bibliotek",
+  "importUrlNotSupported": "Den här länktypen går inte att importera",
+  "importTooLarge": "Tavelfilen är för stor för att importeras",
+  "importFailedTitle": "Det gick inte att importera tavlan",
+  "importRetry": "Försök igen",
+  "importGoToBoards": "Till mina tavlor"
 }

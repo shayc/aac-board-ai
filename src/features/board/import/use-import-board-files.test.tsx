@@ -40,7 +40,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board imported");
   });
 
-  test("shows the replaced message when the set already exists", async () => {
+  test("shows the already-in-library message when the set already exists", async () => {
     const file = await loadFixtureFile(OBF_FIXTURE);
     await importBoardSets(file);
 
@@ -49,6 +49,6 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board replaced");
+      .toHaveTextContent("Board already in your library");
   });
 });

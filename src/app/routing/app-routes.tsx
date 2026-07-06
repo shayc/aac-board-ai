@@ -15,7 +15,11 @@ export const appRoutes: RouteObject[] = [
         ErrorBoundary: RouteErrorBoundary,
         HydrateFallback: LoadingState,
         children: [
-          { index: true, loader: rootIndexLoader },
+          {
+            index: true,
+            loader: rootIndexLoader,
+            lazy: () => import("@pages/root-index-page"),
+          },
           {
             path: BOARD_SET_PATTERN,
             children: [

@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಬದಲಾಯಿಸಲಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಬದಲಾಯಿಸಲಾಗಿವೆ"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ"
+  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
+  "importAlreadyInLibrary": "ಬೋರ್ಡ್ ಈಗಾಗಲೇ ನಿಮ್ಮ ಗ್ರಂಥಾಲಯದಲ್ಲಿದೆ",
+  "importUrlNotSupported": "ಈ ಲಿಂಕ್ ಪ್ರಕಾರವನ್ನು ಆಮದು ಮಾಡಲಾಗುವುದಿಲ್ಲ",
+  "importTooLarge": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
+  "importFailedTitle": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "importRetry": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ",
+  "importGoToBoards": "ನನ್ನ ಬೋರ್ಡ್‌ಗಳಿಗೆ ಹೋಗಿ"
 }

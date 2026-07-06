@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "বোর্ড প্রতিস্থাপিত হয়েছে",
-        "countPlural=*": "বোর্ড প্রতিস্থাপিত হয়েছে"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "কিছু একটা ভুল হয়েছে",
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
-  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি"
+  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",
+  "importAlreadyInLibrary": "বোর্ডটি ইতিমধ্যে আপনার লাইব্রেরিতে আছে",
+  "importUrlNotSupported": "এই ধরনের লিঙ্ক আমদানি করা যায় না",
+  "importTooLarge": "বোর্ড ফাইলটি আমদানি করার জন্য অনেক বড়",
+  "importFailedTitle": "বোর্ড আমদানি করা যায়নি",
+  "importRetry": "আবার চেষ্টা করুন",
+  "importGoToBoards": "আমার বোর্ডে যান"
 }

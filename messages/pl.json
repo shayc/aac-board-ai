@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Zastąpiono tablicę",
-        "countPlural=*": "Zastąpiono tablice"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Coś poszło nie tak",
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
-  "errorBoardSetNotFound": "Nie znaleziono tablicy"
+  "errorBoardSetNotFound": "Nie znaleziono tablicy",
+  "importAlreadyInLibrary": "Tablica jest już w Twojej bibliotece",
+  "importUrlNotSupported": "Tego typu linku nie można zaimportować",
+  "importTooLarge": "Plik tablicy jest zbyt duży, aby go zaimportować",
+  "importFailedTitle": "Nie udało się zaimportować tablicy",
+  "importRetry": "Spróbuj ponownie",
+  "importGoToBoards": "Przejdź do moich tablic"
 }

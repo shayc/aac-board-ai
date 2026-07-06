@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "பலகை மாற்றப்பட்டது",
-        "countPlural=*": "பலகைகள் மாற்றப்பட்டன"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "ஏதோ தவறு நடந்தது",
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
-  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை"
+  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை",
+  "importAlreadyInLibrary": "இந்தப் பலகை ஏற்கனவே உங்கள் நூலகத்தில் உள்ளது",
+  "importUrlNotSupported": "இந்த வகை இணைப்பை இறக்குமதி செய்ய முடியாது",
+  "importTooLarge": "பலகைக் கோப்பு இறக்குமதி செய்ய மிகப் பெரியது",
+  "importFailedTitle": "பலகையை இறக்குமதி செய்ய முடியவில்லை",
+  "importRetry": "மீண்டும் முயற்சி செய்",
+  "importGoToBoards": "எனது பலகைகளுக்குச் செல்"
 }

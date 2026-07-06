@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Доска заменена",
-        "countPlural=*": "Доски заменены"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Что-то пошло не так",
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
-  "errorBoardSetNotFound": "Доска не найдена"
+  "errorBoardSetNotFound": "Доска не найдена",
+  "importAlreadyInLibrary": "Эта доска уже есть в вашей библиотеке",
+  "importUrlNotSupported": "Этот тип ссылки нельзя импортировать",
+  "importTooLarge": "Файл доски слишком большой для импорта",
+  "importFailedTitle": "Не удалось импортировать доску",
+  "importRetry": "Повторить",
+  "importGoToBoards": "Перейти к моим доскам"
 }

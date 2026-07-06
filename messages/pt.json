@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Prancha substituída",
-        "countPlural=*": "Pranchas substituídas"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Algo deu errado",
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
-  "errorBoardSetNotFound": "Prancha não encontrada"
+  "errorBoardSetNotFound": "Prancha não encontrada",
+  "importAlreadyInLibrary": "A prancha já está na sua biblioteca",
+  "importUrlNotSupported": "Esse tipo de link não pode ser importado",
+  "importTooLarge": "O arquivo da prancha é muito grande para importar",
+  "importFailedTitle": "Não foi possível importar a prancha",
+  "importRetry": "Tentar novamente",
+  "importGoToBoards": "Ir para minhas pranchas"
 }

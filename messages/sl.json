@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabla zamenjana",
-        "countPlural=*": "Table zamenjane"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Nekaj je šlo narobe",
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
-  "errorBoardSetNotFound": "Table ni mogoče najti"
+  "errorBoardSetNotFound": "Table ni mogoče najti",
+  "importAlreadyInLibrary": "Tabla je že v vaši knjižnici",
+  "importUrlNotSupported": "Te vrste povezave ni mogoče uvoziti",
+  "importTooLarge": "Datoteka table je prevelika za uvoz",
+  "importFailedTitle": "Table ni bilo mogoče uvoziti",
+  "importRetry": "Poskusi znova",
+  "importGoToBoards": "Pojdi na moje table"
 }

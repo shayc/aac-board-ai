@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "הלוח הוחלף בהצלחה",
-        "countPlural=*": "הלוחות הוחלפו בהצלחה"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "משהו השתבש",
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
-  "errorBoardSetNotFound": "הלוח לא נמצא"
+  "errorBoardSetNotFound": "הלוח לא נמצא",
+  "importAlreadyInLibrary": "הלוח כבר נמצא בספרייה שלך",
+  "importUrlNotSupported": "לא ניתן לייבא סוג קישור זה",
+  "importTooLarge": "קובץ הלוח גדול מדי לייבוא",
+  "importFailedTitle": "ייבוא הלוח נכשל",
+  "importRetry": "ניסיון חוזר",
+  "importGoToBoards": "מעבר ללוחות שלי"
 }

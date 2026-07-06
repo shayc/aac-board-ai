@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Đã thay thế bảng",
-        "countPlural=*": "Đã thay thế các bảng"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Đã xảy ra lỗi",
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
-  "errorBoardSetNotFound": "Không tìm thấy bảng"
+  "errorBoardSetNotFound": "Không tìm thấy bảng",
+  "importAlreadyInLibrary": "Bảng đã có trong thư viện của bạn",
+  "importUrlNotSupported": "Không thể nhập loại liên kết này",
+  "importTooLarge": "Tệp bảng quá lớn để nhập",
+  "importFailedTitle": "Không thể nhập bảng",
+  "importRetry": "Thử lại",
+  "importGoToBoards": "Về các bảng của tôi"
 }

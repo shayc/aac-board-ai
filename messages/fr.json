@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tableau remplacé",
-        "countPlural=*": "Tableaux remplacés"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Une erreur s'est produite",
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
-  "errorBoardSetNotFound": "Tableau introuvable"
+  "errorBoardSetNotFound": "Tableau introuvable",
+  "importAlreadyInLibrary": "Ce tableau est déjà dans votre bibliothèque",
+  "importUrlNotSupported": "Ce type de lien ne peut pas être importé",
+  "importTooLarge": "Le fichier du tableau est trop volumineux pour être importé",
+  "importFailedTitle": "Impossible d'importer le tableau",
+  "importRetry": "Réessayer",
+  "importGoToBoards": "Aller à mes tableaux"
 }

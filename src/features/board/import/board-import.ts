@@ -8,17 +8,32 @@ import {
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
 import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
-import type {
-  UpsertAssetInput,
-  UpsertBoardInput,
-  UpsertBoardSetInput,
+import {
+  createBoardSet,
+  findBoardSetBySourceHash,
+  type AssetInput,
+  type BoardInput,
+  type BoardSetInput,
 } from "../storage/boards-db";
-import { replaceBoardSet } from "../storage/boards-db";
+import {
+  BOARD_UNZIP_LIMITS,
+  BoardFileTooLargeError,
+  MAX_BOARD_FILE_BYTES,
+} from "./import-limits";
 
 export interface ImportResult {
   setId: string;
   rootBoardId: string;
-  replacedExisting: boolean;
+  alreadyExisted: boolean;
+}
+
+async function hashFile(file: File): Promise<string> {
+  const bytes = await file.arrayBuffer();
+  const digest = await crypto.subtle.digest("SHA-256", bytes);
+
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export async function importBoardSets(
@@ -26,20 +41,48 @@ export async function importBoardSets(
 ): Promise<ImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
   const results: ImportResult[] = [];
+  const importedInBatch = new Map<string, ImportResult>();
 
   try {
     for (const file of fileList) {
-      const setId = deriveSetId(file.name);
-      const loaded = await loadBoard(file);
+      if (file.size > MAX_BOARD_FILE_BYTES) {
+        throw new BoardFileTooLargeError();
+      }
 
-      results.push(
+      const sourceHash = await hashFile(file);
+      const batchHit = importedInBatch.get(sourceHash);
+
+      if (batchHit) {
+        results.push({ ...batchHit, alreadyExisted: true });
+        continue;
+      }
+
+      const existing = await findBoardSetBySourceHash(sourceHash);
+
+      if (existing) {
+        const result: ImportResult = {
+          setId: existing.setId,
+          rootBoardId: existing.rootBoardId,
+          alreadyExisted: true,
+        };
+        results.push(result);
+        importedInBatch.set(sourceHash, result);
+        continue;
+      }
+
+      const setId = crypto.randomUUID();
+      const loaded = await loadBoard(file, { limits: BOARD_UNZIP_LIMITS });
+
+      const result =
         loaded.format === "obz"
-          ? await importOBZArchive(loaded.archive, setId, file.name)
-          : await importOBFBoard(loaded.board, setId, file.name),
-      );
+          ? await importOBZArchive(loaded.archive, setId, file.name, sourceHash)
+          : await importOBFBoard(loaded.board, setId, file.name, sourceHash);
+
+      results.push(result);
+      importedInBatch.set(sourceHash, result);
     }
   } finally {
-    if (results.length > 0) {
+    if (results.some((result) => !result.alreadyExisted)) {
       await notifyBoardSetsChanged();
     }
   }
@@ -51,31 +94,33 @@ async function importOBZArchive(
   archive: ParsedOBZ,
   setId: string,
   fileName: string,
+  sourceHash: string,
 ): Promise<ImportResult> {
   const { manifest, boards, rootBoard, resources } = archive;
   const boardPathToId = buildBoardPathToId(manifest);
 
-  const { replacedExisting } = await replaceBoardSet({
-    boardSet: buildBoardSetInput(setId, rootBoard, fileName),
+  await createBoardSet({
+    boardSet: { ...buildBoardSetInput(setId, rootBoard, fileName), sourceHash },
     boards: buildBoardInputs(boards, boardPathToId),
     assets: buildAssetInputs(resources),
   });
 
-  return { setId, rootBoardId: rootBoard.id, replacedExisting };
+  return { setId, rootBoardId: rootBoard.id, alreadyExisted: false };
 }
 
 async function importOBFBoard(
   board: OBFBoard,
   setId: string,
   fileName: string,
+  sourceHash: string,
 ): Promise<ImportResult> {
-  const { replacedExisting } = await replaceBoardSet({
-    boardSet: buildBoardSetInput(setId, board, fileName),
+  await createBoardSet({
+    boardSet: { ...buildBoardSetInput(setId, board, fileName), sourceHash },
     boards: [{ boardId: board.id, name: board.name ?? board.id, obf: board }],
     assets: [],
   });
 
-  return { setId, rootBoardId: board.id, replacedExisting };
+  return { setId, rootBoardId: board.id, alreadyExisted: false };
 }
 
 function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
@@ -110,7 +155,7 @@ export function resolveLoadBoardPaths(
 function buildBoardInputs(
   boards: Map<string, OBFBoard>,
   boardPathToId: Map<string, string>,
-): UpsertBoardInput[] {
+): BoardInput[] {
   return Array.from(boards.entries()).map(([id, board]) => ({
     boardId: id,
     name: board.name ?? id,
@@ -120,7 +165,7 @@ function buildBoardInputs(
 
 export function buildAssetInputs(
   resources: Map<string, Uint8Array>,
-): UpsertAssetInput[] {
+): AssetInput[] {
   return Array.from(resources.entries())
     .filter(([path]) => {
       const lowerPath = path.toLowerCase();
@@ -140,7 +185,7 @@ function buildBoardSetInput(
   setId: string,
   board: OBFBoard,
   fallbackSetName: string,
-): UpsertBoardSetInput {
+): BoardSetInput {
   return {
     setId,
     name: board.name ?? fallbackSetName,
@@ -154,10 +199,4 @@ function buildBoardSetInput(
     gridRows: board.grid.rows,
     gridColumns: board.grid.columns,
   };
-}
-
-function deriveSetId(fileName: string): string {
-  const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
-
-  return stem.slice(0, 255) || "imported-board";
 }

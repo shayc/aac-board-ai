@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tablă înlocuită",
-        "countPlural=*": "Table înlocuite"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Ceva nu a mers bine",
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
-  "errorBoardSetNotFound": "Tabla nu a fost găsită"
+  "errorBoardSetNotFound": "Tabla nu a fost găsită",
+  "importAlreadyInLibrary": "Tabla există deja în biblioteca ta",
+  "importUrlNotSupported": "Acest tip de link nu poate fi importat",
+  "importTooLarge": "Fișierul tablei este prea mare pentru a fi importat",
+  "importFailedTitle": "Tabla nu a putut fi importată",
+  "importRetry": "Încearcă din nou",
+  "importGoToBoards": "Mergi la tablele mele"
 }

@@ -1,22 +1,71 @@
 import { assertDefined } from "@shared/testing/assert-defined";
-import { loadOBF, loadOBZ, type OBFBoard } from "@shayc/open-board-format";
+import {
+  loadOBF,
+  loadOBZ,
+  OBFError,
+  type OBFBoard,
+} from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
   getAssetBlob,
   getBoard,
   getBoardsDB,
   listBoardSets,
+  updateBoardStrings,
 } from "../storage/boards-db";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+import { loadFixtureFile, makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   buildAssetInputs,
   importBoardSets,
   resolveLoadBoardPaths,
 } from "./board-import";
+import { BoardFileTooLargeError, MAX_BOARD_FILE_BYTES } from "./import-limits";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 const OBF_FIXTURE = "lots-of-stuff.obf";
-const IMPORTED_SET_ID = "lots-of-stuff";
+const SET_ID_PATTERN = /^[0-9a-f-]{36}$/;
+
+/** Patches declared uncompressed sizes in a ZIP's central directory, without touching entry data — for exercising decompression-bomb limits. */
+async function declareEntrySizes(
+  file: File,
+  sizesByName: Record<string, number>,
+): Promise<File> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const view = new DataView(bytes.buffer);
+
+  let eocd = bytes.length - 22;
+  while (view.getUint32(eocd, true) !== 0x06054b50) {
+    eocd -= 1;
+  }
+
+  const entryCount = view.getUint16(eocd + 8, true);
+  let offset = view.getUint32(eocd + 16, true);
+  const remaining = new Set(Object.keys(sizesByName));
+
+  for (let i = 0; i < entryCount; i++) {
+    const fileNameLength = view.getUint16(offset + 28, true);
+    const extraLength = view.getUint16(offset + 30, true);
+    const commentLength = view.getUint16(offset + 32, true);
+    const name = new TextDecoder().decode(
+      bytes.subarray(offset + 46, offset + 46 + fileNameLength),
+    );
+
+    if (name in sizesByName) {
+      view.setUint32(offset + 24, sizesByName[name], true);
+      remaining.delete(name);
+    }
+
+    offset += 46 + fileNameLength + extraLength + commentLength;
+  }
+
+  if (remaining.size > 0) {
+    throw new Error(
+      `Entries not found in archive: ${[...remaining].join(", ")}`,
+    );
+  }
+
+  return new File([bytes], file.name, { type: file.type });
+}
 
 describe("importBoardSets", () => {
   beforeEach(async () => {
@@ -29,20 +78,22 @@ describe("importBoardSets", () => {
 
     const importResults = await importBoardSets(fixtureFile);
 
-    expect(importResults).toEqual([
-      {
-        setId: IMPORTED_SET_ID,
-        rootBoardId: board.id,
-        replacedExisting: false,
-      },
-    ]);
+    expect(importResults).toHaveLength(1);
+    const [result] = importResults;
+    assertDefined(result);
+    expect(result.setId).toMatch(SET_ID_PATTERN);
+    expect(result).toEqual({
+      setId: result.setId,
+      rootBoardId: board.id,
+      alreadyExisted: false,
+    });
 
     const db = await getBoardsDB();
     const boardSets = await listBoardSets();
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
+      setId: result.setId,
       rootBoardId: board.id,
       boardCount: 1,
       name: board.name,
@@ -51,7 +102,7 @@ describe("importBoardSets", () => {
       gridColumns: board.grid.columns,
     });
 
-    const storedBoard = await getBoard(IMPORTED_SET_ID, board.id);
+    const storedBoard = await getBoard(result.setId, board.id);
     assertDefined(storedBoard);
 
     expect(storedBoard.name).toBe(board.name ?? board.id);
@@ -61,7 +112,7 @@ describe("importBoardSets", () => {
     const assetCount = await db.countFromIndex(
       "assets",
       "bySetId",
-      IMPORTED_SET_ID,
+      result.setId,
     );
     expect(assetCount).toBe(0);
   });
@@ -69,8 +120,6 @@ describe("importBoardSets", () => {
   test("imports an OBZ file into IndexedDB", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     const archive = await loadOBZ(fixtureFile);
-
-    const rootBoardId = archive.rootBoard.id;
 
     const assetEntries = Array.from(archive.resources.entries()).filter(
       ([path]) => !path.endsWith(".obf") && path !== "manifest.json",
@@ -82,40 +131,42 @@ describe("importBoardSets", () => {
 
     const importResults = await importBoardSets(fixtureFile);
 
-    expect(importResults).toEqual([
-      {
-        setId: IMPORTED_SET_ID,
-        rootBoardId,
-        replacedExisting: false,
-      },
-    ]);
+    expect(importResults).toHaveLength(1);
+    const [result] = importResults;
+    assertDefined(result);
+    expect(result.setId).toMatch(SET_ID_PATTERN);
+    expect(result).toEqual({
+      setId: result.setId,
+      rootBoardId: archive.rootBoard.id,
+      alreadyExisted: false,
+    });
 
     const db = await getBoardsDB();
     const boardSets = await listBoardSets();
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
-      rootBoardId,
+      setId: result.setId,
+      rootBoardId: archive.rootBoard.id,
       boardCount: archive.boards.size,
-      name: archive.boards.get(rootBoardId)?.name,
+      name: archive.boards.get(archive.rootBoard.id)?.name,
     });
 
     const readTx = db.transaction(["boards", "assets"], "readonly");
     const storedBoardCount = await readTx
       .objectStore("boards")
       .index("bySetId")
-      .count(IMPORTED_SET_ID);
+      .count(result.setId);
     const storedAssetCount = await readTx
       .objectStore("assets")
       .index("bySetId")
-      .count(IMPORTED_SET_ID);
+      .count(result.setId);
     await readTx.done;
 
     expect(storedBoardCount).toBe(archive.boards.size);
     expect(storedAssetCount).toBe(assetEntries.length);
 
-    const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
+    const storedRootBoard = await getBoard(result.setId, archive.rootBoard.id);
     assertDefined(storedRootBoard);
 
     const boardLinks = storedRootBoard.obf.buttons.flatMap((button) =>
@@ -140,13 +191,13 @@ describe("importBoardSets", () => {
       expect(link.id).toBe(expectedChildBoardId);
 
       const storedChildBoard = await getBoard(
-        IMPORTED_SET_ID,
+        result.setId,
         expectedChildBoardId,
       );
       expect(storedChildBoard).toBeDefined();
     }
 
-    const storedAsset = await getAssetBlob(IMPORTED_SET_ID, sampleAssetPath);
+    const storedAsset = await getAssetBlob(result.setId, sampleAssetPath);
 
     expect(storedAsset).toBeInstanceOf(Blob);
     expect(storedAsset?.size).toBe(sampleAssetBytes.byteLength);
@@ -162,49 +213,132 @@ describe("importBoardSets", () => {
     const importResults = await importBoardSets(zipNamedFile);
 
     expect(importResults).toHaveLength(1);
-    expect(importResults[0].setId).toBe(IMPORTED_SET_ID);
+    const [result] = importResults;
+    assertDefined(result);
+    expect(result.setId).toMatch(SET_ID_PATTERN);
 
     const boardSets = await listBoardSets();
     expect(archive.boards.size).toBeGreaterThan(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
+      setId: result.setId,
       boardCount: archive.boards.size,
     });
   });
 
-  test("falls back to a default setId when the filename is only an extension", async () => {
-    const obzFile = await loadFixtureFile(OBZ_FIXTURE);
-    const extensionOnlyFile = new File([obzFile], ".obz", {
-      type: "application/octet-stream",
+  test("two different files with the same filename import as independent sets", async () => {
+    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+    const firstFile = new File([fixtureFile], "shared-name.obf", {
+      type: fixtureFile.type,
     });
 
-    const importResults = await importBoardSets(extensionOnlyFile);
+    const otherBoard = makeOBFBoard({ id: "other-board", name: "Other Board" });
+    const secondFile = new File(
+      [JSON.stringify(otherBoard)],
+      "shared-name.obf",
+      { type: "application/json" },
+    );
 
-    expect(importResults[0].setId).toBe("imported-board");
+    const [firstResult] = await importBoardSets(firstFile);
+    assertDefined(firstResult);
+    const firstBoardBefore = await getBoard(
+      firstResult.setId,
+      firstResult.rootBoardId,
+    );
+    assertDefined(firstBoardBefore);
+
+    const [secondResult] = await importBoardSets(secondFile);
+    assertDefined(secondResult);
+
+    expect(secondResult.setId).not.toBe(firstResult.setId);
+
+    const boardSets = await listBoardSets();
+    expect(boardSets).toHaveLength(2);
+
+    const firstBoardAfter = await getBoard(
+      firstResult.setId,
+      firstResult.rootBoardId,
+    );
+    expect(firstBoardAfter).toEqual(firstBoardBefore);
   });
 
-  test("clamps the derived setId to 255 characters", async () => {
-    const obfFile = await loadFixtureFile(OBF_FIXTURE);
-    const longNamedFile = new File([obfFile], `${"x".repeat(300)}.obf`, {
-      type: "application/octet-stream",
-    });
-
-    const importResults = await importBoardSets(longNamedFile);
-
-    expect(importResults[0].setId).toBe("x".repeat(255));
-  });
-
-  test("re-importing the same filename replaces the existing set", async () => {
+  test("re-importing the same file dedups to the existing set", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
 
-    const first = await importBoardSets(fixtureFile);
-    expect(first[0].replacedExisting).toBe(false);
+    const [first] = await importBoardSets(fixtureFile);
+    assertDefined(first);
+    expect(first.alreadyExisted).toBe(false);
 
-    const second = await importBoardSets(fixtureFile);
-    expect(second[0].replacedExisting).toBe(true);
+    const [second] = await importBoardSets(fixtureFile);
+    expect(second).toEqual({ ...first, alreadyExisted: true });
 
     const boardSets = await listBoardSets();
     expect(boardSets).toHaveLength(1);
+  });
+
+  test("importing the same file twice in one batch writes once and dedups the second", async () => {
+    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const [first, second] = await importBoardSets([fixtureFile, fixtureFile]);
+    assertDefined(first);
+    expect(first.alreadyExisted).toBe(false);
+    expect(second).toEqual({ ...first, alreadyExisted: true });
+
+    const boardSets = await listBoardSets();
+    expect(boardSets).toHaveLength(1);
+  });
+
+  test("caching a translation does not break dedup on re-import", async () => {
+    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const [result] = await importBoardSets(fixtureFile);
+    assertDefined(result);
+
+    await updateBoardStrings(result.setId, result.rootBoardId, "es", {
+      hello: "hola",
+    });
+
+    const [reImportResult] = await importBoardSets(fixtureFile);
+    assertDefined(reImportResult);
+
+    expect(reImportResult.alreadyExisted).toBe(true);
+    expect(reImportResult.setId).toBe(result.setId);
+
+    const boardSets = await listBoardSets();
+    expect(boardSets).toHaveLength(1);
+  });
+
+  test("rejects a local file over the byte limit before any read", async () => {
+    const hugeFile = new File(
+      [new ArrayBuffer(MAX_BOARD_FILE_BYTES + 1)],
+      "big.obz",
+    );
+
+    await expect(importBoardSets(hugeFile)).rejects.toThrow(
+      BoardFileTooLargeError,
+    );
+
+    expect(await listBoardSets()).toHaveLength(0);
+  });
+
+  test("rejects an archive whose declared uncompressed size exceeds the total limit", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const oversizedFile = await declareEntrySizes(fixtureFile, {
+      "boards/inline_images.obf": 150_000_000,
+      "boards/linked_board.obf": 150_000_000,
+      "boards/root_board.obf": 150_000_000,
+      "images/happy.png": 150_000_000,
+    });
+
+    const error: unknown = await importBoardSets(oversizedFile).catch(
+      (caught: unknown) => caught,
+    );
+
+    expect(error).toBeInstanceOf(OBFError);
+    expect((error as InstanceType<typeof OBFError>).info.code).toBe(
+      "archive-too-large",
+    );
+
+    expect(await listBoardSets()).toHaveLength(0);
   });
 
   test("a failure partway through a multi-file import still leaves the earlier set visible", async () => {
@@ -216,7 +350,7 @@ describe("importBoardSets", () => {
     await expect(importBoardSets([goodFile, corruptFile])).rejects.toThrow();
 
     const boardSets = await listBoardSets();
-    expect(boardSets.map((set) => set.setId)).toContain(IMPORTED_SET_ID);
+    expect(boardSets).toHaveLength(1);
   });
 });
 

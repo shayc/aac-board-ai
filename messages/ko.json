@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "보드를 교체했습니다",
-        "countPlural=*": "보드를 교체했습니다"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "문제가 발생했습니다",
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
-  "errorBoardSetNotFound": "보드를 찾을 수 없음"
+  "errorBoardSetNotFound": "보드를 찾을 수 없음",
+  "importAlreadyInLibrary": "이미 라이브러리에 있는 보드입니다",
+  "importUrlNotSupported": "이 링크 유형은 가져올 수 없습니다",
+  "importTooLarge": "보드 파일이 너무 커서 가져올 수 없습니다",
+  "importFailedTitle": "보드를 가져올 수 없습니다",
+  "importRetry": "다시 시도",
+  "importGoToBoards": "내 보드로 이동"
 }

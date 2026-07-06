@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дошку замінено",
-        "countPlural=*": "Дошки замінено"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Щось пішло не так",
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
-  "errorBoardSetNotFound": "Дошку не знайдено"
+  "errorBoardSetNotFound": "Дошку не знайдено",
+  "importAlreadyInLibrary": "Дошка вже є у вашій бібліотеці",
+  "importUrlNotSupported": "Цей тип посилання неможливо імпортувати",
+  "importTooLarge": "Файл дошки занадто великий для імпорту",
+  "importFailedTitle": "Не вдалося імпортувати дошку",
+  "importRetry": "Спробувати ще раз",
+  "importGoToBoards": "Перейти до моїх дошок"
 }

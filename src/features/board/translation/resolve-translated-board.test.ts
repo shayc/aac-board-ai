@@ -3,7 +3,7 @@ import {
   stubTranslator,
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { getBoard, replaceBoardSet } from "../storage/boards-db";
+import { getBoard, createBoardSet } from "../storage/boards-db";
 import { resetBoardsDB } from "../testing";
 import type { Board } from "../types";
 import { resolveTranslatedBoard } from "./resolve-translated-board";
@@ -76,7 +76,7 @@ describe("resolveTranslatedBoard", () => {
   });
 
   test("persists a fresh translation so the next load hits the cache", async () => {
-    await replaceBoardSet({
+    await createBoardSet({
       boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
       boards: [
         {

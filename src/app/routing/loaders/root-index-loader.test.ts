@@ -1,14 +1,15 @@
-import { beforeEach, describe, expect, test } from "vitest";
-import type { LoaderFunctionArgs } from "react-router";
 import { getBoardSets } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
-import { rootIndexLoader } from "./root-index-loader";
+import type { LoaderFunctionArgs } from "react-router";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { rootIndexLoader, type RootIndexLoaderData } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
-const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
 
-function callLoader(searchParams = ""): Promise<Response> {
+function callLoader(
+  searchParams = "",
+): Promise<Response | RootIndexLoaderData> {
   const args = {
     request: new Request(`http://localhost/${searchParams}`),
     params: {},
@@ -22,17 +23,18 @@ describe("rootIndexLoader", () => {
     await resetBoardsDB();
   });
 
-  test("imports the URL from ?board and redirects to its board route", async () => {
-    const response = await callLoader(
+  test("returns the ?board URL for the page to import, without touching the DB", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const result = await callLoader(
       `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
     );
 
-    expect(response.status).toBe(302);
-    const location = response.headers.get("Location");
-    expect(location).toMatch(/^\/sets\/[^/]+\/boards\/[^/]+$/);
+    expect(result).toEqual({ importUrl: FIXTURE_BOARD_URL });
+    expect(fetchSpy).not.toHaveBeenCalled();
 
     const sets = await getBoardSets();
-    expect(sets).toHaveLength(1);
+    expect(sets).toHaveLength(0);
   });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
@@ -41,26 +43,22 @@ describe("rootIndexLoader", () => {
       { setId: "set-2", rootBoardId: "root-2" },
     ]);
 
-    const response = await callLoader();
+    const result = await callLoader();
 
+    expect(result).toBeInstanceOf(Response);
+    const response = result as Response;
     expect(response.status).toBe(302);
     expect(response.headers.get("Location")).toBe("/sets/set-2/boards/root-2");
   });
 
-  test("imports the default board when no param is given and IDB is empty", async () => {
-    const probe = await fetch(DEFAULT_BOARD_PATH);
-    if (!probe.ok) {
-      throw new Error(`Default board fixture missing at ${DEFAULT_BOARD_PATH}`);
-    }
+  test("returns the default board URL when no param is given and IDB is empty", async () => {
+    const result = await callLoader();
 
-    const response = await callLoader();
-
-    expect(response.status).toBe(302);
-    expect(response.headers.get("Location")).toMatch(
-      /^\/sets\/[^/]+\/boards\/[^/]+$/,
-    );
+    expect(result).not.toBeInstanceOf(Response);
+    const { importUrl } = result as RootIndexLoaderData;
+    expect(importUrl).toMatch(/quick-core-24\.obz$/);
 
     const sets = await getBoardSets();
-    expect(sets).toHaveLength(1);
+    expect(sets).toHaveLength(0);
   });
 });

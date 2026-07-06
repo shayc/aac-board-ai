@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Pano değiştirildi",
-        "countPlural=*": "Panolar değiştirildi"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Bir şeyler ters gitti",
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
-  "errorBoardSetNotFound": "Pano bulunamadı"
+  "errorBoardSetNotFound": "Pano bulunamadı",
+  "importAlreadyInLibrary": "Pano zaten kitaplığınızda",
+  "importUrlNotSupported": "Bu bağlantı türü içe aktarılamıyor",
+  "importTooLarge": "Pano dosyası içe aktarılamayacak kadar büyük",
+  "importFailedTitle": "Pano içe aktarılamadı",
+  "importRetry": "Tekrar dene",
+  "importGoToBoards": "Panolarıma git"
 }

@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavle erstattet",
-        "countPlural=*": "Tavler erstattet"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Noget gik galt",
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
-  "errorBoardSetNotFound": "Tavlen blev ikke fundet"
+  "errorBoardSetNotFound": "Tavlen blev ikke fundet",
+  "importAlreadyInLibrary": "Tavlen er allerede i dit bibliotek",
+  "importUrlNotSupported": "Denne linktype kan ikke importeres",
+  "importTooLarge": "Tavlefilen er for stor til at blive importeret",
+  "importFailedTitle": "Tavlen kunne ikke importeres",
+  "importRetry": "Prøv igen",
+  "importGoToBoards": "Gå til mine tavler"
 }

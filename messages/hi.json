@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "बोर्ड बदल दिया गया",
-        "countPlural=*": "बोर्ड बदल दिए गए"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "कुछ गलत हो गया",
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
-  "errorBoardSetNotFound": "बोर्ड नहीं मिला"
+  "errorBoardSetNotFound": "बोर्ड नहीं मिला",
+  "importAlreadyInLibrary": "बोर्ड पहले से आपकी लाइब्रेरी में है",
+  "importUrlNotSupported": "इस प्रकार के लिंक को आयात नहीं किया जा सकता",
+  "importTooLarge": "बोर्ड फ़ाइल आयात करने के लिए बहुत बड़ी है",
+  "importFailedTitle": "बोर्ड आयात नहीं किया जा सका",
+  "importRetry": "पुनः प्रयास करें",
+  "importGoToBoards": "अपने बोर्ड पर जाएँ"
 }

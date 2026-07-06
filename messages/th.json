@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "แทนที่บอร์ดแล้ว",
-        "countPlural=*": "แทนที่บอร์ดแล้ว"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
-  "errorBoardSetNotFound": "ไม่พบบอร์ด"
+  "errorBoardSetNotFound": "ไม่พบบอร์ด",
+  "importAlreadyInLibrary": "บอร์ดนี้อยู่ในคลังของคุณแล้ว",
+  "importUrlNotSupported": "ลิงก์ประเภทนี้ไม่สามารถนำเข้าได้",
+  "importTooLarge": "ไฟล์บอร์ดมีขนาดใหญ่เกินกว่าจะนำเข้าได้",
+  "importFailedTitle": "นำเข้าบอร์ดไม่สำเร็จ",
+  "importRetry": "ลองอีกครั้ง",
+  "importGoToBoards": "ไปที่บอร์ดของฉัน"
 }

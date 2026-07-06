@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ploča zamijenjena",
-        "countPlural=*": "Ploče zamijenjene"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Nešto je pošlo po zlu",
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
-  "errorBoardSetNotFound": "Ploča nije pronađena"
+  "errorBoardSetNotFound": "Ploča nije pronađena",
+  "importAlreadyInLibrary": "Ploča je već u vašoj knjižnici",
+  "importUrlNotSupported": "Ovu vrstu poveznice nije moguće uvesti",
+  "importTooLarge": "Datoteka ploče je prevelika za uvoz",
+  "importFailedTitle": "Ploču nije moguće uvesti",
+  "importRetry": "Pokušaj ponovno",
+  "importGoToBoards": "Idi na moje ploče"
 }

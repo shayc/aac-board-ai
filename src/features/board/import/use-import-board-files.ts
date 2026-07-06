@@ -30,14 +30,15 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     try {
       const results = await importBoardSets(files);
 
-      const replacedExisting = results.some(
-        (result) => result.replacedExisting,
-      );
+      const importedCount = results.filter(
+        (result) => !result.alreadyExisted,
+      ).length;
 
       showSnackbar({
-        message: replacedExisting
-          ? m.libraryReplacedBoards({ count })
-          : m.libraryImportedBoards({ count }),
+        message:
+          importedCount === 0
+            ? m.importAlreadyInLibrary()
+            : m.libraryImportedBoards({ count: importedCount }),
         severity: "success",
       });
 

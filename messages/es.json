@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tablero reemplazado",
-        "countPlural=*": "Tableros reemplazados"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "Algo salió mal",
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
-  "errorBoardSetNotFound": "Tablero no encontrado"
+  "errorBoardSetNotFound": "Tablero no encontrado",
+  "importAlreadyInLibrary": "El tablero ya está en tu biblioteca",
+  "importUrlNotSupported": "Este tipo de enlace no se puede importar",
+  "importTooLarge": "El archivo del tablero es demasiado grande para importarlo",
+  "importFailedTitle": "No se pudo importar el tablero",
+  "importRetry": "Reintentar",
+  "importGoToBoards": "Ir a mis tableros"
 }

@@ -30,16 +30,6 @@
       }
     }
   ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "已替换沟通板",
-        "countPlural=*": "已替换沟通板"
-      }
-    }
-  ],
   "libraryImportFailedBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -116,5 +106,11 @@
   "errorGenericTitle": "出了点问题",
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
-  "errorBoardSetNotFound": "未找到沟通板"
+  "errorBoardSetNotFound": "未找到沟通板",
+  "importAlreadyInLibrary": "沟通板已在你的板库中",
+  "importUrlNotSupported": "此链接类型不支持导入",
+  "importTooLarge": "沟通板文件过大，无法导入",
+  "importFailedTitle": "无法导入沟通板",
+  "importRetry": "重试",
+  "importGoToBoards": "前往我的沟通板"
 }
