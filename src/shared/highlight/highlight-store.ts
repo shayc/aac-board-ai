@@ -1,16 +1,16 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-export interface PlaybackConfig {
+export interface HighlightConfig {
   highlightActivePart: boolean;
 }
 
-const DEFAULT_CONFIG: PlaybackConfig = {
+const DEFAULT_CONFIG: HighlightConfig = {
   highlightActivePart: false,
 };
 
-export function parsePlaybackConfig(raw: unknown): PlaybackConfig {
-  const parsed = (raw ?? {}) as Partial<PlaybackConfig>;
+export function parseHighlightConfig(raw: unknown): HighlightConfig {
+  const parsed = (raw ?? {}) as Partial<HighlightConfig>;
 
   return {
     highlightActivePart:
@@ -20,21 +20,21 @@ export function parsePlaybackConfig(raw: unknown): PlaybackConfig {
   };
 }
 
-const playbackStore = createPersistedStore<PlaybackConfig>(
-  "playback-config",
-  parsePlaybackConfig,
+const highlightStore = createPersistedStore<HighlightConfig>(
+  "highlight-config",
+  parseHighlightConfig,
 );
 
 export function setHighlightActivePart(highlightActivePart: boolean): void {
-  playbackStore.setState({
-    ...playbackStore.getSnapshot(),
+  highlightStore.setState({
+    ...highlightStore.getSnapshot(),
     highlightActivePart,
   });
 }
 
-export function usePlaybackConfig(): PlaybackConfig {
+export function useHighlightConfig(): HighlightConfig {
   return useSyncExternalStore(
-    playbackStore.subscribe,
-    playbackStore.getSnapshot,
+    highlightStore.subscribe,
+    highlightStore.getSnapshot,
   );
 }

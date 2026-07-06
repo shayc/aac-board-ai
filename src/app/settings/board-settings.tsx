@@ -3,11 +3,11 @@ import Switch from "@mui/material/Switch";
 import { m } from "@paraglide/messages.js";
 import {
   setHighlightActivePart,
-  usePlaybackConfig,
-} from "@shared/playback/playback-store";
+  useHighlightConfig,
+} from "@shared/highlight/highlight-store";
 
 export function BoardSettings() {
-  const { highlightActivePart } = usePlaybackConfig();
+  const { highlightActivePart } = useHighlightConfig();
 
   return (
     <FormControlLabel

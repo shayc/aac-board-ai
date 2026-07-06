@@ -4,7 +4,7 @@ import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
-import { usePlaybackConfig } from "@shared/playback/playback-store";
+import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./board-button";
@@ -41,7 +41,7 @@ const rootSx = (theme: Theme) => ({
 export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { highlightActivePart } = usePlaybackConfig();
+  const { highlightActivePart } = useHighlightConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text);
