@@ -3,24 +3,24 @@ import { useLanguage } from "@shared/language/use-language";
 import { findTranslations } from "../translation/board-strings";
 import { listBoards } from "../storage/boards-db";
 
-export interface UseSetBoardsOptions {
+export interface UseBoardsInSetOptions {
   setId: string | undefined;
 }
 
-export interface BoardSwitcherItem {
+export interface BoardSummary {
   boardId: string;
   name: string;
 }
 
-export interface UseSetBoardsReturn {
-  boards: BoardSwitcherItem[];
+export interface UseBoardsInSetReturn {
+  boards: BoardSummary[];
   isLoading: boolean;
   error: Error | undefined;
 }
 
-export function useSetBoards({
+export function useBoardsInSet({
   setId,
-}: UseSetBoardsOptions): UseSetBoardsReturn {
+}: UseBoardsInSetOptions): UseBoardsInSetReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
     enabled: setId !== undefined,
