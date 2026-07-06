@@ -2,31 +2,43 @@ import {
   boardSetPath,
   getBoardSets,
   importBoardFromUrl,
+  type BoardSetRecord,
 } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
-async function resolveInitialRedirectPath(
+type BoardSource =
+  | { kind: "existing"; boardSet: BoardSetRecord }
+  | { kind: "import"; url: string };
+
+function decideBoardSource(
   boardUrl: string | null,
-): Promise<string> {
+  boardSets: BoardSetRecord[],
+): BoardSource {
   if (boardUrl) {
-    return boardSetPath(await importBoardFromUrl(boardUrl));
+    return { kind: "import", url: boardUrl };
   }
 
-  const [boardSet] = await getBoardSets();
+  const [boardSet] = boardSets;
   if (boardSet) {
-    return boardSetPath(boardSet);
+    return { kind: "existing", boardSet };
   }
 
-  return boardSetPath(await importBoardFromUrl(DEFAULT_BOARD_URL));
+  return { kind: "import", url: DEFAULT_BOARD_URL };
 }
 
 export async function rootIndexLoader({
   request,
 }: LoaderFunctionArgs): Promise<Response> {
   const boardUrl = new URL(request.url).searchParams.get("board");
-  const path = await resolveInitialRedirectPath(boardUrl);
+  const boardSets = await getBoardSets();
+  const source = decideBoardSource(boardUrl, boardSets);
 
-  return redirect(path);
+  const boardSet =
+    source.kind === "import"
+      ? await importBoardFromUrl(source.url)
+      : source.boardSet;
+
+  return redirect(boardSetPath(boardSet));
 }
