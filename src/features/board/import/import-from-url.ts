@@ -61,9 +61,12 @@ async function readBoundedBody(response: Response): Promise<Blob> {
   });
 }
 
-export async function importBoardFromUrl(url: string): Promise<ImportResult> {
+export async function importBoardFromUrl(
+  url: string,
+  signal?: AbortSignal,
+): Promise<ImportResult> {
   const resolved = resolveAllowedUrl(url);
-  const response = await fetch(resolved);
+  const response = await fetch(resolved, { signal });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);

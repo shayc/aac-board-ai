@@ -5,7 +5,7 @@ import {
   OBFError,
   type OBFBoard,
 } from "@shayc/open-board-format";
-import { beforeEach, describe, expect, test } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import {
   getAssetBlob,
   getBoard,
@@ -351,6 +351,37 @@ describe("importBoardSets", () => {
 
     const boardSets = await listBoardSets();
     expect(boardSets).toHaveLength(1);
+  });
+
+  describe("without crypto.subtle (insecure context)", () => {
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    test("imports without a sourceHash and re-imports create separate sets", async () => {
+      vi.stubGlobal("crypto", {
+        getRandomValues: crypto.getRandomValues.bind(crypto),
+      });
+
+      const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+
+      const [first] = await importBoardSets(fixtureFile);
+      assertDefined(first);
+      expect(first.alreadyExisted).toBe(false);
+
+      const storedFirst = await listBoardSets();
+      expect(
+        storedFirst.find((set) => set.setId === first.setId)?.sourceHash,
+      ).toBeUndefined();
+
+      const [second] = await importBoardSets(fixtureFile);
+      assertDefined(second);
+      expect(second.alreadyExisted).toBe(false);
+      expect(second.setId).not.toBe(first.setId);
+
+      const boardSets = await listBoardSets();
+      expect(boardSets).toHaveLength(2);
+    });
   });
 });
 

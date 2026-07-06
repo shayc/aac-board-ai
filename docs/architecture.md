@@ -254,13 +254,15 @@ Each is the one place to change a concern:
 - **Import boundary (write) — `src/features/board/import/`.** The only place a file
   becomes database records. All four entry points (picker, drag-drop, `?board=` URL,
   PWA file handler) converge on `importBoardSets`. Imports are **insert-only**: every
-  import gets a fresh `crypto.randomUUID()` identity, so no import can ever address,
+  import gets a fresh random identity, so no import can ever address,
   modify, or replace an existing set — a crafted filename or URL can add data but
   never overwrite it. A SHA-256 `sourceHash` of the imported bytes dedups a
   byte-identical re-import to the existing set instead of duplicating it. Additive
   derived data (cached translations via `updateBoardStrings`) preserves `sourceHash`;
   a future feature that edits source content (labels, grid, images) must clear it, or
-  re-importing the pristine file would wrongly dedup to the edited set.
+  re-importing the pristine file would wrongly dedup to the edited set. Dedup requires
+  `crypto.subtle`, which is only available in secure contexts; on plain-http origins
+  it's skipped and imports still work, just without dedup.
 - **AI provider boundary — `@shayc/react-built-in-ai`.** App code only consumes its
   hooks; swap models or providers in the library, not in features.
 - **Speech boundary — `src/shared/speech/`.** The only wrapper over the Web Speech

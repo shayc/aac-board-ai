@@ -1,5 +1,6 @@
 import { htmlToText } from "@shared/utils/html";
 import { normalizeLocale } from "@shared/utils/locale";
+import { randomId } from "@shared/utils/random-id";
 import {
   loadBoard,
   type OBFBoard,
@@ -27,7 +28,11 @@ export interface ImportResult {
   alreadyExisted: boolean;
 }
 
-async function hashFile(file: File): Promise<string> {
+async function hashFile(file: File): Promise<string | undefined> {
+  if (typeof crypto.subtle === "undefined") {
+    return undefined;
+  }
+
   const bytes = await file.arrayBuffer();
   const digest = await crypto.subtle.digest("SHA-256", bytes);
 
@@ -50,27 +55,30 @@ export async function importBoardSets(
       }
 
       const sourceHash = await hashFile(file);
-      const batchHit = importedInBatch.get(sourceHash);
 
-      if (batchHit) {
-        results.push({ ...batchHit, alreadyExisted: true });
-        continue;
+      if (sourceHash) {
+        const batchHit = importedInBatch.get(sourceHash);
+
+        if (batchHit) {
+          results.push({ ...batchHit, alreadyExisted: true });
+          continue;
+        }
+
+        const existing = await findBoardSetBySourceHash(sourceHash);
+
+        if (existing) {
+          const result: ImportResult = {
+            setId: existing.setId,
+            rootBoardId: existing.rootBoardId,
+            alreadyExisted: true,
+          };
+          results.push(result);
+          importedInBatch.set(sourceHash, result);
+          continue;
+        }
       }
 
-      const existing = await findBoardSetBySourceHash(sourceHash);
-
-      if (existing) {
-        const result: ImportResult = {
-          setId: existing.setId,
-          rootBoardId: existing.rootBoardId,
-          alreadyExisted: true,
-        };
-        results.push(result);
-        importedInBatch.set(sourceHash, result);
-        continue;
-      }
-
-      const setId = crypto.randomUUID();
+      const setId = randomId();
       const loaded = await loadBoard(file, { limits: BOARD_UNZIP_LIMITS });
 
       const result =
@@ -79,7 +87,9 @@ export async function importBoardSets(
           : await importOBFBoard(loaded.board, setId, file.name, sourceHash);
 
       results.push(result);
-      importedInBatch.set(sourceHash, result);
+      if (sourceHash) {
+        importedInBatch.set(sourceHash, result);
+      }
     }
   } finally {
     if (results.some((result) => !result.alreadyExisted)) {
@@ -94,7 +104,7 @@ async function importOBZArchive(
   archive: ParsedOBZ,
   setId: string,
   fileName: string,
-  sourceHash: string,
+  sourceHash: string | undefined,
 ): Promise<ImportResult> {
   const { manifest, boards, rootBoard, resources } = archive;
   const boardPathToId = buildBoardPathToId(manifest);
@@ -112,7 +122,7 @@ async function importOBFBoard(
   board: OBFBoard,
   setId: string,
   fileName: string,
-  sourceHash: string,
+  sourceHash: string | undefined,
 ): Promise<ImportResult> {
   await createBoardSet({
     boardSet: { ...buildBoardSetInput(setId, board, fileName), sourceHash },
