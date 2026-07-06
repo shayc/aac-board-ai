@@ -126,5 +126,9 @@
   "errorGenericTitle": "Etwas ist schiefgelaufen",
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
-  "errorBoardSetNotFound": "Tafel nicht gefunden"
+  "errorBoardSetNotFound": "Tafel nicht gefunden",
+  "boardUrlReplaceConfirmTitle": "„{name}“ ersetzen?",
+  "boardUrlReplaceConfirmDescription": "Der Import über diesen Link ersetzt diese Tafel und alles darin. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "boardUrlReplace": "Ersetzen",
+  "boardUrlImportFailed": "Tafel konnte nicht über den Link importiert werden"
 }

@@ -126,5 +126,9 @@
   "errorGenericTitle": "Něco se pokazilo",
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
-  "errorBoardSetNotFound": "Tabulka nebyla nalezena"
+  "errorBoardSetNotFound": "Tabulka nebyla nalezena",
+  "boardUrlReplaceConfirmTitle": "Nahradit „{name}“?",
+  "boardUrlReplaceConfirmDescription": "Import z tohoto odkazu nahradí tuto tabulku a vše v ní. Tuto akci nelze vrátit zpět.",
+  "boardUrlReplace": "Nahradit",
+  "boardUrlImportFailed": "Tabulku se nepodařilo importovat z odkazu"
 }

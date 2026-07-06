@@ -126,5 +126,9 @@
   "errorGenericTitle": "Щось пішло не так",
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
-  "errorBoardSetNotFound": "Дошку не знайдено"
+  "errorBoardSetNotFound": "Дошку не знайдено",
+  "boardUrlReplaceConfirmTitle": "Замінити «{name}»?",
+  "boardUrlReplaceConfirmDescription": "Імпорт за цим посиланням замінить цю дошку та весь її вміст. Цю дію не можна скасувати.",
+  "boardUrlReplace": "Замінити",
+  "boardUrlImportFailed": "Не вдалося імпортувати дошку за посиланням"
 }

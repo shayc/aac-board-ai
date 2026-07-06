@@ -126,5 +126,9 @@
   "errorGenericTitle": "कुछ गलत हो गया",
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
-  "errorBoardSetNotFound": "बोर्ड नहीं मिला"
+  "errorBoardSetNotFound": "बोर्ड नहीं मिला",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" को बदलें?",
+  "boardUrlReplaceConfirmDescription": "इस लिंक से आयात करने पर यह बोर्ड और इसमें मौजूद सब कुछ बदल जाएगा। यह क्रिया पूर्ववत नहीं की जा सकती।",
+  "boardUrlReplace": "बदलें",
+  "boardUrlImportFailed": "लिंक से बोर्ड आयात नहीं किया जा सका"
 }

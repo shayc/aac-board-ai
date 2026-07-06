@@ -126,5 +126,9 @@
   "errorGenericTitle": "কিছু একটা ভুল হয়েছে",
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
-  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি"
+  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" প্রতিস্থাপন করবেন?",
+  "boardUrlReplaceConfirmDescription": "এই লিঙ্ক থেকে আমদানি করলে এই বোর্ড এবং এর ভেতরের সবকিছু প্রতিস্থাপিত হবে। এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না।",
+  "boardUrlReplace": "প্রতিস্থাপন করুন",
+  "boardUrlImportFailed": "লিঙ্ক থেকে বোর্ড আমদানি করা যায়নি"
 }

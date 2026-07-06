@@ -126,5 +126,9 @@
   "errorGenericTitle": "問題が発生しました",
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
-  "errorBoardSetNotFound": "ボードが見つかりません"
+  "errorBoardSetNotFound": "ボードが見つかりません",
+  "boardUrlReplaceConfirmTitle": "「{name}」を置き換えますか？",
+  "boardUrlReplaceConfirmDescription": "このリンクからインポートすると、このボードとその中のすべてが置き換えられます。この操作は取り消せません。",
+  "boardUrlReplace": "置き換える",
+  "boardUrlImportFailed": "リンクからボードをインポートできませんでした"
 }

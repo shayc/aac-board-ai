@@ -126,5 +126,9 @@
   "errorGenericTitle": "Đã xảy ra lỗi",
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
-  "errorBoardSetNotFound": "Không tìm thấy bảng"
+  "errorBoardSetNotFound": "Không tìm thấy bảng",
+  "boardUrlReplaceConfirmTitle": "Thay thế \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Nhập từ liên kết này sẽ thay thế bảng này và mọi thứ trong đó. Không thể hoàn tác hành động này.",
+  "boardUrlReplace": "Thay thế",
+  "boardUrlImportFailed": "Không thể nhập bảng từ liên kết"
 }

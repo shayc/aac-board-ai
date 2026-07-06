@@ -126,5 +126,9 @@
   "errorGenericTitle": "Ceva nu a mers bine",
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
-  "errorBoardSetNotFound": "Tabla nu a fost găsită"
+  "errorBoardSetNotFound": "Tabla nu a fost găsită",
+  "boardUrlReplaceConfirmTitle": "Înlocuiești „{name}”?",
+  "boardUrlReplaceConfirmDescription": "Importul din acest link va înlocui această tablă și tot conținutul ei. Această acțiune nu poate fi anulată.",
+  "boardUrlReplace": "Înlocuiește",
+  "boardUrlImportFailed": "Tabla nu a putut fi importată din link"
 }

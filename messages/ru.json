@@ -126,5 +126,9 @@
   "errorGenericTitle": "Что-то пошло не так",
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
-  "errorBoardSetNotFound": "Доска не найдена"
+  "errorBoardSetNotFound": "Доска не найдена",
+  "boardUrlReplaceConfirmTitle": "Заменить «{name}»?",
+  "boardUrlReplaceConfirmDescription": "Импорт по этой ссылке заменит эту доску и всё её содержимое. Это действие нельзя отменить.",
+  "boardUrlReplace": "Заменить",
+  "boardUrlImportFailed": "Не удалось импортировать доску по ссылке"
 }

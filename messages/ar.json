@@ -126,5 +126,9 @@
   "errorGenericTitle": "حدث خطأ ما",
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
-  "errorBoardSetNotFound": "اللوحة غير موجودة"
+  "errorBoardSetNotFound": "اللوحة غير موجودة",
+  "boardUrlReplaceConfirmTitle": "استبدال \"{name}\"؟",
+  "boardUrlReplaceConfirmDescription": "الاستيراد من هذا الرابط سيستبدل هذه اللوحة وكل ما فيها. لا يمكن التراجع عن هذا الإجراء.",
+  "boardUrlReplace": "استبدال",
+  "boardUrlImportFailed": "تعذّر استيراد اللوحة من الرابط"
 }

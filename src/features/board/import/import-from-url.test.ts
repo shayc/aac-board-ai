@@ -50,4 +50,39 @@ describe("importBoardFromUrl", () => {
       importBoardFromUrl("https://example.com/missing.obz"),
     ).rejects.toThrow("Failed to fetch board: HTTP 404");
   });
+
+  test("rejects a non-http(s) URL before fetching", async () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    await expect(
+      importBoardFromUrl("data:application/zip;base64,UEsDBA=="),
+    ).rejects.toMatchObject({
+      name: "BoardUrlError",
+      code: "unsupported-scheme",
+    });
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  test("cancels a download that exceeds the size cap instead of buffering it", async () => {
+    let cancelled = false;
+    const endlessBody = new ReadableStream<Uint8Array>({
+      pull(controller) {
+        controller.enqueue(new Uint8Array(32 * 1024 * 1024));
+      },
+      cancel() {
+        cancelled = true;
+      },
+    });
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(endlessBody));
+
+    await expect(
+      importBoardFromUrl("https://example.com/huge.obz"),
+    ).rejects.toMatchObject({
+      name: "BoardUrlError",
+      code: "download-too-large",
+    });
+
+    expect(cancelled).toBe(true);
+  });
 });

@@ -126,5 +126,9 @@
   "errorGenericTitle": "Something went wrong",
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
-  "errorBoardSetNotFound": "Board not found"
+  "errorBoardSetNotFound": "Board not found",
+  "boardUrlReplaceConfirmTitle": "Replace \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Importing from this link will replace this board and everything in it. This cannot be undone.",
+  "boardUrlReplace": "Replace",
+  "boardUrlImportFailed": "Couldn't import board from link"
 }
