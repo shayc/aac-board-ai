@@ -36,7 +36,7 @@ Optional tone variants (direct, professional, friendly) are offered the same way
 - **Translation** — Translates board labels and vocalizations between languages ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
 - **Text to Speech** — Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
 - **Offline Ready** — Installs as a standalone app with automatic updates ([PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)).
-- **Open Board Format** — Imports `.obf` and `.obz` files ([example boards](https://www.openboardformat.org/examples)).
+- **Open Board Format** — Imports `.obf` and `.obz` files ([example boards](https://www.openboardformat.org/examples)), including by URL via `?board=https://example.com/board.obz`.
 
 ## Enabling Built-in AI
 
@@ -89,16 +89,6 @@ npm run build           # Typecheck + production build
 - **Tooling:** Vite, Vitest, Playwright
 
 See full architecture details in [docs/architecture.md](docs/architecture.md).
-
-## Loading a board via URL
-
-Load a board by passing an OBF or OBZ file URL as the `board` query parameter:
-
-```
-https://aacboard.app/?board=https://example.com/board.obz
-```
-
-The app fetches, imports, and navigates to the board automatically.
 
 ## References
 
