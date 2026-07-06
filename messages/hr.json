@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}” nije moguće izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
-  "librarySourceCode": "Izvorni kod",
+  "aboutSourceCode": "Izvorni kod",
   "settingsTitle": "Postavke",
   "settingsOpen": "Otvori postavke",
   "settingsClose": "Zatvori postavke",

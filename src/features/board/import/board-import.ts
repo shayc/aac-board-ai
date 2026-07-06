@@ -8,11 +8,11 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
+import { refreshAndBroadcastBoardSets } from "../board-sets/board-sets-store";
 import type {
-  UpsertAssetInput,
-  UpsertBoardInput,
-  UpsertBoardSetInput,
+  AssetInput,
+  BoardInput,
+  BoardSetInput,
 } from "../storage/boards-db";
 import { replaceBoardSet } from "../storage/boards-db";
 
@@ -55,7 +55,7 @@ export async function importBoardSets(
     }
   } finally {
     if (results.length > 0) {
-      await notifyBoardSetsChanged();
+      await refreshAndBroadcastBoardSets();
     }
   }
 
@@ -125,7 +125,7 @@ export function resolveLoadBoardPaths(
 function buildBoardInputs(
   boards: Map<string, OBFBoard>,
   boardPathToId: Map<string, string>,
-): UpsertBoardInput[] {
+): BoardInput[] {
   return Array.from(boards.entries()).map(([id, board]) => ({
     boardId: id,
     name: board.name ?? id,
@@ -135,7 +135,7 @@ function buildBoardInputs(
 
 export function buildAssetInputs(
   resources: Map<string, Uint8Array>,
-): UpsertAssetInput[] {
+): AssetInput[] {
   return Array.from(resources.entries())
     .filter(([path]) => {
       const lowerPath = path.toLowerCase();
@@ -155,7 +155,7 @@ function buildBoardSetInput(
   setId: string,
   board: OBFBoard,
   fallbackSetName: string,
-): UpsertBoardSetInput {
+): BoardSetInput {
   return {
     setId,
     name: board.name ?? fallbackSetName,

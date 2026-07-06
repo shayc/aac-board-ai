@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" என்பதை நீக்க முடியவில்லை",
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",
-  "librarySourceCode": "மூலக் குறியீடு",
+  "aboutSourceCode": "மூலக் குறியீடு",
   "settingsTitle": "அமைப்புகள்",
   "settingsOpen": "அமைப்புகளைத் திற",
   "settingsClose": "அமைப்புகளை மூடு",

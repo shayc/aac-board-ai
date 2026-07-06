@@ -4,7 +4,7 @@ import { openFiles } from "@shared/utils/file-picker";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { boardSetPath } from "../navigation/board-paths";
-import { BOARD_FILE_ACCEPT } from "./board-file-types";
+import { BOARD_FILE_ACCEPT } from "./board-file-formats";
 import { importBoardSets, type ImportResult } from "./board-import";
 
 export interface UseImportBoardFilesReturn {

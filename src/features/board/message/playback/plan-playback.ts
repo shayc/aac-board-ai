@@ -1,4 +1,4 @@
-import { getSpokenText } from "../../board-button";
+import { getSpokenText } from "../../button-readers";
 import type { MessagePart } from "../use-message";
 import {
   createSpokenPartTracker,

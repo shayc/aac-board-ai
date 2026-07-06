@@ -1,5 +1,5 @@
+import { getNavigationTargetId, getSpokenText } from "../button-readers";
 import type { MessagePartContent } from "../message/use-message";
-import { getNavigationTargetId, getSpokenText } from "../board-button";
 import type { BoardAction, BoardButton } from "../types";
 
 export type ButtonIntent =

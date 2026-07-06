@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import {
   closeBoardsDB,
-  deleteBoardSetData,
+  deleteBoardSetRows,
   getAssetBlob,
   getBoard,
   getBoardsDB,
@@ -376,11 +376,11 @@ describe("updateBoardStrings", () => {
   });
 });
 
-describe("deleteBoardSetData", () => {
+describe("deleteBoardSetRows", () => {
   test("removes the board set record", async () => {
     await replaceBoardSet(makeReplaceInput());
 
-    await deleteBoardSetData("set-1");
+    await deleteBoardSetRows("set-1");
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(0);
@@ -396,7 +396,7 @@ describe("deleteBoardSetData", () => {
       }),
     );
 
-    await deleteBoardSetData("set-1");
+    await deleteBoardSetRows("set-1");
 
     expect(await getBoard("set-1", "b1")).toBeUndefined();
     expect(await getBoard("set-1", "b2")).toBeUndefined();
@@ -412,7 +412,7 @@ describe("deleteBoardSetData", () => {
       }),
     );
 
-    await deleteBoardSetData("set-1");
+    await deleteBoardSetRows("set-1");
 
     expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
@@ -436,7 +436,7 @@ describe("deleteBoardSetData", () => {
       }),
     );
 
-    await deleteBoardSetData("set-1");
+    await deleteBoardSetRows("set-1");
 
     const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
@@ -447,7 +447,7 @@ describe("deleteBoardSetData", () => {
   });
 
   test("rejects empty setId", async () => {
-    await expect(deleteBoardSetData("")).rejects.toThrow("Invalid setId");
+    await expect(deleteBoardSetRows("")).rejects.toThrow("Invalid setId");
   });
 });
 

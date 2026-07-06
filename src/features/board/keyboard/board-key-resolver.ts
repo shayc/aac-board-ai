@@ -1,7 +1,7 @@
 export type BoardKeyAction =
   | { kind: "backspace" }
   | { kind: "clear" }
-  | { kind: "play" }
+  | { kind: "speak" }
   | { kind: "stop" };
 
 export interface KeyEventLike {
@@ -21,7 +21,7 @@ export function resolveBoardKey(
 ): BoardKeyAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      return isPlaying ? null : { kind: "play" };
+      return isPlaying ? null : { kind: "speak" };
     }
 
     if (event.key === "Backspace") {

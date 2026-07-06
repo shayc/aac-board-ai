@@ -1,4 +1,5 @@
-import { stubAudio, stubSpeech } from "@shared/testing/device-output";
+import { stubAudio } from "@shared/testing/stub-audio";
+import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart } from "../use-message";

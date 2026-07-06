@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "A(z) „{name}” törlése nem sikerült",
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",
-  "librarySourceCode": "Forráskód",
+  "aboutSourceCode": "Forráskód",
   "settingsTitle": "Beállítások",
   "settingsOpen": "Beállítások megnyitása",
   "settingsClose": "Beállítások bezárása",

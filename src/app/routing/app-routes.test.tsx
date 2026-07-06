@@ -1,7 +1,8 @@
 import { importBoardFromUrl } from "@features/board";
 import { resetBoardsDB } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
-import { stubAudio, stubSpeech } from "@shared/testing/device-output";
+import { stubAudio } from "@shared/testing/stub-audio";
+import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";

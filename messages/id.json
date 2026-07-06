@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Tidak dapat menghapus \"{name}\"",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
-  "librarySourceCode": "Kode sumber",
+  "aboutSourceCode": "Kode sumber",
   "settingsTitle": "Setelan",
   "settingsOpen": "Buka setelan",
   "settingsClose": "Tutup setelan",

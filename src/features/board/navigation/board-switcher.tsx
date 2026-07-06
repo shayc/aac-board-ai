@@ -3,11 +3,11 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useState } from "react";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useSetBoards } from "./use-set-boards";
+import { useBoardsInSet } from "./use-boards-in-set";
 
 export function BoardSwitcher() {
   const { setId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useSetBoards({ setId });
+  const { boards } = useBoardsInSet({ setId });
   const [inputValue, setInputValue] = useState("");
 
   const selectedBoard = boards.find((board) => board.boardId === boardId);
