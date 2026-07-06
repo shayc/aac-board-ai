@@ -25,8 +25,7 @@ export function useBoardsInSet({
   const { value, error, isPending } = useLatestAsync({
     enabled: setId !== undefined,
     deps: [setId ?? ""],
-    fetch: () =>
-      setId === undefined ? Promise.resolve([]) : listBoards(setId),
+    run: () => (setId === undefined ? Promise.resolve([]) : listBoards(setId)),
   });
 
   const records = value ?? [];

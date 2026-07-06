@@ -8,7 +8,7 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { TEST_IMAGE_SRC } from "./testing";
-import { renderBoardViewer, TWO_TILE_BOARD } from "./test-utils";
+import { renderBoardViewer, TWO_BUTTON_BOARD } from "./test-utils";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -42,7 +42,7 @@ describe("BoardViewer", () => {
   });
 
   test("composing tiles and pressing play speaks the merged message", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
@@ -69,7 +69,7 @@ describe("BoardViewer", () => {
   });
 
   test("names the tile grid with the board's name", async () => {
-    const namedBoard: OBFBoard = { ...TWO_TILE_BOARD, name: "Core words" };
+    const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
 
     const screen = await renderBoardViewer(namedBoard);
 
@@ -79,7 +79,7 @@ describe("BoardViewer", () => {
   });
 
   test("falls back to a generic grid name when the board is unnamed", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
 
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
@@ -91,7 +91,7 @@ describe("BoardViewer", () => {
     proofreader.availability.mockResolvedValue("downloadable");
     stubBuiltInAIUnsupported("Rewriter");
 
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "Enable suggestions" }).click();
 
@@ -101,7 +101,7 @@ describe("BoardViewer", () => {
   });
 
   test("has no accessibility violations", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
 
     await expectNoA11yViolations(screen.container);
   });

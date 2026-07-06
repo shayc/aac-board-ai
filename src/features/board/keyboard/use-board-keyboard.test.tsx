@@ -2,7 +2,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
-import { renderBoardViewer, TWO_TILE_BOARD } from "../test-utils";
+import { renderBoardViewer, TWO_BUTTON_BOARD } from "../test-utils";
 
 describe("board keyboard shortcuts", () => {
   let speech: ReturnType<typeof stubSpeech>;
@@ -13,7 +13,7 @@ describe("board keyboard shortcuts", () => {
   });
 
   test("Backspace from a focused tile removes a character from a text-only message part", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
 
@@ -32,7 +32,7 @@ describe("board keyboard shortcuts", () => {
   });
 
   test("Backspace works board-wide — even from a non-grid button", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
 
@@ -48,7 +48,7 @@ describe("board keyboard shortcuts", () => {
   });
 
   test("⌘+Enter speaks the message", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
 
@@ -63,7 +63,7 @@ describe("board keyboard shortcuts", () => {
   });
 
   test("Escape stops playback in progress", async () => {
-    const screen = await renderBoardViewer(TWO_TILE_BOARD);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
     await screen.getByRole("button", { name: "hello" }).click();
 
     preventSpeechEnd(speech.speak);
