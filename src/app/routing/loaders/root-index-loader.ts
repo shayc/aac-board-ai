@@ -2,43 +2,30 @@ import {
   boardSetPath,
   getBoardSets,
   importBoardFromUrl,
-  type BoardSetRecord,
 } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
-type BoardSource =
-  | { kind: "existing"; boardSet: BoardSetRecord }
-  | { kind: "import"; url: string };
-
-function decideBoardSource(
+async function getOrImportBoardSet(
   boardUrl: string | null,
-  boardSets: BoardSetRecord[],
-): BoardSource {
+): Promise<{ setId: string; rootBoardId: string }> {
   if (boardUrl) {
-    return { kind: "import", url: boardUrl };
+    return importBoardFromUrl(boardUrl);
   }
 
-  const [boardSet] = boardSets;
+  const [boardSet] = await getBoardSets();
   if (boardSet) {
-    return { kind: "existing", boardSet };
+    return boardSet;
   }
 
-  return { kind: "import", url: DEFAULT_BOARD_URL };
+  return importBoardFromUrl(DEFAULT_BOARD_URL);
 }
 
 export async function rootIndexLoader({
   request,
 }: LoaderFunctionArgs): Promise<Response> {
   const boardUrl = new URL(request.url).searchParams.get("board");
-  const boardSets = await getBoardSets();
-  const source = decideBoardSource(boardUrl, boardSets);
 
-  const boardSet =
-    source.kind === "import"
-      ? await importBoardFromUrl(source.url)
-      : source.boardSet;
-
-  return redirect(boardSetPath(boardSet));
+  return redirect(boardSetPath(await getOrImportBoardSet(boardUrl)));
 }
