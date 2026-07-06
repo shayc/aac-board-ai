@@ -39,7 +39,7 @@ export function useBoardKeyboard({
         case "clear":
           message.clear();
           break;
-        case "play":
+        case "speak":
           void playback.play(message.parts);
           break;
         case "stop":
