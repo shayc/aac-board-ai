@@ -8,7 +8,7 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
+import { refreshAndBroadcastBoardSets } from "../board-sets/board-sets-store";
 import type {
   AssetInput,
   BoardInput,
@@ -55,7 +55,7 @@ export async function importBoardSets(
     }
   } finally {
     if (results.length > 0) {
-      await notifyBoardSetsChanged();
+      await refreshAndBroadcastBoardSets();
     }
   }
 
