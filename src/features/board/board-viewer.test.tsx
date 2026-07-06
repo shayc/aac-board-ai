@@ -3,7 +3,8 @@ import {
   stubBuiltInAIUnsupported,
   stubProofreader,
 } from "@shared/testing/built-in-ai";
-import { stubAudio, stubSpeech } from "@shared/testing/device-output";
+import { stubAudio } from "@shared/testing/stub-audio";
+import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { TEST_IMAGE_SRC } from "./testing";

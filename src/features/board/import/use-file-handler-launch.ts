@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { isBoardFile } from "./board-file-types";
+import { isBoardFile } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useFileHandlerLaunch(): void {

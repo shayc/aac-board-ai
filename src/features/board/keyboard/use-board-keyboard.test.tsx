@@ -1,8 +1,5 @@
-import {
-  preventSpeechEnd,
-  stubAudio,
-  stubSpeech,
-} from "@shared/testing/device-output";
+import { stubAudio } from "@shared/testing/stub-audio";
+import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { renderBoardViewer, TWO_TILE_BOARD } from "../test-utils";

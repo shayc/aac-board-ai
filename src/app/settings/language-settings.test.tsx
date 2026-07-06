@@ -4,7 +4,7 @@ import {
   stubBuiltInAIUnsupported,
   stubTranslator,
 } from "@shared/testing/built-in-ai";
-import { stubVoices } from "@shared/testing/device-output";
+import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { LanguageSettings } from "./language-settings";

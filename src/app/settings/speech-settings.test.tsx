@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { stubVoices } from "@shared/testing/device-output";
+import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { SpeechSettings } from "./speech-settings";

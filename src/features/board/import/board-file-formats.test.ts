@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isBoardFile } from "./board-file-types";
+import { isBoardFile } from "./board-file-formats";
 
 function namedFile(name: string): File {
   return new File([""], name);
