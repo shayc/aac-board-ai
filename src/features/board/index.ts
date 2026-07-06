@@ -11,9 +11,9 @@ export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useFileHandlerLaunch } from "./import/use-file-handler-launch";
 export { useImportBoardFiles } from "./import/use-import-board-files";
 export {
-  BOARD_PATTERN,
   BOARD_ROUTE_PATTERN,
-  BOARD_SET_PATTERN,
+  BOARD_SEGMENT,
+  BOARD_SET_SEGMENT,
   boardSetPath,
 } from "./navigation/board-paths";
 export { BoardSwitcher } from "./navigation/board-switcher";
