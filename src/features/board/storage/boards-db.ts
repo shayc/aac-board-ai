@@ -45,7 +45,7 @@ export class InvalidIdError extends Error {
   }
 }
 
-export interface UpsertBoardSetInput {
+export interface BoardSetInput {
   setId: string;
   name: string;
   rootBoardId: string;
@@ -57,13 +57,13 @@ export interface UpsertBoardSetInput {
   gridColumns?: number;
 }
 
-export interface UpsertBoardInput {
+export interface BoardInput {
   boardId: string;
   name: string;
   obf: OBFBoard;
 }
 
-export interface UpsertAssetInput {
+export interface AssetInput {
   path: string;
   blob: Blob;
 }
@@ -187,7 +187,7 @@ function boardSetRange(setId: string): IDBKeyRange {
   return IDBKeyRange.bound([setId], [setId, []]);
 }
 
-export async function deleteBoardSetData(setId: string): Promise<void> {
+export async function deleteBoardSetRows(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
@@ -202,9 +202,9 @@ export async function deleteBoardSetData(setId: string): Promise<void> {
 }
 
 export interface ReplaceBoardSetInput {
-  boardSet: UpsertBoardSetInput;
-  boards: UpsertBoardInput[];
-  assets: UpsertAssetInput[];
+  boardSet: BoardSetInput;
+  boards: BoardInput[];
+  assets: AssetInput[];
 }
 
 export async function replaceBoardSet(
