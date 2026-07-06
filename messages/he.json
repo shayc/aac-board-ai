@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת ספרייה",
-  "librarySourceCode": "קוד מקור",
+  "aboutSourceCode": "קוד מקור",
   "settingsTitle": "הגדרות",
   "settingsOpen": "פתיחת הגדרות",
   "settingsClose": "סגירת הגדרות",

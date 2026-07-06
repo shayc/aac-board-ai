@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Nie udało się usunąć „{name}”",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",
-  "librarySourceCode": "Kod źródłowy",
+  "aboutSourceCode": "Kod źródłowy",
   "settingsTitle": "Ustawienia",
   "settingsOpen": "Otwórz ustawienia",
   "settingsClose": "Zamknij ustawienia",

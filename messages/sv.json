@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Det gick inte att ta bort ”{name}”",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",
-  "librarySourceCode": "Källkod",
+  "aboutSourceCode": "Källkod",
   "settingsTitle": "Inställningar",
   "settingsOpen": "Öppna inställningar",
   "settingsClose": "Stäng inställningar",

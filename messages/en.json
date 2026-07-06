@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Couldn't delete \"{name}\"",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
-  "librarySourceCode": "Source code",
+  "aboutSourceCode": "Source code",
   "settingsTitle": "Settings",
   "settingsOpen": "Open settings",
   "settingsClose": "Close settings",
