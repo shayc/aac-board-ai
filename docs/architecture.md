@@ -34,8 +34,8 @@ Assumes React, TypeScript, and the Web Platform; no AAC background needed (see t
 - [Data and state model](#data-and-state-model) — the five kinds of state
 - [Invariants](#invariants) — rules you can't see by reading one file
 - [Boundaries](#boundaries) — the seams, and where to swap things
-- [Cross-cutting concerns](#cross-cutting-concerns) — the concerns that touch every module
 - [Key decisions](#key-decisions) — the load-bearing choices and why
+- [Verification](#verification) — how the claims are tested
 - [Risks and technical debt](#risks-and-technical-debt) — the known fragilities
 - [Glossary](#glossary) — AAC and domain terms
 
@@ -91,7 +91,9 @@ at runtime, absent on most browsers, and never required for core use.
 ## Containers and runtime
 
 The app is one SPA; inside it, each capability sits behind its own module. A PWA
-service worker caches the shell so the app loads offline after first visit.
+service worker (`vite-plugin-pwa`, `autoUpdate`) caches the shell so the app loads
+offline after first visit, and the manifest registers `file_handlers` for
+`.obf`/`.obz`, so the OS can hand board files straight to the app.
 
 ```mermaid
 flowchart LR
@@ -118,57 +120,54 @@ service worker caches out of band._
 the work before any component renders, so nothing flashes untranslated or
 half-loaded:
 
-```mermaid
-flowchart LR
-    nav["navigate to<br/>/sets/:setId/boards/:boardId"] --> hydrate["hydrateBoard<br/>read OBF + asset blobs, mint object URLs,<br/>obfToBoard → in-memory Board"]
-    hydrate --> xlate["resolveTranslatedBoard<br/>cache → Translator → persist"]
-    xlate --> render["render grid"]
-```
+1. Navigate to `/sets/:setId/boards/:boardId`.
+2. `hydrateBoard` — read the raw OBF and asset blobs, mint object URLs, and map
+   `obfToBoard` into the in-memory `Board`.
+3. `resolveTranslatedBoard` — serve the cached translation, or run the Translator
+   and persist the result.
+4. Render the grid.
 
 **Runtime flow 2 — tap a tile (intent to speech).** A tap is resolved to a typed
 _intent_, then dispatched. Most taps compose the message bar; some navigate or run
 an action:
 
-```mermaid
-flowchart LR
-    tap["tile tap / Enter"] --> resolve["resolveButtonIntents<br/>navigate · compose · speakText · playAudio · runAction"]
-    resolve --> dispatch["activateButton"]
-    dispatch --> msg["append to message bar"]
-    dispatch --> goto["navigate to board"]
-    dispatch --> say["speak / play audio"]
-    msg --> play["play → planPlayback → Web Speech (per-part highlight)"]
-```
+1. A tile tap (or Enter) goes through `resolveButtonIntents`, which yields typed
+   intents: navigate, compose, speakText, playAudio, or runAction.
+2. `activateButton` dispatches each intent — appending to the message bar,
+   navigating to another board, or speaking / playing audio directly.
+3. Playing the message runs `planPlayback` → Web Speech, with per-part
+   highlighting as it speaks.
 
 ## Codemap
 
 Coarse modules and what they do. Names are **symbol-searchable**, not
 hyperlinked, so a moved file never breaks this table.
 
-| Module                                                                   | What it does                                                                                                               |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| `src/main.tsx`                                                           | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                |
-| `src/app/`                                                               | Composition root: router, route loaders, app shell, header, library/settings drawers, onboarding.                          |
-| `src/app/routing/loaders/`                                               | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                           |
-| `src/pages/`                                                             | Route entry components, each code-split via React Router's `lazy` route import.                                            |
-| `src/features/board/`                                                    | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                           |
-| `src/features/board/grid·tile·pictogram/`                                | Render the tile grid and each pictogram.                                                                                   |
-| `src/features/board/activation/`                                         | Tap → typed intent → dispatch. Search `resolveButtonIntents`, `createButtonActivation`.                                    |
-| `src/features/board/message/`                                            | The message bar: accumulate parts, then `planPlayback` → TTS with per-part highlighting.                                   |
-| `src/features/board/navigation/`                                         | Board-to-board navigation over the router. Search `useBoardNavigation`, `boardPath`.                                       |
-| `src/features/board/keyboard/` + `grid/use-grid-keyboard.ts`             | Keyboard as a first-class input surface: grid navigation (`useGridKeyboard`) and message editing (`useBoardKeyboard`).     |
-| `src/features/board/obf/`                                                | **OBF → in-memory `Board`** mapping and action parsing. The format _read_ seam. Search `obfToBoard`, `parseAction`.        |
-| `src/features/board/import/`                                             | File / drag-drop / URL / file-handler import → parse → write IndexedDB. The format _write_ seam. Search `importBoardSets`. |
-| `src/features/board/storage/`                                            | **The only reader/writer of IndexedDB.** `boards-db.ts` (idb) + `board-hydration.ts` (blobs → object URLs).                |
-| `src/features/board/board-sets/`                                         | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                           |
-| `src/features/board/suggestions/`                                        | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                           |
-| `src/features/board/translation/`                                        | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                  |
-| `src/shared/speech/`                                                     | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                      |
-| `src/shared/language/`                                                   | The one language model: UI/board/TTS language context + persisted store.                                                   |
-| `src/shared/theme/`                                                      | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                      |
-| `src/shared/built-in-ai/`                                                | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.   |
-| `src/shared/{playback,audio,snackbar,providers,components,hooks,utils}/` | Cross-cutting helpers: status UI, snackbar, app providers.                                                                 |
-| `src/shared/utils/{external-store,persisted-store}.ts`                   | The two state primitives every cross-cutting store is built from.                                                          |
-| `messages/*.json` + `project.inlang/`                                    | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                               |
+| Module                                                       | What it does                                                                                                                    |
+| ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `src/main.tsx`                                               | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                     |
+| `src/app/`                                                   | Composition root: router, route loaders, app shell, header, library/settings drawers, onboarding.                               |
+| `src/app/routing/loaders/`                                   | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                                |
+| `src/pages/`                                                 | Route entry components, each code-split via React Router's `lazy` route import.                                                 |
+| `src/features/board/`                                        | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                                |
+| `src/features/board/grid·tile·pictogram/`                    | Render the tile grid and each pictogram.                                                                                        |
+| `src/features/board/activation/`                             | Tap → typed intent → dispatch. Search `resolveButtonIntents`, `createButtonActivation`.                                         |
+| `src/features/board/message/`                                | The message bar: accumulate parts, then `planPlayback` → TTS with per-part highlighting.                                        |
+| `src/features/board/navigation/`                             | Board-to-board navigation over the router. Search `useBoardNavigation`, `boardPath`.                                            |
+| `src/features/board/keyboard/` + `grid/use-grid-keyboard.ts` | Keyboard as a first-class input surface: grid navigation (`useGridKeyboard`) and message editing (`useBoardKeyboard`).          |
+| `src/features/board/obf/`                                    | **OBF → in-memory `Board`** mapping and action parsing. The format _read_ seam. Search `obfToBoard`, `parseAction`.             |
+| `src/features/board/import/`                                 | File / drag-drop / URL / file-handler import → parse → write IndexedDB. The format _write_ seam. Search `importBoardSets`.      |
+| `src/features/board/storage/`                                | **The only reader/writer of IndexedDB.** `boards-db.ts` (idb) + `board-hydration.ts` (blobs → object URLs).                     |
+| `src/features/board/board-sets/`                             | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                                |
+| `src/features/board/suggestions/`                            | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                                |
+| `src/features/board/translation/`                            | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                       |
+| `src/shared/speech/`                                         | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                           |
+| `src/shared/language/`                                       | The one language model: UI/board/TTS language context + persisted store.                                                        |
+| `src/shared/theme/`                                          | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                           |
+| `src/shared/built-in-ai/`                                    | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.        |
+| everything else under `src/shared/`                          | Small cross-cutting helpers (audio, snackbar, providers, shared components/hooks/utils); each directory name says what it does. |
+| `src/shared/utils/{external-store,persisted-store}.ts`       | The two state primitives every cross-cutting store is built from.                                                               |
+| `messages/*.json` + `project.inlang/`                        | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                    |
 
 Two libraries the author maintains carry the heaviest seams: **`@shayc/open-board-format`**
 (OBF/OBZ parsing) and **`@shayc/react-built-in-ai`** (React hooks over Chrome's
@@ -181,6 +180,11 @@ State has **five kinds**, each with one home:
 1. **Source of truth — IndexedDB.** Three object stores: `boardSets` (metadata),
    `boards` (one raw `OBFBoard` per board), `assets` (image/sound blobs by path).
    Everything visible is derived from here. Only `src/features/board/storage/` touches it.
+   Writes are batched and reads are bulk, so imports and board loads stay fast.
+   The schema is versioned: `boards-db.ts` opens the database through `idb`'s
+   `upgrade` callback, so a schema change ships as a new `DB_VERSION` plus a
+   migration step there — nowhere else. Multi-tab upgrades are handled: a tab
+   holding the old version closes its connection when a newer one needs to upgrade.
 2. **Route state — React Router loaders.** A board is fetched, hydrated, and
    translated _per navigation_; components receive a ready `Board`, never a loading
    spinner of their own. A language change calls `revalidate()` to re-translate.
@@ -238,15 +242,11 @@ Rules that constrain every file but are visible in none — several are _absence
 - **Theme values have a single source** (`theme-colors.ts`), shared into `index.html`
   by a Vite plugin; light/dark is a class toggled _pre-paint_ to avoid a flash.
 - **Board media object URLs have a single owner** — a module-level registry in
-  `board-hydration.ts`, not the loader. A visible board's URLs are never revoked out
-  from under it: a load superseded mid-flight (rapid navigation) discards its own URLs
-  instead of replacing the live ones. Loader calls are not serialized — a new
-  navigation can start hydrating before the previous one settles — so safety comes
-  from each call checking `signal.throwIfAborted()` after every await and only
-  swapping in the registry synchronously if it wins; a superseded call throws
-  first and revokes its own URLs instead. The registry is a global because data mode has
-  no component unmount to hook into; it stays safe only because `boardLoader` is
-  assumed to be its sole consumer — an assumption held by a comment, not the types.
+  `board-hydration.ts` (a global because data-mode loaders have no unmount to hook
+  into). A visible board's URLs are never revoked out from under it: a load
+  superseded by rapid navigation revokes its own URLs, never the live ones. Only
+  `boardLoader` may touch the registry; the abort/race choreography is documented
+  where it lives, in `board-hydration.ts`.
 
 ## Boundaries
 
@@ -256,7 +256,7 @@ Each is the one place to change a concern:
   nowhere else.
 - **OBF format boundary (read) — `src/features/board/obf/`.** This is the contract
   with the AAC ecosystem (OBF/OBZ). Changing the mapping is a breaking change to
-  import/export compatibility.
+  import compatibility.
 - **Import boundary (write) — `src/features/board/import/`.** The only place a file
   becomes database records. All four entry points (picker, drag-drop, `?board=` URL,
   PWA file handler) converge on `importBoardSets`.
@@ -270,21 +270,6 @@ Each is the one place to change a concern:
 - **Routing / data boundary — `src/app/routing/loaders/` + React Router.** The only path
   from storage into the render tree.
 
-## Cross-cutting concerns
-
-- **Accessibility** — see the "no bespoke unlabeled controls" invariant above. Worth singling
-  out: the keyboard is a first-class _input surface_ (arrow navigation, editing,
-  activation), not a shortcut layer bolted on.
-- **i18n + RTL** — Paraglide (base `en`), dual LTR/RTL Emotion caches via
-  `@mui/stylis-plugin-rtl`, direction bound to `<html dir>` from the language.
-- **Offline / PWA** — `vite-plugin-pwa` service worker (`autoUpdate`), installable,
-  with `file_handlers` registering `.obf`/`.obz` so the OS can open boards in the app.
-- **Theming** — MUI + Emotion, light/dark as CSS variables on a pre-paint class,
-  single color source shared with the static HTML.
-- **Privacy** — on-device AI and no network for core flows; see the no-backend invariant.
-- **Performance** — React Compiler auto-memoization, route-level code splitting,
-  batched IndexedDB writes and bulk reads.
-
 ## Key decisions
 
 The load-bearing choices and _why_. No separate ADR log; these summaries are the
@@ -292,7 +277,8 @@ record. Revisit one only if its rationale stops holding.
 
 - **Local-first, no backend.** A vulnerable user population needs privacy by default
   and a board that works on a school network with no data agreement, subscription, or
-  internet. Trade-off: no server-side sync; cross-device sharing is via OBF/OBZ files.
+  internet. Trade-off: no server-side sync; cross-device sharing means re-importing
+  OBF/OBZ files (the app has no export yet — see Risks).
 - **On-device Built-in AI over server AI.** Buys privacy, zero latency, zero cost, and
   offline operation — at the price of narrow browser support, which the
   progressive-enhancement invariant absorbs.
@@ -305,6 +291,17 @@ record. Revisit one only if its rationale stops holding.
 - **Accessible primitives + real-Chromium browser tests.** Accessibility correctness is the
   product; it's verified against a real engine (Playwright via Vitest), with axe-core.
 
+## Verification
+
+Every test runs in **real Chromium** — Vitest browser mode with the Playwright
+provider, configured in `vite.config.ts`; there is no jsdom tier. That is what makes
+the accessibility claims testable rather than aspirational: component tests assert
+with **axe-core**, and keyboard behavior is exercised against the actual engine.
+Shared test setup lives in `src/shared/testing/`; board-domain helpers in
+`src/features/board/test-utils.tsx`. Coverage thresholds in `vite.config.ts` are a
+ratchet — set just under the measured baseline, raised alongside meaningful gains,
+never lowered.
+
 ## Risks and technical debt
 
 The known fragilities:
@@ -312,8 +309,11 @@ The known fragilities:
 - **Built-in AI is Chrome/Edge-only.** The headline help — sentence expansion, tone,
   translation — is absent on most browsers today. Progressive enhancement absorbs it,
   but the differentiator reaches few users until support spreads.
-- **No cross-device sync.** A board lives on one device; sharing is manual OBF/OBZ
-  export and import. By design, but users will ask for sync.
+- **No cross-device sync, and no export yet.** A board lives on one device; sharing
+  means re-importing the original OBF/OBZ file elsewhere. The app cannot export, so
+  in-app changes (like cached translations) cannot leave the device — export is the
+  missing half of the "share via files" answer. No-sync is by design, but users
+  will ask for it.
 - **The language list follows installed TTS voices.** A device with sparse voices
   offers fewer languages than the UI is translated into — capability, not
   translation, is the limit.
@@ -325,7 +325,7 @@ The known fragilities:
 - **AAC** — Augmentative and Alternative Communication: tools for people who can't
   rely on speech.
 - **OBF / OBZ** — Open Board Format: a single board (`.obf`, JSON) or a zipped board
-  set with assets (`.obz`). The app's import/export contract.
+  set with assets (`.obz`). The app's import contract (no export yet).
 - **Board set** — a collection of linked boards with a root board, imported as a unit.
 - **Tile / pictogram** — one grid cell: an image plus a label that the user taps.
 - **Vocalization** — what a button _speaks_, when it differs from its visible label.

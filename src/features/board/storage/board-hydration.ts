@@ -7,7 +7,13 @@ import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
 import { BoardNotFoundError, getAssetBlob, getBoard } from "./boards-db";
 
-// Single concurrent caller assumed — the only consumer is boardLoader.
+// Module-level because data-mode loaders have no unmount to hook into. Loader
+// calls are not serialized — a new navigation can start hydrating before the
+// previous one settles — and a superseded call must never revoke the live
+// board's URLs. Each call builds URLs in its own registry, checks the abort
+// signal after every await, and swaps into `previousRegistry` synchronously
+// only if it wins; a superseded call throws first and revokes only its own
+// registry. Single concurrent caller assumed — the only consumer is boardLoader.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
 export async function hydrateBoard(
