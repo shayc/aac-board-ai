@@ -1,6 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { openFiles } from "@shared/utils/file-picker";
+import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { boardSetPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-types";
@@ -43,8 +44,13 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
       return results;
     } catch (error) {
+      const tooLarge =
+        error instanceof OBFError && error.info.code === "archive-too-large";
+
       showSnackbar({
-        message: m.libraryImportFailedBoards({ count }),
+        message: tooLarge
+          ? m.libraryImportTooLargeBoards({ count })
+          : m.libraryImportFailedBoards({ count }),
         severity: "error",
       });
 

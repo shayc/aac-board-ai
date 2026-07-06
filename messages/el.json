@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ο πίνακας είναι πολύ μεγάλος για εισαγωγή",
+        "countPlural=*": "Οι πίνακες είναι πολύ μεγάλοι για εισαγωγή"
+      }
+    }
+  ],
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
   "libraryDelete": "Διαγραφή",

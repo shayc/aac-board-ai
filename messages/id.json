@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Papan terlalu besar untuk diimpor",
+        "countPlural=*": "Papan terlalu besar untuk diimpor"
+      }
+    }
+  ],
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",

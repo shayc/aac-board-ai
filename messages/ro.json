@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabla este prea mare pentru a fi importată",
+        "countPlural=*": "Tablele sunt prea mari pentru a fi importate"
+      }
+    }
+  ],
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",

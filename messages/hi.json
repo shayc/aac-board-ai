@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "बोर्ड आयात करने के लिए बहुत बड़ा है",
+        "countPlural=*": "बोर्ड आयात करने के लिए बहुत बड़े हैं"
+      }
+    }
+  ],
   "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
   "libraryInfo": "जानकारी",
   "libraryDelete": "हटाएँ",

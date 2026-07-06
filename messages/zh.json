@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "沟通板过大，无法导入",
+        "countPlural=*": "沟通板过大，无法导入"
+      }
+    }
+  ],
   "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",
   "libraryDelete": "删除",

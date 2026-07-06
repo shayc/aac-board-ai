@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+        "countPlural=*": "บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
+      }
+    }
+  ],
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",

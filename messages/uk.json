@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дошка занадто велика для імпортування",
+        "countPlural=*": "Дошки занадто великі для імпортування"
+      }
+    }
+  ],
   "libraryDropToImport": "Перетягніть файли дошок для імпорту",
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",

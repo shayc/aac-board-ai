@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
+        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ"
+      }
+    }
+  ],
   "libraryDropToImport": "ಆಮದು ಮಾಡಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಬಿಡಿ",
   "libraryInfo": "ಮಾಹಿತಿ",
   "libraryDelete": "ಅಳಿಸಿ",

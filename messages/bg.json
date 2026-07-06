@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дъската е твърде голяма за импортиране",
+        "countPlural=*": "Дъските са твърде големи за импортиране"
+      }
+    }
+  ],
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
   "libraryInfo": "Информация",
   "libraryDelete": "Изтриване",

@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "A tábla túl nagy az importáláshoz",
+        "countPlural=*": "A táblák túl nagyok az importáláshoz"
+      }
+    }
+  ],
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",
   "libraryDelete": "Törlés",

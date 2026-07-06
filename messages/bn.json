@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "বোর্ডটি আমদানি করার জন্য খুব বড়",
+        "countPlural=*": "বোর্ডগুলি আমদানি করার জন্য খুব বড়"
+      }
+    }
+  ],
   "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
   "libraryInfo": "তথ্য",
   "libraryDelete": "মুছুন",

@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "اللوحة كبيرة جدًا بحيث يتعذّر استيرادها",
+        "countPlural=*": "اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
+      }
+    }
+  ],
   "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
   "libraryInfo": "معلومات",
   "libraryDelete": "حذف",

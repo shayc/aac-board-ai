@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Het bord is te groot om te importeren",
+        "countPlural=*": "De borden zijn te groot om te importeren"
+      }
+    }
+  ],
   "libraryDropToImport": "Zet bordbestanden neer om te importeren",
   "libraryInfo": "Info",
   "libraryDelete": "Verwijderen",

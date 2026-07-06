@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ボードが大きすぎてインポートできません",
+        "countPlural=*": "ボードが大きすぎてインポートできません"
+      }
+    }
+  ],
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
   "libraryInfo": "情報",
   "libraryDelete": "削除",

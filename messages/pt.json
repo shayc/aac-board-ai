@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "A prancha é grande demais para importar",
+        "countPlural=*": "As pranchas são grandes demais para importar"
+      }
+    }
+  ],
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
   "libraryInfo": "Informações",
   "libraryDelete": "Excluir",
