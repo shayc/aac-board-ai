@@ -1,8 +1,8 @@
 import { describe, expect, test, vi } from "vitest";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { render } from "vitest-browser-react";
-import { LanguageProvider } from "./language-provider";
-import { setStoredLanguage } from "./language-store";
+import { LanguageProvider } from "@shared/language/language-provider";
+import { setStoredLanguage } from "@shared/language/language-store";
 import { useRevalidateOnLanguageChange } from "./use-revalidate-on-language-change";
 
 function Probe() {
