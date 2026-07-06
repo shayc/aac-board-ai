@@ -37,11 +37,11 @@ export function toPrediction({
     return [];
   }
 
-  const canonical = new Map<string, string>();
+  const canonicalWords = new Map<string, string>();
   for (const word of boardWords) {
     const key = word.toLowerCase();
-    if (!canonical.has(key)) {
-      canonical.set(key, word);
+    if (!canonicalWords.has(key)) {
+      canonicalWords.set(key, word);
     }
   }
 
@@ -52,7 +52,7 @@ export function toPrediction({
   const accepted: string[] = [];
 
   for (const word of words) {
-    const boardWord = canonical.get(word.toLowerCase());
+    const boardWord = canonicalWords.get(word.toLowerCase());
     if (!boardWord) {
       break;
     }

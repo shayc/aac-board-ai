@@ -14,14 +14,14 @@ export function buildPredictionPrompt(
   messageText: string,
   boardWords: readonly string[],
 ): string {
-  const words = `Board words: ${boardWords.join(", ")}`;
+  const boardWordsLine = `Board words: ${boardWords.join(", ")}`;
   const trimmed = messageText.trim();
 
   if (!trimmed) {
-    return `${words}\nSentence so far: (empty)\nFirst 1 to 3 words to start a sentence:`;
+    return `${boardWordsLine}\nSentence so far: (empty)\nFirst 1 to 3 words to start a sentence:`;
   }
 
-  return `${words}\nSentence so far: ${trimmed}\nNext 1 to 3 words:`;
+  return `${boardWordsLine}\nSentence so far: ${trimmed}\nNext 1 to 3 words:`;
 }
 
 export const PREDICTION_RESPONSE_SCHEMA = {
