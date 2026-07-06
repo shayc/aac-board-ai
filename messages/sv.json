@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavlan är för stor för att importeras",
+        "countPlural=*": "Tavlorna är för stora för att importeras"
+      }
+    }
+  ],
   "libraryDropToImport": "Släpp tavelfiler för att importera",
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",

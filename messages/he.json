@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "הלוח גדול מדי לייבוא",
+        "countPlural=*": "הלוחות גדולים מדי לייבוא"
+      }
+    }
+  ],
   "libraryDropToImport": "גרירת קובצי לוחות לכאן לייבוא",
   "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",

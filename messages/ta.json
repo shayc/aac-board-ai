@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "பலகை இறக்குமதி செய்ய மிகப் பெரியது",
+        "countPlural=*": "பலகைகள் இறக்குமதி செய்ய மிகப் பெரியவை"
+      }
+    }
+  ],
   "libraryDropToImport": "இறக்குமதி செய்ய பலகை கோப்புகளை விடுங்கள்",
   "libraryInfo": "தகவல்",
   "libraryDelete": "நீக்கு",

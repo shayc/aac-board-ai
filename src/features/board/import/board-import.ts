@@ -5,6 +5,7 @@ import {
   type OBFBoard,
   type OBFManifest,
   type ParsedOBZ,
+  type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
 import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
@@ -21,6 +22,20 @@ export interface ImportResult {
   replacedExisting: boolean;
 }
 
+/**
+ * Decompression limits enforced against an OBZ archive's declared uncompressed
+ * sizes before any entry is inflated — zip-bomb defense for every import path
+ * (picker, drag-drop, file-handler, URL). The caps are deliberately generous
+ * versus real boards (observed up to ~70MB) but bounded, so a maliciously
+ * crafted archive is rejected before it can exhaust memory. Exceeding a cap
+ * makes `loadBoard` throw an `OBFError` with code `"archive-too-large"`.
+ */
+export const BOARD_IMPORT_LIMITS: UnzipLimits = {
+  maxTotalOriginalSize: 500 * 1024 * 1024, // 500MB across the whole archive
+  maxEntrySize: 100 * 1024 * 1024, // 100MB for any single entry
+  maxEntries: 5000,
+};
+
 export async function importBoardSets(
   files: File | File[],
 ): Promise<ImportResult[]> {
@@ -30,7 +45,7 @@ export async function importBoardSets(
   try {
     for (const file of fileList) {
       const setId = deriveSetId(file.name);
-      const loaded = await loadBoard(file);
+      const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
 
       results.push(
         loaded.format === "obz"

@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "La tabella è troppo grande per essere importata",
+        "countPlural=*": "Le tabelle sono troppo grandi per essere importate"
+      }
+    }
+  ],
   "libraryDropToImport": "Rilascia i file delle tabelle per importare",
   "libraryInfo": "Informazioni",
   "libraryDelete": "Elimina",

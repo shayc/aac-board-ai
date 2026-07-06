@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavlen er for stor til at blive importeret",
+        "countPlural=*": "Tavlerne er for store til at blive importeret"
+      }
+    }
+  ],
   "libraryDropToImport": "Slip tavlefiler for at importere",
   "libraryInfo": "Info",
   "libraryDelete": "Slet",

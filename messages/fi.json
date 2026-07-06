@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Taulu on liian suuri tuotavaksi",
+        "countPlural=*": "Taulut ovat liian suuria tuotaviksi"
+      }
+    }
+  ],
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",

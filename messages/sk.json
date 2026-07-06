@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabuľka je príliš veľká na import",
+        "countPlural=*": "Tabuľky sú príliš veľké na import"
+      }
+    }
+  ],
   "libraryDropToImport": "Pustite súbory tabuliek na import",
   "libraryInfo": "Informácie",
   "libraryDelete": "Odstrániť",

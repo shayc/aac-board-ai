@@ -1,5 +1,11 @@
 import { assertDefined } from "@shared/testing/assert-defined";
-import { loadOBF, loadOBZ, type OBFBoard } from "@shayc/open-board-format";
+import {
+  loadOBF,
+  loadOBZ,
+  OBFError,
+  zip,
+  type OBFBoard,
+} from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import {
   getAssetBlob,
@@ -9,6 +15,7 @@ import {
 } from "../storage/boards-db";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
+  BOARD_IMPORT_LIMITS,
   buildAssetInputs,
   importBoardSets,
   resolveLoadBoardPaths,
@@ -205,6 +212,26 @@ describe("importBoardSets", () => {
 
     const boardSets = await listBoardSets();
     expect(boardSets).toHaveLength(1);
+  });
+
+  test("rejects an OBZ whose declared uncompressed size exceeds the per-entry limit", async () => {
+    // A buffer of zeros compresses to a tiny archive, but its central-directory
+    // metadata declares the full uncompressed size — so the limit trips on the
+    // declared size before any inflation happens (zip-bomb defense).
+    const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
+    const zipped = await zip(new Map([["big.bin", oversized]]));
+    const file = new File([zipped as Uint8Array<ArrayBuffer>], "zip-bomb.obz", {
+      type: "application/octet-stream",
+    });
+
+    const error = await importBoardSets(file).catch((e: unknown) => e);
+    expect(error).toBeInstanceOf(OBFError);
+    expect(error).toMatchObject({
+      info: { code: "archive-too-large", limit: "maxEntrySize" },
+    });
+
+    const boardSets = await listBoardSets();
+    expect(boardSets).toHaveLength(0);
   });
 
   test("a failure partway through a multi-file import still leaves the earlier set visible", async () => {

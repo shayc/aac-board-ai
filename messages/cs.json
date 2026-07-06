@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabulka je příliš velká na import",
+        "countPlural=*": "Tabulky jsou příliš velké na import"
+      }
+    }
+  ],
   "libraryDropToImport": "Přetáhněte sem soubory tabulek pro import",
   "libraryInfo": "Informace",
   "libraryDelete": "Smazat",

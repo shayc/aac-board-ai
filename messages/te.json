@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "బోర్డు దిగుమతి చేయడానికి చాలా పెద్దది",
+        "countPlural=*": "బోర్డులు దిగుమతి చేయడానికి చాలా పెద్దవి"
+      }
+    }
+  ],
   "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
   "libraryInfo": "సమాచారం",
   "libraryDelete": "తొలగించు",

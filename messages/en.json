@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Board is too large to import",
+        "countPlural=*": "Boards are too large to import"
+      }
+    }
+  ],
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
   "libraryDelete": "Delete",

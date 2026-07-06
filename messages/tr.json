@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Pano içe aktarılamayacak kadar büyük",
+        "countPlural=*": "Panolar içe aktarılamayacak kadar büyük"
+      }
+    }
+  ],
   "libraryDropToImport": "İçe aktarmak için pano dosyalarını bırakın",
   "libraryInfo": "Bilgi",
   "libraryDelete": "Sil",

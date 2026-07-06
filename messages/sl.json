@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabla je prevelika za uvoz",
+        "countPlural=*": "Table so prevelike za uvoz"
+      }
+    }
+  ],
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

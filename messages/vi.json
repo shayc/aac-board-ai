@@ -50,6 +50,16 @@
       }
     }
   ],
+  "libraryImportTooLargeBoards": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Bảng quá lớn để nhập",
+        "countPlural=*": "Các bảng quá lớn để nhập"
+      }
+    }
+  ],
   "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",
