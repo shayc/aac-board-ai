@@ -11,7 +11,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { Board, BoardButton } from "../types";
 import { PREDICTION_SYSTEM_PROMPT } from "./prediction-prompt";
-import { useTilePrediction } from "./use-tile-prediction";
+import { useWordPrediction } from "./use-word-prediction";
 
 function makeBoard(words: string[]): Board {
   const buttons: BoardButton[] = words.map((label, i) => ({
@@ -28,13 +28,13 @@ function makeBoard(words: string[]): Board {
 
 const FOOD_BOARD = makeBoard(["eat", "drink", "more", "help", "stop"]);
 
-function renderTilePrediction(text: string, board: Board = FOOD_BOARD) {
-  return renderHook(() => useTilePrediction(text, board), {
+function renderWordPrediction(text: string, board: Board = FOOD_BOARD) {
+  return renderHook(() => useWordPrediction(text, board), {
     wrapper: LanguageProvider,
   });
 }
 
-describe("useTilePrediction", () => {
+describe("useWordPrediction", () => {
   beforeEach(() => {
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
@@ -42,7 +42,7 @@ describe("useTilePrediction", () => {
   test("assembles the sentence-so-far plus the predicted next words", async () => {
     stubLanguageModel(() => '{"words":["more","help"]}');
 
-    const { result } = await renderTilePrediction("I want");
+    const { result } = await renderWordPrediction("I want");
 
     await vi.waitFor(() => {
       expect(result.current.phrase).toBe("I want more help");
@@ -52,7 +52,7 @@ describe("useTilePrediction", () => {
   test("provisions the session with the system prompt and expected languages", async () => {
     const { create } = stubLanguageModel();
 
-    await renderTilePrediction("I want");
+    await renderWordPrediction("I want");
 
     await vi.waitFor(() => {
       expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
@@ -66,7 +66,7 @@ describe("useTilePrediction", () => {
   test("constrains the response to the prediction schema", async () => {
     const { prompt } = stubLanguageModel();
 
-    await renderTilePrediction("I want");
+    await renderWordPrediction("I want");
 
     await vi.waitFor(() => {
       expect(prompt.mock.calls.at(0)?.at(1)).toMatchObject({
@@ -78,7 +78,7 @@ describe("useTilePrediction", () => {
   test("reports unsupported and stays empty when the Prompt API is unavailable", async () => {
     stubBuiltInAIUnsupported("LanguageModel");
 
-    const { result } = await renderTilePrediction("I want");
+    const { result } = await renderWordPrediction("I want");
 
     await vi.waitFor(() => {
       expect(result.current.status).toBe("unsupported");
@@ -90,7 +90,7 @@ describe("useTilePrediction", () => {
     const { prompt } = stubLanguageModel();
     const foldersOnly = makeBoard([]);
 
-    const { result } = await renderTilePrediction("I want", foldersOnly);
+    const { result } = await renderWordPrediction("I want", foldersOnly);
 
     await vi.waitFor(() => {
       expect(result.current.status).toBe("ready");
@@ -113,7 +113,7 @@ describe("useTilePrediction", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "I want" }) =>
-        useTilePrediction(text, FOOD_BOARD),
+        useWordPrediction(text, FOOD_BOARD),
       { initialProps: { text: "I want" }, wrapper: LanguageProvider },
     );
 
@@ -139,7 +139,7 @@ describe("useTilePrediction", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "I want" }) =>
-        useTilePrediction(text, FOOD_BOARD),
+        useWordPrediction(text, FOOD_BOARD),
       { initialProps: { text: "I want" }, wrapper: LanguageProvider },
     );
 

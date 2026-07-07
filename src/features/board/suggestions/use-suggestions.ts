@@ -19,7 +19,7 @@ import {
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { useTilePrediction } from "./use-tile-prediction";
+import { useWordPrediction } from "./use-word-prediction";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 const TONE_DEBOUNCE_MS = 400;
@@ -59,7 +59,7 @@ export function useSuggestions(
     ...rewriterLanguageOptions(language),
   });
 
-  const prediction = useTilePrediction(text, board);
+  const prediction = useWordPrediction(text, board);
 
   const hasText = text.trim().length > 0;
 

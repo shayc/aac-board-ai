@@ -399,7 +399,7 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("lists the tile prediction last, after the proofread and rewrite", async () => {
+  test("lists the word prediction last, after the proofread and rewrite", async () => {
     stubProofreader(() => makeProofreadResult("I want to eat."));
     stubRewriter(() => "I would like to eat.");
     stubLanguageModel(() => '{"words":["more"]}');

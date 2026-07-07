@@ -16,7 +16,7 @@ import { toPrediction } from "./to-prediction";
 
 const PREDICTION_DEBOUNCE_MS = 400;
 
-export interface UseTilePredictionReturn {
+export interface UseWordPredictionReturn {
   status: Status;
   requestFailed: boolean;
   isPending: boolean;
@@ -36,12 +36,12 @@ function modelOptions(language: string) {
   return { initialPrompts, ...languageModelLanguageOptions(language) };
 }
 
-// Predicts the next 1–3 tiles for the message being composed, constrained to
+// Predicts the next 1–3 words for the message being composed, constrained to
 // the visible board's words.
-export function useTilePrediction(
+export function useWordPrediction(
   text: string,
   board: Board,
-): UseTilePredictionReturn {
+): UseWordPredictionReturn {
   const { language } = useLanguage();
   const boardWords = getBoardWords(board);
 
