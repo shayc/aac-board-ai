@@ -86,7 +86,6 @@ export function useSuggestions(
     "LanguageModel",
   ]);
 
-  // Prediction last — proofread and rewrite are the primary suggestions.
   const phrases = toPhrases(text, [
     corrected.value,
     rewritten.value,

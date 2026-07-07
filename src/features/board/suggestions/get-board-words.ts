@@ -1,9 +1,7 @@
 import { resolveButtonIntents } from "../activation/button-intent-resolver";
 import type { Board } from "../types";
 
-// Nano's context is small; a long board would blow the per-call token budget
-// and slow the on-device prompt.
-const MAX_BOARD_WORDS = 60;
+const MAX_BOARD_WORDS = 112;
 
 // The words a person can tap into their message on this board. Source of truth
 // is the intent resolver: compose intents exist only for buttons that add to

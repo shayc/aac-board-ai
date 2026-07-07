@@ -1,4 +1,3 @@
-// The system prompt lives in `initialPrompts` so it survives session resets.
 export const PREDICTION_SYSTEM_PROMPT =
   "You predict the next words for a person composing a sentence by tapping " +
   "word tiles on a communication board. Given the sentence so far and the " +
@@ -7,7 +6,6 @@ export const PREDICTION_SYSTEM_PROMPT =
   "connecting or filler words that are not on the board. Never complete the " +
   "whole sentence.";
 
-// Kept short — on-device latency scales with the prompt length.
 export function buildPredictionPrompt(
   messageText: string,
   boardWords: readonly string[],

@@ -51,17 +51,17 @@ describe("getBoardWords", () => {
     expect(getBoardWords(board)).toEqual(["Eat"]);
   });
 
-  test("caps the result at 60 words", () => {
+  test("caps the result at 112 words", () => {
     const board = makeBoard(
-      Array.from({ length: 100 }, (_, i) => ({
+      Array.from({ length: 150 }, (_, i) => ({
         id: `b${i}`,
         label: `word${i}`,
       })),
     );
 
     const words = getBoardWords(board);
-    expect(words).toHaveLength(60);
+    expect(words).toHaveLength(112);
     expect(words[0]).toBe("word0");
-    expect(words[59]).toBe("word59");
+    expect(words[111]).toBe("word111");
   });
 });
