@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 
 export interface TileColorConfig {
   saturation: number;
+  borderVisible: boolean;
 }
 
 export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
@@ -17,6 +18,8 @@ export function parseTileColorConfig(raw: unknown): TileColorConfig {
       Number.isFinite(parsed.saturation)
         ? Math.min(Math.max(parsed.saturation, min), max)
         : fallback,
+    borderVisible:
+      typeof parsed.borderVisible === "boolean" ? parsed.borderVisible : true,
   };
 }
 
@@ -27,6 +30,13 @@ const tileColorStore = createPersistedStore<TileColorConfig>(
 
 export function setTileSaturation(saturation: number): void {
   tileColorStore.setState({ ...tileColorStore.getSnapshot(), saturation });
+}
+
+export function setTileBorderVisible(borderVisible: boolean): void {
+  tileColorStore.setState({
+    ...tileColorStore.getSnapshot(),
+    borderVisible,
+  });
 }
 
 export function useTileColorConfig(): TileColorConfig {

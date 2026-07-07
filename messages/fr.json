@@ -99,6 +99,7 @@
   "speechVoicePreview": "Bonjour, voici ma voix !",
   "playbackHighlight": "Surligner les mots pendant la lecture à voix haute",
   "tileSaturation": "Intensité des couleurs",
+  "tileBorders": "Afficher les bordures des cases",
   "aiCustomInstructions": "Instructions personnalisées",
   "aiCustomInstructionsPlaceholder": "p. ex. parler sur un ton sarcastique",
   "aiCustomInstructionsHelper": "Façonnez les suggestions avec vos propres mots.",

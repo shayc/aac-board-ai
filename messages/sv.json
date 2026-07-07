@@ -99,6 +99,7 @@
   "speechVoicePreview": "Hej, det här är min röst!",
   "playbackHighlight": "Markera ord medan de talas",
   "tileSaturation": "Färgintensitet",
+  "tileBorders": "Visa kantlinjer på rutor",
   "aiCustomInstructions": "Anpassade instruktioner",
   "aiCustomInstructionsPlaceholder": "t.ex. tala med sarkastisk ton",
   "aiCustomInstructionsHelper": "Forma förslagen med dina egna ord.",

@@ -43,7 +43,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = useHighlightConfig();
-  const { saturation } = useTileColorConfig();
+  const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text);
@@ -65,6 +65,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
       variant={getNavigationTargetId(button) ? "folder" : undefined}
+      borderHidden={!borderVisible}
       onClick={() => activateButton(button)}
       {...props}
     />

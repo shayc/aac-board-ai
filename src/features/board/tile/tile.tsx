@@ -9,6 +9,7 @@ export interface TileProps {
   borderColor?: string;
   disabled?: boolean;
   variant?: "folder";
+  borderHidden?: boolean;
   tabIndex?: number;
   onClick: () => void;
 }
@@ -27,6 +28,7 @@ export function Tile({
   borderColor,
   disabled,
   variant,
+  borderHidden,
   tabIndex,
   onClick,
 }: TileProps) {
@@ -45,7 +47,11 @@ export function Tile({
         alignItems: "stretch",
         justifyContent: "stretch",
         p: 1,
-        border: `4px solid ${resolvedBorderColor ? desaturate(resolvedBorderColor) : "transparent"}`,
+        border: `4px solid ${
+          !borderHidden && resolvedBorderColor
+            ? desaturate(resolvedBorderColor)
+            : "transparent"
+        }`,
         borderRadius: 4,
         overflow: "hidden",
         position: "relative",

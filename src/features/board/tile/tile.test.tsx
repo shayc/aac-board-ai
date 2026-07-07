@@ -108,6 +108,44 @@ describe("Tile", () => {
     );
   });
 
+  test("borderHidden renders a transparent border but keeps its width", async () => {
+    const screen = await render(
+      <Tile
+        label="Borderless"
+        backgroundColor="#ff0000"
+        borderColor="#00ff00"
+        borderHidden
+        onClick={vi.fn()}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Borderless" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.borderColor).toBe("rgba(0, 0, 0, 0)");
+    expect(styles.borderTopWidth).toBe("4px");
+    expect(styles.backgroundColor).toBe(
+      resolveColor("oklch(from #ff0000 l c h)"),
+    );
+  });
+
+  test("borderHidden keeps the folder corner visible", async () => {
+    const screen = await render(
+      <Tile
+        label="Folder"
+        variant="folder"
+        borderColor="#000000"
+        borderHidden
+        onClick={vi.fn()}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Folder" });
+    const afterStyles = getComputedStyle(button.element(), "::after");
+
+    expect(afterStyles.display).toBe("block");
+  });
+
   test("calls onClick when clicked", async () => {
     const onClick = vi.fn();
 

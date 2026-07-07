@@ -99,6 +99,7 @@
   "speechVoicePreview": "¡Hola, esta es mi voz!",
   "playbackHighlight": "Resaltar palabras mientras se habla",
   "tileSaturation": "Intensidad del color",
+  "tileBorders": "Mostrar bordes de las casillas",
   "aiCustomInstructions": "Instrucciones personalizadas",
   "aiCustomInstructionsPlaceholder": "p. ej., habla con un tono sarcástico",
   "aiCustomInstructionsHelper": "Da forma a las sugerencias con tus propias palabras.",

@@ -99,6 +99,7 @@
   "speechVoicePreview": "Ahoj, tohle je můj hlas!",
   "playbackHighlight": "Zvýraznit slova během mluvení",
   "tileSaturation": "Intenzita barev",
+  "tileBorders": "Zobrazit ohraničení dlaždic",
   "aiCustomInstructions": "Vlastní pokyny",
   "aiCustomInstructionsPlaceholder": "např. mluv sarkastickým tónem",
   "aiCustomInstructionsHelper": "Formulujte návrhy vlastními slovy.",

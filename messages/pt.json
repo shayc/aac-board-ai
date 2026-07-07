@@ -99,6 +99,7 @@
   "speechVoicePreview": "Olá, esta é a minha voz!",
   "playbackHighlight": "Destacar palavras durante a fala",
   "tileSaturation": "Intensidade da cor",
+  "tileBorders": "Mostrar contornos dos blocos",
   "aiCustomInstructions": "Instruções personalizadas",
   "aiCustomInstructionsPlaceholder": "ex.: fale com um tom sarcástico",
   "aiCustomInstructionsHelper": "Molde as sugestões com suas próprias palavras.",

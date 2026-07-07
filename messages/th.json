@@ -99,6 +99,7 @@
   "speechVoicePreview": "สวัสดี นี่คือเสียงของฉัน!",
   "playbackHighlight": "ไฮไลต์คำขณะพูด",
   "tileSaturation": "ความเข้มของสี",
+  "tileBorders": "แสดงขอบไทล์",
   "aiCustomInstructions": "คำสั่งที่กำหนดเอง",
   "aiCustomInstructionsPlaceholder": "เช่น พูดด้วยน้ำเสียงประชดประชัน",
   "aiCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",

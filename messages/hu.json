@@ -99,6 +99,7 @@
   "speechVoicePreview": "Szia, ez az én hangom!",
   "playbackHighlight": "Szavak kiemelése beszéd közben",
   "tileSaturation": "Színintenzitás",
+  "tileBorders": "Csempék szegélyének megjelenítése",
   "aiCustomInstructions": "Egyéni utasítások",
   "aiCustomInstructionsPlaceholder": "pl. beszélj szarkasztikus hangnemben",
   "aiCustomInstructionsHelper": "Alakítsd a javaslatokat a saját szavaiddal.",

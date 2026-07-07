@@ -9,6 +9,7 @@ import {
   useHighlightConfig,
 } from "@shared/highlight/highlight-store";
 import {
+  setTileBorderVisible,
   setTileSaturation,
   TILE_SATURATION,
   useTileColorConfig,
@@ -16,7 +17,7 @@ import {
 
 export function BoardSettings() {
   const { highlightActivePart } = useHighlightConfig();
-  const { saturation } = useTileColorConfig();
+  const { saturation, borderVisible } = useTileColorConfig();
 
   return (
     <Stack spacing={3}>
@@ -26,6 +27,16 @@ export function BoardSettings() {
           <Switch
             checked={highlightActivePart}
             onChange={(event) => setHighlightActivePart(event.target.checked)}
+          />
+        }
+      />
+
+      <FormControlLabel
+        label={m.tileBorders()}
+        control={
+          <Switch
+            checked={borderVisible}
+            onChange={(event) => setTileBorderVisible(event.target.checked)}
           />
         }
       />
