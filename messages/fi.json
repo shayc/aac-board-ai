@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Toimii kokonaan laitteellasi ilman tietojen seurantaa ja ilman pilviriippuvuutta.",
   "onboardingContinue": "Jatka",
   "errorGenericTitle": "Jokin meni pieleen",
+  "errorPageNotFound": "Sivua ei löytynyt",
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulua ei löytynyt",

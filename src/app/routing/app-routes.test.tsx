@@ -116,6 +116,18 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Old Board" }))
       .toBeVisible();
   });
+
+  test("an unmatched URL renders the localized not-found page inside the shell", async () => {
+    const screen = await renderApp("/nonexistent");
+
+    // The shell still mounts on a miss, so dismiss onboarding first.
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await expect.element(screen.getByText("Page not found")).toBeVisible();
+    await expect
+      .element(screen.getByRole("link", { name: "Go home" }))
+      .toHaveAttribute("href", "/");
+  });
 });
 
 // A set whose setId collides with what the OBZ fixture URL derives, so a

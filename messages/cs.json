@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Běží zcela ve vašem zařízení, bez sledování dat a bez závislosti na cloudu.",
   "onboardingContinue": "Pokračovat",
   "errorGenericTitle": "Něco se pokazilo",
+  "errorPageNotFound": "Stránka nebyla nalezena",
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Tabulka nebyla nalezena",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Працює повністю на вашому пристрої, без відстеження даних і без залежності від хмари.",
   "onboardingContinue": "Продовжити",
   "errorGenericTitle": "Щось пішло не так",
+  "errorPageNotFound": "Сторінку не знайдено",
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Дошку не знайдено",

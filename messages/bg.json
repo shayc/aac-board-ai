@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Работи изцяло на вашето устройство, без проследяване на данни и без зависимост от облака.",
   "onboardingContinue": "Продължаване",
   "errorGenericTitle": "Нещо се обърка",
+  "errorPageNotFound": "Страницата не е намерена",
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Дъската не е намерена",

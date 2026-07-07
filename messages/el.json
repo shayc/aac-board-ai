@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Εκτελείται εξ ολοκλήρου στη συσκευή σας, χωρίς παρακολούθηση δεδομένων και χωρίς εξάρτηση από το cloud.",
   "onboardingContinue": "Συνέχεια",
   "errorGenericTitle": "Κάτι πήγε στραβά",
+  "errorPageNotFound": "Η σελίδα δεν βρέθηκε",
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",

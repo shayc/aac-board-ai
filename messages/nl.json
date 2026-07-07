@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Draait volledig op je apparaat, zonder gegevens te volgen en zonder afhankelijkheid van de cloud.",
   "onboardingContinue": "Doorgaan",
   "errorGenericTitle": "Er is iets misgegaan",
+  "errorPageNotFound": "Pagina niet gevonden",
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bord niet gevonden",

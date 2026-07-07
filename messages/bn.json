@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "সম্পূর্ণরূপে আপনার ডিভাইসে চলে, কোনো ডেটা ট্র্যাকিং ছাড়াই এবং ক্লাউডের ওপর নির্ভরতা ছাড়াই।",
   "onboardingContinue": "চালিয়ে যান",
   "errorGenericTitle": "কিছু একটা ভুল হয়েছে",
+  "errorPageNotFound": "পৃষ্ঠাটি পাওয়া যায়নি",
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",

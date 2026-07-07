@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Funciona inteiramente no seu dispositivo, sem rastreamento de dados nem dependência da nuvem.",
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo deu errado",
+  "errorPageNotFound": "Página não encontrada",
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Prancha não encontrada",

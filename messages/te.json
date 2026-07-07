@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "పూర్తిగా మీ పరికరంలోనే పనిచేస్తుంది, ఎలాంటి డేటా ట్రాకింగ్ లేకుండా, క్లౌడ్ ఆధారపడటం లేకుండా.",
   "onboardingContinue": "కొనసాగించు",
   "errorGenericTitle": "ఏదో తప్పు జరిగింది",
+  "errorPageNotFound": "పేజీ కనుగొనబడలేదు",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "ทำงานบนอุปกรณ์ของคุณทั้งหมด ไม่มีการติดตามข้อมูลและไม่ต้องพึ่งพาคลาวด์",
   "onboardingContinue": "ดำเนินการต่อ",
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
+  "errorPageNotFound": "ไม่พบหน้านี้",
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบบอร์ด",

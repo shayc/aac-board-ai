@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Körs helt på din enhet, utan dataspårning och utan molnberoende.",
   "onboardingContinue": "Fortsätt",
   "errorGenericTitle": "Något gick fel",
+  "errorPageNotFound": "Sidan hittades inte",
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Tavlan hittades inte",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Działa w całości na Twoim urządzeniu, bez śledzenia danych i bez zależności od chmury.",
   "onboardingContinue": "Kontynuuj",
   "errorGenericTitle": "Coś poszło nie tak",
+  "errorPageNotFound": "Nie znaleziono strony",
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono tablicy",
