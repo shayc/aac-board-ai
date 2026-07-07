@@ -1,7 +1,20 @@
+import type { CSSProperties } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
 import { Tile } from "./tile";
+
+// Colors are rendered through oklch(from ...), so the browser serializes computed
+// values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
+// canonical serialization of the expected color instead of hardcoding a format.
+function resolveColor(cssColor: string): string {
+  const probe = document.createElement("div");
+  document.body.append(probe);
+  probe.style.color = cssColor;
+  const resolved = getComputedStyle(probe).color;
+  probe.remove();
+  return resolved;
+}
 
 describe("Tile", () => {
   test("renders label without image when imageSrc is not provided", async () => {
@@ -51,7 +64,9 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Colored" });
     const styles = getComputedStyle(button.element());
 
-    expect(["rgb(0, 0, 0)", "oklab(0 0 0)"]).toContain(styles.backgroundColor);
+    expect(styles.backgroundColor).toBe(
+      resolveColor("oklch(from #000000 l c h)"),
+    );
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
@@ -63,7 +78,7 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Bordered" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.borderColor).toBe("rgb(0, 255, 0)");
+    expect(styles.borderColor).toBe(resolveColor("oklch(from #00ff00 l c h)"));
   });
 
   test("defaults borderColor to backgroundColor when borderColor is omitted", async () => {
@@ -74,7 +89,23 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Match" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.borderColor).toBe("rgb(255, 0, 0)");
+    expect(styles.borderColor).toBe(resolveColor("oklch(from #ff0000 l c h)"));
+  });
+
+  test("desaturates the background when --tile-saturation is set", async () => {
+    const screen = await render(
+      <div style={{ "--tile-saturation": 0 } as CSSProperties}>
+        <Tile label="Muted" backgroundColor="#ff0000" onClick={vi.fn()} />
+      </div>,
+    );
+
+    const button = screen.getByRole("button", { name: "Muted" });
+    const styles = getComputedStyle(button.element());
+
+    // chroma × 0 → achromatic gray at the original lightness
+    expect(styles.backgroundColor).toBe(
+      resolveColor("oklch(from #ff0000 l 0 h)"),
+    );
   });
 
   test("calls onClick when clicked", async () => {

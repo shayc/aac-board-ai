@@ -98,6 +98,7 @@
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
   "playbackHighlight": "Highlight words while speaking",
+  "tileSaturation": "Color intensity",
   "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g. speak in a sarcastic tone",
   "aiCustomInstructionsHelper": "Shape suggestions in your own words.",

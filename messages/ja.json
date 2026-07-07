@@ -98,6 +98,7 @@
   "speechPreview": "試聴",
   "speechVoicePreview": "こんにちは、これが私の声です！",
   "playbackHighlight": "発話中に単語をハイライト表示",
+  "tileSaturation": "色の濃さ",
   "aiCustomInstructions": "カスタム指示",
   "aiCustomInstructionsPlaceholder": "例：皮肉っぽい口調で話す",
   "aiCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",

@@ -98,6 +98,7 @@
   "speechPreview": "Ascolta",
   "speechVoicePreview": "Ciao, questa è la mia voce!",
   "playbackHighlight": "Evidenzia le parole durante il parlato",
+  "tileSaturation": "Intensità del colore",
   "aiCustomInstructions": "Istruzioni personalizzate",
   "aiCustomInstructionsPlaceholder": "ad es. parla con tono sarcastico",
   "aiCustomInstructionsHelper": "Modella i suggerimenti con le tue parole.",
