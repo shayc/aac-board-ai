@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Teljes egészében az eszközödön fut, adatkövetés nélkül és felhőfüggőség nélkül.",
   "onboardingContinue": "Folytatás",
   "errorGenericTitle": "Hiba történt",
+  "errorPageNotFound": "Az oldal nem található",
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A tábla nem található",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Rulează în întregime pe dispozitivul tău, fără urmărirea datelor și fără dependență de cloud.",
   "onboardingContinue": "Continuă",
   "errorGenericTitle": "Ceva nu a mers bine",
+  "errorPageNotFound": "Pagina nu a fost găsită",
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Tabla nu a fost găsită",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "يعمل بالكامل على جهازك دون أي تتبّع للبيانات أو اعتماد على السحابة.",
   "onboardingContinue": "متابعة",
   "errorGenericTitle": "حدث خطأ ما",
+  "errorPageNotFound": "الصفحة غير موجودة",
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "اللوحة غير موجودة",

@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Kører helt på din enhed, uden datasporing og uden afhængighed af skyen.",
   "onboardingContinue": "Fortsæt",
   "errorGenericTitle": "Noget gik galt",
+  "errorPageNotFound": "Siden blev ikke fundet",
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlen blev ikke fundet",

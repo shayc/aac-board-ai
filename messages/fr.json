@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Fonctionne entièrement sur votre appareil, sans suivi des données ni dépendance au cloud.",
   "onboardingContinue": "Continuer",
   "errorGenericTitle": "Une erreur s'est produite",
+  "errorPageNotFound": "Page introuvable",
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Tableau introuvable",

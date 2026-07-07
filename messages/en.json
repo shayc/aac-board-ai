@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Runs entirely on your device with zero data tracking and no cloud dependencies.",
   "onboardingContinue": "Continue",
   "errorGenericTitle": "Something went wrong",
+  "errorPageNotFound": "Page not found",
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board not found",

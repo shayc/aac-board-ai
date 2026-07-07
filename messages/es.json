@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Se ejecuta por completo en tu dispositivo, sin rastreo de datos ni dependencia de la nube.",
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo salió mal",
+  "errorPageNotFound": "Página no encontrada",
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Tablero no encontrado",

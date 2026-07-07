@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Berjalan sepenuhnya di perangkat Anda, tanpa pelacakan data dan tanpa ketergantungan cloud.",
   "onboardingContinue": "Lanjutkan",
   "errorGenericTitle": "Terjadi kesalahan",
+  "errorPageNotFound": "Halaman tidak ditemukan",
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Papan tidak ditemukan",

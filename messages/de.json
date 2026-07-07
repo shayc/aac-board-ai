@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Läuft vollständig auf deinem Gerät – ohne Datenverfolgung und ohne Cloud-Abhängigkeiten.",
   "onboardingContinue": "Weiter",
   "errorGenericTitle": "Etwas ist schiefgelaufen",
+  "errorPageNotFound": "Seite nicht gefunden",
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafel nicht gefunden",

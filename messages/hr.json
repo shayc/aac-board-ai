@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "Radi u potpunosti na vašem uređaju, bez praćenja podataka i bez ovisnosti o oblaku.",
   "onboardingContinue": "Nastavi",
   "errorGenericTitle": "Nešto je pošlo po zlu",
+  "errorPageNotFound": "Stranica nije pronađena",
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Ploča nije pronađena",

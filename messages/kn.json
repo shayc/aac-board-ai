@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "ಸಂಪೂರ್ಣವಾಗಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ, ಯಾವುದೇ ಡೇಟಾ ಟ್ರ್ಯಾಕಿಂಗ್ ಇಲ್ಲದೆ ಮತ್ತು ಕ್ಲೌಡ್ ಅವಲಂಬನೆ ಇಲ್ಲದೆ.",
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",
   "errorGenericTitle": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
+  "errorPageNotFound": "ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",

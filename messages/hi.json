@@ -124,6 +124,7 @@
   "onboardingPrivacyDescription": "पूरी तरह आपके डिवाइस पर चलता है, बिना किसी डेटा ट्रैकिंग और बिना क्लाउड पर निर्भरता के।",
   "onboardingContinue": "जारी रखें",
   "errorGenericTitle": "कुछ गलत हो गया",
+  "errorPageNotFound": "पृष्ठ नहीं मिला",
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड नहीं मिला",
