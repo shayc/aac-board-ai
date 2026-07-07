@@ -12,7 +12,7 @@ import {
   PREDICTION_RESPONSE_SCHEMA,
   PREDICTION_SYSTEM_PROMPT,
 } from "./prediction-prompt";
-import { toPrediction } from "./to-prediction";
+import { toPredictedWords } from "./to-predicted-words";
 
 const PREDICTION_DEBOUNCE_MS = 400;
 
@@ -87,8 +87,12 @@ export function useWordPrediction(
           responseConstraint: PREDICTION_RESPONSE_SCHEMA,
           signal,
         })
-        .then((raw) =>
-          toPrediction({ raw, boardWords, messageText: debouncedText }),
+        .then((rawResponse) =>
+          toPredictedWords({
+            rawResponse,
+            boardWords,
+            messageText: debouncedText,
+          }),
         ),
   });
 

@@ -6,14 +6,14 @@ function normalizeWord(word: string): string {
 
 const MAX_PREDICTION_WORDS = 3;
 
-export interface ToPredictionInput {
-  raw: string;
+export interface ToPredictedWordsInput {
+  rawResponse: string;
   boardWords: readonly string[];
   messageText: string;
 }
 
 // The model sometimes echoes the last typed word ("I want" → "want more").
-function dropLeadingDuplicate(words: string[], messageText: string): string[] {
+function dropEchoedWord(words: string[], messageText: string): string[] {
   const lastWord = messageText.trim().split(/\s+/).at(-1)?.toLowerCase();
   if (!lastWord || words.length === 0) {
     return words;
@@ -25,12 +25,12 @@ function dropLeadingDuplicate(words: string[], messageText: string): string[] {
 // The model is never trusted: each word is matched against the board words.
 // The first word that isn't on the board truncates the rest, since later
 // words were predicted on top of the invalid one.
-export function toPrediction({
-  raw,
+export function toPredictedWords({
+  rawResponse,
   boardWords,
   messageText,
-}: ToPredictionInput): string[] {
-  const rawWords = parseWords(raw);
+}: ToPredictedWordsInput): string[] {
+  const rawWords = parseWords(rawResponse);
   if (!rawWords) {
     return [];
   }
@@ -45,7 +45,7 @@ export function toPrediction({
 
   // Strip the echoed last word before validation — otherwise, if it isn't on
   // the current board, it would truncate the whole prediction before it starts.
-  const words = dropLeadingDuplicate(rawWords.map(normalizeWord), messageText);
+  const words = dropEchoedWord(rawWords.map(normalizeWord), messageText);
 
   const accepted: string[] = [];
 

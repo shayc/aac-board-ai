@@ -1,21 +1,21 @@
 import { describe, expect, test } from "vitest";
-import { toPrediction } from "./to-prediction";
+import { toPredictedWords } from "./to-predicted-words";
 
 const BOARD_WORDS = ["eat", "drink", "more", "help", "stop"];
 
 function predict(
-  raw: string,
-  overrides: Partial<Parameters<typeof toPrediction>[0]> = {},
+  rawResponse: string,
+  overrides: Partial<Parameters<typeof toPredictedWords>[0]> = {},
 ) {
-  return toPrediction({
-    raw,
+  return toPredictedWords({
+    rawResponse,
     boardWords: BOARD_WORDS,
     messageText: "I want",
     ...overrides,
   });
 }
 
-describe("toPrediction", () => {
+describe("toPredictedWords", () => {
   test("maps model words back to the board's canonical casing", () => {
     const words = predict('{"words":["eat"]}', {
       boardWords: ["EAT", "Drink"],
