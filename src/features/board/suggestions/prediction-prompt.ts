@@ -1,6 +1,4 @@
-// The system prompt lives in `initialPrompts` so it survives session resets;
-// each call's user prompt is self-contained (full message + board words) so a
-// reset never drops conversational state we depend on.
+// The system prompt lives in `initialPrompts` so it survives session resets.
 export const PREDICTION_SYSTEM_PROMPT =
   "You predict the next words for a person composing a sentence by tapping " +
   "word tiles on a communication board. Given the sentence so far and the " +
@@ -14,14 +12,11 @@ export function buildPredictionPrompt(
   messageText: string,
   boardWords: readonly string[],
 ): string {
-  const boardWordsLine = `Board words: ${boardWords.join(", ")}`;
-  const trimmed = messageText.trim();
-
-  if (!trimmed) {
-    return `${boardWordsLine}\nSentence so far: (empty)\nFirst 1 to 3 words to start a sentence:`;
-  }
-
-  return `${boardWordsLine}\nSentence so far: ${trimmed}\nNext 1 to 3 words:`;
+  return [
+    `Board words: ${boardWords.join(", ")}`,
+    `Sentence so far: ${messageText.trim()}`,
+    `Next 1 to 3 words:`,
+  ].join("\n");
 }
 
 export const PREDICTION_RESPONSE_SCHEMA = {

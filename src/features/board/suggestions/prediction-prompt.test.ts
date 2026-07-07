@@ -25,11 +25,4 @@ describe("buildPredictionPrompt", () => {
 
     expect(prompt).toContain("Sentence so far: I want\n");
   });
-
-  test("uses a starter variant for an empty message", () => {
-    const prompt = buildPredictionPrompt("   ", ["eat", "drink"]);
-
-    expect(prompt).toContain("Sentence so far: (empty)");
-    expect(prompt).toContain("First 1 to 3 words to start a sentence:");
-  });
 });

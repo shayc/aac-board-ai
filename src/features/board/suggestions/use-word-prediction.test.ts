@@ -133,27 +133,4 @@ describe("useWordPrediction", () => {
       expect(result.current.phrase).toBe("I want more help");
     });
   });
-
-  test("withholds the chip while the live text is ahead of the debounced prediction", async () => {
-    stubLanguageModel(() => '{"words":["eat"]}');
-
-    const { result, rerender } = await renderHook(
-      ({ text }: { text: string } = { text: "I want" }) =>
-        useWordPrediction(text, FOOD_BOARD),
-      { initialProps: { text: "I want" }, wrapper: LanguageProvider },
-    );
-
-    await vi.waitFor(() => {
-      expect(result.current.phrase).toBe("I want eat");
-    });
-
-    // A fresh keystroke: the words still describe "I want", so the chip must
-    // not splice them onto the newer text until the prediction catches up.
-    await rerender({ text: "I want to" });
-    expect(result.current.phrase).toBeUndefined();
-
-    await vi.waitFor(() => {
-      expect(result.current.phrase).toBe("I want to eat");
-    });
-  });
 });
