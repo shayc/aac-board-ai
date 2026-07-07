@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}“ konnte nicht gelöscht werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",
-  "librarySourceCode": "Quellcode",
+  "aboutSourceCode": "Quellcode",
   "settingsTitle": "Einstellungen",
   "settingsOpen": "Einstellungen öffnen",
   "settingsClose": "Einstellungen schließen",
@@ -98,6 +98,8 @@
   "speechPreview": "Anhören",
   "speechVoicePreview": "Hallo, das ist meine Stimme!",
   "playbackHighlight": "Wörter beim Sprechen hervorheben",
+  "tileSaturation": "Farbintensität",
+  "tileBorders": "Kachel-Rahmen anzeigen",
   "aiCustomInstructions": "Benutzerdefinierte Anweisungen",
   "aiCustomInstructionsPlaceholder": "z. B. in sarkastischem Ton sprechen",
   "aiCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Läuft vollständig auf deinem Gerät – ohne Datenverfolgung und ohne Cloud-Abhängigkeiten.",
   "onboardingContinue": "Weiter",
   "errorGenericTitle": "Etwas ist schiefgelaufen",
+  "errorPageNotFound": "Seite nicht gefunden",
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
-  "errorBoardSetNotFound": "Tafel nicht gefunden"
+  "errorBoardSetNotFound": "Tafel nicht gefunden",
+  "boardUrlReplaceConfirmTitle": "„{name}“ ersetzen?",
+  "boardUrlReplaceConfirmDescription": "Der Import von {host} ersetzt diese Tafel und alles darin. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "boardUrlReplace": "Ersetzen",
+  "boardUrlImportFailed": "Tafel konnte nicht über den Link importiert werden"
 }

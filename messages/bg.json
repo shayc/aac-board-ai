@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}“ не може да бъде изтрита",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",
-  "librarySourceCode": "Изходен код",
+  "aboutSourceCode": "Изходен код",
   "settingsTitle": "Настройки",
   "settingsOpen": "Отваряне на настройките",
   "settingsClose": "Затваряне на настройките",
@@ -98,6 +98,8 @@
   "speechPreview": "Прослушване",
   "speechVoicePreview": "Здравей, това е моят глас!",
   "playbackHighlight": "Осветяване на думите по време на говорене",
+  "tileSaturation": "Интензивност на цвета",
+  "tileBorders": "Показване на рамки на плочките",
   "aiCustomInstructions": "Персонализирани инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори със саркастичен тон",
   "aiCustomInstructionsHelper": "Оформете предложенията с ваши думи.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Работи изцяло на вашето устройство, без проследяване на данни и без зависимост от облака.",
   "onboardingContinue": "Продължаване",
   "errorGenericTitle": "Нещо се обърка",
+  "errorPageNotFound": "Страницата не е намерена",
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
-  "errorBoardSetNotFound": "Дъската не е намерена"
+  "errorBoardSetNotFound": "Дъската не е намерена",
+  "boardUrlReplaceConfirmTitle": "Да се замени ли „{name}“?",
+  "boardUrlReplaceConfirmDescription": "Импортирането от {host} ще замени тази дъска и всичко в нея. Това действие не може да бъде отменено.",
+  "boardUrlReplace": "Замяна",
+  "boardUrlImportFailed": "Дъската не може да бъде импортирана от връзката"
 }

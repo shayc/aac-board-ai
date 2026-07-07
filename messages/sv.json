@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Det gick inte att ta bort ”{name}”",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",
-  "librarySourceCode": "Källkod",
+  "aboutSourceCode": "Källkod",
   "settingsTitle": "Inställningar",
   "settingsOpen": "Öppna inställningar",
   "settingsClose": "Stäng inställningar",
@@ -98,6 +98,8 @@
   "speechPreview": "Lyssna",
   "speechVoicePreview": "Hej, det här är min röst!",
   "playbackHighlight": "Markera ord medan de talas",
+  "tileSaturation": "Färgintensitet",
+  "tileBorders": "Visa kantlinjer på rutor",
   "aiCustomInstructions": "Anpassade instruktioner",
   "aiCustomInstructionsPlaceholder": "t.ex. tala med sarkastisk ton",
   "aiCustomInstructionsHelper": "Forma förslagen med dina egna ord.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Körs helt på din enhet, utan dataspårning och utan molnberoende.",
   "onboardingContinue": "Fortsätt",
   "errorGenericTitle": "Något gick fel",
+  "errorPageNotFound": "Sidan hittades inte",
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
-  "errorBoardSetNotFound": "Tavlan hittades inte"
+  "errorBoardSetNotFound": "Tavlan hittades inte",
+  "boardUrlReplaceConfirmTitle": "Ersätt ”{name}”?",
+  "boardUrlReplaceConfirmDescription": "Import från {host} ersätter den här tavlan och allt i den. Den här åtgärden kan inte ångras.",
+  "boardUrlReplace": "Ersätt",
+  "boardUrlImportFailed": "Det gick inte att importera tavlan från länken"
 }

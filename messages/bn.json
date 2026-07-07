@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",
-  "librarySourceCode": "সোর্স কোড",
+  "aboutSourceCode": "সোর্স কোড",
   "settingsTitle": "সেটিংস",
   "settingsOpen": "সেটিংস খুলুন",
   "settingsClose": "সেটিংস বন্ধ করুন",
@@ -98,6 +98,8 @@
   "speechPreview": "শুনুন",
   "speechVoicePreview": "হ্যালো, এটা আমার কণ্ঠস্বর!",
   "playbackHighlight": "কথা বলার সময় শব্দগুলি হাইলাইট করুন",
+  "tileSaturation": "রঙের তীব্রতা",
+  "tileBorders": "টাইলের সীমানা দেখান",
   "aiCustomInstructions": "কাস্টম নির্দেশনা",
   "aiCustomInstructionsPlaceholder": "যেমন, ব্যঙ্গাত্মক সুরে কথা বলুন",
   "aiCustomInstructionsHelper": "নিজের ভাষায় পরামর্শগুলো গঠন করুন।",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "সম্পূর্ণরূপে আপনার ডিভাইসে চলে, কোনো ডেটা ট্র্যাকিং ছাড়াই এবং ক্লাউডের ওপর নির্ভরতা ছাড়াই।",
   "onboardingContinue": "চালিয়ে যান",
   "errorGenericTitle": "কিছু একটা ভুল হয়েছে",
+  "errorPageNotFound": "পৃষ্ঠাটি পাওয়া যায়নি",
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
-  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি"
+  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" প্রতিস্থাপন করবেন?",
+  "boardUrlReplaceConfirmDescription": "{host} থেকে আমদানি করলে এই বোর্ড এবং এর ভেতরের সবকিছু প্রতিস্থাপিত হবে। এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না।",
+  "boardUrlReplace": "প্রতিস্থাপন করুন",
+  "boardUrlImportFailed": "লিঙ্ক থেকে বোর্ড আমদানি করা যায়নি"
 }

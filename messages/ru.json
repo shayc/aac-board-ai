@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Не удалось удалить «{name}»",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",
-  "librarySourceCode": "Исходный код",
+  "aboutSourceCode": "Исходный код",
   "settingsTitle": "Настройки",
   "settingsOpen": "Открыть настройки",
   "settingsClose": "Закрыть настройки",
@@ -98,6 +98,8 @@
   "speechPreview": "Прослушать",
   "speechVoicePreview": "Привет, это мой голос!",
   "playbackHighlight": "Подсвечивать слова во время произношения",
+  "tileSaturation": "Насыщенность цвета",
+  "tileBorders": "Показывать границы плиток",
   "aiCustomInstructions": "Пользовательские инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичным тоном",
   "aiCustomInstructionsHelper": "Формулируйте предложения своими словами.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Работает полностью на вашем устройстве, без отслеживания данных и без зависимости от облака.",
   "onboardingContinue": "Продолжить",
   "errorGenericTitle": "Что-то пошло не так",
+  "errorPageNotFound": "Страница не найдена",
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
-  "errorBoardSetNotFound": "Доска не найдена"
+  "errorBoardSetNotFound": "Доска не найдена",
+  "boardUrlReplaceConfirmTitle": "Заменить «{name}»?",
+  "boardUrlReplaceConfirmDescription": "Импорт с сайта {host} заменит эту доску и всё её содержимое. Это действие нельзя отменить.",
+  "boardUrlReplace": "Заменить",
+  "boardUrlImportFailed": "Не удалось импортировать доску по ссылке"
 }

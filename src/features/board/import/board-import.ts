@@ -8,11 +8,11 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { notifyBoardSetsChanged } from "../board-sets/board-sets-store";
+import { refreshAndBroadcastBoardSets } from "../board-sets/board-sets-store";
 import type {
-  UpsertAssetInput,
-  UpsertBoardInput,
-  UpsertBoardSetInput,
+  AssetInput,
+  BoardInput,
+  BoardSetInput,
 } from "../storage/boards-db";
 import { replaceBoardSet } from "../storage/boards-db";
 
@@ -31,8 +31,8 @@ export interface ImportResult {
  * makes `loadBoard` throw an `OBFError` with code `"archive-too-large"`.
  */
 export const BOARD_IMPORT_LIMITS: UnzipLimits = {
-  maxTotalOriginalSize: 500 * 1024 * 1024, // 500MB across the whole archive
-  maxEntrySize: 100 * 1024 * 1024, // 100MB for any single entry
+  maxTotalOriginalSize: 500 * 1024 * 1024,
+  maxEntrySize: 100 * 1024 * 1024,
   maxEntries: 5000,
 };
 
@@ -55,7 +55,7 @@ export async function importBoardSets(
     }
   } finally {
     if (results.length > 0) {
-      await notifyBoardSetsChanged();
+      await refreshAndBroadcastBoardSets();
     }
   }
 
@@ -125,7 +125,7 @@ export function resolveLoadBoardPaths(
 function buildBoardInputs(
   boards: Map<string, OBFBoard>,
   boardPathToId: Map<string, string>,
-): UpsertBoardInput[] {
+): BoardInput[] {
   return Array.from(boards.entries()).map(([id, board]) => ({
     boardId: id,
     name: board.name ?? id,
@@ -135,7 +135,7 @@ function buildBoardInputs(
 
 export function buildAssetInputs(
   resources: Map<string, Uint8Array>,
-): UpsertAssetInput[] {
+): AssetInput[] {
   return Array.from(resources.entries())
     .filter(([path]) => {
       const lowerPath = path.toLowerCase();
@@ -155,7 +155,7 @@ function buildBoardSetInput(
   setId: string,
   board: OBFBoard,
   fallbackSetName: string,
-): UpsertBoardSetInput {
+): BoardSetInput {
   return {
     setId,
     name: board.name ?? fallbackSetName,
@@ -171,7 +171,7 @@ function buildBoardSetInput(
   };
 }
 
-function deriveSetId(fileName: string): string {
+export function deriveSetId(fileName: string): string {
   const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";

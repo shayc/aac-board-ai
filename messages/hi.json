@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" को हटाया नहीं जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",
-  "librarySourceCode": "सोर्स कोड",
+  "aboutSourceCode": "सोर्स कोड",
   "settingsTitle": "सेटिंग्स",
   "settingsOpen": "सेटिंग्स खोलें",
   "settingsClose": "सेटिंग्स बंद करें",
@@ -98,6 +98,8 @@
   "speechPreview": "सुनें",
   "speechVoicePreview": "नमस्ते, यह मेरी आवाज़ है!",
   "playbackHighlight": "बोलते समय शब्दों को हाइलाइट करें",
+  "tileSaturation": "रंग की तीव्रता",
+  "tileBorders": "टाइल की सीमाएँ दिखाएं",
   "aiCustomInstructions": "कस्टम निर्देश",
   "aiCustomInstructionsPlaceholder": "जैसे, व्यंग्यात्मक लहजे में बोलें",
   "aiCustomInstructionsHelper": "सुझावों को अपने शब्दों में ढालें।",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "पूरी तरह आपके डिवाइस पर चलता है, बिना किसी डेटा ट्रैकिंग और बिना क्लाउड पर निर्भरता के।",
   "onboardingContinue": "जारी रखें",
   "errorGenericTitle": "कुछ गलत हो गया",
+  "errorPageNotFound": "पृष्ठ नहीं मिला",
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
-  "errorBoardSetNotFound": "बोर्ड नहीं मिला"
+  "errorBoardSetNotFound": "बोर्ड नहीं मिला",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" को बदलें?",
+  "boardUrlReplaceConfirmDescription": "{host} से आयात करने पर यह बोर्ड और इसमें मौजूद सब कुछ बदल जाएगा। यह क्रिया पूर्ववत नहीं की जा सकती।",
+  "boardUrlReplace": "बदलें",
+  "boardUrlImportFailed": "लिंक से बोर्ड आयात नहीं किया जा सका"
 }

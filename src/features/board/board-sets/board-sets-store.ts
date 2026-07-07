@@ -1,6 +1,6 @@
 import { createExternalStore } from "@shared/utils/external-store";
 import {
-  deleteBoardSetData,
+  deleteBoardSetRows,
   listBoardSets,
   type BoardSetRecord,
 } from "../storage/boards-db";
@@ -55,9 +55,9 @@ export async function refreshBoardSets(): Promise<void> {
   await pendingLoad;
 }
 
-export async function notifyBoardSetsChanged(): Promise<void> {
+export async function refreshAndBroadcastBoardSets(): Promise<void> {
   await refreshBoardSets();
-  boardSetsSyncChannel.postMessage("invalidate");
+  boardSetsSyncChannel.postMessage(undefined);
 }
 
 export function subscribeBoardSets(listener: () => void): () => void {
@@ -78,6 +78,6 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function deleteBoardSet(setId: string): Promise<void> {
-  await deleteBoardSetData(setId);
-  await notifyBoardSetsChanged();
+  await deleteBoardSetRows(setId);
+  await refreshAndBroadcastBoardSets();
 }

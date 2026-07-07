@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\"ను తొలగించలేకపోయాం",
   "libraryTitle": "లైబ్రరీ",
   "libraryOpen": "లైబ్రరీని తెరువు",
-  "librarySourceCode": "సోర్స్ కోడ్",
+  "aboutSourceCode": "సోర్స్ కోడ్",
   "settingsTitle": "సెట్టింగ్‌లు",
   "settingsOpen": "సెట్టింగ్‌లను తెరువు",
   "settingsClose": "సెట్టింగ్‌లను మూసివేయి",
@@ -98,6 +98,8 @@
   "speechPreview": "విను",
   "speechVoicePreview": "హాయ్, ఇది నా వాయిస్!",
   "playbackHighlight": "మాట్లాడేటప్పుడు పదాలను హైలైట్ చేయి",
+  "tileSaturation": "రంగు తీవ్రత",
+  "tileBorders": "టైల్ సరిహద్దులను చూపించు",
   "aiCustomInstructions": "అనుకూల సూచనలు",
   "aiCustomInstructionsPlaceholder": "ఉదా., వ్యంగ్యమైన స్వరంతో మాట్లాడు",
   "aiCustomInstructionsHelper": "మీ సొంత మాటల్లో సూచనలను రూపొందించండి.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "పూర్తిగా మీ పరికరంలోనే పనిచేస్తుంది, ఎలాంటి డేటా ట్రాకింగ్ లేకుండా, క్లౌడ్ ఆధారపడటం లేకుండా.",
   "onboardingContinue": "కొనసాగించు",
   "errorGenericTitle": "ఏదో తప్పు జరిగింది",
+  "errorPageNotFound": "పేజీ కనుగొనబడలేదు",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
-  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు"
+  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",
+  "boardUrlReplaceConfirmTitle": "\"{name}\"ను భర్తీ చేయాలా?",
+  "boardUrlReplaceConfirmDescription": "{host} నుండి దిగుమతి చేస్తే ఈ బోర్డు మరియు అందులోని అన్నీ భర్తీ అవుతాయి. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
+  "boardUrlReplace": "భర్తీ చేయి",
+  "boardUrlImportFailed": "లింక్ నుండి బోర్డును దిగుమతి చేయలేకపోయాం"
 }

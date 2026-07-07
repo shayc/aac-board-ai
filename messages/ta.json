@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" என்பதை நீக்க முடியவில்லை",
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",
-  "librarySourceCode": "மூலக் குறியீடு",
+  "aboutSourceCode": "மூலக் குறியீடு",
   "settingsTitle": "அமைப்புகள்",
   "settingsOpen": "அமைப்புகளைத் திற",
   "settingsClose": "அமைப்புகளை மூடு",
@@ -98,6 +98,8 @@
   "speechPreview": "கேள்",
   "speechVoicePreview": "வணக்கம், இது என் குரல்!",
   "playbackHighlight": "பேசும்போது சொற்களை தனிப்படுத்து",
+  "tileSaturation": "வண்ணத் தீவிரம்",
+  "tileBorders": "டைல் எல்லைகளைக் காட்டு",
   "aiCustomInstructions": "தனிப்பயன் வழிமுறைகள்",
   "aiCustomInstructionsPlaceholder": "எ.கா., கிண்டலான தொனியில் பேசு",
   "aiCustomInstructionsHelper": "உங்கள் சொந்த வார்த்தைகளில் பரிந்துரைகளை வடிவமைக்கவும்.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "முழுவதுமாக உங்கள் சாதனத்தில் இயங்குகிறது, எந்த தரவுக் கண்காணிப்பும் இல்லாமல், கிளவுட் சார்பும் இல்லாமல்.",
   "onboardingContinue": "தொடரவும்",
   "errorGenericTitle": "ஏதோ தவறு நடந்தது",
+  "errorPageNotFound": "பக்கம் கிடைக்கவில்லை",
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
-  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை"
+  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" என்பதை மாற்றவா?",
+  "boardUrlReplaceConfirmDescription": "{host} இலிருந்து இறக்குமதி செய்தால், இந்தப் பலகையும் அதில் உள்ள அனைத்தும் மாற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.",
+  "boardUrlReplace": "மாற்று",
+  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகையை இறக்குமதி செய்ய முடியவில்லை"
 }

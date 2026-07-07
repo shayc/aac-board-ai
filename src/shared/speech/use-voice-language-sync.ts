@@ -16,8 +16,7 @@ export interface UseVoiceLanguageSyncOptions {
 
 /**
  * The user's own region for a language, drawn from OS/browser preferences
- * (e.g. a Canadian's "fr-CA" → "CA"). Undefined when none of the preferred
- * locales name a region for this language.
+ * (e.g. a Canadian's "fr-CA" → "CA").
  */
 function getUserRegionForLanguage(language: string): string | undefined {
   for (const tag of navigator.languages) {

@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
-  "librarySourceCode": "Πηγαίος κώδικας",
+  "aboutSourceCode": "Πηγαίος κώδικας",
   "settingsTitle": "Ρυθμίσεις",
   "settingsOpen": "Άνοιγμα ρυθμίσεων",
   "settingsClose": "Κλείσιμο ρυθμίσεων",
@@ -98,6 +98,8 @@
   "speechPreview": "Ακρόαση",
   "speechVoicePreview": "Γεια, αυτή είναι η φωνή μου!",
   "playbackHighlight": "Επισήμανση λέξεων κατά την ομιλία",
+  "tileSaturation": "Ένταση χρώματος",
+  "tileBorders": "Εμφάνιση περιγράμματος πλακιδίων",
   "aiCustomInstructions": "Προσαρμοσμένες οδηγίες",
   "aiCustomInstructionsPlaceholder": "π.χ. μίλα με σαρκαστικό τόνο",
   "aiCustomInstructionsHelper": "Διαμορφώστε τις προτάσεις με τα δικά σας λόγια.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Εκτελείται εξ ολοκλήρου στη συσκευή σας, χωρίς παρακολούθηση δεδομένων και χωρίς εξάρτηση από το cloud.",
   "onboardingContinue": "Συνέχεια",
   "errorGenericTitle": "Κάτι πήγε στραβά",
+  "errorPageNotFound": "Η σελίδα δεν βρέθηκε",
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
-  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε"
+  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",
+  "boardUrlReplaceConfirmTitle": "Αντικατάσταση «{name}»;",
+  "boardUrlReplaceConfirmDescription": "Η εισαγωγή από το {host} θα αντικαταστήσει αυτόν τον πίνακα και ό,τι περιέχει. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+  "boardUrlReplace": "Αντικατάσταση",
+  "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του πίνακα από τον σύνδεσμο"
 }

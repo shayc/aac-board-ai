@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Não foi possível excluir \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
-  "librarySourceCode": "Código-fonte",
+  "aboutSourceCode": "Código-fonte",
   "settingsTitle": "Configurações",
   "settingsOpen": "Abrir configurações",
   "settingsClose": "Fechar configurações",
@@ -98,6 +98,8 @@
   "speechPreview": "Ouvir",
   "speechVoicePreview": "Olá, esta é a minha voz!",
   "playbackHighlight": "Destacar palavras durante a fala",
+  "tileSaturation": "Intensidade da cor",
+  "tileBorders": "Mostrar contornos dos blocos",
   "aiCustomInstructions": "Instruções personalizadas",
   "aiCustomInstructionsPlaceholder": "ex.: fale com um tom sarcástico",
   "aiCustomInstructionsHelper": "Molde as sugestões com suas próprias palavras.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Funciona inteiramente no seu dispositivo, sem rastreamento de dados nem dependência da nuvem.",
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo deu errado",
+  "errorPageNotFound": "Página não encontrada",
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
-  "errorBoardSetNotFound": "Prancha não encontrada"
+  "errorBoardSetNotFound": "Prancha não encontrada",
+  "boardUrlReplaceConfirmTitle": "Substituir \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Importar de {host} substituirá esta prancha e tudo o que há nela. Esta ação não pode ser desfeita.",
+  "boardUrlReplace": "Substituir",
+  "boardUrlImportFailed": "Não foi possível importar a prancha do link"
 }

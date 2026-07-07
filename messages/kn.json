@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
   "libraryTitle": "ಗ್ರಂಥಾಲಯ",
   "libraryOpen": "ಗ್ರಂಥಾಲಯವನ್ನು ತೆರೆಯಿರಿ",
-  "librarySourceCode": "ಮೂಲ ಕೋಡ್",
+  "aboutSourceCode": "ಮೂಲ ಕೋಡ್",
   "settingsTitle": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
   "settingsOpen": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ತೆರೆಯಿರಿ",
   "settingsClose": "ಸೆಟ್ಟಿಂಗ್‌ಗಳನ್ನು ಮುಚ್ಚಿ",
@@ -98,6 +98,8 @@
   "speechPreview": "ಕೇಳಿ",
   "speechVoicePreview": "ನಮಸ್ಕಾರ, ಇದು ನನ್ನ ಧ್ವನಿ!",
   "playbackHighlight": "ಮಾತನಾಡುವಾಗ ಪದಗಳನ್ನು ಹೈಲೈಟ್ ಮಾಡಿ",
+  "tileSaturation": "ಬಣ್ಣದ ತೀವ್ರತೆ",
+  "tileBorders": "ಟೈಲ್ ಗಡಿಗಳನ್ನು ತೋರಿಸಿ",
   "aiCustomInstructions": "ಕಸ್ಟಮ್ ಸೂಚನೆಗಳು",
   "aiCustomInstructionsPlaceholder": "ಉದಾ., ವ್ಯಂಗ್ಯ ಧ್ವನಿಯಲ್ಲಿ ಮಾತನಾಡಿ",
   "aiCustomInstructionsHelper": "ನಿಮ್ಮ ಸ್ವಂತ ಮಾತುಗಳಲ್ಲಿ ಸಲಹೆಗಳನ್ನು ರೂಪಿಸಿ.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "ಸಂಪೂರ್ಣವಾಗಿ ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತದೆ, ಯಾವುದೇ ಡೇಟಾ ಟ್ರ್ಯಾಕಿಂಗ್ ಇಲ್ಲದೆ ಮತ್ತು ಕ್ಲೌಡ್ ಅವಲಂಬನೆ ಇಲ್ಲದೆ.",
   "onboardingContinue": "ಮುಂದುವರಿಸಿ",
   "errorGenericTitle": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
+  "errorPageNotFound": "ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ"
+  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" ಅನ್ನು ಬದಲಾಯಿಸುವುದೇ?",
+  "boardUrlReplaceConfirmDescription": "{host} ನಿಂದ ಆಮದು ಮಾಡಿದರೆ ಈ ಬೋರ್ಡ್ ಮತ್ತು ಅದರಲ್ಲಿರುವ ಎಲ್ಲವೂ ಬದಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
+  "boardUrlReplace": "ಬದಲಾಯಿಸಿ",
+  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Nie udało się usunąć „{name}”",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",
-  "librarySourceCode": "Kod źródłowy",
+  "aboutSourceCode": "Kod źródłowy",
   "settingsTitle": "Ustawienia",
   "settingsOpen": "Otwórz ustawienia",
   "settingsClose": "Zamknij ustawienia",
@@ -98,6 +98,8 @@
   "speechPreview": "Posłuchaj",
   "speechVoicePreview": "Cześć, to mój głos!",
   "playbackHighlight": "Podświetlaj słowa podczas mówienia",
+  "tileSaturation": "Intensywność kolorów",
+  "tileBorders": "Pokaż obramowania kafelków",
   "aiCustomInstructions": "Instrukcje niestandardowe",
   "aiCustomInstructionsPlaceholder": "np. mów sarkastycznym tonem",
   "aiCustomInstructionsHelper": "Kształtuj sugestie własnymi słowami.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Działa w całości na Twoim urządzeniu, bez śledzenia danych i bez zależności od chmury.",
   "onboardingContinue": "Kontynuuj",
   "errorGenericTitle": "Coś poszło nie tak",
+  "errorPageNotFound": "Nie znaleziono strony",
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
-  "errorBoardSetNotFound": "Nie znaleziono tablicy"
+  "errorBoardSetNotFound": "Nie znaleziono tablicy",
+  "boardUrlReplaceConfirmTitle": "Zastąpić „{name}”?",
+  "boardUrlReplaceConfirmDescription": "Import z {host} zastąpi tę tablicę i całą jej zawartość. Tej operacji nie można cofnąć.",
+  "boardUrlReplace": "Zastąp",
+  "boardUrlImportFailed": "Nie udało się zaimportować tablicy z linku"
 }

@@ -1,4 +1,3 @@
-import { APP_NAME } from "@app/app-info";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import TranslateOutlinedIcon from "@mui/icons-material/TranslateOutlined";
@@ -15,6 +14,8 @@ import ListItemText from "@mui/material/ListItemText";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import type { ReactNode } from "react";
+
+const APP_NAME = "AAC Board AI";
 
 export interface OnboardingDialogProps {
   open: boolean;

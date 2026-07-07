@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "\"{name}\" silinemedi",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
-  "librarySourceCode": "Kaynak kodu",
+  "aboutSourceCode": "Kaynak kodu",
   "settingsTitle": "Ayarlar",
   "settingsOpen": "Ayarları aç",
   "settingsClose": "Ayarları kapat",
@@ -98,6 +98,8 @@
   "speechPreview": "Dinle",
   "speechVoicePreview": "Merhaba, bu benim sesim!",
   "playbackHighlight": "Konuşurken kelimeleri vurgula",
+  "tileSaturation": "Renk yoğunluğu",
+  "tileBorders": "Kare kenarlıklarını göster",
   "aiCustomInstructions": "Özel talimatlar",
   "aiCustomInstructionsPlaceholder": "ör. alaycı bir tonda konuş",
   "aiCustomInstructionsHelper": "Önerileri kendi kelimelerinizle şekillendirin.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Tamamen cihazınızda çalışır; veri takibi olmadan ve buluta bağımlılık olmadan.",
   "onboardingContinue": "Devam et",
   "errorGenericTitle": "Bir şeyler ters gitti",
+  "errorPageNotFound": "Sayfa bulunamadı",
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
-  "errorBoardSetNotFound": "Pano bulunamadı"
+  "errorBoardSetNotFound": "Pano bulunamadı",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" değiştirilsin mi?",
+  "boardUrlReplaceConfirmDescription": "{host} adresinden içe aktarma bu panoyu ve içindeki her şeyi değiştirir. Bu işlem geri alınamaz.",
+  "boardUrlReplace": "Değiştir",
+  "boardUrlImportFailed": "Pano bağlantıdan içe aktarılamadı"
 }

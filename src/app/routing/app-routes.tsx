@@ -2,31 +2,38 @@ import { AppShell } from "@app/layouts/app-shell";
 import { boardLoader } from "@app/routing/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/routing/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
+import { NotFound } from "@app/routing/not-found";
 import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
-import { BOARD_PATTERN, BOARD_SET_PATTERN } from "@features/board";
+import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/board";
 import { LoadingState } from "@shared/components/loading-state";
 import type { RouteObject } from "react-router";
 
 export const appRoutes: RouteObject[] = [
   {
     Component: AppShell,
+    ErrorBoundary: RouteErrorBoundary,
     children: [
       {
         ErrorBoundary: RouteErrorBoundary,
         HydrateFallback: LoadingState,
         children: [
-          { index: true, loader: rootIndexLoader },
           {
-            path: BOARD_SET_PATTERN,
+            index: true,
+            loader: rootIndexLoader,
+            lazy: () => import("@pages/board-url-import-page"),
+          },
+          {
+            path: BOARD_SET_SEGMENT,
             children: [
               { index: true, loader: boardSetIndexLoader },
               {
-                path: BOARD_PATTERN,
+                path: BOARD_SEGMENT,
                 loader: boardLoader,
                 lazy: () => import("@pages/board-page"),
               },
             ],
           },
+          { path: "*", Component: NotFound },
         ],
       },
     ],

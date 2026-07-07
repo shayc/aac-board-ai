@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",
-  "librarySourceCode": "Zdrojový kód",
+  "aboutSourceCode": "Zdrojový kód",
   "settingsTitle": "Nastavení",
   "settingsOpen": "Otevřít nastavení",
   "settingsClose": "Zavřít nastavení",
@@ -98,6 +98,8 @@
   "speechPreview": "Poslechnout",
   "speechVoicePreview": "Ahoj, tohle je můj hlas!",
   "playbackHighlight": "Zvýraznit slova během mluvení",
+  "tileSaturation": "Intenzita barev",
+  "tileBorders": "Zobrazit ohraničení dlaždic",
   "aiCustomInstructions": "Vlastní pokyny",
   "aiCustomInstructionsPlaceholder": "např. mluv sarkastickým tónem",
   "aiCustomInstructionsHelper": "Formulujte návrhy vlastními slovy.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Běží zcela ve vašem zařízení, bez sledování dat a bez závislosti na cloudu.",
   "onboardingContinue": "Pokračovat",
   "errorGenericTitle": "Něco se pokazilo",
+  "errorPageNotFound": "Stránka nebyla nalezena",
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
-  "errorBoardSetNotFound": "Tabulka nebyla nalezena"
+  "errorBoardSetNotFound": "Tabulka nebyla nalezena",
+  "boardUrlReplaceConfirmTitle": "Nahradit „{name}“?",
+  "boardUrlReplaceConfirmDescription": "Import z {host} nahradí tuto tabulku a vše v ní. Tuto akci nelze vrátit zpět.",
+  "boardUrlReplace": "Nahradit",
+  "boardUrlImportFailed": "Tabulku se nepodařilo importovat z odkazu"
 }

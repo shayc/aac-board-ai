@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "无法删除“{name}”",
   "libraryTitle": "板库",
   "libraryOpen": "打开板库",
-  "librarySourceCode": "源代码",
+  "aboutSourceCode": "源代码",
   "settingsTitle": "设置",
   "settingsOpen": "打开设置",
   "settingsClose": "关闭设置",
@@ -98,6 +98,8 @@
   "speechPreview": "试听",
   "speechVoicePreview": "你好，这是我的声音！",
   "playbackHighlight": "说话时高亮显示单词",
+  "tileSaturation": "颜色强度",
+  "tileBorders": "显示图块边框",
   "aiCustomInstructions": "自定义指令",
   "aiCustomInstructionsPlaceholder": "例如：以讽刺的语气说话",
   "aiCustomInstructionsHelper": "用你自己的话塑造建议。",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "完全在你的设备上运行，零数据追踪，也不依赖云端。",
   "onboardingContinue": "继续",
   "errorGenericTitle": "出了点问题",
+  "errorPageNotFound": "页面未找到",
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
-  "errorBoardSetNotFound": "未找到沟通板"
+  "errorBoardSetNotFound": "未找到沟通板",
+  "boardUrlReplaceConfirmTitle": "替换“{name}”？",
+  "boardUrlReplaceConfirmDescription": "从 {host} 导入将替换此沟通板及其中的所有内容。此操作无法撤消。",
+  "boardUrlReplace": "替换",
+  "boardUrlImportFailed": "无法从链接导入沟通板"
 }

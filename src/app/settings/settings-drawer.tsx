@@ -144,7 +144,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             fontSize="small"
             sx={{ verticalAlign: "text-bottom", mr: 2 }}
           />
-          {m.librarySourceCode()}
+          {m.aboutSourceCode()}
         </ExternalLink>
       </Box>
     </Drawer>

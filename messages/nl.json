@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Kan \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",
-  "librarySourceCode": "Broncode",
+  "aboutSourceCode": "Broncode",
   "settingsTitle": "Instellingen",
   "settingsOpen": "Instellingen openen",
   "settingsClose": "Instellingen sluiten",
@@ -98,6 +98,8 @@
   "speechPreview": "Beluisteren",
   "speechVoicePreview": "Hoi, dit is mijn stem!",
   "playbackHighlight": "Woorden markeren tijdens het spreken",
+  "tileSaturation": "Kleurintensiteit",
+  "tileBorders": "Tegelranden weergeven",
   "aiCustomInstructions": "Aangepaste instructies",
   "aiCustomInstructionsPlaceholder": "bijv. spreek op een sarcastische toon",
   "aiCustomInstructionsHelper": "Geef de suggesties vorm in je eigen woorden.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Draait volledig op je apparaat, zonder gegevens te volgen en zonder afhankelijkheid van de cloud.",
   "onboardingContinue": "Doorgaan",
   "errorGenericTitle": "Er is iets misgegaan",
+  "errorPageNotFound": "Pagina niet gevonden",
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
-  "errorBoardSetNotFound": "Bord niet gevonden"
+  "errorBoardSetNotFound": "Bord niet gevonden",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" vervangen?",
+  "boardUrlReplaceConfirmDescription": "Importeren van {host} vervangt dit bord en alles erin. Deze actie kan niet ongedaan worden gemaakt.",
+  "boardUrlReplace": "Vervangen",
+  "boardUrlImportFailed": "Kan bord niet importeren via de link"
 }

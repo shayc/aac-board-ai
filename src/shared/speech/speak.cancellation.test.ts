@@ -8,9 +8,6 @@ import {
 } from "vitest";
 import { speak } from "./speak";
 
-// Kept separate from the no-API suite: that suite must import speak only
-// after stubbing speechSynthesis away, which a static import in a shared file
-// would defeat.
 describe("speak() under cancellation", () => {
   let speakSpy: MockInstance<SpeechSynthesis["speak"]>;
   let cancelSpy: MockInstance<SpeechSynthesis["cancel"]>;

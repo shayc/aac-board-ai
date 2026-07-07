@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "ลบ \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
-  "librarySourceCode": "ซอร์สโค้ด",
+  "aboutSourceCode": "ซอร์สโค้ด",
   "settingsTitle": "การตั้งค่า",
   "settingsOpen": "เปิดการตั้งค่า",
   "settingsClose": "ปิดการตั้งค่า",
@@ -98,6 +98,8 @@
   "speechPreview": "ฟัง",
   "speechVoicePreview": "สวัสดี นี่คือเสียงของฉัน!",
   "playbackHighlight": "ไฮไลต์คำขณะพูด",
+  "tileSaturation": "ความเข้มของสี",
+  "tileBorders": "แสดงขอบไทล์",
   "aiCustomInstructions": "คำสั่งที่กำหนดเอง",
   "aiCustomInstructionsPlaceholder": "เช่น พูดด้วยน้ำเสียงประชดประชัน",
   "aiCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "ทำงานบนอุปกรณ์ของคุณทั้งหมด ไม่มีการติดตามข้อมูลและไม่ต้องพึ่งพาคลาวด์",
   "onboardingContinue": "ดำเนินการต่อ",
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
+  "errorPageNotFound": "ไม่พบหน้านี้",
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
-  "errorBoardSetNotFound": "ไม่พบบอร์ด"
+  "errorBoardSetNotFound": "ไม่พบบอร์ด",
+  "boardUrlReplaceConfirmTitle": "แทนที่ \"{name}\" ไหม",
+  "boardUrlReplaceConfirmDescription": "การนำเข้าจาก {host} จะแทนที่บอร์ดนี้และทุกอย่างในบอร์ด ไม่สามารถเลิกทำการกระทำนี้ได้",
+  "boardUrlReplace": "แทนที่",
+  "boardUrlImportFailed": "นำเข้าบอร์ดจากลิงก์ไม่สำเร็จ"
 }

@@ -29,12 +29,12 @@ describe("resolveBoardKey", () => {
     expect(
       resolveBoardKey(key({ key: "Enter", metaKey: true }), false),
     ).toEqual({
-      kind: "play",
+      kind: "speak",
     });
     expect(
       resolveBoardKey(key({ key: "Enter", ctrlKey: true }), false),
     ).toEqual({
-      kind: "play",
+      kind: "speak",
     });
     expect(
       resolveBoardKey(key({ key: "Enter", metaKey: true }), true),

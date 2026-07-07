@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Не вдалося видалити «{name}»",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",
-  "librarySourceCode": "Вихідний код",
+  "aboutSourceCode": "Вихідний код",
   "settingsTitle": "Налаштування",
   "settingsOpen": "Відкрити налаштування",
   "settingsClose": "Закрити налаштування",
@@ -98,6 +98,8 @@
   "speechPreview": "Прослухати",
   "speechVoicePreview": "Привіт, це мій голос!",
   "playbackHighlight": "Підсвічувати слова під час озвучення",
+  "tileSaturation": "Насиченість кольору",
+  "tileBorders": "Показувати межі плиток",
   "aiCustomInstructions": "Власні інструкції",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичним тоном",
   "aiCustomInstructionsHelper": "Формулюйте пропозиції власними словами.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Працює повністю на вашому пристрої, без відстеження даних і без залежності від хмари.",
   "onboardingContinue": "Продовжити",
   "errorGenericTitle": "Щось пішло не так",
+  "errorPageNotFound": "Сторінку не знайдено",
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
-  "errorBoardSetNotFound": "Дошку не знайдено"
+  "errorBoardSetNotFound": "Дошку не знайдено",
+  "boardUrlReplaceConfirmTitle": "Замінити «{name}»?",
+  "boardUrlReplaceConfirmDescription": "Імпорт із сайту {host} замінить цю дошку та весь її вміст. Цю дію не можна скасувати.",
+  "boardUrlReplace": "Замінити",
+  "boardUrlImportFailed": "Не вдалося імпортувати дошку за посиланням"
 }

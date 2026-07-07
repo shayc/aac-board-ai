@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export interface UseLatestAsyncOptions<T> {
   enabled: boolean;
   deps: readonly (string | number | boolean)[];
-  fetch: (signal: AbortSignal) => Promise<T>;
+  run: (signal: AbortSignal) => Promise<T>;
 }
 
 export interface UseLatestAsyncReturn<T> {
@@ -19,13 +19,13 @@ type SettledRound<T> =
 export function useLatestAsync<T>({
   enabled,
   deps,
-  fetch,
+  run,
 }: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
   const signature = deps.join("\0");
 
-  const fetchRef = useRef(fetch);
+  const runRef = useRef(run);
   useEffect(() => {
-    fetchRef.current = fetch;
+    runRef.current = run;
   });
 
   const [round, setRound] = useState<SettledRound<T>>();
@@ -38,7 +38,7 @@ export function useLatestAsync<T>({
     const controller = new AbortController();
     const { signal } = controller;
 
-    fetchRef
+    runRef
       .current(signal)
       .then((value) => {
         if (!signal.aborted) {

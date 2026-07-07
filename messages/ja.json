@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",
-  "librarySourceCode": "ソースコード",
+  "aboutSourceCode": "ソースコード",
   "settingsTitle": "設定",
   "settingsOpen": "設定を開く",
   "settingsClose": "設定を閉じる",
@@ -98,6 +98,8 @@
   "speechPreview": "試聴",
   "speechVoicePreview": "こんにちは、これが私の声です！",
   "playbackHighlight": "発話中に単語をハイライト表示",
+  "tileSaturation": "色の濃さ",
+  "tileBorders": "タイルの枠線を表示",
   "aiCustomInstructions": "カスタム指示",
   "aiCustomInstructionsPlaceholder": "例：皮肉っぽい口調で話す",
   "aiCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "すべてお使いのデバイス上で動作し、データの追跡やクラウドへの依存は一切ありません。",
   "onboardingContinue": "続ける",
   "errorGenericTitle": "問題が発生しました",
+  "errorPageNotFound": "ページが見つかりません",
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
-  "errorBoardSetNotFound": "ボードが見つかりません"
+  "errorBoardSetNotFound": "ボードが見つかりません",
+  "boardUrlReplaceConfirmTitle": "「{name}」を置き換えますか？",
+  "boardUrlReplaceConfirmDescription": "{host} からインポートすると、このボードとその中のすべてが置き換えられます。この操作は取り消せません。",
+  "boardUrlReplace": "置き換える",
+  "boardUrlImportFailed": "リンクからボードをインポートできませんでした"
 }

@@ -1,13 +1,15 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
-import { usePlaybackConfig } from "@shared/playback/playback-store";
 import { safeAreaInset } from "@shared/theme/safe-area";
+import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { createButtonActivation } from "./activation/button-activation";
-import { getNavigationTargetId } from "./board-button";
+import { getNavigationTargetId } from "./button-readers";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
@@ -41,7 +43,8 @@ const rootSx = (theme: Theme) => ({
 export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { highlightActivePart } = usePlaybackConfig();
+  const { highlightActivePart } = useHighlightConfig();
+  const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text, board);
@@ -63,13 +66,18 @@ export function BoardViewer({ board }: BoardViewerProps) {
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
       variant={getNavigationTargetId(button) ? "folder" : undefined}
+      borderHidden={!borderVisible}
       onClick={() => activateButton(button)}
       {...props}
     />
   );
 
   return (
-    <Stack {...keyboard.rootProps} direction="column" sx={rootSx}>
+    <Stack
+      {...keyboard.rootProps}
+      direction="column"
+      sx={[rootSx, { "--tile-saturation": String(saturation) }]}
+    >
       <MessageBar
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}
@@ -92,10 +100,12 @@ export function BoardViewer({ board }: BoardViewerProps) {
           />
         )}
 
-        <BackspaceButton
-          onPress={message.removeLastPart}
-          onLongPress={message.clear}
-        />
+        {!isSmallScreen && (
+          <BackspaceButton
+            onPress={message.removeLastPart}
+            onLongPress={message.clear}
+          />
+        )}
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
@@ -111,17 +121,20 @@ export function BoardViewer({ board }: BoardViewerProps) {
       </Box>
 
       {isSmallScreen && (
-        <Box
+        <Toolbar
           sx={{
-            minHeight: 56,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
+            gap: 2,
             pb: safeAreaInset("bottom"),
           }}
         >
           <NavButtons />
-        </Box>
+
+          <BackspaceButton
+            onPress={message.removeLastPart}
+            onLongPress={message.clear}
+          />
+        </Toolbar>
       )}
     </Stack>
   );

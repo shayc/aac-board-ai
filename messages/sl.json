@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "»{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",
-  "librarySourceCode": "Izvorna koda",
+  "aboutSourceCode": "Izvorna koda",
   "settingsTitle": "Nastavitve",
   "settingsOpen": "Odpri nastavitve",
   "settingsClose": "Zapri nastavitve",
@@ -98,6 +98,8 @@
   "speechPreview": "Poslušaj",
   "speechVoicePreview": "Živjo, to je moj glas!",
   "playbackHighlight": "Označi besede med govorjenjem",
+  "tileSaturation": "Intenzivnost barve",
+  "tileBorders": "Prikaži obrobe ploščic",
   "aiCustomInstructions": "Navodila po meri",
   "aiCustomInstructionsPlaceholder": "npr. govori sarkastičnim tonom",
   "aiCustomInstructionsHelper": "Oblikujte predloge s svojimi besedami.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Deluje v celoti v vaši napravi, brez sledenja podatkom in brez odvisnosti od oblaka.",
   "onboardingContinue": "Nadaljuj",
   "errorGenericTitle": "Nekaj je šlo narobe",
+  "errorPageNotFound": "Strani ni mogoče najti",
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
-  "errorBoardSetNotFound": "Table ni mogoče najti"
+  "errorBoardSetNotFound": "Table ni mogoče najti",
+  "boardUrlReplaceConfirmTitle": "Zamenjam »{name}«?",
+  "boardUrlReplaceConfirmDescription": "Uvoz s {host} bo zamenjal to tablo in vse v njej. Tega dejanja ni mogoče razveljaviti.",
+  "boardUrlReplace": "Zamenjaj",
+  "boardUrlImportFailed": "Table ni bilo mogoče uvoziti s povezave"
 }

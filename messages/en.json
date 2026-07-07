@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Couldn't delete \"{name}\"",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
-  "librarySourceCode": "Source code",
+  "aboutSourceCode": "Source code",
   "settingsTitle": "Settings",
   "settingsOpen": "Open settings",
   "settingsClose": "Close settings",
@@ -98,6 +98,8 @@
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
   "playbackHighlight": "Highlight words while speaking",
+  "tileSaturation": "Color intensity",
+  "tileBorders": "Show tile borders",
   "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g. speak in a sarcastic tone",
   "aiCustomInstructionsHelper": "Shape suggestions in your own words.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Runs entirely on your device with zero data tracking and no cloud dependencies.",
   "onboardingContinue": "Continue",
   "errorGenericTitle": "Something went wrong",
+  "errorPageNotFound": "Page not found",
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
-  "errorBoardSetNotFound": "Board not found"
+  "errorBoardSetNotFound": "Board not found",
+  "boardUrlReplaceConfirmTitle": "Replace \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Importing from {host} will replace this board and everything in it. This cannot be undone.",
+  "boardUrlReplace": "Replace",
+  "boardUrlImportFailed": "Couldn't import board from link"
 }

@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Kohteen ”{name}” poisto epäonnistui",
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",
-  "librarySourceCode": "Lähdekoodi",
+  "aboutSourceCode": "Lähdekoodi",
   "settingsTitle": "Asetukset",
   "settingsOpen": "Avaa asetukset",
   "settingsClose": "Sulje asetukset",
@@ -98,6 +98,8 @@
   "speechPreview": "Kuuntele",
   "speechVoicePreview": "Hei, tämä on minun ääneni!",
   "playbackHighlight": "Korosta sanat puheen aikana",
+  "tileSaturation": "Värien voimakkuus",
+  "tileBorders": "Näytä ruutujen reunat",
   "aiCustomInstructions": "Mukautetut ohjeet",
   "aiCustomInstructionsPlaceholder": "esim. puhu sarkastisella sävyllä",
   "aiCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Toimii kokonaan laitteellasi ilman tietojen seurantaa ja ilman pilviriippuvuutta.",
   "onboardingContinue": "Jatka",
   "errorGenericTitle": "Jokin meni pieleen",
+  "errorPageNotFound": "Sivua ei löytynyt",
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
-  "errorBoardSetNotFound": "Taulua ei löytynyt"
+  "errorBoardSetNotFound": "Taulua ei löytynyt",
+  "boardUrlReplaceConfirmTitle": "Korvataanko ”{name}”?",
+  "boardUrlReplaceConfirmDescription": "Tuonti osoitteesta {host} korvaa tämän taulun ja kaiken sen sisällön. Tätä toimintoa ei voi kumota.",
+  "boardUrlReplace": "Korvaa",
+  "boardUrlImportFailed": "Taulun tuonti linkistä epäonnistui"
 }

@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Tidak dapat menghapus \"{name}\"",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
-  "librarySourceCode": "Kode sumber",
+  "aboutSourceCode": "Kode sumber",
   "settingsTitle": "Setelan",
   "settingsOpen": "Buka setelan",
   "settingsClose": "Tutup setelan",
@@ -98,6 +98,8 @@
   "speechPreview": "Dengarkan",
   "speechVoicePreview": "Hai, ini suara saya!",
   "playbackHighlight": "Sorot kata saat berbicara",
+  "tileSaturation": "Intensitas warna",
+  "tileBorders": "Tampilkan batas petak",
   "aiCustomInstructions": "Instruksi khusus",
   "aiCustomInstructionsPlaceholder": "mis. berbicara dengan nada sarkastis",
   "aiCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Berjalan sepenuhnya di perangkat Anda, tanpa pelacakan data dan tanpa ketergantungan cloud.",
   "onboardingContinue": "Lanjutkan",
   "errorGenericTitle": "Terjadi kesalahan",
+  "errorPageNotFound": "Halaman tidak ditemukan",
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
-  "errorBoardSetNotFound": "Papan tidak ditemukan"
+  "errorBoardSetNotFound": "Papan tidak ditemukan",
+  "boardUrlReplaceConfirmTitle": "Ganti \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Mengimpor dari {host} akan mengganti papan ini beserta seluruh isinya. Tindakan ini tidak dapat dibatalkan.",
+  "boardUrlReplace": "Ganti",
+  "boardUrlImportFailed": "Tidak dapat mengimpor papan dari tautan"
 }

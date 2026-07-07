@@ -1,5 +1,5 @@
 import { useRef, useState, type DragEvent } from "react";
-import { isBoardFile } from "./board-file-types";
+import { isBoardFile } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export interface BoardFileDropHandlers {

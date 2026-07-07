@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}“ sa nepodarilo odstrániť",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",
-  "librarySourceCode": "Zdrojový kód",
+  "aboutSourceCode": "Zdrojový kód",
   "settingsTitle": "Nastavenia",
   "settingsOpen": "Otvoriť nastavenia",
   "settingsClose": "Zavrieť nastavenia",
@@ -98,6 +98,8 @@
   "speechPreview": "Vypočuť",
   "speechVoicePreview": "Ahoj, toto je môj hlas!",
   "playbackHighlight": "Zvýrazniť slová počas hovorenia",
+  "tileSaturation": "Intenzita farieb",
+  "tileBorders": "Zobraziť okraje dlaždíc",
   "aiCustomInstructions": "Vlastné pokyny",
   "aiCustomInstructionsPlaceholder": "napr. hovor sarkastickým tónom",
   "aiCustomInstructionsHelper": "Formulujte návrhy vlastnými slovami.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Beží úplne vo vašom zariadení, bez sledovania údajov a bez závislosti od cloudu.",
   "onboardingContinue": "Pokračovať",
   "errorGenericTitle": "Niečo sa pokazilo",
+  "errorPageNotFound": "Stránka sa nenašla",
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
-  "errorBoardSetNotFound": "Tabuľka sa nenašla"
+  "errorBoardSetNotFound": "Tabuľka sa nenašla",
+  "boardUrlReplaceConfirmTitle": "Nahradiť „{name}“?",
+  "boardUrlReplaceConfirmDescription": "Import z {host} nahradí túto tabuľku a všetko v nej. Túto akciu nie je možné vrátiť späť.",
+  "boardUrlReplace": "Nahradiť",
+  "boardUrlImportFailed": "Tabuľku sa nepodarilo importovať z odkazu"
 }

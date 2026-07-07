@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Không thể xóa \"{name}\"",
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
-  "librarySourceCode": "Mã nguồn",
+  "aboutSourceCode": "Mã nguồn",
   "settingsTitle": "Cài đặt",
   "settingsOpen": "Mở cài đặt",
   "settingsClose": "Đóng cài đặt",
@@ -98,6 +98,8 @@
   "speechPreview": "Nghe thử",
   "speechVoicePreview": "Xin chào, đây là giọng nói của tôi!",
   "playbackHighlight": "Đánh dấu từ khi nói",
+  "tileSaturation": "Cường độ màu",
+  "tileBorders": "Hiển thị viền ô",
   "aiCustomInstructions": "Hướng dẫn tùy chỉnh",
   "aiCustomInstructionsPlaceholder": "ví dụ: nói với giọng điệu châm biếm",
   "aiCustomInstructionsHelper": "Định hình gợi ý theo cách nói của riêng bạn.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Chạy hoàn toàn trên thiết bị của bạn, không theo dõi dữ liệu và không phụ thuộc vào đám mây.",
   "onboardingContinue": "Tiếp tục",
   "errorGenericTitle": "Đã xảy ra lỗi",
+  "errorPageNotFound": "Không tìm thấy trang",
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
-  "errorBoardSetNotFound": "Không tìm thấy bảng"
+  "errorBoardSetNotFound": "Không tìm thấy bảng",
+  "boardUrlReplaceConfirmTitle": "Thay thế \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Nhập từ {host} sẽ thay thế bảng này và mọi thứ trong đó. Không thể hoàn tác hành động này.",
+  "boardUrlReplace": "Thay thế",
+  "boardUrlImportFailed": "Không thể nhập bảng từ liên kết"
 }

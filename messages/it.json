@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "Impossibile eliminare \"{name}\"",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",
-  "librarySourceCode": "Codice sorgente",
+  "aboutSourceCode": "Codice sorgente",
   "settingsTitle": "Impostazioni",
   "settingsOpen": "Apri impostazioni",
   "settingsClose": "Chiudi impostazioni",
@@ -98,6 +98,8 @@
   "speechPreview": "Ascolta",
   "speechVoicePreview": "Ciao, questa è la mia voce!",
   "playbackHighlight": "Evidenzia le parole durante il parlato",
+  "tileSaturation": "Intensità del colore",
+  "tileBorders": "Mostra i bordi delle caselle",
   "aiCustomInstructions": "Istruzioni personalizzate",
   "aiCustomInstructionsPlaceholder": "ad es. parla con tono sarcastico",
   "aiCustomInstructionsHelper": "Modella i suggerimenti con le tue parole.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Funziona interamente sul tuo dispositivo, senza tracciamento dei dati né dipendenza dal cloud.",
   "onboardingContinue": "Continua",
   "errorGenericTitle": "Qualcosa è andato storto",
+  "errorPageNotFound": "Pagina non trovata",
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
-  "errorBoardSetNotFound": "Tabella non trovata"
+  "errorBoardSetNotFound": "Tabella non trovata",
+  "boardUrlReplaceConfirmTitle": "Sostituire \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "L'importazione da {host} sostituirà questa tabella e tutto il suo contenuto. Questa azione non può essere annullata.",
+  "boardUrlReplace": "Sostituisci",
+  "boardUrlImportFailed": "Impossibile importare la tabella dal link"
 }

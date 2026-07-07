@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "No se pudo eliminar \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
-  "librarySourceCode": "Código fuente",
+  "aboutSourceCode": "Código fuente",
   "settingsTitle": "Ajustes",
   "settingsOpen": "Abrir ajustes",
   "settingsClose": "Cerrar ajustes",
@@ -98,6 +98,8 @@
   "speechPreview": "Escuchar",
   "speechVoicePreview": "¡Hola, esta es mi voz!",
   "playbackHighlight": "Resaltar palabras mientras se habla",
+  "tileSaturation": "Intensidad del color",
+  "tileBorders": "Mostrar bordes de las casillas",
   "aiCustomInstructions": "Instrucciones personalizadas",
   "aiCustomInstructionsPlaceholder": "p. ej., habla con un tono sarcástico",
   "aiCustomInstructionsHelper": "Da forma a las sugerencias con tus propias palabras.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Se ejecuta por completo en tu dispositivo, sin rastreo de datos ni dependencia de la nube.",
   "onboardingContinue": "Continuar",
   "errorGenericTitle": "Algo salió mal",
+  "errorPageNotFound": "Página no encontrada",
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
-  "errorBoardSetNotFound": "Tablero no encontrado"
+  "errorBoardSetNotFound": "Tablero no encontrado",
+  "boardUrlReplaceConfirmTitle": "¿Reemplazar \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Importar desde {host} reemplazará este tablero y todo su contenido. Esta acción no se puede deshacer.",
+  "boardUrlReplace": "Reemplazar",
+  "boardUrlImportFailed": "No se pudo importar el tablero desde el enlace"
 }

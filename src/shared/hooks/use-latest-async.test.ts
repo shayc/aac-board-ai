@@ -3,36 +3,36 @@ import { renderHook } from "vitest-browser-react";
 import { useLatestAsync } from "./use-latest-async";
 
 describe("useLatestAsync", () => {
-  test("stands down without fetching when not enabled", async () => {
-    const fetch = vi.fn(() => Promise.resolve("value"));
+  test("stands down without running when not enabled", async () => {
+    const run = vi.fn(() => Promise.resolve("value"));
 
     const { result } = await renderHook(() =>
-      useLatestAsync({ enabled: false, deps: ["a"], fetch }),
+      useLatestAsync({ enabled: false, deps: ["a"], run }),
     );
 
     expect(result.current.value).toBeUndefined();
     expect(result.current.isPending).toBe(false);
-    expect(fetch).not.toHaveBeenCalled();
+    expect(run).not.toHaveBeenCalled();
   });
 
-  test("fetches when enabled even with an empty deps list", async () => {
-    const fetch = vi.fn(() => Promise.resolve("once"));
+  test("runs when enabled even with an empty deps list", async () => {
+    const run = vi.fn(() => Promise.resolve("once"));
 
     const { result } = await renderHook(() =>
-      useLatestAsync({ enabled: true, deps: [], fetch }),
+      useLatestAsync({ enabled: true, deps: [], run }),
     );
 
     await vi.waitFor(() => expect(result.current.value).toBe("once"));
-    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(run).toHaveBeenCalledTimes(1);
   });
 
-  test("is pending from mount until the fetch resolves", async () => {
+  test("is pending from mount until it resolves", async () => {
     const pending: ((value: string) => void)[] = [];
     const { result } = await renderHook(() =>
       useLatestAsync({
         enabled: true,
         deps: ["a"],
-        fetch: () => new Promise<string>((r) => pending.push(r)),
+        run: () => new Promise<string>((r) => pending.push(r)),
       }),
     );
 
@@ -55,7 +55,7 @@ describe("useLatestAsync", () => {
         useLatestAsync({
           enabled: true,
           deps: [id],
-          fetch: () => new Promise<string>((r) => pending.push(r)),
+          run: () => new Promise<string>((r) => pending.push(r)),
         }),
       { initialProps: { id: "a" } },
     );
@@ -76,7 +76,7 @@ describe("useLatestAsync", () => {
         useLatestAsync({
           enabled: true,
           deps: [id],
-          fetch: () => new Promise<string>((r) => pending.push(r)),
+          run: () => new Promise<string>((r) => pending.push(r)),
         }),
       { initialProps: { id: "a" } },
     );
@@ -98,7 +98,7 @@ describe("useLatestAsync", () => {
       useLatestAsync({
         enabled: true,
         deps: ["a"],
-        fetch: () => Promise.reject(new Error("model exploded")),
+        run: () => Promise.reject(new Error("model exploded")),
       }),
     );
 
@@ -115,7 +115,7 @@ describe("useLatestAsync", () => {
         useLatestAsync({
           enabled: true,
           deps: [id],
-          fetch: () =>
+          run: () =>
             id === "a"
               ? Promise.reject(new Error("bad round"))
               : Promise.resolve("good round"),
@@ -142,7 +142,7 @@ describe("useLatestAsync", () => {
         useLatestAsync({
           enabled,
           deps: ["a"],
-          fetch: (signal) =>
+          run: (signal) =>
             new Promise<string>((_resolve, reject) => {
               signal.addEventListener("abort", () => {
                 reject(new DOMException("Aborted", "AbortError"));
@@ -165,7 +165,7 @@ describe("useLatestAsync", () => {
         useLatestAsync({
           enabled: true,
           deps: [id],
-          fetch: () => new Promise<string>((r) => pending.set(id, r)),
+          run: () => new Promise<string>((r) => pending.set(id, r)),
         }),
       { initialProps: { id: "a" } },
     );

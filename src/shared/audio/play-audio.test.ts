@@ -1,4 +1,4 @@
-import { stubAudio } from "@shared/testing/device-output";
+import { stubAudio } from "@shared/testing/stub-audio";
 import { beforeEach, describe, expect, test } from "vitest";
 import { playAudio } from "./play-audio";
 

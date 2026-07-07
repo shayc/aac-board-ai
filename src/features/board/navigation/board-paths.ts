@@ -1,8 +1,8 @@
 import { generatePath } from "react-router";
 
-export const BOARD_SET_PATTERN = "sets/:setId";
-export const BOARD_PATTERN = "boards/:boardId";
-export const BOARD_ROUTE_PATTERN = `/${BOARD_SET_PATTERN}/${BOARD_PATTERN}`;
+export const BOARD_SET_SEGMENT = "sets/:setId";
+export const BOARD_SEGMENT = "boards/:boardId";
+export const BOARD_ROUTE_PATTERN = `/${BOARD_SET_SEGMENT}/${BOARD_SEGMENT}`;
 
 export function boardPath({
   setId,

@@ -66,7 +66,7 @@ export function useSuggestions(
   const corrected = useLatestAsync({
     enabled: hasText && proofreader.status === "ready",
     deps: [text, language],
-    fetch: (signal) =>
+    run: (signal) =>
       proofreader
         .proofread(text, { signal })
         .then((result) => result.correctedInput),
@@ -75,7 +75,7 @@ export function useSuggestions(
   const rewritten = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
     deps: [text, debouncedTone, debouncedSharedContext, language],
-    fetch: (signal) => rewriter.rewrite(text, { signal }),
+    run: (signal) => rewriter.rewrite(text, { signal }),
   });
 
   // Settings' Download action provisions its own hook instances; only the

@@ -75,7 +75,7 @@
   "libraryDeleteFailed": "„{name}” nije moguće izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
-  "librarySourceCode": "Izvorni kod",
+  "aboutSourceCode": "Izvorni kod",
   "settingsTitle": "Postavke",
   "settingsOpen": "Otvori postavke",
   "settingsClose": "Zatvori postavke",
@@ -98,6 +98,8 @@
   "speechPreview": "Poslušaj",
   "speechVoicePreview": "Bok, ovo je moj glas!",
   "playbackHighlight": "Istakni riječi tijekom govora",
+  "tileSaturation": "Intenzitet boje",
+  "tileBorders": "Prikaži obrube pločica",
   "aiCustomInstructions": "Prilagođene upute",
   "aiCustomInstructionsPlaceholder": "npr. govori sarkastičnim tonom",
   "aiCustomInstructionsHelper": "Oblikujte prijedloge svojim riječima.",
@@ -124,7 +126,12 @@
   "onboardingPrivacyDescription": "Radi u potpunosti na vašem uređaju, bez praćenja podataka i bez ovisnosti o oblaku.",
   "onboardingContinue": "Nastavi",
   "errorGenericTitle": "Nešto je pošlo po zlu",
+  "errorPageNotFound": "Stranica nije pronađena",
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
-  "errorBoardSetNotFound": "Ploča nije pronađena"
+  "errorBoardSetNotFound": "Ploča nije pronađena",
+  "boardUrlReplaceConfirmTitle": "Zamijeniti „{name}”?",
+  "boardUrlReplaceConfirmDescription": "Uvoz s {host} zamijenit će ovu ploču i sve u njoj. Ovu radnju nije moguće poništiti.",
+  "boardUrlReplace": "Zamijeni",
+  "boardUrlImportFailed": "Ploču nije moguće uvesti s poveznice"
 }

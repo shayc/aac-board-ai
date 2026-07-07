@@ -1,4 +1,4 @@
-import { stubSpeech, stubVoices } from "@shared/testing/device-output";
+import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { resetPersistedStores } from "@shared/utils/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
