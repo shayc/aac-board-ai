@@ -99,6 +99,7 @@
   "speechVoicePreview": "Hallo, das ist meine Stimme!",
   "playbackHighlight": "Wörter beim Sprechen hervorheben",
   "tileSaturation": "Farbintensität",
+  "tileBorders": "Kachel-Rahmen anzeigen",
   "aiCustomInstructions": "Benutzerdefinierte Anweisungen",
   "aiCustomInstructionsPlaceholder": "z. B. in sarkastischem Ton sprechen",
   "aiCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",

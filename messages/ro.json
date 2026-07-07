@@ -99,6 +99,7 @@
   "speechVoicePreview": "Bună, aceasta este vocea mea!",
   "playbackHighlight": "Evidențiază cuvintele în timpul vorbirii",
   "tileSaturation": "Intensitatea culorii",
+  "tileBorders": "Afișează marginile casetelor",
   "aiCustomInstructions": "Instrucțiuni personalizate",
   "aiCustomInstructionsPlaceholder": "ex. vorbește pe un ton sarcastic",
   "aiCustomInstructionsHelper": "Modelează sugestiile cu propriile tale cuvinte.",

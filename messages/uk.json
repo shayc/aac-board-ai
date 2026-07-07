@@ -99,6 +99,7 @@
   "speechVoicePreview": "Привіт, це мій голос!",
   "playbackHighlight": "Підсвічувати слова під час озвучення",
   "tileSaturation": "Насиченість кольору",
+  "tileBorders": "Показувати межі плиток",
   "aiCustomInstructions": "Власні інструкції",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичним тоном",
   "aiCustomInstructionsHelper": "Формулюйте пропозиції власними словами.",

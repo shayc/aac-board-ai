@@ -99,6 +99,7 @@
   "speechVoicePreview": "வணக்கம், இது என் குரல்!",
   "playbackHighlight": "பேசும்போது சொற்களை தனிப்படுத்து",
   "tileSaturation": "வண்ணத் தீவிரம்",
+  "tileBorders": "டைல் எல்லைகளைக் காட்டு",
   "aiCustomInstructions": "தனிப்பயன் வழிமுறைகள்",
   "aiCustomInstructionsPlaceholder": "எ.கா., கிண்டலான தொனியில் பேசு",
   "aiCustomInstructionsHelper": "உங்கள் சொந்த வார்த்தைகளில் பரிந்துரைகளை வடிவமைக்கவும்.",

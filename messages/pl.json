@@ -99,6 +99,7 @@
   "speechVoicePreview": "Cześć, to mój głos!",
   "playbackHighlight": "Podświetlaj słowa podczas mówienia",
   "tileSaturation": "Intensywność kolorów",
+  "tileBorders": "Pokaż obramowania kafelków",
   "aiCustomInstructions": "Instrukcje niestandardowe",
   "aiCustomInstructionsPlaceholder": "np. mów sarkastycznym tonem",
   "aiCustomInstructionsHelper": "Kształtuj sugestie własnymi słowami.",

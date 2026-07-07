@@ -99,6 +99,7 @@
   "speechVoicePreview": "Hai, ini suara saya!",
   "playbackHighlight": "Sorot kata saat berbicara",
   "tileSaturation": "Intensitas warna",
+  "tileBorders": "Tampilkan batas petak",
   "aiCustomInstructions": "Instruksi khusus",
   "aiCustomInstructionsPlaceholder": "mis. berbicara dengan nada sarkastis",
   "aiCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",

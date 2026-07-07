@@ -99,6 +99,7 @@
   "speechVoicePreview": "Xin chào, đây là giọng nói của tôi!",
   "playbackHighlight": "Đánh dấu từ khi nói",
   "tileSaturation": "Cường độ màu",
+  "tileBorders": "Hiển thị viền ô",
   "aiCustomInstructions": "Hướng dẫn tùy chỉnh",
   "aiCustomInstructionsPlaceholder": "ví dụ: nói với giọng điệu châm biếm",
   "aiCustomInstructionsHelper": "Định hình gợi ý theo cách nói của riêng bạn.",

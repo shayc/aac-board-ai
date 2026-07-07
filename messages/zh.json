@@ -99,6 +99,7 @@
   "speechVoicePreview": "你好，这是我的声音！",
   "playbackHighlight": "说话时高亮显示单词",
   "tileSaturation": "颜色强度",
+  "tileBorders": "显示图块边框",
   "aiCustomInstructions": "自定义指令",
   "aiCustomInstructionsPlaceholder": "例如：以讽刺的语气说话",
   "aiCustomInstructionsHelper": "用你自己的话塑造建议。",

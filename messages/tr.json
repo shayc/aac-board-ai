@@ -99,6 +99,7 @@
   "speechVoicePreview": "Merhaba, bu benim sesim!",
   "playbackHighlight": "Konuşurken kelimeleri vurgula",
   "tileSaturation": "Renk yoğunluğu",
+  "tileBorders": "Kare kenarlıklarını göster",
   "aiCustomInstructions": "Özel talimatlar",
   "aiCustomInstructionsPlaceholder": "ör. alaycı bir tonda konuş",
   "aiCustomInstructionsHelper": "Önerileri kendi kelimelerinizle şekillendirin.",

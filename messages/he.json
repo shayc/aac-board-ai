@@ -99,6 +99,7 @@
   "speechVoicePreview": "שלום, זה הקול שלי!",
   "playbackHighlight": "הדגשת מילים בעת הדיבור",
   "tileSaturation": "עוצמת הצבע",
+  "tileBorders": "הצגת מסגרות למשבצות",
   "aiCustomInstructions": "הוראות מותאמות אישית",
   "aiCustomInstructionsPlaceholder": "למשל: דבר בטון סרקסטי",
   "aiCustomInstructionsHelper": "עצבו את ההצעות במילים שלכם.",

@@ -32,7 +32,38 @@ describe("BoardSettings", () => {
     await expect.element(saturationSlider).toBeVisible();
     expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe("1");
 
+    const bordersSwitch = screen.getByRole("switch", {
+      name: "Show tile borders",
+    });
+
+    await expect.element(bordersSwitch).toBeChecked();
+
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("toggling the tile-borders switch persists the borderVisible setting", async () => {
+    const screen = await render(
+      <AppProviders>
+        <BoardSettings />
+      </AppProviders>,
+    );
+
+    const bordersSwitch = screen.getByRole("switch", {
+      name: "Show tile borders",
+    });
+
+    await expect.element(bordersSwitch).toBeChecked();
+    await bordersSwitch.click();
+    await expect.element(bordersSwitch).not.toBeChecked();
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("tile-color-config");
+      expect(stored).not.toBeNull();
+      const config = JSON.parse(stored ?? "{}") as {
+        borderVisible: boolean;
+      };
+      expect(config.borderVisible).toBe(false);
+    });
   });
 
   test("lowering the color-intensity slider persists the saturation setting", async () => {
