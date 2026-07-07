@@ -126,5 +126,9 @@
   "errorGenericTitle": "Une erreur s'est produite",
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
-  "errorBoardSetNotFound": "Tableau introuvable"
+  "errorBoardSetNotFound": "Tableau introuvable",
+  "boardUrlReplaceConfirmTitle": "Remplacer « {name} » ?",
+  "boardUrlReplaceConfirmDescription": "L'importation depuis {host} remplacera ce tableau et tout son contenu. Cette action est irréversible.",
+  "boardUrlReplace": "Remplacer",
+  "boardUrlImportFailed": "Impossible d'importer le tableau depuis le lien"
 }

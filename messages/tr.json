@@ -126,5 +126,9 @@
   "errorGenericTitle": "Bir şeyler ters gitti",
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
-  "errorBoardSetNotFound": "Pano bulunamadı"
+  "errorBoardSetNotFound": "Pano bulunamadı",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" değiştirilsin mi?",
+  "boardUrlReplaceConfirmDescription": "{host} adresinden içe aktarma bu panoyu ve içindeki her şeyi değiştirir. Bu işlem geri alınamaz.",
+  "boardUrlReplace": "Değiştir",
+  "boardUrlImportFailed": "Pano bağlantıdan içe aktarılamadı"
 }

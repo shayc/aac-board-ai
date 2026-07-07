@@ -126,5 +126,9 @@
   "errorGenericTitle": "Nešto je pošlo po zlu",
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
-  "errorBoardSetNotFound": "Ploča nije pronađena"
+  "errorBoardSetNotFound": "Ploča nije pronađena",
+  "boardUrlReplaceConfirmTitle": "Zamijeniti „{name}”?",
+  "boardUrlReplaceConfirmDescription": "Uvoz s {host} zamijenit će ovu ploču i sve u njoj. Ovu radnju nije moguće poništiti.",
+  "boardUrlReplace": "Zamijeni",
+  "boardUrlImportFailed": "Ploču nije moguće uvesti s poveznice"
 }

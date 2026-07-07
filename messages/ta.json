@@ -126,5 +126,9 @@
   "errorGenericTitle": "ஏதோ தவறு நடந்தது",
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
-  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை"
+  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" என்பதை மாற்றவா?",
+  "boardUrlReplaceConfirmDescription": "{host} இலிருந்து இறக்குமதி செய்தால், இந்தப் பலகையும் அதில் உள்ள அனைத்தும் மாற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.",
+  "boardUrlReplace": "மாற்று",
+  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகையை இறக்குமதி செய்ய முடியவில்லை"
 }

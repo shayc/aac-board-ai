@@ -126,5 +126,9 @@
   "errorGenericTitle": "Coś poszło nie tak",
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
-  "errorBoardSetNotFound": "Nie znaleziono tablicy"
+  "errorBoardSetNotFound": "Nie znaleziono tablicy",
+  "boardUrlReplaceConfirmTitle": "Zastąpić „{name}”?",
+  "boardUrlReplaceConfirmDescription": "Import z {host} zastąpi tę tablicę i całą jej zawartość. Tej operacji nie można cofnąć.",
+  "boardUrlReplace": "Zastąp",
+  "boardUrlImportFailed": "Nie udało się zaimportować tablicy z linku"
 }

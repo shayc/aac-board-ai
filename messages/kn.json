@@ -126,5 +126,9 @@
   "errorGenericTitle": "ಏನೋ ತಪ್ಪಾಗಿದೆ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ"
+  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
+  "boardUrlReplaceConfirmTitle": "\"{name}\" ಅನ್ನು ಬದಲಾಯಿಸುವುದೇ?",
+  "boardUrlReplaceConfirmDescription": "{host} ನಿಂದ ಆಮದು ಮಾಡಿದರೆ ಈ ಬೋರ್ಡ್ ಮತ್ತು ಅದರಲ್ಲಿರುವ ಎಲ್ಲವೂ ಬದಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
+  "boardUrlReplace": "ಬದಲಾಯಿಸಿ",
+  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

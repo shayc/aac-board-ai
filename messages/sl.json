@@ -126,5 +126,9 @@
   "errorGenericTitle": "Nekaj je šlo narobe",
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
-  "errorBoardSetNotFound": "Table ni mogoče najti"
+  "errorBoardSetNotFound": "Table ni mogoče najti",
+  "boardUrlReplaceConfirmTitle": "Zamenjam »{name}«?",
+  "boardUrlReplaceConfirmDescription": "Uvoz s {host} bo zamenjal to tablo in vse v njej. Tega dejanja ni mogoče razveljaviti.",
+  "boardUrlReplace": "Zamenjaj",
+  "boardUrlImportFailed": "Table ni bilo mogoče uvoziti s povezave"
 }

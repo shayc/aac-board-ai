@@ -126,5 +126,9 @@
   "errorGenericTitle": "Qualcosa è andato storto",
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
-  "errorBoardSetNotFound": "Tabella non trovata"
+  "errorBoardSetNotFound": "Tabella non trovata",
+  "boardUrlReplaceConfirmTitle": "Sostituire \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "L'importazione da {host} sostituirà questa tabella e tutto il suo contenuto. Questa azione non può essere annullata.",
+  "boardUrlReplace": "Sostituisci",
+  "boardUrlImportFailed": "Impossibile importare la tabella dal link"
 }

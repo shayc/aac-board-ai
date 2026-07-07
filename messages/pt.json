@@ -126,5 +126,9 @@
   "errorGenericTitle": "Algo deu errado",
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
-  "errorBoardSetNotFound": "Prancha não encontrada"
+  "errorBoardSetNotFound": "Prancha não encontrada",
+  "boardUrlReplaceConfirmTitle": "Substituir \"{name}\"?",
+  "boardUrlReplaceConfirmDescription": "Importar de {host} substituirá esta prancha e tudo o que há nela. Esta ação não pode ser desfeita.",
+  "boardUrlReplace": "Substituir",
+  "boardUrlImportFailed": "Não foi possível importar a prancha do link"
 }

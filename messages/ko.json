@@ -126,5 +126,9 @@
   "errorGenericTitle": "문제가 발생했습니다",
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
-  "errorBoardSetNotFound": "보드를 찾을 수 없음"
+  "errorBoardSetNotFound": "보드를 찾을 수 없음",
+  "boardUrlReplaceConfirmTitle": "\"{name}\"을(를) 교체하시겠어요?",
+  "boardUrlReplaceConfirmDescription": "{host}에서 가져오면 이 보드와 그 안의 모든 내용이 교체됩니다. 이 작업은 되돌릴 수 없습니다.",
+  "boardUrlReplace": "교체",
+  "boardUrlImportFailed": "링크에서 보드를 가져올 수 없습니다"
 }

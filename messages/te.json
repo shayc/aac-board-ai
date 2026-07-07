@@ -126,5 +126,9 @@
   "errorGenericTitle": "ఏదో తప్పు జరిగింది",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
-  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు"
+  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",
+  "boardUrlReplaceConfirmTitle": "\"{name}\"ను భర్తీ చేయాలా?",
+  "boardUrlReplaceConfirmDescription": "{host} నుండి దిగుమతి చేస్తే ఈ బోర్డు మరియు అందులోని అన్నీ భర్తీ అవుతాయి. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
+  "boardUrlReplace": "భర్తీ చేయి",
+  "boardUrlImportFailed": "లింక్ నుండి బోర్డును దిగుమతి చేయలేకపోయాం"
 }

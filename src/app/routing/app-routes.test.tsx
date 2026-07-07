@@ -1,5 +1,9 @@
 import { importBoardFromUrl } from "@features/board";
-import { resetBoardsDB } from "@features/board/testing";
+import {
+  makeOBFBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
@@ -12,8 +16,10 @@ import { appRoutes } from "./app-routes";
 const OBZ_FIXTURE_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 
-async function renderApp() {
-  const router = createMemoryRouter(appRoutes, { initialEntries: ["/"] });
+async function renderApp(initialEntry = "/") {
+  const router = createMemoryRouter(appRoutes, {
+    initialEntries: [initialEntry],
+  });
 
   return render(
     <AppProviders>
@@ -68,4 +74,64 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Quick Core 24" }))
       .toBeVisible();
   });
+
+  test("?board= link that collides with an existing set replaces it only after confirmation", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const screen = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    // The confirmation dialog stacks above onboarding, so answer it first.
+    await screen.getByRole("button", { name: "Replace" }).click();
+
+    // Let the import snackbars run their course: they cover the onboarding
+    // button, and a hovering pointer from a retried click pauses auto-hide.
+    await expect
+      .element(screen.getByText("Board replaced"))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByText("Board replaced"), { timeout: 10_000 })
+      .not.toBeInTheDocument();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .toBeVisible();
+  });
+
+  test("cancelling the ?board= replacement keeps the existing set", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const screen = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    // The confirmation dialog stacks above onboarding, so answer it first.
+    await screen.getByRole("button", { name: "Cancel" }).click();
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Old Board" }))
+      .toBeVisible();
+  });
 });
+
+// A set whose setId collides with what the OBZ fixture URL derives, so a
+// ?board= import of the fixture would overwrite it.
+function seedExistingLotsOfStuffSet() {
+  return seedBoardSets([
+    {
+      setId: "lots-of-stuff",
+      rootBoardId: "root-1",
+      boards: [
+        {
+          boardId: "root-1",
+          name: "Old Board",
+          obf: makeOBFBoard({ id: "root-1", name: "Old Board" }),
+        },
+      ],
+    },
+  ]);
+}
