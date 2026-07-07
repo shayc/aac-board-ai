@@ -47,7 +47,7 @@ export function useWordPrediction(
   const prediction = useLatestAsync({
     enabled: model.status === "ready" && hasText && boardWords.length > 0,
     deps: [debouncedText, boardWords.join("\0")],
-    fetch: (signal) =>
+    fetch: (signal: AbortSignal) =>
       model
         .prompt(buildPredictionPrompt(debouncedText, boardWords), {
           responseConstraint: PREDICTION_RESPONSE_SCHEMA,
