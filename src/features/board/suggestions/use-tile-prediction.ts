@@ -37,8 +37,7 @@ function modelOptions(language: string) {
 }
 
 // Predicts the next 1–3 tiles for the message being composed, constrained to
-// the visible board's words. A sibling of the proofread/rewrite engines in
-// useSuggestions; the prediction surfaces as a regular phrase chip.
+// the visible board's words.
 export function useTilePrediction(
   text: string,
   board: Board,
@@ -65,10 +64,9 @@ export function useTilePrediction(
     modelRef.current.reset(modelOptions(language));
   }, [language]);
 
-  // Rare drift guards: a fresh session when the context overflows or fills past
-  // the half-way mark. `reset()` reuses the current options, costing at most one
-  // harmless re-prediction. A per-call reset is deliberately avoided — it races
-  // the library's session swap.
+  // A per-call reset is deliberately avoided — it races the library's session
+  // swap. `reset()` reuses the current options, costing at most one harmless
+  // re-prediction.
   useEffect(() => {
     const overflowed = model.overflowCount > 0;
     const halfFull =
@@ -100,11 +98,9 @@ export function useTilePrediction(
     }
   };
 
-  // Assemble the chip here, from the SAME debounced text the words were
-  // predicted for — and only while the live text still matches it, so a
-  // half-typed sentence never shows a continuation predicted for an older
-  // prefix. Both `debouncedText` and `prediction.value` advance together, so
-  // pairing them is always coherent.
+  // Only show the prediction while live text still matches the debounced text
+  // it was predicted for, so a half-typed sentence never shows a continuation
+  // predicted for an older prefix.
   const words = prediction.value ?? [];
   const phrase =
     words.length > 0 && text === debouncedText

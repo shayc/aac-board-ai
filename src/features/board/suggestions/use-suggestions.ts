@@ -86,10 +86,7 @@ export function useSuggestions(
     "LanguageModel",
   ]);
 
-  // The prediction rides in as a regular phrase chip (the full sentence so far
-  // plus the predicted next words, assembled inside the hook against its own
-  // debounced text). It's listed last — the proofread (fastest) and rewrite
-  // land first; existing dedupe/clean rules then apply unchanged.
+  // Prediction last — proofread and rewrite are the primary suggestions.
   const phrases = toPhrases(text, [
     corrected.value,
     rewritten.value,

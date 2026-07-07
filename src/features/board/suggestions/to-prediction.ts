@@ -22,11 +22,9 @@ function dropLeadingDuplicate(words: string[], messageText: string): string[] {
   return words[0].toLowerCase() === lastWord ? words.slice(1) : words;
 }
 
-// Turns raw model output into a validated word list. The model is never
-// trusted: output is parsed, then each word is matched against the board words
-// (case-insensitively). The first word that isn't on the board truncates the
-// rest (later words were predicted on top of the invalid one), so an empty
-// result means nothing to suggest.
+// The model is never trusted: each word is matched against the board words.
+// The first word that isn't on the board truncates the rest, since later
+// words were predicted on top of the invalid one.
 export function toPrediction({
   raw,
   boardWords,
