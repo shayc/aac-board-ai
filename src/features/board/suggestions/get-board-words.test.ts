@@ -1,6 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { Board, BoardButton } from "../types";
-import { getBoardWords } from "./board-words";
+import { getBoardWords } from "./get-board-words";
 
 function makeBoard(buttons: BoardButton[]): Board {
   return {

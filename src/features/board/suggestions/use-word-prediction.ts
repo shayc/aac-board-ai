@@ -6,7 +6,7 @@ import { useLanguage } from "@shared/language/use-language";
 import { type Status, useLanguageModel } from "@shayc/react-built-in-ai";
 import { useEffect, useRef } from "react";
 import type { Board } from "../types";
-import { getBoardWords } from "./board-words";
+import { getBoardWords } from "./get-board-words";
 import {
   buildPredictionPrompt,
   PREDICTION_RESPONSE_SCHEMA,
@@ -28,7 +28,7 @@ function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
 
-function modelOptions(language: string) {
+function sessionOptions(language: string) {
   const initialPrompts: [LanguageModelSystemMessage] = [
     { role: "system", content: PREDICTION_SYSTEM_PROMPT },
   ];
@@ -48,7 +48,7 @@ export function useWordPrediction(
   // Options are captured once at mount (the library's session contract), so the
   // system prompt survives resets. The session is held in a ref so the
   // re-provisioning effects can call reset() without re-reading mount options.
-  const model = useLanguageModel(modelOptions(language));
+  const model = useLanguageModel(sessionOptions(language));
 
   const modelRef = useRef(model);
   useEffect(() => {
@@ -61,7 +61,7 @@ export function useWordPrediction(
       return;
     }
     languageRef.current = language;
-    modelRef.current.reset(modelOptions(language));
+    modelRef.current.reset(sessionOptions(language));
   }, [language]);
 
   // A per-call reset is deliberately avoided — it races the library's session
