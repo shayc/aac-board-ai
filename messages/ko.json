@@ -98,6 +98,7 @@
   "speechPreview": "미리 듣기",
   "speechVoicePreview": "안녕하세요, 제 목소리예요!",
   "playbackHighlight": "말할 때 단어 강조 표시",
+  "tileSaturation": "색상 강도",
   "aiCustomInstructions": "맞춤 지침",
   "aiCustomInstructionsPlaceholder": "예: 냉소적인 어조로 말하기",
   "aiCustomInstructionsHelper": "자신만의 언어로 제안을 다듬어 보세요.",

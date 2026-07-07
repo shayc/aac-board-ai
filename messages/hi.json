@@ -98,6 +98,7 @@
   "speechPreview": "सुनें",
   "speechVoicePreview": "नमस्ते, यह मेरी आवाज़ है!",
   "playbackHighlight": "बोलते समय शब्दों को हाइलाइट करें",
+  "tileSaturation": "रंग की तीव्रता",
   "aiCustomInstructions": "कस्टम निर्देश",
   "aiCustomInstructionsPlaceholder": "जैसे, व्यंग्यात्मक लहजे में बोलें",
   "aiCustomInstructionsHelper": "सुझावों को अपने शब्दों में ढालें।",

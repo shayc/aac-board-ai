@@ -98,6 +98,7 @@
   "speechPreview": "Прослушать",
   "speechVoicePreview": "Привет, это мой голос!",
   "playbackHighlight": "Подсвечивать слова во время произношения",
+  "tileSaturation": "Насыщенность цвета",
   "aiCustomInstructions": "Пользовательские инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори саркастичным тоном",
   "aiCustomInstructionsHelper": "Формулируйте предложения своими словами.",

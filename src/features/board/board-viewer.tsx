@@ -6,6 +6,7 @@ import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { safeAreaInset } from "@shared/theme/safe-area";
+import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./button-readers";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -42,6 +43,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = useHighlightConfig();
+  const { saturation } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text);
@@ -69,7 +71,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
   );
 
   return (
-    <Stack {...keyboard.rootProps} direction="column" sx={rootSx}>
+    <Stack
+      {...keyboard.rootProps}
+      direction="column"
+      sx={[rootSx, { "--tile-saturation": String(saturation) }]}
+    >
       <MessageBar
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}

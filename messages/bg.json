@@ -98,6 +98,7 @@
   "speechPreview": "Прослушване",
   "speechVoicePreview": "Здравей, това е моят глас!",
   "playbackHighlight": "Осветяване на думите по време на говорене",
+  "tileSaturation": "Интензивност на цвета",
   "aiCustomInstructions": "Персонализирани инструкции",
   "aiCustomInstructionsPlaceholder": "напр. говори със саркастичен тон",
   "aiCustomInstructionsHelper": "Оформете предложенията с ваши думи.",

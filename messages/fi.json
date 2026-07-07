@@ -98,6 +98,7 @@
   "speechPreview": "Kuuntele",
   "speechVoicePreview": "Hei, tämä on minun ääneni!",
   "playbackHighlight": "Korosta sanat puheen aikana",
+  "tileSaturation": "Värien voimakkuus",
   "aiCustomInstructions": "Mukautetut ohjeet",
   "aiCustomInstructionsPlaceholder": "esim. puhu sarkastisella sävyllä",
   "aiCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",

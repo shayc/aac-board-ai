@@ -98,6 +98,7 @@
   "speechPreview": "Lyt",
   "speechVoicePreview": "Hej, det er min stemme!",
   "playbackHighlight": "Fremhæv ord under tale",
+  "tileSaturation": "Farveintensitet",
   "aiCustomInstructions": "Tilpassede instruktioner",
   "aiCustomInstructionsPlaceholder": "f.eks. tal i en sarkastisk tone",
   "aiCustomInstructionsHelper": "Form forslagene med dine egne ord.",

@@ -13,6 +13,13 @@ export interface TileProps {
   onClick: () => void;
 }
 
+// Scale an author-supplied color's OKLCH chroma by the board's saturation
+// setting so bright third-party boards can be toned down without shifting hue
+// or perceived lightness. The var fallback keeps colors intact outside BoardViewer.
+function desaturate(color: string): string {
+  return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
+}
+
 export function Tile({
   label,
   imageSrc,
@@ -23,6 +30,8 @@ export function Tile({
   tabIndex,
   onClick,
 }: TileProps) {
+  const resolvedBorderColor = borderColor ?? backgroundColor;
+
   return (
     <Button
       tabIndex={tabIndex}
@@ -36,15 +45,15 @@ export function Tile({
         alignItems: "stretch",
         justifyContent: "stretch",
         p: 1,
-        border: `4px solid ${borderColor ?? backgroundColor ?? "transparent"}`,
+        border: `4px solid ${resolvedBorderColor ? desaturate(resolvedBorderColor) : "transparent"}`,
         borderRadius: 4,
         overflow: "hidden",
         position: "relative",
         textTransform: "none",
         color: backgroundColor
-          ? `contrast-color(${backgroundColor})`
+          ? `contrast-color(${desaturate(backgroundColor)})`
           : "inherit",
-        backgroundColor,
+        backgroundColor: backgroundColor && desaturate(backgroundColor),
         transition: theme.transitions.create("filter", {
           duration: theme.transitions.duration.short,
         }),
@@ -68,7 +77,7 @@ export function Tile({
             insetInlineEnd: -2,
             width: 0,
             height: 0,
-            borderInlineEnd: `32px solid ${borderColor ?? "#000"}`,
+            borderInlineEnd: `32px solid ${borderColor ? desaturate(borderColor) : "#000"}`,
             borderBottom: "32px solid transparent",
           },
         }),
