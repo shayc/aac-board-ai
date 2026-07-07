@@ -15,6 +15,12 @@ import { toPredictedWords } from "./to-predicted-words";
 
 const PREDICTION_DEBOUNCE_MS = 400;
 
+// Kill switch — flip to re-enable. While off, this hook reports "unsupported",
+// the same as a browser without the Prompt API, so it never prompts the model
+// and every downstream consumer (status bar, isSupported, enable()) treats
+// the feature as absent without any other file changing.
+const PREDICTION_ENABLED = false;
+
 export interface UseWordPredictionReturn {
   status: Status;
   requestFailed: boolean;
@@ -45,7 +51,11 @@ export function useWordPrediction(
   const hasText = debouncedText.trim().length > 0;
 
   const prediction = useLatestAsync({
-    enabled: model.status === "ready" && hasText && boardWords.length > 0,
+    enabled:
+      PREDICTION_ENABLED &&
+      model.status === "ready" &&
+      hasText &&
+      boardWords.length > 0,
     deps: [debouncedText, boardWords.join("\0")],
     run: (signal) =>
       model
@@ -57,7 +67,7 @@ export function useWordPrediction(
   });
 
   const enable = () => {
-    if (model.status === "downloadable") {
+    if (PREDICTION_ENABLED && model.status === "downloadable") {
       prepareQuietly(model);
     }
   };
@@ -67,10 +77,10 @@ export function useWordPrediction(
     words.length > 0 ? [debouncedText.trim(), ...words].join(" ") : undefined;
 
   return {
-    status: model.status,
-    requestFailed: isNonAbortError(prediction.error),
-    isPending: prediction.isPending,
-    phrase,
+    status: PREDICTION_ENABLED ? model.status : "unsupported",
+    requestFailed: PREDICTION_ENABLED && isNonAbortError(prediction.error),
+    isPending: PREDICTION_ENABLED && prediction.isPending,
+    phrase: PREDICTION_ENABLED ? phrase : undefined,
     enable,
   };
 }

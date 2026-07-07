@@ -399,7 +399,10 @@ describe("useSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("lists the word prediction last, after the proofread and rewrite", async () => {
+  // Skipped while PREDICTION_ENABLED is off in use-word-prediction.ts — the
+  // hook reports "unsupported" and never prompts, so these assertions can't
+  // hold. Re-enable alongside the flag.
+  test.skip("lists the word prediction last, after the proofread and rewrite", async () => {
     stubProofreader(() => makeProofreadResult("I want to eat."));
     stubRewriter(() => "I would like to eat.");
     stubLanguageModel(() => '{"words":["more"]}');
@@ -415,7 +418,8 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("stays supported when only the Prompt API is available", async () => {
+  // Skipped while PREDICTION_ENABLED is off — see note above.
+  test.skip("stays supported when only the Prompt API is available", async () => {
     stubLanguageModel();
     stubBuiltInAIUnsupported("Proofreader", "Rewriter");
 
@@ -426,7 +430,8 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("enable prepares a downloadable Prompt API session", async () => {
+  // Skipped while PREDICTION_ENABLED is off — see note above.
+  test.skip("enable prepares a downloadable Prompt API session", async () => {
     const { availability } = stubLanguageModel();
     availability.mockResolvedValue("downloadable");
     stubBuiltInAIUnsupported("Proofreader", "Rewriter");

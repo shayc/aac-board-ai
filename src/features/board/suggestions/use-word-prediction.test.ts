@@ -39,7 +39,10 @@ describe("useWordPrediction", () => {
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
 
-  test("assembles the sentence-so-far plus the predicted next words", async () => {
+  // Skipped while PREDICTION_ENABLED is off in use-word-prediction.ts — the
+  // hook reports "unsupported" and never prompts, so these assertions can't
+  // hold. Re-enable alongside the flag.
+  test.skip("assembles the sentence-so-far plus the predicted next words", async () => {
     stubLanguageModel(() => '{"words":["more","help"]}');
 
     const { result } = await renderWordPrediction("I want");
@@ -63,7 +66,8 @@ describe("useWordPrediction", () => {
     });
   });
 
-  test("constrains the response to the prediction schema", async () => {
+  // Skipped while PREDICTION_ENABLED is off — see note above.
+  test.skip("constrains the response to the prediction schema", async () => {
     const { prompt } = stubLanguageModel();
 
     await renderWordPrediction("I want");
@@ -86,7 +90,8 @@ describe("useWordPrediction", () => {
     expect(result.current.phrase).toBeUndefined();
   });
 
-  test("stays quiet when the board has no word tiles", async () => {
+  // Skipped while PREDICTION_ENABLED is off — see note above.
+  test.skip("stays quiet when the board has no word tiles", async () => {
     const { prompt } = stubLanguageModel();
     const foldersOnly = makeBoard([]);
 
@@ -99,7 +104,8 @@ describe("useWordPrediction", () => {
     expect(result.current.phrase).toBeUndefined();
   });
 
-  test("ignores a stale in-flight prediction when the text changes mid-flight", async () => {
+  // Skipped while PREDICTION_ENABLED is off — see note above.
+  test.skip("ignores a stale in-flight prediction when the text changes mid-flight", async () => {
     const resolvers = new Map<string, (raw: string) => void>();
     stubLanguageModel(
       (input) =>
