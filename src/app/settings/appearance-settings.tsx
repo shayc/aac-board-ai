@@ -25,6 +25,7 @@ export function AppearanceSettings() {
         aria-labelledby="theme-toggle"
         name="theme-toggle"
         value={mode}
+        row={true}
         onChange={(event) =>
           setMode(event.target.value as "system" | "light" | "dark")
         }
