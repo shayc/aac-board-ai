@@ -13,11 +13,13 @@ import {
   useProofreader,
   useRewriter,
 } from "@shayc/react-built-in-ai";
+import type { Board } from "../types";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
+import { useWordPrediction } from "./use-word-prediction";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 const TONE_DEBOUNCE_MS = 400;
@@ -33,7 +35,10 @@ function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
 
-export function useSuggestions(text: string): UseSuggestionsReturn {
+export function useSuggestions(
+  text: string,
+  board: Board,
+): UseSuggestionsReturn {
   const sharedContext = useAISharedContext();
   const debouncedSharedContext = useDebouncedValue(
     sharedContext,
@@ -53,6 +58,8 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     format: "plain-text",
     ...rewriterLanguageOptions(language),
   });
+
+  const prediction = useWordPrediction(text, board);
 
   const hasText = text.trim().length > 0;
 
@@ -76,10 +83,16 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   const downloadProgress = useGlobalDownloadProgress([
     "Proofreader",
     "Rewriter",
+    "LanguageModel",
   ]);
 
-  const phrases = toPhrases(text, [corrected.value, rewritten.value]);
-  const isPending = corrected.isPending || rewritten.isPending;
+  const phrases = toPhrases(text, [
+    corrected.value,
+    rewritten.value,
+    prediction.phrase,
+  ]);
+  const isPending =
+    corrected.isPending || rewritten.isPending || prediction.isPending;
 
   const status = deriveSuggestionStatus({
     engines: [
@@ -90,6 +103,10 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
       {
         status: rewriter.status,
         requestFailed: isNonAbortError(rewritten.error),
+      },
+      {
+        status: prediction.status,
+        requestFailed: prediction.requestFailed,
       },
     ],
     downloadProgress,
@@ -106,10 +123,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     if (rewriter.status === "downloadable") {
       prepareQuietly(rewriter);
     }
+
+    prediction.enable();
   };
 
   const isSupported =
-    proofreader.status !== "unsupported" || rewriter.status !== "unsupported";
+    proofreader.status !== "unsupported" ||
+    rewriter.status !== "unsupported" ||
+    prediction.status !== "unsupported";
 
   return {
     isSupported,

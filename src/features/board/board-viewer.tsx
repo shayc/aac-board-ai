@@ -47,7 +47,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
-  const suggestions = useSuggestions(message.text);
+  const suggestions = useSuggestions(message.text, board);
   const navigation = useBoardNavigation();
 
   const { activateButton } = createButtonActivation({
