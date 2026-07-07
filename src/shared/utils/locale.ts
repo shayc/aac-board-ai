@@ -19,10 +19,6 @@ export function normalizeLocale(locale: string): string {
   }
 }
 
-/**
- * Extracts the primary language subtag from a BCP-47 locale code
- * (e.g. "en-US" → "en"). Always lowercase.
- */
 export function getLanguageCode(locale: string): string {
   return locale.split(/[_-]/)[0].toLowerCase();
 }
@@ -52,7 +48,6 @@ export function getLikelyRegion(language: string): string | undefined {
 }
 
 /**
- * Returns the writing direction for a BCP-47 locale code.
  * Falls back to "ltr" for structurally invalid input; unknown
  * but well-formed codes default to "ltr" via Intl.
  */
@@ -65,8 +60,8 @@ export function getTextDirection(locale: string): "ltr" | "rtl" {
 }
 
 /**
- * Returns the language name of a locale code in English
- * (e.g. "he-IL" → "Hebrew").
+ * English display name of a locale, dialect-aware
+ * (e.g. "en-US" → "American English", "he-IL" → "Hebrew (Israel)").
  * Falls back to the original code if the locale is not recognized.
  */
 export function getEnglishLanguageName(locale: string): string {

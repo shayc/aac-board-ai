@@ -233,7 +233,7 @@ describe("useMessagePlayback", () => {
     await rerender();
 
     result.current.stop();
-    resolveFirstSpeak?.(); // let the awaited first utterance resolve
+    resolveFirstSpeak?.();
     await playPromise;
     await rerender();
 
@@ -266,7 +266,7 @@ describe("useMessagePlayback", () => {
     await rerender();
 
     result.current.stop();
-    fireBoundary?.(2); // late event for the canceled utterance
+    fireBoundary?.(2);
     await rerender();
     expect(result.current.activePartId).toBeNull();
 
