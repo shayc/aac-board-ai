@@ -89,7 +89,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       <Stack
         direction="row"
         spacing={2}
-        sx={{ minHeight: 32, justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
+        sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
         {suggestions.isSupported && (
           <SuggestionBar
@@ -124,6 +124,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
         <Toolbar
           sx={{
             justifyContent: "space-between",
+            gap: 2,
             pb: safeAreaInset("bottom"),
           }}
         >

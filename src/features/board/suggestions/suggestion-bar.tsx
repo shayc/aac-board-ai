@@ -23,7 +23,13 @@ export function SuggestionBar({
   return (
     <Stack
       direction="row"
-      sx={{ flex: "1", alignItems: "center", gap: 2, overflow: "hidden" }}
+      sx={{
+        minHeight: 32,
+        flex: "1",
+        gap: 2,
+        alignItems: "center",
+        overflow: "hidden",
+      }}
     >
       <SuggestionStatus status={status} onEnable={onEnable} />
 
