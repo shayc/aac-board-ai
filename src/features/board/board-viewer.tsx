@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
@@ -88,7 +89,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
       <Stack
         direction="row"
         spacing={2}
-        sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
+        sx={{ minHeight: 32, justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
         {suggestions.isSupported && (
           <SuggestionBar
@@ -99,10 +100,12 @@ export function BoardViewer({ board }: BoardViewerProps) {
           />
         )}
 
-        <BackspaceButton
-          onPress={message.removeLastPart}
-          onLongPress={message.clear}
-        />
+        {!isSmallScreen && (
+          <BackspaceButton
+            onPress={message.removeLastPart}
+            onLongPress={message.clear}
+          />
+        )}
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
@@ -118,17 +121,19 @@ export function BoardViewer({ board }: BoardViewerProps) {
       </Box>
 
       {isSmallScreen && (
-        <Box
+        <Toolbar
           sx={{
-            minHeight: 56,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-between",
             pb: safeAreaInset("bottom"),
           }}
         >
           <NavButtons />
-        </Box>
+
+          <BackspaceButton
+            onPress={message.removeLastPart}
+            onLongPress={message.clear}
+          />
+        </Toolbar>
       )}
     </Stack>
   );
