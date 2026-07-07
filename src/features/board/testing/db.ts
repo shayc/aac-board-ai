@@ -39,7 +39,6 @@ async function clearBoardsDB(): Promise<void> {
   await tx.done;
 }
 
-/** Standard per-suite IDB reset: clear all board stores and refresh the in-memory board-sets cache. */
 export async function resetBoardsDB(): Promise<void> {
   await clearBoardsDB();
   await refreshBoardSets();

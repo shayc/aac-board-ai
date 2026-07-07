@@ -7,10 +7,6 @@ export const TEST_IMAGE_SRC =
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 
-/**
- * Loads a board file from sample-boards/ off the test server as a File,
- * ready to feed into import flows.
- */
 export async function loadFixtureFile(name: string): Promise<File> {
   const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
 

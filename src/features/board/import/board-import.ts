@@ -31,8 +31,8 @@ export interface ImportResult {
  * makes `loadBoard` throw an `OBFError` with code `"archive-too-large"`.
  */
 export const BOARD_IMPORT_LIMITS: UnzipLimits = {
-  maxTotalOriginalSize: 500 * 1024 * 1024, // 500MB across the whole archive
-  maxEntrySize: 100 * 1024 * 1024, // 100MB for any single entry
+  maxTotalOriginalSize: 500 * 1024 * 1024,
+  maxEntrySize: 100 * 1024 * 1024,
   maxEntries: 5000,
 };
 

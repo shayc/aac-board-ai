@@ -24,7 +24,6 @@ const themeColorHtmlPlugin: Plugin = {
       .replaceAll("__CONTENT_DARK__", CONTENT_DARK),
 };
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
     themeColorHtmlPlugin,
@@ -129,7 +128,6 @@ export default defineConfig({
     browser: {
       enabled: true,
       provider: playwright(),
-      // https://vitest.dev/guide/browser/playwright
       instances: [{ browser: "chromium" }],
     },
     coverage: {
