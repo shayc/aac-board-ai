@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Дошку не знайдено",
   "boardUrlReplaceConfirmTitle": "Замінити «{name}»?",
-  "boardUrlReplaceConfirmDescription": "Імпорт за цим посиланням замінить цю дошку та весь її вміст. Цю дію не можна скасувати.",
+  "boardUrlReplaceConfirmDescription": "Імпорт із сайту {host} замінить цю дошку та весь її вміст. Цю дію не можна скасувати.",
   "boardUrlReplace": "Замінити",
   "boardUrlImportFailed": "Не вдалося імпортувати дошку за посиланням"
 }

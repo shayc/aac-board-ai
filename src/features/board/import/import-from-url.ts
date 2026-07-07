@@ -69,6 +69,8 @@ async function downloadBoard(url: URL): Promise<Blob> {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
+  // Not a cap bypass: browsers only leave body null for null-body statuses
+  // (e.g. 204), which carry no payload for the size cap to bound.
   const reader = response.body?.getReader();
   if (!reader) {
     return response.blob();

@@ -20,6 +20,10 @@ export const Component = function BoardUrlImportPage() {
   const navigate = useNavigate();
   const [importing, setImporting] = useState(false);
 
+  // Consent needs to name the source; a relative URL resolves to this origin.
+  const boardHost = new URL(pendingImport.boardUrl, window.location.origin)
+    .host;
+
   async function confirmImport() {
     setImporting(true);
     showSnackbar({ message: m.libraryImportingBoards({ count: 1 }) });
@@ -55,7 +59,7 @@ export const Component = function BoardUrlImportPage() {
 
       <DialogContent>
         <DialogContentText id="board-url-import-description">
-          {m.boardUrlReplaceConfirmDescription()}
+          {m.boardUrlReplaceConfirmDescription({ host: boardHost })}
         </DialogContentText>
       </DialogContent>
 

@@ -128,7 +128,7 @@
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板",
   "boardUrlReplaceConfirmTitle": "替换“{name}”？",
-  "boardUrlReplaceConfirmDescription": "从此链接导入将替换此沟通板及其中的所有内容。此操作无法撤消。",
+  "boardUrlReplaceConfirmDescription": "从 {host} 导入将替换此沟通板及其中的所有内容。此操作无法撤消。",
   "boardUrlReplace": "替换",
   "boardUrlImportFailed": "无法从链接导入沟通板"
 }

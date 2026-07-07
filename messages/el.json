@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",
   "boardUrlReplaceConfirmTitle": "Αντικατάσταση «{name}»;",
-  "boardUrlReplaceConfirmDescription": "Η εισαγωγή από αυτόν τον σύνδεσμο θα αντικαταστήσει αυτόν τον πίνακα και ό,τι περιέχει. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+  "boardUrlReplaceConfirmDescription": "Η εισαγωγή από το {host} θα αντικαταστήσει αυτόν τον πίνακα και ό,τι περιέχει. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
   "boardUrlReplace": "Αντικατάσταση",
   "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του πίνακα από τον σύνδεσμο"
 }

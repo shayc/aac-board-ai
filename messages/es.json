@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Tablero no encontrado",
   "boardUrlReplaceConfirmTitle": "¿Reemplazar \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Importar desde este enlace reemplazará este tablero y todo su contenido. Esta acción no se puede deshacer.",
+  "boardUrlReplaceConfirmDescription": "Importar desde {host} reemplazará este tablero y todo su contenido. Esta acción no se puede deshacer.",
   "boardUrlReplace": "Reemplazar",
   "boardUrlImportFailed": "No se pudo importar el tablero desde el enlace"
 }

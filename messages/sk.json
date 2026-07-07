@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Tabuľka sa nenašla",
   "boardUrlReplaceConfirmTitle": "Nahradiť „{name}“?",
-  "boardUrlReplaceConfirmDescription": "Import z tohto odkazu nahradí túto tabuľku a všetko v nej. Túto akciu nie je možné vrátiť späť.",
+  "boardUrlReplaceConfirmDescription": "Import z {host} nahradí túto tabuľku a všetko v nej. Túto akciu nie je možné vrátiť späť.",
   "boardUrlReplace": "Nahradiť",
   "boardUrlImportFailed": "Tabuľku sa nepodarilo importovať z odkazu"
 }

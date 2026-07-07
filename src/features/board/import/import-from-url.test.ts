@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
-import { importBoardFromUrl } from "./import-from-url";
+import {
+  importBoardFromUrl,
+  MAX_BOARD_DOWNLOAD_BYTES,
+} from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
@@ -68,7 +71,7 @@ describe("importBoardFromUrl", () => {
     let cancelled = false;
     const endlessBody = new ReadableStream<Uint8Array>({
       pull(controller) {
-        controller.enqueue(new Uint8Array(32 * 1024 * 1024));
+        controller.enqueue(new Uint8Array(MAX_BOARD_DOWNLOAD_BYTES / 4));
       },
       cancel() {
         cancelled = true;

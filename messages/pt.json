@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Prancha não encontrada",
   "boardUrlReplaceConfirmTitle": "Substituir \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Importar deste link substituirá esta prancha e tudo o que há nela. Esta ação não pode ser desfeita.",
+  "boardUrlReplaceConfirmDescription": "Importar de {host} substituirá esta prancha e tudo o que há nela. Esta ação não pode ser desfeita.",
   "boardUrlReplace": "Substituir",
   "boardUrlImportFailed": "Não foi possível importar a prancha do link"
 }

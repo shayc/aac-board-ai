@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Tabella non trovata",
   "boardUrlReplaceConfirmTitle": "Sostituire \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "L'importazione da questo link sostituirà questa tabella e tutto il suo contenuto. Questa azione non può essere annullata.",
+  "boardUrlReplaceConfirmDescription": "L'importazione da {host} sostituirà questa tabella e tutto il suo contenuto. Questa azione non può essere annullata.",
   "boardUrlReplace": "Sostituisci",
   "boardUrlImportFailed": "Impossibile importare la tabella dal link"
 }

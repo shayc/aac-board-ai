@@ -128,7 +128,7 @@
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "اللوحة غير موجودة",
   "boardUrlReplaceConfirmTitle": "استبدال \"{name}\"؟",
-  "boardUrlReplaceConfirmDescription": "الاستيراد من هذا الرابط سيستبدل هذه اللوحة وكل ما فيها. لا يمكن التراجع عن هذا الإجراء.",
+  "boardUrlReplaceConfirmDescription": "الاستيراد من {host} سيستبدل هذه اللوحة وكل ما فيها. لا يمكن التراجع عن هذا الإجراء.",
   "boardUrlReplace": "استبدال",
   "boardUrlImportFailed": "تعذّر استيراد اللوحة من الرابط"
 }

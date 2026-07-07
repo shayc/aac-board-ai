@@ -128,7 +128,7 @@
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A tábla nem található",
   "boardUrlReplaceConfirmTitle": "Lecseréled a(z) „{name}” táblát?",
-  "boardUrlReplaceConfirmDescription": "Az importálás erről a hivatkozásról lecseréli ezt a táblát és minden tartalmát. Ez a művelet nem vonható vissza.",
+  "boardUrlReplaceConfirmDescription": "A(z) {host} helyről történő importálás lecseréli ezt a táblát és minden tartalmát. Ez a művelet nem vonható vissza.",
   "boardUrlReplace": "Csere",
   "boardUrlImportFailed": "A tábla importálása a hivatkozásról nem sikerült"
 }

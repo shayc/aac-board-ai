@@ -21,20 +21,32 @@ export interface RootIndexData {
 // silently replace a user's vocabulary. An import that would overwrite an
 // existing set is returned as an intent for BoardUrlImportPage to confirm,
 // and a rejected URL or failed import surfaces as a localized error state.
+// Storage errors propagate to the generic error boundary instead — they are
+// not the link's fault and must not be reported as a bad link.
 async function importFromBoardUrl(
   boardUrl: string,
 ): Promise<Response | RootIndexData> {
+  let setId: string;
   try {
-    const existingSet = await getBoardSet(deriveSetIdFromUrl(boardUrl));
+    setId = deriveSetIdFromUrl(boardUrl);
+  } catch {
+    throw importFailed();
+  }
 
-    if (existingSet) {
-      return { pendingImport: { boardUrl, boardSetName: existingSet.name } };
-    }
+  const existingSet = await getBoardSet(setId);
+  if (existingSet) {
+    return { pendingImport: { boardUrl, boardSetName: existingSet.name } };
+  }
 
+  try {
     return redirect(boardSetPath(await importBoardFromUrl(boardUrl)));
   } catch {
-    throw data(m.boardUrlImportFailed(), { status: 400 });
+    throw importFailed();
   }
+}
+
+function importFailed() {
+  return data(m.boardUrlImportFailed(), { status: 400 });
 }
 
 export async function rootIndexLoader({

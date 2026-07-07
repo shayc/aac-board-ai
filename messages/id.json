@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Papan tidak ditemukan",
   "boardUrlReplaceConfirmTitle": "Ganti \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Mengimpor dari tautan ini akan mengganti papan ini beserta seluruh isinya. Tindakan ini tidak dapat dibatalkan.",
+  "boardUrlReplaceConfirmDescription": "Mengimpor dari {host} akan mengganti papan ini beserta seluruh isinya. Tindakan ini tidak dapat dibatalkan.",
   "boardUrlReplace": "Ganti",
   "boardUrlImportFailed": "Tidak dapat mengimpor papan dari tautan"
 }

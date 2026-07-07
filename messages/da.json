@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlen blev ikke fundet",
   "boardUrlReplaceConfirmTitle": "Erstat \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Import fra dette link erstatter denne tavle og alt i den. Denne handling kan ikke fortrydes.",
+  "boardUrlReplaceConfirmDescription": "Import fra {host} erstatter denne tavle og alt i den. Denne handling kan ikke fortrydes.",
   "boardUrlReplace": "Erstat",
   "boardUrlImportFailed": "Tavlen kunne ikke importeres fra linket"
 }

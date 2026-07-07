@@ -128,7 +128,7 @@
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบบอร์ด",
   "boardUrlReplaceConfirmTitle": "แทนที่ \"{name}\" ไหม",
-  "boardUrlReplaceConfirmDescription": "การนำเข้าจากลิงก์นี้จะแทนที่บอร์ดนี้และทุกอย่างในบอร์ด ไม่สามารถเลิกทำการกระทำนี้ได้",
+  "boardUrlReplaceConfirmDescription": "การนำเข้าจาก {host} จะแทนที่บอร์ดนี้และทุกอย่างในบอร์ด ไม่สามารถเลิกทำการกระทำนี้ได้",
   "boardUrlReplace": "แทนที่",
   "boardUrlImportFailed": "นำเข้าบอร์ดจากลิงก์ไม่สำเร็จ"
 }

@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulua ei löytynyt",
   "boardUrlReplaceConfirmTitle": "Korvataanko ”{name}”?",
-  "boardUrlReplaceConfirmDescription": "Tuonti tästä linkistä korvaa tämän taulun ja kaiken sen sisällön. Tätä toimintoa ei voi kumota.",
+  "boardUrlReplaceConfirmDescription": "Tuonti osoitteesta {host} korvaa tämän taulun ja kaiken sen sisällön. Tätä toimintoa ei voi kumota.",
   "boardUrlReplace": "Korvaa",
   "boardUrlImportFailed": "Taulun tuonti linkistä epäonnistui"
 }

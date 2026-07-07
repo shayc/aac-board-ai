@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Table ni mogoče najti",
   "boardUrlReplaceConfirmTitle": "Zamenjam »{name}«?",
-  "boardUrlReplaceConfirmDescription": "Uvoz s te povezave bo zamenjal to tablo in vse v njej. Tega dejanja ni mogoče razveljaviti.",
+  "boardUrlReplaceConfirmDescription": "Uvoz s {host} bo zamenjal to tablo in vse v njej. Tega dejanja ni mogoče razveljaviti.",
   "boardUrlReplace": "Zamenjaj",
   "boardUrlImportFailed": "Table ni bilo mogoče uvoziti s povezave"
 }

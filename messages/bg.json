@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Дъската не е намерена",
   "boardUrlReplaceConfirmTitle": "Да се замени ли „{name}“?",
-  "boardUrlReplaceConfirmDescription": "Импортирането от тази връзка ще замени тази дъска и всичко в нея. Това действие не може да бъде отменено.",
+  "boardUrlReplaceConfirmDescription": "Импортирането от {host} ще замени тази дъска и всичко в нея. Това действие не може да бъде отменено.",
   "boardUrlReplace": "Замяна",
   "boardUrlImportFailed": "Дъската не може да бъде импортирана от връзката"
 }

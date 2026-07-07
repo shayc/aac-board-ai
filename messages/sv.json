@@ -128,7 +128,7 @@
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Tavlan hittades inte",
   "boardUrlReplaceConfirmTitle": "Ersätt ”{name}”?",
-  "boardUrlReplaceConfirmDescription": "Import från den här länken ersätter den här tavlan och allt i den. Den här åtgärden kan inte ångras.",
+  "boardUrlReplaceConfirmDescription": "Import från {host} ersätter den här tavlan och allt i den. Den här åtgärden kan inte ångras.",
   "boardUrlReplace": "Ersätt",
   "boardUrlImportFailed": "Det gick inte att importera tavlan från länken"
 }

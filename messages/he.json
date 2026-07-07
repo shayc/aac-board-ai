@@ -128,7 +128,7 @@
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "הלוח לא נמצא",
   "boardUrlReplaceConfirmTitle": "להחליף את \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "ייבוא מהקישור הזה יחליף את הלוח הזה ואת כל מה שבו. לא ניתן לבטל פעולה זו.",
+  "boardUrlReplaceConfirmDescription": "ייבוא מ-{host} יחליף את הלוח הזה ואת כל מה שבו. לא ניתן לבטל פעולה זו.",
   "boardUrlReplace": "החלפה",
   "boardUrlImportFailed": "ייבוא הלוח מהקישור נכשל"
 }
