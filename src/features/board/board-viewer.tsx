@@ -125,6 +125,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
           sx={{
             justifyContent: "space-between",
             gap: 2,
+            px: { xs: 3 },
             pb: safeAreaInset("bottom"),
           }}
         >

@@ -110,7 +110,9 @@ function getThemeOptions(reducedMotion: boolean) {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 24,
+            borderRadius: 25,
+            paddingTop: 13,
+            paddingBottom: 13,
           },
         },
       },

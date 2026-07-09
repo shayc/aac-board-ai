@@ -32,8 +32,8 @@ export function AppHeader({
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
           alignItems: "center",
           gap: theme.spacing(2),
-          pl: safeAreaGutter(theme.spacing(2), "left"),
-          pr: safeAreaGutter(theme.spacing(2), "right"),
+          pl: safeAreaGutter(theme.spacing(3), "left"),
+          pr: safeAreaGutter(theme.spacing(3), "right"),
           [theme.breakpoints.up("sm")]: {
             pl: safeAreaGutter(theme.spacing(3), "left"),
             pr: safeAreaGutter(theme.spacing(3), "right"),
