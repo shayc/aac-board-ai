@@ -42,6 +42,10 @@ export function BoardSwitcher() {
           onFocus={() => setInputValue("")}
           slotProps={{
             ...params.slotProps,
+            input: {
+              ...params.slotProps?.input,
+              sx: { height: 50, borderRadius: 7 },
+            },
             htmlInput: {
               ...params.slotProps?.htmlInput,
               "aria-label": m.board(),
