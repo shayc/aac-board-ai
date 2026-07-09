@@ -110,7 +110,7 @@ function getThemeOptions(reducedMotion: boolean) {
       MuiButton: {
         styleOverrides: {
           root: {
-            borderRadius: 25,
+            borderRadius: 32,
             paddingTop: 13,
             paddingBottom: 13,
           },
@@ -134,14 +134,14 @@ function getThemeOptions(reducedMotion: boolean) {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {
-            borderRadius: 24,
+            borderRadius: 32,
           },
         },
       },
       MuiListItemButton: {
         styleOverrides: {
           root: {
-            borderRadius: 24,
+            borderRadius: 32,
           },
         },
       },

@@ -32,7 +32,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             gap: 2,
             px: 6,
             py: 5,
-            borderRadius: 2,
+            borderRadius: 4,
             border: `2px dashed ${theme.palette.primary.main}`,
           })}
         >

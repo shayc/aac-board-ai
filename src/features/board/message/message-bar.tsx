@@ -52,7 +52,7 @@ export function MessageBar({
           {
             flexGrow: 1,
             gap: 2,
-            borderRadius: 16,
+            borderRadius: 32,
             overflow: "hidden",
             bgcolor: "grey.200",
           },
