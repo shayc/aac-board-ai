@@ -1,3 +1,4 @@
+import { sanitizeColor } from "@shared/utils/css-color";
 import { normalizeLocale } from "@shared/utils/locale";
 import type {
   OBFBoard,
@@ -70,8 +71,8 @@ function transformButton(
     id: obfButton.id,
     label: obfButton.label,
     vocalization: obfButton.vocalization,
-    backgroundColor: obfButton.background_color,
-    borderColor: obfButton.border_color,
+    backgroundColor: sanitizeColor(obfButton.background_color),
+    borderColor: sanitizeColor(obfButton.border_color),
     imageSrc: obfButton.image_id
       ? imageSourceById.get(obfButton.image_id)
       : undefined,

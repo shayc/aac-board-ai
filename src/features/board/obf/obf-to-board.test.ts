@@ -176,6 +176,32 @@ describe("obfToBoard", () => {
       });
     });
 
+    test("drops a CSS-unsafe button color", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-unsafe-color",
+        buttons: [
+          {
+            id: "btn-1",
+            label: "hi",
+            background_color:
+              "x); } a { background-image: url(https://evil.example) }",
+            border_color: "rgb(0, 0, 0)",
+          },
+        ],
+        grid: {
+          rows: 1,
+          columns: 1,
+          order: [["btn-1"]],
+        },
+      };
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]?.backgroundColor).toBeUndefined();
+      expect(board.buttons[0]?.borderColor).toBe("rgb(0, 0, 0)");
+    });
+
     test("maps load_board to camelCased loadBoard", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
