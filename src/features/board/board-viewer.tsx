@@ -91,6 +91,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
+        {!isSmallScreen && <NavButtons />}
+
         {suggestions.isSupported && (
           <SuggestionBar
             status={suggestions.status}
