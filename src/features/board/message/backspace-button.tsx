@@ -33,7 +33,7 @@ export function BackspaceButton({
       color="inherit"
       disabled={disabled}
       variant="contained"
-      sx={{ width: 104 }}
+      sx={{ width: 96 }}
     >
       <BackspaceOutlinedIcon sx={flipForRtl} />
     </Button>
