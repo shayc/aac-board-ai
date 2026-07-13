@@ -21,7 +21,7 @@ export function NavButtons() {
         color="inherit"
         disabled={!canGoBack}
         variant="contained"
-        sx={{ width: 104 }}
+        sx={{ width: 96 }}
         onClick={goBack}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
@@ -33,7 +33,7 @@ export function NavButtons() {
         color="inherit"
         disabled={!canGoHome}
         variant="contained"
-        sx={{ width: 104 }}
+        sx={{ width: 96 }}
         onClick={goHome}
       >
         <HomeOutlinedIcon />
