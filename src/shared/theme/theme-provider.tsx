@@ -6,8 +6,8 @@ import {
   ThemeProvider as MUIThemeProvider,
   type ThemeOptions,
 } from "@mui/material/styles";
-import rtlPlugin from "@mui/stylis-plugin-rtl";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
@@ -37,16 +37,16 @@ function getThemeOptions(reducedMotion: boolean) {
     },
     transitions: reducedMotion
       ? {
-          duration: {
-            shortest: 0,
-            shorter: 0,
-            short: 0,
-            standard: 0,
-            complex: 0,
-            enteringScreen: 0,
-            leavingScreen: 0,
-          },
-        }
+        duration: {
+          shortest: 0,
+          shorter: 0,
+          short: 0,
+          standard: 0,
+          complex: 0,
+          enteringScreen: 0,
+          leavingScreen: 0,
+        },
+      }
       : undefined,
     typography: {
       button: {
@@ -111,23 +111,8 @@ function getThemeOptions(reducedMotion: boolean) {
         styleOverrides: {
           root: {
             borderRadius: 32,
-            paddingTop: 13,
-            paddingBottom: 13,
-          },
-        },
-      },
-      MuiIconButton: {
-        styleOverrides: {
-          root: ({ theme }) => {
-            const borderColor = theme.vars
-              ? theme.alpha(theme.vars.palette.common.onBackground, 0.23)
-              : theme.palette.mode === "light"
-                ? "rgba(0, 0, 0, 0.23)"
-                : "rgba(255, 255, 255, 0.23)";
-
-            return {
-              border: `1px solid ${borderColor}`,
-            };
+            paddingTop: 12,
+            paddingBottom: 12,
           },
         },
       },

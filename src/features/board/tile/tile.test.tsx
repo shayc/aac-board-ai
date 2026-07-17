@@ -1,3 +1,8 @@
+import Button from "@mui/material/Button";
+import {
+  createTheme,
+  ThemeProvider as MUIThemeProvider,
+} from "@mui/material/styles";
 import type { CSSProperties } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
@@ -16,7 +21,142 @@ function resolveColor(cssColor: string): string {
   return resolved;
 }
 
+function resolveBoxShadow(cssShadow: string): string {
+  const probe = document.createElement("div");
+  document.body.append(probe);
+  probe.style.boxShadow = cssShadow;
+  const resolved = getComputedStyle(probe).boxShadow;
+  probe.remove();
+  return resolved;
+}
+
+function getStateShadows(element: Element) {
+  const styleClass = [...element.classList].find((className) =>
+    className.includes("MuiButtonBase-root-MuiButton-root"),
+  );
+  if (!styleClass) {
+    throw new Error("Expected an Emotion-generated Button class");
+  }
+
+  const shadows = {
+    hover: [] as string[],
+    active: [] as string[],
+    focusVisible: [] as string[],
+    disabled: [] as string[],
+  };
+
+  function collect(rules: CSSRuleList) {
+    for (const rule of rules) {
+      if (rule instanceof CSSMediaRule) {
+        collect(rule.cssRules);
+        continue;
+      }
+      if (!(rule instanceof CSSStyleRule)) {
+        continue;
+      }
+      if (!rule.selectorText.includes(`.${styleClass}`)) {
+        continue;
+      }
+
+      const boxShadow = rule.style.boxShadow;
+      if (!boxShadow) {
+        continue;
+      }
+
+      const resolvedShadow = resolveBoxShadow(boxShadow);
+      if (rule.selectorText.includes(":hover")) {
+        shadows.hover.push(resolvedShadow);
+      } else if (rule.selectorText.includes(":active")) {
+        shadows.active.push(resolvedShadow);
+      } else if (rule.selectorText.includes(".Mui-focusVisible")) {
+        shadows.focusVisible.push(resolvedShadow);
+      } else if (rule.selectorText.includes(".Mui-disabled")) {
+        shadows.disabled.push(resolvedShadow);
+      }
+    }
+  }
+
+  for (const styleSheet of document.styleSheets) {
+    collect(styleSheet.cssRules);
+  }
+
+  return shadows;
+}
+
 describe("Tile", () => {
+  test.each(["light", "dark"] as const)(
+    "matches contained Button elevations in %s mode",
+    async (mode) => {
+      const theme = createTheme({
+        palette: { mode },
+        transitions: { duration: { short: 0 } },
+      });
+      const screen = await render(
+        <MUIThemeProvider theme={theme}>
+          <Button variant="contained">MUI reference</Button>
+          <Tile label="Tile reference" onClick={vi.fn()} />
+          <Button variant="contained" disabled>
+            Disabled MUI reference
+          </Button>
+          <Tile label="Disabled tile reference" onClick={vi.fn()} disabled />
+        </MUIThemeProvider>,
+      );
+
+      const muiButton = screen.getByRole("button", {
+        name: "MUI reference",
+        exact: true,
+      });
+      const tile = screen.getByRole("button", {
+        name: "Tile reference",
+        exact: true,
+      });
+      const disabledMuiButton = screen.getByRole("button", {
+        name: "Disabled MUI reference",
+        exact: true,
+      });
+      const disabledTile = screen.getByRole("button", {
+        name: "Disabled tile reference",
+        exact: true,
+      });
+
+      expect(getComputedStyle(tile.element()).boxShadow).toBe(
+        getComputedStyle(muiButton.element()).boxShadow,
+      );
+      expect(getComputedStyle(tile.element()).boxShadow).toBe(
+        resolveBoxShadow(theme.shadows[2]),
+      );
+
+      const tileStateShadows = getStateShadows(tile.element());
+      expect(tileStateShadows).toEqual(getStateShadows(muiButton.element()));
+      expect(tileStateShadows).toEqual({
+        hover: [
+          resolveBoxShadow(theme.shadows[4]),
+          resolveBoxShadow(theme.shadows[2]),
+        ],
+        active: [resolveBoxShadow(theme.shadows[8])],
+        focusVisible: [resolveBoxShadow(theme.shadows[6])],
+        disabled: [resolveBoxShadow(theme.shadows[0])],
+      });
+
+      expect(getComputedStyle(disabledTile.element()).boxShadow).toBe(
+        getComputedStyle(disabledMuiButton.element()).boxShadow,
+      );
+      expect(getComputedStyle(disabledTile.element()).boxShadow).toBe(
+        resolveBoxShadow(theme.shadows[0]),
+      );
+    },
+  );
+
+  test("uses the contained Button resting elevation", async () => {
+    const screen = await render(<Tile label="Raised" onClick={vi.fn()} />);
+
+    const button = screen.getByRole("button", { name: "Raised" });
+
+    expect(getComputedStyle(button.element()).boxShadow).toBe(
+      resolveBoxShadow(createTheme().shadows[2]),
+    );
+  });
+
   test("renders label without image when imageSrc is not provided", async () => {
     const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
 
@@ -166,6 +306,7 @@ describe("Tile", () => {
 
     const button = screen.getByRole("button", { name: "Disabled tile" });
     await expect.element(button).toBeDisabled();
+    expect(getComputedStyle(button.element()).boxShadow).toBe("none");
     await button.click({ force: true });
 
     expect(onClick).not.toHaveBeenCalled();
