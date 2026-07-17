@@ -39,7 +39,6 @@ export function BoardSwitcher() {
         <TextField
           {...params}
           placeholder={selectedBoard.name}
-          onFocus={() => setInputValue("")}
           slotProps={{
             ...params.slotProps,
             input: {

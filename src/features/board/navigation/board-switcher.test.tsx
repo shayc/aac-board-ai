@@ -142,20 +142,6 @@ describe("BoardSwitcher", () => {
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
   });
 
-  test("clears the input on focus, showing the current board name as a placeholder, and restores it on blur", async () => {
-    const { screen } = await renderSwitcher("/sets/set-1/boards/root");
-
-    const combobox = screen.getByRole("combobox");
-    await expect.element(combobox).toHaveValue("Home");
-
-    await combobox.click();
-    await expect.element(combobox).toHaveValue("");
-    await expect.element(combobox).toHaveAttribute("placeholder", "Home");
-
-    await userEvent.tab();
-    await expect.element(combobox).toHaveValue("Home");
-  });
-
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
     await replaceBoardSet({
       boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
