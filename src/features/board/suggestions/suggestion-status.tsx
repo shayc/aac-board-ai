@@ -1,15 +1,25 @@
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import Chip from "@mui/material/Chip";
+import Chip, { type ChipProps } from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 export interface SuggestionStatusProps {
   status: SuggestionStatusView;
+  enableButtonProps?: SuggestionEnableButtonProps;
   onEnable: () => void;
 }
 
-export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
+export type SuggestionEnableButtonProps = Omit<
+  ChipProps,
+  "color" | "icon" | "label" | "onClick" | "variant"
+>;
+
+export function SuggestionStatus({
+  status,
+  enableButtonProps,
+  onEnable,
+}: SuggestionStatusProps) {
   if (status === null || status.kind === "pending") {
     return null;
   }
@@ -18,6 +28,7 @@ export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
     case "needs-activation":
       return (
         <Chip
+          {...enableButtonProps}
           icon={<AutoAwesomeIcon />}
           label={m.suggestionsEnable()}
           color="primary"

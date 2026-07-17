@@ -6,11 +6,17 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
+import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
+import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { createButtonActivation } from "./activation/button-activation";
-import { getNavigationTargetId } from "./button-readers";
-import { Grid, type GridItemProps } from "./grid/grid";
+import {
+  ScannableGridRow,
+  ScannableSuggestion,
+  ScannableTile,
+} from "./board-scanning";
+import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
 import { MessageBar } from "./message/message-bar";
@@ -20,14 +26,14 @@ import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
-import { Tile } from "./tile/tile";
 import type { Board, BoardButton } from "./types";
+import { useBoardScanning } from "./use-board-scanning";
 
 export interface BoardViewerProps {
   board: Board;
 }
 
-const rootSx = (theme: Theme) => ({
+const boardRootSx = (theme: Theme) => ({
   height: "100%",
   ...theme.applyStyles("dark", {
     backgroundRepeat: "no-repeat",
@@ -41,6 +47,14 @@ const rootSx = (theme: Theme) => ({
 });
 
 export function BoardViewer({ board }: BoardViewerProps) {
+  return (
+    <SwitchScanningBoundary>
+      <BoardViewerContent board={board} />
+    </SwitchScanningBoundary>
+  );
+}
+
+function BoardViewerContent({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = useHighlightConfig();
@@ -57,46 +71,93 @@ export function BoardViewer({ board }: BoardViewerProps) {
   });
 
   const keyboard = useBoardKeyboard({ message, playback });
+  const hasMessage = message.parts.length > 0;
+  const scanning = useBoardScanning({
+    boardId: board.id,
+    hasMessage,
+    isPlaying: playback.isPlaying,
+    navigation: {
+      isInBoardSet: navigation.setId !== undefined,
+      canGoBack: navigation.canGoBack,
+      canGoHome: navigation.canGoHome,
+      isHome: navigation.isHome,
+    },
+    suggestions: {
+      isSupported: suggestions.isSupported,
+      needsActivation: suggestions.status?.kind === "needs-activation",
+      phrases: suggestions.phrases,
+    },
+  });
+  const isActionsGroupOnTop = !isSmallScreen || suggestions.isSupported;
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
-    <Tile
+    <ScannableTile
       key={button.id}
-      label={button.label ?? ""}
-      imageSrc={button.imageSrc}
-      backgroundColor={button.backgroundColor}
-      borderColor={button.borderColor}
-      variant={getNavigationTargetId(button) ? "folder" : undefined}
+      boardId={board.id}
+      button={button}
       borderHidden={!borderVisible}
       onClick={() => activateButton(button)}
       {...props}
     />
   );
+  const renderRow = (
+    buttons: readonly (BoardButton | undefined)[],
+    rowIndex: number,
+    props: GridRowProps,
+  ) => (
+    <ScannableGridRow
+      boardId={board.id}
+      buttons={buttons}
+      rowIndex={rowIndex}
+      {...props}
+    />
+  );
+  const renderSuggestion = (phrase: string, onClick: () => void) => (
+    <ScannableSuggestion boardId={board.id} phrase={phrase} onClick={onClick} />
+  );
 
   return (
     <Stack
       {...keyboard.rootProps}
+      data-switch-scanning-scope=""
       direction="column"
-      sx={[rootSx, { "--tile-saturation": String(saturation) }]}
+      sx={[
+        boardRootSx,
+        switchScanningSx,
+        { "--tile-saturation": String(saturation) },
+      ]}
     >
       <MessageBar
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
+        playDisabled={!hasMessage}
+        slotProps={{ playButton: scanning.playTarget }}
         onPlayClick={() => void playback.play(message.parts)}
         onStopClick={playback.stop}
       />
 
       <Stack
+        {...(isActionsGroupOnTop ? scanning.actionsGroup : {})}
         direction="row"
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
-        {!isSmallScreen && <NavButtons />}
+        {!isSmallScreen && (
+          <NavButtons
+            slotProps={{
+              backButton: scanning.backTarget,
+              homeButton: scanning.homeTarget,
+            }}
+          />
+        )}
 
         {suggestions.isSupported && (
           <SuggestionBar
             status={suggestions.status}
             phrases={suggestions.phrases}
+            slotProps={{ enableButton: scanning.suggestionsEnableTarget }}
+            renderPhrase={renderSuggestion}
             onEnable={suggestions.enable}
             onPhraseClick={message.setFromText}
           />
@@ -104,6 +165,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
         {!isSmallScreen && (
           <BackspaceButton
+            {...scanning.backspaceTarget}
+            disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}
           />
@@ -118,12 +181,14 @@ export function BoardViewer({ board }: BoardViewerProps) {
           columns={board.grid.columns}
           order={board.grid.order}
           renderItem={renderTile}
+          renderRow={renderRow}
           dir={direction}
         />
       </Box>
 
       {isSmallScreen && (
         <Toolbar
+          {...(!isActionsGroupOnTop ? scanning.actionsGroup : {})}
           sx={{
             justifyContent: "space-between",
             gap: 2,
@@ -131,9 +196,16 @@ export function BoardViewer({ board }: BoardViewerProps) {
             pb: safeAreaInset("bottom"),
           }}
         >
-          <NavButtons />
+          <NavButtons
+            slotProps={{
+              backButton: scanning.backTarget,
+              homeButton: scanning.homeTarget,
+            }}
+          />
 
           <BackspaceButton
+            {...scanning.backspaceTarget}
+            disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}
           />

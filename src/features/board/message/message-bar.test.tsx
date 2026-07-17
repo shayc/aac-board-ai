@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import {
   afterEach,
   beforeEach,
@@ -153,6 +154,20 @@ describe("MessageBar", () => {
   });
 
   describe("controls", () => {
+    test("forwards play button slot props", async () => {
+      const ref = createRef<HTMLButtonElement>();
+      const screen = await render(
+        <MessageBar
+          {...createProps()}
+          slotProps={{ playButton: { ref, className: "play-button-slot" } }}
+        />,
+      );
+
+      const button = screen.getByRole("button", { name: "Play message" });
+      await expect.element(button).toHaveClass("play-button-slot");
+      expect(ref.current).toBe(button.element());
+    });
+
     test("delegates play to onPlayClick while idle", async () => {
       const onPlayClick = vi.fn();
 

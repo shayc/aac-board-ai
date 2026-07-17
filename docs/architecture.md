@@ -193,9 +193,10 @@ State has **five kinds**, each with one home:
    These change outside React (DB writes, the browser's `voiceschanged` event).
 4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
    change): selected **language**, speech config (voice/rate/pitch/volume),
-   playback config, AI shared context, AI tone (`tone-store.ts`, key `ai-tone`), and
-   the onboarding-seen flag (`use-onboarding.ts`, key `hasSeenOnboarding`). Theme
-   mode persists separately as MUI's `mui-mode`, read pre-paint in `index.html`.
+   playback config, switch-scanning access method and timing, AI shared context,
+   AI tone (`tone-store.ts`, key `ai-tone`), and the onboarding-seen flag
+   (`use-onboarding.ts`, key `hasSeenOnboarding`). Theme mode persists separately
+   as MUI's `mui-mode`, read pre-paint in `index.html`.
 5. **Local component state** — the in-progress message (`useMessage`), playback
    progress, grid focus. Never promoted to a global store.
 
@@ -265,6 +266,11 @@ Each is the one place to change a concern:
 - **Speech boundary — `src/shared/speech/`.** The only wrapper over the Web Speech
   API. Playback is single-flight: a new clip stops the current, and a clip merely cut
   short resolves rather than throwing.
+- **Switch-access boundary — `src/shared/switch-scanning/`.** Persists the selected
+  access method and timing, then translates that profile into the switch-scanning
+  package's method and keyboard bindings. The action bar and grid rows register as
+  scan groups for action–control and row–tile traversal; board controls keep their
+  native click handlers and receive only scan registration props.
 - **i18n boundary — Paraglide `m` + `src/shared/language/`.** The only source of UI
   strings and the active locale.
 - **Routing / data boundary — `src/app/routing/loaders/` + React Router.** The only path

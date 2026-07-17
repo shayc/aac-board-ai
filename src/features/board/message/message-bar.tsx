@@ -1,13 +1,19 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { Pictogram } from "../pictogram/pictogram";
-import { PlayButton } from "./play-button";
+import { PlayButton, type PlayButtonRootProps } from "./play-button";
 import type { MessagePart } from "./use-message";
+
+export interface MessageBarSlotProps {
+  playButton?: Omit<PlayButtonRootProps, "disabled">;
+}
 
 export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
+  playDisabled?: boolean;
+  slotProps?: MessageBarSlotProps;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
@@ -16,6 +22,8 @@ export function MessageBar({
   parts,
   activePartId,
   isPlaying,
+  playDisabled,
+  slotProps,
   onPlayClick,
   onStopClick,
 }: MessageBarProps) {
@@ -93,6 +101,8 @@ export function MessageBar({
         </Stack>
 
         <PlayButton
+          {...slotProps?.playButton}
+          disabled={playDisabled}
           isPlaying={isPlaying}
           onPlayClick={onPlayClick}
           onStopClick={onStopClick}

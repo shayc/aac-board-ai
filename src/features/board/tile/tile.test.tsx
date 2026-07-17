@@ -3,7 +3,7 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import type { CSSProperties } from "react";
+import { createRef, type CSSProperties } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
@@ -143,6 +143,17 @@ describe("Tile", () => {
       );
     },
   );
+
+  test("forwards root element props and refs", async () => {
+    const ref = createRef<HTMLButtonElement>();
+    const screen = await render(
+      <Tile ref={ref} data-scan-target="" label="Hello" onClick={vi.fn()} />,
+    );
+
+    const button = screen.getByRole("button", { name: "Hello" });
+    await expect.element(button).toHaveAttribute("data-scan-target", "");
+    expect(ref.current).toBe(button.element());
+  });
 
   test("renders label without image when imageSrc is not provided", async () => {
     const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
