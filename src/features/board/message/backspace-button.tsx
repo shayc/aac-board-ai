@@ -44,7 +44,7 @@ export function BackspaceButton({
       size="large"
       color="inherit"
       variant="contained"
-      sx={mergeSx({ width: 96 }, sx)}
+      sx={mergeSx({ width: 72 }, sx)}
     >
       <BackspaceOutlinedIcon sx={flipForRtl} />
     </Button>

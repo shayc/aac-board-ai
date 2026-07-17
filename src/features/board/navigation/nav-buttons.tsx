@@ -46,7 +46,7 @@ export function NavButtons({ slotProps }: NavButtonsProps = {}) {
         color="inherit"
         disabled={!canGoBack}
         variant="contained"
-        sx={mergeSx({ width: 96 }, backButtonSx)}
+        sx={mergeSx({ width: 72 }, backButtonSx)}
         onClick={goBack}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
@@ -59,7 +59,7 @@ export function NavButtons({ slotProps }: NavButtonsProps = {}) {
         color="inherit"
         disabled={!canGoHome || isHome}
         variant="contained"
-        sx={mergeSx({ width: 96 }, homeButtonSx)}
+        sx={mergeSx({ width: 72 }, homeButtonSx)}
         onClick={goHome}
       >
         <HomeOutlinedIcon />
