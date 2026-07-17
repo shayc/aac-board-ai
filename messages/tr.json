@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Eylemler",
+  "switchScanningActionsExit": "Eylemlerden geri dön",
+  "switchScanningRow": "{row}. satır",
+  "switchScanningRowExit": "{row}. satırdan geri dön",
   "loading": "Yükleniyor...",
   "close": "Kapat",
   "opensInNewTab": "(yeni sekmede açılır)",

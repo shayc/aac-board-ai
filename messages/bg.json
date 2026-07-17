@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Действия",
+  "switchScanningActionsExit": "Назад от действията",
+  "switchScanningRow": "Ред {row}",
+  "switchScanningRowExit": "Назад от ред {row}",
   "loading": "Зареждане...",
   "close": "Затваряне",
   "opensInNewTab": "(отваря се в нов раздел)",

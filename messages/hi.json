@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "कार्रवाइयाँ",
+  "switchScanningActionsExit": "कार्रवाइयों से वापस जाएँ",
+  "switchScanningRow": "पंक्ति {row}",
+  "switchScanningRowExit": "पंक्ति {row} से वापस जाएँ",
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",
   "opensInNewTab": "(नए टैब में खुलता है)",

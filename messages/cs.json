@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Akce",
+  "switchScanningActionsExit": "Zpět z akcí",
+  "switchScanningRow": "Řádek {row}",
+  "switchScanningRowExit": "Zpět z řádku {row}",
   "loading": "Načítání...",
   "close": "Zavřít",
   "opensInNewTab": "(otevře se na nové kartě)",

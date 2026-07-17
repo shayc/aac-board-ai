@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Handlinger",
+  "switchScanningActionsExit": "Tilbage fra handlinger",
+  "switchScanningRow": "Række {row}",
+  "switchScanningRowExit": "Tilbage fra række {row}",
   "loading": "Indlæser...",
   "close": "Luk",
   "opensInNewTab": "(åbner i nyt faneblad)",

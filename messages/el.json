@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Ενέργειες",
+  "switchScanningActionsExit": "Πίσω από τις ενέργειες",
+  "switchScanningRow": "Σειρά {row}",
+  "switchScanningRowExit": "Πίσω από τη σειρά {row}",
   "loading": "Φόρτωση...",
   "close": "Κλείσιμο",
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",

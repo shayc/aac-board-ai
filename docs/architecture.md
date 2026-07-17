@@ -268,8 +268,9 @@ Each is the one place to change a concern:
   short resolves rather than throwing.
 - **Switch-access boundary — `src/shared/switch-scanning/`.** Persists the selected
   access method and timing, then translates that profile into the switch-scanning
-  package's method and keyboard bindings. Board controls keep their native click
-  handlers and receive only scan registration props.
+  package's method and keyboard bindings. The action bar and grid rows register as
+  scan groups for action–control and row–tile traversal; board controls keep their
+  native click handlers and receive only scan registration props.
 - **i18n boundary — Paraglide `m` + `src/shared/language/`.** The only source of UI
   strings and the active locale.
 - **Routing / data boundary — `src/app/routing/loaders/` + React Router.** The only path

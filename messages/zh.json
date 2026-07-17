@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "操作",
+  "switchScanningActionsExit": "从操作返回",
+  "switchScanningRow": "第 {row} 行",
+  "switchScanningRowExit": "从第 {row} 行返回",
   "loading": "正在加载……",
   "close": "关闭",
   "opensInNewTab": "(在新标签页中打开)",

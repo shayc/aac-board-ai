@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "การดำเนินการ",
+  "switchScanningActionsExit": "ย้อนกลับจากการดำเนินการ",
+  "switchScanningRow": "แถว {row}",
+  "switchScanningRowExit": "ย้อนกลับจากแถว {row}",
   "loading": "กำลังโหลด...",
   "close": "ปิด",
   "opensInNewTab": "(เปิดในแท็บใหม่)",

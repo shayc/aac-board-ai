@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "చర్యలు",
+  "switchScanningActionsExit": "చర్యల నుండి వెనక్కి",
+  "switchScanningRow": "వరుస {row}",
+  "switchScanningRowExit": "{row}వ వరుస నుండి వెనక్కి",
   "loading": "లోడ్ అవుతోంది…",
   "close": "మూసివేయి",
   "opensInNewTab": "(కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",

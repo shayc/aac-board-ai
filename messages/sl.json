@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Dejanja",
+  "switchScanningActionsExit": "Nazaj iz dejanj",
+  "switchScanningRow": "Vrstica {row}",
+  "switchScanningRowExit": "Nazaj iz vrstice {row}",
   "loading": "Nalaganje...",
   "close": "Zapri",
   "opensInNewTab": "(odpre se v novem zavihku)",

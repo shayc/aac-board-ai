@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "ಕ್ರಿಯೆಗಳು",
+  "switchScanningActionsExit": "ಕ್ರಿಯೆಗಳಿಂದ ಹಿಂದೆ",
+  "switchScanningRow": "ಸಾಲು {row}",
+  "switchScanningRowExit": "{row}ನೇ ಸಾಲಿನಿಂದ ಹಿಂದೆ",
   "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "close": "ಮುಚ್ಚಿ",
   "opensInNewTab": "(ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",

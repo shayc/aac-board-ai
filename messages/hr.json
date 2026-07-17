@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Radnje",
+  "switchScanningActionsExit": "Natrag iz radnji",
+  "switchScanningRow": "Redak {row}",
+  "switchScanningRowExit": "Natrag iz retka {row}",
   "loading": "Učitavanje...",
   "close": "Zatvori",
   "opensInNewTab": "(otvara se u novoj kartici)",

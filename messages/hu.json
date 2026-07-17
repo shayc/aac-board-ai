@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Műveletek",
+  "switchScanningActionsExit": "Vissza a műveletekből",
+  "switchScanningRow": "{row}. sor",
+  "switchScanningRowExit": "Vissza a(z) {row}. sorból",
   "loading": "Betöltés...",
   "close": "Bezárás",
   "opensInNewTab": "(új lapon nyílik meg)",

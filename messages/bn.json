@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "কাজসমূহ",
+  "switchScanningActionsExit": "কাজসমূহ থেকে ফিরে যান",
+  "switchScanningRow": "সারি {row}",
+  "switchScanningRowExit": "{row} নম্বর সারি থেকে ফিরে যান",
   "loading": "লোড হচ্ছে…",
   "close": "বন্ধ করুন",
   "opensInNewTab": "(নতুন ট্যাবে খোলে)",

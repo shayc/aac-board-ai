@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Azioni",
+  "switchScanningActionsExit": "Indietro dalle azioni",
+  "switchScanningRow": "Riga {row}",
+  "switchScanningRowExit": "Indietro dalla riga {row}",
   "loading": "Caricamento...",
   "close": "Chiudi",
   "opensInNewTab": "(si apre in una nuova scheda)",

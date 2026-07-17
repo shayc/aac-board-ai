@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Toiminnot",
+  "switchScanningActionsExit": "Takaisin toiminnoista",
+  "switchScanningRow": "Rivi {row}",
+  "switchScanningRowExit": "Takaisin riviltä {row}",
   "loading": "Ladataan...",
   "close": "Sulje",
   "opensInNewTab": "(avautuu uuteen välilehteen)",

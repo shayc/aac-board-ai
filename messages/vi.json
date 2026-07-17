@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Thao tác",
+  "switchScanningActionsExit": "Quay lại từ thao tác",
+  "switchScanningRow": "Hàng {row}",
+  "switchScanningRowExit": "Quay lại từ hàng {row}",
   "loading": "Đang tải...",
   "close": "Đóng",
   "opensInNewTab": "(mở trong tab mới)",

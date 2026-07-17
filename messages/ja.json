@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "操作",
+  "switchScanningActionsExit": "操作から戻る",
+  "switchScanningRow": "{row} 行目",
+  "switchScanningRowExit": "{row} 行目から戻る",
   "loading": "読み込んでいます…",
   "close": "閉じる",
   "opensInNewTab": "(新しいタブで開きます)",

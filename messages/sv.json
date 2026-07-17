@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Åtgärder",
+  "switchScanningActionsExit": "Tillbaka från åtgärder",
+  "switchScanningRow": "Rad {row}",
+  "switchScanningRowExit": "Tillbaka från rad {row}",
   "loading": "Laddar...",
   "close": "Stäng",
   "opensInNewTab": "(öppnas i en ny flik)",

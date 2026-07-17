@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "الإجراءات",
+  "switchScanningActionsExit": "العودة من الإجراءات",
+  "switchScanningRow": "الصف {row}",
+  "switchScanningRowExit": "العودة من الصف {row}",
   "loading": "جارٍ التحميل...",
   "close": "إغلاق",
   "opensInNewTab": "(يفتح في علامة تبويب جديدة)",

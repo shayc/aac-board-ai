@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Tindakan",
+  "switchScanningActionsExit": "Kembali dari tindakan",
+  "switchScanningRow": "Baris {row}",
+  "switchScanningRowExit": "Kembali dari baris {row}",
   "loading": "Memuat...",
   "close": "Tutup",
   "opensInNewTab": "(dibuka di tab baru)",

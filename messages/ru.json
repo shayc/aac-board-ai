@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "Действия",
+  "switchScanningActionsExit": "Назад из действий",
+  "switchScanningRow": "Строка {row}",
+  "switchScanningRowExit": "Назад из строки {row}",
   "loading": "Загрузка...",
   "close": "Закрыть",
   "opensInNewTab": "(открывается в новой вкладке)",

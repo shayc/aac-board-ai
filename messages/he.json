@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "פעולות",
+  "switchScanningActionsExit": "חזרה מהפעולות",
+  "switchScanningRow": "שורה {row}",
+  "switchScanningRowExit": "חזרה משורה {row}",
   "loading": "טעינה...",
   "close": "סגירה",
   "opensInNewTab": "(נפתח בכרטיסייה חדשה)",

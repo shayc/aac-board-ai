@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
-import Stack from "@mui/material/Stack";
+import Stack, { type StackProps } from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import type { ReactNode, Ref } from "react";
+import { Fragment } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
 const MIN_CELL_SIZE = "96px";
@@ -14,6 +15,14 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
+export interface GridRowProps extends Omit<
+  StackProps,
+  "children" | "direction" | "gap" | "role"
+> {
+  children: ReactNode;
+  gap: number;
+}
+
 export interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
   items: readonly TItem[];
@@ -21,6 +30,11 @@ export interface GridProps<TItem extends { id: string }> {
   columns: number;
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
+  renderRow?: (
+    items: readonly (TItem | undefined)[],
+    rowIndex: number,
+    props: GridRowProps,
+  ) => ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
   ref?: Ref<HTMLDivElement>;
@@ -33,6 +47,7 @@ export function Grid<TItem extends { id: string }>({
   columns,
   order,
   renderItem,
+  renderRow,
   dir = "ltr",
   gap = 1,
   ref,
@@ -86,41 +101,58 @@ export function Grid<TItem extends { id: string }>({
           gap,
         })}
       >
-        {grid.map((row, rowIndex) => (
-          <Stack
-            key={rowIndex}
-            role="row"
-            direction="row"
-            sx={{ flex: 1, minHeight: "var(--cell-height)", gap }}
-          >
-            {row.map((item, colIndex) => {
-              const isActive =
-                rowIndex === activeCell.row && colIndex === activeCell.col;
+        {grid.map((row, rowIndex) => {
+          const cells = row.map((item, colIndex) => {
+            const isActive =
+              rowIndex === activeCell.row && colIndex === activeCell.col;
 
-              return (
-                <Stack
-                  key={colIndex}
-                  role="gridcell"
-                  aria-rowindex={rowIndex + 1}
-                  aria-colindex={colIndex + 1}
-                  sx={{
-                    flex: 1,
-                    minWidth: "var(--cell-width)",
-                    minHeight: MIN_CELL_SIZE,
-                    scrollSnapAlign: "start",
-                  }}
-                >
-                  {item &&
-                    renderItem(item, {
-                      tabIndex: isActive ? 0 : -1,
-                    })}
-                </Stack>
-              );
-            })}
-          </Stack>
-        ))}
+            return (
+              <Stack
+                key={colIndex}
+                role="gridcell"
+                aria-rowindex={rowIndex + 1}
+                aria-colindex={colIndex + 1}
+                sx={{
+                  flex: 1,
+                  minWidth: "var(--cell-width)",
+                  minHeight: MIN_CELL_SIZE,
+                  scrollSnapAlign: "start",
+                }}
+              >
+                {item &&
+                  renderItem(item, {
+                    tabIndex: isActive ? 0 : -1,
+                  })}
+              </Stack>
+            );
+          });
+          const rowProps = { gap, children: cells };
+
+          return renderRow ? (
+            <Fragment key={rowIndex}>
+              {renderRow(row, rowIndex, rowProps)}
+            </Fragment>
+          ) : (
+            <GridRow key={rowIndex} gap={gap}>
+              {cells}
+            </GridRow>
+          );
+        })}
       </Stack>
     </Box>
+  );
+}
+
+export function GridRow({ children, gap, ...rootProps }: GridRowProps) {
+  return (
+    <Stack
+      {...rootProps}
+      role="row"
+      direction="row"
+      sx={{ flex: 1, minHeight: "var(--cell-height)", gap }}
+    >
+      {children}
+    </Stack>
   );
 }
 

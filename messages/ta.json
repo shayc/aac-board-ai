@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "செயல்கள்",
+  "switchScanningActionsExit": "செயல்களிலிருந்து பின்செல்",
+  "switchScanningRow": "வரி {row}",
+  "switchScanningRowExit": "{row} ஆம் வரியிலிருந்து பின்செல்",
   "loading": "ஏற்றப்படுகிறது…",
   "close": "மூடு",
   "opensInNewTab": "(புதிய தாவலில் திறக்கும்)",

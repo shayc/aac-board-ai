@@ -1,5 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningActions": "작업",
+  "switchScanningActionsExit": "작업에서 뒤로",
+  "switchScanningRow": "{row}행",
+  "switchScanningRowExit": "{row}행에서 뒤로",
   "loading": "불러오는 중…",
   "close": "닫기",
   "opensInNewTab": "(새 탭에서 열림)",
