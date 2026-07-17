@@ -1,4 +1,4 @@
-import Button, { type ButtonProps } from "@mui/material/Button";
+import Button, { buttonClasses, type ButtonProps } from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
 import { mergeSx } from "@shared/theme/merge-sx";
 import { Pictogram } from "../pictogram/pictogram";
@@ -43,6 +43,7 @@ export function Tile({
       onClick={onClick}
       sx={mergeSx(
         (theme) => ({
+          boxShadow: (theme.vars ?? theme).shadows[2],
           width: "100%",
           height: "100%",
           display: "grid",
@@ -62,20 +63,33 @@ export function Tile({
             ? `contrast-color(${desaturate(backgroundColor)})`
             : "inherit",
           backgroundColor: backgroundColor && desaturate(backgroundColor),
-          transition: theme.transitions.create("filter", {
+          transition: theme.transitions.create(["filter", "box-shadow"], {
             duration: theme.transitions.duration.short,
           }),
-          "@media (hover: hover)": {
-            "&:hover": { filter: "brightness(0.8)" },
+          "&:hover": {
+            boxShadow: (theme.vars ?? theme).shadows[4],
+            "@media (hover: hover)": {
+              filter: "brightness(0.8)",
+            },
+            "@media (hover: none)": {
+              boxShadow: (theme.vars ?? theme).shadows[2],
+            },
           },
-          "&:active": { filter: "brightness(0.7)" },
-          "&:focus-visible": {
+          "&:active": {
+            boxShadow: (theme.vars ?? theme).shadows[8],
+            filter: "brightness(0.7)",
+          },
+          [`&.${buttonClasses.focusVisible}`]: {
+            boxShadow: (theme.vars ?? theme).shadows[6],
             outline: `3px solid ${
               theme.vars
                 ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
                 : alpha(theme.palette.text.primary, 0.8)
             }`,
             outlineOffset: 2,
+          },
+          [`&.${buttonClasses.disabled}`]: {
+            boxShadow: (theme.vars ?? theme).shadows[0],
           },
           ...(variant === "folder" && {
             "&::after": {

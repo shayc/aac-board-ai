@@ -6,8 +6,8 @@ import {
   ThemeProvider as MUIThemeProvider,
   type ThemeOptions,
 } from "@mui/material/styles";
-import rtlPlugin from "@mui/stylis-plugin-rtl";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
