@@ -1,4 +1,4 @@
-import { BoardSwitcher } from "@features/board";
+import { BoardSelector } from "@features/board";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -61,7 +61,7 @@ export function AppHeader({
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
-          <BoardSwitcher />
+          <BoardSelector />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>

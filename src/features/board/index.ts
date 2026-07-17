@@ -19,7 +19,7 @@ export {
   BOARD_SET_SEGMENT,
   boardSetPath,
 } from "./navigation/board-paths";
-export { BoardSwitcher } from "./navigation/board-switcher";
+export { BoardSelector } from "./navigation/board-selector";
 export { NavButtons } from "./navigation/nav-buttons";
 export { hydrateBoard } from "./storage/board-hydration";
 export {
