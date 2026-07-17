@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,13 +12,21 @@ import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
 import { createButtonActivation } from "./activation/button-activation";
-import { getNavigationTargetId } from "./button-readers";
 import {
-  Grid,
-  type GridItemProps,
-  GridRow,
-  type GridRowProps,
-} from "./grid/grid";
+  ScannableGridRow,
+  ScannableSuggestion,
+  ScannableTile,
+} from "./board-scanning";
+import {
+  ACTIONS_SCAN_ID,
+  BACK_SCAN_ID,
+  BACKSPACE_SCAN_ID,
+  getSuggestionScanId,
+  HOME_SCAN_ID,
+  PLAY_SCAN_ID,
+  SUGGESTIONS_ENABLE_SCAN_ID,
+} from "./board-scanning-ids";
+import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
 import { MessageBar } from "./message/message-bar";
@@ -29,18 +36,11 @@ import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
-import { Tile } from "./tile/tile";
 import type { Board, BoardButton } from "./types";
 
 export interface BoardViewerProps {
   board: Board;
 }
-
-const ACTIONS_SCAN_ID = "board-actions";
-const BACK_SCAN_ID = "board-navigation-back";
-const BACKSPACE_SCAN_ID = "board-message-backspace";
-const HOME_SCAN_ID = "board-navigation-home";
-const SUGGESTIONS_ENABLE_SCAN_ID = "board-suggestions-enable";
 
 const boardRootSx = (theme: Theme) => ({
   height: "100%",
@@ -83,14 +83,8 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const hasMessage = message.parts.length > 0;
 
   const playTarget = useScanTarget({
-    id: "board-message-play",
+    id: PLAY_SCAN_ID,
     label: playback.isPlaying ? m.messageStop() : m.messagePlay(),
-    disabled: !hasMessage,
-  });
-  const backspaceTarget = useScanTarget({
-    id: BACKSPACE_SCAN_ID,
-    parentId: ACTIONS_SCAN_ID,
-    label: m.messageBackspace(),
     disabled: !hasMessage,
   });
   const backTarget = useScanTarget({
@@ -110,6 +104,12 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     parentId: ACTIONS_SCAN_ID,
     label: m.suggestionsEnable(),
     disabled: suggestions.status?.kind !== "needs-activation",
+  });
+  const backspaceTarget = useScanTarget({
+    id: BACKSPACE_SCAN_ID,
+    parentId: ACTIONS_SCAN_ID,
+    label: m.messageBackspace(),
+    disabled: !hasMessage,
   });
 
   const suggestionScanIds = suggestions.isSupported
@@ -154,7 +154,12 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     />
   );
   const renderSuggestion = (phrase: string, onClick: () => void) => (
-    <ScannableSuggestion boardId={board.id} phrase={phrase} onClick={onClick} />
+    <ScannableSuggestion
+      boardId={board.id}
+      phrase={phrase}
+      scanParentId={ACTIONS_SCAN_ID}
+      onClick={onClick}
+    />
   );
 
   return (
@@ -248,94 +253,4 @@ function BoardViewerContent({ board }: BoardViewerProps) {
       )}
     </Stack>
   );
-}
-
-interface ScannableTileProps extends GridItemProps {
-  boardId: string;
-  button: BoardButton;
-  borderHidden: boolean;
-  onClick: () => void;
-}
-
-interface ScannableGridRowProps extends GridRowProps {
-  boardId: string;
-  buttons: readonly (BoardButton | undefined)[];
-  rowIndex: number;
-}
-
-interface ScannableSuggestionProps {
-  boardId: string;
-  phrase: string;
-  onClick: () => void;
-}
-
-function ScannableSuggestion({
-  boardId,
-  phrase,
-  onClick,
-}: ScannableSuggestionProps) {
-  const scanTarget = useScanTarget({
-    id: getSuggestionScanId(boardId, phrase),
-    parentId: ACTIONS_SCAN_ID,
-    label: phrase,
-  });
-
-  return <Chip {...scanTarget} label={phrase} onClick={onClick} />;
-}
-
-function ScannableGridRow({
-  boardId,
-  buttons,
-  rowIndex,
-  ...rowProps
-}: ScannableGridRowProps) {
-  const rowNumber = rowIndex + 1;
-  const sequence = buttons.flatMap((button) =>
-    button ? [getTileScanId(boardId, button.id)] : [],
-  );
-  const scanGroup = useScanGroup({
-    id: `board-row:${boardId}:${rowIndex}`,
-    label: m.switchScanningRow({ row: rowNumber }),
-    exitLabel: m.switchScanningRowExit({ row: rowNumber }),
-    disabled: sequence.length === 0,
-    sequence,
-  });
-
-  return <GridRow {...rowProps} {...scanGroup} />;
-}
-
-function ScannableTile({
-  boardId,
-  button,
-  borderHidden,
-  tabIndex,
-  onClick,
-}: ScannableTileProps) {
-  const label = button.label ?? "";
-  const scanTarget = useScanTarget({
-    id: getTileScanId(boardId, button.id),
-    label,
-  });
-
-  return (
-    <Tile
-      {...scanTarget}
-      label={label}
-      imageSrc={button.imageSrc}
-      backgroundColor={button.backgroundColor}
-      borderColor={button.borderColor}
-      variant={getNavigationTargetId(button) ? "folder" : undefined}
-      borderHidden={borderHidden}
-      tabIndex={tabIndex}
-      onClick={onClick}
-    />
-  );
-}
-
-function getTileScanId(boardId: string, buttonId: string): string {
-  return `board-button:${boardId}:${buttonId}`;
-}
-
-function getSuggestionScanId(boardId: string, phrase: string): string {
-  return `board-suggestion:${boardId}:${phrase}`;
 }
