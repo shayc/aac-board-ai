@@ -25,9 +25,15 @@ export interface NavButtonsSlotProps {
 
 export interface NavButtonsProps {
   slotProps?: NavButtonsSlotProps;
+  onBackClick?: () => void;
+  onHomeClick?: () => void;
 }
 
-export function NavButtons({ slotProps }: NavButtonsProps = {}) {
+export function NavButtons({
+  slotProps,
+  onBackClick,
+  onHomeClick,
+}: NavButtonsProps = {}) {
   const { setId, canGoBack, canGoHome, isHome, goBack, goHome } =
     useBoardNavigation();
   const { sx: backButtonSx, ...backButtonProps } = slotProps?.backButton ?? {};
@@ -35,6 +41,16 @@ export function NavButtons({ slotProps }: NavButtonsProps = {}) {
 
   if (!setId) {
     return null;
+  }
+
+  function handleBackClick() {
+    onBackClick?.();
+    goBack();
+  }
+
+  function handleHomeClick() {
+    onHomeClick?.();
+    goHome();
   }
 
   return (
@@ -47,7 +63,7 @@ export function NavButtons({ slotProps }: NavButtonsProps = {}) {
         disabled={!canGoBack}
         variant="contained"
         sx={mergeSx({ width: 72 }, backButtonSx)}
-        onClick={goBack}
+        onClick={handleBackClick}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
       </Button>
@@ -57,10 +73,10 @@ export function NavButtons({ slotProps }: NavButtonsProps = {}) {
         aria-label={m.navHome()}
         size="large"
         color="inherit"
-        disabled={!canGoHome || isHome}
+        disabled={!canGoHome || (isHome && !onHomeClick)}
         variant="contained"
         sx={mergeSx({ width: 72 }, homeButtonSx)}
-        onClick={goHome}
+        onClick={handleHomeClick}
       >
         <HomeOutlinedIcon />
       </Button>
