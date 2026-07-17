@@ -187,7 +187,7 @@ describe("Tile", () => {
     expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
   });
 
-  test("renders the folder corner using the readable text color", async () => {
+  test("renders the folder corner as a translucent readable text color", async () => {
     const screen = await render(
       <Tile
         label="Folder"
@@ -203,7 +203,11 @@ describe("Tile", () => {
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(styles.color);
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor(
+        `color-mix(in srgb, ${styles.color} 75%, transparent)`,
+      ),
+    );
     expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
   });
 
@@ -319,7 +323,11 @@ describe("Tile", () => {
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(styles.color);
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor(
+        `color-mix(in srgb, ${styles.color} 75%, transparent)`,
+      ),
+    );
   });
 
   test("calls onClick when clicked", async () => {

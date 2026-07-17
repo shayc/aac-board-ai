@@ -111,7 +111,8 @@ export function Tile({
               insetInlineEnd: -2,
               width: 0,
               height: 0,
-              borderInlineEnd: "32px solid currentColor",
+              borderInlineEnd:
+                "32px solid color-mix(in srgb, currentColor 75%, transparent)",
               borderBottom: "32px solid transparent",
             },
           }),
