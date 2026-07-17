@@ -208,6 +208,28 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
+  test("darkens only the background on hover", async () => {
+    const theme = createTheme({ transitions: { duration: { short: 0 } } });
+    const screen = await render(
+      <MUIThemeProvider theme={theme}>
+        <Tile label="Colored" backgroundColor="#ff0000" onClick={vi.fn()} />
+      </MUIThemeProvider>,
+    );
+
+    const button = screen.getByRole("button", { name: "Colored" });
+    await button.hover();
+
+    const styles = getComputedStyle(button.element());
+    expect(styles.backgroundColor).toBe(
+      resolveColor(
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 90%, black)",
+      ),
+    );
+    expect(styles.filter).toBe("none");
+
+    await button.unhover();
+  });
+
   test("applies borderColor when provided", async () => {
     const screen = await render(
       <Tile label="Bordered" borderColor="#00ff00" onClick={vi.fn()} />,
