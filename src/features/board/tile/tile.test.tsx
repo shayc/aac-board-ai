@@ -39,6 +39,7 @@ function getStateShadows(element: Element) {
   }
 
   const shadows = {
+    rest: [] as string[],
     hover: [] as string[],
     active: [] as string[],
     focusVisible: [] as string[],
@@ -72,6 +73,8 @@ function getStateShadows(element: Element) {
         shadows.focusVisible.push(resolvedShadow);
       } else if (rule.selectorText.includes(".Mui-disabled")) {
         shadows.disabled.push(resolvedShadow);
+      } else if (rule.selectorText === `.${styleClass}`) {
+        shadows.rest.push(resolvedShadow);
       }
     }
   }
@@ -119,16 +122,10 @@ describe("Tile", () => {
         exact: true,
       });
 
-      expect(getComputedStyle(tile.element()).boxShadow).toBe(
-        getComputedStyle(muiButton.element()).boxShadow,
-      );
-      expect(getComputedStyle(tile.element()).boxShadow).toBe(
-        resolveBoxShadow(theme.shadows[2]),
-      );
-
       const tileStateShadows = getStateShadows(tile.element());
       expect(tileStateShadows).toEqual(getStateShadows(muiButton.element()));
       expect(tileStateShadows).toEqual({
+        rest: [resolveBoxShadow(theme.shadows[2])],
         hover: [
           resolveBoxShadow(theme.shadows[4]),
           resolveBoxShadow(theme.shadows[2]),
@@ -146,16 +143,6 @@ describe("Tile", () => {
       );
     },
   );
-
-  test("uses the contained Button resting elevation", async () => {
-    const screen = await render(<Tile label="Raised" onClick={vi.fn()} />);
-
-    const button = screen.getByRole("button", { name: "Raised" });
-
-    expect(getComputedStyle(button.element()).boxShadow).toBe(
-      resolveBoxShadow(createTheme().shadows[2]),
-    );
-  });
 
   test("renders label without image when imageSrc is not provided", async () => {
     const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
