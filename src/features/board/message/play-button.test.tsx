@@ -1,3 +1,4 @@
+import { createRef } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { PlayButton } from "./play-button";
@@ -10,6 +11,23 @@ function createHandlers() {
 }
 
 describe("PlayButton", () => {
+  test("forwards root element props and refs", async () => {
+    const handlers = createHandlers();
+    const ref = createRef<HTMLButtonElement>();
+    const screen = await render(
+      <PlayButton
+        {...handlers}
+        ref={ref}
+        data-scan-target=""
+        isPlaying={false}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Play message" });
+    await expect.element(button).toHaveAttribute("data-scan-target", "");
+    expect(ref.current).toBe(button.element());
+  });
+
   test("calls onPlayClick when clicked while not playing", async () => {
     const handlers = createHandlers();
 

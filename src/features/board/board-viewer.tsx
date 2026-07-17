@@ -6,8 +6,10 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
+import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
+import { useScanTarget } from "@shayc/switch-scanning/react";
 import { createButtonActivation } from "./activation/button-activation";
 import { getNavigationTargetId } from "./button-readers";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -41,6 +43,14 @@ const rootSx = (theme: Theme) => ({
 });
 
 export function BoardViewer({ board }: BoardViewerProps) {
+  return (
+    <SwitchScanningBoundary>
+      <BoardViewerContent board={board} />
+    </SwitchScanningBoundary>
+  );
+}
+
+function BoardViewerContent({ board }: BoardViewerProps) {
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = useHighlightConfig();
@@ -57,15 +67,34 @@ export function BoardViewer({ board }: BoardViewerProps) {
   });
 
   const keyboard = useBoardKeyboard({ message, playback });
+  const hasMessage = message.parts.length > 0;
+
+  const playTarget = useScanTarget({
+    id: "board-message-play",
+    label: playback.isPlaying ? m.messageStop() : m.messagePlay(),
+    disabled: !hasMessage,
+  });
+  const backspaceTarget = useScanTarget({
+    id: "board-message-backspace",
+    label: m.messageBackspace(),
+    disabled: !hasMessage,
+  });
+  const backTarget = useScanTarget({
+    id: "board-navigation-back",
+    label: m.navBack(),
+    disabled: !navigation.canGoBack,
+  });
+  const homeTarget = useScanTarget({
+    id: "board-navigation-home",
+    label: m.navHome(),
+    disabled: !navigation.canGoHome || navigation.isHome,
+  });
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
-    <Tile
+    <ScannableTile
       key={button.id}
-      label={button.label ?? ""}
-      imageSrc={button.imageSrc}
-      backgroundColor={button.backgroundColor}
-      borderColor={button.borderColor}
-      variant={getNavigationTargetId(button) ? "folder" : undefined}
+      boardId={board.id}
+      button={button}
       borderHidden={!borderVisible}
       onClick={() => activateButton(button)}
       {...props}
@@ -75,6 +104,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
   return (
     <Stack
       {...keyboard.rootProps}
+      data-switch-scanning-scope=""
       direction="column"
       sx={[rootSx, { "--tile-saturation": String(saturation) }]}
     >
@@ -82,6 +112,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
         parts={message.parts}
         activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
+        playDisabled={!hasMessage}
+        slotProps={{ playButton: playTarget }}
         onPlayClick={() => void playback.play(message.parts)}
         onStopClick={playback.stop}
       />
@@ -91,7 +123,11 @@ export function BoardViewer({ board }: BoardViewerProps) {
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
-        {!isSmallScreen && <NavButtons />}
+        {!isSmallScreen && (
+          <NavButtons
+            slotProps={{ backButton: backTarget, homeButton: homeTarget }}
+          />
+        )}
 
         {suggestions.isSupported && (
           <SuggestionBar
@@ -104,6 +140,8 @@ export function BoardViewer({ board }: BoardViewerProps) {
 
         {!isSmallScreen && (
           <BackspaceButton
+            {...backspaceTarget}
+            disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}
           />
@@ -131,14 +169,53 @@ export function BoardViewer({ board }: BoardViewerProps) {
             pb: safeAreaInset("bottom"),
           }}
         >
-          <NavButtons />
+          <NavButtons
+            slotProps={{ backButton: backTarget, homeButton: homeTarget }}
+          />
 
           <BackspaceButton
+            {...backspaceTarget}
+            disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}
           />
         </Toolbar>
       )}
     </Stack>
+  );
+}
+
+interface ScannableTileProps extends GridItemProps {
+  boardId: string;
+  button: BoardButton;
+  borderHidden: boolean;
+  onClick: () => void;
+}
+
+function ScannableTile({
+  boardId,
+  button,
+  borderHidden,
+  tabIndex,
+  onClick,
+}: ScannableTileProps) {
+  const label = button.label ?? "";
+  const scanTarget = useScanTarget({
+    id: `board-button:${boardId}:${button.id}`,
+    label,
+  });
+
+  return (
+    <Tile
+      {...scanTarget}
+      label={label}
+      imageSrc={button.imageSrc}
+      backgroundColor={button.backgroundColor}
+      borderColor={button.borderColor}
+      variant={getNavigationTargetId(button) ? "folder" : undefined}
+      borderHidden={borderHidden}
+      tabIndex={tabIndex}
+      onClick={onClick}
+    />
   );
 }

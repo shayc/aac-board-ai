@@ -1,3 +1,7 @@
+import {
+  setSwitchScanningEnabled,
+  setSwitchScanningMethod,
+} from "@shared/switch-scanning/switch-scanning-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
   stubBuiltInAIUnsupported,
@@ -7,8 +11,9 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { TEST_IMAGE_SRC } from "./testing";
+import { userEvent } from "vitest/browser";
 import { renderBoardViewer, TWO_BUTTON_BOARD } from "./test-utils";
+import { TEST_IMAGE_SRC } from "./testing";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -84,6 +89,41 @@ describe("BoardViewer", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
       .toBeVisible();
+  });
+
+  test("two-switch scanning moves the highlight and activates through the tile click path", async () => {
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const hello = screen.getByRole("button", { name: "hello" });
+    const world = screen.getByRole("button", { name: "world" });
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(hello).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(world).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Enter}");
+
+    await vi.waitFor(() => {
+      expect(speech.speak).toHaveBeenCalledTimes(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("world");
+    });
+  });
+
+  test("leaves native Space activation intact while switch scanning is off", async () => {
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const hello = screen.getByRole("button", { name: "hello" });
+
+    hello.element().focus();
+    await userEvent.keyboard("{Space}");
+
+    await vi.waitFor(() => {
+      expect(speech.speak).toHaveBeenCalledTimes(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+    });
   });
 
   test("tapping the enable chip starts the suggestion model download", async () => {

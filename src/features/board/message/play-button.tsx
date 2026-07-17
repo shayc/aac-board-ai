@@ -1,40 +1,51 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import Fab from "@mui/material/Fab";
+import Fab, { type FabProps } from "@mui/material/Fab";
 import { m } from "@paraglide/messages.js";
+import { mergeSx } from "@shared/theme/merge-sx";
 
 const iconSx = { fontSize: 32 };
 
-export interface PlayButtonProps {
-  disabled?: boolean;
+interface PlayButtonOwnProps {
   isPlaying: boolean;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
 
+export type PlayButtonRootProps = Omit<
+  FabProps,
+  keyof PlayButtonOwnProps | "aria-label" | "children" | "color" | "onClick"
+>;
+
+export type PlayButtonProps = PlayButtonOwnProps & PlayButtonRootProps;
+
 export function PlayButton({
-  disabled,
   isPlaying,
   onPlayClick,
   onStopClick,
+  sx,
+  ...fabProps
 }: PlayButtonProps) {
   const label = isPlaying ? m.messageStop() : m.messagePlay();
 
   return (
     <Fab
+      {...fabProps}
       color={isPlaying ? "default" : "primary"}
-      disabled={disabled}
       aria-label={label}
       onClick={isPlaying ? onStopClick : onPlayClick}
-      sx={{
-        width: 72,
-        height: 72,
-        flexShrink: 0,
-        my: 2,
-        marginInlineStart: 0,
-        marginInlineEnd: 2,
-        alignSelf: "center",
-      }}
+      sx={mergeSx(
+        {
+          width: 72,
+          height: 72,
+          flexShrink: 0,
+          my: 2,
+          marginInlineStart: 0,
+          marginInlineEnd: 2,
+          alignSelf: "center",
+        },
+        sx,
+      )}
     >
       {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}
     </Fab>
