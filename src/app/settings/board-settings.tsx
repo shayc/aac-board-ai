@@ -5,10 +5,6 @@ import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import {
-  setHighlightActivePart,
-  useHighlightConfig,
-} from "@shared/highlight/highlight-store";
-import {
   setTileBorderVisible,
   setTileSaturation,
   TILE_SATURATION,
@@ -16,21 +12,10 @@ import {
 } from "@shared/tile-color/tile-color-store";
 
 export function BoardSettings() {
-  const { highlightActivePart } = useHighlightConfig();
   const { saturation, borderVisible } = useTileColorConfig();
 
   return (
     <Stack spacing={3}>
-      <FormControlLabel
-        label={m.playbackHighlight()}
-        control={
-          <Switch
-            checked={highlightActivePart}
-            onChange={(event) => setHighlightActivePart(event.target.checked)}
-          />
-        }
-      />
-
       <FormControlLabel
         label={m.tileBorders()}
         control={
@@ -52,7 +37,7 @@ export function BoardSettings() {
           value={saturation}
           min={TILE_SATURATION.min}
           max={TILE_SATURATION.max}
-          step={0.05}
+          step={0.1}
           onChange={(_event, newValue) => setTileSaturation(newValue)}
         />
       </Stack>

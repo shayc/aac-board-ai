@@ -5,8 +5,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
 import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -96,8 +96,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         ]}
       >
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <WbSunnyOutlinedIcon fontSize="small" />
-          {m.settingsSectionAppearance()}
+          <TuneOutlinedIcon fontSize="small" />
+          {m.settingsSectionGeneral()}
         </Typography>
         <Stack spacing={3}>
           <AppearanceSettings />
