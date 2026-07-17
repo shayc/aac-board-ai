@@ -19,7 +19,7 @@ export function parseTileColorConfig(raw: unknown): TileColorConfig {
         ? Math.min(Math.max(parsed.saturation, min), max)
         : fallback,
     borderVisible:
-      typeof parsed.borderVisible === "boolean" ? parsed.borderVisible : true,
+      typeof parsed.borderVisible === "boolean" ? parsed.borderVisible : false,
   };
 }
 

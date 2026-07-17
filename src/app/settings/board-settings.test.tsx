@@ -36,7 +36,7 @@ describe("BoardSettings", () => {
       name: "Show tile borders",
     });
 
-    await expect.element(bordersSwitch).toBeChecked();
+    await expect.element(bordersSwitch).not.toBeChecked();
 
     await expectNoA11yViolations(screen.container);
   });
@@ -52,9 +52,9 @@ describe("BoardSettings", () => {
       name: "Show tile borders",
     });
 
-    await expect.element(bordersSwitch).toBeChecked();
-    await bordersSwitch.click();
     await expect.element(bordersSwitch).not.toBeChecked();
+    await bordersSwitch.click();
+    await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("tile-color-config");
@@ -62,7 +62,7 @@ describe("BoardSettings", () => {
       const config = JSON.parse(stored ?? "{}") as {
         borderVisible: boolean;
       };
-      expect(config.borderVisible).toBe(false);
+      expect(config.borderVisible).toBe(true);
     });
   });
 

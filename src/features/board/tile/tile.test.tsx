@@ -21,6 +21,15 @@ function resolveColor(cssColor: string): string {
   return resolved;
 }
 
+function resolveBackgroundColor(cssColor: string): string {
+  const probe = document.createElement("div");
+  document.body.append(probe);
+  probe.style.backgroundColor = cssColor;
+  const resolved = getComputedStyle(probe).backgroundColor;
+  probe.remove();
+  return resolved;
+}
+
 function resolveBoxShadow(cssShadow: string): string {
   const probe = document.createElement("div");
   document.body.append(probe);
@@ -203,7 +212,7 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
 
     expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #000000 l c h)"),
+      resolveBackgroundColor("oklch(from #000000 l c h)"),
     );
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
@@ -221,7 +230,7 @@ describe("Tile", () => {
 
     const styles = getComputedStyle(button.element());
     expect(styles.backgroundColor).toBe(
-      resolveColor(
+      resolveBackgroundColor(
         "color-mix(in srgb, oklch(from #ff0000 l c h) 80%, black)",
       ),
     );

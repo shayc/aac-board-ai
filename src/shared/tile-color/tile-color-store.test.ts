@@ -37,16 +37,16 @@ describe("tile-color-store", () => {
       expect(parseTileColorConfig({ saturation: 0.4 }).saturation).toBe(0.4);
     });
 
-    test("defaults borderVisible to true when absent", () => {
-      expect(parseTileColorConfig(undefined).borderVisible).toBe(true);
+    test("defaults borderVisible to false when absent", () => {
+      expect(parseTileColorConfig(undefined).borderVisible).toBe(false);
     });
 
     test("ignores a non-boolean stored borderVisible value", () => {
       expect(parseTileColorConfig({ borderVisible: "no" }).borderVisible).toBe(
-        true,
+        false,
       );
       expect(parseTileColorConfig({ borderVisible: 0 }).borderVisible).toBe(
-        true,
+        false,
       );
     });
 
@@ -70,7 +70,7 @@ describe("tile-color-store", () => {
     expect(result.current.saturation).toBe(0.4);
     await vi.waitFor(() =>
       expect(localStorage.getItem("tile-color-config")).toBe(
-        JSON.stringify({ saturation: 0.4, borderVisible: true }),
+        JSON.stringify({ saturation: 0.4, borderVisible: false }),
       ),
     );
   });
@@ -78,13 +78,13 @@ describe("tile-color-store", () => {
   test("setTileBorderVisible updates the snapshot and persists it", async () => {
     const { result, rerender } = await renderHook(() => useTileColorConfig());
 
-    setTileBorderVisible(false);
+    setTileBorderVisible(true);
     await rerender();
 
-    expect(result.current.borderVisible).toBe(false);
+    expect(result.current.borderVisible).toBe(true);
     await vi.waitFor(() =>
       expect(localStorage.getItem("tile-color-config")).toBe(
-        JSON.stringify({ saturation: 1, borderVisible: false }),
+        JSON.stringify({ saturation: 1, borderVisible: true }),
       ),
     );
   });
