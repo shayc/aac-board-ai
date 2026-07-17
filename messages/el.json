@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Πρόσβαση με διακόπτη",
   "switchScanningEnabled": "Ενεργοποίηση σάρωσης με διακόπτη",
   "switchScanningMethod": "Μέθοδος σάρωσης",
+  "switchScanningOneSwitch": "Ένας διακόπτης",
+  "switchScanningTwoSwitches": "Δύο διακόπτες",
   "switchScanningMethodAuto": "Αυτόματη",
   "switchScanningMethodStep": "Βήμα με δύο διακόπτες",
   "switchScanningMethodDwell": "Παραμονή με έναν διακόπτη",

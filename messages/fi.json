@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Kytkinohjaus",
   "switchScanningEnabled": "Ota kytkinskannaus käyttöön",
   "switchScanningMethod": "Skannaustapa",
+  "switchScanningOneSwitch": "Yksi kytkin",
+  "switchScanningTwoSwitches": "Kaksi kytkintä",
   "switchScanningMethodAuto": "Automaattinen",
   "switchScanningMethodStep": "Kahden kytkimen askellus",
   "switchScanningMethodDwell": "Yhden kytkimen viivevalinta",

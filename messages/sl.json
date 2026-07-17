@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Dostop s stikalom",
   "switchScanningEnabled": "Vklopi skeniranje s stikalom",
   "switchScanningMethod": "Način skeniranja",
+  "switchScanningOneSwitch": "Eno stikalo",
+  "switchScanningTwoSwitches": "Dve stikali",
   "switchScanningMethodAuto": "Samodejno",
   "switchScanningMethodStep": "Korak z dvema stikaloma",
   "switchScanningMethodDwell": "Zadržanje z enim stikalom",

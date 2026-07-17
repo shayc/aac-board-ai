@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Kontaktstyrning",
   "switchScanningEnabled": "Aktivera kontaktskanning",
   "switchScanningMethod": "Skanningsmetod",
+  "switchScanningOneSwitch": "En kontakt",
+  "switchScanningTwoSwitches": "Två kontakter",
   "switchScanningMethodAuto": "Automatisk",
   "switchScanningMethodStep": "Steg med två kontakter",
   "switchScanningMethodDwell": "Väntetid med en kontakt",

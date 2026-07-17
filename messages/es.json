@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Acceso con pulsador",
   "switchScanningEnabled": "Activar barrido con pulsador",
   "switchScanningMethod": "Método de barrido",
+  "switchScanningOneSwitch": "Un pulsador",
+  "switchScanningTwoSwitches": "Dos pulsadores",
   "switchScanningMethodAuto": "Automático",
   "switchScanningMethodStep": "Paso con dos pulsadores",
   "switchScanningMethodDwell": "Permanencia con un pulsador",

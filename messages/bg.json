@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Достъп с превключвател",
   "switchScanningEnabled": "Включване на сканирането с превключвател",
   "switchScanningMethod": "Метод на сканиране",
+  "switchScanningOneSwitch": "Един превключвател",
+  "switchScanningTwoSwitches": "Два превключвателя",
   "switchScanningMethodAuto": "Автоматично",
   "switchScanningMethodStep": "Стъпка с два превключвателя",
   "switchScanningMethodDwell": "Задържане с един превключвател",

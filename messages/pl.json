@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Dostęp przełącznikiem",
   "switchScanningEnabled": "Włącz skanowanie przełącznikiem",
   "switchScanningMethod": "Metoda skanowania",
+  "switchScanningOneSwitch": "Jeden przełącznik",
+  "switchScanningTwoSwitches": "Dwa przełączniki",
   "switchScanningMethodAuto": "Automatyczna",
   "switchScanningMethodStep": "Krok dwoma przełącznikami",
   "switchScanningMethodDwell": "Zatrzymanie jednym przełącznikiem",

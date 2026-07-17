@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Керування перемикачем",
   "switchScanningEnabled": "Увімкнути сканування перемикачем",
   "switchScanningMethod": "Метод сканування",
+  "switchScanningOneSwitch": "Один перемикач",
+  "switchScanningTwoSwitches": "Два перемикачі",
   "switchScanningMethodAuto": "Автоматичний",
   "switchScanningMethodStep": "Крок двома перемикачами",
   "switchScanningMethodDwell": "Затримка з одним перемикачем",

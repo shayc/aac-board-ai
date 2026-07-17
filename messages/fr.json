@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Accès par contacteur",
   "switchScanningEnabled": "Activer le balayage par contacteur",
   "switchScanningMethod": "Méthode de balayage",
+  "switchScanningOneSwitch": "Un contacteur",
+  "switchScanningTwoSwitches": "Deux contacteurs",
   "switchScanningMethodAuto": "Automatique",
   "switchScanningMethodStep": "Pas à deux contacteurs",
   "switchScanningMethodDwell": "Temporisation à un contacteur",

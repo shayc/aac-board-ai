@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Управление переключателем",
   "switchScanningEnabled": "Включить сканирование переключателем",
   "switchScanningMethod": "Метод сканирования",
+  "switchScanningOneSwitch": "Один переключатель",
+  "switchScanningTwoSwitches": "Два переключателя",
   "switchScanningMethodAuto": "Автоматический",
   "switchScanningMethodStep": "Шаг двумя переключателями",
   "switchScanningMethodDwell": "Задержка с одним переключателем",

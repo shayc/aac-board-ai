@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Acesso por acionador",
   "switchScanningEnabled": "Ativar varredura por acionador",
   "switchScanningMethod": "Método de varredura",
+  "switchScanningOneSwitch": "Um acionador",
+  "switchScanningTwoSwitches": "Dois acionadores",
   "switchScanningMethodAuto": "Automática",
   "switchScanningMethodStep": "Passo com dois acionadores",
   "switchScanningMethodDwell": "Permanência com um acionador",

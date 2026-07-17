@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "சுவிட்ச் அணுகல்",
   "switchScanningEnabled": "சுவிட்ச் ஸ்கேனிங்கை இயக்கு",
   "switchScanningMethod": "ஸ்கேன் முறை",
+  "switchScanningOneSwitch": "ஒரு சுவிட்ச்",
+  "switchScanningTwoSwitches": "இரண்டு சுவிட்ச்கள்",
   "switchScanningMethodAuto": "தானியங்கி",
   "switchScanningMethodStep": "இரண்டு-சுவிட்ச் படி",
   "switchScanningMethodDwell": "ஒற்றை-சுவிட்ச் காத்திருப்பு",

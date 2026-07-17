@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "גישה באמצעות מתג",
   "switchScanningEnabled": "הפעלת סריקה באמצעות מתג",
   "switchScanningMethod": "שיטת סריקה",
+  "switchScanningOneSwitch": "מתג אחד",
+  "switchScanningTwoSwitches": "שני מתגים",
   "switchScanningMethodAuto": "אוטומטית",
   "switchScanningMethodStep": "צעד באמצעות שני מתגים",
   "switchScanningMethodDwell": "השהיה באמצעות מתג אחד",

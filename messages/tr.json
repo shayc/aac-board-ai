@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Anahtar erişimi",
   "switchScanningEnabled": "Anahtarla taramayı etkinleştir",
   "switchScanningMethod": "Tarama yöntemi",
+  "switchScanningOneSwitch": "Tek anahtar",
+  "switchScanningTwoSwitches": "İki anahtar",
   "switchScanningMethodAuto": "Otomatik",
   "switchScanningMethodStep": "İki anahtarlı adım",
   "switchScanningMethodDwell": "Tek anahtarlı bekleme",

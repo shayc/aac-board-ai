@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "开关控制",
   "switchScanningEnabled": "启用开关扫描",
   "switchScanningMethod": "扫描方式",
+  "switchScanningOneSwitch": "单开关",
+  "switchScanningTwoSwitches": "双开关",
   "switchScanningMethodAuto": "自动",
   "switchScanningMethodStep": "双开关步进",
   "switchScanningMethodDwell": "单开关停留",

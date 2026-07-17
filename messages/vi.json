@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Truy cập bằng công tắc",
   "switchScanningEnabled": "Bật quét bằng công tắc",
   "switchScanningMethod": "Phương thức quét",
+  "switchScanningOneSwitch": "Một công tắc",
+  "switchScanningTwoSwitches": "Hai công tắc",
   "switchScanningMethodAuto": "Tự động",
   "switchScanningMethodStep": "Bước bằng hai công tắc",
   "switchScanningMethodDwell": "Dừng bằng một công tắc",

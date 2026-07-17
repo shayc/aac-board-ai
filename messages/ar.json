@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "الوصول باستخدام المفتاح",
   "switchScanningEnabled": "تفعيل المسح بالمفتاح",
   "switchScanningMethod": "طريقة المسح",
+  "switchScanningOneSwitch": "مفتاح واحد",
+  "switchScanningTwoSwitches": "مفتاحان",
   "switchScanningMethodAuto": "تلقائي",
   "switchScanningMethodStep": "التنقل بمفتاحين",
   "switchScanningMethodDwell": "المكوث بمفتاح واحد",

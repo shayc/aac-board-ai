@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Acces cu comutator",
   "switchScanningEnabled": "Activează scanarea cu comutator",
   "switchScanningMethod": "Metodă de scanare",
+  "switchScanningOneSwitch": "Un comutator",
+  "switchScanningTwoSwitches": "Două comutatoare",
   "switchScanningMethodAuto": "Automată",
   "switchScanningMethodStep": "Pas cu două comutatoare",
   "switchScanningMethodDwell": "Staționare cu un comutator",

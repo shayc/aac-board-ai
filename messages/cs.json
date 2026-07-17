@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Ovládání spínačem",
   "switchScanningEnabled": "Zapnout skenování spínačem",
   "switchScanningMethod": "Způsob skenování",
+  "switchScanningOneSwitch": "Jeden spínač",
+  "switchScanningTwoSwitches": "Dva spínače",
   "switchScanningMethodAuto": "Automatické",
   "switchScanningMethodStep": "Krokování dvěma spínači",
   "switchScanningMethodDwell": "Prodleva s jedním spínačem",

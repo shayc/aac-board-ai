@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Akses sakelar",
   "switchScanningEnabled": "Aktifkan pemindaian sakelar",
   "switchScanningMethod": "Metode pemindaian",
+  "switchScanningOneSwitch": "Satu sakelar",
+  "switchScanningTwoSwitches": "Dua sakelar",
   "switchScanningMethodAuto": "Otomatis",
   "switchScanningMethodStep": "Langkah dua sakelar",
   "switchScanningMethodDwell": "Jeda satu sakelar",

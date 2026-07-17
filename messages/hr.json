@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Pristup prekidačem",
   "switchScanningEnabled": "Uključi skeniranje prekidačem",
   "switchScanningMethod": "Način skeniranja",
+  "switchScanningOneSwitch": "Jedan prekidač",
+  "switchScanningTwoSwitches": "Dva prekidača",
   "switchScanningMethodAuto": "Automatski",
   "switchScanningMethodStep": "Korak s dva prekidača",
   "switchScanningMethodDwell": "Zadržavanje s jednim prekidačem",

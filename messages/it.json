@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Accesso con sensore",
   "switchScanningEnabled": "Attiva la scansione con sensore",
   "switchScanningMethod": "Metodo di scansione",
+  "switchScanningOneSwitch": "Un sensore",
+  "switchScanningTwoSwitches": "Due sensori",
   "switchScanningMethodAuto": "Automatica",
   "switchScanningMethodStep": "Passo con due sensori",
   "switchScanningMethodDwell": "Permanenza con un sensore",

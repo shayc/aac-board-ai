@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "스위치 제어",
   "switchScanningEnabled": "스위치 스캔 사용",
   "switchScanningMethod": "스캔 방식",
+  "switchScanningOneSwitch": "스위치 1개",
+  "switchScanningTwoSwitches": "스위치 2개",
   "switchScanningMethodAuto": "자동",
   "switchScanningMethodStep": "2스위치 단계",
   "switchScanningMethodDwell": "1스위치 머무르기",

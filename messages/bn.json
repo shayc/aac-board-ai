@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "সুইচ অ্যাক্সেস",
   "switchScanningEnabled": "সুইচ স্ক্যানিং চালু করুন",
   "switchScanningMethod": "স্ক্যান পদ্ধতি",
+  "switchScanningOneSwitch": "একটি সুইচ",
+  "switchScanningTwoSwitches": "দুটি সুইচ",
   "switchScanningMethodAuto": "স্বয়ংক্রিয়",
   "switchScanningMethodStep": "দুই-সুইচ ধাপ",
   "switchScanningMethodDwell": "এক-সুইচ অপেক্ষা",

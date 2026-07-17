@@ -2,6 +2,7 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
+import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
@@ -78,6 +79,39 @@ export function SwitchScanningSettings() {
           }
         : null;
 
+  const methodGroups: readonly {
+    label: string;
+    methods: readonly SwitchScanningMethod[];
+  }[] = [
+    {
+      label: m.switchScanningOneSwitch(),
+      methods: ["auto", "dwell", "inverse"],
+    },
+    { label: m.switchScanningTwoSwitches(), methods: ["step"] },
+  ];
+
+  function renderMethodGroup(
+    label: string,
+    methods: readonly SwitchScanningMethod[],
+  ) {
+    return [
+      <ListSubheader key={`${methods[0]}-heading`}>{label}</ListSubheader>,
+      ...methods.map((option) => {
+        const optionLabel = getMethodLabel(option);
+
+        return (
+          <MenuItem
+            key={option}
+            value={option}
+            aria-label={`${optionLabel}, ${label}`}
+          >
+            {optionLabel}
+          </MenuItem>
+        );
+      }),
+    ];
+  }
+
   return (
     <Stack spacing={3}>
       <FormControlLabel
@@ -101,11 +135,9 @@ export function SwitchScanningSettings() {
           value={method}
           onChange={(event) => setSwitchScanningMethod(event.target.value)}
         >
-          {(["auto", "step", "dwell", "inverse"] as const).map((option) => (
-            <MenuItem key={option} value={option}>
-              {getMethodLabel(option)}
-            </MenuItem>
-          ))}
+          {methodGroups.flatMap(({ label, methods }) =>
+            renderMethodGroup(label, methods),
+          )}
         </Select>
         <FormHelperText
           sx={{

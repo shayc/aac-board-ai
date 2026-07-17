@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "స్విచ్ యాక్సెస్",
   "switchScanningEnabled": "స్విచ్ స్కానింగ్‌ను ప్రారంభించండి",
   "switchScanningMethod": "స్కాన్ పద్ధతి",
+  "switchScanningOneSwitch": "ఒక స్విచ్",
+  "switchScanningTwoSwitches": "రెండు స్విచ్‌లు",
   "switchScanningMethodAuto": "స్వయంచాలక",
   "switchScanningMethodStep": "రెండు-స్విచ్ దశ",
   "switchScanningMethodDwell": "ఒక-స్విచ్ నిరీక్షణ",

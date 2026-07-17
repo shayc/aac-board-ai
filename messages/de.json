@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Tastersteuerung",
   "switchScanningEnabled": "Tastenscanning aktivieren",
   "switchScanningMethod": "Scanmethode",
+  "switchScanningOneSwitch": "Eine Taste",
+  "switchScanningTwoSwitches": "Zwei Tasten",
   "switchScanningMethodAuto": "Automatisch",
   "switchScanningMethodStep": "Zwei-Tasten-Schritt",
   "switchScanningMethodDwell": "Ein-Tasten-Verweilen",

@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "Kapcsolós hozzáférés",
   "switchScanningEnabled": "Kapcsolós pásztázás bekapcsolása",
   "switchScanningMethod": "Pásztázási mód",
+  "switchScanningOneSwitch": "Egy kapcsoló",
+  "switchScanningTwoSwitches": "Két kapcsoló",
   "switchScanningMethodAuto": "Automatikus",
   "switchScanningMethodStep": "Kétkapcsolós léptetés",
   "switchScanningMethodDwell": "Egykapcsolós várakozás",

@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "การเข้าถึงด้วยสวิตช์",
   "switchScanningEnabled": "เปิดใช้การสแกนด้วยสวิตช์",
   "switchScanningMethod": "วิธีการสแกน",
+  "switchScanningOneSwitch": "หนึ่งสวิตช์",
+  "switchScanningTwoSwitches": "สองสวิตช์",
   "switchScanningMethodAuto": "อัตโนมัติ",
   "switchScanningMethodStep": "เลื่อนด้วยสองสวิตช์",
   "switchScanningMethodDwell": "ค้างด้วยสวิตช์เดียว",

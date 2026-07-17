@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "スイッチアクセス",
   "switchScanningEnabled": "スイッチスキャンを有効にする",
   "switchScanningMethod": "スキャン方法",
+  "switchScanningOneSwitch": "1つのスイッチ",
+  "switchScanningTwoSwitches": "2つのスイッチ",
   "switchScanningMethodAuto": "自動",
   "switchScanningMethodStep": "2スイッチステップ",
   "switchScanningMethodDwell": "1スイッチ滞留",

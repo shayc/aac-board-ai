@@ -87,6 +87,8 @@
   "settingsSectionSwitchAccess": "ಸ್ವಿಚ್ ಪ್ರವೇಶ",
   "switchScanningEnabled": "ಸ್ವಿಚ್ ಸ್ಕ್ಯಾನಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "switchScanningMethod": "ಸ್ಕ್ಯಾನ್ ವಿಧಾನ",
+  "switchScanningOneSwitch": "ಒಂದು ಸ್ವಿಚ್",
+  "switchScanningTwoSwitches": "ಎರಡು ಸ್ವಿಚ್‌ಗಳು",
   "switchScanningMethodAuto": "ಸ್ವಯಂಚಾಲಿತ",
   "switchScanningMethodStep": "ಎರಡು-ಸ್ವಿಚ್ ಹಂತ",
   "switchScanningMethodDwell": "ಒಂದು-ಸ್ವಿಚ್ ಕಾಯುವಿಕೆ",
