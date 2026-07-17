@@ -3,7 +3,6 @@ import { m } from "@paraglide/messages.js";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
 import { getNavigationTargetId } from "./button-readers";
 import {
-  ACTIONS_SCAN_ID,
   getTileScanId,
   getRowScanId,
   getSuggestionScanId,
@@ -87,7 +86,6 @@ export function ScannableSuggestion({
 }: ScannableSuggestionProps) {
   const scanTarget = useScanTarget({
     id: getSuggestionScanId(boardId, phrase),
-    parentId: ACTIONS_SCAN_ID,
     label: phrase,
   });
 
