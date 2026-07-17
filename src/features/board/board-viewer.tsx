@@ -10,22 +10,12 @@ import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-
 import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
-import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
 import { createButtonActivation } from "./activation/button-activation";
 import {
   ScannableGridRow,
   ScannableSuggestion,
   ScannableTile,
 } from "./board-scanning";
-import {
-  ACTIONS_SCAN_ID,
-  BACK_SCAN_ID,
-  BACKSPACE_SCAN_ID,
-  getSuggestionScanId,
-  HOME_SCAN_ID,
-  PLAY_SCAN_ID,
-  SUGGESTIONS_ENABLE_SCAN_ID,
-} from "./board-scanning-ids";
 import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
@@ -37,6 +27,7 @@ import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useSuggestions } from "./suggestions/use-suggestions";
 import type { Board, BoardButton } from "./types";
+import { useBoardScanning } from "./use-board-scanning";
 
 export interface BoardViewerProps {
   board: Board;
@@ -81,53 +72,21 @@ function BoardViewerContent({ board }: BoardViewerProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
   const hasMessage = message.parts.length > 0;
-
-  const playTarget = useScanTarget({
-    id: PLAY_SCAN_ID,
-    label: playback.isPlaying ? m.messageStop() : m.messagePlay(),
-    disabled: !hasMessage,
-  });
-  const backTarget = useScanTarget({
-    id: BACK_SCAN_ID,
-    parentId: ACTIONS_SCAN_ID,
-    label: m.navBack(),
-    disabled: !navigation.canGoBack,
-  });
-  const homeTarget = useScanTarget({
-    id: HOME_SCAN_ID,
-    parentId: ACTIONS_SCAN_ID,
-    label: m.navHome(),
-    disabled: !navigation.canGoHome || navigation.isHome,
-  });
-  const suggestionsEnableTarget = useScanTarget({
-    id: SUGGESTIONS_ENABLE_SCAN_ID,
-    parentId: ACTIONS_SCAN_ID,
-    label: m.suggestionsEnable(),
-    disabled: suggestions.status?.kind !== "needs-activation",
-  });
-  const backspaceTarget = useScanTarget({
-    id: BACKSPACE_SCAN_ID,
-    parentId: ACTIONS_SCAN_ID,
-    label: m.messageBackspace(),
-    disabled: !hasMessage,
-  });
-
-  const suggestionScanIds = suggestions.isSupported
-    ? suggestions.phrases.map((phrase) => getSuggestionScanId(board.id, phrase))
-    : [];
-  const actionSequence = [
-    ...(navigation.setId ? [BACK_SCAN_ID, HOME_SCAN_ID] : []),
-    ...(suggestions.status?.kind === "needs-activation"
-      ? [SUGGESTIONS_ENABLE_SCAN_ID]
-      : []),
-    ...suggestionScanIds,
-    BACKSPACE_SCAN_ID,
-  ];
-  const actionsGroup = useScanGroup({
-    id: ACTIONS_SCAN_ID,
-    label: m.switchScanningActions(),
-    exitLabel: m.switchScanningActionsExit(),
-    sequence: actionSequence,
+  const scanning = useBoardScanning({
+    boardId: board.id,
+    hasMessage,
+    isPlaying: playback.isPlaying,
+    navigation: {
+      isInBoardSet: navigation.setId !== undefined,
+      canGoBack: navigation.canGoBack,
+      canGoHome: navigation.canGoHome,
+      isHome: navigation.isHome,
+    },
+    suggestions: {
+      isSupported: suggestions.isSupported,
+      needsActivation: suggestions.status?.kind === "needs-activation",
+      phrases: suggestions.phrases,
+    },
   });
   const isActionsGroupOnTop = !isSmallScreen || suggestions.isSupported;
 
@@ -154,12 +113,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     />
   );
   const renderSuggestion = (phrase: string, onClick: () => void) => (
-    <ScannableSuggestion
-      boardId={board.id}
-      phrase={phrase}
-      scanParentId={ACTIONS_SCAN_ID}
-      onClick={onClick}
-    />
+    <ScannableSuggestion boardId={board.id} phrase={phrase} onClick={onClick} />
   );
 
   return (
@@ -178,20 +132,23 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
         playDisabled={!hasMessage}
-        slotProps={{ playButton: playTarget }}
+        slotProps={{ playButton: scanning.playTarget }}
         onPlayClick={() => void playback.play(message.parts)}
         onStopClick={playback.stop}
       />
 
       <Stack
-        {...(isActionsGroupOnTop ? actionsGroup : {})}
+        {...(isActionsGroupOnTop ? scanning.actionsGroup : {})}
         direction="row"
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
       >
         {!isSmallScreen && (
           <NavButtons
-            slotProps={{ backButton: backTarget, homeButton: homeTarget }}
+            slotProps={{
+              backButton: scanning.backTarget,
+              homeButton: scanning.homeTarget,
+            }}
           />
         )}
 
@@ -199,7 +156,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
           <SuggestionBar
             status={suggestions.status}
             phrases={suggestions.phrases}
-            slotProps={{ enableButton: suggestionsEnableTarget }}
+            slotProps={{ enableButton: scanning.suggestionsEnableTarget }}
             renderPhrase={renderSuggestion}
             onEnable={suggestions.enable}
             onPhraseClick={message.setFromText}
@@ -208,7 +165,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
 
         {!isSmallScreen && (
           <BackspaceButton
-            {...backspaceTarget}
+            {...scanning.backspaceTarget}
             disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}
@@ -231,7 +188,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
 
       {isSmallScreen && (
         <Toolbar
-          {...(!isActionsGroupOnTop ? actionsGroup : {})}
+          {...(!isActionsGroupOnTop ? scanning.actionsGroup : {})}
           sx={{
             justifyContent: "space-between",
             gap: 2,
@@ -240,11 +197,14 @@ function BoardViewerContent({ board }: BoardViewerProps) {
           }}
         >
           <NavButtons
-            slotProps={{ backButton: backTarget, homeButton: homeTarget }}
+            slotProps={{
+              backButton: scanning.backTarget,
+              homeButton: scanning.homeTarget,
+            }}
           />
 
           <BackspaceButton
-            {...backspaceTarget}
+            {...scanning.backspaceTarget}
             disabled={!hasMessage}
             onPress={message.removeLastPart}
             onLongPress={message.clear}

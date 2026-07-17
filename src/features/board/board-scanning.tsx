@@ -3,6 +3,7 @@ import { m } from "@paraglide/messages.js";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
 import { getNavigationTargetId } from "./button-readers";
 import {
+  ACTIONS_SCAN_ID,
   getTileScanId,
   getRowScanId,
   getSuggestionScanId,
@@ -27,7 +28,6 @@ interface ScannableGridRowProps extends GridRowProps {
 interface ScannableSuggestionProps {
   boardId: string;
   phrase: string;
-  scanParentId: string;
   onClick: () => void;
 }
 
@@ -83,12 +83,11 @@ export function ScannableGridRow({
 export function ScannableSuggestion({
   boardId,
   phrase,
-  scanParentId,
   onClick,
 }: ScannableSuggestionProps) {
   const scanTarget = useScanTarget({
     id: getSuggestionScanId(boardId, phrase),
-    parentId: scanParentId,
+    parentId: ACTIONS_SCAN_ID,
     label: phrase,
   });
 
