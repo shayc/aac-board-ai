@@ -45,7 +45,7 @@ Grammar correction and tone adjustment require experimental browser flags.
 **Chrome:**
 
 ```
-chrome://flags/#proofreader-api-for-gemini-nano
+chrome://flags/#proofreader-api
 chrome://flags/#rewriter-api-for-gemini-nano
 ```
 
