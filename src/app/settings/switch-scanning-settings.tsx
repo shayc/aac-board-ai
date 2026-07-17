@@ -64,18 +64,18 @@ export function SwitchScanningSettings() {
   const timing =
     method === "dwell"
       ? {
-        label: m.switchScanningDwellDuration(),
-        value: dwellDurationMs,
-        range: DWELL_DURATION_MS,
-        onChange: setDwellDurationMs,
-      }
+          label: m.switchScanningDwellDuration(),
+          value: dwellDurationMs,
+          range: DWELL_DURATION_MS,
+          onChange: setDwellDurationMs,
+        }
       : method === "auto" || method === "inverse"
         ? {
-          label: m.switchScanningInterval(),
-          value: scanIntervalMs,
-          range: SCAN_INTERVAL_MS,
-          onChange: setScanIntervalMs,
-        }
+            label: m.switchScanningInterval(),
+            value: scanIntervalMs,
+            range: SCAN_INTERVAL_MS,
+            onChange: setScanIntervalMs,
+          }
         : null;
 
   return (

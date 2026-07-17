@@ -83,9 +83,7 @@ export function useBoardScanning({
   });
 
   const suggestionScanIds = suggestions.isSupported
-    ? suggestions.phrases.map((phrase) =>
-      getSuggestionScanId(boardId, phrase),
-    )
+    ? suggestions.phrases.map((phrase) => getSuggestionScanId(boardId, phrase))
     : [];
 
   const actionSequence = [

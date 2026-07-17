@@ -204,9 +204,7 @@ describe("Tile", () => {
 
     expect(afterStyles.display).toBe("block");
     expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(
-        `color-mix(in srgb, ${styles.color} 75%, transparent)`,
-      ),
+      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
     );
     expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
   });
@@ -324,9 +322,7 @@ describe("Tile", () => {
 
     expect(afterStyles.display).toBe("block");
     expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(
-        `color-mix(in srgb, ${styles.color} 75%, transparent)`,
-      ),
+      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
     );
   });
 
