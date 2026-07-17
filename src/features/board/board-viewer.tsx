@@ -135,27 +135,29 @@ function BoardViewerContent({ board }: BoardViewerProps) {
       <Stack
         direction="row"
         spacing={2}
-        sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
+        sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
-        {!isSmallScreen && (
-          <NavButtons
-            slotProps={{
-              backButton: scanning.backTarget,
-              homeButton: scanning.homeTarget,
-            }}
-          />
-        )}
+        <div>
+          {!isSmallScreen && (
+            <NavButtons
+              slotProps={{
+                backButton: scanning.backTarget,
+                homeButton: scanning.homeTarget,
+              }}
+            />
+          )}
 
-        {suggestions.isSupported && (
-          <SuggestionBar
-            status={suggestions.status}
-            phrases={suggestions.phrases}
-            slotProps={{ enableButton: scanning.suggestionsEnableTarget }}
-            renderPhrase={renderSuggestion}
-            onEnable={suggestions.enable}
-            onPhraseClick={message.setFromText}
-          />
-        )}
+          {suggestions.isSupported && (
+            <SuggestionBar
+              status={suggestions.status}
+              phrases={suggestions.phrases}
+              slotProps={{ enableButton: scanning.suggestionsEnableTarget }}
+              renderPhrase={renderSuggestion}
+              onEnable={suggestions.enable}
+              onPhraseClick={message.setFromText}
+            />
+          )}
+        </div>
 
         {!isSmallScreen && (
           <BackspaceButton
