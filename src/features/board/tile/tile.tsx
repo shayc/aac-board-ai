@@ -23,6 +23,10 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
+function darken(color: string, percentage: number): string {
+  return `color-mix(in srgb, ${color} ${percentage}%, black)`;
+}
+
 export function Tile({
   label,
   imageSrc,
@@ -35,6 +39,9 @@ export function Tile({
   ...buttonProps
 }: TileProps) {
   const resolvedBorderColor = borderColor ?? backgroundColor;
+  const resolvedBackgroundColor = backgroundColor
+    ? desaturate(backgroundColor)
+    : undefined;
 
   return (
     <Button
@@ -59,17 +66,21 @@ export function Tile({
           overflow: "hidden",
           position: "relative",
           textTransform: "none",
-          color: backgroundColor
-            ? `contrast-color(${desaturate(backgroundColor)})`
+          color: resolvedBackgroundColor
+            ? `contrast-color(${resolvedBackgroundColor})`
             : "inherit",
-          backgroundColor: backgroundColor && desaturate(backgroundColor),
-          transition: theme.transitions.create(["filter", "box-shadow"], {
-            duration: theme.transitions.duration.short,
-          }),
+          backgroundColor: resolvedBackgroundColor,
+          transition: theme.transitions.create(
+            ["background-color", "box-shadow"],
+            {
+              duration: theme.transitions.duration.short,
+            },
+          ),
           "&:hover": {
             boxShadow: (theme.vars ?? theme).shadows[4],
             "@media (hover: hover)": {
-              filter: "brightness(0.8)",
+              backgroundColor:
+                resolvedBackgroundColor && darken(resolvedBackgroundColor, 80),
             },
             "@media (hover: none)": {
               boxShadow: (theme.vars ?? theme).shadows[2],
@@ -77,7 +88,8 @@ export function Tile({
           },
           "&:active": {
             boxShadow: (theme.vars ?? theme).shadows[8],
-            filter: "brightness(0.7)",
+            backgroundColor:
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 70),
           },
           [`&.${buttonClasses.focusVisible}`]: {
             boxShadow: (theme.vars ?? theme).shadows[6],

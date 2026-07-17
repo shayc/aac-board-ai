@@ -21,6 +21,15 @@ function resolveColor(cssColor: string): string {
   return resolved;
 }
 
+function resolveBackgroundColor(cssColor: string): string {
+  const probe = document.createElement("div");
+  document.body.append(probe);
+  probe.style.backgroundColor = cssColor;
+  const resolved = getComputedStyle(probe).backgroundColor;
+  probe.remove();
+  return resolved;
+}
+
 function resolveBoxShadow(cssShadow: string): string {
   const probe = document.createElement("div");
   document.body.append(probe);
@@ -203,9 +212,31 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
 
     expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #000000 l c h)"),
+      resolveBackgroundColor("oklch(from #000000 l c h)"),
     );
     expect(styles.color).toBe("rgb(255, 255, 255)");
+  });
+
+  test("darkens only the background on hover", async () => {
+    const theme = createTheme({ transitions: { duration: { short: 0 } } });
+    const screen = await render(
+      <MUIThemeProvider theme={theme}>
+        <Tile label="Colored" backgroundColor="#ff0000" onClick={vi.fn()} />
+      </MUIThemeProvider>,
+    );
+
+    const button = screen.getByRole("button", { name: "Colored" });
+    await button.hover();
+
+    const styles = getComputedStyle(button.element());
+    expect(styles.backgroundColor).toBe(
+      resolveBackgroundColor(
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 80%, black)",
+      ),
+    );
+    expect(styles.filter).toBe("none");
+
+    await button.unhover();
   });
 
   test("applies borderColor when provided", async () => {
