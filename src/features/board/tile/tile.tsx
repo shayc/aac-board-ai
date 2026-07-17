@@ -80,7 +80,7 @@ export function Tile({
             boxShadow: (theme.vars ?? theme).shadows[4],
             "@media (hover: hover)": {
               backgroundColor:
-                resolvedBackgroundColor && darken(resolvedBackgroundColor, 90),
+                resolvedBackgroundColor && darken(resolvedBackgroundColor, 80),
             },
             "@media (hover: none)": {
               boxShadow: (theme.vars ?? theme).shadows[2],
@@ -89,7 +89,7 @@ export function Tile({
           "&:active": {
             boxShadow: (theme.vars ?? theme).shadows[8],
             backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 80),
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 70),
           },
           [`&.${buttonClasses.focusVisible}`]: {
             boxShadow: (theme.vars ?? theme).shadows[6],
