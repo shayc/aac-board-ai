@@ -93,7 +93,7 @@ export function Tile({
           },
           [`&.${buttonClasses.focusVisible}`]: {
             boxShadow: (theme.vars ?? theme).shadows[6],
-            outline: `3px solid ${
+            outline: `4px solid ${
               theme.vars
                 ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
                 : alpha(theme.palette.text.primary, 0.8)
