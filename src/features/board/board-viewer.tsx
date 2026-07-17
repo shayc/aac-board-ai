@@ -10,6 +10,7 @@ import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-
 import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
+import { useRef } from "react";
 import { createButtonActivation } from "./activation/button-activation";
 import {
   ScannableGridRow,
@@ -63,6 +64,11 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const playback = useMessagePlayback();
   const suggestions = useSuggestions(message.text, board);
   const navigation = useBoardNavigation();
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  function scrollGridToOrigin() {
+    gridRef.current?.scrollTo({ left: 0, top: 0 });
+  }
 
   const { activateButton } = createButtonActivation({
     message,
@@ -78,7 +84,6 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     navigation: {
       canGoBack: navigation.canGoBack,
       canGoHome: navigation.canGoHome,
-      isHome: navigation.isHome,
     },
     suggestions: {
       needsActivation: suggestions.status?.kind === "needs-activation",
@@ -140,6 +145,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         <Stack direction="row" spacing={2}>
           {!isSmallScreen && (
             <NavButtons
+              onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
               slotProps={{
                 backButton: scanning.backTarget,
                 homeButton: scanning.homeTarget,
@@ -171,6 +177,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
+          ref={gridRef}
           ariaLabel={board.name ?? m.boardGridLabel()}
           items={board.buttons}
           rows={board.grid.rows}
@@ -192,6 +199,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
           }}
         >
           <NavButtons
+            onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
             slotProps={{
               backButton: scanning.backTarget,
               homeButton: scanning.homeTarget,

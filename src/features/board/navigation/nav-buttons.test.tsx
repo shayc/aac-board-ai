@@ -5,7 +5,7 @@ import {
 import { createRef } from "react";
 import { createMemoryRouter, type InitialEntry } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { seedBoardSets } from "../testing";
@@ -17,6 +17,8 @@ async function renderAt(
     initialIndex?: number;
     direction?: "ltr" | "rtl";
     slotProps?: NavButtonsSlotProps;
+    onBackClick?: () => void;
+    onHomeClick?: () => void;
   } = {},
 ) {
   const theme = createTheme({ direction: options.direction ?? "ltr" });
@@ -25,7 +27,13 @@ async function renderAt(
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <NavButtons slotProps={options.slotProps} />,
+        element: (
+          <NavButtons
+            slotProps={options.slotProps}
+            onBackClick={options.onBackClick}
+            onHomeClick={options.onHomeClick}
+          />
+        ),
       },
     ],
     { initialEntries, initialIndex: options.initialIndex },
@@ -64,6 +72,7 @@ describe("NavButtons", () => {
   });
 
   test("navigates back to the previous board when the back button is clicked", async () => {
+    const onBackClick = vi.fn();
     const { router, screen } = await renderAt(
       [
         "/sets/set-1/boards/root-1",
@@ -72,23 +81,27 @@ describe("NavButtons", () => {
           state: { backStack: ["root-1"] },
         },
       ],
-      { initialIndex: 1 },
+      { initialIndex: 1, onBackClick },
     );
 
     await screen.getByRole("button", { name: "Back" }).click();
 
+    expect(onBackClick).toHaveBeenCalledOnce();
     await expect
       .poll(() => router.state.location.pathname)
       .toBe("/sets/set-1/boards/root-1");
   });
 
-  test("navigates home when the home button is clicked", async () => {
-    const { router, screen } = await renderAt([
-      { pathname: "/sets/set-1/boards/board-2", state: { backStack: [] } },
-    ]);
+  test("runs the Home callback and navigates home", async () => {
+    const onHomeClick = vi.fn();
+    const { router, screen } = await renderAt(
+      [{ pathname: "/sets/set-1/boards/board-2", state: { backStack: [] } }],
+      { onHomeClick },
+    );
 
     await screen.getByRole("button", { name: "Home" }).click();
 
+    expect(onHomeClick).toHaveBeenCalledOnce();
     await expect
       .poll(() => router.state.location.pathname)
       .toBe("/sets/set-1/boards/root-1");

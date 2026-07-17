@@ -17,7 +17,6 @@ export interface UseBoardScanningOptions {
   navigation: {
     canGoBack: boolean;
     canGoHome: boolean;
-    isHome: boolean;
   };
   suggestions: {
     needsActivation: boolean;
@@ -53,7 +52,7 @@ export function useBoardScanning({
   const homeTarget = useScanTarget({
     id: HOME_SCAN_ID,
     label: m.navHome(),
-    disabled: !navigation.canGoHome || navigation.isHome,
+    disabled: !navigation.canGoHome,
   });
 
   const suggestionsEnableTarget = useScanTarget({

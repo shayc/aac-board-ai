@@ -3,6 +3,7 @@ import {
   setSwitchScanningMethod,
 } from "@shared/switch-scanning/switch-scanning-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { assertDefined } from "@shared/testing/assert-defined";
 import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
@@ -59,6 +60,27 @@ const ROW_SCAN_BOARD: OBFBoard = {
   },
 };
 
+const LARGE_GRID_SIZE = 20;
+const LARGE_GRID_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "large-grid-board",
+  locale: "en",
+  buttons: Array.from({ length: LARGE_GRID_SIZE ** 2 }, (_, index) => ({
+    id: `btn-${index}`,
+    label: `Button ${index}`,
+  })),
+  grid: {
+    rows: LARGE_GRID_SIZE,
+    columns: LARGE_GRID_SIZE,
+    order: Array.from({ length: LARGE_GRID_SIZE }, (_, rowIndex) =>
+      Array.from(
+        { length: LARGE_GRID_SIZE },
+        (_, columnIndex) => `btn-${rowIndex * LARGE_GRID_SIZE + columnIndex}`,
+      ),
+    ),
+  },
+};
+
 describe("BoardViewer", () => {
   let speech: ReturnType<typeof stubSpeech>;
 
@@ -102,6 +124,60 @@ describe("BoardViewer", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Core words" }))
       .toBeVisible();
+  });
+
+  test("does not scroll the grid when Home navigates to the home board", async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
+
+    const screen = await renderBoardViewer(LARGE_GRID_BOARD, [
+      "/sets/set-1/boards/other-board",
+    ]);
+    const grid = screen.getByRole("grid").element();
+    const scrollContainer = grid.parentElement;
+    assertDefined(scrollContainer);
+
+    scrollContainer.scrollTo({
+      left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+      top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+    });
+
+    await vi.waitFor(() => {
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    });
+
+    await screen.getByRole("button", { name: "Home" }).click();
+
+    expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+    expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+  });
+
+  test("scrolls the grid to both origins when Home is clicked from Home", async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
+
+    const screen = await renderBoardViewer(LARGE_GRID_BOARD, [
+      "/sets/set-1/boards/root-board",
+    ]);
+    const grid = screen.getByRole("grid").element();
+    const scrollContainer = grid.parentElement;
+    assertDefined(scrollContainer);
+
+    scrollContainer.scrollTo({
+      left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+      top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+    });
+
+    await vi.waitFor(() => {
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    });
+
+    await screen.getByRole("button", { name: "Home" }).click();
+
+    await vi.waitFor(() => {
+      expect(scrollContainer.scrollLeft).toBe(0);
+      expect(scrollContainer.scrollTop).toBe(0);
+    });
   });
 
   test("falls back to a generic grid name when the board is unnamed", async () => {
