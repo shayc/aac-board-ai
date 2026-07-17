@@ -187,20 +187,24 @@ describe("Tile", () => {
     expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
   });
 
-  test("renders folder corner indicator when variant is folder", async () => {
+  test("renders the folder corner using the readable text color", async () => {
     const screen = await render(
       <Tile
         label="Folder"
         variant="folder"
+        backgroundColor="#000000"
         borderColor="#000000"
         onClick={vi.fn()}
       />,
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
+    const styles = getComputedStyle(button.element());
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
+    expect(afterStyles.borderInlineEndColor).toBe(styles.color);
+    expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
   });
 
   test("applies backgroundColor and a readable text color", async () => {
@@ -303,6 +307,7 @@ describe("Tile", () => {
       <Tile
         label="Folder"
         variant="folder"
+        backgroundColor="#000000"
         borderColor="#000000"
         borderHidden
         onClick={vi.fn()}
@@ -310,9 +315,11 @@ describe("Tile", () => {
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
+    const styles = getComputedStyle(button.element());
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
+    expect(afterStyles.borderInlineEndColor).toBe(styles.color);
   });
 
   test("calls onClick when clicked", async () => {

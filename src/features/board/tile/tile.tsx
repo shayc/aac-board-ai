@@ -111,7 +111,7 @@ export function Tile({
               insetInlineEnd: -2,
               width: 0,
               height: 0,
-              borderInlineEnd: `32px solid ${borderColor ? desaturate(borderColor) : "#000"}`,
+              borderInlineEnd: "32px solid currentColor",
               borderBottom: "32px solid transparent",
             },
           }),
