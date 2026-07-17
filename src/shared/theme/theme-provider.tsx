@@ -37,16 +37,16 @@ function getThemeOptions(reducedMotion: boolean) {
     },
     transitions: reducedMotion
       ? {
-        duration: {
-          shortest: 0,
-          shorter: 0,
-          short: 0,
-          standard: 0,
-          complex: 0,
-          enteringScreen: 0,
-          leavingScreen: 0,
-        },
-      }
+          duration: {
+            shortest: 0,
+            shorter: 0,
+            short: 0,
+            standard: 0,
+            complex: 0,
+            enteringScreen: 0,
+            leavingScreen: 0,
+          },
+        }
       : undefined,
     typography: {
       button: {
