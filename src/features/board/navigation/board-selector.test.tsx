@@ -11,14 +11,14 @@ import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { replaceBoardSet } from "../storage/boards-db";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
-import { BoardSwitcher } from "./board-switcher";
+import { BoardSelector } from "./board-selector";
 
-async function renderSwitcher(initialPath: string) {
+async function renderSelector(initialPath: string) {
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <BoardSwitcher />,
+        element: <BoardSelector />,
       },
     ],
     { initialEntries: [initialPath] },
@@ -59,15 +59,15 @@ beforeEach(async () => {
   });
 });
 
-describe("BoardSwitcher", () => {
+describe("BoardSelector", () => {
   test("shows the current board name in the input", async () => {
-    const { screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { screen } = await renderSelector("/sets/set-1/boards/root");
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Home");
   });
 
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
-    const { screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").click();
 
@@ -88,7 +88,7 @@ describe("BoardSwitcher", () => {
   });
 
   test("navigates and closes the popup when a board is clicked", async () => {
-    const { router, screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").click();
     await screen.getByRole("option", { name: "Animals" }).click();
@@ -101,7 +101,7 @@ describe("BoardSwitcher", () => {
   });
 
   test("navigates with arrow keys and Enter", async () => {
-    const { router, screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").click();
     await userEvent.keyboard("{ArrowDown}{Enter}");
@@ -110,7 +110,7 @@ describe("BoardSwitcher", () => {
   });
 
   test("filters while typing and selects the first match with Enter", async () => {
-    const { router, screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").fill("ani");
 
@@ -127,7 +127,7 @@ describe("BoardSwitcher", () => {
   });
 
   test("closes the popup on Escape and restores the current board name on blur", async () => {
-    const { router, screen } = await renderSwitcher("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").fill("ani");
     await userEvent.keyboard("{Escape}");
@@ -166,7 +166,7 @@ describe("BoardSwitcher", () => {
 
     setStoredLanguage("es");
 
-    const { screen } = await renderSwitcher("/sets/set-2/boards/root");
+    const { screen } = await renderSelector("/sets/set-2/boards/root");
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
 

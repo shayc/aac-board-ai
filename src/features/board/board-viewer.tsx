@@ -137,7 +137,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         spacing={2}
         sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
-        <div>
+        <Stack direction="row" spacing={2}>
           {!isSmallScreen && (
             <NavButtons
               slotProps={{
@@ -157,7 +157,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
               onPhraseClick={message.setFromText}
             />
           )}
-        </div>
+        </Stack>
 
         {!isSmallScreen && (
           <BackspaceButton

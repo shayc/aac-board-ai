@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useBoardNavigation } from "./use-board-navigation";
 import { useBoardsInSet } from "./use-boards-in-set";
 
-export function BoardSwitcher() {
+export function BoardSelector() {
   const { setId, boardId, goToBoard } = useBoardNavigation();
   const { boards } = useBoardsInSet({ setId });
   const [inputValue, setInputValue] = useState("");
