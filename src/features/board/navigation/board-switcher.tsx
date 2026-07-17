@@ -44,7 +44,7 @@ export function BoardSwitcher() {
             ...params.slotProps,
             input: {
               ...params.slotProps?.input,
-              sx: { height: 50, borderRadius: 7 },
+              sx: { height: 48, borderRadius: 8 },
             },
             htmlInput: {
               ...params.slotProps?.htmlInput,

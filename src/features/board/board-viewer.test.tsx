@@ -1,5 +1,10 @@
+import {
+  setSwitchScanningEnabled,
+  setSwitchScanningMethod,
+} from "@shared/switch-scanning/switch-scanning-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
+  makeProofreadResult,
   stubBuiltInAIUnsupported,
   stubProofreader,
 } from "@shared/testing/built-in-ai";
@@ -7,8 +12,9 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { TEST_IMAGE_SRC } from "./testing";
+import { userEvent } from "vitest/browser";
 import { renderBoardViewer, TWO_BUTTON_BOARD } from "./test-utils";
+import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -31,6 +37,26 @@ const PICTOGRAM_BOARD: OBFBoard = {
     { id: "img-1", data: TEST_IMAGE_SRC },
     { id: "img-2", data: TEST_IMAGE_SRC },
   ],
+};
+
+const ROW_SCAN_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "row-scan-board",
+  locale: "en",
+  buttons: [
+    { id: "btn-1", label: "hello" },
+    { id: "btn-2", label: "world" },
+    { id: "btn-3", label: "yes" },
+    { id: "btn-4", label: "no" },
+  ],
+  grid: {
+    rows: 2,
+    columns: 2,
+    order: [
+      ["btn-1", "btn-2"],
+      ["btn-3", "btn-4"],
+    ],
+  },
 };
 
 describe("BoardViewer", () => {
@@ -86,14 +112,198 @@ describe("BoardViewer", () => {
       .toBeVisible();
   });
 
-  test("tapping the enable chip starts the suggestion model download", async () => {
-    const proofreader = stubProofreader();
-    proofreader.availability.mockResolvedValue("downloadable");
+  test("two-switch scanning selects a row before moving through its tiles", async () => {
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+
+    const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+    const firstRow = screen.getByRole("row").nth(0);
+    const secondRow = screen.getByRole("row").nth(1);
+    const yes = screen.getByRole("button", { name: "yes", exact: true });
+    const no = screen.getByRole("button", { name: "no", exact: true });
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(firstRow).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(secondRow).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Enter}");
+    await expect.element(yes).toHaveAttribute("data-scan-highlighted");
+    await expect.element(secondRow).toHaveAttribute("data-scan-within");
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(no).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Enter}");
+
+    await vi.waitFor(() => {
+      expect(speech.speak).toHaveBeenCalledTimes(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("no");
+    });
+  });
+
+  test("scans navigation and backspace inside the actions group", async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD, [
+      {
+        pathname: "/sets/set-1/boards/other-board",
+        state: { backStack: ["root-board"] },
+      },
+    ]);
+    const play = screen.getByRole("button", { name: "Play message" });
+    const back = screen.getByRole("button", { name: "Go back" });
+    const home = screen.getByRole("button", { name: "Go home" });
+    const backspace = screen.getByRole("button", { name: "Backspace" });
+
+    await screen.getByRole("button", { name: "hello" }).click();
+    await expect.element(backspace).toBeEnabled();
+
+    const actionsGroup = getScanGroup(back.element());
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(play).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Space}");
+    if (!actionsGroup.hasAttribute("data-scan-highlighted")) {
+      // On small screens the actions toolbar follows the grid visually.
+      await userEvent.keyboard("{Space}");
+    }
+    await vi.waitFor(() => {
+      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
+    });
+
+    await userEvent.keyboard("{Enter}");
+    await expect.element(back).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(home).toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Space}");
+    await expect.element(backspace).toHaveAttribute("data-scan-highlighted");
+  });
+
+  test("scans generated suggestions inside the actions group", async () => {
+    stubProofreader(() => makeProofreadResult("Corrected hello"));
     stubBuiltInAIUnsupported("Rewriter");
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
 
     const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
 
-    await screen.getByRole("button", { name: "Enable suggestions" }).click();
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    const suggestion = screen.getByRole("button", {
+      name: "Corrected hello",
+    });
+    await expect.element(suggestion).toBeVisible();
+
+    const actionsGroup = getScanGroup(suggestion.element());
+
+    await userEvent.keyboard("{Space}");
+    await userEvent.keyboard("{Space}");
+    await vi.waitFor(() => {
+      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
+    });
+
+    await userEvent.keyboard("{Enter}");
+    await expect.element(suggestion).toHaveAttribute("data-scan-highlighted");
+    expect(actionsGroup.hasAttribute("data-scan-within")).toBe(true);
+  });
+
+  test("shows the active row and tile clearly in light and dark themes", async () => {
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+
+    const originalThemeClasses = document.documentElement.className;
+
+    try {
+      setThemeMode("light");
+
+      const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+      const firstRow = screen.getByRole("row").nth(0);
+      const hello = screen.getByRole("button", {
+        name: "hello",
+        exact: true,
+      });
+
+      await userEvent.keyboard("{Space}");
+
+      const lightRowStyles = getComputedStyle(firstRow.element());
+      expect(lightRowStyles.outlineStyle).toBe("solid");
+      expect(lightRowStyles.outlineWidth).toBe("5px");
+      expect(lightRowStyles.boxShadow).not.toBe("none");
+
+      await userEvent.keyboard("{Enter}");
+
+      const lightTileStyles = getComputedStyle(hello.element());
+      const lightOutlineColor = lightTileStyles.outlineColor;
+      expect(lightTileStyles.outlineStyle).toBe("solid");
+      expect(lightTileStyles.outlineWidth).toBe("5px");
+      expect(lightTileStyles.boxShadow).not.toBe("none");
+      expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
+
+      setThemeMode("dark");
+
+      await vi.waitFor(() => {
+        expect(getComputedStyle(hello.element()).outlineColor).not.toBe(
+          lightOutlineColor,
+        );
+      });
+
+      const darkTileStyles = getComputedStyle(hello.element());
+      expect(darkTileStyles.outlineStyle).toBe("solid");
+      expect(darkTileStyles.outlineWidth).toBe("5px");
+      expect(darkTileStyles.boxShadow).not.toBe("none");
+      expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
+    } finally {
+      document.documentElement.className = originalThemeClasses;
+    }
+  });
+
+  test("leaves native Space activation intact while switch scanning is off", async () => {
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const hello = screen.getByRole("button", { name: "hello" });
+
+    hello.element().focus();
+    await userEvent.keyboard("{Space}");
+
+    await vi.waitFor(() => {
+      expect(speech.speak).toHaveBeenCalledTimes(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+    });
+  });
+
+  test("scanning the enable chip starts the suggestion model download", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const enableSuggestions = screen.getByRole("button", {
+      name: "Enable suggestions",
+    });
+
+    await expect.element(enableSuggestions).toBeVisible();
+
+    const actionsGroup = getScanGroup(enableSuggestions.element());
+
+    await userEvent.keyboard("{Space}");
+    await vi.waitFor(() => {
+      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
+    });
+
+    await userEvent.keyboard("{Enter}");
+    await expect
+      .element(enableSuggestions)
+      .toHaveAttribute("data-scan-highlighted");
+
+    await userEvent.keyboard("{Enter}");
 
     await vi.waitFor(() => {
       expect(proofreader.create).toHaveBeenCalled();
@@ -115,3 +325,17 @@ describe("BoardViewer", () => {
     await expectNoA11yViolations(screen.container);
   });
 });
+
+function setThemeMode(mode: "light" | "dark"): void {
+  document.documentElement.classList.remove("light", "dark");
+  document.documentElement.classList.add(mode);
+}
+
+function getScanGroup(element: Element): HTMLElement {
+  const group = element.closest<HTMLElement>("[data-scan-group]");
+  if (!group) {
+    throw new Error("Expected control to be inside a scan group");
+  }
+
+  return group;
+}

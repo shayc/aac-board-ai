@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
-import { MemoryRouter } from "react-router";
+import { MemoryRouter, type InitialEntry } from "react-router";
 import { render } from "vitest-browser-react";
 import { BoardViewer } from "./board-viewer";
 import { obfToBoard } from "./obf/obf-to-board";
@@ -16,9 +16,12 @@ export const TWO_BUTTON_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
 };
 
-export function renderBoardViewer(obfBoard: OBFBoard) {
+export function renderBoardViewer(
+  obfBoard: OBFBoard,
+  initialEntries: InitialEntry[] = ["/"],
+) {
   return render(
-    <MemoryRouter>
+    <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
         <div style={{ height: "100vh" }}>
           <BoardViewer board={obfToBoard(obfBoard)} />

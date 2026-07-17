@@ -2,6 +2,7 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { createRef } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
@@ -37,6 +38,28 @@ describe("BackspaceButton", () => {
   afterEach(() => {
     vi.clearAllTimers();
     vi.useRealTimers();
+  });
+
+  test("forwards root props and composes their event handlers", async () => {
+    const handlers = createHandlers();
+    const onClick = vi.fn();
+    const ref = createRef<HTMLButtonElement>();
+    const screen = await render(
+      <BackspaceButton
+        {...handlers}
+        ref={ref}
+        data-scan-target=""
+        onClick={onClick}
+      />,
+    );
+
+    const button = screen.getByRole("button", { name: "Backspace" });
+    await button.click();
+
+    await expect.element(button).toHaveAttribute("data-scan-target", "");
+    expect(ref.current).toBe(button.element());
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(handlers.onPress).toHaveBeenCalledTimes(1);
   });
 
   test("calls onPress when clicked", async () => {
