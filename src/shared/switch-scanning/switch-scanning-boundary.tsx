@@ -1,5 +1,3 @@
-import "@shayc/switch-scanning/styles.css";
-
 import { SwitchScanner } from "@shayc/switch-scanning/react";
 import type { ReactNode } from "react";
 import {

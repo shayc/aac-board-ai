@@ -8,6 +8,7 @@ import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
+import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
@@ -41,37 +42,8 @@ const BACKSPACE_SCAN_ID = "board-message-backspace";
 const HOME_SCAN_ID = "board-navigation-home";
 const SUGGESTIONS_ENABLE_SCAN_ID = "board-suggestions-enable";
 
-const rootSx = (theme: Theme) => ({
-  "--scan-outline-width": "5px",
-  "--scan-outline-offset": "3px",
-  "--scan-within-width": "3px",
-  "--scan-within-offset": "1px",
+const boardRootSx = (theme: Theme) => ({
   height: "100%",
-  "&& [data-scan-highlighted]": {
-    outline:
-      "var(--scan-outline-width) solid var(--scan-outline-color, CanvasText)",
-    outlineOffset: "var(--scan-outline-offset)",
-  },
-  "&& [data-scan-within]": {
-    outline:
-      "var(--scan-within-width) dashed var(--scan-within-color, CanvasText)",
-    outlineOffset: "var(--scan-within-offset)",
-  },
-  "&& [data-scan-exit-highlighted]": {
-    outline:
-      "var(--scan-outline-width) dashed var(--scan-outline-color, CanvasText)",
-    outlineOffset: "var(--scan-outline-offset)",
-  },
-  "@media (forced-colors: none)": {
-    "--scan-outline-color":
-      theme.vars?.palette.primary.main ?? theme.palette.primary.main,
-    "--scan-within-color":
-      theme.vars?.palette.primary.main ?? theme.palette.primary.main,
-    "&& [data-scan-highlighted], && [data-scan-exit-highlighted]": {
-      boxShadow:
-        "0 0 0 calc(var(--scan-outline-width) + var(--scan-outline-offset) + 2px) Canvas",
-    },
-  },
   ...theme.applyStyles("dark", {
     backgroundRepeat: "no-repeat",
     backgroundImage:
@@ -190,7 +162,11 @@ function BoardViewerContent({ board }: BoardViewerProps) {
       {...keyboard.rootProps}
       data-switch-scanning-scope=""
       direction="column"
-      sx={[rootSx, { "--tile-saturation": String(saturation) }]}
+      sx={[
+        boardRootSx,
+        switchScanningSx,
+        { "--tile-saturation": String(saturation) },
+      ]}
     >
       <MessageBar
         parts={message.parts}
