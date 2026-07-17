@@ -73,22 +73,17 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const keyboard = useBoardKeyboard({ message, playback });
   const hasMessage = message.parts.length > 0;
   const scanning = useBoardScanning({
-    boardId: board.id,
     hasMessage,
     isPlaying: playback.isPlaying,
     navigation: {
-      isInBoardSet: navigation.setId !== undefined,
       canGoBack: navigation.canGoBack,
       canGoHome: navigation.canGoHome,
       isHome: navigation.isHome,
     },
     suggestions: {
-      isSupported: suggestions.isSupported,
       needsActivation: suggestions.status?.kind === "needs-activation",
-      phrases: suggestions.phrases,
     },
   });
-  const isActionsGroupOnTop = !isSmallScreen || suggestions.isSupported;
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <ScannableTile
@@ -138,7 +133,6 @@ function BoardViewerContent({ board }: BoardViewerProps) {
       />
 
       <Stack
-        {...(isActionsGroupOnTop ? scanning.actionsGroup : {})}
         direction="row"
         spacing={2}
         sx={{ justifyContent: "flex-end", px: { xs: 2, sm: 3 } }}
@@ -188,7 +182,6 @@ function BoardViewerContent({ board }: BoardViewerProps) {
 
       {isSmallScreen && (
         <Toolbar
-          {...(!isActionsGroupOnTop ? scanning.actionsGroup : {})}
           sx={{
             justifyContent: "space-between",
             gap: 2,

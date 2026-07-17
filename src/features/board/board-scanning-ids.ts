@@ -1,4 +1,3 @@
-export const ACTIONS_SCAN_ID = "board-actions";
 export const BACK_SCAN_ID = "board-navigation-back";
 export const BACKSPACE_SCAN_ID = "board-message-backspace";
 export const HOME_SCAN_ID = "board-navigation-home";

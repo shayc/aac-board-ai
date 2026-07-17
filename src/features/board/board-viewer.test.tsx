@@ -143,7 +143,7 @@ describe("BoardViewer", () => {
     });
   });
 
-  test("scans navigation and backspace inside the actions group", async () => {
+  test("scans navigation and backspace as top-level targets", async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
     setSwitchScanningEnabled(true);
     setSwitchScanningMethod("step");
@@ -162,21 +162,18 @@ describe("BoardViewer", () => {
     await screen.getByRole("button", { name: "hello" }).click();
     await expect.element(backspace).toBeEnabled();
 
-    const actionsGroup = getScanGroup(back.element());
+    expect(back.element().closest("[data-scan-group]")).toBeNull();
+    expect(home.element().closest("[data-scan-group]")).toBeNull();
+    expect(backspace.element().closest("[data-scan-group]")).toBeNull();
 
     await userEvent.keyboard("{Space}");
     await expect.element(play).toHaveAttribute("data-scan-highlighted");
 
     await userEvent.keyboard("{Space}");
-    if (!actionsGroup.hasAttribute("data-scan-highlighted")) {
-      // On small screens the actions toolbar follows the grid visually.
+    if (!back.element().hasAttribute("data-scan-highlighted")) {
+      // On small screens the tile grid precedes the actions toolbar.
       await userEvent.keyboard("{Space}");
     }
-    await vi.waitFor(() => {
-      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
-    });
-
-    await userEvent.keyboard("{Enter}");
     await expect.element(back).toHaveAttribute("data-scan-highlighted");
 
     await userEvent.keyboard("{Space}");
@@ -186,7 +183,7 @@ describe("BoardViewer", () => {
     await expect.element(backspace).toHaveAttribute("data-scan-highlighted");
   });
 
-  test("scans generated suggestions inside the actions group", async () => {
+  test("scans generated suggestions as top-level targets", async () => {
     stubProofreader(() => makeProofreadResult("Corrected hello"));
     stubBuiltInAIUnsupported("Rewriter");
     setSwitchScanningEnabled(true);
@@ -201,17 +198,11 @@ describe("BoardViewer", () => {
     });
     await expect.element(suggestion).toBeVisible();
 
-    const actionsGroup = getScanGroup(suggestion.element());
+    expect(suggestion.element().closest("[data-scan-group]")).toBeNull();
 
     await userEvent.keyboard("{Space}");
     await userEvent.keyboard("{Space}");
-    await vi.waitFor(() => {
-      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
-    });
-
-    await userEvent.keyboard("{Enter}");
     await expect.element(suggestion).toHaveAttribute("data-scan-highlighted");
-    expect(actionsGroup.hasAttribute("data-scan-within")).toBe(true);
   });
 
   test("shows the active row and tile clearly in light and dark themes", async () => {
@@ -291,14 +282,9 @@ describe("BoardViewer", () => {
 
     await expect.element(enableSuggestions).toBeVisible();
 
-    const actionsGroup = getScanGroup(enableSuggestions.element());
+    expect(enableSuggestions.element().closest("[data-scan-group]")).toBeNull();
 
     await userEvent.keyboard("{Space}");
-    await vi.waitFor(() => {
-      expect(actionsGroup.hasAttribute("data-scan-highlighted")).toBe(true);
-    });
-
-    await userEvent.keyboard("{Enter}");
     await expect
       .element(enableSuggestions)
       .toHaveAttribute("data-scan-highlighted");
@@ -329,13 +315,4 @@ describe("BoardViewer", () => {
 function setThemeMode(mode: "light" | "dark"): void {
   document.documentElement.classList.remove("light", "dark");
   document.documentElement.classList.add(mode);
-}
-
-function getScanGroup(element: Element): HTMLElement {
-  const group = element.closest<HTMLElement>("[data-scan-group]");
-  if (!group) {
-    throw new Error("Expected control to be inside a scan group");
-  }
-
-  return group;
 }
