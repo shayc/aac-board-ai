@@ -1,14 +1,20 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
+import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import {
+  setHighlightActivePart,
+  useHighlightConfig,
+} from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { speak } from "@shared/speech/speak";
 import {
@@ -26,6 +32,7 @@ import {
 export function SpeechSettings() {
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
+  const { highlightActivePart } = useHighlightConfig();
 
   const { language } = useLanguage();
 
@@ -123,6 +130,16 @@ export function SpeechSettings() {
           </Stack>
         ),
       )}
+
+      <FormControlLabel
+        label={m.playbackHighlight()}
+        control={
+          <Switch
+            checked={highlightActivePart}
+            onChange={(event) => setHighlightActivePart(event.target.checked)}
+          />
+        }
+      />
 
       <Button
         variant="contained"

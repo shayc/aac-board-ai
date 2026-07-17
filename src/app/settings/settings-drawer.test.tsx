@@ -24,7 +24,7 @@ describe("SettingsDrawer", () => {
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
 
     await expect
-      .element(screen.getByRole("heading", { name: "Appearance" }))
+      .element(screen.getByRole("heading", { name: "General" }))
       .toBeInTheDocument();
     await expect.element(screen.getByText("Theme")).toBeInTheDocument();
     await expect
@@ -42,9 +42,7 @@ describe("SettingsDrawer", () => {
       .element(screen.getByRole("heading", { name: "Board" }))
       .toBeInTheDocument();
     await expect
-      .element(
-        screen.getByRole("switch", { name: "Highlight words while speaking" }),
-      )
+      .element(screen.getByRole("slider", { name: "Tile color intensity" }))
       .toBeInTheDocument();
 
     await expect
@@ -52,6 +50,9 @@ describe("SettingsDrawer", () => {
       .toBeInTheDocument();
     await expect
       .element(screen.getByRole("combobox", { name: "Voice" }))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("switch", { name: "Highlight spoken words" }))
       .toBeInTheDocument();
 
     await expect

@@ -39,7 +39,11 @@ describe("SwitchScanningSettings", () => {
       .getByRole("switch", { name: "Enable switch scanning" })
       .click();
     await screen.getByRole("combobox", { name: "Scan method" }).click();
-    await screen.getByRole("option", { name: "Two-switch step" }).click();
+    await expect.element(screen.getByText("One switch")).toBeVisible();
+    await expect.element(screen.getByText("Two switches")).toBeVisible();
+    await screen
+      .getByRole("option", { name: "Two-switch step scan, Two switches" })
+      .click();
 
     await expect
       .element(screen.getByText("Press Space to move and Enter to select."))
@@ -56,14 +60,18 @@ describe("SwitchScanningSettings", () => {
     });
   });
 
-  test("shows dwell timing only for single-switch dwell", async () => {
+  test("shows dwell timing only for single-switch step scan", async () => {
     const screen = await renderSettings();
 
     await screen
       .getByRole("switch", { name: "Enable switch scanning" })
       .click();
     await screen.getByRole("combobox", { name: "Scan method" }).click();
-    await screen.getByRole("option", { name: "Single-switch dwell" }).click();
+    await screen
+      .getByRole("option", {
+        name: "Single-switch step scan, One switch",
+      })
+      .click();
 
     await expect
       .element(screen.getByRole("slider", { name: "Dwell time" }))

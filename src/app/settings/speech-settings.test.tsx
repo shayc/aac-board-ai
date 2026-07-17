@@ -66,12 +66,26 @@ describe("SpeechSettings", () => {
       .element(screen.getByRole("slider", { name: "Pitch" }))
       .toBeInTheDocument();
     await expect
-      .element(screen.getByRole("slider", { name: "Volume" }))
+      .element(screen.getByRole("slider", { name: "Speech volume" }))
       .toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("switch", { name: "Highlight spoken words" }))
+      .not.toBeChecked();
     await expect
       .element(screen.getByRole("button", { name: "Preview" }))
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("toggles spoken-word highlighting", async () => {
+    const screen = await renderSpeechSettings();
+    const highlightSwitch = screen.getByRole("switch", {
+      name: "Highlight spoken words",
+    });
+
+    await highlightSwitch.click();
+
+    await expect.element(highlightSwitch).toBeChecked();
   });
 });
