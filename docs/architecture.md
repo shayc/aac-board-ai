@@ -194,9 +194,9 @@ State has **five kinds**, each with one home:
 4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
    change): selected **language**, speech config (voice/rate/pitch/volume),
    playback config, switch-scanning access method and timing, AI shared context,
-   AI tone (`tone-store.ts`, key `ai-tone`), and the onboarding-seen flag
-   (`use-onboarding.ts`, key `hasSeenOnboarding`). Theme mode persists separately
-   as MUI's `mui-mode`, read pre-paint in `index.html`.
+   and the onboarding-seen flag (`use-onboarding.ts`, key `hasSeenOnboarding`).
+   Theme mode persists separately as MUI's `mui-mode`, read pre-paint in
+   `index.html`.
 5. **Local component state** — the in-progress message (`useMessage`), playback
    progress, grid focus. Never promoted to a global store.
 

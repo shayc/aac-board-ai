@@ -4,7 +4,6 @@ import {
 } from "@shared/built-in-ai/engine-language-options";
 import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
-import { useAITone } from "@shared/built-in-ai/tone-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
@@ -22,7 +21,6 @@ import { toPhrases } from "./to-phrases";
 import { useWordPrediction } from "./use-word-prediction";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
-const TONE_DEBOUNCE_MS = 400;
 
 export interface UseSuggestionsReturn {
   isSupported: boolean;
@@ -45,18 +43,26 @@ export function useSuggestions(
     SHARED_CONTEXT_DEBOUNCE_MS,
   );
 
-  const tone = useAITone();
-  const debouncedTone = useDebouncedValue(tone, TONE_DEBOUNCE_MS);
   const { language } = useLanguage();
 
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
-
-  const rewriter = useRewriter({
-    tone: debouncedTone,
+  const rewriterOptions = {
     sharedContext: debouncedSharedContext,
-    length: "shorter",
-    format: "plain-text",
+    length: "shorter" as const,
+    format: "plain-text" as const,
     ...rewriterLanguageOptions(language),
+  };
+  const directRewriter = useRewriter({
+    ...rewriterOptions,
+    tone: "as-is",
+  });
+  const friendlyRewriter = useRewriter({
+    ...rewriterOptions,
+    tone: "more-casual",
+  });
+  const professionalRewriter = useRewriter({
+    ...rewriterOptions,
+    tone: "more-formal",
   });
 
   const prediction = useWordPrediction(text, board);
@@ -72,14 +78,31 @@ export function useSuggestions(
         .then((result) => result.correctedInput),
   });
 
-  const rewritten = useLatestAsync({
-    enabled: hasText && rewriter.status === "ready",
-    deps: [text, debouncedTone, debouncedSharedContext, language],
-    run: (signal) => rewriter.rewrite(text, { signal }),
+  const directRewrite = useLatestAsync({
+    enabled: hasText && directRewriter.status === "ready",
+    deps: [text, debouncedSharedContext, language],
+    run: (signal) => directRewriter.rewrite(text, { signal }),
   });
 
-  // Settings' Download action provisions its own hook instances; only the
-  // global store sees the downloads they start.
+  const friendlyRewrite = useLatestAsync({
+    enabled: hasText && friendlyRewriter.status === "ready",
+    deps: [text, debouncedSharedContext, language],
+    run: (signal) => friendlyRewriter.rewrite(text, { signal }),
+  });
+
+  const professionalRewrite = useLatestAsync({
+    enabled: hasText && professionalRewriter.status === "ready",
+    deps: [text, debouncedSharedContext, language],
+    run: (signal) => professionalRewriter.rewrite(text, { signal }),
+  });
+  const rewriterSuggestions = [
+    { engine: directRewriter, request: directRewrite },
+    { engine: friendlyRewriter, request: friendlyRewrite },
+    { engine: professionalRewriter, request: professionalRewrite },
+  ];
+
+  // Other hook instances can start these downloads; global progress keeps the
+  // suggestion bar in sync with them.
   const downloadProgress = useGlobalDownloadProgress([
     "Proofreader",
     "Rewriter",
@@ -88,11 +111,15 @@ export function useSuggestions(
 
   const phrases = toPhrases(text, [
     corrected.value,
-    rewritten.value,
+    directRewrite.value,
+    friendlyRewrite.value,
+    professionalRewrite.value,
     prediction.phrase,
   ]);
   const isPending =
-    corrected.isPending || rewritten.isPending || prediction.isPending;
+    corrected.isPending ||
+    rewriterSuggestions.some(({ request }) => request.isPending) ||
+    prediction.isPending;
 
   const status = deriveSuggestionStatus({
     engines: [
@@ -100,10 +127,10 @@ export function useSuggestions(
         status: proofreader.status,
         requestFailed: isNonAbortError(corrected.error),
       },
-      {
-        status: rewriter.status,
-        requestFailed: isNonAbortError(rewritten.error),
-      },
+      ...rewriterSuggestions.map(({ engine, request }) => ({
+        status: engine.status,
+        requestFailed: isNonAbortError(request.error),
+      })),
       {
         status: prediction.status,
         requestFailed: prediction.requestFailed,
@@ -120,8 +147,10 @@ export function useSuggestions(
       prepareQuietly(proofreader);
     }
 
-    if (rewriter.status === "downloadable") {
-      prepareQuietly(rewriter);
+    for (const { engine } of rewriterSuggestions) {
+      if (engine.status === "downloadable") {
+        prepareQuietly(engine);
+      }
     }
 
     prediction.enable();
@@ -129,7 +158,7 @@ export function useSuggestions(
 
   const isSupported =
     proofreader.status !== "unsupported" ||
-    rewriter.status !== "unsupported" ||
+    rewriterSuggestions.some(({ engine }) => engine.status !== "unsupported") ||
     prediction.status !== "unsupported";
 
   return {
