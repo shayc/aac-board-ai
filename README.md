@@ -1,6 +1,6 @@
-# AAC Board AI
-
 <div align="center">
+
+# AAC Board AI
 
 [![CI](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
@@ -69,7 +69,7 @@ edge://flags/#edge-llm-rewriter-api-for-phi-mini
 Requires Node.js 24+.
 
 ```bash
-git clone https://github.com/shayc/aac-board-ai.git
+git clone [https://github.com/shayc/aac-board-ai.git](https://github.com/shayc/aac-board-ai.git)
 cd aac-board-ai
 npm install && npm run dev
 ```
