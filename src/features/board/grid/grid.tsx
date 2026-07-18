@@ -5,7 +5,7 @@ import type { ReactNode, Ref } from "react";
 import { Fragment } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
-const MIN_CELL_SIZE = "96px";
+const MIN_CELL_SIZE = "88px";
 const PAD = "var(--pad)";
 const PAD_TOTAL = `calc(2 * ${PAD})`;
 
