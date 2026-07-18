@@ -52,7 +52,7 @@ export function BoardSetInfoDialog({
         )}
 
         {boardSet?.description && (
-          <Typography variant="body2" sx={{ mt: 2, whiteSpace: "pre-line" }}>
+          <Typography variant="body1" sx={{ mt: 2, whiteSpace: "pre-line" }}>
             {boardSet.description}
           </Typography>
         )}
