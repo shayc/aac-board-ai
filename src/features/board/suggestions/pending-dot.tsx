@@ -12,6 +12,7 @@ export function PendingDot({ show }: PendingDotProps) {
       <Box
         sx={{
           width: 8,
+          flexShrink: 0,
           aspectRatio: "1",
           borderRadius: "50%",
           backgroundColor: orange[500],

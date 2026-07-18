@@ -142,7 +142,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         spacing={2}
         sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
-        <Stack direction="row" spacing={2} sx={{ overflow: "hidden" }}>
+        <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
           {!isSmallScreen && (
             <NavButtons
               onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}

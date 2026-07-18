@@ -5,10 +5,10 @@ const highlightedTargetSelector =
   "&[data-switch-scanning-scope] [data-scan-highlighted]";
 
 export const switchScanningSx = (theme: Theme) => ({
-  "--scan-outline-width": "5px",
-  "--scan-outline-offset": "3px",
+  "--scan-outline-width": "4px",
+  "--scan-outline-offset": "2px",
   "--scan-within-width": "3px",
-  "--scan-within-offset": "1px",
+  "--scan-within-offset": "2px",
   [highlightedTargetSelector]: {
     outline:
       "var(--scan-outline-width) solid var(--scan-outline-color, CanvasText)",
