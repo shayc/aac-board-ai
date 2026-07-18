@@ -46,23 +46,22 @@ export function useSuggestions(
   const { language } = useLanguage();
 
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
+
   const rewriterOptions = {
     sharedContext: debouncedSharedContext,
     length: "shorter" as const,
     format: "plain-text" as const,
     ...rewriterLanguageOptions(language),
   };
+
   const directRewriter = useRewriter({
     ...rewriterOptions,
     tone: "as-is",
   });
+
   const friendlyRewriter = useRewriter({
     ...rewriterOptions,
     tone: "more-casual",
-  });
-  const professionalRewriter = useRewriter({
-    ...rewriterOptions,
-    tone: "more-formal",
   });
 
   const prediction = useWordPrediction(text, board);
@@ -90,15 +89,9 @@ export function useSuggestions(
     run: (signal) => friendlyRewriter.rewrite(text, { signal }),
   });
 
-  const professionalRewrite = useLatestAsync({
-    enabled: hasText && professionalRewriter.status === "ready",
-    deps: [text, debouncedSharedContext, language],
-    run: (signal) => professionalRewriter.rewrite(text, { signal }),
-  });
   const rewriterSuggestions = [
     { engine: directRewriter, request: directRewrite },
     { engine: friendlyRewriter, request: friendlyRewrite },
-    { engine: professionalRewriter, request: professionalRewrite },
   ];
 
   // Other hook instances can start these downloads; global progress keeps the
@@ -113,9 +106,9 @@ export function useSuggestions(
     corrected.value,
     directRewrite.value,
     friendlyRewrite.value,
-    professionalRewrite.value,
     prediction.phrase,
   ]);
+
   const isPending =
     corrected.isPending ||
     rewriterSuggestions.some(({ request }) => request.isPending) ||

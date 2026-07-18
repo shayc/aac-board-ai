@@ -301,7 +301,7 @@ describe("BoardViewer", () => {
 
       const lightRowStyles = getComputedStyle(firstRow.element());
       expect(lightRowStyles.outlineStyle).toBe("solid");
-      expect(lightRowStyles.outlineWidth).toBe("5px");
+      expect(lightRowStyles.outlineWidth).toBe("4px");
       expect(lightRowStyles.boxShadow).not.toBe("none");
 
       await userEvent.keyboard("{Enter}");
@@ -309,7 +309,7 @@ describe("BoardViewer", () => {
       const lightTileStyles = getComputedStyle(hello.element());
       const lightOutlineColor = lightTileStyles.outlineColor;
       expect(lightTileStyles.outlineStyle).toBe("solid");
-      expect(lightTileStyles.outlineWidth).toBe("5px");
+      expect(lightTileStyles.outlineWidth).toBe("4px");
       expect(lightTileStyles.boxShadow).not.toBe("none");
       expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
 
@@ -323,7 +323,7 @@ describe("BoardViewer", () => {
 
       const darkTileStyles = getComputedStyle(hello.element());
       expect(darkTileStyles.outlineStyle).toBe("solid");
-      expect(darkTileStyles.outlineWidth).toBe("5px");
+      expect(darkTileStyles.outlineWidth).toBe("4px");
       expect(darkTileStyles.boxShadow).not.toBe("none");
       expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
     } finally {

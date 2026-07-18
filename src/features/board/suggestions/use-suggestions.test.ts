@@ -37,11 +37,13 @@ function renderSuggestions(text: string, board: Board = FOOD_BOARD) {
   });
 }
 
-function stubRewritesByTone(rewrites: Record<RewriterTone, string>) {
+function stubRewritesByTone(
+  rewrites: Pick<Record<RewriterTone, string>, "as-is" | "more-casual">,
+) {
   const rewriter = stubRewriter();
 
   rewriter.create.mockImplementation((options) => {
-    const tone = options?.tone as RewriterTone;
+    const tone = options?.tone as keyof typeof rewrites;
 
     return Promise.resolve({
       destroy: () => undefined,
@@ -94,12 +96,11 @@ describe("useSuggestions", () => {
     });
   });
 
-  test("orders suggestions as proofread, direct, friendly, then professional", async () => {
+  test("orders suggestions as proofread, direct, then friendly", async () => {
     stubProofreader(() => makeProofreadResult("Proofread message."));
     stubRewritesByTone({
       "as-is": "Direct message.",
       "more-casual": "Friendly message.",
-      "more-formal": "Professional message.",
     });
 
     const { result } = await renderSuggestions("message");
@@ -109,7 +110,6 @@ describe("useSuggestions", () => {
         "Proofread message.",
         "Direct message.",
         "Friendly message.",
-        "Professional message.",
       ]);
     });
   });
@@ -170,7 +170,7 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("unchanged");
 
     await vi.waitFor(() => {
-      expect(rejecters).toHaveLength(3);
+      expect(rejecters).toHaveLength(2);
       expect(result.current.status).toEqual({ kind: "pending" });
     });
     rejecters.forEach((reject) => reject(new Error("rewrite down")));
@@ -191,7 +191,7 @@ describe("useSuggestions", () => {
     const { result } = await renderSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(rejecters).toHaveLength(3);
+      expect(rejecters).toHaveLength(2);
       expect(result.current.status).toEqual({ kind: "pending" });
     });
     rejecters.forEach((reject) =>
@@ -224,13 +224,13 @@ describe("useSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "needs-activation" });
-      expect(rewriter.availability).toHaveBeenCalledTimes(3);
+      expect(rewriter.availability).toHaveBeenCalledTimes(2);
     });
 
     result.current.enable();
 
     await vi.waitFor(() => {
-      expect(rewriter.availability).toHaveBeenCalledTimes(6);
+      expect(rewriter.availability).toHaveBeenCalledTimes(4);
     });
   });
 
@@ -264,7 +264,7 @@ describe("useSuggestions", () => {
     await renderSuggestions("ahoy");
 
     await vi.waitFor(() => {
-      expect(create).toHaveBeenCalledTimes(3);
+      expect(create).toHaveBeenCalledTimes(2);
     });
 
     expect(create.mock.calls.map(([options]) => options)).toEqual([
@@ -280,12 +280,6 @@ describe("useSuggestions", () => {
         length: "shorter",
         format: "plain-text",
       }),
-      expect.objectContaining({
-        tone: "more-formal",
-        sharedContext: "Talk like a pirate",
-        length: "shorter",
-        format: "plain-text",
-      }),
     ]);
   });
 
@@ -296,7 +290,7 @@ describe("useSuggestions", () => {
     await renderSuggestions("hello");
 
     await vi.waitFor(() => {
-      expect(createRewriter).toHaveBeenCalledTimes(3);
+      expect(createRewriter).toHaveBeenCalledTimes(2);
       expect(createProofreader.mock.calls.at(0)?.at(0)).toMatchObject({
         expectedInputLanguages: ["en"],
       });
@@ -319,7 +313,7 @@ describe("useSuggestions", () => {
     await renderSuggestions("שלום");
 
     await vi.waitFor(() => {
-      expect(create).toHaveBeenCalledTimes(3);
+      expect(create).toHaveBeenCalledTimes(2);
     });
 
     for (const [options] of create.mock.calls) {
@@ -342,17 +336,12 @@ describe("useSuggestions", () => {
       expect(result.current.status).toEqual({ kind: "pending" });
     });
 
-    await vi.waitFor(() => expect(pending).toHaveLength(3));
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
     pending[0]("direct hi");
     pending[1]("friendly hi");
-    pending[2]("professional hi");
 
     await vi.waitFor(() => {
-      expect(result.current.phrases).toEqual([
-        "direct hi",
-        "friendly hi",
-        "professional hi",
-      ]);
+      expect(result.current.phrases).toEqual(["direct hi", "friendly hi"]);
       expect(result.current.status).toBeNull();
     });
   });
