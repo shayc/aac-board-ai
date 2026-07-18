@@ -193,6 +193,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         <Toolbar
           sx={{
             justifyContent: "space-between",
+            alignItems: "flex-end",
             gap: 2,
             px: { xs: 3 },
             pb: safeAreaInset("bottom"),
