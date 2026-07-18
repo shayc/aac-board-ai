@@ -852,7 +852,7 @@ describe("Grid", () => {
     // default used above that breakpoint.
     const PAD = 16;
     const GAP = 8;
-    const MIN_CELL = 96;
+    const MIN_CELL = 88;
 
     const expectedCellWidth = (containerWidth: number, columns: number) => {
       const fit = Math.floor(
@@ -940,7 +940,7 @@ describe("Grid", () => {
     // Same narrower-than-"sm" test viewport as the column-sizing suite above.
     const PAD = 16;
     const GAP = 8;
-    const MIN_CELL = 96;
+    const MIN_CELL = 88;
 
     const expectedCellHeight = (containerHeight: number, rows: number) => {
       const fit = Math.floor(
