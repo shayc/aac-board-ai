@@ -1,8 +1,14 @@
 import CssBaseline from "@mui/material/CssBaseline";
+import {
+  createTheme,
+  ThemeProvider as MUIThemeProvider,
+} from "@mui/material/styles";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent, type Locator } from "vitest/browser";
 import { Grid } from "./grid";
+
+const cssVariableTheme = createTheme({ cssVariables: true });
 
 function getCellPosition(item: Locator): { row: number; col: number } {
   const cell = item.element().closest("[role='gridcell']");
@@ -870,7 +876,7 @@ describe("Grid", () => {
       }));
 
       const screen = await render(
-        <>
+        <MUIThemeProvider theme={cssVariableTheme}>
           <CssBaseline />
           <div style={{ width: `${containerWidth}px`, height: "400px" }}>
             <Grid
@@ -882,7 +888,7 @@ describe("Grid", () => {
               )}
             />
           </div>
-        </>,
+        </MUIThemeProvider>,
       );
 
       const gridEl = screen.getByRole("grid").element();
@@ -958,7 +964,7 @@ describe("Grid", () => {
       }));
 
       const screen = await render(
-        <>
+        <MUIThemeProvider theme={cssVariableTheme}>
           <CssBaseline />
           <div style={{ width: "400px", height: `${containerHeight}px` }}>
             <Grid
@@ -970,7 +976,7 @@ describe("Grid", () => {
               )}
             />
           </div>
-        </>,
+        </MUIThemeProvider>,
       );
 
       const gridEl = screen.getByRole("grid").element();

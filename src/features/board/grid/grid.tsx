@@ -5,9 +5,13 @@ import type { ReactNode, Ref } from "react";
 import { Fragment } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
 
-const MIN_CELL_SIZE = "96px";
+const MUI_SPACING_UNIT_PX = 8;
+const MIN_CELL_SIZE_PX = 96;
+const MIN_CELL_SIZE = `${MIN_CELL_SIZE_PX}px`;
 const PAD = "var(--pad)";
 const PAD_TOTAL = `calc(2 * ${PAD})`;
+const SMALL_SCREEN_PADDING = 2;
+const DEFAULT_PADDING = 3;
 
 type GridOrder = readonly (readonly (string | null)[])[];
 
@@ -63,14 +67,14 @@ export function Grid<TItem extends { id: string }>({
       ref={ref}
       dir={dir}
       sx={(theme) => ({
-        "--pad": theme.spacing(3),
+        "--pad": theme.spacing(DEFAULT_PADDING),
         height: "100%",
         overflow: "auto",
         containerType: "size",
         scrollSnapType: "both proximity",
         scrollPadding: PAD,
         [theme.breakpoints.down("sm")]: {
-          "--pad": theme.spacing(2),
+          "--pad": theme.spacing(SMALL_SCREEN_PADDING),
         },
       })}
     >
@@ -81,8 +85,20 @@ export function Grid<TItem extends { id: string }>({
         aria-label={ariaLabel}
         direction="column"
         sx={(theme) => ({
-          "--visible-cols": visibleTracks(theme, "100cqi", gap, columns),
-          "--visible-rows": visibleTracks(theme, "100cqb", gap, rows),
+          "--visible-cols": 1,
+          "--visible-rows": 1,
+          [theme.breakpoints.down("sm")]: visibleTrackQueries(
+            rows,
+            columns,
+            gap,
+            SMALL_SCREEN_PADDING,
+          ),
+          [theme.breakpoints.up("sm")]: visibleTrackQueries(
+            rows,
+            columns,
+            gap,
+            DEFAULT_PADDING,
+          ),
           "--cell-width": trackSize(
             theme,
             "100cqi",
@@ -185,16 +201,49 @@ function buildGrid<TItem extends { id: string }>(
   );
 }
 
-function visibleTracks(
-  theme: Theme,
-  extent: string,
+function visibleTrackQueries(
+  rows: number,
+  columns: number,
   gap: number,
-  count: number,
-): string {
-  const inner = `${extent} - ${PAD_TOTAL}`;
-  const pitch = `${MIN_CELL_SIZE} + ${theme.spacing(gap)}`;
+  padding: number,
+): Record<string, Record<string, number>> {
+  return {
+    ...trackAxisQueries("min-width", "--visible-cols", columns, gap, padding),
+    ...trackAxisQueries("min-height", "--visible-rows", rows, gap, padding),
+  };
+}
 
-  return `min(${count}, max(1, round(down, (${inner} + ${theme.spacing(gap)}) / (${pitch}), 1)))`;
+function trackAxisQueries(
+  feature: "min-width" | "min-height",
+  property: "--visible-cols" | "--visible-rows",
+  count: number,
+  gap: number,
+  padding: number,
+): Record<string, Record<string, number>> {
+  const steps: [string, Record<string, number>][] = Array.from(
+    { length: Math.max(0, count - 1) },
+    (_, index) => {
+      const visible = index + 2;
+      const threshold = trackFitThreshold(visible, gap, padding);
+
+      return [`@container (${feature}: ${threshold})`, { [property]: visible }];
+    },
+  );
+
+  return Object.fromEntries(steps);
+}
+
+function trackFitThreshold(
+  count: number,
+  gap: number,
+  padding: number,
+): string {
+  const threshold =
+    count * MIN_CELL_SIZE_PX +
+    (count - 1) * gap * MUI_SPACING_UNIT_PX +
+    2 * padding * MUI_SPACING_UNIT_PX;
+
+  return `${threshold}px`;
 }
 
 function trackSize(
