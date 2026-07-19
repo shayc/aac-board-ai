@@ -2,7 +2,6 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
-import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Slider from "@mui/material/Slider";
@@ -21,6 +20,8 @@ import {
   type SwitchScanningMethod,
   useSwitchScanningConfig,
 } from "@shared/switch-scanning/switch-scanning-store";
+import { SwitchInputSetup } from "./switch-input-setup";
+import { SwitchScanningAdvancedSettings } from "./switch-scanning-advanced-settings";
 
 const MILLISECONDS_PER_SECOND = 1_000;
 
@@ -37,23 +38,34 @@ function getMethodLabel(method: SwitchScanningMethod): string {
   }
 }
 
-function getMethodHint(method: SwitchScanningMethod): string {
+function getMethodDescription(method: SwitchScanningMethod): string {
   switch (method) {
     case "auto":
-      return m.switchScanningAutoHint();
+      return m.switchScanningMethodAutoDescription();
     case "step":
-      return m.switchScanningStepHint();
+      return m.switchScanningMethodStepDescription();
     case "dwell":
-      return m.switchScanningDwellHint();
+      return m.switchScanningMethodDwellDescription();
     case "inverse":
-      return m.switchScanningInverseHint();
+      return m.switchScanningMethodInverseDescription();
   }
 }
 
 export function SwitchScanningSettings() {
   const { language } = useLanguage();
-  const { enabled, method, scanIntervalMs, dwellDurationMs } =
-    useSwitchScanningConfig();
+  const config = useSwitchScanningConfig();
+  const {
+    enabled,
+    method,
+    scanIntervalMs,
+    dwellDurationMs,
+    cyclesBeforePausing,
+    firstItemPauseMs,
+    ignoreRepeatMs,
+    minimumPressDurationMs,
+    inputs,
+  } = config;
+  const hasTimedScan = method === "auto" || method === "inverse";
 
   const seconds = new Intl.NumberFormat(language, {
     style: "unit",
@@ -79,43 +91,12 @@ export function SwitchScanningSettings() {
           }
         : null;
 
-  const methodGroups: readonly {
-    label: string;
-    methods: readonly SwitchScanningMethod[];
-  }[] = [
-    {
-      label: m.switchScanningOneSwitch(),
-      methods: ["auto", "dwell", "inverse"],
-    },
-    { label: m.switchScanningTwoSwitches(), methods: ["step"] },
-  ];
-
-  function renderMethodGroup(
-    label: string,
-    methods: readonly SwitchScanningMethod[],
-  ) {
-    return [
-      <ListSubheader key={`${methods[0]}-heading`}>{label}</ListSubheader>,
-      ...methods.map((option) => {
-        const optionLabel = getMethodLabel(option);
-
-        return (
-          <MenuItem
-            key={option}
-            value={option}
-            aria-label={`${optionLabel}, ${label}`}
-          >
-            {optionLabel}
-          </MenuItem>
-        );
-      }),
-    ];
-  }
-
   return (
     <Stack spacing={3}>
       <FormControlLabel
+        labelPlacement="start"
         label={m.switchScanningEnabled()}
+        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={enabled}
@@ -124,49 +105,66 @@ export function SwitchScanningSettings() {
         }
       />
 
-      <FormControl size="small" fullWidth disabled={!enabled}>
-        <InputLabel id="switch-scanning-method-label">
-          {m.switchScanningMethod()}
-        </InputLabel>
-        <Select
-          id="switch-scanning-method"
-          labelId="switch-scanning-method-label"
-          label={m.switchScanningMethod()}
-          value={method}
-          onChange={(event) => setSwitchScanningMethod(event.target.value)}
-        >
-          {methodGroups.flatMap(({ label, methods }) =>
-            renderMethodGroup(label, methods),
-          )}
-        </Select>
-        <FormHelperText
-          sx={{
-            color: "text.secondary",
-            "&.Mui-disabled": { color: "text.secondary" },
-          }}
-        >
-          {getMethodHint(method)}
-        </FormHelperText>
-      </FormControl>
+      {enabled && (
+        <Stack spacing={3}>
+          <FormControl size="small" fullWidth>
+            <InputLabel id="switch-scanning-method-label">
+              {m.switchScanningMethod()}
+            </InputLabel>
+            <Select
+              id="switch-scanning-method"
+              labelId="switch-scanning-method-label"
+              label={m.switchScanningMethod()}
+              value={method}
+              onChange={(event) => setSwitchScanningMethod(event.target.value)}
+            >
+              {(["auto", "dwell", "inverse", "step"] as const).map((option) => (
+                <MenuItem key={option} value={option}>
+                  {getMethodLabel(option)}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText sx={{ color: "text.secondary", mx: 0 }}>
+              {getMethodDescription(method)}
+            </FormHelperText>
+          </FormControl>
 
-      {timing && (
-        <Stack spacing={0.5}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {timing.label}
-          </Typography>
-          <Slider
-            disabled={!enabled}
-            aria-label={timing.label}
-            valueLabelDisplay="auto"
-            valueLabelFormat={(value) => seconds.format(value)}
-            getAriaValueText={(value) => seconds.format(value)}
-            value={timing.value / MILLISECONDS_PER_SECOND}
-            min={timing.range.min / MILLISECONDS_PER_SECOND}
-            max={timing.range.max / MILLISECONDS_PER_SECOND}
-            step={0.1}
-            onChange={(_event, value) =>
-              timing.onChange(value * MILLISECONDS_PER_SECOND)
-            }
+          <SwitchInputSetup inputs={inputs} method={method} />
+
+          {timing && (
+            <Stack spacing={0.5}>
+              <Stack
+                direction="row"
+                sx={{ justifyContent: "space-between", gap: 2 }}
+              >
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  {timing.label}
+                </Typography>
+                <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                  {seconds.format(timing.value / MILLISECONDS_PER_SECOND)}
+                </Typography>
+              </Stack>
+              <Slider
+                aria-label={timing.label}
+                getAriaValueText={(value) => seconds.format(value)}
+                value={timing.value / MILLISECONDS_PER_SECOND}
+                min={timing.range.min / MILLISECONDS_PER_SECOND}
+                max={timing.range.max / MILLISECONDS_PER_SECOND}
+                step={0.1}
+                onChange={(_event, value) =>
+                  timing.onChange(value * MILLISECONDS_PER_SECOND)
+                }
+              />
+            </Stack>
+          )}
+
+          <SwitchScanningAdvancedSettings
+            cyclesBeforePausing={cyclesBeforePausing}
+            firstItemPauseMs={firstItemPauseMs}
+            hasTimedScan={hasTimedScan}
+            ignoreRepeatMs={ignoreRepeatMs}
+            minimumPressDurationMs={minimumPressDurationMs}
+            formatSeconds={(value) => seconds.format(value)}
           />
         </Stack>
       )}

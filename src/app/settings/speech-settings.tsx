@@ -73,7 +73,7 @@ export function SpeechSettings() {
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
       onChange: setRate,
-      valueLabelFormat: (value: number) => `${value}x`,
+      formatValue: (value: number) => `${value}x`,
     },
     {
       id: "pitch",
@@ -82,7 +82,7 @@ export function SpeechSettings() {
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
       onChange: setPitch,
-      valueLabelFormat: (value: number) => `${value}x`,
+      formatValue: (value: number) => `${value}x`,
     },
     {
       id: "volume",
@@ -91,7 +91,7 @@ export function SpeechSettings() {
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
       onChange: setVolume,
-      valueLabelFormat: (value: number) => `${Math.round(value * 100)}%`,
+      formatValue: (value: number) => `${Math.round(value * 100)}%`,
     },
   ];
 
@@ -112,15 +112,22 @@ export function SpeechSettings() {
       </FormControl>
 
       {speechControls.map(
-        ({ id, label, value, min, max, onChange, valueLabelFormat }) => (
-          <Stack key={id} spacing={0.5}>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {label}
-            </Typography>
+        ({ id, label, value, min, max, onChange, formatValue }) => (
+          <Stack key={id} spacing={0.5} role="group" aria-label={label}>
+            <Stack
+              direction="row"
+              sx={{ justifyContent: "space-between", gap: 2 }}
+            >
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {label}
+              </Typography>
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>
+                {formatValue(value)}
+              </Typography>
+            </Stack>
             <Slider
               aria-label={label}
-              valueLabelDisplay="auto"
-              valueLabelFormat={valueLabelFormat}
+              getAriaValueText={formatValue}
               value={value}
               min={min}
               max={max}
@@ -132,7 +139,9 @@ export function SpeechSettings() {
       )}
 
       <FormControlLabel
+        labelPlacement="start"
         label={m.playbackHighlight()}
+        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={highlightActivePart}

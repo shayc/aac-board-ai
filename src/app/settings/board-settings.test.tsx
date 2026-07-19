@@ -19,6 +19,7 @@ describe("BoardSettings", () => {
 
     await expect.element(saturationSlider).toBeVisible();
     expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe("1");
+    await expect.element(screen.getByText("100%")).toBeVisible();
 
     const bordersSwitch = screen.getByRole("switch", {
       name: "Show tile borders",
@@ -72,6 +73,7 @@ describe("BoardSettings", () => {
       saturationSlider.element().getAttribute("aria-valuenow"),
     );
     expect(valueNow).toBe(0.9);
+    await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("tile-color-config");

@@ -35,8 +35,11 @@ describe("SettingsDrawer", () => {
       .element(screen.getByRole("heading", { name: "Switch access" }))
       .toBeInTheDocument();
     await expect
-      .element(screen.getByRole("switch", { name: "Enable switch scanning" }))
+      .element(screen.getByRole("switch", { name: "Switch scanning" }))
       .toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Scan method" }))
+      .not.toBeInTheDocument();
 
     await expect
       .element(screen.getByRole("heading", { name: "Board" }))

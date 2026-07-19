@@ -1,0 +1,157 @@
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Slider from "@mui/material/Slider";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { m } from "@paraglide/messages.js";
+import {
+  CYCLES_BEFORE_PAUSING,
+  FIRST_ITEM_PAUSE_MS,
+  IGNORE_REPEAT_MS,
+  MINIMUM_PRESS_DURATION_MS,
+  setCyclesBeforePausing,
+  setFirstItemPauseMs,
+  setIgnoreRepeatMs,
+  setMinimumPressDurationMs,
+} from "@shared/switch-scanning/switch-scanning-store";
+
+const MILLISECONDS_PER_SECOND = 1_000;
+
+interface SettingSliderProps {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  step: number;
+  formatValue: (value: number) => string;
+  onChange: (value: number) => void;
+}
+
+interface SwitchScanningAdvancedSettingsProps {
+  cyclesBeforePausing: number;
+  firstItemPauseMs: number;
+  hasTimedScan: boolean;
+  ignoreRepeatMs: number;
+  minimumPressDurationMs: number;
+  formatSeconds: (value: number) => string;
+}
+
+function SettingSlider({
+  label,
+  value,
+  min,
+  max,
+  step,
+  formatValue,
+  onChange,
+}: SettingSliderProps) {
+  return (
+    <Stack spacing={0.5}>
+      <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          {label}
+        </Typography>
+        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+          {formatValue(value)}
+        </Typography>
+      </Stack>
+      <Slider
+        aria-label={label}
+        getAriaValueText={formatValue}
+        value={value}
+        min={min}
+        max={max}
+        step={step}
+        onChange={(_event, newValue) => onChange(newValue)}
+      />
+    </Stack>
+  );
+}
+
+export function SwitchScanningAdvancedSettings({
+  cyclesBeforePausing,
+  firstItemPauseMs,
+  hasTimedScan,
+  ignoreRepeatMs,
+  minimumPressDurationMs,
+  formatSeconds,
+}: SwitchScanningAdvancedSettingsProps) {
+  return (
+    <Accordion
+      disableGutters
+      elevation={0}
+      sx={{
+        borderBlock: 1,
+        borderColor: "divider",
+        "&:before": { display: "none" },
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="switch-scanning-advanced-controls"
+        id="switch-scanning-advanced-heading"
+        sx={{ px: 0 }}
+      >
+        <Typography component="h4" variant="body2" sx={{ fontWeight: 500 }}>
+          {m.switchScanningAdvanced()}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails
+        id="switch-scanning-advanced-controls"
+        aria-labelledby="switch-scanning-advanced-heading"
+        sx={{ px: 0, pt: 1 }}
+      >
+        <Stack spacing={3}>
+          {hasTimedScan && (
+            <>
+              <SettingSlider
+                label={m.switchScanningCyclesBeforePausing()}
+                value={cyclesBeforePausing}
+                min={CYCLES_BEFORE_PAUSING.min}
+                max={CYCLES_BEFORE_PAUSING.max}
+                step={1}
+                formatValue={String}
+                onChange={setCyclesBeforePausing}
+              />
+              <SettingSlider
+                label={m.switchScanningFirstItemPause()}
+                value={firstItemPauseMs / MILLISECONDS_PER_SECOND}
+                min={FIRST_ITEM_PAUSE_MS.min / MILLISECONDS_PER_SECOND}
+                max={FIRST_ITEM_PAUSE_MS.max / MILLISECONDS_PER_SECOND}
+                step={0.1}
+                formatValue={formatSeconds}
+                onChange={(value) =>
+                  setFirstItemPauseMs(value * MILLISECONDS_PER_SECOND)
+                }
+              />
+            </>
+          )}
+          <SettingSlider
+            label={m.switchScanningIgnoreRepeatedPresses()}
+            value={ignoreRepeatMs / MILLISECONDS_PER_SECOND}
+            min={IGNORE_REPEAT_MS.min / MILLISECONDS_PER_SECOND}
+            max={IGNORE_REPEAT_MS.max / MILLISECONDS_PER_SECOND}
+            step={0.1}
+            formatValue={formatSeconds}
+            onChange={(value) =>
+              setIgnoreRepeatMs(value * MILLISECONDS_PER_SECOND)
+            }
+          />
+          <SettingSlider
+            label={m.switchScanningMinimumPressDuration()}
+            value={minimumPressDurationMs / MILLISECONDS_PER_SECOND}
+            min={MINIMUM_PRESS_DURATION_MS.min / MILLISECONDS_PER_SECOND}
+            max={MINIMUM_PRESS_DURATION_MS.max / MILLISECONDS_PER_SECOND}
+            step={0.1}
+            formatValue={formatSeconds}
+            onChange={(value) =>
+              setMinimumPressDurationMs(value * MILLISECONDS_PER_SECOND)
+            }
+          />
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
+  );
+}

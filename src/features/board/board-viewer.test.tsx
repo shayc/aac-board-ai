@@ -1,5 +1,6 @@
 import {
   setSwitchScanningEnabled,
+  setSwitchInput,
   setSwitchScanningMethod,
 } from "@shared/switch-scanning/switch-scanning-store";
 import { expectNoA11yViolations } from "@shared/testing/axe";
@@ -80,6 +81,15 @@ const LARGE_GRID_BOARD: OBFBoard = {
     ),
   },
 };
+
+function pressMouseSwitch(button: number): void {
+  document.body.dispatchEvent(
+    new MouseEvent("mousedown", { bubbles: true, button }),
+  );
+  document.body.dispatchEvent(
+    new MouseEvent("mouseup", { bubbles: true, button }),
+  );
+}
 
 describe("BoardViewer", () => {
   let speech: ReturnType<typeof stubSpeech>;
@@ -217,6 +227,27 @@ describe("BoardViewer", () => {
       expect(speech.speak).toHaveBeenCalledTimes(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("no");
     });
+  });
+
+  test("drives scanning with assigned mouse buttons", async () => {
+    setSwitchScanningEnabled(true);
+    setSwitchScanningMethod("step");
+    setSwitchInput("next", { kind: "mouse", button: 3 });
+    setSwitchInput("select", { kind: "mouse", button: 4 });
+
+    const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+    const firstRow = screen.getByRole("row").nth(0);
+    const secondRow = screen.getByRole("row").nth(1);
+    const yes = screen.getByRole("button", { name: "yes", exact: true });
+
+    pressMouseSwitch(3);
+    await expect.element(firstRow).toHaveAttribute("data-scan-highlighted");
+
+    pressMouseSwitch(3);
+    await expect.element(secondRow).toHaveAttribute("data-scan-highlighted");
+
+    pressMouseSwitch(4);
+    await expect.element(yes).toHaveAttribute("data-scan-highlighted");
   });
 
   test("scans navigation and backspace as top-level targets", async () => {

@@ -1,16 +1,23 @@
-import { SwitchScanner } from "@shayc/switch-scanning/react";
+import {
+  ScannerProvider,
+  useKeyboardSwitches,
+  useOwnedScanner,
+} from "@shayc/switch-scanning/react/advanced";
 import type { ReactNode } from "react";
 import {
   createKeyboardBindings,
+  createMouseBindings,
   createScanMethod,
+  createSwitchDefinitions,
 } from "./switch-scanning-options";
 import { useSwitchScanningConfig } from "./switch-scanning-store";
+import { useMouseSwitches } from "./use-mouse-switches";
 
 export interface SwitchScanningBoundaryProps {
   children: ReactNode;
 }
 
-function shouldHandleBoardInput(event: KeyboardEvent): boolean {
+function shouldHandleBoardInput(event: Event): boolean {
   const target = event.target;
 
   if (target === document.body) {
@@ -27,19 +34,24 @@ export function SwitchScanningBoundary({
   children,
 }: SwitchScanningBoundaryProps) {
   const config = useSwitchScanningConfig();
-  const method = createScanMethod(config);
-  const keyboard = createKeyboardBindings(config.method);
+  const scanner = useOwnedScanner({
+    method: createScanMethod(config),
+    switches: createSwitchDefinitions(config),
+    enabled: config.enabled,
+    startOn: "input",
+    afterActivation: "continue",
+  });
+  const keyboardBindings = createKeyboardBindings(config);
+  const mouseBindings = createMouseBindings(config);
 
-  return (
-    <SwitchScanner
-      method={method}
-      keyboard={keyboard}
-      enabled={config.enabled}
-      start="input"
-      behavior={{ afterActivation: "continue" }}
-      keyboardOptions={{ shouldHandle: shouldHandleBoardInput }}
-    >
-      {children}
-    </SwitchScanner>
-  );
+  useKeyboardSwitches(scanner, keyboardBindings, {
+    enabled: config.enabled,
+    shouldHandle: shouldHandleBoardInput,
+  });
+  useMouseSwitches(scanner, mouseBindings, {
+    enabled: config.enabled,
+    shouldHandle: shouldHandleBoardInput,
+  });
+
+  return <ScannerProvider scanner={scanner}>{children}</ScannerProvider>;
 }
