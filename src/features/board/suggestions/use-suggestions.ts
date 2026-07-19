@@ -12,13 +12,11 @@ import {
   useProofreader,
   useRewriter,
 } from "@shayc/react-built-in-ai";
-import type { Board } from "../types";
 import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
 import { toPhrases } from "./to-phrases";
-import { useWordPrediction } from "./use-word-prediction";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
@@ -33,10 +31,7 @@ function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
 }
 
-export function useSuggestions(
-  text: string,
-  board: Board,
-): UseSuggestionsReturn {
+export function useSuggestions(text: string): UseSuggestionsReturn {
   const sharedContext = useAISharedContext();
   const debouncedSharedContext = useDebouncedValue(
     sharedContext,
@@ -63,8 +58,6 @@ export function useSuggestions(
     ...rewriterOptions,
     tone: "more-casual",
   });
-
-  const prediction = useWordPrediction(text, board);
 
   const hasText = text.trim().length > 0;
 
@@ -99,20 +92,17 @@ export function useSuggestions(
   const downloadProgress = useGlobalDownloadProgress([
     "Proofreader",
     "Rewriter",
-    "LanguageModel",
   ]);
 
   const phrases = toPhrases(text, [
     corrected.value,
     directRewrite.value,
     friendlyRewrite.value,
-    prediction.phrase,
   ]);
 
   const isPending =
     corrected.isPending ||
-    rewriterSuggestions.some(({ request }) => request.isPending) ||
-    prediction.isPending;
+    rewriterSuggestions.some(({ request }) => request.isPending);
 
   const status = deriveSuggestionStatus({
     engines: [
@@ -124,10 +114,6 @@ export function useSuggestions(
         status: engine.status,
         requestFailed: isNonAbortError(request.error),
       })),
-      {
-        status: prediction.status,
-        requestFailed: prediction.requestFailed,
-      },
     ],
     downloadProgress,
     hasText,
@@ -145,14 +131,11 @@ export function useSuggestions(
         prepareQuietly(engine);
       }
     }
-
-    prediction.enable();
   };
 
   const isSupported =
     proofreader.status !== "unsupported" ||
-    rewriterSuggestions.some(({ engine }) => engine.status !== "unsupported") ||
-    prediction.status !== "unsupported";
+    rewriterSuggestions.some(({ engine }) => engine.status !== "unsupported");
 
   return {
     isSupported,

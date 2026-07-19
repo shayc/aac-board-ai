@@ -4,8 +4,6 @@ export interface Board {
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
-  descriptionHtml?: string;
-  license?: BoardLicense;
   strings?: BoardStrings;
 }
 
@@ -28,11 +26,7 @@ export interface BoardButton {
 }
 
 export interface LoadBoard {
-  id?: string;
-  name?: string;
-  url?: string;
-  path?: string;
-  dataUrl?: string;
+  id: string;
 }
 
 export type BoardAction =
@@ -42,14 +36,5 @@ export type BoardAction =
   | { kind: "home" }
   | { kind: "speak" }
   | { kind: "spell"; text: string };
-
-export interface BoardLicense {
-  type: string;
-  authorName?: string;
-  authorEmail?: string;
-  authorUrl?: string;
-  sourceUrl?: string;
-  copyrightNoticeUrl?: string;
-}
 
 export type BoardStrings = Record<string, Record<string, string>>;
