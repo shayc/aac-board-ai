@@ -16,6 +16,7 @@ import {
   useHighlightConfig,
 } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
+import { useTranslate } from "@shared/language/use-translate";
 import { speak } from "@shared/speech/speak";
 import {
   setPitch,
@@ -30,16 +31,18 @@ import {
 } from "@shared/speech/speech-store";
 
 export function SpeechSettings() {
+  const t = useTranslate();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
   const { highlightActivePart } = useHighlightConfig();
 
-  const { language } = useLanguage();
+  const { communicationLanguage: language } = useLanguage();
 
-  const voicesByLocale = Object.groupBy(
-    voicesByLanguage[language] ?? [],
-    (voice) => voice.lang,
-  );
+  const voices = voicesByLanguage[language] ?? [];
+  const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
+  const selectedVoiceURI = voices.some((voice) => voice.voiceURI === voiceURI)
+    ? voiceURI
+    : "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );
@@ -68,7 +71,7 @@ export function SpeechSettings() {
   const speechControls = [
     {
       id: "rate",
-      label: m.speechRate(),
+      label: t(m.speechRate),
       value: rate,
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
@@ -77,7 +80,7 @@ export function SpeechSettings() {
     },
     {
       id: "pitch",
-      label: m.speechPitch(),
+      label: t(m.speechPitch),
       value: pitch,
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
@@ -86,7 +89,7 @@ export function SpeechSettings() {
     },
     {
       id: "volume",
-      label: m.speechVolume(),
+      label: t(m.speechVolume),
       value: volume,
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
@@ -98,14 +101,16 @@ export function SpeechSettings() {
   return (
     <Stack spacing={3}>
       <FormControl size="small" fullWidth>
-        <InputLabel id="voice-select-label">{m.speechVoice()}</InputLabel>
+        <InputLabel id="voice-select-label">{t(m.speechVoice)}</InputLabel>
         <Select
           variant="outlined"
-          label={m.speechVoice()}
+          label={t(m.speechVoice)}
           labelId="voice-select-label"
           id="voice-select"
-          value={voiceURI ?? ""}
-          onChange={(event) => setVoiceURI(event.target.value || null)}
+          value={selectedVoiceURI}
+          onChange={(event) =>
+            setVoiceURI(event.target.value === "" ? null : event.target.value)
+          }
         >
           {locales.map(renderLocaleOptions)}
         </Select>
@@ -140,7 +145,7 @@ export function SpeechSettings() {
 
       <FormControlLabel
         labelPlacement="start"
-        label={m.playbackHighlight()}
+        label={t(m.playbackHighlight)}
         sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
@@ -155,9 +160,9 @@ export function SpeechSettings() {
         color="primary"
         startIcon={<PlayArrowIcon />}
         sx={{ alignSelf: "flex-start" }}
-        onClick={() => void speak(m.speechVoicePreview())}
+        onClick={() => void speak(t(m.speechVoicePreview))}
       >
-        {m.speechPreview()}
+        {t(m.speechPreview)}
       </Button>
     </Stack>
   );

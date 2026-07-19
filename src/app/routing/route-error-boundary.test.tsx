@@ -1,10 +1,13 @@
+import { AppProviders } from "@shared/providers/app-providers";
+import { setStoredLanguage } from "@shared/language/language-store";
 import { createMemoryRouter, data } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { RouteErrorBoundary } from "./route-error-boundary";
+import { createLocalizedRouteError, routeErrorCodes } from "./route-error";
 
-function renderWithLoader(loader: () => never) {
+function renderWithLoader(loader: () => unknown) {
   const router = createMemoryRouter(
     [
       {
@@ -16,17 +19,26 @@ function renderWithLoader(loader: () => never) {
     { initialEntries: ["/"] },
   );
 
-  return render(<RouterProvider router={router} />);
+  return render(
+    <AppProviders>
+      <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
+      <RouterProvider router={router} />
+    </AppProviders>,
+  );
+}
+
+function throwDataResponse(errorData: unknown): never {
+  // Mirrors the data() idiom used by real loaders (exempted from this
+  // rule via their `*-loader.ts` filename, which this test file isn't).
+  // eslint-disable-next-line @typescript-eslint/only-throw-error
+  throw data(errorData, { status: 404 });
 }
 
 describe("RouteErrorBoundary", () => {
   test("shows the custom title for a data() response with a string message", async () => {
-    const screen = await renderWithLoader(() => {
-      // Mirrors the data() idiom used by real loaders (exempted from this
-      // rule via their `*-loader.ts` filename, which this test file isn't).
-      // eslint-disable-next-line @typescript-eslint/only-throw-error
-      throw data("Custom title", { status: 404 });
-    });
+    const screen = await renderWithLoader(() =>
+      throwDataResponse("Custom title"),
+    );
 
     await expect.element(screen.getByText("Custom title")).toBeVisible();
   });
@@ -49,5 +61,18 @@ describe("RouteErrorBoundary", () => {
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))
       .toHaveAttribute("href", "/");
+  });
+
+  test("retranslates a loader error that is already being displayed", async () => {
+    const screen = await renderWithLoader(() =>
+      throwDataResponse(
+        createLocalizedRouteError(routeErrorCodes.boardNotFound),
+      ),
+    );
+
+    await expect.element(screen.getByText("Board not found")).toBeVisible();
+
+    await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
+    await expect.element(screen.getByText("הלוח לא נמצא")).toBeVisible();
   });
 });

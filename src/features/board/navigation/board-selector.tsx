@@ -1,11 +1,13 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { useState } from "react";
 import { useBoardNavigation } from "./use-board-navigation";
 import { useBoardsInSet } from "./use-boards-in-set";
 
 export function BoardSelector() {
+  const t = useTranslate();
   const { setId, boardId, goToBoard } = useBoardNavigation();
   const { boards } = useBoardsInSet({ setId });
   const [inputValue, setInputValue] = useState("");
@@ -47,7 +49,7 @@ export function BoardSelector() {
             },
             htmlInput: {
               ...params.slotProps?.htmlInput,
-              "aria-label": m.board(),
+              "aria-label": t(m.board),
             },
           }}
         />

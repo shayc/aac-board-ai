@@ -22,7 +22,8 @@ export function useFileHandlerLaunch(): void {
         await importAndOpenBoardFiles(opened.filter(isBoardFile));
       } catch {
         showSnackbar({
-          message: m.libraryImportFailedBoards({ count: handles.length }),
+          message: (translate) =>
+            translate(m.libraryImportFailedBoards, { count: handles.length }),
           severity: "error",
         });
       }

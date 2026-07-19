@@ -1,4 +1,5 @@
-import { createRef } from "react";
+import { AppProviders } from "@shared/providers/app-providers";
+import { createRef, type ReactNode } from "react";
 import {
   afterEach,
   beforeEach,
@@ -11,6 +12,10 @@ import {
 import { render } from "vitest-browser-react";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./use-message";
+
+function renderWithProviders(children: ReactNode) {
+  return render(<AppProviders>{children}</AppProviders>);
+}
 
 function createProps(
   overrides: Partial<MessageBarProps> = {},
@@ -54,7 +59,9 @@ describe("MessageBar", () => {
       { id: "c", label: "water" },
     ];
 
-    const screen = await render(<MessageBar {...createProps({ parts })} />);
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
 
     await expect.element(screen.getByText("I")).toBeVisible();
     await expect.element(screen.getByText("want")).toBeVisible();
@@ -64,7 +71,9 @@ describe("MessageBar", () => {
   test("re-enables text selection so the composed message can be copied", async () => {
     const parts: MessagePart[] = [{ id: "a", label: "I" }];
 
-    const screen = await render(<MessageBar {...createProps({ parts })} />);
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts })} />,
+    );
 
     const label = screen.getByText("I").element();
     const styles = getComputedStyle(label);
@@ -74,21 +83,23 @@ describe("MessageBar", () => {
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MessageBar {...createProps({ parts: [] })} />,
       );
 
       expect(scrollIntoView).not.toHaveBeenCalled();
 
       await screen.rerender(
-        <MessageBar
-          {...createProps({
-            parts: [
-              { id: "a", label: "I" },
-              { id: "b", label: "want" },
-            ],
-          })}
-        />,
+        <AppProviders>
+          <MessageBar
+            {...createProps({
+              parts: [
+                { id: "a", label: "I" },
+                { id: "b", label: "want" },
+              ],
+            })}
+          />
+        </AppProviders>,
       );
 
       await vi.waitFor(() => {
@@ -110,7 +121,9 @@ describe("MessageBar", () => {
         { id: "c", label: "water" },
       ];
 
-      const screen = await render(<MessageBar {...createProps({ parts })} />);
+      const screen = await renderWithProviders(
+        <MessageBar {...createProps({ parts })} />,
+      );
 
       // Drain the mount-time scroll-to-end so only the active-part scroll remains.
       await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
@@ -119,7 +132,9 @@ describe("MessageBar", () => {
       // Same `parts` reference: the append effect stays put, isolating the
       // active-part effect we are asserting on.
       await screen.rerender(
-        <MessageBar {...createProps({ parts, activePartId: "b" })} />,
+        <AppProviders>
+          <MessageBar {...createProps({ parts, activePartId: "b" })} />
+        </AppProviders>,
       );
 
       await vi.waitFor(() => {
@@ -140,7 +155,7 @@ describe("MessageBar", () => {
         { id: "b", label: "want" },
       ];
 
-      await render(
+      await renderWithProviders(
         <MessageBar {...createProps({ parts, activePartId: null })} />,
       );
 
@@ -156,7 +171,7 @@ describe("MessageBar", () => {
   describe("controls", () => {
     test("forwards play button slot props", async () => {
       const ref = createRef<HTMLButtonElement>();
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MessageBar
           {...createProps()}
           slotProps={{ playButton: { ref, className: "play-button-slot" } }}
@@ -171,7 +186,7 @@ describe("MessageBar", () => {
     test("delegates play to onPlayClick while idle", async () => {
       const onPlayClick = vi.fn();
 
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MessageBar {...createProps({ isPlaying: false, onPlayClick })} />,
       );
 
@@ -183,7 +198,7 @@ describe("MessageBar", () => {
     test("delegates stop to onStopClick while playing", async () => {
       const onStopClick = vi.fn();
 
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MessageBar {...createProps({ isPlaying: true, onStopClick })} />,
       );
 

@@ -6,6 +6,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
+import { useTranslate } from "@shared/language/use-translate";
 import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
 import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
@@ -56,6 +57,7 @@ export function BoardViewer({ board }: BoardViewerProps) {
 }
 
 function BoardViewerContent({ board }: BoardViewerProps) {
+  const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { highlightActivePart } = useHighlightConfig();
@@ -178,7 +180,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
           ref={gridRef}
-          ariaLabel={board.name ?? m.boardGridLabel()}
+          ariaLabel={board.name ?? t(m.boardGridLabel)}
           items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}

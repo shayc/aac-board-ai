@@ -5,9 +5,9 @@ import {
   resolveTranslatedBoard,
   type Board,
 } from "@features/board";
-import { m } from "@paraglide/messages.js";
 import { getStoredLanguage } from "@shared/language/language-store";
 import { data, type LoaderFunctionArgs } from "react-router";
+import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
 
 export async function boardLoader({
   params,
@@ -15,7 +15,9 @@ export async function boardLoader({
 }: LoaderFunctionArgs): Promise<Board> {
   const { setId, boardId } = params;
   if (!setId || !boardId) {
-    throw data(m.errorBoardNotFound(), { status: 404 });
+    throw data(createLocalizedRouteError(routeErrorCodes.boardNotFound), {
+      status: 404,
+    });
   }
 
   try {
@@ -28,7 +30,9 @@ export async function boardLoader({
       error instanceof BoardNotFoundError ||
       error instanceof InvalidIdError
     ) {
-      throw data(m.errorBoardNotFound(), { status: 404 });
+      throw data(createLocalizedRouteError(routeErrorCodes.boardNotFound), {
+        status: 404,
+      });
     }
 
     throw error;

@@ -1,5 +1,6 @@
 import Chip from "@mui/material/Chip";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
 import { getNavigationTargetId } from "./button-readers";
 import {
@@ -64,14 +65,15 @@ export function ScannableGridRow({
   rowIndex,
   ...rowProps
 }: ScannableGridRowProps) {
+  const t = useTranslate();
   const rowNumber = rowIndex + 1;
   const sequence = buttons.flatMap((button) =>
     button ? [getTileScanId(boardId, button.id)] : [],
   );
   const scanGroup = useScanGroup({
     id: getRowScanId(boardId, rowIndex),
-    label: m.switchScanningRow({ row: rowNumber }),
-    exitLabel: m.switchScanningRowExit({ row: rowNumber }),
+    label: t(m.switchScanningRow, { row: rowNumber }),
+    exitLabel: t(m.switchScanningRowExit, { row: rowNumber }),
     disabled: sequence.length === 0,
     sequence,
   });

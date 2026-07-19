@@ -13,6 +13,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { useState } from "react";
 import type { BoardSetRecord } from "../storage/boards-db";
 
@@ -31,6 +32,7 @@ export function BoardSetList({
   onDelete,
   selectedSetId,
 }: BoardSetListProps) {
+  const t = useTranslate();
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
     boardSet: BoardSetRecord;
@@ -72,7 +74,7 @@ export function BoardSetList({
         <List
           subheader={
             <ListSubheader id="board-set-list-subheader">
-              {m.libraryBoards()}
+              {t(m.libraryBoards)}
             </ListSubheader>
           }
           sx={(theme) => ({
@@ -101,10 +103,10 @@ export function BoardSetList({
                 key={boardSet.setId}
                 data-menu-open={isMenuOpen || undefined}
                 secondaryAction={
-                  <Tooltip title={m.libraryMoreOptions()}>
+                  <Tooltip title={t(m.libraryMoreOptions)}>
                     <IconButton
                       edge="end"
-                      aria-label={m.libraryMoreOptionsFor({
+                      aria-label={t(m.libraryMoreOptionsFor, {
                         name: boardSet.name,
                       })}
                       aria-controls={isMenuOpen ? "board-set-menu" : undefined}
@@ -152,13 +154,13 @@ export function BoardSetList({
           <ListItemIcon>
             <InfoOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{m.libraryInfo()}</ListItemText>
+          <ListItemText>{t(m.libraryInfo)}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{m.libraryDelete()}</ListItemText>
+          <ListItemText>{t(m.libraryDelete)}</ListItemText>
         </MenuItem>
       </Menu>
     </>

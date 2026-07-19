@@ -2,6 +2,7 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   setSwitchInput,
   type SwitchInput,
@@ -38,6 +39,8 @@ function SwitchInputButton({
   label,
   onListen,
 }: SwitchInputButtonProps) {
+  const t = useTranslate();
+
   return (
     <Stack spacing={0.5} sx={{ flex: 1 }} role="group" aria-label={label}>
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -70,12 +73,12 @@ function SwitchInputButton({
         }}
       >
         {isListening ? (
-          m.switchScanningAssign()
+          t(m.switchScanningAssign)
         ) : (
           <>
-            <span>{formatSwitchInput(input)}</span>
+            <span>{formatSwitchInput(t, input)}</span>
             <Typography component="span" variant="body2" color="primary.main">
-              {m.switchScanningChange()}
+              {t(m.switchScanningChange)}
             </Typography>
           </>
         )}
@@ -85,6 +88,7 @@ function SwitchInputButton({
 }
 
 export function SwitchInputSetup({ inputs, method }: SwitchInputSetupProps) {
+  const t = useTranslate();
   const [listeningRole, setListeningRole] = useState<SwitchInputRole | null>(
     null,
   );
@@ -140,18 +144,18 @@ export function SwitchInputSetup({ inputs, method }: SwitchInputSetupProps) {
     switch (role) {
       case "single":
         if (method === "auto") {
-          return m.switchScanningSelectSwitch();
+          return t(m.switchScanningSelectSwitch);
         }
 
         if (method === "dwell") {
-          return m.switchScanningNextItemSwitch();
+          return t(m.switchScanningNextItemSwitch);
         }
 
-        return m.switchScanningScanSwitch();
+        return t(m.switchScanningScanSwitch);
       case "next":
-        return m.switchScanningNextItemSwitch();
+        return t(m.switchScanningNextItemSwitch);
       case "select":
-        return m.switchScanningSelectSwitch();
+        return t(m.switchScanningSelectSwitch);
     }
   }
 

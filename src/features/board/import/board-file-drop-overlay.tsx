@@ -5,12 +5,15 @@ import Paper from "@mui/material/Paper";
 import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 
 interface BoardFileDropOverlayProps {
   open: boolean;
 }
 
 export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
+  const t = useTranslate();
+
   return (
     <Backdrop
       open={open}
@@ -37,7 +40,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
           })}
         >
           <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />
-          <Typography variant="h6">{m.libraryDropToImport()}</Typography>
+          <Typography variant="h6">{t(m.libraryDropToImport)}</Typography>
         </Paper>
       </Grow>
     </Backdrop>

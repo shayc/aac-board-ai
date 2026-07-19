@@ -26,7 +26,7 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
     SHARED_CONTEXT_DEBOUNCE_MS,
   );
 
-  const { language } = useLanguage();
+  const { communicationLanguage: language } = useLanguage();
 
   const proofreading = useProofreadSuggestion(text, language);
   const sameToneRewrite = useRewriteSuggestion({

@@ -9,27 +9,30 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   isSupported,
   useGlobalDownloadProgress,
 } from "@shayc/react-built-in-ai";
 
 export function LanguageSettings() {
-  const { languages, language, setLanguage } = useLanguage();
+  const t = useTranslate();
+  const { languages, communicationLanguage, setCommunicationLanguage } =
+    useLanguage();
   const progress = useGlobalDownloadProgress("Translator");
   const isTranslationSupported = isSupported("Translator");
 
   return (
     <Stack spacing={2}>
       <FormControl size="small" fullWidth>
-        <InputLabel id="language-select-label">{m.languageLabel()}</InputLabel>
+        <InputLabel id="language-select-label">{t(m.languageLabel)}</InputLabel>
         <Select
           variant="outlined"
-          label={m.languageLabel()}
+          label={t(m.languageLabel)}
           labelId="language-select-label"
           id="language-select"
-          value={language}
-          onChange={(event) => setLanguage(event.target.value)}
+          value={communicationLanguage}
+          onChange={(event) => setCommunicationLanguage(event.target.value)}
         >
           {languages.map(({ code, name }) => (
             <MenuItem key={code} value={code}>
@@ -41,7 +44,7 @@ export function LanguageSettings() {
 
       {!isTranslationSupported && (
         <Typography sx={{ typography: "body2", color: "text.secondary" }}>
-          {m.languageTranslationUnavailable()}
+          {t(m.languageTranslationUnavailable)}
         </Typography>
       )}
 
@@ -51,9 +54,9 @@ export function LanguageSettings() {
           variant="outlined"
           icon={<DownloadingIcon fontSize="inherit" />}
         >
-          <AlertTitle>{m.languageDownloading()}</AlertTitle>
+          <AlertTitle>{t(m.languageDownloading)}</AlertTitle>
           <Typography>
-            {m.languageDownloadProgress({
+            {t(m.languageDownloadProgress, {
               progress: Math.round(progress * 100),
             })}
           </Typography>

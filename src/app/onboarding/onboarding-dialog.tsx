@@ -13,6 +13,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
 
 const APP_NAME = "AAC Board AI";
@@ -23,6 +24,7 @@ interface OnboardingDialogProps {
 }
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
+  const t = useTranslate();
   const fullScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const highlights: {
@@ -34,20 +36,20 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     {
       id: "rewriting",
       icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: m.onboardingSmartRewritingTitle(),
-      secondary: m.onboardingSmartRewritingDescription(),
+      primary: t(m.onboardingSmartRewritingTitle),
+      secondary: t(m.onboardingSmartRewritingDescription),
     },
     {
       id: "translation",
       icon: <TranslateOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: m.onboardingTranslationTitle(),
-      secondary: m.onboardingTranslationDescription(),
+      primary: t(m.onboardingTranslationTitle),
+      secondary: t(m.onboardingTranslationDescription),
     },
     {
       id: "privacy",
       icon: <LockOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: m.onboardingPrivacyTitle(),
-      secondary: m.onboardingPrivacyDescription(),
+      primary: t(m.onboardingPrivacyTitle),
+      secondary: t(m.onboardingPrivacyDescription),
     },
   ];
 
@@ -120,7 +122,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
       <DialogActions sx={{ p: 3 }}>
         <Button fullWidth variant="contained" size="large" onClick={onClose}>
-          {m.onboardingContinue()}
+          {t(m.onboardingContinue)}
         </Button>
       </DialogActions>
     </Dialog>

@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   setTileBorderVisible,
   setTileSaturation,
@@ -16,6 +17,7 @@ function formatSaturation(value: number): string {
 }
 
 export function BoardSettings() {
+  const t = useTranslate();
   const { saturation, borderVisible } = useTileColorConfig();
   const saturationLabel = formatSaturation(saturation);
 
@@ -23,7 +25,7 @@ export function BoardSettings() {
     <Stack spacing={3}>
       <FormControlLabel
         labelPlacement="start"
-        label={m.tileBorders()}
+        label={t(m.tileBorders)}
         sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
@@ -36,14 +38,14 @@ export function BoardSettings() {
       <Stack spacing={0.5}>
         <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {m.tileSaturation()}
+            {t(m.tileSaturation)}
           </Typography>
           <Typography variant="body2" sx={{ fontWeight: 600 }}>
             {saturationLabel}
           </Typography>
         </Stack>
         <Slider
-          aria-label={m.tileSaturation()}
+          aria-label={t(m.tileSaturation)}
           getAriaValueText={formatSaturation}
           value={saturation}
           min={TILE_SATURATION.min}
