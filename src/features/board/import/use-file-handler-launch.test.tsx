@@ -31,6 +31,12 @@ function fileHandle(file: File): FileSystemFileHandle {
   return { getFile: () => Promise.resolve(file) } as FileSystemFileHandle;
 }
 
+function inaccessibleFileHandle(): FileSystemFileHandle {
+  return {
+    getFile: () => Promise.reject(new DOMException("Access denied")),
+  } as FileSystemFileHandle;
+}
+
 function renderLaunchHandler() {
   return render(
     <AppProviders>
@@ -73,5 +79,16 @@ describe("useFileHandlerLaunch", () => {
     await expect
       .element(screen.getByTestId("path"))
       .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
+  });
+
+  test("reports a file that can no longer be opened", async () => {
+    const launch = stubLaunchQueue();
+    const screen = await renderLaunchHandler();
+
+    launch(inaccessibleFileHandle());
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Couldn't import board");
   });
 });
