@@ -224,19 +224,6 @@ describe("createButtonActivation", () => {
     expect(message.setParts).not.toHaveBeenCalled();
   });
 
-  test("treats a loadBoard without an id as not navigable and speaks instead", () => {
-    const { activation, message, navigation } = setup();
-
-    activation.activateButton({
-      id: "btn",
-      label: "hi",
-      loadBoard: { name: "Other" },
-    });
-
-    expect(navigation.goToBoard).not.toHaveBeenCalled();
-    expect(message.setParts).toHaveBeenCalledTimes(1);
-  });
-
   test("treats an empty actions array as no actions and speaks instead", () => {
     const { activation, message } = setup();
 

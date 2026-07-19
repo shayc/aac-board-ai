@@ -62,7 +62,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
-  const suggestions = useSuggestions(message.text, board);
+  const suggestions = useSuggestions(message.text);
   const navigation = useBoardNavigation();
   const gridRef = useRef<HTMLDivElement>(null);
 

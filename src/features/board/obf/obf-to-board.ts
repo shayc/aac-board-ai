@@ -4,7 +4,6 @@ import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
-  OBFLicense,
   OBFLoadBoard,
   OBFMedia,
 } from "@shayc/open-board-format";
@@ -13,7 +12,6 @@ import type {
   BoardAction,
   BoardButton,
   BoardGrid,
-  BoardLicense,
   BoardStrings,
   LoadBoard,
 } from "../types";
@@ -27,13 +25,11 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     id: obfBoard.id,
     name: obfBoard.name,
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
-    descriptionHtml: obfBoard.description_html,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),
     grid: transformGrid(obfBoard.grid),
     strings: transformStrings(obfBoard.strings),
-    license: obfBoard.license ? transformLicense(obfBoard.license) : undefined,
   };
 
   return board;
@@ -80,9 +76,7 @@ function transformButton(
       ? soundSourceById.get(obfButton.sound_id)
       : undefined,
     actions: collectActions(obfButton),
-    loadBoard: obfButton.load_board
-      ? transformLoadBoard(obfButton.load_board)
-      : undefined,
+    loadBoard: transformLoadBoard(obfButton.load_board),
   };
 }
 
@@ -97,14 +91,10 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   });
 }
 
-function transformLoadBoard(obfLoadBoard: OBFLoadBoard): LoadBoard {
-  return {
-    id: obfLoadBoard.id,
-    name: obfLoadBoard.name,
-    url: obfLoadBoard.url,
-    dataUrl: obfLoadBoard.data_url,
-    path: obfLoadBoard.path,
-  };
+function transformLoadBoard(
+  obfLoadBoard: OBFLoadBoard | undefined,
+): LoadBoard | undefined {
+  return obfLoadBoard?.id ? { id: obfLoadBoard.id } : undefined;
 }
 
 function transformStrings(
@@ -127,16 +117,5 @@ function transformGrid(obfGrid: OBFGrid): BoardGrid {
     rows: obfGrid.rows,
     columns: obfGrid.columns,
     order: obfGrid.order,
-  };
-}
-
-function transformLicense(obfLicense: OBFLicense): BoardLicense {
-  return {
-    type: obfLicense.type,
-    copyrightNoticeUrl: obfLicense.copyright_notice_url,
-    sourceUrl: obfLicense.source_url,
-    authorName: obfLicense.author_name,
-    authorUrl: obfLicense.author_url,
-    authorEmail: obfLicense.author_email,
   };
 }

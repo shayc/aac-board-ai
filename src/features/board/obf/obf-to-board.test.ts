@@ -26,13 +26,12 @@ describe("obfToBoard", () => {
   });
 
   describe("board fields", () => {
-    test("maps optional top-level fields (locale, descriptionHtml)", () => {
+    test("maps the optional locale", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-top-level",
         name: "My Board",
         locale: "en-US",
-        description_html: "<p>Board description</p>",
         buttons: [],
         grid: {
           rows: 1,
@@ -44,7 +43,6 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.locale).toBe("en-US");
-      expect(board.descriptionHtml).toBe("<p>Board description</p>");
     });
 
     test("normalizes the locale to BCP-47 casing on import", () => {
@@ -77,38 +75,6 @@ describe("obfToBoard", () => {
 
       expect(board.id).toBe("board-no-name");
       expect(board.name).toBeUndefined();
-    });
-
-    test("maps license fields with snake_case to camelCase", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-license",
-        buttons: [],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [[null]],
-        },
-        license: {
-          type: "CC BY-SA 4.0",
-          copyright_notice_url: "https://example.com/copyright",
-          source_url: "https://example.com/source",
-          author_name: "Jane Doe",
-          author_url: "https://example.com/author",
-          author_email: "jane@example.com",
-        },
-      };
-
-      const board = obfToBoard(obfBoard);
-
-      expect(board.license).toEqual({
-        type: "CC BY-SA 4.0",
-        copyrightNoticeUrl: "https://example.com/copyright",
-        sourceUrl: "https://example.com/source",
-        authorName: "Jane Doe",
-        authorUrl: "https://example.com/author",
-        authorEmail: "jane@example.com",
-      });
     });
   });
 
@@ -202,7 +168,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.borderColor).toBe("rgb(0, 0, 0)");
     });
 
-    test("maps load_board to camelCased loadBoard", () => {
+    test("maps a load_board id to the runtime navigation target", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-load",
@@ -230,11 +196,26 @@ describe("obfToBoard", () => {
 
       expect(board.buttons[0]?.loadBoard).toEqual({
         id: "child-1",
-        name: "Child",
-        url: "https://example.com/child.obf",
-        dataUrl: "https://example.com/child.obf?download=1",
-        path: "boards/child.obf",
       });
+    });
+
+    test("ignores a load_board without a resolved id", () => {
+      const obfBoard: OBFBoard = {
+        format: "open-board-0.1",
+        id: "board-load-path-only",
+        buttons: [
+          {
+            id: "btn-1",
+            label: "Go",
+            load_board: { path: "boards/child.obf" },
+          },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      };
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]?.loadBoard).toBeUndefined();
     });
 
     test("defaults actions to empty array when none provided", () => {

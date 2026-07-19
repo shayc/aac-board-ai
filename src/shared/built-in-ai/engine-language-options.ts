@@ -1,5 +1,4 @@
 import type {
-  LanguageModelOptions,
   ProofreaderOptions,
   RewriterOptions,
 } from "@shayc/react-built-in-ai";
@@ -28,18 +27,5 @@ export function rewriterLanguageOptions(
     expectedInputLanguages: [language],
     expectedContextLanguages: [language],
     outputLanguage: language,
-  };
-}
-
-type LanguageModelLanguageOptions = Required<
-  Pick<LanguageModelOptions, "expectedInputs" | "expectedOutputs">
->;
-
-export function languageModelLanguageOptions(
-  language: string,
-): LanguageModelLanguageOptions {
-  return {
-    expectedInputs: [{ type: "text", languages: [language] }],
-    expectedOutputs: [{ type: "text", languages: [language] }],
   };
 }
