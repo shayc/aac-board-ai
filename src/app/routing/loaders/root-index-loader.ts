@@ -3,8 +3,8 @@ import {
   getBoardSets,
   importBoardFromUrl,
 } from "@features/board";
-import { m } from "@paraglide/messages.js";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
+import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
@@ -20,7 +20,9 @@ async function importFromBoardUrl(boardUrl: string): Promise<Response> {
 }
 
 function importFailed() {
-  return data(m.boardUrlImportFailed(), { status: 400 });
+  return data(createLocalizedRouteError(routeErrorCodes.boardUrlImportFailed), {
+    status: 400,
+  });
 }
 
 export async function rootIndexLoader({

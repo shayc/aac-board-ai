@@ -1,3 +1,5 @@
+import { m } from "@paraglide/messages.js";
+import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
@@ -22,6 +24,7 @@ function ShowButtons({
           {name}
         </button>
       ))}
+      <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
       <button>outside</button>
     </>
   );
@@ -86,5 +89,24 @@ describe("SnackbarProvider", () => {
     });
 
     await expectNoA11yViolations(document.body);
+  });
+
+  test("retranslates a visible localized message when the locale changes", async () => {
+    const screen = await renderSnackbars({
+      "show-imported": {
+        message: (t) => t(m.libraryImportedBoards, { count: 1 }),
+        duration: LONG_DURATION,
+      },
+    });
+
+    await screen.getByRole("button", { name: "show-imported" }).click();
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Board imported");
+
+    await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("הלוח יובא בהצלחה");
   });
 });

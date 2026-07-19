@@ -3,12 +3,16 @@ import Fade from "@mui/material/Fade";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 
 interface LoadingStateProps {
   message?: string;
 }
 
-export function LoadingState({ message = m.loading() }: LoadingStateProps) {
+export function LoadingState({ message }: LoadingStateProps) {
+  const t = useTranslate();
+  const resolvedMessage = message ?? t(m.loading);
+
   return (
     <Fade in timeout={400} style={{ transitionDelay: "300ms" }}>
       <Stack
@@ -20,7 +24,9 @@ export function LoadingState({ message = m.loading() }: LoadingStateProps) {
         }}
       >
         <CircularProgress />
-        {message && <Typography color="text.secondary">{message}</Typography>}
+        {resolvedMessage && (
+          <Typography color="text.secondary">{resolvedMessage}</Typography>
+        )}
       </Stack>
     </Fade>
   );

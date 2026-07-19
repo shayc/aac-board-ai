@@ -7,6 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 
@@ -21,6 +22,8 @@ export function AppHeader({
   onLibraryClick,
   onSettingsClick,
 }: AppHeaderProps) {
+  const t = useTranslate();
+
   return (
     <AppBar position="static">
       <Toolbar
@@ -46,9 +49,9 @@ export function AppHeader({
           }}
         >
           {!libraryButtonHidden && (
-            <Tooltip title={m.libraryOpen()}>
+            <Tooltip title={t(m.libraryOpen)}>
               <IconButton
-                aria-label={m.libraryOpen()}
+                aria-label={t(m.libraryOpen)}
                 size="large"
                 edge="start"
                 color="inherit"
@@ -65,9 +68,9 @@ export function AppHeader({
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>
-          <Tooltip title={m.settingsOpen()}>
+          <Tooltip title={t(m.settingsOpen)}>
             <IconButton
-              aria-label={m.settingsOpen()}
+              aria-label={t(m.settingsOpen)}
               size="large"
               edge="end"
               color="inherit"

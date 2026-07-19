@@ -2,6 +2,7 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { AppProviders } from "@shared/providers/app-providers";
 import { createRef } from "react";
 import { createMemoryRouter, type InitialEntry } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -40,9 +41,11 @@ async function renderAt(
   );
 
   const screen = await render(
-    <MUIThemeProvider theme={theme}>
-      <RouterProvider router={router} />
-    </MUIThemeProvider>,
+    <AppProviders>
+      <MUIThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </MUIThemeProvider>
+    </AppProviders>,
   );
 
   return { router, screen };

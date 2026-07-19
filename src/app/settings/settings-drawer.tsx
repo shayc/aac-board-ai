@@ -17,6 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/components/external-link";
+import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { AppearanceSettings } from "./appearance-settings";
 import { BoardSettings } from "./board-settings";
@@ -40,6 +41,8 @@ const sectionHeadingSx = {
 } as const;
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
+  const t = useTranslate();
+
   return (
     <Drawer
       anchor="right"
@@ -47,7 +50,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       onClose={onClose}
       slotProps={{
         paper: {
-          "aria-label": m.settingsTitle(),
+          "aria-label": t(m.settingsTitle),
           sx: [
             {
               width: safeAreaGutter(DRAWER_BASE_WIDTH, "right"),
@@ -69,12 +72,12 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         })}
       >
         <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
-          {m.settingsTitle()}
+          {t(m.settingsTitle)}
         </Typography>
 
-        <Tooltip title={m.settingsClose()}>
+        <Tooltip title={t(m.settingsClose)}>
           <IconButton
-            aria-label={m.settingsClose()}
+            aria-label={t(m.settingsClose)}
             size="large"
             edge="end"
             color="inherit"
@@ -97,7 +100,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       >
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <TuneOutlinedIcon fontSize="small" />
-          {m.settingsSectionGeneral()}
+          {t(m.settingsSectionGeneral)}
         </Typography>
         <Stack spacing={3}>
           <AppearanceSettings />
@@ -108,7 +111,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <AccessibilityNewOutlinedIcon fontSize="small" />
-          {m.settingsSectionSwitchAccess()}
+          {t(m.settingsSectionSwitchAccess)}
         </Typography>
         <SwitchScanningSettings />
 
@@ -116,7 +119,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <GridViewOutlinedIcon fontSize="small" />
-          {m.settingsSectionBoard()}
+          {t(m.settingsSectionBoard)}
         </Typography>
         <Stack spacing={3}>
           <BoardSettings />
@@ -126,7 +129,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <VolumeUpOutlinedIcon fontSize="small" />
-          {m.settingsSectionSpeech()}
+          {t(m.settingsSectionSpeech)}
         </Typography>
         <Stack spacing={3}>
           <SpeechSettings />
@@ -136,7 +139,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <AutoAwesomeIcon fontSize="small" />
-          {m.settingsSectionSuggestions()}
+          {t(m.settingsSectionSuggestions)}
         </Typography>
         <SuggestionsSettings />
 
@@ -144,7 +147,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
           <InfoOutlinedIcon fontSize="small" />
-          {m.settingsSectionAbout()}
+          {t(m.settingsSectionAbout)}
         </Typography>
         <ExternalLink
           href="https://github.com/shayc/aac-board-ai"
@@ -154,7 +157,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             fontSize="small"
             sx={{ verticalAlign: "text-bottom", mr: 2 }}
           />
-          {m.aboutSourceCode()}
+          {t(m.aboutSourceCode)}
         </ExternalLink>
       </Box>
     </Drawer>

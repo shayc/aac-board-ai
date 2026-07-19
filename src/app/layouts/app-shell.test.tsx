@@ -40,4 +40,45 @@ describe("AppShell", () => {
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .not.toBeInTheDocument();
   });
+
+  test("updates the mounted shell and open settings drawer across locale changes", async () => {
+    const screen = await renderAppShell();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+      .not.toBeInTheDocument();
+
+    const openSettings = screen.getByRole("button", {
+      name: "Open settings",
+    });
+    const openSettingsButton = openSettings.element();
+    await openSettings.click();
+
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "বাংলা" }).click();
+
+    await expect
+      .element(screen.getByRole("heading", { name: "সেটিংস" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox", { name: "ভাষা" }))
+      .toBeVisible();
+    expect(openSettingsButton).toHaveAttribute("aria-label", "সেটিংস খুলুন");
+    expect(document.documentElement).toHaveAttribute("lang", "bn");
+    expect(document.documentElement).toHaveAttribute("dir", "ltr");
+
+    await screen.getByRole("combobox", { name: "ভাষা" }).click();
+    await screen.getByRole("option", { name: "עברית" }).click();
+
+    await expect
+      .element(screen.getByRole("heading", { name: "הגדרות" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox", { name: "שפה" }))
+      .toBeVisible();
+    expect(openSettingsButton).toHaveAttribute("aria-label", "פתיחת הגדרות");
+    expect(document.documentElement).toHaveAttribute("lang", "he");
+    expect(document.documentElement).toHaveAttribute("dir", "rtl");
+  });
 });

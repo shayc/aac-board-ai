@@ -2,6 +2,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import Chip, { type ChipProps } from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 interface SuggestionStatusProps {
@@ -20,6 +21,8 @@ export function SuggestionStatus({
   enableButtonProps,
   onEnable,
 }: SuggestionStatusProps) {
+  const t = useTranslate();
+
   if (status === null || status.kind === "pending") {
     return null;
   }
@@ -30,7 +33,7 @@ export function SuggestionStatus({
         <Chip
           {...enableButtonProps}
           icon={<AutoAwesomeIcon />}
-          label={m.suggestionsEnable()}
+          label={t(m.suggestionsEnable)}
           color="primary"
           variant="outlined"
           onClick={onEnable}
@@ -40,14 +43,14 @@ export function SuggestionStatus({
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {status.percent === null
-            ? m.suggestionsDownloadingIndeterminate()
-            : m.suggestionsDownloading({ progress: status.percent })}
+            ? t(m.suggestionsDownloadingIndeterminate)
+            : t(m.suggestionsDownloading, { progress: status.percent })}
         </Typography>
       );
     case "unavailable":
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {m.suggestionsUnavailable()}
+          {t(m.suggestionsUnavailable)}
         </Typography>
       );
     default:

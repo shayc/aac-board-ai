@@ -1,11 +1,17 @@
+import { AppProviders } from "@shared/providers/app-providers";
+import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetList } from "./board-set-list";
 import { makeBoardSet } from "./test-utils";
 
+function renderWithProviders(children: ReactNode) {
+  return render(<AppProviders>{children}</AppProviders>);
+}
+
 describe("BoardSetList", () => {
   test("renders an item per board set with its name", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[
           makeBoardSet({ setId: "a", name: "Core Words" }),
@@ -23,7 +29,7 @@ describe("BoardSetList", () => {
 
   test("calls onSelect with the board set when its row is clicked", async () => {
     const onSelect = vi.fn();
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={onSelect}
@@ -43,7 +49,7 @@ describe("BoardSetList", () => {
   test("opens the row menu and routes Info to onInfo", async () => {
     const onInfo = vi.fn();
     const onDelete = vi.fn();
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={vi.fn()}
@@ -65,7 +71,7 @@ describe("BoardSetList", () => {
   test("routes the menu's Delete to onDelete", async () => {
     const onInfo = vi.fn();
     const onDelete = vi.fn();
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={vi.fn()}

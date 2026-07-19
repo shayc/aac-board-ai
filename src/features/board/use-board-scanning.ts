@@ -1,4 +1,5 @@
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   type ScanTargetProps,
   useScanTarget,
@@ -37,33 +38,34 @@ export function useBoardScanning({
   navigation,
   suggestions,
 }: UseBoardScanningOptions): UseBoardScanningReturn {
+  const t = useTranslate();
   const playTarget = useScanTarget({
     id: PLAY_SCAN_ID,
-    label: isPlaying ? m.messageStop() : m.messagePlay(),
+    label: isPlaying ? t(m.messageStop) : t(m.messagePlay),
     disabled: !hasMessage,
   });
 
   const backTarget = useScanTarget({
     id: BACK_SCAN_ID,
-    label: m.navBack(),
+    label: t(m.navBack),
     disabled: !navigation.canGoBack,
   });
 
   const homeTarget = useScanTarget({
     id: HOME_SCAN_ID,
-    label: m.navHome(),
+    label: t(m.navHome),
     disabled: !navigation.canGoHome,
   });
 
   const suggestionsEnableTarget = useScanTarget({
     id: SUGGESTIONS_ENABLE_SCAN_ID,
-    label: m.suggestionsEnable(),
+    label: t(m.suggestionsEnable),
     disabled: !suggestions.needsActivation,
   });
 
   const backspaceTarget = useScanTarget({
     id: BACKSPACE_SCAN_ID,
-    label: m.messageBackspace(),
+    label: t(m.messageBackspace),
     disabled: !hasMessage,
   });
 

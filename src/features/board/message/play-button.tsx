@@ -2,6 +2,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
 import Fab, { type FabProps } from "@mui/material/Fab";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { mergeSx } from "@shared/theme/merge-sx";
 
 const iconSx = { fontSize: 32 };
@@ -26,7 +27,8 @@ export function PlayButton({
   sx,
   ...fabProps
 }: PlayButtonProps) {
-  const label = isPlaying ? m.messageStop() : m.messagePlay();
+  const t = useTranslate();
+  const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
 
   return (
     <Fab

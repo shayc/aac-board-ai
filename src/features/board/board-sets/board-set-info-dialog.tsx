@@ -7,6 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate, type Translate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "../storage/boards-db";
 
 interface BoardSetInfoDialogProps {
@@ -18,7 +19,8 @@ export function BoardSetInfoDialog({
   boardSet,
   onClose,
 }: BoardSetInfoDialogProps) {
-  const chipLabels = boardSet ? buildChipLabels(boardSet) : [];
+  const t = useTranslate();
+  const chipLabels = boardSet ? buildChipLabels(t, boardSet) : [];
 
   return (
     <Dialog
@@ -32,7 +34,7 @@ export function BoardSetInfoDialog({
         {boardSet?.name}
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {m.libraryByAuthor({ author: boardSet.author })}
+            {t(m.libraryByAuthor, { author: boardSet.author })}
           </Typography>
         )}
       </DialogTitle>
@@ -59,18 +61,18 @@ export function BoardSetInfoDialog({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>{m.close()}</Button>
+        <Button onClick={onClose}>{t(m.close)}</Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-function buildChipLabels(boardSet: BoardSetRecord): string[] {
+function buildChipLabels(t: Translate, boardSet: BoardSetRecord): string[] {
   const labels: string[] = [];
 
   if (boardSet.gridRows && boardSet.gridColumns) {
     labels.push(
-      m.libraryGridDimensions({
+      t(m.libraryGridDimensions, {
         rows: boardSet.gridRows,
         columns: boardSet.gridColumns,
       }),

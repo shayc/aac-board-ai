@@ -2,11 +2,16 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
-import { createRef } from "react";
+import { AppProviders } from "@shared/providers/app-providers";
+import { createRef, type ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { BackspaceButton } from "./backspace-button";
+
+function renderWithProviders(children: ReactNode) {
+  return render(<AppProviders>{children}</AppProviders>);
+}
 
 function createHandlers() {
   return {
@@ -44,7 +49,7 @@ describe("BackspaceButton", () => {
     const handlers = createHandlers();
     const onClick = vi.fn();
     const ref = createRef<HTMLButtonElement>();
-    const screen = await render(
+    const screen = await renderWithProviders(
       <BackspaceButton
         {...handlers}
         ref={ref}
@@ -65,7 +70,7 @@ describe("BackspaceButton", () => {
   test("calls onPress when clicked", async () => {
     const handlers = createHandlers();
 
-    const screen = await render(<BackspaceButton {...handlers} />);
+    const screen = await renderWithProviders(<BackspaceButton {...handlers} />);
 
     const button = screen.getByRole("button", { name: "Backspace" });
     await button.click();
@@ -77,7 +82,7 @@ describe("BackspaceButton", () => {
   test("calls onLongPress when long-pressed", async () => {
     const handlers = createHandlers();
 
-    const screen = await render(<BackspaceButton {...handlers} />);
+    const screen = await renderWithProviders(<BackspaceButton {...handlers} />);
 
     const button = screen.getByRole("button", { name: "Backspace" });
     longPress(button.element());
@@ -91,7 +96,7 @@ describe("BackspaceButton", () => {
       const theme = createTheme({ direction: "rtl" });
       const handlers = createHandlers();
 
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MUIThemeProvider theme={theme}>
           <BackspaceButton {...handlers} />
         </MUIThemeProvider>,
@@ -110,7 +115,7 @@ describe("BackspaceButton", () => {
       const theme = createTheme({ direction: "ltr" });
       const handlers = createHandlers();
 
-      const screen = await render(
+      const screen = await renderWithProviders(
         <MUIThemeProvider theme={theme}>
           <BackspaceButton {...handlers} />
         </MUIThemeProvider>,

@@ -1,7 +1,8 @@
 import { m } from "@paraglide/messages.js";
+import type { Translate } from "@shared/language/use-translate";
 import type { SwitchInput } from "@shared/switch-scanning/switch-scanning-store";
 
-function getSwitchInputLabel(input: SwitchInput): string {
+function getSwitchInputLabel(t: Translate, input: SwitchInput): string {
   if (input.kind === "keyboard") {
     if (
       input.code === "MetaLeft" ||
@@ -11,14 +12,14 @@ function getSwitchInputLabel(input: SwitchInput): string {
       const platform = navigator.platform.toLocaleLowerCase();
 
       if (platform.includes("mac")) {
-        return m.switchScanningCommandKey();
+        return t(m.switchScanningCommandKey);
       }
 
       if (platform.includes("win")) {
-        return m.switchScanningWindowsKey();
+        return t(m.switchScanningWindowsKey);
       }
 
-      return m.switchScanningMetaKey();
+      return t(m.switchScanningMetaKey);
     }
 
     return input.label;
@@ -26,16 +27,16 @@ function getSwitchInputLabel(input: SwitchInput): string {
 
   switch (input.button) {
     case 0:
-      return m.switchScanningLeftMouseButton();
+      return t(m.switchScanningLeftMouseButton);
     case 1:
-      return m.switchScanningMiddleMouseButton();
+      return t(m.switchScanningMiddleMouseButton);
     case 2:
-      return m.switchScanningRightMouseButton();
+      return t(m.switchScanningRightMouseButton);
     default:
-      return m.switchScanningMouseInput({ button: input.button + 1 });
+      return t(m.switchScanningMouseInput, { button: input.button + 1 });
   }
 }
 
-export function formatSwitchInput(input: SwitchInput): string {
-  return getSwitchInputLabel(input);
+export function formatSwitchInput(t: Translate, input: SwitchInput): string {
+  return getSwitchInputLabel(t, input);
 }

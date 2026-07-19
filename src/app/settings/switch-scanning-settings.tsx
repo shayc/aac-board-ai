@@ -10,6 +10,7 @@ import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
+import { type Translate, useTranslate } from "@shared/language/use-translate";
 import {
   DWELL_DURATION_MS,
   SCAN_INTERVAL_MS,
@@ -25,34 +26,38 @@ import { SwitchScanningAdvancedSettings } from "./switch-scanning-advanced-setti
 
 const MILLISECONDS_PER_SECOND = 1_000;
 
-function getMethodLabel(method: SwitchScanningMethod): string {
+function getMethodLabel(t: Translate, method: SwitchScanningMethod): string {
   switch (method) {
     case "auto":
-      return m.switchScanningMethodAuto();
+      return t(m.switchScanningMethodAuto);
     case "step":
-      return m.switchScanningMethodStep();
+      return t(m.switchScanningMethodStep);
     case "dwell":
-      return m.switchScanningMethodDwell();
+      return t(m.switchScanningMethodDwell);
     case "inverse":
-      return m.switchScanningMethodInverse();
+      return t(m.switchScanningMethodInverse);
   }
 }
 
-function getMethodDescription(method: SwitchScanningMethod): string {
+function getMethodDescription(
+  t: Translate,
+  method: SwitchScanningMethod,
+): string {
   switch (method) {
     case "auto":
-      return m.switchScanningMethodAutoDescription();
+      return t(m.switchScanningMethodAutoDescription);
     case "step":
-      return m.switchScanningMethodStepDescription();
+      return t(m.switchScanningMethodStepDescription);
     case "dwell":
-      return m.switchScanningMethodDwellDescription();
+      return t(m.switchScanningMethodDwellDescription);
     case "inverse":
-      return m.switchScanningMethodInverseDescription();
+      return t(m.switchScanningMethodInverseDescription);
   }
 }
 
 export function SwitchScanningSettings() {
-  const { language } = useLanguage();
+  const t = useTranslate();
+  const { communicationLanguage: language } = useLanguage();
   const config = useSwitchScanningConfig();
   const {
     enabled,
@@ -74,19 +79,19 @@ export function SwitchScanningSettings() {
     maximumFractionDigits: 1,
   });
   const formatOptionalSeconds = (value: number) =>
-    value === 0 ? m.switchScanningOff() : seconds.format(value);
+    value === 0 ? t(m.switchScanningOff) : seconds.format(value);
 
   const timing =
     method === "dwell"
       ? {
-          label: m.switchScanningDwellDuration(),
+          label: t(m.switchScanningDwellDuration),
           value: dwellDurationMs,
           range: DWELL_DURATION_MS,
           onChange: setDwellDurationMs,
         }
       : method === "auto" || method === "inverse"
         ? {
-            label: m.switchScanningInterval(),
+            label: t(m.switchScanningInterval),
             value: scanIntervalMs,
             range: SCAN_INTERVAL_MS,
             onChange: setScanIntervalMs,
@@ -97,7 +102,7 @@ export function SwitchScanningSettings() {
     <Stack spacing={3}>
       <FormControlLabel
         labelPlacement="start"
-        label={m.switchScanningEnabled()}
+        label={t(m.switchScanningEnabled)}
         sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
@@ -111,23 +116,23 @@ export function SwitchScanningSettings() {
         <Stack spacing={3}>
           <FormControl size="small" fullWidth>
             <InputLabel id="switch-scanning-method-label">
-              {m.switchScanningMethod()}
+              {t(m.switchScanningMethod)}
             </InputLabel>
             <Select
               id="switch-scanning-method"
               labelId="switch-scanning-method-label"
-              label={m.switchScanningMethod()}
+              label={t(m.switchScanningMethod)}
               value={method}
               onChange={(event) => setSwitchScanningMethod(event.target.value)}
             >
               {(["auto", "dwell", "inverse", "step"] as const).map((option) => (
                 <MenuItem key={option} value={option}>
-                  {getMethodLabel(option)}
+                  {getMethodLabel(t, option)}
                 </MenuItem>
               ))}
             </Select>
             <FormHelperText sx={{ color: "text.secondary", mx: 0 }}>
-              {getMethodDescription(method)}
+              {getMethodDescription(t, method)}
             </FormHelperText>
           </FormControl>
 

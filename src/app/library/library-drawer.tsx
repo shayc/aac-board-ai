@@ -8,6 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useMatches, useNavigate } from "react-router";
@@ -23,6 +24,8 @@ export function LibraryDrawer({
   onClose,
   variant = "temporary",
 }: LibraryDrawerProps) {
+  const t = useTranslate();
+
   const navigate = useNavigate();
   const activeMatch = useMatches().find((match) => match.params.setId);
   const activeSetId = activeMatch?.params.setId;
@@ -37,7 +40,7 @@ export function LibraryDrawer({
       variant={variant}
       slotProps={{
         paper: {
-          "aria-label": m.libraryTitle(),
+          "aria-label": t(m.libraryTitle),
           ...(variant === "persistent" && { component: "aside" }),
           sx: {
             width: LIBRARY_DRAWER_WIDTH,
@@ -55,12 +58,12 @@ export function LibraryDrawer({
         })}
       >
         <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
-          {m.libraryTitle()}
+          {t(m.libraryTitle)}
         </Typography>
 
-        <Tooltip title={m.libraryClose()}>
+        <Tooltip title={t(m.libraryClose)}>
           <IconButton
-            aria-label={m.libraryClose()}
+            aria-label={t(m.libraryClose)}
             size="large"
             edge="end"
             color="inherit"

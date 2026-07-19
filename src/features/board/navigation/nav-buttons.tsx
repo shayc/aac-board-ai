@@ -3,6 +3,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Box from "@mui/material/Box";
 import Button, { type ButtonProps } from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { mergeSx } from "@shared/theme/merge-sx";
 import { flipForRtl } from "@shared/theme/rtl";
 import { useBoardNavigation } from "./use-board-navigation";
@@ -34,6 +35,7 @@ export function NavButtons({
   onBackClick,
   onHomeClick,
 }: NavButtonsProps = {}) {
+  const t = useTranslate();
   const { setId, canGoBack, canGoHome, isHome, goBack, goHome } =
     useBoardNavigation();
   const { sx: backButtonSx, ...backButtonProps } = slotProps?.backButton ?? {};
@@ -57,7 +59,7 @@ export function NavButtons({
     <Box sx={{ display: "flex", gap: 1 }}>
       <Button
         {...backButtonProps}
-        aria-label={m.navBack()}
+        aria-label={t(m.navBack)}
         size="large"
         color="inherit"
         disabled={!canGoBack}
@@ -70,7 +72,7 @@ export function NavButtons({
 
       <Button
         {...homeButtonProps}
-        aria-label={m.navHome()}
+        aria-label={t(m.navHome)}
         size="large"
         color="inherit"
         disabled={!canGoHome || (isHome && !onHomeClick)}

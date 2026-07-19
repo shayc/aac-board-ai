@@ -6,6 +6,7 @@ import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   CYCLES_BEFORE_PAUSING,
   FIRST_ITEM_PAUSE_MS,
@@ -78,6 +79,8 @@ export function SwitchScanningAdvancedSettings({
   minimumPressDurationMs,
   formatSeconds,
 }: SwitchScanningAdvancedSettingsProps) {
+  const t = useTranslate();
+
   return (
     <Accordion
       disableGutters
@@ -95,7 +98,7 @@ export function SwitchScanningAdvancedSettings({
         sx={{ px: 0 }}
       >
         <Typography component="h4" variant="body2" sx={{ fontWeight: 500 }}>
-          {m.switchScanningAdvanced()}
+          {t(m.switchScanningAdvanced)}
         </Typography>
       </AccordionSummary>
       <AccordionDetails
@@ -107,7 +110,7 @@ export function SwitchScanningAdvancedSettings({
           {hasTimedScan && (
             <>
               <SettingSlider
-                label={m.switchScanningCyclesBeforePausing()}
+                label={t(m.switchScanningCyclesBeforePausing)}
                 value={cyclesBeforePausing}
                 min={CYCLES_BEFORE_PAUSING.min}
                 max={CYCLES_BEFORE_PAUSING.max}
@@ -116,7 +119,7 @@ export function SwitchScanningAdvancedSettings({
                 onChange={setCyclesBeforePausing}
               />
               <SettingSlider
-                label={m.switchScanningFirstItemPause()}
+                label={t(m.switchScanningFirstItemPause)}
                 value={firstItemPauseMs / MILLISECONDS_PER_SECOND}
                 min={FIRST_ITEM_PAUSE_MS.min / MILLISECONDS_PER_SECOND}
                 max={FIRST_ITEM_PAUSE_MS.max / MILLISECONDS_PER_SECOND}
@@ -129,7 +132,7 @@ export function SwitchScanningAdvancedSettings({
             </>
           )}
           <SettingSlider
-            label={m.switchScanningIgnoreRepeatedPresses()}
+            label={t(m.switchScanningIgnoreRepeatedPresses)}
             value={ignoreRepeatMs / MILLISECONDS_PER_SECOND}
             min={IGNORE_REPEAT_MS.min / MILLISECONDS_PER_SECOND}
             max={IGNORE_REPEAT_MS.max / MILLISECONDS_PER_SECOND}
@@ -140,7 +143,7 @@ export function SwitchScanningAdvancedSettings({
             }
           />
           <SettingSlider
-            label={m.switchScanningMinimumPressDuration()}
+            label={t(m.switchScanningMinimumPressDuration)}
             value={minimumPressDurationMs / MILLISECONDS_PER_SECOND}
             min={MINIMUM_PRESS_DURATION_MS.min / MILLISECONDS_PER_SECOND}
             max={MINIMUM_PRESS_DURATION_MS.max / MILLISECONDS_PER_SECOND}

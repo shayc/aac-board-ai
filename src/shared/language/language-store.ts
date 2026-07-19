@@ -1,4 +1,10 @@
-import { baseLocale, isLocale } from "@paraglide/runtime";
+import {
+  baseLocale,
+  isLocale,
+  overwriteGetLocale,
+  overwriteSetLocale,
+  type Locale,
+} from "@paraglide/runtime";
 import { getLanguageCode } from "@shared/utils/locale";
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
@@ -28,6 +34,10 @@ const store = createPersistedStore<string>(
   parseStoredLanguage,
 );
 
+export function resolveUiLocale(language: string): Locale {
+  return isLocale(language) ? language : baseLocale;
+}
+
 export function getStoredLanguage(): string {
   return store.getSnapshot();
 }
@@ -39,3 +49,16 @@ export function setStoredLanguage(language: string): void {
 export function useStoredLanguage(): string {
   return useSyncExternalStore(store.subscribe, store.getSnapshot);
 }
+
+export function getUiLocale(): Locale {
+  return resolveUiLocale(getStoredLanguage());
+}
+
+export function useUiLocale(): Locale {
+  return resolveUiLocale(useStoredLanguage());
+}
+
+// The communication language store is the app's locale authority. Paraglide
+// delegates to it so message functions and React always observe one snapshot.
+overwriteGetLocale(getUiLocale);
+overwriteSetLocale((locale) => setStoredLanguage(locale));

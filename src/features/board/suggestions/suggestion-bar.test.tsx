@@ -1,7 +1,13 @@
+import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionBar, type SuggestionBarProps } from "./suggestion-bar";
+
+function renderWithProviders(children: ReactNode) {
+  return render(<AppProviders>{children}</AppProviders>);
+}
 
 function makeProps(
   overrides: Partial<SuggestionBarProps> = {},
@@ -19,7 +25,9 @@ describe("SuggestionBar", () => {
   test("renders a chip for each phrase", async () => {
     const phrases = ["Hello", "How are you?", "Thank you"];
 
-    const screen = await render(<SuggestionBar {...makeProps({ phrases })} />);
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps({ phrases })} />,
+    );
 
     for (const phrase of phrases) {
       await expect
@@ -30,7 +38,7 @@ describe("SuggestionBar", () => {
 
   test("calls onPhraseClick with the correct value when a phrase chip is clicked", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
-    const screen = await render(<SuggestionBar {...props} />);
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Hello" }).click();
 
@@ -45,7 +53,7 @@ describe("SuggestionBar", () => {
 
   test("offers an enable chip when activation is needed", async () => {
     const props = makeProps({ status: { kind: "needs-activation" } });
-    const screen = await render(<SuggestionBar {...props} />);
+    const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Enable suggestions" }).click();
 
@@ -53,7 +61,7 @@ describe("SuggestionBar", () => {
   });
 
   test("shows download progress while the model downloads", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <SuggestionBar
         {...makeProps({ status: { kind: "downloading", percent: 43 } })}
       />,
@@ -65,7 +73,7 @@ describe("SuggestionBar", () => {
   });
 
   test("shows a percentless download message while progress is unknown", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <SuggestionBar
         {...makeProps({ status: { kind: "downloading", percent: null } })}
       />,
@@ -77,7 +85,7 @@ describe("SuggestionBar", () => {
   });
 
   test("announces unavailability after a failed request", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );
 
@@ -89,7 +97,7 @@ describe("SuggestionBar", () => {
   });
 
   test("has no accessibility violations", async () => {
-    const screen = await render(
+    const screen = await renderWithProviders(
       <SuggestionBar
         {...makeProps({ phrases: ["Hello", "How are you?", "Thank you"] })}
       />,

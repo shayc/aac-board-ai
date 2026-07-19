@@ -1,6 +1,7 @@
 import BackspaceOutlinedIcon from "@mui/icons-material/BackspaceOutlined";
 import Button, { type ButtonProps } from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import { mergeSx } from "@shared/theme/merge-sx";
 import { flipForRtl } from "@shared/theme/rtl";
 import { mergeProps, useLongPress, usePress } from "react-aria";
@@ -29,10 +30,11 @@ export function BackspaceButton({
   sx,
   ...buttonProps
 }: BackspaceButtonProps) {
+  const t = useTranslate();
   const { pressProps } = usePress({ onPress });
 
   const { longPressProps } = useLongPress({
-    accessibilityDescription: m.messageBackspaceLongPressHint(),
+    accessibilityDescription: t(m.messageBackspaceLongPressHint),
     threshold: LONG_PRESS_THRESHOLD_MS,
     onLongPress,
   });
@@ -40,7 +42,7 @@ export function BackspaceButton({
   return (
     <Button
       {...mergeProps(buttonProps, pressProps, longPressProps)}
-      aria-label={m.messageBackspace()}
+      aria-label={t(m.messageBackspace)}
       size="large"
       color="inherit"
       variant="contained"

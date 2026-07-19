@@ -27,14 +27,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const count = files.length;
 
     showSnackbar({
-      message: m.libraryImportingBoards({ count }),
+      message: (translate) => translate(m.libraryImportingBoards, { count }),
     });
 
     try {
       const results = await importBoardSets(files);
 
       showSnackbar({
-        message: m.libraryImportedBoards({ count }),
+        message: (translate) => translate(m.libraryImportedBoards, { count }),
         severity: "success",
       });
 
@@ -45,8 +45,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
       showSnackbar({
         message: tooLarge
-          ? m.libraryImportTooLargeBoards({ count })
-          : m.libraryImportFailedBoards({ count }),
+          ? (translate) => translate(m.libraryImportTooLargeBoards, { count })
+          : (translate) => translate(m.libraryImportFailedBoards, { count }),
         severity: "error",
       });
 

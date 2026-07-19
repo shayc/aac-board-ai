@@ -9,6 +9,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
 import { EmptyState } from "@shared/components/empty-state";
 import { LoadingState } from "@shared/components/loading-state";
+import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useState } from "react";
 import { useImportBoardFiles } from "../import/use-import-board-files";
@@ -28,6 +29,7 @@ export function BoardSetLibrary({
   selectedSetId,
   onSelect,
 }: BoardSetLibraryProps) {
+  const t = useTranslate();
   const { boardSets, isLoading } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
@@ -46,12 +48,12 @@ export function BoardSetLibrary({
     try {
       await deleteBoardSet(setId);
       showSnackbar({
-        message: m.libraryDeleted({ name }),
+        message: (translate) => translate(m.libraryDeleted, { name }),
         severity: "success",
       });
     } catch {
       showSnackbar({
-        message: m.libraryDeleteFailed({ name }),
+        message: (translate) => translate(m.libraryDeleteFailed, { name }),
         severity: "error",
       });
     }
@@ -60,7 +62,7 @@ export function BoardSetLibrary({
   if (isLoading) {
     return (
       <Box sx={{ px: 2, height: "100%" }}>
-        <LoadingState message={m.libraryLoading()} />
+        <LoadingState message={t(m.libraryLoading)} />
       </Box>
     );
   }
@@ -69,15 +71,15 @@ export function BoardSetLibrary({
     return (
       <Box sx={{ px: 2, height: "100%" }}>
         <EmptyState
-          title={m.libraryEmptyTitle()}
-          description={m.libraryEmptyDescription()}
+          title={t(m.libraryEmptyTitle)}
+          description={t(m.libraryEmptyDescription)}
           action={
             <Button
               variant="contained"
               startIcon={<LibraryAddOutlinedIcon />}
               onClick={() => void pickAndImportBoardFiles()}
             >
-              {m.libraryImportBoards()}
+              {t(m.libraryImportBoards)}
             </Button>
           }
         />
@@ -93,7 +95,7 @@ export function BoardSetLibrary({
             <ListItemIcon>
               <LibraryAddOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={m.libraryImportBoards()} />
+            <ListItemText primary={t(m.libraryImportBoards)} />
           </ListItemButton>
         </ListItem>
       </List>

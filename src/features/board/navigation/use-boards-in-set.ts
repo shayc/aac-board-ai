@@ -1,7 +1,7 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
-import { findTranslations } from "../translation/board-strings";
 import { listBoards } from "../storage/boards-db";
+import { findTranslations } from "../translation/board-strings";
 
 interface UseBoardsInSetOptions {
   setId: string | undefined;
@@ -21,7 +21,7 @@ interface UseBoardsInSetReturn {
 export function useBoardsInSet({
   setId,
 }: UseBoardsInSetOptions): UseBoardsInSetReturn {
-  const { language } = useLanguage();
+  const { communicationLanguage: language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
     enabled: setId !== undefined,
     deps: [setId ?? ""],

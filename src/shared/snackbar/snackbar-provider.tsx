@@ -1,6 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTranslate } from "@shared/language/use-translate";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -37,6 +38,7 @@ interface SnackbarProviderProps {
 }
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
+  const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -70,6 +72,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const contextValue: SnackbarContextValue = {
     showSnackbar,
   };
+  const message =
+    typeof state.current?.message === "function"
+      ? state.current.message(t)
+      : state.current?.message;
 
   return (
     <SnackbarContext value={contextValue}>
@@ -92,7 +98,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           onClose={handleClose}
           sx={{ width: "100%" }}
         >
-          {state.current?.message}
+          {message}
         </Alert>
       </Snackbar>
     </SnackbarContext>

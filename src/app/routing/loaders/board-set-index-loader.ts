@@ -1,6 +1,6 @@
 import { boardSetPath, getBoardSet, InvalidIdError } from "@features/board";
-import { m } from "@paraglide/messages.js";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
+import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
 
 export async function boardSetIndexLoader({
   params,
@@ -18,7 +18,9 @@ export async function boardSetIndexLoader({
   }
 
   if (!boardSet) {
-    throw data(m.errorBoardSetNotFound(), { status: 404 });
+    throw data(createLocalizedRouteError(routeErrorCodes.boardSetNotFound), {
+      status: 404,
+    });
   }
 
   return redirect(boardSetPath(boardSet));
