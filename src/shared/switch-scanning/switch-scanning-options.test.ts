@@ -1,7 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
   createKeyboardBindings,
+  createMouseBindings,
   createScanMethod,
+  createSwitchDefinitions,
 } from "./switch-scanning-options";
 import type { SwitchScanningConfig } from "./switch-scanning-store";
 
@@ -10,6 +12,11 @@ const config: SwitchScanningConfig = {
   method: "auto",
   scanIntervalMs: 1_500,
   dwellDurationMs: 2_000,
+  inputs: {
+    single: { kind: "keyboard", code: "F13", label: "F13" },
+    next: { kind: "keyboard", code: "KeyN", label: "N" },
+    select: { kind: "mouse", button: 3 },
+  },
 };
 
 describe("switch-scanning-options", () => {
@@ -34,22 +41,27 @@ describe("switch-scanning-options", () => {
     });
   });
 
-  test("maps common switch-interface keys to each method's actions", () => {
-    expect(createKeyboardBindings("auto")).toMatchObject({
-      Space: "select",
-      Enter: "select",
+  test("maps configured keyboard keys and mouse buttons to logical switches", () => {
+    expect(createSwitchDefinitions(config)).toEqual({
+      single: { action: "select" },
     });
-    expect(createKeyboardBindings("step")).toMatchObject({
-      Space: "next",
-      Enter: "select",
+    expect(createKeyboardBindings(config)).toEqual({ F13: "single" });
+    expect(createMouseBindings(config)).toEqual({});
+
+    const stepConfig = { ...config, method: "step" as const };
+
+    expect(createSwitchDefinitions(stepConfig)).toEqual({
+      next: { action: "next" },
+      select: { action: "select" },
     });
-    expect(createKeyboardBindings("dwell")).toMatchObject({
-      Space: "next",
-      Enter: "next",
+    expect(createKeyboardBindings(stepConfig)).toEqual({ KeyN: "next" });
+    expect(createMouseBindings(stepConfig)).toEqual({ 3: "select" });
+
+    expect(createSwitchDefinitions({ ...config, method: "dwell" })).toEqual({
+      single: { action: "next" },
     });
-    expect(createKeyboardBindings("inverse")).toMatchObject({
-      Space: "scan",
-      Enter: "scan",
+    expect(createSwitchDefinitions({ ...config, method: "inverse" })).toEqual({
+      single: { action: "scan" },
     });
   });
 });
