@@ -1,50 +1,35 @@
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
-import type { MessagePart, UseMessageReturn } from "../message/use-message";
-import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
+import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
 import { createButtonActivation } from "./button-activation";
 
-function createMessageStub(parts: MessagePart[] = []): UseMessageReturn {
+type ActivationOptions = Parameters<typeof createButtonActivation>[0];
+
+function createMessageStub(
+  parts: MessagePart[] = [],
+): ActivationOptions["message"] {
   return {
     parts,
-    text: parts.map((p) => p.label ?? "").join(" "),
-    setFromText: vi.fn(),
-    removeLastPart: vi.fn(),
     setParts: vi.fn(),
-    clear: vi.fn(),
   };
 }
 
-function createPlaybackStub(): UseMessagePlaybackReturn {
+function createPlaybackStub(): ActivationOptions["playback"] {
   return {
-    isPlaying: false,
-    activePartId: null,
     play: vi.fn(() => Promise.resolve()),
-    stop: vi.fn(),
   };
 }
 
-function createNavigationStub(): UseBoardNavigationReturn {
+function createNavigationStub(): ActivationOptions["navigation"] {
   return {
-    setId: "set-1",
-    boardId: "board-1",
-    canGoBack: false,
-    canGoHome: true,
-    isHome: false,
     goToBoard: vi.fn(),
-    goBack: vi.fn(),
     goHome: vi.fn(),
   };
 }
 
-interface SetupOptions {
-  message?: UseMessageReturn;
-  playback?: UseMessagePlaybackReturn;
-  navigation?: UseBoardNavigationReturn;
-}
+type SetupOptions = Partial<ActivationOptions>;
 
 function setup(opts: SetupOptions = {}) {
   const message = opts.message ?? createMessageStub();

@@ -7,16 +7,28 @@ import {
   appendTextToLastPart,
   dropLastPart,
 } from "../message/message-transforms";
-import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
-import type { MessagePart, UseMessageReturn } from "../message/use-message";
-import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
+import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
 import { resolveButtonIntents } from "./button-intent-resolver";
 
+interface ActivationMessage {
+  parts: MessagePart[];
+  setParts: (parts: MessagePart[]) => void;
+}
+
+interface ActivationPlayback {
+  play: (parts: MessagePart[]) => Promise<void>;
+}
+
+interface ActivationNavigation {
+  goToBoard: (targetBoardId: string) => void;
+  goHome: () => void;
+}
+
 interface ButtonActivationOptions {
-  message: Pick<UseMessageReturn, "parts" | "setParts">;
-  playback: Pick<UseMessagePlaybackReturn, "play">;
-  navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
+  message: ActivationMessage;
+  playback: ActivationPlayback;
+  navigation: ActivationNavigation;
 }
 
 interface ButtonActivation {

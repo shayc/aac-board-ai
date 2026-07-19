@@ -2,7 +2,7 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { Pictogram } from "../pictogram/pictogram";
 import { PlayButton, type PlayButtonRootProps } from "./play-button";
-import type { MessagePart } from "./use-message";
+import type { MessagePart } from "./message-types";
 
 interface MessageBarSlotProps {
   playButton?: Omit<PlayButtonRootProps, "disabled">;

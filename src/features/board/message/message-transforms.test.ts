@@ -5,7 +5,7 @@ import {
   appendTextToLastPart,
   dropLastPart,
 } from "./message-transforms";
-import type { MessagePart } from "./use-message";
+import type { MessagePart } from "./message-types";
 
 describe("appendPart", () => {
   test("appends a new part with a minted id", () => {

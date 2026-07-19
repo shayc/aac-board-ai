@@ -11,7 +11,7 @@ import {
 } from "vitest";
 import { render } from "vitest-browser-react";
 import { MessageBar, type MessageBarProps } from "./message-bar";
-import type { MessagePart } from "./use-message";
+import type { MessagePart } from "./message-types";
 
 function renderWithProviders(children: ReactNode) {
   return render(<AppProviders>{children}</AppProviders>);
