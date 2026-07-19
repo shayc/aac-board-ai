@@ -126,6 +126,7 @@
   "themeLight": "Light",
   "themeDark": "Dark",
   "languageLabel": "Language",
+  "languageTranslationUnavailable": "Automatic board translation is unavailable on this device.",
   "languageDownloading": "Downloading language...",
   "languageDownloadProgress": "{progress}% complete...",
   "speechVoice": "Voice",
