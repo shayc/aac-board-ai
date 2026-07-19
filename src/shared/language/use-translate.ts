@@ -1,5 +1,5 @@
 import type { Locale, LocalizedString } from "@paraglide/runtime";
-import { useLanguage } from "./use-language";
+import { useUiLocale } from "./language-store";
 
 interface MessageOptions {
   locale?: Locale;
@@ -20,7 +20,7 @@ export type Translate = <Inputs extends object>(
 ) => LocalizedString;
 
 export function useTranslate(): Translate {
-  const { uiLocale } = useLanguage();
+  const uiLocale = useUiLocale();
 
   return <Inputs extends object>(
     message: Message<Inputs>,
