@@ -198,6 +198,25 @@ describe("useSuggestions", () => {
     });
   });
 
+  test("enable prepares the proofreader", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result } = await renderSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
+      expect(proofreader.availability).toHaveBeenCalledOnce();
+    });
+
+    result.current.enable();
+
+    await vi.waitFor(() => {
+      expect(proofreader.availability).toHaveBeenCalledTimes(2);
+    });
+  });
+
   test("enable prepares every fixed-tone rewriter", async () => {
     const rewriter = stubRewriter();
     rewriter.availability.mockResolvedValue("downloadable");

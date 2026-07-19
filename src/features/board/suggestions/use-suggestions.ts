@@ -8,6 +8,7 @@ import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import {
+  type Status,
   useGlobalDownloadProgress,
   useProofreader,
   useRewriter,
@@ -27,8 +28,90 @@ interface UseSuggestionsReturn {
   enable: () => void;
 }
 
+interface SuggestionSource {
+  engineStatus: Status;
+  phrase: string | undefined;
+  isPending: boolean;
+  hasRequestFailed: boolean;
+  enable: () => void;
+}
+
+interface UseRewriteSuggestionOptions {
+  text: string;
+  sharedContext: string;
+  language: string;
+  tone: "as-is" | "more-casual";
+}
+
 function isNonAbortError(error: Error | undefined): boolean {
   return error !== undefined && error.name !== "AbortError";
+}
+
+function useProofreadSuggestion(
+  text: string,
+  language: string,
+): SuggestionSource {
+  const proofreader = useProofreader(proofreaderLanguageOptions(language));
+  const hasText = text.trim().length > 0;
+
+  const request = useLatestAsync({
+    enabled: hasText && proofreader.status === "ready",
+    deps: [text, language],
+    run: (signal) =>
+      proofreader
+        .proofread(text, { signal })
+        .then((result) => result.correctedInput),
+  });
+
+  const enable = () => {
+    if (proofreader.status === "downloadable") {
+      prepareQuietly(proofreader);
+    }
+  };
+
+  return {
+    engineStatus: proofreader.status,
+    phrase: request.value,
+    isPending: request.isPending,
+    hasRequestFailed: isNonAbortError(request.error),
+    enable,
+  };
+}
+
+function useRewriteSuggestion({
+  text,
+  sharedContext,
+  language,
+  tone,
+}: UseRewriteSuggestionOptions): SuggestionSource {
+  const rewriter = useRewriter({
+    sharedContext,
+    length: "shorter",
+    format: "plain-text",
+    tone,
+    ...rewriterLanguageOptions(language),
+  });
+  const hasText = text.trim().length > 0;
+
+  const request = useLatestAsync({
+    enabled: hasText && rewriter.status === "ready",
+    deps: [text, sharedContext, language],
+    run: (signal) => rewriter.rewrite(text, { signal }),
+  });
+
+  const enable = () => {
+    if (rewriter.status === "downloadable") {
+      prepareQuietly(rewriter);
+    }
+  };
+
+  return {
+    engineStatus: rewriter.status,
+    phrase: request.value,
+    isPending: request.isPending,
+    hasRequestFailed: isNonAbortError(request.error),
+    enable,
+  };
 }
 
 export function useSuggestions(text: string): UseSuggestionsReturn {
@@ -40,52 +123,26 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
 
   const { language } = useLanguage();
 
-  const proofreader = useProofreader(proofreaderLanguageOptions(language));
-
-  const rewriterOptions = {
+  const proofreadSuggestion = useProofreadSuggestion(text, language);
+  const directSuggestion = useRewriteSuggestion({
+    text,
     sharedContext: debouncedSharedContext,
-    length: "shorter" as const,
-    format: "plain-text" as const,
-    ...rewriterLanguageOptions(language),
-  };
-
-  const directRewriter = useRewriter({
-    ...rewriterOptions,
+    language,
     tone: "as-is",
   });
-
-  const friendlyRewriter = useRewriter({
-    ...rewriterOptions,
+  const friendlySuggestion = useRewriteSuggestion({
+    text,
+    sharedContext: debouncedSharedContext,
+    language,
     tone: "more-casual",
   });
 
-  const hasText = text.trim().length > 0;
-
-  const corrected = useLatestAsync({
-    enabled: hasText && proofreader.status === "ready",
-    deps: [text, language],
-    run: (signal) =>
-      proofreader
-        .proofread(text, { signal })
-        .then((result) => result.correctedInput),
-  });
-
-  const directRewrite = useLatestAsync({
-    enabled: hasText && directRewriter.status === "ready",
-    deps: [text, debouncedSharedContext, language],
-    run: (signal) => directRewriter.rewrite(text, { signal }),
-  });
-
-  const friendlyRewrite = useLatestAsync({
-    enabled: hasText && friendlyRewriter.status === "ready",
-    deps: [text, debouncedSharedContext, language],
-    run: (signal) => friendlyRewriter.rewrite(text, { signal }),
-  });
-
-  const rewriterSuggestions = [
-    { engine: directRewriter, request: directRewrite },
-    { engine: friendlyRewriter, request: friendlyRewrite },
+  const suggestionSources = [
+    proofreadSuggestion,
+    directSuggestion,
+    friendlySuggestion,
   ];
+  const hasText = text.trim().length > 0;
 
   // Other hook instances can start these downloads; global progress keeps the
   // suggestion bar in sync with them.
@@ -94,27 +151,17 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
     "Rewriter",
   ]);
 
-  const phrases = toPhrases(text, [
-    corrected.value,
-    directRewrite.value,
-    friendlyRewrite.value,
-  ]);
-
-  const isPending =
-    corrected.isPending ||
-    rewriterSuggestions.some(({ request }) => request.isPending);
+  const phrases = toPhrases(
+    text,
+    suggestionSources.map(({ phrase }) => phrase),
+  );
+  const isPending = suggestionSources.some(({ isPending }) => isPending);
 
   const status = deriveSuggestionStatus({
-    engines: [
-      {
-        status: proofreader.status,
-        requestFailed: isNonAbortError(corrected.error),
-      },
-      ...rewriterSuggestions.map(({ engine, request }) => ({
-        status: engine.status,
-        requestFailed: isNonAbortError(request.error),
-      })),
-    ],
+    engines: suggestionSources.map(({ engineStatus, hasRequestFailed }) => ({
+      status: engineStatus,
+      requestFailed: hasRequestFailed,
+    })),
     downloadProgress,
     hasText,
     isPending,
@@ -122,20 +169,14 @@ export function useSuggestions(text: string): UseSuggestionsReturn {
   });
 
   const enable = () => {
-    if (proofreader.status === "downloadable") {
-      prepareQuietly(proofreader);
-    }
-
-    for (const { engine } of rewriterSuggestions) {
-      if (engine.status === "downloadable") {
-        prepareQuietly(engine);
-      }
+    for (const source of suggestionSources) {
+      source.enable();
     }
   };
 
-  const isSupported =
-    proofreader.status !== "unsupported" ||
-    rewriterSuggestions.some(({ engine }) => engine.status !== "unsupported");
+  const isSupported = suggestionSources.some(
+    ({ engineStatus }) => engineStatus !== "unsupported",
+  );
 
   return {
     isSupported,
