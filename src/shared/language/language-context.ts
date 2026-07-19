@@ -1,12 +1,9 @@
-import type { Locale } from "@paraglide/runtime";
 import { createContext } from "react";
 
-export interface LanguageContextValue {
-  communicationLanguage: string;
-  setCommunicationLanguage: (language: string) => void;
-  uiLocale: Locale;
-  languages: { code: string; name: string }[];
-  direction: "ltr" | "rtl";
+interface LanguageContextValue {
+  readonly language: string;
+  readonly direction: "ltr" | "rtl";
+  setLanguage: (language: string) => void;
 }
 
 export const LanguageContext = createContext<LanguageContextValue | null>(null);

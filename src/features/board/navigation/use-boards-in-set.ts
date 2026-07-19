@@ -21,7 +21,7 @@ interface UseBoardsInSetReturn {
 export function useBoardsInSet({
   setId,
 }: UseBoardsInSetOptions): UseBoardsInSetReturn {
-  const { communicationLanguage: language } = useLanguage();
+  const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
     enabled: setId !== undefined,
     deps: [setId ?? ""],

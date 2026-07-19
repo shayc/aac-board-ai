@@ -1,36 +1,27 @@
 import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { getTextDirection } from "@shared/utils/locale";
 import { useLayoutEffect, type ReactNode } from "react";
-import { LanguageContext, type LanguageContextValue } from "./language-context";
-import {
-  resolveUiLocale,
-  setStoredLanguage,
-  useStoredLanguage,
-} from "./language-store";
-import { useAvailableLanguages } from "./use-available-languages";
+import { LanguageContext } from "./language-context";
+import { setStoredLanguage, useStoredLanguage } from "./language-store";
 
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const communicationLanguage = useStoredLanguage();
-  const uiLocale = resolveUiLocale(communicationLanguage);
-  const languages = useAvailableLanguages();
-  const direction = getTextDirection(communicationLanguage);
+  const language = useStoredLanguage();
+  const direction = getTextDirection(language);
 
   useLayoutEffect(() => {
     document.documentElement.dir = direction;
-    document.documentElement.lang = communicationLanguage;
-  }, [communicationLanguage, direction]);
+    document.documentElement.lang = language;
+  }, [direction, language]);
 
-  useVoiceLanguageSync({ language: communicationLanguage });
+  useVoiceLanguageSync({ language });
 
-  const contextValue: LanguageContextValue = {
-    communicationLanguage,
-    setCommunicationLanguage: setStoredLanguage,
-    uiLocale,
-    languages,
+  const contextValue = {
+    language,
+    setLanguage: setStoredLanguage,
     direction,
   };
 

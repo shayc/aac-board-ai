@@ -57,7 +57,7 @@ function getMethodDescription(
 
 export function SwitchScanningSettings() {
   const t = useTranslate();
-  const { communicationLanguage: language } = useLanguage();
+  const { language } = useLanguage();
   const config = useSwitchScanningConfig();
   const {
     enabled,

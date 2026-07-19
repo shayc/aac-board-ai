@@ -36,7 +36,7 @@ export function SpeechSettings() {
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
   const { highlightActivePart } = useHighlightConfig();
 
-  const { communicationLanguage: language } = useLanguage();
+  const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
