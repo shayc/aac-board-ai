@@ -232,7 +232,9 @@ Rules that constrain every file but are visible in none — several are _absence
   No component assumes the AI API exists.
 - **One language drives everything** — UI text (Paraglide), board content
   (translation), text direction (RTL), and TTS voice. The _available_ languages are
-  derived from the installed TTS voices, not a hardcoded list.
+  the union of translated UI locales and installed TTS voices. Choosing a language
+  never depends on the optional Translator API; unsupported board translation falls
+  back independently.
 - **No bespoke unlabeled controls.** Interactive elements are built on MUI primitives
   (with react-aria for low-level keyboard and press behavior); accessibility is
   asserted with **axe-core inside the browser test suite**, which CI runs.

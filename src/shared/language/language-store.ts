@@ -1,11 +1,26 @@
+import { baseLocale, isLocale } from "@paraglide/runtime";
+import { getLanguageCode } from "@shared/utils/locale";
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
 const LANGUAGE_STORAGE_KEY = "language";
-export const DEFAULT_LANGUAGE = "en";
+export const DEFAULT_LANGUAGE = baseLocale;
+
+export function getPreferredLanguage(
+  languages: readonly string[] = globalThis.navigator?.languages ?? [],
+): string {
+  for (const locale of languages) {
+    const language = getLanguageCode(locale);
+    if (isLocale(language)) {
+      return language;
+    }
+  }
+
+  return DEFAULT_LANGUAGE;
+}
 
 export function parseStoredLanguage(raw: unknown): string {
-  return typeof raw === "string" && raw !== "" ? raw : DEFAULT_LANGUAGE;
+  return typeof raw === "string" && raw !== "" ? raw : getPreferredLanguage();
 }
 
 const store = createPersistedStore<string>(

@@ -18,18 +18,20 @@ function renderLanguageSettings() {
 }
 
 describe("LanguageSettings", () => {
-  test("hides the language select without the Translator", async () => {
+  test("keeps language selection available without the Translator", async () => {
     stubBuiltInAIUnsupported("Translator");
 
     const screen = await renderLanguageSettings();
 
     await expect
       .element(screen.getByRole("combobox", { name: "Language" }))
-      .not.toBeInTheDocument();
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByText(/Automatic board translation is unavailable/))
+      .toBeInTheDocument();
   });
 
   test("enables the language select when the Translator is available, with no a11y violations", async () => {
-    // The language list derives from TTS voices, which headless CI lacks.
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
     stubTranslator();
 
@@ -38,6 +40,9 @@ describe("LanguageSettings", () => {
     const select = screen.getByRole("combobox", { name: "Language" });
     await expect.element(select).not.toHaveAttribute("aria-disabled");
     await expect.element(select).toHaveTextContent("English");
+    await expect
+      .element(screen.getByText(/Automatic board translation is unavailable/))
+      .not.toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
   });

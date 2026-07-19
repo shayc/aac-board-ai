@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import {
   DEFAULT_LANGUAGE,
   getStoredLanguage,
+  getPreferredLanguage,
   parseStoredLanguage,
   setStoredLanguage,
 } from "./language-store";
@@ -19,6 +20,16 @@ describe("parseStoredLanguage", () => {
 
   test("falls back to the default for an empty string", () => {
     expect(parseStoredLanguage("")).toBe(DEFAULT_LANGUAGE);
+  });
+});
+
+describe("getPreferredLanguage", () => {
+  test("uses the first browser language with an app translation", () => {
+    expect(getPreferredLanguage(["ca-ES", "fr-CA", "he-IL"])).toBe("fr");
+  });
+
+  test("falls back to English when no browser language is translated", () => {
+    expect(getPreferredLanguage(["ca-ES", "ms-MY"])).toBe(DEFAULT_LANGUAGE);
   });
 });
 

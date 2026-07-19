@@ -1,14 +1,12 @@
+import { locales } from "@paraglide/runtime";
 import { useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName } from "@shared/utils/locale";
 
-// Chrome's Translator API can't handle these, so the picker hides them.
-const UNTRANSLATABLE_LANGUAGES = new Set(["ca", "ms", "nb", "yue"]);
-
 export function useAvailableLanguages() {
   const voicesByLanguage = useVoicesByLanguage();
+  const languages = new Set([...locales, ...Object.keys(voicesByLanguage)]);
 
-  return Object.keys(voicesByLanguage)
-    .filter((code) => !UNTRANSLATABLE_LANGUAGES.has(code))
+  return [...languages]
     .sort((a, b) => a.localeCompare(b))
     .map((code) => ({
       code,
