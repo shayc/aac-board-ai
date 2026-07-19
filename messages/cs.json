@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Nastavit spínače",
+  "switchScanningAdvanced": "Pokročilé",
+  "switchScanningCyclesBeforePausing": "Cykly před pozastavením",
+  "switchScanningFirstItemPause": "Pozastavení na první položce",
+  "switchScanningIgnoreRepeatedPresses": "Ignorovat opakovaná stisknutí",
+  "switchScanningMinimumPressDuration": "Minimální doba stisknutí",
   "switchScanningAssign": "Stisknutím spínače ho přiřaďte",
   "switchScanningNextItem": "Další položka",
   "switchScanningSelectSwitch": "Spínač pro výběr",

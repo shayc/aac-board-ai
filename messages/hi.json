@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "स्विच सेट अप करें",
+  "switchScanningAdvanced": "उन्नत",
+  "switchScanningCyclesBeforePausing": "रुकने से पहले चक्र",
+  "switchScanningFirstItemPause": "पहले आइटम पर विराम",
+  "switchScanningIgnoreRepeatedPresses": "बार-बार दबाने को अनदेखा करें",
+  "switchScanningMinimumPressDuration": "दबाने की न्यूनतम अवधि",
   "switchScanningAssign": "असाइन करने के लिए स्विच दबाएँ",
   "switchScanningNextItem": "अगला आइटम",
   "switchScanningSelectSwitch": "चुनने का स्विच",

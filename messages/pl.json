@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Skonfiguruj przełączniki",
+  "switchScanningAdvanced": "Zaawansowane",
+  "switchScanningCyclesBeforePausing": "Cykle przed wstrzymaniem",
+  "switchScanningFirstItemPause": "Pauza na pierwszym elemencie",
+  "switchScanningIgnoreRepeatedPresses": "Ignoruj powtórne naciśnięcia",
+  "switchScanningMinimumPressDuration": "Minimalny czas naciśnięcia",
   "switchScanningAssign": "Naciśnij przełącznik, aby go przypisać",
   "switchScanningNextItem": "Następny element",
   "switchScanningSelectSwitch": "Przełącznik wyboru",

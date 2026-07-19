@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "சுவிட்சுகளை அமைக்கவும்",
+  "switchScanningAdvanced": "மேம்பட்டவை",
+  "switchScanningCyclesBeforePausing": "இடைநிறுத்தத்திற்கு முன் சுழற்சிகள்",
+  "switchScanningFirstItemPause": "முதல் உருப்படி இடைநிறுத்தம்",
+  "switchScanningIgnoreRepeatedPresses": "மீண்டும் மீண்டும் அழுத்துவதைப் புறக்கணிக்கவும்",
+  "switchScanningMinimumPressDuration": "குறைந்தபட்ச அழுத்த காலம்",
   "switchScanningAssign": "ஒதுக்க ஒரு சுவிட்சை அழுத்தவும்",
   "switchScanningNextItem": "அடுத்த உருப்படி",
   "switchScanningSelectSwitch": "தேர்ந்தெடுக்கும் சுவிட்ச்",

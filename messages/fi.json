@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Määritä kytkimet",
+  "switchScanningAdvanced": "Lisäasetukset",
+  "switchScanningCyclesBeforePausing": "Kierrokset ennen keskeytystä",
+  "switchScanningFirstItemPause": "Ensimmäisen kohteen tauko",
+  "switchScanningIgnoreRepeatedPresses": "Ohita toistuvat painallukset",
+  "switchScanningMinimumPressDuration": "Painalluksen vähimmäiskesto",
   "switchScanningAssign": "Määritä kytkin painamalla sitä",
   "switchScanningNextItem": "Seuraava kohde",
   "switchScanningSelectSwitch": "Valintakytkin",

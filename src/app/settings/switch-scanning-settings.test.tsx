@@ -1,6 +1,7 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { SwitchScanningSettings } from "./switch-scanning-settings";
 
@@ -13,7 +14,7 @@ function renderSettings() {
 }
 
 describe("SwitchScanningSettings", () => {
-  test("keeps scanning opt-in and offers switch setup", async () => {
+  test("keeps scanning opt-in and its configuration collapsed", async () => {
     const screen = await renderSettings();
 
     await expect
@@ -21,34 +22,86 @@ describe("SwitchScanningSettings", () => {
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("combobox", { name: "Scan method" }))
-      .toBeEnabled();
+      .not.toBeInTheDocument();
     await expect
-      .element(
-        screen.getByText(
-          "Items advance automatically. Press your switch to select.",
-        ),
-      )
-      .toBeVisible();
-    await expect
-      .element(screen.getByRole("heading", { name: "Switch assignments" }))
-      .toBeVisible();
-    const switchInput = screen.getByRole("group", { name: "Select switch" });
-    await expect
-      .element(switchInput.getByRole("button", { name: "Space Change" }))
-      .toBeEnabled();
+      .element(screen.getByRole("group", { name: "Select switch" }))
+      .not.toBeInTheDocument();
     await expect
       .element(screen.getByRole("slider", { name: "Scan interval" }))
-      .toBeEnabled();
-    await expect.element(screen.getByText("1.2 seconds").first()).toBeVisible();
-    await expect.element(screen.getByText("Faster")).toBeVisible();
-    await expect.element(screen.getByText("Slower")).toBeVisible();
+      .not.toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
   });
 
-  test("configures two-switch scanning while activation remains off", async () => {
+  test("uses the scanning switch to expand and collapse configuration", async () => {
+    const screen = await renderSettings();
+    const scanningSwitch = screen.getByRole("switch", {
+      name: "Switch scanning",
+    });
+
+    await scanningSwitch.click();
+
+    await expect.element(scanningSwitch).toBeChecked();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Scan method" }))
+      .toBeEnabled();
+    await expect
+      .element(screen.getByRole("group", { name: "Select switch" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("slider", { name: "Scan interval" }))
+      .toBeEnabled();
+    await expect.element(screen.getByText("1.2 seconds")).toBeVisible();
+    await expect.element(screen.getByText("Faster")).not.toBeInTheDocument();
+    await expect.element(screen.getByText("Slower")).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("button", { name: "Advanced" }))
+      .toHaveAttribute("aria-expanded", "false");
+
+    await scanningSwitch.click();
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Scan method" }))
+      .not.toBeInTheDocument();
+    await expectNoA11yViolations(screen.container);
+  });
+
+  test("uses concise mode names with full helper text", async () => {
     const screen = await renderSettings();
 
+    await screen.getByRole("switch", { name: "Switch scanning" }).click();
+    await expect
+      .element(
+        screen.getByText("Items advance automatically. Press to select."),
+      )
+      .toBeVisible();
+
+    const modes = [
+      {
+        label: "Step and wait",
+        description: "Press to advance. Wait to select.",
+      },
+      {
+        label: "Hold and release",
+        description: "Hold to advance. Release to select.",
+      },
+      {
+        label: "Two-switch step",
+        description: "Use one switch to advance and another to select.",
+      },
+    ] as const;
+
+    for (const { label, description } of modes) {
+      await screen.getByRole("combobox", { name: "Scan method" }).click();
+      await screen.getByRole("option", { name: label }).click();
+      await expect.element(screen.getByText(description)).toBeVisible();
+    }
+  });
+
+  test("configures two-switch scanning", async () => {
+    const screen = await renderSettings();
+
+    await screen.getByRole("switch", { name: "Switch scanning" }).click();
     await screen.getByRole("combobox", { name: "Scan method" }).click();
     await screen.getByRole("option", { name: "Two-switch step" }).click();
 
@@ -72,7 +125,7 @@ describe("SwitchScanningSettings", () => {
       const stored = localStorage.getItem("switch-scanning-config");
       expect(stored).not.toBeNull();
       expect(JSON.parse(stored ?? "{}")).toMatchObject({
-        enabled: false,
+        enabled: true,
         method: "step",
       });
     });
@@ -83,15 +136,27 @@ describe("SwitchScanningSettings", () => {
 
     await screen.getByRole("switch", { name: "Switch scanning" }).click();
     await screen.getByRole("combobox", { name: "Scan method" }).click();
+    await expect
+      .element(
+        screen.getByRole("option", {
+          name: "Hold and release",
+        }),
+      )
+      .toBeVisible();
     await screen
       .getByRole("option", {
-        name: "Step, then wait to select",
+        name: "Step and wait",
       })
       .click();
 
     await expect
       .element(screen.getByRole("slider", { name: "Auto-select delay" }))
       .toBeVisible();
+    await expect
+      .element(screen.getByText("Press to advance. Wait to select."))
+      .toBeVisible();
+    await expect.element(screen.getByText("Shorter")).not.toBeInTheDocument();
+    await expect.element(screen.getByText("Longer")).not.toBeInTheDocument();
     await expect
       .element(screen.getByRole("group", { name: "Next item switch" }))
       .toBeVisible();
@@ -103,6 +168,7 @@ describe("SwitchScanningSettings", () => {
   test("assigns arbitrary keyboard keys and mouse buttons", async () => {
     const screen = await renderSettings();
 
+    await screen.getByRole("switch", { name: "Switch scanning" }).click();
     await screen.getByRole("combobox", { name: "Scan method" }).click();
     await screen.getByRole("option", { name: "Two-switch step" }).click();
     const moveSwitch = screen.getByRole("group", {
@@ -155,6 +221,7 @@ describe("SwitchScanningSettings", () => {
 
   test("uses familiar names for primary mouse and platform modifier inputs", async () => {
     const screen = await renderSettings();
+    await screen.getByRole("switch", { name: "Switch scanning" }).click();
     const selectSwitch = screen.getByRole("group", { name: "Select switch" });
 
     await selectSwitch.getByRole("button", { name: "Space Change" }).click();
@@ -186,5 +253,46 @@ describe("SwitchScanningSettings", () => {
         }),
       )
       .toBeVisible();
+  });
+
+  test("persists advanced scan and input timing controls", async () => {
+    const screen = await renderSettings();
+
+    await screen.getByRole("switch", { name: "Switch scanning" }).click();
+    await screen.getByRole("button", { name: "Advanced" }).click();
+
+    const cycles = screen.getByRole("slider", {
+      name: "Cycles before pausing",
+    });
+    const firstItemPause = screen.getByRole("slider", {
+      name: "First-item pause",
+    });
+    const ignoreRepeatedPresses = screen.getByRole("slider", {
+      name: "Ignore repeated presses",
+    });
+    const minimumPressDuration = screen.getByRole("slider", {
+      name: "Minimum press duration",
+    });
+
+    await expect.element(cycles).toBeVisible();
+    await expect.element(firstItemPause).toBeVisible();
+    await expect.element(ignoreRepeatedPresses).toBeVisible();
+    await expect.element(minimumPressDuration).toBeVisible();
+
+    cycles.element().focus();
+    await userEvent.keyboard("{ArrowRight}");
+    minimumPressDuration.element().focus();
+    await userEvent.keyboard("{ArrowRight}");
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("switch-scanning-config");
+      expect(stored).not.toBeNull();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({
+        cyclesBeforePausing: 4,
+        minimumPressDurationMs: 100,
+      });
+    });
+
+    await expectNoA11yViolations(screen.container);
   });
 });

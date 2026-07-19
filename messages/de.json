@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Tasten einrichten",
+  "switchScanningAdvanced": "Erweitert",
+  "switchScanningCyclesBeforePausing": "Durchläufe bis zur Pause",
+  "switchScanningFirstItemPause": "Pause beim ersten Element",
+  "switchScanningIgnoreRepeatedPresses": "Wiederholte Betätigungen ignorieren",
+  "switchScanningMinimumPressDuration": "Mindestbetätigungsdauer",
   "switchScanningAssign": "Zum Zuweisen eine Taste drücken",
   "switchScanningNextItem": "Nächstes Element",
   "switchScanningSelectSwitch": "Taste zum Auswählen",

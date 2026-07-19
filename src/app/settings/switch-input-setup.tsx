@@ -156,21 +156,16 @@ export function SwitchInputSetup({ inputs, method }: SwitchInputSetupProps) {
   }
 
   return (
-    <Stack spacing={1}>
-      <Typography component="h4" variant="body2" sx={{ fontWeight: 500 }}>
-        {m.switchScanningSetup()}
-      </Typography>
-      <Stack spacing={1.5}>
-        {roles.map((role) => (
-          <SwitchInputButton
-            key={role}
-            input={inputs[role]}
-            isListening={listeningRole === role}
-            label={getRoleLabel(role)}
-            onListen={() => setListeningRole(role)}
-          />
-        ))}
-      </Stack>
+    <Stack spacing={1.5} sx={{ pt: 1 }}>
+      {roles.map((role) => (
+        <SwitchInputButton
+          key={role}
+          input={inputs[role]}
+          isListening={listeningRole === role}
+          label={getRoleLabel(role)}
+          onListen={() => setListeningRole(role)}
+        />
+      ))}
     </Stack>
   );
 }

@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "إعداد المفاتيح",
+  "switchScanningAdvanced": "متقدم",
+  "switchScanningCyclesBeforePausing": "الدورات قبل التوقف المؤقت",
+  "switchScanningFirstItemPause": "التوقف المؤقت عند العنصر الأول",
+  "switchScanningIgnoreRepeatedPresses": "تجاهل الضغطات المتكررة",
+  "switchScanningMinimumPressDuration": "الحد الأدنى لمدة الضغط",
   "switchScanningAssign": "اضغط على مفتاح للتعيين",
   "switchScanningNextItem": "العنصر التالي",
   "switchScanningSelectSwitch": "مفتاح الاختيار",

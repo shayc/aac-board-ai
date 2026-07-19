@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "设置开关",
+  "switchScanningAdvanced": "高级",
+  "switchScanningCyclesBeforePausing": "暂停前的循环次数",
+  "switchScanningFirstItemPause": "首项暂停",
+  "switchScanningIgnoreRepeatedPresses": "忽略重复按压",
+  "switchScanningMinimumPressDuration": "最短按压时长",
   "switchScanningAssign": "按下一个开关进行分配",
   "switchScanningNextItem": "下一项",
   "switchScanningSelectSwitch": "选择开关",

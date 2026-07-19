@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Siapkan sakelar",
+  "switchScanningAdvanced": "Lanjutan",
+  "switchScanningCyclesBeforePausing": "Siklus sebelum dijeda",
+  "switchScanningFirstItemPause": "Jeda item pertama",
+  "switchScanningIgnoreRepeatedPresses": "Abaikan penekanan berulang",
+  "switchScanningMinimumPressDuration": "Durasi penekanan minimum",
   "switchScanningAssign": "Tekan sakelar untuk menetapkannya",
   "switchScanningNextItem": "Item berikutnya",
   "switchScanningSelectSwitch": "Sakelar pilih",

@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "స్విచ్‌లను సెటప్ చేయండి",
+  "switchScanningAdvanced": "అధునాతన",
+  "switchScanningCyclesBeforePausing": "పాజ్ చేయడానికి ముందు చక్రాలు",
+  "switchScanningFirstItemPause": "మొదటి అంశం పాజ్",
+  "switchScanningIgnoreRepeatedPresses": "పదేపదే నొక్కడం విస్మరించండి",
+  "switchScanningMinimumPressDuration": "కనీస నొక్కు వ్యవధి",
   "switchScanningAssign": "కేటాయించడానికి ఒక స్విచ్‌ను నొక్కండి",
   "switchScanningNextItem": "తదుపరి అంశం",
   "switchScanningSelectSwitch": "ఎంచుకునే స్విచ్",

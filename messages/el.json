@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Ρύθμιση διακοπτών",
+  "switchScanningAdvanced": "Για προχωρημένους",
+  "switchScanningCyclesBeforePausing": "Κύκλοι πριν από την παύση",
+  "switchScanningFirstItemPause": "Παύση στο πρώτο στοιχείο",
+  "switchScanningIgnoreRepeatedPresses": "Παράβλεψη επαναλαμβανόμενων πατημάτων",
+  "switchScanningMinimumPressDuration": "Ελάχιστη διάρκεια πατήματος",
   "switchScanningAssign": "Πατήστε έναν διακόπτη για αντιστοίχιση",
   "switchScanningNextItem": "Επόμενο στοιχείο",
   "switchScanningSelectSwitch": "Διακόπτης επιλογής",

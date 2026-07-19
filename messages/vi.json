@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Thiết lập công tắc",
+  "switchScanningAdvanced": "Nâng cao",
+  "switchScanningCyclesBeforePausing": "Số chu kỳ trước khi tạm dừng",
+  "switchScanningFirstItemPause": "Tạm dừng ở mục đầu tiên",
+  "switchScanningIgnoreRepeatedPresses": "Bỏ qua các lần nhấn lặp lại",
+  "switchScanningMinimumPressDuration": "Thời lượng nhấn tối thiểu",
   "switchScanningAssign": "Nhấn một công tắc để gán",
   "switchScanningNextItem": "Mục tiếp theo",
   "switchScanningSelectSwitch": "Công tắc chọn",

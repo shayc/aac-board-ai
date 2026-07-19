@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Configurează comutatoarele",
+  "switchScanningAdvanced": "Avansat",
+  "switchScanningCyclesBeforePausing": "Cicluri înainte de pauză",
+  "switchScanningFirstItemPause": "Pauză la primul element",
+  "switchScanningIgnoreRepeatedPresses": "Ignoră apăsările repetate",
+  "switchScanningMinimumPressDuration": "Durata minimă a apăsării",
   "switchScanningAssign": "Apasă un comutator pentru a-l atribui",
   "switchScanningNextItem": "Elementul următor",
   "switchScanningSelectSwitch": "Comutator de selectare",

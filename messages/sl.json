@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Nastavite stikala",
+  "switchScanningAdvanced": "Napredno",
+  "switchScanningCyclesBeforePausing": "Cikli pred premorom",
+  "switchScanningFirstItemPause": "Premor na prvem elementu",
+  "switchScanningIgnoreRepeatedPresses": "Prezri ponovljene pritiske",
+  "switchScanningMinimumPressDuration": "Najkrajše trajanje pritiska",
   "switchScanningAssign": "Pritisnite stikalo, da ga dodelite",
   "switchScanningNextItem": "Naslednji element",
   "switchScanningSelectSwitch": "Stikalo za izbiro",

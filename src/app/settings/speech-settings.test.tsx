@@ -69,6 +69,17 @@ describe("SpeechSettings", () => {
       .element(screen.getByRole("slider", { name: "Speech volume" }))
       .toBeInTheDocument();
     await expect
+      .element(screen.getByRole("group", { name: "Rate" }).getByText("1x"))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("group", { name: "Pitch" }).getByText("1x"))
+      .toBeVisible();
+    await expect
+      .element(
+        screen.getByRole("group", { name: "Speech volume" }).getByText("100%"),
+      )
+      .toBeVisible();
+    await expect
       .element(screen.getByRole("switch", { name: "Highlight spoken words" }))
       .not.toBeChecked();
     await expect

@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Schakelaars instellen",
+  "switchScanningAdvanced": "Geavanceerd",
+  "switchScanningCyclesBeforePausing": "Cycli vóór pauzeren",
+  "switchScanningFirstItemPause": "Pauze bij eerste item",
+  "switchScanningIgnoreRepeatedPresses": "Herhaalde drukken negeren",
+  "switchScanningMinimumPressDuration": "Minimale drukduur",
   "switchScanningAssign": "Druk op een schakelaar om deze toe te wijzen",
   "switchScanningNextItem": "Volgend item",
   "switchScanningSelectSwitch": "Selectieschakelaar",

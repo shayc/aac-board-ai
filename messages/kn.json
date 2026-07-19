@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "ಸ್ವಿಚ್‌ಗಳನ್ನು ಹೊಂದಿಸಿ",
+  "switchScanningAdvanced": "ಸುಧಾರಿತ",
+  "switchScanningCyclesBeforePausing": "ವಿರಾಮದ ಮೊದಲು ಆವರ್ತನಗಳು",
+  "switchScanningFirstItemPause": "ಮೊದಲ ಐಟಂ ವಿರಾಮ",
+  "switchScanningIgnoreRepeatedPresses": "ಪುನರಾವರ್ತಿತ ಒತ್ತುವಿಕೆಗಳನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ",
+  "switchScanningMinimumPressDuration": "ಕನಿಷ್ಠ ಒತ್ತುವ ಅವಧಿ",
   "switchScanningAssign": "ನಿಯೋಜಿಸಲು ಸ್ವಿಚ್ ಒತ್ತಿರಿ",
   "switchScanningNextItem": "ಮುಂದಿನ ಐಟಂ",
   "switchScanningSelectSwitch": "ಆಯ್ಕೆ ಸ್ವಿಚ್",

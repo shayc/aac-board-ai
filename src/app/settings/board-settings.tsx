@@ -11,13 +11,20 @@ import {
   useTileColorConfig,
 } from "@shared/tile-color/tile-color-store";
 
+function formatSaturation(value: number): string {
+  return `${Math.round(value * 100)}%`;
+}
+
 export function BoardSettings() {
   const { saturation, borderVisible } = useTileColorConfig();
+  const saturationLabel = formatSaturation(saturation);
 
   return (
     <Stack spacing={3}>
       <FormControlLabel
+        labelPlacement="start"
         label={m.tileBorders()}
+        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={borderVisible}
@@ -27,13 +34,17 @@ export function BoardSettings() {
       />
 
       <Stack spacing={0.5}>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {m.tileSaturation()}
-        </Typography>
+        <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
+            {m.tileSaturation()}
+          </Typography>
+          <Typography variant="body2" sx={{ fontWeight: 600 }}>
+            {saturationLabel}
+          </Typography>
+        </Stack>
         <Slider
           aria-label={m.tileSaturation()}
-          valueLabelDisplay="auto"
-          valueLabelFormat={(value) => `${Math.round(value * 100)}%`}
+          getAriaValueText={formatSaturation}
           value={saturation}
           min={TILE_SATURATION.min}
           max={TILE_SATURATION.max}

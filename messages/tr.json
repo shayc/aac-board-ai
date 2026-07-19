@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Anahtarları ayarla",
+  "switchScanningAdvanced": "Gelişmiş",
+  "switchScanningCyclesBeforePausing": "Duraklatmadan önceki döngüler",
+  "switchScanningFirstItemPause": "İlk öğede duraklama",
+  "switchScanningIgnoreRepeatedPresses": "Yinelenen basışları yok say",
+  "switchScanningMinimumPressDuration": "Minimum basma süresi",
   "switchScanningAssign": "Atamak için bir anahtara basın",
   "switchScanningNextItem": "Sonraki öğe",
   "switchScanningSelectSwitch": "Seçim anahtarı",

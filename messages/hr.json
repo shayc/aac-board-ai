@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Postavi prekidače",
+  "switchScanningAdvanced": "Napredno",
+  "switchScanningCyclesBeforePausing": "Ciklusi prije pauziranja",
+  "switchScanningFirstItemPause": "Pauza na prvoj stavci",
+  "switchScanningIgnoreRepeatedPresses": "Zanemari ponovljene pritiske",
+  "switchScanningMinimumPressDuration": "Minimalno trajanje pritiska",
   "switchScanningAssign": "Pritisnite prekidač da biste ga dodijelili",
   "switchScanningNextItem": "Sljedeća stavka",
   "switchScanningSelectSwitch": "Prekidač za odabir",

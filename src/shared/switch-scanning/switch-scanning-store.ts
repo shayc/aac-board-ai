@@ -34,6 +34,10 @@ export interface SwitchScanningConfig {
   method: SwitchScanningMethod;
   scanIntervalMs: number;
   dwellDurationMs: number;
+  cyclesBeforePausing: number;
+  firstItemPauseMs: number;
+  ignoreRepeatMs: number;
+  minimumPressDurationMs: number;
   inputs: SwitchInputAssignments;
 }
 
@@ -55,6 +59,30 @@ export const DWELL_DURATION_MS = {
   fallback: 1_000,
 } as const;
 
+export const CYCLES_BEFORE_PAUSING = {
+  min: 1,
+  max: 10,
+  fallback: 3,
+} as const;
+
+export const FIRST_ITEM_PAUSE_MS = {
+  min: 0,
+  max: 5_000,
+  fallback: 0,
+} as const;
+
+export const IGNORE_REPEAT_MS = {
+  min: 0,
+  max: 5_000,
+  fallback: 0,
+} as const;
+
+export const MINIMUM_PRESS_DURATION_MS = {
+  min: 0,
+  max: 2_000,
+  fallback: 0,
+} as const;
+
 const DEFAULT_INPUTS: SwitchInputAssignments = {
   single: { kind: "keyboard", code: "Space", label: "Space" },
   next: { kind: "keyboard", code: "Space", label: "Space" },
@@ -71,6 +99,17 @@ function parseTiming(value: unknown, range: TimingRange): number {
   }
 
   return Math.min(Math.max(value, range.min), range.max);
+}
+
+function parseCycles(value: unknown): number {
+  if (typeof value !== "number" || !Number.isInteger(value)) {
+    return CYCLES_BEFORE_PAUSING.fallback;
+  }
+
+  return Math.min(
+    Math.max(value, CYCLES_BEFORE_PAUSING.min),
+    CYCLES_BEFORE_PAUSING.max,
+  );
 }
 
 function parseSwitchInput(value: unknown): SwitchInput | null {
@@ -136,6 +175,13 @@ export function parseSwitchScanningConfig(raw: unknown): SwitchScanningConfig {
     method: isSwitchScanningMethod(parsed.method) ? parsed.method : "auto",
     scanIntervalMs: parseTiming(parsed.scanIntervalMs, SCAN_INTERVAL_MS),
     dwellDurationMs: parseTiming(parsed.dwellDurationMs, DWELL_DURATION_MS),
+    cyclesBeforePausing: parseCycles(parsed.cyclesBeforePausing),
+    firstItemPauseMs: parseTiming(parsed.firstItemPauseMs, FIRST_ITEM_PAUSE_MS),
+    ignoreRepeatMs: parseTiming(parsed.ignoreRepeatMs, IGNORE_REPEAT_MS),
+    minimumPressDurationMs: parseTiming(
+      parsed.minimumPressDurationMs,
+      MINIMUM_PRESS_DURATION_MS,
+    ),
     inputs: parseSwitchInputAssignments(parsed.inputs),
   };
 }
@@ -171,6 +217,35 @@ export function setScanIntervalMs(scanIntervalMs: number): void {
 export function setDwellDurationMs(dwellDurationMs: number): void {
   updateSwitchScanningConfig({
     dwellDurationMs: parseTiming(dwellDurationMs, DWELL_DURATION_MS),
+  });
+}
+
+export function setCyclesBeforePausing(cyclesBeforePausing: number): void {
+  updateSwitchScanningConfig({
+    cyclesBeforePausing: parseCycles(cyclesBeforePausing),
+  });
+}
+
+export function setFirstItemPauseMs(firstItemPauseMs: number): void {
+  updateSwitchScanningConfig({
+    firstItemPauseMs: parseTiming(firstItemPauseMs, FIRST_ITEM_PAUSE_MS),
+  });
+}
+
+export function setIgnoreRepeatMs(ignoreRepeatMs: number): void {
+  updateSwitchScanningConfig({
+    ignoreRepeatMs: parseTiming(ignoreRepeatMs, IGNORE_REPEAT_MS),
+  });
+}
+
+export function setMinimumPressDurationMs(
+  minimumPressDurationMs: number,
+): void {
+  updateSwitchScanningConfig({
+    minimumPressDurationMs: parseTiming(
+      minimumPressDurationMs,
+      MINIMUM_PRESS_DURATION_MS,
+    ),
   });
 }
 

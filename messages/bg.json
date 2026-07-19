@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Настройване на превключватели",
+  "switchScanningAdvanced": "Разширени",
+  "switchScanningCyclesBeforePausing": "Цикли преди пауза",
+  "switchScanningFirstItemPause": "Пауза на първия елемент",
+  "switchScanningIgnoreRepeatedPresses": "Игнориране на повторни натискания",
+  "switchScanningMinimumPressDuration": "Минимална продължителност на натискане",
   "switchScanningAssign": "Натиснете превключвател за задаване",
   "switchScanningNextItem": "Следващ елемент",
   "switchScanningSelectSwitch": "Превключвател за избиране",

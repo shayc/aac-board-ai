@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Konfigurera kontakter",
+  "switchScanningAdvanced": "Avancerat",
+  "switchScanningCyclesBeforePausing": "Cykler före paus",
+  "switchScanningFirstItemPause": "Paus på första objektet",
+  "switchScanningIgnoreRepeatedPresses": "Ignorera upprepade tryck",
+  "switchScanningMinimumPressDuration": "Minsta trycktid",
   "switchScanningAssign": "Tryck på en kontakt för att tilldela den",
   "switchScanningNextItem": "Nästa objekt",
   "switchScanningSelectSwitch": "Kontakt för val",

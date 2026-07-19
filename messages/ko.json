@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "스위치 설정",
+  "switchScanningAdvanced": "고급",
+  "switchScanningCyclesBeforePausing": "일시 정지 전 반복 횟수",
+  "switchScanningFirstItemPause": "첫 번째 항목 일시 정지",
+  "switchScanningIgnoreRepeatedPresses": "반복 누르기 무시",
+  "switchScanningMinimumPressDuration": "최소 누르기 시간",
   "switchScanningAssign": "할당할 스위치를 누르세요",
   "switchScanningNextItem": "다음 항목",
   "switchScanningSelectSwitch": "선택 스위치",

@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Configura i sensori",
+  "switchScanningAdvanced": "Avanzate",
+  "switchScanningCyclesBeforePausing": "Cicli prima della pausa",
+  "switchScanningFirstItemPause": "Pausa sul primo elemento",
+  "switchScanningIgnoreRepeatedPresses": "Ignora pressioni ripetute",
+  "switchScanningMinimumPressDuration": "Durata minima della pressione",
   "switchScanningAssign": "Premi un sensore per assegnarlo",
   "switchScanningNextItem": "Elemento successivo",
   "switchScanningSelectSwitch": "Sensore di selezione",

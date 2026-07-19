@@ -9,7 +9,6 @@ import {
 } from "@shayc/switch-scanning/react";
 import type { SwitchScanningConfig } from "./switch-scanning-store";
 
-const TIMED_SCAN_PASSES = 3;
 const SINGLE_SWITCH_ID = "single";
 const NEXT_SWITCH_ID = "next";
 const SELECT_SWITCH_ID = "select";
@@ -21,7 +20,8 @@ export function createScanMethod(config: SwitchScanningConfig): ScanMethod {
     case "auto":
       return autoScan({
         intervalMs: config.scanIntervalMs,
-        passes: TIMED_SCAN_PASSES,
+        passes: config.cyclesBeforePausing,
+        firstItemPauseMs: config.firstItemPauseMs,
       });
     case "step":
       return stepScan();
@@ -30,7 +30,8 @@ export function createScanMethod(config: SwitchScanningConfig): ScanMethod {
     case "inverse":
       return inverseScan({
         intervalMs: config.scanIntervalMs,
-        passes: TIMED_SCAN_PASSES,
+        passes: config.cyclesBeforePausing,
+        firstItemPauseMs: config.firstItemPauseMs,
       });
   }
 }
@@ -62,15 +63,20 @@ function getInputBindings(config: SwitchScanningConfig) {
 export function createSwitchDefinitions(
   config: SwitchScanningConfig,
 ): Readonly<Record<string, SwitchDefinition>> {
+  const timing = {
+    holdDurationMs: config.minimumPressDurationMs,
+    ignoreRepeatMs: config.ignoreRepeatMs,
+  };
+
   if (config.method === "step") {
     return {
-      [NEXT_SWITCH_ID]: { action: "next" },
-      [SELECT_SWITCH_ID]: { action: "select" },
+      [NEXT_SWITCH_ID]: { action: "next", ...timing },
+      [SELECT_SWITCH_ID]: { action: "select", ...timing },
     };
   }
 
   return {
-    [SINGLE_SWITCH_ID]: { action: getSingleSwitchAction(config) },
+    [SINGLE_SWITCH_ID]: { action: getSingleSwitchAction(config), ...timing },
   };
 }
 

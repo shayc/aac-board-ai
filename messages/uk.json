@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Налаштувати перемикачі",
+  "switchScanningAdvanced": "Додатково",
+  "switchScanningCyclesBeforePausing": "Цикли до паузи",
+  "switchScanningFirstItemPause": "Пауза на першому елементі",
+  "switchScanningIgnoreRepeatedPresses": "Ігнорувати повторні натискання",
+  "switchScanningMinimumPressDuration": "Мінімальна тривалість натискання",
   "switchScanningAssign": "Натисніть перемикач, щоб призначити його",
   "switchScanningNextItem": "Наступний елемент",
   "switchScanningSelectSwitch": "Перемикач вибору",

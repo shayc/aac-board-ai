@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Настроить переключатели",
+  "switchScanningAdvanced": "Дополнительно",
+  "switchScanningCyclesBeforePausing": "Циклы до паузы",
+  "switchScanningFirstItemPause": "Пауза на первом элементе",
+  "switchScanningIgnoreRepeatedPresses": "Игнорировать повторные нажатия",
+  "switchScanningMinimumPressDuration": "Минимальная длительность нажатия",
   "switchScanningAssign": "Нажмите переключатель, чтобы назначить его",
   "switchScanningNextItem": "Следующий элемент",
   "switchScanningSelectSwitch": "Переключатель выбора",

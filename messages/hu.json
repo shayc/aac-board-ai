@@ -1,6 +1,10 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningSetup": "Kapcsolók beállítása",
+  "switchScanningAdvanced": "Speciális",
+  "switchScanningCyclesBeforePausing": "Ciklusok száma szüneteltetés előtt",
+  "switchScanningFirstItemPause": "Első elem szünete",
+  "switchScanningIgnoreRepeatedPresses": "Ismételt megnyomások figyelmen kívül hagyása",
+  "switchScanningMinimumPressDuration": "Minimális nyomvatartási idő",
   "switchScanningAssign": "Nyomjon meg egy kapcsolót a hozzárendeléshez",
   "switchScanningNextItem": "Következő elem",
   "switchScanningSelectSwitch": "Kiválasztó kapcsoló",
