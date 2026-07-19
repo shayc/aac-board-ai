@@ -120,7 +120,7 @@
   "tileSaturation": "Tile color intensity",
   "tileBorders": "Show tile borders",
   "aiCustomInstructions": "Custom instructions",
-  "aiCustomInstructionsPlaceholder": "e.g. speak in a sarcastic tone",
+  "aiCustomInstructionsPlaceholder": "e.g. sarcastic personality",
   "aiCustomInstructionsHelper": "Shape suggestions in your own words.",
   "suggestionsUnsupported": "Suggestions require desktop Chrome or Edge with built-in AI enabled.",
   "suggestionsEnable": "Enable suggestions",
