@@ -1,4 +1,4 @@
-export type BoardKeyAction =
+type BoardKeyAction =
   | { kind: "backspace" }
   | { kind: "clear" }
   | { kind: "speak" }

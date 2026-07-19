@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import type { BoardSetRecord } from "../storage/boards-db";
 
-export interface BoardSetInfoDialogProps {
+interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;
   onClose: () => void;
 }

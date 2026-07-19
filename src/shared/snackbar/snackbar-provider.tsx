@@ -32,7 +32,7 @@ const initialState: SnackbarState = {
   open: false,
 };
 
-export interface SnackbarProviderProps {
+interface SnackbarProviderProps {
   children: ReactNode;
 }
 

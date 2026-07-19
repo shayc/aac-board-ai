@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 
-export interface LoadingStateProps {
+interface LoadingStateProps {
   message?: string;
 }
 

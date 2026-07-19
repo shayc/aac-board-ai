@@ -3,13 +3,13 @@ import { createExternalStore } from "@shared/utils/external-store";
 import { getLanguageCode } from "@shared/utils/locale";
 import { useSyncExternalStore } from "react";
 
-export interface SpeechParamSpec {
+interface SpeechParamSpec {
   min: number;
   max: number;
   fallback: number;
 }
 
-export interface SpeechConfig {
+interface SpeechConfig {
   voiceURI: string | null;
   rate: number;
   pitch: number;

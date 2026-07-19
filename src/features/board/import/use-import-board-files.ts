@@ -7,7 +7,7 @@ import { boardSetPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
 import { importBoardSets, type ImportResult } from "./board-import";
 
-export interface UseImportBoardFilesReturn {
+interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
   importBoardFiles: (files: File[]) => Promise<ImportResult[]>;
   importAndOpenBoardFiles: (files: File[]) => Promise<void>;

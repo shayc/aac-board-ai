@@ -8,10 +8,10 @@ import { importBoardSets, type ImportResult } from "./board-import";
  */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-export type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
+type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
 
 /** Thrown when a board URL is rejected before or during download. */
-export class BoardUrlError extends Error {
+class BoardUrlError extends Error {
   readonly code: BoardUrlErrorCode;
 
   constructor(code: BoardUrlErrorCode, message: string) {

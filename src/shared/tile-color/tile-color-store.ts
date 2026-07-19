@@ -1,7 +1,7 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-export interface TileColorConfig {
+interface TileColorConfig {
   saturation: number;
   borderVisible: boolean;
 }

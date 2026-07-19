@@ -3,16 +3,16 @@ import { useLanguage } from "@shared/language/use-language";
 import { findTranslations } from "../translation/board-strings";
 import { listBoards } from "../storage/boards-db";
 
-export interface UseBoardsInSetOptions {
+interface UseBoardsInSetOptions {
   setId: string | undefined;
 }
 
-export interface BoardSummary {
+interface BoardSummary {
   boardId: string;
   name: string;
 }
 
-export interface UseBoardsInSetReturn {
+interface UseBoardsInSetReturn {
   boards: BoardSummary[];
   isLoading: boolean;
   error: Error | undefined;

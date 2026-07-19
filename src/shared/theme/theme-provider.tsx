@@ -14,7 +14,7 @@ import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
 import { prefixer } from "stylis";
 
-export interface ThemeProviderProps {
+interface ThemeProviderProps {
   children: ReactNode;
 }
 

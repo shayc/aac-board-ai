@@ -23,7 +23,7 @@ export interface NavButtonsSlotProps {
   homeButton?: NavigationButtonSlotProps;
 }
 
-export interface NavButtonsProps {
+interface NavButtonsProps {
   slotProps?: NavButtonsSlotProps;
   onBackClick?: () => void;
   onHomeClick?: () => void;

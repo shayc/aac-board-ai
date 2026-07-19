@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
-export interface PictogramProps {
+interface PictogramProps {
   src?: string;
   label: string;
   labelPlacement?: "top" | "bottom" | "hidden";

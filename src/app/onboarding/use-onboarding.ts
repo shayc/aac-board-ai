@@ -5,7 +5,7 @@ const store = createPersistedStore<boolean>("hasSeenOnboarding", (raw) =>
   typeof raw === "boolean" ? raw : false,
 );
 
-export interface UseOnboardingReturn {
+interface UseOnboardingReturn {
   shouldShow: boolean;
   dismiss: () => void;
 }

@@ -30,7 +30,7 @@ import { useSuggestions } from "./suggestions/use-suggestions";
 import type { Board, BoardButton } from "./types";
 import { useBoardScanning } from "./use-board-scanning";
 
-export interface BoardViewerProps {
+interface BoardViewerProps {
   board: Board;
 }
 

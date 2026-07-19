@@ -12,7 +12,7 @@ import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { useMatches, useNavigate } from "react-router";
 
-export interface LibraryDrawerProps {
+interface LibraryDrawerProps {
   open: boolean;
   onClose: () => void;
   variant?: "temporary" | "persistent";

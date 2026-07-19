@@ -25,7 +25,7 @@ import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
 import { SwitchScanningSettings } from "./switch-scanning-settings";
 
-export interface SettingsDrawerProps {
+interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }

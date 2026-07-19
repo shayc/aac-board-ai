@@ -2,14 +2,14 @@ import { useRef, useState, type DragEvent } from "react";
 import { isBoardFile } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
-export interface BoardFileDropHandlers {
+interface BoardFileDropHandlers {
   onDragEnter: (event: DragEvent<HTMLElement>) => void;
   onDragOver: (event: DragEvent<HTMLElement>) => void;
   onDragLeave: (event: DragEvent<HTMLElement>) => void;
   onDrop: (event: DragEvent<HTMLElement>) => void;
 }
 
-export interface UseBoardFileDropReturn {
+interface UseBoardFileDropReturn {
   isDraggingFiles: boolean;
   dropHandlers: BoardFileDropHandlers;
 }

@@ -19,7 +19,7 @@ import { BoardSetList } from "./board-set-list";
 import { deleteBoardSet } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
 
-export interface BoardSetLibraryProps {
+interface BoardSetLibraryProps {
   selectedSetId?: string;
   onSelect: (boardSet: BoardSetRecord) => void;
 }

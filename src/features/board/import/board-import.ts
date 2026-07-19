@@ -184,7 +184,7 @@ function buildBoardSetInput(
   };
 }
 
-export function deriveSetId(fileName: string): string {
+function deriveSetId(fileName: string): string {
   const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";

@@ -10,7 +10,7 @@ import {
   useVoicesByLanguage,
 } from "./speech-store";
 
-export interface UseVoiceLanguageSyncOptions {
+interface UseVoiceLanguageSyncOptions {
   language: string;
 }
 

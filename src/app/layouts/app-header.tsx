@@ -10,7 +10,7 @@ import { m } from "@paraglide/messages.js";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 
-export interface AppHeaderProps {
+interface AppHeaderProps {
   libraryButtonHidden?: boolean;
   onLibraryClick: () => void;
   onSettingsClick: () => void;

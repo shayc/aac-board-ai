@@ -1,4 +1,4 @@
-export interface PlayAudioOptions {
+interface PlayAudioOptions {
   signal?: AbortSignal;
 }
 

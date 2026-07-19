@@ -5,17 +5,17 @@ import { useKeyboard } from "react-aria";
 const CELL = "[role='gridcell']";
 const FOCUSABLE = "[tabindex]";
 
-export interface Cell {
+interface Cell {
   row: number;
   col: number;
 }
 
-export interface UseGridKeyboardOptions {
+interface UseGridKeyboardOptions {
   grid: readonly (readonly unknown[])[];
   dir: "ltr" | "rtl";
 }
 
-export interface UseGridKeyboardReturn {
+interface UseGridKeyboardReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
   activeCell: Cell;

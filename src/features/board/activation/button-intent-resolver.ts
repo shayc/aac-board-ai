@@ -2,7 +2,7 @@ import { getNavigationTargetId, getSpokenText } from "../button-readers";
 import type { MessagePartContent } from "../message/use-message";
 import type { BoardAction, BoardButton } from "../types";
 
-export type ButtonIntent =
+type ButtonIntent =
   | { kind: "navigate"; targetBoardId: string }
   | { kind: "compose"; content: MessagePartContent }
   | { kind: "playAudio"; src: string }

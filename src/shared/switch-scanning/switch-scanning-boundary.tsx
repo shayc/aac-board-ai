@@ -13,7 +13,7 @@ import {
 import { useSwitchScanningConfig } from "./switch-scanning-store";
 import { useMouseSwitches } from "./use-mouse-switches";
 
-export interface SwitchScanningBoundaryProps {
+interface SwitchScanningBoundaryProps {
   children: ReactNode;
 }
 

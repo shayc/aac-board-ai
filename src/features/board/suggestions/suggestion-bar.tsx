@@ -9,7 +9,7 @@ import {
   type SuggestionEnableButtonProps,
 } from "./suggestion-status";
 
-export interface SuggestionBarSlotProps {
+interface SuggestionBarSlotProps {
   enableButton?: SuggestionEnableButtonProps;
 }
 

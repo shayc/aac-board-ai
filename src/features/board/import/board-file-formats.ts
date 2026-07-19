@@ -1,4 +1,4 @@
-export const BOARD_FILE_EXTENSIONS = [".obz", ".obf", ".zip", ".json"] as const;
+const BOARD_FILE_EXTENSIONS = [".obz", ".obf", ".zip", ".json"] as const;
 
 export const BOARD_FILE_ACCEPT = [
   ...BOARD_FILE_EXTENSIONS,

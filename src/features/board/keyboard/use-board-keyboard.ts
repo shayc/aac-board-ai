@@ -5,12 +5,12 @@ import type { UseMessagePlaybackReturn } from "../message/playback/use-message-p
 import type { UseMessageReturn } from "../message/use-message";
 import { resolveBoardKey } from "./board-key-resolver";
 
-export interface UseBoardKeyboardOptions {
+interface UseBoardKeyboardOptions {
   message: Pick<UseMessageReturn, "parts" | "removeLastPart" | "clear">;
   playback: Pick<UseMessagePlaybackReturn, "play" | "stop" | "isPlaying">;
 }
 
-export interface UseBoardKeyboardReturn {
+interface UseBoardKeyboardReturn {
   rootProps: DOMAttributes<HTMLElement>;
 }
 

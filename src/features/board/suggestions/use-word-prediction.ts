@@ -21,7 +21,7 @@ const PREDICTION_DEBOUNCE_MS = 400;
 // the feature as absent without any other file changing.
 const PREDICTION_ENABLED = false;
 
-export interface UseWordPredictionReturn {
+interface UseWordPredictionReturn {
   status: Status;
   requestFailed: boolean;
   isPending: boolean;

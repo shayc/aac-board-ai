@@ -13,7 +13,7 @@ interface TileOwnProps {
   onClick: () => void;
 }
 
-export type TileProps = TileOwnProps &
+type TileProps = TileOwnProps &
   Omit<ButtonProps, keyof TileOwnProps | "children" | "disableRipple">;
 
 // Scale an author-supplied color's OKLCH chroma by the board's saturation

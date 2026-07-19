@@ -1,6 +1,6 @@
 import { getSpeechConfig, getVoices, synthesis } from "./speech-store";
 
-export interface SpeakOptions {
+interface SpeakOptions {
   signal?: AbortSignal;
   onBoundary?: (charIndex: number) => void;
 }

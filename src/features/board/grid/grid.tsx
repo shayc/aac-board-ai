@@ -27,7 +27,7 @@ export interface GridRowProps extends Omit<
   gap: number;
 }
 
-export interface GridProps<TItem extends { id: string }> {
+interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
   items: readonly TItem[];
   rows: number;
