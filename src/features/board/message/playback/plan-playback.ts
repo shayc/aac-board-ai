@@ -1,5 +1,5 @@
 import { getSpokenText } from "../../button-readers";
-import type { MessagePart } from "../use-message";
+import type { MessagePart } from "../message-types";
 import {
   createSpokenPartTracker,
   type SpokenPart,

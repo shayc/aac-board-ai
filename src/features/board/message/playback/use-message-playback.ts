@@ -2,7 +2,7 @@ import { playAudio } from "@shared/audio/play-audio";
 import { speak } from "@shared/speech/speak";
 import { assertNever } from "@shared/utils/assert-never";
 import { useRef, useState } from "react";
-import type { MessagePart } from "../use-message";
+import type { MessagePart } from "../message-types";
 import { planPlayback } from "./plan-playback";
 
 export interface UseMessagePlaybackReturn {
