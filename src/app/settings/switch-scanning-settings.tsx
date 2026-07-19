@@ -73,6 +73,8 @@ export function SwitchScanningSettings() {
     unitDisplay: "long",
     maximumFractionDigits: 1,
   });
+  const formatOptionalSeconds = (value: number) =>
+    value === 0 ? m.switchScanningOff() : seconds.format(value);
 
   const timing =
     method === "dwell"
@@ -164,7 +166,7 @@ export function SwitchScanningSettings() {
             hasTimedScan={hasTimedScan}
             ignoreRepeatMs={ignoreRepeatMs}
             minimumPressDurationMs={minimumPressDurationMs}
-            formatSeconds={(value) => seconds.format(value)}
+            formatSeconds={formatOptionalSeconds}
           />
         </Stack>
       )}

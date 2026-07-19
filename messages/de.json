@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "Aus",
   "switchScanningAdvanced": "Erweitert",
   "switchScanningCyclesBeforePausing": "Durchläufe bis zur Pause",
   "switchScanningFirstItemPause": "Pause beim ersten Element",

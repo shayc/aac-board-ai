@@ -1,6 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "switchScanningAssign": "Press your switch…",
+  "switchScanningAssign": "Press your switch",
+  "switchScanningOff": "Off",
   "switchScanningChange": "Change",
   "switchScanningNextItemSwitch": "Next item switch",
   "switchScanningSelectSwitch": "Select switch",
@@ -115,7 +116,7 @@
   "switchScanningCyclesBeforePausing": "Cycles before pausing",
   "switchScanningFirstItemPause": "First-item pause",
   "switchScanningIgnoreRepeatedPresses": "Ignore repeated presses",
-  "switchScanningMinimumPressDuration": "Minimum press duration",
+  "switchScanningMinimumPressDuration": "Minimum press time",
   "settingsSectionBoard": "Board",
   "settingsSectionSpeech": "Speech",
   "settingsSectionSuggestions": "Suggestions",

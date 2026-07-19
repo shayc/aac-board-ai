@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "बंद",
   "switchScanningAdvanced": "उन्नत",
   "switchScanningCyclesBeforePausing": "रुकने से पहले चक्र",
   "switchScanningFirstItemPause": "पहले आइटम पर विराम",
