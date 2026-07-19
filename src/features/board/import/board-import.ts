@@ -14,12 +14,14 @@ import type {
   BoardInput,
   BoardSetInput,
 } from "../storage/boards-db";
-import { replaceBoardSet } from "../storage/boards-db";
+import {
+  BoardSetAlreadyExistsError,
+  createBoardSet,
+} from "../storage/boards-db";
 
 export interface ImportResult {
   setId: string;
   rootBoardId: string;
-  replacedExisting: boolean;
 }
 
 /**
@@ -44,14 +46,25 @@ export async function importBoardSets(
 
   try {
     for (const file of fileList) {
-      const setId = deriveSetId(file.name);
       const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+      const baseSetId = deriveSetId(file.name);
 
-      results.push(
-        loaded.format === "obz"
-          ? await importOBZArchive(loaded.archive, setId, file.name)
-          : await importOBFBoard(loaded.board, setId, file.name),
-      );
+      for (let candidateNumber = 1; ; candidateNumber += 1) {
+        const setId = buildSetIdCandidate(baseSetId, candidateNumber);
+
+        try {
+          results.push(
+            loaded.format === "obz"
+              ? await importOBZArchive(loaded.archive, setId, file.name)
+              : await importOBFBoard(loaded.board, setId, file.name),
+          );
+          break;
+        } catch (error) {
+          if (!(error instanceof BoardSetAlreadyExistsError)) {
+            throw error;
+          }
+        }
+      }
     }
   } finally {
     if (results.length > 0) {
@@ -70,13 +83,13 @@ async function importOBZArchive(
   const { manifest, boards, rootBoard, resources } = archive;
   const boardPathToId = buildBoardPathToId(manifest);
 
-  const { replacedExisting } = await replaceBoardSet({
+  await createBoardSet({
     boardSet: buildBoardSetInput(setId, rootBoard, fileName),
     boards: buildBoardInputs(boards, boardPathToId),
     assets: buildAssetInputs(resources),
   });
 
-  return { setId, rootBoardId: rootBoard.id, replacedExisting };
+  return { setId, rootBoardId: rootBoard.id };
 }
 
 async function importOBFBoard(
@@ -84,13 +97,13 @@ async function importOBFBoard(
   setId: string,
   fileName: string,
 ): Promise<ImportResult> {
-  const { replacedExisting } = await replaceBoardSet({
+  await createBoardSet({
     boardSet: buildBoardSetInput(setId, board, fileName),
     boards: [{ boardId: board.id, name: board.name ?? board.id, obf: board }],
     assets: [],
   });
 
-  return { setId, rootBoardId: board.id, replacedExisting };
+  return { setId, rootBoardId: board.id };
 }
 
 function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
@@ -175,4 +188,14 @@ export function deriveSetId(fileName: string): string {
   const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";
+}
+
+function buildSetIdCandidate(baseSetId: string, candidateNumber: number) {
+  if (candidateNumber === 1) {
+    return baseSetId;
+  }
+
+  const suffix = `-${candidateNumber}`;
+
+  return `${baseSetId.slice(0, 255 - suffix.length)}${suffix}`;
 }

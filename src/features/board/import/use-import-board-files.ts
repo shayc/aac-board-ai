@@ -31,14 +31,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     try {
       const results = await importBoardSets(files);
 
-      const replacedExisting = results.some(
-        (result) => result.replacedExisting,
-      );
-
       showSnackbar({
-        message: replacedExisting
-          ? m.libraryReplacedBoards({ count })
-          : m.libraryImportedBoards({ count }),
+        message: m.libraryImportedBoards({ count }),
         severity: "success",
       });
 

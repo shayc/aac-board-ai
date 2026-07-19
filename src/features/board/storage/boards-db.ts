@@ -36,6 +36,13 @@ export class BoardNotFoundError extends Error {
   }
 }
 
+export class BoardSetAlreadyExistsError extends Error {
+  constructor(setId: string) {
+    super(`Board set already exists: ${setId}`);
+    this.name = "BoardSetAlreadyExistsError";
+  }
+}
+
 const MAX_ID_LENGTH = 255;
 
 export class InvalidIdError extends Error {
@@ -201,15 +208,28 @@ export async function deleteBoardSetRows(setId: string): Promise<void> {
   ]);
 }
 
-export interface ReplaceBoardSetInput {
+export interface BoardSetWriteInput {
   boardSet: BoardSetInput;
   boards: BoardInput[];
   assets: AssetInput[];
 }
 
+export async function createBoardSet(input: BoardSetWriteInput): Promise<void> {
+  await writeBoardSet(input, "create");
+}
+
 export async function replaceBoardSet(
-  input: ReplaceBoardSetInput,
+  input: BoardSetWriteInput,
 ): Promise<{ replacedExisting: boolean }> {
+  return { replacedExisting: await writeBoardSet(input, "replace") };
+}
+
+type BoardSetWriteMode = "create" | "replace";
+
+async function writeBoardSet(
+  input: BoardSetWriteInput,
+  mode: BoardSetWriteMode,
+): Promise<boolean> {
   const { boardSet, boards, assets } = input;
   validateId(boardSet.setId, "setId");
   validateId(boardSet.rootBoardId, "rootBoardId");
@@ -225,7 +245,10 @@ export async function replaceBoardSet(
   const assetStore = tx.objectStore("assets");
 
   const existing = await boardSetStore.get(setId);
-  const setRange = boardSetRange(setId);
+  if (mode === "create" && existing) {
+    await tx.done;
+    throw new BoardSetAlreadyExistsError(setId);
+  }
 
   const record: BoardSetRecord = {
     setId,
@@ -248,7 +271,11 @@ export async function replaceBoardSet(
   const requests: Promise<unknown>[] = [tx.done];
 
   try {
-    requests.push(boardStore.delete(setRange), assetStore.delete(setRange));
+    if (mode === "replace") {
+      const setRange = boardSetRange(setId);
+      requests.push(boardStore.delete(setRange), assetStore.delete(setRange));
+    }
+
     for (const board of boards) {
       requests.push(
         boardStore.put({
@@ -268,7 +295,9 @@ export async function replaceBoardSet(
         }),
       );
     }
-    requests.push(boardSetStore.put(record));
+    requests.push(
+      mode === "create" ? boardSetStore.add(record) : boardSetStore.put(record),
+    );
 
     await Promise.all(requests);
   } catch (error) {
@@ -281,7 +310,7 @@ export async function replaceBoardSet(
     throw error;
   }
 
-  return { replacedExisting: existing !== undefined };
+  return existing !== undefined;
 }
 
 export async function getBoard(

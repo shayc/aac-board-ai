@@ -6,10 +6,7 @@ export { deleteBoardSet, getBoardSets } from "./board-sets/board-sets-store";
 export { useBoardSets } from "./board-sets/use-board-sets";
 export { BoardViewer } from "./board-viewer";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
-export {
-  deriveSetIdFromUrl,
-  importBoardFromUrl,
-} from "./import/import-from-url";
+export { importBoardFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useFileHandlerLaunch } from "./import/use-file-handler-launch";
 export { useImportBoardFiles } from "./import/use-import-board-files";

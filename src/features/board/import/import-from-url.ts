@@ -1,8 +1,4 @@
-import {
-  deriveSetId,
-  importBoardSets,
-  type ImportResult,
-} from "./board-import";
+import { importBoardSets, type ImportResult } from "./board-import";
 
 /**
  * Hard cap on a board download, enforced while the response streams so an
@@ -42,11 +38,6 @@ function parseBoardUrl(url: string): URL {
 
 function deriveFilename(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
-}
-
-/** The setId a board URL would import into, without downloading anything. */
-export function deriveSetIdFromUrl(url: string): string {
-  return deriveSetId(deriveFilename(parseBoardUrl(url)));
 }
 
 export async function importBoardFromUrl(url: string): Promise<ImportResult> {
