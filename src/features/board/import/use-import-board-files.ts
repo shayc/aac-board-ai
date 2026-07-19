@@ -9,7 +9,7 @@ import { importBoardSets, type ImportResult } from "./board-import";
 
 interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
-  importBoardFiles: (files: File[]) => Promise<ImportResult[]>;
+  importBoardFiles: (files: File[]) => Promise<ImportResult[] | undefined>;
   importAndOpenBoardFiles: (files: File[]) => Promise<void>;
 }
 
@@ -17,7 +17,9 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importBoardFiles(files: File[]): Promise<ImportResult[]> {
+  async function importBoardFiles(
+    files: File[],
+  ): Promise<ImportResult[] | undefined> {
     if (files.length === 0) {
       return [];
     }
@@ -48,17 +50,19 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         severity: "error",
       });
 
-      throw error;
+      return undefined;
     }
   }
 
   async function importAndOpenBoardFiles(files: File[]) {
     const results = await importBoardFiles(files);
 
-    if (results.length === 1) {
-      const [result] = results;
-      void navigate(boardSetPath(result));
+    if (results?.length !== 1) {
+      return;
     }
+
+    const [result] = results;
+    void navigate(boardSetPath(result));
   }
 
   async function pickAndImportBoardFiles() {
