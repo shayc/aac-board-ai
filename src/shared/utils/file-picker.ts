@@ -1,4 +1,4 @@
-export interface OpenFilesOptions {
+interface OpenFilesOptions {
   accept?: string;
   multiple?: boolean;
 }

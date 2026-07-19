@@ -1,6 +1,6 @@
 const MAX_PREDICTION_WORDS = 3;
 
-export interface ToPredictedWordsInput {
+interface ToPredictedWordsInput {
   rawResponse: string;
   boardWords: readonly string[];
 }

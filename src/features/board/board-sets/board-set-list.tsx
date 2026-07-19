@@ -16,7 +16,7 @@ import { m } from "@paraglide/messages.js";
 import { useState } from "react";
 import type { BoardSetRecord } from "../storage/boards-db";
 
-export interface BoardSetListProps {
+interface BoardSetListProps {
   boardSets: BoardSetRecord[];
   onSelect: (boardSet: BoardSetRecord) => void;
   onInfo: (boardSet: BoardSetRecord) => void;

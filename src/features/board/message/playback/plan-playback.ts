@@ -6,7 +6,7 @@ import {
   type SpokenPartTracker,
 } from "./spoken-part-tracker";
 
-export type PlaybackStep =
+type PlaybackStep =
   | { kind: "sound"; partId: string; src: string }
   | { kind: "speech"; tracker: SpokenPartTracker };
 

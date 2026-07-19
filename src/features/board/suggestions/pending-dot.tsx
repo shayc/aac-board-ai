@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { orange } from "@mui/material/colors";
 import Fade from "@mui/material/Fade";
 
-export interface PendingDotProps {
+interface PendingDotProps {
   show: boolean;
 }
 

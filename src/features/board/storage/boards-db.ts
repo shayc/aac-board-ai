@@ -23,7 +23,7 @@ export interface BoardRecord {
   obf: OBFBoard;
 }
 
-export interface AssetRecord {
+interface AssetRecord {
   setId: string;
   path: string;
   blob: Blob;
@@ -93,7 +93,7 @@ interface BoardsDBSchema extends DBSchema {
   };
 }
 
-export type BoardsDB = IDBPDatabase<BoardsDBSchema>;
+type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 
 const DB_NAME = "aac-boards-db";
 const DB_VERSION = 1;

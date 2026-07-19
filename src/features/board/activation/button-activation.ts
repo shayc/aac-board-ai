@@ -13,13 +13,13 @@ import type { UseBoardNavigationReturn } from "../navigation/use-board-navigatio
 import type { BoardButton } from "../types";
 import { resolveButtonIntents } from "./button-intent-resolver";
 
-export interface ButtonActivationOptions {
+interface ButtonActivationOptions {
   message: Pick<UseMessageReturn, "parts" | "setParts">;
   playback: Pick<UseMessagePlaybackReturn, "play">;
   navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
-export interface ButtonActivation {
+interface ButtonActivation {
   activateButton: (button: BoardButton) => void;
 }
 

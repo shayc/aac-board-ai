@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
-export interface SuggestionStatusProps {
+interface SuggestionStatusProps {
   status: SuggestionStatusView;
   enableButtonProps?: SuggestionEnableButtonProps;
   onEnable: () => void;

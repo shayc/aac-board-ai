@@ -6,7 +6,7 @@ import { alpha } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 
-export interface BoardFileDropOverlayProps {
+interface BoardFileDropOverlayProps {
   open: boolean;
 }
 

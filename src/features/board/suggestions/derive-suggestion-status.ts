@@ -7,7 +7,7 @@ export type SuggestionStatusView =
   | { kind: "unavailable" }
   | null;
 
-export interface EngineCondition {
+interface EngineCondition {
   status: Status;
   requestFailed: boolean;
 }

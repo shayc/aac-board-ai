@@ -22,7 +22,7 @@ export function preventSpeechEnd(
   speak.mockImplementation(() => undefined);
 }
 
-export interface StubVoice {
+interface StubVoice {
   voiceURI: string;
   name: string;
   lang: string;

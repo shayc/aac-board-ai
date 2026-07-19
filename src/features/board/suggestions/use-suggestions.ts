@@ -22,7 +22,7 @@ import { useWordPrediction } from "./use-word-prediction";
 
 const SHARED_CONTEXT_DEBOUNCE_MS = 400;
 
-export interface UseSuggestionsReturn {
+interface UseSuggestionsReturn {
   isSupported: boolean;
   status: SuggestionStatusView;
   phrases: string[];

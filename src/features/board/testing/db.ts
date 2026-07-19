@@ -9,7 +9,7 @@ import {
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
-export interface SeedBoardSet extends Partial<BoardSetRecord> {
+interface SeedBoardSet extends Partial<BoardSetRecord> {
   setId: string;
   rootBoardId: string;
   boards?: Omit<BoardRecord, "setId">[];

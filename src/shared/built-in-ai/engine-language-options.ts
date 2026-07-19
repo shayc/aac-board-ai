@@ -4,11 +4,11 @@ import type {
   RewriterOptions,
 } from "@shayc/react-built-in-ai";
 
-export type ProofreaderLanguageOptions = Required<
+type ProofreaderLanguageOptions = Required<
   Pick<ProofreaderOptions, "expectedInputLanguages">
 >;
 
-export type RewriterLanguageOptions = Required<
+type RewriterLanguageOptions = Required<
   Pick<
     RewriterOptions,
     "expectedInputLanguages" | "expectedContextLanguages" | "outputLanguage"
@@ -31,7 +31,7 @@ export function rewriterLanguageOptions(
   };
 }
 
-export type LanguageModelLanguageOptions = Required<
+type LanguageModelLanguageOptions = Required<
   Pick<LanguageModelOptions, "expectedInputs" | "expectedOutputs">
 >;
 

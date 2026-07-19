@@ -3,7 +3,7 @@ import { SnackbarProvider } from "@shared/snackbar/snackbar-provider";
 import { ThemeProvider } from "@shared/theme/theme-provider";
 import type { ReactNode } from "react";
 
-export interface AppProvidersProps {
+interface AppProvidersProps {
   children: ReactNode;
 }
 

@@ -17,7 +17,7 @@ export type PlayButtonRootProps = Omit<
   keyof PlayButtonOwnProps | "aria-label" | "children" | "color" | "onClick"
 >;
 
-export type PlayButtonProps = PlayButtonOwnProps & PlayButtonRootProps;
+type PlayButtonProps = PlayButtonOwnProps & PlayButtonRootProps;
 
 export function PlayButton({
   isPlaying,

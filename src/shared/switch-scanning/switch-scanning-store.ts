@@ -1,12 +1,7 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-export const SWITCH_SCANNING_METHODS = [
-  "auto",
-  "step",
-  "dwell",
-  "inverse",
-] as const;
+const SWITCH_SCANNING_METHODS = ["auto", "step", "dwell", "inverse"] as const;
 
 export type SwitchScanningMethod = (typeof SWITCH_SCANNING_METHODS)[number];
 

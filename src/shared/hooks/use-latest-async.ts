@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
-export interface UseLatestAsyncOptions<T> {
+interface UseLatestAsyncOptions<T> {
   enabled: boolean;
   deps: readonly (string | number | boolean)[];
   run: (signal: AbortSignal) => Promise<T>;
 }
 
-export interface UseLatestAsyncReturn<T> {
+interface UseLatestAsyncReturn<T> {
   value: T | undefined;
   error: Error | undefined;
   isPending: boolean;

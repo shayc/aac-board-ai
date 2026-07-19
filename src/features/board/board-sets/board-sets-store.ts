@@ -5,7 +5,7 @@ import {
   type BoardSetRecord,
 } from "../storage/boards-db";
 
-export interface BoardSetsSnapshot {
+interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
   isLoading: boolean;
   error: Error | null;

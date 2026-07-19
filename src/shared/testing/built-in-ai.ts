@@ -13,21 +13,21 @@ interface NamespaceSpies {
   >;
 }
 
-export interface ProofreaderStub extends NamespaceSpies {
+interface ProofreaderStub extends NamespaceSpies {
   proofread: Mock<
     (input: string) => ProofreadResult | Promise<ProofreadResult>
   >;
 }
 
-export interface RewriterStub extends NamespaceSpies {
+interface RewriterStub extends NamespaceSpies {
   rewrite: Mock<(input: string) => string | Promise<string>>;
 }
 
-export interface TranslatorStub extends NamespaceSpies {
+interface TranslatorStub extends NamespaceSpies {
   translate: Mock<(input: string) => string | Promise<string>>;
 }
 
-export interface LanguageModelStub extends NamespaceSpies {
+interface LanguageModelStub extends NamespaceSpies {
   prompt: Mock<(input: string) => string | Promise<string>>;
 }
 

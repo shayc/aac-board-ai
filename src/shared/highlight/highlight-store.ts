@@ -1,7 +1,7 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-export interface HighlightConfig {
+interface HighlightConfig {
   highlightActivePart: boolean;
 }
 

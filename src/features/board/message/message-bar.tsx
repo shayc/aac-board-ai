@@ -4,7 +4,7 @@ import { Pictogram } from "../pictogram/pictogram";
 import { PlayButton, type PlayButtonRootProps } from "./play-button";
 import type { MessagePart } from "./use-message";
 
-export interface MessageBarSlotProps {
+interface MessageBarSlotProps {
   playButton?: Omit<PlayButtonRootProps, "disabled">;
 }
 

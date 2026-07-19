@@ -12,7 +12,7 @@ interface BackspaceButtonOwnProps {
   onLongPress: () => void;
 }
 
-export type BackspaceButtonProps = BackspaceButtonOwnProps &
+type BackspaceButtonProps = BackspaceButtonOwnProps &
   Omit<
     ButtonProps,
     | keyof BackspaceButtonOwnProps

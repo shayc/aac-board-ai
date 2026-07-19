@@ -17,7 +17,7 @@ import type { ReactNode } from "react";
 
 const APP_NAME = "AAC Board AI";
 
-export interface OnboardingDialogProps {
+interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
 }

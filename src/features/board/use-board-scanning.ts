@@ -11,7 +11,7 @@ import {
   SUGGESTIONS_ENABLE_SCAN_ID,
 } from "./board-scanning-ids";
 
-export interface UseBoardScanningOptions {
+interface UseBoardScanningOptions {
   hasMessage: boolean;
   isPlaying: boolean;
   navigation: {
@@ -23,7 +23,7 @@ export interface UseBoardScanningOptions {
   };
 }
 
-export interface UseBoardScanningReturn {
+interface UseBoardScanningReturn {
   playTarget: ScanTargetProps;
   backTarget: ScanTargetProps;
   homeTarget: ScanTargetProps;
