@@ -26,7 +26,7 @@ import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
-import { useSuggestions } from "./suggestions/use-suggestions";
+import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import type { Board, BoardButton } from "./types";
 import { useBoardScanning } from "./use-board-scanning";
 
@@ -62,7 +62,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
   const playback = useMessagePlayback();
-  const suggestions = useSuggestions(message.text);
+  const suggestions = useMessageSuggestions(message.text);
   const navigation = useBoardNavigation();
   const gridRef = useRef<HTMLDivElement>(null);
 
