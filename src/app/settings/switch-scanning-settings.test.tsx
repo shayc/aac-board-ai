@@ -32,9 +32,6 @@ describe("SwitchScanningSettings", () => {
     await expect
       .element(screen.getByRole("heading", { name: "Switch assignments" }))
       .toBeVisible();
-    await expect
-      .element(screen.getByText("Select, then press your switch."))
-      .toBeVisible();
     const switchInput = screen.getByRole("group", { name: "Select switch" });
     await expect
       .element(switchInput.getByRole("button", { name: "Space Change" }))

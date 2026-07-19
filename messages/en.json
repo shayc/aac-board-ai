@@ -1,7 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "switchScanningSetup": "Switch assignments",
-  "switchScanningSetupHint": "Select, then press your switch.",
   "switchScanningAssign": "Press your switch…",
   "switchScanningChange": "Change",
   "switchScanningNextItemSwitch": "Next item switch",

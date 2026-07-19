@@ -160,9 +160,6 @@ export function SwitchInputSetup({ inputs, method }: SwitchInputSetupProps) {
       <Typography component="h4" variant="body2" sx={{ fontWeight: 500 }}>
         {m.switchScanningSetup()}
       </Typography>
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {m.switchScanningSetupHint()}
-      </Typography>
       <Stack spacing={1.5}>
         {roles.map((role) => (
           <SwitchInputButton
