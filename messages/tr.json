@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "Kapalı",
   "switchScanningAdvanced": "Gelişmiş",
   "switchScanningCyclesBeforePausing": "Duraklatmadan önceki döngüler",
   "switchScanningFirstItemPause": "İlk öğede duraklama",

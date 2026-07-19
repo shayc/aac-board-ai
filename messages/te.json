@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "ಆఫ్",
   "switchScanningAdvanced": "అధునాతన",
   "switchScanningCyclesBeforePausing": "పాజ్ చేయడానికి ముందు చక్రాలు",
   "switchScanningFirstItemPause": "మొదటి అంశం పాజ్",

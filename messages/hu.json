@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "Ki",
   "switchScanningAdvanced": "Speciális",
   "switchScanningCyclesBeforePausing": "Ciklusok száma szüneteltetés előtt",
   "switchScanningFirstItemPause": "Első elem szünete",

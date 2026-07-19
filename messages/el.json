@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "switchScanningOff": "Ανενεργό",
   "switchScanningAdvanced": "Για προχωρημένους",
   "switchScanningCyclesBeforePausing": "Κύκλοι πριν από την παύση",
   "switchScanningFirstItemPause": "Παύση στο πρώτο στοιχείο",

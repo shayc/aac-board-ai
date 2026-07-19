@@ -178,7 +178,7 @@ describe("SwitchScanningSettings", () => {
 
     await moveSwitch.getByRole("button", { name: "Space Change" }).click();
     await expect
-      .element(moveSwitch.getByText("Press your switch…", { exact: true }))
+      .element(moveSwitch.getByText("Press your switch", { exact: true }))
       .toBeVisible();
     document.dispatchEvent(
       new KeyboardEvent("keydown", {
@@ -270,18 +270,28 @@ describe("SwitchScanningSettings", () => {
     const ignoreRepeatedPresses = screen.getByRole("slider", {
       name: "Ignore repeated presses",
     });
-    const minimumPressDuration = screen.getByRole("slider", {
-      name: "Minimum press duration",
+    const minimumPressTime = screen.getByRole("slider", {
+      name: "Minimum press time",
     });
 
     await expect.element(cycles).toBeVisible();
     await expect.element(firstItemPause).toBeVisible();
     await expect.element(ignoreRepeatedPresses).toBeVisible();
-    await expect.element(minimumPressDuration).toBeVisible();
+    await expect.element(minimumPressTime).toBeVisible();
+    expect(screen.getByText("Off", { exact: true }).all()).toHaveLength(3);
+    await expect
+      .element(firstItemPause)
+      .toHaveAttribute("aria-valuetext", "Off");
+    await expect
+      .element(ignoreRepeatedPresses)
+      .toHaveAttribute("aria-valuetext", "Off");
+    await expect
+      .element(minimumPressTime)
+      .toHaveAttribute("aria-valuetext", "Off");
 
     cycles.element().focus();
     await userEvent.keyboard("{ArrowRight}");
-    minimumPressDuration.element().focus();
+    minimumPressTime.element().focus();
     await userEvent.keyboard("{ArrowRight}");
 
     await vi.waitFor(() => {
