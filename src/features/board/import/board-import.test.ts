@@ -40,7 +40,6 @@ describe("importBoardSets", () => {
       {
         setId: IMPORTED_SET_ID,
         rootBoardId: board.id,
-        replacedExisting: false,
       },
     ]);
 
@@ -93,7 +92,6 @@ describe("importBoardSets", () => {
       {
         setId: IMPORTED_SET_ID,
         rootBoardId,
-        replacedExisting: false,
       },
     ]);
 
@@ -201,17 +199,40 @@ describe("importBoardSets", () => {
     expect(importResults[0].setId).toBe("x".repeat(255));
   });
 
-  test("re-importing the same filename replaces the existing set", async () => {
+  test("re-importing the same filename keeps both board sets", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
 
     const first = await importBoardSets(fixtureFile);
-    expect(first[0].replacedExisting).toBe(false);
+    expect(first[0].setId).toBe(IMPORTED_SET_ID);
 
     const second = await importBoardSets(fixtureFile);
-    expect(second[0].replacedExisting).toBe(true);
+    expect(second[0].setId).toBe(`${IMPORTED_SET_ID}-2`);
 
     const boardSets = await listBoardSets();
-    expect(boardSets).toHaveLength(1);
+    expect(new Set(boardSets.map((set) => set.setId))).toEqual(
+      new Set([`${IMPORTED_SET_ID}-2`, IMPORTED_SET_ID]),
+    );
+  });
+
+  test("a filename collision preserves the existing boards and assets", async () => {
+    const obzFile = await loadFixtureFile(OBZ_FIXTURE);
+    const archive = await loadOBZ(obzFile);
+    const originalFile = new File([obzFile], "board.obz");
+    await importBoardSets(originalFile);
+
+    const resourcePath = Array.from(archive.resources.keys()).find(
+      (path) => !path.endsWith(".obf") && path !== "manifest.json",
+    );
+    assertDefined(resourcePath);
+
+    const obfFile = await loadFixtureFile(OBF_FIXTURE);
+    const collidingFile = new File([obfFile], "BOARD.json");
+    const [result] = await importBoardSets(collidingFile);
+
+    expect(result.setId).toBe("board-2");
+    expect(await getBoard("board", archive.rootBoard.id)).toBeDefined();
+    expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
+    expect(await listBoardSets()).toHaveLength(2);
   });
 
   test("rejects an OBZ whose declared uncompressed size exceeds the per-entry limit", async () => {

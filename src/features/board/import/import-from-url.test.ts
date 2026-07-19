@@ -26,6 +26,18 @@ describe("importBoardFromUrl", () => {
     expect(result.rootBoardId).toBeTruthy();
   });
 
+  test("keeps both sets when URL imports share a filename", async () => {
+    const first = await importBoardFromUrl(
+      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
+    );
+    const second = await importBoardFromUrl(
+      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
+    );
+
+    expect(first.setId).toBe("lots-of-stuff");
+    expect(second.setId).toBe("lots-of-stuff-2");
+  });
+
   test("derives the setId from the last non-empty segment when the URL path ends with a slash", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));

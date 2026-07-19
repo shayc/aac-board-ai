@@ -2,28 +2,19 @@ import { getBoardSets } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { rootIndexLoader, type RootIndexData } from "./root-index-loader";
+import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
 
-function callLoader(searchParams = ""): Promise<Response | RootIndexData> {
+function callLoader(searchParams = ""): Promise<Response> {
   const args = {
     request: new Request(`http://localhost/${searchParams}`),
     params: {},
   } as unknown as LoaderFunctionArgs;
 
   return rootIndexLoader(args);
-}
-
-async function callLoaderForRedirect(searchParams = ""): Promise<Response> {
-  const result = await callLoader(searchParams);
-  if (!(result instanceof Response)) {
-    throw new Error("Expected the loader to return a redirect Response");
-  }
-
-  return result;
 }
 
 describe("rootIndexLoader", () => {
@@ -36,7 +27,7 @@ describe("rootIndexLoader", () => {
   });
 
   test("imports the URL from ?board and redirects to its board route", async () => {
-    const response = await callLoaderForRedirect(
+    const response = await callLoader(
       `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
     );
 
@@ -48,23 +39,22 @@ describe("rootIndexLoader", () => {
     expect(sets).toHaveLength(1);
   });
 
-  test("returns a pending-import intent instead of overwriting an existing set", async () => {
+  test("keeps the existing set when a URL import has the same filename", async () => {
     await seedBoardSets([
       { setId: "lots-of-stuff", rootBoardId: "root-1", name: "My Vocabulary" },
     ]);
-    const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-    const result = await callLoader(
+    const response = await callLoader(
       `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
     );
 
-    expect(result).toEqual({
-      pendingImport: {
-        boardUrl: FIXTURE_BOARD_URL,
-        boardSetName: "My Vocabulary",
-      },
-    });
-    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(response.status).toBe(302);
+    expect(response.headers.get("Location")).toMatch(
+      /^\/sets\/lots-of-stuff-2\/boards\/[^/]+$/,
+    );
+    expect(new Set((await getBoardSets()).map((set) => set.setId))).toEqual(
+      new Set(["lots-of-stuff-2", "lots-of-stuff"]),
+    );
   });
 
   test("throws a localized 400 instead of fetching a non-http(s) board URL", async () => {
@@ -97,7 +87,7 @@ describe("rootIndexLoader", () => {
       { setId: "set-2", rootBoardId: "root-2" },
     ]);
 
-    const response = await callLoaderForRedirect();
+    const response = await callLoader();
 
     expect(response.status).toBe(302);
     expect(response.headers.get("Location")).toBe("/sets/set-2/boards/root-2");
@@ -109,7 +99,7 @@ describe("rootIndexLoader", () => {
       throw new Error(`Default board fixture missing at ${DEFAULT_BOARD_PATH}`);
     }
 
-    const response = await callLoaderForRedirect();
+    const response = await callLoader();
 
     expect(response.status).toBe(302);
     expect(response.headers.get("Location")).toMatch(

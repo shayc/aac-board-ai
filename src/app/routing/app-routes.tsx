@@ -19,8 +19,8 @@ export const appRoutes: RouteObject[] = [
         children: [
           {
             index: true,
+            Component: LoadingState,
             loader: rootIndexLoader,
-            lazy: () => import("@pages/board-url-import-page"),
           },
           {
             path: BOARD_SET_SEGMENT,

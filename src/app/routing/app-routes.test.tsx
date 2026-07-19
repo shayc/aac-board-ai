@@ -1,4 +1,4 @@
-import { importBoardFromUrl } from "@features/board";
+import { getBoardSets, importBoardFromUrl } from "@features/board";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -75,46 +75,22 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
-  test("?board= link that collides with an existing set replaces it only after confirmation", async () => {
+  test("?board= link that collides with an existing set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 
     const screen = await renderApp(
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
-
-    // The confirmation dialog stacks above onboarding, so answer it first.
-    await screen.getByRole("button", { name: "Replace" }).click();
-
-    // Let the import snackbars run their course: they cover the onboarding
-    // button, and a hovering pointer from a retried click pauses auto-hide.
-    await expect
-      .element(screen.getByText("Board replaced"))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByText("Board replaced"), { timeout: 10_000 })
-      .not.toBeInTheDocument();
 
     await screen.getByRole("button", { name: "Continue" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
-  });
 
-  test("cancelling the ?board= replacement keeps the existing set", async () => {
-    await seedExistingLotsOfStuffSet();
-
-    const screen = await renderApp(
-      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    expect(new Set((await getBoardSets()).map((set) => set.setId))).toEqual(
+      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
-
-    // The confirmation dialog stacks above onboarding, so answer it first.
-    await screen.getByRole("button", { name: "Cancel" }).click();
-    await screen.getByRole("button", { name: "Continue" }).click();
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Old Board" }))
-      .toBeVisible();
   });
 
   test("an unmatched URL renders the localized not-found page inside the shell", async () => {
@@ -130,8 +106,7 @@ describe("app flow", () => {
   });
 });
 
-// A set whose setId collides with what the OBZ fixture URL derives, so a
-// ?board= import of the fixture would overwrite it.
+// A set whose setId collides with what the OBZ fixture URL derives.
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {

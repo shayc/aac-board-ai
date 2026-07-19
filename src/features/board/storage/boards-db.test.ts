@@ -2,7 +2,9 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import {
+  BoardSetAlreadyExistsError,
   closeBoardsDB,
+  createBoardSet,
   deleteBoardSetRows,
   getAssetBlob,
   getBoard,
@@ -12,13 +14,13 @@ import {
   listBoardSets,
   replaceBoardSet,
   updateBoardStrings,
-  type ReplaceBoardSetInput,
+  type BoardSetWriteInput,
 } from "./boards-db";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 
 function makeReplaceInput(
-  overrides: Partial<ReplaceBoardSetInput> = {},
-): ReplaceBoardSetInput {
+  overrides: Partial<BoardSetWriteInput> = {},
+): BoardSetWriteInput {
   return {
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root-1" },
     boards: [],
@@ -32,6 +34,37 @@ beforeEach(async () => {
 });
 
 afterEach(closeBoardsDB);
+
+describe("createBoardSet", () => {
+  test("rejects a conflicting ID without changing the existing set", async () => {
+    await createBoardSet(
+      makeReplaceInput({
+        boardSet: { setId: "set-1", name: "Original", rootBoardId: "a" },
+        boards: [{ boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) }],
+        assets: [{ path: "x.png", blob: new Blob(["x"]) }],
+      }),
+    );
+
+    await expect(
+      createBoardSet(
+        makeReplaceInput({
+          boardSet: {
+            setId: "set-1",
+            name: "Replacement",
+            rootBoardId: "b",
+          },
+          boards: [{ boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) }],
+          assets: [],
+        }),
+      ),
+    ).rejects.toBeInstanceOf(BoardSetAlreadyExistsError);
+
+    expect(await getBoard("set-1", "a")).toBeDefined();
+    expect(await getBoard("set-1", "b")).toBeUndefined();
+    expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
+    expect((await listBoardSets())[0]?.name).toBe("Original");
+  });
+});
 
 describe("replaceBoardSet", () => {
   test("inserts a new board set", async () => {

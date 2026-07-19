@@ -45,7 +45,7 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board imported");
   });
 
-  test("shows the replaced message when the set already exists", async () => {
+  test("shows the imported message and keeps both sets on a conflict", async () => {
     const file = await loadFixtureFile(OBF_FIXTURE);
     await importBoardSets(file);
 
@@ -54,7 +54,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board replaced");
+      .toHaveTextContent("Board imported");
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {

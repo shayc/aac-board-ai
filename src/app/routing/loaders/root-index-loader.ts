@@ -1,7 +1,5 @@
 import {
   boardSetPath,
-  deriveSetIdFromUrl,
-  getBoardSet,
   getBoardSets,
   importBoardFromUrl,
 } from "@features/board";
@@ -10,34 +8,10 @@ import { data, redirect, type LoaderFunctionArgs } from "react-router";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
-export interface RootIndexData {
-  pendingImport: {
-    boardUrl: string;
-    boardSetName: string;
-  };
-}
-
 // The ?board= param is attacker-controlled: a crafted link must never
-// silently replace a user's vocabulary. An import that would overwrite an
-// existing set is returned as an intent for BoardUrlImportPage to confirm,
-// and a rejected URL or failed import surfaces as a localized error state.
-// Storage errors propagate to the generic error boundary instead — they are
-// not the link's fault and must not be reported as a bad link.
-async function importFromBoardUrl(
-  boardUrl: string,
-): Promise<Response | RootIndexData> {
-  let setId: string;
-  try {
-    setId = deriveSetIdFromUrl(boardUrl);
-  } catch {
-    throw importFailed();
-  }
-
-  const existingSet = await getBoardSet(setId);
-  if (existingSet) {
-    return { pendingImport: { boardUrl, boardSetName: existingSet.name } };
-  }
-
+// silently replace a user's vocabulary. Every import allocates a separate set
+// ID, while rejected URLs and failed imports surface as localized errors.
+async function importFromBoardUrl(boardUrl: string): Promise<Response> {
   try {
     return redirect(boardSetPath(await importBoardFromUrl(boardUrl)));
   } catch {
@@ -51,7 +25,7 @@ function importFailed() {
 
 export async function rootIndexLoader({
   request,
-}: LoaderFunctionArgs): Promise<Response | RootIndexData> {
+}: LoaderFunctionArgs): Promise<Response> {
   const boardUrl = new URL(request.url).searchParams.get("board");
 
   if (boardUrl) {
