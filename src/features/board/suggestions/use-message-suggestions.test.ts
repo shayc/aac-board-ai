@@ -12,10 +12,10 @@ import {
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useSuggestions } from "./use-suggestions";
+import { useMessageSuggestions } from "./use-message-suggestions";
 
-function renderSuggestions(text: string) {
-  return renderHook(() => useSuggestions(text), {
+function renderMessageSuggestions(text: string) {
+  return renderHook(() => useMessageSuggestions(text), {
     wrapper: LanguageProvider,
   });
 }
@@ -37,7 +37,7 @@ function stubRewritesByTone(
   return rewriter;
 }
 
-describe("useSuggestions", () => {
+describe("useMessageSuggestions", () => {
   beforeEach(() => {
     setAISharedContext("");
     setStoredLanguage(DEFAULT_LANGUAGE);
@@ -46,7 +46,7 @@ describe("useSuggestions", () => {
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
     stubBuiltInAIUnsupported("Proofreader", "Rewriter");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(false);
@@ -58,7 +58,7 @@ describe("useSuggestions", () => {
     stubProofreader();
     stubBuiltInAIUnsupported("Rewriter");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.isSupported).toBe(true);
@@ -69,7 +69,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => makeProofreadResult("I want to eat."));
     stubRewriter(() => "I would like to eat.");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([
@@ -86,7 +86,7 @@ describe("useSuggestions", () => {
       "more-casual": "Friendly message.",
     });
 
-    const { result } = await renderSuggestions("message");
+    const { result } = await renderMessageSuggestions("message");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual([
@@ -101,7 +101,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => makeProofreadResult("My movies"));
     stubRewriter(() => "my movies");
 
-    const { result } = await renderSuggestions("movies");
+    const { result } = await renderMessageSuggestions("movies");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["My movies"]);
@@ -112,7 +112,7 @@ describe("useSuggestions", () => {
     stubProofreader((input) => makeProofreadResult(input));
     stubRewriter(() => "Something different.");
 
-    const { result } = await renderSuggestions("unchanged");
+    const { result } = await renderMessageSuggestions("unchanged");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["Something different."]);
@@ -123,7 +123,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => Promise.reject(new Error("input too long")));
     stubRewriter(() => "I would like to eat.");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["I would like to eat."]);
@@ -135,7 +135,7 @@ describe("useSuggestions", () => {
     stubProofreader(() => Promise.reject(new Error("proofread down")));
     stubRewriter(() => Promise.reject(new Error("rewrite down")));
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "unavailable" });
@@ -150,7 +150,7 @@ describe("useSuggestions", () => {
       () => new Promise<string>((_, reject) => rejecters.push(reject)),
     );
 
-    const { result } = await renderSuggestions("unchanged");
+    const { result } = await renderMessageSuggestions("unchanged");
 
     await vi.waitFor(() => {
       expect(rejecters).toHaveLength(2);
@@ -171,7 +171,7 @@ describe("useSuggestions", () => {
     );
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(rejecters).toHaveLength(2);
@@ -191,10 +191,29 @@ describe("useSuggestions", () => {
     proofreader.availability.mockResolvedValue("downloadable");
     stubBuiltInAIUnsupported("Rewriter");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "needs-activation" });
+    });
+  });
+
+  test("enable prepares the proofreader", async () => {
+    const proofreader = stubProofreader();
+    proofreader.availability.mockResolvedValue("downloadable");
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result } = await renderMessageSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(result.current.status).toEqual({ kind: "needs-activation" });
+      expect(proofreader.availability).toHaveBeenCalledOnce();
+    });
+
+    result.current.enable();
+
+    await vi.waitFor(() => {
+      expect(proofreader.availability).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -203,7 +222,7 @@ describe("useSuggestions", () => {
     rewriter.availability.mockResolvedValue("downloadable");
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "needs-activation" });
@@ -226,7 +245,7 @@ describe("useSuggestions", () => {
     );
     stubBuiltInAIUnsupported("Rewriter");
 
-    const { result } = await renderSuggestions("want eat");
+    const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "needs-activation" });
@@ -244,7 +263,7 @@ describe("useSuggestions", () => {
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
 
-    await renderSuggestions("ahoy");
+    await renderMessageSuggestions("ahoy");
 
     await vi.waitFor(() => {
       expect(create).toHaveBeenCalledTimes(2);
@@ -270,7 +289,7 @@ describe("useSuggestions", () => {
     const { create: createRewriter } = stubRewriter();
     const { create: createProofreader } = stubProofreader();
 
-    await renderSuggestions("hello");
+    await renderMessageSuggestions("hello");
 
     await vi.waitFor(() => {
       expect(createRewriter).toHaveBeenCalledTimes(2);
@@ -293,7 +312,7 @@ describe("useSuggestions", () => {
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
 
-    await renderSuggestions("שלום");
+    await renderMessageSuggestions("שלום");
 
     await vi.waitFor(() => {
       expect(create).toHaveBeenCalledTimes(2);
@@ -313,7 +332,7 @@ describe("useSuggestions", () => {
     stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
     stubBuiltInAIUnsupported("Proofreader");
 
-    const { result } = await renderSuggestions("hi");
+    const { result } = await renderMessageSuggestions("hi");
 
     await vi.waitFor(() => {
       expect(result.current.status).toEqual({ kind: "pending" });
@@ -340,7 +359,8 @@ describe("useSuggestions", () => {
     stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
-      ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
+      ({ text }: { text: string } = { text: "old" }) =>
+        useMessageSuggestions(text),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
@@ -372,7 +392,8 @@ describe("useSuggestions", () => {
     stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
-      ({ text }: { text: string } = { text: "old" }) => useSuggestions(text),
+      ({ text }: { text: string } = { text: "old" }) =>
+        useMessageSuggestions(text),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
