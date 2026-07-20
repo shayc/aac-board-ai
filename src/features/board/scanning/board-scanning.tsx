@@ -2,7 +2,6 @@ import Chip from "@mui/material/Chip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
-import { getNavigationTargetId } from "../button-readers";
 import { GridRow, type GridItemProps, type GridRowProps } from "../grid/grid";
 import { Tile } from "../tile/tile";
 import type { BoardButton } from "../types";
@@ -51,7 +50,7 @@ export function ScannableTile({
       imageSrc={button.imageSrc}
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
-      variant={getNavigationTargetId(button) ? "folder" : undefined}
+      variant={button.loadBoard?.id ? "folder" : undefined}
       borderHidden={borderHidden}
       tabIndex={tabIndex}
       onClick={onClick}

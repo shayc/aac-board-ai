@@ -1,4 +1,3 @@
-import { getNavigationTargetId } from "../button-readers";
 import type { MessagePartContent } from "../message/message-types";
 import type { BoardAction, BoardButton } from "../types";
 
@@ -8,7 +7,7 @@ type ButtonIntent =
   | { kind: "runAction"; action: BoardAction };
 
 export function resolveButtonIntents(button: BoardButton): ButtonIntent[] {
-  const targetBoardId = getNavigationTargetId(button);
+  const targetBoardId = button.loadBoard?.id;
   if (targetBoardId) {
     return [{ kind: "navigate", targetBoardId }];
   }
