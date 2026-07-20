@@ -1,14 +1,14 @@
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { resetPersistedStores } from "@shared/utils/persisted-store";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { speak } from "./speak";
 import {
   setPitch,
   setRate,
   setVoiceURI,
   setVolume,
   SPEECH_RATE,
-} from "./speech-store";
+} from "@shared/speech/speech-store";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { speak } from "./speak";
 
 // Real SpeechSynthesisUtterance rejects assigning a `.voice` that isn't a
 // platform-native SpeechSynthesisVoice, so stubbed voice objects can't be

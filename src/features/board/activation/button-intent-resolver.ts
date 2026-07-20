@@ -1,12 +1,10 @@
-import { getNavigationTargetId, getSpokenText } from "../button-readers";
+import { getNavigationTargetId } from "../button-readers";
 import type { MessagePartContent } from "../message/message-types";
 import type { BoardAction, BoardButton } from "../types";
 
 type ButtonIntent =
   | { kind: "navigate"; targetBoardId: string }
-  | { kind: "compose"; content: MessagePartContent }
-  | { kind: "playAudio"; src: string }
-  | { kind: "speakText"; text: string }
+  | { kind: "composeAndPlay"; content: MessagePartContent }
   | { kind: "runAction"; action: BoardAction };
 
 export function resolveButtonIntents(button: BoardButton): ButtonIntent[] {
@@ -19,20 +17,7 @@ export function resolveButtonIntents(button: BoardButton): ButtonIntent[] {
     return button.actions.map((action) => ({ kind: "runAction", action }));
   }
 
-  const intents: ButtonIntent[] = [
-    { kind: "compose", content: toPartContent(button) },
-  ];
-
-  if (button.soundSrc) {
-    intents.push({ kind: "playAudio", src: button.soundSrc });
-  } else {
-    const text = getSpokenText(button);
-    if (text) {
-      intents.push({ kind: "speakText", text });
-    }
-  }
-
-  return intents;
+  return [{ kind: "composeAndPlay", content: toPartContent(button) }];
 }
 
 function toPartContent(button: BoardButton): MessagePartContent {

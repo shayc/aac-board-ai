@@ -18,7 +18,8 @@ describe("planPlayback", () => {
     expect(steps).toHaveLength(1);
     expect(steps[0]).toMatchObject({ kind: "speech" });
     if (steps[0].kind === "speech") {
-      expect(steps[0].tracker.text).toBe("i want");
+      expect(steps[0].text).toBe("i want");
+      expect(steps[0].trackingKeyAt?.(2)).toBe("2");
     }
   });
 
@@ -27,7 +28,9 @@ describe("planPlayback", () => {
       { id: "1", label: "bell", soundSrc: "bell.mp3" },
     ]);
 
-    expect(steps).toEqual([{ kind: "sound", partId: "1", src: "bell.mp3" }]);
+    expect(steps).toEqual([
+      { kind: "audio", trackingKey: "1", src: "bell.mp3" },
+    ]);
   });
 
   test("preserves order when a sound breaks a text run", () => {
@@ -41,7 +44,7 @@ describe("planPlayback", () => {
 
     expect(steps.map((step) => step.kind)).toEqual([
       "speech",
-      "sound",
+      "audio",
       "speech",
     ]);
   });
@@ -51,7 +54,7 @@ describe("planPlayback", () => {
       { id: "1", label: "🙂", vocalization: "Happy" },
     ]);
 
-    expect(steps[0].kind === "speech" && steps[0].tracker.text).toBe("happy");
+    expect(steps[0].kind === "speech" && steps[0].text).toBe("happy");
   });
 
   test("skips parts with no spoken text, such as inserted spaces", () => {
@@ -61,6 +64,6 @@ describe("planPlayback", () => {
     ]);
 
     expect(steps).toHaveLength(1);
-    expect(steps[0].kind === "speech" && steps[0].tracker.text).toBe("hi");
+    expect(steps[0].kind === "speech" && steps[0].text).toBe("hi");
   });
 });

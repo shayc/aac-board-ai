@@ -103,7 +103,10 @@ flowchart LR
     LD --> STG["Storage<br/>features/board/storage (idb)"]
     STG --> DB[("IndexedDB<br/>boardSets · boards · assets")]
 
-    UI --> SPK["Speech<br/>shared/speech"] --> WS["Web Speech API"]
+    UI --> PLY["Playback coordinator<br/>shared/playback"]
+    PLY --> OUT["Output transports<br/>shared/playback/transports"]
+    OUT --> WS["Web Speech API"]
+    OUT --> AUD["HTML Audio"]
     UI --> SUG["Suggestions + Translation<br/>features/board/{suggestions,translation}"]
     SUG -.->|via @shayc/react-built-in-ai| BAI["Built-in AI"]
 
@@ -132,11 +135,11 @@ _intent_, then dispatched. Most taps compose the message bar; some navigate or r
 an action:
 
 1. A tile tap (or Enter) goes through `resolveButtonIntents`, which yields typed
-   intents: navigate, compose, speakText, playAudio, or runAction.
+   intents: navigate, composeAndPlay, or runAction.
 2. `activateButton` dispatches each intent — appending to the message bar,
-   navigating to another board, or speaking / playing audio directly.
-3. Playing the message runs `planPlayback` → Web Speech, with per-part
-   highlighting as it speaks.
+   navigating to another board, or submitting playable content.
+3. The board playback adapter runs `planPlayback`, then the app-wide playback
+   coordinator serializes speech and recorded audio with per-part highlighting.
 
 ## Codemap
 
@@ -161,11 +164,12 @@ hyperlinked, so a moved file never breaks this table.
 | `src/features/board/board-sets/`                             | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                                |
 | `src/features/board/suggestions/`                            | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                                |
 | `src/features/board/translation/`                            | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                       |
-| `src/shared/speech/`                                         | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                           |
+| `src/shared/speech/`                                         | Voice catalog, persisted speech configuration, and voice↔language sync.                                                         |
+| `src/shared/playback/`                                       | The sole app-wide playback owner: serializes output, owns browser transports, coordinates cancellation, and publishes progress. |
 | `src/shared/language/`                                       | The one language model: UI/board/TTS language context + persisted store.                                                        |
 | `src/shared/theme/`                                          | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                           |
 | `src/shared/built-in-ai/`                                    | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.        |
-| everything else under `src/shared/`                          | Small cross-cutting helpers (audio, snackbar, providers, shared components/hooks/utils); each directory name says what it does. |
+| everything else under `src/shared/`                          | Small cross-cutting helpers (snackbar, providers, shared components/hooks/utils); each directory name says what it does.        |
 | `src/shared/utils/{external-store,persisted-store}.ts`       | The two state primitives every cross-cutting store is built from.                                                               |
 | `messages/*.json` + `project.inlang/`                        | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                    |
 
@@ -189,23 +193,25 @@ State has **five kinds**, each with one home:
    translated _per navigation_; components receive a ready `Board`, never a loading
    spinner of their own. A language change calls `revalidate()` to re-translate.
 3. **Reactive cross-cutting stores** — built on `createExternalStore` +
-   `useSyncExternalStore`: the **board-set catalog** and the **TTS voice catalog**.
-   These change outside React (DB writes, the browser's `voiceschanged` event).
+   `useSyncExternalStore`: the **board-set catalog**, **TTS voice catalog**, and
+   active **playback coordinator**. These change outside React (DB writes, browser
+   voice events, and playback boundaries).
 4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
    change): selected **language**, speech config (voice/rate/pitch/volume),
    playback config, switch-scanning access method and timing, AI shared context,
    and the onboarding-seen flag (`use-onboarding.ts`, key `hasSeenOnboarding`).
    Theme mode persists separately as MUI's `mui-mode`, read pre-paint in
    `index.html`.
-5. **Local component state** — the in-progress message (`useMessage`), playback
-   progress, grid focus. Never promoted to a global store.
+5. **Local component state** — the in-progress message (`useMessage`) and grid
+   focus. Never promoted to a global store.
 
 **Cross-tab coherence** rides on `BroadcastChannel` (`board-sets-sync`) — one
 listener per tab, registered at module load and never tied to a component mount, so
 a second tab or window sees board-set changes without polling.
 
-React **Context** carries only the three things that are genuinely app-wide:
-language, theme, and the snackbar.
+React **Context** carries only the things that are genuinely app-wide: language,
+theme, playback controls, and the snackbar. Playback progress uses external-store
+subscriptions so word boundaries only rerender consumers of the changed slice.
 
 ## Invariants
 
@@ -266,9 +272,11 @@ Each is the one place to change a concern:
   PWA file handler) converge on `importBoardSets`.
 - **AI provider boundary — `@shayc/react-built-in-ai`.** App code only consumes its
   hooks; swap models or providers in the library, not in features.
-- **Speech boundary — `src/shared/speech/`.** The only wrapper over the Web Speech
-  API. Playback is single-flight: a new clip stops the current, and a clip merely cut
-  short resolves rather than throwing.
+- **Playback boundary — `src/shared/playback/`.** The only gateway to Web Speech and
+  HTML Audio output. Playback is single-flight: a new request stops the current one,
+  and interrupted output resolves rather than throwing.
+- **Voice boundary — `src/shared/speech/`.** Owns the voice catalog, persisted speech
+  configuration, and voice↔language synchronization; it does not produce output.
 - **Switch-access boundary — `src/shared/switch-scanning/`.** Persists the selected
   access method, timing, and assigned keyboard or mouse inputs, then translates that
   profile into the switch-scanning package's method and logical switches. The action

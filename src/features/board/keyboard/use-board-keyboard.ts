@@ -1,13 +1,13 @@
 import { assertNever } from "@shared/utils/assert-never";
 import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
-import type { UseMessagePlaybackReturn } from "../message/playback/use-message-playback";
 import type { UseMessageReturn } from "../message/use-message";
+import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import { resolveBoardKey } from "./board-key-resolver";
 
 interface UseBoardKeyboardOptions {
   message: Pick<UseMessageReturn, "parts" | "removeLastPart" | "clear">;
-  playback: Pick<UseMessagePlaybackReturn, "play" | "stop" | "isPlaying">;
+  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "stop" | "isPlaying">;
 }
 
 interface UseBoardKeyboardReturn {
@@ -40,7 +40,7 @@ export function useBoardKeyboard({
           message.clear();
           break;
         case "speak":
-          void playback.play(message.parts);
+          void playback.playMessage(message.parts);
           break;
         case "stop":
           playback.stop();

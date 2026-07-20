@@ -27,7 +27,7 @@ describe("resolveButtonIntents", () => {
     ]);
   });
 
-  test("returns compose and playAudio intents if soundSrc is present", () => {
+  test("returns one high-level compose-and-play intent", () => {
     const button: BoardButton = {
       id: "b1",
       label: "apple",
@@ -36,7 +36,7 @@ describe("resolveButtonIntents", () => {
     const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
-        kind: "compose",
+        kind: "composeAndPlay",
         content: {
           label: "apple",
           vocalization: undefined,
@@ -44,11 +44,10 @@ describe("resolveButtonIntents", () => {
           soundSrc: "apple.mp3",
         },
       },
-      { kind: "playAudio", src: "apple.mp3" },
     ]);
   });
 
-  test("returns compose and speakText intents if vocalization or label is present without soundSrc", () => {
+  test("keeps vocalization in the high-level playable content", () => {
     const button: BoardButton = {
       id: "b1",
       label: "Apple",
@@ -57,7 +56,7 @@ describe("resolveButtonIntents", () => {
     const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
-        kind: "compose",
+        kind: "composeAndPlay",
         content: {
           label: "Apple",
           vocalization: "Eat apple",
@@ -65,18 +64,17 @@ describe("resolveButtonIntents", () => {
           soundSrc: undefined,
         },
       },
-      { kind: "speakText", text: "eat apple" },
     ]);
   });
 
-  test("returns only compose intent if no sound or text is speakable", () => {
+  test("still composes content that has nothing audible", () => {
     const button: BoardButton = {
       id: "b1",
     };
     const intents = resolveButtonIntents(button);
     expect(intents).toEqual([
       {
-        kind: "compose",
+        kind: "composeAndPlay",
         content: {
           label: undefined,
           vocalization: undefined,

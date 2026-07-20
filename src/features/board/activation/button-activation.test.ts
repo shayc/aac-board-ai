@@ -1,6 +1,5 @@
-import { stubAudio } from "@shared/testing/stub-audio";
-import { stubSpeech } from "@shared/testing/stub-speech";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import type { PlaybackOutcome } from "@shared/playback/playback-context";
+import { describe, expect, test, vi } from "vitest";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
 import { createButtonActivation } from "./button-activation";
@@ -18,7 +17,12 @@ function createMessageStub(
 
 function createPlaybackStub(): ActivationOptions["playback"] {
   return {
-    play: vi.fn(() => Promise.resolve()),
+    playMessage: vi.fn((): Promise<PlaybackOutcome> =>
+      Promise.resolve("completed"),
+    ),
+    playPart: vi.fn((): Promise<PlaybackOutcome> =>
+      Promise.resolve("completed"),
+    ),
   };
 }
 
@@ -42,14 +46,6 @@ function setup(opts: SetupOptions = {}) {
 }
 
 describe("createButtonActivation", () => {
-  let speech: ReturnType<typeof stubSpeech>;
-  let audio: ReturnType<typeof stubAudio>;
-
-  beforeEach(() => {
-    speech = stubSpeech();
-    audio = stubAudio();
-  });
-
   test("navigates to the linked board and skips message and audio when loadBoard.id is set", () => {
     const { activation, message, playback, navigation } = setup();
 
@@ -63,9 +59,8 @@ describe("createButtonActivation", () => {
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(message.setParts).not.toHaveBeenCalled();
-    expect(playback.play).not.toHaveBeenCalled();
-    expect(speech.speak).not.toHaveBeenCalled();
-    expect(audio.play).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
+    expect(playback.playPart).not.toHaveBeenCalled();
   });
 
   test("maps home to navigation.goHome", () => {
@@ -139,8 +134,8 @@ describe("createButtonActivation", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
     });
 
-    expect(playback.play).toHaveBeenCalledTimes(1);
-    const [spokenParts] = vi.mocked(playback.play).mock.calls[0];
+    expect(playback.playMessage).toHaveBeenCalledTimes(1);
+    const [spokenParts] = vi.mocked(playback.playMessage).mock.calls[0];
     expect(spokenParts).toHaveLength(1);
     expect(spokenParts[0].label).toBe("s");
     expect(spokenParts[0].id).toBeTruthy();
@@ -152,10 +147,10 @@ describe("createButtonActivation", () => {
     const message = createMessageStub(initialParts);
     const playback = createPlaybackStub();
     let resolvePlay: (() => void) | undefined;
-    playback.play = vi.fn(
+    playback.playMessage = vi.fn(
       () =>
-        new Promise<void>((resolve) => {
-          resolvePlay = resolve;
+        new Promise<"completed">((resolve) => {
+          resolvePlay = () => resolve("completed");
         }),
     );
     const { activation } = setup({ message, playback });
@@ -165,13 +160,31 @@ describe("createButtonActivation", () => {
       actions: [{ kind: "speak" }, { kind: "clear" }],
     });
 
-    expect(playback.play).toHaveBeenCalledWith(initialParts);
+    expect(playback.playMessage).toHaveBeenCalledWith(initialParts);
     expect(message.setParts).not.toHaveBeenCalled();
 
     resolvePlay?.();
     await vi.waitFor(() => {
       expect(message.setParts).toHaveBeenCalledWith([]);
     });
+  });
+
+  test("does not apply post-speak mutations when playback is interrupted", async () => {
+    const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const message = createMessageStub(initialParts);
+    const playback = createPlaybackStub();
+    playback.playMessage = vi.fn((): Promise<PlaybackOutcome> =>
+      Promise.resolve("interrupted"),
+    );
+    const { activation } = setup({ message, playback });
+
+    activation.activateButton({
+      id: "btn",
+      actions: [{ kind: "speak" }, { kind: "clear" }],
+    });
+    await Promise.resolve();
+
+    expect(message.setParts).not.toHaveBeenCalled();
   });
 
   test("a mutation-only sequence folds every mutation into one commit and never plays", () => {
@@ -191,7 +204,7 @@ describe("createButtonActivation", () => {
     expect(message.setParts).toHaveBeenCalledTimes(1);
     const [committed] = vi.mocked(message.setParts).mock.calls[0];
     expect(committed.map((part) => part.label)).toEqual(["hi", ""]);
-    expect(playback.play).not.toHaveBeenCalled();
+    expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
   test("a speak-only sequence plays without committing any parts", async () => {
@@ -202,7 +215,7 @@ describe("createButtonActivation", () => {
 
     activation.activateButton({ id: "btn", actions: [{ kind: "speak" }] });
 
-    expect(playback.play).toHaveBeenCalledWith(initialParts);
+    expect(playback.playMessage).toHaveBeenCalledWith(initialParts);
 
     await Promise.resolve();
 
@@ -243,8 +256,8 @@ describe("createButtonActivation", () => {
     expect(committed[0].id).toBeTruthy();
   });
 
-  test("plays the button's soundSrc rather than speaking when both are present", () => {
-    const { activation } = setup();
+  test("passes the composed sound part to playback", () => {
+    const { activation, playback } = setup();
 
     activation.activateButton({
       id: "btn",
@@ -252,12 +265,14 @@ describe("createButtonActivation", () => {
       soundSrc: "bell.mp3",
     });
 
-    expect(audio.play).toHaveBeenCalledTimes(1);
-    expect(speech.speak).not.toHaveBeenCalled();
+    expect(playback.playPart).toHaveBeenCalledTimes(1);
+    expect(playback.playPart).toHaveBeenCalledWith(
+      expect.objectContaining({ label: "bell", soundSrc: "bell.mp3" }),
+    );
   });
 
-  test("speaks the lowercased vocalization when no soundSrc", () => {
-    const { activation } = setup();
+  test("passes vocalization to playback without handling speech mechanics", () => {
+    const { activation, playback } = setup();
 
     activation.activateButton({
       id: "btn",
@@ -265,26 +280,27 @@ describe("createButtonActivation", () => {
       vocalization: "Hello",
     });
 
-    expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+    expect(playback.playPart).toHaveBeenCalledWith(
+      expect.objectContaining({ label: "I", vocalization: "Hello" }),
+    );
   });
 
-  test("falls back to the lowercased label when vocalization is absent", () => {
-    const { activation } = setup();
+  test("passes label-only content to playback", () => {
+    const { activation, playback } = setup();
 
     activation.activateButton({ id: "btn", label: "Goodbye" });
 
-    expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0][0].text).toBe("goodbye");
+    expect(playback.playPart).toHaveBeenCalledWith(
+      expect.objectContaining({ label: "Goodbye" }),
+    );
   });
 
-  test("stays silent when the button has neither sound nor any speakable text", () => {
-    const { activation, message } = setup();
+  test("delegates inaudible content so playback policy stays centralized", () => {
+    const { activation, message, playback } = setup();
 
     activation.activateButton({ id: "btn" });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
-    expect(speech.speak).not.toHaveBeenCalled();
-    expect(audio.play).not.toHaveBeenCalled();
+    expect(playback.playPart).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,3 +1,4 @@
+import type { PlaybackStep } from "@shared/playback/playback-context";
 import { getSpokenText } from "../../button-readers";
 import type { MessagePart } from "../message-types";
 import {
@@ -5,10 +6,6 @@ import {
   type SpokenPart,
   type SpokenPartTracker,
 } from "./spoken-part-tracker";
-
-type PlaybackStep =
-  | { kind: "sound"; partId: string; src: string }
-  | { kind: "speech"; tracker: SpokenPartTracker };
 
 export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
@@ -19,14 +16,23 @@ export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
       return;
     }
 
-    steps.push({ kind: "speech", tracker: createSpokenPartTracker(spokenRun) });
+    const tracker: SpokenPartTracker = createSpokenPartTracker(spokenRun);
+    steps.push({
+      kind: "speech",
+      text: tracker.text,
+      trackingKeyAt: tracker.partIdAt,
+    });
     spokenRun = [];
   }
 
   for (const part of parts) {
     if (part.soundSrc) {
       flushSpeech();
-      steps.push({ kind: "sound", partId: part.id, src: part.soundSrc });
+      steps.push({
+        kind: "audio",
+        src: part.soundSrc,
+        trackingKey: part.id,
+      });
       continue;
     }
 

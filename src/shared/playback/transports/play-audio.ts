@@ -2,20 +2,16 @@ interface PlayAudioOptions {
   signal?: AbortSignal;
 }
 
-let stopCurrent: (() => void) | null = null;
-
 export function playAudio(
-  url: string,
+  src: string,
   { signal }: PlayAudioOptions = {},
 ): Promise<void> {
   if (signal?.aborted) {
     return Promise.resolve();
   }
 
-  stopCurrent?.();
-
   const { promise, resolve } = Promise.withResolvers<void>();
-  const audio = new Audio(url);
+  const audio = new Audio(src);
   let settled = false;
 
   function finish() {
@@ -29,10 +25,6 @@ export function playAudio(
     audio.pause();
     signal?.removeEventListener("abort", finish);
 
-    if (stopCurrent === finish) {
-      stopCurrent = null;
-    }
-
     resolve();
   }
 
@@ -40,8 +32,6 @@ export function playAudio(
   audio.onerror = finish;
 
   signal?.addEventListener("abort", finish, { once: true });
-  stopCurrent = finish;
-
   audio.play().catch(finish);
 
   return promise;

@@ -1,10 +1,9 @@
-import { playAudio } from "@shared/audio/play-audio";
-import { speak } from "@shared/speech/speak";
+import type { PlaybackOutcome } from "@shared/playback/playback-context";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  appendPart,
   appendSpace,
   appendTextToLastPart,
+  createPart,
   dropLastPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -17,7 +16,8 @@ interface ActivationMessage {
 }
 
 interface ActivationPlayback {
-  play: (parts: MessagePart[]) => Promise<void>;
+  playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
+  playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
 }
 
 interface ActivationNavigation {
@@ -45,20 +45,16 @@ export function createButtonActivation({
 
     let parts = message.parts;
     let partsToSpeak: MessagePart[] | null = null;
+    let partToPlay: MessagePart | null = null;
 
     for (const intent of intents) {
       switch (intent.kind) {
         case "navigate":
           navigation.goToBoard(intent.targetBoardId);
           break;
-        case "compose":
-          parts = appendPart(parts, intent.content);
-          break;
-        case "playAudio":
-          void playAudio(intent.src);
-          break;
-        case "speakText":
-          void speak(intent.text);
+        case "composeAndPlay":
+          partToPlay = createPart(intent.content);
+          parts = [...parts, partToPlay];
           break;
         case "runAction":
           switch (intent.action.kind) {
@@ -98,13 +94,17 @@ export function createButtonActivation({
       // Post-speak mutations (":speak" then ":clear") commit after the
       // utterance, so the spoken message stays visible while it plays.
       const partsAfterSpeak = parts;
-      void playback.play(partsToSpeak).then(() => {
-        if (partsAfterSpeak !== partsToSpeak) {
+      void playback.playMessage(partsToSpeak).then((outcome) => {
+        if (outcome === "completed" && partsAfterSpeak !== partsToSpeak) {
           message.setParts(partsAfterSpeak);
         }
       });
     } else if (parts !== message.parts) {
       message.setParts(parts);
+    }
+
+    if (partToPlay) {
+      void playback.playPart(partToPlay);
     }
   }
 

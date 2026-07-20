@@ -5,14 +5,13 @@ import { PlayButton, type PlayButtonRootProps } from "./play-button";
 import type { MessagePart } from "./message-types";
 
 interface MessageBarSlotProps {
-  playButton?: Omit<PlayButtonRootProps, "disabled">;
+  playButton?: PlayButtonRootProps;
 }
 
 export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
-  playDisabled?: boolean;
   slotProps?: MessageBarSlotProps;
   onPlayClick: () => void;
   onStopClick: () => void;
@@ -22,7 +21,6 @@ export function MessageBar({
   parts,
   activePartId,
   isPlaying,
-  playDisabled,
   slotProps,
   onPlayClick,
   onStopClick,
@@ -102,7 +100,6 @@ export function MessageBar({
 
         <PlayButton
           {...slotProps?.playButton}
-          disabled={playDisabled}
           isPlaying={isPlaying}
           onPlayClick={onPlayClick}
           onStopClick={onStopClick}

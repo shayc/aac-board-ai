@@ -1,4 +1,8 @@
-import { getSpeechConfig, getVoices, synthesis } from "./speech-store";
+import {
+  getSpeechConfig,
+  getVoices,
+  synthesis,
+} from "@shared/speech/speech-store";
 
 interface SpeakOptions {
   signal?: AbortSignal;
@@ -60,7 +64,6 @@ export function speak(
   utterance.onerror = finish;
   signal?.addEventListener("abort", onAbort, { once: true });
 
-  synthesis.cancel();
   synthesis.speak(utterance);
 
   return promise;

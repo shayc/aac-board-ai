@@ -8,7 +8,7 @@ import {
 } from "vitest";
 import { speak } from "./speak";
 
-describe("speak() under cancellation", () => {
+describe("speak transport under cancellation", () => {
   let speakSpy: MockInstance<SpeechSynthesis["speak"]>;
   let cancelSpy: MockInstance<SpeechSynthesis["cancel"]>;
   let spokenUtterance: SpeechSynthesisUtterance | undefined;
