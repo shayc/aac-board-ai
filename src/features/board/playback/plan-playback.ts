@@ -1,11 +1,14 @@
 import type { PlaybackStep } from "@shared/playback/playback-context";
-import { getSpokenText } from "../button-readers";
 import type { MessagePart } from "../message/message-types";
 import {
   createSpokenPartTracker,
   type SpokenPart,
   type SpokenPartTracker,
 } from "./spoken-part-tracker";
+
+function getSpokenText(part: MessagePart): string | undefined {
+  return (part.vocalization ?? part.label)?.toLowerCase();
+}
 
 export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
