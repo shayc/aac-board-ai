@@ -129,11 +129,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     >
       <BoardPlaybackMessageBar
         parts={message.parts}
-        isPlaying={playback.isPlaying}
-        playDisabled={!hasMessage}
-        playButtonSlotProps={scanning.playTarget}
-        onPlayClick={() => void playback.playMessage(message.parts)}
-        onStopClick={playback.stop}
+        slotProps={{ playButton: scanning.playTarget }}
       />
 
       <Stack
