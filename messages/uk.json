@@ -31,18 +31,18 @@
   "opensInNewTab": "(відкривається в новій вкладці)",
   "boardGridLabel": "Комунікаційна дошка",
   "board": "Дошка",
-  "libraryLoading": "Завантаження дошок...",
+  "libraryLoading": "Завантаження наборів дошок...",
   "libraryEmptyTitle": "Бібліотека порожня",
-  "libraryEmptyDescription": "Імпортуйте комунікаційні дошки, щоб почати.",
-  "libraryImportBoards": "Імпортувати дошки",
-  "libraryBoards": "Дошки",
+  "libraryEmptyDescription": "Імпортуйте файли дошок, щоб почати.",
+  "libraryImportBoards": "Імпортувати файли дошок",
+  "libraryBoards": "Набори дошок",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Імпортування дошки...",
-        "countPlural=*": "Імпортування дошок..."
+        "countPlural=one": "Імпортування файла дошки...",
+        "countPlural=*": "Імпортування файлів дошок..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Дошку імпортовано",
-        "countPlural=*": "Дошки імпортовано"
+        "countPlural=one": "Набір дошок імпортовано",
+        "countPlural=*": "Набори дошок імпортовано"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Не вдалося імпортувати дошку",
-        "countPlural=*": "Не вдалося імпортувати дошки"
+        "countPlural=one": "Не вдалося імпортувати файл дошки",
+        "countPlural=*": "Не вдалося імпортувати файли дошок"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Дошка занадто велика для імпортування",
-        "countPlural=*": "Дошки занадто великі для імпортування"
+        "countPlural=one": "Файл дошки занадто великий для імпортування",
+        "countPlural=*": "Файли дошок занадто великі для імпортування"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Більше параметрів для {name}",
   "libraryByAuthor": "Автор: {author}",
   "libraryGridDimensions": "Сітка {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Видалити «{name}»?",
-  "libraryDeleteIrreversible": "Цю дію не можна скасувати.",
-  "libraryDeleted": "«{name}» видалено",
-  "libraryDeleteFailed": "Не вдалося видалити «{name}»",
+  "libraryDeleteConfirmTitle": "Видалити набір дошок «{name}»?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дошку з цього набору буде видалено. Цю дію не можна скасувати.",
+        "countPlural=*": "Усі дошки з цього набору ({count}) буде видалено. Цю дію не можна скасувати."
+      }
+    }
+  ],
+  "libraryDeleted": "Набір дошок «{name}» видалено",
+  "libraryDeleteFailed": "Не вдалося видалити набір дошок «{name}»",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",
   "aboutSourceCode": "Вихідний код",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Сторінку не знайдено",
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
-  "errorBoardSetNotFound": "Дошку не знайдено",
-  "boardUrlImportFailed": "Не вдалося імпортувати дошку за посиланням"
+  "errorBoardSetNotFound": "Набір дошок не знайдено",
+  "boardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням"
 }

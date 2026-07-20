@@ -31,18 +31,18 @@
   "opensInNewTab": "(새 탭에서 열림)",
   "boardGridLabel": "의사소통 보드",
   "board": "보드",
-  "libraryLoading": "보드를 불러오는 중…",
+  "libraryLoading": "보드 세트를 불러오는 중…",
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
-  "libraryEmptyDescription": "의사소통 보드를 가져와 시작하세요.",
-  "libraryImportBoards": "보드 가져오기",
-  "libraryBoards": "보드",
+  "libraryEmptyDescription": "보드 파일을 가져와 시작하세요.",
+  "libraryImportBoards": "보드 파일 가져오기",
+  "libraryBoards": "보드 세트",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "보드를 가져오는 중…",
-        "countPlural=*": "보드를 가져오는 중…"
+        "countPlural=one": "보드 파일을 가져오는 중…",
+        "countPlural=*": "보드 파일을 가져오는 중…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "보드를 가져왔습니다",
-        "countPlural=*": "보드를 가져왔습니다"
+        "countPlural=one": "보드 세트를 가져왔습니다",
+        "countPlural=*": "보드 세트를 가져왔습니다"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "보드를 가져올 수 없습니다",
-        "countPlural=*": "보드를 가져올 수 없습니다"
+        "countPlural=one": "보드 파일을 가져올 수 없습니다",
+        "countPlural=*": "보드 파일을 가져올 수 없습니다"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "보드가 너무 커서 가져올 수 없습니다",
-        "countPlural=*": "보드가 너무 커서 가져올 수 없습니다"
+        "countPlural=one": "보드 파일이 너무 커서 가져올 수 없습니다",
+        "countPlural=*": "보드 파일이 너무 커서 가져올 수 없습니다"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name}의 옵션 더 보기",
   "libraryByAuthor": "작성자: {author}",
   "libraryGridDimensions": "{rows}×{columns} 그리드",
-  "libraryDeleteConfirmTitle": "\"{name}\"을(를) 삭제하시겠어요?",
-  "libraryDeleteIrreversible": "이 작업은 되돌릴 수 없습니다.",
-  "libraryDeleted": "\"{name}\"이(가) 삭제됨",
-  "libraryDeleteFailed": "\"{name}\"을(를) 삭제할 수 없습니다",
+  "libraryDeleteConfirmTitle": "보드 세트 \"{name}\"을(를) 삭제하시겠어요?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "이 세트의 보드가 삭제됩니다. 이 작업은 되돌릴 수 없습니다.",
+        "countPlural=*": "이 세트의 보드 {count}개가 모두 삭제됩니다. 이 작업은 되돌릴 수 없습니다."
+      }
+    }
+  ],
+  "libraryDeleted": "보드 세트 \"{name}\"이(가) 삭제됨",
+  "libraryDeleteFailed": "보드 세트 \"{name}\"을(를) 삭제할 수 없습니다",
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",
   "aboutSourceCode": "소스 코드",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "페이지를 찾을 수 없음",
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
-  "errorBoardSetNotFound": "보드를 찾을 수 없음",
-  "boardUrlImportFailed": "링크에서 보드를 가져올 수 없습니다"
+  "errorBoardSetNotFound": "보드 세트를 찾을 수 없음",
+  "boardUrlImportFailed": "링크에서 보드 파일을 가져올 수 없습니다"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(abre em uma nova aba)",
   "boardGridLabel": "Prancha de comunicação",
   "board": "Prancha",
-  "libraryLoading": "Carregando pranchas...",
+  "libraryLoading": "Carregando conjuntos de pranchas...",
   "libraryEmptyTitle": "A biblioteca está vazia",
-  "libraryEmptyDescription": "Importe pranchas de comunicação para começar.",
-  "libraryImportBoards": "Importar pranchas",
-  "libraryBoards": "Pranchas",
+  "libraryEmptyDescription": "Importe arquivos de pranchas para começar.",
+  "libraryImportBoards": "Importar arquivos de pranchas",
+  "libraryBoards": "Conjuntos de pranchas",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importando prancha...",
-        "countPlural=*": "Importando pranchas..."
+        "countPlural=one": "Importando arquivo de prancha...",
+        "countPlural=*": "Importando arquivos de pranchas..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Prancha importada",
-        "countPlural=*": "Pranchas importadas"
+        "countPlural=one": "Conjunto de pranchas importado",
+        "countPlural=*": "Conjuntos de pranchas importados"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Não foi possível importar a prancha",
-        "countPlural=*": "Não foi possível importar as pranchas"
+        "countPlural=one": "Não foi possível importar o arquivo de prancha",
+        "countPlural=*": "Não foi possível importar os arquivos de pranchas"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "A prancha é grande demais para importar",
-        "countPlural=*": "As pranchas são grandes demais para importar"
+        "countPlural=one": "O arquivo de prancha é grande demais para importar",
+        "countPlural=*": "Os arquivos de pranchas são grandes demais para importar"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Mais opções para {name}",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Grade {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Excluir \"{name}\"?",
-  "libraryDeleteIrreversible": "Esta ação não pode ser desfeita.",
-  "libraryDeleted": "\"{name}\" excluída",
-  "libraryDeleteFailed": "Não foi possível excluir \"{name}\"",
+  "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "A prancha neste conjunto será excluída. Esta ação não pode ser desfeita.",
+        "countPlural=*": "Todas as {count} pranchas neste conjunto serão excluídas. Esta ação não pode ser desfeita."
+      }
+    }
+  ],
+  "libraryDeleted": "Conjunto de pranchas \"{name}\" excluído",
+  "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
   "aboutSourceCode": "Código-fonte",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Página não encontrada",
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
-  "errorBoardSetNotFound": "Prancha não encontrada",
-  "boardUrlImportFailed": "Não foi possível importar a prancha do link"
+  "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
+  "boardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link"
 }

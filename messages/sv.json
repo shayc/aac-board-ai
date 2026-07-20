@@ -31,18 +31,18 @@
   "opensInNewTab": "(öppnas i en ny flik)",
   "boardGridLabel": "Kommunikationstavla",
   "board": "Tavla",
-  "libraryLoading": "Laddar tavlor...",
+  "libraryLoading": "Laddar taveluppsättningar...",
   "libraryEmptyTitle": "Biblioteket är tomt",
-  "libraryEmptyDescription": "Importera kommunikationstavlor för att komma igång.",
-  "libraryImportBoards": "Importera tavlor",
-  "libraryBoards": "Tavlor",
+  "libraryEmptyDescription": "Importera tavelfiler för att komma igång.",
+  "libraryImportBoards": "Importera tavelfiler",
+  "libraryBoards": "Taveluppsättningar",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importerar tavla...",
-        "countPlural=*": "Importerar tavlor..."
+        "countPlural=one": "Importerar tavelfil...",
+        "countPlural=*": "Importerar tavelfiler..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tavla importerad",
-        "countPlural=*": "Tavlor importerade"
+        "countPlural=one": "Taveluppsättning importerad",
+        "countPlural=*": "Taveluppsättningar importerade"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Det gick inte att importera tavlan",
-        "countPlural=*": "Det gick inte att importera tavlorna"
+        "countPlural=one": "Det gick inte att importera tavelfilen",
+        "countPlural=*": "Det gick inte att importera tavelfilerna"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tavlan är för stor för att importeras",
-        "countPlural=*": "Tavlorna är för stora för att importeras"
+        "countPlural=one": "Tavelfilen är för stor för att importeras",
+        "countPlural=*": "Tavelfilerna är för stora för att importeras"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Fler alternativ för {name}",
   "libraryByAuthor": "Av {author}",
   "libraryGridDimensions": "Rutnät {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Ta bort ”{name}”?",
-  "libraryDeleteIrreversible": "Den här åtgärden kan inte ångras.",
-  "libraryDeleted": "”{name}” borttagen",
-  "libraryDeleteFailed": "Det gick inte att ta bort ”{name}”",
+  "libraryDeleteConfirmTitle": "Ta bort taveluppsättningen ”{name}”?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavlan i den här uppsättningen kommer att tas bort. Den här åtgärden kan inte ångras.",
+        "countPlural=*": "Alla {count} tavlor i den här uppsättningen kommer att tas bort. Den här åtgärden kan inte ångras."
+      }
+    }
+  ],
+  "libraryDeleted": "Taveluppsättningen ”{name}” borttagen",
+  "libraryDeleteFailed": "Det gick inte att ta bort taveluppsättningen ”{name}”",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",
   "aboutSourceCode": "Källkod",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Sidan hittades inte",
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
-  "errorBoardSetNotFound": "Tavlan hittades inte",
-  "boardUrlImportFailed": "Det gick inte att importera tavlan från länken"
+  "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
+  "boardUrlImportFailed": "Det gick inte att importera tavelfilen från länken"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(mở trong tab mới)",
   "boardGridLabel": "Bảng giao tiếp",
   "board": "Bảng",
-  "libraryLoading": "Đang tải các bảng...",
+  "libraryLoading": "Đang tải các bộ bảng...",
   "libraryEmptyTitle": "Thư viện trống",
-  "libraryEmptyDescription": "Nhập các bảng giao tiếp để bắt đầu.",
-  "libraryImportBoards": "Nhập bảng",
-  "libraryBoards": "Bảng",
+  "libraryEmptyDescription": "Nhập tệp bảng để bắt đầu.",
+  "libraryImportBoards": "Nhập tệp bảng",
+  "libraryBoards": "Bộ bảng",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Đang nhập bảng...",
-        "countPlural=*": "Đang nhập các bảng..."
+        "countPlural=one": "Đang nhập tệp bảng...",
+        "countPlural=*": "Đang nhập các tệp bảng..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Đã nhập bảng",
-        "countPlural=*": "Đã nhập các bảng"
+        "countPlural=one": "Đã nhập bộ bảng",
+        "countPlural=*": "Đã nhập các bộ bảng"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Không thể nhập bảng",
-        "countPlural=*": "Không thể nhập các bảng"
+        "countPlural=one": "Không thể nhập tệp bảng",
+        "countPlural=*": "Không thể nhập các tệp bảng"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Bảng quá lớn để nhập",
-        "countPlural=*": "Các bảng quá lớn để nhập"
+        "countPlural=one": "Tệp bảng quá lớn để nhập",
+        "countPlural=*": "Các tệp bảng quá lớn để nhập"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Tùy chọn khác cho {name}",
   "libraryByAuthor": "Bởi {author}",
   "libraryGridDimensions": "Lưới {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Xóa \"{name}\"?",
-  "libraryDeleteIrreversible": "Không thể hoàn tác hành động này.",
-  "libraryDeleted": "Đã xóa \"{name}\"",
-  "libraryDeleteFailed": "Không thể xóa \"{name}\"",
+  "libraryDeleteConfirmTitle": "Xóa bộ bảng \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Bảng trong bộ này sẽ bị xóa. Không thể hoàn tác hành động này.",
+        "countPlural=*": "Tất cả {count} bảng trong bộ này sẽ bị xóa. Không thể hoàn tác hành động này."
+      }
+    }
+  ],
+  "libraryDeleted": "Đã xóa bộ bảng \"{name}\"",
+  "libraryDeleteFailed": "Không thể xóa bộ bảng \"{name}\"",
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
   "aboutSourceCode": "Mã nguồn",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Không tìm thấy trang",
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
-  "errorBoardSetNotFound": "Không tìm thấy bảng",
-  "boardUrlImportFailed": "Không thể nhập bảng từ liên kết"
+  "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
+  "boardUrlImportFailed": "Không thể nhập tệp bảng từ liên kết"
 }

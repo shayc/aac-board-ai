@@ -31,18 +31,18 @@
   "opensInNewTab": "(új lapon nyílik meg)",
   "boardGridLabel": "Kommunikációs tábla",
   "board": "Tábla",
-  "libraryLoading": "Táblák betöltése...",
+  "libraryLoading": "Táblakészletek betöltése...",
   "libraryEmptyTitle": "A könyvtár üres",
-  "libraryEmptyDescription": "Az induláshoz importálj kommunikációs táblákat.",
-  "libraryImportBoards": "Táblák importálása",
-  "libraryBoards": "Táblák",
+  "libraryEmptyDescription": "Az induláshoz importálj táblafájlokat.",
+  "libraryImportBoards": "Táblafájlok importálása",
+  "libraryBoards": "Táblakészletek",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tábla importálása...",
-        "countPlural=*": "Táblák importálása..."
+        "countPlural=one": "Táblafájl importálása...",
+        "countPlural=*": "Táblafájlok importálása..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tábla importálva",
-        "countPlural=*": "Táblák importálva"
+        "countPlural=one": "Táblakészlet importálva",
+        "countPlural=*": "Táblakészletek importálva"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "A tábla importálása nem sikerült",
-        "countPlural=*": "A táblák importálása nem sikerült"
+        "countPlural=one": "A táblafájl importálása nem sikerült",
+        "countPlural=*": "A táblafájlok importálása nem sikerült"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "A tábla túl nagy az importáláshoz",
-        "countPlural=*": "A táblák túl nagyok az importáláshoz"
+        "countPlural=one": "A táblafájl túl nagy az importáláshoz",
+        "countPlural=*": "A táblafájlok túl nagyok az importáláshoz"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "További lehetőségek: {name}",
   "libraryByAuthor": "Szerző: {author}",
   "libraryGridDimensions": "{rows}×{columns} rács",
-  "libraryDeleteConfirmTitle": "Törlöd a(z) „{name}” elemet?",
-  "libraryDeleteIrreversible": "Ez a művelet nem vonható vissza.",
-  "libraryDeleted": "„{name}” törölve",
-  "libraryDeleteFailed": "A(z) „{name}” törlése nem sikerült",
+  "libraryDeleteConfirmTitle": "Törlöd a(z) „{name}” táblakészletet?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "A készletben lévő tábla törlődik. Ez a művelet nem vonható vissza.",
+        "countPlural=*": "A készlet mind a(z) {count} táblája törlődik. Ez a művelet nem vonható vissza."
+      }
+    }
+  ],
+  "libraryDeleted": "A(z) „{name}” táblakészlet törölve",
+  "libraryDeleteFailed": "A(z) „{name}” táblakészlet törlése nem sikerült",
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",
   "aboutSourceCode": "Forráskód",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Az oldal nem található",
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
-  "errorBoardSetNotFound": "A tábla nem található",
-  "boardUrlImportFailed": "A tábla importálása a hivatkozásról nem sikerült"
+  "errorBoardSetNotFound": "A táblakészlet nem található",
+  "boardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült"
 }

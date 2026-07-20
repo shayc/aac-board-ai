@@ -36,7 +36,9 @@ export function BoardSetDeleteDialog({
 
       <DialogContent>
         <DialogContentText id="delete-dialog-description">
-          {t(m.libraryDeleteIrreversible)}
+          {boardSet
+            ? t(m.libraryDeleteIrreversible, { count: boardSet.boardCount })
+            : null}
         </DialogContentText>
       </DialogContent>
 

@@ -31,18 +31,18 @@
   "opensInNewTab": "(新しいタブで開きます)",
   "boardGridLabel": "コミュニケーションボード",
   "board": "ボード",
-  "libraryLoading": "ボードを読み込んでいます…",
+  "libraryLoading": "ボードセットを読み込んでいます…",
   "libraryEmptyTitle": "ライブラリは空です",
-  "libraryEmptyDescription": "コミュニケーションボードをインポートして始めましょう。",
-  "libraryImportBoards": "ボードをインポート",
-  "libraryBoards": "ボード",
+  "libraryEmptyDescription": "ボードファイルをインポートして始めましょう。",
+  "libraryImportBoards": "ボードファイルをインポート",
+  "libraryBoards": "ボードセット",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ボードをインポートしています…",
-        "countPlural=*": "ボードをインポートしています…"
+        "countPlural=one": "ボードファイルをインポートしています…",
+        "countPlural=*": "ボードファイルをインポートしています…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ボードをインポートしました",
-        "countPlural=*": "ボードをインポートしました"
+        "countPlural=one": "ボードセットをインポートしました",
+        "countPlural=*": "ボードセットをインポートしました"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ボードをインポートできませんでした",
-        "countPlural=*": "ボードをインポートできませんでした"
+        "countPlural=one": "ボードファイルをインポートできませんでした",
+        "countPlural=*": "ボードファイルをインポートできませんでした"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ボードが大きすぎてインポートできません",
-        "countPlural=*": "ボードが大きすぎてインポートできません"
+        "countPlural=one": "ボードファイルが大きすぎてインポートできません",
+        "countPlural=*": "ボードファイルが大きすぎてインポートできません"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name} のその他のオプション",
   "libraryByAuthor": "作成者：{author}",
   "libraryGridDimensions": "{rows}×{columns} グリッド",
-  "libraryDeleteConfirmTitle": "「{name}」を削除しますか？",
-  "libraryDeleteIrreversible": "この操作は取り消せません。",
-  "libraryDeleted": "「{name}」を削除しました",
-  "libraryDeleteFailed": "「{name}」を削除できませんでした",
+  "libraryDeleteConfirmTitle": "ボードセット「{name}」を削除しますか？",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "このセットのボードが削除されます。この操作は取り消せません。",
+        "countPlural=*": "このセットの{count}個のボードがすべて削除されます。この操作は取り消せません。"
+      }
+    }
+  ],
+  "libraryDeleted": "ボードセット「{name}」を削除しました",
+  "libraryDeleteFailed": "ボードセット「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",
   "aboutSourceCode": "ソースコード",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "ページが見つかりません",
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
-  "errorBoardSetNotFound": "ボードが見つかりません",
-  "boardUrlImportFailed": "リンクからボードをインポートできませんでした"
+  "errorBoardSetNotFound": "ボードセットが見つかりません",
+  "boardUrlImportFailed": "リンクからボードファイルをインポートできませんでした"
 }

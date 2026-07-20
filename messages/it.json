@@ -31,18 +31,18 @@
   "opensInNewTab": "(si apre in una nuova scheda)",
   "boardGridLabel": "Tabella di comunicazione",
   "board": "Tabella",
-  "libraryLoading": "Caricamento tabelle...",
+  "libraryLoading": "Caricamento set di tabelle...",
   "libraryEmptyTitle": "La libreria è vuota",
-  "libraryEmptyDescription": "Importa tabelle di comunicazione per iniziare.",
-  "libraryImportBoards": "Importa tabelle",
-  "libraryBoards": "Tabelle",
+  "libraryEmptyDescription": "Importa file di tabelle per iniziare.",
+  "libraryImportBoards": "Importa file di tabelle",
+  "libraryBoards": "Set di tabelle",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importazione tabella...",
-        "countPlural=*": "Importazione tabelle..."
+        "countPlural=one": "Importazione file di tabella...",
+        "countPlural=*": "Importazione file di tabelle..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabella importata",
-        "countPlural=*": "Tabelle importate"
+        "countPlural=one": "Set di tabelle importato",
+        "countPlural=*": "Set di tabelle importati"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Impossibile importare la tabella",
-        "countPlural=*": "Impossibile importare le tabelle"
+        "countPlural=one": "Impossibile importare il file di tabella",
+        "countPlural=*": "Impossibile importare i file di tabelle"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "La tabella è troppo grande per essere importata",
-        "countPlural=*": "Le tabelle sono troppo grandi per essere importate"
+        "countPlural=one": "Il file di tabella è troppo grande per essere importato",
+        "countPlural=*": "I file di tabelle sono troppo grandi per essere importati"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Altre opzioni per {name}",
   "libraryByAuthor": "Di {author}",
   "libraryGridDimensions": "Griglia {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Eliminare \"{name}\"?",
-  "libraryDeleteIrreversible": "Questa azione non può essere annullata.",
-  "libraryDeleted": "\"{name}\" eliminata",
-  "libraryDeleteFailed": "Impossibile eliminare \"{name}\"",
+  "libraryDeleteConfirmTitle": "Eliminare il set di tabelle \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "La tabella in questo set verrà eliminata. Questa azione non può essere annullata.",
+        "countPlural=*": "Tutte le {count} tabelle in questo set verranno eliminate. Questa azione non può essere annullata."
+      }
+    }
+  ],
+  "libraryDeleted": "Set di tabelle \"{name}\" eliminato",
+  "libraryDeleteFailed": "Impossibile eliminare il set di tabelle \"{name}\"",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",
   "aboutSourceCode": "Codice sorgente",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Pagina non trovata",
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
-  "errorBoardSetNotFound": "Tabella non trovata",
-  "boardUrlImportFailed": "Impossibile importare la tabella dal link"
+  "errorBoardSetNotFound": "Set di tabelle non trovato",
+  "boardUrlImportFailed": "Impossibile importare il file di tabella dal link"
 }

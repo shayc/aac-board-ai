@@ -31,18 +31,18 @@
   "opensInNewTab": "(åbner i nyt faneblad)",
   "boardGridLabel": "Kommunikationstavle",
   "board": "Tavle",
-  "libraryLoading": "Indlæser tavler...",
+  "libraryLoading": "Indlæser tavlesæt...",
   "libraryEmptyTitle": "Biblioteket er tomt",
-  "libraryEmptyDescription": "Importér kommunikationstavler for at komme i gang.",
-  "libraryImportBoards": "Importér tavler",
-  "libraryBoards": "Tavler",
+  "libraryEmptyDescription": "Importér tavlefiler for at komme i gang.",
+  "libraryImportBoards": "Importér tavlefiler",
+  "libraryBoards": "Tavlesæt",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importerer tavle...",
-        "countPlural=*": "Importerer tavler..."
+        "countPlural=one": "Importerer tavlefil...",
+        "countPlural=*": "Importerer tavlefiler..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tavle importeret",
-        "countPlural=*": "Tavler importeret"
+        "countPlural=one": "Tavlesæt importeret",
+        "countPlural=*": "Tavlesæt importeret"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tavlen kunne ikke importeres",
-        "countPlural=*": "Tavlerne kunne ikke importeres"
+        "countPlural=one": "Tavlefilen kunne ikke importeres",
+        "countPlural=*": "Tavlefilerne kunne ikke importeres"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tavlen er for stor til at blive importeret",
-        "countPlural=*": "Tavlerne er for store til at blive importeret"
+        "countPlural=one": "Tavlefilen er for stor til at blive importeret",
+        "countPlural=*": "Tavlefilerne er for store til at blive importeret"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Flere indstillinger for {name}",
   "libraryByAuthor": "Af {author}",
   "libraryGridDimensions": "Gitter {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Slet \"{name}\"?",
-  "libraryDeleteIrreversible": "Denne handling kan ikke fortrydes.",
-  "libraryDeleted": "\"{name}\" slettet",
-  "libraryDeleteFailed": "\"{name}\" kunne ikke slettes",
+  "libraryDeleteConfirmTitle": "Slet tavlesættet \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tavlen i dette sæt vil blive slettet. Dette kan ikke fortrydes.",
+        "countPlural=*": "Alle {count} tavler i dette sæt vil blive slettet. Dette kan ikke fortrydes."
+      }
+    }
+  ],
+  "libraryDeleted": "Tavlesættet \"{name}\" er slettet",
+  "libraryDeleteFailed": "Tavlesættet \"{name}\" kunne ikke slettes",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",
   "aboutSourceCode": "Kildekode",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Siden blev ikke fundet",
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
-  "errorBoardSetNotFound": "Tavlen blev ikke fundet",
-  "boardUrlImportFailed": "Tavlen kunne ikke importeres fra linket"
+  "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
+  "boardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket"
 }

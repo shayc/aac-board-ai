@@ -31,18 +31,18 @@
   "opensInNewTab": "(opent in nieuw tabblad)",
   "boardGridLabel": "Communicatiebord",
   "board": "Bord",
-  "libraryLoading": "Borden laden...",
+  "libraryLoading": "Bordsets laden...",
   "libraryEmptyTitle": "De bibliotheek is leeg",
-  "libraryEmptyDescription": "Importeer communicatieborden om te beginnen.",
-  "libraryImportBoards": "Borden importeren",
-  "libraryBoards": "Borden",
+  "libraryEmptyDescription": "Importeer bordbestanden om te beginnen.",
+  "libraryImportBoards": "Bordbestanden importeren",
+  "libraryBoards": "Bordsets",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Bord importeren...",
-        "countPlural=*": "Borden importeren..."
+        "countPlural=one": "Bordbestand importeren...",
+        "countPlural=*": "Bordbestanden importeren..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Bord geïmporteerd",
-        "countPlural=*": "Borden geïmporteerd"
+        "countPlural=one": "Bordset geïmporteerd",
+        "countPlural=*": "Bordsets geïmporteerd"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Kan bord niet importeren",
-        "countPlural=*": "Kan borden niet importeren"
+        "countPlural=one": "Kan bordbestand niet importeren",
+        "countPlural=*": "Kan bordbestanden niet importeren"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Het bord is te groot om te importeren",
-        "countPlural=*": "De borden zijn te groot om te importeren"
+        "countPlural=one": "Het bordbestand is te groot om te importeren",
+        "countPlural=*": "De bordbestanden zijn te groot om te importeren"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Meer opties voor {name}",
   "libraryByAuthor": "Door {author}",
   "libraryGridDimensions": "Raster {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "\"{name}\" verwijderen?",
-  "libraryDeleteIrreversible": "Deze actie kan niet ongedaan worden gemaakt.",
-  "libraryDeleted": "\"{name}\" verwijderd",
-  "libraryDeleteFailed": "Kan \"{name}\" niet verwijderen",
+  "libraryDeleteConfirmTitle": "Bordset \"{name}\" verwijderen?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Het bord in deze set wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
+        "countPlural=*": "Alle {count} borden in deze set worden verwijderd. Deze actie kan niet ongedaan worden gemaakt."
+      }
+    }
+  ],
+  "libraryDeleted": "Bordset \"{name}\" verwijderd",
+  "libraryDeleteFailed": "Kan bordset \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",
   "aboutSourceCode": "Broncode",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Pagina niet gevonden",
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
-  "errorBoardSetNotFound": "Bord niet gevonden",
-  "boardUrlImportFailed": "Kan bord niet importeren via de link"
+  "errorBoardSetNotFound": "Bordset niet gevonden",
+  "boardUrlImportFailed": "Kan bordbestand niet importeren via de link"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(s'ouvre dans un nouvel onglet)",
   "boardGridLabel": "Tableau de communication",
   "board": "Tableau",
-  "libraryLoading": "Chargement des tableaux...",
+  "libraryLoading": "Chargement des ensembles de tableaux...",
   "libraryEmptyTitle": "La bibliothèque est vide",
-  "libraryEmptyDescription": "Importez des tableaux de communication pour commencer.",
-  "libraryImportBoards": "Importer des tableaux",
-  "libraryBoards": "Tableaux",
+  "libraryEmptyDescription": "Importez des fichiers de tableaux pour commencer.",
+  "libraryImportBoards": "Importer des fichiers de tableaux",
+  "libraryBoards": "Ensembles de tableaux",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importation du tableau...",
-        "countPlural=*": "Importation des tableaux..."
+        "countPlural=one": "Importation du fichier de tableau...",
+        "countPlural=*": "Importation des fichiers de tableaux..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tableau importé",
-        "countPlural=*": "Tableaux importés"
+        "countPlural=one": "Ensemble de tableaux importé",
+        "countPlural=*": "Ensembles de tableaux importés"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Impossible d'importer le tableau",
-        "countPlural=*": "Impossible d'importer les tableaux"
+        "countPlural=one": "Impossible d'importer le fichier de tableau",
+        "countPlural=*": "Impossible d'importer les fichiers de tableaux"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Le tableau est trop volumineux pour être importé",
-        "countPlural=*": "Les tableaux sont trop volumineux pour être importés"
+        "countPlural=one": "Le fichier de tableau est trop volumineux pour être importé",
+        "countPlural=*": "Les fichiers de tableaux sont trop volumineux pour être importés"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Plus d'options pour {name}",
   "libraryByAuthor": "Par {author}",
   "libraryGridDimensions": "Grille {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Supprimer « {name} » ?",
-  "libraryDeleteIrreversible": "Cette action est irréversible.",
-  "libraryDeleted": "« {name} » supprimé",
-  "libraryDeleteFailed": "Impossible de supprimer « {name} »",
+  "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux « {name} » ?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Le tableau de cet ensemble sera supprimé. Cette action est irréversible.",
+        "countPlural=*": "Les {count} tableaux de cet ensemble seront tous supprimés. Cette action est irréversible."
+      }
+    }
+  ],
+  "libraryDeleted": "Ensemble de tableaux « {name} » supprimé",
+  "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",
   "aboutSourceCode": "Code source",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Page introuvable",
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
-  "errorBoardSetNotFound": "Tableau introuvable",
-  "boardUrlImportFailed": "Impossible d'importer le tableau depuis le lien"
+  "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
+  "boardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien"
 }

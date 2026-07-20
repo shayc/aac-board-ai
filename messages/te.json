@@ -31,18 +31,18 @@
   "opensInNewTab": "(కొత్త ట్యాబ్‌లో తెరుచుకుంటుంది)",
   "boardGridLabel": "సంభాషణ బోర్డు",
   "board": "బోర్డు",
-  "libraryLoading": "బోర్డులు లోడ్ అవుతున్నాయి…",
+  "libraryLoading": "బోర్డు సెట్లు లోడ్ అవుతున్నాయి…",
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
-  "libraryEmptyDescription": "ప్రారంభించడానికి సంభాషణ బోర్డులను దిగుమతి చేయండి.",
-  "libraryImportBoards": "బోర్డులను దిగుమతి చేయి",
-  "libraryBoards": "బోర్డులు",
+  "libraryEmptyDescription": "ప్రారంభించడానికి బోర్డు ఫైళ్లను దిగుమతి చేయండి.",
+  "libraryImportBoards": "బోర్డు ఫైళ్లను దిగుమతి చేయి",
+  "libraryBoards": "బోర్డు సెట్లు",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "బోర్డు దిగుమతి అవుతోంది…",
-        "countPlural=*": "బోర్డులు దిగుమతి అవుతున్నాయి…"
+        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి అవుతోంది…",
+        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి అవుతున్నాయి…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "బోర్డు దిగుమతి చేయబడింది",
-        "countPlural=*": "బోర్డులు దిగుమతి చేయబడ్డాయి"
+        "countPlural=one": "బోర్డు సెట్ దిగుమతి చేయబడింది",
+        "countPlural=*": "బోర్డు సెట్లు దిగుమతి చేయబడ్డాయి"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "బోర్డును దిగుమతి చేయలేకపోయాం",
-        "countPlural=*": "బోర్డులను దిగుమతి చేయలేకపోయాం"
+        "countPlural=one": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
+        "countPlural=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "బోర్డు దిగుమతి చేయడానికి చాలా పెద్దది",
-        "countPlural=*": "బోర్డులు దిగుమతి చేయడానికి చాలా పెద్దవి"
+        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
+        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name} కోసం మరిన్ని ఎంపికలు",
   "libraryByAuthor": "రచయిత: {author}",
   "libraryGridDimensions": "{rows}×{columns} గ్రిడ్",
-  "libraryDeleteConfirmTitle": "\"{name}\"ను తొలగించాలా?",
-  "libraryDeleteIrreversible": "ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
-  "libraryDeleted": "\"{name}\" తొలగించబడింది",
-  "libraryDeleteFailed": "\"{name}\"ను తొలగించలేకపోయాం",
+  "libraryDeleteConfirmTitle": "బోర్డు సెట్ \"{name}\"ను తొలగించాలా?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ఈ సెట్‌లోని బోర్డు తొలగించబడుతుంది. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
+        "countPlural=*": "ఈ సెట్‌లోని మొత్తం {count} బోర్డులు తొలగించబడతాయి. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు."
+      }
+    }
+  ],
+  "libraryDeleted": "బోర్డు సెట్ \"{name}\" తొలగించబడింది",
+  "libraryDeleteFailed": "బోర్డు సెట్ \"{name}\"ను తొలగించలేకపోయాం",
   "libraryTitle": "లైబ్రరీ",
   "libraryOpen": "లైబ్రరీని తెరువు",
   "aboutSourceCode": "సోర్స్ కోడ్",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "పేజీ కనుగొనబడలేదు",
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
-  "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",
-  "boardUrlImportFailed": "లింక్ నుండి బోర్డును దిగుమతి చేయలేకపోయాం"
+  "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
+  "boardUrlImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం"
 }

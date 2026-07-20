@@ -31,18 +31,18 @@
   "opensInNewTab": "(открывается в новой вкладке)",
   "boardGridLabel": "Коммуникационная доска",
   "board": "Доска",
-  "libraryLoading": "Загрузка досок...",
+  "libraryLoading": "Загрузка наборов досок...",
   "libraryEmptyTitle": "Библиотека пуста",
-  "libraryEmptyDescription": "Импортируйте коммуникационные доски, чтобы начать.",
-  "libraryImportBoards": "Импортировать доски",
-  "libraryBoards": "Доски",
+  "libraryEmptyDescription": "Импортируйте файлы досок, чтобы начать.",
+  "libraryImportBoards": "Импортировать файлы досок",
+  "libraryBoards": "Наборы досок",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Импорт доски...",
-        "countPlural=*": "Импорт досок..."
+        "countPlural=one": "Импорт файла доски...",
+        "countPlural=*": "Импорт файлов досок..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Доска импортирована",
-        "countPlural=*": "Доски импортированы"
+        "countPlural=one": "Набор досок импортирован",
+        "countPlural=*": "Наборы досок импортированы"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Не удалось импортировать доску",
-        "countPlural=*": "Не удалось импортировать доски"
+        "countPlural=one": "Не удалось импортировать файл доски",
+        "countPlural=*": "Не удалось импортировать файлы досок"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Доска слишком большая для импорта",
-        "countPlural=*": "Доски слишком большие для импорта"
+        "countPlural=one": "Файл доски слишком большой для импорта",
+        "countPlural=*": "Файлы досок слишком большие для импорта"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Дополнительные параметры для {name}",
   "libraryByAuthor": "Автор: {author}",
   "libraryGridDimensions": "Сетка {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Удалить «{name}»?",
-  "libraryDeleteIrreversible": "Это действие нельзя отменить.",
-  "libraryDeleted": "«{name}» удалена",
-  "libraryDeleteFailed": "Не удалось удалить «{name}»",
+  "libraryDeleteConfirmTitle": "Удалить набор досок «{name}»?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Доска из этого набора будет удалена. Это действие нельзя отменить.",
+        "countPlural=*": "Все доски из этого набора ({count}) будут удалены. Это действие нельзя отменить."
+      }
+    }
+  ],
+  "libraryDeleted": "Набор досок «{name}» удалён",
+  "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",
   "aboutSourceCode": "Исходный код",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Страница не найдена",
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
-  "errorBoardSetNotFound": "Доска не найдена",
-  "boardUrlImportFailed": "Не удалось импортировать доску по ссылке"
+  "errorBoardSetNotFound": "Набор досок не найден",
+  "boardUrlImportFailed": "Не удалось импортировать файл доски по ссылке"
 }

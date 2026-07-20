@@ -31,18 +31,18 @@
   "opensInNewTab": "(se abre en una pestaña nueva)",
   "boardGridLabel": "Tablero de comunicación",
   "board": "Tablero",
-  "libraryLoading": "Cargando tableros...",
+  "libraryLoading": "Cargando conjuntos de tableros...",
   "libraryEmptyTitle": "La biblioteca está vacía",
-  "libraryEmptyDescription": "Importa tableros de comunicación para empezar.",
-  "libraryImportBoards": "Importar tableros",
-  "libraryBoards": "Tableros",
+  "libraryEmptyDescription": "Importa archivos de tableros para empezar.",
+  "libraryImportBoards": "Importar archivos de tableros",
+  "libraryBoards": "Conjuntos de tableros",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importando tablero...",
-        "countPlural=*": "Importando tableros..."
+        "countPlural=one": "Importando archivo de tablero...",
+        "countPlural=*": "Importando archivos de tableros..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tablero importado",
-        "countPlural=*": "Tableros importados"
+        "countPlural=one": "Conjunto de tableros importado",
+        "countPlural=*": "Conjuntos de tableros importados"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "No se pudo importar el tablero",
-        "countPlural=*": "No se pudieron importar los tableros"
+        "countPlural=one": "No se pudo importar el archivo de tablero",
+        "countPlural=*": "No se pudieron importar los archivos de tableros"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "El tablero es demasiado grande para importarlo",
-        "countPlural=*": "Los tableros son demasiado grandes para importarlos"
+        "countPlural=one": "El archivo de tablero es demasiado grande para importarlo",
+        "countPlural=*": "Los archivos de tableros son demasiado grandes para importarlos"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Más opciones para {name}",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Cuadrícula de {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "¿Eliminar \"{name}\"?",
-  "libraryDeleteIrreversible": "Esta acción no se puede deshacer.",
-  "libraryDeleted": "\"{name}\" eliminado",
-  "libraryDeleteFailed": "No se pudo eliminar \"{name}\"",
+  "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "El tablero de este conjunto se eliminará. Esta acción no se puede deshacer.",
+        "countPlural=*": "Los {count} tableros de este conjunto se eliminarán. Esta acción no se puede deshacer."
+      }
+    }
+  ],
+  "libraryDeleted": "Conjunto de tableros \"{name}\" eliminado",
+  "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
   "aboutSourceCode": "Código fuente",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Página no encontrada",
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
-  "errorBoardSetNotFound": "Tablero no encontrado",
-  "boardUrlImportFailed": "No se pudo importar el tablero desde el enlace"
+  "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
+  "boardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(yeni sekmede açılır)",
   "boardGridLabel": "İletişim panosu",
   "board": "Pano",
-  "libraryLoading": "Panolar yükleniyor...",
+  "libraryLoading": "Pano setleri yükleniyor...",
   "libraryEmptyTitle": "Kitaplık boş",
-  "libraryEmptyDescription": "Başlamak için iletişim panoları içe aktarın.",
-  "libraryImportBoards": "Panoları içe aktar",
-  "libraryBoards": "Panolar",
+  "libraryEmptyDescription": "Başlamak için pano dosyalarını içe aktarın.",
+  "libraryImportBoards": "Pano dosyalarını içe aktar",
+  "libraryBoards": "Pano setleri",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Pano içe aktarılıyor...",
-        "countPlural=*": "Panolar içe aktarılıyor..."
+        "countPlural=one": "Pano dosyası içe aktarılıyor...",
+        "countPlural=*": "Pano dosyaları içe aktarılıyor..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Pano içe aktarıldı",
-        "countPlural=*": "Panolar içe aktarıldı"
+        "countPlural=one": "Pano seti içe aktarıldı",
+        "countPlural=*": "Pano setleri içe aktarıldı"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Pano içe aktarılamadı",
-        "countPlural=*": "Panolar içe aktarılamadı"
+        "countPlural=one": "Pano dosyası içe aktarılamadı",
+        "countPlural=*": "Pano dosyaları içe aktarılamadı"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Pano içe aktarılamayacak kadar büyük",
-        "countPlural=*": "Panolar içe aktarılamayacak kadar büyük"
+        "countPlural=one": "Pano dosyası içe aktarılamayacak kadar büyük",
+        "countPlural=*": "Pano dosyaları içe aktarılamayacak kadar büyük"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name} için diğer seçenekler",
   "libraryByAuthor": "{author} tarafından",
   "libraryGridDimensions": "{rows}×{columns} ızgara",
-  "libraryDeleteConfirmTitle": "\"{name}\" silinsin mi?",
-  "libraryDeleteIrreversible": "Bu işlem geri alınamaz.",
-  "libraryDeleted": "\"{name}\" silindi",
-  "libraryDeleteFailed": "\"{name}\" silinemedi",
+  "libraryDeleteConfirmTitle": "\"{name}\" pano seti silinsin mi?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Bu setteki pano silinecek. Bu işlem geri alınamaz.",
+        "countPlural=*": "Bu setteki {count} panonun tümü silinecek. Bu işlem geri alınamaz."
+      }
+    }
+  ],
+  "libraryDeleted": "\"{name}\" pano seti silindi",
+  "libraryDeleteFailed": "\"{name}\" pano seti silinemedi",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
   "aboutSourceCode": "Kaynak kodu",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Sayfa bulunamadı",
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
-  "errorBoardSetNotFound": "Pano bulunamadı",
-  "boardUrlImportFailed": "Pano bağlantıdan içe aktarılamadı"
+  "errorBoardSetNotFound": "Pano seti bulunamadı",
+  "boardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı"
 }

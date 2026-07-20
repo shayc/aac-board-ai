@@ -31,18 +31,18 @@
   "opensInNewTab": "(öffnet in neuem Tab)",
   "boardGridLabel": "Kommunikationstafel",
   "board": "Tafel",
-  "libraryLoading": "Tafeln werden geladen...",
+  "libraryLoading": "Tafelsätze werden geladen...",
   "libraryEmptyTitle": "Die Bibliothek ist leer",
-  "libraryEmptyDescription": "Importiere Kommunikationstafeln, um loszulegen.",
-  "libraryImportBoards": "Tafeln importieren",
-  "libraryBoards": "Tafeln",
+  "libraryEmptyDescription": "Importiere Tafeldateien, um loszulegen.",
+  "libraryImportBoards": "Tafeldateien importieren",
+  "libraryBoards": "Tafelsätze",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tafel wird importiert...",
-        "countPlural=*": "Tafeln werden importiert..."
+        "countPlural=one": "Tafeldatei wird importiert...",
+        "countPlural=*": "Tafeldateien werden importiert..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tafel importiert",
-        "countPlural=*": "Tafeln importiert"
+        "countPlural=one": "Tafelsatz importiert",
+        "countPlural=*": "Tafelsätze importiert"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tafel konnte nicht importiert werden",
-        "countPlural=*": "Tafeln konnten nicht importiert werden"
+        "countPlural=one": "Tafeldatei konnte nicht importiert werden",
+        "countPlural=*": "Tafeldateien konnten nicht importiert werden"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Die Tafel ist zu groß zum Importieren",
-        "countPlural=*": "Die Tafeln sind zu groß zum Importieren"
+        "countPlural=one": "Die Tafeldatei ist zu groß zum Importieren",
+        "countPlural=*": "Die Tafeldateien sind zu groß zum Importieren"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Weitere Optionen für {name}",
   "libraryByAuthor": "Von {author}",
   "libraryGridDimensions": "Raster {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "„{name}“ löschen?",
-  "libraryDeleteIrreversible": "Diese Aktion kann nicht rückgängig gemacht werden.",
-  "libraryDeleted": "„{name}“ gelöscht",
-  "libraryDeleteFailed": "„{name}“ konnte nicht gelöscht werden",
+  "libraryDeleteConfirmTitle": "Tafelsatz „{name}“ löschen?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Die Tafel in diesem Satz wird gelöscht. Dies kann nicht rückgängig gemacht werden.",
+        "countPlural=*": "Alle {count} Tafeln in diesem Satz werden gelöscht. Dies kann nicht rückgängig gemacht werden."
+      }
+    }
+  ],
+  "libraryDeleted": "Tafelsatz „{name}“ gelöscht",
+  "libraryDeleteFailed": "Tafelsatz „{name}“ konnte nicht gelöscht werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",
   "aboutSourceCode": "Quellcode",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Seite nicht gefunden",
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
-  "errorBoardSetNotFound": "Tafel nicht gefunden",
-  "boardUrlImportFailed": "Tafel konnte nicht über den Link importiert werden"
+  "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
+  "boardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden"
 }

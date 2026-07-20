@@ -31,18 +31,18 @@
   "opensInNewTab": "(נפתח בכרטיסייה חדשה)",
   "boardGridLabel": "לוח תקשורת",
   "board": "לוח",
-  "libraryLoading": "טעינת לוחות...",
+  "libraryLoading": "טעינת ערכות לוחות...",
   "libraryEmptyTitle": "הספרייה ריקה",
-  "libraryEmptyDescription": "כדי להתחיל, יש לייבא לוחות תקשורת.",
-  "libraryImportBoards": "ייבוא לוחות",
-  "libraryBoards": "לוחות",
+  "libraryEmptyDescription": "כדי להתחיל, יש לייבא קובצי לוחות.",
+  "libraryImportBoards": "ייבוא קובצי לוחות",
+  "libraryBoards": "ערכות לוחות",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ייבוא לוח...",
-        "countPlural=*": "ייבוא לוחות..."
+        "countPlural=one": "ייבוא קובץ לוח...",
+        "countPlural=*": "ייבוא קובצי לוחות..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "הלוח יובא בהצלחה",
-        "countPlural=*": "הלוחות יובאו בהצלחה"
+        "countPlural=one": "ערכת הלוחות יובאה בהצלחה",
+        "countPlural=*": "ערכות הלוחות יובאו בהצלחה"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ייבוא הלוח נכשל",
-        "countPlural=*": "ייבוא הלוחות נכשל"
+        "countPlural=one": "ייבוא קובץ הלוח נכשל",
+        "countPlural=*": "ייבוא קובצי הלוחות נכשל"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "הלוח גדול מדי לייבוא",
-        "countPlural=*": "הלוחות גדולים מדי לייבוא"
+        "countPlural=one": "קובץ הלוח גדול מדי לייבוא",
+        "countPlural=*": "קובצי הלוחות גדולים מדי לייבוא"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
   "libraryByAuthor": "מאת {author}",
   "libraryGridDimensions": "רשת {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "למחוק את \"{name}\"?",
-  "libraryDeleteIrreversible": "לא ניתן לבטל פעולה זו.",
-  "libraryDeleted": "\"{name}\" נמחק",
-  "libraryDeleteFailed": "מחיקת \"{name}\" נכשלה",
+  "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "הלוח בערכה זו יימחק. לא ניתן לבטל זאת.",
+        "countPlural=*": "כל {count} הלוחות בערכה זו יימחקו. לא ניתן לבטל זאת."
+      }
+    }
+  ],
+  "libraryDeleted": "ערכת הלוחות \"{name}\" נמחקה",
+  "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת ספרייה",
   "aboutSourceCode": "קוד מקור",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "הדף לא נמצא",
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
-  "errorBoardSetNotFound": "הלוח לא נמצא",
-  "boardUrlImportFailed": "ייבוא הלוח מהקישור נכשל"
+  "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
+  "boardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
 }

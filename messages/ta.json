@@ -31,18 +31,18 @@
   "opensInNewTab": "(புதிய தாவலில் திறக்கும்)",
   "boardGridLabel": "தொடர்பு பலகை",
   "board": "பலகை",
-  "libraryLoading": "பலகைகள் ஏற்றப்படுகின்றன…",
+  "libraryLoading": "பலகைத் தொகுப்புகள் ஏற்றப்படுகின்றன…",
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
-  "libraryEmptyDescription": "தொடங்க தொடர்பு பலகைகளை இறக்குமதி செய்யுங்கள்.",
-  "libraryImportBoards": "பலகைகளை இறக்குமதி செய்",
-  "libraryBoards": "பலகைகள்",
+  "libraryEmptyDescription": "தொடங்க பலகைக் கோப்புகளை இறக்குமதி செய்யுங்கள்.",
+  "libraryImportBoards": "பலகைக் கோப்புகளை இறக்குமதி செய்",
+  "libraryBoards": "பலகைத் தொகுப்புகள்",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "பலகை இறக்குமதி செய்யப்படுகிறது…",
-        "countPlural=*": "பலகைகள் இறக்குமதி செய்யப்படுகின்றன…"
+        "countPlural=one": "பலகைக் கோப்பு இறக்குமதி செய்யப்படுகிறது…",
+        "countPlural=*": "பலகைக் கோப்புகள் இறக்குமதி செய்யப்படுகின்றன…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "பலகை இறக்குமதி செய்யப்பட்டது",
-        "countPlural=*": "பலகைகள் இறக்குமதி செய்யப்பட்டன"
+        "countPlural=one": "பலகைத் தொகுப்பு இறக்குமதி செய்யப்பட்டது",
+        "countPlural=*": "பலகைத் தொகுப்புகள் இறக்குமதி செய்யப்பட்டன"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "பலகையை இறக்குமதி செய்ய முடியவில்லை",
-        "countPlural=*": "பலகைகளை இறக்குமதி செய்ய முடியவில்லை"
+        "countPlural=one": "பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை",
+        "countPlural=*": "பலகைக் கோப்புகளை இறக்குமதி செய்ய முடியவில்லை"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "பலகை இறக்குமதி செய்ய மிகப் பெரியது",
-        "countPlural=*": "பலகைகள் இறக்குமதி செய்ய மிகப் பெரியவை"
+        "countPlural=one": "பலகைக் கோப்பு இறக்குமதி செய்ய மிகப் பெரியது",
+        "countPlural=*": "பலகைக் கோப்புகள் இறக்குமதி செய்ய மிகப் பெரியவை"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name}க்கான மேலும் விருப்பங்கள்",
   "libraryByAuthor": "எழுதியவர்: {author}",
   "libraryGridDimensions": "{rows}×{columns} கட்டம்",
-  "libraryDeleteConfirmTitle": "\"{name}\" என்பதை நீக்கவா?",
-  "libraryDeleteIrreversible": "இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.",
-  "libraryDeleted": "\"{name}\" நீக்கப்பட்டது",
-  "libraryDeleteFailed": "\"{name}\" என்பதை நீக்க முடியவில்லை",
+  "libraryDeleteConfirmTitle": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்கவா?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "இந்தத் தொகுப்பில் உள்ள பலகை நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது.",
+        "countPlural=*": "இந்தத் தொகுப்பில் உள்ள அனைத்து {count} பலகைகளும் நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது."
+      }
+    }
+  ],
+  "libraryDeleted": "பலகைத் தொகுப்பு \"{name}\" நீக்கப்பட்டது",
+  "libraryDeleteFailed": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்க முடியவில்லை",
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",
   "aboutSourceCode": "மூலக் குறியீடு",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "பக்கம் கிடைக்கவில்லை",
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
-  "errorBoardSetNotFound": "பலகை கிடைக்கவில்லை",
-  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகையை இறக்குமதி செய்ய முடியவில்லை"
+  "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை",
+  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை"
 }

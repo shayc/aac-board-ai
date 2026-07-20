@@ -31,18 +31,18 @@
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",
   "boardGridLabel": "Πίνακας επικοινωνίας",
   "board": "Πίνακας",
-  "libraryLoading": "Φόρτωση πινάκων...",
+  "libraryLoading": "Φόρτωση συνόλων πινάκων...",
   "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
-  "libraryEmptyDescription": "Εισαγάγετε πίνακες επικοινωνίας για να ξεκινήσετε.",
-  "libraryImportBoards": "Εισαγωγή πινάκων",
-  "libraryBoards": "Πίνακες",
+  "libraryEmptyDescription": "Εισαγάγετε αρχεία πινάκων για να ξεκινήσετε.",
+  "libraryImportBoards": "Εισαγωγή αρχείων πινάκων",
+  "libraryBoards": "Σύνολα πινάκων",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Εισαγωγή πίνακα...",
-        "countPlural=*": "Εισαγωγή πινάκων..."
+        "countPlural=one": "Εισαγωγή αρχείου πίνακα...",
+        "countPlural=*": "Εισαγωγή αρχείων πινάκων..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Ο πίνακας εισήχθη",
-        "countPlural=*": "Οι πίνακες εισήχθησαν"
+        "countPlural=one": "Το σύνολο πινάκων εισήχθη",
+        "countPlural=*": "Τα σύνολα πινάκων εισήχθησαν"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του πίνακα",
-        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των πινάκων"
+        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
+        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Ο πίνακας είναι πολύ μεγάλος για εισαγωγή",
-        "countPlural=*": "Οι πίνακες είναι πολύ μεγάλοι για εισαγωγή"
+        "countPlural=one": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
+        "countPlural=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Περισσότερες επιλογές για {name}",
   "libraryByAuthor": "Από {author}",
   "libraryGridDimensions": "Πλέγμα {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Διαγραφή «{name}»;",
-  "libraryDeleteIrreversible": "Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-  "libraryDeleted": "Το «{name}» διαγράφηκε",
-  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του «{name}»",
+  "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων «{name}»;",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ο πίνακας σε αυτό το σύνολο θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+        "countPlural=*": "Και οι {count} πίνακες σε αυτό το σύνολο θα διαγραφούν. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
+      }
+    }
+  ],
+  "libraryDeleted": "Το σύνολο πινάκων «{name}» διαγράφηκε",
+  "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
   "aboutSourceCode": "Πηγαίος κώδικας",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Η σελίδα δεν βρέθηκε",
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
-  "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",
-  "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του πίνακα από τον σύνδεσμο"
+  "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
+  "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο"
 }
