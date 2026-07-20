@@ -1,8 +1,8 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
-import { Pictogram } from "../pictogram/pictogram";
-import { PlayButton, type PlayButtonRootProps } from "./play-button";
+import { CommunicationSymbol } from "../communication-symbol/communication-symbol";
 import type { MessagePart } from "./message-types";
+import { PlayButton, type PlayButtonRootProps } from "./play-button";
 
 interface MessageBarSlotProps {
   playButton?: PlayButtonRootProps;
@@ -92,7 +92,10 @@ export function MessageBar({
                     : "none",
                 })}
               >
-                <Pictogram label={part.label ?? ""} src={part.imageSrc} />
+                <CommunicationSymbol
+                  label={part.label ?? ""}
+                  imageSrc={part.imageSrc}
+                />
               </Stack>
             );
           })}

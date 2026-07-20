@@ -28,8 +28,9 @@ Web Platform. AAC terms are defined in the [glossary](#glossary).
 ## Purpose and constraints
 
 The app gives someone who cannot rely on speech a fast way to compose and speak
-a message by selecting pictogram tiles. Optional on-device models can turn short,
-telegraphic input such as "want eat pizza later" into more natural language.
+a message by selecting tiles that contain communication symbols. Optional
+on-device models can turn short, telegraphic input such as "want eat pizza
+later" into more natural language.
 
 Two constraints shape the architecture:
 
@@ -273,10 +274,12 @@ rise with meaningful coverage gains and are not lowered to admit a regression.
   board set with assets (`.obz`). The current interchange contract is import-only.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
-- **Tile / pictogram** — one grid cell: an image plus a label that the user
-  activates.
+- **Symbol** — an AAC representation displayed on a tile or in the message bar:
+  an image, a written label, or both.
+- **Tile** — an interactive board button containing a communication symbol. It
+  adds to the message or navigates to a linked board when activated.
 - **Vocalization** — what a button speaks when it differs from the visible label.
-- **Message bar** — the selected tiles accumulated into the message to speak.
+- **Message bar** — the selected symbols accumulated into the message to speak.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.

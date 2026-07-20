@@ -29,9 +29,9 @@ const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 1, order: [["btn-1"]] },
 };
 
-const PICTOGRAM_BOARD: OBFBoard = {
+const SYMBOL_BOARD: OBFBoard = {
   format: "open-board-0.1",
-  id: "pictogram-board",
+  id: "symbol-board",
   locale: "en",
   buttons: [
     { id: "btn-1", label: "hello", image_id: "img-1" },
@@ -435,7 +435,7 @@ describe("BoardViewer", () => {
   });
 
   test("has no accessibility violations with a composed message", async () => {
-    const screen = await renderBoardViewer(PICTOGRAM_BOARD);
+    const screen = await renderBoardViewer(SYMBOL_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();

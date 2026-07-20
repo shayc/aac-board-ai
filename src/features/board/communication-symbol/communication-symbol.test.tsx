@@ -1,25 +1,27 @@
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
-import { Pictogram } from "./pictogram";
+import { CommunicationSymbol } from "./communication-symbol";
 
-describe("Pictogram", () => {
-  test("renders no content when no src or label is provided", async () => {
-    const screen = await render(<Pictogram label="" />);
+describe("CommunicationSymbol", () => {
+  test("renders no content when no image source or label is provided", async () => {
+    const screen = await render(<CommunicationSymbol label="" />);
 
     expect(screen.container.textContent).toBe("");
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
   test("renders label when provided", async () => {
-    const screen = await render(<Pictogram label="Hello" />);
+    const screen = await render(<CommunicationSymbol label="Hello" />);
 
     await expect.element(screen.getByText("Hello")).toBeVisible();
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders image when src is provided", async () => {
-    const screen = await render(<Pictogram src={TEST_IMAGE_SRC} label="" />);
+  test("renders image when imageSrc is provided", async () => {
+    const screen = await render(
+      <CommunicationSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
+    );
 
     const img = screen.container.querySelector("img");
     expect(img).not.toBeNull();
@@ -29,7 +31,7 @@ describe("Pictogram", () => {
 
   test("renders both image and label when both are provided", async () => {
     const screen = await render(
-      <Pictogram src={TEST_IMAGE_SRC} label="Action" />,
+      <CommunicationSymbol imageSrc={TEST_IMAGE_SRC} label="Action" />,
     );
 
     await expect.element(screen.getByText("Action")).toBeVisible();
@@ -38,19 +40,27 @@ describe("Pictogram", () => {
 
   test("places the label above the image when labelPlacement is top", async () => {
     const screen = await render(
-      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="top" />,
+      <CommunicationSymbol
+        imageSrc={TEST_IMAGE_SRC}
+        label="Action"
+        labelPlacement="top"
+      />,
     );
 
     const container = screen.getByText("Action").element().parentElement;
     if (!container) {
-      throw new Error("Pictogram container not found");
+      throw new Error("Communication symbol container not found");
     }
     expect(getComputedStyle(container).flexDirection).toBe("column-reverse");
   });
 
   test("keeps the label accessible when labelPlacement is hidden", async () => {
     const screen = await render(
-      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="hidden" />,
+      <CommunicationSymbol
+        imageSrc={TEST_IMAGE_SRC}
+        label="Action"
+        labelPlacement="hidden"
+      />,
     );
 
     await expect.element(screen.getByText("Action")).toBeInTheDocument();
@@ -58,7 +68,11 @@ describe("Pictogram", () => {
 
   test("takes no layout space for the label when labelPlacement is hidden", async () => {
     const screen = await render(
-      <Pictogram src={TEST_IMAGE_SRC} label="Action" labelPlacement="hidden" />,
+      <CommunicationSymbol
+        imageSrc={TEST_IMAGE_SRC}
+        label="Action"
+        labelPlacement="hidden"
+      />,
     );
 
     const label = screen.getByText("Action").element();
