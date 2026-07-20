@@ -42,7 +42,7 @@ export async function resolveTranslatedBoard(
     }
   } catch {
     // Total by design: translation is an enhancement, not a requirement —
-    // pictograms carry the meaning, so a failure must never block the board.
+    // symbols carry the meaning, so a failure must never block the board.
     return board;
   }
 }

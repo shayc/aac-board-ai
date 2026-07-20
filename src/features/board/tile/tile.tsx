@@ -1,7 +1,7 @@
 import Button, { buttonClasses, type ButtonProps } from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
 import { mergeSx } from "@shared/theme/merge-sx";
-import { Pictogram } from "../pictogram/pictogram";
+import { CommunicationSymbol } from "../communication-symbol/communication-symbol";
 
 interface TileOwnProps {
   label: string;
@@ -120,7 +120,7 @@ export function Tile({
         sx,
       )}
     >
-      <Pictogram label={label} src={imageSrc} />
+      <CommunicationSymbol label={label} imageSrc={imageSrc} />
     </Button>
   );
 }

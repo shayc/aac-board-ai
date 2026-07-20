@@ -2,17 +2,17 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
-interface PictogramProps {
-  src?: string;
+interface CommunicationSymbolProps {
+  imageSrc?: string;
   label: string;
   labelPlacement?: "top" | "bottom" | "hidden";
 }
 
-export function Pictogram({
-  src,
+export function CommunicationSymbol({
+  imageSrc,
   label,
   labelPlacement = "bottom",
-}: PictogramProps) {
+}: CommunicationSymbolProps) {
   return (
     <Box
       sx={{
@@ -24,7 +24,7 @@ export function Pictogram({
         overflow: "hidden",
       }}
     >
-      {src && (
+      {imageSrc && (
         <Box
           sx={{
             height: "54px",
@@ -35,7 +35,7 @@ export function Pictogram({
         >
           <Box
             component="img"
-            src={src}
+            src={imageSrc}
             alt=""
             sx={{
               width: "100%",
@@ -53,7 +53,7 @@ export function Pictogram({
       <Typography
         noWrap
         component="span"
-        variant={src ? "body2" : "h5"}
+        variant={imageSrc ? "body2" : "h5"}
         sx={labelPlacement === "hidden" ? visuallyHidden : { lineHeight: 1 }}
       >
         {label}
