@@ -1,17 +1,16 @@
 import { PlaybackProvider } from "@shared/playback/playback-provider";
-import { useActivePlaybackTrackingKey } from "@shared/playback/use-playback";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import type { MessagePart } from "../message/message-types";
-import { useBoardPlayback } from "./use-board-playback";
+import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
 function renderPlayback() {
   return renderHook(
     () => ({
       ...useBoardPlayback(),
-      activePartId: useActivePlaybackTrackingKey(),
+      activePartId: useActiveMessagePartId(),
     }),
     { wrapper: PlaybackProvider },
   );
@@ -115,6 +114,20 @@ describe("useBoardPlayback", () => {
     await playPromise;
     await rerender();
     expect(result.current.isPlaying).toBe(false);
+  });
+
+  test("does not present tile speech as message playback", async () => {
+    speech.speak.mockImplementationOnce(() => undefined);
+    const { result, rerender } = await renderPlayback();
+
+    const playPromise = result.current.playPart({ id: "1", label: "hi" });
+    await rerender();
+
+    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
+
+    result.current.stop();
+    await playPromise;
   });
 
   test("stop() cancels speech and clears isPlaying", async () => {

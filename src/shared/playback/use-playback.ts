@@ -11,21 +11,32 @@ export function usePlayback(): PlaybackController {
   return context;
 }
 
-export function useIsPlaybackActive(): boolean {
-  const playback = usePlayback();
-
-  return useSyncExternalStore(
-    playback.subscribe,
-    () => playback.getSnapshot().status === "playing",
-  );
-}
-
-export function useActivePlaybackTrackingKey(): string | null {
+export function useIsPlaybackActive(source?: string): boolean {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
     const state = playback.getSnapshot();
 
-    return state.status === "playing" ? state.activeTrackingKey : null;
+    return (
+      state.status === "playing" &&
+      (source === undefined || state.source === source)
+    );
+  });
+}
+
+export function useActivePlaybackTrackingKey(source?: string): string | null {
+  const playback = usePlayback();
+
+  return useSyncExternalStore(playback.subscribe, () => {
+    const state = playback.getSnapshot();
+
+    if (
+      state.status !== "playing" ||
+      (source !== undefined && state.source !== source)
+    ) {
+      return null;
+    }
+
+    return state.activeTrackingKey;
   });
 }

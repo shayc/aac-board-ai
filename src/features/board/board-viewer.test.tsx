@@ -115,6 +115,17 @@ describe("BoardViewer", () => {
     });
   });
 
+  test("keeps the message play action visible while a tile speaks", async () => {
+    speech.speak.mockImplementationOnce(() => undefined);
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeVisible();
+  });
+
   test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
     const screen = await renderBoardViewer(SPELL_THEN_SPEAK_BOARD);
 

@@ -1,8 +1,7 @@
 import { useHighlightConfig } from "@shared/highlight/highlight-store";
-import { useActivePlaybackTrackingKey } from "@shared/playback/use-playback";
 import { MessageBar, type MessageBarProps } from "../message/message-bar";
 import type { MessagePart } from "../message/message-types";
-import { useBoardPlayback } from "./use-board-playback";
+import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
 interface BoardPlaybackMessageBarProps {
   parts: MessagePart[];
@@ -14,8 +13,8 @@ export function BoardPlaybackMessageBar({
   slotProps,
 }: BoardPlaybackMessageBarProps) {
   const playback = useBoardPlayback();
+  const activePartId = useActiveMessagePartId();
   const { highlightActivePart } = useHighlightConfig();
-  const activePartId = useActivePlaybackTrackingKey();
 
   return (
     <MessageBar

@@ -1,5 +1,6 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-context";
 import {
+  useActivePlaybackTrackingKey,
   useIsPlaybackActive,
   usePlayback,
 } from "@shared/playback/use-playback";
@@ -18,7 +19,7 @@ export interface UseBoardPlaybackReturn {
 
 export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const isPlaying = useIsPlaybackActive();
+  const isPlaying = useIsPlaybackActive(MESSAGE_SOURCE);
 
   function playMessage(parts: MessagePart[]) {
     return playback.play({
@@ -37,4 +38,8 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     playPart,
     stop: playback.stop,
   };
+}
+
+export function useActiveMessagePartId(): string | null {
+  return useActivePlaybackTrackingKey(MESSAGE_SOURCE);
 }
