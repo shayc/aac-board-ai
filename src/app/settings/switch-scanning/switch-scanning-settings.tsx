@@ -55,6 +55,40 @@ function getMethodDescription(
   }
 }
 
+interface TimingSetting {
+  label: string;
+  value: number;
+  range: { min: number; max: number };
+  onChange: (value: number) => void;
+}
+
+function getTimingSetting(
+  t: Translate,
+  method: SwitchScanningMethod,
+  scanIntervalMs: number,
+  dwellDurationMs: number,
+): TimingSetting | null {
+  switch (method) {
+    case "dwell":
+      return {
+        label: t(m.switchScanningDwellDuration),
+        value: dwellDurationMs,
+        range: DWELL_DURATION_MS,
+        onChange: setDwellDurationMs,
+      };
+    case "auto":
+    case "inverse":
+      return {
+        label: t(m.switchScanningInterval),
+        value: scanIntervalMs,
+        range: SCAN_INTERVAL_MS,
+        onChange: setScanIntervalMs,
+      };
+    case "step":
+      return null;
+  }
+}
+
 export function SwitchScanningSettings() {
   const t = useTranslate();
   const { language } = useLanguage();
@@ -81,22 +115,7 @@ export function SwitchScanningSettings() {
   const formatOptionalSeconds = (value: number) =>
     value === 0 ? t(m.switchScanningOff) : seconds.format(value);
 
-  const timing =
-    method === "dwell"
-      ? {
-          label: t(m.switchScanningDwellDuration),
-          value: dwellDurationMs,
-          range: DWELL_DURATION_MS,
-          onChange: setDwellDurationMs,
-        }
-      : method === "auto" || method === "inverse"
-        ? {
-            label: t(m.switchScanningInterval),
-            value: scanIntervalMs,
-            range: SCAN_INTERVAL_MS,
-            onChange: setScanIntervalMs,
-          }
-        : null;
+  const timing = getTimingSetting(t, method, scanIntervalMs, dwellDurationMs);
 
   return (
     <Stack spacing={3}>
