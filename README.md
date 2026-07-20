@@ -13,7 +13,7 @@
 
 **AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. Its core communication features work offline in modern browsers, while optional browser-native **Built-in AI** improves grammar, adjusts tone, and translates boards on-device.
 
-![Demo: selecting “want,” “eat,” and “pizza,” accepting “I want to eat pizza,” and playing the message aloud](demo.gif)
+![Demo: selecting “want,” go,” and “my room” accepting “I'm heading to my room now.” and playing the message aloud](demo.gif)
 
 _Built-in AI is a progressive enhancement; availability depends on the browser, device, language, and downloaded models._
 
