@@ -9,16 +9,24 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { replaceBoardSet } from "../storage/boards-db";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
+import type { BoardSummary } from "./board-summaries";
 import { BoardSelector } from "./board-selector";
 
-async function renderSelector(initialPath: string) {
+const BOARDS: BoardSummary[] = [
+  { boardId: "animals", name: "Animals" },
+  { boardId: "food", name: "Food" },
+  { boardId: "root", name: "Home" },
+];
+
+async function renderSelector(
+  initialPath: string,
+  boards: BoardSummary[] = BOARDS,
+) {
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <BoardSelector />,
+        element: <BoardSelector boards={boards} />,
       },
     ],
     { initialEntries: [initialPath] },
@@ -33,30 +41,8 @@ async function renderSelector(initialPath: string) {
   return { router, screen };
 }
 
-beforeEach(async () => {
+beforeEach(() => {
   setStoredLanguage(DEFAULT_LANGUAGE);
-  await resetBoardsDB();
-  await replaceBoardSet({
-    boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
-    boards: [
-      {
-        boardId: "root",
-        name: "Home",
-        obf: makeOBFBoard({ id: "root", name: "Home" }),
-      },
-      {
-        boardId: "animals",
-        name: "Animals",
-        obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-      },
-      {
-        boardId: "food",
-        name: "Food",
-        obf: makeOBFBoard({ id: "food", name: "Food" }),
-      },
-    ],
-    assets: [],
-  });
 });
 
 describe("BoardSelector", () => {
@@ -142,37 +128,17 @@ describe("BoardSelector", () => {
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
   });
 
-  test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
-    await replaceBoardSet({
-      boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
-      boards: [
-        {
-          boardId: "root",
-          name: "Home",
-          obf: makeOBFBoard({
-            id: "root",
-            name: "Home",
-            strings: { es: { Home: "Inicio" } },
-          }),
-        },
-        {
-          boardId: "animals",
-          name: "Animals",
-          obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-        },
-      ],
-      assets: [],
-    });
-
-    setStoredLanguage("es");
-
-    const { screen } = await renderSelector("/sets/set-2/boards/root");
+  test("renders names exactly as provided by route data", async () => {
+    const { screen } = await renderSelector("/sets/set-1/boards/root", [
+      { boardId: "root", name: "Inicio" },
+      { boardId: "animals", name: "Animales" },
+    ]);
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
 
     await screen.getByRole("combobox").click();
     await expect
-      .element(screen.getByRole("option", { name: "Animals" }))
+      .element(screen.getByRole("option", { name: "Animales" }))
       .toBeInTheDocument();
   });
 });

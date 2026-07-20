@@ -10,6 +10,7 @@ export {
   BOARD_SET_SEGMENT,
   boardSetPath,
 } from "./navigation/board-paths";
+export { loadBoardSummaries } from "./navigation/board-summaries";
 export { BoardSelector } from "./navigation/board-selector";
 export { hydrateBoard } from "./storage/board-hydration";
 export {
@@ -19,4 +20,5 @@ export {
 } from "./storage/boards-db";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
+export type { BoardSummary } from "./navigation/board-summaries";
 export type { Board } from "./types";

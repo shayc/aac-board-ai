@@ -3,13 +3,16 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useState } from "react";
+import type { BoardSummary } from "./board-summaries";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardsInSet } from "./use-boards-in-set";
 
-export function BoardSelector() {
+interface BoardSelectorProps {
+  boards: BoardSummary[];
+}
+
+export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
-  const { setId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useBoardsInSet({ setId });
+  const { boardId, goToBoard } = useBoardNavigation();
   const [inputValue, setInputValue] = useState("");
 
   const selectedBoard = boards.find((board) => board.boardId === boardId);

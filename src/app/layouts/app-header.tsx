@@ -1,4 +1,6 @@
-import { BoardSelector } from "@features/board";
+import type { BoardSetRouteData } from "@app/routing/route-data";
+import { BOARD_ROUTE_ID, BOARD_SET_ROUTE_ID } from "@app/routing/route-ids";
+import { BoardSelector, type Board } from "@features/board";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -10,6 +12,8 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { useRouteLoaderData } from "react-router";
+import { resolveBoardSelectorOptions } from "./resolve-board-selector-options";
 
 interface AppHeaderProps {
   libraryButtonHidden?: boolean;
@@ -23,6 +27,15 @@ export function AppHeader({
   onSettingsClick,
 }: AppHeaderProps) {
   const t = useTranslate();
+  const boardSet = useRouteLoaderData<BoardSetRouteData>(BOARD_SET_ROUTE_ID);
+  const activeBoard = useRouteLoaderData<Board>(BOARD_ROUTE_ID);
+  const boardOptions = boardSet
+    ? resolveBoardSelectorOptions(
+        boardSet.boards,
+        activeBoard,
+        boardSet.language,
+      )
+    : [];
 
   return (
     <AppBar position="static">
@@ -64,7 +77,7 @@ export function AppHeader({
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
-          <BoardSelector />
+          <BoardSelector boards={boardOptions} />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>

@@ -121,11 +121,12 @@ the work before any component renders, so nothing flashes untranslated or
 half-loaded:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` — read the raw OBF and asset blobs, mint object URLs, and map
+2. `boardSetLoader` — read and localize the board summaries used by the selector.
+3. `hydrateBoard` — read the raw OBF and asset blobs, mint object URLs, and map
    `obfToBoard` into the in-memory `Board`.
-3. `resolveTranslatedBoard` — serve the cached translation, or run the Translator
+4. `resolveTranslatedBoard` — serve the cached translation, or run the Translator
    and persist the result.
-4. Render the grid.
+5. Render the selector and grid from the committed route snapshots.
 
 **Runtime flow 2 — tap a tile (intent to speech).** A tap is resolved to a typed
 _intent_, then dispatched. Most taps compose the message bar; some navigate or run
@@ -147,7 +148,7 @@ hyperlinked, so a moved file never breaks this table.
 | ------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | `src/main.tsx`                                               | Entry. Mounts `AppProviders` → `AppRouter`.                                                                                     |
 | `src/app/`                                                   | Composition root: router, route loaders, app shell, header, library/settings drawers, onboarding.                               |
-| `src/app/routing/loaders/`                                   | React Router data loaders. Read IndexedDB and **hydrate + translate a board before it renders**.                                |
+| `src/app/routing/loaders/`                                   | React Router data loaders. Read selector summaries and **hydrate + translate a board before it renders**.                       |
 | `src/pages/`                                                 | Route entry components, each code-split via React Router's `lazy` route import.                                                 |
 | `src/features/board/`                                        | The entire board domain. `board-viewer.tsx` is the orchestrator.                                                                |
 | `src/features/board/grid·tile·pictogram/`                    | Render the tile grid and each pictogram.                                                                                        |
@@ -185,9 +186,10 @@ State has **five kinds**, each with one home:
    `upgrade` callback, so a schema change ships as a new `DB_VERSION` plus a
    migration step there — nowhere else. Multi-tab upgrades are handled: a tab
    holding the old version closes its connection when a newer one needs to upgrade.
-2. **Route state — React Router loaders.** A board is fetched, hydrated, and
-   translated _per navigation_; components receive a ready `Board`, never a loading
-   spinner of their own. A language change calls `revalidate()` to re-translate.
+2. **Route state — React Router loaders.** Board summaries and the current board are
+   fetched and localized before render; components receive ready route snapshots,
+   never loading spinners of their own. A language change calls `revalidate()` to
+   refresh both the selector and board.
 3. **Reactive cross-cutting stores** — built on `createExternalStore` +
    `useSyncExternalStore`: the **board-set catalog** and the **TTS voice catalog**.
    These change outside React (DB writes, the browser's `voiceschanged` event).
