@@ -28,26 +28,22 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: {
     id: string;
     icon: ReactNode;
-    primary: string;
-    secondary: string;
+    text: string;
   }[] = [
     {
       id: "rewriting",
       icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: t(m.onboardingSmartRewritingTitle),
-      secondary: t(m.onboardingSmartRewritingDescription),
+      text: t(m.onboardingSmartRewritingDescription),
     },
     {
       id: "translation",
       icon: <TranslateOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: t(m.onboardingTranslationTitle),
-      secondary: t(m.onboardingTranslationDescription),
+      text: t(m.onboardingTranslationDescription),
     },
     {
       id: "privacy",
       icon: <LockOutlinedIcon color="primary" fontSize="inherit" />,
-      primary: t(m.onboardingPrivacyTitle),
-      secondary: t(m.onboardingPrivacyDescription),
+      text: t(m.onboardingPrivacyDescription),
     },
   ];
 
@@ -72,8 +68,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         src={`${import.meta.env.BASE_URL}board.svg`}
         alt=""
         sx={{
-          width: 80,
-          height: 80,
+          width: 96,
+          height: 96,
           mx: "auto",
           mt: 4,
           mb: 2,
@@ -96,18 +92,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       <DialogContent>
         <List>
           {highlights.map((highlight) => (
-            <ListItem key={highlight.id} sx={{ alignItems: "flex-start" }}>
-              <ListItemIcon sx={{ fontSize: "40px", mr: 2, mt: 1.75 }}>
+            <ListItem key={highlight.id} sx={{ alignItems: "center", py: 1.5 }}>
+              <ListItemIcon sx={{ fontSize: "40px", mr: 2 }}>
                 {highlight.icon}
               </ListItemIcon>
               <ListItemText
-                primary={highlight.primary}
-                secondary={highlight.secondary}
+                secondary={highlight.text}
                 slotProps={{
-                  primary: {
-                    variant: "h6",
-                    component: "span",
-                  },
                   secondary: {
                     variant: "body1",
                   },

@@ -268,16 +268,16 @@ describe("SwitchScanningSettings", () => {
       name: "First-item pause",
     });
     const ignoreRepeatedPresses = screen.getByRole("slider", {
-      name: "Ignore repeated presses",
+      name: "Ignore repeated presses for",
     });
-    const minimumPressTime = screen.getByRole("slider", {
-      name: "Minimum press time",
+    const minimumPressDuration = screen.getByRole("slider", {
+      name: "Minimum press duration",
     });
 
     await expect.element(cycles).toBeVisible();
     await expect.element(firstItemPause).toBeVisible();
     await expect.element(ignoreRepeatedPresses).toBeVisible();
-    await expect.element(minimumPressTime).toBeVisible();
+    await expect.element(minimumPressDuration).toBeVisible();
     expect(screen.getByText("Off", { exact: true }).all()).toHaveLength(3);
     await expect
       .element(firstItemPause)
@@ -286,12 +286,12 @@ describe("SwitchScanningSettings", () => {
       .element(ignoreRepeatedPresses)
       .toHaveAttribute("aria-valuetext", "Off");
     await expect
-      .element(minimumPressTime)
+      .element(minimumPressDuration)
       .toHaveAttribute("aria-valuetext", "Off");
 
     cycles.element().focus();
     await userEvent.keyboard("{ArrowRight}");
-    minimumPressTime.element().focus();
+    minimumPressDuration.element().focus();
     await userEvent.keyboard("{ArrowRight}");
 
     await vi.waitFor(() => {
