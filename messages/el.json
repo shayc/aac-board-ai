@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Αλλαγή",
   "switchScanningNextItemSwitch": "Διακόπτης επόμενου στοιχείου",
   "switchScanningScanSwitch": "Διακόπτης σάρωσης",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Παράβλεψη επαναλαμβανόμενων πατημάτων",
   "switchScanningMinimumPressDuration": "Ελάχιστη διάρκεια πατήματος",
   "switchScanningAssign": "Πατήστε έναν διακόπτη για αντιστοίχιση",
-  "switchScanningNextItem": "Επόμενο στοιχείο",
   "switchScanningSelectSwitch": "Διακόπτης επιλογής",
   "switchScanningMouseInput": "Κουμπί ποντικιού {button}",
-  "switchScanningActions": "Ενέργειες",
-  "switchScanningActionsExit": "Πίσω από τις ενέργειες",
   "switchScanningRow": "Σειρά {row}",
   "switchScanningRowExit": "Πίσω από τη σειρά {row}",
   "loading": "Φόρτωση...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Ο πίνακας εισήχθη",
         "countPlural=*": "Οι πίνακες εισήχθησαν"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ο πίνακας αντικαταστάθηκε",
-        "countPlural=*": "Οι πίνακες αντικαταστάθηκαν"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Πρόσβαση με διακόπτη",
   "switchScanningEnabled": "Ενεργοποίηση σάρωσης με διακόπτη",
   "switchScanningMethod": "Μέθοδος σάρωσης",
-  "switchScanningOneSwitch": "Ένας διακόπτης",
-  "switchScanningTwoSwitches": "Δύο διακόπτες",
   "switchScanningMethodAuto": "Αυτόματη",
   "switchScanningMethodStep": "Βήμα με δύο διακόπτες",
   "switchScanningMethodDwell": "Παραμονή με έναν διακόπτη",
@@ -165,8 +151,5 @@
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Ο πίνακας δεν βρέθηκε",
-  "boardUrlReplaceConfirmTitle": "Αντικατάσταση «{name}»;",
-  "boardUrlReplaceConfirmDescription": "Η εισαγωγή από το {host} θα αντικαταστήσει αυτόν τον πίνακα και ό,τι περιέχει. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-  "boardUrlReplace": "Αντικατάσταση",
   "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του πίνακα από τον σύνδεσμο"
 }

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Spremeni",
   "switchScanningNextItemSwitch": "Stikalo za naslednji element",
   "switchScanningScanSwitch": "Stikalo za pregledovanje",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Prezri ponovljene pritiske",
   "switchScanningMinimumPressDuration": "Najkrajše trajanje pritiska",
   "switchScanningAssign": "Pritisnite stikalo, da ga dodelite",
-  "switchScanningNextItem": "Naslednji element",
   "switchScanningSelectSwitch": "Stikalo za izbiro",
   "switchScanningMouseInput": "Gumb miške {button}",
-  "switchScanningActions": "Dejanja",
-  "switchScanningActionsExit": "Nazaj iz dejanj",
   "switchScanningRow": "Vrstica {row}",
   "switchScanningRowExit": "Nazaj iz vrstice {row}",
   "loading": "Nalaganje...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tabla uvožena",
         "countPlural=*": "Table uvožene"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabla zamenjana",
-        "countPlural=*": "Table zamenjane"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Dostop s stikalom",
   "switchScanningEnabled": "Vklopi skeniranje s stikalom",
   "switchScanningMethod": "Način skeniranja",
-  "switchScanningOneSwitch": "Eno stikalo",
-  "switchScanningTwoSwitches": "Dve stikali",
   "switchScanningMethodAuto": "Samodejno",
   "switchScanningMethodStep": "Korak z dvema stikaloma",
   "switchScanningMethodDwell": "Zadržanje z enim stikalom",
@@ -165,8 +151,5 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Table ni mogoče najti",
-  "boardUrlReplaceConfirmTitle": "Zamenjam »{name}«?",
-  "boardUrlReplaceConfirmDescription": "Uvoz s {host} bo zamenjal to tablo in vse v njej. Tega dejanja ni mogoče razveljaviti.",
-  "boardUrlReplace": "Zamenjaj",
   "boardUrlImportFailed": "Table ni bilo mogoče uvoziti s povezave"
 }

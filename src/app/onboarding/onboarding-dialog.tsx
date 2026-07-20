@@ -16,8 +16,6 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
 
-const APP_NAME = "AAC Board AI";
-
 interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
@@ -92,7 +90,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
           textAlign: "center",
         }}
       >
-        {APP_NAME}
+        {t(m.appName)}
       </DialogTitle>
 
       <DialogContent>

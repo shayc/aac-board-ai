@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Змінити",
   "switchScanningNextItemSwitch": "Перемикач наступного елемента",
   "switchScanningScanSwitch": "Перемикач сканування",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ігнорувати повторні натискання",
   "switchScanningMinimumPressDuration": "Мінімальна тривалість натискання",
   "switchScanningAssign": "Натисніть перемикач, щоб призначити його",
-  "switchScanningNextItem": "Наступний елемент",
   "switchScanningSelectSwitch": "Перемикач вибору",
   "switchScanningMouseInput": "Кнопка миші {button}",
-  "switchScanningActions": "Дії",
-  "switchScanningActionsExit": "Назад із дій",
   "switchScanningRow": "Рядок {row}",
   "switchScanningRowExit": "Назад із рядка {row}",
   "loading": "Завантаження...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Дошку імпортовано",
         "countPlural=*": "Дошки імпортовано"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дошку замінено",
-        "countPlural=*": "Дошки замінено"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Керування перемикачем",
   "switchScanningEnabled": "Увімкнути сканування перемикачем",
   "switchScanningMethod": "Метод сканування",
-  "switchScanningOneSwitch": "Один перемикач",
-  "switchScanningTwoSwitches": "Два перемикачі",
   "switchScanningMethodAuto": "Автоматичний",
   "switchScanningMethodStep": "Крок двома перемикачами",
   "switchScanningMethodDwell": "Затримка з одним перемикачем",
@@ -165,8 +151,5 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Дошку не знайдено",
-  "boardUrlReplaceConfirmTitle": "Замінити «{name}»?",
-  "boardUrlReplaceConfirmDescription": "Імпорт із сайту {host} замінить цю дошку та весь її вміст. Цю дію не можна скасувати.",
-  "boardUrlReplace": "Замінити",
   "boardUrlImportFailed": "Не вдалося імпортувати дошку за посиланням"
 }

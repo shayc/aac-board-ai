@@ -222,8 +222,9 @@ Rules that constrain every file but are visible in none — several are _absence
   appends a locale's entries to `obf.strings` after a translation resolves. The
   in-memory `Board` is still _derived on read_ via `obfToBoard`, so the mapping
   can evolve and any board can be re-derived losslessly.
-- **Board data reaches components only through route loaders** — never fetched in a
-  component effect. Data (and its translation) is ready before render.
+- **The active hydrated board reaches components through route loaders.** Its data
+  and translation are ready before render. Ancillary board summaries may be loaded
+  by feature hooks through the storage API.
 - **Built-in AI is reached only through `@shayc/react-built-in-ai`.** Support is
   detected by probing for the task-specific global — `isSupported(name)` is just
   `globalThis[name] != null` for `Proofreader`, `Rewriter`, `Translator` — never a
@@ -323,9 +324,10 @@ The known fragilities:
   in-app changes (like cached translations) cannot leave the device — export is the
   missing half of the "share via files" answer. No-sync is by design, but users
   will ask for it.
-- **The language list follows installed TTS voices.** A device with sparse voices
-  offers fewer languages than the UI is translated into — capability, not
-  translation, is the limit.
+- **Speech support varies by language and device.** The language list combines every
+  translated UI locale with languages exposed by installed TTS voices. Sparse voice
+  coverage does not hide translated UI languages, but it can leave some languages
+  without a matching speech voice.
 - **Deploy config is host-specific.** Static hosting is portable, but the current
   config is Netlify-only (`netlify.toml`).
 

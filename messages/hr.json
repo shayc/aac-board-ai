@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Promijeni",
   "switchScanningNextItemSwitch": "Sklopka za sljedeću stavku",
   "switchScanningScanSwitch": "Sklopka za skeniranje",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Zanemari ponovljene pritiske",
   "switchScanningMinimumPressDuration": "Minimalno trajanje pritiska",
   "switchScanningAssign": "Pritisnite prekidač da biste ga dodijelili",
-  "switchScanningNextItem": "Sljedeća stavka",
   "switchScanningSelectSwitch": "Prekidač za odabir",
   "switchScanningMouseInput": "Tipka miša {button}",
-  "switchScanningActions": "Radnje",
-  "switchScanningActionsExit": "Natrag iz radnji",
   "switchScanningRow": "Redak {row}",
   "switchScanningRowExit": "Natrag iz retka {row}",
   "loading": "Učitavanje...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Ploča uvezena",
         "countPlural=*": "Ploče uvezene"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ploča zamijenjena",
-        "countPlural=*": "Ploče zamijenjene"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Pristup prekidačem",
   "switchScanningEnabled": "Uključi skeniranje prekidačem",
   "switchScanningMethod": "Način skeniranja",
-  "switchScanningOneSwitch": "Jedan prekidač",
-  "switchScanningTwoSwitches": "Dva prekidača",
   "switchScanningMethodAuto": "Automatski",
   "switchScanningMethodStep": "Korak s dva prekidača",
   "switchScanningMethodDwell": "Zadržavanje s jednim prekidačem",
@@ -165,8 +151,5 @@
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Ploča nije pronađena",
-  "boardUrlReplaceConfirmTitle": "Zamijeniti „{name}”?",
-  "boardUrlReplaceConfirmDescription": "Uvoz s {host} zamijenit će ovu ploču i sve u njoj. Ovu radnju nije moguće poništiti.",
-  "boardUrlReplace": "Zamijeni",
   "boardUrlImportFailed": "Ploču nije moguće uvesti s poveznice"
 }

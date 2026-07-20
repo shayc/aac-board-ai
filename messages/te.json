@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "మార్చు",
   "switchScanningNextItemSwitch": "తదుపరి అంశం స్విచ్",
   "switchScanningScanSwitch": "స్కాన్ స్విచ్",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "పదేపదే నొక్కడం విస్మరించండి",
   "switchScanningMinimumPressDuration": "కనీస నొక్కు వ్యవధి",
   "switchScanningAssign": "కేటాయించడానికి ఒక స్విచ్‌ను నొక్కండి",
-  "switchScanningNextItem": "తదుపరి అంశం",
   "switchScanningSelectSwitch": "ఎంచుకునే స్విచ్",
   "switchScanningMouseInput": "మౌస్ బటన్ {button}",
-  "switchScanningActions": "చర్యలు",
-  "switchScanningActionsExit": "చర్యల నుండి వెనక్కి",
   "switchScanningRow": "వరుస {row}",
   "switchScanningRowExit": "{row}వ వరుస నుండి వెనక్కి",
   "loading": "లోడ్ అవుతోంది…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "బోర్డు దిగుమతి చేయబడింది",
         "countPlural=*": "బోర్డులు దిగుమతి చేయబడ్డాయి"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "బోర్డు భర్తీ చేయబడింది",
-        "countPlural=*": "బోర్డులు భర్తీ చేయబడ్డాయి"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "స్విచ్ యాక్సెస్",
   "switchScanningEnabled": "స్విచ్ స్కానింగ్‌ను ప్రారంభించండి",
   "switchScanningMethod": "స్కాన్ పద్ధతి",
-  "switchScanningOneSwitch": "ఒక స్విచ్",
-  "switchScanningTwoSwitches": "రెండు స్విచ్‌లు",
   "switchScanningMethodAuto": "స్వయంచాలక",
   "switchScanningMethodStep": "రెండు-స్విచ్ దశ",
   "switchScanningMethodDwell": "ఒక-స్విచ్ నిరీక్షణ",
@@ -165,8 +151,5 @@
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు కనుగొనబడలేదు",
-  "boardUrlReplaceConfirmTitle": "\"{name}\"ను భర్తీ చేయాలా?",
-  "boardUrlReplaceConfirmDescription": "{host} నుండి దిగుమతి చేస్తే ఈ బోర్డు మరియు అందులోని అన్నీ భర్తీ అవుతాయి. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
-  "boardUrlReplace": "భర్తీ చేయి",
   "boardUrlImportFailed": "లింక్ నుండి బోర్డును దిగుమతి చేయలేకపోయాం"
 }

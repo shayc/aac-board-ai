@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "बदलें",
   "switchScanningNextItemSwitch": "अगले आइटम का स्विच",
   "switchScanningScanSwitch": "स्कैन स्विच",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "बार-बार दबाने को अनदेखा करें",
   "switchScanningMinimumPressDuration": "दबाने की न्यूनतम अवधि",
   "switchScanningAssign": "असाइन करने के लिए स्विच दबाएँ",
-  "switchScanningNextItem": "अगला आइटम",
   "switchScanningSelectSwitch": "चुनने का स्विच",
   "switchScanningMouseInput": "माउस बटन {button}",
-  "switchScanningActions": "कार्रवाइयाँ",
-  "switchScanningActionsExit": "कार्रवाइयों से वापस जाएँ",
   "switchScanningRow": "पंक्ति {row}",
   "switchScanningRowExit": "पंक्ति {row} से वापस जाएँ",
   "loading": "लोड हो रहा है…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "बोर्ड आयात हो गया",
         "countPlural=*": "बोर्ड आयात हो गए"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "बोर्ड बदल दिया गया",
-        "countPlural=*": "बोर्ड बदल दिए गए"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "स्विच एक्सेस",
   "switchScanningEnabled": "स्विच स्कैनिंग चालू करें",
   "switchScanningMethod": "स्कैन विधि",
-  "switchScanningOneSwitch": "एक स्विच",
-  "switchScanningTwoSwitches": "दो स्विच",
   "switchScanningMethodAuto": "स्वचालित",
   "switchScanningMethodStep": "दो-स्विच चरण",
   "switchScanningMethodDwell": "एक-स्विच ठहराव",
@@ -165,8 +151,5 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड नहीं मिला",
-  "boardUrlReplaceConfirmTitle": "\"{name}\" को बदलें?",
-  "boardUrlReplaceConfirmDescription": "{host} से आयात करने पर यह बोर्ड और इसमें मौजूद सब कुछ बदल जाएगा। यह क्रिया पूर्ववत नहीं की जा सकती।",
-  "boardUrlReplace": "बदलें",
   "boardUrlImportFailed": "लिंक से बोर्ड आयात नहीं किया जा सका"
 }

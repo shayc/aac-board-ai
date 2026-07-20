@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Ändra",
   "switchScanningNextItemSwitch": "Kontakt för nästa objekt",
   "switchScanningScanSwitch": "Skanningskontakt",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorera upprepade tryck",
   "switchScanningMinimumPressDuration": "Minsta trycktid",
   "switchScanningAssign": "Tryck på en kontakt för att tilldela den",
-  "switchScanningNextItem": "Nästa objekt",
   "switchScanningSelectSwitch": "Kontakt för val",
   "switchScanningMouseInput": "Musknapp {button}",
-  "switchScanningActions": "Åtgärder",
-  "switchScanningActionsExit": "Tillbaka från åtgärder",
   "switchScanningRow": "Rad {row}",
   "switchScanningRowExit": "Tillbaka från rad {row}",
   "loading": "Laddar...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tavla importerad",
         "countPlural=*": "Tavlor importerade"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavla ersatt",
-        "countPlural=*": "Tavlor ersatta"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Kontaktstyrning",
   "switchScanningEnabled": "Aktivera kontaktskanning",
   "switchScanningMethod": "Skanningsmetod",
-  "switchScanningOneSwitch": "En kontakt",
-  "switchScanningTwoSwitches": "Två kontakter",
   "switchScanningMethodAuto": "Automatisk",
   "switchScanningMethodStep": "Steg med två kontakter",
   "switchScanningMethodDwell": "Väntetid med en kontakt",
@@ -165,8 +151,5 @@
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Tavlan hittades inte",
-  "boardUrlReplaceConfirmTitle": "Ersätt ”{name}”?",
-  "boardUrlReplaceConfirmDescription": "Import från {host} ersätter den här tavlan och allt i den. Den här åtgärden kan inte ångras.",
-  "boardUrlReplace": "Ersätt",
   "boardUrlImportFailed": "Det gick inte att importera tavlan från länken"
 }

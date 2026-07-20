@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Cambia",
   "switchScanningNextItemSwitch": "Sensore per elemento successivo",
   "switchScanningScanSwitch": "Sensore di scansione",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignora pressioni ripetute",
   "switchScanningMinimumPressDuration": "Durata minima della pressione",
   "switchScanningAssign": "Premi un sensore per assegnarlo",
-  "switchScanningNextItem": "Elemento successivo",
   "switchScanningSelectSwitch": "Sensore di selezione",
   "switchScanningMouseInput": "Pulsante del mouse {button}",
-  "switchScanningActions": "Azioni",
-  "switchScanningActionsExit": "Indietro dalle azioni",
   "switchScanningRow": "Riga {row}",
   "switchScanningRowExit": "Indietro dalla riga {row}",
   "loading": "Caricamento...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tabella importata",
         "countPlural=*": "Tabelle importate"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabella sostituita",
-        "countPlural=*": "Tabelle sostituite"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Accesso con sensore",
   "switchScanningEnabled": "Attiva la scansione con sensore",
   "switchScanningMethod": "Metodo di scansione",
-  "switchScanningOneSwitch": "Un sensore",
-  "switchScanningTwoSwitches": "Due sensori",
   "switchScanningMethodAuto": "Automatica",
   "switchScanningMethodStep": "Passo con due sensori",
   "switchScanningMethodDwell": "Permanenza con un sensore",
@@ -165,8 +151,5 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Tabella non trovata",
-  "boardUrlReplaceConfirmTitle": "Sostituire \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "L'importazione da {host} sostituirà questa tabella e tutto il suo contenuto. Questa azione non può essere annullata.",
-  "boardUrlReplace": "Sostituisci",
   "boardUrlImportFailed": "Impossibile importare la tabella dal link"
 }

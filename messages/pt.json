@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Alterar",
   "switchScanningNextItemSwitch": "Acionador do próximo item",
   "switchScanningScanSwitch": "Acionador de varredura",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorar acionamentos repetidos",
   "switchScanningMinimumPressDuration": "Duração mínima do acionamento",
   "switchScanningAssign": "Prima um acionador para o atribuir",
-  "switchScanningNextItem": "Item seguinte",
   "switchScanningSelectSwitch": "Acionador de seleção",
   "switchScanningMouseInput": "Botão do rato {button}",
-  "switchScanningActions": "Ações",
-  "switchScanningActionsExit": "Voltar das ações",
   "switchScanningRow": "Linha {row}",
   "switchScanningRowExit": "Voltar da linha {row}",
   "loading": "Carregando...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Prancha importada",
         "countPlural=*": "Pranchas importadas"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Prancha substituída",
-        "countPlural=*": "Pranchas substituídas"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Acesso por acionador",
   "switchScanningEnabled": "Ativar varredura por acionador",
   "switchScanningMethod": "Método de varredura",
-  "switchScanningOneSwitch": "Um acionador",
-  "switchScanningTwoSwitches": "Dois acionadores",
   "switchScanningMethodAuto": "Automática",
   "switchScanningMethodStep": "Passo com dois acionadores",
   "switchScanningMethodDwell": "Permanência com um acionador",
@@ -165,8 +151,5 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Prancha não encontrada",
-  "boardUrlReplaceConfirmTitle": "Substituir \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Importar de {host} substituirá esta prancha e tudo o que há nela. Esta ação não pode ser desfeita.",
-  "boardUrlReplace": "Substituir",
   "boardUrlImportFailed": "Não foi possível importar a prancha do link"
 }

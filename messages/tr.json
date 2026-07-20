@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Değiştir",
   "switchScanningNextItemSwitch": "Sonraki öğe anahtarı",
   "switchScanningScanSwitch": "Tarama anahtarı",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Yinelenen basışları yok say",
   "switchScanningMinimumPressDuration": "Minimum basma süresi",
   "switchScanningAssign": "Atamak için bir anahtara basın",
-  "switchScanningNextItem": "Sonraki öğe",
   "switchScanningSelectSwitch": "Seçim anahtarı",
   "switchScanningMouseInput": "Fare düğmesi {button}",
-  "switchScanningActions": "Eylemler",
-  "switchScanningActionsExit": "Eylemlerden geri dön",
   "switchScanningRow": "{row}. satır",
   "switchScanningRowExit": "{row}. satırdan geri dön",
   "loading": "Yükleniyor...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Pano içe aktarıldı",
         "countPlural=*": "Panolar içe aktarıldı"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Pano değiştirildi",
-        "countPlural=*": "Panolar değiştirildi"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Anahtar erişimi",
   "switchScanningEnabled": "Anahtarla taramayı etkinleştir",
   "switchScanningMethod": "Tarama yöntemi",
-  "switchScanningOneSwitch": "Tek anahtar",
-  "switchScanningTwoSwitches": "İki anahtar",
   "switchScanningMethodAuto": "Otomatik",
   "switchScanningMethodStep": "İki anahtarlı adım",
   "switchScanningMethodDwell": "Tek anahtarlı bekleme",
@@ -165,8 +151,5 @@
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano bulunamadı",
-  "boardUrlReplaceConfirmTitle": "\"{name}\" değiştirilsin mi?",
-  "boardUrlReplaceConfirmDescription": "{host} adresinden içe aktarma bu panoyu ve içindeki her şeyi değiştirir. Bu işlem geri alınamaz.",
-  "boardUrlReplace": "Değiştir",
   "boardUrlImportFailed": "Pano bağlantıdan içe aktarılamadı"
 }

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Cambiar",
   "switchScanningNextItemSwitch": "Pulsador de elemento siguiente",
   "switchScanningScanSwitch": "Pulsador de barrido",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorar pulsaciones repetidas",
   "switchScanningMinimumPressDuration": "Duración mínima de pulsación",
   "switchScanningAssign": "Pulsa un pulsador para asignarlo",
-  "switchScanningNextItem": "Elemento siguiente",
   "switchScanningSelectSwitch": "Pulsador de selección",
   "switchScanningMouseInput": "Botón del ratón {button}",
-  "switchScanningActions": "Acciones",
-  "switchScanningActionsExit": "Volver desde las acciones",
   "switchScanningRow": "Fila {row}",
   "switchScanningRowExit": "Volver desde la fila {row}",
   "loading": "Cargando...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tablero importado",
         "countPlural=*": "Tableros importados"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tablero reemplazado",
-        "countPlural=*": "Tableros reemplazados"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Acceso con pulsador",
   "switchScanningEnabled": "Activar barrido con pulsador",
   "switchScanningMethod": "Método de barrido",
-  "switchScanningOneSwitch": "Un pulsador",
-  "switchScanningTwoSwitches": "Dos pulsadores",
   "switchScanningMethodAuto": "Automático",
   "switchScanningMethodStep": "Paso con dos pulsadores",
   "switchScanningMethodDwell": "Permanencia con un pulsador",
@@ -165,8 +151,5 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Tablero no encontrado",
-  "boardUrlReplaceConfirmTitle": "¿Reemplazar \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Importar desde {host} reemplazará este tablero y todo su contenido. Esta acción no se puede deshacer.",
-  "boardUrlReplace": "Reemplazar",
   "boardUrlImportFailed": "No se pudo importar el tablero desde el enlace"
 }

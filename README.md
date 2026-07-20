@@ -69,7 +69,7 @@ edge://flags/#edge-llm-rewriter-api-for-phi-mini
 Requires Node.js 24+.
 
 ```bash
-git clone [https://github.com/shayc/aac-board-ai.git](https://github.com/shayc/aac-board-ai.git)
+git clone https://github.com/shayc/aac-board-ai.git
 cd aac-board-ai
 npm install && npm run dev
 ```

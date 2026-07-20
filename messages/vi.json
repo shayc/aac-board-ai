@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Thay đổi",
   "switchScanningNextItemSwitch": "Công tắc mục tiếp theo",
   "switchScanningScanSwitch": "Công tắc quét",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Bỏ qua các lần nhấn lặp lại",
   "switchScanningMinimumPressDuration": "Thời lượng nhấn tối thiểu",
   "switchScanningAssign": "Nhấn một công tắc để gán",
-  "switchScanningNextItem": "Mục tiếp theo",
   "switchScanningSelectSwitch": "Công tắc chọn",
   "switchScanningMouseInput": "Nút chuột {button}",
-  "switchScanningActions": "Thao tác",
-  "switchScanningActionsExit": "Quay lại từ thao tác",
   "switchScanningRow": "Hàng {row}",
   "switchScanningRowExit": "Quay lại từ hàng {row}",
   "loading": "Đang tải...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Đã nhập bảng",
         "countPlural=*": "Đã nhập các bảng"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Đã thay thế bảng",
-        "countPlural=*": "Đã thay thế các bảng"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Truy cập bằng công tắc",
   "switchScanningEnabled": "Bật quét bằng công tắc",
   "switchScanningMethod": "Phương thức quét",
-  "switchScanningOneSwitch": "Một công tắc",
-  "switchScanningTwoSwitches": "Hai công tắc",
   "switchScanningMethodAuto": "Tự động",
   "switchScanningMethodStep": "Bước bằng hai công tắc",
   "switchScanningMethodDwell": "Dừng bằng một công tắc",
@@ -165,8 +151,5 @@
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bảng",
-  "boardUrlReplaceConfirmTitle": "Thay thế \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Nhập từ {host} sẽ thay thế bảng này và mọi thứ trong đó. Không thể hoàn tác hành động này.",
-  "boardUrlReplace": "Thay thế",
   "boardUrlImportFailed": "Không thể nhập bảng từ liên kết"
 }

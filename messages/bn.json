@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "পরিবর্তন করুন",
   "switchScanningNextItemSwitch": "পরবর্তী আইটেমের সুইচ",
   "switchScanningScanSwitch": "স্ক্যান সুইচ",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "বারবার চাপ উপেক্ষা করুন",
   "switchScanningMinimumPressDuration": "সর্বনিম্ন চাপের সময়কাল",
   "switchScanningAssign": "বরাদ্দ করতে একটি সুইচ চাপুন",
-  "switchScanningNextItem": "পরবর্তী আইটেম",
   "switchScanningSelectSwitch": "নির্বাচনের সুইচ",
   "switchScanningMouseInput": "মাউস বোতাম {button}",
-  "switchScanningActions": "কাজসমূহ",
-  "switchScanningActionsExit": "কাজসমূহ থেকে ফিরে যান",
   "switchScanningRow": "সারি {row}",
   "switchScanningRowExit": "{row} নম্বর সারি থেকে ফিরে যান",
   "loading": "লোড হচ্ছে…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "বোর্ড আমদানি করা হয়েছে",
         "countPlural=*": "বোর্ড আমদানি করা হয়েছে"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "বোর্ড প্রতিস্থাপিত হয়েছে",
-        "countPlural=*": "বোর্ড প্রতিস্থাপিত হয়েছে"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "সুইচ অ্যাক্সেস",
   "switchScanningEnabled": "সুইচ স্ক্যানিং চালু করুন",
   "switchScanningMethod": "স্ক্যান পদ্ধতি",
-  "switchScanningOneSwitch": "একটি সুইচ",
-  "switchScanningTwoSwitches": "দুটি সুইচ",
   "switchScanningMethodAuto": "স্বয়ংক্রিয়",
   "switchScanningMethodStep": "দুই-সুইচ ধাপ",
   "switchScanningMethodDwell": "এক-সুইচ অপেক্ষা",
@@ -165,8 +151,5 @@
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",
-  "boardUrlReplaceConfirmTitle": "\"{name}\" প্রতিস্থাপন করবেন?",
-  "boardUrlReplaceConfirmDescription": "{host} থেকে আমদানি করলে এই বোর্ড এবং এর ভেতরের সবকিছু প্রতিস্থাপিত হবে। এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না।",
-  "boardUrlReplace": "প্রতিস্থাপন করুন",
   "boardUrlImportFailed": "লিঙ্ক থেকে বোর্ড আমদানি করা যায়নি"
 }

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Schimbă",
   "switchScanningNextItemSwitch": "Comutator pentru elementul următor",
   "switchScanningScanSwitch": "Comutator de scanare",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignoră apăsările repetate",
   "switchScanningMinimumPressDuration": "Durata minimă a apăsării",
   "switchScanningAssign": "Apasă un comutator pentru a-l atribui",
-  "switchScanningNextItem": "Elementul următor",
   "switchScanningSelectSwitch": "Comutator de selectare",
   "switchScanningMouseInput": "Butonul mouse-ului {button}",
-  "switchScanningActions": "Acțiuni",
-  "switchScanningActionsExit": "Înapoi din acțiuni",
   "switchScanningRow": "Rândul {row}",
   "switchScanningRowExit": "Înapoi din rândul {row}",
   "loading": "Se încarcă...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tablă importată",
         "countPlural=*": "Table importate"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tablă înlocuită",
-        "countPlural=*": "Table înlocuite"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Acces cu comutator",
   "switchScanningEnabled": "Activează scanarea cu comutator",
   "switchScanningMethod": "Metodă de scanare",
-  "switchScanningOneSwitch": "Un comutator",
-  "switchScanningTwoSwitches": "Două comutatoare",
   "switchScanningMethodAuto": "Automată",
   "switchScanningMethodStep": "Pas cu două comutatoare",
   "switchScanningMethodDwell": "Staționare cu un comutator",
@@ -165,8 +151,5 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Tabla nu a fost găsită",
-  "boardUrlReplaceConfirmTitle": "Înlocuiești „{name}”?",
-  "boardUrlReplaceConfirmDescription": "Importul de la {host} va înlocui această tablă și tot conținutul ei. Această acțiune nu poate fi anulată.",
-  "boardUrlReplace": "Înlocuiește",
   "boardUrlImportFailed": "Tabla nu a putut fi importată din link"
 }
