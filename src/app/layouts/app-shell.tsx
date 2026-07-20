@@ -3,6 +3,7 @@ import { ContentColumn } from "@app/layouts/content-column";
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
+import { useBoardMediaLifetime } from "@app/routing/use-board-media-lifetime";
 import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
@@ -27,6 +28,7 @@ export function AppShell() {
   const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
 
   useFileHandlerLaunch();
+  useBoardMediaLifetime();
   useRevalidateOnLanguageChange();
 
   return (

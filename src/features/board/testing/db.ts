@@ -3,6 +3,7 @@ import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   getBoardsDB,
   replaceBoardSet,
+  type AssetInput,
   type BoardRecord,
   type BoardSetRecord,
 } from "../storage/boards-db";
@@ -13,6 +14,7 @@ interface SeedBoardSet extends Partial<BoardSetRecord> {
   setId: string;
   rootBoardId: string;
   boards?: Omit<BoardRecord, "setId">[];
+  assets?: AssetInput[];
 }
 
 export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
@@ -46,11 +48,11 @@ export async function resetBoardsDB(): Promise<void> {
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   await clearBoardsDB();
-  for (const { boards = [], ...record } of records) {
+  for (const { boards = [], assets = [], ...record } of records) {
     await replaceBoardSet({
       boardSet: { name: record.setId, ...record },
       boards,
-      assets: [],
+      assets,
     });
   }
 

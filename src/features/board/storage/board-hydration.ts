@@ -7,20 +7,21 @@ import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
 import { BoardNotFoundError, getAssetBlob, getBoard } from "./boards-db";
 
-// Module-level because data-mode loaders have no unmount to hook into. Loader
-// calls are not serialized — a new navigation can start hydrating before the
-// previous one settles — and a superseded call must never revoke the live
-// board's URLs. Each call builds URLs in its own registry, checks the abort
-// signal after every await, and swaps into `previousRegistry` synchronously
-// only if it wins; a superseded call throws first and revokes only its own
-// registry. The only production call site is boardLoader.
-let previousRegistry: ObjectUrlRegistry | null = null;
+export interface BoardMediaResource {
+  commit(): void;
+  dispose(): void;
+}
+
+export interface HydratedBoard {
+  board: Board;
+  media: BoardMediaResource;
+}
 
 export async function hydrateBoard(
   setId: string,
   boardId: string,
   signal?: AbortSignal,
-): Promise<Board> {
+): Promise<HydratedBoard> {
   const registry = createObjectUrlRegistry();
   try {
     const obf = await readOBFBoard(setId, boardId);
@@ -32,15 +33,55 @@ export async function hydrateBoard(
 
     signal?.throwIfAborted();
 
-    const previous = previousRegistry;
-    previousRegistry = registry;
-    previous?.revokeAll();
-
-    return board;
+    return { board, media: createBoardMediaResource(registry, signal) };
   } catch (error) {
     registry.revokeAll();
     throw error;
   }
+}
+
+function createBoardMediaResource(
+  registry: ObjectUrlRegistry,
+  signal?: AbortSignal,
+): BoardMediaResource {
+  let state: "provisional" | "committed" | "disposed" = "provisional";
+
+  function removeAbortListener() {
+    signal?.removeEventListener("abort", disposeProvisional);
+  }
+
+  function dispose() {
+    if (state === "disposed") {
+      return;
+    }
+
+    state = "disposed";
+    removeAbortListener();
+    registry.revokeAll();
+  }
+
+  function disposeProvisional() {
+    if (state === "provisional") {
+      dispose();
+    }
+  }
+
+  signal?.addEventListener("abort", disposeProvisional, { once: true });
+
+  return {
+    commit() {
+      if (state === "disposed") {
+        throw new Error("Cannot commit disposed board media");
+      }
+      if (state === "committed") {
+        return;
+      }
+
+      state = "committed";
+      removeAbortListener();
+    },
+    dispose,
+  };
 }
 
 async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
