@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack, { type StackProps } from "@mui/material/Stack";
 import type { Theme } from "@mui/material/styles";
+import { mergeSx } from "@shared/theme/merge-sx";
 import type { ReactNode, Ref } from "react";
 import { Fragment } from "react";
 import { useGridKeyboard } from "./use-grid-keyboard";
@@ -159,13 +160,13 @@ export function Grid<TItem extends { id: string }>({
   );
 }
 
-export function GridRow({ children, gap, ...rootProps }: GridRowProps) {
+export function GridRow({ children, gap, sx, ...rootProps }: GridRowProps) {
   return (
     <Stack
       {...rootProps}
       role="row"
       direction="row"
-      sx={{ flex: 1, minHeight: "var(--cell-height)", gap }}
+      sx={mergeSx({ flex: 1, minHeight: "var(--cell-height)", gap }, sx)}
     >
       {children}
     </Stack>
