@@ -31,18 +31,18 @@
   "opensInNewTab": "(dibuka di tab baru)",
   "boardGridLabel": "Papan komunikasi",
   "board": "Papan",
-  "libraryLoading": "Memuat papan...",
+  "libraryLoading": "Memuat set papan...",
   "libraryEmptyTitle": "Pustaka kosong",
-  "libraryEmptyDescription": "Impor papan komunikasi untuk memulai.",
-  "libraryImportBoards": "Impor papan",
-  "libraryBoards": "Papan",
+  "libraryEmptyDescription": "Impor berkas papan untuk memulai.",
+  "libraryImportBoards": "Impor berkas papan",
+  "libraryBoards": "Set papan",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Mengimpor papan...",
-        "countPlural=*": "Mengimpor papan..."
+        "countPlural=one": "Mengimpor berkas papan...",
+        "countPlural=*": "Mengimpor berkas papan..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Papan diimpor",
-        "countPlural=*": "Papan diimpor"
+        "countPlural=one": "Set papan diimpor",
+        "countPlural=*": "Set papan diimpor"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tidak dapat mengimpor papan",
-        "countPlural=*": "Tidak dapat mengimpor papan"
+        "countPlural=one": "Tidak dapat mengimpor berkas papan",
+        "countPlural=*": "Tidak dapat mengimpor berkas papan"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Papan terlalu besar untuk diimpor",
-        "countPlural=*": "Papan terlalu besar untuk diimpor"
+        "countPlural=one": "Berkas papan terlalu besar untuk diimpor",
+        "countPlural=*": "Berkas papan terlalu besar untuk diimpor"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Opsi lainnya untuk {name}",
   "libraryByAuthor": "Oleh {author}",
   "libraryGridDimensions": "Kisi {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Hapus \"{name}\"?",
-  "libraryDeleteIrreversible": "Tindakan ini tidak dapat dibatalkan.",
-  "libraryDeleted": "\"{name}\" dihapus",
-  "libraryDeleteFailed": "Tidak dapat menghapus \"{name}\"",
+  "libraryDeleteConfirmTitle": "Hapus set papan \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Papan dalam set ini akan dihapus. Tindakan ini tidak dapat dibatalkan.",
+        "countPlural=*": "Semua {count} papan dalam set ini akan dihapus. Tindakan ini tidak dapat dibatalkan."
+      }
+    }
+  ],
+  "libraryDeleted": "Set papan \"{name}\" dihapus",
+  "libraryDeleteFailed": "Tidak dapat menghapus set papan \"{name}\"",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
   "aboutSourceCode": "Kode sumber",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Halaman tidak ditemukan",
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
-  "errorBoardSetNotFound": "Papan tidak ditemukan",
-  "boardUrlImportFailed": "Tidak dapat mengimpor papan dari tautan"
+  "errorBoardSetNotFound": "Set papan tidak ditemukan",
+  "boardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(otvorí sa na novej karte)",
   "boardGridLabel": "Komunikačná tabuľka",
   "board": "Tabuľka",
-  "libraryLoading": "Načítavajú sa tabuľky...",
+  "libraryLoading": "Načítavajú sa súpravy tabuliek...",
   "libraryEmptyTitle": "Knižnica je prázdna",
-  "libraryEmptyDescription": "Začnite importovaním komunikačných tabuliek.",
-  "libraryImportBoards": "Importovať tabuľky",
-  "libraryBoards": "Tabuľky",
+  "libraryEmptyDescription": "Začnite importovaním súborov tabuliek.",
+  "libraryImportBoards": "Importovať súbory tabuliek",
+  "libraryBoards": "Súpravy tabuliek",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importovanie tabuľky...",
-        "countPlural=*": "Importovanie tabuliek..."
+        "countPlural=one": "Importovanie súboru tabuľky...",
+        "countPlural=*": "Importovanie súborov tabuliek..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabuľka importovaná",
-        "countPlural=*": "Tabuľky importované"
+        "countPlural=one": "Súprava tabuliek importovaná",
+        "countPlural=*": "Súpravy tabuliek importované"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabuľku sa nepodarilo importovať",
-        "countPlural=*": "Tabuľky sa nepodarilo importovať"
+        "countPlural=one": "Súbor tabuľky sa nepodarilo importovať",
+        "countPlural=*": "Súbory tabuliek sa nepodarilo importovať"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabuľka je príliš veľká na import",
-        "countPlural=*": "Tabuľky sú príliš veľké na import"
+        "countPlural=one": "Súbor tabuľky je príliš veľký na import",
+        "countPlural=*": "Súbory tabuliek sú príliš veľké na import"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Ďalšie možnosti pre {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mriežka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Odstrániť „{name}“?",
-  "libraryDeleteIrreversible": "Túto akciu nie je možné vrátiť späť.",
-  "libraryDeleted": "„{name}“ odstránené",
-  "libraryDeleteFailed": "„{name}“ sa nepodarilo odstrániť",
+  "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek „{name}“?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabuľka v tejto súprave bude odstránená. Túto akciu nie je možné vrátiť späť.",
+        "countPlural=*": "Všetkých {count} tabuliek v tejto súprave bude odstránených. Túto akciu nie je možné vrátiť späť."
+      }
+    }
+  ],
+  "libraryDeleted": "Súprava tabuliek „{name}“ odstránená",
+  "libraryDeleteFailed": "Súpravu tabuliek „{name}“ sa nepodarilo odstrániť",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",
   "aboutSourceCode": "Zdrojový kód",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Stránka sa nenašla",
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
-  "errorBoardSetNotFound": "Tabuľka sa nenašla",
-  "boardUrlImportFailed": "Tabuľku sa nepodarilo importovať z odkazu"
+  "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
+  "boardUrlImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu"
 }

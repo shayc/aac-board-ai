@@ -31,18 +31,18 @@
   "opensInNewTab": "(otevře se na nové kartě)",
   "boardGridLabel": "Komunikační tabulka",
   "board": "Tabulka",
-  "libraryLoading": "Načítání tabulek...",
+  "libraryLoading": "Načítání sad tabulek...",
   "libraryEmptyTitle": "Knihovna je prázdná",
-  "libraryEmptyDescription": "Začněte importem komunikačních tabulek.",
-  "libraryImportBoards": "Importovat tabulky",
-  "libraryBoards": "Tabulky",
+  "libraryEmptyDescription": "Začněte importem souborů tabulek.",
+  "libraryImportBoards": "Importovat soubory tabulek",
+  "libraryBoards": "Sady tabulek",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importování tabulky...",
-        "countPlural=*": "Importování tabulek..."
+        "countPlural=one": "Importování souboru tabulky...",
+        "countPlural=*": "Importování souborů tabulek..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabulka importována",
-        "countPlural=*": "Tabulky importovány"
+        "countPlural=one": "Sada tabulek importována",
+        "countPlural=*": "Sady tabulek importovány"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabulku se nepodařilo importovat",
-        "countPlural=*": "Tabulky se nepodařilo importovat"
+        "countPlural=one": "Soubor tabulky se nepodařilo importovat",
+        "countPlural=*": "Soubory tabulek se nepodařilo importovat"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabulka je příliš velká na import",
-        "countPlural=*": "Tabulky jsou příliš velké na import"
+        "countPlural=one": "Soubor tabulky je příliš velký na import",
+        "countPlural=*": "Soubory tabulek jsou příliš velké na import"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Další možnosti pro {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mřížka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Smazat „{name}“?",
-  "libraryDeleteIrreversible": "Tuto akci nelze vrátit zpět.",
-  "libraryDeleted": "„{name}“ smazáno",
-  "libraryDeleteFailed": "„{name}“ se nepodařilo smazat",
+  "libraryDeleteConfirmTitle": "Smazat sadu tabulek „{name}“?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabulka v této sadě bude smazána. Tuto akci nelze vrátit zpět.",
+        "countPlural=*": "Všech {count} tabulek v této sadě bude smazáno. Tuto akci nelze vrátit zpět."
+      }
+    }
+  ],
+  "libraryDeleted": "Sada tabulek „{name}“ smazána",
+  "libraryDeleteFailed": "Sadu tabulek „{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",
   "aboutSourceCode": "Zdrojový kód",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Stránka nebyla nalezena",
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
-  "errorBoardSetNotFound": "Tabulka nebyla nalezena",
-  "boardUrlImportFailed": "Tabulku se nepodařilo importovat z odkazu"
+  "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
+  "boardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu"
 }

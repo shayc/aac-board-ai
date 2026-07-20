@@ -31,18 +31,18 @@
   "opensInNewTab": "(เปิดในแท็บใหม่)",
   "boardGridLabel": "บอร์ดสื่อสาร",
   "board": "บอร์ด",
-  "libraryLoading": "กำลังโหลดบอร์ด...",
+  "libraryLoading": "กำลังโหลดชุดบอร์ด...",
   "libraryEmptyTitle": "คลังว่างเปล่า",
-  "libraryEmptyDescription": "นำเข้าบอร์ดสื่อสารเพื่อเริ่มต้น",
-  "libraryImportBoards": "นำเข้าบอร์ด",
-  "libraryBoards": "บอร์ด",
+  "libraryEmptyDescription": "นำเข้าไฟล์บอร์ดเพื่อเริ่มต้น",
+  "libraryImportBoards": "นำเข้าไฟล์บอร์ด",
+  "libraryBoards": "ชุดบอร์ด",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "กำลังนำเข้าบอร์ด...",
-        "countPlural=*": "กำลังนำเข้าบอร์ด..."
+        "countPlural=one": "กำลังนำเข้าไฟล์บอร์ด...",
+        "countPlural=*": "กำลังนำเข้าไฟล์บอร์ด..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "นำเข้าบอร์ดแล้ว",
-        "countPlural=*": "นำเข้าบอร์ดแล้ว"
+        "countPlural=one": "นำเข้าชุดบอร์ดแล้ว",
+        "countPlural=*": "นำเข้าชุดบอร์ดแล้ว"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "นำเข้าบอร์ดไม่สำเร็จ",
-        "countPlural=*": "นำเข้าบอร์ดไม่สำเร็จ"
+        "countPlural=one": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
+        "countPlural=*": "นำเข้าไฟล์บอร์ดไม่สำเร็จ"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
-        "countPlural=*": "บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
+        "countPlural=one": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
+        "countPlural=*": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "ตัวเลือกเพิ่มเติมสำหรับ {name}",
   "libraryByAuthor": "โดย {author}",
   "libraryGridDimensions": "ตาราง {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "ลบ \"{name}\" ไหม",
-  "libraryDeleteIrreversible": "ไม่สามารถเลิกทำการกระทำนี้ได้",
-  "libraryDeleted": "ลบ \"{name}\" แล้ว",
-  "libraryDeleteFailed": "ลบ \"{name}\" ไม่สำเร็จ",
+  "libraryDeleteConfirmTitle": "ลบชุดบอร์ด \"{name}\" ไหม",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "บอร์ดในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
+        "countPlural=*": "บอร์ดทั้ง {count} รายการในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้"
+      }
+    }
+  ],
+  "libraryDeleted": "ลบชุดบอร์ด \"{name}\" แล้ว",
+  "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
   "aboutSourceCode": "ซอร์สโค้ด",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "ไม่พบหน้านี้",
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
-  "errorBoardSetNotFound": "ไม่พบบอร์ด",
-  "boardUrlImportFailed": "นำเข้าบอร์ดจากลิงก์ไม่สำเร็จ"
+  "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
+  "boardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ"
 }

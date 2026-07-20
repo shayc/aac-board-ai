@@ -31,18 +31,18 @@
   "opensInNewTab": "(ಹೊಸ ಟ್ಯಾಬ್‌ನಲ್ಲಿ ತೆರೆಯುತ್ತದೆ)",
   "boardGridLabel": "ಸಂವಹನ ಬೋರ್ಡ್",
   "board": "ಬೋರ್ಡ್",
-  "libraryLoading": "ಬೋರ್ಡ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",
+  "libraryLoading": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಲೋಡ್ ಆಗುತ್ತಿವೆ…",
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
-  "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಸಂವಹನ ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
-  "libraryImportBoards": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
-  "libraryBoards": "ಬೋರ್ಡ್‌ಗಳು",
+  "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
+  "libraryImportBoards": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
+  "libraryBoards": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
+        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಆಗುತ್ತಿದೆ…",
+        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಆಗುತ್ತಿವೆ…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದಾಗಿವೆ"
+        "countPlural=one": "ಬೋರ್ಡ್ ಸೆಟ್ ಆಮದಾಗಿದೆ",
+        "countPlural=*": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು ಆಮದಾಗಿವೆ"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ"
+        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
+        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name} ಗಾಗಿ ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳು",
   "libraryByAuthor": "ಲೇಖಕ: {author}",
   "libraryGridDimensions": "{rows}×{columns} ಗ್ರಿಡ್",
-  "libraryDeleteConfirmTitle": "\"{name}\" ಅನ್ನು ಅಳಿಸುವುದೇ?",
-  "libraryDeleteIrreversible": "ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
-  "libraryDeleted": "\"{name}\" ಅಳಿಸಲಾಗಿದೆ",
-  "libraryDeleteFailed": "\"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
+  "libraryDeleteConfirmTitle": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಅಳಿಸುವುದೇ?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "ಈ ಸೆಟ್‌ನಲ್ಲಿರುವ ಬೋರ್ಡ್ ಅನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
+        "countPlural=*": "ಈ ಸೆಟ್‌ನಲ್ಲಿರುವ ಎಲ್ಲಾ {count} ಬೋರ್ಡ್‌ಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು."
+      }
+    }
+  ],
+  "libraryDeleted": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅಳಿಸಲಾಗಿದೆ",
+  "libraryDeleteFailed": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
   "libraryTitle": "ಗ್ರಂಥಾಲಯ",
   "libraryOpen": "ಗ್ರಂಥಾಲಯವನ್ನು ತೆರೆಯಿರಿ",
   "aboutSourceCode": "ಮೂಲ ಕೋಡ್",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "ಪುಟ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+  "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
+  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

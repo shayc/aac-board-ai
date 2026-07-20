@@ -31,18 +31,18 @@
   "opensInNewTab": "(otvara se u novoj kartici)",
   "boardGridLabel": "Komunikacijska ploča",
   "board": "Ploča",
-  "libraryLoading": "Učitavanje ploča...",
+  "libraryLoading": "Učitavanje skupova ploča...",
   "libraryEmptyTitle": "Knjižnica je prazna",
-  "libraryEmptyDescription": "Za početak uvezite komunikacijske ploče.",
-  "libraryImportBoards": "Uvezi ploče",
-  "libraryBoards": "Ploče",
+  "libraryEmptyDescription": "Za početak uvezite datoteke ploča.",
+  "libraryImportBoards": "Uvezi datoteke ploča",
+  "libraryBoards": "Skupovi ploča",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Uvoz ploče...",
-        "countPlural=*": "Uvoz ploča..."
+        "countPlural=one": "Uvoz datoteke ploče...",
+        "countPlural=*": "Uvoz datoteka ploča..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Ploča uvezena",
-        "countPlural=*": "Ploče uvezene"
+        "countPlural=one": "Skup ploča uvezen",
+        "countPlural=*": "Skupovi ploča uvezeni"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Ploču nije moguće uvesti",
-        "countPlural=*": "Ploče nije moguće uvesti"
+        "countPlural=one": "Datoteku ploče nije moguće uvesti",
+        "countPlural=*": "Datoteke ploča nije moguće uvesti"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Ploča je prevelika za uvoz",
-        "countPlural=*": "Ploče su prevelike za uvoz"
+        "countPlural=one": "Datoteka ploče je prevelika za uvoz",
+        "countPlural=*": "Datoteke ploča su prevelike za uvoz"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Više opcija za {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrisati „{name}”?",
-  "libraryDeleteIrreversible": "Ovu radnju nije moguće poništiti.",
-  "libraryDeleted": "„{name}” izbrisana",
-  "libraryDeleteFailed": "„{name}” nije moguće izbrisati",
+  "libraryDeleteConfirmTitle": "Izbrisati skup ploča „{name}”?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Ploča u ovom skupu bit će izbrisana. Ovu radnju nije moguće poništiti.",
+        "countPlural=*": "Svih {count} ploča u ovom skupu bit će izbrisano. Ovu radnju nije moguće poništiti."
+      }
+    }
+  ],
+  "libraryDeleted": "Skup ploča „{name}” izbrisan",
+  "libraryDeleteFailed": "Skup ploča „{name}” nije moguće izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
   "aboutSourceCode": "Izvorni kod",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Stranica nije pronađena",
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
-  "errorBoardSetNotFound": "Ploča nije pronađena",
-  "boardUrlImportFailed": "Ploču nije moguće uvesti s poveznice"
+  "errorBoardSetNotFound": "Skup ploča nije pronađen",
+  "boardUrlImportFailed": "Datoteku ploče nije moguće uvesti s poveznice"
 }

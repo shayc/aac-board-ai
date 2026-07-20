@@ -28,7 +28,7 @@ describe("BoardSetLibrary", () => {
       .element(screen.getByText("Library is empty"))
       .toBeInTheDocument();
     await expect
-      .element(screen.getByRole("button", { name: "Import boards" }))
+      .element(screen.getByRole("button", { name: "Import board files" }))
       .toBeInTheDocument();
   });
 
@@ -59,13 +59,13 @@ describe("BoardSetLibrary", () => {
     await screen.getByRole("menuitem", { name: "Delete" }).click();
 
     await expect
-      .element(screen.getByText('Delete "Animals"?'))
+      .element(screen.getByText('Delete board set "Animals"?'))
       .toBeInTheDocument();
     await screen.getByRole("button", { name: "Delete" }).click();
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"Animals" deleted');
+      .toHaveTextContent('Board set "Animals" deleted');
     await expect
       .element(screen.getByText("Library is empty"))
       .toBeInTheDocument();
@@ -86,7 +86,7 @@ describe("BoardSetLibrary", () => {
 
     await expect.element(screen.getByText("Animals")).toBeInTheDocument();
     await expect
-      .element(screen.getByText('Delete "Animals"?'))
+      .element(screen.getByText('Delete board set "Animals"?'))
       .not.toBeInTheDocument();
   });
 
@@ -98,6 +98,7 @@ describe("BoardSetLibrary", () => {
 
     const screen = await renderBoardSetLibrary();
 
+    await expect.element(screen.getByText("Board sets")).toBeInTheDocument();
     await expect.element(screen.getByText("Animals")).toBeInTheDocument();
     await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
 

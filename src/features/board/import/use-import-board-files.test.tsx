@@ -38,7 +38,19 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board imported");
+      .toHaveTextContent("Board set imported");
+  });
+
+  test("shows the plural imported message for multiple files", async () => {
+    const firstFile = await loadFixtureFile(OBF_FIXTURE);
+    const secondFile = await loadFixtureFile(OBF_FIXTURE);
+    const screen = await renderImport([firstFile, secondFile]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Board sets imported");
   });
 
   test("shows the imported message and keeps both sets on a conflict", async () => {
@@ -50,7 +62,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board imported");
+      .toHaveTextContent("Board set imported");
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {
@@ -67,6 +79,6 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board is too large to import");
+      .toHaveTextContent("Board file is too large to import");
   });
 });

@@ -31,18 +31,18 @@
   "opensInNewTab": "(otwiera się w nowej karcie)",
   "boardGridLabel": "Tablica komunikacyjna",
   "board": "Tablica",
-  "libraryLoading": "Ładowanie tablic...",
+  "libraryLoading": "Ładowanie zestawów tablic...",
   "libraryEmptyTitle": "Biblioteka jest pusta",
-  "libraryEmptyDescription": "Zaimportuj tablice komunikacyjne, aby rozpocząć.",
-  "libraryImportBoards": "Importuj tablice",
-  "libraryBoards": "Tablice",
+  "libraryEmptyDescription": "Zaimportuj pliki tablic, aby rozpocząć.",
+  "libraryImportBoards": "Importuj pliki tablic",
+  "libraryBoards": "Zestawy tablic",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importowanie tablicy...",
-        "countPlural=*": "Importowanie tablic..."
+        "countPlural=one": "Importowanie pliku tablicy...",
+        "countPlural=*": "Importowanie plików tablic..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Zaimportowano tablicę",
-        "countPlural=*": "Zaimportowano tablice"
+        "countPlural=one": "Zaimportowano zestaw tablic",
+        "countPlural=*": "Zaimportowano zestawy tablic"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Nie udało się zaimportować tablicy",
-        "countPlural=*": "Nie udało się zaimportować tablic"
+        "countPlural=one": "Nie udało się zaimportować pliku tablicy",
+        "countPlural=*": "Nie udało się zaimportować plików tablic"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tablica jest zbyt duża, aby ją zaimportować",
-        "countPlural=*": "Tablice są zbyt duże, aby je zaimportować"
+        "countPlural=one": "Plik tablicy jest zbyt duży, aby go zaimportować",
+        "countPlural=*": "Pliki tablic są zbyt duże, aby je zaimportować"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Więcej opcji dla {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Siatka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Usunąć „{name}”?",
-  "libraryDeleteIrreversible": "Tej operacji nie można cofnąć.",
-  "libraryDeleted": "Usunięto „{name}”",
-  "libraryDeleteFailed": "Nie udało się usunąć „{name}”",
+  "libraryDeleteConfirmTitle": "Usunąć zestaw tablic „{name}”?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tablica z tego zestawu zostanie usunięta. Tej operacji nie można cofnąć.",
+        "countPlural=*": "Wszystkie tablice z tego zestawu ({count}) zostaną usunięte. Tej operacji nie można cofnąć."
+      }
+    }
+  ],
+  "libraryDeleted": "Zestaw tablic „{name}” usunięty",
+  "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic „{name}”",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",
   "aboutSourceCode": "Kod źródłowy",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Nie znaleziono strony",
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
-  "errorBoardSetNotFound": "Nie znaleziono tablicy",
-  "boardUrlImportFailed": "Nie udało się zaimportować tablicy z linku"
+  "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
+  "boardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
 }

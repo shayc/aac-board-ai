@@ -31,18 +31,18 @@
   "opensInNewTab": "(নতুন ট্যাবে খোলে)",
   "boardGridLabel": "যোগাযোগ বোর্ড",
   "board": "বোর্ড",
-  "libraryLoading": "বোর্ড লোড হচ্ছে…",
+  "libraryLoading": "বোর্ড সেট লোড হচ্ছে…",
   "libraryEmptyTitle": "লাইব্রেরি খালি",
-  "libraryEmptyDescription": "শুরু করতে যোগাযোগ বোর্ড আমদানি করুন।",
-  "libraryImportBoards": "বোর্ড আমদানি করুন",
-  "libraryBoards": "বোর্ড",
+  "libraryEmptyDescription": "শুরু করতে বোর্ড ফাইল আমদানি করুন।",
+  "libraryImportBoards": "বোর্ড ফাইল আমদানি করুন",
+  "libraryBoards": "বোর্ড সেট",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "বোর্ড আমদানি করা হচ্ছে…",
-        "countPlural=*": "বোর্ড আমদানি করা হচ্ছে…"
+        "countPlural=one": "বোর্ড ফাইল আমদানি করা হচ্ছে…",
+        "countPlural=*": "বোর্ড ফাইল আমদানি করা হচ্ছে…"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "বোর্ড আমদানি করা হয়েছে",
-        "countPlural=*": "বোর্ড আমদানি করা হয়েছে"
+        "countPlural=one": "বোর্ড সেট আমদানি করা হয়েছে",
+        "countPlural=*": "বোর্ড সেট আমদানি করা হয়েছে"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "বোর্ড আমদানি করা যায়নি",
-        "countPlural=*": "বোর্ড আমদানি করা যায়নি"
+        "countPlural=one": "বোর্ড ফাইল আমদানি করা যায়নি",
+        "countPlural=*": "বোর্ড ফাইল আমদানি করা যায়নি"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "বোর্ডটি আমদানি করার জন্য খুব বড়",
-        "countPlural=*": "বোর্ডগুলি আমদানি করার জন্য খুব বড়"
+        "countPlural=one": "বোর্ড ফাইলটি আমদানি করার জন্য খুব বড়",
+        "countPlural=*": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
   "libraryByAuthor": "লিখেছেন {author}",
   "libraryGridDimensions": "{rows}×{columns} গ্রিড",
-  "libraryDeleteConfirmTitle": "\"{name}\" মুছবেন?",
-  "libraryDeleteIrreversible": "এই ক্রিয়াটি পূর্বাবস্থায় ফেরানো যাবে না।",
-  "libraryDeleted": "\"{name}\" মুছে ফেলা হয়েছে",
-  "libraryDeleteFailed": "\"{name}\" মোছা যায়নি",
+  "libraryDeleteConfirmTitle": "বোর্ড সেট \"{name}\" মুছবেন?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "এই সেটের বোর্ডটি মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
+        "countPlural=*": "এই সেটের সব {count}টি বোর্ড মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।"
+      }
+    }
+  ],
+  "libraryDeleted": "বোর্ড সেট \"{name}\" মুছে ফেলা হয়েছে",
+  "libraryDeleteFailed": "বোর্ড সেট \"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",
   "aboutSourceCode": "সোর্স কোড",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "পৃষ্ঠাটি পাওয়া যায়নি",
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
-  "errorBoardSetNotFound": "বোর্ড পাওয়া যায়নি",
-  "boardUrlImportFailed": "লিঙ্ক থেকে বোর্ড আমদানি করা যায়নি"
+  "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
+  "boardUrlImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি"
 }

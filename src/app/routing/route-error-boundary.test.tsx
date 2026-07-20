@@ -75,4 +75,17 @@ describe("RouteErrorBoundary", () => {
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect.element(screen.getByText("הלוח לא נמצא")).toBeVisible();
   });
+
+  test("distinguishes a missing board set from a missing board", async () => {
+    const screen = await renderWithLoader(() =>
+      throwDataResponse(
+        createLocalizedRouteError(routeErrorCodes.boardSetNotFound),
+      ),
+    );
+
+    await expect.element(screen.getByText("Board set not found")).toBeVisible();
+    await expect
+      .element(screen.getByText("Board not found"))
+      .not.toBeInTheDocument();
+  });
 });

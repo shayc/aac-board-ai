@@ -102,11 +102,11 @@ describe("SnackbarProvider", () => {
     await screen.getByRole("button", { name: "show-imported" }).click();
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board imported");
+      .toHaveTextContent("Board set imported");
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("הלוח יובא בהצלחה");
+      .toHaveTextContent("ערכת הלוחות יובאה בהצלחה");
   });
 });

@@ -31,18 +31,18 @@
   "opensInNewTab": "(отваря се в нов раздел)",
   "boardGridLabel": "Комуникационна дъска",
   "board": "Дъска",
-  "libraryLoading": "Зареждане на дъските...",
+  "libraryLoading": "Зареждане на наборите от дъски...",
   "libraryEmptyTitle": "Библиотеката е празна",
-  "libraryEmptyDescription": "Импортирайте комуникационни дъски, за да започнете.",
-  "libraryImportBoards": "Импортиране на дъски",
-  "libraryBoards": "Дъски",
+  "libraryEmptyDescription": "Импортирайте файлове с дъски, за да започнете.",
+  "libraryImportBoards": "Импортиране на файлове с дъски",
+  "libraryBoards": "Набори от дъски",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Импортиране на дъската...",
-        "countPlural=*": "Импортиране на дъските..."
+        "countPlural=one": "Импортиране на файл с дъска...",
+        "countPlural=*": "Импортиране на файлове с дъски..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Дъската е импортирана",
-        "countPlural=*": "Дъските са импортирани"
+        "countPlural=one": "Наборът от дъски е импортиран",
+        "countPlural=*": "Наборите от дъски са импортирани"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Дъската не може да бъде импортирана",
-        "countPlural=*": "Дъските не могат да бъдат импортирани"
+        "countPlural=one": "Файлът с дъска не може да бъде импортиран",
+        "countPlural=*": "Файловете с дъски не могат да бъдат импортирани"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Дъската е твърде голяма за импортиране",
-        "countPlural=*": "Дъските са твърде големи за импортиране"
+        "countPlural=one": "Файлът с дъска е твърде голям за импортиране",
+        "countPlural=*": "Файловете с дъски са твърде големи за импортиране"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Още опции за {name}",
   "libraryByAuthor": "От {author}",
   "libraryGridDimensions": "Мрежа {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Да се изтрие ли „{name}“?",
-  "libraryDeleteIrreversible": "Това действие не може да бъде отменено.",
-  "libraryDeleted": "„{name}“ е изтрита",
-  "libraryDeleteFailed": "„{name}“ не може да бъде изтрита",
+  "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски „{name}“?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Дъската в този набор ще бъде изтрита. Това не може да бъде отменено.",
+        "countPlural=*": "Всички {count} дъски в този набор ще бъдат изтрити. Това не може да бъде отменено."
+      }
+    }
+  ],
+  "libraryDeleted": "Наборът от дъски „{name}“ е изтрит",
+  "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",
   "aboutSourceCode": "Изходен код",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Страницата не е намерена",
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
-  "errorBoardSetNotFound": "Дъската не е намерена",
-  "boardUrlImportFailed": "Дъската не може да бъде импортирана от връзката"
+  "errorBoardSetNotFound": "Наборът от дъски не е намерен",
+  "boardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
 }

@@ -21,18 +21,18 @@
   "opensInNewTab": "(opens in new tab)",
   "boardGridLabel": "Communication board",
   "board": "Board",
-  "libraryLoading": "Loading boards...",
+  "libraryLoading": "Loading board sets...",
   "libraryEmptyTitle": "Library is empty",
-  "libraryEmptyDescription": "Import communication boards to get started.",
-  "libraryImportBoards": "Import boards",
-  "libraryBoards": "Boards",
+  "libraryEmptyDescription": "Import board files to get started.",
+  "libraryImportBoards": "Import board files",
+  "libraryBoards": "Board sets",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importing board...",
-        "countPlural=*": "Importing boards..."
+        "countPlural=one": "Importing board file...",
+        "countPlural=*": "Importing board files..."
       }
     }
   ],
@@ -41,8 +41,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Board imported",
-        "countPlural=*": "Boards imported"
+        "countPlural=one": "Board set imported",
+        "countPlural=*": "Board sets imported"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Couldn't import board",
-        "countPlural=*": "Couldn't import boards"
+        "countPlural=one": "Couldn't import board file",
+        "countPlural=*": "Couldn't import board files"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Board is too large to import",
-        "countPlural=*": "Boards are too large to import"
+        "countPlural=one": "Board file is too large to import",
+        "countPlural=*": "Board files are too large to import"
       }
     }
   ],
@@ -75,10 +75,19 @@
   "libraryMoreOptionsFor": "More options for {name}",
   "libraryByAuthor": "By {author}",
   "libraryGridDimensions": "{rows}×{columns} grid",
-  "libraryDeleteConfirmTitle": "Delete \"{name}\"?",
-  "libraryDeleteIrreversible": "This action cannot be undone.",
-  "libraryDeleted": "\"{name}\" deleted",
-  "libraryDeleteFailed": "Couldn't delete \"{name}\"",
+  "libraryDeleteConfirmTitle": "Delete board set \"{name}\"?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "The board in this set will be deleted. This cannot be undone.",
+        "countPlural=*": "All {count} boards in this set will be deleted. This cannot be undone."
+      }
+    }
+  ],
+  "libraryDeleted": "Board set \"{name}\" deleted",
+  "libraryDeleteFailed": "Couldn't delete board set \"{name}\"",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
   "aboutSourceCode": "Source code",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Page not found",
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
-  "errorBoardSetNotFound": "Board not found",
-  "boardUrlImportFailed": "Couldn't import board from link"
+  "errorBoardSetNotFound": "Board set not found",
+  "boardUrlImportFailed": "Couldn't import board file from link"
 }

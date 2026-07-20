@@ -24,20 +24,42 @@ describe("BoardSetDeleteDialog", () => {
     await expectNoA11yViolations(document.body);
   });
 
-  test("shows the board set name and an irreversible warning when open", async () => {
+  test("shows the board set name and the single-board warning", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet({ name: "Core Words" })}
+        boardSet={makeBoardSet({ name: "Core Words", boardCount: 1 })}
         onConfirm={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
     await expect
-      .element(screen.getByText('Delete "Core Words"?'))
+      .element(screen.getByText('Delete board set "Core Words"?'))
       .toBeInTheDocument();
     await expect
-      .element(screen.getByText("This action cannot be undone."))
+      .element(
+        screen.getByText(
+          "The board in this set will be deleted. This cannot be undone.",
+        ),
+      )
+      .toBeInTheDocument();
+  });
+
+  test("shows the board count in the multiple-board warning", async () => {
+    const screen = await renderWithProviders(
+      <BoardSetDeleteDialog
+        boardSet={makeBoardSet({ boardCount: 5 })}
+        onConfirm={vi.fn()}
+        onClose={vi.fn()}
+      />,
+    );
+
+    await expect
+      .element(
+        screen.getByText(
+          "All 5 boards in this set will be deleted. This cannot be undone.",
+        ),
+      )
       .toBeInTheDocument();
   });
 
@@ -51,7 +73,11 @@ describe("BoardSetDeleteDialog", () => {
     );
 
     await expect
-      .element(screen.getByText("This action cannot be undone."))
+      .element(
+        screen.getByText(
+          "The board in this set will be deleted. This cannot be undone.",
+        ),
+      )
       .not.toBeInTheDocument();
   });
 

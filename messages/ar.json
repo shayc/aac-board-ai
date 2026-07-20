@@ -31,18 +31,18 @@
   "opensInNewTab": "(يفتح في علامة تبويب جديدة)",
   "boardGridLabel": "لوحة تواصل",
   "board": "لوحة",
-  "libraryLoading": "جارٍ تحميل اللوحات...",
+  "libraryLoading": "جارٍ تحميل مجموعات اللوحات...",
   "libraryEmptyTitle": "المكتبة فارغة",
-  "libraryEmptyDescription": "استورد لوحات تواصل للبدء.",
-  "libraryImportBoards": "استيراد لوحات",
-  "libraryBoards": "لوحات",
+  "libraryEmptyDescription": "استورد ملفات اللوحات للبدء.",
+  "libraryImportBoards": "استيراد ملفات اللوحات",
+  "libraryBoards": "مجموعات اللوحات",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "جارٍ استيراد اللوحة...",
-        "countPlural=*": "جارٍ استيراد اللوحات..."
+        "countPlural=one": "جارٍ استيراد ملف لوحة...",
+        "countPlural=*": "جارٍ استيراد ملفات لوحات..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "تم استيراد اللوحة",
-        "countPlural=*": "تم استيراد اللوحات"
+        "countPlural=one": "تم استيراد مجموعة اللوحات",
+        "countPlural=*": "تم استيراد مجموعات اللوحات"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "تعذّر استيراد اللوحة",
-        "countPlural=*": "تعذّر استيراد اللوحات"
+        "countPlural=one": "تعذّر استيراد ملف اللوحة",
+        "countPlural=*": "تعذّر استيراد ملفات اللوحات"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "اللوحة كبيرة جدًا بحيث يتعذّر استيرادها",
-        "countPlural=*": "اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
+        "countPlural=one": "ملف اللوحة كبير جدًا بحيث يتعذّر استيراده",
+        "countPlural=*": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "خيارات إضافية لـ {name}",
   "libraryByAuthor": "بقلم {author}",
   "libraryGridDimensions": "شبكة {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "حذف \"{name}\"؟",
-  "libraryDeleteIrreversible": "لا يمكن التراجع عن هذا الإجراء.",
-  "libraryDeleted": "تم حذف \"{name}\"",
-  "libraryDeleteFailed": "تعذّر حذف \"{name}\"",
+  "libraryDeleteConfirmTitle": "حذف مجموعة اللوحات \"{name}\"؟",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "سيتم حذف اللوحة الموجودة في هذه المجموعة. لا يمكن التراجع عن ذلك.",
+        "countPlural=*": "سيتم حذف جميع اللوحات البالغ عددها {count} في هذه المجموعة. لا يمكن التراجع عن ذلك."
+      }
+    }
+  ],
+  "libraryDeleted": "تم حذف مجموعة اللوحات \"{name}\"",
+  "libraryDeleteFailed": "تعذّر حذف مجموعة اللوحات \"{name}\"",
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",
   "aboutSourceCode": "الكود المصدري",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "الصفحة غير موجودة",
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
-  "errorBoardSetNotFound": "اللوحة غير موجودة",
-  "boardUrlImportFailed": "تعذّر استيراد اللوحة من الرابط"
+  "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
+  "boardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط"
 }

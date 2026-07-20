@@ -31,18 +31,18 @@
   "opensInNewTab": "(avautuu uuteen välilehteen)",
   "boardGridLabel": "Kommunikointitaulu",
   "board": "Taulu",
-  "libraryLoading": "Ladataan tauluja...",
+  "libraryLoading": "Ladataan taulusarjoja...",
   "libraryEmptyTitle": "Kirjasto on tyhjä",
-  "libraryEmptyDescription": "Tuo kommunikointitauluja päästäksesi alkuun.",
-  "libraryImportBoards": "Tuo tauluja",
-  "libraryBoards": "Taulut",
+  "libraryEmptyDescription": "Tuo taulutiedostoja päästäksesi alkuun.",
+  "libraryImportBoards": "Tuo taulutiedostoja",
+  "libraryBoards": "Taulusarjat",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tuodaan taulua...",
-        "countPlural=*": "Tuodaan tauluja..."
+        "countPlural=one": "Tuodaan taulutiedostoa...",
+        "countPlural=*": "Tuodaan taulutiedostoja..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Taulu tuotu",
-        "countPlural=*": "Taulut tuotu"
+        "countPlural=one": "Taulusarja tuotu",
+        "countPlural=*": "Taulusarjat tuotu"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Taulun tuonti epäonnistui",
-        "countPlural=*": "Taulujen tuonti epäonnistui"
+        "countPlural=one": "Taulutiedoston tuonti epäonnistui",
+        "countPlural=*": "Taulutiedostojen tuonti epäonnistui"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Taulu on liian suuri tuotavaksi",
-        "countPlural=*": "Taulut ovat liian suuria tuotaviksi"
+        "countPlural=one": "Taulutiedosto on liian suuri tuotavaksi",
+        "countPlural=*": "Taulutiedostot ovat liian suuria tuotaviksi"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Lisää vaihtoehtoja kohteelle {name}",
   "libraryByAuthor": "Tekijä: {author}",
   "libraryGridDimensions": "Ruudukko {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Poistetaanko ”{name}”?",
-  "libraryDeleteIrreversible": "Tätä toimintoa ei voi kumota.",
-  "libraryDeleted": "”{name}” poistettu",
-  "libraryDeleteFailed": "Kohteen ”{name}” poisto epäonnistui",
+  "libraryDeleteConfirmTitle": "Poistetaanko taulusarja ”{name}”?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tämän sarjan taulu poistetaan. Tätä toimintoa ei voi kumota.",
+        "countPlural=*": "Kaikki tämän sarjan {count} taulua poistetaan. Tätä toimintoa ei voi kumota."
+      }
+    }
+  ],
+  "libraryDeleted": "Taulusarja ”{name}” poistettu",
+  "libraryDeleteFailed": "Taulusarjan ”{name}” poisto epäonnistui",
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",
   "aboutSourceCode": "Lähdekoodi",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Sivua ei löytynyt",
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
-  "errorBoardSetNotFound": "Taulua ei löytynyt",
-  "boardUrlImportFailed": "Taulun tuonti linkistä epäonnistui"
+  "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
+  "boardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui"
 }

@@ -31,18 +31,18 @@
   "opensInNewTab": "(odpre se v novem zavihku)",
   "boardGridLabel": "Komunikacijska tabla",
   "board": "Tabla",
-  "libraryLoading": "Nalaganje tabel...",
+  "libraryLoading": "Nalaganje kompletov tabel...",
   "libraryEmptyTitle": "Knjižnica je prazna",
-  "libraryEmptyDescription": "Za začetek uvozite komunikacijske table.",
-  "libraryImportBoards": "Uvozi table",
-  "libraryBoards": "Table",
+  "libraryEmptyDescription": "Za začetek uvozite datoteke tabel.",
+  "libraryImportBoards": "Uvozi datoteke tabel",
+  "libraryBoards": "Kompleti tabel",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Uvažanje table...",
-        "countPlural=*": "Uvažanje tabel..."
+        "countPlural=one": "Uvažanje datoteke tabele...",
+        "countPlural=*": "Uvažanje datotek tabel..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabla uvožena",
-        "countPlural=*": "Table uvožene"
+        "countPlural=one": "Komplet tabel uvožen",
+        "countPlural=*": "Kompleti tabel uvoženi"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Table ni bilo mogoče uvoziti",
-        "countPlural=*": "Tabel ni bilo mogoče uvoziti"
+        "countPlural=one": "Datoteke tabele ni bilo mogoče uvoziti",
+        "countPlural=*": "Datotek tabel ni bilo mogoče uvoziti"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabla je prevelika za uvoz",
-        "countPlural=*": "Table so prevelike za uvoz"
+        "countPlural=one": "Datoteka tabele je prevelika za uvoz",
+        "countPlural=*": "Datoteke tabel so prevelike za uvoz"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Več možnosti za {name}",
   "libraryByAuthor": "Avtor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrišem »{name}«?",
-  "libraryDeleteIrreversible": "Tega dejanja ni mogoče razveljaviti.",
-  "libraryDeleted": "»{name}« izbrisana",
-  "libraryDeleteFailed": "»{name}« ni bilo mogoče izbrisati",
+  "libraryDeleteConfirmTitle": "Izbrišem komplet tabel »{name}«?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabela v tem kompletu bo izbrisana. Tega dejanja ni mogoče razveljaviti.",
+        "countPlural=*": "Vseh {count} tabel v tem kompletu bo izbrisanih. Tega dejanja ni mogoče razveljaviti."
+      }
+    }
+  ],
+  "libraryDeleted": "Komplet tabel »{name}« izbrisan",
+  "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",
   "aboutSourceCode": "Izvorna koda",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Strani ni mogoče najti",
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
-  "errorBoardSetNotFound": "Table ni mogoče najti",
-  "boardUrlImportFailed": "Table ni bilo mogoče uvoziti s povezave"
+  "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
+  "boardUrlImportFailed": "Datoteke tabele ni bilo mogoče uvoziti s povezave"
 }

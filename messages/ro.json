@@ -31,18 +31,18 @@
   "opensInNewTab": "(se deschide într-o filă nouă)",
   "boardGridLabel": "Tablă de comunicare",
   "board": "Tablă",
-  "libraryLoading": "Se încarcă tablele...",
+  "libraryLoading": "Se încarcă seturile de table...",
   "libraryEmptyTitle": "Biblioteca este goală",
-  "libraryEmptyDescription": "Importă table de comunicare pentru a începe.",
-  "libraryImportBoards": "Importă table",
-  "libraryBoards": "Table",
+  "libraryEmptyDescription": "Importă fișiere de table pentru a începe.",
+  "libraryImportBoards": "Importă fișiere de table",
+  "libraryBoards": "Seturi de table",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Se importă tabla...",
-        "countPlural=*": "Se importă tablele..."
+        "countPlural=one": "Se importă fișierul tablei...",
+        "countPlural=*": "Se importă fișierele tablelor..."
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tablă importată",
-        "countPlural=*": "Table importate"
+        "countPlural=one": "Set de table importat",
+        "countPlural=*": "Seturi de table importate"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabla nu a putut fi importată",
-        "countPlural=*": "Tablele nu au putut fi importate"
+        "countPlural=one": "Fișierul tablei nu a putut fi importat",
+        "countPlural=*": "Fișierele tablelor nu au putut fi importate"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabla este prea mare pentru a fi importată",
-        "countPlural=*": "Tablele sunt prea mari pentru a fi importate"
+        "countPlural=one": "Fișierul tablei este prea mare pentru a fi importat",
+        "countPlural=*": "Fișierele tablelor sunt prea mari pentru a fi importate"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "Mai multe opțiuni pentru {name}",
   "libraryByAuthor": "De {author}",
   "libraryGridDimensions": "Grilă {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Ștergi „{name}”?",
-  "libraryDeleteIrreversible": "Această acțiune nu poate fi anulată.",
-  "libraryDeleted": "„{name}” a fost ștearsă",
-  "libraryDeleteFailed": "„{name}” nu a putut fi ștearsă",
+  "libraryDeleteConfirmTitle": "Ștergi setul de table „{name}”?",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "Tabla din acest set va fi ștearsă. Această acțiune nu poate fi anulată.",
+        "countPlural=*": "Toate cele {count} table din acest set vor fi șterse. Această acțiune nu poate fi anulată."
+      }
+    }
+  ],
+  "libraryDeleted": "Setul de table „{name}” a fost șters",
+  "libraryDeleteFailed": "Setul de table „{name}” nu a putut fi șters",
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",
   "aboutSourceCode": "Cod sursă",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "Pagina nu a fost găsită",
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
-  "errorBoardSetNotFound": "Tabla nu a fost găsită",
-  "boardUrlImportFailed": "Tabla nu a putut fi importată din link"
+  "errorBoardSetNotFound": "Setul de table nu a fost găsit",
+  "boardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link"
 }

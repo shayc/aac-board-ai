@@ -31,18 +31,18 @@
   "opensInNewTab": "(在新标签页中打开)",
   "boardGridLabel": "沟通板",
   "board": "沟通板",
-  "libraryLoading": "正在加载沟通板……",
+  "libraryLoading": "正在加载沟通板集……",
   "libraryEmptyTitle": "板库为空",
-  "libraryEmptyDescription": "导入沟通板即可开始。",
-  "libraryImportBoards": "导入沟通板",
-  "libraryBoards": "沟通板",
+  "libraryEmptyDescription": "导入沟通板文件即可开始。",
+  "libraryImportBoards": "导入沟通板文件",
+  "libraryBoards": "沟通板集",
   "libraryImportingBoards": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "正在导入沟通板……",
-        "countPlural=*": "正在导入沟通板……"
+        "countPlural=one": "正在导入沟通板文件……",
+        "countPlural=*": "正在导入沟通板文件……"
       }
     }
   ],
@@ -51,8 +51,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "已导入沟通板",
-        "countPlural=*": "已导入沟通板"
+        "countPlural=one": "已导入沟通板集",
+        "countPlural=*": "已导入沟通板集"
       }
     }
   ],
@@ -61,8 +61,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "无法导入沟通板",
-        "countPlural=*": "无法导入沟通板"
+        "countPlural=one": "无法导入沟通板文件",
+        "countPlural=*": "无法导入沟通板文件"
       }
     }
   ],
@@ -71,8 +71,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "沟通板过大，无法导入",
-        "countPlural=*": "沟通板过大，无法导入"
+        "countPlural=one": "沟通板文件过大，无法导入",
+        "countPlural=*": "沟通板文件过大，无法导入"
       }
     }
   ],
@@ -85,10 +85,19 @@
   "libraryMoreOptionsFor": "{name} 的更多选项",
   "libraryByAuthor": "作者：{author}",
   "libraryGridDimensions": "{rows}×{columns} 网格",
-  "libraryDeleteConfirmTitle": "删除“{name}”？",
-  "libraryDeleteIrreversible": "此操作无法撤消。",
-  "libraryDeleted": "已删除“{name}”",
-  "libraryDeleteFailed": "无法删除“{name}”",
+  "libraryDeleteConfirmTitle": "删除沟通板集“{name}”？",
+  "libraryDeleteIrreversible": [
+    {
+      "declarations": ["input count", "local countPlural = count: plural"],
+      "selectors": ["countPlural"],
+      "match": {
+        "countPlural=one": "此板集中的沟通板将被删除。此操作无法撤消。",
+        "countPlural=*": "此板集中的全部 {count} 个沟通板将被删除。此操作无法撤消。"
+      }
+    }
+  ],
+  "libraryDeleted": "已删除沟通板集“{name}”",
+  "libraryDeleteFailed": "无法删除沟通板集“{name}”",
   "libraryTitle": "板库",
   "libraryOpen": "打开板库",
   "aboutSourceCode": "源代码",
@@ -147,6 +156,6 @@
   "errorPageNotFound": "页面未找到",
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
-  "errorBoardSetNotFound": "未找到沟通板",
-  "boardUrlImportFailed": "无法从链接导入沟通板"
+  "errorBoardSetNotFound": "未找到沟通板集",
+  "boardUrlImportFailed": "无法从链接导入沟通板文件"
 }
