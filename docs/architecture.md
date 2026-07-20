@@ -112,13 +112,30 @@ output:
    coordinator serializes speech and recorded audio and publishes progress for
    per-part highlighting.
 
-## Codemap and boundaries
+## Codemap and ownership seams
 
-The table identifies the owner of each concern and the rule at its boundary.
-Names are symbol-searchable rather than hyperlinked so file moves do not break
-the map.
+The repository has three enforced module boundaries:
 
-| Concern                   | Owner                                                                                              | Boundary rule                                                                                                                                                                 |
+- `src/shared/` is the leaf layer. It does not import from the app, pages, or
+  features.
+- Each directory directly under `src/features/` is an isolated feature. A
+  feature imports shared code and its own relative modules, but not the app,
+  pages, or another feature.
+- `src/app/` and `src/pages/` compose features through their public entry points,
+  such as `src/features/board/index.ts`, rather than importing feature internals.
+
+Directories inside `src/features/board/` are cohesion areas within one feature,
+not independent modules. They group code that changes together and may
+collaborate through relative imports; they do not need individual barrels or
+enforced dependency rules. Some still carry important ownership invariants —
+for example, `storage/` exclusively owns IndexedDB access — but a folder alone
+does not imply an independently replaceable boundary.
+
+The table identifies the owner of each concern and the rule at its ownership
+seam. Names are symbol-searchable rather than hyperlinked so file moves do not
+break the map.
+
+| Concern                   | Owner                                                                                              | Ownership rule                                                                                                                                                                |
 | ------------------------- | -------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Composition               | `src/main.tsx`, `src/app/`, `src/pages/`                                                           | `AppProviders` and the router assemble features; pages are route entry components.                                                                                            |
 | Active-board data         | `src/app/routing/loaders/`                                                                         | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                     |
