@@ -104,8 +104,9 @@ flowchart LR
     STG --> DB[("IndexedDB<br/>boardSets · boards · assets")]
 
     UI --> PLY["Playback coordinator<br/>shared/playback"]
-    PLY --> SPK["Speech<br/>shared/speech"] --> WS["Web Speech API"]
-    PLY --> AUD["Recorded audio<br/>shared/audio"]
+    PLY --> OUT["Output transports<br/>shared/playback/transports"]
+    OUT --> WS["Web Speech API"]
+    OUT --> AUD["HTML Audio"]
     UI --> SUG["Suggestions + Translation<br/>features/board/{suggestions,translation}"]
     SUG -.->|via @shayc/react-built-in-ai| BAI["Built-in AI"]
 
@@ -163,12 +164,12 @@ hyperlinked, so a moved file never breaks this table.
 | `src/features/board/board-sets/`                             | Board-set catalog (an external store with cross-tab sync) + delete/info dialogs.                                                |
 | `src/features/board/suggestions/`                            | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                                |
 | `src/features/board/translation/`                            | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                       |
-| `src/shared/speech/`                                         | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                           |
-| `src/shared/playback/`                                       | The sole app-wide playback owner: serializes speech/audio, coordinates cancellation, and exposes reactive progress.             |
+| `src/shared/speech/`                                         | Voice catalog, persisted speech configuration, and voice↔language sync.                                                         |
+| `src/shared/playback/`                                       | The sole app-wide playback owner: serializes output, owns browser transports, coordinates cancellation, and publishes progress. |
 | `src/shared/language/`                                       | The one language model: UI/board/TTS language context + persisted store.                                                        |
 | `src/shared/theme/`                                          | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                           |
 | `src/shared/built-in-ai/`                                    | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.        |
-| everything else under `src/shared/`                          | Small cross-cutting helpers (audio, snackbar, providers, shared components/hooks/utils); each directory name says what it does. |
+| everything else under `src/shared/`                          | Small cross-cutting helpers (snackbar, providers, shared components/hooks/utils); each directory name says what it does.        |
 | `src/shared/utils/{external-store,persisted-store}.ts`       | The two state primitives every cross-cutting store is built from.                                                               |
 | `messages/*.json` + `project.inlang/`                        | Paraglide message sources (one JSON per locale), compiled to the generated `src/paraglide/`.                                    |
 
@@ -271,9 +272,11 @@ Each is the one place to change a concern:
   PWA file handler) converge on `importBoardSets`.
 - **AI provider boundary — `@shayc/react-built-in-ai`.** App code only consumes its
   hooks; swap models or providers in the library, not in features.
-- **Speech boundary — `src/shared/speech/`.** The only wrapper over the Web Speech
-  API. Playback is single-flight: a new clip stops the current, and a clip merely cut
-  short resolves rather than throwing.
+- **Playback boundary — `src/shared/playback/`.** The only gateway to Web Speech and
+  HTML Audio output. Playback is single-flight: a new request stops the current one,
+  and interrupted output resolves rather than throwing.
+- **Voice boundary — `src/shared/speech/`.** Owns the voice catalog, persisted speech
+  configuration, and voice↔language synchronization; it does not produce output.
 - **Switch-access boundary — `src/shared/switch-scanning/`.** Persists the selected
   access method, timing, and assigned keyboard or mouse inputs, then translates that
   profile into the switch-scanning package's method and logical switches. The action

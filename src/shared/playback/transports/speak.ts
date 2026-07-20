@@ -1,4 +1,8 @@
-import { getSpeechConfig, getVoices, synthesis } from "./speech-store";
+import {
+  getSpeechConfig,
+  getVoices,
+  synthesis,
+} from "@shared/speech/speech-store";
 
 interface SpeakOptions {
   signal?: AbortSignal;

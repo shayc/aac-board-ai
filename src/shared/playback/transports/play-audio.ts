@@ -3,7 +3,7 @@ interface PlayAudioOptions {
 }
 
 export function playAudio(
-  url: string,
+  src: string,
   { signal }: PlayAudioOptions = {},
 ): Promise<void> {
   if (signal?.aborted) {
@@ -11,7 +11,7 @@ export function playAudio(
   }
 
   const { promise, resolve } = Promise.withResolvers<void>();
-  const audio = new Audio(url);
+  const audio = new Audio(src);
   let settled = false;
 
   function finish() {

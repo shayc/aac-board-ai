@@ -1,5 +1,3 @@
-import { playAudio } from "@shared/audio/play-audio";
-import { speak } from "@shared/speech/speak";
 import { assertNever } from "@shared/utils/assert-never";
 import { createExternalStore } from "@shared/utils/external-store";
 import {
@@ -8,6 +6,8 @@ import {
   type PlaybackRequest,
   type PlaybackState,
 } from "./playback-context";
+import { playAudio } from "./transports/play-audio";
+import { speak } from "./transports/speak";
 
 interface PlaybackSession {
   controller: AbortController;
