@@ -89,12 +89,15 @@ of board use.
 React Router loaders prepare the active board before its route renders:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` reads raw OBF and asset blobs, creates media object URLs, and
-   maps the result through `obfToBoard` into the in-memory `Board`.
+2. `hydrateBoard` reads raw OBF and asset blobs, creates provisional media
+   object URLs, and maps the result through `obfToBoard` into the in-memory
+   `Board`.
 3. `resolveTranslatedBoard` uses an existing translation or attempts an optional
    translation. Success is applied immediately and cached with a best-effort,
    asynchronous IndexedDB write; failure returns the untranslated board.
-4. Render the grid with a ready `Board`.
+4. Render the grid with a ready `Board`; the route-lifetime observer commits its
+   media and releases the prior board. An aborted load releases only its own
+   provisional media.
 
 ### Activate a tile
 
@@ -178,8 +181,10 @@ rerender only subscribers to the changed slice.
   the in-memory model on every read so its shape can evolve without rewriting
   imported records.
 - **The active board is loader-owned.** Hydration and optional translation finish
-  before the new route renders. Ancillary board summaries may load through the
-  storage API without becoming another active-board path.
+  before the new route renders. Its media remains provisional until the route
+  commits, and leaving the route releases the committed media. Ancillary board
+  summaries may load through the storage API without becoming another
+  active-board path.
 - **Optional AI is capability-detected and failure-tolerant.** Consumers use
   `@shayc/react-built-in-ai`, never User-Agent checks. Suggestions disappear when
   unavailable; translation returns the untranslated board.
@@ -240,12 +245,6 @@ rise with meaningful coverage gains and are not lowered to admit a regression.
   locales remain selectable even when the browser exposes no matching voice. The
   app does not require `SpeechSynthesisVoice.localService`, so a selected voice's
   offline and privacy behavior remains platform-dependent.
-- **Media object-URL lifetime is coupled to hydration.** `hydrateBoard` replaces
-  the module-level URL registry and revokes the previous registry when hydration
-  completes, before optional translation and route commit finish. A pending
-  navigation can therefore revoke media still used by the visible board. The
-  ownership transition should move to route commit or another render-aware
-  lifecycle.
 - **Deployment configuration is host-specific.** The static SPA is portable, but
   the current deployment configuration is Netlify-only (`netlify.toml`).
 

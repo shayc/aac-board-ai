@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
-import { hydrateBoard } from "./board-hydration";
+import { hydrateBoard, type HydratedBoard } from "./board-hydration";
 import { BoardNotFoundError, replaceBoardSet } from "./boards-db";
 import { resetBoardsDB } from "../testing";
 
@@ -62,6 +62,13 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
   });
 }
 
+function getImageUrl(loadedBoard: HydratedBoard): string {
+  const imageUrl = loadedBoard.board.buttons[0].imageSrc;
+  assertDefined(imageUrl);
+
+  return imageUrl;
+}
+
 describe("hydrateBoard", () => {
   beforeEach(async () => {
     await resetBoardsDB();
@@ -71,14 +78,15 @@ describe("hydrateBoard", () => {
   test("returns a hydrated board on the happy path", async () => {
     await seedTestBoard();
 
-    const board = await hydrateBoard(SET_ID, BOARD_ID);
+    const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID);
 
-    expect(board.id).toBe(BOARD_ID);
+    expect(loadedBoard.board.id).toBe(BOARD_ID);
 
-    const imageSrc = board.buttons[0].imageSrc;
-    assertDefined(imageSrc);
+    const imageSrc = getImageUrl(loadedBoard);
     expect(imageSrc.startsWith("blob:")).toBe(true);
     expect(await isObjectUrlAlive(imageSrc)).toBe(true);
+
+    loadedBoard.media.dispose();
   });
 
   test("throws BoardNotFoundError when the board is not in IDB", async () => {
@@ -89,40 +97,43 @@ describe("hydrateBoard", () => {
     expect(error).toBeInstanceOf(BoardNotFoundError);
   });
 
-  test("revokes the previous registry on the next hydrateBoard call", async () => {
+  test("keeps concurrent hydration resources independent", async () => {
     await seedTestBoard();
 
     const first = await hydrateBoard(SET_ID, BOARD_ID);
-    const firstUrl = first.buttons[0].imageSrc;
-    assertDefined(firstUrl);
-    expect(await isObjectUrlAlive(firstUrl)).toBe(true);
-
     const second = await hydrateBoard(SET_ID, BOARD_ID);
-    const secondUrl = second.buttons[0].imageSrc;
-    assertDefined(secondUrl);
+    const firstUrl = getImageUrl(first);
+    const secondUrl = getImageUrl(second);
+
+    expect(await isObjectUrlAlive(firstUrl)).toBe(true);
+    expect(await isObjectUrlAlive(secondUrl)).toBe(true);
+
+    first.media.dispose();
 
     expect(await isObjectUrlAlive(firstUrl)).toBe(false);
     expect(await isObjectUrlAlive(secondUrl)).toBe(true);
+
+    second.media.dispose();
   });
 
-  test("a missing-board error does not poison module state for a later success", async () => {
+  test("a missing-board error does not affect a later success", async () => {
     await seedTestBoard();
 
     await expectThrown(hydrateBoard(SET_ID, "missing-board"));
 
-    const board = await hydrateBoard(SET_ID, BOARD_ID);
-    const url = board.buttons[0].imageSrc;
+    const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID);
+    const url = getImageUrl(loadedBoard);
 
-    assertDefined(url);
     expect(await isObjectUrlAlive(url)).toBe(true);
+
+    loadedBoard.media.dispose();
   });
 
-  test("self-destructs without promoting when the signal is already aborted", async () => {
+  test("an already-aborted load does not disturb another resource", async () => {
     await seedTestBoard();
 
     const live = await hydrateBoard(SET_ID, BOARD_ID);
-    const liveUrl = live.buttons[0].imageSrc;
-    assertDefined(liveUrl);
+    const liveUrl = getImageUrl(live);
     expect(await isObjectUrlAlive(liveUrl)).toBe(true);
 
     const aborted = new AbortController();
@@ -132,9 +143,43 @@ describe("hydrateBoard", () => {
     );
 
     expect((error as Error).name).toBe("AbortError");
-    // A superseded load self-destructs instead of promoting, so the live load's
-    // URLs aren't orphaned.
     expect(await isObjectUrlAlive(liveUrl)).toBe(true);
+
+    live.media.dispose();
+  });
+
+  test("disposes provisional media when its signal aborts", async () => {
+    await seedTestBoard();
+
+    const controller = new AbortController();
+    const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID, controller.signal);
+    const url = getImageUrl(loadedBoard);
+    expect(await isObjectUrlAlive(url)).toBe(true);
+
+    controller.abort();
+
+    expect(await isObjectUrlAlive(url)).toBe(false);
+    loadedBoard.media.dispose();
+    expect(() => loadedBoard.media.commit()).toThrow(
+      "Cannot commit disposed board media",
+    );
+  });
+
+  test("a committed resource survives its loader signal", async () => {
+    await seedTestBoard();
+
+    const controller = new AbortController();
+    const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID, controller.signal);
+    const url = getImageUrl(loadedBoard);
+
+    loadedBoard.media.commit();
+    controller.abort();
+
+    expect(await isObjectUrlAlive(url)).toBe(true);
+
+    loadedBoard.media.dispose();
+
+    expect(await isObjectUrlAlive(url)).toBe(false);
   });
 
   test("a later load still hydrates after an aborted one", async () => {
@@ -144,10 +189,11 @@ describe("hydrateBoard", () => {
     aborted.abort();
     await expectThrown(hydrateBoard(SET_ID, BOARD_ID, aborted.signal));
 
-    const board = await hydrateBoard(SET_ID, BOARD_ID);
-    const url = board.buttons[0].imageSrc;
+    const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID);
+    const url = getImageUrl(loadedBoard);
 
-    assertDefined(url);
     expect(await isObjectUrlAlive(url)).toBe(true);
+
+    loadedBoard.media.dispose();
   });
 });

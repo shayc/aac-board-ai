@@ -12,6 +12,10 @@ export {
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
 export { hydrateBoard } from "./storage/board-hydration";
+export type {
+  BoardMediaResource,
+  HydratedBoard,
+} from "./storage/board-hydration";
 export {
   BoardNotFoundError,
   getBoardSet,
