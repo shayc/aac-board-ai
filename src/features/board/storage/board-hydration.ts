@@ -13,7 +13,7 @@ import { BoardNotFoundError, getAssetBlob, getBoard } from "./boards-db";
 // board's URLs. Each call builds URLs in its own registry, checks the abort
 // signal after every await, and swaps into `previousRegistry` synchronously
 // only if it wins; a superseded call throws first and revokes only its own
-// registry. Single concurrent caller assumed — the only consumer is boardLoader.
+// registry. The only production call site is boardLoader.
 let previousRegistry: ObjectUrlRegistry | null = null;
 
 export async function hydrateBoard(
