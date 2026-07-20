@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "שינוי",
   "switchScanningNextItemSwitch": "מתג לפריט הבא",
   "switchScanningScanSwitch": "מתג סריקה",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "התעלמות מלחיצות חוזרות",
   "switchScanningMinimumPressDuration": "משך לחיצה מינימלי",
   "switchScanningAssign": "יש ללחוץ על מתג כדי להקצות אותו",
-  "switchScanningNextItem": "הפריט הבא",
   "switchScanningSelectSwitch": "מתג בחירה",
   "switchScanningMouseInput": "לחצן עכבר {button}",
-  "switchScanningActions": "פעולות",
-  "switchScanningActionsExit": "חזרה מהפעולות",
   "switchScanningRow": "שורה {row}",
   "switchScanningRowExit": "חזרה משורה {row}",
   "loading": "טעינה...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "הלוח יובא בהצלחה",
         "countPlural=*": "הלוחות יובאו בהצלחה"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "הלוח הוחלף בהצלחה",
-        "countPlural=*": "הלוחות הוחלפו בהצלחה"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "גישה באמצעות מתג",
   "switchScanningEnabled": "הפעלת סריקה באמצעות מתג",
   "switchScanningMethod": "שיטת סריקה",
-  "switchScanningOneSwitch": "מתג אחד",
-  "switchScanningTwoSwitches": "שני מתגים",
   "switchScanningMethodAuto": "אוטומטית",
   "switchScanningMethodStep": "צעד באמצעות שני מתגים",
   "switchScanningMethodDwell": "השהיה באמצעות מתג אחד",
@@ -165,8 +151,5 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "הלוח לא נמצא",
-  "boardUrlReplaceConfirmTitle": "להחליף את \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "ייבוא מ-{host} יחליף את הלוח הזה ואת כל מה שבו. לא ניתן לבטל פעולה זו.",
-  "boardUrlReplace": "החלפה",
   "boardUrlImportFailed": "ייבוא הלוח מהקישור נכשל"
 }

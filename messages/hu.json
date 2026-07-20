@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Módosítás",
   "switchScanningNextItemSwitch": "Következő elem kapcsolója",
   "switchScanningScanSwitch": "Pásztázó kapcsoló",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ismételt megnyomások figyelmen kívül hagyása",
   "switchScanningMinimumPressDuration": "Minimális nyomvatartási idő",
   "switchScanningAssign": "Nyomjon meg egy kapcsolót a hozzárendeléshez",
-  "switchScanningNextItem": "Következő elem",
   "switchScanningSelectSwitch": "Kiválasztó kapcsoló",
   "switchScanningMouseInput": "{button}. egérgomb",
-  "switchScanningActions": "Műveletek",
-  "switchScanningActionsExit": "Vissza a műveletekből",
   "switchScanningRow": "{row}. sor",
   "switchScanningRowExit": "Vissza a(z) {row}. sorból",
   "loading": "Betöltés...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tábla importálva",
         "countPlural=*": "Táblák importálva"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tábla lecserélve",
-        "countPlural=*": "Táblák lecserélve"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Kapcsolós hozzáférés",
   "switchScanningEnabled": "Kapcsolós pásztázás bekapcsolása",
   "switchScanningMethod": "Pásztázási mód",
-  "switchScanningOneSwitch": "Egy kapcsoló",
-  "switchScanningTwoSwitches": "Két kapcsoló",
   "switchScanningMethodAuto": "Automatikus",
   "switchScanningMethodStep": "Kétkapcsolós léptetés",
   "switchScanningMethodDwell": "Egykapcsolós várakozás",
@@ -165,8 +151,5 @@
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A tábla nem található",
-  "boardUrlReplaceConfirmTitle": "Lecseréled a(z) „{name}” táblát?",
-  "boardUrlReplaceConfirmDescription": "A(z) {host} helyről történő importálás lecseréli ezt a táblát és minden tartalmát. Ez a művelet nem vonható vissza.",
-  "boardUrlReplace": "Csere",
   "boardUrlImportFailed": "A tábla importálása a hivatkozásról nem sikerült"
 }

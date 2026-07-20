@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Změnit",
   "switchScanningNextItemSwitch": "Spínač další položky",
   "switchScanningScanSwitch": "Skenovací spínač",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorovat opakovaná stisknutí",
   "switchScanningMinimumPressDuration": "Minimální doba stisknutí",
   "switchScanningAssign": "Stisknutím spínače ho přiřaďte",
-  "switchScanningNextItem": "Další položka",
   "switchScanningSelectSwitch": "Spínač pro výběr",
   "switchScanningMouseInput": "Tlačítko myši {button}",
-  "switchScanningActions": "Akce",
-  "switchScanningActionsExit": "Zpět z akcí",
   "switchScanningRow": "Řádek {row}",
   "switchScanningRowExit": "Zpět z řádku {row}",
   "loading": "Načítání...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tabulka importována",
         "countPlural=*": "Tabulky importovány"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabulka nahrazena",
-        "countPlural=*": "Tabulky nahrazeny"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Ovládání spínačem",
   "switchScanningEnabled": "Zapnout skenování spínačem",
   "switchScanningMethod": "Způsob skenování",
-  "switchScanningOneSwitch": "Jeden spínač",
-  "switchScanningTwoSwitches": "Dva spínače",
   "switchScanningMethodAuto": "Automatické",
   "switchScanningMethodStep": "Krokování dvěma spínači",
   "switchScanningMethodDwell": "Prodleva s jedním spínačem",
@@ -165,8 +151,5 @@
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Tabulka nebyla nalezena",
-  "boardUrlReplaceConfirmTitle": "Nahradit „{name}“?",
-  "boardUrlReplaceConfirmDescription": "Import z {host} nahradí tuto tabulku a vše v ní. Tuto akci nelze vrátit zpět.",
-  "boardUrlReplace": "Nahradit",
   "boardUrlImportFailed": "Tabulku se nepodařilo importovat z odkazu"
 }

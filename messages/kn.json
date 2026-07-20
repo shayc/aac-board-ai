@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "ಬದಲಿಸಿ",
   "switchScanningNextItemSwitch": "ಮುಂದಿನ ಅಂಶದ ಸ್ವಿಚ್",
   "switchScanningScanSwitch": "ಸ್ಕ್ಯಾನ್ ಸ್ವಿಚ್",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "ಪುನರಾವರ್ತಿತ ಒತ್ತುವಿಕೆಗಳನ್ನು ನಿರ್ಲಕ್ಷಿಸಿ",
   "switchScanningMinimumPressDuration": "ಕನಿಷ್ಠ ಒತ್ತುವ ಅವಧಿ",
   "switchScanningAssign": "ನಿಯೋಜಿಸಲು ಸ್ವಿಚ್ ಒತ್ತಿರಿ",
-  "switchScanningNextItem": "ಮುಂದಿನ ಐಟಂ",
   "switchScanningSelectSwitch": "ಆಯ್ಕೆ ಸ್ವಿಚ್",
   "switchScanningMouseInput": "ಮೌಸ್ ಬಟನ್ {button}",
-  "switchScanningActions": "ಕ್ರಿಯೆಗಳು",
-  "switchScanningActionsExit": "ಕ್ರಿಯೆಗಳಿಂದ ಹಿಂದೆ",
   "switchScanningRow": "ಸಾಲು {row}",
   "switchScanningRowExit": "{row}ನೇ ಸಾಲಿನಿಂದ ಹಿಂದೆ",
   "loading": "ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "ಬೋರ್ಡ್ ಆಮದಾಗಿದೆ",
         "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಆಮದಾಗಿವೆ"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಬದಲಾಯಿಸಲಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್‌ಗಳು ಬದಲಾಯಿಸಲಾಗಿವೆ"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "ಸ್ವಿಚ್ ಪ್ರವೇಶ",
   "switchScanningEnabled": "ಸ್ವಿಚ್ ಸ್ಕ್ಯಾನಿಂಗ್ ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "switchScanningMethod": "ಸ್ಕ್ಯಾನ್ ವಿಧಾನ",
-  "switchScanningOneSwitch": "ಒಂದು ಸ್ವಿಚ್",
-  "switchScanningTwoSwitches": "ಎರಡು ಸ್ವಿಚ್‌ಗಳು",
   "switchScanningMethodAuto": "ಸ್ವಯಂಚಾಲಿತ",
   "switchScanningMethodStep": "ಎರಡು-ಸ್ವಿಚ್ ಹಂತ",
   "switchScanningMethodDwell": "ಒಂದು-ಸ್ವಿಚ್ ಕಾಯುವಿಕೆ",
@@ -165,8 +151,5 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "boardUrlReplaceConfirmTitle": "\"{name}\" ಅನ್ನು ಬದಲಾಯಿಸುವುದೇ?",
-  "boardUrlReplaceConfirmDescription": "{host} ನಿಂದ ಆಮದು ಮಾಡಿದರೆ ಈ ಬೋರ್ಡ್ ಮತ್ತು ಅದರಲ್ಲಿರುವ ಎಲ್ಲವೂ ಬದಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
-  "boardUrlReplace": "ಬದಲಾಯಿಸಿ",
   "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

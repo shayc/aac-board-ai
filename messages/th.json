@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "เปลี่ยน",
   "switchScanningNextItemSwitch": "สวิตช์รายการถัดไป",
   "switchScanningScanSwitch": "สวิตช์สแกน",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "ละเว้นการกดซ้ำ",
   "switchScanningMinimumPressDuration": "ระยะเวลากดขั้นต่ำ",
   "switchScanningAssign": "กดสวิตช์เพื่อกำหนด",
-  "switchScanningNextItem": "รายการถัดไป",
   "switchScanningSelectSwitch": "สวิตช์เลือก",
   "switchScanningMouseInput": "ปุ่มเมาส์ {button}",
-  "switchScanningActions": "การดำเนินการ",
-  "switchScanningActionsExit": "ย้อนกลับจากการดำเนินการ",
   "switchScanningRow": "แถว {row}",
   "switchScanningRowExit": "ย้อนกลับจากแถว {row}",
   "loading": "กำลังโหลด...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "นำเข้าบอร์ดแล้ว",
         "countPlural=*": "นำเข้าบอร์ดแล้ว"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "แทนที่บอร์ดแล้ว",
-        "countPlural=*": "แทนที่บอร์ดแล้ว"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "การเข้าถึงด้วยสวิตช์",
   "switchScanningEnabled": "เปิดใช้การสแกนด้วยสวิตช์",
   "switchScanningMethod": "วิธีการสแกน",
-  "switchScanningOneSwitch": "หนึ่งสวิตช์",
-  "switchScanningTwoSwitches": "สองสวิตช์",
   "switchScanningMethodAuto": "อัตโนมัติ",
   "switchScanningMethodStep": "เลื่อนด้วยสองสวิตช์",
   "switchScanningMethodDwell": "ค้างด้วยสวิตช์เดียว",
@@ -165,8 +151,5 @@
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบบอร์ด",
-  "boardUrlReplaceConfirmTitle": "แทนที่ \"{name}\" ไหม",
-  "boardUrlReplaceConfirmDescription": "การนำเข้าจาก {host} จะแทนที่บอร์ดนี้และทุกอย่างในบอร์ด ไม่สามารถเลิกทำการกระทำนี้ได้",
-  "boardUrlReplace": "แทนที่",
   "boardUrlImportFailed": "นำเข้าบอร์ดจากลิงก์ไม่สำเร็จ"
 }

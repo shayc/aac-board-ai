@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Ubah",
   "switchScanningNextItemSwitch": "Sakelar item berikutnya",
   "switchScanningScanSwitch": "Sakelar pemindaian",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Abaikan penekanan berulang",
   "switchScanningMinimumPressDuration": "Durasi penekanan minimum",
   "switchScanningAssign": "Tekan sakelar untuk menetapkannya",
-  "switchScanningNextItem": "Item berikutnya",
   "switchScanningSelectSwitch": "Sakelar pilih",
   "switchScanningMouseInput": "Tombol mouse {button}",
-  "switchScanningActions": "Tindakan",
-  "switchScanningActionsExit": "Kembali dari tindakan",
   "switchScanningRow": "Baris {row}",
   "switchScanningRowExit": "Kembali dari baris {row}",
   "loading": "Memuat...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Papan diimpor",
         "countPlural=*": "Papan diimpor"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Papan diganti",
-        "countPlural=*": "Papan diganti"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Akses sakelar",
   "switchScanningEnabled": "Aktifkan pemindaian sakelar",
   "switchScanningMethod": "Metode pemindaian",
-  "switchScanningOneSwitch": "Satu sakelar",
-  "switchScanningTwoSwitches": "Dua sakelar",
   "switchScanningMethodAuto": "Otomatis",
   "switchScanningMethodStep": "Langkah dua sakelar",
   "switchScanningMethodDwell": "Jeda satu sakelar",
@@ -165,8 +151,5 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Papan tidak ditemukan",
-  "boardUrlReplaceConfirmTitle": "Ganti \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Mengimpor dari {host} akan mengganti papan ini beserta seluruh isinya. Tindakan ini tidak dapat dibatalkan.",
-  "boardUrlReplace": "Ganti",
   "boardUrlImportFailed": "Tidak dapat mengimpor papan dari tautan"
 }

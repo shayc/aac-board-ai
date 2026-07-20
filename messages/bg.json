@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Промяна",
   "switchScanningNextItemSwitch": "Превключвател за следващ елемент",
   "switchScanningScanSwitch": "Превключвател за сканиране",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Игнориране на повторни натискания",
   "switchScanningMinimumPressDuration": "Минимална продължителност на натискане",
   "switchScanningAssign": "Натиснете превключвател за задаване",
-  "switchScanningNextItem": "Следващ елемент",
   "switchScanningSelectSwitch": "Превключвател за избиране",
   "switchScanningMouseInput": "Бутон на мишката {button}",
-  "switchScanningActions": "Действия",
-  "switchScanningActionsExit": "Назад от действията",
   "switchScanningRow": "Ред {row}",
   "switchScanningRowExit": "Назад от ред {row}",
   "loading": "Зареждане...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Дъската е импортирана",
         "countPlural=*": "Дъските са импортирани"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дъската е заменена",
-        "countPlural=*": "Дъските са заменени"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Достъп с превключвател",
   "switchScanningEnabled": "Включване на сканирането с превключвател",
   "switchScanningMethod": "Метод на сканиране",
-  "switchScanningOneSwitch": "Един превключвател",
-  "switchScanningTwoSwitches": "Два превключвателя",
   "switchScanningMethodAuto": "Автоматично",
   "switchScanningMethodStep": "Стъпка с два превключвателя",
   "switchScanningMethodDwell": "Задържане с един превключвател",
@@ -165,8 +151,5 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Дъската не е намерена",
-  "boardUrlReplaceConfirmTitle": "Да се замени ли „{name}“?",
-  "boardUrlReplaceConfirmDescription": "Импортирането от {host} ще замени тази дъска и всичко в нея. Това действие не може да бъде отменено.",
-  "boardUrlReplace": "Замяна",
   "boardUrlImportFailed": "Дъската не може да бъде импортирана от връзката"
 }

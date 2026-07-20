@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningAssign": "Press your switch",
   "switchScanningOff": "Off",
   "switchScanningChange": "Change",
@@ -13,8 +14,6 @@
   "switchScanningCommandKey": "Command key",
   "switchScanningWindowsKey": "Windows key",
   "switchScanningMetaKey": "Meta key",
-  "switchScanningActions": "Actions",
-  "switchScanningActionsExit": "Back from actions",
   "switchScanningRow": "Row {row}",
   "switchScanningRowExit": "Back from row {row}",
   "loading": "Loading...",
@@ -44,16 +43,6 @@
       "match": {
         "countPlural=one": "Board imported",
         "countPlural=*": "Boards imported"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Board replaced",
-        "countPlural=*": "Boards replaced"
       }
     }
   ],
@@ -100,8 +89,6 @@
   "settingsSectionSwitchAccess": "Switch access",
   "switchScanningEnabled": "Switch scanning",
   "switchScanningMethod": "Scan method",
-  "switchScanningOneSwitch": "One switch",
-  "switchScanningTwoSwitches": "Two switches",
   "switchScanningMethodAuto": "Automatic scan",
   "switchScanningMethodStep": "Two-switch step",
   "switchScanningMethodDwell": "Step and wait",
@@ -164,8 +151,5 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board not found",
-  "boardUrlReplaceConfirmTitle": "Replace \"{name}\"?",
-  "boardUrlReplaceConfirmDescription": "Importing from {host} will replace this board and everything in it. This cannot be undone.",
-  "boardUrlReplace": "Replace",
   "boardUrlImportFailed": "Couldn't import board from link"
 }

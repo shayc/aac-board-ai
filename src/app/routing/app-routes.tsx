@@ -5,6 +5,7 @@ import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
 import { NotFound } from "@app/routing/not-found";
 import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
 import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/board";
+import { BoardPage } from "@pages/board-page";
 import { LoadingState } from "@shared/components/loading-state";
 import type { RouteObject } from "react-router";
 
@@ -29,7 +30,7 @@ export const appRoutes: RouteObject[] = [
               {
                 path: BOARD_SEGMENT,
                 loader: boardLoader,
-                lazy: () => import("@pages/board-page"),
+                Component: BoardPage,
               },
             ],
           },

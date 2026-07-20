@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Изменить",
   "switchScanningNextItemSwitch": "Переключатель следующего элемента",
   "switchScanningScanSwitch": "Переключатель сканирования",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Игнорировать повторные нажатия",
   "switchScanningMinimumPressDuration": "Минимальная длительность нажатия",
   "switchScanningAssign": "Нажмите переключатель, чтобы назначить его",
-  "switchScanningNextItem": "Следующий элемент",
   "switchScanningSelectSwitch": "Переключатель выбора",
   "switchScanningMouseInput": "Кнопка мыши {button}",
-  "switchScanningActions": "Действия",
-  "switchScanningActionsExit": "Назад из действий",
   "switchScanningRow": "Строка {row}",
   "switchScanningRowExit": "Назад из строки {row}",
   "loading": "Загрузка...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Доска импортирована",
         "countPlural=*": "Доски импортированы"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Доска заменена",
-        "countPlural=*": "Доски заменены"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Управление переключателем",
   "switchScanningEnabled": "Включить сканирование переключателем",
   "switchScanningMethod": "Метод сканирования",
-  "switchScanningOneSwitch": "Один переключатель",
-  "switchScanningTwoSwitches": "Два переключателя",
   "switchScanningMethodAuto": "Автоматический",
   "switchScanningMethodStep": "Шаг двумя переключателями",
   "switchScanningMethodDwell": "Задержка с одним переключателем",
@@ -165,8 +151,5 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Доска не найдена",
-  "boardUrlReplaceConfirmTitle": "Заменить «{name}»?",
-  "boardUrlReplaceConfirmDescription": "Импорт с сайта {host} заменит эту доску и всё её содержимое. Это действие нельзя отменить.",
-  "boardUrlReplace": "Заменить",
   "boardUrlImportFailed": "Не удалось импортировать доску по ссылке"
 }

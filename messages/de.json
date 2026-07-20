@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Ändern",
   "switchScanningNextItemSwitch": "Schalter für nächstes Element",
   "switchScanningScanSwitch": "Scan-Schalter",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Wiederholte Betätigungen ignorieren",
   "switchScanningMinimumPressDuration": "Mindestbetätigungsdauer",
   "switchScanningAssign": "Zum Zuweisen eine Taste drücken",
-  "switchScanningNextItem": "Nächstes Element",
   "switchScanningSelectSwitch": "Taste zum Auswählen",
   "switchScanningMouseInput": "Maustaste {button}",
-  "switchScanningActions": "Aktionen",
-  "switchScanningActionsExit": "Zurück von den Aktionen",
   "switchScanningRow": "Zeile {row}",
   "switchScanningRowExit": "Zurück aus Zeile {row}",
   "loading": "Wird geladen...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tafel importiert",
         "countPlural=*": "Tafeln importiert"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tafel ersetzt",
-        "countPlural=*": "Tafeln ersetzt"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Tastersteuerung",
   "switchScanningEnabled": "Tastenscanning aktivieren",
   "switchScanningMethod": "Scanmethode",
-  "switchScanningOneSwitch": "Eine Taste",
-  "switchScanningTwoSwitches": "Zwei Tasten",
   "switchScanningMethodAuto": "Automatisch",
   "switchScanningMethodStep": "Zwei-Tasten-Schritt",
   "switchScanningMethodDwell": "Ein-Tasten-Verweilen",
@@ -165,8 +151,5 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafel nicht gefunden",
-  "boardUrlReplaceConfirmTitle": "„{name}“ ersetzen?",
-  "boardUrlReplaceConfirmDescription": "Der Import von {host} ersetzt diese Tafel und alles darin. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "boardUrlReplace": "Ersetzen",
   "boardUrlImportFailed": "Tafel konnte nicht über den Link importiert werden"
 }

@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "変更",
   "switchScanningNextItemSwitch": "次の項目スイッチ",
   "switchScanningScanSwitch": "スキャンスイッチ",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "連続した押下を無視",
   "switchScanningMinimumPressDuration": "最小押下時間",
   "switchScanningAssign": "割り当てるスイッチを押してください",
-  "switchScanningNextItem": "次の項目",
   "switchScanningSelectSwitch": "選択スイッチ",
   "switchScanningMouseInput": "マウスボタン {button}",
-  "switchScanningActions": "操作",
-  "switchScanningActionsExit": "操作から戻る",
   "switchScanningRow": "{row} 行目",
   "switchScanningRowExit": "{row} 行目から戻る",
   "loading": "読み込んでいます…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "ボードをインポートしました",
         "countPlural=*": "ボードをインポートしました"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ボードを置き換えました",
-        "countPlural=*": "ボードを置き換えました"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "スイッチアクセス",
   "switchScanningEnabled": "スイッチスキャンを有効にする",
   "switchScanningMethod": "スキャン方法",
-  "switchScanningOneSwitch": "1つのスイッチ",
-  "switchScanningTwoSwitches": "2つのスイッチ",
   "switchScanningMethodAuto": "自動",
   "switchScanningMethodStep": "2スイッチステップ",
   "switchScanningMethodDwell": "1スイッチ滞留",
@@ -165,8 +151,5 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードが見つかりません",
-  "boardUrlReplaceConfirmTitle": "「{name}」を置き換えますか？",
-  "boardUrlReplaceConfirmDescription": "{host} からインポートすると、このボードとその中のすべてが置き換えられます。この操作は取り消せません。",
-  "boardUrlReplace": "置き換える",
   "boardUrlImportFailed": "リンクからボードをインポートできませんでした"
 }

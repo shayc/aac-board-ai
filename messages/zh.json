@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "更改",
   "switchScanningNextItemSwitch": "下一项开关",
   "switchScanningScanSwitch": "扫描开关",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "忽略重复按压",
   "switchScanningMinimumPressDuration": "最短按压时长",
   "switchScanningAssign": "按下一个开关进行分配",
-  "switchScanningNextItem": "下一项",
   "switchScanningSelectSwitch": "选择开关",
   "switchScanningMouseInput": "鼠标按钮 {button}",
-  "switchScanningActions": "操作",
-  "switchScanningActionsExit": "从操作返回",
   "switchScanningRow": "第 {row} 行",
   "switchScanningRowExit": "从第 {row} 行返回",
   "loading": "正在加载……",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "已导入沟通板",
         "countPlural=*": "已导入沟通板"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "已替换沟通板",
-        "countPlural=*": "已替换沟通板"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "开关控制",
   "switchScanningEnabled": "启用开关扫描",
   "switchScanningMethod": "扫描方式",
-  "switchScanningOneSwitch": "单开关",
-  "switchScanningTwoSwitches": "双开关",
   "switchScanningMethodAuto": "自动",
   "switchScanningMethodStep": "双开关步进",
   "switchScanningMethodDwell": "单开关停留",
@@ -165,8 +151,5 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板",
-  "boardUrlReplaceConfirmTitle": "替换“{name}”？",
-  "boardUrlReplaceConfirmDescription": "从 {host} 导入将替换此沟通板及其中的所有内容。此操作无法撤消。",
-  "boardUrlReplace": "替换",
   "boardUrlImportFailed": "无法从链接导入沟通板"
 }

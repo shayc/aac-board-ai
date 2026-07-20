@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Vaihda",
   "switchScanningNextItemSwitch": "Seuraavan kohteen kytkin",
   "switchScanningScanSwitch": "Skannauskytkin",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ohita toistuvat painallukset",
   "switchScanningMinimumPressDuration": "Painalluksen vähimmäiskesto",
   "switchScanningAssign": "Määritä kytkin painamalla sitä",
-  "switchScanningNextItem": "Seuraava kohde",
   "switchScanningSelectSwitch": "Valintakytkin",
   "switchScanningMouseInput": "Hiiren painike {button}",
-  "switchScanningActions": "Toiminnot",
-  "switchScanningActionsExit": "Takaisin toiminnoista",
   "switchScanningRow": "Rivi {row}",
   "switchScanningRowExit": "Takaisin riviltä {row}",
   "loading": "Ladataan...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Taulu tuotu",
         "countPlural=*": "Taulut tuotu"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Taulu korvattu",
-        "countPlural=*": "Taulut korvattu"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Kytkinohjaus",
   "switchScanningEnabled": "Ota kytkinskannaus käyttöön",
   "switchScanningMethod": "Skannaustapa",
-  "switchScanningOneSwitch": "Yksi kytkin",
-  "switchScanningTwoSwitches": "Kaksi kytkintä",
   "switchScanningMethodAuto": "Automaattinen",
   "switchScanningMethodStep": "Kahden kytkimen askellus",
   "switchScanningMethodDwell": "Yhden kytkimen viivevalinta",
@@ -165,8 +151,5 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulua ei löytynyt",
-  "boardUrlReplaceConfirmTitle": "Korvataanko ”{name}”?",
-  "boardUrlReplaceConfirmDescription": "Tuonti osoitteesta {host} korvaa tämän taulun ja kaiken sen sisällön. Tätä toimintoa ei voi kumota.",
-  "boardUrlReplace": "Korvaa",
   "boardUrlImportFailed": "Taulun tuonti linkistä epäonnistui"
 }

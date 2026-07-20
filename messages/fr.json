@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Modifier",
   "switchScanningNextItemSwitch": "Contacteur d’élément suivant",
   "switchScanningScanSwitch": "Contacteur de balayage",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorer les pressions répétées",
   "switchScanningMinimumPressDuration": "Durée minimale de pression",
   "switchScanningAssign": "Appuyez sur un contacteur pour l’attribuer",
-  "switchScanningNextItem": "Élément suivant",
   "switchScanningSelectSwitch": "Contacteur de sélection",
   "switchScanningMouseInput": "Bouton de souris {button}",
-  "switchScanningActions": "Actions",
-  "switchScanningActionsExit": "Quitter les actions",
   "switchScanningRow": "Ligne {row}",
   "switchScanningRowExit": "Quitter la ligne {row}",
   "loading": "Chargement...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tableau importé",
         "countPlural=*": "Tableaux importés"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tableau remplacé",
-        "countPlural=*": "Tableaux remplacés"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Accès par contacteur",
   "switchScanningEnabled": "Activer le balayage par contacteur",
   "switchScanningMethod": "Méthode de balayage",
-  "switchScanningOneSwitch": "Un contacteur",
-  "switchScanningTwoSwitches": "Deux contacteurs",
   "switchScanningMethodAuto": "Automatique",
   "switchScanningMethodStep": "Pas à deux contacteurs",
   "switchScanningMethodDwell": "Temporisation à un contacteur",
@@ -165,8 +151,5 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Tableau introuvable",
-  "boardUrlReplaceConfirmTitle": "Remplacer « {name} » ?",
-  "boardUrlReplaceConfirmDescription": "L'importation depuis {host} remplacera ce tableau et tout son contenu. Cette action est irréversible.",
-  "boardUrlReplace": "Remplacer",
   "boardUrlImportFailed": "Impossible d'importer le tableau depuis le lien"
 }

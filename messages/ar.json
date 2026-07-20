@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "تغيير",
   "switchScanningNextItemSwitch": "مفتاح العنصر التالي",
   "switchScanningScanSwitch": "مفتاح المسح",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "تجاهل الضغطات المتكررة",
   "switchScanningMinimumPressDuration": "الحد الأدنى لمدة الضغط",
   "switchScanningAssign": "اضغط على مفتاح للتعيين",
-  "switchScanningNextItem": "العنصر التالي",
   "switchScanningSelectSwitch": "مفتاح الاختيار",
   "switchScanningMouseInput": "زر الماوس {button}",
-  "switchScanningActions": "الإجراءات",
-  "switchScanningActionsExit": "العودة من الإجراءات",
   "switchScanningRow": "الصف {row}",
   "switchScanningRowExit": "العودة من الصف {row}",
   "loading": "جارٍ التحميل...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "تم استيراد اللوحة",
         "countPlural=*": "تم استيراد اللوحات"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "تم استبدال اللوحة",
-        "countPlural=*": "تم استبدال اللوحات"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "الوصول باستخدام المفتاح",
   "switchScanningEnabled": "تفعيل المسح بالمفتاح",
   "switchScanningMethod": "طريقة المسح",
-  "switchScanningOneSwitch": "مفتاح واحد",
-  "switchScanningTwoSwitches": "مفتاحان",
   "switchScanningMethodAuto": "تلقائي",
   "switchScanningMethodStep": "التنقل بمفتاحين",
   "switchScanningMethodDwell": "المكوث بمفتاح واحد",
@@ -165,8 +151,5 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "اللوحة غير موجودة",
-  "boardUrlReplaceConfirmTitle": "استبدال \"{name}\"؟",
-  "boardUrlReplaceConfirmDescription": "الاستيراد من {host} سيستبدل هذه اللوحة وكل ما فيها. لا يمكن التراجع عن هذا الإجراء.",
-  "boardUrlReplace": "استبدال",
   "boardUrlImportFailed": "تعذّر استيراد اللوحة من الرابط"
 }

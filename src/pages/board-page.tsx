@@ -1,7 +1,7 @@
 import { BoardViewer, type Board } from "@features/board";
 import { useLoaderData } from "react-router";
 
-export const Component = function BoardPage() {
+export function BoardPage() {
   const board = useLoaderData<Board>();
 
   return (
@@ -10,4 +10,4 @@ export const Component = function BoardPage() {
       <BoardViewer board={board} />
     </>
   );
-};
+}

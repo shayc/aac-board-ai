@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "변경",
   "switchScanningNextItemSwitch": "다음 항목 스위치",
   "switchScanningScanSwitch": "스캔 스위치",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "반복 누르기 무시",
   "switchScanningMinimumPressDuration": "최소 누르기 시간",
   "switchScanningAssign": "할당할 스위치를 누르세요",
-  "switchScanningNextItem": "다음 항목",
   "switchScanningSelectSwitch": "선택 스위치",
   "switchScanningMouseInput": "마우스 버튼 {button}",
-  "switchScanningActions": "작업",
-  "switchScanningActionsExit": "작업에서 뒤로",
   "switchScanningRow": "{row}행",
   "switchScanningRowExit": "{row}행에서 뒤로",
   "loading": "불러오는 중…",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "보드를 가져왔습니다",
         "countPlural=*": "보드를 가져왔습니다"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "보드를 교체했습니다",
-        "countPlural=*": "보드를 교체했습니다"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "스위치 제어",
   "switchScanningEnabled": "스위치 스캔 사용",
   "switchScanningMethod": "스캔 방식",
-  "switchScanningOneSwitch": "스위치 1개",
-  "switchScanningTwoSwitches": "스위치 2개",
   "switchScanningMethodAuto": "자동",
   "switchScanningMethodStep": "2스위치 단계",
   "switchScanningMethodDwell": "1스위치 머무르기",
@@ -165,8 +151,5 @@
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
   "errorBoardSetNotFound": "보드를 찾을 수 없음",
-  "boardUrlReplaceConfirmTitle": "\"{name}\"을(를) 교체하시겠어요?",
-  "boardUrlReplaceConfirmDescription": "{host}에서 가져오면 이 보드와 그 안의 모든 내용이 교체됩니다. 이 작업은 되돌릴 수 없습니다.",
-  "boardUrlReplace": "교체",
   "boardUrlImportFailed": "링크에서 보드를 가져올 수 없습니다"
 }

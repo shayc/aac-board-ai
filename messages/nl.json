@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Wijzigen",
   "switchScanningNextItemSwitch": "Schakelaar voor volgend item",
   "switchScanningScanSwitch": "Scanschakelaar",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Herhaalde drukken negeren",
   "switchScanningMinimumPressDuration": "Minimale drukduur",
   "switchScanningAssign": "Druk op een schakelaar om deze toe te wijzen",
-  "switchScanningNextItem": "Volgend item",
   "switchScanningSelectSwitch": "Selectieschakelaar",
   "switchScanningMouseInput": "Muisknop {button}",
-  "switchScanningActions": "Acties",
-  "switchScanningActionsExit": "Terug uit acties",
   "switchScanningRow": "Rij {row}",
   "switchScanningRowExit": "Terug uit rij {row}",
   "loading": "Laden...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Bord geïmporteerd",
         "countPlural=*": "Borden geïmporteerd"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Bord vervangen",
-        "countPlural=*": "Borden vervangen"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Schakelaarbediening",
   "switchScanningEnabled": "Scannen met schakelaar inschakelen",
   "switchScanningMethod": "Scanmethode",
-  "switchScanningOneSwitch": "Eén schakelaar",
-  "switchScanningTwoSwitches": "Twee schakelaars",
   "switchScanningMethodAuto": "Automatisch",
   "switchScanningMethodStep": "Stap met twee schakelaars",
   "switchScanningMethodDwell": "Verblijven met één schakelaar",
@@ -165,8 +151,5 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bord niet gevonden",
-  "boardUrlReplaceConfirmTitle": "\"{name}\" vervangen?",
-  "boardUrlReplaceConfirmDescription": "Importeren van {host} vervangt dit bord en alles erin. Deze actie kan niet ongedaan worden gemaakt.",
-  "boardUrlReplace": "Vervangen",
   "boardUrlImportFailed": "Kan bord niet importeren via de link"
 }

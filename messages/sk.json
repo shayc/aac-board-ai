@@ -1,5 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
+  "appName": "AAC Board AI",
   "switchScanningChange": "Zmeniť",
   "switchScanningNextItemSwitch": "Spínač ďalšej položky",
   "switchScanningScanSwitch": "Skenovací spínač",
@@ -21,11 +22,8 @@
   "switchScanningIgnoreRepeatedPresses": "Ignorovať opakované stlačenia",
   "switchScanningMinimumPressDuration": "Minimálne trvanie stlačenia",
   "switchScanningAssign": "Stlačením spínača ho priraďte",
-  "switchScanningNextItem": "Ďalšia položka",
   "switchScanningSelectSwitch": "Spínač na výber",
   "switchScanningMouseInput": "Tlačidlo myši {button}",
-  "switchScanningActions": "Akcie",
-  "switchScanningActionsExit": "Späť z akcií",
   "switchScanningRow": "Riadok {row}",
   "switchScanningRowExit": "Späť z riadka {row}",
   "loading": "Načítava sa...",
@@ -55,16 +53,6 @@
       "match": {
         "countPlural=one": "Tabuľka importovaná",
         "countPlural=*": "Tabuľky importované"
-      }
-    }
-  ],
-  "libraryReplacedBoards": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabuľka nahradená",
-        "countPlural=*": "Tabuľky nahradené"
       }
     }
   ],
@@ -111,8 +99,6 @@
   "settingsSectionSwitchAccess": "Ovládanie spínačom",
   "switchScanningEnabled": "Zapnúť skenovanie spínačom",
   "switchScanningMethod": "Spôsob skenovania",
-  "switchScanningOneSwitch": "Jeden spínač",
-  "switchScanningTwoSwitches": "Dva spínače",
   "switchScanningMethodAuto": "Automatické",
   "switchScanningMethodStep": "Krokovanie dvoma spínačmi",
   "switchScanningMethodDwell": "Zotrvanie s jedným spínačom",
@@ -165,8 +151,5 @@
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Tabuľka sa nenašla",
-  "boardUrlReplaceConfirmTitle": "Nahradiť „{name}“?",
-  "boardUrlReplaceConfirmDescription": "Import z {host} nahradí túto tabuľku a všetko v nej. Túto akciu nie je možné vrátiť späť.",
-  "boardUrlReplace": "Nahradiť",
   "boardUrlImportFailed": "Tabuľku sa nepodarilo importovať z odkazu"
 }
