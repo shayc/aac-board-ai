@@ -1,10 +1,10 @@
 import {
-  setSwitchScanningEnabled,
   setSwitchInput,
+  setSwitchScanningEnabled,
   setSwitchScanningMethod,
 } from "@shared/switch-scanning/switch-scanning-store";
-import { expectNoA11yViolations } from "@shared/testing/axe";
 import { assertDefined } from "@shared/testing/assert-defined";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
   makeProofreadResult,
   stubBuiltInAIUnsupported,
@@ -15,8 +15,11 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
-import { renderBoardViewer, TWO_BUTTON_BOARD } from "./test-utils";
 import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
+import {
+  renderBoardViewer,
+  TWO_BUTTON_BOARD,
+} from "./testing/render-board-viewer";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",

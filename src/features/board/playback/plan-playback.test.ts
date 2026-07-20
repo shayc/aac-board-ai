@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import type { MessagePart } from "../message-types";
+import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
 describe("planPlayback", () => {

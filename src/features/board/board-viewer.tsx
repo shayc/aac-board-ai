@@ -12,11 +12,6 @@ import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
 import { useRef } from "react";
 import { createButtonActivation } from "./activation/button-activation";
-import {
-  ScannableGridRow,
-  ScannableSuggestion,
-  ScannableTile,
-} from "./board-scanning";
 import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
@@ -25,10 +20,15 @@ import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { BoardPlaybackMessageBar } from "./playback/board-playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
+import {
+  ScannableGridRow,
+  ScannableSuggestion,
+  ScannableTile,
+} from "./scanning/board-scanning";
+import { useBoardScanning } from "./scanning/use-board-scanning";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import type { Board, BoardButton } from "./types";
-import { useBoardScanning } from "./use-board-scanning";
 
 interface BoardViewerProps {
   board: Board;

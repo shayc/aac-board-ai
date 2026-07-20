@@ -5,7 +5,7 @@ import {
   usePlayback,
 } from "@shared/playback/use-playback";
 import type { MessagePart } from "../message/message-types";
-import { planPlayback } from "../message/playback/plan-playback";
+import { planPlayback } from "./plan-playback";
 
 const MESSAGE_SOURCE = "board-message";
 const TILE_SOURCE = "board-tile";

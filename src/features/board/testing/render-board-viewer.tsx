@@ -2,8 +2,8 @@ import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter, type InitialEntry } from "react-router";
 import { render } from "vitest-browser-react";
-import { BoardViewer } from "./board-viewer";
-import { obfToBoard } from "./obf/obf-to-board";
+import { BoardViewer } from "../board-viewer";
+import { obfToBoard } from "../obf/obf-to-board";
 
 export const TWO_BUTTON_BOARD: OBFBoard = {
   format: "open-board-0.1",
