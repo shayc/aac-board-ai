@@ -1,6 +1,6 @@
 import type { PlaybackStep } from "@shared/playback/playback-context";
-import { getSpokenText } from "../../button-readers";
-import type { MessagePart } from "../message-types";
+import { getSpokenText } from "../button-readers";
+import type { MessagePart } from "../message/message-types";
 import {
   createSpokenPartTracker,
   type SpokenPart,

@@ -2,15 +2,15 @@ import Chip from "@mui/material/Chip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useScanGroup, useScanTarget } from "@shayc/switch-scanning/react";
-import { getNavigationTargetId } from "./button-readers";
+import { getNavigationTargetId } from "../button-readers";
+import { GridRow, type GridItemProps, type GridRowProps } from "../grid/grid";
+import { Tile } from "../tile/tile";
+import type { BoardButton } from "../types";
 import {
-  getTileScanId,
   getRowScanId,
   getSuggestionScanId,
+  getTileScanId,
 } from "./board-scanning-ids";
-import { GridRow, type GridItemProps, type GridRowProps } from "./grid/grid";
-import { Tile } from "./tile/tile";
-import type { BoardButton } from "./types";
 
 interface ScannableTileProps extends GridItemProps {
   boardId: string;

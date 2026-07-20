@@ -24,7 +24,7 @@ import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
-import { SwitchScanningSettings } from "./switch-scanning-settings";
+import { SwitchScanningSettings } from "./switch-scanning/switch-scanning-settings";
 
 interface SettingsDrawerProps {
   open: boolean;
