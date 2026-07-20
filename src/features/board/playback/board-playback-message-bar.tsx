@@ -15,13 +15,17 @@ export function BoardPlaybackMessageBar({
   const playback = useBoardPlayback();
   const activePartId = useActiveMessagePartId();
   const { highlightActivePart } = useHighlightConfig();
+  const playButtonProps = {
+    ...slotProps?.playButton,
+    disabled: parts.length === 0 || slotProps?.playButton?.disabled,
+  };
 
   return (
     <MessageBar
       parts={parts}
       activePartId={highlightActivePart ? activePartId : null}
       isPlaying={playback.isPlaying}
-      slotProps={slotProps}
+      slotProps={{ playButton: playButtonProps }}
       onPlayClick={() => void playback.playMessage(parts)}
       onStopClick={playback.stop}
     />

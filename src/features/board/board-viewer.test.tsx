@@ -126,6 +126,17 @@ describe("BoardViewer", () => {
       .toBeVisible();
   });
 
+  test("enables message playback only after content is composed", async () => {
+    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const play = screen.getByRole("button", { name: "Play message" });
+
+    await expect.element(play).toBeDisabled();
+
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    await expect.element(play).toBeEnabled();
+  });
+
   test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
     const screen = await renderBoardViewer(SPELL_THEN_SPEAK_BOARD);
 
