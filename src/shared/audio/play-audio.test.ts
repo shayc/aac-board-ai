@@ -22,19 +22,6 @@ describe("playAudio", () => {
     expect(audio.play).toHaveBeenCalledTimes(1);
   });
 
-  test("resolves the previous clip when a new one supersedes it", async () => {
-    audio.play.mockImplementationOnce(function (this: HTMLAudioElement) {
-      queueMicrotask(() => this.dispatchEvent(new Event("play")));
-
-      return Promise.resolve();
-    });
-    const first = playAudio("a.mp3");
-    const second = playAudio("b.mp3");
-
-    await expect(first).resolves.toBeUndefined();
-    await expect(second).resolves.toBeUndefined();
-  });
-
   test("resolves and stops playback when the signal aborts", async () => {
     pendingPlayback(audio);
     const controller = new AbortController();

@@ -1,6 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { stubVoices } from "@shared/testing/stub-speech";
+import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { SpeechSettings } from "./speech-settings";
@@ -98,5 +98,16 @@ describe("SpeechSettings", () => {
     await highlightSwitch.click();
 
     await expect.element(highlightSwitch).toBeChecked();
+  });
+
+  test("plays the voice preview through app playback", async () => {
+    const speech = stubSpeech();
+    stubVoices([]);
+    const screen = await renderSpeechSettings();
+
+    await screen.getByRole("button", { name: "Preview" }).click();
+
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(speech.speak.mock.calls[0][0].text).toBe("Hi, this is my voice!");
   });
 });

@@ -1,11 +1,23 @@
+import { PlaybackProvider } from "@shared/playback/playback-provider";
+import { useActivePlaybackTrackingKey } from "@shared/playback/use-playback";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import type { MessagePart } from "../message-types";
-import { useMessagePlayback } from "./use-message-playback";
+import type { MessagePart } from "../message/message-types";
+import { useBoardPlayback } from "./use-board-playback";
 
-describe("useMessagePlayback", () => {
+function renderPlayback() {
+  return renderHook(
+    () => ({
+      ...useBoardPlayback(),
+      activePartId: useActivePlaybackTrackingKey(),
+    }),
+    { wrapper: PlaybackProvider },
+  );
+}
+
+describe("useBoardPlayback", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
@@ -20,9 +32,9 @@ describe("useMessagePlayback", () => {
       { id: "2", label: "want" },
     ];
 
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
-    await result.current.play(parts);
+    await result.current.playMessage(parts);
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("i want");
@@ -33,9 +45,9 @@ describe("useMessagePlayback", () => {
       { id: "1", label: "bell", soundSrc: "bell.mp3" },
     ];
 
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
-    await result.current.play(parts);
+    await result.current.playMessage(parts);
 
     expect(audio.play).toHaveBeenCalledTimes(1);
     expect(speech.speak).not.toHaveBeenCalled();
@@ -65,9 +77,9 @@ describe("useMessagePlayback", () => {
       return Promise.resolve();
     });
 
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
-    await result.current.play(parts);
+    await result.current.playMessage(parts);
 
     expect(callOrder).toEqual(["speak:before", "play:ding.mp3", "speak:after"]);
   });
@@ -75,9 +87,9 @@ describe("useMessagePlayback", () => {
   test("drops parts with no audible content", async () => {
     const parts: MessagePart[] = [{ id: "1" }];
 
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
-    await result.current.play(parts);
+    await result.current.playMessage(parts);
 
     expect(speech.speak).not.toHaveBeenCalled();
     expect(audio.play).not.toHaveBeenCalled();
@@ -93,9 +105,9 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.isPlaying).toBe(true);
 
@@ -115,9 +127,9 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
 
     result.current.stop();
@@ -141,16 +153,16 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    await expect(result.current.play(parts)).resolves.toBeUndefined();
+    await expect(result.current.playMessage(parts)).resolves.toBe("completed");
     await rerender();
 
     expect(result.current.isPlaying).toBe(false);
   });
 
   test("has no active part before playback starts", async () => {
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
     expect(result.current.activePartId).toBeNull();
   });
@@ -173,9 +185,9 @@ describe("useMessagePlayback", () => {
       { id: "2", label: "want" },
     ];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
 
     fireBoundary?.(2); // "want" begins at offset 2 in "i want"
@@ -199,9 +211,9 @@ describe("useMessagePlayback", () => {
 
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
     expect(result.current.activePartId).toBe("1");
 
@@ -227,9 +239,9 @@ describe("useMessagePlayback", () => {
       { id: "3", label: "after" },
     ];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
 
     result.current.stop();
@@ -260,9 +272,9 @@ describe("useMessagePlayback", () => {
       { id: "2", label: "want" },
     ];
 
-    const { result, rerender } = await renderHook(() => useMessagePlayback());
+    const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.play(parts);
+    const playPromise = result.current.playMessage(parts);
     await rerender();
 
     result.current.stop();
@@ -274,7 +286,7 @@ describe("useMessagePlayback", () => {
     await playPromise;
   });
 
-  test("a second play() call aborts the first and speaks only its own parts", async () => {
+  test("a second playMessage() call aborts the first and speaks only its own parts", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => {
@@ -287,10 +299,12 @@ describe("useMessagePlayback", () => {
       });
     });
 
-    const { result } = await renderHook(() => useMessagePlayback());
+    const { result } = await renderPlayback();
 
-    const firstPlay = result.current.play([{ id: "1", label: "first" }]);
-    const secondPlay = result.current.play([{ id: "2", label: "second" }]);
+    const firstPlay = result.current.playMessage([{ id: "1", label: "first" }]);
+    const secondPlay = result.current.playMessage([
+      { id: "2", label: "second" },
+    ]);
 
     resolveFirstSpeak?.();
     await firstPlay;

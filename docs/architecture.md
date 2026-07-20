@@ -103,7 +103,9 @@ flowchart LR
     LD --> STG["Storage<br/>features/board/storage (idb)"]
     STG --> DB[("IndexedDB<br/>boardSets · boards · assets")]
 
-    UI --> SPK["Speech<br/>shared/speech"] --> WS["Web Speech API"]
+    UI --> PLY["Playback coordinator<br/>shared/playback"]
+    PLY --> SPK["Speech<br/>shared/speech"] --> WS["Web Speech API"]
+    PLY --> AUD["Recorded audio<br/>shared/audio"]
     UI --> SUG["Suggestions + Translation<br/>features/board/{suggestions,translation}"]
     SUG -.->|via @shayc/react-built-in-ai| BAI["Built-in AI"]
 
@@ -132,11 +134,11 @@ _intent_, then dispatched. Most taps compose the message bar; some navigate or r
 an action:
 
 1. A tile tap (or Enter) goes through `resolveButtonIntents`, which yields typed
-   intents: navigate, compose, speakText, playAudio, or runAction.
+   intents: navigate, composeAndPlay, or runAction.
 2. `activateButton` dispatches each intent — appending to the message bar,
-   navigating to another board, or speaking / playing audio directly.
-3. Playing the message runs `planPlayback` → Web Speech, with per-part
-   highlighting as it speaks.
+   navigating to another board, or submitting playable content.
+3. The board playback adapter runs `planPlayback`, then the app-wide playback
+   coordinator serializes speech and recorded audio with per-part highlighting.
 
 ## Codemap
 
@@ -162,6 +164,7 @@ hyperlinked, so a moved file never breaks this table.
 | `src/features/board/suggestions/`                            | AI grammar + tone suggestions (Proofreader + Rewriter). Search `useSuggestions`.                                                |
 | `src/features/board/translation/`                            | Board translation (Translator), cached in the board's IndexedDB strings. Search `resolveTranslatedBoard`.                       |
 | `src/shared/speech/`                                         | Web Speech API TTS wrapper, voice catalog store, voice↔language sync.                                                           |
+| `src/shared/playback/`                                       | The sole app-wide playback owner: serializes speech/audio, coordinates cancellation, and exposes reactive progress.             |
 | `src/shared/language/`                                       | The one language model: UI/board/TTS language context + persisted store.                                                        |
 | `src/shared/theme/`                                          | MUI/Emotion theme, light/dark, RTL, theme-color meta.                                                                           |
 | `src/shared/built-in-ai/`                                    | App policy atop `@shayc/react-built-in-ai`: silent engine warm-up, shared rewriter context, per-engine language options.        |
@@ -189,23 +192,25 @@ State has **five kinds**, each with one home:
    translated _per navigation_; components receive a ready `Board`, never a loading
    spinner of their own. A language change calls `revalidate()` to re-translate.
 3. **Reactive cross-cutting stores** — built on `createExternalStore` +
-   `useSyncExternalStore`: the **board-set catalog** and the **TTS voice catalog**.
-   These change outside React (DB writes, the browser's `voiceschanged` event).
+   `useSyncExternalStore`: the **board-set catalog**, **TTS voice catalog**, and
+   active **playback coordinator**. These change outside React (DB writes, browser
+   voice events, and playback boundaries).
 4. **Persisted settings** — `createPersistedStore` (localStorage, written on every
    change): selected **language**, speech config (voice/rate/pitch/volume),
    playback config, switch-scanning access method and timing, AI shared context,
    and the onboarding-seen flag (`use-onboarding.ts`, key `hasSeenOnboarding`).
    Theme mode persists separately as MUI's `mui-mode`, read pre-paint in
    `index.html`.
-5. **Local component state** — the in-progress message (`useMessage`), playback
-   progress, grid focus. Never promoted to a global store.
+5. **Local component state** — the in-progress message (`useMessage`) and grid
+   focus. Never promoted to a global store.
 
 **Cross-tab coherence** rides on `BroadcastChannel` (`board-sets-sync`) — one
 listener per tab, registered at module load and never tied to a component mount, so
 a second tab or window sees board-set changes without polling.
 
-React **Context** carries only the three things that are genuinely app-wide:
-language, theme, and the snackbar.
+React **Context** carries only the things that are genuinely app-wide: language,
+theme, playback controls, and the snackbar. Playback progress uses external-store
+subscriptions so word boundaries only rerender consumers of the changed slice.
 
 ## Invariants
 

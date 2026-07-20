@@ -4,7 +4,6 @@ import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { useHighlightConfig } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
@@ -21,11 +20,11 @@ import {
 import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
-import { MessageBar } from "./message/message-bar";
-import { useMessagePlayback } from "./message/playback/use-message-playback";
 import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
+import { BoardPlaybackMessageBar } from "./playback/board-playback-message-bar";
+import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import type { Board, BoardButton } from "./types";
@@ -60,10 +59,9 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { highlightActivePart } = useHighlightConfig();
   const { saturation, borderVisible } = useTileColorConfig();
   const message = useMessage();
-  const playback = useMessagePlayback();
+  const playback = useBoardPlayback();
   const suggestions = useMessageSuggestions(message.text);
   const navigation = useBoardNavigation();
   const gridRef = useRef<HTMLDivElement>(null);
@@ -129,13 +127,12 @@ function BoardViewerContent({ board }: BoardViewerProps) {
         { "--tile-saturation": String(saturation) },
       ]}
     >
-      <MessageBar
+      <BoardPlaybackMessageBar
         parts={message.parts}
-        activePartId={highlightActivePart ? playback.activePartId : null}
         isPlaying={playback.isPlaying}
         playDisabled={!hasMessage}
-        slotProps={{ playButton: scanning.playTarget }}
-        onPlayClick={() => void playback.play(message.parts)}
+        playButtonSlotProps={scanning.playTarget}
+        onPlayClick={() => void playback.playMessage(message.parts)}
         onStopClick={playback.stop}
       />
 

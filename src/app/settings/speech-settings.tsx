@@ -17,12 +17,12 @@ import {
 } from "@shared/highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import { speak } from "@shared/speech/speak";
+import { usePlayback } from "@shared/playback/use-playback";
 import {
   setPitch,
   setRate,
-  setVolume,
   setVoiceURI,
+  setVolume,
   SPEECH_PITCH,
   SPEECH_RATE,
   SPEECH_VOLUME,
@@ -32,6 +32,7 @@ import {
 
 export function SpeechSettings() {
   const t = useTranslate();
+  const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
   const { highlightActivePart } = useHighlightConfig();
@@ -160,7 +161,12 @@ export function SpeechSettings() {
         color="primary"
         startIcon={<PlayArrowIcon />}
         sx={{ alignSelf: "flex-start" }}
-        onClick={() => void speak(t(m.speechVoicePreview))}
+        onClick={() =>
+          void playback.play({
+            source: "speech-preview",
+            steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
+          })
+        }
       >
         {t(m.speechPreview)}
       </Button>

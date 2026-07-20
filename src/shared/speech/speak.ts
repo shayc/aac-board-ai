@@ -60,7 +60,6 @@ export function speak(
   utterance.onerror = finish;
   signal?.addEventListener("abort", onAbort, { once: true });
 
-  synthesis.cancel();
   synthesis.speak(utterance);
 
   return promise;
