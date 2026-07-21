@@ -25,9 +25,7 @@ describe("SuggestionsSettings", () => {
     const screen = await renderSuggestionsSettings();
 
     await expect
-      .element(
-        screen.getByText(/Custom instructions require desktop Chrome or Edge/i),
-      )
+      .element(screen.getByText(/Suggestions require desktop Chrome or Edge/i))
       .toBeVisible();
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))

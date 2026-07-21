@@ -137,7 +137,7 @@
   "aiCustomInstructions": "Custom instructions",
   "aiCustomInstructionsPlaceholder": "e.g., make suggestions playful and sarcastic",
   "aiCustomInstructionsHelper": "Shape suggestions in your own words.",
-  "suggestionsUnsupported": "Custom instructions require desktop Chrome or Edge with built-in AI enabled.",
+  "suggestionsUnsupported": "Suggestions require desktop Chrome or Edge with built-in AI enabled.",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model... {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloading AI model...",
