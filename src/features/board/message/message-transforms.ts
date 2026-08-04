@@ -1,5 +1,5 @@
-import { randomId } from "@shared/utils/random-id";
 import type { MessagePart, MessagePartContent } from "./message-types";
+import { randomId } from "./random-id";
 
 export function createPart(content: MessagePartContent): MessagePart {
   return { ...content, id: randomId() };

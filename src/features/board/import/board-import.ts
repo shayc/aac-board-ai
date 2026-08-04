@@ -1,4 +1,3 @@
-import { htmlToText } from "@shared/utils/html";
 import { normalizeLocale } from "@shared/utils/locale";
 import {
   loadBoard,
@@ -18,6 +17,7 @@ import {
   BoardSetAlreadyExistsError,
   createBoardSet,
 } from "../storage/boards-db";
+import { htmlToText } from "./html";
 
 export interface ImportResult {
   setId: string;

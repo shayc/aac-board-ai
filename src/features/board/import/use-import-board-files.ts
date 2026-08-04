@@ -1,11 +1,11 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { openFiles } from "@shared/utils/file-picker";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { boardSetPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
 import { importBoardSets, type ImportResult } from "./board-import";
+import { openFiles } from "./file-picker";
 
 interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
