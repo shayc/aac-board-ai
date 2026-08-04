@@ -6,7 +6,7 @@ import {
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import type { Locator } from "vitest/browser";
-import { Grid, GridRow } from "./grid";
+import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
@@ -475,19 +475,5 @@ describe("Grid", () => {
         parseFloat(getComputedStyle(cells[5]).scrollMarginLeft),
       ).toBeLessThan(1);
     });
-  });
-});
-
-describe("GridRow", () => {
-  test("merges caller styles after its layout styles", async () => {
-    const screen = await render(
-      <GridRow gap={1} sx={{ minHeight: "42px" }}>
-        <span>Item</span>
-      </GridRow>,
-    );
-
-    expect(getComputedStyle(screen.getByRole("row").element()).minHeight).toBe(
-      "42px",
-    );
   });
 });

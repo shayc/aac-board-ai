@@ -137,16 +137,6 @@ describe("createBoardSet", () => {
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
-  test("rejects empty setId", async () => {
-    await expect(
-      createBoardSet(
-        makeBoardSetInput({
-          boardSet: { setId: "", name: "Bad", rootBoardId: "root-1" },
-        }),
-      ),
-    ).rejects.toThrow("Invalid setId");
-  });
-
   test("rejects empty setId with a typed InvalidIdError", async () => {
     await expect(
       createBoardSet(
