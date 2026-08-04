@@ -9,7 +9,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
 import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useTileColorConfig } from "@shared/tile-color/tile-color-store";
+import { useTileAppearanceConfig } from "@shared/tile-appearance/tile-appearance-store";
 import { useRef } from "react";
 import { createButtonActivation } from "./activation/button-activation";
 import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
@@ -59,7 +59,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { saturation, borderVisible } = useTileColorConfig();
+  const { saturation, borderVisible } = useTileAppearanceConfig();
   const message = useMessage();
   const playback = useBoardPlayback();
   const suggestions = useMessageSuggestions(message.text);

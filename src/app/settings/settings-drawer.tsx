@@ -1,4 +1,4 @@
-import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
+import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
 import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CloseIcon from "@mui/icons-material/Close";

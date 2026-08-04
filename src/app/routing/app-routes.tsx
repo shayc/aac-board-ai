@@ -1,4 +1,4 @@
-import { AppShell } from "@app/layouts/app-shell";
+import { AppShell } from "@app/shell/app-shell";
 import { boardLoader } from "@app/routing/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/routing/loaders/board-set-index-loader";
 import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
