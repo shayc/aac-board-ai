@@ -2,59 +2,64 @@
 
 # AAC Board AI
 
+**Winner — [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025), Most Helpful Web Application**
+
+**[Try AAC Board AI](https://aacboard.app)** — opens with a ready-to-use communication board
+
 [![CI](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml)
-[![Netlify Status](https://api.netlify.com/api/v1/badges/d6e3dbf1-40d1-4343-9f56-3c9368d2fe56/deploy-status)](https://app.netlify.com/projects/aacboard/deploys)
-
-**Winner — [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) (Most Helpful Application)**
-
-**[aacboard.app](https://aacboard.app)**
 
 </div>
 
-**AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. Core board features work offline after the app and a board have been loaded, while optional browser-native **Built-in AI** improves grammar, adjusts tone, and translates boards on-device.
+**AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with communication symbols and speak them aloud.
+
+On supported browsers, **Built-in AI** uses models supplied and run by the browser to proofread messages, adjust tone, and translate boards. It requires no API key or cloud AI service, and core communication works without it.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
-_Built-in AI is a progressive enhancement; availability depends on the browser, device, language, and downloaded models._
+## From a few symbols to a clearer message
 
-## From taps to clearer messages
-
-Selecting tiles often produces telegraphic output such as `"want eat pizza"`. AAC Board AI can suggest a corrected sentence on-device without applying it automatically:
+AAC users often select a few key concepts instead of every word in a complete sentence:
 
 ```text
-User taps:          [ want ] → [ eat ] → [ pizza ]
-Raw text:           "want eat pizza"
-Grammar-corrected:  "I want to eat pizza"
+Selected tiles:  [ want ] → [ eat ] → [ pizza ]
+Raw message:     "want eat pizza"
+AI suggestion:   "I want to eat pizza."
 ```
 
-It can also suggest concise rewrites in the original or a friendlier tone. Every suggestion remains an interactive button until the user accepts it.
+Suggestions remain visible choices until the user accepts one. The original message is never replaced automatically.
 
-## Who it's for
+## Built-in AI where it matters
 
-- **AAC users** — Communicate faster without selecting every word individually.
-- **Facilitators** — Speech-language pathologists (SLPs), educators, and families can customize and deploy boards without a backend or cloud subscription.
-- **Developers** — Explore an open-source reference implementation of browser-native language models in a React 19 app.
+| Browser API                                                         | What it offers the user                                    |
+| ------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections             |
+| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing in the original or a more casual tone |
+| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases         |
 
-## Key features
+## A complete board, with or without AI
 
-- **Grammar correction** — Fixes grammar while keeping the user's wording ([Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api)).
-- **Tone adjustment** — Suggests concise rewrites in the original or a friendlier tone ([Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api)).
-- **Translation** — Translates board labels and vocalizations ([Translator API](https://developer.chrome.com/docs/ai/translator-api)).
-- **Text-to-speech** — Reads messages aloud ([Web Speech API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Speech_API)).
-- **Accessible input** — Supports keyboard navigation and one- or two-switch scanning.
-- **Offline and installable** — Caches the app shell for offline use and installs as a standalone app ([PWA](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)).
-- **Open Board Format** — Imports `.obf`/`.obz` files ([example boards](https://www.openboardformat.org/examples)), including by URL via `?board=https://example.com/board.obz`.
+- **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
+- **Accessible input** — Supports touch, keyboard navigation, and configurable automatic, step, dwell, and inverse switch scanning.
+- **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files, including by URL.
+- **Multilingual** — Provides 35 interface languages, including right-to-left layouts, and can cache translated boards on the device.
+- **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.
 
-## Built-in AI support
+## Privacy, offline use, and current limits
 
-Built-in AI is optional and detected at runtime. Support varies by browser, operating system, hardware, language, and model availability. An initial model download may require an unmetered connection; the core board continues to work when these APIs are unavailable.
+AAC Board AI has no account system, application backend, telemetry, or tracking. Imported boards, settings, and cached translations are stored on the device; messages are not sent to an AAC Board AI server.
 
-Because these APIs are evolving, follow the current setup instructions for each browser:
+The app shell and loaded boards work offline after the first successful load. URL imports require a connection, and speech availability can depend on the selected platform voice.
 
-- **Google Chrome:** [Proofreader API](https://developer.chrome.com/docs/ai/proofreader-api), [Rewriter API](https://developer.chrome.com/docs/ai/rewriter-api), and [Translator API](https://developer.chrome.com/docs/ai/translator-api).
-- **Microsoft Edge:** [Proofreader API](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Writing Assistance APIs](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator API](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api).
+Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
-## Quick start
+## Compatibility
+
+Built-in AI is detected at runtime. Availability depends on the browser, operating system, hardware, language, and downloaded models; initial model or language-pack downloads may require an unmetered connection.
+
+- **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api), [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api), and [Translator](https://developer.chrome.com/docs/ai/translator-api)
+- **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Writing Assistance](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
+
+## Develop locally
 
 Requires Node.js 24+.
 
@@ -67,20 +72,16 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-## Development
-
 ```bash
 npx playwright install --with-deps  # Install browser test dependencies
-npm run dev                         # Start the development server
-npm run dev:host                    # Start a network-accessible server
-npm run lint                        # Lint the code
-npm test                            # Run the tests
-npm run build                       # Type-check and build for production
+npm run lint                         # Lint the code
+npm test                             # Run the tests in Chromium
+npm run build                        # Type-check and build for production
 ```
 
-## Technical stack
+## Architecture
 
-React 19 with the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design and module boundaries.
+React 19 with the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
 
 ## Contributing
 
@@ -90,6 +91,4 @@ This repository is a personal workspace, so pull requests are not accepted. You 
 
 [MIT](LICENSE) © Shay Cojocaru
 
-<div align="center">
-  <small>Designed by a human. Assembled by AI.</small>
-</div>
+The bundled Quick Core 24 board is by [OpenAAC](https://www.openaac.org) and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
