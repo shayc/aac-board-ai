@@ -12,7 +12,7 @@
 
 **AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with communication symbols and speak them aloud.
 
-On supported browsers, **Built-in AI** uses models supplied and run by the browser to proofread messages, adjust tone, and translate boards. It requires no API key or cloud AI service, and core communication works without it.
+On supported browsers, **Built-in AI** uses models provided by the browser and run locally on the device to proofread messages, adjust tone, and translate boards. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
@@ -30,25 +30,25 @@ Suggestions remain visible choices until the user accepts one. The original mess
 
 ## Built-in AI where it matters
 
-| Browser API                                                         | What it offers the user                                    |
-| ------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections             |
-| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing in the original or a more casual tone |
-| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases         |
+| Browser API                                                         | What it offers the user                                                           |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections                                    |
+| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing that preserves the original tone or adopts a more casual one |
+| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases                                |
 
 ## A complete board, with or without AI
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
 - **Accessible input** — Supports touch, keyboard navigation, and configurable automatic, step, dwell, and inverse switch scanning.
 - **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files, including by URL.
-- **Multilingual** — Provides 35 interface languages, including right-to-left layouts, and can cache translated boards on the device.
+- **Multilingual** — Supports 35 interface languages and right-to-left layouts, and can cache translated boards on the device.
 - **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.
 
 ## Privacy, offline use, and current limits
 
 AAC Board AI has no account system, application backend, telemetry, or tracking. Imported boards, settings, and cached translations are stored on the device; messages are not sent to an AAC Board AI server.
 
-The app shell and loaded boards work offline after the first successful load. URL imports require a connection, and speech availability can depend on the selected platform voice.
+The app shell and loaded boards work offline after the first successful load. URL imports require a connection, and text-to-speech support depends on the platform and its available voices.
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
@@ -85,7 +85,7 @@ React 19 with the React Compiler, TypeScript, Material UI, React Router, Indexed
 
 ## Contributing
 
-This repository is a personal workspace, so pull requests are not accepted. You may fork the project and adapt it under the MIT license.
+This is a personal project, so pull requests are not accepted. You may fork the project and adapt it under the MIT license.
 
 ## License
 
