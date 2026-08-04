@@ -1,5 +1,5 @@
-import { AppHeader } from "@app/layouts/app-header";
-import { ContentColumn } from "@app/layouts/content-column";
+import { AppHeader } from "@app/shell/app-header";
+import { ContentColumn } from "@app/shell/content-column";
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";

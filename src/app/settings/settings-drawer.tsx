@@ -1,4 +1,4 @@
-import { DRAWER_BASE_WIDTH } from "@app/layouts/drawer-width";
+import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
 import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,7 +16,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { ExternalLink } from "@shared/components/external-link";
+import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import { AppearanceSettings } from "./appearance-settings";

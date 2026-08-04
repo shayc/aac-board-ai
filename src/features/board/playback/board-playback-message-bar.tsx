@@ -1,4 +1,4 @@
-import { useHighlightConfig } from "@shared/highlight/highlight-store";
+import { useHighlightConfig } from "@shared/playback-highlight/highlight-store";
 import { MessageBar, type MessageBarProps } from "../message/message-bar";
 import type { MessagePart } from "../message/message-types";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";

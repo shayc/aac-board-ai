@@ -1,14 +1,14 @@
 import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
 
-interface TileColorConfig {
+interface TileAppearanceConfig {
   saturation: number;
   borderVisible: boolean;
 }
 
 export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
 
-export function parseTileColorConfig(raw: unknown): TileColorConfig {
+export function parseTileAppearanceConfig(raw: unknown): TileAppearanceConfig {
   const parsed = (raw ?? {}) as Record<string, unknown>;
   const { min, max, fallback } = TILE_SATURATION;
 
@@ -23,25 +23,28 @@ export function parseTileColorConfig(raw: unknown): TileColorConfig {
   };
 }
 
-const tileColorStore = createPersistedStore<TileColorConfig>(
+const tileAppearanceStore = createPersistedStore<TileAppearanceConfig>(
   "tile-color-config",
-  parseTileColorConfig,
+  parseTileAppearanceConfig,
 );
 
 export function setTileSaturation(saturation: number): void {
-  tileColorStore.setState({ ...tileColorStore.getSnapshot(), saturation });
+  tileAppearanceStore.setState({
+    ...tileAppearanceStore.getSnapshot(),
+    saturation,
+  });
 }
 
 export function setTileBorderVisible(borderVisible: boolean): void {
-  tileColorStore.setState({
-    ...tileColorStore.getSnapshot(),
+  tileAppearanceStore.setState({
+    ...tileAppearanceStore.getSnapshot(),
     borderVisible,
   });
 }
 
-export function useTileColorConfig(): TileColorConfig {
+export function useTileAppearanceConfig(): TileAppearanceConfig {
   return useSyncExternalStore(
-    tileColorStore.subscribe,
-    tileColorStore.getSnapshot,
+    tileAppearanceStore.subscribe,
+    tileAppearanceStore.getSnapshot,
   );
 }

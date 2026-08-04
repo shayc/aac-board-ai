@@ -14,7 +14,7 @@ import { m } from "@paraglide/messages.js";
 import {
   setHighlightActivePart,
   useHighlightConfig,
-} from "@shared/highlight/highlight-store";
+} from "@shared/playback-highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";

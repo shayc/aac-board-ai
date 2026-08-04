@@ -9,8 +9,8 @@ import {
   setTileBorderVisible,
   setTileSaturation,
   TILE_SATURATION,
-  useTileColorConfig,
-} from "@shared/tile-color/tile-color-store";
+  useTileAppearanceConfig,
+} from "@shared/tile-appearance/tile-appearance-store";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -18,7 +18,7 @@ function formatSaturation(value: number): string {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const { saturation, borderVisible } = useTileColorConfig();
+  const { saturation, borderVisible } = useTileAppearanceConfig();
   const saturationLabel = formatSaturation(saturation);
 
   return (

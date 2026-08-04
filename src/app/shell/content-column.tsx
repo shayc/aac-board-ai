@@ -1,4 +1,4 @@
-import { LIBRARY_DRAWER_WIDTH } from "@app/layouts/drawer-width";
+import { LIBRARY_DRAWER_WIDTH } from "@app/shell/drawer-width";
 import Box from "@mui/material/Box";
 import type { ReactNode } from "react";
 
