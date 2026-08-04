@@ -1,8 +1,3 @@
-const englishLanguageNames = new Intl.DisplayNames(["en"], {
-  type: "language",
-  languageDisplay: "dialect",
-});
-
 function parseLocale(locale: string): Intl.Locale {
   return new Intl.Locale(locale.replace(/_/g, "-"));
 }
@@ -56,19 +51,6 @@ export function getTextDirection(locale: string): "ltr" | "rtl" {
     return parseLocale(locale).getTextInfo().direction ?? "ltr";
   } catch {
     return "ltr";
-  }
-}
-
-/**
- * English display name of a locale, dialect-aware
- * (e.g. "en-US" → "American English", "he-IL" → "Hebrew (Israel)").
- * Falls back to the original code if the locale is not recognized.
- */
-export function getEnglishLanguageName(locale: string): string {
-  try {
-    return englishLanguageNames.of(normalizeLocale(locale)) ?? locale;
-  } catch {
-    return locale;
   }
 }
 
