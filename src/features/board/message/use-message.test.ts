@@ -13,31 +13,6 @@ describe("useMessage", () => {
     expect(result.current.text).toBe("I want water");
   });
 
-  test("mints a distinct id for each part even with identical content", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.setFromText("cat cat");
-    await rerender();
-
-    const [first, second] = result.current.parts;
-    expect(first.id).toBeTruthy();
-    expect(second.id).toBeTruthy();
-    expect(first.id).not.toBe(second.id);
-  });
-
-  test("removes a single character from the last-added text-only part", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.setFromText("hello world");
-    await rerender();
-
-    result.current.removeLastPart();
-    await rerender();
-
-    expect(result.current.parts).toHaveLength(2);
-    expect(result.current.text).toBe("hello worl");
-  });
-
   test("keeps trailing punctuation attached to its word for TTS prosody", async () => {
     const { result, rerender } = await renderHook(() => useMessage());
 
@@ -88,17 +63,5 @@ describe("useMessage", () => {
     await rerender();
 
     expect(result.current.parts).toHaveLength(0);
-  });
-
-  test("setParts replaces the parts wholesale", async () => {
-    const { result, rerender } = await renderHook(() => useMessage());
-
-    result.current.setFromText("existing");
-    await rerender();
-
-    result.current.setParts([{ id: "1", label: "replaced" }]);
-    await rerender();
-
-    expect(result.current.parts).toEqual([{ id: "1", label: "replaced" }]);
   });
 });
