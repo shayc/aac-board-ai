@@ -1,4 +1,3 @@
-import { sanitizeColor } from "@shared/utils/css-color";
 import { normalizeLocale } from "@shared/utils/locale";
 import type {
   OBFBoard,
@@ -15,6 +14,7 @@ import type {
   BoardStrings,
   LoadBoard,
 } from "../types";
+import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
