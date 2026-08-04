@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { hydrateBoard, type HydratedBoard } from "./board-hydration";
-import { BoardNotFoundError, replaceBoardSet } from "./boards-db";
+import { BoardNotFoundError, createBoardSet } from "./boards-db";
 import { resetBoardsDB } from "../testing";
 
 const SET_ID = "loader-test-set";
@@ -28,7 +28,7 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   };
 
-  await replaceBoardSet({
+  await createBoardSet({
     boardSet: { setId: SET_ID, name: "Loader Test", rootBoardId: BOARD_ID },
     boards: [{ boardId: BOARD_ID, name: "Test Board", obf: obfBoard }],
     assets: [{ path: IMAGE_PATH, blob: pngBlob }],

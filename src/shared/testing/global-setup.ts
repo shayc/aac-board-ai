@@ -1,17 +1,10 @@
 import { resetPersistedStores } from "@shared/utils/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
-// Built-in AI namespaces the app reads off globalThis. CI's Chromium exposes
-// some of these (e.g. a downloadable LanguageModel) while local Chromium does
-// not, so tests that don't stub them would otherwise pick up ambient state and
-// behave differently across environments. Default them all to absent; tests
-// opt in with the stub helpers in built-in-ai.ts.
-const BUILT_IN_AI_NAMESPACES = [
-  "Proofreader",
-  "Rewriter",
-  "Translator",
-  "LanguageModel",
-];
+// Built-in AI namespaces the app reads off globalThis. Their ambient state can
+// differ between local and CI Chromium, so default them to absent; tests opt in
+// with the stub helpers in built-in-ai.ts.
+const BUILT_IN_AI_NAMESPACES = ["Proofreader", "Rewriter", "Translator"];
 
 function clearStorage() {
   localStorage.clear();

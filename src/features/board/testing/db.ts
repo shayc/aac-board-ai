@@ -2,7 +2,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   getBoardsDB,
-  replaceBoardSet,
+  createBoardSet,
   type AssetInput,
   type BoardRecord,
   type BoardSetRecord,
@@ -49,7 +49,7 @@ export async function resetBoardsDB(): Promise<void> {
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   await clearBoardsDB();
   for (const { boards = [], assets = [], ...record } of records) {
-    await replaceBoardSet({
+    await createBoardSet({
       boardSet: { name: record.setId, ...record },
       boards,
       assets,

@@ -4,7 +4,7 @@ import { type Mock, vi } from "vitest";
 // @shayc/react-built-in-ai reads off globalThis. They're absent in CI Chromium,
 // so we fake them at the global boundary.
 
-type AINamespace = "Proofreader" | "Rewriter" | "Translator" | "LanguageModel";
+type AINamespace = "Proofreader" | "Rewriter" | "Translator";
 
 interface NamespaceSpies {
   create: Mock<(options?: Record<string, unknown>) => Promise<unknown>>;
@@ -25,10 +25,6 @@ interface RewriterStub extends NamespaceSpies {
 
 interface TranslatorStub extends NamespaceSpies {
   translate: Mock<(input: string) => string | Promise<string>>;
-}
-
-interface LanguageModelStub extends NamespaceSpies {
-  prompt: Mock<(input: string) => string | Promise<string>>;
 }
 
 function installNamespace(
@@ -79,22 +75,6 @@ export function stubTranslator(
   const spies = installNamespace("Translator", () => ({ translate: action }));
 
   return { translate: action, ...spies };
-}
-
-// The Prompt API session exposes the surface @shayc/react-built-in-ai reads:
-// `prompt`, the `contextoverflow` listener, and the live context-window numbers.
-export function stubLanguageModel(
-  prompt: (input: string) => string | Promise<string> = () => '{"words":[]}',
-): LanguageModelStub {
-  const action = vi.fn(prompt);
-  const spies = installNamespace("LanguageModel", () => ({
-    prompt: action,
-    addEventListener: () => undefined,
-    contextWindow: 4096,
-    contextUsage: 0,
-  }));
-
-  return { prompt: action, ...spies };
 }
 
 export function stubBuiltInAIUnsupported(...names: AINamespace[]): void {

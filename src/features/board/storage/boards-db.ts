@@ -208,28 +208,15 @@ export async function deleteBoardSetRows(setId: string): Promise<void> {
   ]);
 }
 
-export interface BoardSetWriteInput {
+export interface BoardSetCreateInput {
   boardSet: BoardSetInput;
   boards: BoardInput[];
   assets: AssetInput[];
 }
 
-export async function createBoardSet(input: BoardSetWriteInput): Promise<void> {
-  await writeBoardSet(input, "create");
-}
-
-export async function replaceBoardSet(
-  input: BoardSetWriteInput,
-): Promise<{ replacedExisting: boolean }> {
-  return { replacedExisting: await writeBoardSet(input, "replace") };
-}
-
-type BoardSetWriteMode = "create" | "replace";
-
-async function writeBoardSet(
-  input: BoardSetWriteInput,
-  mode: BoardSetWriteMode,
-): Promise<boolean> {
+export async function createBoardSet(
+  input: BoardSetCreateInput,
+): Promise<void> {
   const { boardSet, boards, assets } = input;
   validateId(boardSet.setId, "setId");
   validateId(boardSet.rootBoardId, "rootBoardId");
@@ -245,7 +232,7 @@ async function writeBoardSet(
   const assetStore = tx.objectStore("assets");
 
   const existing = await boardSetStore.get(setId);
-  if (mode === "create" && existing) {
+  if (existing) {
     await tx.done;
     throw new BoardSetAlreadyExistsError(setId);
   }
@@ -271,11 +258,6 @@ async function writeBoardSet(
   const requests: Promise<unknown>[] = [tx.done];
 
   try {
-    if (mode === "replace") {
-      const setRange = boardSetRange(setId);
-      requests.push(boardStore.delete(setRange), assetStore.delete(setRange));
-    }
-
     for (const board of boards) {
       requests.push(
         boardStore.put({
@@ -295,9 +277,7 @@ async function writeBoardSet(
         }),
       );
     }
-    requests.push(
-      mode === "create" ? boardSetStore.add(record) : boardSetStore.put(record),
-    );
+    requests.push(boardSetStore.add(record));
 
     await Promise.all(requests);
   } catch (error) {
@@ -309,8 +289,6 @@ async function writeBoardSet(
     await Promise.allSettled(requests);
     throw error;
   }
-
-  return existing !== undefined;
 }
 
 export async function getBoard(

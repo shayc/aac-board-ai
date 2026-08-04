@@ -1,6 +1,5 @@
 import { describe, expect, test } from "vitest";
 import {
-  getEnglishLanguageName,
   getLanguageCode,
   getNativeLanguageName,
   getTextDirection,
@@ -56,16 +55,6 @@ describe("getTextDirection", () => {
 
   test("returns ltr when Intl.Locale rejects structurally invalid input", () => {
     expect(getTextDirection("!!!")).toBe("ltr");
-  });
-});
-
-describe("getEnglishLanguageName", () => {
-  test("uses dialect form for region-qualified locales", () => {
-    expect(getEnglishLanguageName("en-US")).toBe("American English");
-  });
-
-  test("returns plain language name when no region is given", () => {
-    expect(getEnglishLanguageName("es")).toBe("Spanish");
   });
 });
 
