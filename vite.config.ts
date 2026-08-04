@@ -11,7 +11,7 @@ import {
   CONTENT_LIGHT,
   SHELL_DARK,
   SHELL_LIGHT,
-} from "./src/shared/theme/theme-colors";
+} from "./src/shared/theme/theme-colors.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
@@ -78,11 +78,11 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@app": path.resolve(__dirname, "./src/app"),
-      "@features": path.resolve(__dirname, "./src/features"),
-      "@pages": path.resolve(__dirname, "./src/pages"),
-      "@paraglide": path.resolve(__dirname, "./src/paraglide"),
-      "@shared": path.resolve(__dirname, "./src/shared"),
+      "@app": path.resolve(import.meta.dirname, "./src/app"),
+      "@features": path.resolve(import.meta.dirname, "./src/features"),
+      "@pages": path.resolve(import.meta.dirname, "./src/pages"),
+      "@paraglide": path.resolve(import.meta.dirname, "./src/paraglide"),
+      "@shared": path.resolve(import.meta.dirname, "./src/shared"),
     },
   },
   optimizeDeps: {
