@@ -30,18 +30,18 @@ Suggestions remain visible choices until the user accepts one. The original mess
 
 ## Built-in AI where it matters
 
-| Browser API                                                         | What it offers the user                                    |
-| ------------------------------------------------------------------- | ---------------------------------------------------------- |
-| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections             |
-| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing in the original or a more casual tone |
-| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases         |
+| Browser API                                                         | What it offers the user                                                           |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections                                    |
+| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing that preserves the original tone or adopts a more casual one |
+| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases                                |
 
 ## A complete board, with or without AI
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
 - **Accessible input** — Supports touch, keyboard navigation, and configurable automatic, step, dwell, and inverse switch scanning.
 - **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files, including by URL.
-- **Multilingual** — Provides 35 interface languages, including right-to-left layouts, and can cache translated boards on the device.
+- **Multilingual** — Supports 35 interface languages and right-to-left layouts, and can cache translated boards on the device.
 - **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.
 
 ## Privacy, offline use, and current limits
