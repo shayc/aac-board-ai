@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
-import { ErrorState } from "@shared/components/error-state";
+import { ErrorState } from "@shared/ui/error-state";
 import { useTranslate } from "@shared/language/use-translate";
 import { Link } from "react-router";
 

@@ -7,7 +7,7 @@ import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
 import { BOARD_ROUTE_ID } from "@app/routing/use-board-media-lifetime";
 import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/board";
 import { BoardPage } from "@pages/board-page";
-import { LoadingState } from "@shared/components/loading-state";
+import { LoadingState } from "@shared/ui/loading-state";
 import type { RouteObject } from "react-router";
 
 export const appRoutes: RouteObject[] = [
