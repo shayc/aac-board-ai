@@ -30,6 +30,10 @@ function resolveBackgroundColor(cssColor: string): string {
   return resolved;
 }
 
+function resolveColorInSrgb(cssColor: string): string {
+  return resolveColor(`color(srgb from ${cssColor} r g b)`);
+}
+
 function resolveBoxShadow(cssShadow: string): string {
   const probe = document.createElement("div");
   document.body.append(probe);
@@ -217,8 +221,8 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Colored" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.backgroundColor).toBe(
-      resolveBackgroundColor("oklch(from #000000 l c h)"),
+    expect(resolveColorInSrgb(styles.backgroundColor)).toBe(
+      resolveColorInSrgb("oklch(from #000000 l c h)"),
     );
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
