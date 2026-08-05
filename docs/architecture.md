@@ -153,11 +153,12 @@ seam. Search by path or symbol name to locate the code.
 | Shared state primitives   | `src/shared/utils/external-store.ts`, `src/shared/utils/persisted-store.ts`                                  | Cross-cutting stores build on these primitives instead of defining new subscription or localStorage machinery.                                                                |
 | UI messages               | `messages/*.json`, `project.inlang/`                                                                         | Message sources compile through Paraglide into generated `src/paraglide/`; generated files are never edited manually.                                                         |
 
-External packages carry three integration seams:
-`@shayc/open-board-format` parses OBF/OBZ,
-`@shayc/react-built-in-ai` wraps browser AI APIs, and
-`@shayc/switch-scanning` provides the scanning engine. App modules add product
-policy around those package interfaces.
+Two companion packages own reusable mechanics outside the application:
+[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) parses
+and creates OBF/OBZ files, while
+[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai)
+manages browser AI availability, provisioning, and lifecycle. App modules add
+product policy around both interfaces.
 
 ## Data and state model
 
