@@ -52,7 +52,7 @@ After the first successful load, the app and loaded boards work offline. URL imp
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
-## Compatibility
+## Built-in AI compatibility
 
 The app checks for Built-in AI support at runtime. Availability depends on the browser, operating system, hardware, language, and downloaded models; initial model or language-pack downloads may require an unmetered connection.
 
