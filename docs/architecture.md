@@ -3,17 +3,17 @@
 > **TL;DR** — AAC Board AI is a device-local PWA for augmentative and
 > alternative communication. Open Board Format boards live in IndexedDB;
 > selecting tiles builds a message that the browser can speak. Optional Built-in
-> AI can refine or translate text without an application backend. **No
-> application backend, telemetry, or tracking.**
+> AI can refine or translate text on-device. **No application backend, telemetry,
+> or tracking.**
 >
 > New here? The board domain lives under `src/features/board/`; start with
 > `board-viewer.tsx`.
 
 This document describes the app's modules, ownership boundaries, invariants, and
-load-bearing decisions. Setup and commands live in `README.md` and `AGENTS.md`;
-code style lives in `AGENTS.md`; symbol-level behavior lives beside the code.
-The intended audience is contributors familiar with React, TypeScript, and the
-Web Platform. AAC terms are defined in the [glossary](#glossary).
+load-bearing decisions. Setup and basic commands live in `README.md`; contributor
+conventions live in `AGENTS.md`; symbol-level behavior lives beside the code. The
+intended audience is contributors familiar with React, TypeScript, and the Web
+Platform. AAC terms are defined in the [glossary](#glossary).
 
 **Quality goals, in order:**
 
@@ -36,7 +36,7 @@ Two constraints shape the architecture:
 
 - **Device-local core.** IndexedDB is the source of truth for imported boards.
   Reading, composing, navigating, and speaking a board do not require a network.
-  AI, translation, and URL import are progressive enhancements.
+  AI suggestions, board translation, and URL imports are progressive enhancements.
 - **No application backend.** A static host serves the SPA and service-worker
   updates, but no application server stores user content. Cross-device sync is
   therefore outside the current architecture.
@@ -133,8 +133,7 @@ for example, `storage/` exclusively owns IndexedDB access — but a folder alone
 does not imply an independently replaceable boundary.
 
 The table identifies the owner of each concern and the rule at its ownership
-seam. Names are symbol-searchable rather than hyperlinked so file moves do not
-break the map.
+seam. Search by path or symbol name to locate the code.
 
 | Concern                   | Owner                                                                                                        | Ownership rule                                                                                                                                                                |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -142,7 +141,7 @@ break the map.
 | Active-board data         | `src/app/routing/loaders/`                                                                                   | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                     |
 | Board domain              | `src/features/board/`                                                                                        | `board-viewer.tsx` orchestrates the grid, activation, message, navigation, keyboard, scanning, suggestions, and playback adapters.                                            |
 | OBF runtime mapping       | `src/features/board/obf/`                                                                                    | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                    |
-| Board ingestion           | `src/features/board/import/`                                                                                 | Picker, drag-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                            |
+| Board ingestion           | `src/features/board/import/`                                                                                 | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                   |
 | Board persistence         | `src/features/board/storage/`                                                                                | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                      |
 | Board-set catalog         | `src/features/board/board-sets/`                                                                             | An external store projects IndexedDB metadata into a reactive, cross-tab catalog.                                                                                             |
 | Board playback            | `src/features/board/playback/`                                                                               | Converts message parts into playback steps and owns board-specific tracking and UI adapters; device output remains delegated to shared playback.                              |
@@ -189,9 +188,10 @@ rerender only subscribers to the changed slice.
 - **No application backend, telemetry, or tracking.** The static host receives
   normal asset requests, and URL import contacts the URL selected by the user, but
   the app does not send board or message content to an application service.
-- **Core communication works offline after installation and board import.** AI,
-  translation, and URL import may be unavailable without preventing board reading,
-  navigation, composition, or locally available playback.
+- **Core communication works offline once the app shell and board data have loaded
+  successfully.** AI suggestions, board translation, and URL imports may be
+  unavailable without preventing board reading, navigation, composition, or
+  locally available playback.
 - **Board persistence is centralized.** Components do not touch IndexedDB; all
   production access goes through `src/features/board/storage/`.
 - **IndexedDB stores raw OBF, amended only by cached translation strings.**
