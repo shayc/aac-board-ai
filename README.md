@@ -2,9 +2,9 @@
 
 # AAC Board AI
 
-**Winner — [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025), Most Helpful Web Application**
+**Winner of the [Google Chrome Built-in AI Challenge 2025](https://developer.chrome.com/blog/ai-challenge-winners-2025) — Most Helpful Application**
 
-**[Try AAC Board AI](https://aacboard.app)** — opens with a ready-to-use communication board
+**[Try AAC Board AI](https://aacboard.app)**
 
 [![CI](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/shayc/aac-board-ai/actions/workflows/ci.yml)
 
@@ -12,7 +12,7 @@
 
 **AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with communication symbols and speak them aloud.
 
-On supported browsers, **Built-in AI** uses models provided by the browser and run locally on the device to proofread messages, adjust tone, and translate boards. No API key or cloud AI service is required, and core communication works without Built-in AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, adjust tone, and translate boards. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
@@ -26,7 +26,7 @@ Raw message:     "want eat pizza"
 AI suggestion:   "I want to eat pizza."
 ```
 
-Suggestions remain visible choices until the user accepts one. The original message is never replaced automatically.
+Suggestions are optional; the original message is replaced only when the user accepts one.
 
 ## Built-in AI where it matters
 
@@ -40,24 +40,24 @@ Suggestions remain visible choices until the user accepts one. The original mess
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
 - **Accessible input** — Supports touch, keyboard navigation, and configurable automatic, step, dwell, and inverse switch scanning.
-- **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files, including by URL.
-- **Multilingual** — Supports 35 interface languages and right-to-left layouts, and can cache translated boards on the device.
+- **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files from your device or a URL.
+- **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
 - **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.
 
 ## Privacy, offline use, and current limits
 
-AAC Board AI has no account system, application backend, telemetry, or tracking. Imported boards, settings, and cached translations are stored on the device; messages are not sent to an AAC Board AI server.
+AAC Board AI has no accounts, backend, telemetry, or tracking. Imported boards, settings, and cached translations stay on the device; messages are never sent to an AAC Board AI server.
 
-The app shell and loaded boards work offline after the first successful load. URL imports require a connection, and text-to-speech support depends on the platform and its available voices.
+After the first successful load, the app and loaded boards work offline. URL imports require a connection, and text-to-speech support depends on the platform and its available voices.
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
 ## Compatibility
 
-Built-in AI is detected at runtime. Availability depends on the browser, operating system, hardware, language, and downloaded models; initial model or language-pack downloads may require an unmetered connection.
+The app checks for Built-in AI support at runtime. Availability depends on the browser, operating system, hardware, language, and downloaded models; initial model or language-pack downloads may require an unmetered connection.
 
 - **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api), [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api), and [Translator](https://developer.chrome.com/docs/ai/translator-api)
-- **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Writing Assistance](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
+- **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
 
 ## Develop locally
 
@@ -74,14 +74,14 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ```bash
 npx playwright install --with-deps  # Install browser test dependencies
-npm run lint                         # Lint the code
-npm test                             # Run the tests in Chromium
-npm run build                        # Type-check and build for production
+npm run lint                        # Lint the code
+npm test                            # Run the tests in Chromium
+npm run build                       # Type-check and build for production
 ```
 
 ## Architecture
 
-React 19 with the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
+AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
 
 ## Contributing
 
