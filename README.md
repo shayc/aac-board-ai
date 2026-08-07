@@ -18,7 +18,7 @@ On supported browsers, **Built-in AI** uses the browser’s on-device models to 
 
 ## From a few symbols to a clearer message
 
-AAC users often select a few key concepts instead of every word in a complete sentence:
+AAC users may select a few key concepts rather than every word in a complete sentence:
 
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
@@ -85,7 +85,7 @@ AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI
 
 ## Contributing
 
-This is a personal project, so pull requests are not accepted. You may fork the project and adapt it under the MIT license.
+Bug reports and feedback are welcome. Pull requests are not accepted.
 
 ## License
 
