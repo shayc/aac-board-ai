@@ -18,7 +18,7 @@ On supported browsers, **Built-in AI** uses the browser’s on-device models to 
 
 ## From a few symbols to a clearer message
 
-AAC users often select a few key concepts instead of every word in a complete sentence:
+AAC users may select a few key concepts rather than every word in a complete sentence:
 
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
