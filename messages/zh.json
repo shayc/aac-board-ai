@@ -117,7 +117,7 @@
   "messageStop": "停止",
   "onboardingSmartRewritingDescription": "将点按图块扩展为自然的句子，并调整语气：直接、专业或友好。",
   "onboardingTranslationDescription": "在本地翻译沟通板，以使用多种语言交流。",
-  "onboardingPrivacyDescription": "完全在你的设备上运行，零数据追踪，也不依赖云端。",
+  "onboardingPrivacyDescription": "无需账户，也无应用追踪。可离线编写消息。",
   "onboardingContinue": "继续",
   "errorGenericTitle": "出了点问题",
   "errorPageNotFound": "页面未找到",

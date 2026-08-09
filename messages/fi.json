@@ -117,7 +117,7 @@
   "messageStop": "Pysäytä",
   "onboardingSmartRewritingDescription": "Laajenna ruutujen napautukset luonnollisiksi lauseiksi ja säädä sävyä: suora, ammattimainen tai ystävällinen.",
   "onboardingTranslationDescription": "Käännä taulut paikallisesti, jotta voit viestiä useilla kielillä.",
-  "onboardingPrivacyDescription": "Toimii kokonaan laitteellasi ilman tietojen seurantaa ja ilman pilviriippuvuutta.",
+  "onboardingPrivacyDescription": "Ei tilejä eikä sovellusseurantaa. Muodosta viestejä ilman verkkoyhteyttä.",
   "onboardingContinue": "Jatka",
   "errorGenericTitle": "Jokin meni pieleen",
   "errorPageNotFound": "Sivua ei löytynyt",

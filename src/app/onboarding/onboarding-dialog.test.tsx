@@ -30,7 +30,7 @@ describe("OnboardingDialog", () => {
     for (const benefit of [
       "Say more with fewer taps. AI helps your messages sound clear and natural.",
       "Communicate across languages, right from your board.",
-      "Your communication stays private and works offline. No subscription needed.",
+      "No accounts or app tracking. Build messages offline.",
     ]) {
       await expect.element(screen.getByText(benefit)).toBeVisible();
     }
