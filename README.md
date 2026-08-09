@@ -42,13 +42,15 @@ Suggestions are optional; the original message is replaced only when the user ac
 - **Accessible input** — Supports touch and keyboard navigation.
 - **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files from your device or a URL.
 - **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
-- **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.
+- **Offline and installable** — Runs as a PWA and keeps core board features available after the app and board data have loaded.
 
 ## Privacy, offline use, and current limits
 
-AAC Board AI has no accounts, backend, telemetry, or tracking. Imported boards, settings, and cached translations stay on the device; messages are never sent to an AAC Board AI server.
+AAC Board AI has no accounts, application backend, telemetry, or tracking. Imported board data, settings, and cached translations stay on the device; messages are never sent to an AAC Board AI service.
 
-After the first successful load, the app and loaded boards work offline. URL imports require a connection, and text-to-speech support depends on the platform and its available voices.
+After the first successful load, the app shell and stored board data support offline reading, navigation, and message composition. Locally stored media and locally available speech voices can also play without a connection.
+
+Opening a board with third-party media contacts the hosts named in those URLs. Remote images are cached after their first successful display, subject to browser storage limits and eviction; remote audio remains network-dependent. URL imports and initial AI model or language-pack downloads also require a connection. Text-to-speech availability and whether speech is processed locally depend on the platform and selected voice.
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 

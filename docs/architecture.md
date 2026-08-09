@@ -35,8 +35,10 @@ later" into more natural language.
 Two constraints shape the architecture:
 
 - **Device-local core.** IndexedDB is the source of truth for imported boards.
-  Reading, composing, navigating, and speaking a board do not require a network.
-  AI suggestions, board translation, and URL imports are progressive enhancements.
+  Reading, composing, and navigating a loaded board do not require a network.
+  Playback is offline when its media and speech voice are locally available. AI
+  suggestions, board translation, URL imports, and remote media are progressive
+  enhancements.
 - **No application backend.** A static host serves the SPA and service-worker
   updates, but no application server stores user content. Cross-device sync is
   therefore outside the current architecture.
@@ -46,7 +48,8 @@ Two constraints shape the architecture:
 The app is one React SPA. Browser APIs provide persistence and output; feature
 modules isolate the board domain, imports, playback, and optional AI. A
 `vite-plugin-pwa` service worker caches the app shell after a successful first
-load, and the manifest registers `.obf` and `.obz` file handlers.
+load and caches third-party images after they are displayed. The manifest
+registers `.obf` and `.obz` file handlers.
 
 ```mermaid
 flowchart LR
@@ -186,8 +189,9 @@ rerender only subscribers to the changed slice.
 ## Invariants
 
 - **No application backend, telemetry, or tracking.** The static host receives
-  normal asset requests, and URL import contacts the URL selected by the user, but
-  the app does not send board or message content to an application service.
+  normal asset requests. URL imports and third-party media contact their source
+  hosts, and some platform speech voices may contact an external service, but the
+  app does not send board or message content to an application service.
 - **Core communication works offline once the app shell and board data have loaded
   successfully.** AI suggestions, board translation, and URL imports may be
   unavailable without preventing board reading, navigation, composition, or
@@ -262,6 +266,11 @@ rise with meaningful coverage gains and are not lowered to admit a regression.
   locales remain selectable even when the browser exposes no matching voice. The
   app does not require `SpeechSynthesisVoice.localService`, so a selected voice's
   offline and privacy behavior remains platform-dependent.
+- **Remote media is best-effort offline content.** The service worker caches
+  third-party images after their first successful display, but browser storage
+  pressure may evict them. Third-party audio remains network-dependent because
+  media playback may use range requests that opaque cross-origin responses cannot
+  reliably satisfy from this cache strategy.
 - **Deployment configuration is host-specific.** The static SPA is portable, but
   the current deployment configuration is Netlify-only (`netlify.toml`).
 

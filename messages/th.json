@@ -117,7 +117,7 @@
   "messageStop": "หยุด",
   "onboardingSmartRewritingDescription": "ขยายการแตะไทล์ให้เป็นประโยคที่เป็นธรรมชาติ และปรับโทน: ตรงไปตรงมา เป็นทางการ หรือเป็นมิตร",
   "onboardingTranslationDescription": "แปลบอร์ดในเครื่อง เพื่อสื่อสารได้หลายภาษา",
-  "onboardingPrivacyDescription": "ทำงานบนอุปกรณ์ของคุณทั้งหมด ไม่มีการติดตามข้อมูลและไม่ต้องพึ่งพาคลาวด์",
+  "onboardingPrivacyDescription": "ไม่มีบัญชีหรือการติดตามในแอป สร้างข้อความแบบออฟไลน์",
   "onboardingContinue": "ดำเนินการต่อ",
   "errorGenericTitle": "เกิดข้อผิดพลาดบางอย่าง",
   "errorPageNotFound": "ไม่พบหน้านี้",
