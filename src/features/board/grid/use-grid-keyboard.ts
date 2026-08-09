@@ -1,14 +1,14 @@
 import type { DOMAttributes, FocusEvent, RefObject } from "react";
 import { useEffect, useRef, useState } from "react";
 import { useKeyboard } from "react-aria";
-
-const CELL = "[role='gridcell']";
-const FOCUSABLE = "[tabindex]";
-
-interface Cell {
-  row: number;
-  col: number;
-}
+import {
+  findFirstGridFocusable,
+  findFocusableInGridPosition,
+  findGridPosition,
+  isSameGridPosition,
+} from "./grid-dom";
+import { findGridKeyTarget } from "./grid-key-navigation";
+import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
 
 interface UseGridKeyboardOptions {
   grid: readonly (readonly unknown[])[];
@@ -18,25 +18,7 @@ interface UseGridKeyboardOptions {
 interface UseGridKeyboardReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
-  activeCell: Cell;
-}
-
-interface Step {
-  row: -1 | 0 | 1;
-  col: -1 | 0 | 1;
-}
-
-interface FocusTarget {
-  element: HTMLElement;
-  position: Cell;
-}
-
-interface KeyEventLike {
-  key: string;
-  ctrlKey: boolean;
-  metaKey: boolean;
-  shiftKey: boolean;
-  altKey: boolean;
+  activeCell: GridPosition;
 }
 
 export function useGridKeyboard({
@@ -44,13 +26,13 @@ export function useGridKeyboard({
   dir,
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [rememberedCell, setRememberedCell] = useState<Cell>(() =>
-    findFirstNonEmptyCell(grid),
+  const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
+    () => findFirstOccupiedPosition(grid),
   );
-  const rememberedCellRef = useRef(rememberedCell);
-  const rememberCell = (next: Cell) => {
-    rememberedCellRef.current = next;
-    setRememberedCell(next);
+  const rememberedPositionRef = useRef(rememberedPosition);
+  const rememberPosition = (next: GridPosition) => {
+    rememberedPositionRef.current = next;
+    setRememberedPosition(next);
   };
 
   const { keyboardProps } = useKeyboard({
@@ -62,30 +44,30 @@ export function useGridKeyboard({
         return;
       }
 
-      const from = cellOf(event.target as Element | null);
+      const from = findGridPosition(event.target as Element | null);
       if (!from) {
         event.continuePropagation();
 
         return;
       }
 
-      const next = nextFocus(event, root, from, dir);
-      if (!next || sameCell(next.position, from)) {
+      const next = findGridKeyTarget(event, root, from, dir);
+      if (!next || isSameGridPosition(next.position, from)) {
         event.continuePropagation();
 
         return;
       }
 
       event.preventDefault();
-      rememberCell(next.position);
+      rememberPosition(next.position);
       next.element.focus();
     },
   });
 
   const handleFocus = (event: FocusEvent<HTMLElement>) => {
-    const position = cellOf(event.target);
+    const position = findGridPosition(event.target);
     if (position) {
-      rememberCell(position);
+      rememberPosition(position);
     }
   };
 
@@ -107,165 +89,18 @@ export function useGridKeyboard({
     }
 
     const target =
-      findFocusableInCell(root, rememberedCellRef.current) ??
-      findFirstFocusable(root);
+      findFocusableInGridPosition(root, rememberedPositionRef.current) ??
+      findFirstGridFocusable(root);
     target?.focus();
   }, [grid]);
 
-  const activeCell = grid[rememberedCell.row]?.[rememberedCell.col]
-    ? rememberedCell
-    : findFirstNonEmptyCell(grid);
+  const activeCell = grid[rememberedPosition.row]?.[rememberedPosition.col]
+    ? rememberedPosition
+    : findFirstOccupiedPosition(grid);
 
   return {
     rootRef,
     rootProps: { ...keyboardProps, onFocus: handleFocus },
     activeCell,
   };
-}
-
-function findFirstNonEmptyCell(grid: readonly (readonly unknown[])[]): Cell {
-  for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < grid[row].length; col++) {
-      if (grid[row][col]) {
-        return { row, col };
-      }
-    }
-  }
-
-  return { row: 0, col: 0 };
-}
-
-function findFocusableInCell(
-  root: HTMLElement,
-  cell: Cell,
-): HTMLElement | null {
-  return root.querySelector<HTMLElement>(
-    `${CELL}[aria-rowindex='${cell.row + 1}'][aria-colindex='${cell.col + 1}'] ${FOCUSABLE}`,
-  );
-}
-
-function findFirstFocusable(root: HTMLElement): HTMLElement | null {
-  return root.querySelector<HTMLElement>(`${CELL} ${FOCUSABLE}`);
-}
-
-function nextFocus(
-  event: KeyEventLike,
-  root: HTMLElement,
-  from: Cell,
-  dir: "ltr" | "rtl",
-): FocusTarget | null {
-  if (event.key === "Home" || event.key === "End") {
-    if (event.shiftKey || event.altKey) {
-      return null;
-    }
-
-    const spansWholeGrid = event.ctrlKey || event.metaKey;
-    const scope = spansWholeGrid
-      ? CELL
-      : `${CELL}[aria-rowindex='${from.row + 1}']`;
-    const candidates = root.querySelectorAll<HTMLElement>(
-      `${scope} ${FOCUSABLE}`,
-    );
-
-    const goToFirst =
-      dir === "rtl" ? event.key === "End" : event.key === "Home";
-
-    const element = goToFirst
-      ? candidates[0]
-      : candidates[candidates.length - 1];
-
-    if (!element) {
-      return null;
-    }
-
-    const position = cellOf(element);
-
-    return position ? { element, position } : null;
-  }
-
-  if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
-    return null;
-  }
-
-  const step = arrowStep(event.key, dir);
-
-  return step ? nearestInDirection(root, from, step) : null;
-}
-
-function arrowStep(key: string, dir: "ltr" | "rtl"): Step | null {
-  const rtl = dir === "rtl";
-  switch (key) {
-    case "ArrowUp":
-      return { row: -1, col: 0 };
-    case "ArrowDown":
-      return { row: 1, col: 0 };
-    case "ArrowLeft":
-      return { row: 0, col: rtl ? 1 : -1 };
-    case "ArrowRight":
-      return { row: 0, col: rtl ? -1 : 1 };
-    default:
-      return null;
-  }
-}
-
-function nearestInDirection(
-  root: HTMLElement,
-  from: Cell,
-  step: Step,
-): FocusTarget | null {
-  let best: { target: FocusTarget; primary: number; cross: number } | null =
-    null;
-
-  for (const cell of root.querySelectorAll<HTMLElement>(CELL)) {
-    const position = positionOf(cell);
-    const element = cell.querySelector<HTMLElement>(FOCUSABLE);
-    if (!position || !element) {
-      continue;
-    }
-
-    const onRowAxis = step.row !== 0;
-    const dPrimary = onRowAxis
-      ? position.row - from.row
-      : position.col - from.col;
-    const dCross = onRowAxis
-      ? position.col - from.col
-      : position.row - from.row;
-    if (Math.sign(dPrimary) !== (onRowAxis ? step.row : step.col)) {
-      continue;
-    }
-
-    const primary = Math.abs(dPrimary);
-    const cross = Math.abs(dCross);
-    if (
-      !best ||
-      cross < best.cross ||
-      (cross === best.cross && primary < best.primary)
-    ) {
-      best = { target: { element, position }, primary, cross };
-    }
-  }
-
-  return best?.target ?? null;
-}
-
-function cellOf(target: Element | null): Cell | null {
-  return positionOf(target?.closest(CELL) ?? null);
-}
-
-function positionOf(cell: Element | null): Cell | null {
-  if (!cell) {
-    return null;
-  }
-
-  const row = Number.parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
-  const col = Number.parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
-  if (Number.isNaN(row) || Number.isNaN(col)) {
-    return null;
-  }
-
-  return { row, col };
-}
-
-function sameCell(a: Cell, b: Cell): boolean {
-  return a.row === b.row && a.col === b.col;
 }
