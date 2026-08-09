@@ -51,6 +51,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       ...snackbarOptions,
       key: nextKeyRef.current++,
     };
+
     dispatch({ type: "show", snackbar });
   };
 
@@ -72,6 +73,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const contextValue: SnackbarContextValue = {
     showSnackbar,
   };
+
   const message =
     typeof state.current?.message === "function"
       ? state.current.message(t)

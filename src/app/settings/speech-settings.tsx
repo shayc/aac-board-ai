@@ -36,7 +36,6 @@ export function SpeechSettings() {
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
   const { highlightActivePart } = useHighlightConfig();
-
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
@@ -49,7 +48,6 @@ export function SpeechSettings() {
   );
 
   const hasMultipleLocales = locales.length > 1;
-
   const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });

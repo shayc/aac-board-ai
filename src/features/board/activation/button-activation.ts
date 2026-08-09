@@ -91,6 +91,7 @@ export function createButtonActivation({
       if (partsToSpeak !== message.parts) {
         message.setParts(partsToSpeak);
       }
+
       // Post-speak mutations (":speak" then ":clear") commit after the
       // utterance, so the spoken message stays visible while it plays.
       const partsAfterSpeak = parts;

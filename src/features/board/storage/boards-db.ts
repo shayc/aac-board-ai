@@ -131,6 +131,7 @@ export function getBoardsDB(): Promise<BoardsDB> {
 export async function closeBoardsDB(): Promise<void> {
   const pending = connection;
   connection = null;
+
   try {
     (await pending)?.close();
   } catch {
@@ -268,6 +269,7 @@ export async function createBoardSet(
         }),
       );
     }
+
     for (const asset of assets) {
       requests.push(
         assetStore.put({
@@ -277,6 +279,7 @@ export async function createBoardSet(
         }),
       );
     }
+
     requests.push(boardSetStore.add(record));
 
     await Promise.all(requests);
@@ -286,6 +289,7 @@ export async function createBoardSet(
     } catch {
       // Already finished — the transaction aborted itself.
     }
+
     await Promise.allSettled(requests);
     throw error;
   }
