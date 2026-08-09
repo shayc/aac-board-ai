@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { createPart, dropLastPart } from "./message-transforms";
+import { applyBackspace, createPart } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
   setFromText: (input: string) => void;
-  removeLastPart: () => void;
+  backspace: () => void;
   setParts: (parts: MessagePart[]) => void;
   clear: () => void;
 }
@@ -25,8 +25,8 @@ export function useMessage(): UseMessageReturn {
     );
   }
 
-  function removeLastPart() {
-    setParts((prev) => dropLastPart(prev));
+  function backspace() {
+    setParts((prev) => applyBackspace(prev));
   }
 
   function clear() {
@@ -37,7 +37,7 @@ export function useMessage(): UseMessageReturn {
     parts,
     text,
     setFromText,
-    removeLastPart,
+    backspace,
     setParts,
     clear,
   };

@@ -3,7 +3,7 @@ import {
   appendPart,
   appendSpace,
   appendTextToLastPart,
-  dropLastPart,
+  applyBackspace,
 } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
@@ -91,9 +91,9 @@ describe("appendTextToLastPart", () => {
   });
 });
 
-describe("dropLastPart", () => {
+describe("applyBackspace", () => {
   test("removes a single character if the last part is text-only", () => {
-    const parts = dropLastPart([
+    const parts = applyBackspace([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
     ]);
@@ -105,7 +105,7 @@ describe("dropLastPart", () => {
   });
 
   test("removes the entire part if it is text-only but has 1 or 0 characters", () => {
-    const parts = dropLastPart([
+    const parts = applyBackspace([
       { id: "1", label: "hello" },
       { id: "2", label: "w" },
     ]);
@@ -114,7 +114,7 @@ describe("dropLastPart", () => {
   });
 
   test("removes the entire part if it is not text-only", () => {
-    const parts = dropLastPart([
+    const parts = applyBackspace([
       { id: "1", label: "hello" },
       { id: "2", label: "world", imageSrc: "img.png" },
     ]);
@@ -123,10 +123,10 @@ describe("dropLastPart", () => {
   });
 
   test("returns an empty array when there is only one part and it gets removed", () => {
-    expect(dropLastPart([{ id: "1", label: "h" }])).toEqual([]);
+    expect(applyBackspace([{ id: "1", label: "h" }])).toEqual([]);
   });
 
   test("returns an empty array when already empty", () => {
-    expect(dropLastPart([])).toEqual([]);
+    expect(applyBackspace([])).toEqual([]);
   });
 });

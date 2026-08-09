@@ -17,11 +17,11 @@ export interface KeyEventLike {
  */
 export function resolveBoardKey(
   event: KeyEventLike,
-  isPlaying: boolean,
+  isMessagePlaying: boolean,
 ): BoardKeyAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      return isPlaying ? null : { kind: "speak" };
+      return isMessagePlaying ? null : { kind: "speak" };
     }
 
     if (event.key === "Backspace") {
@@ -32,7 +32,7 @@ export function resolveBoardKey(
   }
 
   if (event.key === "Escape") {
-    return isPlaying ? { kind: "stop" } : null;
+    return isMessagePlaying ? { kind: "stop" } : null;
   }
 
   if (event.key === "Backspace") {

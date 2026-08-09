@@ -6,8 +6,11 @@ import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import { resolveBoardKey } from "./board-key-resolver";
 
 interface UseBoardKeyboardOptions {
-  message: Pick<UseMessageReturn, "parts" | "removeLastPart" | "clear">;
-  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "stop" | "isPlaying">;
+  message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
+  playback: Pick<
+    UseBoardPlaybackReturn,
+    "playMessage" | "stop" | "isMessagePlaying"
+  >;
 }
 
 interface UseBoardKeyboardReturn {
@@ -22,7 +25,7 @@ export function useBoardKeyboard({
     onKeyDown: (event) => {
       const action = resolveBoardKey(
         { key: event.key, metaKey: event.metaKey, ctrlKey: event.ctrlKey },
-        playback.isPlaying,
+        playback.isMessagePlaying,
       );
 
       if (!action) {
@@ -34,7 +37,7 @@ export function useBoardKeyboard({
       event.preventDefault();
       switch (action.kind) {
         case "backspace":
-          message.removeLastPart();
+          message.backspace();
           break;
         case "clear":
           message.clear();

@@ -1,4 +1,4 @@
-import { boardSetPath, getBoardSet, InvalidIdError } from "@features/board";
+import { getBoardSet, InvalidIdError, rootBoardPath } from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
 
@@ -23,5 +23,5 @@ export async function boardSetIndexLoader({
     });
   }
 
-  return redirect(boardSetPath(boardSet));
+  return redirect(rootBoardPath(boardSet));
 }

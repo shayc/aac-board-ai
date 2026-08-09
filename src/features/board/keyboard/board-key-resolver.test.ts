@@ -6,7 +6,7 @@ function key(overrides: Partial<KeyEventLike>): KeyEventLike {
 }
 
 describe("resolveBoardKey", () => {
-  test("Backspace removes the last part", () => {
+  test("Backspace applies message backspace behavior", () => {
     expect(resolveBoardKey(key({ key: "Backspace" }), false)).toEqual({
       kind: "backspace",
     });

@@ -8,7 +8,7 @@ export { useFileHandlerLaunch } from "./import/use-file-handler-launch";
 export {
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
-  boardSetPath,
+  rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
 export { hydrateBoard } from "./storage/board-hydration";

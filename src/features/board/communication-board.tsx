@@ -80,7 +80,7 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
   const hasMessage = message.parts.length > 0;
   const scanning = useBoardScanning({
     hasMessage,
-    isPlaying: playback.isPlaying,
+    isMessagePlaying: playback.isMessagePlaying,
     navigation: {
       canGoBack: navigation.canGoBack,
       canGoHome: navigation.canGoHome,
@@ -164,7 +164,7 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
           <BackspaceButton
             {...scanning.backspaceTarget}
             disabled={!hasMessage}
-            onPress={message.removeLastPart}
+            onPress={message.backspace}
             onLongPress={message.clear}
           />
         )}
@@ -205,7 +205,7 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
           <BackspaceButton
             {...scanning.backspaceTarget}
             disabled={!hasMessage}
-            onPress={message.removeLastPart}
+            onPress={message.backspace}
             onLongPress={message.clear}
           />
         </Toolbar>

@@ -2,7 +2,7 @@ import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
-import { boardSetPath } from "../navigation/board-paths";
+import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
 import { importBoardSets, type ImportResult } from "./board-import";
 import { openFiles } from "./file-picker";
@@ -62,7 +62,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
 
     const [result] = results;
-    void navigate(boardSetPath(result));
+    void navigate(rootBoardPath(result));
   }
 
   async function pickAndImportBoardFiles() {

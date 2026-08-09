@@ -1,5 +1,5 @@
 import { LIBRARY_DRAWER_WIDTH } from "@app/shell/drawer-width";
-import { BoardSetLibrary, boardSetPath } from "@features/board";
+import { BoardSetLibrary, rootBoardPath } from "@features/board";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -87,7 +87,7 @@ export function LibraryDrawer({
         <BoardSetLibrary
           selectedSetId={activeSetId}
           onSelect={(boardSet) => {
-            void navigate(boardSetPath(boardSet));
+            void navigate(rootBoardPath(boardSet));
             closeOnNavigate?.();
           }}
         />

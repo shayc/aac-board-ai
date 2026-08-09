@@ -37,7 +37,7 @@ export function appendTextToLastPart(
   });
 }
 
-export function dropLastPart(parts: MessagePart[]): MessagePart[] {
+export function applyBackspace(parts: MessagePart[]): MessagePart[] {
   const lastPart = parts.at(-1);
   if (!lastPart) {
     return parts;
