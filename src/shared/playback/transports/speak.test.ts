@@ -1,5 +1,3 @@
-import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { resetPersistedStores } from "@shared/utils/persisted-store";
 import {
   setPitch,
   setRate,
@@ -7,6 +5,8 @@ import {
   setVolume,
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
+import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
+import { resetPersistedStores } from "@shared/utils/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
@@ -71,7 +71,7 @@ describe("speak() utterance mapping", () => {
     expect(utterance.voice?.voiceURI).toBe("voice-1");
   });
 
-  test("clamps a malformed stored rate to the configured max", async () => {
+  test("clamps an out-of-range stored rate to the configured max", async () => {
     const speech = stubSpeech();
     localStorage.setItem("speech-config", JSON.stringify({ rate: 99 }));
     resetPersistedStores();
@@ -80,5 +80,45 @@ describe("speak() utterance mapping", () => {
 
     const utterance = speech.speak.mock.calls[0][0];
     expect(utterance.rate).toBe(SPEECH_RATE.max);
+  });
+});
+
+describe("speak() lifecycle", () => {
+  test("does not speak when the signal is already aborted", async () => {
+    const speech = stubSpeech();
+
+    await expect(
+      speak("hello", { signal: AbortSignal.abort() }),
+    ).resolves.toBeUndefined();
+
+    expect(speech.speak).not.toHaveBeenCalled();
+  });
+
+  test("cancels active speech and resolves when aborted", async () => {
+    const speech = stubSpeech();
+    speech.speak.mockImplementationOnce(() => undefined);
+    const controller = new AbortController();
+
+    const playback = speak("hello", { signal: controller.signal });
+    const cancelsBeforeAbort = speech.cancel.mock.calls.length;
+    controller.abort();
+
+    expect(speech.cancel.mock.calls.length).toBeGreaterThan(cancelsBeforeAbort);
+    await expect(playback).resolves.toBeUndefined();
+  });
+
+  test("resolves when speech synthesis fails", async () => {
+    const speech = stubSpeech();
+    let utterance: SpeechSynthesisUtterance | undefined;
+    speech.speak.mockImplementationOnce((spoken) => {
+      utterance = spoken;
+    });
+    const playback = speak("hello");
+
+    utterance?.onerror?.({
+      error: "synthesis-failed",
+    } as SpeechSynthesisErrorEvent);
+
+    await expect(playback).resolves.toBeUndefined();
   });
 });
