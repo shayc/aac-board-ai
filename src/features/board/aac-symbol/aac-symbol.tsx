@@ -2,17 +2,17 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
-interface CommunicationSymbolProps {
+interface AACSymbolProps {
   imageSrc?: string;
   label: string;
   labelPlacement?: "top" | "bottom" | "hidden";
 }
 
-export function CommunicationSymbol({
+export function AACSymbol({
   imageSrc,
   label,
   labelPlacement = "bottom",
-}: CommunicationSymbolProps) {
+}: AACSymbolProps) {
   return (
     <Box
       sx={{

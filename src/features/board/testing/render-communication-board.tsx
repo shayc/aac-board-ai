@@ -2,7 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter, type InitialEntry } from "react-router";
 import { render } from "vitest-browser-react";
-import { BoardViewer } from "../board-viewer";
+import { CommunicationBoard } from "../communication-board";
 import { obfToBoard } from "../obf/obf-to-board";
 
 export const TWO_BUTTON_BOARD: OBFBoard = {
@@ -16,7 +16,7 @@ export const TWO_BUTTON_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
 };
 
-export function renderBoardViewer(
+export function renderCommunicationBoard(
   obfBoard: OBFBoard,
   initialEntries: InitialEntry[] = ["/"],
 ) {
@@ -24,7 +24,7 @@ export function renderBoardViewer(
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
         <div style={{ height: "100vh" }}>
-          <BoardViewer board={obfToBoard(obfBoard)} />
+          <CommunicationBoard board={obfToBoard(obfBoard)} />
         </div>
       </AppProviders>
     </MemoryRouter>,

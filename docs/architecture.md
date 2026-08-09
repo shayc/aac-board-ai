@@ -7,7 +7,7 @@
 > or tracking.**
 >
 > New here? The board domain lives under `src/features/board/`; start with
-> `board-viewer.tsx`.
+> `communication-board.tsx`.
 
 This document describes the app's modules, ownership boundaries, invariants, and
 load-bearing decisions. Setup and basic commands live in `README.md`; contributor
@@ -139,7 +139,7 @@ seam. Search by path or symbol name to locate the code.
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Composition               | `src/main.tsx`, `src/app/`, `src/pages/`                                                                     | `AppProviders` and the router assemble features; pages are route entry components.                                                                                            |
 | Active-board data         | `src/app/routing/loaders/`                                                                                   | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                     |
-| Board domain              | `src/features/board/`                                                                                        | `board-viewer.tsx` orchestrates the grid, activation, message, navigation, keyboard, scanning, suggestions, and playback adapters.                                            |
+| Board domain              | `src/features/board/`                                                                                        | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, scanning, suggestions, and playback adapters.                                     |
 | OBF runtime mapping       | `src/features/board/obf/`                                                                                    | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                    |
 | Board ingestion           | `src/features/board/import/`                                                                                 | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                   |
 | Board persistence         | `src/features/board/storage/`                                                                                | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                      |

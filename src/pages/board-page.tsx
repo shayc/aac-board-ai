@@ -1,4 +1,4 @@
-import { BoardViewer, type HydratedBoard } from "@features/board";
+import { CommunicationBoard, type HydratedBoard } from "@features/board";
 import { useLoaderData } from "react-router";
 
 export function BoardPage() {
@@ -7,7 +7,7 @@ export function BoardPage() {
   return (
     <>
       <title>{board.name}</title>
-      <BoardViewer board={board} />
+      <CommunicationBoard board={board} />
     </>
   );
 }

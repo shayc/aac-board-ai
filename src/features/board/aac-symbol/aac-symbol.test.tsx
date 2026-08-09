@@ -1,18 +1,18 @@
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
-import { CommunicationSymbol } from "./communication-symbol";
+import { AACSymbol } from "./aac-symbol";
 
-describe("CommunicationSymbol", () => {
+describe("AACSymbol", () => {
   test("renders no content when no image source or label is provided", async () => {
-    const screen = await render(<CommunicationSymbol label="" />);
+    const screen = await render(<AACSymbol label="" />);
 
     expect(screen.container.textContent).toBe("");
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
   test("renders label when provided", async () => {
-    const screen = await render(<CommunicationSymbol label="Hello" />);
+    const screen = await render(<AACSymbol label="Hello" />);
 
     await expect.element(screen.getByText("Hello")).toBeVisible();
     expect(screen.container.querySelector("img")).toBeNull();
@@ -20,7 +20,7 @@ describe("CommunicationSymbol", () => {
 
   test("renders image when imageSrc is provided", async () => {
     const screen = await render(
-      <CommunicationSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
     );
 
     const img = screen.container.querySelector("img");
@@ -31,7 +31,7 @@ describe("CommunicationSymbol", () => {
 
   test("renders both image and label when both are provided", async () => {
     const screen = await render(
-      <CommunicationSymbol imageSrc={TEST_IMAGE_SRC} label="Action" />,
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Action" />,
     );
 
     await expect.element(screen.getByText("Action")).toBeVisible();
@@ -40,7 +40,7 @@ describe("CommunicationSymbol", () => {
 
   test("places the label above the image when labelPlacement is top", async () => {
     const screen = await render(
-      <CommunicationSymbol
+      <AACSymbol
         imageSrc={TEST_IMAGE_SRC}
         label="Action"
         labelPlacement="top"
@@ -49,14 +49,14 @@ describe("CommunicationSymbol", () => {
 
     const container = screen.getByText("Action").element().parentElement;
     if (!container) {
-      throw new Error("Communication symbol container not found");
+      throw new Error("AAC symbol container not found");
     }
     expect(getComputedStyle(container).flexDirection).toBe("column-reverse");
   });
 
   test("keeps the label accessible when labelPlacement is hidden", async () => {
     const screen = await render(
-      <CommunicationSymbol
+      <AACSymbol
         imageSrc={TEST_IMAGE_SRC}
         label="Action"
         labelPlacement="hidden"
@@ -68,7 +68,7 @@ describe("CommunicationSymbol", () => {
 
   test("takes no layout space for the label when labelPlacement is hidden", async () => {
     const screen = await render(
-      <CommunicationSymbol
+      <AACSymbol
         imageSrc={TEST_IMAGE_SRC}
         label="Action"
         labelPlacement="hidden"

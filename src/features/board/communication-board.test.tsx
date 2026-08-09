@@ -17,9 +17,9 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
-  renderBoardViewer,
+  renderCommunicationBoard,
   TWO_BUTTON_BOARD,
-} from "./testing/render-board-viewer";
+} from "./testing/render-communication-board";
 
 const SPELL_THEN_SPEAK_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -94,7 +94,7 @@ function pressMouseSwitch(button: number): void {
   );
 }
 
-describe("BoardViewer", () => {
+describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
 
   beforeEach(() => {
@@ -103,7 +103,7 @@ describe("BoardViewer", () => {
   });
 
   test("composing tiles and pressing play speaks the merged message", async () => {
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
@@ -120,7 +120,7 @@ describe("BoardViewer", () => {
 
   test("keeps the message play action visible while a tile speaks", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
 
@@ -130,7 +130,7 @@ describe("BoardViewer", () => {
   });
 
   test("enables message playback only after content is composed", async () => {
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     const play = screen.getByRole("button", { name: "Play message" });
 
     await expect.element(play).toBeDisabled();
@@ -141,7 +141,7 @@ describe("BoardViewer", () => {
   });
 
   test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
-    const screen = await renderBoardViewer(SPELL_THEN_SPEAK_BOARD);
+    const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
 
     await screen.getByRole("button", { name: "S", exact: true }).click();
 
@@ -154,7 +154,7 @@ describe("BoardViewer", () => {
   test("names the tile grid with the board's name", async () => {
     const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
 
-    const screen = await renderBoardViewer(namedBoard);
+    const screen = await renderCommunicationBoard(namedBoard);
 
     await expect
       .element(screen.getByRole("grid", { name: "Core words" }))
@@ -164,7 +164,7 @@ describe("BoardViewer", () => {
   test("does not scroll the grid when Home navigates to the home board", async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
 
-    const screen = await renderBoardViewer(LARGE_GRID_BOARD, [
+    const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
       "/sets/set-1/boards/other-board",
     ]);
     const grid = screen.getByRole("grid").element();
@@ -190,7 +190,7 @@ describe("BoardViewer", () => {
   test("scrolls the grid to both origins when Home is clicked from Home", async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
 
-    const screen = await renderBoardViewer(LARGE_GRID_BOARD, [
+    const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
       "/sets/set-1/boards/root-board",
     ]);
     const grid = screen.getByRole("grid").element();
@@ -216,7 +216,7 @@ describe("BoardViewer", () => {
   });
 
   test("falls back to a generic grid name when the board is unnamed", async () => {
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
@@ -227,7 +227,7 @@ describe("BoardViewer", () => {
     setSwitchScanningEnabled(true);
     setSwitchScanningMethod("step");
 
-    const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+    const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
     const firstRow = screen.getByRole("row").nth(0);
     const secondRow = screen.getByRole("row").nth(1);
     const yes = screen.getByRole("button", { name: "yes", exact: true });
@@ -260,7 +260,7 @@ describe("BoardViewer", () => {
     setSwitchInput("next", { kind: "mouse", button: 3 });
     setSwitchInput("select", { kind: "mouse", button: 4 });
 
-    const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+    const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
     const firstRow = screen.getByRole("row").nth(0);
     const secondRow = screen.getByRole("row").nth(1);
     const yes = screen.getByRole("button", { name: "yes", exact: true });
@@ -280,7 +280,7 @@ describe("BoardViewer", () => {
     setSwitchScanningEnabled(true);
     setSwitchScanningMethod("step");
 
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD, [
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD, [
       {
         pathname: "/sets/set-1/boards/other-board",
         state: { backStack: ["root-board"] },
@@ -321,7 +321,7 @@ describe("BoardViewer", () => {
     setSwitchScanningEnabled(true);
     setSwitchScanningMethod("step");
 
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
 
@@ -346,7 +346,7 @@ describe("BoardViewer", () => {
     try {
       setThemeMode("light");
 
-      const screen = await renderBoardViewer(ROW_SCAN_BOARD);
+      const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
       const firstRow = screen.getByRole("row").nth(0);
       const hello = screen.getByRole("button", {
         name: "hello",
@@ -388,7 +388,7 @@ describe("BoardViewer", () => {
   });
 
   test("leaves native Space activation intact while switch scanning is off", async () => {
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     const hello = screen.getByRole("button", { name: "hello" });
 
     hello.element().focus();
@@ -407,7 +407,7 @@ describe("BoardViewer", () => {
     setSwitchScanningEnabled(true);
     setSwitchScanningMethod("step");
 
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     const enableSuggestions = screen.getByRole("button", {
       name: "Enable suggestions",
     });
@@ -429,13 +429,13 @@ describe("BoardViewer", () => {
   });
 
   test("has no accessibility violations", async () => {
-    const screen = await renderBoardViewer(TWO_BUTTON_BOARD);
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await expectNoA11yViolations(screen.container);
   });
 
   test("has no accessibility violations with a composed message", async () => {
-    const screen = await renderBoardViewer(SYMBOL_BOARD);
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();

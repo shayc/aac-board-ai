@@ -1,6 +1,6 @@
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { getBoardSets } from "./board-sets/board-sets-store";
-export { BoardViewer } from "./board-viewer";
+export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
