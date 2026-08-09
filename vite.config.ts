@@ -37,6 +37,21 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: ["board.svg"],
+      workbox: {
+        runtimeCaching: [
+          {
+            urlPattern: ({ request, sameOrigin }) =>
+              !sameOrigin && request.destination === "image",
+            handler: "CacheFirst",
+            options: {
+              cacheName: "aac-remote-images",
+              // Cross-origin <img> responses are opaque but remain renderable.
+              cacheableResponse: { statuses: [0, 200] },
+              expiration: { maxEntries: 1000, purgeOnQuotaError: true },
+            },
+          },
+        ],
+      },
       manifest: {
         name: "AAC Board AI",
         short_name: "AAC Board",
