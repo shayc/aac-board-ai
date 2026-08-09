@@ -1,4 +1,4 @@
-import { resetPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/utils/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
 // Built-in AI namespaces the app reads off globalThis. Their ambient state can
@@ -16,11 +16,10 @@ beforeEach(() => {
     vi.stubGlobal(namespace, undefined);
   }
   clearStorage();
-  // Persisted stores snapshot localStorage at module import, so import order
-  // can leak state between test files. Reloading here resets every store to
-  // parse(undefined) regardless of import order. Note: setState() emits, so
-  // each store's persist() subscriber immediately writes its parsed defaults
-  // back into localStorage — storage isn't empty after this call, just reset.
-  resetPersistedStores();
+  // Persisted stores read localStorage at module import, so test-file import
+  // order can leak state. Reload every store from parse(undefined) to remove
+  // that dependency. Because setState() notifies persist() subscribers,
+  // localStorage is repopulated with parsed defaults—reset, not emptied.
+  reloadPersistedStores();
 });
 afterEach(clearStorage);

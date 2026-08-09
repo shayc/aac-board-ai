@@ -2,7 +2,7 @@ import { createExternalStore, type ExternalStore } from "./external-store";
 
 const reloaders = new Set<() => void>();
 
-export function resetPersistedStores(): void {
+export function reloadPersistedStores(): void {
   for (const reload of reloaders) {
     reload();
   }

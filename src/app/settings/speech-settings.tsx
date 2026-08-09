@@ -6,10 +6,8 @@ import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import {
   setHighlightActivePart,
@@ -29,6 +27,7 @@ import {
   useSpeechConfig,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { SettingSlider } from "./setting-slider";
 
 export function SpeechSettings() {
   const t = useTranslate();
@@ -119,28 +118,16 @@ export function SpeechSettings() {
 
       {speechControls.map(
         ({ id, label, value, min, max, onChange, formatValue }) => (
-          <Stack key={id} spacing={0.5} role="group" aria-label={label}>
-            <Stack
-              direction="row"
-              sx={{ justifyContent: "space-between", gap: 2 }}
-            >
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {label}
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {formatValue(value)}
-              </Typography>
-            </Stack>
-            <Slider
-              aria-label={label}
-              getAriaValueText={formatValue}
-              value={value}
-              min={min}
-              max={max}
-              step={0.1}
-              onChange={(_event, newValue) => onChange(newValue)}
-            />
-          </Stack>
+          <SettingSlider
+            key={id}
+            label={label}
+            value={value}
+            min={min}
+            max={max}
+            step={0.1}
+            formatValue={formatValue}
+            onChange={onChange}
+          />
         ),
       )}
 

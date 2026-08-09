@@ -11,7 +11,7 @@ import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presen
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileAppearanceConfig } from "@shared/tile-appearance/tile-appearance-store";
 import { useRef } from "react";
-import { createButtonActivation } from "./activation/button-activation";
+import { createButtonActivator } from "./activation/button-activation";
 import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
@@ -70,7 +70,7 @@ function BoardViewerContent({ board }: BoardViewerProps) {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
-  const { activateButton } = createButtonActivation({
+  const activateButton = createButtonActivator({
     message,
     playback,
     navigation,

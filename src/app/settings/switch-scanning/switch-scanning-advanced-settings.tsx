@@ -2,7 +2,6 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
@@ -17,18 +16,9 @@ import {
   setIgnoreRepeatMs,
   setMinimumPressDurationMs,
 } from "@shared/switch-scanning/switch-scanning-store";
+import { SettingSlider } from "../setting-slider";
 
 const MILLISECONDS_PER_SECOND = 1_000;
-
-interface SettingSliderProps {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  formatValue: (value: number) => string;
-  onChange: (value: number) => void;
-}
 
 interface SwitchScanningAdvancedSettingsProps {
   cyclesBeforePausing: number;
@@ -37,38 +27,6 @@ interface SwitchScanningAdvancedSettingsProps {
   ignoreRepeatMs: number;
   minimumPressDurationMs: number;
   formatSeconds: (value: number) => string;
-}
-
-function SettingSlider({
-  label,
-  value,
-  min,
-  max,
-  step,
-  formatValue,
-  onChange,
-}: SettingSliderProps) {
-  return (
-    <Stack spacing={0.5}>
-      <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {label}
-        </Typography>
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
-          {formatValue(value)}
-        </Typography>
-      </Stack>
-      <Slider
-        aria-label={label}
-        getAriaValueText={formatValue}
-        value={value}
-        min={min}
-        max={max}
-        step={step}
-        onChange={(_event, newValue) => onChange(newValue)}
-      />
-    </Stack>
-  );
 }
 
 export function SwitchScanningAdvancedSettings({

@@ -4,10 +4,8 @@ import FormHelperText from "@mui/material/FormHelperText";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { type Translate, useTranslate } from "@shared/language/use-translate";
@@ -21,6 +19,7 @@ import {
   type SwitchScanningMethod,
   useSwitchScanningConfig,
 } from "@shared/switch-scanning/switch-scanning-store";
+import { SettingSlider } from "../setting-slider";
 import { SwitchInputSetup } from "./switch-input-setup";
 import { SwitchScanningAdvancedSettings } from "./switch-scanning-advanced-settings";
 
@@ -158,30 +157,17 @@ export function SwitchScanningSettings() {
           <SwitchInputSetup inputs={inputs} method={method} />
 
           {timing && (
-            <Stack spacing={0.5}>
-              <Stack
-                direction="row"
-                sx={{ justifyContent: "space-between", gap: 2 }}
-              >
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {timing.label}
-                </Typography>
-                <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                  {seconds.format(timing.value / MILLISECONDS_PER_SECOND)}
-                </Typography>
-              </Stack>
-              <Slider
-                aria-label={timing.label}
-                getAriaValueText={(value) => seconds.format(value)}
-                value={timing.value / MILLISECONDS_PER_SECOND}
-                min={timing.range.min / MILLISECONDS_PER_SECOND}
-                max={timing.range.max / MILLISECONDS_PER_SECOND}
-                step={0.1}
-                onChange={(_event, value) =>
-                  timing.onChange(value * MILLISECONDS_PER_SECOND)
-                }
-              />
-            </Stack>
+            <SettingSlider
+              label={timing.label}
+              value={timing.value / MILLISECONDS_PER_SECOND}
+              min={timing.range.min / MILLISECONDS_PER_SECOND}
+              max={timing.range.max / MILLISECONDS_PER_SECOND}
+              step={0.1}
+              formatValue={(value) => seconds.format(value)}
+              onChange={(value) =>
+                timing.onChange(value * MILLISECONDS_PER_SECOND)
+              }
+            />
           )}
 
           <SwitchScanningAdvancedSettings

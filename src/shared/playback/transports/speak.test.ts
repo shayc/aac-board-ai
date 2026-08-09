@@ -1,5 +1,5 @@
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { resetPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/utils/persisted-store";
 import {
   setPitch,
   setRate,
@@ -74,7 +74,7 @@ describe("speak() utterance mapping", () => {
   test("clamps a malformed stored rate to the configured max", async () => {
     const speech = stubSpeech();
     localStorage.setItem("speech-config", JSON.stringify({ rate: 99 }));
-    resetPersistedStores();
+    reloadPersistedStores();
 
     await speak("hi");
 

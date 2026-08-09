@@ -1,8 +1,6 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import {
@@ -11,6 +9,7 @@ import {
   TILE_SATURATION,
   useTileAppearanceConfig,
 } from "@shared/tile-appearance/tile-appearance-store";
+import { SettingSlider } from "./setting-slider";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -19,7 +18,6 @@ function formatSaturation(value: number): string {
 export function BoardSettings() {
   const t = useTranslate();
   const { saturation, borderVisible } = useTileAppearanceConfig();
-  const saturationLabel = formatSaturation(saturation);
 
   return (
     <Stack spacing={3}>
@@ -35,25 +33,15 @@ export function BoardSettings() {
         }
       />
 
-      <Stack spacing={0.5}>
-        <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {t(m.tileSaturation)}
-          </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {saturationLabel}
-          </Typography>
-        </Stack>
-        <Slider
-          aria-label={t(m.tileSaturation)}
-          getAriaValueText={formatSaturation}
-          value={saturation}
-          min={TILE_SATURATION.min}
-          max={TILE_SATURATION.max}
-          step={0.1}
-          onChange={(_event, newValue) => setTileSaturation(newValue)}
-        />
-      </Stack>
+      <SettingSlider
+        label={t(m.tileSaturation)}
+        value={saturation}
+        min={TILE_SATURATION.min}
+        max={TILE_SATURATION.max}
+        step={0.1}
+        formatValue={formatSaturation}
+        onChange={setTileSaturation}
+      />
     </Stack>
   );
 }
