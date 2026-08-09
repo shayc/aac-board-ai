@@ -1,7 +1,7 @@
 import Button, { buttonClasses, type ButtonProps } from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
 import { mergeSx } from "@shared/theme/merge-sx";
-import { CommunicationSymbol } from "../communication-symbol/communication-symbol";
+import { AACSymbol } from "../aac-symbol/aac-symbol";
 
 interface TileOwnProps {
   label: string;
@@ -18,7 +18,7 @@ type TileProps = TileOwnProps &
 
 // Scale an author-supplied color's OKLCH chroma by the board's saturation
 // setting so bright third-party boards can be toned down without shifting hue
-// or perceived lightness. The var fallback keeps colors intact outside BoardViewer.
+// or perceived lightness. The var fallback keeps colors intact outside CommunicationBoard.
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
@@ -120,7 +120,7 @@ export function Tile({
         sx,
       )}
     >
-      <CommunicationSymbol label={label} imageSrc={imageSrc} />
+      <AACSymbol label={label} imageSrc={imageSrc} />
     </Button>
   );
 }

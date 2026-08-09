@@ -30,7 +30,7 @@ import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import type { Board, BoardButton } from "./types";
 
-interface BoardViewerProps {
+interface CommunicationBoardProps {
   board: Board;
 }
 
@@ -47,15 +47,15 @@ const boardRootSx = (theme: Theme) => ({
   },
 });
 
-export function BoardViewer({ board }: BoardViewerProps) {
+export function CommunicationBoard({ board }: CommunicationBoardProps) {
   return (
     <SwitchScanningBoundary>
-      <BoardViewerContent board={board} />
+      <CommunicationBoardContent board={board} />
     </SwitchScanningBoundary>
   );
 }
 
-function BoardViewerContent({ board }: BoardViewerProps) {
+function CommunicationBoardContent({ board }: CommunicationBoardProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));

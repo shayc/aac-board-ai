@@ -1,6 +1,6 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
-import { CommunicationSymbol } from "../communication-symbol/communication-symbol";
+import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { MessagePart } from "./message-types";
 import { PlayButton, type PlayButtonRootProps } from "./play-button";
 
@@ -92,10 +92,7 @@ export function MessageBar({
                     : "none",
                 })}
               >
-                <CommunicationSymbol
-                  label={part.label ?? ""}
-                  imageSrc={part.imageSrc}
-                />
+                <AACSymbol label={part.label ?? ""} imageSrc={part.imageSrc} />
               </Stack>
             );
           })}
