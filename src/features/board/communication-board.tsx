@@ -6,13 +6,11 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import { SwitchScanningBoundary } from "@shared/switch-scanning/switch-scanning-boundary";
-import { switchScanningSx } from "@shared/switch-scanning/switch-scanning-presentation";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useTileAppearanceConfig } from "@shared/tile-appearance/tile-appearance-store";
 import { useRef } from "react";
 import { createButtonActivation } from "./activation/button-activation";
-import { Grid, type GridItemProps, type GridRowProps } from "./grid/grid";
+import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
@@ -20,14 +18,9 @@ import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { BoardPlaybackMessageBar } from "./playback/board-playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
-import {
-  ScannableGridRow,
-  ScannableSuggestion,
-  ScannableTile,
-} from "./scanning/board-scanning";
-import { useBoardScanning } from "./scanning/use-board-scanning";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
+import { Tile } from "./tile/tile";
 import type { Board, BoardButton } from "./types";
 
 interface CommunicationBoardProps {
@@ -48,14 +41,6 @@ const boardRootSx = (theme: Theme) => ({
 });
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
-  return (
-    <SwitchScanningBoundary>
-      <CommunicationBoardContent board={board} />
-    </SwitchScanningBoundary>
-  );
-}
-
-function CommunicationBoardContent({ board }: CommunicationBoardProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -78,59 +63,28 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
   const hasMessage = message.parts.length > 0;
-  const scanning = useBoardScanning({
-    hasMessage,
-    isMessagePlaying: playback.isMessagePlaying,
-    navigation: {
-      canGoBack: navigation.canGoBack,
-      canGoHome: navigation.canGoHome,
-    },
-    suggestions: {
-      needsActivation: suggestions.status?.kind === "needs-activation",
-    },
-  });
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
-    <ScannableTile
+    <Tile
       key={button.id}
-      boardId={board.id}
-      button={button}
+      label={button.label ?? ""}
+      imageSrc={button.imageSrc}
+      backgroundColor={button.backgroundColor}
+      borderColor={button.borderColor}
+      variant={button.loadBoard?.id ? "folder" : undefined}
       borderHidden={!borderVisible}
       onClick={() => activateButton(button)}
       {...props}
     />
   );
-  const renderRow = (
-    buttons: readonly (BoardButton | undefined)[],
-    rowIndex: number,
-    props: GridRowProps,
-  ) => (
-    <ScannableGridRow
-      boardId={board.id}
-      buttons={buttons}
-      rowIndex={rowIndex}
-      {...props}
-    />
-  );
-  const renderSuggestion = (phrase: string, onClick: () => void) => (
-    <ScannableSuggestion boardId={board.id} phrase={phrase} onClick={onClick} />
-  );
 
   return (
     <Stack
       {...keyboard.rootProps}
-      data-switch-scanning-scope=""
       direction="column"
-      sx={[
-        boardRootSx,
-        switchScanningSx,
-        { "--tile-saturation": String(saturation) },
-      ]}
+      sx={[boardRootSx, { "--tile-saturation": String(saturation) }]}
     >
-      <BoardPlaybackMessageBar
-        parts={message.parts}
-        slotProps={{ playButton: scanning.playTarget }}
-      />
+      <BoardPlaybackMessageBar parts={message.parts} />
 
       <Stack
         direction="row"
@@ -141,10 +95,6 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
           {!isSmallScreen && (
             <NavButtons
               onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
-              slotProps={{
-                backButton: scanning.backTarget,
-                homeButton: scanning.homeTarget,
-              }}
             />
           )}
 
@@ -152,8 +102,6 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
             <SuggestionBar
               status={suggestions.status}
               phrases={suggestions.phrases}
-              slotProps={{ enableButton: scanning.suggestionsEnableTarget }}
-              renderPhrase={renderSuggestion}
               onEnable={suggestions.enable}
               onPhraseClick={message.setFromText}
             />
@@ -162,7 +110,6 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
 
         {!isSmallScreen && (
           <BackspaceButton
-            {...scanning.backspaceTarget}
             disabled={!hasMessage}
             onPress={message.backspace}
             onLongPress={message.clear}
@@ -179,7 +126,6 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
           columns={board.grid.columns}
           order={board.grid.order}
           renderItem={renderTile}
-          renderRow={renderRow}
           dir={direction}
         />
       </Box>
@@ -196,14 +142,9 @@ function CommunicationBoardContent({ board }: CommunicationBoardProps) {
         >
           <NavButtons
             onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
-            slotProps={{
-              backButton: scanning.backTarget,
-              homeButton: scanning.homeTarget,
-            }}
           />
 
           <BackspaceButton
-            {...scanning.backspaceTarget}
             disabled={!hasMessage}
             onPress={message.backspace}
             onLongPress={message.clear}

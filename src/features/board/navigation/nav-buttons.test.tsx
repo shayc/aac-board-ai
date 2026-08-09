@@ -3,21 +3,19 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { AppProviders } from "@shared/providers/app-providers";
-import { createRef } from "react";
 import { createMemoryRouter, type InitialEntry } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { render } from "vitest-browser-react";
 import { seedBoardSets } from "../testing";
-import { NavButtons, type NavButtonsSlotProps } from "./nav-buttons";
+import { NavButtons } from "./nav-buttons";
 
 async function renderAt(
   initialEntries: InitialEntry[],
   options: {
     initialIndex?: number;
     direction?: "ltr" | "rtl";
-    slotProps?: NavButtonsSlotProps;
     onBackClick?: () => void;
     onHomeClick?: () => void;
   } = {},
@@ -30,7 +28,6 @@ async function renderAt(
         path: "/sets/:setId/boards/:boardId",
         element: (
           <NavButtons
-            slotProps={options.slotProps}
             onBackClick={options.onBackClick}
             onHomeClick={options.onHomeClick}
           />
@@ -54,24 +51,6 @@ async function renderAt(
 describe("NavButtons", () => {
   beforeEach(async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-1" }]);
-  });
-
-  test("forwards navigation button slot props", async () => {
-    const backRef = createRef<HTMLButtonElement>();
-    const homeRef = createRef<HTMLButtonElement>();
-    const { screen } = await renderAt(["/sets/set-1/boards/root-1"], {
-      slotProps: {
-        backButton: { ref: backRef, className: "back-button-slot" },
-        homeButton: { ref: homeRef, className: "home-button-slot" },
-      },
-    });
-
-    const backButton = screen.getByRole("button", { name: "Back" });
-    const homeButton = screen.getByRole("button", { name: "Home" });
-    await expect.element(backButton).toHaveClass("back-button-slot");
-    await expect.element(homeButton).toHaveClass("home-button-slot");
-    expect(backRef.current).toBe(backButton.element());
-    expect(homeRef.current).toBe(homeButton.element());
   });
 
   test("navigates back to the previous board when the back button is clicked", async () => {

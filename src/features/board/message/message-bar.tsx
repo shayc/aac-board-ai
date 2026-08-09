@@ -2,17 +2,12 @@ import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { MessagePart } from "./message-types";
-import { PlayButton, type PlayButtonRootProps } from "./play-button";
-
-interface MessageBarSlotProps {
-  playButton?: PlayButtonRootProps;
-}
+import { PlayButton } from "./play-button";
 
 export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
-  slotProps?: MessageBarSlotProps;
   onPlayClick: () => void;
   onStopClick: () => void;
 }
@@ -21,7 +16,6 @@ export function MessageBar({
   parts,
   activePartId,
   isPlaying,
-  slotProps,
   onPlayClick,
   onStopClick,
 }: MessageBarProps) {
@@ -99,7 +93,7 @@ export function MessageBar({
         </Stack>
 
         <PlayButton
-          {...slotProps?.playButton}
+          disabled={!isPlaying && parts.length === 0}
           isPlaying={isPlaying}
           onPlayClick={onPlayClick}
           onStopClick={onStopClick}

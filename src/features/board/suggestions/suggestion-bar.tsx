@@ -1,23 +1,13 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { Fragment, type ReactNode } from "react";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 import { PendingDot } from "./pending-dot";
-import {
-  SuggestionStatus,
-  type SuggestionEnableButtonProps,
-} from "./suggestion-status";
-
-interface SuggestionBarSlotProps {
-  enableButton?: SuggestionEnableButtonProps;
-}
+import { SuggestionStatus } from "./suggestion-status";
 
 export interface SuggestionBarProps {
   status: SuggestionStatusView;
   phrases: string[];
-  slotProps?: SuggestionBarSlotProps;
-  renderPhrase?: (phrase: string, onClick: () => void) => ReactNode;
   onEnable: () => void;
   onPhraseClick: (phrase: string) => void;
 }
@@ -25,8 +15,6 @@ export interface SuggestionBarProps {
 export function SuggestionBar({
   status,
   phrases,
-  slotProps,
-  renderPhrase,
   onEnable,
   onPhraseClick,
 }: SuggestionBarProps) {
@@ -45,11 +33,7 @@ export function SuggestionBar({
     >
       {(status === null || isPending) && <PendingDot show={isPending} />}
 
-      <SuggestionStatus
-        status={status}
-        enableButtonProps={slotProps?.enableButton}
-        onEnable={onEnable}
-      />
+      <SuggestionStatus status={status} onEnable={onEnable} />
 
       <Box
         sx={{
@@ -61,15 +45,13 @@ export function SuggestionBar({
           overflowX: "auto",
         }}
       >
-        {phrases.map((phrase) => {
-          const onClick = () => onPhraseClick(phrase);
-
-          return renderPhrase ? (
-            <Fragment key={phrase}>{renderPhrase(phrase, onClick)}</Fragment>
-          ) : (
-            <Chip key={phrase} label={phrase} onClick={onClick} />
-          );
-        })}
+        {phrases.map((phrase) => (
+          <Chip
+            key={phrase}
+            label={phrase}
+            onClick={() => onPhraseClick(phrase)}
+          />
+        ))}
       </Box>
     </Stack>
   );

@@ -1,5 +1,4 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
-import AccessibilityNewOutlinedIcon from "@mui/icons-material/AccessibilityNewOutlined";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -24,7 +23,6 @@ import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
-import { SwitchScanningSettings } from "./switch-scanning/switch-scanning-settings";
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -106,14 +104,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           <AppearanceSettings />
           <LanguageSettings />
         </Stack>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <AccessibilityNewOutlinedIcon fontSize="small" />
-          {t(m.settingsSectionSwitchAccess)}
-        </Typography>
-        <SwitchScanningSettings />
 
         <Divider sx={{ my: 3 }} />
 

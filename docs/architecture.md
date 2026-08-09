@@ -139,7 +139,7 @@ seam. Search by path or symbol name to locate the code.
 | ------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Composition               | `src/main.tsx`, `src/app/`, `src/pages/`                                                                     | `AppProviders` and the router assemble features; pages are route entry components.                                                                                            |
 | Active-board data         | `src/app/routing/loaders/`                                                                                   | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                     |
-| Board domain              | `src/features/board/`                                                                                        | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, scanning, suggestions, and playback adapters.                                     |
+| Board domain              | `src/features/board/`                                                                                        | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, suggestions, and playback adapters.                                               |
 | OBF runtime mapping       | `src/features/board/obf/`                                                                                    | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                    |
 | Board ingestion           | `src/features/board/import/`                                                                                 | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                   |
 | Board persistence         | `src/features/board/storage/`                                                                                | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                      |
@@ -149,7 +149,6 @@ seam. Search by path or symbol name to locate the code.
 | Playback output           | `src/shared/playback/`                                                                                       | The only gateway to Web Speech and HTML Audio. Playback is single-flight; a new request interrupts the current request without surfacing an error to the user.                |
 | Voices                    | `src/shared/speech/`                                                                                         | Owns voice discovery, persisted speech configuration, and voice-language synchronization; it does not produce output.                                                         |
 | Language and presentation | `src/shared/language/`, `src/shared/theme/`, `src/shared/playback-highlight/`, `src/shared/tile-appearance/` | Own the active language, direction, theme, playback highlighting, and tile presentation. UI text comes from Paraglide messages.                                               |
-| Switch access             | `src/app/settings/switch-scanning/`, `src/shared/switch-scanning/`, `src/features/board/scanning/`           | App settings own the configuration UI; shared code owns persisted input profiles and engine setup; the board registers existing controls as scan groups and targets.          |
 | Shared state primitives   | `src/shared/utils/external-store.ts`, `src/shared/utils/persisted-store.ts`                                  | Cross-cutting stores build on these primitives instead of defining new subscription or localStorage machinery.                                                                |
 | UI messages               | `messages/*.json`, `project.inlang/`                                                                         | Message sources compile through Paraglide into generated `src/paraglide/`; generated files are never edited manually.                                                         |
 
@@ -164,13 +163,13 @@ product policy around both interfaces.
 
 State has five lifetimes, each with one owner:
 
-| Kind                         | Home                                           | Includes                                                                                                                                                                                      |
-| ---------------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Durable board data           | IndexedDB via `src/features/board/storage/`    | `boardSets` metadata, raw `OBFBoard` records, and image/sound asset blobs.                                                                                                                    |
-| Navigation data              | React Router loaders                           | The hydrated, optionally translated active `Board` for each navigation.                                                                                                                       |
-| Reactive cross-cutting state | `createExternalStore` + `useSyncExternalStore` | Board-set catalog, TTS voice catalog, and active playback coordinator.                                                                                                                        |
-| Persisted settings           | `createPersistedStore` + localStorage          | Language, speech, highlighting, tile presentation, switch scanning, AI context, and onboarding state. MUI theme mode persists separately as `mui-mode` and is read pre-paint in `index.html`. |
-| Ephemeral interaction state  | Local React state                              | In-progress message parts and remembered grid focus.                                                                                                                                          |
+| Kind                         | Home                                           | Includes                                                                                                                                                                     |
+| ---------------------------- | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Durable board data           | IndexedDB via `src/features/board/storage/`    | `boardSets` metadata, raw `OBFBoard` records, and image/sound asset blobs.                                                                                                   |
+| Navigation data              | React Router loaders                           | The hydrated, optionally translated active `Board` for each navigation.                                                                                                      |
+| Reactive cross-cutting state | `createExternalStore` + `useSyncExternalStore` | Board-set catalog, TTS voice catalog, and active playback coordinator.                                                                                                       |
+| Persisted settings           | `createPersistedStore` + localStorage          | Language, speech, highlighting, tile presentation, AI context, and onboarding state. MUI theme mode persists separately as `mui-mode` and is read pre-paint in `index.html`. |
+| Ephemeral interaction state  | Local React state                              | In-progress message parts and remembered grid focus.                                                                                                                         |
 
 The IndexedDB schema is versioned in `boards-db.ts`. A schema change increments
 `DB_VERSION` and adds its migration to the `idb` upgrade callback. A tab holding
@@ -212,9 +211,8 @@ rerender only subscribers to the changed slice.
   UI locales and installed TTS voice languages; translation and speech may each
   fall back independently.
 - **Accessibility applies to every interaction.** Interactive controls have
-  programmatic names. Board communication supports pointer, keyboard, and
-  configured switch input. Browser tests exercise behavior and run axe-core
-  checks.
+  programmatic names. Board communication supports pointer and keyboard input.
+  Browser tests exercise behavior and run axe-core checks.
 - **User-facing strings and layout are locale-aware.** UI text flows through
   Paraglide; dual Emotion caches, `stylis-rtl`, and logical CSS support text
   direction.

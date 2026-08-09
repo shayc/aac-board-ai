@@ -1,5 +1,5 @@
 import { AppProviders } from "@shared/providers/app-providers";
-import { createRef, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import {
   afterEach,
   beforeEach,
@@ -169,25 +169,17 @@ describe("MessageBar", () => {
   });
 
   describe("controls", () => {
-    test("forwards play button slot props", async () => {
-      const ref = createRef<HTMLButtonElement>();
-      const screen = await renderWithProviders(
-        <MessageBar
-          {...createProps()}
-          slotProps={{ playButton: { ref, className: "play-button-slot" } }}
-        />,
-      );
-
-      const button = screen.getByRole("button", { name: "Play message" });
-      await expect.element(button).toHaveClass("play-button-slot");
-      expect(ref.current).toBe(button.element());
-    });
-
     test("delegates play to onPlayClick while idle", async () => {
       const onPlayClick = vi.fn();
 
       const screen = await renderWithProviders(
-        <MessageBar {...createProps({ isPlaying: false, onPlayClick })} />,
+        <MessageBar
+          {...createProps({
+            parts: [{ id: "a", label: "Hello" }],
+            isPlaying: false,
+            onPlayClick,
+          })}
+        />,
       );
 
       await screen.getByRole("button", { name: "Play message" }).click();

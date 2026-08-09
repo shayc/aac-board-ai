@@ -1,8 +1,6 @@
 import Box from "@mui/material/Box";
-import Stack, { type StackProps } from "@mui/material/Stack";
-import { mergeSx } from "@shared/theme/merge-sx";
+import Stack from "@mui/material/Stack";
 import type { ReactNode, Ref } from "react";
-import { Fragment } from "react";
 import {
   createGridContentSx,
   createGridRowSx,
@@ -16,14 +14,6 @@ export interface GridItemProps {
   tabIndex: number;
 }
 
-export interface GridRowProps extends Omit<
-  StackProps,
-  "children" | "direction" | "gap" | "role"
-> {
-  children: ReactNode;
-  gap: number;
-}
-
 interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
   items: readonly TItem[];
@@ -31,11 +21,6 @@ interface GridProps<TItem extends { id: string }> {
   columns: number;
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  renderRow?: (
-    items: readonly (TItem | undefined)[],
-    rowIndex: number,
-    props: GridRowProps,
-  ) => ReactNode;
   dir?: "ltr" | "rtl";
   gap?: number;
   ref?: Ref<HTMLDivElement>;
@@ -48,7 +33,6 @@ export function Grid<TItem extends { id: string }>({
   columns,
   order,
   renderItem,
-  renderRow,
   dir = "ltr",
   gap = 1,
   ref,
@@ -89,32 +73,18 @@ export function Grid<TItem extends { id: string }>({
               </Stack>
             );
           });
-          const rowProps = { gap, children: cells };
-
-          return renderRow ? (
-            <Fragment key={rowIndex}>
-              {renderRow(row, rowIndex, rowProps)}
-            </Fragment>
-          ) : (
-            <GridRow key={rowIndex} gap={gap}>
+          return (
+            <Stack
+              key={rowIndex}
+              role="row"
+              direction="row"
+              sx={createGridRowSx(gap)}
+            >
               {cells}
-            </GridRow>
+            </Stack>
           );
         })}
       </Stack>
     </Box>
-  );
-}
-
-export function GridRow({ children, gap, sx, ...rootProps }: GridRowProps) {
-  return (
-    <Stack
-      {...rootProps}
-      role="row"
-      direction="row"
-      sx={mergeSx(createGridRowSx(gap), sx)}
-    >
-      {children}
-    </Stack>
   );
 }
