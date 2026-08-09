@@ -39,7 +39,7 @@ Suggestions are optional; the original message is replaced only when the user ac
 ## A complete board, with or without AI
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
-- **Accessible input** — Supports touch, keyboard navigation, and configurable automatic, step, dwell, and inverse switch scanning.
+- **Accessible input** — Supports touch and keyboard navigation.
 - **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files from your device or a URL.
 - **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
 - **Offline and installable** — Runs as a PWA and keeps loaded boards available without a connection.

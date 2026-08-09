@@ -1,15 +1,5 @@
-import {
-  setSwitchInput,
-  setSwitchScanningEnabled,
-  setSwitchScanningMethod,
-} from "@shared/switch-scanning/switch-scanning-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import {
-  makeProofreadResult,
-  stubBuiltInAIUnsupported,
-  stubProofreader,
-} from "@shared/testing/built-in-ai";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -44,26 +34,6 @@ const SYMBOL_BOARD: OBFBoard = {
   ],
 };
 
-const ROW_SCAN_BOARD: OBFBoard = {
-  format: "open-board-0.1",
-  id: "row-scan-board",
-  locale: "en",
-  buttons: [
-    { id: "btn-1", label: "hello" },
-    { id: "btn-2", label: "world" },
-    { id: "btn-3", label: "yes" },
-    { id: "btn-4", label: "no" },
-  ],
-  grid: {
-    rows: 2,
-    columns: 2,
-    order: [
-      ["btn-1", "btn-2"],
-      ["btn-3", "btn-4"],
-    ],
-  },
-};
-
 const LARGE_GRID_SIZE = 20;
 const LARGE_GRID_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -84,15 +54,6 @@ const LARGE_GRID_BOARD: OBFBoard = {
     ),
   },
 };
-
-function pressMouseSwitch(button: number): void {
-  document.body.dispatchEvent(
-    new MouseEvent("mousedown", { bubbles: true, button }),
-  );
-  document.body.dispatchEvent(
-    new MouseEvent("mouseup", { bubbles: true, button }),
-  );
-}
 
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
@@ -223,171 +184,7 @@ describe("CommunicationBoard", () => {
       .toBeVisible();
   });
 
-  test("two-switch scanning selects a row before moving through its tiles", async () => {
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-
-    const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
-    const firstRow = screen.getByRole("row").nth(0);
-    const secondRow = screen.getByRole("row").nth(1);
-    const yes = screen.getByRole("button", { name: "yes", exact: true });
-    const no = screen.getByRole("button", { name: "no", exact: true });
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(firstRow).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(secondRow).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Enter}");
-    await expect.element(yes).toHaveAttribute("data-scan-highlighted");
-    await expect.element(secondRow).toHaveAttribute("data-scan-within");
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(no).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Enter}");
-
-    await vi.waitFor(() => {
-      expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("no");
-    });
-  });
-
-  test("drives scanning with assigned mouse buttons", async () => {
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-    setSwitchInput("next", { kind: "mouse", button: 3 });
-    setSwitchInput("select", { kind: "mouse", button: 4 });
-
-    const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
-    const firstRow = screen.getByRole("row").nth(0);
-    const secondRow = screen.getByRole("row").nth(1);
-    const yes = screen.getByRole("button", { name: "yes", exact: true });
-
-    pressMouseSwitch(3);
-    await expect.element(firstRow).toHaveAttribute("data-scan-highlighted");
-
-    pressMouseSwitch(3);
-    await expect.element(secondRow).toHaveAttribute("data-scan-highlighted");
-
-    pressMouseSwitch(4);
-    await expect.element(yes).toHaveAttribute("data-scan-highlighted");
-  });
-
-  test("scans navigation and backspace as top-level targets", async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD, [
-      {
-        pathname: "/sets/set-1/boards/other-board",
-        state: { backStack: ["root-board"] },
-      },
-    ]);
-    const play = screen.getByRole("button", { name: "Play message" });
-    const back = screen.getByRole("button", { name: "Go back" });
-    const home = screen.getByRole("button", { name: "Go home" });
-    const backspace = screen.getByRole("button", { name: "Backspace" });
-
-    await screen.getByRole("button", { name: "hello" }).click();
-    await expect.element(backspace).toBeEnabled();
-
-    expect(back.element().closest("[data-scan-group]")).toBeNull();
-    expect(home.element().closest("[data-scan-group]")).toBeNull();
-    expect(backspace.element().closest("[data-scan-group]")).toBeNull();
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(play).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Space}");
-    if (!back.element().hasAttribute("data-scan-highlighted")) {
-      // On small screens the tile grid precedes the actions toolbar.
-      await userEvent.keyboard("{Space}");
-    }
-    await expect.element(back).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(home).toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Space}");
-    await expect.element(backspace).toHaveAttribute("data-scan-highlighted");
-  });
-
-  test("scans generated suggestions as top-level targets", async () => {
-    stubProofreader(() => makeProofreadResult("Corrected hello"));
-    stubBuiltInAIUnsupported("Rewriter");
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-    await screen.getByRole("button", { name: "hello" }).click();
-
-    const suggestion = screen.getByRole("button", {
-      name: "Corrected hello",
-    });
-    await expect.element(suggestion).toBeVisible();
-
-    expect(suggestion.element().closest("[data-scan-group]")).toBeNull();
-
-    await userEvent.keyboard("{Space}");
-    await userEvent.keyboard("{Space}");
-    await expect.element(suggestion).toHaveAttribute("data-scan-highlighted");
-  });
-
-  test("shows the active row and tile clearly in light and dark themes", async () => {
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-
-    const originalThemeClasses = document.documentElement.className;
-
-    try {
-      setThemeMode("light");
-
-      const screen = await renderCommunicationBoard(ROW_SCAN_BOARD);
-      const firstRow = screen.getByRole("row").nth(0);
-      const hello = screen.getByRole("button", {
-        name: "hello",
-        exact: true,
-      });
-
-      await userEvent.keyboard("{Space}");
-
-      const lightRowStyles = getComputedStyle(firstRow.element());
-      expect(lightRowStyles.outlineStyle).toBe("solid");
-      expect(lightRowStyles.outlineWidth).toBe("4px");
-      expect(lightRowStyles.boxShadow).not.toBe("none");
-
-      await userEvent.keyboard("{Enter}");
-
-      const lightTileStyles = getComputedStyle(hello.element());
-      const lightOutlineColor = lightTileStyles.outlineColor;
-      expect(lightTileStyles.outlineStyle).toBe("solid");
-      expect(lightTileStyles.outlineWidth).toBe("4px");
-      expect(lightTileStyles.boxShadow).not.toBe("none");
-      expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
-
-      setThemeMode("dark");
-
-      await vi.waitFor(() => {
-        expect(getComputedStyle(hello.element()).outlineColor).not.toBe(
-          lightOutlineColor,
-        );
-      });
-
-      const darkTileStyles = getComputedStyle(hello.element());
-      expect(darkTileStyles.outlineStyle).toBe("solid");
-      expect(darkTileStyles.outlineWidth).toBe("4px");
-      expect(darkTileStyles.boxShadow).not.toBe("none");
-      expect(getComputedStyle(firstRow.element()).outlineStyle).toBe("dashed");
-    } finally {
-      document.documentElement.className = originalThemeClasses;
-    }
-  });
-
-  test("leaves native Space activation intact while switch scanning is off", async () => {
+  test("activates a focused tile with the Space key", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     const hello = screen.getByRole("button", { name: "hello" });
 
@@ -397,34 +194,6 @@ describe("CommunicationBoard", () => {
     await vi.waitFor(() => {
       expect(speech.speak).toHaveBeenCalledTimes(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("hello");
-    });
-  });
-
-  test("scanning the enable chip starts the suggestion model download", async () => {
-    const proofreader = stubProofreader();
-    proofreader.availability.mockResolvedValue("downloadable");
-    stubBuiltInAIUnsupported("Rewriter");
-    setSwitchScanningEnabled(true);
-    setSwitchScanningMethod("step");
-
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-    const enableSuggestions = screen.getByRole("button", {
-      name: "Enable suggestions",
-    });
-
-    await expect.element(enableSuggestions).toBeVisible();
-
-    expect(enableSuggestions.element().closest("[data-scan-group]")).toBeNull();
-
-    await userEvent.keyboard("{Space}");
-    await expect
-      .element(enableSuggestions)
-      .toHaveAttribute("data-scan-highlighted");
-
-    await userEvent.keyboard("{Enter}");
-
-    await vi.waitFor(() => {
-      expect(proofreader.create).toHaveBeenCalled();
     });
   });
 
@@ -443,8 +212,3 @@ describe("CommunicationBoard", () => {
     await expectNoA11yViolations(screen.container);
   });
 });
-
-function setThemeMode(mode: "light" | "dark"): void {
-  document.documentElement.classList.remove("light", "dark");
-  document.documentElement.classList.add(mode);
-}

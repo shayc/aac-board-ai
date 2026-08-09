@@ -36,7 +36,6 @@
     "@mui/stylis-plugin-rtl": "^9.3.0",
     "@shayc/open-board-format": "^1.3.1",
     "@shayc/react-built-in-ai": "^0.11.5",
-    "@shayc/switch-scanning": "^0.1.1",
     "idb": "^8.0.3",
     "mrmime": "^2.0.1",
     "react": "^19.2.8",
