@@ -9,12 +9,12 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
+import { useTranslate } from "@shared/language/use-translate";
 import {
   setHighlightActivePart,
   useHighlightConfig,
 } from "@shared/playback-highlight/highlight-store";
-import { useLanguage } from "@shared/language/use-language";
-import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
 import {
   setPitch,
