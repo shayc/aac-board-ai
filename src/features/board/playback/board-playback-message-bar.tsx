@@ -24,7 +24,7 @@ export function BoardPlaybackMessageBar({
     <MessageBar
       parts={parts}
       activePartId={highlightActivePart ? activePartId : null}
-      isPlaying={playback.isPlaying}
+      isPlaying={playback.isMessagePlaying}
       slotProps={{ playButton: playButtonProps }}
       onPlayClick={() => void playback.playMessage(parts)}
       onStopClick={playback.stop}

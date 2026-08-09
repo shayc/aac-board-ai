@@ -14,7 +14,7 @@ import {
 
 interface UseBoardScanningOptions {
   hasMessage: boolean;
-  isPlaying: boolean;
+  isMessagePlaying: boolean;
   navigation: {
     canGoBack: boolean;
     canGoHome: boolean;
@@ -34,14 +34,14 @@ interface UseBoardScanningReturn {
 
 export function useBoardScanning({
   hasMessage,
-  isPlaying,
+  isMessagePlaying,
   navigation,
   suggestions,
 }: UseBoardScanningOptions): UseBoardScanningReturn {
   const t = useTranslate();
   const playTarget = useScanTarget({
     id: PLAY_SCAN_ID,
-    label: isPlaying ? t(m.messageStop) : t(m.messagePlay),
+    label: isMessagePlaying ? t(m.messageStop) : t(m.messagePlay),
     disabled: !hasMessage,
   });
 

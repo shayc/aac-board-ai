@@ -94,7 +94,7 @@ describe("useBoardPlayback", () => {
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("reports isPlaying true during playback and false after it resolves", async () => {
+  test("reports isMessagePlaying true during playback and false after it resolves", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveSpeak = () => {
@@ -108,12 +108,12 @@ describe("useBoardPlayback", () => {
 
     const playPromise = result.current.playMessage(parts);
     await rerender();
-    expect(result.current.isPlaying).toBe(true);
+    expect(result.current.isMessagePlaying).toBe(true);
 
     resolveSpeak?.();
     await playPromise;
     await rerender();
-    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.isMessagePlaying).toBe(false);
   });
 
   test("does not present tile speech as message playback", async () => {
@@ -123,14 +123,14 @@ describe("useBoardPlayback", () => {
     const playPromise = result.current.playPart({ id: "1", label: "hi" });
     await rerender();
 
-    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.isMessagePlaying).toBe(false);
     expect(result.current.activePartId).toBeNull();
 
     result.current.stop();
     await playPromise;
   });
 
-  test("stop() cancels speech and clears isPlaying", async () => {
+  test("stop() cancels speech and clears isMessagePlaying", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveSpeak = () => {
@@ -149,13 +149,13 @@ describe("useBoardPlayback", () => {
     await rerender();
 
     expect(speech.cancel).toHaveBeenCalled();
-    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.isMessagePlaying).toBe(false);
 
     resolveSpeak?.();
     await playPromise;
   });
 
-  test("resets isPlaying to false after a speech error", async () => {
+  test("resets isMessagePlaying to false after a speech error", async () => {
     speech.speak.mockImplementationOnce((utterance) => {
       queueMicrotask(() => {
         utterance.onerror?.({
@@ -171,7 +171,7 @@ describe("useBoardPlayback", () => {
     await expect(result.current.playMessage(parts)).resolves.toBe("completed");
     await rerender();
 
-    expect(result.current.isPlaying).toBe(false);
+    expect(result.current.isMessagePlaying).toBe(false);
   });
 
   test("has no active part before playback starts", async () => {

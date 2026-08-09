@@ -11,7 +11,7 @@ const MESSAGE_SOURCE = "board-message";
 const TILE_SOURCE = "board-tile";
 
 export interface UseBoardPlaybackReturn {
-  isPlaying: boolean;
+  isMessagePlaying: boolean;
   playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
   playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
   stop: () => void;
@@ -19,7 +19,7 @@ export interface UseBoardPlaybackReturn {
 
 export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const isPlaying = useIsPlaybackActive(MESSAGE_SOURCE);
+  const isMessagePlaying = useIsPlaybackActive(MESSAGE_SOURCE);
 
   function playMessage(parts: MessagePart[]) {
     return playback.play({
@@ -33,7 +33,7 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
   }
 
   return {
-    isPlaying,
+    isMessagePlaying,
     playMessage,
     playPart,
     stop: playback.stop,

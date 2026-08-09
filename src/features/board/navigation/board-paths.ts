@@ -14,7 +14,7 @@ export function boardPath({
   return generatePath(BOARD_ROUTE_PATTERN, { setId, boardId });
 }
 
-export function boardSetPath({
+export function rootBoardPath({
   setId,
   rootBoardId,
 }: {

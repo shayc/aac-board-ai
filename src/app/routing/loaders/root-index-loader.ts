@@ -1,5 +1,5 @@
 import {
-  boardSetPath,
+  rootBoardPath,
   getBoardSets,
   importBoardFromUrl,
 } from "@features/board";
@@ -13,7 +13,7 @@ const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 // ID, while rejected URLs and failed imports surface as localized errors.
 async function importFromBoardUrl(boardUrl: string): Promise<Response> {
   try {
-    return redirect(boardSetPath(await importBoardFromUrl(boardUrl)));
+    return redirect(rootBoardPath(await importBoardFromUrl(boardUrl)));
   } catch {
     throw importFailed();
   }
@@ -36,8 +36,8 @@ export async function rootIndexLoader({
 
   const [boardSet] = await getBoardSets();
   if (boardSet) {
-    return redirect(boardSetPath(boardSet));
+    return redirect(rootBoardPath(boardSet));
   }
 
-  return redirect(boardSetPath(await importBoardFromUrl(DEFAULT_BOARD_URL)));
+  return redirect(rootBoardPath(await importBoardFromUrl(DEFAULT_BOARD_URL)));
 }

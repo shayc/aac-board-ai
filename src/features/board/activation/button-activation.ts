@@ -1,10 +1,10 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-context";
 import { assertNever } from "@shared/utils/assert-never";
 import {
+  applyBackspace,
   appendSpace,
   appendTextToLastPart,
   createPart,
-  dropLastPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
@@ -65,7 +65,7 @@ export function createButtonActivation({
               parts = appendSpace(parts);
               break;
             case "backspace":
-              parts = dropLastPart(parts);
+              parts = applyBackspace(parts);
               break;
             case "clear":
               parts = [];
