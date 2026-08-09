@@ -60,6 +60,7 @@ export function getTextDirection(locale: string): "ltr" | "rtl" {
  */
 export function getNativeLanguageName(locale: string): string {
   const language = getLanguageCode(locale);
+
   try {
     return (
       new Intl.DisplayNames([language], { type: "language" }).of(language) ??

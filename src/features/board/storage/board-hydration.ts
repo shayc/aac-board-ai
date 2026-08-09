@@ -70,6 +70,7 @@ function createBoardMediaResource(
       if (state === "disposed") {
         throw new Error("Cannot commit disposed board media");
       }
+
       if (state === "committed") {
         return;
       }

@@ -138,6 +138,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const { direction } = useLanguage();
   const isRtl = direction === "rtl";
   const reducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+
   const theme = createTheme({
     ...getThemeOptions(reducedMotion),
     direction: isRtl ? "rtl" : "ltr",

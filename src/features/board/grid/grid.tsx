@@ -73,6 +73,7 @@ export function Grid<TItem extends { id: string }>({
               </Stack>
             );
           });
+
           return (
             <Stack
               key={rowIndex}

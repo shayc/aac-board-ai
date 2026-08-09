@@ -10,11 +10,14 @@ export function toPhrases(
     if (!candidate || !isClean(candidate)) {
       return false;
     }
+
     const key = normalize(candidate);
     if (seen.has(key)) {
       return false;
     }
+
     seen.add(key);
+
     return true;
   });
 }

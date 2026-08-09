@@ -49,6 +49,7 @@ export function useLatestAsync<T>({
         if (signal.aborted) {
           return;
         }
+
         setRound({
           signature,
           status: "rejected",

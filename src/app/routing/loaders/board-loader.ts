@@ -25,6 +25,7 @@ export async function boardLoader({
   try {
     const hydrated = await hydrateBoard(setId, boardId, request.signal);
     media = hydrated.media;
+
     const language = getStoredLanguage();
     const board = await resolveTranslatedBoard(
       setId,

@@ -49,6 +49,7 @@ export function speak(
     utterance.onerror = null;
     utterance.onboundary = null;
     signal?.removeEventListener("abort", onAbort);
+
     resolve();
   }
 

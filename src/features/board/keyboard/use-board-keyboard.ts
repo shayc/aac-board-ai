@@ -35,6 +35,7 @@ export function useBoardKeyboard({
       }
 
       event.preventDefault();
+
       switch (action.kind) {
         case "backspace":
           message.backspace();
