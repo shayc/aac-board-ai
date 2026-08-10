@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "vitest";
-import { createPersistedStore, resetPersistedStores } from "./persisted-store";
+import { createPersistedStore, reloadPersistedStores } from "./persisted-store";
 
 interface Counter {
   count: number;
@@ -46,12 +46,12 @@ describe("createPersistedStore", () => {
     expect(localStorage.getItem("counter")).toBe(JSON.stringify({ count: 9 }));
   });
 
-  test("resetPersistedStores reloads registered stores back to their parsed default", () => {
+  test("reloads registered stores to their parsed defaults after storage is cleared", () => {
     const store = createPersistedStore("counter", parseCounter);
 
     store.setState({ count: 9 });
     localStorage.clear();
-    resetPersistedStores();
+    reloadPersistedStores();
 
     expect(store.getSnapshot()).toEqual({ count: 0 });
   });

@@ -1,4 +1,4 @@
-import { resetPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/utils/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
 // Built-in AI namespaces the app reads off globalThis. Their ambient state can
@@ -21,6 +21,6 @@ beforeEach(() => {
   // parse(undefined) regardless of import order. Note: setState() emits, so
   // each store's persist() subscriber immediately writes its parsed defaults
   // back into localStorage — storage isn't empty after this call, just reset.
-  resetPersistedStores();
+  reloadPersistedStores();
 });
 afterEach(clearStorage);

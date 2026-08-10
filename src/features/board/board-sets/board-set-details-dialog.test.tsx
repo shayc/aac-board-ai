@@ -3,17 +3,17 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { BoardSetInfoDialog } from "./board-set-info-dialog";
+import { BoardSetDetailsDialog } from "./board-set-details-dialog";
 import { makeBoardSet } from "./test-utils";
 
 function renderWithProviders(children: ReactNode) {
   return render(<AppProviders>{children}</AppProviders>);
 }
 
-describe("BoardSetInfoDialog", () => {
+describe("BoardSetDetailsDialog", () => {
   test("has no a11y violations when open", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog
+      <BoardSetDetailsDialog
         boardSet={makeBoardSet({ name: "Core Words", author: "Jane" })}
         onClose={vi.fn()}
       />,
@@ -25,7 +25,7 @@ describe("BoardSetInfoDialog", () => {
 
   test("shows the name and author", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog
+      <BoardSetDetailsDialog
         boardSet={makeBoardSet({ name: "Core Words", author: "Jane" })}
         onClose={vi.fn()}
       />,
@@ -37,7 +37,7 @@ describe("BoardSetInfoDialog", () => {
 
   test("builds chips from grid dimensions and license", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog
+      <BoardSetDetailsDialog
         boardSet={makeBoardSet({
           gridRows: 2,
           gridColumns: 3,
@@ -54,7 +54,7 @@ describe("BoardSetInfoDialog", () => {
 
   test("omits the author line and chips when those fields are absent", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog boardSet={makeBoardSet()} onClose={vi.fn()} />,
+      <BoardSetDetailsDialog boardSet={makeBoardSet()} onClose={vi.fn()} />,
     );
 
     await expect.element(screen.getByText("My Board")).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("BoardSetInfoDialog", () => {
 
   test("shows the description when present", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog
+      <BoardSetDetailsDialog
         boardSet={makeBoardSet({ description: "A starter vocabulary board." })}
         onClose={vi.fn()}
       />,
@@ -77,7 +77,7 @@ describe("BoardSetInfoDialog", () => {
 
   test("renders nothing when no board set is targeted", async () => {
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />,
+      <BoardSetDetailsDialog boardSet={null} onClose={vi.fn()} />,
     );
 
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
@@ -86,7 +86,7 @@ describe("BoardSetInfoDialog", () => {
   test("calls onClose when Close is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
-      <BoardSetInfoDialog boardSet={makeBoardSet()} onClose={onClose} />,
+      <BoardSetDetailsDialog boardSet={makeBoardSet()} onClose={onClose} />,
     );
 
     await screen.getByRole("button", { name: "Close" }).click();

@@ -18,7 +18,7 @@ describe("BoardSetList", () => {
           makeBoardSet({ setId: "b", name: "Animals" }),
         ]}
         onSelect={vi.fn()}
-        onInfo={vi.fn()}
+        onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
@@ -33,7 +33,7 @@ describe("BoardSetList", () => {
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={onSelect}
-        onInfo={vi.fn()}
+        onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
@@ -46,14 +46,14 @@ describe("BoardSetList", () => {
     expect(onSelect.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
   });
 
-  test("opens the row menu and routes Info to onInfo", async () => {
-    const onInfo = vi.fn();
+  test("opens the row menu and routes the details action to onShowDetails", async () => {
+    const onShowDetails = vi.fn();
     const onDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={vi.fn()}
-        onInfo={onInfo}
+        onShowDetails={onShowDetails}
         onDelete={onDelete}
       />,
     );
@@ -63,19 +63,21 @@ describe("BoardSetList", () => {
       .click();
     await screen.getByRole("menuitem", { name: "Info" }).click();
 
-    expect(onInfo).toHaveBeenCalledOnce();
-    expect(onInfo.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
+    expect(onShowDetails).toHaveBeenCalledOnce();
+    expect(onShowDetails.mock.calls[0][0]).toMatchObject({
+      name: "Core Words",
+    });
     expect(onDelete).not.toHaveBeenCalled();
   });
 
   test("routes the menu's Delete to onDelete", async () => {
-    const onInfo = vi.fn();
+    const onShowDetails = vi.fn();
     const onDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onSelect={vi.fn()}
-        onInfo={onInfo}
+        onShowDetails={onShowDetails}
         onDelete={onDelete}
       />,
     );
@@ -87,6 +89,6 @@ describe("BoardSetList", () => {
 
     expect(onDelete).toHaveBeenCalledOnce();
     expect(onDelete.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
-    expect(onInfo).not.toHaveBeenCalled();
+    expect(onShowDetails).not.toHaveBeenCalled();
   });
 });

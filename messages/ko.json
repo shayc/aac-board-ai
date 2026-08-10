@@ -53,7 +53,7 @@
     }
   ],
   "libraryDropToImport": "가져오려면 보드 파일을 놓으세요",
-  "libraryInfo": "정보",
+  "libraryDetails": "정보",
   "libraryDelete": "삭제",
   "libraryCancel": "취소",
   "libraryClose": "라이브러리 닫기",
