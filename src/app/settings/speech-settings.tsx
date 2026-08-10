@@ -1,3 +1,7 @@
+import {
+  setMessagePartHighlightingEnabled,
+  useBoardPlaybackConfig,
+} from "@features/board";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -11,10 +15,6 @@ import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import {
-  setHighlightActivePart,
-  useHighlightConfig,
-} from "@shared/playback-highlight/highlight-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
@@ -35,7 +35,7 @@ export function SpeechSettings() {
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
-  const { highlightActivePart } = useHighlightConfig();
+  const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
@@ -148,8 +148,10 @@ export function SpeechSettings() {
         sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
-            checked={highlightActivePart}
-            onChange={(event) => setHighlightActivePart(event.target.checked)}
+            checked={isMessagePartHighlightingEnabled}
+            onChange={(event) =>
+              setMessagePartHighlightingEnabled(event.target.checked)
+            }
           />
         }
       />

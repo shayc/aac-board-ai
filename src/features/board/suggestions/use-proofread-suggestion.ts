@@ -1,7 +1,7 @@
-import { proofreaderLanguageOptions } from "@shared/built-in-ai/engine-language-options";
-import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
+import { proofreaderLanguageOptions } from "./engine-language-options";
+import { prepareQuietly } from "./prepare-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
 export function useProofreadSuggestion(

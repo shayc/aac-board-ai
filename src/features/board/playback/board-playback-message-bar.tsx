@@ -1,6 +1,6 @@
-import { useHighlightConfig } from "@shared/playback-highlight/highlight-store";
 import { MessageBar } from "../message/message-bar";
 import type { MessagePart } from "../message/message-types";
+import { useBoardPlaybackConfig } from "./playback-config-store";
 import { useActiveMessagePartId, useBoardPlayback } from "./use-board-playback";
 
 interface BoardPlaybackMessageBarProps {
@@ -12,12 +12,12 @@ export function BoardPlaybackMessageBar({
 }: BoardPlaybackMessageBarProps) {
   const playback = useBoardPlayback();
   const activePartId = useActiveMessagePartId();
-  const { highlightActivePart } = useHighlightConfig();
+  const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
 
   return (
     <MessageBar
       parts={parts}
-      activePartId={highlightActivePart ? activePartId : null}
+      activePartId={isMessagePartHighlightingEnabled ? activePartId : null}
       isPlaying={playback.isMessagePlaying}
       onPlayClick={() => void playback.playMessage(parts)}
       onStopClick={playback.stop}
