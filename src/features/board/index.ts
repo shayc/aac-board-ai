@@ -11,16 +11,13 @@ export {
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
+export { BoardNotFoundError } from "./storage/board-content-storage";
 export { hydrateBoard } from "./storage/board-hydration";
 export type {
   BoardMediaResource,
   HydratedBoard,
 } from "./storage/board-hydration";
-export {
-  BoardNotFoundError,
-  getBoardSet,
-  InvalidIdError,
-} from "./storage/boards-db";
+export { getBoardSet, InvalidIdError } from "./storage/board-set-storage";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { Board } from "./types";

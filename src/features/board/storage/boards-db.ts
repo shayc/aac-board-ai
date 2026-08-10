@@ -29,20 +29,6 @@ interface AssetRecord {
   blob: Blob;
 }
 
-export class BoardNotFoundError extends Error {
-  constructor(setId: string, boardId: string) {
-    super(`Board not found: ${setId}/${boardId}`);
-    this.name = "BoardNotFoundError";
-  }
-}
-
-export class BoardSetAlreadyExistsError extends Error {
-  constructor(setId: string) {
-    super(`Board set already exists: ${setId}`);
-    this.name = "BoardSetAlreadyExistsError";
-  }
-}
-
 const MAX_ID_LENGTH = 255;
 
 export class InvalidIdError extends Error {
@@ -50,29 +36,6 @@ export class InvalidIdError extends Error {
     super(`Invalid ${fieldName}: must be 1-${MAX_ID_LENGTH} characters`);
     this.name = "InvalidIdError";
   }
-}
-
-export interface BoardSetInput {
-  setId: string;
-  name: string;
-  rootBoardId: string;
-  author?: string;
-  description?: string;
-  license?: string;
-  locale?: string;
-  gridRows?: number;
-  gridColumns?: number;
-}
-
-export interface BoardInput {
-  boardId: string;
-  name: string;
-  obf: OBFBoard;
-}
-
-export interface AssetInput {
-  path: string;
-  blob: Blob;
 }
 
 interface BoardsDBSchema extends DBSchema {
@@ -98,20 +61,18 @@ type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 const DB_NAME = "aac-boards-db";
 const DB_VERSION = 1;
 
-function normalizePath(rawPath: string): string {
+export function normalizeAssetPath(rawPath: string): string {
   if (!rawPath) {
     throw new Error("Path cannot be empty");
   }
 
-  const normalized = rawPath
+  return rawPath
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
-
-  return normalized;
 }
 
-function validateId(id: string, fieldName: string): void {
+export function validateId(id: string, fieldName: string): void {
   if (!id || id.length > MAX_ID_LENGTH) {
     throw new InvalidIdError(fieldName);
   }
@@ -171,181 +132,4 @@ function openConnection(): Promise<BoardsDB> {
       connection = null;
     },
   });
-}
-
-export async function getBoardSet(
-  setId: string,
-): Promise<BoardSetRecord | undefined> {
-  validateId(setId, "setId");
-  const db = await getBoardsDB();
-
-  return db.get("boardSets", setId);
-}
-
-export async function listBoardSets(): Promise<BoardSetRecord[]> {
-  const db = await getBoardsDB();
-  const boardSets = await db.getAllFromIndex("boardSets", "byUpdatedAt");
-
-  return boardSets.reverse();
-}
-
-// The [] upper bound exploits IDB key ordering — arrays sort after strings,
-// so [setId, []] is the smallest key greater than every [setId, "..."].
-function boardSetRange(setId: string): IDBKeyRange {
-  return IDBKeyRange.bound([setId], [setId, []]);
-}
-
-export async function deleteBoardSetRows(setId: string): Promise<void> {
-  validateId(setId, "setId");
-  const db = await getBoardsDB();
-  const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
-  const setRange = boardSetRange(setId);
-
-  await Promise.all([
-    tx.objectStore("boards").delete(setRange),
-    tx.objectStore("assets").delete(setRange),
-    tx.objectStore("boardSets").delete(setId),
-    tx.done,
-  ]);
-}
-
-export interface BoardSetCreateInput {
-  boardSet: BoardSetInput;
-  boards: BoardInput[];
-  assets: AssetInput[];
-}
-
-export async function createBoardSet(
-  input: BoardSetCreateInput,
-): Promise<void> {
-  const { boardSet, boards, assets } = input;
-  validateId(boardSet.setId, "setId");
-  validateId(boardSet.rootBoardId, "rootBoardId");
-  for (const board of boards) {
-    validateId(board.boardId, "boardId");
-  }
-
-  const { setId } = boardSet;
-  const db = await getBoardsDB();
-  const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
-  const boardSetStore = tx.objectStore("boardSets");
-  const boardStore = tx.objectStore("boards");
-  const assetStore = tx.objectStore("assets");
-
-  const existing = await boardSetStore.get(setId);
-  if (existing) {
-    await tx.done;
-    throw new BoardSetAlreadyExistsError(setId);
-  }
-
-  const record: BoardSetRecord = {
-    setId,
-    name: boardSet.name,
-    rootBoardId: boardSet.rootBoardId,
-    updatedAt: Date.now(),
-    boardCount: boards.length,
-    author: boardSet.author,
-    description: boardSet.description,
-    license: boardSet.license,
-    locale: boardSet.locale,
-    gridRows: boardSet.gridRows,
-    gridColumns: boardSet.gridColumns,
-  };
-
-  // idb creates tx.done eagerly when the transaction is opened, and requests
-  // already issued before a synchronous put() failure (e.g. a non-cloneable
-  // value) keep running — both must be drained after abort, or they reject
-  // as unhandled rejections once the transaction tears down.
-  const requests: Promise<unknown>[] = [tx.done];
-
-  try {
-    for (const board of boards) {
-      requests.push(
-        boardStore.put({
-          setId,
-          boardId: board.boardId,
-          name: board.name,
-          obf: board.obf,
-        }),
-      );
-    }
-
-    for (const asset of assets) {
-      requests.push(
-        assetStore.put({
-          setId,
-          path: normalizePath(asset.path),
-          blob: asset.blob,
-        }),
-      );
-    }
-
-    requests.push(boardSetStore.add(record));
-
-    await Promise.all(requests);
-  } catch (error) {
-    try {
-      tx.abort();
-    } catch {
-      // Already finished — the transaction aborted itself.
-    }
-
-    await Promise.allSettled(requests);
-    throw error;
-  }
-}
-
-export async function getBoard(
-  setId: string,
-  boardId: string,
-): Promise<BoardRecord | undefined> {
-  validateId(setId, "setId");
-  validateId(boardId, "boardId");
-  const db = await getBoardsDB();
-
-  return db.get("boards", [setId, boardId]);
-}
-
-export async function listBoards(setId: string): Promise<BoardRecord[]> {
-  validateId(setId, "setId");
-  const db = await getBoardsDB();
-
-  return db.getAllFromIndex("boards", "bySetId", setId);
-}
-
-export async function updateBoardStrings(
-  setId: string,
-  boardId: string,
-  language: string,
-  translations: Record<string, string>,
-): Promise<void> {
-  validateId(setId, "setId");
-  validateId(boardId, "boardId");
-  const db = await getBoardsDB();
-  const tx = db.transaction("boards", "readwrite");
-  const record = await tx.store.get([setId, boardId]);
-
-  if (!record) {
-    throw new BoardNotFoundError(setId, boardId);
-  }
-
-  const updatedObf = {
-    ...record.obf,
-    strings: { ...record.obf.strings, [language]: translations },
-  };
-
-  await tx.store.put({ ...record, obf: updatedObf });
-  await tx.done;
-}
-
-export async function getAssetBlob(
-  setId: string,
-  path: string,
-): Promise<Blob | undefined> {
-  validateId(setId, "setId");
-  const db = await getBoardsDB();
-  const cleanPath = normalizePath(path);
-  const asset = await db.get("assets", [setId, cleanPath]);
-
-  return asset?.blob;
 }

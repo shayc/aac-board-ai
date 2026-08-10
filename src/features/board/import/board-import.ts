@@ -12,11 +12,11 @@ import type {
   AssetInput,
   BoardInput,
   BoardSetInput,
-} from "../storage/boards-db";
+} from "../storage/board-set-storage";
 import {
   BoardSetAlreadyExistsError,
   createBoardSet,
-} from "../storage/boards-db";
+} from "../storage/board-set-storage";
 import { htmlToText } from "./html";
 
 export interface ImportResult {

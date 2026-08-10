@@ -1,7 +1,11 @@
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
-import { BoardNotFoundError, getAssetBlob, getBoard } from "./boards-db";
+import {
+  BoardNotFoundError,
+  getAssetBlob,
+  getBoard,
+} from "./board-content-storage";
 import { createObjectUrlRegistry, type ObjectUrlRegistry } from "./object-url";
 
 export interface BoardMediaResource {

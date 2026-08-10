@@ -1,12 +1,12 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
+import type { BoardRecord } from "../storage/board-content-storage";
 import {
-  getBoardsDB,
   createBoardSet,
   type AssetInput,
-  type BoardRecord,
   type BoardSetRecord,
-} from "../storage/boards-db";
+} from "../storage/board-set-storage";
+import { getBoardsDB } from "../storage/boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
@@ -44,6 +44,19 @@ async function clearBoardsDB(): Promise<void> {
 export async function resetBoardsDB(): Promise<void> {
   await clearBoardsDB();
   await refreshBoardSets();
+}
+
+export async function countStoredBoardContent(setId: string): Promise<{
+  boards: number;
+  assets: number;
+}> {
+  const db = await getBoardsDB();
+  const tx = db.transaction(["boards", "assets"], "readonly");
+  const boardCount = tx.objectStore("boards").index("bySetId").count(setId);
+  const assetCount = tx.objectStore("assets").index("bySetId").count(setId);
+  const [boards, assets] = await Promise.all([boardCount, assetCount, tx.done]);
+
+  return { boards, assets };
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {

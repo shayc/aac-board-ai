@@ -3,7 +3,8 @@ import {
   stubTranslator,
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { getBoard, createBoardSet } from "../storage/boards-db";
+import { getBoard } from "../storage/board-content-storage";
+import { createBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import type { Board } from "../types";
 import { resolveTranslatedBoard } from "./resolve-translated-board";

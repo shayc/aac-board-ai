@@ -7,13 +7,13 @@ import {
   type OBFBoard,
 } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
+import { getAssetBlob, getBoard } from "../storage/board-content-storage";
+import { listBoardSets } from "../storage/board-set-storage";
 import {
-  getAssetBlob,
-  getBoard,
-  getBoardsDB,
-  listBoardSets,
-} from "../storage/boards-db";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+  countStoredBoardContent,
+  loadFixtureFile,
+  resetBoardsDB,
+} from "../testing";
 import {
   BOARD_IMPORT_LIMITS,
   buildAssetInputs,
@@ -43,7 +43,6 @@ describe("importBoardSets", () => {
       },
     ]);
 
-    const db = await getBoardsDB();
     const boardSets = await listBoardSets();
 
     expect(boardSets).toHaveLength(1);
@@ -64,12 +63,7 @@ describe("importBoardSets", () => {
     expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
-    const assetCount = await db.countFromIndex(
-      "assets",
-      "bySetId",
-      IMPORTED_SET_ID,
-    );
-    expect(assetCount).toBe(0);
+    expect((await countStoredBoardContent(IMPORTED_SET_ID)).assets).toBe(0);
   });
 
   test("imports an OBZ file into IndexedDB", async () => {
@@ -95,7 +89,6 @@ describe("importBoardSets", () => {
       },
     ]);
 
-    const db = await getBoardsDB();
     const boardSets = await listBoardSets();
 
     expect(boardSets).toHaveLength(1);
@@ -106,19 +99,9 @@ describe("importBoardSets", () => {
       name: archive.boards.get(rootBoardId)?.name,
     });
 
-    const readTx = db.transaction(["boards", "assets"], "readonly");
-    const storedBoardCount = await readTx
-      .objectStore("boards")
-      .index("bySetId")
-      .count(IMPORTED_SET_ID);
-    const storedAssetCount = await readTx
-      .objectStore("assets")
-      .index("bySetId")
-      .count(IMPORTED_SET_ID);
-    await readTx.done;
-
-    expect(storedBoardCount).toBe(archive.boards.size);
-    expect(storedAssetCount).toBe(assetEntries.length);
+    const storedContent = await countStoredBoardContent(IMPORTED_SET_ID);
+    expect(storedContent.boards).toBe(archive.boards.size);
+    expect(storedContent.assets).toBe(assetEntries.length);
 
     const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
     assertDefined(storedRootBoard);

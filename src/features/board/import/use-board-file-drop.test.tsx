@@ -2,7 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { listBoardSets } from "../storage/boards-db";
+import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
 

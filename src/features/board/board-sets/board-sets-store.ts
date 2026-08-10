@@ -1,9 +1,9 @@
 import { createExternalStore } from "@shared/utils/external-store";
 import {
-  deleteBoardSetRows,
+  deleteBoardSet as deleteStoredBoardSet,
   listBoardSets,
   type BoardSetRecord,
-} from "../storage/boards-db";
+} from "../storage/board-set-storage";
 
 interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
@@ -78,6 +78,6 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function deleteBoardSet(setId: string): Promise<void> {
-  await deleteBoardSetRows(setId);
+  await deleteStoredBoardSet(setId);
   await refreshAndBroadcastBoardSets();
 }
