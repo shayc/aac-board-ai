@@ -30,7 +30,7 @@ describe("BoardSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("toggling the tile-borders switch persists the borderVisible setting", async () => {
+  test("toggling tile borders persists their visibility", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -46,16 +46,16 @@ describe("BoardSettings", () => {
     await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-color-config");
+      const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
       const config = JSON.parse(stored ?? "{}") as {
-        borderVisible: boolean;
+        areTileBordersVisible: boolean;
       };
-      expect(config.borderVisible).toBe(true);
+      expect(config.areTileBordersVisible).toBe(true);
     });
   });
 
-  test("lowering the color-intensity slider persists the saturation setting", async () => {
+  test("lowering color intensity persists tile saturation", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -76,10 +76,12 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-color-config");
+      const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
-      const config = JSON.parse(stored ?? "{}") as { saturation: number };
-      expect(config.saturation).toBe(valueNow);
+      const config = JSON.parse(stored ?? "{}") as {
+        tileSaturation: number;
+      };
+      expect(config.tileSaturation).toBe(valueNow);
     });
   });
 });

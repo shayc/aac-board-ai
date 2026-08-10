@@ -1,3 +1,9 @@
+import {
+  setTileBordersVisible,
+  setTileSaturation,
+  TILE_SATURATION,
+  useBoardAppearanceConfig,
+} from "@features/board";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
@@ -5,12 +11,6 @@ import Switch from "@mui/material/Switch";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import {
-  setTileBorderVisible,
-  setTileSaturation,
-  TILE_SATURATION,
-  useTileAppearanceConfig,
-} from "@shared/tile-appearance/tile-appearance-store";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -18,8 +18,8 @@ function formatSaturation(value: number): string {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const { saturation, borderVisible } = useTileAppearanceConfig();
-  const saturationLabel = formatSaturation(saturation);
+  const { tileSaturation, areTileBordersVisible } = useBoardAppearanceConfig();
+  const saturationLabel = formatSaturation(tileSaturation);
 
   return (
     <Stack spacing={3}>
@@ -29,8 +29,8 @@ export function BoardSettings() {
         sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
-            checked={borderVisible}
-            onChange={(event) => setTileBorderVisible(event.target.checked)}
+            checked={areTileBordersVisible}
+            onChange={(event) => setTileBordersVisible(event.target.checked)}
           />
         }
       />
@@ -47,7 +47,7 @@ export function BoardSettings() {
         <Slider
           aria-label={t(m.tileSaturation)}
           getAriaValueText={formatSaturation}
-          value={saturation}
+          value={tileSaturation}
           min={TILE_SATURATION.min}
           max={TILE_SATURATION.max}
           step={0.1}

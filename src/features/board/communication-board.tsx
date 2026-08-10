@@ -7,9 +7,9 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useTileAppearanceConfig } from "@shared/tile-appearance/tile-appearance-store";
 import { useRef } from "react";
 import { createButtonActivation } from "./activation/button-activation";
+import { useBoardAppearanceConfig } from "./appearance/appearance-store";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
@@ -44,7 +44,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { saturation, borderVisible } = useTileAppearanceConfig();
+  const { tileSaturation, areTileBordersVisible } = useBoardAppearanceConfig();
   const message = useMessage();
   const playback = useBoardPlayback();
   const suggestions = useMessageSuggestions(message.text);
@@ -72,7 +72,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
       variant={button.loadBoard?.id ? "folder" : undefined}
-      borderHidden={!borderVisible}
+      borderHidden={!areTileBordersVisible}
       onClick={() => activateButton(button)}
       {...props}
     />
@@ -82,7 +82,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...keyboard.rootProps}
       direction="column"
-      sx={[boardRootSx, { "--tile-saturation": String(saturation) }]}
+      sx={[boardRootSx, { "--tile-saturation": String(tileSaturation) }]}
     >
       <BoardPlaybackMessageBar parts={message.parts} />
 

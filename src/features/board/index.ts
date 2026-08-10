@@ -1,3 +1,10 @@
+export {
+  setTileBordersVisible,
+  setTileSaturation,
+  TILE_SATURATION,
+  useBoardAppearanceConfig,
+} from "./appearance/appearance-store";
+export type { BoardAppearanceConfig } from "./appearance/appearance-store";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { getBoardSets } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
