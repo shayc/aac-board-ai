@@ -6,7 +6,7 @@ import {
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { resetPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/utils/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
@@ -74,7 +74,7 @@ describe("speak() utterance mapping", () => {
   test("clamps an out-of-range stored rate to the configured max", async () => {
     const speech = stubSpeech();
     localStorage.setItem("speech-config", JSON.stringify({ rate: 99 }));
-    resetPersistedStores();
+    reloadPersistedStores();
 
     await speak("hi");
 
