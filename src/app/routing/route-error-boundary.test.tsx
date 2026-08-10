@@ -7,12 +7,22 @@ import { render } from "vitest-browser-react";
 import { RouteErrorBoundary } from "./route-error-boundary";
 import { createLocalizedRouteError, routeErrorCodes } from "./route-error";
 
+function TestRoute() {
+  return null;
+}
+
+function TestHydrateFallback() {
+  return null;
+}
+
 function renderWithLoader(loader: () => unknown) {
   const router = createMemoryRouter(
     [
       {
         path: "/",
         loader,
+        Component: TestRoute,
+        HydrateFallback: TestHydrateFallback,
         ErrorBoundary: RouteErrorBoundary,
       },
     ],

@@ -11,12 +11,21 @@ function Probe() {
   return <p>probe ready</p>;
 }
 
+function TestHydrateFallback() {
+  return null;
+}
+
 describe("useRevalidateOnLanguageChange", () => {
   test("re-runs route loaders only when the language actually changes", async () => {
     setStoredLanguage("en");
     const loader = vi.fn(() => null);
     const router = createMemoryRouter([
-      { path: "/", element: <Probe />, loader },
+      {
+        path: "/",
+        element: <Probe />,
+        loader,
+        HydrateFallback: TestHydrateFallback,
+      },
     ]);
 
     const screen = await render(
