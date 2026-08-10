@@ -10,15 +10,15 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
-interface BoardSetInfoDialogProps {
+interface BoardSetDetailsDialogProps {
   boardSet: BoardSetRecord | null;
   onClose: () => void;
 }
 
-export function BoardSetInfoDialog({
+export function BoardSetDetailsDialog({
   boardSet,
   onClose,
-}: BoardSetInfoDialogProps) {
+}: BoardSetDetailsDialogProps) {
   const t = useTranslate();
   const chipLabels = boardSet ? buildChipLabels(t, boardSet) : [];
 
@@ -26,11 +26,11 @@ export function BoardSetInfoDialog({
     <Dialog
       open={boardSet !== null}
       onClose={onClose}
-      aria-labelledby="info-dialog-title"
+      aria-labelledby="details-dialog-title"
       fullWidth
       maxWidth="sm"
     >
-      <DialogTitle id="info-dialog-title">
+      <DialogTitle id="details-dialog-title">
         {boardSet?.name}
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>

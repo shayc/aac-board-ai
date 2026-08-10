@@ -53,7 +53,7 @@
     }
   ],
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
-  "libraryInfo": "Info",
+  "libraryDetails": "Info",
   "libraryDelete": "Löschen",
   "libraryCancel": "Abbrechen",
   "libraryClose": "Bibliothek schließen",

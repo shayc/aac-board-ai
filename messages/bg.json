@@ -53,7 +53,7 @@
     }
   ],
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
-  "libraryInfo": "Информация",
+  "libraryDetails": "Информация",
   "libraryDelete": "Изтриване",
   "libraryCancel": "Отказ",
   "libraryClose": "Затваряне на библиотеката",

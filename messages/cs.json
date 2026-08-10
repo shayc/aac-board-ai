@@ -53,7 +53,7 @@
     }
   ],
   "libraryDropToImport": "Přetáhněte sem soubory tabulek pro import",
-  "libraryInfo": "Informace",
+  "libraryDetails": "Informace",
   "libraryDelete": "Smazat",
   "libraryCancel": "Zrušit",
   "libraryClose": "Zavřít knihovnu",
