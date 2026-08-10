@@ -1,4 +1,3 @@
-import { useAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { useDebouncedValue } from "@shared/hooks/use-debounced-value";
 import { useLanguage } from "@shared/language/use-language";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
@@ -6,11 +5,12 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatusView,
 } from "./derive-suggestion-status";
+import { useBoardSuggestionConfig } from "./suggestion-config-store";
 import { toPhrases } from "./to-phrases";
 import { useProofreadSuggestion } from "./use-proofread-suggestion";
 import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 
-const SHARED_CONTEXT_DEBOUNCE_MS = 400;
+const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
 interface MessageSuggestions {
   isSupported: boolean;
@@ -20,10 +20,10 @@ interface MessageSuggestions {
 }
 
 export function useMessageSuggestions(text: string): MessageSuggestions {
-  const sharedContext = useAISharedContext();
-  const debouncedSharedContext = useDebouncedValue(
-    sharedContext,
-    SHARED_CONTEXT_DEBOUNCE_MS,
+  const { customInstructions } = useBoardSuggestionConfig();
+  const debouncedCustomInstructions = useDebouncedValue(
+    customInstructions,
+    CUSTOM_INSTRUCTIONS_DEBOUNCE_MS,
   );
 
   const { language } = useLanguage();
@@ -31,13 +31,13 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
   const proofreading = useProofreadSuggestion(text, language);
   const sameToneRewrite = useRewriteSuggestion({
     text,
-    sharedContext: debouncedSharedContext,
+    customInstructions: debouncedCustomInstructions,
     language,
     tone: "as-is",
   });
   const casualRewrite = useRewriteSuggestion({
     text,
-    sharedContext: debouncedSharedContext,
+    customInstructions: debouncedCustomInstructions,
     language,
     tone: "more-casual",
   });

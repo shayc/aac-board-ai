@@ -1,4 +1,3 @@
-import { setAISharedContext } from "@shared/built-in-ai/shared-context-store";
 import { LanguageProvider } from "@shared/language/language-provider";
 import {
   DEFAULT_LANGUAGE,
@@ -12,6 +11,7 @@ import {
 } from "@shared/testing/built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
+import { setSuggestionCustomInstructions } from "./suggestion-config-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 
 function renderMessageSuggestions(text: string) {
@@ -39,7 +39,7 @@ function stubRewritesByTone(
 
 describe("useMessageSuggestions", () => {
   beforeEach(() => {
-    setAISharedContext("");
+    setSuggestionCustomInstructions("");
     setStoredLanguage(DEFAULT_LANGUAGE);
   });
 
@@ -258,8 +258,8 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("passes the persisted shared context to every fixed-tone rewriter", async () => {
-    setAISharedContext("Talk like a pirate");
+  test("passes custom instructions to every fixed-tone rewriter", async () => {
+    setSuggestionCustomInstructions("Talk like a pirate");
     const { create } = stubRewriter();
     stubBuiltInAIUnsupported("Proofreader");
 

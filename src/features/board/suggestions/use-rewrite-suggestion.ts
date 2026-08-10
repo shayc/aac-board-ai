@@ -1,24 +1,24 @@
-import { rewriterLanguageOptions } from "@shared/built-in-ai/engine-language-options";
-import { prepareQuietly } from "@shared/built-in-ai/prepare-quietly";
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
+import { rewriterLanguageOptions } from "./engine-language-options";
+import { prepareQuietly } from "./prepare-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
 interface RewriteSuggestionOptions {
   text: string;
-  sharedContext: string;
+  customInstructions: string;
   language: string;
   tone: "as-is" | "more-casual";
 }
 
 export function useRewriteSuggestion({
   text,
-  sharedContext,
+  customInstructions,
   language,
   tone,
 }: RewriteSuggestionOptions): SuggestionSource {
   const rewriter = useRewriter({
-    sharedContext,
+    sharedContext: customInstructions,
     length: "shorter",
     format: "plain-text",
     tone,
@@ -28,7 +28,7 @@ export function useRewriteSuggestion({
 
   const request = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
-    deps: [text, sharedContext, language],
+    deps: [text, customInstructions, language],
     run: (signal) => rewriter.rewrite(text, { signal }),
   });
 

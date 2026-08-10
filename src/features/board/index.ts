@@ -22,6 +22,10 @@ export {
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
+export {
+  setMessagePartHighlightingEnabled,
+  useBoardPlaybackConfig,
+} from "./playback/playback-config-store";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { hydrateBoard } from "./storage/board-hydration";
 export type {
@@ -29,6 +33,10 @@ export type {
   HydratedBoard,
 } from "./storage/board-hydration";
 export { getBoardSet, InvalidIdError } from "./storage/board-set-storage";
+export {
+  setSuggestionCustomInstructions,
+  useBoardSuggestionConfig,
+} from "./suggestions/suggestion-config-store";
 export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { Board } from "./types";
