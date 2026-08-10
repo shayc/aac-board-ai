@@ -44,7 +44,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { tileSaturation, areTileBordersVisible } = useBoardAppearanceConfig();
+  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
+    useBoardAppearanceConfig();
   const message = useMessage();
   const playback = useBoardPlayback();
   const suggestions = useMessageSuggestions(message.text);
@@ -71,6 +72,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       imageSrc={button.imageSrc}
       backgroundColor={button.backgroundColor}
       borderColor={button.borderColor}
+      labelPlacement={tileLabelPlacement}
       variant={button.loadBoard?.id ? "folder" : undefined}
       borderHidden={!areTileBordersVisible}
       onClick={() => activateButton(button)}

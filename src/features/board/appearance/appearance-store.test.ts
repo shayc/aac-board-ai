@@ -3,6 +3,7 @@ import { renderHook } from "vitest-browser-react";
 import {
   parseBoardAppearanceConfig,
   setTileBordersVisible,
+  setTileLabelPlacement,
   setTileSaturation,
   useBoardAppearanceConfig,
 } from "./appearance-store";
@@ -77,6 +78,28 @@ describe("appearance-store", () => {
           .tileSaturation,
       ).toBe(1);
     });
+
+    test("defaults tileLabelPlacement to top when absent", () => {
+      expect(parseBoardAppearanceConfig(undefined).tileLabelPlacement).toBe(
+        "top",
+      );
+    });
+
+    test("ignores an unsupported stored tileLabelPlacement", () => {
+      expect(
+        parseBoardAppearanceConfig({ tileLabelPlacement: "center" })
+          .tileLabelPlacement,
+      ).toBe("top");
+    });
+
+    test.each(["top", "bottom", "hidden"] as const)(
+      "keeps a supported tileLabelPlacement of %s",
+      (tileLabelPlacement) => {
+        expect(
+          parseBoardAppearanceConfig({ tileLabelPlacement }).tileLabelPlacement,
+        ).toBe(tileLabelPlacement);
+      },
+    );
   });
 
   test("setTileSaturation updates the snapshot and persists it", async () => {
@@ -93,6 +116,7 @@ describe("appearance-store", () => {
         JSON.stringify({
           tileSaturation: 0.4,
           areTileBordersVisible: false,
+          tileLabelPlacement: "top",
         }),
       ),
     );
@@ -109,7 +133,31 @@ describe("appearance-store", () => {
     expect(result.current.areTileBordersVisible).toBe(true);
     await vi.waitFor(() =>
       expect(localStorage.getItem("board-appearance")).toBe(
-        JSON.stringify({ tileSaturation: 1, areTileBordersVisible: true }),
+        JSON.stringify({
+          tileSaturation: 1,
+          areTileBordersVisible: true,
+          tileLabelPlacement: "top",
+        }),
+      ),
+    );
+  });
+
+  test("setTileLabelPlacement updates and persists the snapshot", async () => {
+    const { result, rerender } = await renderHook(() =>
+      useBoardAppearanceConfig(),
+    );
+
+    setTileLabelPlacement("bottom");
+    await rerender();
+
+    expect(result.current.tileLabelPlacement).toBe("bottom");
+    await vi.waitFor(() =>
+      expect(localStorage.getItem("board-appearance")).toBe(
+        JSON.stringify({
+          tileSaturation: 1,
+          areTileBordersVisible: false,
+          tileLabelPlacement: "bottom",
+        }),
       ),
     );
   });

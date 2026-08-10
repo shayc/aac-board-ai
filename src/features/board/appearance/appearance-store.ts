@@ -4,9 +4,15 @@ import { useSyncExternalStore } from "react";
 export interface BoardAppearanceConfig {
   tileSaturation: number;
   areTileBordersVisible: boolean;
+  tileLabelPlacement: TileLabelPlacement;
 }
 
 export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
+export type TileLabelPlacement = "top" | "bottom" | "hidden";
+
+function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
+  return value === "top" || value === "bottom" || value === "hidden";
+}
 
 export function parseBoardAppearanceConfig(
   raw: unknown,
@@ -24,6 +30,9 @@ export function parseBoardAppearanceConfig(
       typeof parsed.areTileBordersVisible === "boolean"
         ? parsed.areTileBordersVisible
         : false,
+    tileLabelPlacement: isTileLabelPlacement(parsed.tileLabelPlacement)
+      ? parsed.tileLabelPlacement
+      : "top",
   };
 }
 
@@ -43,6 +52,15 @@ export function setTileBordersVisible(areTileBordersVisible: boolean): void {
   appearanceStore.setState({
     ...appearanceStore.getSnapshot(),
     areTileBordersVisible,
+  });
+}
+
+export function setTileLabelPlacement(
+  tileLabelPlacement: TileLabelPlacement,
+): void {
+  appearanceStore.setState({
+    ...appearanceStore.getSnapshot(),
+    tileLabelPlacement,
   });
 }
 

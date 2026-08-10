@@ -1,10 +1,16 @@
 import {
   setTileBordersVisible,
+  setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
+  type TileLabelPlacement,
   useBoardAppearanceConfig,
 } from "@features/board";
+import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Switch from "@mui/material/Switch";
@@ -18,11 +24,46 @@ function formatSaturation(value: number): string {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const { tileSaturation, areTileBordersVisible } = useBoardAppearanceConfig();
+  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
+    useBoardAppearanceConfig();
   const saturationLabel = formatSaturation(tileSaturation);
 
   return (
     <Stack spacing={3}>
+      <FormControl>
+        <FormLabel
+          id="tile-label-position"
+          sx={{ typography: "body2", color: "text.secondary" }}
+        >
+          {t(m.tileLabelPosition)}
+        </FormLabel>
+        <RadioGroup
+          aria-labelledby="tile-label-position"
+          name="tile-label-position"
+          value={tileLabelPlacement}
+          row
+          onChange={(event) =>
+            setTileLabelPlacement(event.target.value as TileLabelPlacement)
+          }
+        >
+          <FormControlLabel
+            value="top"
+            control={<Radio />}
+            label={t(m.tileLabelTop)}
+          />
+          <FormControlLabel
+            value="bottom"
+            control={<Radio />}
+            label={t(m.tileLabelBottom)}
+          />
+          <FormControlLabel
+            value="hidden"
+            control={<Radio />}
+            label={t(m.tileLabelHidden)}
+          />
+        </RadioGroup>
+      </FormControl>
+
       <FormControlLabel
         labelPlacement="start"
         label={t(m.tileBorders)}

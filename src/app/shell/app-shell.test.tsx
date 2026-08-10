@@ -77,7 +77,7 @@ describe("AppShell", () => {
     await expect
       .element(screen.getByRole("combobox", { name: "שפה" }))
       .toBeVisible();
-    expect(openSettingsButton).toHaveAttribute("aria-label", "פתיחת הגדרות");
+    expect(openSettingsButton).toHaveAttribute("aria-label", "פתיחת ההגדרות");
     expect(document.documentElement).toHaveAttribute("lang", "he");
     expect(document.documentElement).toHaveAttribute("dir", "rtl");
   });
