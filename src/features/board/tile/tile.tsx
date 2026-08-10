@@ -1,6 +1,7 @@
 import Button, { buttonClasses } from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
+import type { TileLabelPlacement } from "../appearance/appearance-store";
 
 interface TileProps {
   label: string;
@@ -10,6 +11,7 @@ interface TileProps {
   disabled?: boolean;
   variant?: "folder";
   borderHidden?: boolean;
+  labelPlacement?: TileLabelPlacement;
   tabIndex?: number;
   onClick: () => void;
 }
@@ -33,6 +35,7 @@ export function Tile({
   disabled,
   variant,
   borderHidden,
+  labelPlacement,
   tabIndex,
   onClick,
 }: TileProps) {
@@ -116,7 +119,11 @@ export function Tile({
         }),
       })}
     >
-      <AACSymbol label={label} imageSrc={imageSrc} />
+      <AACSymbol
+        label={label}
+        imageSrc={imageSrc}
+        labelPlacement={labelPlacement}
+      />
     </Button>
   );
 }

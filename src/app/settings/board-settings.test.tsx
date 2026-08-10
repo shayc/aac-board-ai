@@ -16,21 +16,36 @@ describe("BoardSettings", () => {
     const saturationSlider = screen.getByRole("slider", {
       name: "Tile color intensity",
     });
+    const labelPositionGroup = screen.getByRole("radiogroup", {
+      name: "Tile label position",
+    });
+    const bordersSwitch = screen.getByRole("switch", {
+      name: "Show tile borders",
+    });
 
     await expect.element(saturationSlider).toBeVisible();
     expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe("1");
     await expect.element(screen.getByText("100%")).toBeVisible();
 
-    const bordersSwitch = screen.getByRole("switch", {
-      name: "Show tile borders",
-    });
-
     await expect.element(bordersSwitch).not.toBeChecked();
+    await expect
+      .element(screen.getByRole("radio", { name: "Top" }))
+      .toBeChecked();
+    expect(
+      labelPositionGroup
+        .element()
+        .compareDocumentPosition(bordersSwitch.element()),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(
+      bordersSwitch
+        .element()
+        .compareDocumentPosition(saturationSlider.element()),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
 
     await expectNoA11yViolations(screen.container);
   });
 
-  test("toggling the tile-borders switch persists the borderVisible setting", async () => {
+  test("toggling tile borders persists their visibility", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -46,16 +61,16 @@ describe("BoardSettings", () => {
     await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-color-config");
+      const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
       const config = JSON.parse(stored ?? "{}") as {
-        borderVisible: boolean;
+        areTileBordersVisible: boolean;
       };
-      expect(config.borderVisible).toBe(true);
+      expect(config.areTileBordersVisible).toBe(true);
     });
   });
 
-  test("lowering the color-intensity slider persists the saturation setting", async () => {
+  test("lowering color intensity persists tile saturation", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -76,10 +91,35 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("tile-color-config");
+      const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
-      const config = JSON.parse(stored ?? "{}") as { saturation: number };
-      expect(config.saturation).toBe(valueNow);
+      const config = JSON.parse(stored ?? "{}") as {
+        tileSaturation: number;
+      };
+      expect(config.tileSaturation).toBe(valueNow);
+    });
+  });
+
+  test("changing the tile label position persists the selection", async () => {
+    const screen = await render(
+      <AppProviders>
+        <BoardSettings />
+      </AppProviders>,
+    );
+
+    const bottomRadio = screen.getByRole("radio", { name: "Bottom" });
+
+    await expect.element(bottomRadio).not.toBeChecked();
+    await bottomRadio.click();
+    await expect.element(bottomRadio).toBeChecked();
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("board-appearance");
+      expect(stored).not.toBeNull();
+      const config = JSON.parse(stored ?? "{}") as {
+        tileLabelPlacement: string;
+      };
+      expect(config.tileLabelPlacement).toBe("bottom");
     });
   });
 });

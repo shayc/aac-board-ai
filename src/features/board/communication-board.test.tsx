@@ -5,6 +5,7 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import { setTileLabelPlacement } from "./appearance/appearance-store";
 import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
@@ -182,6 +183,17 @@ describe("CommunicationBoard", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
       .toBeVisible();
+  });
+
+  test("hides tile labels visually without removing accessible names", async () => {
+    setTileLabelPlacement("hidden");
+
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+    const helloTile = screen.getByRole("button", { name: "hello" });
+    const helloLabel = screen.getByText("hello").element();
+
+    await expect.element(helloTile).toBeVisible();
+    expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
   test("activates a focused tile with the Space key", async () => {
