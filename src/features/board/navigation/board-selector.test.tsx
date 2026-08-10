@@ -9,7 +9,7 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { createBoardSet } from "../storage/boards-db";
+import { createBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSelector } from "./board-selector";
 
