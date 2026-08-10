@@ -56,7 +56,7 @@ export default defineConfig({
         name: "AAC Board AI",
         short_name: "AAC Board",
         description:
-          "AAC Board AI helps people who can't speak communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
+          "AAC Board AI helps people who cannot rely on speech communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
         start_url: "/",
         display: "standalone",
         file_handlers: [
