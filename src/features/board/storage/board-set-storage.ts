@@ -17,32 +17,32 @@ export class BoardSetAlreadyExistsError extends Error {
 }
 
 export interface BoardSetInput {
-  setId: string;
-  name: string;
-  rootBoardId: string;
-  author?: string;
-  description?: string;
-  license?: string;
-  locale?: string;
-  gridRows?: number;
-  gridColumns?: number;
+  readonly setId: string;
+  readonly name: string;
+  readonly rootBoardId: string;
+  readonly author?: string;
+  readonly description?: string;
+  readonly license?: string;
+  readonly locale?: string;
+  readonly gridRows?: number;
+  readonly gridColumns?: number;
 }
 
 export interface BoardInput {
-  boardId: string;
-  name: string;
-  obf: OBFBoard;
+  readonly boardId: string;
+  readonly name: string;
+  readonly obf: OBFBoard;
 }
 
 export interface AssetInput {
-  path: string;
-  blob: Blob;
+  readonly path: string;
+  readonly blob: Blob;
 }
 
 export interface BoardSetCreateInput {
-  boardSet: BoardSetInput;
-  boards: BoardInput[];
-  assets: AssetInput[];
+  readonly boardSet: BoardSetInput;
+  readonly boards: readonly BoardInput[];
+  readonly assets: readonly AssetInput[];
 }
 
 export async function getBoardSet(

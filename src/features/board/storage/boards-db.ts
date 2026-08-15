@@ -3,30 +3,30 @@ import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 
 export interface BoardSetRecord {
-  setId: string;
-  name: string;
-  rootBoardId: string;
-  updatedAt: number;
-  boardCount: number;
-  author?: string;
-  description?: string;
-  license?: string;
-  locale?: string;
-  gridRows?: number;
-  gridColumns?: number;
+  readonly setId: string;
+  readonly name: string;
+  readonly rootBoardId: string;
+  readonly updatedAt: number;
+  readonly boardCount: number;
+  readonly author?: string;
+  readonly description?: string;
+  readonly license?: string;
+  readonly locale?: string;
+  readonly gridRows?: number;
+  readonly gridColumns?: number;
 }
 
 export interface BoardRecord {
-  setId: string;
-  boardId: string;
-  name: string;
-  obf: OBFBoard;
+  readonly setId: string;
+  readonly boardId: string;
+  readonly name: string;
+  readonly obf: OBFBoard;
 }
 
 interface AssetRecord {
-  setId: string;
-  path: string;
-  blob: Blob;
+  readonly setId: string;
+  readonly path: string;
+  readonly blob: Blob;
 }
 
 const MAX_ID_LENGTH = 255;
