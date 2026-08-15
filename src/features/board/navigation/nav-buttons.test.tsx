@@ -16,8 +16,8 @@ async function renderAt(
   options: {
     initialIndex?: number;
     direction?: "ltr" | "rtl";
-    onBackClick?: () => void;
-    onHomeClick?: () => void;
+    onBack?: () => void;
+    onHome?: () => void;
   } = {},
 ) {
   const theme = createTheme({ direction: options.direction ?? "ltr" });
@@ -26,12 +26,7 @@ async function renderAt(
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: (
-          <NavButtons
-            onBackClick={options.onBackClick}
-            onHomeClick={options.onHomeClick}
-          />
-        ),
+        element: <NavButtons onBack={options.onBack} onHome={options.onHome} />,
       },
     ],
     { initialEntries, initialIndex: options.initialIndex },
@@ -54,7 +49,7 @@ describe("NavButtons", () => {
   });
 
   test("navigates back to the previous board when the back button is clicked", async () => {
-    const onBackClick = vi.fn();
+    const onBack = vi.fn();
     const { router, screen } = await renderAt(
       [
         "/sets/set-1/boards/root-1",
@@ -63,27 +58,27 @@ describe("NavButtons", () => {
           state: { backStack: ["root-1"] },
         },
       ],
-      { initialIndex: 1, onBackClick },
+      { initialIndex: 1, onBack },
     );
 
     await screen.getByRole("button", { name: "Back" }).click();
 
-    expect(onBackClick).toHaveBeenCalledOnce();
+    expect(onBack).toHaveBeenCalledOnce();
     await expect
       .poll(() => router.state.location.pathname)
       .toBe("/sets/set-1/boards/root-1");
   });
 
   test("runs the Home callback and navigates home", async () => {
-    const onHomeClick = vi.fn();
+    const onHome = vi.fn();
     const { router, screen } = await renderAt(
       [{ pathname: "/sets/set-1/boards/board-2", state: { backStack: [] } }],
-      { onHomeClick },
+      { onHome },
     );
 
     await screen.getByRole("button", { name: "Home" }).click();
 
-    expect(onHomeClick).toHaveBeenCalledOnce();
+    expect(onHome).toHaveBeenCalledOnce();
     await expect
       .poll(() => router.state.location.pathname)
       .toBe("/sets/set-1/boards/root-1");

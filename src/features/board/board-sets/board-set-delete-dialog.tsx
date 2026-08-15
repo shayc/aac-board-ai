@@ -10,13 +10,13 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 
 interface BoardSetDeleteDialogProps {
   boardSet: BoardSetRecord | null;
-  onConfirm: () => void;
+  onDelete: () => void;
   onClose: () => void;
 }
 
 export function BoardSetDeleteDialog({
   boardSet,
-  onConfirm,
+  onDelete,
   onClose,
 }: BoardSetDeleteDialogProps) {
   const t = useTranslate();
@@ -44,7 +44,7 @@ export function BoardSetDeleteDialog({
 
       <DialogActions>
         <Button onClick={onClose}>{t(m.libraryCancel)}</Button>
-        <Button onClick={onConfirm} color="error">
+        <Button onClick={onDelete} color="error">
           {t(m.libraryDelete)}
         </Button>
       </DialogActions>

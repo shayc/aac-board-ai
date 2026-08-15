@@ -24,8 +24,8 @@ function createProps(
     parts: [],
     activePartId: null,
     isPlaying: false,
-    onPlayClick: vi.fn(),
-    onStopClick: vi.fn(),
+    onPlay: vi.fn(),
+    onStop: vi.fn(),
     ...overrides,
   };
 }
@@ -169,34 +169,34 @@ describe("MessageBar", () => {
   });
 
   describe("controls", () => {
-    test("delegates play to onPlayClick while idle", async () => {
-      const onPlayClick = vi.fn();
+    test("delegates play to onPlay while idle", async () => {
+      const onPlay = vi.fn();
 
       const screen = await renderWithProviders(
         <MessageBar
           {...createProps({
             parts: [{ id: "a", label: "Hello" }],
             isPlaying: false,
-            onPlayClick,
+            onPlay,
           })}
         />,
       );
 
       await screen.getByRole("button", { name: "Play message" }).click();
 
-      expect(onPlayClick).toHaveBeenCalledTimes(1);
+      expect(onPlay).toHaveBeenCalledTimes(1);
     });
 
-    test("delegates stop to onStopClick while playing", async () => {
-      const onStopClick = vi.fn();
+    test("delegates stop to onStop while playing", async () => {
+      const onStop = vi.fn();
 
       const screen = await renderWithProviders(
-        <MessageBar {...createProps({ isPlaying: true, onStopClick })} />,
+        <MessageBar {...createProps({ isPlaying: true, onStop })} />,
       );
 
       await screen.getByRole("button", { name: "Stop message" }).click();
 
-      expect(onStopClick).toHaveBeenCalledTimes(1);
+      expect(onStop).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -10,10 +10,6 @@ import {
   useVoicesByLanguage,
 } from "./speech-store";
 
-interface UseVoiceLanguageSyncOptions {
-  language: string;
-}
-
 /**
  * The user's own region for a language, drawn from OS/browser preferences
  * (e.g. a Canadian's "fr-CA" → "CA").
@@ -31,9 +27,7 @@ function getUserRegionForLanguage(language: string): string | undefined {
   return undefined;
 }
 
-export function useVoiceLanguageSync({
-  language,
-}: UseVoiceLanguageSyncOptions): void {
+export function useVoiceLanguageSync(language: string): void {
   const voicesByLanguage = useVoicesByLanguage();
 
   useEffect(() => {

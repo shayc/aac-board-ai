@@ -42,7 +42,7 @@ describe("useVoiceLanguageSync", () => {
   test("selects a voice in the new language when language changes", async () => {
     const { rerender } = await renderHook(
       ({ language }: { language: string } = { language: "en" }) =>
-        useVoiceLanguageSync({ language }),
+        useVoiceLanguageSync(language),
       { initialProps: { language: "en" } },
     );
 
@@ -60,7 +60,7 @@ describe("useVoiceLanguageSync", () => {
   test("keeps the current voice when it already matches the language", async () => {
     setVoiceURI("en-voice");
 
-    await renderHook(() => useVoiceLanguageSync({ language: "en" }));
+    await renderHook(() => useVoiceLanguageSync("en"));
 
     expect(getSpeechConfig().voiceURI).toBe("en-voice");
   });
@@ -72,7 +72,7 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 
-    await renderHook(() => useVoiceLanguageSync({ language: "en" }));
+    await renderHook(() => useVoiceLanguageSync("en"));
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("en-default");
@@ -87,7 +87,7 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 
-    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+    await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("fr-fr-voice");
@@ -102,7 +102,7 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 
-    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+    await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
@@ -117,7 +117,7 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 
-    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+    await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
@@ -132,7 +132,7 @@ describe("useVoiceLanguageSync", () => {
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
 
-    await renderHook(() => useVoiceLanguageSync({ language: "fr" }));
+    await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
       expect(getSpeechConfig().voiceURI).toBe("fr-be-default");

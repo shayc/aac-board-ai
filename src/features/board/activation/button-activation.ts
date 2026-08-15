@@ -25,21 +25,19 @@ interface ActivationNavigation {
   goHome: () => void;
 }
 
-interface ButtonActivationOptions {
+interface ButtonActivatorOptions {
   message: ActivationMessage;
   playback: ActivationPlayback;
   navigation: ActivationNavigation;
 }
 
-interface ButtonActivation {
-  activateButton: (button: BoardButton) => void;
-}
+type ButtonActivator = (button: BoardButton) => void;
 
-export function createButtonActivation({
+export function createButtonActivator({
   message,
   playback,
   navigation,
-}: ButtonActivationOptions): ButtonActivation {
+}: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     const intents = resolveButtonIntents(button);
 
@@ -109,5 +107,5 @@ export function createButtonActivation({
     }
   }
 
-  return { activateButton };
+  return activateButton;
 }

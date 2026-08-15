@@ -7,8 +7,8 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useRef } from "react";
-import { createButtonActivation } from "./activation/button-activation";
+import { useRef, type CSSProperties } from "react";
+import { createButtonActivator } from "./activation/button-activation";
 import { useBoardAppearanceConfig } from "./appearance/appearance-store";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
@@ -26,6 +26,10 @@ import type { Board, BoardButton } from "./types";
 interface CommunicationBoardProps {
   board: Board;
 }
+
+type BoardRootStyle = CSSProperties & {
+  "--tile-saturation": string;
+};
 
 const boardRootSx = (theme: Theme) => ({
   height: "100%",
@@ -56,7 +60,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
-  const { activateButton } = createButtonActivation({
+  const activateButton = createButtonActivator({
     message,
     playback,
     navigation,
@@ -64,6 +68,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
   const hasMessage = message.parts.length > 0;
+  const boardRootStyle: BoardRootStyle = {
+    "--tile-saturation": String(tileSaturation),
+  };
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
@@ -75,7 +82,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       labelPlacement={tileLabelPlacement}
       variant={button.loadBoard?.id ? "folder" : undefined}
       borderHidden={!areTileBordersVisible}
-      onClick={() => activateButton(button)}
+      onActivate={() => activateButton(button)}
       {...props}
     />
   );
@@ -84,7 +91,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...keyboard.rootProps}
       direction="column"
-      sx={[boardRootSx, { "--tile-saturation": String(tileSaturation) }]}
+      sx={boardRootSx}
+      style={boardRootStyle}
     >
       <BoardPlaybackMessageBar parts={message.parts} />
 
@@ -96,7 +104,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
           {!isSmallScreen && (
             <NavButtons
-              onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
+              onHome={navigation.isHome ? scrollGridToOrigin : undefined}
             />
           )}
 
@@ -105,7 +113,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
               status={suggestions.status}
               phrases={suggestions.phrases}
               onEnable={suggestions.enable}
-              onPhraseClick={message.setFromText}
+              onPhraseSelect={message.setFromText}
             />
           )}
         </Stack>
@@ -143,7 +151,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           }}
         >
           <NavButtons
-            onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
+            onHome={navigation.isHome ? scrollGridToOrigin : undefined}
           />
 
           <BackspaceButton

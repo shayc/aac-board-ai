@@ -42,8 +42,8 @@ export function AppShell() {
       <ContentColumn shifted={isLibraryPushingContent}>
         <AppHeader
           libraryButtonHidden={isLibraryPushingContent}
-          onLibraryClick={() => setIsLibraryOpen(true)}
-          onSettingsClick={() => setIsSettingsOpen(true)}
+          onOpenLibrary={() => setIsLibraryOpen(true)}
+          onOpenSettings={() => setIsSettingsOpen(true)}
         />
 
         <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>

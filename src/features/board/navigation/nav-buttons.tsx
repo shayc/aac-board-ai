@@ -8,11 +8,11 @@ import { flipForRtl } from "@shared/theme/rtl";
 import { useBoardNavigation } from "./use-board-navigation";
 
 interface NavButtonsProps {
-  onBackClick?: () => void;
-  onHomeClick?: () => void;
+  onBack?: () => void;
+  onHome?: () => void;
 }
 
-export function NavButtons({ onBackClick, onHomeClick }: NavButtonsProps = {}) {
+export function NavButtons({ onBack, onHome }: NavButtonsProps = {}) {
   const t = useTranslate();
   const { setId, canGoBack, canGoHome, isHome, goBack, goHome } =
     useBoardNavigation();
@@ -22,12 +22,12 @@ export function NavButtons({ onBackClick, onHomeClick }: NavButtonsProps = {}) {
   }
 
   function handleBackClick() {
-    onBackClick?.();
+    onBack?.();
     goBack();
   }
 
   function handleHomeClick() {
-    onHomeClick?.();
+    onHome?.();
     goHome();
   }
 
@@ -49,7 +49,7 @@ export function NavButtons({ onBackClick, onHomeClick }: NavButtonsProps = {}) {
         aria-label={t(m.navHome)}
         size="large"
         color="inherit"
-        disabled={!canGoHome || (isHome && !onHomeClick)}
+        disabled={!canGoHome || (isHome && !onHome)}
         variant="contained"
         sx={{ width: 72 }}
         onClick={handleHomeClick}

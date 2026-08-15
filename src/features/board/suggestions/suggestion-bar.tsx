@@ -9,14 +9,14 @@ export interface SuggestionBarProps {
   status: SuggestionStatusView;
   phrases: string[];
   onEnable: () => void;
-  onPhraseClick: (phrase: string) => void;
+  onPhraseSelect: (phrase: string) => void;
 }
 
 export function SuggestionBar({
   status,
   phrases,
   onEnable,
-  onPhraseClick,
+  onPhraseSelect,
 }: SuggestionBarProps) {
   const isPending = status?.kind === "pending";
 
@@ -49,7 +49,7 @@ export function SuggestionBar({
           <Chip
             key={phrase}
             label={phrase}
-            onClick={() => onPhraseClick(phrase)}
+            onClick={() => onPhraseSelect(phrase)}
           />
         ))}
       </Box>

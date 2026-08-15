@@ -15,7 +15,7 @@ describe("BoardSetDeleteDialog", () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSet({ name: "Core Words" })}
-        onConfirm={vi.fn()}
+        onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -28,7 +28,7 @@ describe("BoardSetDeleteDialog", () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSet({ name: "Core Words", boardCount: 1 })}
-        onConfirm={vi.fn()}
+        onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -49,7 +49,7 @@ describe("BoardSetDeleteDialog", () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSet({ boardCount: 5 })}
-        onConfirm={vi.fn()}
+        onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -67,7 +67,7 @@ describe("BoardSetDeleteDialog", () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={null}
-        onConfirm={vi.fn()}
+        onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
     );
@@ -81,30 +81,30 @@ describe("BoardSetDeleteDialog", () => {
       .not.toBeInTheDocument();
   });
 
-  test("calls onConfirm when Delete is clicked", async () => {
-    const onConfirm = vi.fn();
+  test("calls onDelete when Delete is clicked", async () => {
+    const onDelete = vi.fn();
     const onClose = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSet()}
-        onConfirm={onConfirm}
+        onDelete={onDelete}
         onClose={onClose}
       />,
     );
 
     await screen.getByRole("button", { name: "Delete" }).click();
 
-    expect(onConfirm).toHaveBeenCalledOnce();
+    expect(onDelete).toHaveBeenCalledOnce();
     expect(onClose).not.toHaveBeenCalled();
   });
 
   test("calls onClose when Cancel is clicked", async () => {
-    const onConfirm = vi.fn();
+    const onDelete = vi.fn();
     const onClose = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSet()}
-        onConfirm={onConfirm}
+        onDelete={onDelete}
         onClose={onClose}
       />,
     );
@@ -112,6 +112,6 @@ describe("BoardSetDeleteDialog", () => {
     await screen.getByRole("button", { name: "Cancel" }).click();
 
     expect(onClose).toHaveBeenCalledOnce();
-    expect(onConfirm).not.toHaveBeenCalled();
+    expect(onDelete).not.toHaveBeenCalled();
   });
 });

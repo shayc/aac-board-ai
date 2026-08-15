@@ -2,15 +2,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useState } from "react";
 import { useBoardNavigation } from "./use-board-navigation";
 import { useBoardsInSet } from "./use-boards-in-set";
 
 export function BoardSelector() {
   const t = useTranslate();
   const { setId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useBoardsInSet({ setId });
-  const [inputValue, setInputValue] = useState("");
+  const { boards } = useBoardsInSet(setId);
 
   const selectedBoard = boards.find((board) => board.boardId === boardId);
 
@@ -25,8 +23,6 @@ export function BoardSelector() {
       size="small"
       options={boards}
       value={selectedBoard}
-      inputValue={inputValue}
-      onInputChange={(_event, value) => setInputValue(value)}
       onChange={(_event, board) => goToBoard(board.boardId)}
       getOptionLabel={(board) => board.name}
       getOptionKey={(board) => board.boardId}
@@ -40,12 +36,11 @@ export function BoardSelector() {
       renderInput={(params) => (
         <TextField
           {...params}
-          placeholder={selectedBoard.name}
           slotProps={{
             ...params.slotProps,
             input: {
               ...params.slotProps?.input,
-              sx: { height: 48, borderRadius: 8 },
+              sx: { borderRadius: 8 },
             },
             htmlInput: {
               ...params.slotProps?.htmlInput,

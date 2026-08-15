@@ -19,8 +19,8 @@ export function BoardPlaybackMessageBar({
       parts={parts}
       activePartId={isMessagePartHighlightingEnabled ? activePartId : null}
       isPlaying={playback.isMessagePlaying}
-      onPlayClick={() => void playback.playMessage(parts)}
-      onStopClick={playback.stop}
+      onPlay={() => void playback.playMessage(parts)}
+      onStop={playback.stop}
     />
   );
 }
