@@ -21,10 +21,10 @@ function containsFiles(event: DragEvent<HTMLElement>): boolean {
 export function useBoardFileDrop(): UseBoardFileDropReturn {
   const { importAndOpenBoardFiles } = useImportBoardFiles();
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
-  const dragDepth = useRef(0);
+  const dragDepthRef = useRef(0);
 
   function clearDrag() {
-    dragDepth.current = 0;
+    dragDepthRef.current = 0;
     setIsDraggingFiles(false);
   }
 
@@ -33,7 +33,7 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
       return;
     }
 
-    dragDepth.current += 1;
+    dragDepthRef.current += 1;
     setIsDraggingFiles(true);
   }
 
@@ -55,9 +55,9 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
       return;
     }
 
-    dragDepth.current -= 1;
+    dragDepthRef.current -= 1;
 
-    if (dragDepth.current <= 0) {
+    if (dragDepthRef.current <= 0) {
       clearDrag();
     }
   }
