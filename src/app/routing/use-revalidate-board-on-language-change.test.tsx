@@ -1,12 +1,12 @@
-import { describe, expect, test, vi } from "vitest";
-import { createMemoryRouter, RouterProvider } from "react-router";
-import { render } from "vitest-browser-react";
 import { LanguageProvider } from "@shared/language/language-provider";
 import { setStoredLanguage } from "@shared/language/language-store";
-import { useRevalidateOnLanguageChange } from "./use-revalidate-on-language-change";
+import { createMemoryRouter, RouterProvider } from "react-router";
+import { describe, expect, test, vi } from "vitest";
+import { render } from "vitest-browser-react";
+import { useRevalidateBoardOnLanguageChange } from "./use-revalidate-board-on-language-change";
 
 function Probe() {
-  useRevalidateOnLanguageChange();
+  useRevalidateBoardOnLanguageChange();
 
   return <p>probe ready</p>;
 }
@@ -15,7 +15,7 @@ function TestHydrateFallback() {
   return null;
 }
 
-describe("useRevalidateOnLanguageChange", () => {
+describe("useRevalidateBoardOnLanguageChange", () => {
   test("re-runs route loaders only when the language actually changes", async () => {
     setStoredLanguage("en");
     const loader = vi.fn(() => null);

@@ -4,7 +4,7 @@ import { useRevalidator } from "react-router";
 
 // Board translations are resolved in the route loader, so a language change must
 // re-run the loaders to re-translate the board currently on screen.
-export function useRevalidateOnLanguageChange(): void {
+export function useRevalidateBoardOnLanguageChange(): void {
   const { language } = useLanguage();
   const { revalidate } = useRevalidator();
   const previousLanguageRef = useRef(language);

@@ -1,20 +1,15 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { isBoardFile } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
-export function useFileHandlerLaunch(): void {
+export function useImportLaunchedBoardFiles(): void {
   const { importAndOpenBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
 
-  useEffect(() => {
-    const queue = window.launchQueue;
-    if (!queue) {
-      return;
-    }
-
-    async function importFileHandles(handles: readonly FileSystemFileHandle[]) {
+  const importLaunchedFiles = useEffectEvent(
+    async (handles: readonly FileSystemFileHandle[]) => {
       try {
         const opened = await Promise.all(
           handles.map((handle) => handle.getFile()),
@@ -27,10 +22,17 @@ export function useFileHandlerLaunch(): void {
           severity: "error",
         });
       }
+    },
+  );
+
+  useEffect(() => {
+    const queue = window.launchQueue;
+    if (!queue) {
+      return;
     }
 
     queue.setConsumer(({ files }) => {
-      void importFileHandles(files);
+      void importLaunchedFiles(files);
     });
-  }, [importAndOpenBoardFiles, showSnackbar]);
+  }, []);
 }

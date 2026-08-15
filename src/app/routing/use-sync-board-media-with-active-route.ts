@@ -6,12 +6,12 @@ export const BOARD_ROUTE_ID = "board";
 
 let committedMedia: BoardMediaResource | undefined;
 
-export function useBoardMediaLifetime(): void {
+export function useSyncBoardMediaWithActiveRoute(): void {
   const loadedBoard = useRouteLoaderData<HydratedBoard>(BOARD_ROUTE_ID);
   const media = loadedBoard?.media;
 
-  // Route data becoming undefined is the unmount signal. Effect cleanup would
-  // revoke live media during Strict Mode's development replay.
+  // The persistent app shell observes the board route becoming unmatched.
+  // Effect cleanup would revoke live media during Strict Mode's replay.
   useEffect(() => replaceCommittedMedia(media), [media]);
 }
 

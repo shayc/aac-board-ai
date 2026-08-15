@@ -1,15 +1,15 @@
-import { AppHeader } from "@app/shell/app-header";
-import { ContentColumn } from "@app/shell/content-column";
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useBoardMediaLifetime } from "@app/routing/use-board-media-lifetime";
-import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
+import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
+import { useSyncBoardMediaWithActiveRoute } from "@app/routing/use-sync-board-media-with-active-route";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
+import { AppHeader } from "@app/shell/app-header";
+import { ContentColumn } from "@app/shell/content-column";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
-  useFileHandlerLaunch,
+  useImportLaunchedBoardFiles,
 } from "@features/board";
 import Box from "@mui/material/Box";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -27,9 +27,9 @@ export function AppShell() {
   );
   const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
 
-  useFileHandlerLaunch();
-  useBoardMediaLifetime();
-  useRevalidateOnLanguageChange();
+  useImportLaunchedBoardFiles();
+  useSyncBoardMediaWithActiveRoute();
+  useRevalidateBoardOnLanguageChange();
 
   return (
     <Box sx={{ height: "100svh", display: "flex" }} {...fileDrop.dropHandlers}>

@@ -1,20 +1,20 @@
 import { hydrateBoard, type HydratedBoard } from "@features/board";
 import { makeOBFBoard, seedBoardSets } from "@features/board/testing";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { StrictMode } from "react";
 import {
   createMemoryRouter,
   Outlet,
-  type LoaderFunctionArgs,
   useLoaderData,
+  type LoaderFunctionArgs,
 } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { assertDefined } from "@shared/testing/assert-defined";
 import {
   BOARD_ROUTE_ID,
-  useBoardMediaLifetime,
-} from "./use-board-media-lifetime";
+  useSyncBoardMediaWithActiveRoute,
+} from "./use-sync-board-media-with-active-route";
 
 const SET_ID = "media-lifetime-set";
 const IMAGE_PATH = "images/test.png";
@@ -61,7 +61,7 @@ async function waitForGate(gate: Gate, signal: AbortSignal): Promise<void> {
 }
 
 function TestShell() {
-  useBoardMediaLifetime();
+  useSyncBoardMediaWithActiveRoute();
 
   return <Outlet />;
 }
