@@ -45,63 +45,111 @@ Two constraints shape the architecture:
 
 ## Runtime architecture
 
-The app is one React SPA. Browser APIs provide persistence and output; feature
-modules isolate the board domain, imports, playback, and optional AI. A
-`vite-plugin-pwa` service worker caches the app shell after a successful first
-load and caches third-party images after they are displayed. The manifest
-registers `.obf` and `.obz` file handlers.
+The app is one React SPA. The board feature groups the domain, import,
+board-specific playback, and optional-AI policy; shared modules own browser
+output and cross-cutting presentation. A `vite-plugin-pwa` service worker caches
+the app shell after a successful first load and caches third-party images after
+they are displayed. The manifest registers `.obf` and `.obz` file handlers.
 
 ```mermaid
 flowchart LR
+    accTitle: AAC Board AI runtime and trust boundaries
+    accDescr: The device-local React app stores boards in the browser, uses browser output and optional built-in AI, and contacts network hosts only for loading, updates, URL imports, remote media, or a voice-dependent speech service.
+
     user["AAC user · carer · SLP / educator"]
-    files["OBF / OBZ files<br/>local disk · chosen URL"]
-    host["Static host<br/>SPA · service-worker updates"]
+    files["Local filesystem<br/>OBF / OBZ files"]
+    host["Static web host"]
+    remote["Remote board / media hosts"]
+    voice["Platform speech service<br/>voice-dependent"]
 
-    subgraph app["AAC Board AI"]
-        UI["React UI"]
-        LD["Route loaders"]
-        IMP["Board import"]
-        STG["Board storage"]
-        PLY["Playback coordinator"]
-        AIF["Suggestions · translation"]
+    subgraph browser["User device · browser runtime"]
+        SPA["React SPA<br/>UI · React Router"]
+        SW["Service worker"]
+        IDB[("IndexedDB<br/>board metadata · OBF source records · assets")]
+        CACHE[("Cache Storage<br/>app shell · remote images")]
+        OUT["Web Speech API · HTML Audio"]
+        AI["Built-in AI APIs<br/>Proofreader · Rewriter · Translator"]
 
-        UI --> LD
-        LD --> STG
-        IMP --> STG
-        UI --> PLY
-        UI --> AIF
+        SPA <-->|read · write| IDB
+        SW <--> CACHE
+        SW -->|cached shell · images| SPA
+        SPA -->|speak · play| OUT
+        SPA -.->|optional language help| AI
     end
 
-    IDB[("IndexedDB<br/>boardSets · boards · assets")]
-    OUT["Web Speech API · HTML Audio"]
-    AI["Built-in AI<br/>Proofreader · Rewriter · Translator"]
-
-    user -->|selects · types · imports| UI
-    files --> IMP
-    host -.->|static assets| UI
-    STG --> IDB
-    PLY --> OUT
-    AIF -.->|feature-detected| AI
+    user -->|activates · navigates · configures| SPA
+    files -->|picker · drop · file handler| SPA
+    host -->|first load| SPA
+    host -->|app · service-worker updates| SW
+    remote -.->|URL import · remote audio| SPA
+    remote -.->|remote images| SW
+    OUT -.->|voice-dependent| voice
 ```
 
-Dashed edges are outside the core communication path. Built-in AI is detected by
-capability rather than User-Agent, and the service worker updates independently
-of board use.
+Dashed edges are progressive or platform-dependent integrations: their failure
+must not block reading, navigating, or composing with an already loaded board.
+Built-in AI is a browser capability inside the device boundary, detected by
+capability rather than User-Agent. The service worker updates independently of
+board use.
+
+The root route imports an explicit `?board=` URL when present, otherwise opens
+the first stored board set, or imports the bundled starter board when the catalog
+is empty. Local files and downloaded boards then converge on the same import and
+storage pipeline.
 
 ### Open a board
 
 React Router loaders prepare the active board before its route renders:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` reads raw OBF and asset blobs, creates provisional media
-   object URLs, and maps the result through `obfToBoard` into the in-memory
-   `Board`.
+2. `hydrateBoard` reads the stored OBF source record and asset blobs, creates
+   provisional media object URLs, and maps the result through `obfToBoard` into
+   the in-memory `Board`.
 3. `resolveTranslatedBoard` uses an existing translation or attempts an optional
    translation. Success is applied immediately and cached with a best-effort,
    asynchronous IndexedDB write; failure returns the untranslated board.
 4. Render the grid with a ready `Board`; the route-lifetime observer commits its
    media and releases the prior board. An aborted load releases only its own
    provisional media.
+
+The sequence below makes the asynchronous translation fallback and media-resource
+lifecycle explicit.
+
+```mermaid
+sequenceDiagram
+    accTitle: Opening a board
+    accDescr: React Router hydrates a board from IndexedDB, optionally translates it, then renders it and commits its media resources.
+
+    actor User
+    participant Router as React Router / boardLoader
+    participant Storage as Board storage / IndexedDB
+    participant Translation as Translation policy
+    participant AI as Built-in Translator
+    participant Route as Board route lifecycle
+
+    User->>Router: Navigate to a board
+    Router->>Storage: hydrateBoard(setId, boardId)
+    Storage->>Storage: Read OBF and assets; create URLs; map to Board
+    Storage-->>Router: Board + provisional media
+    Router->>Translation: Resolve communication language
+
+    alt Original language or cached strings
+        Translation-->>Router: Ready Board
+    else Translator succeeds
+        Translation->>AI: Translate board phrases
+        AI-->>Translation: Translations
+        Translation->>Storage: Start best-effort cache write
+        Note right of Storage: updateBoardStrings is not awaited;<br/>failure only costs re-translation
+        Translation-->>Router: Translated Board
+    else Translator unavailable or fails
+        Translation-->>Router: Untranslated Board
+    end
+
+    Router-->>Route: Render ready Board + provisional media
+    Route->>Route: Commit new media; dispose previous media
+
+    Note over Router,Route: Loader failure or navigation abort disposes provisional media
+```
 
 ### Activate a tile
 
@@ -118,7 +166,8 @@ output:
 
 ## Codemap and ownership seams
 
-The repository has three enforced module boundaries:
+The repository follows three module boundaries. ESLint enforces their aliased
+import forms; contributor rules require path aliases for cross-boundary imports:
 
 - `src/shared/` is the leaf layer. It does not import from the app, pages, or
   features.
@@ -140,14 +189,14 @@ seam. Search by path or symbol name to locate the code.
 
 | Concern                   | Owner                                                                       | Ownership rule                                                                                                                                                              |
 | ------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Composition               | `src/main.tsx`, `src/app/`, `src/pages/`                                    | `AppProviders` and the router assemble features; pages are route entry components.                                                                                          |
+| Composition               | `src/main.tsx`, `src/app/`, `src/pages/`, `src/shared/providers/`           | `main` composes providers and routing; shared providers assemble cross-cutting services; the router and pages assemble features.                                            |
 | Active-board data         | `src/app/routing/loaders/`                                                  | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                   |
 | Board domain              | `src/features/board/`                                                       | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, suggestions, and playback adapters.                                             |
 | OBF runtime mapping       | `src/features/board/obf/`                                                   | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                  |
 | Board ingestion           | `src/features/board/import/`                                                | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                 |
 | Board persistence         | `src/features/board/storage/`                                               | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                    |
 | Board-set catalog         | `src/features/board/board-sets/`                                            | An external store projects IndexedDB metadata into a reactive, cross-tab catalog.                                                                                           |
-| Board appearance          | `src/features/board/appearance/`                                            | Owns persisted user overrides for the visual presentation of the board, including its grid, tiles, symbols, and labels.                                                     |
+| Board appearance          | `src/features/board/appearance/`                                            | Owns persisted tile saturation, border visibility, and label placement.                                                                                                     |
 | Board playback            | `src/features/board/playback/`                                              | Converts message parts into playback steps and owns board-specific tracking, highlighting preferences, and UI adapters; device output remains delegated to shared playback. |
 | Optional language help    | `src/features/board/suggestions/`, `src/features/board/translation/`        | Owns Built-in AI policy such as warm-up, custom instructions, and engine language options. Every call must tolerate unavailable engines.                                    |
 | Playback output           | `src/shared/playback/`                                                      | The only gateway to Web Speech and HTML Audio. Playback is single-flight; a new request interrupts the current request without surfacing an error to the user.              |
@@ -165,15 +214,21 @@ product policy around both interfaces.
 
 ## Data and state model
 
-State has five lifetimes, each with one owner:
+Application state has six lifetimes, each with one owner:
 
 | Kind                         | Home                                           | Includes                                                                                                                                                                                                     |
 | ---------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Durable board data           | IndexedDB via `src/features/board/storage/`    | `boardSets` metadata, raw `OBFBoard` records, and image/sound asset blobs.                                                                                                                                   |
-| Navigation data              | React Router loaders                           | The hydrated, optionally translated active `Board` for each navigation.                                                                                                                                      |
+| Durable board data           | IndexedDB via `src/features/board/storage/`    | `boardSets` metadata, source `OBFBoard` records, and image/sound asset blobs.                                                                                                                                |
+| Loaded route data            | React Router loaders                           | The hydrated, optionally translated active `Board` for each navigation.                                                                                                                                      |
+| Navigation history state     | React Router `location.state`                  | The bounded board back-stack carried by board-to-board navigation.                                                                                                                                           |
 | Reactive cross-cutting state | `createExternalStore` + `useSyncExternalStore` | Board-set catalog, TTS voice catalog, and active playback coordinator.                                                                                                                                       |
 | Persisted settings           | `createPersistedStore` + localStorage          | Language, speech, message-part highlighting, board appearance, suggestion custom instructions, and onboarding state. MUI theme mode persists separately as `mui-mode` and is read pre-paint in `index.html`. |
 | Ephemeral interaction state  | Local React state                              | In-progress message parts and remembered grid focus.                                                                                                                                                         |
+
+Hydrated asset object URLs have an explicit resource lifecycle rather than a
+state lifetime. A loader owns them provisionally, the app-shell route observer
+commits them with the rendered board, and replacement, abort, or failure disposes
+them.
 
 The IndexedDB schema is versioned in `boards-db.ts`. A schema change increments
 `DB_VERSION` and adds its migration to the `idb` upgrade callback. A tab holding
@@ -199,18 +254,20 @@ rerender only subscribers to the changed slice.
   locally available playback.
 - **Board persistence is centralized.** Components do not touch IndexedDB; all
   production access goes through `src/features/board/storage/`.
-- **IndexedDB stores raw OBF, amended only by cached translation strings.**
-  `updateBoardStrings` adds locale entries to `obf.strings`; `obfToBoard` derives
-  the in-memory model on every read so its shape can evolve without rewriting
-  imported records.
+- **IndexedDB stores an OBF-shaped source model.** OBZ imports preserve source
+  fields while enriching path-only `load_board` entries with resolved board IDs.
+  `updateBoardStrings` later adds cached locale entries to `obf.strings`;
+  `obfToBoard` derives the in-memory model on every read so its shape can evolve
+  without rewriting imported records.
 - **The active board is loader-owned.** Hydration and optional translation finish
   before the new route renders. Its media remains provisional until the route
   commits, and leaving the route releases the committed media. Ancillary board
   summaries may load through the storage API without becoming another
   active-board path.
 - **Optional AI is capability-detected and failure-tolerant.** Consumers use
-  `@shayc/react-built-in-ai`, never User-Agent checks. Suggestions disappear when
-  unavailable; translation returns the untranslated board.
+  `@shayc/react-built-in-ai`, never User-Agent checks. Suggestions are omitted
+  when unsupported and surface an unavailable state when supported but unusable;
+  translation returns the untranslated board.
 - **One communication language coordinates UI locale, board translation, text
   direction, and TTS selection.** Available choices are the union of translated
   UI locales and installed TTS voice languages; translation and speech may each
@@ -239,8 +296,9 @@ longer holds.
 - **Open Board Format as the interchange model.** Compatibility with the AAC
   ecosystem outweighs the simplicity of a bespoke format; the cost is a mapping
   layer.
-- **Store raw OBF and derive `Board` on read.** Imports remain lossless while the
-  in-memory model can evolve without a data migration.
+- **Store the OBF source model and derive `Board` on read.** Keeping the
+  interchange and runtime models separate preserves imported fields while
+  allowing the runtime model to evolve without data migrations.
 - **Hydrate and translate in route loaders.** Components receive coherent board
   data without managing their own loading or translation orchestration.
 - **Accessible primitives plus real-browser tests.** Accessibility behavior is
