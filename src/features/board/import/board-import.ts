@@ -25,12 +25,12 @@ export interface ImportResult {
 }
 
 /**
- * Decompression limits enforced against an OBZ archive's declared uncompressed
- * sizes before any entry is inflated — zip-bomb defense for every import path
- * (picker, drag-drop, file-handler, URL). The caps are deliberately generous
- * versus real boards (observed up to ~70MB) but bounded, so a maliciously
- * crafted archive is rejected before it can exhaust memory. Exceeding a cap
- * makes `loadBoard` throw an `OBFError` with code `"archive-too-large"`.
+ * Decompression caps used by every OBZ import path. Limits are checked against
+ * each entry's declared metadata before that entry is inflated; entries
+ * accepted earlier may already be allocated. The values are generous relative
+ * to observed boards (~70 MB) while bounding decompression allocation.
+ * Exceeding a cap makes `loadBoard` throw an `OBFError` with code
+ * `"archive-too-large"`.
  */
 export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxTotalOriginalSize: 500 * 1024 * 1024,
