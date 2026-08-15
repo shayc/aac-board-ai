@@ -31,7 +31,7 @@ export function StatusLayout({
         textAlign: "center",
       }}
     >
-      {icon && (
+      {Boolean(icon) && (
         <Box
           sx={{
             width: 64,
@@ -60,7 +60,7 @@ export function StatusLayout({
         )}
       </Box>
 
-      {action && <Box>{action}</Box>}
+      {Boolean(action) && <Box>{action}</Box>}
     </Stack>
   );
 }

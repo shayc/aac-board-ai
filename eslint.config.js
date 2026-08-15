@@ -27,7 +27,7 @@ export default defineConfig([
       js.configs.recommended,
       tseslint.configs.recommendedTypeChecked,
       tseslint.configs.stylisticTypeChecked,
-      eslintReact.configs["recommended-typescript"],
+      eslintReact.configs["recommended-type-checked"],
       eslintReact.configs["disable-rsc"],
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite(),
