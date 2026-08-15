@@ -102,20 +102,18 @@ storage pipeline.
 React Router loaders prepare the active board before its route renders:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` reads the stored OBF source record and asset blobs, creates
-   provisional media object URLs, and maps the result through `obfToBoard` into
-   the in-memory `Board`.
-3. `resolveTranslatedBoard` uses an existing translation or attempts an optional
-   translation. Success is applied immediately and cached with a best-effort,
-   asynchronous IndexedDB write; failure returns the untranslated board.
-4. Render the grid with a ready `Board`; the route-lifetime observer commits its
-   media and releases the prior board. An aborted load releases only its own
-   provisional media.
-
-The sequence below makes the asynchronous translation fallback and media-resource
-lifecycle explicit.
+2. `hydrateBoard` reads the stored OBF and asset blobs, creates provisional media
+   object URLs, and maps them through `obfToBoard` into the in-memory `Board`.
+3. `resolveTranslatedBoard` uses the original language or a cached translation
+   when possible; otherwise it attempts optional translation. A successful
+   translation is returned without waiting for the best-effort IndexedDB cache
+   write. Failure returns the untranslated board.
+4. The route renders the ready `Board`, commits its provisional media, and
+   releases the previous board's media. A failed or aborted load releases only
+   its own provisional media.
 
 ```mermaid
+%%{init: { "sequence": { "mirrorActors": false }}}%%
 sequenceDiagram
     accTitle: Opening a board
     accDescr: React Router hydrates a board from IndexedDB, optionally translates it, then renders it and commits its media resources.
@@ -129,26 +127,25 @@ sequenceDiagram
 
     User->>Router: Navigate to a board
     Router->>Storage: hydrateBoard(setId, boardId)
-    Storage->>Storage: Read OBF and assets, create URLs, and map to Board
+    Storage->>Storage: Load OBF + assets, create media URLs
     Storage-->>Router: Board + provisional media
-    Router->>Translation: Resolve communication language
+    Router->>Translation: Resolve board for active language
 
-    alt Original language or cached strings
+    alt Original language or cached translation
         Translation-->>Router: Ready Board
-    else Translator succeeds
-        Translation->>AI: Translate board phrases
+    else Translation succeeds
+        Translation->>AI: Translate phrases
         AI-->>Translation: Translations
-        Translation->>Storage: Start best-effort cache write
-        Note right of Storage: updateBoardStrings is not awaited<br/>failure only costs re-translation
+        Translation->>Storage: Cache translations (not awaited)
         Translation-->>Router: Translated Board
-    else Translator unavailable or fails
+    else Translation unavailable or fails
         Translation-->>Router: Untranslated Board
     end
 
-    Router-->>Route: Render ready Board + provisional media
-    Route->>Route: Commit new media and dispose previous media
+    Router-->>Route: Board + provisional media
+    Route->>Route: Commit media, dispose previous
 
-    Note over Router,Route: Loader failure or navigation abort disposes provisional media
+    Note over Router,Route: Abort or failure → dispose provisional media
 ```
 
 ### Activate a tile
@@ -287,8 +284,9 @@ These summaries are the decision record. Revisit one when its rationale no
 longer holds.
 
 - **Device-local data, no application backend.** Privacy and operation on
-  restricted networks outweigh built-in server sync. The trade-off is manual
-  file-based sharing.
+  restricted networks outweigh built-in server sync. The trade-off is no built-in
+  cross-device sync; moving boards between devices relies on the original OBF/OBZ
+  files.
 - **On-device Built-in AI over server AI.** This keeps communication content out
   of a model server and removes a per-request network dependency or service cost
   once a model is available. The trade-off is browser, model, and language
