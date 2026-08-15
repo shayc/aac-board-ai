@@ -2,9 +2,9 @@ import type { PlaybackOutcome } from "@shared/playback/playback-context";
 import { describe, expect, test, vi } from "vitest";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
-import { createButtonActivation } from "./button-activation";
+import { createButtonActivator } from "./button-activation";
 
-type ActivationOptions = Parameters<typeof createButtonActivation>[0];
+type ActivationOptions = Parameters<typeof createButtonActivator>[0];
 
 function createMessageStub(
   parts: MessagePart[] = [],
@@ -40,14 +40,18 @@ function setup(opts: SetupOptions = {}) {
   const playback = opts.playback ?? createPlaybackStub();
   const navigation = opts.navigation ?? createNavigationStub();
 
-  const activation = createButtonActivation({ message, playback, navigation });
+  const activateButton = createButtonActivator({
+    message,
+    playback,
+    navigation,
+  });
 
-  return { activation, message, playback, navigation };
+  return { activateButton, message, playback, navigation };
 }
 
-describe("createButtonActivation", () => {
+describe("createButtonActivator", () => {
   test("navigates to the linked board and skips message and audio when loadBoard.id is set", () => {
-    const { activation, message, playback, navigation } = setup();
+    const { activateButton, message, playback, navigation } = setup();
 
     const button: BoardButton = {
       id: "btn",
@@ -55,7 +59,7 @@ describe("createButtonActivation", () => {
       loadBoard: { id: "child-board" },
     };
 
-    activation.activateButton(button);
+    activateButton(button);
 
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(message.setParts).not.toHaveBeenCalled();
@@ -64,18 +68,18 @@ describe("createButtonActivation", () => {
   });
 
   test("maps home to navigation.goHome", () => {
-    const { activation, navigation } = setup();
+    const { activateButton, navigation } = setup();
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "home" }] });
+    activateButton({ id: "btn", actions: [{ kind: "home" }] });
 
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
 
   test("spell appends the text via setParts", () => {
     const message = createMessageStub([]);
-    const { activation } = setup({ message });
+    const { activateButton } = setup({ message });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       actions: [{ kind: "spell", text: "t" }],
     });
@@ -89,9 +93,9 @@ describe("createButtonActivation", () => {
 
   test("space appends an empty-label part via setParts", () => {
     const message = createMessageStub([]);
-    const { activation } = setup({ message });
+    const { activateButton } = setup({ message });
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "space" }] });
+    activateButton({ id: "btn", actions: [{ kind: "space" }] });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
     const [committed] = vi.mocked(message.setParts).mock.calls[0];
@@ -105,9 +109,9 @@ describe("createButtonActivation", () => {
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
     ]);
-    const { activation } = setup({ message });
+    const { activateButton } = setup({ message });
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "backspace" }] });
+    activateButton({ id: "btn", actions: [{ kind: "backspace" }] });
 
     expect(message.setParts).toHaveBeenCalledWith([
       { id: "1", label: "hello" },
@@ -117,9 +121,9 @@ describe("createButtonActivation", () => {
 
   test("clear empties the message via setParts", () => {
     const message = createMessageStub([{ id: "1", label: "hello" }]);
-    const { activation } = setup({ message });
+    const { activateButton } = setup({ message });
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "clear" }] });
+    activateButton({ id: "btn", actions: [{ kind: "clear" }] });
 
     expect(message.setParts).toHaveBeenCalledWith([]);
   });
@@ -127,9 +131,9 @@ describe("createButtonActivation", () => {
   test("spelling then speaking speaks a message that includes the spelled letter", () => {
     const message = createMessageStub([]);
     const playback = createPlaybackStub();
-    const { activation } = setup({ message, playback });
+    const { activateButton } = setup({ message, playback });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
     });
@@ -153,9 +157,9 @@ describe("createButtonActivation", () => {
           resolvePlay = () => resolve("completed");
         }),
     );
-    const { activation } = setup({ message, playback });
+    const { activateButton } = setup({ message, playback });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       actions: [{ kind: "speak" }, { kind: "clear" }],
     });
@@ -176,9 +180,9 @@ describe("createButtonActivation", () => {
     playback.playMessage = vi.fn((): Promise<PlaybackOutcome> =>
       Promise.resolve("interrupted"),
     );
-    const { activation } = setup({ message, playback });
+    const { activateButton } = setup({ message, playback });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       actions: [{ kind: "speak" }, { kind: "clear" }],
     });
@@ -190,9 +194,9 @@ describe("createButtonActivation", () => {
   test("a mutation-only sequence folds every mutation into one commit and never plays", () => {
     const message = createMessageStub([]);
     const playback = createPlaybackStub();
-    const { activation } = setup({ message, playback });
+    const { activateButton } = setup({ message, playback });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       actions: [
         { kind: "spell", text: "h" },
@@ -211,9 +215,9 @@ describe("createButtonActivation", () => {
     const initialParts: MessagePart[] = [{ id: "1", label: "hi" }];
     const message = createMessageStub(initialParts);
     const playback = createPlaybackStub();
-    const { activation } = setup({ message, playback });
+    const { activateButton } = setup({ message, playback });
 
-    activation.activateButton({ id: "btn", actions: [{ kind: "speak" }] });
+    activateButton({ id: "btn", actions: [{ kind: "speak" }] });
 
     expect(playback.playMessage).toHaveBeenCalledWith(initialParts);
 
@@ -223,9 +227,9 @@ describe("createButtonActivation", () => {
   });
 
   test("treats an empty actions array as no actions and speaks instead", () => {
-    const { activation, message } = setup();
+    const { activateButton, message } = setup();
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       label: "hi",
       actions: [],
@@ -236,9 +240,9 @@ describe("createButtonActivation", () => {
 
   test("adds the button as a message part when there are no actions and no loadBoard", () => {
     const message = createMessageStub([]);
-    const { activation } = setup({ message });
+    const { activateButton } = setup({ message });
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       label: "hi",
       vocalization: "hello",
@@ -257,9 +261,9 @@ describe("createButtonActivation", () => {
   });
 
   test("passes the composed sound part to playback", () => {
-    const { activation, playback } = setup();
+    const { activateButton, playback } = setup();
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       label: "bell",
       soundSrc: "bell.mp3",
@@ -272,9 +276,9 @@ describe("createButtonActivation", () => {
   });
 
   test("passes vocalization to playback without handling speech mechanics", () => {
-    const { activation, playback } = setup();
+    const { activateButton, playback } = setup();
 
-    activation.activateButton({
+    activateButton({
       id: "btn",
       label: "I",
       vocalization: "Hello",
@@ -286,9 +290,9 @@ describe("createButtonActivation", () => {
   });
 
   test("passes label-only content to playback", () => {
-    const { activation, playback } = setup();
+    const { activateButton, playback } = setup();
 
-    activation.activateButton({ id: "btn", label: "Goodbye" });
+    activateButton({ id: "btn", label: "Goodbye" });
 
     expect(playback.playPart).toHaveBeenCalledWith(
       expect.objectContaining({ label: "Goodbye" }),
@@ -296,9 +300,9 @@ describe("createButtonActivation", () => {
   });
 
   test("delegates inaudible content so playback policy stays centralized", () => {
-    const { activation, message, playback } = setup();
+    const { activateButton, message, playback } = setup();
 
-    activation.activateButton({ id: "btn" });
+    activateButton({ id: "btn" });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
     expect(playback.playPart).toHaveBeenCalledTimes(1);
