@@ -82,7 +82,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       labelPlacement={tileLabelPlacement}
       variant={button.loadBoard?.id ? "folder" : undefined}
       borderHidden={!areTileBordersVisible}
-      onClick={() => activateButton(button)}
+      onActivate={() => activateButton(button)}
       {...props}
     />
   );
@@ -104,7 +104,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
           {!isSmallScreen && (
             <NavButtons
-              onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
+              onHome={navigation.isHome ? scrollGridToOrigin : undefined}
             />
           )}
 
@@ -151,7 +151,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           }}
         >
           <NavButtons
-            onHomeClick={navigation.isHome ? scrollGridToOrigin : undefined}
+            onHome={navigation.isHome ? scrollGridToOrigin : undefined}
           />
 
           <BackspaceButton

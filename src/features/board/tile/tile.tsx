@@ -13,7 +13,7 @@ interface TileProps {
   borderHidden?: boolean;
   labelPlacement?: TileLabelPlacement;
   tabIndex?: number;
-  onClick: () => void;
+  onActivate: () => void;
 }
 
 // Scale an author-supplied color's OKLCH chroma by the board's saturation
@@ -37,7 +37,7 @@ export function Tile({
   borderHidden,
   labelPlacement,
   tabIndex,
-  onClick,
+  onActivate,
 }: TileProps) {
   const resolvedBorderColor = borderColor ?? backgroundColor;
   const resolvedBackgroundColor = backgroundColor
@@ -49,7 +49,7 @@ export function Tile({
       disableRipple
       disabled={disabled}
       tabIndex={tabIndex}
-      onClick={onClick}
+      onClick={onActivate}
       sx={(theme) => ({
         boxShadow: (theme.vars ?? theme).shadows[2],
         width: "100%",

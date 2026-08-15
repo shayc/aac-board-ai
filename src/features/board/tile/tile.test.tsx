@@ -35,7 +35,7 @@ function resolveColorInSrgb(cssColor: string): string {
 
 describe("Tile", () => {
   test("renders label without image when imageSrc is not provided", async () => {
-    const screen = await render(<Tile label="Hello" onClick={vi.fn()} />);
+    const screen = await render(<Tile label="Hello" onActivate={vi.fn()} />);
 
     await expect
       .element(screen.getByRole("button", { name: "Hello" }))
@@ -44,7 +44,7 @@ describe("Tile", () => {
 
   test("renders with image when imageSrc is provided", async () => {
     const screen = await render(
-      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onClick={vi.fn()} />,
+      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onActivate={vi.fn()} />,
     );
 
     await expect
@@ -64,7 +64,7 @@ describe("Tile", () => {
         variant="folder"
         backgroundColor="#000000"
         borderColor="#000000"
-        onClick={vi.fn()}
+        onActivate={vi.fn()}
       />,
     );
 
@@ -81,7 +81,7 @@ describe("Tile", () => {
 
   test("applies backgroundColor and a readable text color", async () => {
     const screen = await render(
-      <Tile label="Colored" backgroundColor="#000000" onClick={vi.fn()} />,
+      <Tile label="Colored" backgroundColor="#000000" onActivate={vi.fn()} />,
     );
 
     const button = screen.getByRole("button", { name: "Colored" });
@@ -97,7 +97,7 @@ describe("Tile", () => {
     const theme = createTheme({ transitions: { duration: { short: 0 } } });
     const screen = await render(
       <MUIThemeProvider theme={theme}>
-        <Tile label="Colored" backgroundColor="#ff0000" onClick={vi.fn()} />
+        <Tile label="Colored" backgroundColor="#ff0000" onActivate={vi.fn()} />
       </MUIThemeProvider>,
     );
 
@@ -117,7 +117,7 @@ describe("Tile", () => {
 
   test("applies borderColor when provided", async () => {
     const screen = await render(
-      <Tile label="Bordered" borderColor="#00ff00" onClick={vi.fn()} />,
+      <Tile label="Bordered" borderColor="#00ff00" onActivate={vi.fn()} />,
     );
 
     const button = screen.getByRole("button", { name: "Bordered" });
@@ -128,7 +128,7 @@ describe("Tile", () => {
 
   test("defaults borderColor to backgroundColor when borderColor is omitted", async () => {
     const screen = await render(
-      <Tile label="Match" backgroundColor="#ff0000" onClick={vi.fn()} />,
+      <Tile label="Match" backgroundColor="#ff0000" onActivate={vi.fn()} />,
     );
 
     const button = screen.getByRole("button", { name: "Match" });
@@ -140,7 +140,7 @@ describe("Tile", () => {
   test("desaturates the background when --tile-saturation is set", async () => {
     const screen = await render(
       <div style={{ "--tile-saturation": 0 } as CSSProperties}>
-        <Tile label="Muted" backgroundColor="#ff0000" onClick={vi.fn()} />
+        <Tile label="Muted" backgroundColor="#ff0000" onActivate={vi.fn()} />
       </div>,
     );
 
@@ -160,7 +160,7 @@ describe("Tile", () => {
         backgroundColor="#ff0000"
         borderColor="#00ff00"
         borderHidden
-        onClick={vi.fn()}
+        onActivate={vi.fn()}
       />,
     );
 
@@ -182,7 +182,7 @@ describe("Tile", () => {
         backgroundColor="#000000"
         borderColor="#000000"
         borderHidden
-        onClick={vi.fn()}
+        onActivate={vi.fn()}
       />,
     );
 
@@ -196,22 +196,24 @@ describe("Tile", () => {
     );
   });
 
-  test("calls onClick when clicked", async () => {
-    const onClick = vi.fn();
+  test("calls onActivate when clicked", async () => {
+    const onActivate = vi.fn();
 
-    const screen = await render(<Tile label="Click me" onClick={onClick} />);
+    const screen = await render(
+      <Tile label="Click me" onActivate={onActivate} />,
+    );
 
     const button = screen.getByRole("button", { name: "Click me" });
     await button.click();
 
-    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(onActivate).toHaveBeenCalledTimes(1);
   });
 
-  test("does not call onClick when disabled", async () => {
-    const onClick = vi.fn();
+  test("does not call onActivate when disabled", async () => {
+    const onActivate = vi.fn();
 
     const screen = await render(
-      <Tile label="Disabled tile" onClick={onClick} disabled />,
+      <Tile label="Disabled tile" onActivate={onActivate} disabled />,
     );
 
     const button = screen.getByRole("button", { name: "Disabled tile" });
@@ -219,6 +221,6 @@ describe("Tile", () => {
     expect(getComputedStyle(button.element()).boxShadow).toBe("none");
     await button.click({ force: true });
 
-    expect(onClick).not.toHaveBeenCalled();
+    expect(onActivate).not.toHaveBeenCalled();
   });
 });
