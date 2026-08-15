@@ -3,10 +3,6 @@ import { useLanguage } from "@shared/language/use-language";
 import { listBoards } from "../storage/board-content-storage";
 import { findTranslations } from "../translation/board-strings";
 
-interface UseBoardsInSetOptions {
-  setId: string | undefined;
-}
-
 interface BoardSummary {
   boardId: string;
   name: string;
@@ -18,9 +14,9 @@ interface UseBoardsInSetReturn {
   error: Error | undefined;
 }
 
-export function useBoardsInSet({
-  setId,
-}: UseBoardsInSetOptions): UseBoardsInSetReturn {
+export function useBoardsInSet(
+  setId: string | undefined,
+): UseBoardsInSetReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
     enabled: setId !== undefined,
