@@ -113,7 +113,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
               status={suggestions.status}
               phrases={suggestions.phrases}
               onEnable={suggestions.enable}
-              onPhraseClick={message.setFromText}
+              onPhraseSelect={message.setFromText}
             />
           )}
         </Stack>

@@ -16,7 +16,7 @@ function makeProps(
     status: null,
     phrases: [],
     onEnable: vi.fn(),
-    onPhraseClick: vi.fn(),
+    onPhraseSelect: vi.fn(),
     ...overrides,
   };
 }
@@ -36,19 +36,19 @@ describe("SuggestionBar", () => {
     }
   });
 
-  test("calls onPhraseClick with the correct value when a phrase chip is clicked", async () => {
+  test("calls onPhraseSelect with the correct value when a phrase chip is clicked", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Hello" }).click();
 
-    expect(props.onPhraseClick).toHaveBeenCalledWith("Hello");
-    expect(props.onPhraseClick).toHaveBeenCalledTimes(1);
+    expect(props.onPhraseSelect).toHaveBeenCalledWith("Hello");
+    expect(props.onPhraseSelect).toHaveBeenCalledTimes(1);
 
     await screen.getByRole("button", { name: "Goodbye" }).click();
 
-    expect(props.onPhraseClick).toHaveBeenCalledWith("Goodbye");
-    expect(props.onPhraseClick).toHaveBeenCalledTimes(2);
+    expect(props.onPhraseSelect).toHaveBeenCalledWith("Goodbye");
+    expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
   });
 
   test("offers an enable chip when activation is needed", async () => {
