@@ -146,6 +146,7 @@ export default defineConfig({
       instances: [{ browser: "chromium" }],
     },
     coverage: {
+      include: ["src/**/*.{ts,tsx}"],
       exclude: [
         ...coverageConfigDefaults.exclude,
         "src/paraglide/**",

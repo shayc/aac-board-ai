@@ -4,27 +4,32 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
-import { useFileHandlerLaunch } from "./use-file-handler-launch";
+import { useImportLaunchedBoardFiles } from "./use-import-launched-board-files";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
 function LaunchHarness() {
-  useFileHandlerLaunch();
+  useImportLaunchedBoardFiles();
 
   return <div data-testid="path">{useLocation().pathname}</div>;
 }
 
 function stubLaunchQueue() {
   let consumer: ((params: LaunchParams) => void) | undefined;
+  let consumerInstallCount = 0;
 
   vi.stubGlobal("launchQueue", {
     setConsumer: (next: (params: LaunchParams) => void) => {
       consumer = next;
+      consumerInstallCount += 1;
     },
   });
 
-  return (...files: FileSystemFileHandle[]) => consumer?.({ files });
+  return {
+    getConsumerInstallCount: () => consumerInstallCount,
+    launch: (...files: FileSystemFileHandle[]) => consumer?.({ files }),
+  };
 }
 
 function fileHandle(file: File): FileSystemFileHandle {
@@ -47,7 +52,7 @@ function renderLaunchHandler() {
   );
 }
 
-describe("useFileHandlerLaunch", () => {
+describe("useImportLaunchedBoardFiles", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -62,10 +67,13 @@ describe("useFileHandlerLaunch", () => {
   });
 
   test("imports only the board files and opens the result", async () => {
-    const launch = stubLaunchQueue();
+    const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
+    const initialConsumerInstallCount = launchQueue.getConsumerInstallCount();
 
-    launch(
+    expect(initialConsumerInstallCount).toBeGreaterThan(0);
+
+    launchQueue.launch(
       fileHandle(new File([""], "notes.txt")),
       fileHandle(await loadFixtureFile(OBF_FIXTURE)),
     );
@@ -79,13 +87,16 @@ describe("useFileHandlerLaunch", () => {
     await expect
       .element(screen.getByTestId("path"))
       .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
+    expect(launchQueue.getConsumerInstallCount()).toBe(
+      initialConsumerInstallCount,
+    );
   });
 
   test("reports a file that can no longer be opened", async () => {
-    const launch = stubLaunchQueue();
+    const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
-    launch(inaccessibleFileHandle());
+    launchQueue.launch(inaccessibleFileHandle());
 
     await expect
       .element(screen.getByRole("alert"))

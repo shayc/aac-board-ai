@@ -3,7 +3,7 @@ import type { Theme } from "@mui/material/styles";
 const MUI_SPACING_UNIT_PX = 8;
 const MIN_CELL_SIZE_PX = 96;
 const PAD = "var(--pad)";
-const PAD_TOTAL = `calc(2 * ${PAD})`;
+const TOTAL_PADDING = `calc(2 * ${PAD})`;
 const SMALL_SCREEN_PADDING = 2;
 const DEFAULT_PADDING = 3;
 
@@ -81,17 +81,17 @@ function trackAxisQueries(
   gap: number,
   padding: number,
 ): Record<string, Record<string, number>> {
-  const steps: [string, Record<string, number>][] = Array.from(
-    { length: Math.max(0, count - 1) },
-    (_, index) => {
-      const visible = index + 2;
-      const threshold = trackFitThreshold(visible, gap, padding);
+  const queries: Record<string, Record<string, number>> = {};
 
-      return [`@container (${feature}: ${threshold})`, { [property]: visible }];
-    },
-  );
+  for (let visible = 2; visible <= count; visible++) {
+    const threshold = trackFitThreshold(visible, gap, padding);
 
-  return Object.fromEntries(steps);
+    queries[`@container (${feature}: ${threshold})`] = {
+      [property]: visible,
+    };
+  }
+
+  return queries;
 }
 
 function trackFitThreshold(
@@ -113,7 +113,7 @@ function trackSize(
   gap: number,
   visible: string,
 ): string {
-  return `calc((${extent} - ${PAD_TOTAL} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
+  return `calc((${extent} - ${TOTAL_PADDING} - (${visible} - 1) * ${theme.spacing(gap)}) / ${visible})`;
 }
 
 function gridExtent(
@@ -122,5 +122,5 @@ function gridExtent(
   gap: number,
   count: number,
 ): string {
-  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${PAD_TOTAL})`;
+  return `calc(${count} * ${cellSize} + ${count - 1} * ${theme.spacing(gap)} + ${TOTAL_PADDING})`;
 }

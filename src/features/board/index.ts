@@ -15,7 +15,7 @@ export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
-export { useFileHandlerLaunch } from "./import/use-file-handler-launch";
+export { useImportLaunchedBoardFiles } from "./import/use-import-launched-board-files";
 export {
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
