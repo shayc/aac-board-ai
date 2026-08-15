@@ -13,6 +13,7 @@
 - Dev: `npm run dev`
 - Lint: `npm run lint`
 - Test: `npm test`
+- Test with coverage: `npm run test:coverage`
 - Test one file: `npm test -- <file-or-pattern>`
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
@@ -35,8 +36,8 @@
 - **Runner:** `npm test` runs Vitest browser mode via Playwright (real Chromium).
 - **Utilities:** Use `vitest-browser-react` for components and interactions.
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
-- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities) or native web APIs.
-  - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`).
+- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use Chromium's real web APIs except for the allowed stubs below.
+  - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`), and browser capabilities unavailable in the test runtime (only at the platform boundary).
   - _Method:_ Prefer `vi.spyOn` over `vi.mock`.
 - **Scope:**
   - **Interactive:** Prove a behavior (interaction → observable result).
@@ -56,15 +57,15 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 ### Naming
 
 - All files and folders under `src/` are kebab-case.
-- No filler words (`data`, `info`, `manager`) or cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
-- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs.
+- Avoid vague filler words (`data`, `info`, `manager`) when a precise domain name is available, and avoid cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
+- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs; React components use descriptive PascalCase nouns.
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
 
 ### Abstraction & Data Flow
 
 - Keep each function at one level of abstraction: low-level mechanics live in named helpers; the body reads as a summary of what happens.
-- Pass components and functions only the leaf data they use — not a whole `User` for `user.avatarUrl`.
+- Prefer the smallest meaningful input a component or function needs; don't pass large objects solely to access one leaf property.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
 - Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`, `@paraglide/*`).
 - User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text.
@@ -78,12 +79,14 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 
 ### Always
 
-- Develop exclusively in feature branches cut from `main` using an intent-based prefix (`feat/`, `fix/`, `refactor/`).
+- When starting new work without an existing task branch, create a branch from `main` using an intent-based prefix (`feat/`, `fix/`, `refactor/`). Never switch away from an existing task branch unless asked.
 - Keep changes closely scoped; avoid sweeping refactors or structural reformatting outside the task.
-- Verify changes by running `npm run lint`, `npm test`, and `npm run build` before pushing or marking a task complete.
+- For code changes, verify with `npm run lint`, `npm test`, and `npm run build` before pushing or marking the task complete. For documentation-only changes, run only applicable formatting, link, or documentation checks.
 - Follow existing module boundaries and adjacent file design patterns.
 
 ### Ask First
+
+Ask first unless the requested task explicitly requires the change:
 
 - Modifying dependencies (`package.json`, `package-lock.json`).
 - Infrastructure modifications (CI configurations, build tooling, lint/test configs).
@@ -96,4 +99,4 @@ Prettier and ESLint own formatting and mechanical rules; the guidance below cove
 - Commit secrets, environment tokens, or private API keys.
 - Suppress linting directives, bypass typechecking, or drop tests to force a build through.
 - Manually edit or commit generated artifacts (`dist/`, `coverage/`, `src/paraglide/`).
-- Introduce telemetry, analytics, tracking scripts, or any data-exfiltration path.
+- Introduce telemetry, analytics, tracking, or undisclosed transmission of user content or usage data.
