@@ -16,13 +16,13 @@ On supported browsers, **Built-in AI** uses the browser’s on-device models to 
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
-## From a few symbols to a clearer message
+## From a few symbols to a complete sentence
 
 AAC users may select a few key concepts rather than every word in a complete sentence:
 
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
-Raw message:     "want eat pizza"
+Board message:   "want eat pizza"
 AI suggestion:   "I want to eat pizza."
 ```
 
@@ -30,11 +30,11 @@ Suggestions are optional; the original message is replaced only when the user ac
 
 ## Built-in AI where it matters
 
-| Browser API                                                         | What it offers the user                                                           |
-| ------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
-| [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) | Grammar, spelling, and punctuation corrections                                    |
-| [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api)       | Alternative phrasing that preserves the original tone or adopts a more casual one |
-| [Translator](https://developer.chrome.com/docs/ai/translator-api)   | Translated board names, labels, and spoken phrases                                |
+| Browser API | What it offers the user                                                           |
+| ----------- | --------------------------------------------------------------------------------- |
+| Proofreader | Grammar, spelling, and punctuation corrections                                    |
+| Rewriter    | Alternative phrasing that preserves the original tone or adopts a more casual one |
+| Translator  | Translated board names, labels, and spoken phrases                                |
 
 ## A complete board, with or without AI
 
@@ -44,19 +44,27 @@ Suggestions are optional; the original message is replaced only when the user ac
 - **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
 - **Offline and installable** — Runs as a PWA and keeps core board features available after the app and board data have loaded.
 
-## Privacy, offline use, and current limits
+## Privacy
 
 AAC Board AI has no accounts, application backend, telemetry, or tracking. Imported board data, settings, and cached translations stay on the device; messages are never sent to an AAC Board AI service.
 
-After the first successful load, the app shell and stored board data support offline reading, navigation, and message composition. Locally stored media and locally available speech voices can also play without a connection.
+Opening a board with third-party media contacts the hosts named in those URLs.
 
-Opening a board with third-party media contacts the hosts named in those URLs. Remote images are cached after their first successful display, subject to browser storage limits and eviction; remote audio remains network-dependent. URL imports and initial AI model or language-pack downloads also require a connection. Text-to-speech availability and whether speech is processed locally depend on the platform and selected voice.
+## Offline use
+
+After the app has loaded and a board has been stored, reading, navigation, and message composition remain available offline. Locally stored media and locally available speech voices can also play without a connection.
+
+Remote images are cached after their first successful display, subject to browser storage limits and eviction; remote audio remains network-dependent. URL imports and initial AI model or language-pack downloads also require a connection. Text-to-speech availability and whether speech is processed locally depend on the platform and selected voice.
+
+## Current limits
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
-## Built-in AI compatibility
+## Built-in AI availability
 
-The app checks for Built-in AI support at runtime. Availability depends on the browser, operating system, hardware, language, and downloaded models; initial model or language-pack downloads may require an unmetered connection.
+The app checks each API at runtime. Availability varies by browser version and release channel, operating system, hardware, language, and model availability. Initial model and language-pack downloads require a connection and may require an unmetered connection.
+
+See the browser documentation for current requirements and preview status:
 
 - **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api), [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api), and [Translator](https://developer.chrome.com/docs/ai/translator-api)
 - **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
