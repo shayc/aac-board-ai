@@ -11,9 +11,9 @@ export interface KeyEventLike {
 }
 
 /**
- * Resolves a keystroke to a board action, or `null` when the board doesn't
- * claim the key — so the caller leaves it be: Enter and Space keep activating
- * the focused control, and ⌘/Ctrl combos reach the browser.
+ * Resolves board-owned keyboard shortcuts to actions. Returns `null` for
+ * unclaimed keys so native control activation and browser shortcuts can
+ * continue.
  */
 export function resolveBoardKey(
   event: KeyEventLike,

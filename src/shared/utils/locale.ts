@@ -3,8 +3,8 @@ function parseLocale(locale: string): Intl.Locale {
 }
 
 /**
- * Normalizes a BCP-47 locale code to canonical casing
- * (lowercase language subtag, uppercase region subtag, hyphen separator).
+ * Returns the canonical BCP 47 base name, accepting `_` separators and
+ * stripping extensions. Returns the input unchanged when parsing fails.
  */
 export function normalizeLocale(locale: string): string {
   try {
@@ -19,8 +19,8 @@ export function getLanguageCode(locale: string): string {
 }
 
 /**
- * Returns the uppercase region subtag of a locale code, or undefined when
- * none is present (e.g. "fr-CA" → "CA", "fr" → undefined).
+ * Returns the explicit region subtag in canonical form, or `undefined` when
+ * none is present (`fr-CA` → `CA`; `fr` → `undefined`).
  */
 export function getRegionCode(locale: string): string | undefined {
   try {
@@ -31,8 +31,8 @@ export function getRegionCode(locale: string): string | undefined {
 }
 
 /**
- * Returns the region most associated with a language via CLDR likely-subtags
- * (e.g. "fr" → "FR", "en" → "US"). Undefined for unrecognized input.
+ * Returns the region inferred by `Intl.Locale.maximize()` (`fr` → `FR`;
+ * `en` → `US`), or `undefined` when no region can be inferred.
  */
 export function getLikelyRegion(language: string): string | undefined {
   try {
@@ -43,8 +43,8 @@ export function getLikelyRegion(language: string): string | undefined {
 }
 
 /**
- * Falls back to "ltr" for structurally invalid input; unknown
- * but well-formed codes default to "ltr" via Intl.
+ * Returns the locale's text direction. Falls back to `ltr` when Intl rejects
+ * the tag or cannot determine a direction.
  */
 export function getTextDirection(locale: string): "ltr" | "rtl" {
   try {
@@ -54,10 +54,7 @@ export function getTextDirection(locale: string): "ltr" | "rtl" {
   }
 }
 
-/**
- * Returns the language name in its own language (endonym),
- * e.g. "es" → "español", "fr" → "français".
- */
+/** Returns the primary language's endonym (`es` → `español`; `fr` → `français`). */
 export function getNativeLanguageName(locale: string): string {
   const language = getLanguageCode(locale);
 

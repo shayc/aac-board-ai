@@ -1,10 +1,6 @@
 import type { SxProps, Theme } from "@mui/material/styles";
-import type { SystemStyleObject } from "@mui/system/styleFunctionSx";
 
-type SxItem =
-  | boolean
-  | SystemStyleObject<Theme>
-  | ((theme: Theme) => SystemStyleObject<Theme>);
+type SxItem = Extract<SxProps<Theme>, readonly unknown[]>[number];
 
 export function mergeSx(
   base: SxItem,

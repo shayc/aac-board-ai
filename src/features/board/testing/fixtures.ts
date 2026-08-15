@@ -1,7 +1,4 @@
-/**
- * Minimal valid 1x1 transparent PNG as data URI.
- * Use this in tests that need an image src to avoid network requests.
- */
+/** Inline 1×1 PNG for tests that need an image source without a network request. */
 export const TEST_IMAGE_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 

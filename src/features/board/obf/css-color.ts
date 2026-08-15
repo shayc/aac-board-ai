@@ -1,8 +1,7 @@
 /**
- * Returns the color only if the browser parses it as a valid CSS <color>,
- * otherwise undefined. Guards against untrusted values that get interpolated
- * into CSS declarations: validating with the browser's own parser rejects
- * breakout payloads like "x); } a { background-image: url(...) }".
+ * Returns `color` only when the browser accepts it for the CSS `color`
+ * property. This rejects declaration-breakout strings before untrusted board
+ * colors are embedded in derived CSS.
  */
 export function sanitizeColor(color: string | undefined): string | undefined {
   if (color === undefined) {
