@@ -117,7 +117,7 @@ export function BoardSetLibrary({
 
       <BoardSetDeleteDialog
         boardSet={deleteTarget}
-        onConfirm={() => void handleDelete()}
+        onDelete={() => void handleDelete()}
         onClose={() => setDeleteTarget(null)}
       />
     </>

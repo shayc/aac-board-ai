@@ -9,15 +9,15 @@ const iconSx = { fontSize: 32 };
 interface PlayButtonProps {
   disabled?: boolean;
   isPlaying: boolean;
-  onPlayClick: () => void;
-  onStopClick: () => void;
+  onPlay: () => void;
+  onStop: () => void;
 }
 
 export function PlayButton({
   disabled,
   isPlaying,
-  onPlayClick,
-  onStopClick,
+  onPlay,
+  onStop,
 }: PlayButtonProps) {
   const t = useTranslate();
   const label = isPlaying ? t(m.messageStop) : t(m.messagePlay);
@@ -27,7 +27,7 @@ export function PlayButton({
       color={isPlaying ? "default" : "primary"}
       disabled={disabled}
       aria-label={label}
-      onClick={isPlaying ? onStopClick : onPlayClick}
+      onClick={isPlaying ? onStop : onPlay}
       sx={{
         width: 72,
         height: 72,

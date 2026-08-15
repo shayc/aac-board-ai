@@ -13,14 +13,14 @@ import { safeAreaGutter } from "@shared/theme/safe-area";
 
 interface AppHeaderProps {
   libraryButtonHidden?: boolean;
-  onLibraryClick: () => void;
-  onSettingsClick: () => void;
+  onOpenLibrary: () => void;
+  onOpenSettings: () => void;
 }
 
 export function AppHeader({
   libraryButtonHidden = false,
-  onLibraryClick,
-  onSettingsClick,
+  onOpenLibrary,
+  onOpenSettings,
 }: AppHeaderProps) {
   const t = useTranslate();
 
@@ -55,7 +55,7 @@ export function AppHeader({
                 size="large"
                 edge="start"
                 color="inherit"
-                onClick={onLibraryClick}
+                onClick={onOpenLibrary}
               >
                 <ViewSidebarOutlinedIcon sx={flipForLtr} />
               </IconButton>
@@ -74,7 +74,7 @@ export function AppHeader({
               size="large"
               edge="end"
               color="inherit"
-              onClick={onSettingsClick}
+              onClick={onOpenSettings}
             >
               <SettingsOutlinedIcon />
             </IconButton>

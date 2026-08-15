@@ -8,16 +8,16 @@ export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
-  onPlayClick: () => void;
-  onStopClick: () => void;
+  onPlay: () => void;
+  onStop: () => void;
 }
 
 export function MessageBar({
   parts,
   activePartId,
   isPlaying,
-  onPlayClick,
-  onStopClick,
+  onPlay,
+  onStop,
 }: MessageBarProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -95,8 +95,8 @@ export function MessageBar({
         <PlayButton
           disabled={!isPlaying && parts.length === 0}
           isPlaying={isPlaying}
-          onPlayClick={onPlayClick}
-          onStopClick={onStopClick}
+          onPlay={onPlay}
+          onStop={onStop}
         />
       </Stack>
     </Stack>
