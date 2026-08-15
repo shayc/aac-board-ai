@@ -16,11 +16,14 @@ describe("planPlayback", () => {
     const steps = planPlayback(parts);
 
     expect(steps).toHaveLength(1);
-    expect(steps[0]).toMatchObject({ kind: "speech" });
-    if (steps[0].kind === "speech") {
-      expect(steps[0].text).toBe("i want");
-      expect(steps[0].trackingKeyAt?.(2)).toBe("2");
+    const step = steps[0];
+
+    if (step.kind !== "speech") {
+      throw new Error("Expected a speech step");
     }
+
+    expect(step.text).toBe("i want");
+    expect(step.trackingKeyAt?.(2)).toBe("2");
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
