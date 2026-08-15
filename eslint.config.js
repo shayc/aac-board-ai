@@ -72,6 +72,17 @@ export default defineConfig([
   },
   {
     files: ["src/app/**/*.{ts,tsx}", "src/pages/**/*.{ts,tsx}"],
+    ignores: ["src/app/**/*.test.{ts,tsx}", "src/pages/**/*.test.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": restrictImports({
+        regex: "^@features/[^/]+/.+",
+        message:
+          "A feature's internals and testing API are private — use its barrel, e.g. @features/board.",
+      }),
+    },
+  },
+  {
+    files: ["src/app/**/*.test.{ts,tsx}", "src/pages/**/*.test.{ts,tsx}"],
     rules: {
       "no-restricted-imports": restrictImports({
         regex: "^@features/[^/]+/(?!testing$).+",
