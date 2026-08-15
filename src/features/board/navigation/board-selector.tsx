@@ -45,7 +45,7 @@ export function BoardSelector() {
             ...params.slotProps,
             input: {
               ...params.slotProps?.input,
-              sx: { height: 48, borderRadius: 8 },
+              sx: { borderRadius: 8 },
             },
             htmlInput: {
               ...params.slotProps?.htmlInput,
