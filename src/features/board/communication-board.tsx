@@ -7,7 +7,7 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { createButtonActivation } from "./activation/button-activation";
 import { useBoardAppearanceConfig } from "./appearance/appearance-store";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -26,6 +26,10 @@ import type { Board, BoardButton } from "./types";
 interface CommunicationBoardProps {
   board: Board;
 }
+
+type BoardRootStyle = CSSProperties & {
+  "--tile-saturation": string;
+};
 
 const boardRootSx = (theme: Theme) => ({
   height: "100%",
@@ -64,6 +68,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const keyboard = useBoardKeyboard({ message, playback });
   const hasMessage = message.parts.length > 0;
+  const boardRootStyle: BoardRootStyle = {
+    "--tile-saturation": String(tileSaturation),
+  };
 
   const renderTile = (button: BoardButton, props: GridItemProps) => (
     <Tile
@@ -84,7 +91,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...keyboard.rootProps}
       direction="column"
-      sx={[boardRootSx, { "--tile-saturation": String(tileSaturation) }]}
+      sx={boardRootSx}
+      style={boardRootStyle}
     >
       <BoardPlaybackMessageBar parts={message.parts} />
 
