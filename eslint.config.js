@@ -1,5 +1,6 @@
 import eslintReact from "@eslint-react/eslint-plugin";
 import js from "@eslint/js";
+import vitest from "@vitest/eslint-plugin";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 import reactHooks from "eslint-plugin-react-hooks";
 import { reactRefresh } from "eslint-plugin-react-refresh";
@@ -45,6 +46,18 @@ export default defineConfig([
       "@eslint-react/no-array-index-key": "off",
       "no-restricted-imports": restrictImports(),
       curly: "error",
+    },
+  },
+  {
+    files: ["src/**/*.test.{ts,tsx}"],
+    extends: [vitest.configs.recommended],
+    rules: {
+      "vitest/expect-expect": [
+        "error",
+        {
+          assertFunctionNames: ["expect", "assert", "expectNoA11yViolations"],
+        },
+      ],
     },
   },
   {
