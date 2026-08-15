@@ -7,14 +7,14 @@ import { useRevalidator } from "react-router";
 export function useRevalidateOnLanguageChange(): void {
   const { language } = useLanguage();
   const { revalidate } = useRevalidator();
-  const previousLanguage = useRef(language);
+  const previousLanguageRef = useRef(language);
 
   useEffect(() => {
-    if (previousLanguage.current === language) {
+    if (previousLanguageRef.current === language) {
       return;
     }
 
-    previousLanguage.current = language;
+    previousLanguageRef.current = language;
     void revalidate();
   }, [language, revalidate]);
 }
