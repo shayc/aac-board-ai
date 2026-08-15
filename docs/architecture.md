@@ -129,7 +129,7 @@ sequenceDiagram
 
     User->>Router: Navigate to a board
     Router->>Storage: hydrateBoard(setId, boardId)
-    Storage->>Storage: Read OBF and assets; create URLs; map to Board
+    Storage->>Storage: Read OBF and assets, create URLs, and map to Board
     Storage-->>Router: Board + provisional media
     Router->>Translation: Resolve communication language
 
@@ -139,14 +139,14 @@ sequenceDiagram
         Translation->>AI: Translate board phrases
         AI-->>Translation: Translations
         Translation->>Storage: Start best-effort cache write
-        Note right of Storage: updateBoardStrings is not awaited;<br/>failure only costs re-translation
+        Note right of Storage: updateBoardStrings is not awaited<br/>failure only costs re-translation
         Translation-->>Router: Translated Board
     else Translator unavailable or fails
         Translation-->>Router: Untranslated Board
     end
 
     Router-->>Route: Render ready Board + provisional media
-    Route->>Route: Commit new media; dispose previous media
+    Route->>Route: Commit new media and dispose previous media
 
     Note over Router,Route: Loader failure or navigation abort disposes provisional media
 ```
