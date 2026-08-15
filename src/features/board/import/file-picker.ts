@@ -19,7 +19,7 @@ export function openFiles({
     input.addEventListener(
       "change",
       () => {
-        resolve(input.files ? Array.from(input.files) : []);
+        resolve(Array.from(input.files ?? []));
       },
       { once: true },
     );
@@ -32,6 +32,6 @@ export function openFiles({
       { once: true },
     );
 
-    input.click();
+    input.showPicker();
   });
 }
