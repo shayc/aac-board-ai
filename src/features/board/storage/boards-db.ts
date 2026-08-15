@@ -62,14 +62,16 @@ const DB_NAME = "aac-boards-db";
 const DB_VERSION = 1;
 
 export function normalizeAssetPath(rawPath: string): string {
-  if (!rawPath) {
-    throw new Error("Path cannot be empty");
-  }
-
-  return rawPath
+  const path = rawPath
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
+
+  if (!path) {
+    throw new Error("Path cannot be empty");
+  }
+
+  return path;
 }
 
 export function validateId(id: string, fieldName: string): void {
