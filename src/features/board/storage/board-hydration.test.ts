@@ -2,7 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
-import { resetBoardsDB } from "../testing";
+import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
 import { hydrateBoard, type HydratedBoard } from "./board-hydration";
 import { createBoardSet } from "./board-set-storage";
@@ -10,15 +10,9 @@ import { createBoardSet } from "./board-set-storage";
 const SET_ID = "loader-test-set";
 const BOARD_ID = "loader-test-board";
 const IMAGE_PATH = "images/test.png";
-const REAL_PNG_URL = "/pwa-192x192.png";
 
 async function seedTestBoard(): Promise<void> {
-  const pngResponse = await fetch(REAL_PNG_URL);
-  if (!pngResponse.ok) {
-    throw new Error(`Could not fetch ${REAL_PNG_URL} for fixture image`);
-  }
-
-  const pngBlob = await pngResponse.blob();
+  const pngBlob = await loadTestImageBlob();
 
   const obfBoard: OBFBoard = {
     format: "open-board-0.1",

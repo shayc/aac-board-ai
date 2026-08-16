@@ -4,4 +4,4 @@ export {
   resetBoardsDB,
   seedBoardSets,
 } from "./db";
-export { loadFixtureFile, TEST_IMAGE_SRC } from "./fixtures";
+export { loadFixtureFile, loadTestImageBlob, TEST_IMAGE_SRC } from "./fixtures";
