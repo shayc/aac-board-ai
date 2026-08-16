@@ -4,6 +4,12 @@ export const TEST_IMAGE_SRC =
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 
+export async function loadTestImageBlob(): Promise<Blob> {
+  const response = await fetch(TEST_IMAGE_SRC);
+
+  return response.blob();
+}
+
 export async function loadFixtureFile(name: string): Promise<File> {
   const response = await fetch(`${SAMPLE_BOARDS_DIR}/${name}`);
 

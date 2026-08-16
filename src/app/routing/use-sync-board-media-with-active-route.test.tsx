@@ -1,5 +1,9 @@
 import { hydrateBoard, type HydratedBoard } from "@features/board";
-import { makeOBFBoard, seedBoardSets } from "@features/board/testing";
+import {
+  loadTestImageBlob,
+  makeOBFBoard,
+  seedBoardSets,
+} from "@features/board/testing";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { StrictMode } from "react";
 import {
@@ -18,7 +22,6 @@ import {
 
 const SET_ID = "media-lifetime-set";
 const IMAGE_PATH = "images/test.png";
-const REAL_PNG_URL = "/pwa-192x192.png";
 
 interface Gate {
   promise: Promise<void>;
@@ -113,10 +116,7 @@ function makeBoard(boardId: string, name: string) {
 }
 
 async function seedBoards(): Promise<void> {
-  const pngResponse = await fetch(REAL_PNG_URL);
-  if (!pngResponse.ok) {
-    throw new Error(`Could not fetch ${REAL_PNG_URL} for fixture image`);
-  }
+  const pngBlob = await loadTestImageBlob();
 
   await seedBoardSets([
     {
@@ -128,7 +128,7 @@ async function seedBoards(): Promise<void> {
         makeBoard("second", "Second Board"),
         makeBoard("third", "Third Board"),
       ],
-      assets: [{ path: IMAGE_PATH, blob: await pngResponse.blob() }],
+      assets: [{ path: IMAGE_PATH, blob: pngBlob }],
     },
   ]);
 }
