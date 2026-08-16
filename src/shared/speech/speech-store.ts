@@ -1,7 +1,8 @@
-import { createPersistedStore } from "@shared/utils/persisted-store";
 import { createExternalStore } from "@shared/utils/external-store";
 import { getLanguageCode } from "@shared/utils/locale";
+import { createPersistedStore } from "@shared/utils/persisted-store";
 import { useSyncExternalStore } from "react";
+import { getSpeechSynthesis } from "./speech-synthesis";
 
 interface SpeechParamSpec {
   min: number;
@@ -56,8 +57,7 @@ function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
   };
 }
 
-export const synthesis: SpeechSynthesis | undefined =
-  globalThis.speechSynthesis;
+const synthesis = getSpeechSynthesis();
 
 const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
   buildVoiceCatalog(synthesis?.getVoices() ?? []),

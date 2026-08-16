@@ -1,8 +1,5 @@
-import {
-  getSpeechConfig,
-  getVoices,
-  synthesis,
-} from "@shared/speech/speech-store";
+import { getSpeechConfig, getVoices } from "@shared/speech/speech-store";
+import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
 
 interface SpeakOptions {
   signal?: AbortSignal;
@@ -26,6 +23,7 @@ export function speak(
   text: string,
   { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
+  const synthesis = getSpeechSynthesis();
   if (!synthesis || signal?.aborted) {
     return Promise.resolve();
   }
@@ -35,7 +33,7 @@ export function speak(
   let settled = false;
 
   const onAbort = () => {
-    synthesis?.cancel();
+    synthesis.cancel();
     finish();
   };
 

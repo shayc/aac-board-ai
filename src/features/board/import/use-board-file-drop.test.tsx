@@ -2,6 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { rootBoardPath } from "../navigation/board-paths";
 import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
@@ -127,8 +128,11 @@ describe("useBoardFileDrop", () => {
       expect(boardSets[0]?.setId).toBe(IMPORTED_SET_ID);
     });
 
-    await expect
-      .element(screen.getByTestId("path"))
-      .toHaveTextContent(`/sets/${IMPORTED_SET_ID}/boards/`);
+    await expect.element(screen.getByTestId("path")).toHaveTextContent(
+      rootBoardPath({
+        setId: IMPORTED_SET_ID,
+        rootBoardId: "lots_of_stuff",
+      }),
+    );
   });
 });
