@@ -91,7 +91,7 @@ npm run build                       # Type-check and build for production
 
 ## Architecture
 
-AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
+AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants. Coding-agent commands, standards, and change boundaries live in [AGENTS.md](AGENTS.md).
 
 ## Contributing
 
