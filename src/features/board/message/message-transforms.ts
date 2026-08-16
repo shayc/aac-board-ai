@@ -21,13 +21,8 @@ export function appendTextToLastPart(
   text: string,
 ): MessagePart[] {
   const lastPart = parts.at(-1);
-  const isTextOnly =
-    lastPart &&
-    !lastPart.imageSrc &&
-    !lastPart.soundSrc &&
-    !lastPart.vocalization;
 
-  if (!lastPart || !isTextOnly) {
+  if (!lastPart || !isTextOnlyPart(lastPart)) {
     return appendPart(parts, { label: text });
   }
 
@@ -43,10 +38,7 @@ export function applyBackspace(parts: MessagePart[]): MessagePart[] {
     return parts;
   }
 
-  const isTextOnly =
-    !lastPart.imageSrc && !lastPart.soundSrc && !lastPart.vocalization;
-
-  if (isTextOnly && lastPart.label && lastPart.label.length > 1) {
+  if (isTextOnlyPart(lastPart) && lastPart.label && lastPart.label.length > 1) {
     return parts.with(-1, {
       ...lastPart,
       label: lastPart.label.slice(0, -1),
@@ -54,4 +46,8 @@ export function applyBackspace(parts: MessagePart[]): MessagePart[] {
   }
 
   return parts.slice(0, -1);
+}
+
+function isTextOnlyPart(part: MessagePart): boolean {
+  return !part.imageSrc && !part.soundSrc && !part.vocalization;
 }

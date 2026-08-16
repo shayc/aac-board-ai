@@ -103,10 +103,16 @@ describe("SnackbarProvider", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board set imported");
+    await expect
+      .element(screen.getByRole("button", { name: "Close" }))
+      .toBeVisible();
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("ערכת הלוחות יובאה בהצלחה");
+    await expect
+      .element(screen.getByRole("button", { name: "סגירה" }))
+      .toBeVisible();
   });
 });

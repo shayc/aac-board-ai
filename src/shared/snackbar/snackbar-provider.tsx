@@ -1,6 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
@@ -97,6 +98,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
           action={state.current?.action}
+          closeText={t(m.close)}
           onClose={handleClose}
           sx={{ width: "100%" }}
         >
