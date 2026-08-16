@@ -10,8 +10,9 @@
 > `communication-board.tsx`.
 
 This document describes the app's modules, ownership boundaries, invariants, and
-load-bearing decisions. Setup and basic commands live in `README.md`; contributor
-conventions live in `AGENTS.md`; symbol-level behavior lives beside the code. The
+load-bearing decisions. Setup and basic commands live in
+[README.md](../README.md); coding-agent instructions live in
+[AGENTS.md](../AGENTS.md); symbol-level behavior lives beside the code. The
 intended audience is contributors familiar with React, TypeScript, and the Web
 Platform. AAC terms are defined in the [glossary](#glossary).
 
