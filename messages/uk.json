@@ -8,6 +8,7 @@
   "boardGridLabel": "Комунікаційна дошка",
   "board": "Дошка",
   "libraryLoading": "Завантаження наборів дошок...",
+  "libraryLoadFailed": "Не вдалося завантажити бібліотеку",
   "libraryEmptyTitle": "Бібліотека порожня",
   "libraryEmptyDescription": "Імпортуйте файли дошок, щоб почати.",
   "libraryImportBoards": "Імпортувати файли дошок",

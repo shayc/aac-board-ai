@@ -8,6 +8,7 @@
   "boardGridLabel": "Tableau de communication",
   "board": "Tableau",
   "libraryLoading": "Chargement des ensembles de tableaux...",
+  "libraryLoadFailed": "Impossible de charger la bibliothèque",
   "libraryEmptyTitle": "La bibliothèque est vide",
   "libraryEmptyDescription": "Importez des fichiers de tableaux pour commencer.",
   "libraryImportBoards": "Importer des fichiers de tableaux",

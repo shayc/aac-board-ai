@@ -7,6 +7,7 @@
   "boardGridLabel": "Communication board",
   "board": "Board",
   "libraryLoading": "Loading board sets...",
+  "libraryLoadFailed": "Couldn't load library",
   "libraryEmptyTitle": "Library is empty",
   "libraryEmptyDescription": "Import board files to get started.",
   "libraryImportBoards": "Import board files",

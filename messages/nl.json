@@ -8,6 +8,7 @@
   "boardGridLabel": "Communicatiebord",
   "board": "Bord",
   "libraryLoading": "Bordsets laden...",
+  "libraryLoadFailed": "Bibliotheek kan niet worden geladen",
   "libraryEmptyTitle": "De bibliotheek is leeg",
   "libraryEmptyDescription": "Importeer bordbestanden om te beginnen.",
   "libraryImportBoards": "Bordbestanden importeren",

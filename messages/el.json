@@ -8,6 +8,7 @@
   "boardGridLabel": "Πίνακας επικοινωνίας",
   "board": "Πίνακας",
   "libraryLoading": "Φόρτωση συνόλων πινάκων...",
+  "libraryLoadFailed": "Δεν ήταν δυνατή η φόρτωση της βιβλιοθήκης",
   "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
   "libraryEmptyDescription": "Εισαγάγετε αρχεία πινάκων για να ξεκινήσετε.",
   "libraryImportBoards": "Εισαγωγή αρχείων πινάκων",

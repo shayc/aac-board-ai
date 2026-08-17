@@ -8,6 +8,7 @@
   "boardGridLabel": "لوحة تواصل",
   "board": "لوحة",
   "libraryLoading": "جارٍ تحميل مجموعات اللوحات...",
+  "libraryLoadFailed": "تعذر تحميل المكتبة",
   "libraryEmptyTitle": "المكتبة فارغة",
   "libraryEmptyDescription": "استورد ملفات اللوحات للبدء.",
   "libraryImportBoards": "استيراد ملفات اللوحات",

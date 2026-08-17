@@ -8,6 +8,7 @@
   "boardGridLabel": "Tablero de comunicación",
   "board": "Tablero",
   "libraryLoading": "Cargando conjuntos de tableros...",
+  "libraryLoadFailed": "No se pudo cargar la biblioteca",
   "libraryEmptyTitle": "La biblioteca está vacía",
   "libraryEmptyDescription": "Importa archivos de tableros para empezar.",
   "libraryImportBoards": "Importar archivos de tableros",

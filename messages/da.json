@@ -8,6 +8,7 @@
   "boardGridLabel": "Kommunikationstavle",
   "board": "Tavle",
   "libraryLoading": "Indlæser tavlesæt...",
+  "libraryLoadFailed": "Biblioteket kunne ikke indlæses",
   "libraryEmptyTitle": "Biblioteket er tomt",
   "libraryEmptyDescription": "Importér tavlefiler for at komme i gang.",
   "libraryImportBoards": "Importér tavlefiler",

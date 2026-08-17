@@ -8,6 +8,7 @@
   "boardGridLabel": "Kommunikointitaulu",
   "board": "Taulu",
   "libraryLoading": "Ladataan taulusarjoja...",
+  "libraryLoadFailed": "Kirjastoa ei voitu ladata",
   "libraryEmptyTitle": "Kirjasto on tyhjä",
   "libraryEmptyDescription": "Tuo taulutiedostoja päästäksesi alkuun.",
   "libraryImportBoards": "Tuo taulutiedostoja",

@@ -8,6 +8,7 @@
   "boardGridLabel": "Kommunikationstafel",
   "board": "Tafel",
   "libraryLoading": "Tafelsätze werden geladen...",
+  "libraryLoadFailed": "Bibliothek konnte nicht geladen werden",
   "libraryEmptyTitle": "Die Bibliothek ist leer",
   "libraryEmptyDescription": "Importiere Tafeldateien, um loszulegen.",
   "libraryImportBoards": "Tafeldateien importieren",

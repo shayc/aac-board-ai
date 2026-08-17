@@ -8,6 +8,7 @@
   "boardGridLabel": "Komunikacijska ploča",
   "board": "Ploča",
   "libraryLoading": "Učitavanje skupova ploča...",
+  "libraryLoadFailed": "Nije moguće učitati knjižnicu",
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za početak uvezite datoteke ploča.",
   "libraryImportBoards": "Uvezi datoteke ploča",

@@ -8,6 +8,7 @@
   "boardGridLabel": "Bảng giao tiếp",
   "board": "Bảng",
   "libraryLoading": "Đang tải các bộ bảng...",
+  "libraryLoadFailed": "Không thể tải thư viện",
   "libraryEmptyTitle": "Thư viện trống",
   "libraryEmptyDescription": "Nhập tệp bảng để bắt đầu.",
   "libraryImportBoards": "Nhập tệp bảng",

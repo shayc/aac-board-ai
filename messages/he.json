@@ -8,6 +8,7 @@
   "boardGridLabel": "לוח תקשורת",
   "board": "לוח",
   "libraryLoading": "טעינת ערכות לוחות...",
+  "libraryLoadFailed": "לא ניתן לטעון את הספרייה",
   "libraryEmptyTitle": "הספרייה ריקה",
   "libraryEmptyDescription": "כדי להתחיל, יש לייבא קובצי לוחות.",
   "libraryImportBoards": "ייבוא קובצי לוחות",

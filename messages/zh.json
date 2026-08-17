@@ -8,6 +8,7 @@
   "boardGridLabel": "沟通板",
   "board": "沟通板",
   "libraryLoading": "正在加载沟通板集……",
+  "libraryLoadFailed": "无法加载板库",
   "libraryEmptyTitle": "板库为空",
   "libraryEmptyDescription": "导入沟通板文件即可开始。",
   "libraryImportBoards": "导入沟通板文件",
