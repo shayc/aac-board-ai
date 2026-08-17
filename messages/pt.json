@@ -8,6 +8,7 @@
   "boardGridLabel": "Prancha de comunicação",
   "board": "Prancha",
   "libraryLoading": "Carregando conjuntos de pranchas...",
+  "libraryLoadFailed": "Não foi possível carregar a biblioteca",
   "libraryEmptyTitle": "A biblioteca está vazia",
   "libraryEmptyDescription": "Importe arquivos de pranchas para começar.",
   "libraryImportBoards": "Importar arquivos de pranchas",

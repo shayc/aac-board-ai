@@ -8,6 +8,7 @@
   "boardGridLabel": "Komunikační tabulka",
   "board": "Tabulka",
   "libraryLoading": "Načítání sad tabulek...",
+  "libraryLoadFailed": "Knihovnu se nepodařilo načíst",
   "libraryEmptyTitle": "Knihovna je prázdná",
   "libraryEmptyDescription": "Začněte importem souborů tabulek.",
   "libraryImportBoards": "Importovat soubory tabulek",

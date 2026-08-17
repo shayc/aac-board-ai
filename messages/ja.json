@@ -8,6 +8,7 @@
   "boardGridLabel": "コミュニケーションボード",
   "board": "ボード",
   "libraryLoading": "ボードセットを読み込んでいます…",
+  "libraryLoadFailed": "ライブラリを読み込めませんでした",
   "libraryEmptyTitle": "ライブラリは空です",
   "libraryEmptyDescription": "ボードファイルをインポートして始めましょう。",
   "libraryImportBoards": "ボードファイルをインポート",

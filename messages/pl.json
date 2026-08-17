@@ -8,6 +8,7 @@
   "boardGridLabel": "Tablica komunikacyjna",
   "board": "Tablica",
   "libraryLoading": "Ładowanie zestawów tablic...",
+  "libraryLoadFailed": "Nie udało się wczytać biblioteki",
   "libraryEmptyTitle": "Biblioteka jest pusta",
   "libraryEmptyDescription": "Zaimportuj pliki tablic, aby rozpocząć.",
   "libraryImportBoards": "Importuj pliki tablic",

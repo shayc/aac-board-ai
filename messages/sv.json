@@ -8,6 +8,7 @@
   "boardGridLabel": "Kommunikationstavla",
   "board": "Tavla",
   "libraryLoading": "Laddar taveluppsättningar...",
+  "libraryLoadFailed": "Det gick inte att läsa in biblioteket",
   "libraryEmptyTitle": "Biblioteket är tomt",
   "libraryEmptyDescription": "Importera tavelfiler för att komma igång.",
   "libraryImportBoards": "Importera tavelfiler",

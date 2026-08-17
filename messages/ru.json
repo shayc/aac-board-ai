@@ -8,6 +8,7 @@
   "boardGridLabel": "Коммуникационная доска",
   "board": "Доска",
   "libraryLoading": "Загрузка наборов досок...",
+  "libraryLoadFailed": "Не удалось загрузить библиотеку",
   "libraryEmptyTitle": "Библиотека пуста",
   "libraryEmptyDescription": "Импортируйте файлы досок, чтобы начать.",
   "libraryImportBoards": "Импортировать файлы досок",

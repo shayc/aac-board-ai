@@ -8,6 +8,7 @@
   "boardGridLabel": "Комуникационна дъска",
   "board": "Дъска",
   "libraryLoading": "Зареждане на наборите от дъски...",
+  "libraryLoadFailed": "Библиотеката не можа да се зареди",
   "libraryEmptyTitle": "Библиотеката е празна",
   "libraryEmptyDescription": "Импортирайте файлове с дъски, за да започнете.",
   "libraryImportBoards": "Импортиране на файлове с дъски",

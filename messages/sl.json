@@ -8,6 +8,7 @@
   "boardGridLabel": "Komunikacijska tabla",
   "board": "Tabla",
   "libraryLoading": "Nalaganje kompletov tabel...",
+  "libraryLoadFailed": "Knjižnice ni bilo mogoče naložiti",
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za začetek uvozite datoteke tabel.",
   "libraryImportBoards": "Uvozi datoteke tabel",

@@ -8,6 +8,7 @@
   "boardGridLabel": "บอร์ดสื่อสาร",
   "board": "บอร์ด",
   "libraryLoading": "กำลังโหลดชุดบอร์ด...",
+  "libraryLoadFailed": "ไม่สามารถโหลดคลังได้",
   "libraryEmptyTitle": "คลังว่างเปล่า",
   "libraryEmptyDescription": "นำเข้าไฟล์บอร์ดเพื่อเริ่มต้น",
   "libraryImportBoards": "นำเข้าไฟล์บอร์ด",

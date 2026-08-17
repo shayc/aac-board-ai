@@ -8,6 +8,7 @@
   "boardGridLabel": "Papan komunikasi",
   "board": "Papan",
   "libraryLoading": "Memuat set papan...",
+  "libraryLoadFailed": "Tidak dapat memuat pustaka",
   "libraryEmptyTitle": "Pustaka kosong",
   "libraryEmptyDescription": "Impor berkas papan untuk memulai.",
   "libraryImportBoards": "Impor berkas papan",

@@ -8,6 +8,7 @@
   "boardGridLabel": "Kommunikációs tábla",
   "board": "Tábla",
   "libraryLoading": "Táblakészletek betöltése...",
+  "libraryLoadFailed": "Nem sikerült betölteni a könyvtárat",
   "libraryEmptyTitle": "A könyvtár üres",
   "libraryEmptyDescription": "Az induláshoz importálj táblafájlokat.",
   "libraryImportBoards": "Táblafájlok importálása",

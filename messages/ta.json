@@ -8,6 +8,7 @@
   "boardGridLabel": "தொடர்பு பலகை",
   "board": "பலகை",
   "libraryLoading": "பலகைத் தொகுப்புகள் ஏற்றப்படுகின்றன…",
+  "libraryLoadFailed": "நூலகத்தை ஏற்ற முடியவில்லை",
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
   "libraryEmptyDescription": "தொடங்க பலகைக் கோப்புகளை இறக்குமதி செய்யுங்கள்.",
   "libraryImportBoards": "பலகைக் கோப்புகளை இறக்குமதி செய்",

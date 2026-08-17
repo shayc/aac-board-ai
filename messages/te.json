@@ -8,6 +8,7 @@
   "boardGridLabel": "సంభాషణ బోర్డు",
   "board": "బోర్డు",
   "libraryLoading": "బోర్డు సెట్లు లోడ్ అవుతున్నాయి…",
+  "libraryLoadFailed": "లైబ్రరీని లోడ్ చేయడం సాధ్యపడలేదు",
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
   "libraryEmptyDescription": "ప్రారంభించడానికి బోర్డు ఫైళ్లను దిగుమతి చేయండి.",
   "libraryImportBoards": "బోర్డు ఫైళ్లను దిగుమతి చేయి",

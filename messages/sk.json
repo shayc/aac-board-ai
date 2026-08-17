@@ -8,6 +8,7 @@
   "boardGridLabel": "Komunikačná tabuľka",
   "board": "Tabuľka",
   "libraryLoading": "Načítavajú sa súpravy tabuliek...",
+  "libraryLoadFailed": "Knižnicu sa nepodarilo načítať",
   "libraryEmptyTitle": "Knižnica je prázdna",
   "libraryEmptyDescription": "Začnite importovaním súborov tabuliek.",
   "libraryImportBoards": "Importovať súbory tabuliek",

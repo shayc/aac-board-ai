@@ -8,6 +8,7 @@
   "boardGridLabel": "Tablă de comunicare",
   "board": "Tablă",
   "libraryLoading": "Se încarcă seturile de table...",
+  "libraryLoadFailed": "Biblioteca nu a putut fi încărcată",
   "libraryEmptyTitle": "Biblioteca este goală",
   "libraryEmptyDescription": "Importă fișiere de table pentru a începe.",
   "libraryImportBoards": "Importă fișiere de table",

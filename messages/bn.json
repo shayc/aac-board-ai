@@ -8,6 +8,7 @@
   "boardGridLabel": "যোগাযোগ বোর্ড",
   "board": "বোর্ড",
   "libraryLoading": "বোর্ড সেট লোড হচ্ছে…",
+  "libraryLoadFailed": "লাইব্রেরি লোড করা যায়নি",
   "libraryEmptyTitle": "লাইব্রেরি খালি",
   "libraryEmptyDescription": "শুরু করতে বোর্ড ফাইল আমদানি করুন।",
   "libraryImportBoards": "বোর্ড ফাইল আমদানি করুন",

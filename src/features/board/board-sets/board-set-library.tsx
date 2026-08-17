@@ -10,6 +10,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { EmptyState } from "@shared/ui/empty-state";
+import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useImportBoardFiles } from "../import/use-import-board-files";
@@ -30,7 +31,7 @@ export function BoardSetLibrary({
   onSelect,
 }: BoardSetLibraryProps) {
   const t = useTranslate();
-  const { boardSets, isLoading } = useBoardSets();
+  const { boardSets, isLoading, error } = useBoardSets();
   const { pickAndImportBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
 
@@ -65,6 +66,14 @@ export function BoardSetLibrary({
     return (
       <Box sx={{ px: 2, height: "100%" }}>
         <LoadingState message={t(m.libraryLoading)} />
+      </Box>
+    );
+  }
+
+  if (error && boardSets.length === 0) {
+    return (
+      <Box sx={{ px: 2, height: "100%" }}>
+        <ErrorState icon={null} title={t(m.libraryLoadFailed)} />
       </Box>
     );
   }

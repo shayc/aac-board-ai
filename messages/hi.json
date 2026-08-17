@@ -8,6 +8,7 @@
   "boardGridLabel": "संचार बोर्ड",
   "board": "बोर्ड",
   "libraryLoading": "बोर्ड सेट लोड हो रहे हैं…",
+  "libraryLoadFailed": "लाइब्रेरी लोड नहीं हो सकी",
   "libraryEmptyTitle": "लाइब्रेरी खाली है",
   "libraryEmptyDescription": "शुरू करने के लिए बोर्ड फ़ाइलें आयात करें।",
   "libraryImportBoards": "बोर्ड फ़ाइलें आयात करें",

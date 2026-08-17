@@ -8,6 +8,7 @@
   "boardGridLabel": "Tabella di comunicazione",
   "board": "Tabella",
   "libraryLoading": "Caricamento set di tabelle...",
+  "libraryLoadFailed": "Impossibile caricare la libreria",
   "libraryEmptyTitle": "La libreria è vuota",
   "libraryEmptyDescription": "Importa file di tabelle per iniziare.",
   "libraryImportBoards": "Importa file di tabelle",

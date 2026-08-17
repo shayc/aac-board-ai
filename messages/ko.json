@@ -8,6 +8,7 @@
   "boardGridLabel": "의사소통 보드",
   "board": "보드",
   "libraryLoading": "보드 세트를 불러오는 중…",
+  "libraryLoadFailed": "라이브러리를 불러올 수 없습니다",
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
   "libraryEmptyDescription": "보드 파일을 가져와 시작하세요.",
   "libraryImportBoards": "보드 파일 가져오기",

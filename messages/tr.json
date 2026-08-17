@@ -8,6 +8,7 @@
   "boardGridLabel": "İletişim panosu",
   "board": "Pano",
   "libraryLoading": "Pano setleri yükleniyor...",
+  "libraryLoadFailed": "Kitaplık yüklenemedi",
   "libraryEmptyTitle": "Kitaplık boş",
   "libraryEmptyDescription": "Başlamak için pano dosyalarını içe aktarın.",
   "libraryImportBoards": "Pano dosyalarını içe aktar",

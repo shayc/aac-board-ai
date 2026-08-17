@@ -2,9 +2,11 @@ import { resetBoardsDB, seedBoardSets } from "../testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { MemoryRouter } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
 import { BoardSetLibrary } from "./board-set-library";
+import { refreshBoardSets } from "./board-sets-store";
 
 function renderBoardSetLibrary(onSelect = vi.fn()) {
   return render(
@@ -21,6 +23,10 @@ describe("BoardSetLibrary", () => {
     await resetBoardsDB();
   });
 
+  afterEach(async () => {
+    await closeBoardsDB();
+  });
+
   test("shows the empty state with an import action when no sets exist", async () => {
     const screen = await renderBoardSetLibrary();
 
@@ -30,6 +36,21 @@ describe("BoardSetLibrary", () => {
     await expect
       .element(screen.getByRole("button", { name: "Import board files" }))
       .toBeInTheDocument();
+  });
+
+  test("shows an error instead of the empty state when sets cannot be retrieved", async () => {
+    const db = await getBoardsDB();
+    db.close();
+    await refreshBoardSets();
+
+    const screen = await renderBoardSetLibrary();
+
+    await expect
+      .element(screen.getByText("Couldn't load library"))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByText("Library is empty"))
+      .not.toBeInTheDocument();
   });
 
   test("invokes onSelect when a set is chosen", async () => {
