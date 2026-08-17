@@ -42,18 +42,6 @@ export function getLikelyRegion(language: string): string | undefined {
   }
 }
 
-/**
- * Returns the locale's text direction. Falls back to `ltr` when Intl rejects
- * the tag or cannot determine a direction.
- */
-export function getTextDirection(locale: string): "ltr" | "rtl" {
-  try {
-    return parseLocale(locale).getTextInfo().direction ?? "ltr";
-  } catch {
-    return "ltr";
-  }
-}
-
 /** Returns the primary language's endonym (`es` → `español`; `fr` → `français`). */
 export function getNativeLanguageName(locale: string): string {
   const language = getLanguageCode(locale);

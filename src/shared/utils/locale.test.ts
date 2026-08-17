@@ -2,7 +2,6 @@ import { describe, expect, test } from "vitest";
 import {
   getLanguageCode,
   getNativeLanguageName,
-  getTextDirection,
   normalizeLocale,
 } from "./locale";
 
@@ -34,27 +33,6 @@ describe("getLanguageCode", () => {
     ["zh-Hant-CN", "zh"],
   ])("extracts primary language from %s → %s", (input, expected) => {
     expect(getLanguageCode(input)).toBe(expected);
-  });
-});
-
-describe("getTextDirection", () => {
-  test.each(["en", "zh-TW"])("returns ltr for %s", (input) => {
-    expect(getTextDirection(input)).toBe("ltr");
-  });
-
-  test.each(["ar", "he", "fa", "ur", "ckb", "sd", "he-IL"])(
-    "returns rtl for %s",
-    (input) => {
-      expect(getTextDirection(input)).toBe("rtl");
-    },
-  );
-
-  test("returns ltr for well-formed but unknown codes (maximize finds no script)", () => {
-    expect(getTextDirection("xx")).toBe("ltr");
-  });
-
-  test("returns ltr when Intl.Locale rejects structurally invalid input", () => {
-    expect(getTextDirection("!!!")).toBe("ltr");
   });
 });
 

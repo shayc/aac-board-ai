@@ -1,5 +1,5 @@
+import { getTextDirection } from "@paraglide/runtime";
 import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
-import { getTextDirection } from "@shared/utils/locale";
 import { useLayoutEffect, type ReactNode } from "react";
 import { LanguageContext } from "./language-context";
 import { setStoredLanguage, useStoredLanguage } from "./language-store";
