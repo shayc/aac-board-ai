@@ -36,6 +36,26 @@ Suggestions are optional; the original message is replaced only when the user ac
 | Rewriter    | Alternative phrasing that preserves the original tone or adopts a more casual one |
 | Translator  | Translated board names, labels, and spoken phrases                                |
 
+## Enable experimental AI features
+
+Proofreading and rewriting currently require experimental browser flags. Open each address for your browser and set the flag to **Enabled**:
+
+**Google Chrome**
+
+```text
+chrome://flags/#proofreader-api
+chrome://flags/#rewriter-api
+```
+
+**Microsoft Edge Canary or Dev**
+
+```text
+edge://flags/#edge-proofreader-api
+edge://flags/#edge-llm-rewriter-api-for-phi-mini
+```
+
+Then restart your browser.
+
 ## A complete board, with or without AI
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
