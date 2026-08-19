@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 
 interface UseLatestAsyncOptions<T> {
   enabled: boolean;
@@ -21,12 +21,8 @@ export function useLatestAsync<T>({
   deps,
   run,
 }: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
-  const signature = deps.join("\0");
-
-  const runRef = useRef(run);
-  useEffect(() => {
-    runRef.current = run;
-  });
+  const signature = JSON.stringify(deps);
+  const runLatest = useEffectEvent(run);
 
   const [round, setRound] = useState<SettledRound<T>>();
 
@@ -38,8 +34,7 @@ export function useLatestAsync<T>({
     const controller = new AbortController();
     const { signal } = controller;
 
-    runRef
-      .current(signal)
+    runLatest(signal)
       .then((value) => {
         if (!signal.aborted) {
           setRound({ signature, status: "resolved", value });
