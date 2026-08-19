@@ -12,7 +12,7 @@
 
 **AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with communication symbols and speak them aloud.
 
-On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, adjust tone, and translate boards. No API key or cloud AI service is required, and core communication works without Built-in AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, adjust tone, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
@@ -36,7 +36,7 @@ Suggestions are optional; the original message is replaced only when the user ac
 | Rewriter    | Alternative phrasing that preserves the original tone or adopts a more casual one |
 | Translator  | Translated board names, labels, and spoken phrases                                |
 
-## Enable experimental AI features
+## Enable Built-in AI (optional)
 
 Proofreading and rewriting currently require experimental browser flags. Open each address for your browser and set the flag to **Enabled**:
 
@@ -56,13 +56,17 @@ edge://flags/#edge-llm-rewriter-api-for-phi-mini
 
 Then restart your browser.
 
-## A complete board, with or without AI
+## Core communication features
 
 - **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
 - **Accessible input** — Supports touch and keyboard navigation.
-- **Open boards** — Imports `.obf` and `.obz` [Open Board Format](https://www.openboardformat.org) files from your device or a URL.
+- **Open boards** — Imports [Open Board Format](https://www.openboardformat.org) (`.obf` and `.obz`) boards from your device or a URL.
 - **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
-- **Offline and installable** — Runs as a PWA and keeps core board features available after the app and board data have loaded.
+- **Offline and installable** — Runs as a PWA and supports offline communication after initial setup.
+
+## Open-source building blocks
+
+AAC Board AI uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) for OBF and OBZ support and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) for browser-managed, on-device AI.
 
 ## Privacy
 
@@ -72,9 +76,11 @@ Opening a board with third-party media contacts the hosts named in those URLs.
 
 ## Offline use
 
-After the app has loaded and a board has been stored, reading, navigation, and message composition remain available offline. Locally stored media and locally available speech voices can also play without a connection.
+After the app has loaded and a board has been stored, reading, navigation, and message composition remain available offline.
 
-Remote images are cached after their first successful display, subject to browser storage limits and eviction; remote audio remains network-dependent. URL imports and initial AI model or language-pack downloads also require a connection. Text-to-speech availability and whether speech is processed locally depend on the platform and selected voice.
+Locally stored media and available speech voices can also work offline. URL imports, remote resources, and initial AI model or language-pack downloads require a connection.
+
+Text-to-speech behavior depends on the platform and selected voice.
 
 ## Current limits
 
@@ -111,11 +117,11 @@ npm run build                       # Type-check and build for production
 
 ## Architecture
 
-AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants. Coding-agent commands, standards, and change boundaries live in [AGENTS.md](AGENTS.md).
+AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
 
 ## Contributing
 
-Bug reports and feedback are welcome. Pull requests are not accepted.
+The project is currently maintained by a single developer, so contributions are limited. Bug reports and feedback are welcome.
 
 ## License
 
