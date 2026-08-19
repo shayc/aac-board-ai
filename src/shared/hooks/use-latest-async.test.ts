@@ -69,6 +69,35 @@ describe("useLatestAsync", () => {
     expect(result.current.value).toBeUndefined();
   });
 
+  test("starts a new round for dependency tuples that join to the same string", async () => {
+    interface TestProps {
+      deps: readonly (string | number | boolean)[];
+      label: string;
+    }
+
+    const firstProps: TestProps = {
+      deps: ["a\0b", "c"],
+      label: "first",
+    };
+    const run = vi.fn((label: string) => Promise.resolve(label));
+    const { result, rerender } = await renderHook(
+      ({ deps, label }: TestProps = firstProps) =>
+        useLatestAsync({
+          enabled: true,
+          deps,
+          run: () => run(label),
+        }),
+      { initialProps: firstProps },
+    );
+
+    await vi.waitFor(() => expect(result.current.value).toBe("first"));
+
+    await rerender({ deps: ["a", "b\0c"], label: "second" });
+
+    await vi.waitFor(() => expect(result.current.value).toBe("second"));
+    expect(run).toHaveBeenCalledTimes(2);
+  });
+
   test("hides the previous value the instant deps change, until the next resolves", async () => {
     const pending: ((value: string) => void)[] = [];
     const { result, rerender } = await renderHook(
