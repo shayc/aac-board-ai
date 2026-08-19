@@ -15,14 +15,17 @@ export function RouteErrorBoundary() {
   const title = getErrorTitle(error, t);
 
   return (
-    <ErrorState
-      title={title}
-      action={
-        <Button component={Link} to="/" variant="contained">
-          {t(m.errorGoHome)}
-        </Button>
-      }
-    />
+    <>
+      <title>{title}</title>
+      <ErrorState
+        title={title}
+        action={
+          <Button component={Link} to="/" variant="contained">
+            {t(m.errorGoHome)}
+          </Button>
+        }
+      />
+    </>
   );
 }
 
