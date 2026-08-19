@@ -21,11 +21,13 @@ async function renderApp(initialEntry = "/") {
     initialEntries: [initialEntry],
   });
 
-  return render(
+  const screen = await render(
     <AppProviders>
       <RouterProvider router={router} />
     </AppProviders>,
   );
+
+  return { router, screen };
 }
 
 describe("app flow", () => {
@@ -40,7 +42,7 @@ describe("app flow", () => {
   test("first run: imported board set opens, composes across boards, and speaks", async () => {
     await importBoardFromUrl(OBZ_FIXTURE_URL);
 
-    const screen = await renderApp();
+    const { screen } = await renderApp();
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
@@ -67,7 +69,7 @@ describe("app flow", () => {
   });
 
   test("empty database: imports and opens the bundled starter board", async () => {
-    const screen = await renderApp();
+    const { screen } = await renderApp();
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
@@ -78,7 +80,7 @@ describe("app flow", () => {
   test("?board= link that collides with an existing set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 
-    const screen = await renderApp(
+    const { screen } = await renderApp(
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
 
@@ -93,13 +95,19 @@ describe("app flow", () => {
     );
   });
 
-  test("an unmatched URL renders the localized not-found page inside the shell", async () => {
-    const screen = await renderApp("/nonexistent");
+  test("client navigation from a board sets the localized not-found title", async () => {
+    const { router, screen } = await renderApp();
 
-    // The shell still mounts on a miss, so dismiss onboarding first.
     await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Quick Core 24" }))
+      .toBeVisible();
+    expect(document.title).toBe("Quick Core 24");
+
+    await router.navigate("/nonexistent");
 
     await expect.element(screen.getByText("Page not found")).toBeVisible();
+    expect(document.title).toBe("Page not found");
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))
       .toHaveAttribute("href", "/");

@@ -9,15 +9,19 @@ import { Link } from "react-router";
 // available, rather than falling through to react-router's unstyled default.
 export function NotFound() {
   const t = useTranslate();
+  const title = t(m.errorPageNotFound);
 
   return (
-    <ErrorState
-      title={t(m.errorPageNotFound)}
-      action={
-        <Button component={Link} to="/" variant="contained">
-          {t(m.errorGoHome)}
-        </Button>
-      }
-    />
+    <>
+      <title>{title}</title>
+      <ErrorState
+        title={title}
+        action={
+          <Button component={Link} to="/" variant="contained">
+            {t(m.errorGoHome)}
+          </Button>
+        }
+      />
+    </>
   );
 }

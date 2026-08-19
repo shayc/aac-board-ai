@@ -2,7 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { createMemoryRouter, data } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { RouteErrorBoundary } from "./route-error-boundary";
 import { createLocalizedRouteError, routeErrorCodes } from "./route-error";
@@ -81,9 +81,11 @@ describe("RouteErrorBoundary", () => {
     );
 
     await expect.element(screen.getByText("Board not found")).toBeVisible();
+    expect(document.title).toBe("Board not found");
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect.element(screen.getByText("הלוח לא נמצא")).toBeVisible();
+    await vi.waitFor(() => expect(document.title).toBe("הלוח לא נמצא"));
   });
 
   test("distinguishes a missing board set from a missing board", async () => {
