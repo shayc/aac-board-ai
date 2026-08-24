@@ -1,20 +1,20 @@
 [build.environment]
-  NODE_VERSION = "24"
+NODE_VERSION = "24"
 
 [[redirects]]
-  from = "/*"
-  to   = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200
 
 # CSP intentionally absent for now: index.html's inline theme script would need
 # hash upkeep on every edit. X-Frame-Options covers framing until a CSP ships.
 [[headers]]
-  for = "/*"
-  [headers.values]
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-    X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "no-referrer"
-    Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=(), usb=(), display-capture=()"
-    X-Frame-Options = "DENY"
-    Cross-Origin-Opener-Policy = "same-origin"
-    Cross-Origin-Resource-Policy = "same-origin"
+for = "/*"
+[headers.values]
+Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+X-Content-Type-Options = "nosniff"
+Referrer-Policy = "no-referrer"
+Permissions-Policy = "geolocation=(), camera=(), microphone=(), payment=(), usb=(), display-capture=()"
+X-Frame-Options = "DENY"
+Cross-Origin-Opener-Policy = "same-origin"
+Cross-Origin-Resource-Policy = "same-origin"
