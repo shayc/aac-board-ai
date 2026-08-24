@@ -66,7 +66,10 @@ describe("deriveSuggestionStatus", () => {
     });
     expect(
       deriveSuggestionStatus(makeInput({ downloadProgress: 0.004 })),
-    ).toEqual({ kind: "downloading", percent: null });
+    ).toEqual({
+      kind: "downloading",
+      percent: null,
+    });
   });
 
   test("shows pending while any request is in flight, even with phrases showing", () => {
@@ -75,7 +78,9 @@ describe("deriveSuggestionStatus", () => {
     });
     expect(
       deriveSuggestionStatus(makeInput({ isPending: true, phraseCount: 1 })),
-    ).toEqual({ kind: "pending" });
+    ).toEqual({
+      kind: "pending",
+    });
   });
 
   test("announces unavailability only when every engine is out and nothing was suggested", () => {

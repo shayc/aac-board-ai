@@ -38,9 +38,7 @@ function renderWithLoader(loader: () => unknown) {
 }
 
 function throwDataResponse(errorData: unknown): never {
-  // Mirrors the data() idiom used by real loaders (exempted from this
-  // rule via their `*-loader.ts` filename, which this test file isn't).
-  // eslint-disable-next-line @typescript-eslint/only-throw-error
+  // React Router exposes data responses by throwing them from loaders.
   throw data(errorData, { status: 404 });
 }
 

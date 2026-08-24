@@ -1,8 +1,7 @@
 {
   "recommendations": [
-    "dbaeumer.vscode-eslint",
+    "oxc.oxc-vscode",
     "vitest.explorer",
-    "esbenp.prettier-vscode",
     "inlang.vs-code-extension"
   ]
 }

@@ -164,7 +164,7 @@ output:
 
 ## Codemap and ownership seams
 
-The repository follows three module boundaries. ESLint enforces their aliased
+The repository follows three module boundaries. Oxlint enforces their aliased
 import forms; contributor rules require path aliases for cross-boundary imports:
 
 - `src/shared/` is the leaf layer. It does not import from the app, pages, or
