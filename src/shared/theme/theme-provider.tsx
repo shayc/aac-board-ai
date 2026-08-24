@@ -146,7 +146,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   return (
     <CacheProvider value={isRtl ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={theme}>
+      <MUIThemeProvider theme={theme} noSsr>
         <CssBaseline />
         <ThemeColorMeta />
         {children}
