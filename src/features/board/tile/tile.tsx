@@ -77,6 +77,9 @@ export function Tile({
             duration: theme.transitions.duration.short,
           },
         ),
+        "@media (prefers-reduced-motion: reduce)": {
+          transition: "none",
+        },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
