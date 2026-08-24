@@ -87,6 +87,9 @@ export function BoardSetList({
                   transition: theme.transitions.create("opacity", {
                     duration: theme.transitions.duration.shortest,
                   }),
+                  "@media (prefers-reduced-motion: reduce)": {
+                    transition: "none",
+                  },
                 },
                 "& .MuiListItem-root:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
                   { opacity: 1, pointerEvents: "auto" },
