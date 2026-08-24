@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["oxlint.config.ts", "vite.config.ts"]
+  "include": ["oxfmt.config.ts", "oxlint.config.ts", "vite.config.ts"]
 }
