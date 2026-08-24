@@ -110,6 +110,7 @@ Open [http://localhost:5173](http://localhost:5173).
 
 ```bash
 npx playwright install --with-deps  # Install browser test dependencies
+npm run format:check                # Check formatting
 npm run lint                        # Lint the code
 npm test                            # Run the tests in Chromium
 npm run build                       # Type-check and build for production

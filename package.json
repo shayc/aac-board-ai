@@ -58,8 +58,11 @@
     "vitest-browser-react": "^2.2.0"
   },
   "lint-staged": {
-    "*.{js,mjs,ts,tsx}": "oxlint --fix --no-error-on-unmatched-pattern",
-    "*": "oxfmt --no-error-on-unmatched-pattern"
+    "*.{ts,tsx}": [
+      "oxlint --fix --no-error-on-unmatched-pattern",
+      "oxfmt --no-error-on-unmatched-pattern"
+    ],
+    "!(*.{ts,tsx})": "oxfmt --no-error-on-unmatched-pattern"
   },
   "engines": {
     "node": ">=24"

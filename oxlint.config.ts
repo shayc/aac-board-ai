@@ -1,13 +1,12 @@
 import { defineConfig } from "oxlint";
 
 type ImportPattern = {
-  group?: string[];
+  group: string[];
   message: string;
-  regex?: string;
 };
 
 const muiBarrelRestriction: ImportPattern = {
-  regex: "^@mui/(?!stylis-plugin-rtl)[^/]+$",
+  group: ["@mui/*", "!@mui/stylis-plugin-rtl"],
   message:
     "@mui package roots are barrels — use a subpath, e.g. @mui/material/Button.",
 };
@@ -32,6 +31,7 @@ export default defineConfig({
     typeAware: true,
   },
   plugins: [
+    "eslint",
     "import",
     "jsx-a11y",
     "oxc",
@@ -46,17 +46,22 @@ export default defineConfig({
     // ARIA grids and MUI primitives intentionally express semantics without table-specific elements.
     "jsx-a11y/prefer-tag-over-role": "off",
     "react/only-export-components": ["error", { allowConstantExport: true }],
+    "react/rules-of-hooks": "error",
     "react/unsupported-syntax": "error",
-    // Contextual prop types already constrain callback mocks; redundant generics obscure test intent.
+    "typescript/no-explicit-any": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-unsafe-argument": "error",
+    "typescript/no-unsafe-assignment": "error",
+    "typescript/no-unsafe-call": "error",
+    "typescript/no-unsafe-member-access": "error",
+    "typescript/no-unsafe-return": "error",
     "vitest/require-mock-type-parameters": "off",
-    // Some tests assert only that an operation rejects, not its incidental browser-generated wording.
     "vitest/require-to-throw-message": "off",
-    // Vitest supports a second `expect` argument for diagnostic messages.
-    "vitest/valid-expect": "off",
+    "vitest/valid-expect": ["error", { maxArgs: 2 }],
   },
   overrides: [
     {
-      files: ["*.config.{js,mjs,ts,mts}", "oxlint.config.ts"],
+      files: ["*.config.ts"],
       env: {
         browser: false,
         node: true,
@@ -104,7 +109,7 @@ export default defineConfig({
       ],
       rules: {
         "no-restricted-imports": restrictImports({
-          regex: "^@features/[^/]+/.+",
+          group: ["@features/*/**"],
           message:
             "A feature's internals and testing API are private — use its barrel, e.g. @features/board.",
         }),
@@ -114,16 +119,10 @@ export default defineConfig({
       files: ["src/app/**/*.test.{ts,tsx}", "src/pages/**/*.test.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
-          regex: "^@features/[^/]+/(?!testing$).+",
+          group: ["@features/*/**", "!@features/*/testing"],
           message:
             "A feature's internals are private — use its barrel (@features/board) or test entry (@features/board/testing).",
         }),
-      },
-    },
-    {
-      files: ["src/app/routing/loaders/**/*-loader.ts"],
-      rules: {
-        "typescript/only-throw-error": "off",
       },
     },
   ],
