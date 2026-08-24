@@ -6,7 +6,6 @@
     "module": "ESNext",
     "types": ["vite/client", "dom-chromium-ai"],
     "skipLibCheck": true,
-    "allowJs": true,
     "allowArbitraryExtensions": true,
 
     "paths": {
