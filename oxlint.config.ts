@@ -85,7 +85,7 @@ export default defineConfig({
       files: ["src/shared/**/*.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
-          group: ["@app/*", "@features/*", "@pages/*"],
+          group: ["@app/**", "@features/**", "@pages/**"],
           message:
             "@shared is a leaf layer — it imports nothing from @app, @features, or @pages.",
         }),
@@ -95,7 +95,7 @@ export default defineConfig({
       files: ["src/features/**/*.{ts,tsx}"],
       rules: {
         "no-restricted-imports": restrictImports({
-          group: ["@app/*", "@features/*", "@pages/*"],
+          group: ["@app/**", "@features/**", "@pages/**"],
           message:
             "A feature is isolated from @app, @pages, and other features — use @shared (e.g. @shared/testing) or relative paths within the feature.",
         }),
