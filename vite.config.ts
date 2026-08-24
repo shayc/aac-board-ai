@@ -1,7 +1,6 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
-import path from "node:path";
 import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults } from "vitest/config";
@@ -91,13 +90,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      "@app": path.resolve(import.meta.dirname, "./src/app"),
-      "@features": path.resolve(import.meta.dirname, "./src/features"),
-      "@pages": path.resolve(import.meta.dirname, "./src/pages"),
-      "@paraglide": path.resolve(import.meta.dirname, "./src/paraglide"),
-      "@shared": path.resolve(import.meta.dirname, "./src/shared"),
-    },
+    tsconfigPaths: true,
   },
   optimizeDeps: {
     include: [
