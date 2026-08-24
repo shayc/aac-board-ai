@@ -3,9 +3,8 @@ import { StatusLayout, type StatusLayoutProps } from "./status-layout";
 
 type ErrorStateProps = Omit<StatusLayoutProps, "kind">;
 
-export function ErrorState({
-  icon = <ErrorOutlineIcon />,
-  ...props
-}: ErrorStateProps) {
+const defaultIcon = <ErrorOutlineIcon />;
+
+export function ErrorState({ icon = defaultIcon, ...props }: ErrorStateProps) {
   return <StatusLayout kind="error" icon={icon} {...props} />;
 }
