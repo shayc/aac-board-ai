@@ -70,7 +70,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Prefer the smallest meaningful input a component or function needs; don't pass large objects solely to access one leaf property.
 - Avoid long dot-chains (`order.customer.address.city`); derive values close to the data source.
 - Use the path aliases (`@app/*`, `@features/*`, `@shared/*`, `@pages/*`, `@paraglide/*`).
-- User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text.
+- User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text. In React, call messages through `useTranslate()` as `t(m.messageKey)` so renders subscribe to locale changes; Sherlock extraction emits `m.messageKey()` and must be adapted before committing.
 - The React Compiler is enabled: write Compiler-native code; don't add `useMemo`/`useCallback` for performance.
 
 ### Comments
