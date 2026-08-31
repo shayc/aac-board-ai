@@ -68,12 +68,12 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         src={`${import.meta.env.BASE_URL}board.svg`}
         alt=""
         sx={{
+          display: "block",
           width: 96,
           height: 96,
           mx: "auto",
           mt: 4,
           mb: 2,
-          display: "block",
           borderRadius: "22%",
         }}
       />
@@ -93,7 +93,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         <List>
           {highlights.map((highlight) => (
             <ListItem key={highlight.id} sx={{ alignItems: "center", py: 1.5 }}>
-              <ListItemIcon sx={{ fontSize: "40px", mr: 2 }}>
+              <ListItemIcon sx={{ mr: 2, fontSize: "40px" }}>
                 {highlight.icon}
               </ListItemIcon>
               <ListItemText

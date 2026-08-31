@@ -34,9 +34,9 @@ type BoardRootStyle = CSSProperties & {
 const boardRootSx = (theme: Theme) => ({
   height: "100%",
   ...theme.applyStyles("dark", {
-    backgroundRepeat: "no-repeat",
     backgroundImage:
       "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+    backgroundRepeat: "no-repeat",
   }),
   [theme.breakpoints.up("sm")]: {
     pl: safeAreaInset("left"),
@@ -143,8 +143,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       {isSmallScreen && (
         <Toolbar
           sx={{
-            justifyContent: "space-between",
             alignItems: "flex-end",
+            justifyContent: "space-between",
             gap: 2,
             px: { xs: 3 },
             pb: safeAreaInset("bottom"),

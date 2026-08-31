@@ -19,19 +19,19 @@ export function AACSymbol({
       sx={{
         display: "flex",
         flexDirection: labelPlacement === "top" ? "column-reverse" : "column",
-        textAlign: "center",
         justifyContent: "center",
         gap: 0.5,
         overflow: "hidden",
+        textAlign: "center",
       }}
     >
       {imageSrc && (
         <Box
           sx={{
+            position: "relative",
+            flexGrow: 1,
             height: "54px",
             aspectRatio: "1 / 1",
-            flexGrow: 1,
-            position: "relative",
           }}
         >
           <Box
@@ -39,12 +39,12 @@ export function AACSymbol({
             src={imageSrc}
             alt=""
             sx={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
               position: "absolute",
               top: 0,
               insetInlineStart: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
               pointerEvents: "none",
             }}
           />

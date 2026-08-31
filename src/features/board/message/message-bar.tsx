@@ -80,10 +80,10 @@ export function MessageBar({
                 sx={(theme) => ({
                   p: 1,
                   borderRadius: 4,
-                  outlineOffset: -2,
                   outline: isActive
                     ? `2px solid ${theme.vars?.palette.primary.main ?? theme.palette.primary.main}`
                     : "none",
+                  outlineOffset: -2,
                 })}
               >
                 <AACSymbol label={part.label ?? ""} imageSrc={part.imageSrc} />

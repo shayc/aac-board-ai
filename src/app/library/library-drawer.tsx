@@ -43,9 +43,9 @@ export function LibraryDrawer({
           "aria-label": t(m.libraryTitle),
           ...(variant === "persistent" && { component: "aside" }),
           sx: {
-            width: LIBRARY_DRAWER_WIDTH,
             display: "flex",
             flexDirection: "column",
+            width: LIBRARY_DRAWER_WIDTH,
           },
         },
       }}

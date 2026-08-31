@@ -83,10 +83,10 @@ export function BoardSetList({
               [theme.breakpoints.up("md")]: {
                 "& .MuiListItemSecondaryAction-root": {
                   opacity: 0,
-                  pointerEvents: "none",
                   transition: theme.transitions.create("opacity", {
                     duration: theme.transitions.duration.shortest,
                   }),
+                  pointerEvents: "none",
                   "@media (prefers-reduced-motion: reduce)": {
                     transition: "none",
                   },
@@ -131,9 +131,9 @@ export function BoardSetList({
                     primary={
                       <Box
                         sx={{
-                          whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {boardSet.name}

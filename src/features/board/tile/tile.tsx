@@ -51,26 +51,26 @@ export function Tile({
       tabIndex={tabIndex}
       onClick={onActivate}
       sx={(theme) => ({
-        boxShadow: (theme.vars ?? theme).shadows[2],
-        width: "100%",
-        height: "100%",
+        position: "relative",
         display: "grid",
         alignItems: "stretch",
         justifyContent: "stretch",
+        width: "100%",
+        height: "100%",
         p: 1,
+        overflow: "hidden",
+        textTransform: "none",
+        color: resolvedBackgroundColor
+          ? `contrast-color(${resolvedBackgroundColor})`
+          : "inherit",
         border: `4px solid ${
           !borderHidden && resolvedBorderColor
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,
         borderRadius: 4,
-        overflow: "hidden",
-        position: "relative",
-        textTransform: "none",
-        color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
-          : "inherit",
         backgroundColor: resolvedBackgroundColor,
+        boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
@@ -91,18 +91,18 @@ export function Tile({
           },
         },
         "&:active": {
-          boxShadow: (theme.vars ?? theme).shadows[8],
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, 75),
+          boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          boxShadow: (theme.vars ?? theme).shadows[6],
           outline: `4px solid ${
             theme.vars
               ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
               : alpha(theme.palette.text.primary, 0.8)
           }`,
           outlineOffset: 2,
+          boxShadow: (theme.vars ?? theme).shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
           boxShadow: (theme.vars ?? theme).shadows[0],

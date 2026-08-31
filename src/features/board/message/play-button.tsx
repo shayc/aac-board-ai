@@ -29,13 +29,13 @@ export function PlayButton({
       aria-label={label}
       onClick={isPlaying ? onStop : onPlay}
       sx={{
+        alignSelf: "center",
+        flexShrink: 0,
         width: 72,
         height: 72,
-        flexShrink: 0,
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
-        alignSelf: "center",
       }}
     >
       {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}

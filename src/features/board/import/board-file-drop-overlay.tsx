@@ -20,9 +20,9 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
       aria-hidden
       sx={(theme) => ({
         zIndex: theme.zIndex.modal,
-        pointerEvents: "none",
         backgroundColor: alpha(theme.palette.background.default, 0.7),
         backdropFilter: "blur(2px)",
+        pointerEvents: "none",
       })}
     >
       <Grow in={open}>
@@ -35,8 +35,8 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             gap: 2,
             px: 6,
             py: 5,
-            borderRadius: 4,
             border: `2px dashed ${theme.palette.primary.main}`,
+            borderRadius: 4,
           })}
         >
           <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />

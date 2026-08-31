@@ -17,10 +17,10 @@ export function LoadingState({ message }: LoadingStateProps) {
     <Fade in timeout={400} style={{ transitionDelay: "300ms" }}>
       <Stack
         sx={{
-          height: "100%",
           alignItems: "center",
           justifyContent: "center",
           gap: 2,
+          height: "100%",
         }}
       >
         <CircularProgress />
