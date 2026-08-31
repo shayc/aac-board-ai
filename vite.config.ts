@@ -28,9 +28,6 @@ export default defineConfig({
     react({ compiler: true }),
     paraglideVitePlugin({
       project: "./project.inlang",
-      outdir: "./src/paraglide",
-      emitTsDeclarations: true,
-      strategy: ["globalVariable", "baseLocale"],
     }),
     VitePWA({
       registerType: "autoUpdate",
