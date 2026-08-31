@@ -16,9 +16,6 @@ interface TileProps {
   onActivate: () => void;
 }
 
-// Scale an author-supplied color's OKLCH chroma by the board's saturation
-// setting so bright third-party boards can be toned down without shifting hue
-// or perceived lightness. The var fallback keeps colors intact outside CommunicationBoard.
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
