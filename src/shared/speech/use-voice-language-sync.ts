@@ -11,10 +11,10 @@ import {
 } from "./speech-store";
 
 /**
- * The user's own region for a language, drawn from OS/browser preferences
- * (e.g. a Canadian's "fr-CA" → "CA").
+ * The user's preferred regional variant for a language, drawn from OS/browser
+ * preferences (`fr-CA` → `CA`).
  */
-function getUserRegionForLanguage(language: string): string | undefined {
+function getPreferredRegion(language: string): string | undefined {
   for (const tag of navigator.languages) {
     if (getLanguageCode(tag) === language) {
       const region = getRegionCode(tag);
@@ -45,7 +45,7 @@ export function useVoiceLanguageSync(language: string): void {
     }
 
     const preferredRegion =
-      getUserRegionForLanguage(language) ?? getLikelyRegion(language);
+      getPreferredRegion(language) ?? getLikelyRegion(language);
     const regionVoices = voices.filter(
       (voice) => getRegionCode(voice.lang) === preferredRegion,
     );
