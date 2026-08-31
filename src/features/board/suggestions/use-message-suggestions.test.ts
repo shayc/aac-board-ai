@@ -8,7 +8,7 @@ import {
   stubBuiltInAIUnsupported,
   stubProofreader,
   stubRewriter,
-} from "@shared/testing/built-in-ai";
+} from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { setSuggestionCustomInstructions } from "./suggestion-config-store";

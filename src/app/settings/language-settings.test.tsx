@@ -3,7 +3,7 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
   stubBuiltInAIUnsupported,
   stubTranslator,
-} from "@shared/testing/built-in-ai";
+} from "@shared/testing/stub-built-in-ai";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";

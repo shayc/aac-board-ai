@@ -3,7 +3,7 @@ import { afterEach, beforeEach, vi } from "vitest";
 
 // Built-in AI namespaces the app reads off globalThis. Their ambient state can
 // differ between local and CI Chromium, so default them to absent; tests opt in
-// with the stub helpers in built-in-ai.ts.
+// with the stub helpers in stub-built-in-ai.ts.
 const BUILT_IN_AI_NAMESPACES = ["Proofreader", "Rewriter", "Translator"];
 
 function clearStorage() {

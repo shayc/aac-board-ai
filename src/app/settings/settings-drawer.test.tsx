@@ -4,7 +4,7 @@ import {
   stubProofreader,
   stubRewriter,
   stubTranslator,
-} from "@shared/testing/built-in-ai";
+} from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
