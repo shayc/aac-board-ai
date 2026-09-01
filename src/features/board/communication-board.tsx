@@ -135,8 +135,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           rows={board.grid.rows}
           columns={board.grid.columns}
           order={board.grid.order}
-          renderItem={renderTile}
           dir={direction}
+          renderItem={renderTile}
         />
       </Box>
 

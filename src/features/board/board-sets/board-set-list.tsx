@@ -103,7 +103,6 @@ export function BoardSetList({
             return (
               <ListItem
                 key={boardSet.setId}
-                disablePadding
                 data-menu-open={isMenuOpen || undefined}
                 secondaryAction={
                   <Tooltip title={t(m.libraryMoreOptions)}>
@@ -122,6 +121,7 @@ export function BoardSetList({
                     </IconButton>
                   </Tooltip>
                 }
+                disablePadding
               >
                 <ListItemButton
                   selected={boardSet.setId === selectedSetId}

@@ -65,15 +65,15 @@ export function BoardSettings() {
       </FormControl>
 
       <FormControlLabel
-        labelPlacement="start"
         label={t(m.tileBorders)}
-        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={areTileBordersVisible}
             onChange={(event) => setTileBordersVisible(event.target.checked)}
           />
         }
+        labelPlacement="start"
+        sx={{ justifyContent: "space-between", m: 0 }}
       />
 
       <Stack spacing={0.5}>

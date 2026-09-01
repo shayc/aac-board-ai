@@ -22,16 +22,16 @@ export function SuggestionsSettings() {
 
   return (
     <TextField
+      label={t(m.aiCustomInstructions)}
+      placeholder={t(m.aiCustomInstructionsPlaceholder)}
+      helperText={t(m.aiCustomInstructionsHelper)}
+      value={customInstructions}
+      onChange={(event) => setSuggestionCustomInstructions(event.target.value)}
       variant="outlined"
       fullWidth
       multiline
       rows={4}
-      label={t(m.aiCustomInstructions)}
-      placeholder={t(m.aiCustomInstructionsPlaceholder)}
-      helperText={t(m.aiCustomInstructionsHelper)}
       slotProps={{ inputLabel: { shrink: true } }}
-      value={customInstructions}
-      onChange={(event) => setSuggestionCustomInstructions(event.target.value)}
     />
   );
 }

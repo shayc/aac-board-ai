@@ -31,9 +31,9 @@ export function BackspaceButton({
     <Button
       {...mergeProps(pressProps, longPressProps)}
       aria-label={t(m.messageBackspace)}
+      disabled={disabled}
       size="large"
       color="inherit"
-      disabled={disabled}
       variant="contained"
       sx={{ width: 72 }}
     >

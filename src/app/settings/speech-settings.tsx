@@ -143,9 +143,7 @@ export function SpeechSettings() {
       )}
 
       <FormControlLabel
-        labelPlacement="start"
         label={t(m.playbackHighlight)}
-        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={isMessagePartHighlightingEnabled}
@@ -154,6 +152,8 @@ export function SpeechSettings() {
             }
           />
         }
+        labelPlacement="start"
+        sx={{ justifyContent: "space-between", m: 0 }}
       />
 
       <Button
