@@ -49,9 +49,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
   return (
     <Dialog
+      aria-labelledby="onboarding-dialog-title"
       open={open}
       onClose={onClose}
-      aria-labelledby="onboarding-dialog-title"
       fullScreen={fullScreen}
       fullWidth
       maxWidth="xs"
@@ -64,9 +64,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       }}
     >
       <Box
-        component="img"
-        src={`${import.meta.env.BASE_URL}board.svg`}
         alt=""
+        src={`${import.meta.env.BASE_URL}board.svg`}
+        component="img"
         sx={{
           display: "block",
           width: 96,

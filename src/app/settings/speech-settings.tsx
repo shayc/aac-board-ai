@@ -102,14 +102,14 @@ export function SpeechSettings() {
       <FormControl size="small" fullWidth>
         <InputLabel id="voice-select-label">{t(m.speechVoice)}</InputLabel>
         <Select
-          variant="outlined"
-          label={t(m.speechVoice)}
-          labelId="voice-select-label"
           id="voice-select"
+          labelId="voice-select-label"
+          label={t(m.speechVoice)}
           value={selectedVoiceURI}
           onChange={(event) =>
             setVoiceURI(event.target.value === "" ? null : event.target.value)
           }
+          variant="outlined"
         >
           {locales.map(renderLocaleOptions)}
         </Select>
@@ -133,10 +133,10 @@ export function SpeechSettings() {
               aria-label={label}
               getAriaValueText={formatValue}
               value={value}
+              onChange={(_event, newValue) => onChange(newValue)}
               min={min}
               max={max}
               step={0.1}
-              onChange={(_event, newValue) => onChange(newValue)}
             />
           </Stack>
         ),

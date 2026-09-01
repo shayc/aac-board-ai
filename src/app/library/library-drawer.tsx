@@ -34,9 +34,9 @@ export function LibraryDrawer({
 
   return (
     <Drawer
-      anchor="left"
       open={open}
       onClose={onClose}
+      anchor="left"
       variant={variant}
       slotProps={{
         paper: {

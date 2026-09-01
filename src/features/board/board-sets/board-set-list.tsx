@@ -70,7 +70,7 @@ export function BoardSetList({
 
   return (
     <>
-      <Box component="nav" aria-labelledby="board-set-list-subheader">
+      <Box aria-labelledby="board-set-list-subheader" component="nav">
         <List
           subheader={
             <ListSubheader id="board-set-list-subheader">

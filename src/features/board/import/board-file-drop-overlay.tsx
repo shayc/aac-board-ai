@@ -16,8 +16,8 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
 
   return (
     <Backdrop
-      open={open}
       aria-hidden
+      open={open}
       sx={(theme) => ({
         zIndex: theme.zIndex.modal,
         backgroundColor: alpha(theme.palette.background.default, 0.7),

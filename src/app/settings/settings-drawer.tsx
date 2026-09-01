@@ -43,9 +43,9 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
   return (
     <Drawer
-      anchor="right"
       open={open}
       onClose={onClose}
+      anchor="right"
       slotProps={{
         paper: {
           "aria-label": t(m.settingsTitle),

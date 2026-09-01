@@ -43,9 +43,9 @@ export function Tile({
 
   return (
     <Button
-      disableRipple
-      disabled={disabled}
       tabIndex={tabIndex}
+      disabled={disabled}
+      disableRipple
       onClick={onActivate}
       sx={(theme) => ({
         position: "relative",

@@ -23,10 +23,10 @@ export function BoardSetDeleteDialog({
 
   return (
     <Dialog
-      open={boardSet !== null}
-      onClose={onClose}
       aria-labelledby="delete-dialog-title"
       aria-describedby="delete-dialog-description"
+      open={boardSet !== null}
+      onClose={onClose}
     >
       <DialogTitle id="delete-dialog-title">
         {boardSet

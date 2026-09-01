@@ -35,9 +35,9 @@ export function AACSymbol({
           }}
         >
           <Box
-            component="img"
-            src={imageSrc}
             alt=""
+            src={imageSrc}
+            component="img"
             sx={{
               position: "absolute",
               top: 0,

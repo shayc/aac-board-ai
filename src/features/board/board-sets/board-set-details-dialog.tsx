@@ -24,9 +24,9 @@ export function BoardSetDetailsDialog({
 
   return (
     <Dialog
+      aria-labelledby="details-dialog-title"
       open={boardSet !== null}
       onClose={onClose}
-      aria-labelledby="details-dialog-title"
       fullWidth
       maxWidth="sm"
     >
