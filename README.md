@@ -52,8 +52,19 @@ Support varies by browser, device, language, and model availability.
 
 Proofreading and rewriting currently require experimental browser flags:
 
-- **Google Chrome:** `chrome://flags/#proofreader-api` and `chrome://flags/#rewriter-api`
-- **Microsoft Edge Canary or Dev:** `edge://flags/#edge-proofreader-api` and `edge://flags/#edge-llm-rewriter-api-for-phi-mini`
+**Google Chrome**
+
+```text
+chrome://flags/#proofreader-api
+chrome://flags/#rewriter-api
+```
+
+**Microsoft Edge Canary or Dev**
+
+```text
+edge://flags/#edge-proofreader-api
+edge://flags/#edge-llm-rewriter-api-for-phi-mini
+```
 
 Enable the flags and restart your browser. See the API documentation for current requirements:
 
