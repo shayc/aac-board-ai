@@ -15,6 +15,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
+    "test:pwa": "npm run build && playwright test",
     "prepare": "husky && npm run paraglide:compile"
   },
   "dependencies": {
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@inlang/paraglide-js": "^2.25.0",
+    "@playwright/test": "^1.62.1",
     "@types/dom-chromium-ai": "^0.0.17",
     "@types/node": "^24.13.3",
     "@types/react": "^19.2.18",

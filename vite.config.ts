@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
-import { coverageConfigDefaults } from "vitest/config";
+import { configDefaults, coverageConfigDefaults } from "vitest/config";
 import {
   CONTENT_DARK,
   CONTENT_LIGHT,
@@ -125,6 +125,7 @@ export default defineConfig({
     },
   },
   test: {
+    exclude: [...configDefaults.exclude, "e2e/**"],
     setupFiles: ["./src/shared/testing/global-setup.ts"],
     restoreMocks: true,
     unstubGlobals: true,
