@@ -45,3 +45,15 @@ jobs:
 
       - name: Build project
         run: npm run build
+
+      - name: Test offline PWA
+        run: npx playwright test
+
+      - name: Upload Playwright diagnostics
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-test-results
+          path: test-results/
+          if-no-files-found: ignore
+          retention-days: 7

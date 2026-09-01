@@ -114,6 +114,7 @@ npm run format:check                # Check formatting
 npm run lint                        # Lint the code
 npm test                            # Run the tests in Chromium
 npm run build                       # Type-check and build for production
+npm run test:pwa                    # Build and verify the offline PWA flow
 ```
 
 ## Architecture
