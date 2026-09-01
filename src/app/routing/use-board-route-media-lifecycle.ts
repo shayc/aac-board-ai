@@ -1,8 +1,7 @@
+import { BOARD_ROUTE_ID } from "@app/routing/route-ids";
 import type { BoardMediaResource, HydratedBoard } from "@features/board";
 import { useEffect } from "react";
 import { useRouteLoaderData } from "react-router";
-
-export const BOARD_ROUTE_ID = "board";
 
 let committedMedia: BoardMediaResource | undefined;
 

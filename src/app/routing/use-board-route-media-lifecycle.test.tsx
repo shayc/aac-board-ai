@@ -15,10 +15,8 @@ import {
 import { RouterProvider } from "react-router/dom";
 import { expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import {
-  BOARD_ROUTE_ID,
-  useBoardRouteMediaLifecycle,
-} from "./use-board-route-media-lifecycle";
+import { BOARD_ROUTE_ID } from "./route-ids";
+import { useBoardRouteMediaLifecycle } from "./use-board-route-media-lifecycle";
 
 const SET_ID = "media-lifetime-set";
 const IMAGE_PATH = "images/test.png";
