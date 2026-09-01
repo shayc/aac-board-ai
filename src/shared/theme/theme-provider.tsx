@@ -37,6 +37,8 @@ const themeOptions = {
     reducedMotion: "system",
   },
   typography: {
+    fontFamily: "system-ui, sans-serif",
+    fontWeightLight: 400,
     button: {
       textTransform: "none",
     },
