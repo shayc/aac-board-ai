@@ -52,8 +52,8 @@ export function MessageBar({
           {
             flexGrow: 1,
             gap: 2,
-            borderRadius: 32,
             overflow: "hidden",
+            borderRadius: 32,
             bgcolor: "grey.200",
           },
           (theme) => theme.applyStyles("dark", { bgcolor: "grey.800" }),

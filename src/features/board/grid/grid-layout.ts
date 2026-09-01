@@ -39,9 +39,9 @@ export function createGridContentSx(
     "--visible-rows": 1,
     "--cell-width": trackSize(theme, "100cqi", gap, "var(--visible-cols)"),
     "--cell-height": trackSize(theme, "100cqb", gap, "var(--visible-rows)"),
-    gap,
     minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
     minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
+    gap,
     p: PAD,
     [theme.breakpoints.down("sm")]: visibleTrackQueries(
       rows,
@@ -59,7 +59,7 @@ export function createGridContentSx(
 }
 
 export function createGridRowSx(gap: number) {
-  return { flex: 1, gap, minHeight: "var(--cell-height)" };
+  return { flex: 1, minHeight: "var(--cell-height)", gap };
 }
 
 function visibleTrackQueries(

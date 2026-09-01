@@ -26,8 +26,8 @@ export function SuggestionBar({
       sx={{
         flex: "1",
         alignItems: "center",
-        gap: 2,
         minHeight: 32,
+        gap: 2,
         overflow: "hidden",
       }}
     >
@@ -39,8 +39,8 @@ export function SuggestionBar({
         sx={{
           display: "flex",
           alignItems: "center",
-          gap: 2,
           height: "100%",
+          gap: 2,
           marginInlineEnd: "auto",
           overflowX: "auto",
         }}

@@ -19,8 +19,8 @@ export function LoadingState({ message }: LoadingStateProps) {
         sx={{
           alignItems: "center",
           justifyContent: "center",
-          gap: 2,
           height: "100%",
+          gap: 2,
         }}
       >
         <CircularProgress />
