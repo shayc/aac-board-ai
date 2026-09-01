@@ -102,19 +102,19 @@ export function BoardSetList({
 
             return (
               <ListItem
-                disablePadding
                 key={boardSet.setId}
+                disablePadding
                 data-menu-open={isMenuOpen || undefined}
                 secondaryAction={
                   <Tooltip title={t(m.libraryMoreOptions)}>
                     <IconButton
-                      edge="end"
                       aria-label={t(m.libraryMoreOptionsFor, {
                         name: boardSet.name,
                       })}
                       aria-controls={isMenuOpen ? "board-set-menu" : undefined}
                       aria-haspopup="menu"
                       aria-expanded={isMenuOpen ? "true" : undefined}
+                      edge="end"
                       onClick={(event) => handleMenuOpen(event, boardSet)}
                       sx={{ border: "none" }}
                     >

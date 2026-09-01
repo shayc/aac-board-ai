@@ -51,10 +51,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
     <Dialog
       open={open}
       onClose={onClose}
+      aria-labelledby="onboarding-dialog-title"
       fullScreen={fullScreen}
       fullWidth
       maxWidth="xs"
-      aria-labelledby="onboarding-dialog-title"
       slotProps={{
         paper: {
           sx: {

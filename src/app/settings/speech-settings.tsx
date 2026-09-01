@@ -117,7 +117,7 @@ export function SpeechSettings() {
 
       {speechControls.map(
         ({ id, label, value, min, max, onChange, formatValue }) => (
-          <Stack key={id} spacing={0.5} role="group" aria-label={label}>
+          <Stack key={id} role="group" aria-label={label} spacing={0.5}>
             <Stack
               direction="row"
               sx={{ justifyContent: "space-between", gap: 2 }}

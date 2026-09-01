@@ -24,9 +24,9 @@ export function PlayButton({
 
   return (
     <Fab
+      aria-label={label}
       color={isPlaying ? "default" : "primary"}
       disabled={disabled}
-      aria-label={label}
       onClick={isPlaying ? onStop : onPlay}
       sx={{
         alignSelf: "center",

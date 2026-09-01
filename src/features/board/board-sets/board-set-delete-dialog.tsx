@@ -44,7 +44,7 @@ export function BoardSetDeleteDialog({
 
       <DialogActions>
         <Button onClick={onClose}>{t(m.libraryCancel)}</Button>
-        <Button onClick={onDelete} color="error">
+        <Button color="error" onClick={onDelete}>
           {t(m.libraryDelete)}
         </Button>
       </DialogActions>
