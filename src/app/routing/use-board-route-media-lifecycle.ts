@@ -6,7 +6,7 @@ export const BOARD_ROUTE_ID = "board";
 
 let committedMedia: BoardMediaResource | undefined;
 
-export function useSyncBoardMediaWithActiveRoute(): void {
+export function useBoardRouteMediaLifecycle(): void {
   const loadedBoard = useRouteLoaderData<HydratedBoard>(BOARD_ROUTE_ID);
   const media = loadedBoard?.media;
 
