@@ -32,7 +32,7 @@ export function AppShell() {
   useRevalidateBoardOnLanguageChange();
 
   return (
-    <Box sx={{ display: "flex", height: "100svh" }} {...fileDrop.dropHandlers}>
+    <Box {...fileDrop.dropHandlers} sx={{ display: "flex", height: "100svh" }}>
       <LibraryDrawer
         open={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}

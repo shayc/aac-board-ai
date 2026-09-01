@@ -35,9 +35,9 @@ export function AACSymbol({
           }}
         >
           <Box
+            component="img"
             alt=""
             src={imageSrc}
-            component="img"
             sx={{
               position: "absolute",
               top: 0,
@@ -52,8 +52,8 @@ export function AACSymbol({
       )}
 
       <Typography
-        noWrap
         component="span"
+        noWrap
         variant={imageSrc ? "body2" : "h5"}
         sx={labelPlacement === "hidden" ? visuallyHidden : { lineHeight: 1 }}
       >

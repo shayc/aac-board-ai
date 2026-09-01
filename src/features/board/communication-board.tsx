@@ -91,8 +91,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...keyboard.rootProps}
       direction="column"
-      sx={boardRootSx}
       style={boardRootStyle}
+      sx={boardRootSx}
     >
       <BoardPlaybackMessageBar parts={message.parts} />
 
@@ -131,11 +131,11 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Grid<BoardButton>
           ref={gridRef}
           ariaLabel={board.name ?? t(m.boardGridLabel)}
+          dir={direction}
           items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}
           order={board.grid.order}
-          dir={direction}
           renderItem={renderTile}
         />
       </Box>

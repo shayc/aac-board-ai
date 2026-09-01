@@ -213,7 +213,7 @@ describe("Tile", () => {
     const onActivate = vi.fn();
 
     const screen = await render(
-      <Tile label="Disabled tile" onActivate={onActivate} disabled />,
+      <Tile label="Disabled tile" disabled onActivate={onActivate} />,
     );
 
     const button = screen.getByRole("button", { name: "Disabled tile" });

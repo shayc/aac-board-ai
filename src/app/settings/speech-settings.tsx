@@ -160,13 +160,13 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         startIcon={<PlayArrowIcon />}
-        sx={{ alignSelf: "flex-start" }}
         onClick={() =>
           void playback.play({
             source: "speech-preview",
             steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
           })
         }
+        sx={{ alignSelf: "flex-start" }}
       >
         {t(m.speechPreview)}
       </Button>

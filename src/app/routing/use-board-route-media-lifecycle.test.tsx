@@ -76,7 +76,7 @@ function TestBoard() {
   const imageUrl = board.buttons[0].imageSrc;
   assertDefined(imageUrl);
 
-  return <img src={imageUrl} alt={board.name} />;
+  return <img alt={board.name} src={imageUrl} />;
 }
 
 function isObjectUrlAlive(url: string): Promise<boolean> {

@@ -64,9 +64,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       }}
     >
       <Box
+        component="img"
         alt=""
         src={`${import.meta.env.BASE_URL}board.svg`}
-        component="img"
         sx={{
           display: "block",
           width: 96,

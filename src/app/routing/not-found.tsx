@@ -17,7 +17,7 @@ export function NotFound() {
       <ErrorState
         title={title}
         action={
-          <Button to="/" component={Link} variant="contained">
+          <Button component={Link} to="/" variant="contained">
             {t(m.errorGoHome)}
           </Button>
         }
