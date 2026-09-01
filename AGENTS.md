@@ -55,6 +55,8 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Use early returns and guard clauses; keep the happy path at the left margin.
 - Extract dense conditionals and nested ternaries into named locals or helper functions.
 - Extract complex conditional JSX and nested mapping loops into sub-components.
+- Order JSX props as identity (`key`, `ref`) → accessibility → primary data/state → configuration → callbacks. Keep controlled prop pairs together even when that overrides the category order. Place spreads first or last according to precedence. Keep `sx` last and outside this ordering.
+- Within `sx`, order properties as custom properties → positioning → layout → sizing → spacing → overflow/scrolling → typography → visuals → interaction → motion → nested/conditional rules. Keep related properties together. Put broad shorthands before intentional specific overrides, and base declarations before conditional overrides. Don't alphabetize or add blank lines solely to separate categories.
 
 ### Naming
 
