@@ -10,15 +10,15 @@
 
 </div>
 
-**AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with communication symbols and speak them aloud.
+**AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with symbols and speak them aloud.
 
-On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, adjust tone, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
-## From a few symbols to a complete sentence
+## Expanding a message with Built-in AI
 
-AAC users may select a few key concepts rather than every word in a complete sentence:
+AAC users may select a few key concepts instead of composing every word explicitly:
 
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
@@ -26,74 +26,41 @@ Board message:   "want eat pizza"
 AI suggestion:   "I want to eat pizza."
 ```
 
-Suggestions are optional; the original message is replaced only when the user accepts one.
+Suggestions are optional and replace the original message only when accepted.
 
-## Built-in AI where it matters
+## Core features
 
-| Browser API | What it offers the user                                                           |
-| ----------- | --------------------------------------------------------------------------------- |
-| Proofreader | Grammar, spelling, and punctuation corrections                                    |
-| Rewriter    | Alternative phrasing that preserves the original tone or adopts a more casual one |
-| Translator  | Translated board names, labels, and spoken phrases                                |
+- Quick Core 24 starter board with linked vocabulary
+- Touch and keyboard navigation
+- [Open Board Format](https://www.openboardformat.org) (`.obf` and `.obz`) imports from a device or URL
+- 35 interface languages and right-to-left layouts
+- Installable PWA with offline communication
 
-## Enable Built-in AI (optional)
+## Privacy and offline use
 
-Proofreading and rewriting currently require experimental browser flags. Open each address for your browser and set the flag to **Enabled**:
+AAC Board AI has no accounts, backend, telemetry, or tracking. Boards, messages, settings, and cached translations stay on the device. Loading third-party media contacts external hosts.
 
-**Google Chrome**
+Stored boards remain available offline. URL imports and remote resources require a connection. Media and text-to-speech availability depend on the platform and selected voice.
 
-```text
-chrome://flags/#proofreader-api
-chrome://flags/#rewriter-api
-```
-
-**Microsoft Edge Canary or Dev**
-
-```text
-edge://flags/#edge-proofreader-api
-edge://flags/#edge-llm-rewriter-api-for-phi-mini
-```
-
-Then restart your browser.
-
-## Core communication features
-
-- **Starter board** — Includes the Quick Core 24 board with linked vocabulary categories.
-- **Accessible input** — Supports touch and keyboard navigation.
-- **Open boards** — Imports [Open Board Format](https://www.openboardformat.org) (`.obf` and `.obz`) boards from your device or a URL.
-- **Multilingual** — Supports 35 interface languages, right-to-left layouts, and on-device caching for translated boards.
-- **Offline and installable** — Runs as a PWA and supports offline communication after initial setup.
-
-## Open-source building blocks
-
-AAC Board AI uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) for OBF and OBZ support and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) for browser-managed, on-device AI.
-
-## Privacy
-
-AAC Board AI has no accounts, application backend, telemetry, or tracking. Imported board data, settings, and cached translations stay on the device; messages are never sent to an AAC Board AI service.
-
-Opening a board with third-party media contacts the hosts named in those URLs.
-
-## Offline use
-
-After the app has loaded and a board has been stored, reading, navigation, and message composition remain available offline.
-
-Locally stored media and available speech voices can also work offline. URL imports, remote resources, and initial AI model or language-pack downloads require a connection.
-
-Text-to-speech behavior depends on the platform and selected voice.
-
-## Current limits
+## Limitations
 
 Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
 
 ## Built-in AI availability
 
-The app checks each API at runtime. Availability varies by browser version and release channel, operating system, hardware, language, and model availability. Initial model and language-pack downloads require a connection and may require an unmetered connection.
+Support varies by browser, device, language, and model availability.
 
-See the browser documentation for current requirements and preview status:
+Proofreading and rewriting currently require experimental browser flags:
 
-- **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api), [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api), and [Translator](https://developer.chrome.com/docs/ai/translator-api)
-- **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api), [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis), and [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
+- **Google Chrome:** `chrome://flags/#proofreader-api` and `chrome://flags/#rewriter-api`
+- **Microsoft Edge Canary or Dev:** `edge://flags/#edge-proofreader-api` and `edge://flags/#edge-llm-rewriter-api-for-phi-mini`
+
+Enable the flags and restart your browser. See the API documentation for current requirements:
+
+| Browser        | API documentation                                                                                                                                                                                                                                                                             |
+| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Google Chrome  | [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) · [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api) · [Translator](https://developer.chrome.com/docs/ai/translator-api)                                                                                       |
+| Microsoft Edge | [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api) · [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis) · [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api) |
 
 ## Develop locally
 
@@ -108,18 +75,11 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-```bash
-npx playwright install --with-deps  # Install browser test dependencies
-npm run format:check                # Check formatting
-npm run lint                        # Lint the code
-npm test                            # Run the tests in Chromium
-npm run build                       # Type-check and build for production
-npm run test:pwa                    # Build and verify the offline PWA flow
-```
+Tests run in Chromium; install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
 ## Architecture
 
-AAC Board AI is built with React 19, the React Compiler, TypeScript, Material UI, React Router, IndexedDB, Vite, Vitest, and Playwright. See [docs/architecture.md](docs/architecture.md) for the design, module boundaries, storage model, and accessibility invariants.
+See [docs/architecture.md](docs/architecture.md) for the stack, module boundaries, storage model, and accessibility invariants. The Open Board Format and Built-in AI integrations are also available as [@shayc/open-board-format](https://github.com/shayc/open-board-format) and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai).
 
 ## Contributing
 
