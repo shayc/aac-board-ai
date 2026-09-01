@@ -17,9 +17,9 @@ export function LoadingState({ message }: LoadingStateProps) {
     <Fade in timeout={400} style={{ transitionDelay: "300ms" }}>
       <Stack
         sx={{
-          height: "100%",
           alignItems: "center",
           justifyContent: "center",
+          height: "100%",
           gap: 2,
         }}
       >

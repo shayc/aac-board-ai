@@ -24,18 +24,18 @@ export function PlayButton({
 
   return (
     <Fab
-      color={isPlaying ? "default" : "primary"}
-      disabled={disabled}
       aria-label={label}
+      disabled={disabled}
+      color={isPlaying ? "default" : "primary"}
       onClick={isPlaying ? onStop : onPlay}
       sx={{
+        alignSelf: "center",
+        flexShrink: 0,
         width: 72,
         height: 72,
-        flexShrink: 0,
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
-        alignSelf: "center",
       }}
     >
       {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}

@@ -2,7 +2,7 @@ import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
-import { useSyncBoardMediaWithActiveRoute } from "@app/routing/use-sync-board-media-with-active-route";
+import { useBoardRouteMediaLifecycle } from "@app/routing/use-board-route-media-lifecycle";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
@@ -28,11 +28,11 @@ export function AppShell() {
   const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
 
   useImportLaunchedBoardFiles();
-  useSyncBoardMediaWithActiveRoute();
+  useBoardRouteMediaLifecycle();
   useRevalidateBoardOnLanguageChange();
 
   return (
-    <Box sx={{ height: "100svh", display: "flex" }} {...fileDrop.dropHandlers}>
+    <Box {...fileDrop.dropHandlers} sx={{ display: "flex", height: "100svh" }}>
       <LibraryDrawer
         open={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}

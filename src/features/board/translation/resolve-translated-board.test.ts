@@ -1,7 +1,7 @@
 import {
   stubBuiltInAIUnsupported,
   stubTranslator,
-} from "@shared/testing/built-in-ai";
+} from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoard } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";

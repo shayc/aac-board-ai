@@ -70,7 +70,7 @@ export function BoardSetList({
 
   return (
     <>
-      <Box component="nav" aria-labelledby="board-set-list-subheader">
+      <Box aria-labelledby="board-set-list-subheader" component="nav">
         <List
           subheader={
             <ListSubheader id="board-set-list-subheader">
@@ -102,19 +102,18 @@ export function BoardSetList({
 
             return (
               <ListItem
-                disablePadding
                 key={boardSet.setId}
                 data-menu-open={isMenuOpen || undefined}
                 secondaryAction={
                   <Tooltip title={t(m.libraryMoreOptions)}>
                     <IconButton
-                      edge="end"
                       aria-label={t(m.libraryMoreOptionsFor, {
                         name: boardSet.name,
                       })}
                       aria-controls={isMenuOpen ? "board-set-menu" : undefined}
                       aria-haspopup="menu"
                       aria-expanded={isMenuOpen ? "true" : undefined}
+                      edge="end"
                       onClick={(event) => handleMenuOpen(event, boardSet)}
                       sx={{ border: "none" }}
                     >
@@ -122,6 +121,7 @@ export function BoardSetList({
                     </IconButton>
                   </Tooltip>
                 }
+                disablePadding
               >
                 <ListItemButton
                   selected={boardSet.setId === selectedSetId}
@@ -131,9 +131,9 @@ export function BoardSetList({
                     primary={
                       <Box
                         sx={{
-                          whiteSpace: "nowrap",
                           overflow: "hidden",
                           textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
                         }}
                       >
                         {boardSet.name}

@@ -15,10 +15,8 @@ import {
 import { RouterProvider } from "react-router/dom";
 import { expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import {
-  BOARD_ROUTE_ID,
-  useSyncBoardMediaWithActiveRoute,
-} from "./use-sync-board-media-with-active-route";
+import { BOARD_ROUTE_ID } from "./route-ids";
+import { useBoardRouteMediaLifecycle } from "./use-board-route-media-lifecycle";
 
 const SET_ID = "media-lifetime-set";
 const IMAGE_PATH = "images/test.png";
@@ -64,7 +62,7 @@ async function waitForGate(gate: Gate, signal: AbortSignal): Promise<void> {
 }
 
 function TestShell() {
-  useSyncBoardMediaWithActiveRoute();
+  useBoardRouteMediaLifecycle();
 
   return <Outlet />;
 }
@@ -78,7 +76,7 @@ function TestBoard() {
   const imageUrl = board.buttons[0].imageSrc;
   assertDefined(imageUrl);
 
-  return <img src={imageUrl} alt={board.name} />;
+  return <img alt={board.name} src={imageUrl} />;
 }
 
 function isObjectUrlAlive(url: string): Promise<boolean> {

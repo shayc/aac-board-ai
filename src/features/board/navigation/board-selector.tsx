@@ -18,21 +18,20 @@ export function BoardSelector() {
 
   return (
     <Autocomplete
-      disableClearable
-      autoHighlight
-      size="small"
       options={boards}
       value={selectedBoard}
       onChange={(_event, board) => goToBoard(board.boardId)}
+      disableClearable
+      autoHighlight
+      size="small"
+      slotProps={{
+        popupIndicator: { sx: { border: "none" } },
+      }}
       getOptionLabel={(board) => board.name}
       getOptionKey={(board) => board.boardId}
       isOptionEqualToValue={(option, selected) =>
         option.boardId === selected.boardId
       }
-      sx={{ width: 320, maxWidth: "100%" }}
-      slotProps={{
-        popupIndicator: { sx: { border: "none" } },
-      }}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -49,6 +48,7 @@ export function BoardSelector() {
           }}
         />
       )}
+      sx={{ width: 320, maxWidth: "100%" }}
     />
   );
 }

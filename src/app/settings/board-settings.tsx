@@ -41,10 +41,10 @@ export function BoardSettings() {
           aria-labelledby="tile-label-position"
           name="tile-label-position"
           value={tileLabelPlacement}
-          row
           onChange={(event) =>
             setTileLabelPlacement(event.target.value as TileLabelPlacement)
           }
+          row
         >
           <FormControlLabel
             value="top"
@@ -65,15 +65,15 @@ export function BoardSettings() {
       </FormControl>
 
       <FormControlLabel
-        labelPlacement="start"
         label={t(m.tileBorders)}
-        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={areTileBordersVisible}
             onChange={(event) => setTileBordersVisible(event.target.checked)}
           />
         }
+        labelPlacement="start"
+        sx={{ justifyContent: "space-between", m: 0 }}
       />
 
       <Stack spacing={0.5}>
@@ -89,10 +89,10 @@ export function BoardSettings() {
           aria-label={t(m.tileSaturation)}
           getAriaValueText={formatSaturation}
           value={tileSaturation}
+          onChange={(_event, newValue) => setTileSaturation(newValue)}
           min={TILE_SATURATION.min}
           max={TILE_SATURATION.max}
           step={0.1}
-          onChange={(_event, newValue) => setTileSaturation(newValue)}
         />
       </Stack>
     </Stack>

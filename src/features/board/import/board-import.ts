@@ -17,7 +17,7 @@ import {
   BoardSetAlreadyExistsError,
   createBoardSet,
 } from "../storage/board-set-storage";
-import { htmlToText } from "./html";
+import { htmlToText } from "./html-to-text";
 
 export interface ImportResult {
   setId: string;

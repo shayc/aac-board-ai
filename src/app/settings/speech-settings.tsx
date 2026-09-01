@@ -102,14 +102,14 @@ export function SpeechSettings() {
       <FormControl size="small" fullWidth>
         <InputLabel id="voice-select-label">{t(m.speechVoice)}</InputLabel>
         <Select
-          variant="outlined"
-          label={t(m.speechVoice)}
-          labelId="voice-select-label"
           id="voice-select"
+          labelId="voice-select-label"
+          label={t(m.speechVoice)}
           value={selectedVoiceURI}
           onChange={(event) =>
             setVoiceURI(event.target.value === "" ? null : event.target.value)
           }
+          variant="outlined"
         >
           {locales.map(renderLocaleOptions)}
         </Select>
@@ -117,7 +117,7 @@ export function SpeechSettings() {
 
       {speechControls.map(
         ({ id, label, value, min, max, onChange, formatValue }) => (
-          <Stack key={id} spacing={0.5} role="group" aria-label={label}>
+          <Stack key={id} role="group" aria-label={label} spacing={0.5}>
             <Stack
               direction="row"
               sx={{ justifyContent: "space-between", gap: 2 }}
@@ -133,19 +133,17 @@ export function SpeechSettings() {
               aria-label={label}
               getAriaValueText={formatValue}
               value={value}
+              onChange={(_event, newValue) => onChange(newValue)}
               min={min}
               max={max}
               step={0.1}
-              onChange={(_event, newValue) => onChange(newValue)}
             />
           </Stack>
         ),
       )}
 
       <FormControlLabel
-        labelPlacement="start"
         label={t(m.playbackHighlight)}
-        sx={{ justifyContent: "space-between", m: 0 }}
         control={
           <Switch
             checked={isMessagePartHighlightingEnabled}
@@ -154,19 +152,21 @@ export function SpeechSettings() {
             }
           />
         }
+        labelPlacement="start"
+        sx={{ justifyContent: "space-between", m: 0 }}
       />
 
       <Button
         variant="contained"
         color="primary"
         startIcon={<PlayArrowIcon />}
-        sx={{ alignSelf: "flex-start" }}
         onClick={() =>
           void playback.play({
             source: "speech-preview",
             steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
           })
         }
+        sx={{ alignSelf: "flex-start" }}
       >
         {t(m.speechPreview)}
       </Button>

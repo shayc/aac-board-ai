@@ -35,24 +35,24 @@ export function NavButtons({ onBack, onHome }: NavButtonsProps = {}) {
     <Box sx={{ display: "flex", gap: 1 }}>
       <Button
         aria-label={t(m.navBack)}
+        disabled={!canGoBack}
         size="large"
         color="inherit"
-        disabled={!canGoBack}
         variant="contained"
-        sx={{ width: 72 }}
         onClick={handleBackClick}
+        sx={{ width: 72 }}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
       </Button>
 
       <Button
         aria-label={t(m.navHome)}
+        disabled={!canGoHome || (isHome && !onHome)}
         size="large"
         color="inherit"
-        disabled={!canGoHome || (isHome && !onHome)}
         variant="contained"
-        sx={{ width: 72 }}
         onClick={handleHomeClick}
+        sx={{ width: 72 }}
       >
         <HomeOutlinedIcon />
       </Button>

@@ -34,18 +34,18 @@ export function LibraryDrawer({
 
   return (
     <Drawer
-      anchor="left"
       open={open}
       onClose={onClose}
+      anchor="left"
       variant={variant}
       slotProps={{
         paper: {
           "aria-label": t(m.libraryTitle),
           ...(variant === "persistent" && { component: "aside" }),
           sx: {
-            width: LIBRARY_DRAWER_WIDTH,
             display: "flex",
             flexDirection: "column",
+            width: LIBRARY_DRAWER_WIDTH,
           },
         },
       }}

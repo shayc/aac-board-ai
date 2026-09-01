@@ -52,8 +52,8 @@ export function MessageBar({
           {
             flexGrow: 1,
             gap: 2,
-            borderRadius: 32,
             overflow: "hidden",
+            borderRadius: 32,
             bgcolor: "grey.200",
           },
           (theme) => theme.applyStyles("dark", { bgcolor: "grey.800" }),
@@ -80,10 +80,10 @@ export function MessageBar({
                 sx={(theme) => ({
                   p: 1,
                   borderRadius: 4,
-                  outlineOffset: -2,
                   outline: isActive
                     ? `2px solid ${theme.vars?.palette.primary.main ?? theme.palette.primary.main}`
                     : "none",
+                  outlineOffset: -2,
                 })}
               >
                 <AACSymbol label={part.label ?? ""} imageSrc={part.imageSrc} />

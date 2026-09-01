@@ -23,11 +23,11 @@ export function StatusLayout({
   return (
     <Stack
       sx={{
-        height: "100%",
-        py: 8,
         alignItems: "center",
         justifyContent: "center",
+        height: "100%",
         gap: 2,
+        py: 8,
         textAlign: "center",
       }}
     >

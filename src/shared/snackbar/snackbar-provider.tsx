@@ -87,18 +87,18 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       <Snackbar
         key={state.current?.key}
         open={state.open}
+        onClose={handleClose}
         autoHideDuration={state.current?.duration ?? 4000}
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",
         }}
-        onClose={handleClose}
         slotProps={{ transition: { onExited: handleExited } }}
       >
         <Alert
-          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
-          action={state.current?.action}
           closeText={t(m.close)}
+          action={state.current?.action}
+          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
           onClose={handleClose}
           sx={{ width: "100%" }}
         >

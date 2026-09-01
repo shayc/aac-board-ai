@@ -24,10 +24,10 @@ export function SuggestionBar({
     <Stack
       direction="row"
       sx={{
-        minHeight: 32,
         flex: "1",
-        gap: 2,
         alignItems: "center",
+        minHeight: 32,
+        gap: 2,
         overflow: "hidden",
       }}
     >
@@ -37,9 +37,9 @@ export function SuggestionBar({
 
       <Box
         sx={{
-          height: "100%",
           display: "flex",
           alignItems: "center",
+          height: "100%",
           gap: 2,
           marginInlineEnd: "auto",
           overflowX: "auto",

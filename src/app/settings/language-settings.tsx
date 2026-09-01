@@ -28,12 +28,12 @@ export function LanguageSettings() {
       <FormControl size="small" fullWidth>
         <InputLabel id="language-select-label">{t(m.languageLabel)}</InputLabel>
         <Select
-          variant="outlined"
-          label={t(m.languageLabel)}
-          labelId="language-select-label"
           id="language-select"
+          labelId="language-select-label"
+          label={t(m.languageLabel)}
           value={language}
           onChange={(event) => setLanguage(event.target.value)}
+          variant="outlined"
         >
           {availableLanguages.map(({ code, name }) => (
             <MenuItem key={code} value={code}>

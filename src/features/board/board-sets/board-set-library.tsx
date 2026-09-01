@@ -64,7 +64,7 @@ export function BoardSetLibrary({
 
   if (isLoading) {
     return (
-      <Box sx={{ px: 2, height: "100%" }}>
+      <Box sx={{ height: "100%", px: 2 }}>
         <LoadingState message={t(m.libraryLoading)} />
       </Box>
     );
@@ -72,7 +72,7 @@ export function BoardSetLibrary({
 
   if (error && boardSets.length === 0) {
     return (
-      <Box sx={{ px: 2, height: "100%" }}>
+      <Box sx={{ height: "100%", px: 2 }}>
         <ErrorState icon={null} title={t(m.libraryLoadFailed)} />
       </Box>
     );
@@ -80,7 +80,7 @@ export function BoardSetLibrary({
 
   if (boardSets.length === 0) {
     return (
-      <Box sx={{ px: 2, height: "100%" }}>
+      <Box sx={{ height: "100%", px: 2 }}>
         <EmptyState
           title={t(m.libraryEmptyTitle)}
           description={t(m.libraryEmptyDescription)}
@@ -100,7 +100,7 @@ export function BoardSetLibrary({
 
   return (
     <>
-      <List sx={{ px: 1, mb: 2 }}>
+      <List sx={{ mb: 2, px: 1 }}>
         <ListItem disablePadding>
           <ListItemButton onClick={() => void pickAndImportBoardFiles()}>
             <ListItemIcon>

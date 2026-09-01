@@ -17,9 +17,9 @@ export const gridCellSx = {
 export function createGridViewportSx(theme: Theme) {
   return {
     "--pad": theme.spacing(DEFAULT_PADDING),
+    containerType: "size",
     height: "100%",
     overflow: "auto",
-    containerType: "size",
     scrollSnapType: "both proximity",
     scrollPadding: PAD,
     [theme.breakpoints.down("sm")]: {
@@ -37,6 +37,12 @@ export function createGridContentSx(
   return {
     "--visible-cols": 1,
     "--visible-rows": 1,
+    "--cell-width": trackSize(theme, "100cqi", gap, "var(--visible-cols)"),
+    "--cell-height": trackSize(theme, "100cqb", gap, "var(--visible-rows)"),
+    minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
+    minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
+    gap,
+    p: PAD,
     [theme.breakpoints.down("sm")]: visibleTrackQueries(
       rows,
       columns,
@@ -49,12 +55,6 @@ export function createGridContentSx(
       gap,
       DEFAULT_PADDING,
     ),
-    "--cell-width": trackSize(theme, "100cqi", gap, "var(--visible-cols)"),
-    "--cell-height": trackSize(theme, "100cqb", gap, "var(--visible-rows)"),
-    minWidth: gridExtent(theme, "var(--cell-width)", gap, columns),
-    minHeight: gridExtent(theme, "var(--cell-height)", gap, rows),
-    p: PAD,
-    gap,
   };
 }
 

@@ -34,9 +34,9 @@ type BoardRootStyle = CSSProperties & {
 const boardRootSx = (theme: Theme) => ({
   height: "100%",
   ...theme.applyStyles("dark", {
-    backgroundRepeat: "no-repeat",
     backgroundImage:
       "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+    backgroundRepeat: "no-repeat",
   }),
   [theme.breakpoints.up("sm")]: {
     pl: safeAreaInset("left"),
@@ -91,8 +91,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...keyboard.rootProps}
       direction="column"
-      sx={boardRootSx}
       style={boardRootStyle}
+      sx={boardRootSx}
     >
       <BoardPlaybackMessageBar parts={message.parts} />
 
@@ -131,20 +131,20 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Grid<BoardButton>
           ref={gridRef}
           ariaLabel={board.name ?? t(m.boardGridLabel)}
+          dir={direction}
           items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}
           order={board.grid.order}
           renderItem={renderTile}
-          dir={direction}
         />
       </Box>
 
       {isSmallScreen && (
         <Toolbar
           sx={{
-            justifyContent: "space-between",
             alignItems: "flex-end",
+            justifyContent: "space-between",
             gap: 2,
             px: { xs: 3 },
             pb: safeAreaInset("bottom"),

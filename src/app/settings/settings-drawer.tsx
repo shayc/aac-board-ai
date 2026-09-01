@@ -33,8 +33,8 @@ const sectionHeadingSx = {
   display: "flex",
   alignItems: "center",
   gap: 1,
-  fontWeight: 700,
   mb: 2,
+  fontWeight: 700,
   "& > svg": { color: "primary.main" },
 } as const;
 
@@ -43,9 +43,9 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
   return (
     <Drawer
-      anchor="right"
       open={open}
       onClose={onClose}
+      anchor="right"
       slotProps={{
         paper: {
           "aria-label": t(m.settingsTitle),
@@ -145,7 +145,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         >
           <GitHubIcon
             fontSize="small"
-            sx={{ verticalAlign: "text-bottom", mr: 2 }}
+            sx={{ mr: 2, verticalAlign: "text-bottom" }}
           />
           {t(m.aboutSourceCode)}
         </ExternalLink>
