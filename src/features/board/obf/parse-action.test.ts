@@ -24,15 +24,10 @@ describe("parseAction", () => {
     expect(parseAction("+")).toEqual({ kind: "spell", text: "" });
   });
 
-  test("returns null for unknown colon actions", () => {
-    expect(parseAction(":unknown")).toBeNull();
-  });
-
-  test("returns null for empty string", () => {
-    expect(parseAction("")).toBeNull();
-  });
-
-  test("returns null for arbitrary text", () => {
-    expect(parseAction("hello")).toBeNull();
-  });
+  test.each([":unknown", "", "hello"])(
+    "returns null for invalid action %j",
+    (raw) => {
+      expect(parseAction(raw)).toBeNull();
+    },
+  );
 });

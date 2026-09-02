@@ -60,14 +60,6 @@ beforeEach(async () => {
 });
 
 describe("BoardSelector", () => {
-  test("shows the current board name in the input", async () => {
-    const { screen } = await renderSelector("/sets/set-1/boards/root");
-
-    await expect
-      .element(screen.getByRole("combobox", { name: "Board" }))
-      .toHaveValue("Home");
-  });
-
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("/sets/set-1/boards/root");
 

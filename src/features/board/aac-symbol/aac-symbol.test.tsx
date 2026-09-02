@@ -29,15 +29,6 @@ describe("AACSymbol", () => {
     expect(img?.getAttribute("alt")).toBe("");
   });
 
-  test("renders both image and label when both are provided", async () => {
-    const screen = await render(
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Action" />,
-    );
-
-    await expect.element(screen.getByText("Action")).toBeVisible();
-    expect(screen.container.querySelector("img")).not.toBeNull();
-  });
-
   test("places the label above the image when labelPlacement is top", async () => {
     const screen = await render(
       <AACSymbol

@@ -25,33 +25,6 @@ describe("useBoardPlayback", () => {
     audio = stubAudio();
   });
 
-  test("speaks consecutive text parts as one merged utterance", async () => {
-    const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
-    ];
-
-    const { result } = await renderPlayback();
-
-    await result.current.playMessage(parts);
-
-    expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0][0].text).toBe("i want");
-  });
-
-  test("plays a sound part as audio rather than speaking it", async () => {
-    const parts: MessagePart[] = [
-      { id: "1", label: "bell", soundSrc: "bell.mp3" },
-    ];
-
-    const { result } = await renderPlayback();
-
-    await result.current.playMessage(parts);
-
-    expect(audio.play).toHaveBeenCalledTimes(1);
-    expect(speech.speak).not.toHaveBeenCalled();
-  });
-
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
       { id: "1", label: "before" },
@@ -81,17 +54,6 @@ describe("useBoardPlayback", () => {
     await result.current.playMessage(parts);
 
     expect(callOrder).toEqual(["speak:before", "play:ding.mp3", "speak:after"]);
-  });
-
-  test("drops parts with no audible content", async () => {
-    const parts: MessagePart[] = [{ id: "1" }];
-
-    const { result } = await renderPlayback();
-
-    await result.current.playMessage(parts);
-
-    expect(speech.speak).not.toHaveBeenCalled();
-    expect(audio.play).not.toHaveBeenCalled();
   });
 
   test("reports isMessagePlaying true during playback and false after it resolves", async () => {

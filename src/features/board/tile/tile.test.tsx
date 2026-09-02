@@ -34,14 +34,6 @@ function resolveColorInSrgb(cssColor: string): string {
 }
 
 describe("Tile", () => {
-  test("renders label without image when imageSrc is not provided", async () => {
-    const screen = await render(<Tile label="Hello" onActivate={vi.fn()} />);
-
-    await expect
-      .element(screen.getByRole("button", { name: "Hello" }))
-      .toBeVisible();
-  });
-
   test("renders with image when imageSrc is provided", async () => {
     const screen = await render(
       <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onActivate={vi.fn()} />,

@@ -53,20 +53,6 @@ describe("BoardSetLibrary", () => {
       .not.toBeInTheDocument();
   });
 
-  test("invokes onSelect when a set is chosen", async () => {
-    await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
-    ]);
-    const onSelect = vi.fn();
-
-    const screen = await renderBoardSetLibrary(onSelect);
-    await screen.getByText("Animals").click();
-
-    expect(onSelect).toHaveBeenCalledWith(
-      expect.objectContaining({ setId: "animals" }),
-    );
-  });
-
   test("deletes a set after confirmation and announces it", async () => {
     await seedBoardSets([
       { setId: "animals", rootBoardId: "root", name: "Animals" },

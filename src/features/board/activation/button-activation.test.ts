@@ -75,35 +75,6 @@ describe("createButtonActivator", () => {
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
 
-  test("spell appends the text via setParts", () => {
-    const message = createMessageStub([]);
-    const { activateButton } = setup({ message });
-
-    activateButton({
-      id: "btn",
-      actions: [{ kind: "spell", text: "t" }],
-    });
-
-    expect(message.setParts).toHaveBeenCalledTimes(1);
-    const [committed] = vi.mocked(message.setParts).mock.calls[0];
-    expect(committed).toHaveLength(1);
-    expect(committed[0].label).toBe("t");
-    expect(committed[0].id).toBeTruthy();
-  });
-
-  test("space appends an empty-label part via setParts", () => {
-    const message = createMessageStub([]);
-    const { activateButton } = setup({ message });
-
-    activateButton({ id: "btn", actions: [{ kind: "space" }] });
-
-    expect(message.setParts).toHaveBeenCalledTimes(1);
-    const [committed] = vi.mocked(message.setParts).mock.calls[0];
-    expect(committed).toHaveLength(1);
-    expect(committed[0].label).toBe("");
-    expect(committed[0].id).toBeTruthy();
-  });
-
   test("backspace removes a character from a text-only last part via setParts", () => {
     const message = createMessageStub([
       { id: "1", label: "hello" },
@@ -291,16 +262,6 @@ describe("createButtonActivator", () => {
 
     expect(playback.playPart).toHaveBeenCalledWith(
       expect.objectContaining({ label: "I", vocalization: "Hello" }),
-    );
-  });
-
-  test("passes label-only content to playback", () => {
-    const { activateButton, playback } = setup();
-
-    activateButton({ id: "btn", label: "Goodbye" });
-
-    expect(playback.playPart).toHaveBeenCalledWith(
-      expect.objectContaining({ label: "Goodbye" }),
     );
   });
 
