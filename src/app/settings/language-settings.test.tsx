@@ -22,10 +22,9 @@ describe("LanguageSettings", () => {
     stubBuiltInAIUnsupported("Translator");
 
     const screen = await renderLanguageSettings();
+    const select = screen.getByRole("combobox", { name: "Language" });
 
-    await expect
-      .element(screen.getByRole("combobox", { name: "Language" }))
-      .toBeInTheDocument();
+    await expect.element(select).not.toHaveAttribute("aria-disabled");
     await expect
       .element(screen.getByText(/Automatic board translation is unavailable/))
       .toBeInTheDocument();
