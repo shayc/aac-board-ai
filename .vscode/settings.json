@@ -1,4 +1,4 @@
 {
   "editor.defaultFormatter": "oxc.oxc-vscode",
-  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
+  "js/ts.preferences.autoImportSpecifierExcludeRegexes": ["^@mui/[^/]+$"]
 }
