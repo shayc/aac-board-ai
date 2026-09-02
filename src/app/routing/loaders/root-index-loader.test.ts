@@ -87,6 +87,9 @@ describe("rootIndexLoader", () => {
   });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
+    let now = 1000;
+    vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
+
     await seedBoardSets([
       { setId: "set-1", rootBoardId: "root-1" },
       { setId: "set-2", rootBoardId: "root-2" },

@@ -37,7 +37,7 @@ function clamp(
     : fallback;
 }
 
-function parseConfig(raw: unknown): SpeechConfig {
+export function parseSpeechConfig(raw: unknown): SpeechConfig {
   const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -69,7 +69,7 @@ synthesis?.addEventListener("voiceschanged", () => {
 
 const speechConfigStore = createPersistedStore<SpeechConfig>(
   "speech-config",
-  parseConfig,
+  parseSpeechConfig,
 );
 
 function updateConfig(patch: Partial<SpeechConfig>): void {

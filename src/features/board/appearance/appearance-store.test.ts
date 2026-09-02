@@ -65,11 +65,11 @@ describe("appearance-store", () => {
       ).toBe(false);
     });
 
-    test("keeps a stored areTileBordersVisible value of false", () => {
+    test("keeps a stored areTileBordersVisible value of true", () => {
       expect(
-        parseBoardAppearanceConfig({ areTileBordersVisible: false })
+        parseBoardAppearanceConfig({ areTileBordersVisible: true })
           .areTileBordersVisible,
-      ).toBe(false);
+      ).toBe(true);
     });
 
     test("keeps other fields when only areTileBordersVisible is stored", () => {
