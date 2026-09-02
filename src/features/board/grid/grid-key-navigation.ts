@@ -21,7 +21,7 @@ export function findGridKeyTarget(
   direction: "ltr" | "rtl",
 ): GridFocusTarget | null {
   if (event.key === "Home" || event.key === "End") {
-    return findEdgeTarget(event, root, from, direction);
+    return findEdgeTarget(event, root, from);
   }
 
   if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
@@ -37,7 +37,6 @@ function findEdgeTarget(
   event: GridKeyEvent,
   root: HTMLElement,
   from: GridPosition,
-  direction: "ltr" | "rtl",
 ): GridFocusTarget | null {
   if (event.shiftKey || event.altKey) {
     return null;
@@ -48,8 +47,7 @@ function findEdgeTarget(
     root,
     spansWholeGrid ? undefined : from.row,
   );
-  const goesToFirst =
-    direction === "rtl" ? event.key === "End" : event.key === "Home";
+  const goesToFirst = event.key === "Home";
 
   return (
     (goesToFirst ? candidates[0] : candidates[candidates.length - 1]) ?? null
