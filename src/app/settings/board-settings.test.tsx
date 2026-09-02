@@ -31,6 +31,12 @@ describe("BoardSettings", () => {
     await expect
       .element(screen.getByRole("radio", { name: "Top" }))
       .toBeChecked();
+    await expect
+      .element(screen.getByRole("radio", { name: "Bottom" }))
+      .not.toBeChecked();
+    await expect
+      .element(screen.getByRole("radio", { name: "Hidden" }))
+      .not.toBeChecked();
     expect(
       labelPositionGroup
         .element()
