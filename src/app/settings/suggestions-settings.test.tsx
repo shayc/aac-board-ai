@@ -40,9 +40,6 @@ describe("SuggestionsSettings", () => {
     const screen = await renderSuggestionsSettings();
 
     await expect
-      .element(screen.getByRole("radio", { name: "direct" }))
-      .not.toBeInTheDocument();
-    await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
 

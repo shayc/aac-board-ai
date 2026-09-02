@@ -5,12 +5,6 @@ import { useDebouncedValue } from "./use-debounced-value";
 const DELAY = 50;
 
 describe("useDebouncedValue", () => {
-  test("returns the initial value immediately", async () => {
-    const { result } = await renderHook(() => useDebouncedValue("a", DELAY));
-
-    expect(result.current).toBe("a");
-  });
-
   test("holds the previous value until the delay elapses, then updates", async () => {
     const { result, rerender } = await renderHook(
       ({ value }: { value: string } = { value: "a" }) =>

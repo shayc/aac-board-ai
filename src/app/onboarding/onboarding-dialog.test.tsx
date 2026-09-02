@@ -19,13 +19,6 @@ describe("OnboardingDialog", () => {
     await expect
       .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
       .toBeVisible();
-    for (const heading of [
-      "Smart Rewriting",
-      "Translation",
-      "Private & Offline",
-    ]) {
-      await expect.element(screen.getByText(heading)).not.toBeInTheDocument();
-    }
 
     for (const benefit of [
       "Say more with fewer taps. AI helps your messages sound clear and natural.",

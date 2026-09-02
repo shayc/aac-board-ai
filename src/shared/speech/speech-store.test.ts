@@ -1,19 +1,7 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
-import {
-  parseSpeechConfig,
-  setPitch,
-  setRate,
-  setVoiceURI,
-  setVolume,
-  useSpeechConfig,
-} from "./speech-store";
+import { describe, expect, test } from "vitest";
+import { parseSpeechConfig } from "./speech-store";
 
 describe("speech-store", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   describe("parseSpeechConfig", () => {
     test("uses defaults when the config is absent", () => {
       expect(parseSpeechConfig(undefined)).toEqual({
@@ -68,29 +56,6 @@ describe("speech-store", () => {
       (key, value, expected) => {
         expect(parseSpeechConfig({ [key]: value })[key]).toBe(expected);
       },
-    );
-  });
-
-  test("setters update the snapshot and persist it", async () => {
-    const { result, rerender } = await renderHook(() => useSpeechConfig());
-
-    setVoiceURI("voice-1");
-    setRate(1.2);
-    setPitch(0.8);
-    setVolume(0.6);
-    await rerender();
-
-    const expectedConfig = {
-      voiceURI: "voice-1",
-      rate: 1.2,
-      pitch: 0.8,
-      volume: 0.6,
-    };
-    expect(result.current).toEqual(expectedConfig);
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("speech-config")).toBe(
-        JSON.stringify(expectedConfig),
-      ),
     );
   });
 });

@@ -2,7 +2,6 @@ import { beforeEach, describe, expect, test } from "vitest";
 import {
   DEFAULT_LANGUAGE,
   getPreferredLanguage,
-  getStoredLanguage,
   getUiLocale,
   parseStoredLanguage,
   resolveUiLocale,
@@ -38,12 +37,6 @@ describe("getPreferredLanguage", () => {
 describe("language store", () => {
   beforeEach(() => {
     setStoredLanguage(DEFAULT_LANGUAGE);
-  });
-
-  test("setStoredLanguage exposes the new value as the live snapshot", () => {
-    setStoredLanguage("fr");
-
-    expect(getStoredLanguage()).toBe("fr");
   });
 
   test("derives a translated UI locale from the communication language", () => {

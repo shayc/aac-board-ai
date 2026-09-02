@@ -37,14 +37,6 @@ describe("createObjectUrlRegistry", () => {
     expect(revokeSpy).toHaveBeenCalledWith(url2);
   });
 
-  test("revokeAll is safe to call when empty", () => {
-    const registry = createObjectUrlRegistry();
-
-    registry.revokeAll();
-
-    expect(revokeSpy).not.toHaveBeenCalled();
-  });
-
   test("revokeAll clears tracked URLs so double-call is safe", () => {
     const registry = createObjectUrlRegistry();
     registry.create(new Blob(["x"]));

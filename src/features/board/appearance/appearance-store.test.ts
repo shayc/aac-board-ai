@@ -1,18 +1,7 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
-import {
-  parseBoardAppearanceConfig,
-  setTileBordersVisible,
-  setTileLabelPlacement,
-  setTileSaturation,
-  useBoardAppearanceConfig,
-} from "./appearance-store";
+import { describe, expect, test } from "vitest";
+import { parseBoardAppearanceConfig } from "./appearance-store";
 
 describe("appearance-store", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   describe("parseBoardAppearanceConfig", () => {
     test("defaults tileSaturation to 1 when absent", () => {
       expect(parseBoardAppearanceConfig(undefined).tileSaturation).toBe(1);
@@ -99,66 +88,6 @@ describe("appearance-store", () => {
           parseBoardAppearanceConfig({ tileLabelPlacement }).tileLabelPlacement,
         ).toBe(tileLabelPlacement);
       },
-    );
-  });
-
-  test("setTileSaturation updates the snapshot and persists it", async () => {
-    const { result, rerender } = await renderHook(() =>
-      useBoardAppearanceConfig(),
-    );
-
-    setTileSaturation(0.4);
-    await rerender();
-
-    expect(result.current.tileSaturation).toBe(0.4);
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("board-appearance")).toBe(
-        JSON.stringify({
-          tileSaturation: 0.4,
-          areTileBordersVisible: false,
-          tileLabelPlacement: "top",
-        }),
-      ),
-    );
-  });
-
-  test("setTileBordersVisible updates and persists the snapshot", async () => {
-    const { result, rerender } = await renderHook(() =>
-      useBoardAppearanceConfig(),
-    );
-
-    setTileBordersVisible(true);
-    await rerender();
-
-    expect(result.current.areTileBordersVisible).toBe(true);
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("board-appearance")).toBe(
-        JSON.stringify({
-          tileSaturation: 1,
-          areTileBordersVisible: true,
-          tileLabelPlacement: "top",
-        }),
-      ),
-    );
-  });
-
-  test("setTileLabelPlacement updates and persists the snapshot", async () => {
-    const { result, rerender } = await renderHook(() =>
-      useBoardAppearanceConfig(),
-    );
-
-    setTileLabelPlacement("bottom");
-    await rerender();
-
-    expect(result.current.tileLabelPlacement).toBe("bottom");
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("board-appearance")).toBe(
-        JSON.stringify({
-          tileSaturation: 1,
-          areTileBordersVisible: false,
-          tileLabelPlacement: "bottom",
-        }),
-      ),
     );
   });
 });

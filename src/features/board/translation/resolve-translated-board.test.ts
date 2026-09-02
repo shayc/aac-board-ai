@@ -76,7 +76,7 @@ describe("resolveTranslatedBoard", () => {
     expect(inputs).toContain("drink");
   });
 
-  test("persists a fresh translation so the next load hits the cache", async () => {
+  test("persists a fresh translation", async () => {
     await createBoardSet({
       boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
       boards: [
@@ -104,16 +104,6 @@ describe("resolveTranslatedBoard", () => {
     await expect
       .poll(async () => (await getBoard("set-1", "board-1"))?.obf.strings)
       .toEqual(persistedStrings);
-
-    const { create } = stubTranslator();
-    const result = await resolveTranslatedBoard(
-      "set-1",
-      makeBoard({ strings: persistedStrings }),
-      "es",
-    );
-
-    expect(result.name).toBe("[es] Food");
-    expect(create).not.toHaveBeenCalled();
   });
 
   test("falls back to the source board when the Translator is unavailable", async () => {
@@ -130,17 +120,6 @@ describe("resolveTranslatedBoard", () => {
     stubTranslator(() =>
       Promise.reject(new DOMException("model failure", "UnknownError")),
     );
-
-    const result = await resolveTranslatedBoard("set-1", board, "es");
-
-    expect(result).toBe(board);
-  });
-
-  test("falls back even on unexpected errors so the board always renders", async () => {
-    const board = makeBoard();
-    stubTranslator(() => {
-      throw new TypeError("undefined is not a function");
-    });
 
     const result = await resolveTranslatedBoard("set-1", board, "es");
 

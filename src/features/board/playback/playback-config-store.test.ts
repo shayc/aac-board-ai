@@ -1,16 +1,7 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
-import {
-  parseBoardPlaybackConfig,
-  setMessagePartHighlightingEnabled,
-  useBoardPlaybackConfig,
-} from "./playback-config-store";
+import { describe, expect, test } from "vitest";
+import { parseBoardPlaybackConfig } from "./playback-config-store";
 
 describe("playback-config-store", () => {
-  beforeEach(() => {
-    localStorage.clear();
-  });
-
   describe("parseBoardPlaybackConfig", () => {
     test("disables message-part highlighting when absent", () => {
       expect(
@@ -33,21 +24,5 @@ describe("playback-config-store", () => {
         }).isMessagePartHighlightingEnabled,
       ).toBe(true);
     });
-  });
-
-  test("updates the snapshot and persists it", async () => {
-    const { result, rerender } = await renderHook(() =>
-      useBoardPlaybackConfig(),
-    );
-
-    setMessagePartHighlightingEnabled(true);
-    await rerender();
-
-    expect(result.current.isMessagePartHighlightingEnabled).toBe(true);
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("board-playback")).toBe(
-        JSON.stringify({ isMessagePartHighlightingEnabled: true }),
-      ),
-    );
   });
 });

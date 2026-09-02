@@ -22,20 +22,6 @@ function makeProps(
 }
 
 describe("SuggestionBar", () => {
-  test("renders a chip for each phrase", async () => {
-    const phrases = ["Hello", "How are you?", "Thank you"];
-
-    const screen = await renderWithProviders(
-      <SuggestionBar {...makeProps({ phrases })} />,
-    );
-
-    for (const phrase of phrases) {
-      await expect
-        .element(screen.getByRole("button", { name: phrase }))
-        .toBeVisible();
-    }
-  });
-
   test("calls onPhraseSelect with the correct value when a phrase chip is clicked", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);

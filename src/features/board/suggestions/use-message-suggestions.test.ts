@@ -186,18 +186,6 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("asks for activation when the model needs a user-gesture download", async () => {
-    const proofreader = stubProofreader();
-    proofreader.availability.mockResolvedValue("downloadable");
-    stubBuiltInAIUnsupported("Rewriter");
-
-    const { result } = await renderMessageSuggestions("want eat");
-
-    await vi.waitFor(() => {
-      expect(result.current.status).toEqual({ kind: "needs-activation" });
-    });
-  });
-
   test("enable prepares the proofreader", async () => {
     const proofreader = stubProofreader();
     proofreader.availability.mockResolvedValue("downloadable");

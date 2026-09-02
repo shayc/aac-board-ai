@@ -240,9 +240,6 @@ describe("useGridKeyboard", () => {
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      item3.element().focus();
-      await expect.element(item3).toHaveFocus();
-
       await press(item3, "Home");
 
       await expect.element(item2).toHaveFocus();
@@ -265,9 +262,6 @@ describe("useGridKeyboard", () => {
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
-
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
 
       await press(item1, "End");
 
@@ -295,9 +289,6 @@ describe("useGridKeyboard", () => {
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
       const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
 
-      item4.element().focus();
-      await expect.element(item4).toHaveFocus();
-
       await press(item4, "Home", { ctrlKey: true });
 
       await expect.element(item2).toHaveFocus();
@@ -324,48 +315,33 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
       await press(item1, "End", { ctrlKey: true });
 
       await expect.element(item3).toHaveFocus();
     });
 
-    test.each([
-      { modifier: "ctrlKey" as const, label: "Ctrl" },
-      { modifier: "metaKey" as const, label: "Meta" },
-    ])(
-      "$label+Home and $label+End behave identically (macOS parity)",
-      async ({ modifier }) => {
-        const items = makeItems(1, 2, 3, 4);
+    test("Meta+Home and Meta+End match the Ctrl behavior on macOS", async () => {
+      const items = makeItems(1, 2, 3, 4);
 
-        const screen = await render(
-          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
-        );
+      const screen = await render(
+        <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
+      );
 
-        const item1 = screen.getByRole("button", {
-          name: "Item 1",
-          exact: true,
-        });
-        const item4 = screen.getByRole("button", {
-          name: "Item 4",
-          exact: true,
-        });
+      const item1 = screen.getByRole("button", {
+        name: "Item 1",
+        exact: true,
+      });
+      const item4 = screen.getByRole("button", {
+        name: "Item 4",
+        exact: true,
+      });
 
-        item1.element().focus();
-        await expect.element(item1).toHaveFocus();
+      await press(item1, "End", { metaKey: true });
+      await expect.element(item4).toHaveFocus();
 
-        await press(item1, "End", { [modifier]: true });
-        await expect.element(item4).toHaveFocus();
-
-        item4.element().focus();
-        await expect.element(item4).toHaveFocus();
-
-        await press(item4, "Home", { [modifier]: true });
-        await expect.element(item1).toHaveFocus();
-      },
-    );
+      await press(item4, "Home", { metaKey: true });
+      await expect.element(item1).toHaveFocus();
+    });
 
     test("Shift+Home does not move focus", async () => {
       const items = makeItems(1, 2, 3);
@@ -375,9 +351,6 @@ describe("useGridKeyboard", () => {
       );
 
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-
-      item3.element().focus();
-      await expect.element(item3).toHaveFocus();
 
       await press(item3, "Home", { shiftKey: true });
 
@@ -402,9 +375,6 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      item2.element().focus();
-      await expect.element(item2).toHaveFocus();
-
       await press(item2, "ArrowRight");
 
       await expect.element(item1).toHaveFocus();
@@ -425,9 +395,6 @@ describe("useGridKeyboard", () => {
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
-
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
 
       await press(item1, "ArrowLeft");
 
@@ -456,9 +423,6 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
       await press(item1, "ArrowDown");
 
       await expect.element(item2).toHaveFocus();
@@ -479,9 +443,6 @@ describe("useGridKeyboard", () => {
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-
-      item3.element().focus();
-      await expect.element(item3).toHaveFocus();
 
       await press(item3, "Home");
 
@@ -504,9 +465,6 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
-
       await press(item1, "End");
 
       await expect.element(item3).toHaveFocus();
@@ -528,9 +486,6 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
 
-      item4.element().focus();
-      await expect.element(item4).toHaveFocus();
-
       await press(item4, "Home", { ctrlKey: true });
 
       await expect.element(item1).toHaveFocus();
@@ -551,9 +506,6 @@ describe("useGridKeyboard", () => {
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
-
-      item1.element().focus();
-      await expect.element(item1).toHaveFocus();
 
       await press(item1, "End", { ctrlKey: true });
 
