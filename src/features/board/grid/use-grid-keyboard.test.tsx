@@ -520,35 +520,7 @@ describe("useGridKeyboard", () => {
     await expect.element(item2).toHaveFocus();
   });
 
-  test("RTL: Home moves to the visually-left edge (highest aria-colindex)", async () => {
-    const items = [
-      { id: "1", label: "Item 1" },
-      { id: "2", label: "Item 2" },
-      { id: "3", label: "Item 3" },
-    ];
-
-    const screen = await render(
-      <Grid
-        rows={1}
-        columns={3}
-        items={items}
-        dir="rtl"
-        renderItem={(item, props) => <button {...props}>{item.label}</button>}
-      />,
-    );
-
-    const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-    const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-
-    item1.element().focus();
-    await expect.element(item1).toHaveFocus();
-
-    await press(item1, "Home");
-
-    await expect.element(item3).toHaveFocus();
-  });
-
-  test("RTL: End moves to the visually-right edge (lowest aria-colindex)", async () => {
+  test("RTL: Home moves to the first cell in the row", async () => {
     const items = [
       { id: "1", label: "Item 1" },
       { id: "2", label: "Item 2" },
@@ -571,23 +543,22 @@ describe("useGridKeyboard", () => {
     item3.element().focus();
     await expect.element(item3).toHaveFocus();
 
-    await press(item3, "End");
+    await press(item3, "Home");
 
     await expect.element(item1).toHaveFocus();
   });
 
-  test("RTL: Ctrl+Home moves to the visually bottom-left cell of the grid", async () => {
+  test("RTL: End moves to the last cell in the row", async () => {
     const items = [
       { id: "1", label: "Item 1" },
       { id: "2", label: "Item 2" },
       { id: "3", label: "Item 3" },
-      { id: "4", label: "Item 4" },
     ];
 
     const screen = await render(
       <Grid
-        rows={2}
-        columns={2}
+        rows={1}
+        columns={3}
         items={items}
         dir="rtl"
         renderItem={(item, props) => <button {...props}>{item.label}</button>}
@@ -595,17 +566,17 @@ describe("useGridKeyboard", () => {
     );
 
     const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-    const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+    const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
 
     item1.element().focus();
     await expect.element(item1).toHaveFocus();
 
-    await press(item1, "Home", { ctrlKey: true });
+    await press(item1, "End");
 
-    await expect.element(item4).toHaveFocus();
+    await expect.element(item3).toHaveFocus();
   });
 
-  test("RTL: Ctrl+End moves to the visually top-right cell of the grid", async () => {
+  test("RTL: Ctrl+Home moves to the first cell in document order", async () => {
     const items = [
       { id: "1", label: "Item 1" },
       { id: "2", label: "Item 2" },
@@ -629,8 +600,37 @@ describe("useGridKeyboard", () => {
     item4.element().focus();
     await expect.element(item4).toHaveFocus();
 
-    await press(item4, "End", { ctrlKey: true });
+    await press(item4, "Home", { ctrlKey: true });
 
     await expect.element(item1).toHaveFocus();
+  });
+
+  test("RTL: Ctrl+End moves to the last cell in document order", async () => {
+    const items = [
+      { id: "1", label: "Item 1" },
+      { id: "2", label: "Item 2" },
+      { id: "3", label: "Item 3" },
+      { id: "4", label: "Item 4" },
+    ];
+
+    const screen = await render(
+      <Grid
+        rows={2}
+        columns={2}
+        items={items}
+        dir="rtl"
+        renderItem={(item, props) => <button {...props}>{item.label}</button>}
+      />,
+    );
+
+    const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+    const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+
+    item1.element().focus();
+    await expect.element(item1).toHaveFocus();
+
+    await press(item1, "End", { ctrlKey: true });
+
+    await expect.element(item4).toHaveFocus();
   });
 });
