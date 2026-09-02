@@ -6,7 +6,7 @@ import {
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionsSettings } from "./suggestions-settings";
 
@@ -47,5 +47,24 @@ describe("SuggestionsSettings", () => {
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("edits and persists custom instructions", async () => {
+    stubRewriter();
+    const screen = await renderSuggestionsSettings();
+    const instructions = screen.getByRole("textbox", {
+      name: "Custom instructions",
+    });
+
+    await instructions.fill("Prefer short, everyday words");
+
+    await expect
+      .element(instructions)
+      .toHaveValue("Prefer short, everyday words");
+    await vi.waitFor(() =>
+      expect(localStorage.getItem("board-suggestions")).toBe(
+        JSON.stringify({ customInstructions: "Prefer short, everyday words" }),
+      ),
+    );
   });
 });

@@ -227,7 +227,7 @@ describe("createButtonActivator", () => {
   });
 
   test("treats an empty actions array as no actions and speaks instead", () => {
-    const { activateButton, message } = setup();
+    const { activateButton, message, playback } = setup();
 
     activateButton({
       id: "btn",
@@ -236,6 +236,11 @@ describe("createButtonActivator", () => {
     });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
+    expect(playback.playPart).toHaveBeenCalledOnce();
+    expect(playback.playPart).toHaveBeenCalledWith(
+      expect.objectContaining({ label: "hi" }),
+    );
+    expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
   test("adds the button as a message part when there are no actions and no loadBoard", () => {

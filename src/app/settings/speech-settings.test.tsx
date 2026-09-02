@@ -1,7 +1,8 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { SpeechSettings } from "./speech-settings";
 
@@ -98,6 +99,58 @@ describe("SpeechSettings", () => {
     await highlightSwitch.click();
 
     await expect.element(highlightSwitch).toBeChecked();
+    await vi.waitFor(() =>
+      expect(localStorage.getItem("board-playback")).toBe(
+        JSON.stringify({ isMessagePartHighlightingEnabled: true }),
+      ),
+    );
+  });
+
+  test("selects and persists a voice", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "us-2", name: "Alex", lang: "en-US" },
+    ]);
+    const screen = await renderSpeechSettings();
+    const voiceSelect = screen.getByRole("combobox", { name: "Voice" });
+
+    await voiceSelect.click();
+    await screen.getByRole("option", { name: "Alex" }).click();
+
+    await expect.element(voiceSelect).toHaveTextContent("Alex");
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("speech-config");
+      expect(stored).not.toBeNull();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-2" });
+    });
+  });
+
+  test("adjusts and persists rate, pitch, and volume", async () => {
+    const screen = await renderSpeechSettings();
+    const adjustments = [
+      { name: "Rate", key: "{ArrowRight}", expected: 1.1 },
+      { name: "Pitch", key: "{ArrowLeft}", expected: 0.9 },
+      { name: "Speech volume", key: "{ArrowLeft}", expected: 0.9 },
+    ];
+
+    for (const { name, key, expected } of adjustments) {
+      const slider = screen.getByRole("slider", { name });
+      slider.element().focus();
+      await userEvent.keyboard(key);
+      expect(Number(slider.element().getAttribute("aria-valuenow"))).toBe(
+        expected,
+      );
+    }
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("speech-config");
+      expect(stored).not.toBeNull();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({
+        rate: 1.1,
+        pitch: 0.9,
+        volume: 0.9,
+      });
+    });
   });
 
   test("plays the voice preview through app playback", async () => {

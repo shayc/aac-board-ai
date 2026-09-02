@@ -2,6 +2,7 @@
   "recommendations": [
     "oxc.oxc-vscode",
     "vitest.explorer",
+    "ms-playwright.playwright",
     "inlang.vs-code-extension"
   ]
 }

@@ -2,11 +2,16 @@ import { getBoardSets } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
+const localizedImportFailure = {
+  data: { code: routeErrorCodes.boardUrlImportFailed },
+  init: { status: 400 },
+};
 
 function callLoader(searchParams = ""): Promise<Response> {
   const args = {
@@ -64,7 +69,7 @@ describe("rootIndexLoader", () => {
       callLoader(
         `?board=${encodeURIComponent("data:application/zip;base64,UEsDBA==")}`,
       ),
-    ).rejects.toMatchObject({ init: { status: 400 } });
+    ).rejects.toMatchObject(localizedImportFailure);
 
     expect(fetchSpy).not.toHaveBeenCalled();
   });
@@ -78,10 +83,13 @@ describe("rootIndexLoader", () => {
       callLoader(
         `?board=${encodeURIComponent("https://example.com/gone.obz")}`,
       ),
-    ).rejects.toMatchObject({ init: { status: 400 } });
+    ).rejects.toMatchObject(localizedImportFailure);
   });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
+    let now = 1000;
+    vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
+
     await seedBoardSets([
       { setId: "set-1", rootBoardId: "root-1" },
       { setId: "set-2", rootBoardId: "root-2" },

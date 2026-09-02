@@ -3,6 +3,7 @@ import { zip } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
+import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { BOARD_IMPORT_LIMITS, importBoardSets } from "./board-import";
 import { useImportBoardFiles } from "./use-import-board-files";
@@ -63,6 +64,10 @@ describe("useImportBoardFiles", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board set imported");
+
+    expect(new Set((await listBoardSets()).map((set) => set.setId))).toEqual(
+      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
+    );
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {
