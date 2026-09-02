@@ -13,8 +13,10 @@ describe("AACSymbol", () => {
 
   test("renders label when provided", async () => {
     const screen = await render(<AACSymbol label="Hello" />);
+    const label = screen.getByText("Hello");
 
-    await expect.element(screen.getByText("Hello")).toBeVisible();
+    await expect.element(label).toBeVisible();
+    expect(getComputedStyle(label.element()).fontWeight).toBe("600");
     expect(screen.container.querySelector("img")).toBeNull();
   });
 

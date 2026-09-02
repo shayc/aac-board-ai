@@ -55,7 +55,10 @@ export function AACSymbol({
         component="span"
         noWrap
         variant={imageSrc ? "body2" : "h5"}
-        sx={labelPlacement === "hidden" ? visuallyHidden : { lineHeight: 1 }}
+        sx={[
+          { fontWeight: 600, lineHeight: 1 },
+          labelPlacement === "hidden" && visuallyHidden,
+        ]}
       >
         {label}
       </Typography>

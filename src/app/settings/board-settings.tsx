@@ -6,6 +6,9 @@ import {
   type TileLabelPlacement,
   useBoardAppearanceConfig,
 } from "@features/board";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import Box from "@mui/material/Box";
+import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
@@ -20,6 +23,95 @@ import { useTranslate } from "@shared/language/use-translate";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
+}
+
+function LabelLine() {
+  return (
+    <Box
+      component="span"
+      sx={{
+        flexShrink: 0,
+        width: "60%",
+        height: 3,
+        borderRadius: 1,
+        bgcolor: "currentColor",
+      }}
+    />
+  );
+}
+
+interface LabelPlacementPreviewProps {
+  placement: TileLabelPlacement;
+  selected?: boolean;
+}
+
+function LabelPlacementPreview({
+  placement,
+  selected = false,
+}: LabelPlacementPreviewProps) {
+  return (
+    <Box
+      aria-hidden="true"
+      component="span"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 64,
+        height: 54,
+        p: 0.5,
+        gap: 0.25,
+        border: 2,
+        borderColor: selected ? "primary.main" : "divider",
+        borderRadius: 3,
+        color: selected ? "primary.main" : "text.secondary",
+        bgcolor: selected ? "action.selected" : "background.paper",
+      }}
+    >
+      {placement === "top" && <LabelLine />}
+      <ImageOutlinedIcon
+        sx={{
+          flexShrink: 0,
+          width: placement === "hidden" ? 42 : 34,
+          height: placement === "hidden" ? 42 : 34,
+        }}
+      />
+      {placement === "bottom" && <LabelLine />}
+    </Box>
+  );
+}
+
+interface LabelPlacementOptionProps {
+  label: string;
+  placement: TileLabelPlacement;
+}
+
+function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
+  return (
+    <FormControlLabel
+      value={placement}
+      control={
+        <Radio
+          checkedIcon={<LabelPlacementPreview placement={placement} selected />}
+          icon={<LabelPlacementPreview placement={placement} />}
+          disableRipple
+          sx={{
+            p: 0.5,
+            borderRadius: 4,
+            [`&.${buttonBaseClasses.focusVisible}`]: {
+              outline: "3px solid",
+              outlineColor: "primary.main",
+              outlineOffset: 1,
+            },
+          }}
+        />
+      }
+      label={label}
+      labelPlacement="bottom"
+      sx={{ flex: 1, gap: 0.25, m: 0 }}
+    />
+  );
 }
 
 export function BoardSettings() {
@@ -41,25 +133,20 @@ export function BoardSettings() {
           aria-labelledby="tile-label-position"
           name="tile-label-position"
           value={tileLabelPlacement}
+          row
           onChange={(event) =>
             setTileLabelPlacement(event.target.value as TileLabelPlacement)
           }
-          row
+          sx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}
         >
-          <FormControlLabel
-            value="top"
-            control={<Radio />}
-            label={t(m.tileLabelTop)}
-          />
-          <FormControlLabel
-            value="bottom"
-            control={<Radio />}
+          <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
+          <LabelPlacementOption
             label={t(m.tileLabelBottom)}
+            placement="bottom"
           />
-          <FormControlLabel
-            value="hidden"
-            control={<Radio />}
+          <LabelPlacementOption
             label={t(m.tileLabelHidden)}
+            placement="hidden"
           />
         </RadioGroup>
       </FormControl>
