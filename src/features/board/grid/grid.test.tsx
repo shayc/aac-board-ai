@@ -323,6 +323,13 @@ describe("Grid", () => {
       expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
+
+    test("preserves the 96px floor when the container is narrower than one cell", async () => {
+      const { cellWidth, overflows } = await renderSizedGrid(120, 1);
+
+      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(overflows).toBe(true);
+    });
   });
 
   describe("responsive row sizing", () => {
@@ -409,6 +416,13 @@ describe("Grid", () => {
 
       expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL);
       expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
+      expect(overflows).toBe(true);
+    });
+
+    test("preserves the 96px floor when the container is shorter than one cell", async () => {
+      const { cellHeight, overflows } = await renderSizedGrid(120, 1);
+
+      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL);
       expect(overflows).toBe(true);
     });
   });

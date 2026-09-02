@@ -3,9 +3,9 @@ import Stack from "@mui/material/Stack";
 import type { ReactNode, Ref } from "react";
 import {
   createGridContentSx,
-  createGridRowSx,
   createGridViewportSx,
   gridCellSx,
+  gridRowSx,
 } from "./grid-layout";
 import { buildGrid, type GridOrder } from "./grid-model";
 import { useGridKeyboard } from "./use-grid-keyboard";
@@ -51,7 +51,7 @@ export function Grid<TItem extends { id: string }>({
         role="grid"
         aria-label={ariaLabel}
         direction="column"
-        sx={(theme) => createGridContentSx(theme, rows, columns, gap)}
+        sx={(theme) => createGridContentSx(theme, { rows, columns, gap })}
       >
         {grid.map((row, rowIndex) => {
           const cells = row.map((item, colIndex) => {
@@ -75,12 +75,7 @@ export function Grid<TItem extends { id: string }>({
           });
 
           return (
-            <Stack
-              key={rowIndex}
-              role="row"
-              direction="row"
-              sx={createGridRowSx(gap)}
-            >
+            <Stack key={rowIndex} role="row" direction="row" sx={gridRowSx}>
               {cells}
             </Stack>
           );
