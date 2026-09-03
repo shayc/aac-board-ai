@@ -16,7 +16,7 @@ describe("AACSymbol", () => {
     const label = screen.getByText("Hello");
 
     await expect.element(label).toBeVisible();
-    expect(getComputedStyle(label.element()).fontWeight).toBe("600");
+    expect(getComputedStyle(label.element()).fontWeight).toBe("400");
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
