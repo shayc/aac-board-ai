@@ -60,6 +60,14 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     gridRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
+  function handleHome() {
+    if (navigation.isHome) {
+      scrollGridToOrigin();
+    }
+
+    navigation.goHome();
+  }
+
   const activateButton = createButtonActivator({
     message,
     playback,
@@ -94,7 +102,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       style={boardRootStyle}
       sx={boardRootSx}
     >
-      <BoardPlaybackMessageBar parts={message.parts} />
+      <BoardPlaybackMessageBar parts={message.parts} playback={playback} />
 
       <Stack
         direction="row"
@@ -102,9 +110,12 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-          {!isSmallScreen && (
+          {!isSmallScreen && navigation.setId && (
             <NavButtons
-              onHome={navigation.isHome ? scrollGridToOrigin : undefined}
+              canGoBack={navigation.canGoBack}
+              canGoHome={navigation.canGoHome}
+              onBack={navigation.goBack}
+              onHome={handleHome}
             />
           )}
 
@@ -140,7 +151,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         />
       </Box>
 
-      {isSmallScreen && (
+      {isSmallScreen && navigation.setId && (
         <Toolbar
           sx={{
             alignItems: "flex-end",
@@ -151,7 +162,10 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           }}
         >
           <NavButtons
-            onHome={navigation.isHome ? scrollGridToOrigin : undefined}
+            canGoBack={navigation.canGoBack}
+            canGoHome={navigation.canGoHome}
+            onBack={navigation.goBack}
+            onHome={handleHome}
           />
 
           <BackspaceButton

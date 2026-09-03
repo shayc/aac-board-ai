@@ -1,4 +1,4 @@
-import type { BoardSetRecord } from "../storage/board-set-storage";
+import type { BoardSetRecord } from "./board-sets-store";
 
 export function makeBoardSet(
   overrides: Partial<BoardSetRecord> = {},

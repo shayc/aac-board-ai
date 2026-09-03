@@ -5,31 +5,21 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRtl } from "@shared/theme/rtl";
-import { useBoardNavigation } from "./use-board-navigation";
 
 interface NavButtonsProps {
-  onBack?: () => void;
-  onHome?: () => void;
+  canGoBack: boolean;
+  canGoHome: boolean;
+  onBack: () => void;
+  onHome: () => void;
 }
 
-export function NavButtons({ onBack, onHome }: NavButtonsProps = {}) {
+export function NavButtons({
+  canGoBack,
+  canGoHome,
+  onBack,
+  onHome,
+}: NavButtonsProps) {
   const t = useTranslate();
-  const { setId, canGoBack, canGoHome, isHome, goBack, goHome } =
-    useBoardNavigation();
-
-  if (!setId) {
-    return null;
-  }
-
-  function handleBackClick() {
-    onBack?.();
-    goBack();
-  }
-
-  function handleHomeClick() {
-    onHome?.();
-    goHome();
-  }
 
   return (
     <Box sx={{ display: "flex", gap: 1 }}>
@@ -39,7 +29,7 @@ export function NavButtons({ onBack, onHome }: NavButtonsProps = {}) {
         size="large"
         color="inherit"
         variant="contained"
-        onClick={handleBackClick}
+        onClick={onBack}
         sx={{ width: 72 }}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
@@ -47,11 +37,11 @@ export function NavButtons({ onBack, onHome }: NavButtonsProps = {}) {
 
       <Button
         aria-label={t(m.navHome)}
-        disabled={!canGoHome || (isHome && !onHome)}
+        disabled={!canGoHome}
         size="large"
         color="inherit"
         variant="contained"
-        onClick={handleHomeClick}
+        onClick={onHome}
         sx={{ width: 72 }}
       >
         <HomeOutlinedIcon />

@@ -3,11 +3,10 @@ import {
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
-  type TileLabelPlacement,
+  TileLabelPlacementPreview,
   useBoardAppearanceConfig,
+  type TileLabelPlacement,
 } from "@features/board";
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
-import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -25,63 +24,6 @@ function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
-function LabelLine() {
-  return (
-    <Box
-      component="span"
-      sx={{
-        flexShrink: 0,
-        width: "60%",
-        height: 3,
-        borderRadius: 1,
-        bgcolor: "currentColor",
-      }}
-    />
-  );
-}
-
-interface LabelPlacementPreviewProps {
-  placement: TileLabelPlacement;
-  selected?: boolean;
-}
-
-function LabelPlacementPreview({
-  placement,
-  selected = false,
-}: LabelPlacementPreviewProps) {
-  return (
-    <Box
-      aria-hidden="true"
-      component="span"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 64,
-        height: 54,
-        p: 0.5,
-        gap: 0.25,
-        border: 2,
-        borderColor: selected ? "primary.main" : "divider",
-        borderRadius: 3,
-        color: selected ? "primary.main" : "text.secondary",
-        bgcolor: selected ? "action.selected" : "background.paper",
-      }}
-    >
-      {placement === "top" && <LabelLine />}
-      <ImageOutlinedIcon
-        sx={{
-          flexShrink: 0,
-          width: placement === "hidden" ? 42 : 34,
-          height: placement === "hidden" ? 42 : 34,
-        }}
-      />
-      {placement === "bottom" && <LabelLine />}
-    </Box>
-  );
-}
-
 interface LabelPlacementOptionProps {
   label: string;
   placement: TileLabelPlacement;
@@ -93,8 +35,10 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
       value={placement}
       control={
         <Radio
-          checkedIcon={<LabelPlacementPreview placement={placement} selected />}
-          icon={<LabelPlacementPreview placement={placement} />}
+          checkedIcon={
+            <TileLabelPlacementPreview placement={placement} selected />
+          }
+          icon={<TileLabelPlacementPreview placement={placement} />}
           disableRipple
           sx={{
             p: 0.5,
