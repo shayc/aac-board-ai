@@ -7,6 +7,7 @@ import {
   type OBFBoard,
 } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
+import { getBoardSets } from "../board-sets/board-sets-store";
 import { getAssetBlob, getBoard } from "../storage/board-content-storage";
 import { listBoardSets } from "../storage/board-set-storage";
 import {
@@ -64,6 +65,18 @@ describe("importBoardSets", () => {
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
     expect((await countStoredBoardContent(IMPORTED_SET_ID)).assets).toBe(0);
+  });
+
+  test("refreshes the board-set catalog after an import", async () => {
+    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
+
+    expect(await getBoardSets()).toHaveLength(0);
+
+    await importBoardSets(fixtureFile);
+
+    expect(await getBoardSets()).toEqual([
+      expect.objectContaining({ setId: IMPORTED_SET_ID }),
+    ]);
   });
 
   test("imports an OBZ file into IndexedDB", async () => {

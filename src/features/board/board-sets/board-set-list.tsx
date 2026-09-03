@@ -15,7 +15,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useState } from "react";
-import type { BoardSetRecord } from "../storage/board-set-storage";
+import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];

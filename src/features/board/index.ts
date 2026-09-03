@@ -5,12 +5,17 @@ export {
   TILE_SATURATION,
   useBoardAppearanceConfig,
 } from "./appearance/appearance-store";
+export { TileLabelPlacementPreview } from "./appearance/tile-label-placement-preview";
 export type {
   BoardAppearanceConfig,
   TileLabelPlacement,
 } from "./appearance/appearance-store";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
-export { getBoardSets } from "./board-sets/board-sets-store";
+export {
+  getBoardSet,
+  getBoardSets,
+  InvalidIdError,
+} from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardFromUrl } from "./import/import-from-url";
@@ -32,7 +37,6 @@ export type {
   BoardMediaResource,
   HydratedBoard,
 } from "./storage/board-hydration";
-export { getBoardSet, InvalidIdError } from "./storage/board-set-storage";
 export {
   setSuggestionCustomInstructions,
   useBoardSuggestionConfig,

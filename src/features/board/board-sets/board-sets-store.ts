@@ -1,8 +1,23 @@
 import { createExternalStore } from "@shared/utils/external-store";
 import {
+  createBoardSet as createStoredBoardSet,
   deleteBoardSet as deleteStoredBoardSet,
+  getBoardSet as getStoredBoardSet,
   listBoardSets,
+  type BoardSetCreateInput,
   type BoardSetRecord,
+} from "../storage/board-set-storage";
+
+export {
+  BoardSetAlreadyExistsError,
+  InvalidIdError,
+} from "../storage/board-set-storage";
+export type {
+  AssetInput,
+  BoardInput,
+  BoardSetCreateInput,
+  BoardSetInput,
+  BoardSetRecord,
 } from "../storage/board-set-storage";
 
 interface BoardSetsSnapshot {
@@ -75,6 +90,19 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
 
   return store.getSnapshot().boardSets;
+}
+
+export function getBoardSet(
+  setId: string,
+): Promise<BoardSetRecord | undefined> {
+  return getStoredBoardSet(setId);
+}
+
+export async function createBoardSet(
+  input: BoardSetCreateInput,
+): Promise<void> {
+  await createStoredBoardSet(input);
+  await refreshAndBroadcastBoardSets();
 }
 
 export async function deleteBoardSet(setId: string): Promise<void> {

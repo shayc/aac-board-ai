@@ -7,16 +7,13 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
-import { refreshAndBroadcastBoardSets } from "../board-sets/board-sets-store";
-import type {
-  AssetInput,
-  BoardInput,
-  BoardSetInput,
-} from "../storage/board-set-storage";
 import {
   BoardSetAlreadyExistsError,
   createBoardSet,
-} from "../storage/board-set-storage";
+  type AssetInput,
+  type BoardInput,
+  type BoardSetInput,
+} from "../board-sets/board-sets-store";
 import { htmlToText } from "./html-to-text";
 
 export interface ImportResult {
@@ -44,31 +41,25 @@ export async function importBoardSets(
   const fileList = Array.isArray(files) ? files : [files];
   const results: ImportResult[] = [];
 
-  try {
-    for (const file of fileList) {
-      const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-      const baseSetId = deriveSetId(file.name);
+  for (const file of fileList) {
+    const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+    const baseSetId = deriveSetId(file.name);
 
-      for (let candidateNumber = 1; ; candidateNumber += 1) {
-        const setId = buildSetIdCandidate(baseSetId, candidateNumber);
+    for (let candidateNumber = 1; ; candidateNumber += 1) {
+      const setId = buildSetIdCandidate(baseSetId, candidateNumber);
 
-        try {
-          results.push(
-            loaded.format === "obz"
-              ? await importOBZArchive(loaded.archive, setId, file.name)
-              : await importOBFBoard(loaded.board, setId, file.name),
-          );
-          break;
-        } catch (error) {
-          if (!(error instanceof BoardSetAlreadyExistsError)) {
-            throw error;
-          }
+      try {
+        results.push(
+          loaded.format === "obz"
+            ? await importOBZArchive(loaded.archive, setId, file.name)
+            : await importOBFBoard(loaded.board, setId, file.name),
+        );
+        break;
+      } catch (error) {
+        if (!(error instanceof BoardSetAlreadyExistsError)) {
+          throw error;
         }
       }
-    }
-  } finally {
-    if (results.length > 0) {
-      await refreshAndBroadcastBoardSets();
     }
   }
 
