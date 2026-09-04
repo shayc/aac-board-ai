@@ -42,7 +42,7 @@ describe("NavButtons", () => {
     const onBack = vi.fn();
     const { screen } = await renderButtons({ canGoBack: true, onBack });
 
-    await screen.getByRole("button", { name: "Back" }).click();
+    await screen.getByRole("button", { name: "Go back" }).click();
 
     expect(onBack).toHaveBeenCalledOnce();
   });
@@ -51,7 +51,7 @@ describe("NavButtons", () => {
     const onHome = vi.fn();
     const { screen } = await renderButtons({ canGoHome: true, onHome });
 
-    await screen.getByRole("button", { name: "Home" }).click();
+    await screen.getByRole("button", { name: "Go home" }).click();
 
     expect(onHome).toHaveBeenCalledOnce();
   });
@@ -60,11 +60,11 @@ describe("NavButtons", () => {
     const { screen } = await renderButtons();
 
     await expect
-      .element(screen.getByRole("button", { name: "Back" }))
+      .element(screen.getByRole("button", { name: "Go back" }))
       .toBeDisabled();
 
     await expect
-      .element(screen.getByRole("button", { name: "Home" }))
+      .element(screen.getByRole("button", { name: "Go home" }))
       .toBeDisabled();
   });
 
@@ -74,7 +74,7 @@ describe("NavButtons", () => {
         direction: "rtl",
       });
 
-      const backButton = screen.getByRole("button", { name: "Back" });
+      const backButton = screen.getByRole("button", { name: "Go back" });
       const icon = backButton.element().querySelector("svg");
 
       assertDefined(icon);
@@ -86,7 +86,7 @@ describe("NavButtons", () => {
     test("back arrow is not flipped in LTR", async () => {
       const { screen } = await renderButtons();
 
-      const backButton = screen.getByRole("button", { name: "Back" });
+      const backButton = screen.getByRole("button", { name: "Go back" });
       const icon = backButton.element().querySelector("svg");
 
       assertDefined(icon);
@@ -99,7 +99,7 @@ describe("NavButtons", () => {
         direction: "rtl",
       });
 
-      const homeButton = screen.getByRole("button", { name: "Home" });
+      const homeButton = screen.getByRole("button", { name: "Go home" });
       const icon = homeButton.element().querySelector("svg");
 
       assertDefined(icon);

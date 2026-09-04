@@ -64,7 +64,7 @@ describe("useImportLaunchedBoardFiles", () => {
     const screen = await renderLaunchHandler();
 
     expect(await listBoardSets()).toHaveLength(0);
-    await expect.element(screen.getByTestId("path")).toHaveTextContent(/^\/$/);
+    await expect.element(screen.getByTestId("path")).toHaveTextContent("/");
   });
 
   test("imports only the board files and opens the result", async () => {
@@ -104,6 +104,6 @@ describe("useImportLaunchedBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import board");
+      .toHaveTextContent("Couldn't import board file");
   });
 });

@@ -143,7 +143,7 @@ describe("CommunicationBoard", () => {
       expect(scrollContainer.scrollTop).toBeGreaterThan(0);
     });
 
-    await screen.getByRole("button", { name: "Home" }).click();
+    await screen.getByRole("button", { name: "Go home" }).click();
 
     expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
     expect(scrollContainer.scrollTop).toBeGreaterThan(0);
@@ -169,7 +169,7 @@ describe("CommunicationBoard", () => {
       expect(scrollContainer.scrollTop).toBeGreaterThan(0);
     });
 
-    await screen.getByRole("button", { name: "Home" }).click();
+    await screen.getByRole("button", { name: "Go home" }).click();
 
     await vi.waitFor(() => {
       expect(scrollContainer.scrollLeft).toBe(0);
