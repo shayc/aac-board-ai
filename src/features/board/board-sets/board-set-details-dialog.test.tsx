@@ -31,7 +31,9 @@ describe("BoardSetDetailsDialog", () => {
       />,
     );
 
-    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("heading", { name: "Core Words By Jane" }))
+      .toBeInTheDocument();
     await expect.element(screen.getByText("By Jane")).toBeInTheDocument();
   });
 
