@@ -80,20 +80,27 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     "--tile-saturation": String(tileSaturation),
   };
 
-  const renderTile = (button: BoardButton, props: GridItemProps) => (
-    <Tile
-      key={button.id}
-      label={button.label ?? ""}
-      imageSrc={button.imageSrc}
-      backgroundColor={button.backgroundColor}
-      borderColor={button.borderColor}
-      labelPlacement={tileLabelPlacement}
-      variant={button.loadBoard?.id ? "folder" : undefined}
-      borderHidden={!areTileBordersVisible}
-      onActivate={() => activateButton(button)}
-      {...props}
-    />
-  );
+  const renderTile = (button: BoardButton, props: GridItemProps) => {
+    const ariaLabel = button.label?.trim()
+      ? undefined
+      : button.vocalization?.trim() || undefined;
+
+    return (
+      <Tile
+        key={button.id}
+        ariaLabel={ariaLabel}
+        label={button.label ?? ""}
+        imageSrc={button.imageSrc}
+        backgroundColor={button.backgroundColor}
+        borderColor={button.borderColor}
+        labelPlacement={tileLabelPlacement}
+        variant={button.loadBoard?.id ? "folder" : undefined}
+        borderHidden={!areTileBordersVisible}
+        onActivate={() => activateButton(button)}
+        {...props}
+      />
+    );
+  };
 
   return (
     <Stack

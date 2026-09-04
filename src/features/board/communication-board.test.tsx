@@ -196,6 +196,72 @@ describe("CommunicationBoard", () => {
     expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 
+  test.each([
+    { description: "missing", label: undefined },
+    { description: "empty", label: "" },
+    { description: "whitespace-only", label: " \t " },
+  ])(
+    "names a tile by its vocalization when its label is $description",
+    async ({ label }) => {
+      const board: OBFBoard = {
+        format: "open-board-0.1",
+        id: "vocalization-board",
+        locale: "en",
+        buttons: [
+          {
+            id: "help",
+            label,
+            vocalization: "I need help",
+            image_id: "help-image",
+          },
+        ],
+        grid: { rows: 1, columns: 1, order: [["help"]] },
+        images: [{ id: "help-image", data: TEST_IMAGE_SRC }],
+      };
+      const screen = await renderCommunicationBoard(board);
+      const tile = screen.getByRole("button", {
+        name: "I need help",
+        exact: true,
+      });
+
+      await expect.element(tile).toBeVisible();
+      expect(tile.element().textContent).toBe(label ?? "");
+      await expectNoA11yViolations(screen.container);
+
+      await tile.click();
+
+      await vi.waitFor(() => {
+        expect(speech.speak).toHaveBeenCalledTimes(1);
+        expect(speech.speak.mock.calls[0][0].text).toBe("i need help");
+      });
+    },
+  );
+
+  test.each(["top", "hidden"] as const)(
+    "keeps a %s label as the accessible name when vocalization differs",
+    async (placement) => {
+      setTileLabelPlacement(placement);
+      const board: OBFBoard = {
+        ...SYMBOL_BOARD,
+        buttons: SYMBOL_BOARD.buttons.map((button) => ({
+          ...button,
+          vocalization: "I need help",
+        })),
+      };
+      const screen = await renderCommunicationBoard(board);
+      const tile = screen.getByRole("button", { name: "hello", exact: true });
+
+      await expect.element(tile).toHaveAccessibleName("hello");
+
+      await tile.click();
+
+      await vi.waitFor(() => {
+        expect(speech.speak).toHaveBeenCalledTimes(1);
+        expect(speech.speak.mock.calls[0][0].text).toBe("i need help");
+      });
+    },
+  );
+
   test("activates a focused tile with the Space key", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
     const hello = screen.getByRole("button", { name: "hello" });

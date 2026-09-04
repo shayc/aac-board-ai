@@ -4,6 +4,7 @@ import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { TileLabelPlacement } from "../appearance/appearance-store";
 
 interface TileProps {
+  ariaLabel?: string;
   label: string;
   imageSrc?: string;
   backgroundColor?: string;
@@ -25,6 +26,7 @@ function darken(color: string, percentage: number): string {
 }
 
 export function Tile({
+  ariaLabel,
   label,
   imageSrc,
   backgroundColor,
@@ -43,6 +45,7 @@ export function Tile({
 
   return (
     <Button
+      aria-label={ariaLabel}
       tabIndex={tabIndex}
       disabled={disabled}
       disableRipple
