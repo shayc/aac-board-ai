@@ -53,7 +53,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
       }
       label={label}
       labelPlacement="bottom"
-      sx={{ flex: 1, gap: 0.25, m: 0 }}
+      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
     />
   );
 }

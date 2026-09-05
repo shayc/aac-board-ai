@@ -17,7 +17,7 @@ describe("BoardSettings", () => {
       name: "Tile color intensity",
     });
     const labelPositionGroup = screen.getByRole("radiogroup", {
-      name: "Tile label position",
+      name: "Tile labels",
     });
     const bordersSwitch = screen.getByRole("switch", {
       name: "Show tile borders",
@@ -32,10 +32,10 @@ describe("BoardSettings", () => {
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Top" }))
+      .element(screen.getByRole("radio", { name: "Above image" }))
       .toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Bottom" }))
+      .element(screen.getByRole("radio", { name: "Below image" }))
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("radio", { name: "Hidden" }))
@@ -118,7 +118,7 @@ describe("BoardSettings", () => {
     );
 
     const groups = screen
-      .getByRole("radiogroup", { name: "Tile label position" })
+      .getByRole("radiogroup", { name: "Tile labels" })
       .all();
     expect(groups).toHaveLength(2);
     expect(
@@ -127,13 +127,13 @@ describe("BoardSettings", () => {
       ).size,
     ).toBe(2);
 
-    const bottomRadio = groups[0].getByRole("radio", { name: "Bottom" });
+    const bottomRadio = groups[0].getByRole("radio", { name: "Below image" });
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();
     for (const group of groups) {
       await expect
-        .element(group.getByRole("radio", { name: "Bottom" }))
+        .element(group.getByRole("radio", { name: "Below image" }))
         .toBeChecked();
     }
 
