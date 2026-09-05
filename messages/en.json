@@ -99,7 +99,7 @@
   "speechVolume": "Speech volume",
   "speechPreview": "Preview",
   "speechVoicePreview": "Hi, this is my voice!",
-  "playbackHighlight": "Highlight spoken words",
+  "playbackHighlight": "Highlight the message as it plays",
   "tileSaturation": "Tile color intensity",
   "tileBorders": "Show tile borders",
   "tileLabelPosition": "Tile labels",

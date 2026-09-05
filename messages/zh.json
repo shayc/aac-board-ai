@@ -99,7 +99,7 @@
   "speechVolume": "语音音量",
   "speechPreview": "试听",
   "speechVoicePreview": "你好，这是我的声音！",
-  "playbackHighlight": "高亮显示朗读的词语",
+  "playbackHighlight": "播放时高亮显示消息",
   "tileSaturation": "图块颜色强度",
   "tileBorders": "显示图块边框",
   "tileLabelPosition": "图块标签",

@@ -99,7 +99,7 @@
   "speechVolume": "Volume de la parole",
   "speechPreview": "Écouter",
   "speechVoicePreview": "Bonjour, voici ma voix !",
-  "playbackHighlight": "Surligner les mots prononcés",
+  "playbackHighlight": "Surligner le message pendant la lecture",
   "tileSaturation": "Intensité des couleurs des cases",
   "tileBorders": "Afficher les bordures des cases",
   "tileLabelPosition": "Libellés des cases",

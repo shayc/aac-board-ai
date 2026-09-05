@@ -77,7 +77,11 @@ describe("SpeechSettings", () => {
     }
     await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
-      .element(screen.getByRole("switch", { name: "Highlight spoken words" }))
+      .element(
+        screen.getByRole("switch", {
+          name: "Highlight the message as it plays",
+        }),
+      )
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("button", { name: "Preview" }))
@@ -86,10 +90,10 @@ describe("SpeechSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("toggles spoken-word highlighting", async () => {
+  test("toggles message highlighting during playback", async () => {
     const screen = await renderSpeechSettings();
     const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight spoken words",
+      name: "Highlight the message as it plays",
     });
 
     await highlightSwitch.click();

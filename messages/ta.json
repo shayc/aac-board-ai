@@ -99,7 +99,7 @@
   "speechVolume": "பேச்சு ஒலியளவு",
   "speechPreview": "கேள்",
   "speechVoicePreview": "வணக்கம், இது என் குரல்!",
-  "playbackHighlight": "பேசப்படும் சொற்களைத் தனிப்படுத்து",
+  "playbackHighlight": "செய்தி இயங்கும்போது அதைத் தனிப்படுத்திக் காட்டு",
   "tileSaturation": "கட்டங்களின் வண்ணத் தீவிரம்",
   "tileBorders": "கட்டங்களின் எல்லைகளைக் காட்டு",
   "tileLabelPosition": "கட்ட லேபிள்கள்",
