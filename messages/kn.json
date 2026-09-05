@@ -129,7 +129,5 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "boardTranslationPrepare": "ಬೋರ್ಡ್ ಪಠ್ಯವನ್ನು ಅನುವಾದಿಸಿ",
-  "boardTranslationPrepareFailed": "ಅನುವಾದವನ್ನು ಸಿದ್ಧಪಡಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ."
+  "boardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

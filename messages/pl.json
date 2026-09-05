@@ -129,7 +129,5 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "boardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
-  "boardTranslationPrepare": "Przetłumacz tekst tablicy",
-  "boardTranslationPrepareFailed": "Nie udało się przygotować tłumaczenia. Spróbuj ponownie."
+  "boardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
 }

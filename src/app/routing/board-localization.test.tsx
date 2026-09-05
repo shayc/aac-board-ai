@@ -3,13 +3,13 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
+import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
-import { stubTranslator } from "@shared/testing/stub-built-in-ai";
-import { stubAudio } from "@shared/testing/stub-audio";
-import { stubSpeech } from "@shared/testing/stub-speech";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { m } from "@paraglide/messages.js";
+import { stubAudio } from "@shared/testing/stub-audio";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
+import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
@@ -140,44 +140,126 @@ describe("localized board route", () => {
       .toBeVisible();
   });
 
-  test("an unprepared model leaves navigation available and a settings action retries preparation then refreshes names", async () => {
+  test("language selection prepares a missing model and refreshes text after settings close", async () => {
+    const download = Promise.withResolvers<void>();
     const { availability, create, translate } = stubTranslator(
       (input) => `[es] ${input}`,
     );
     availability.mockResolvedValue("downloadable");
-    const { screen } = await renderApp();
-    setStoredLanguage("es");
-    await screen
-      .getByRole("button", { name: m.settingsOpen({}, { locale: "es" }) })
-      .click();
-    const prepare = screen.getByRole("button", {
-      name: m.boardTranslationPrepare({}, { locale: "es" }),
-    });
-    await expect.element(prepare).toBeVisible();
-    expect(create).not.toHaveBeenCalled();
-    expect(translate).not.toHaveBeenCalled();
-
-    create.mockRejectedValueOnce(new Error("download failed"));
-    await prepare.click();
-    await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent(m.boardTranslationPrepareFailed({}, { locale: "es" }));
     create.mockImplementation(async () => {
+      availability.mockResolvedValue("downloading");
+      await download.promise;
       availability.mockResolvedValue("available");
       return { destroy: () => undefined, translate };
     });
-    await prepare.click();
+    const { screen } = await renderApp();
+    await screen.getByRole("button", { name: "Open settings" }).click();
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "español" }).click();
+    await expect.poll(() => create.mock.calls.length).toBe(1);
+    await expect
+      .element(
+        screen.getByRole("button", { name: "Traducir el texto del tablero" }),
+      )
+      .not.toBeInTheDocument();
     await screen
       .getByRole("button", { name: m.settingsClose({}, { locale: "es" }) })
       .click();
 
     await expect
-      .element(screen.getByRole("grid", { name: "[es] Home" }))
+      .element(screen.getByRole("grid", { name: "Home" }))
       .toBeVisible();
-    await expect.element(screen.getByRole("combobox")).toHaveValue("[es] Home");
+    await screen.getByRole("combobox").click();
+    await screen.getByRole("option", { name: "Food" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Food" }))
+      .toBeVisible();
+    expect(translate).not.toHaveBeenCalled();
+    download.resolve();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Food" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "[es] eat" }))
+      .toBeVisible();
+    await expect.element(screen.getByRole("combobox")).toHaveValue("[es] Food");
     await screen.getByRole("combobox").click();
     await expect
-      .element(screen.getByRole("option", { name: "[es] Food" }))
+      .element(screen.getByRole("option", { name: "[es] Home" }))
       .toBeVisible();
+  });
+
+  test("failed model preparation leaves the selected language and board navigation usable", async () => {
+    const { availability, create } = stubTranslator();
+    availability.mockResolvedValue("downloadable");
+    create.mockRejectedValue(new Error("download failed"));
+    const { screen, router } = await renderApp();
+    await screen.getByRole("button", { name: "Open settings" }).click();
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "español" }).click();
+    await expect.poll(() => create.mock.calls.length).toBe(1);
+    await expect
+      .element(
+        screen.getByRole("combobox", {
+          name: m.languageLabel({}, { locale: "es" }),
+        }),
+      )
+      .toHaveTextContent("español");
+    await screen
+      .getByRole("button", { name: m.settingsClose({}, { locale: "es" }) })
+      .click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Home" }))
+      .toBeVisible();
+    await screen.getByRole("combobox").click();
+    await screen.getByRole("option", { name: "Food" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Food" }))
+      .toBeVisible();
+    expect(router.state.location.pathname).toBe("/sets/set-1/boards/food");
+  });
+
+  test("late preparation for an earlier selection cannot change the latest language", async () => {
+    const download = Promise.withResolvers<void>();
+    const { availability, create } = stubTranslator();
+    availability.mockImplementation(async (options) =>
+      options?.targetLanguage === "es" ? "downloadable" : "available",
+    );
+    let downloadSignal: unknown;
+    create.mockImplementation(async (options) => {
+      if (options?.targetLanguage === "es") {
+        downloadSignal = options.signal;
+        await download.promise;
+      }
+      return {
+        destroy: () => undefined,
+        translate: (input: string) =>
+          `[${String(options?.targetLanguage)}] ${input}`,
+      };
+    });
+    const { screen } = await renderApp();
+    await screen.getByRole("button", { name: "Open settings" }).click();
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "español" }).click();
+    await expect.poll(() => create.mock.calls.length).toBe(1);
+    await screen
+      .getByRole("combobox", { name: m.languageLabel({}, { locale: "es" }) })
+      .click();
+    await screen.getByRole("option", { name: "français" }).click();
+    await screen
+      .getByRole("button", { name: m.settingsClose({}, { locale: "fr" }) })
+      .click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[fr] Home" }))
+      .toBeVisible();
+    expect(downloadSignal).toBeInstanceOf(AbortSignal);
+    expect((downloadSignal as AbortSignal).aborted).toBe(true);
+    download.resolve();
+    await download.promise;
+    await expect.element(screen.getByRole("combobox")).toHaveValue("[fr] Home");
+    expect(document.title).toBe("[fr] Home");
   });
 });

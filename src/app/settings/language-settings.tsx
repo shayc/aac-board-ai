@@ -8,8 +8,8 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { useLanguageOptions } from "@shared/language/use-language-options";
 import { useLanguage } from "@shared/language/use-language";
+import { useLanguageOptions } from "@shared/language/use-language-options";
 import { useTranslate } from "@shared/language/use-translate";
 import {
   isSupported,
@@ -17,7 +17,11 @@ import {
 } from "@shayc/react-built-in-ai";
 import { useId } from "react";
 
-export function LanguageSettings() {
+interface LanguageSettingsProps {
+  onLanguageChange?: (language: string) => void;
+}
+
+export function LanguageSettings({ onLanguageChange }: LanguageSettingsProps) {
   const t = useTranslate();
   const selectId = useId();
   const labelId = useId();
@@ -35,7 +39,11 @@ export function LanguageSettings() {
           labelId={labelId}
           label={t(m.languageLabel)}
           value={language}
-          onChange={(event) => setLanguage(event.target.value)}
+          onChange={(event) => {
+            const selectedLanguage = event.target.value;
+            setLanguage(selectedLanguage);
+            onLanguageChange?.(selectedLanguage);
+          }}
           variant="outlined"
         >
           {languageOptions.map(({ code, name }) => (

@@ -129,7 +129,5 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
-  "boardUrlImportFailed": "Kan bordbestand niet importeren via de link",
-  "boardTranslationPrepare": "Bordtekst vertalen",
-  "boardTranslationPrepareFailed": "De vertaling kon niet worden voorbereid. Probeer het opnieuw."
+  "boardUrlImportFailed": "Kan bordbestand niet importeren via de link"
 }

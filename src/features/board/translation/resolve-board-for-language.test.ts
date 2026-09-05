@@ -2,12 +2,12 @@ import {
   stubBuiltInAIUnsupported,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
-import { beforeEach, describe, expect, test, vi } from "vitest";
 import type { OBFBoard } from "@shayc/open-board-format";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import { obfToBoard } from "../obf/obf-to-board";
 import { getBoard, type BoardRecord } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
-import { obfToBoard } from "../obf/obf-to-board";
 import {
   resolveBoardForLanguage,
   TRANSLATION_WAIT_MS,
@@ -145,7 +145,7 @@ describe("resolveBoardForLanguage", () => {
       label: "drink",
       labelLanguage: "en-US",
     });
-    expect(result.translationSources).toEqual(["en-US"]);
+    expect(result.sourceLanguages).toEqual(["en-US"]);
   });
 
   test("unsupported, unprepared, and unknown-source content remains usable", async () => {

@@ -129,7 +129,5 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
-  "boardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
-  "boardTranslationPrepare": "Превод на текста на дъската",
-  "boardTranslationPrepareFailed": "Преводът не можа да бъде подготвен. Опитайте отново."
+  "boardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
 }

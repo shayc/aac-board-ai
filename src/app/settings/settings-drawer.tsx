@@ -15,19 +15,18 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { ThemeSettings } from "./theme-settings";
+import { ExternalLink } from "@shared/ui/external-link";
 import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
-import type { ReactNode } from "react";
+import { ThemeSettings } from "./theme-settings";
 
 interface SettingsDrawerProps {
   open: boolean;
-  translationSettings?: ReactNode;
+  onLanguageChange?: (language: string) => void;
   onClose: () => void;
 }
 
@@ -42,7 +41,7 @@ const sectionHeadingSx = {
 
 export function SettingsDrawer({
   open,
-  translationSettings,
+  onLanguageChange,
   onClose,
 }: SettingsDrawerProps) {
   const t = useTranslate();
@@ -108,8 +107,7 @@ export function SettingsDrawer({
         </Typography>
         <Stack spacing={3}>
           <ThemeSettings />
-          <LanguageSettings />
-          {translationSettings}
+          <LanguageSettings onLanguageChange={onLanguageChange} />
         </Stack>
 
         <Divider sx={{ my: 3 }} />

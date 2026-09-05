@@ -129,7 +129,5 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
-  "boardUrlImportFailed": "无法从链接导入沟通板文件",
-  "boardTranslationPrepare": "翻译沟通板文本",
-  "boardTranslationPrepareFailed": "无法准备翻译。请重试。"
+  "boardUrlImportFailed": "无法从链接导入沟通板文件"
 }

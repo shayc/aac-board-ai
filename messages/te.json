@@ -129,7 +129,5 @@
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
-  "boardUrlImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-  "boardTranslationPrepare": "బోర్డు వచనాన్ని అనువదించండి",
-  "boardTranslationPrepareFailed": "అనువాదాన్ని సిద్ధం చేయలేకపోయాము. మళ్లీ ప్రయత్నించండి."
+  "boardUrlImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం"
 }

@@ -129,7 +129,5 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "boardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
-  "boardTranslationPrepare": "Traducir el texto del tablero",
-  "boardTranslationPrepareFailed": "No se pudo preparar la traducción. Inténtalo de nuevo."
+  "boardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace"
 }

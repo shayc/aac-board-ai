@@ -129,7 +129,5 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "boardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
-  "boardTranslationPrepare": "Traduire le texte du tableau",
-  "boardTranslationPrepareFailed": "Impossible de préparer la traduction. Réessayez."
+  "boardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien"
 }

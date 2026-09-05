@@ -129,7 +129,5 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "boardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
-  "boardTranslationPrepare": "Prevedi besedilo table",
-  "boardTranslationPrepareFailed": "Prevoda ni bilo mogoče pripraviti. Poskusite znova."
+  "boardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
 }

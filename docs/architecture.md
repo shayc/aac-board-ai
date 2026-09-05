@@ -282,8 +282,11 @@ rerender only subscribers to the changed slice.
   when unsupported and surface an unavailable state when supported but unusable;
   translation retains usable source/cached wording. Loaders only attempt already
   available language pairs, prioritize active content, and stop optional work
-  after one second across the entire set. A settings action prepares known pairs
-  from a user gesture and revalidates after success; failures allow retry.
+  after one second across the entire set. Selecting a language also prepares
+  its missing models directly from that gesture, using source languages already
+  returned by the loader. Preparation continues when settings close and
+  revalidates the current board after success. Failures retain source/cached
+  text; changing language again can retry, with no separate translation control.
   This ceiling is a provisional responsiveness policy, not a measured model
   throughput guarantee. Real model latency, cold downloads, and large-set
   coverage still require testing on supported devices.

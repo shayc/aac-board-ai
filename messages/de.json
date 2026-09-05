@@ -129,7 +129,5 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "boardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
-  "boardTranslationPrepare": "Text der Tafel übersetzen",
-  "boardTranslationPrepareFailed": "Die Übersetzung konnte nicht vorbereitet werden. Versuche es erneut."
+  "boardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden"
 }

@@ -129,7 +129,5 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "boardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
-  "boardTranslationPrepare": "תרגום טקסט הלוח",
-  "boardTranslationPrepareFailed": "לא ניתן היה להכין את התרגום. יש לנסות שוב."
+  "boardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
 }

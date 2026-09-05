@@ -129,7 +129,5 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "boardUrlImportFailed": "Не удалось импортировать файл доски по ссылке",
-  "boardTranslationPrepare": "Перевести текст доски",
-  "boardTranslationPrepareFailed": "Не удалось подготовить перевод. Попробуйте ещё раз."
+  "boardUrlImportFailed": "Не удалось импортировать файл доски по ссылке"
 }

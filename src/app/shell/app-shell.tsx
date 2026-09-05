@@ -1,10 +1,10 @@
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
 import { useBoardRouteMediaLifecycle } from "@app/routing/use-board-route-media-lifecycle";
+import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
-import { BoardTranslationSettings } from "@app/settings/board-translation-settings";
+import { usePrepareBoardLanguage } from "@app/settings/use-prepare-board-language";
 import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
 import {
@@ -22,6 +22,7 @@ export function AppShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
+  const prepareBoardLanguage = usePrepareBoardLanguage();
 
   const isPersistentLibrary = useMediaQuery((theme) =>
     theme.breakpoints.up("md"),
@@ -54,7 +55,7 @@ export function AppShell() {
 
       <SettingsDrawer
         open={isSettingsOpen}
-        translationSettings={<BoardTranslationSettings />}
+        onLanguageChange={prepareBoardLanguage}
         onClose={() => setIsSettingsOpen(false)}
       />
 

@@ -11,14 +11,14 @@ import {
   type ResolvedPhrase,
 } from "./board-translations";
 
-// A route-wide ceiling for optional work; model downloads require a settings action.
+// A route-wide ceiling for optional work; language selection initiates model downloads.
 export const TRANSLATION_WAIT_MS = 1_000;
 
 export interface LocalizedBoardContent {
   board: Board;
   boards: BoardSummary[];
   language: string;
-  translationSources: string[];
+  sourceLanguages: string[];
 }
 
 interface BoardResolution {
@@ -54,11 +54,11 @@ export async function resolveBoardForLanguage(
   await translateWithinDeadline(prioritized, language, signal);
   signal?.throwIfAborted();
 
-  const translationSources = new Set<string>();
+  const sourceLanguages = new Set<string>();
   for (const { record, generated, phrases } of resolutions) {
     for (const phrase of phrases.values()) {
-      if (phrase.isMissing && phrase.sourceLanguage) {
-        translationSources.add(phrase.sourceLanguage);
+      if (phrase.sourceLanguage) {
+        sourceLanguages.add(phrase.sourceLanguage);
       }
     }
 
@@ -97,7 +97,7 @@ export async function resolveBoardForLanguage(
     },
     boards: summaries,
     language,
-    translationSources: [...translationSources].sort(),
+    sourceLanguages: [...sourceLanguages].sort(),
   };
 }
 

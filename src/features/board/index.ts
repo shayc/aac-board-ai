@@ -5,11 +5,11 @@ export {
   TILE_SATURATION,
   useBoardAppearanceConfig,
 } from "./appearance/appearance-store";
-export { TileLabelPlacementPreview } from "./appearance/tile-label-placement-preview";
 export type {
   BoardAppearanceConfig,
   TileLabelPlacement,
 } from "./appearance/appearance-store";
+export { TileLabelPlacementPreview } from "./appearance/tile-label-placement-preview";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export {
   getBoardSet,
@@ -44,9 +44,9 @@ export {
   setSuggestionCustomInstructions,
   useBoardSuggestionConfig,
 } from "./suggestions/suggestion-config-store";
+export type { BoardSummary } from "./translation/board-translations";
+export { prepareBoardLanguage } from "./translation/prepare-board-language";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 export type { LocalizedBoardContent } from "./translation/resolve-board-for-language";
-export type { BoardSummary } from "./translation/board-translations";
-export { BoardTranslationPreparation } from "./translation/board-translation-preparation";
 
 export type { Board } from "./types";

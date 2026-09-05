@@ -129,7 +129,5 @@
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Skup ploča nije pronađen",
-  "boardUrlImportFailed": "Datoteku ploče nije moguće uvesti s poveznice",
-  "boardTranslationPrepare": "Prevedi tekst ploče",
-  "boardTranslationPrepareFailed": "Nije moguće pripremiti prijevod. Pokušajte ponovno."
+  "boardUrlImportFailed": "Datoteku ploče nije moguće uvesti s poveznice"
 }

@@ -129,7 +129,5 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
-  "boardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link",
-  "boardTranslationPrepare": "Traduzir o texto da prancha",
-  "boardTranslationPrepareFailed": "Não foi possível preparar a tradução. Tente novamente."
+  "boardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link"
 }

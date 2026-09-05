@@ -129,7 +129,5 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Набір дошок не знайдено",
-  "boardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
-  "boardTranslationPrepare": "Перекласти текст дошки",
-  "boardTranslationPrepareFailed": "Не вдалося підготувати переклад. Спробуйте ще раз."
+  "boardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням"
 }
