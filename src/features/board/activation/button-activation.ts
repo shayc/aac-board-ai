@@ -58,7 +58,7 @@ export function createButtonActivator({
     }
 
     let parts = message.parts;
-    let partsToSpeak: MessagePart[] | null = null;
+    let partsToPlay: MessagePart[] | null = null;
 
     for (const action of button.actions) {
       switch (action.kind) {
@@ -78,7 +78,7 @@ export function createButtonActivator({
           navigation.goHome();
           break;
         case "speak":
-          partsToSpeak = parts;
+          partsToPlay = parts;
           break;
 
         default:
@@ -86,17 +86,17 @@ export function createButtonActivator({
       }
     }
 
-    if (partsToSpeak) {
-      if (partsToSpeak !== message.parts) {
-        message.setParts(partsToSpeak);
+    if (partsToPlay) {
+      if (partsToPlay !== message.parts) {
+        message.setParts(partsToPlay);
       }
 
-      // Post-speak mutations (":speak" then ":clear") commit after the
-      // utterance, so the spoken message stays visible while it plays.
-      const partsAfterSpeak = parts;
-      void playback.playMessage(partsToSpeak).then((outcome) => {
-        if (outcome === "completed" && partsAfterSpeak !== partsToSpeak) {
-          message.setParts(partsAfterSpeak);
+      // Mutations after ":speak" (such as ":clear") wait for playback to
+      // complete without interruption, keeping the message visible while it plays.
+      const finalParts = parts;
+      void playback.playMessage(partsToPlay).then((outcome) => {
+        if (outcome === "completed" && finalParts !== partsToPlay) {
+          message.setParts(finalParts);
         }
       });
     } else if (parts !== message.parts) {
