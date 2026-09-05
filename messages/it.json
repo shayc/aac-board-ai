@@ -129,5 +129,7 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "boardUrlImportFailed": "Impossibile importare il file di tabella dal link"
+  "boardUrlImportFailed": "Impossibile importare il file di tabella dal link",
+  "boardTranslationPrepare": "Traduci il testo della tabella",
+  "boardTranslationPrepareFailed": "Impossibile preparare la traduzione. Riprova."
 }

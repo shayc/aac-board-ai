@@ -4,6 +4,7 @@ import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
 import { useBoardRouteMediaLifecycle } from "@app/routing/use-board-route-media-lifecycle";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
+import { BoardTranslationSettings } from "@app/settings/board-translation-settings";
 import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
 import {
@@ -53,6 +54,7 @@ export function AppShell() {
 
       <SettingsDrawer
         open={isSettingsOpen}
+        translationSettings={<BoardTranslationSettings />}
         onClose={() => setIsSettingsOpen(false)}
       />
 

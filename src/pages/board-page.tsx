@@ -6,7 +6,7 @@ export function BoardPage() {
 
   return (
     <>
-      <title>{board.name}</title>
+      <title lang={board.nameLanguage ?? ""}>{board.name}</title>
       <CommunicationBoard board={board} />
     </>
   );

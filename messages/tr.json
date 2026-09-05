@@ -129,5 +129,7 @@
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
-  "boardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı"
+  "boardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
+  "boardTranslationPrepare": "Pano metnini çevir",
+  "boardTranslationPrepareFailed": "Çeviri hazırlanamadı. Tekrar deneyin."
 }

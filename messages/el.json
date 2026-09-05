@@ -129,5 +129,7 @@
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
-  "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο"
+  "boardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο",
+  "boardTranslationPrepare": "Μετάφραση κειμένου πίνακα",
+  "boardTranslationPrepareFailed": "Δεν ήταν δυνατή η προετοιμασία της μετάφρασης. Δοκιμάστε ξανά."
 }

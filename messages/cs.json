@@ -129,5 +129,7 @@
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
-  "boardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu"
+  "boardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu",
+  "boardTranslationPrepare": "Přeložit text tabulky",
+  "boardTranslationPrepareFailed": "Překlad se nepodařilo připravit. Zkuste to znovu."
 }

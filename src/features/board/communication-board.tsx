@@ -89,6 +89,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       <Tile
         key={button.id}
         ariaLabel={ariaLabel}
+        lang={
+          (ariaLabel ? button.vocalizationLanguage : button.labelLanguage) ?? ""
+        }
         label={button.label ?? ""}
         imageSrc={button.imageSrc}
         backgroundColor={button.backgroundColor}
@@ -149,6 +152,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Grid<BoardButton>
           ref={gridRef}
           ariaLabel={board.name ?? t(m.boardGridLabel)}
+          lang={board.nameLanguage ?? ""}
           dir={direction}
           items={board.buttons}
           rows={board.grid.rows}

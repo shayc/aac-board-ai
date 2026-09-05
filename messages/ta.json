@@ -129,5 +129,7 @@
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
   "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை",
-  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை"
+  "boardUrlImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை",
+  "boardTranslationPrepare": "பலகை உரையை மொழிபெயர்",
+  "boardTranslationPrepareFailed": "மொழிபெயர்ப்பைத் தயாரிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
 }

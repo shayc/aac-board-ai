@@ -1,4 +1,7 @@
+import type { BoardLoaderResult } from "@app/routing/loaders/board-loader";
+import { BOARD_ROUTE_ID } from "@app/routing/route-ids";
 import { BoardSelector } from "@features/board";
+import { useRouteLoaderData } from "react-router";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import AppBar from "@mui/material/AppBar";
@@ -23,6 +26,7 @@ export function AppHeader({
   onOpenSettings,
 }: AppHeaderProps) {
   const t = useTranslate();
+  const loadedBoard = useRouteLoaderData<BoardLoaderResult>(BOARD_ROUTE_ID);
 
   return (
     <AppBar position="static">
@@ -64,7 +68,12 @@ export function AppHeader({
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
-          <BoardSelector />
+          {loadedBoard && (
+            <BoardSelector
+              key={loadedBoard.setId}
+              boards={loadedBoard.boards}
+            />
+          )}
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>

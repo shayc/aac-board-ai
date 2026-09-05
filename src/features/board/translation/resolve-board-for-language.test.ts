@@ -2,129 +2,214 @@ import {
   stubBuiltInAIUnsupported,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
-import { beforeEach, describe, expect, test } from "vitest";
-import { getBoard } from "../storage/board-content-storage";
+import { beforeEach, describe, expect, test, vi } from "vitest";
+import type { OBFBoard } from "@shayc/open-board-format";
+import { getBoard, type BoardRecord } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";
-import { resetBoardsDB } from "../testing";
-import type { Board } from "../types";
-import { resolveBoardForLanguage } from "./resolve-board-for-language";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { obfToBoard } from "../obf/obf-to-board";
+import {
+  resolveBoardForLanguage,
+  TRANSLATION_WAIT_MS,
+} from "./resolve-board-for-language";
 
-function makeBoard(overrides: Partial<Board> = {}): Board {
-  return {
+function makeRecord(overrides: Partial<OBFBoard> = {}): BoardRecord {
+  const obf = makeOBFBoard({
     id: "board-1",
     name: "Food",
     locale: "en-US",
-    grid: { rows: 1, columns: 2 },
     buttons: [
-      { id: "btn-eat", label: "eat", vocalization: "eat" },
-      { id: "btn-drink", label: "drink" },
+      { id: "eat", label: "eat", vocalization: "eat" },
+      { id: "drink", label: "drink" },
     ],
     ...overrides,
-  };
+  });
+
+  return { setId: "set-1", boardId: obf.id, name: obf.name ?? obf.id, obf };
+}
+
+function resolve(record: BoardRecord, language = "es", signal?: AbortSignal) {
+  return resolveBoardForLanguage(
+    obfToBoard(record.obf),
+    [record],
+    language,
+    signal,
+  );
 }
 
 describe("resolveBoardForLanguage", () => {
-  beforeEach(async () => {
-    await resetBoardsDB();
-  });
+  beforeEach(resetBoardsDB);
 
-  test("returns the board unchanged when its language matches the target", async () => {
-    const board = makeBoard();
+  test("uses source and cached text without creating a Translator", async () => {
     const { create } = stubTranslator();
+    const source = makeRecord({
+      strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
+    });
+    const english = await resolve(source, "en");
+    const spanish = await resolve(source);
 
-    const result = await resolveBoardForLanguage("set-1", board, "en");
-
-    expect(result).toBe(board);
+    expect(english.board.name).toBe("Food");
+    expect(spanish.board).toMatchObject({
+      name: "Comida",
+      nameLanguage: "es-ES",
+    });
+    expect(spanish.board.buttons[0]).toMatchObject({
+      label: "comer",
+      vocalization: "comer",
+    });
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("applies cached translations without invoking the Translator", async () => {
-    const board = makeBoard({
-      translations: {
-        "es-ES": { Food: "Comida", eat: "comer", drink: "beber" },
+  test("a name-only cache leaves tiles eligible and successful results persist under their original keys", async () => {
+    const record = makeRecord({
+      buttons: [{ id: "eat", label: ":eat", vocalization: ":utterance" }],
+      strings: {
+        en: { ":eat": "eat", ":utterance": "I want to eat" },
+        es: { Food: "Comida" },
       },
     });
-    const { create } = stubTranslator();
+    await createBoardSet({
+      boardSet: { setId: "set-1", name: "Set", rootBoardId: "board-1" },
+      boards: [record],
+      assets: [],
+    });
+    const { translate } = stubTranslator((input) => `[es] ${input}`);
 
-    const result = await resolveBoardForLanguage("set-1", board, "es");
+    const result = await resolve(record);
 
-    expect(result.name).toBe("Comida");
-    expect(result.buttons[0].label).toBe("comer");
-    expect(result.buttons[0].vocalization).toBe("comer");
-    expect(result.buttons[1].label).toBe("beber");
+    expect(result.board.name).toBe("Comida");
+    expect(result.board.buttons[0]).toMatchObject({
+      label: "[es] eat",
+      vocalization: "[es] I want to eat",
+    });
+    expect(translate.mock.calls.map(([input]) => input)).toEqual([
+      "eat",
+      "I want to eat",
+    ]);
+    await expect
+      .poll(async () => (await getBoard("set-1", "board-1"))?.obf.strings?.es)
+      .toEqual({
+        Food: "Comida",
+        ":eat": "[es] eat",
+        ":utterance": "[es] I want to eat",
+      });
+  });
+
+  test("resolves active content and unvisited names using one translator per source pair", async () => {
+    const active = makeRecord();
+    const other = makeRecord({
+      id: "other",
+      name: "Animals",
+      buttons: [{ id: "dog", label: "dog" }],
+    });
+    const unnamed = makeRecord({ id: "identifier", name: undefined });
+    const { create, translate } = stubTranslator((input) => `[es] ${input}`);
+
+    const result = await resolveBoardForLanguage(
+      obfToBoard(active.obf),
+      [active, other, unnamed],
+      "es",
+    );
+
+    expect(result.board.name).toBe(result.boards[0].name);
+    expect(result.boards.map(({ name }) => name)).toEqual([
+      "[es] Food",
+      "[es] Animals",
+      "identifier",
+    ]);
+    expect(result.language).toBe("es");
+    expect(create).toHaveBeenCalledOnce();
+    expect(translate.mock.calls.map(([input]) => input)).toEqual([
+      "Food",
+      "eat",
+      "drink",
+      "Animals",
+    ]);
+  });
+
+  test("keeps successful phrases and cached fallback when one translation fails", async () => {
+    stubTranslator((input) =>
+      input === "drink"
+        ? Promise.reject(new Error("failure"))
+        : `[es] ${input}`,
+    );
+    const result = await resolve(
+      makeRecord({ strings: { es: { Food: "Comida" } } }),
+    );
+    expect(result.board).toMatchObject({ name: "Comida", locale: "en-US" });
+    expect(result.board.buttons[0]).toMatchObject({
+      label: "[es] eat",
+      labelLanguage: "es",
+    });
+    expect(result.board.buttons[1]).toMatchObject({
+      label: "drink",
+      labelLanguage: "en-US",
+    });
+    expect(result.translationSources).toEqual(["en-US"]);
+  });
+
+  test("unsupported, unprepared, and unknown-source content remains usable", async () => {
+    stubBuiltInAIUnsupported("Translator");
+    expect((await resolve(makeRecord())).board.name).toBe("Food");
+
+    const { availability, create } = stubTranslator();
+    availability.mockResolvedValue("downloadable");
+    expect((await resolve(makeRecord())).board.name).toBe("Food");
+    availability.mockResolvedValue("downloading");
+    expect((await resolve(makeRecord())).board.name).toBe("Food");
+    availability.mockResolvedValue("available");
+    expect((await resolve(makeRecord({ locale: undefined }))).board.name).toBe(
+      "Food",
+    );
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("translates via the Translator API on a cache miss", async () => {
-    const board = makeBoard();
-    const { create, translate } = stubTranslator((input) => `[es] ${input}`);
-
-    const result = await resolveBoardForLanguage("set-1", board, "es");
-
-    expect(result.name).toBe("[es] Food");
-    expect(result.buttons[0].label).toBe("[es] eat");
-    expect(result.buttons[0].vocalization).toBe("[es] eat");
-    expect(result.buttons[1].label).toBe("[es] drink");
-
-    expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
-      sourceLanguage: "en",
-      targetLanguage: "es",
-    });
-
-    const inputs = translate.mock.calls.map((call) => call.at(0));
-    expect(inputs).toHaveLength(3);
-    expect(inputs).toContain("Food");
-    expect(inputs).toContain("eat");
-    expect(inputs).toContain("drink");
-  });
-
-  test("persists a fresh translation", async () => {
-    await createBoardSet({
-      boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
-      boards: [
-        {
-          boardId: "board-1",
-          name: "Food",
-          obf: {
-            format: "open-board-0.1",
-            id: "board-1",
-            buttons: [],
-            grid: { rows: 1, columns: 1, order: [[null]] },
-          },
-        },
-      ],
-      assets: [],
-    });
+  test("fresh text is returned even if its cache record no longer exists", async () => {
     stubTranslator((input) => `[es] ${input}`);
-
-    await resolveBoardForLanguage("set-1", makeBoard(), "es");
-
-    const persistedStrings = {
-      es: { Food: "[es] Food", eat: "[es] eat", drink: "[es] drink" },
-    };
-
-    await expect
-      .poll(async () => (await getBoard("set-1", "board-1"))?.obf.strings)
-      .toEqual(persistedStrings);
+    const result = await resolve(makeRecord());
+    expect(result.board.name).toBe("[es] Food");
+    expect(result.boards[0].name).toBe("[es] Food");
+    expect(await getBoard("set-1", "board-1")).toBeUndefined();
   });
 
-  test("falls back to the source board when the Translator is unavailable", async () => {
-    const board = makeBoard();
-    stubBuiltInAIUnsupported("Translator");
-
-    const result = await resolveBoardForLanguage("set-1", board, "es");
-
-    expect(result).toBe(board);
+  test("the deadline retains completed phrases and ignores late results", async () => {
+    const started = Promise.withResolvers<void>();
+    const late = Promise.withResolvers<string>();
+    stubTranslator((input) => {
+      if (input === "Food") {
+        return "Comida";
+      }
+      started.resolve();
+      return late.promise;
+    });
+    vi.useFakeTimers();
+    try {
+      const pending = resolve(makeRecord());
+      await started.promise;
+      await vi.advanceTimersByTimeAsync(TRANSLATION_WAIT_MS);
+      const result = await pending;
+      expect(result.board.name).toBe("Comida");
+      expect(result.board.buttons[0].label).toBe("eat");
+      late.resolve("obsolete");
+      await late.promise;
+      expect(result.board.buttons[0].label).toBe("eat");
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
-  test("falls back to the source board when the platform fails mid-translation", async () => {
-    const board = makeBoard();
-    stubTranslator(() =>
-      Promise.reject(new DOMException("model failure", "UnknownError")),
-    );
-
-    const result = await resolveBoardForLanguage("set-1", board, "es");
-
-    expect(result).toBe(board);
+  test("an aborted request rejects promptly even if the platform ignores cancellation", async () => {
+    const started = Promise.withResolvers<void>();
+    const late = Promise.withResolvers<string>();
+    stubTranslator(() => {
+      started.resolve();
+      return late.promise;
+    });
+    const controller = new AbortController();
+    const pending = resolve(makeRecord(), "es", controller.signal);
+    await started.promise;
+    controller.abort();
+    await expect(pending).rejects.toMatchObject({ name: "AbortError" });
+    late.resolve("obsolete");
   });
 });

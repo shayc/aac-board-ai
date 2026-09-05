@@ -129,5 +129,7 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "boardUrlImportFailed": "Couldn't import board file from link"
+  "boardUrlImportFailed": "Couldn't import board file from link",
+  "boardTranslationPrepare": "Translate board text",
+  "boardTranslationPrepareFailed": "Couldn’t prepare translation. Try again."
 }

@@ -129,5 +129,7 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
-  "boardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui"
+  "boardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
+  "boardTranslationPrepare": "Käännä taulun teksti",
+  "boardTranslationPrepareFailed": "Käännöksen valmistelu epäonnistui. Yritä uudelleen."
 }

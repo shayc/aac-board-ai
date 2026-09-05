@@ -129,5 +129,7 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "boardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी"
+  "boardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "boardTranslationPrepare": "बोर्ड का टेक्स्ट अनुवाद करें",
+  "boardTranslationPrepareFailed": "अनुवाद तैयार नहीं हो सका। फिर से प्रयास करें।"
 }

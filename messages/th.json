@@ -129,5 +129,7 @@
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
-  "boardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ"
+  "boardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ",
+  "boardTranslationPrepare": "แปลข้อความบนบอร์ด",
+  "boardTranslationPrepareFailed": "เตรียมการแปลไม่สำเร็จ โปรดลองอีกครั้ง"
 }

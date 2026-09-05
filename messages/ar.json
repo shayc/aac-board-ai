@@ -129,5 +129,7 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
-  "boardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط"
+  "boardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
+  "boardTranslationPrepare": "ترجمة نص اللوحة",
+  "boardTranslationPrepareFailed": "تعذّر إعداد الترجمة. حاول مرة أخرى."
 }

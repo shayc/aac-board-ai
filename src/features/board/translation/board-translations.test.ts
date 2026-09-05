@@ -1,96 +1,106 @@
 import { describe, expect, test } from "vitest";
+import { makeOBFBoard } from "../testing";
+import { obfToBoard } from "../obf/obf-to-board";
 import {
-  applyTranslations,
-  collectTranslatablePhrases,
-  findTranslations,
-  getBoardLanguage,
-  findTranslatedBoard,
+  applyResolvedPhrases,
+  collectBoardPhrases,
+  getSourceLanguage,
+  resolvePhrase,
 } from "./board-translations";
-import type { Board } from "../types";
 
-const mockTranslations = {
-  "es-ES": {
-    "My Board": "Mi Tablero",
-    Hello: "Hola",
-    "Hello there": "Hola a todos",
-  },
-  "fr-CA": {
-    Hello: "Bonjour",
-  },
-};
-
-const mockBoard: Board = {
-  id: "board-1",
-  name: "My Board",
-  grid: { columns: 2, rows: 1 },
-  buttons: [
-    {
-      id: "btn-1",
-      label: "Hello",
-      vocalization: "Hello there",
-    },
-    {
-      id: "btn-2",
-      label: undefined,
-      vocalization: undefined,
-    },
-  ],
-  locale: "en-US",
-  translations: mockTranslations,
-};
-
-describe("board-translations", () => {
-  test("getBoardLanguage() extracts the base language code", () => {
-    expect(getBoardLanguage(mockBoard)).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
+describe("board phrase resolution", () => {
+  test("preserves canonical source locales without assuming unknown content is English", () => {
+    expect(getSourceLanguage("pt_BR")).toBe("pt-BR");
+    expect(getSourceLanguage("zh-Hant")).toBe("zh-Hant");
+    expect(getSourceLanguage(undefined)).toBeUndefined();
+    expect(getSourceLanguage("not a locale")).toBeUndefined();
   });
 
-  test("findTranslations() matches language codes correctly", () => {
-    expect(findTranslations(mockBoard.translations, "es")).toEqual(
-      mockTranslations["es-ES"],
+  test("prefers exact entries and fills individual gaps using deterministic compatible dictionaries", () => {
+    const source = makeOBFBoard({
+      strings: {
+        "fr-FR": { Hello: "Salut", Bye: "Au revoir" },
+        fr: { Hello: "Bonjour", Food: "Nourriture" },
+        fr_CA: { Hello: "Allô" },
+      },
+    });
+
+    expect(resolvePhrase(source, "Hello", "fr-CA")).toMatchObject({
+      text: "Allô",
+      language: "fr-CA",
+      isMissing: false,
+    });
+    expect(resolvePhrase(source, "Food", "fr-CA")).toMatchObject({
+      text: "Nourriture",
+      language: "fr",
+    });
+    expect(resolvePhrase(source, "Bye", "fr-CA").text).toBe("Au revoir");
+    expect(resolvePhrase(source, "Unknown", "fr-CA").isMissing).toBe(true);
+  });
+
+  test("does not use an incompatible Chinese script", () => {
+    const source = makeOBFBoard({ strings: { "zh-Hans": { Hello: "你好" } } });
+    expect(resolvePhrase(source, "Hello", "zh-Hant")).toMatchObject({
+      text: "Hello",
+      language: "en",
+      isMissing: true,
+    });
+  });
+
+  test("resolves source dictionary tokens even in the source language and preserves input", () => {
+    const source = makeOBFBoard({
+      name: "Clock",
+      buttons: [{ id: "time", label: ":time", vocalization: ":utterance" }],
+      strings: {
+        en: { ":time": "time", ":utterance": "What time is it?" },
+        es: { ":time": "hora" },
+      },
+    });
+    const english = applyResolvedPhrases(
+      obfToBoard(source),
+      collectBoardPhrases(source, true, "en"),
     );
-    expect(findTranslations(mockBoard.translations, "fr")).toEqual(
-      mockTranslations["fr-CA"],
+    const spanish = applyResolvedPhrases(
+      obfToBoard(source),
+      collectBoardPhrases(source, true, "es"),
     );
-    expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
-    expect(findTranslations(undefined, "es")).toBeUndefined();
+
+    expect(english.buttons[0]).toMatchObject({
+      label: "time",
+      vocalization: "What time is it?",
+      labelLanguage: "en",
+    });
+    expect(spanish.buttons[0]).toMatchObject({
+      label: "hora",
+      labelLanguage: "es",
+      vocalization: "What time is it?",
+      vocalizationLanguage: "en",
+    });
+    expect(source.buttons[0].label).toBe(":time");
+    expect(resolvePhrase(source, ":utterance", "es")).toMatchObject({
+      sourceText: "What time is it?",
+      isMissing: true,
+    });
   });
 
-  test("applyTranslations() maps translations onto board structure", () => {
-    const translations = {
-      "My Board": "Mi Tablero",
-      Hello: "Hola",
-    };
-    const translated = applyTranslations(mockBoard, translations);
-
-    expect(translated.name).toBe("Mi Tablero");
-    expect(translated.buttons[0].label).toBe("Hola");
-    expect(translated.buttons[0].vocalization).toBe("Hello there");
-    expect(translated.buttons[1].label).toBeUndefined();
+  test("own dictionary keys and identity translations count as covered", () => {
+    const source = makeOBFBoard({ strings: { es: { Oslo: "Oslo" } } });
+    expect(resolvePhrase(source, "Oslo", "es").isMissing).toBe(false);
+    expect(resolvePhrase(source, "toString", "es")).toMatchObject({
+      text: "toString",
+      isMissing: true,
+    });
+    expect(resolvePhrase(source, ":unresolved", "es").isMissing).toBe(false);
   });
 
-  test("collectTranslatablePhrases() extracts all unique UI text", () => {
-    const phrases = collectTranslatablePhrases(mockBoard);
-
-    expect(phrases.size).toBe(3);
-    expect(phrases.has("My Board")).toBe(true);
-    expect(phrases.has("Hello")).toBe(true);
-    expect(phrases.has("Hello there")).toBe(true);
-  });
-
-  test("findTranslatedBoard() returns early if languages match", () => {
-    expect(findTranslatedBoard(mockBoard, "en")).toBe(mockBoard);
-  });
-
-  test("findTranslatedBoard() returns translated board if cached translations exist", () => {
-    const translated = findTranslatedBoard(mockBoard, "es");
-    expect(translated).toBeDefined();
-    expect(translated?.name).toBe("Mi Tablero");
-    expect(translated?.buttons[0].label).toBe("Hola");
-  });
-
-  test("findTranslatedBoard() returns undefined if translations are missing", () => {
-    expect(findTranslatedBoard(mockBoard, "de")).toBeUndefined();
+  test("name requests do not collect tile text or a missing-name identifier", () => {
+    const source = makeOBFBoard({
+      name: undefined,
+      buttons: [{ id: "eat", label: "eat" }],
+    });
+    expect(collectBoardPhrases(source, false, "es").size).toBe(0);
+    expect([...collectBoardPhrases(source, true, "es").keys()]).toEqual([
+      "eat",
+    ]);
   });
 });

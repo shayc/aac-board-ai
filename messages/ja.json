@@ -129,5 +129,7 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "boardUrlImportFailed": "リンクからボードファイルをインポートできませんでした"
+  "boardUrlImportFailed": "リンクからボードファイルをインポートできませんでした",
+  "boardTranslationPrepare": "ボードのテキストを翻訳",
+  "boardTranslationPrepareFailed": "翻訳を準備できませんでした。もう一度お試しください。"
 }

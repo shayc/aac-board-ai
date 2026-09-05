@@ -1,6 +1,7 @@
 export interface Board {
   id: string;
   name?: string;
+  nameLanguage?: string;
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
@@ -16,7 +17,9 @@ export interface BoardGrid {
 export interface BoardButton {
   id: string;
   label?: string;
+  labelLanguage?: string;
   vocalization?: string;
+  vocalizationLanguage?: string;
   imageSrc?: string;
   soundSrc?: string;
   backgroundColor?: string;

@@ -5,6 +5,7 @@ import {
   BoardNotFoundError,
   getAssetBlob,
   getBoard,
+  type BoardRecord,
 } from "./board-content-storage";
 import { createObjectUrlRegistry, type ObjectUrlRegistry } from "./object-url";
 
@@ -23,13 +24,23 @@ export async function hydrateBoard(
   boardId: string,
   signal?: AbortSignal,
 ): Promise<HydratedBoard> {
+  const record = await getBoard(setId, boardId);
+  if (!record) {
+    throw new BoardNotFoundError(setId, boardId);
+  }
+
+  return hydrateBoardRecord(record, signal);
+}
+
+export async function hydrateBoardRecord(
+  record: BoardRecord,
+  signal?: AbortSignal,
+): Promise<HydratedBoard> {
   const registry = createObjectUrlRegistry();
   try {
-    const obf = await readOBFBoard(setId, boardId);
-
     signal?.throwIfAborted();
 
-    const hydrated = await hydrateOBFBoard(setId, obf, registry);
+    const hydrated = await hydrateOBFBoard(record.setId, record.obf, registry);
     const board = obfToBoard(hydrated);
 
     signal?.throwIfAborted();
@@ -84,15 +95,6 @@ function createBoardMediaResource(
     },
     dispose,
   };
-}
-
-async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
-  const record = await getBoard(setId, boardId);
-  if (!record) {
-    throw new BoardNotFoundError(setId, boardId);
-  }
-
-  return record.obf;
 }
 
 async function hydrateOBFBoard(

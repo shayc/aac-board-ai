@@ -7,7 +7,11 @@ import {
   listBoards,
   updateBoardStrings,
 } from "./board-content-storage";
-import { createBoardSet, type BoardSetCreateInput } from "./board-set-storage";
+import {
+  createBoardSet,
+  deleteBoardSet,
+  type BoardSetCreateInput,
+} from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
 function makeBoardSetInput(
@@ -93,6 +97,67 @@ describe("getAssetBlob", () => {
 });
 
 describe("updateBoardStrings", () => {
+  test("old work cannot revive a deleted board or contaminate a replacement", async () => {
+    const original = makeOBFBoard({
+      id: "b1",
+      name: "Food",
+      strings: { en: { ":word": "eat" } },
+    });
+    const input = makeBoardSetInput({
+      boards: [{ boardId: "b1", name: "Food", obf: original }],
+    });
+    await createBoardSet(input);
+    await deleteBoardSet("set-1");
+    await expect(
+      updateBoardStrings("set-1", "b1", "es", { Food: "Comida" }, original),
+    ).rejects.toThrow("Board not found");
+    expect(await getBoard("set-1", "b1")).toBeUndefined();
+
+    const replacement = { ...original, strings: { en: { ":word": "drink" } } };
+    await createBoardSet(
+      makeBoardSetInput({
+        boards: [{ boardId: "b1", name: "Food", obf: replacement }],
+      }),
+    );
+    await updateBoardStrings(
+      "set-1",
+      "b1",
+      "es",
+      { ":word": "comer" },
+      original,
+    );
+    expect((await getBoard("set-1", "b1"))?.obf.strings).toEqual(
+      replacement.strings,
+    );
+
+    await updateBoardStrings(
+      "set-1",
+      "b1",
+      "es",
+      { Food: "Comida" },
+      { ...replacement, name: "Different source" },
+    );
+    expect((await getBoard("set-1", "b1"))?.obf.strings).toEqual(
+      replacement.strings,
+    );
+  });
+
+  test("source checks permit overlapping cache additions and reload retains both", async () => {
+    const original = makeOBFBoard({ id: "b1", name: "Food" });
+    await createBoardSet(
+      makeBoardSetInput({
+        boards: [{ boardId: "b1", name: "Food", obf: original }],
+      }),
+    );
+    await Promise.all([
+      updateBoardStrings("set-1", "b1", "es", { Food: "Comida" }, original),
+      updateBoardStrings("set-1", "b1", "es", { eat: "comer" }, original),
+    ]);
+    await closeBoardsDB();
+    expect((await getBoard("set-1", "b1"))?.obf.strings).toEqual({
+      es: { Food: "Comida", eat: "comer" },
+    });
+  });
   test("adds localized strings to a board", async () => {
     const obf = makeOBFBoard({ id: "b1" });
     await createBoardSet(
@@ -134,7 +199,7 @@ describe("updateBoardStrings", () => {
     });
   });
 
-  test("replaces all strings when updating an existing locale", async () => {
+  test("merges concurrent same-locale writes and preserves existing entries", async () => {
     const obf = makeOBFBoard({ id: "b1" });
     await createBoardSet(
       makeBoardSetInput({
@@ -146,11 +211,16 @@ describe("updateBoardStrings", () => {
       hello: "hola",
       bye: "adiós",
     });
-    await updateBoardStrings("set-1", "b1", "es", { hello: "ey" });
+    await Promise.all([
+      updateBoardStrings("set-1", "b1", "es", { hello: "ey", Food: "Comida" }),
+      updateBoardStrings("set-1", "b1", "es", { eat: "comer" }),
+    ]);
 
     const board = await getBoard("set-1", "b1");
     assertDefined(board);
-    expect(board.obf.strings).toEqual({ es: { hello: "ey" } });
+    expect(board.obf.strings).toEqual({
+      es: { hello: "hola", bye: "adiós", Food: "Comida", eat: "comer" },
+    });
   });
 
   test("throws when board does not exist", async () => {

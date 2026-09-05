@@ -129,5 +129,7 @@
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
-  "boardUrlImportFailed": "Det gick inte att importera tavelfilen från länken"
+  "boardUrlImportFailed": "Det gick inte att importera tavelfilen från länken",
+  "boardTranslationPrepare": "Översätt tavlans text",
+  "boardTranslationPrepareFailed": "Det gick inte att förbereda översättningen. Försök igen."
 }

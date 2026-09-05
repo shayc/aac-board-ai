@@ -103,13 +103,19 @@ storage pipeline.
 React Router loaders prepare the active board before its route renders:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` reads the stored OBF and asset blobs, creates provisional media
-   object URLs, and maps them through `obfToBoard` into the in-memory `Board`.
-3. `resolveBoardForLanguage` uses the original language or a cached translation
-   when possible; otherwise it attempts optional translation. A successful
-   translation is returned without waiting for the best-effort IndexedDB cache
-   write. Failure returns the untranslated board.
-4. The route renders the ready `Board`, commits its provisional media, and
+2. The loader reads the set's source records once. `hydrateBoardRecord` loads
+   assets only for the active record, creates provisional object URLs, and maps
+   it through `obfToBoard` into the in-memory `Board`.
+3. `resolveBoardForLanguage` resolves the active board's text and every board
+   name into one route snapshot, including the requested language. Supplied and
+   cached phrases apply individually; missing phrases use prepared Translator
+   pairs within a shared one-second optional wait. Successful phrases survive
+   unrelated failures or the deadline. Source/cached wording fills remaining
+   gaps. Best-effort cache writes do not delay or own the displayed result.
+4. The page and header consume the same snapshot. The switcher receives summaries
+   through the app composition boundary and holds its open options stable until
+   the popup closes, preserving search and keyboard targets during revalidation.
+5. The route renders the ready `Board`, commits its provisional media, and
    releases the previous board's media. A failed or aborted load releases only
    its own provisional media.
 
@@ -127,23 +133,20 @@ sequenceDiagram
     participant Route as Board route lifecycle
 
     User->>Router: Navigate to a board
-    Router->>Storage: hydrateBoard(setId, boardId)
-    Storage->>Storage: Load OBF + assets, create media URLs
-    Storage-->>Router: Board + provisional media
-    Router->>Translation: Resolve board for active language
+    Router->>Storage: Read set records, hydrate active record
+    Storage->>Storage: Load active assets, create media URLs
+    Storage-->>Router: Source records + Board + provisional media
+    Router->>Translation: Resolve active text and set names for requested language
+    Translation->>Translation: Resolve source tokens and cached target phrases
 
-    alt Original language or cached translation
-        Translation-->>Router: Ready Board
-    else Translation succeeds
-        Translation->>AI: Translate phrases
-        AI-->>Translation: Translations
-        Translation->>Storage: Cache translations (not awaited)
-        Translation-->>Router: Translated Board
-    else Translation unavailable or fails
-        Translation-->>Router: Untranslated Board
+    opt Missing text with prepared language pairs
+        Translation->>AI: Translate missing wording within route deadline
+        AI-->>Translation: Successful phrases (others retain fallback)
+        Translation->>Storage: Merge cache with source check (not awaited)
     end
 
-    Router-->>Route: Board + provisional media
+    Translation-->>Router: Localized Board + summaries + requested language
+    Router-->>Route: Shared snapshot + provisional media
     Route->>Route: Commit media, dispose previous
 
     Note over Router,Route: Abort or failure → dispose provisional media
@@ -187,7 +190,7 @@ seam. Search by path or symbol name to locate the code.
 | Concern                   | Owner                                                                       | Ownership rule                                                                                                                                                              |
 | ------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Composition               | `src/main.tsx`, `src/app/`, `src/pages/`, `src/shared/providers/`           | `main` composes providers and routing; shared providers assemble cross-cutting services; the router and pages assemble features.                                            |
-| Active-board data         | `src/app/routing/loaders/`                                                  | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                   |
+| Active-board data         | `src/app/routing/loaders/`                                                  | The active board and localized switcher summaries enter the render tree through one `boardLoader` result.                                                                   |
 | Board domain              | `src/features/board/`                                                       | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, suggestions, and playback adapters.                                             |
 | OBF runtime mapping       | `src/features/board/obf/`                                                   | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                  |
 | Board ingestion           | `src/features/board/import/`                                                | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                 |
@@ -257,15 +260,33 @@ rerender only subscribers to the changed slice.
   `obfToBoard` maps those entries to `Board.translations`, indexed by target
   locale → original board text → translated text. It derives the in-memory
   model on every read so its shape can evolve without rewriting imported records.
-- **The active board is loader-owned.** Hydration and optional translation finish
-  before the new route renders. Its media remains provisional until the route
-  commits, and leaving the route releases the committed media. Ancillary board
-  summaries may load through the storage API without becoming another
-  active-board path.
+- **Board presentation is loader-owned.** One result supplies the active board
+  and switcher names, together with the requested language. Hydration and bounded
+  optional translation finish before the new route renders. Its media remains
+  provisional until the route commits, and leaving the route releases the
+  committed media. Summaries do not independently read storage or request AI.
+- **Translation coverage is per phrase.** A names-only cache never marks tiles
+  complete. AI receives resolved source dictionary wording and results retain
+  original OBF keys. Exact canonical locale matches precede base and sorted
+  compatible regional fallbacks, without crossing likely script boundaries.
+  Unknown source language stays unknown. Names, labels, and vocalizations retain
+  their resolved language separately from the requested language and source
+  locale; imported content and board/button IDs remain unchanged.
+- **Translation cache writes only add missing entries.** Each read/write
+  transaction preserves existing strings and checks the source snapshot,
+  allowing concurrent cache additions but rejecting changed source content or
+  replaced dictionaries. Missing records are never recreated. Generated and
+  imported dictionaries remain in the existing OBF-shaped schema.
 - **Optional AI is capability-detected and failure-tolerant.** Consumers use
   `@shayc/react-built-in-ai`, never User-Agent checks. Suggestions are omitted
   when unsupported and surface an unavailable state when supported but unusable;
-  translation returns the untranslated board.
+  translation retains usable source/cached wording. Loaders only attempt already
+  available language pairs, prioritize active content, and stop optional work
+  after one second across the entire set. A settings action prepares known pairs
+  from a user gesture and revalidates after success; failures allow retry.
+  This ceiling is a provisional responsiveness policy, not a measured model
+  throughput guarantee. Real model latency, cold downloads, and large-set
+  coverage still require testing on supported devices.
 - **One communication language coordinates UI locale, board translation, text
   direction, and TTS selection.** Available choices are the union of translated
   UI locales and installed TTS voice languages; translation and speech may each

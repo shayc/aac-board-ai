@@ -2,15 +2,20 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useState } from "react";
+import type { BoardSummary } from "../translation/board-translations";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardsInSet } from "./use-boards-in-set";
 
-export function BoardSelector() {
+export function BoardSelector({ boards }: { boards: readonly BoardSummary[] }) {
   const t = useTranslate();
-  const { setId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useBoardsInSet(setId);
+  const { boardId, goToBoard } = useBoardNavigation();
+  // Keep the user's search and keyboard target stable until the popup closes.
+  const [popupBoards, setPopupBoards] = useState<
+    readonly BoardSummary[] | null
+  >(null);
+  const options = popupBoards ?? boards;
 
-  const selectedBoard = boards.find((board) => board.boardId === boardId);
+  const selectedBoard = options.find((board) => board.boardId === boardId);
 
   if (!selectedBoard) {
     return null;
@@ -18,9 +23,11 @@ export function BoardSelector() {
 
   return (
     <Autocomplete
-      options={boards}
+      options={options}
       value={selectedBoard}
       onChange={(_event, board) => goToBoard(board.boardId)}
+      onOpen={() => setPopupBoards(boards)}
+      onClose={() => setPopupBoards(null)}
       disableClearable
       autoHighlight
       size="small"
@@ -32,6 +39,11 @@ export function BoardSelector() {
       isOptionEqualToValue={(option, selected) =>
         option.boardId === selected.boardId
       }
+      renderOption={({ key, ...props }, board) => (
+        <li key={key} {...props}>
+          <bdi lang={board.nameLanguage ?? ""}>{board.name}</bdi>
+        </li>
+      )}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -44,6 +56,8 @@ export function BoardSelector() {
             htmlInput: {
               ...params.slotProps?.htmlInput,
               "aria-label": t(m.board),
+              lang: selectedBoard.nameLanguage ?? "",
+              dir: "auto",
             },
           }}
         />

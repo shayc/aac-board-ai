@@ -129,5 +129,7 @@
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A táblakészlet nem található",
-  "boardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült"
+  "boardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült",
+  "boardTranslationPrepare": "A tábla szövegének fordítása",
+  "boardTranslationPrepareFailed": "Nem sikerült előkészíteni a fordítást. Próbáld újra."
 }

@@ -31,8 +31,11 @@ export {
   setMessagePartHighlightingEnabled,
   useBoardPlaybackConfig,
 } from "./playback/playback-config-store";
-export { BoardNotFoundError } from "./storage/board-content-storage";
-export { hydrateBoard } from "./storage/board-hydration";
+export {
+  BoardNotFoundError,
+  listBoards,
+} from "./storage/board-content-storage";
+export { hydrateBoard, hydrateBoardRecord } from "./storage/board-hydration";
 export type {
   BoardMediaResource,
   HydratedBoard,
@@ -42,5 +45,8 @@ export {
   useBoardSuggestionConfig,
 } from "./suggestions/suggestion-config-store";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
+export type { LocalizedBoardContent } from "./translation/resolve-board-for-language";
+export type { BoardSummary } from "./translation/board-translations";
+export { BoardTranslationPreparation } from "./translation/board-translation-preparation";
 
 export type { Board } from "./types";

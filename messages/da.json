@@ -129,5 +129,7 @@
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
-  "boardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket"
+  "boardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket",
+  "boardTranslationPrepare": "Oversæt tavlens tekst",
+  "boardTranslationPrepareFailed": "Kunne ikke forberede oversættelsen. Prøv igen."
 }

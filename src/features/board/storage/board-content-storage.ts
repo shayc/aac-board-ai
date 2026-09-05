@@ -1,3 +1,4 @@
+import type { OBFBoard } from "@shayc/open-board-format";
 import {
   getBoardsDB,
   normalizeAssetPath,
@@ -49,6 +50,7 @@ export async function updateBoardStrings(
   boardId: string,
   language: string,
   translations: Record<string, string>,
+  expectedSource?: OBFBoard,
 ): Promise<void> {
   validateId(setId, "setId");
   validateId(boardId, "boardId");
@@ -60,11 +62,43 @@ export async function updateBoardStrings(
     throw new BoardNotFoundError(setId, boardId);
   }
 
+  if (expectedSource && !matchesTranslationSource(record.obf, expectedSource)) {
+    await tx.done;
+    return;
+  }
+
   const updatedObf = {
     ...record.obf,
-    strings: { ...record.obf.strings, [language]: translations },
+    strings: {
+      ...record.obf.strings,
+      [language]: { ...translations, ...record.obf.strings?.[language] },
+    },
   };
 
   await tx.store.put({ ...record, obf: updatedObf });
   await tx.done;
+}
+
+function matchesTranslationSource(
+  current: OBFBoard,
+  expected: OBFBoard,
+): boolean {
+  const { strings: currentStrings, ...currentContent } = current;
+  const { strings: expectedStrings, ...expectedContent } = expected;
+  if (JSON.stringify(currentContent) !== JSON.stringify(expectedContent)) {
+    return false;
+  }
+
+  // Concurrent cache additions are allowed; replacing any text we resolved is not.
+  return Object.entries(expectedStrings ?? {}).every(([locale, phrases]) =>
+    Object.entries(phrases).every(([key, value]) => {
+      const dictionary = currentStrings?.[locale];
+
+      return (
+        dictionary !== undefined &&
+        Object.hasOwn(dictionary, key) &&
+        dictionary[key] === value
+      );
+    }),
+  );
 }

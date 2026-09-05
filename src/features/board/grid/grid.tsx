@@ -16,6 +16,7 @@ export interface GridItemProps {
 
 interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
+  lang?: string;
   items: readonly TItem[];
   rows: number;
   columns: number;
@@ -28,6 +29,7 @@ interface GridProps<TItem extends { id: string }> {
 
 export function Grid<TItem extends { id: string }>({
   ariaLabel,
+  lang,
   items,
   rows,
   columns,
@@ -50,6 +52,7 @@ export function Grid<TItem extends { id: string }>({
         ref={rootRef}
         role="grid"
         aria-label={ariaLabel}
+        lang={lang}
         direction="column"
         sx={(theme) => createGridContentSx(theme, { rows, columns, gap })}
       >

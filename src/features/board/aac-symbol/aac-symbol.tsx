@@ -46,7 +46,7 @@ export function AACSymbol({
       }
       label={
         <Typography
-          component="span"
+          component="bdi"
           noWrap
           variant={imageSrc ? "body2" : "h5"}
           sx={[

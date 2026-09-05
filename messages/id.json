@@ -129,5 +129,7 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "boardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
+  "boardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "boardTranslationPrepare": "Terjemahkan teks papan",
+  "boardTranslationPrepareFailed": "Tidak dapat menyiapkan terjemahan. Coba lagi."
 }

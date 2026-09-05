@@ -1,74 +1,163 @@
-import { getLanguageCode } from "@shared/utils/locale";
+import { normalizeLocale } from "@shared/utils/locale";
+import type { OBFBoard } from "@shayc/open-board-format";
 import type { Board } from "../types";
 
-const DEFAULT_BOARD_LANGUAGE = "en";
+export interface ResolvedPhrase {
+  text: string;
+  language?: string;
+  sourceText: string;
+  sourceLanguage?: string;
+  isMissing: boolean;
+}
 
-export function findTranslatedBoard(
-  board: Board,
-  language: string,
-): Board | undefined {
-  if (getBoardLanguage(board) === language) {
-    return board;
+export interface BoardSummary {
+  boardId: string;
+  name: string;
+  nameLanguage?: string;
+}
+
+export function getSourceLanguage(
+  locale: string | undefined,
+): string | undefined {
+  if (!locale) {
+    return undefined;
   }
 
-  const cached = findTranslations(board.translations, language);
-
-  return cached ? applyTranslations(board, cached) : undefined;
+  try {
+    return new Intl.Locale(normalizeLocale(locale)).baseName;
+  } catch {
+    return undefined;
+  }
 }
 
-export function getBoardLanguage(board: Board): string {
-  return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
+export function areLanguagesCompatible(
+  source: string,
+  target: string,
+): boolean {
+  try {
+    const left = new Intl.Locale(normalizeLocale(source)).maximize();
+    const right = new Intl.Locale(normalizeLocale(target)).maximize();
+
+    return left.language === right.language && left.script === right.script;
+  } catch {
+    return false;
+  }
 }
 
-export function findTranslations(
-  translations: Board["translations"],
-  language: string,
-): Record<string, string> | undefined {
-  if (!translations) {
-    return;
+function findTranslation(
+  dictionaries: OBFBoard["strings"],
+  language: string | undefined,
+  key: string,
+): { text: string; language: string } | undefined {
+  if (!dictionaries || !language) {
+    return undefined;
   }
 
-  const match = Object.entries(translations).find(
-    ([locale]) => getLanguageCode(locale) === language,
-  );
+  const target = normalizeLocale(language);
+  const candidates = Object.entries(dictionaries)
+    .map(([locale, phrases]) => ({ locale: normalizeLocale(locale), phrases }))
+    .filter(({ locale }) => areLanguagesCompatible(locale, target))
+    .sort((left, right) => {
+      return (
+        rankLocale(left.locale, target) - rankLocale(right.locale, target) ||
+        left.locale.localeCompare(right.locale, "en")
+      );
+    });
 
-  return match?.[1];
+  for (const { locale, phrases } of candidates) {
+    if (Object.hasOwn(phrases, key) && typeof phrases[key] === "string") {
+      return { text: phrases[key], language: locale };
+    }
+  }
+
+  return undefined;
 }
 
-export function applyTranslations(
-  board: Board,
-  translations: Record<string, string>,
-): Board {
-  const lookup = (phrase: string | undefined) =>
-    phrase ? (translations[phrase] ?? phrase) : phrase;
+function rankLocale(locale: string, target: string): number {
+  if (locale === target) {
+    return 0;
+  }
+
+  return locale.includes("-") ? 2 : 1;
+}
+
+export function resolvePhrase(
+  source: OBFBoard,
+  key: string,
+  language: string,
+): ResolvedPhrase {
+  const sourceLanguage = getSourceLanguage(source.locale);
+  const original = findTranslation(source.strings, sourceLanguage, key);
+  const sourceText = original?.text ?? key;
+  const translated = findTranslation(source.strings, language, key);
+  const isSourceLanguage =
+    sourceLanguage !== undefined &&
+    areLanguagesCompatible(sourceLanguage, language);
 
   return {
-    ...board,
-    name: lookup(board.name),
-    buttons: board.buttons.map((button) => ({
-      ...button,
-      label: lookup(button.label),
-      vocalization: lookup(button.vocalization),
-    })),
+    text: translated?.text ?? sourceText,
+    language: translated?.language ?? original?.language ?? sourceLanguage,
+    sourceText,
+    sourceLanguage: original?.language ?? sourceLanguage,
+    isMissing:
+      !translated &&
+      !isSourceLanguage &&
+      sourceLanguage !== undefined &&
+      sourceText.trim().length > 0 &&
+      (original !== undefined || !key.startsWith(":")),
   };
 }
 
-export function collectTranslatablePhrases(board: Board): Set<string> {
-  const translatablePhrases = new Set<string>();
-
-  if (board.name) {
-    translatablePhrases.add(board.name);
+export function collectBoardPhrases(
+  source: OBFBoard,
+  includeButtons: boolean,
+  language: string,
+): Map<string, ResolvedPhrase> {
+  const keys = new Set<string>();
+  if (source.name?.trim()) {
+    keys.add(source.name);
   }
 
-  for (const button of board.buttons) {
-    if (button.label) {
-      translatablePhrases.add(button.label);
-    }
-
-    if (button.vocalization) {
-      translatablePhrases.add(button.vocalization);
+  if (includeButtons) {
+    for (const button of source.buttons) {
+      if (button.label) {
+        keys.add(button.label);
+      }
+      if (button.vocalization) {
+        keys.add(button.vocalization);
+      }
     }
   }
 
-  return translatablePhrases;
+  return new Map(
+    [...keys].map((key) => [key, resolvePhrase(source, key, language)]),
+  );
+}
+
+export function applyResolvedPhrases(
+  board: Board,
+  phrases: ReadonlyMap<string, ResolvedPhrase>,
+): Board {
+  const lookup = (key: string | undefined) =>
+    key === undefined ? undefined : phrases.get(key);
+  const name = lookup(board.name);
+
+  return {
+    ...board,
+    translations: undefined,
+    name: name?.text ?? board.name,
+    nameLanguage: name?.language,
+    buttons: board.buttons.map((button) => {
+      const label = lookup(button.label);
+      const vocalization = lookup(button.vocalization);
+
+      return {
+        ...button,
+        label: label?.text ?? button.label,
+        labelLanguage: label?.language,
+        vocalization: vocalization?.text ?? button.vocalization,
+        vocalizationLanguage: vocalization?.language,
+      };
+    }),
+  };
 }

@@ -1,10 +1,11 @@
 import {
   DEFAULT_LANGUAGE,
+  getStoredLanguage,
   setStoredLanguage,
 } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { createMemoryRouter } from "react-router";
+import { createMemoryRouter, useLoaderData } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
@@ -12,13 +13,46 @@ import { userEvent } from "vitest/browser";
 import { createBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSelector } from "./board-selector";
+import {
+  listBoards,
+  updateBoardStrings,
+} from "../storage/board-content-storage";
+import { obfToBoard } from "../obf/obf-to-board";
+import {
+  resolveBoardForLanguage,
+  type LocalizedBoardContent,
+} from "../translation/resolve-board-for-language";
+
+function SelectorRoute() {
+  const { boards } = useLoaderData<LocalizedBoardContent>();
+  return <BoardSelector boards={boards} />;
+}
 
 async function renderSelector(initialPath: string) {
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:setId/boards/:boardId",
-        element: <BoardSelector />,
+        Component: SelectorRoute,
+        loader: async ({ params, request }) => {
+          const records = await listBoards(params.setId ?? "");
+          records.sort((left, right) =>
+            left.name.localeCompare(right.name, "en"),
+          );
+          const source = records.find(
+            (record) => record.boardId === params.boardId,
+          );
+          if (!source) {
+            throw new Error("Missing test board");
+          }
+
+          return resolveBoardForLanguage(
+            obfToBoard(source.obf),
+            records,
+            getStoredLanguage(),
+            request.signal,
+          );
+        },
       },
     ],
     { initialEntries: [initialPath] },
@@ -60,6 +94,40 @@ beforeEach(async () => {
 });
 
 describe("BoardSelector", () => {
+  test("keeps a filtered keyboard target while new names arrive, including duplicate names", async () => {
+    for (const [id, name] of [
+      ["root", "Home"],
+      ["animals", "Animals"],
+      ["food", "Food"],
+    ]) {
+      await updateBoardStrings("set-1", id, "es", { [name]: "Igual" });
+    }
+    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    await screen.getByRole("combobox").fill("ani");
+    await expect
+      .element(screen.getByRole("option", { name: "Animals" }))
+      .toBeVisible();
+
+    setStoredLanguage("es");
+    await router.revalidate();
+
+    await expect.element(screen.getByRole("combobox")).toHaveValue("ani");
+    await expect
+      .element(screen.getByRole("option", { name: "Animals" }))
+      .toBeVisible();
+    await userEvent.keyboard("{Enter}");
+    await expect
+      .poll(() => router.state.location.pathname)
+      .toBe("/sets/set-1/boards/animals");
+    await expect.element(screen.getByRole("combobox")).toHaveValue("Igual");
+    await screen.getByRole("combobox").click();
+    await expect
+      .element(screen.getByRole("option").first())
+      .toHaveAttribute("aria-selected", "true");
+    await expect
+      .element(screen.getByRole("option").nth(1))
+      .toHaveAttribute("aria-selected", "false");
+  });
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
     const { screen } = await renderSelector("/sets/set-1/boards/root");
 

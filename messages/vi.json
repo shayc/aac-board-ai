@@ -129,5 +129,7 @@
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
-  "boardUrlImportFailed": "Không thể nhập tệp bảng từ liên kết"
+  "boardUrlImportFailed": "Không thể nhập tệp bảng từ liên kết",
+  "boardTranslationPrepare": "Dịch văn bản trên bảng",
+  "boardTranslationPrepareFailed": "Không thể chuẩn bị bản dịch. Hãy thử lại."
 }

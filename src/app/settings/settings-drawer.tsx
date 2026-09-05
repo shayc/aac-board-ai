@@ -23,9 +23,11 @@ import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
 import { SuggestionsSettings } from "./suggestions-settings";
+import type { ReactNode } from "react";
 
 interface SettingsDrawerProps {
   open: boolean;
+  translationSettings?: ReactNode;
   onClose: () => void;
 }
 
@@ -38,7 +40,11 @@ const sectionHeadingSx = {
   "& > svg": { color: "primary.main" },
 } as const;
 
-export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
+export function SettingsDrawer({
+  open,
+  translationSettings,
+  onClose,
+}: SettingsDrawerProps) {
   const t = useTranslate();
 
   return (
@@ -103,6 +109,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Stack spacing={3}>
           <ThemeSettings />
           <LanguageSettings />
+          {translationSettings}
         </Stack>
 
         <Divider sx={{ my: 3 }} />

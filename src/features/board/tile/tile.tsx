@@ -4,6 +4,7 @@ import type { TileLabelPlacement } from "../appearance/appearance-store";
 
 interface TileProps {
   ariaLabel?: string;
+  lang?: string;
   label: string;
   imageSrc?: string;
   backgroundColor?: string;
@@ -26,6 +27,7 @@ function darken(color: string, percentage: number): string {
 
 export function Tile({
   ariaLabel,
+  lang,
   label,
   imageSrc,
   backgroundColor,
@@ -45,6 +47,7 @@ export function Tile({
   return (
     <Button
       aria-label={ariaLabel}
+      lang={lang}
       tabIndex={tabIndex}
       disabled={disabled}
       disableRipple

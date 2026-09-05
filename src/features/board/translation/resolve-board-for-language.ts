@@ -1,81 +1,199 @@
-import { createTranslator } from "@shayc/react-built-in-ai";
-import { updateBoardStrings } from "../storage/board-content-storage";
+import { checkAvailability, createTranslator } from "@shayc/react-built-in-ai";
+import {
+  updateBoardStrings,
+  type BoardRecord,
+} from "../storage/board-content-storage";
 import type { Board } from "../types";
 import {
-  applyTranslations,
-  collectTranslatablePhrases,
-  findTranslatedBoard,
-  getBoardLanguage,
+  applyResolvedPhrases,
+  collectBoardPhrases,
+  type BoardSummary,
+  type ResolvedPhrase,
 } from "./board-translations";
 
-/**
- * Resolves a board for the requested language, falling back to the source board
- * when translation is unavailable or fails.
- */
+// A route-wide ceiling for optional work; model downloads require a settings action.
+export const TRANSLATION_WAIT_MS = 1_000;
+
+export interface LocalizedBoardContent {
+  board: Board;
+  boards: BoardSummary[];
+  language: string;
+  translationSources: string[];
+}
+
+interface BoardResolution {
+  record: BoardRecord;
+  phrases: Map<string, ResolvedPhrase>;
+  generated: Map<string, string>;
+}
+
+/** Source records are the only translation input, even when projecting hydrated media. */
 export async function resolveBoardForLanguage(
-  setId: string,
-  board: Board,
+  activeBoard: Board,
+  records: readonly BoardRecord[],
   language: string,
   signal?: AbortSignal,
-): Promise<Board> {
-  const existing = findTranslatedBoard(board, language);
-  if (existing) {
-    return existing;
-  }
+): Promise<LocalizedBoardContent> {
+  signal?.throwIfAborted();
+  const resolutions = records.map((record) => ({
+    record,
+    phrases: collectBoardPhrases(
+      record.obf,
+      record.boardId === activeBoard.id,
+      language,
+    ),
+    generated: new Map<string, string>(),
+  }));
 
-  const phrases = collectTranslatablePhrases(board);
-  if (phrases.size === 0) {
-    return board;
-  }
-
-  try {
-    const translator = await createTranslator({
-      sourceLanguage: getBoardLanguage(board),
-      targetLanguage: language,
-      signal,
-    });
-
-    try {
-      const translations = await translatePhrases(phrases, translator, signal);
-
-      void persistTranslations(setId, board.id, language, translations);
-
-      return applyTranslations(board, translations);
-    } finally {
-      translator.destroy();
-    }
-  } catch {
-    // Total by design: translation is an enhancement, not a requirement —
-    // symbols carry the meaning, so a failure must never block the board.
-    return board;
-  }
-}
-
-async function translatePhrases(
-  phrases: Set<string>,
-  translator: Translator,
-  signal?: AbortSignal,
-): Promise<Record<string, string>> {
-  const entries = await Promise.all(
-    Array.from(phrases).map(async (phrase) => {
-      const translated = await translator.translate(phrase, { signal });
-
-      return [phrase, translated] as const;
-    }),
+  const active = resolutions.find(
+    ({ record }) => record.boardId === activeBoard.id,
   );
+  const prioritized = active
+    ? [active, ...resolutions.filter((resolution) => resolution !== active)]
+    : resolutions;
+  await translateWithinDeadline(prioritized, language, signal);
+  signal?.throwIfAborted();
 
-  return Object.fromEntries(entries);
+  const translationSources = new Set<string>();
+  for (const { record, generated, phrases } of resolutions) {
+    for (const phrase of phrases.values()) {
+      if (phrase.isMissing && phrase.sourceLanguage) {
+        translationSources.add(phrase.sourceLanguage);
+      }
+    }
+
+    if (generated.size > 0) {
+      // Persistence cannot hold up the snapshot. The transaction checks source identity.
+      void updateBoardStrings(
+        record.setId,
+        record.boardId,
+        language,
+        Object.fromEntries(generated),
+        record.obf,
+      ).catch(() => undefined);
+    }
+  }
+
+  const summaries = resolutions.map(({ record, phrases }) => {
+    const name = record.obf.name ? phrases.get(record.obf.name) : undefined;
+
+    return {
+      boardId: record.boardId,
+      name: name?.text ?? (record.name.trim() || record.boardId),
+      nameLanguage: name?.language,
+    };
+  });
+  // Source ordering stays stable across locale changes and duplicate translated names.
+  const localized = active
+    ? applyResolvedPhrases(activeBoard, active.phrases)
+    : activeBoard;
+  const summary = summaries.find(({ boardId }) => boardId === activeBoard.id);
+
+  return {
+    board: {
+      ...localized,
+      name: summary?.name ?? localized.name,
+      nameLanguage: summary?.nameLanguage,
+    },
+    boards: summaries,
+    language,
+    translationSources: [...translationSources].sort(),
+  };
 }
 
-async function persistTranslations(
-  setId: string,
-  boardId: string,
+async function translateWithinDeadline(
+  resolutions: BoardResolution[],
   language: string,
-  translations: Record<string, string>,
+  requestSignal?: AbortSignal,
 ): Promise<void> {
+  const controller = new AbortController();
+  const signal = requestSignal
+    ? AbortSignal.any([requestSignal, controller.signal])
+    : controller.signal;
+  const stopped = new Promise<void>((resolve) => {
+    if (signal.aborted) {
+      resolve();
+    } else {
+      signal.addEventListener("abort", () => resolve(), { once: true });
+    }
+  });
+  const timer = setTimeout(() => controller.abort(), TRANSLATION_WAIT_MS);
+
   try {
-    await updateBoardStrings(setId, boardId, language, translations);
-  } catch {
-    // Failure only costs a re-translation next load.
+    await Promise.race([
+      translateMissingPhrases(resolutions, language, signal),
+      stopped,
+    ]);
+  } finally {
+    clearTimeout(timer);
+    controller.abort();
+  }
+}
+
+async function translateMissingPhrases(
+  resolutions: BoardResolution[],
+  targetLanguage: string,
+  signal: AbortSignal,
+): Promise<void> {
+  const groups = new Map<
+    string,
+    { resolution: BoardResolution; key: string; phrase: ResolvedPhrase }[]
+  >();
+  for (const resolution of resolutions) {
+    for (const [key, phrase] of resolution.phrases) {
+      if (!phrase.isMissing || !phrase.sourceLanguage) {
+        continue;
+      }
+      const requests = groups.get(phrase.sourceLanguage) ?? [];
+      requests.push({ resolution, key, phrase });
+      groups.set(phrase.sourceLanguage, requests);
+    }
+  }
+
+  for (const [sourceLanguage, requests] of groups) {
+    let translator: Translator | undefined;
+    function dispose() {
+      const instance = translator;
+      translator = undefined;
+      instance?.destroy();
+    }
+    try {
+      signal.throwIfAborted();
+      const options = { sourceLanguage, targetLanguage };
+      if ((await checkAvailability("Translator", options)) !== "available") {
+        continue;
+      }
+      signal.throwIfAborted();
+      translator = await createTranslator({ ...options, signal });
+      signal.addEventListener("abort", dispose, { once: true });
+      signal.throwIfAborted();
+
+      for (const { resolution, key, phrase } of requests) {
+        signal.throwIfAborted();
+        try {
+          const text = await translator?.translate(phrase.sourceText, {
+            signal,
+          });
+          signal.throwIfAborted();
+          if (text === undefined) {
+            continue;
+          }
+          resolution.phrases.set(key, {
+            ...phrase,
+            text,
+            language: targetLanguage,
+            isMissing: false,
+          });
+          resolution.generated.set(key, text);
+        } catch {
+          // One failed phrase must not discard successful wording elsewhere.
+        }
+      }
+    } catch {
+      // Unknown, unavailable, or cancelled AI leaves source/cached wording usable.
+    } finally {
+      signal.removeEventListener("abort", dispose);
+      dispose();
+    }
   }
 }

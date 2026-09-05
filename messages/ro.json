@@ -129,5 +129,7 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "boardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link"
+  "boardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link",
+  "boardTranslationPrepare": "Traduce textul tablei",
+  "boardTranslationPrepareFailed": "Traducerea nu a putut fi pregătită. Încearcă din nou."
 }
