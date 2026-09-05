@@ -1,16 +1,15 @@
 import { assertNever } from "@shared/utils/assert-never";
 import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
-import type { UseMessageReturn } from "../message/use-message";
-import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
+import type { CommunicationSession } from "../session/communication-session";
 import { resolveBoardKey } from "./board-key-resolver";
 
 interface UseBoardKeyboardOptions {
-  message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
-  playback: Pick<
-    UseBoardPlaybackReturn,
-    "playMessage" | "stop" | "isMessagePlaying"
+  session: Pick<
+    CommunicationSession,
+    "backspace" | "clear" | "playMessage" | "stop"
   >;
+  isMessagePlaying: boolean;
 }
 
 interface UseBoardKeyboardReturn {
@@ -18,14 +17,14 @@ interface UseBoardKeyboardReturn {
 }
 
 export function useBoardKeyboard({
-  message,
-  playback,
+  session,
+  isMessagePlaying,
 }: UseBoardKeyboardOptions): UseBoardKeyboardReturn {
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
       const action = resolveBoardKey(
         { key: event.key, metaKey: event.metaKey, ctrlKey: event.ctrlKey },
-        playback.isMessagePlaying,
+        isMessagePlaying,
       );
 
       if (!action) {
@@ -38,16 +37,16 @@ export function useBoardKeyboard({
 
       switch (action.kind) {
         case "backspace":
-          message.backspace();
+          session.backspace();
           break;
         case "clear":
-          message.clear();
+          session.clear();
           break;
-        case "speak":
-          void playback.playMessage(message.parts);
+        case "playMessage":
+          void session.playMessage();
           break;
         case "stop":
-          playback.stop();
+          session.stop();
           break;
         default:
           assertNever(action);

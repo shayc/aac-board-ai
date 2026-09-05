@@ -1,19 +1,21 @@
 import {
   BoardNotFoundError,
-  hydrateBoard,
+  loadBoard,
   InvalidIdError,
-  resolveTranslatedBoard,
-  type BoardMediaResource,
-  type HydratedBoard,
+  type Board,
 } from "@features/board";
-import { getStoredLanguage } from "@shared/language/language-store";
 import { data, type LoaderFunctionArgs } from "react-router";
 import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
+
+export interface BoardRouteData {
+  setId: string;
+  board: Board;
+}
 
 export async function boardLoader({
   params,
   request,
-}: LoaderFunctionArgs): Promise<HydratedBoard> {
+}: LoaderFunctionArgs): Promise<BoardRouteData> {
   const { setId, boardId } = params;
   if (!setId || !boardId) {
     throw data(createLocalizedRouteError(routeErrorCodes.boardNotFound), {
@@ -21,25 +23,11 @@ export async function boardLoader({
     });
   }
 
-  let media: BoardMediaResource | undefined;
   try {
-    const hydrated = await hydrateBoard(setId, boardId, request.signal);
-    media = hydrated.media;
+    const board = await loadBoard({ setId, boardId, signal: request.signal });
 
-    const language = getStoredLanguage();
-    const board = await resolveTranslatedBoard(
-      setId,
-      hydrated.board,
-      language,
-      request.signal,
-    );
-
-    request.signal.throwIfAborted();
-
-    return { board, media };
+    return { setId, board };
   } catch (error) {
-    media?.dispose();
-
     if (
       error instanceof BoardNotFoundError ||
       error instanceof InvalidIdError

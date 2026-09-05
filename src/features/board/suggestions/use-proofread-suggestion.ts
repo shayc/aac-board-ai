@@ -7,13 +7,14 @@ import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 export function useProofreadSuggestion(
   text: string,
   language: string,
+  revision: number,
 ): SuggestionSource {
   const proofreader = useProofreader(proofreaderLanguageOptions(language));
   const hasText = text.trim().length > 0;
 
   const request = useLatestAsync({
     enabled: hasText && proofreader.status === "ready",
-    deps: [text, language],
+    deps: [text, language, revision],
     run: (signal) =>
       proofreader
         .proofread(text, { signal })

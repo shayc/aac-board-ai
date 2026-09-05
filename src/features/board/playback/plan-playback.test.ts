@@ -27,9 +27,7 @@ describe("planPlayback", () => {
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
-    const steps = planPlayback([
-      { id: "1", label: "bell", soundSrc: "bell.mp3" },
-    ]);
+    const steps = planPlayback([{ id: "1", label: "bell", sound: "bell.mp3" }]);
 
     expect(steps).toEqual([
       { kind: "audio", trackingKey: "1", src: "bell.mp3" },
@@ -39,7 +37,7 @@ describe("planPlayback", () => {
   test("preserves order when a sound breaks a text run", () => {
     const parts: MessagePart[] = [
       { id: "1", label: "hello" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { id: "2", label: "ding", sound: "ding.mp3" },
       { id: "3", label: "world" },
     ];
 

@@ -1,12 +1,13 @@
 import Button, { buttonClasses } from "@mui/material/Button";
 import { alpha } from "@mui/material/styles";
+import type { MediaSource } from "@shared/media/media-source";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { TileLabelPlacement } from "../appearance/appearance-store";
 
 interface TileProps {
   ariaLabel?: string;
   label: string;
-  imageSrc?: string;
+  image?: MediaSource;
   backgroundColor?: string;
   borderColor?: string;
   disabled?: boolean;
@@ -28,7 +29,7 @@ function darken(color: string, percentage: number): string {
 export function Tile({
   ariaLabel,
   label,
-  imageSrc,
+  image,
   backgroundColor,
   borderColor,
   disabled,
@@ -122,11 +123,7 @@ export function Tile({
         }),
       })}
     >
-      <AACSymbol
-        label={label}
-        imageSrc={imageSrc}
-        labelPlacement={labelPlacement}
-      />
+      <AACSymbol label={label} image={image} labelPlacement={labelPlacement} />
     </Button>
   );
 }

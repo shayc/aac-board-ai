@@ -15,7 +15,7 @@ import { setSuggestionCustomInstructions } from "./suggestion-config-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 
 function renderMessageSuggestions(text: string) {
-  return renderHook(() => useMessageSuggestions(text), {
+  return renderHook(() => useMessageSuggestions(text, 0), {
     wrapper: LanguageProvider,
   });
 }
@@ -348,7 +348,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions(text, 0),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 
@@ -369,6 +369,64 @@ describe("useMessageSuggestions", () => {
     });
   });
 
+  test("rejects an older revision's result even when the draft text is unchanged", async () => {
+    const pending: ((result: ProofreadResult) => void)[] = [];
+    stubProofreader(
+      () => new Promise<ProofreadResult>((resolve) => pending.push(resolve)),
+    );
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result, rerender } = await renderHook(
+      ({ revision }: { revision: number } = { revision: 1 }) =>
+        useMessageSuggestions("hello", revision),
+      { initialProps: { revision: 1 }, wrapper: LanguageProvider },
+    );
+    await vi.waitFor(() => expect(pending).toHaveLength(1));
+
+    await rerender({ revision: 2 });
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
+    pending[0](makeProofreadResult("old greeting"));
+    pending[1](makeProofreadResult("new greeting"));
+
+    await vi.waitFor(() =>
+      expect(result.current.phrases).toEqual(["new greeting"]),
+    );
+    expect(result.current.revision).toBe(2);
+  });
+
+  test("does not reuse settled suggestions when edits restore an earlier text", async () => {
+    const pending = new Map<string, (result: ProofreadResult) => void>();
+    stubProofreader(
+      (text) =>
+        new Promise<ProofreadResult>((resolve) => pending.set(text, resolve)),
+    );
+    stubBuiltInAIUnsupported("Rewriter");
+
+    const { result, rerender } = await renderHook(
+      (
+        { text, revision }: { text: string; revision: number } = {
+          text: "hello",
+          revision: 1,
+        },
+      ) => useMessageSuggestions(text, revision),
+      {
+        initialProps: { text: "hello", revision: 1 },
+        wrapper: LanguageProvider,
+      },
+    );
+    await vi.waitFor(() => expect(pending.has("hello")).toBe(true));
+    pending.get("hello")?.(makeProofreadResult("old greeting"));
+    await vi.waitFor(() =>
+      expect(result.current.phrases).toEqual(["old greeting"]),
+    );
+
+    await rerender({ text: "changed", revision: 2 });
+    await rerender({ text: "hello", revision: 3 });
+
+    expect(result.current.phrases).toEqual([]);
+    expect(result.current.revision).toBe(3);
+  });
+
   test("clears stale suggestions immediately when the text changes, before new ones resolve", async () => {
     const resolvers = new Map<string, (result: ProofreadResult) => void>();
     stubProofreader(
@@ -381,7 +439,7 @@ describe("useMessageSuggestions", () => {
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
-        useMessageSuggestions(text),
+        useMessageSuggestions(text, 0),
       { initialProps: { text: "old" }, wrapper: LanguageProvider },
     );
 

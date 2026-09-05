@@ -23,3 +23,25 @@ export async function loadFixtureFile(name: string): Promise<File> {
     type: blob.type || "application/octet-stream",
   });
 }
+export function createTestAudioBlob(): Blob {
+  // One second of decodable, silent 8-bit mono PCM. Invalid media would trigger
+  // Chromium's real error event even when HTMLAudioElement.play is stubbed.
+  const bytes = new Uint8Array(8044);
+  const header = new DataView(bytes.buffer);
+  const encoder = new TextEncoder();
+  bytes.set(encoder.encode("RIFF"), 0);
+  header.setUint32(4, bytes.length - 8, true);
+  bytes.set(encoder.encode("WAVEfmt "), 8);
+  header.setUint32(16, 16, true);
+  header.setUint16(20, 1, true);
+  header.setUint16(22, 1, true);
+  header.setUint32(24, 8000, true);
+  header.setUint32(28, 8000, true);
+  header.setUint16(32, 1, true);
+  header.setUint16(34, 8, true);
+  bytes.set(encoder.encode("data"), 36);
+  header.setUint32(40, 8000, true);
+  bytes.fill(128, 44);
+
+  return new Blob([bytes], { type: "audio/wav" });
+}

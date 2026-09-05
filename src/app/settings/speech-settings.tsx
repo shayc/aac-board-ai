@@ -162,7 +162,7 @@ export function SpeechSettings() {
         startIcon={<PlayArrowIcon />}
         onClick={() =>
           void playback.play({
-            source: "speech-preview",
+            origin: "speech-preview",
             steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
           })
         }

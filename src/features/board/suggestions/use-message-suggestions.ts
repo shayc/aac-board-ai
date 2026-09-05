@@ -13,13 +13,17 @@ import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
 interface MessageSuggestions {
+  revision: number;
   isSupported: boolean;
   status: SuggestionStatusView;
   phrases: string[];
   enable: () => void;
 }
 
-export function useMessageSuggestions(text: string): MessageSuggestions {
+export function useMessageSuggestions(
+  text: string,
+  revision: number,
+): MessageSuggestions {
   const { customInstructions } = useBoardSuggestionConfig();
   const debouncedCustomInstructions = useDebouncedValue(
     customInstructions,
@@ -28,15 +32,17 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
 
   const { language } = useLanguage();
 
-  const proofreading = useProofreadSuggestion(text, language);
+  const proofreading = useProofreadSuggestion(text, language, revision);
   const sameToneRewrite = useRewriteSuggestion({
     text,
+    revision,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "as-is",
   });
   const casualRewrite = useRewriteSuggestion({
     text,
+    revision,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "more-casual",
@@ -80,6 +86,7 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
   );
 
   return {
+    revision,
     isSupported,
     status,
     phrases,

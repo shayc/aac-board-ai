@@ -15,7 +15,7 @@ export function parseAction(raw: string): BoardAction | null {
     case ":home":
       return { kind: "home" };
     case ":speak":
-      return { kind: "speak" };
+      return { kind: "playMessage" };
     default:
       return null;
   }

@@ -63,14 +63,14 @@ describe("appendTextToLastPart", () => {
 
   test("starts a new part if the last part has media", () => {
     const original: MessagePart[] = [
-      { id: "1", label: "ca", imageSrc: "img.png" },
+      { id: "1", label: "ca", image: "img.png" },
     ];
 
     const parts = appendTextToLastPart(original, "t");
 
     expect(parts).toHaveLength(2);
     expect(parts[1].label).toBe("t");
-    expect(parts[0].imageSrc).toBe("img.png");
+    expect(parts[0].image).toBe("img.png");
   });
 
   test("accumulates rapid appends into a single part", () => {
@@ -116,7 +116,7 @@ describe("applyBackspace", () => {
   test("removes the entire part if it is not text-only", () => {
     const parts = applyBackspace([
       { id: "1", label: "hello" },
-      { id: "2", label: "world", imageSrc: "img.png" },
+      { id: "2", label: "world", image: "img.png" },
     ]);
 
     expect(parts).toEqual([{ id: "1", label: "hello" }]);

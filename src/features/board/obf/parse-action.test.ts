@@ -7,7 +7,7 @@ describe("parseAction", () => {
     [":backspace", { kind: "backspace" }],
     [":clear", { kind: "clear" }],
     [":home", { kind: "home" }],
-    [":speak", { kind: "speak" }],
+    [":speak", { kind: "playMessage" }],
   ] as const)("parses %s", (raw, expected) => {
     expect(parseAction(raw)).toEqual(expected);
   });

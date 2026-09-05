@@ -1,20 +1,25 @@
+import { acquireMediaUrl } from "@shared/media/acquire-media-url";
+import type { MediaSource } from "@shared/media/media-source";
+import type { PlaybackStepOutcome } from "../playback-types";
+
 interface PlayAudioOptions {
   signal?: AbortSignal;
 }
 
 export function playAudio(
-  src: string,
+  src: MediaSource,
   { signal }: PlayAudioOptions = {},
-): Promise<void> {
+): Promise<PlaybackStepOutcome> {
   if (signal?.aborted) {
-    return Promise.resolve();
+    return Promise.resolve({ status: "interrupted" });
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
-  const audio = new Audio(src);
+  const { promise, resolve } = Promise.withResolvers<PlaybackStepOutcome>();
+  const media = acquireMediaUrl(src);
+  const audio = new Audio(media.url);
   let settled = false;
 
-  function finish() {
+  function finish(outcome: PlaybackStepOutcome) {
     if (settled) {
       return;
     }
@@ -23,16 +28,33 @@ export function playAudio(
     audio.onended = null;
     audio.onerror = null;
     audio.pause();
-    signal?.removeEventListener("abort", finish);
+    signal?.removeEventListener("abort", interrupt);
+    media.release();
 
-    resolve();
+    resolve(outcome);
   }
 
-  audio.onended = finish;
-  audio.onerror = finish;
+  function interrupt() {
+    finish({ status: "interrupted" });
+  }
 
-  signal?.addEventListener("abort", finish, { once: true });
-  audio.play().catch(finish);
+  function fail(error: unknown) {
+    finish({
+      status: "failed",
+      error: error instanceof Error ? error : new Error(String(error)),
+    });
+  }
+
+  audio.onended = () => finish({ status: "completed" });
+  audio.onerror = () =>
+    fail(new Error(audio.error?.message || "Audio playback failed"));
+
+  signal?.addEventListener("abort", interrupt, { once: true });
+  try {
+    void audio.play().catch(fail);
+  } catch (error) {
+    fail(error);
+  }
 
   return promise;
 }

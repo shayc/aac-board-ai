@@ -1,14 +1,11 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-context";
+import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import {
   useActivePlaybackTrackingKey,
   useIsPlaybackActive,
   usePlayback,
 } from "@shared/playback/use-playback";
 import type { MessagePart } from "../message/message-types";
-import { planPlayback } from "./plan-playback";
-
-const MESSAGE_SOURCE = "board-message";
-const TILE_SOURCE = "board-tile";
+import { createBoardPlayback, MESSAGE_ORIGIN } from "./board-playback";
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
@@ -19,27 +16,14 @@ export interface UseBoardPlaybackReturn {
 
 export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const isMessagePlaying = useIsPlaybackActive(MESSAGE_SOURCE);
-
-  function playMessage(parts: MessagePart[]) {
-    return playback.play({
-      source: MESSAGE_SOURCE,
-      steps: planPlayback(parts),
-    });
-  }
-
-  function playPart(part: MessagePart) {
-    return playback.play({ source: TILE_SOURCE, steps: planPlayback([part]) });
-  }
+  const isMessagePlaying = useIsPlaybackActive(MESSAGE_ORIGIN);
 
   return {
+    ...createBoardPlayback(playback),
     isMessagePlaying,
-    playMessage,
-    playPart,
-    stop: playback.stop,
   };
 }
 
 export function useActiveMessagePartId(): string | null {
-  return useActivePlaybackTrackingKey(MESSAGE_SOURCE);
+  return useActivePlaybackTrackingKey(MESSAGE_ORIGIN);
 }

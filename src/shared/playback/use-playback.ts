@@ -1,5 +1,6 @@
 import { use, useSyncExternalStore } from "react";
-import { PlaybackContext, type PlaybackController } from "./playback-context";
+import { PlaybackContext } from "./playback-context";
+import type { PlaybackController } from "./playback-types";
 
 export function usePlayback(): PlaybackController {
   const context = use(PlaybackContext);
@@ -11,7 +12,7 @@ export function usePlayback(): PlaybackController {
   return context;
 }
 
-export function useIsPlaybackActive(source?: string): boolean {
+export function useIsPlaybackActive(origin?: string): boolean {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
@@ -19,12 +20,12 @@ export function useIsPlaybackActive(source?: string): boolean {
 
     return (
       state.status === "playing" &&
-      (source === undefined || state.source === source)
+      (origin === undefined || state.origin === origin)
     );
   });
 }
 
-export function useActivePlaybackTrackingKey(source?: string): string | null {
+export function useActivePlaybackTrackingKey(origin?: string): string | null {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
@@ -32,7 +33,7 @@ export function useActivePlaybackTrackingKey(source?: string): string | null {
 
     if (
       state.status !== "playing" ||
-      (source !== undefined && state.source !== source)
+      (origin !== undefined && state.origin !== origin)
     ) {
       return null;
     }

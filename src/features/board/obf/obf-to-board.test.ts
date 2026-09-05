@@ -42,7 +42,7 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.locale).toBe("en-US");
+      expect(board.sourceLocale).toBe("en-US");
     });
 
     test("normalizes the locale to BCP-47 casing on import", () => {
@@ -56,7 +56,7 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.locale).toBe("en-US");
+      expect(board.sourceLocale).toBe("en-US");
     });
 
     test("handles board without optional name field", () => {
@@ -194,8 +194,9 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.loadBoard).toEqual({
-        id: "child-1",
+      expect(board.buttons[0]?.behavior).toEqual({
+        kind: "navigate",
+        boardId: "child-1",
       });
     });
 
@@ -215,10 +216,10 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.loadBoard).toBeUndefined();
+      expect(board.buttons[0]?.behavior).toEqual({ kind: "compose" });
     });
 
-    test("defaults actions to empty array when none provided", () => {
+    test("defaults to composition when no actions are provided", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-actions-empty",
@@ -231,7 +232,7 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([]);
+      expect(board.buttons[0]?.behavior).toEqual({ kind: "compose" });
     });
 
     test("uses actions and ignores the action fallback when both are present", () => {
@@ -254,10 +255,10 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([
-        { kind: "space" },
-        { kind: "clear" },
-      ]);
+      expect(board.buttons[0]?.behavior).toEqual({
+        kind: "actions",
+        actions: [{ kind: "space" }, { kind: "clear" }],
+      });
     });
 
     test("treats an explicit empty actions array as no actions, ignoring action", () => {
@@ -271,7 +272,7 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([]);
+      expect(board.buttons[0]?.behavior).toEqual({ kind: "compose" });
     });
 
     test("falls back to the single action when actions is absent", () => {
@@ -283,7 +284,10 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([{ kind: "speak" }]);
+      expect(board.buttons[0]?.behavior).toEqual({
+        kind: "actions",
+        actions: [{ kind: "playMessage" }],
+      });
     });
 
     test("parses spell actions and drops unknown ones", () => {
@@ -301,15 +305,15 @@ describe("obfToBoard", () => {
       };
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([
-        { kind: "spell", text: "ing" },
-        { kind: "home" },
-      ]);
+      expect(board.buttons[0]?.behavior).toEqual({
+        kind: "actions",
+        actions: [{ kind: "spell", text: "ing" }, { kind: "home" }],
+      });
     });
   });
 
   describe("media resolution", () => {
-    test("chooses imageSrc/soundSrc by data > path > url precedence", () => {
+    test("chooses image/sound by data > path > url precedence", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-1",
@@ -346,8 +350,8 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBe("data:image/png;base64,AAA");
-      expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
+      expect(board.buttons[0]?.image).toBe("data:image/png;base64,AAA");
+      expect(board.buttons[0]?.sound).toBe("sounds/snd-1.mp3");
     });
 
     test("falls back to url when no data/path is available", () => {
@@ -383,11 +387,11 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBe("https://example.com/img.png");
-      expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
+      expect(board.buttons[0]?.image).toBe("https://example.com/img.png");
+      expect(board.buttons[0]?.sound).toBe("https://example.com/snd.mp3");
     });
 
-    test("returns undefined imageSrc/soundSrc for unknown ids", () => {
+    test("returns undefined image/sound for unknown ids", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-missing-media",
@@ -410,8 +414,8 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0]?.image).toBeUndefined();
+      expect(board.buttons[0]?.sound).toBeUndefined();
     });
 
     test("handles missing images and sounds arrays gracefully", () => {
@@ -435,8 +439,8 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0]?.image).toBeUndefined();
+      expect(board.buttons[0]?.sound).toBeUndefined();
     });
 
     test("ignores media entries without any source (no data, path, or url)", () => {
@@ -470,8 +474,8 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0]?.image).toBeUndefined();
+      expect(board.buttons[0]?.sound).toBeUndefined();
     });
   });
 });

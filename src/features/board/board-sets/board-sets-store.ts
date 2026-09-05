@@ -88,8 +88,12 @@ export function getBoardSetsSnapshot(): BoardSetsSnapshot {
 
 export async function getBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
+  const { boardSets, error } = store.getSnapshot();
+  if (error) {
+    throw error;
+  }
 
-  return store.getSnapshot().boardSets;
+  return boardSets;
 }
 
 export function getBoardSet(

@@ -1,9 +1,9 @@
 import { normalizeLocale } from "@shared/utils/locale";
+import type { MediaSource } from "@shared/media/media-source";
 import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
-  OBFLoadBoard,
   OBFMedia,
 } from "@shayc/open-board-format";
 import type {
@@ -12,19 +12,24 @@ import type {
   BoardButton,
   BoardGrid,
   BoardStrings,
-  LoadBoard,
+  ButtonBehavior,
 } from "../types";
 import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 
-export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSourceById = buildMediaSourceMap(obfBoard.images);
-  const soundSourceById = buildMediaSourceMap(obfBoard.sounds);
+export function obfToBoard(
+  obfBoard: OBFBoard,
+  assets: ReadonlyMap<string, Blob> = new Map(),
+): Board {
+  const imageSourceById = buildMediaSourceMap(obfBoard.images, assets);
+  const soundSourceById = buildMediaSourceMap(obfBoard.sounds, assets);
 
   const board: Board = {
     id: obfBoard.id,
     name: obfBoard.name,
-    locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
+    sourceLocale: obfBoard.locale
+      ? normalizeLocale(obfBoard.locale)
+      : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),
@@ -37,15 +42,18 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
 function buildMediaSourceMap(
   media: OBFMedia[] | undefined,
-): Map<string, string> {
-  const mediaSourceById = new Map<string, string>();
+  assets: ReadonlyMap<string, Blob>,
+): Map<string, MediaSource> {
+  const mediaSourceById = new Map<string, MediaSource>();
 
   if (!media) {
     return mediaSourceById;
   }
 
   for (const item of media) {
-    const source = resolveMediaSource(item);
+    const source =
+      (item.path ? assets.get(item.path) : undefined) ??
+      resolveMediaSource(item);
     if (source) {
       mediaSourceById.set(item.id, source);
     }
@@ -60,8 +68,8 @@ function resolveMediaSource(media: OBFMedia): string | undefined {
 
 function transformButton(
   obfButton: OBFButton,
-  imageSourceById: Map<string, string>,
-  soundSourceById: Map<string, string>,
+  imageSourceById: ReadonlyMap<string, MediaSource>,
+  soundSourceById: ReadonlyMap<string, MediaSource>,
 ): BoardButton {
   return {
     id: obfButton.id,
@@ -69,14 +77,13 @@ function transformButton(
     vocalization: obfButton.vocalization,
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),
-    imageSrc: obfButton.image_id
+    image: obfButton.image_id
       ? imageSourceById.get(obfButton.image_id)
       : undefined,
-    soundSrc: obfButton.sound_id
+    sound: obfButton.sound_id
       ? soundSourceById.get(obfButton.sound_id)
       : undefined,
-    actions: collectActions(obfButton),
-    loadBoard: transformLoadBoard(obfButton.load_board),
+    behavior: resolveBehavior(obfButton),
   };
 }
 
@@ -91,10 +98,16 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   });
 }
 
-function transformLoadBoard(
-  obfLoadBoard: OBFLoadBoard | undefined,
-): LoadBoard | undefined {
-  return obfLoadBoard?.id ? { id: obfLoadBoard.id } : undefined;
+function resolveBehavior(button: OBFButton): ButtonBehavior {
+  if (button.load_board?.id) {
+    return { kind: "navigate", boardId: button.load_board.id };
+  }
+
+  const actions = collectActions(button);
+
+  return actions.length > 0
+    ? { kind: "actions", actions }
+    : { kind: "compose" };
 }
 
 function transformStrings(

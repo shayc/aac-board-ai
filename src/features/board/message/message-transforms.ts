@@ -6,20 +6,22 @@ export function createPart(content: MessagePartContent): MessagePart {
 }
 
 export function appendPart(
-  parts: MessagePart[],
+  parts: readonly MessagePart[],
   content: MessagePartContent,
-): MessagePart[] {
+): readonly MessagePart[] {
   return [...parts, createPart(content)];
 }
 
-export function appendSpace(parts: MessagePart[]): MessagePart[] {
+export function appendSpace(
+  parts: readonly MessagePart[],
+): readonly MessagePart[] {
   return appendPart(parts, { label: "" });
 }
 
 export function appendTextToLastPart(
-  parts: MessagePart[],
+  parts: readonly MessagePart[],
   text: string,
-): MessagePart[] {
+): readonly MessagePart[] {
   const lastPart = parts.at(-1);
 
   if (!lastPart || !isTextOnlyPart(lastPart)) {
@@ -32,7 +34,9 @@ export function appendTextToLastPart(
   });
 }
 
-export function applyBackspace(parts: MessagePart[]): MessagePart[] {
+export function applyBackspace(
+  parts: readonly MessagePart[],
+): readonly MessagePart[] {
   const lastPart = parts.at(-1);
   if (!lastPart) {
     return parts;
@@ -49,5 +53,5 @@ export function applyBackspace(parts: MessagePart[]): MessagePart[] {
 }
 
 function isTextOnlyPart(part: MessagePart): boolean {
-  return !part.imageSrc && !part.soundSrc && !part.vocalization;
+  return !part.image && !part.sound && !part.vocalization;
 }

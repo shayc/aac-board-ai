@@ -1,33 +1,32 @@
 import { MessageBar } from "../message/message-bar";
 import type { MessagePart } from "../message/message-types";
 import { useBoardPlaybackConfig } from "./playback-config-store";
-import {
-  useActiveMessagePartId,
-  type UseBoardPlaybackReturn,
-} from "./use-board-playback";
+import { useIsPlaybackActive } from "@shared/playback/use-playback";
+import { useActiveMessagePartId } from "./use-board-playback";
+import { MESSAGE_ORIGIN } from "./board-playback";
 
 interface BoardPlaybackMessageBarProps {
-  parts: MessagePart[];
-  playback: Pick<
-    UseBoardPlaybackReturn,
-    "isMessagePlaying" | "playMessage" | "stop"
-  >;
+  parts: readonly MessagePart[];
+  onPlay: () => void;
+  onStop: () => void;
 }
 
 export function BoardPlaybackMessageBar({
   parts,
-  playback,
+  onPlay,
+  onStop,
 }: BoardPlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
+  const isPlaying = useIsPlaybackActive(MESSAGE_ORIGIN);
   const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
 
   return (
     <MessageBar
       parts={parts}
       activePartId={isMessagePartHighlightingEnabled ? activePartId : null}
-      isPlaying={playback.isMessagePlaying}
-      onPlay={() => void playback.playMessage(parts)}
-      onStop={playback.stop}
+      isPlaying={isPlaying}
+      onPlay={onPlay}
+      onStop={onStop}
     />
   );
 }

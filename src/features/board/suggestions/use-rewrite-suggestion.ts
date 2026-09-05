@@ -6,6 +6,7 @@ import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
 interface RewriteSuggestionOptions {
   text: string;
+  revision: number;
   customInstructions: string;
   language: string;
   tone: "as-is" | "more-casual";
@@ -13,6 +14,7 @@ interface RewriteSuggestionOptions {
 
 export function useRewriteSuggestion({
   text,
+  revision,
   customInstructions,
   language,
   tone,
@@ -28,7 +30,7 @@ export function useRewriteSuggestion({
 
   const request = useLatestAsync({
     enabled: hasText && rewriter.status === "ready",
-    deps: [text, customInstructions, language],
+    deps: [text, customInstructions, language, revision],
     run: (signal) => rewriter.rewrite(text, { signal }),
   });
 

@@ -42,8 +42,8 @@ describe("speak() without Web Speech API", () => {
     vi.stubGlobal("speechSynthesis", undefined);
   });
 
-  test("speak() resolves silently instead of throwing", async () => {
-    await expect(speak("hello")).resolves.toBeUndefined();
+  test("reports unavailable speech as a failure", async () => {
+    await expect(speak("hello")).resolves.toMatchObject({ status: "failed" });
   });
 });
 
@@ -82,12 +82,23 @@ describe("speak() utterance mapping", () => {
 });
 
 describe("speak() lifecycle", () => {
+  test.each(["canceled", "interrupted"] as const)(
+    "reports platform %s as interruption",
+    async (error) => {
+      const speech = stubSpeech();
+      speech.speak.mockImplementationOnce((utterance) => {
+        utterance.onerror?.({ error } as SpeechSynthesisErrorEvent);
+      });
+
+      await expect(speak("hello")).resolves.toEqual({ status: "interrupted" });
+    },
+  );
   test("does not speak when the signal is already aborted", async () => {
     const speech = stubSpeech();
 
     await expect(
       speak("hello", { signal: AbortSignal.abort() }),
-    ).resolves.toBeUndefined();
+    ).resolves.toMatchObject({ status: "interrupted" });
 
     expect(speech.speak).not.toHaveBeenCalled();
   });
@@ -102,10 +113,10 @@ describe("speak() lifecycle", () => {
     controller.abort();
 
     expect(speech.cancel.mock.calls.length).toBeGreaterThan(cancelsBeforeAbort);
-    await expect(playback).resolves.toBeUndefined();
+    await expect(playback).resolves.toMatchObject({ status: "interrupted" });
   });
 
-  test("resolves when speech synthesis fails", async () => {
+  test("reports speech synthesis failure", async () => {
     const speech = stubSpeech();
     let utterance: SpeechSynthesisUtterance | undefined;
     speech.speak.mockImplementationOnce((spoken) => {
@@ -117,6 +128,6 @@ describe("speak() lifecycle", () => {
       error: "synthesis-failed",
     } as SpeechSynthesisErrorEvent);
 
-    await expect(playback).resolves.toBeUndefined();
+    await expect(playback).resolves.toMatchObject({ status: "failed" });
   });
 });

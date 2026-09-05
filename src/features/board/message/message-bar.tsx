@@ -5,7 +5,7 @@ import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
 export interface MessageBarProps {
-  parts: MessagePart[];
+  parts: readonly MessagePart[];
   activePartId: string | null;
   isPlaying: boolean;
   onPlay: () => void;
@@ -86,7 +86,7 @@ export function MessageBar({
                   outlineOffset: -2,
                 })}
               >
-                <AACSymbol label={part.label ?? ""} imageSrc={part.imageSrc} />
+                <AACSymbol label={part.label ?? ""} image={part.image} />
               </Stack>
             );
           })}

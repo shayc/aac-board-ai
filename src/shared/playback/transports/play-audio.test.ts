@@ -17,8 +17,24 @@ describe("playAudio transport", () => {
     audio = stubAudio();
   });
 
+  test("releases a local recording URL when playback fails", async () => {
+    let url = "";
+    audio.play.mockImplementation(function (this: HTMLAudioElement) {
+      url = this.src;
+      return Promise.reject(new Error("Blocked"));
+    });
+
+    await expect(playAudio(new Blob(["recording"]))).resolves.toMatchObject({
+      status: "failed",
+    });
+    expect(url).toMatch(/^blob:/);
+    await expect(fetch(url)).rejects.toThrow();
+  });
+
   test("plays a url and resolves when the clip ends", async () => {
-    await expect(playAudio("bell.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("bell.mp3")).resolves.toEqual({
+      status: "completed",
+    });
     expect(audio.play).toHaveBeenCalledTimes(1);
   });
 
@@ -29,14 +45,14 @@ describe("playAudio transport", () => {
 
     controller.abort();
 
-    await expect(promise).resolves.toBeUndefined();
+    await expect(promise).resolves.toEqual({ status: "interrupted" });
     expect(audio.pause).toHaveBeenCalled();
   });
 
   test("resolves without playing when the signal is already aborted", async () => {
     await expect(
       playAudio("a.mp3", { signal: AbortSignal.abort() }),
-    ).resolves.toBeUndefined();
+    ).resolves.toEqual({ status: "interrupted" });
     expect(audio.play).not.toHaveBeenCalled();
   });
 
@@ -47,7 +63,9 @@ describe("playAudio transport", () => {
       return Promise.resolve();
     });
 
-    await expect(playAudio("boom.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("boom.mp3")).resolves.toMatchObject({
+      status: "failed",
+    });
   });
 
   test("resolves when playback is blocked", async () => {
@@ -55,6 +73,8 @@ describe("playAudio transport", () => {
       Promise.reject(new Error("NotAllowedError")),
     );
 
-    await expect(playAudio("a.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("a.mp3")).resolves.toMatchObject({
+      status: "failed",
+    });
   });
 });

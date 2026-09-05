@@ -32,15 +32,11 @@ export {
   useBoardPlaybackConfig,
 } from "./playback/playback-config-store";
 export { BoardNotFoundError } from "./storage/board-content-storage";
-export { hydrateBoard } from "./storage/board-hydration";
-export type {
-  BoardMediaResource,
-  HydratedBoard,
-} from "./storage/board-hydration";
+export { loadBoard } from "./storage/load-board";
+export { CommunicationSessionProvider } from "./session/communication-session-provider";
 export {
   setSuggestionCustomInstructions,
   useBoardSuggestionConfig,
 } from "./suggestions/suggestion-config-store";
-export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
 
 export type { Board } from "./types";

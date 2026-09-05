@@ -1,13 +1,12 @@
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
-import { useBoardRouteMediaLifecycle } from "@app/routing/use-board-route-media-lifecycle";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
 import {
   BoardFileDropOverlay,
+  CommunicationSessionProvider,
   useBoardFileDrop,
   useImportLaunchedBoardFiles,
 } from "@features/board";
@@ -28,40 +27,43 @@ export function AppShell() {
   const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
 
   useImportLaunchedBoardFiles();
-  useBoardRouteMediaLifecycle();
-  useRevalidateBoardOnLanguageChange();
 
   return (
-    <Box {...fileDrop.dropHandlers} sx={{ display: "flex", height: "100svh" }}>
-      <LibraryDrawer
-        open={isLibraryOpen}
-        onClose={() => setIsLibraryOpen(false)}
-        variant={isPersistentLibrary ? "persistent" : "temporary"}
-      />
-
-      <ContentColumn shifted={isLibraryPushingContent}>
-        <AppHeader
-          libraryButtonHidden={isLibraryPushingContent}
-          onOpenLibrary={() => setIsLibraryOpen(true)}
-          onOpenSettings={() => setIsSettingsOpen(true)}
+    <CommunicationSessionProvider>
+      <Box
+        {...fileDrop.dropHandlers}
+        sx={{ display: "flex", height: "100svh" }}
+      >
+        <LibraryDrawer
+          open={isLibraryOpen}
+          onClose={() => setIsLibraryOpen(false)}
+          variant={isPersistentLibrary ? "persistent" : "temporary"}
         />
 
-        <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
-          <Outlet />
-        </Box>
-      </ContentColumn>
+        <ContentColumn shifted={isLibraryPushingContent}>
+          <AppHeader
+            libraryButtonHidden={isLibraryPushingContent}
+            onOpenLibrary={() => setIsLibraryOpen(true)}
+            onOpenSettings={() => setIsSettingsOpen(true)}
+          />
 
-      <SettingsDrawer
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+          <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
+            <Outlet />
+          </Box>
+        </ContentColumn>
 
-      <OnboardingDialog
-        open={onboarding.shouldShow}
-        onClose={onboarding.dismiss}
-      />
+        <SettingsDrawer
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
 
-      <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
-    </Box>
+        <OnboardingDialog
+          open={onboarding.shouldShow}
+          onClose={onboarding.dismiss}
+        />
+
+        <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
+      </Box>
+    </CommunicationSessionProvider>
   );
 }

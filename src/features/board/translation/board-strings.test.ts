@@ -3,7 +3,7 @@ import {
   applyTranslations,
   collectTranslatablePhrases,
   findTranslations,
-  getBoardLanguage,
+  getBoardSourceLanguage,
   findTranslatedBoard,
 } from "./board-strings";
 import type { Board } from "../types";
@@ -26,24 +26,30 @@ const mockBoard: Board = {
   buttons: [
     {
       id: "btn-1",
+      behavior: { kind: "compose" },
       label: "Hello",
       vocalization: "Hello there",
     },
     {
       id: "btn-2",
+      behavior: { kind: "compose" },
       label: undefined,
       vocalization: undefined,
     },
   ],
-  locale: "en-US",
+  sourceLocale: "en-US",
   strings: mockStrings,
 };
 
 describe("board-strings", () => {
-  test("getBoardLanguage() extracts the base language code", () => {
-    expect(getBoardLanguage(mockBoard)).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
-    expect(getBoardLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
+  test("getBoardSourceLanguage() extracts the base language code", () => {
+    expect(getBoardSourceLanguage(mockBoard)).toBe("en");
+    expect(
+      getBoardSourceLanguage({ ...mockBoard, sourceLocale: undefined }),
+    ).toBe("en");
+    expect(
+      getBoardSourceLanguage({ ...mockBoard, sourceLocale: "pt-BR" }),
+    ).toBe("pt");
   });
 
   test("findTranslations() matches language codes correctly", () => {

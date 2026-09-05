@@ -1,5 +1,6 @@
 import { getSpeechConfig, getVoices } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
+import type { PlaybackStepOutcome } from "../playback-types";
 
 interface SpeakOptions {
   signal?: AbortSignal;
@@ -22,22 +23,29 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 export function speak(
   text: string,
   { signal, onBoundary }: SpeakOptions = {},
-): Promise<void> {
+): Promise<PlaybackStepOutcome> {
   const synthesis = getSpeechSynthesis();
-  if (!synthesis || signal?.aborted) {
-    return Promise.resolve();
+  if (signal?.aborted) {
+    return Promise.resolve({ status: "interrupted" });
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
+  if (!synthesis) {
+    return Promise.resolve({
+      status: "failed",
+      error: new Error("Speech synthesis is unavailable"),
+    });
+  }
+
+  const { promise, resolve } = Promise.withResolvers<PlaybackStepOutcome>();
   const utterance = buildUtterance(text);
   let settled = false;
 
   const onAbort = () => {
+    finish({ status: "interrupted" });
     synthesis.cancel();
-    finish();
   };
 
-  function finish() {
+  function finish(outcome: PlaybackStepOutcome) {
     if (settled) {
       return;
     }
@@ -48,7 +56,7 @@ export function speak(
     utterance.onboundary = null;
     signal?.removeEventListener("abort", onAbort);
 
-    resolve();
+    resolve(outcome);
   }
 
   if (onBoundary) {
@@ -59,11 +67,26 @@ export function speak(
     };
   }
 
-  utterance.onend = finish;
-  utterance.onerror = finish;
+  utterance.onend = () => finish({ status: "completed" });
+  utterance.onerror = (event) => {
+    const wasInterrupted =
+      event.error === "interrupted" || event.error === "canceled";
+    finish(
+      wasInterrupted
+        ? { status: "interrupted" }
+        : { status: "failed", error: new Error(event.error) },
+    );
+  };
   signal?.addEventListener("abort", onAbort, { once: true });
 
-  synthesis.speak(utterance);
+  try {
+    synthesis.speak(utterance);
+  } catch (error) {
+    finish({
+      status: "failed",
+      error: error instanceof Error ? error : new Error(String(error)),
+    });
+  }
 
   return promise;
 }

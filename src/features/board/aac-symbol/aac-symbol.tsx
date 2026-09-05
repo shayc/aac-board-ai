@@ -1,24 +1,26 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
+import type { MediaSource } from "@shared/media/media-source";
+import { createImageRef } from "@shared/media/image-ref";
 import type { TileLabelPlacement } from "../appearance/appearance-store";
 import { SymbolLayout } from "./symbol-layout";
 
 interface AACSymbolProps {
-  imageSrc?: string;
+  image?: MediaSource;
   label: string;
   labelPlacement?: TileLabelPlacement;
 }
 
 export function AACSymbol({
-  imageSrc,
+  image,
   label,
   labelPlacement = "bottom",
 }: AACSymbolProps) {
   return (
     <SymbolLayout
       image={
-        imageSrc ? (
+        image ? (
           <Box
             sx={{
               position: "relative",
@@ -28,9 +30,9 @@ export function AACSymbol({
             }}
           >
             <Box
+              ref={createImageRef(image)}
               component="img"
               alt=""
-              src={imageSrc}
               sx={{
                 position: "absolute",
                 top: 0,
@@ -48,7 +50,7 @@ export function AACSymbol({
         <Typography
           component="span"
           noWrap
-          variant={imageSrc ? "body2" : "h5"}
+          variant={image ? "body2" : "h5"}
           sx={[
             { lineHeight: 1 },
             labelPlacement === "hidden" && visuallyHidden,

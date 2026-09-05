@@ -100,67 +100,100 @@ storage pipeline.
 
 ### Open a board
 
-React Router loaders prepare the active board before its route renders:
+React Router loaders read the active board's local source before its route renders:
 
 1. Navigate to `/sets/:setId/boards/:boardId`.
-2. `hydrateBoard` reads the stored OBF and asset blobs, creates provisional media
-   object URLs, and maps them through `obfToBoard` into the in-memory `Board`.
-3. `resolveTranslatedBoard` uses the original language or a cached translation
-   when possible; otherwise it attempts optional translation. A successful
-   translation is returned without waiting for the best-effort IndexedDB cache
-   write. Failure returns the untranslated board.
-4. The route renders the ready `Board`, commits its provisional media, and
-   releases the previous board's media. A failed or aborted load releases only
-   its own provisional media.
+2. `loadBoard` reads the stored OBF and local asset blobs, then maps them through
+   `obfToBoard` into the runtime `Board`. Blobs are retained values; loading does
+   not allocate object URLs or require a route commit/dispose protocol.
+   `boardLoader` returns that board and its owning set ID as `BoardRouteData`.
+3. `useBoardPresentation` immediately presents the source board or an available cached
+   translation. An uncached translation runs independently of navigation.
+4. A fresh translation may replace the presentation until the first focus, pointer, or
+   keyboard interaction. Once interaction starts, the displayed labels stay fixed.
+   Late results are cached for the next presentation. Navigating to another board or
+   explicitly changing the communication language starts a new presentation.
+5. Leaving the presentation aborts its translation request. Stale results cannot replace
+   a newer board/language presentation. Translation or cache-write failure leaves the
+   local board usable.
 
 ```mermaid
-%%{init: { "sequence": { "mirrorActors": false }}}%%
-sequenceDiagram
-    accTitle: Opening a board
-    accDescr: React Router hydrates a board from IndexedDB, optionally translates it, then renders it and commits its media resources.
+flowchart LR
+    accTitle: Board loading and independent translation
+    accDescr: The route reads a local board immediately. Optional translation can update an untouched presentation, while the communication session retains the message across route changes.
 
-    actor User
-    participant Router as React Router / boardLoader
-    participant Storage as Board storage / IndexedDB
-    participant Translation as Translation policy
-    participant AI as Built-in Translator
-    participant Route as Board route lifecycle
-
-    User->>Router: Navigate to a board
-    Router->>Storage: hydrateBoard(setId, boardId)
-    Storage->>Storage: Load OBF + assets, create media URLs
-    Storage-->>Router: Board + provisional media
-    Router->>Translation: Resolve board for active language
-
-    alt Original language or cached translation
-        Translation-->>Router: Ready Board
-    else Translation succeeds
-        Translation->>AI: Translate phrases
-        AI-->>Translation: Translations
-        Translation->>Storage: Cache translations (not awaited)
-        Translation-->>Router: Translated Board
-    else Translation unavailable or fails
-        Translation-->>Router: Untranslated Board
-    end
-
-    Router-->>Route: Board + provisional media
-    Route->>Route: Commit media, dispose previous
-
-    Note over Router,Route: Abort or failure → dispose provisional media
+    Router["Route loader"] --> Storage["OBF source + local blobs"]
+    Storage --> Presentation["Board presentation<br/>source or cached translation"]
+    Presentation -.-> Translation["Optional translation"]
+    Translation -.->|before interaction| Presentation
+    Translation -.-> Cache["Translation cache"]
+    Presentation -->|select content| Session["Communication session"]
+    Session -->|immutable snapshot| Playback["Playback"]
 ```
 
-### Activate a tile
+The translation timing is an accessibility policy: a slow model cannot prevent
+opening a board, and labels cannot change underneath an ongoing interaction.
+An explicit language change authorizes a new presentation even when the previous
+presentation was locked. `Board.sourceLocale` always describes the original content;
+a translation is a separate presentation of that source and does not alter its
+provenance. `getBoardSourceLanguage` derives the source language from that locale.
 
-Every activation becomes a typed intent before it changes state or produces
-output:
+### Compose and play a message
 
-1. A tile activation goes through `resolveButtonIntents`, yielding `navigate`,
-   `composeAndPlay`, or `runAction`.
-2. `activateButton` dispatches the intents by updating the message, navigating,
-   or submitting playable content.
-3. The board playback adapter calls `planPlayback`; the app-wide playback
-   coordinator serializes speech and recorded audio and publishes progress for
-   per-part highlighting.
+The communication session belongs to the persistent app shell. It survives board
+changes, board-set changes, and departures from the board route. It is ephemeral:
+clearing the message releases its content, and unmounting the app shell disposes
+the session. A fresh app starts with an empty draft.
+
+1. `obfToBoard` normalizes each button to one behavior: `compose`, `navigate`, or
+   an ordered `actions` sequence. Navigation takes precedence over actions;
+   otherwise recognized actions take precedence over composition.
+   `parseAction` maps the OBF `:speak` action to the runtime `playMessage` action.
+2. `createButtonActivator` delegates navigation to the navigation adapter and
+   communication to the session. Tiles, keyboard shortcuts, message controls,
+   and accepted suggestions all use session methods; raw message replacement is
+   private to that owner. `appendAndPlay` adds a message part and plays it;
+   `playMessage` plays the current message using recordings and synthesized speech.
+3. The session increments the message revision on edits. Suggestion requests carry
+   that revision, and acceptance checks it even when edits restore the same text.
+   `displayText` derives from labels, while
+   `planPlayback` separately resolves vocalization and recorded sound.
+4. Action sequences wait for message playback to finish before continuing.
+   Remaining actions run only after successful playback, provided no intervening
+   edit or newer session operation has superseded the sequence.
+   `operationGeneration` tracks superseding operations independently of the
+   message revision. A `playMessage` action followed by `clear` keeps the draft
+   visible during playback and preserves it after failure, interruption, or an
+   empty playback plan.
+5. The board playback adapter produces steps for the app-wide playback
+   coordinator. The coordinator serializes speech and recorded audio and
+   publishes progress for per-part highlighting.
+
+Each nonempty request creates a `PlaybackRun`. Its `origin` identifies the caller,
+such as a message control, tile, or speech preview. Media sources identify the
+content to play. `PlaybackStepOutcome` describes one step; `PlaybackOutcome`
+describes the whole request.
+
+Playback reports `completed`, `interrupted`, `failed`, or `empty`. Failures include
+whole completed-step count and the failed step index; that failing step may have
+already produced some output. Execution stops on the first failed step, without
+replaying earlier steps. Board playback failures surface a localized snackbar.
+Empty requests leave current output alone. A new nonempty request interrupts the
+current request.
+
+### Media ownership
+
+Local media is retained as immutable `Blob` references in runtime boards and
+message parts. The message retains only selected content, and a playback request
+retains its snapshot until output settles. Deleting the source set from IndexedDB
+does not invalidate those already-loaded bytes. Unreferenced blobs are reclaimed
+by the browser; no global media cache or reference counter is needed.
+
+`createImageRef` gives each mounted image its own object URL. The audio transport
+acquires its own URL for a recording and releases it on completion, failure, or
+interruption. Image replacement and unmount release that image's URL, including
+during Strict Mode replay. Releasing one consumer never revokes another's URL.
+Remote and inline URL sources keep their original ownership and availability.
 
 ## Codemap and ownership seams
 
@@ -185,23 +218,23 @@ does not imply an independently replaceable boundary.
 The table identifies the owner of each concern and the rule at its ownership
 seam. Search by path or symbol name to locate the code.
 
-| Concern                   | Owner                                                                       | Ownership rule                                                                                                                                                              |
-| ------------------------- | --------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Composition               | `src/main.tsx`, `src/app/`, `src/pages/`, `src/shared/providers/`           | `main` composes providers and routing; shared providers assemble cross-cutting services; the router and pages assemble features.                                            |
-| Active-board data         | `src/app/routing/loaders/`                                                  | The active board enters the render tree through `boardLoader`; ancillary summaries may use feature hooks.                                                                   |
-| Board domain              | `src/features/board/`                                                       | `communication-board.tsx` orchestrates the grid, activation, message, navigation, keyboard, suggestions, and playback adapters.                                             |
-| OBF runtime mapping       | `src/features/board/obf/`                                                   | `obfToBoard` and `parseAction` define how imported OBF becomes the in-memory domain model.                                                                                  |
-| Board ingestion           | `src/features/board/import/`                                                | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                 |
-| Board persistence         | `src/features/board/storage/`                                               | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                    |
-| Board-set catalog         | `src/features/board/board-sets/`                                            | Projects IndexedDB metadata into a reactive, cross-tab catalog. Creates and deletes pass through it so every projection stays current.                                      |
-| Board appearance          | `src/features/board/appearance/`                                            | Owns persisted tile saturation, border visibility, and label placement.                                                                                                     |
-| Board playback            | `src/features/board/playback/`                                              | Converts message parts into playback steps and owns board-specific tracking, highlighting preferences, and UI adapters; device output remains delegated to shared playback. |
-| Optional language help    | `src/features/board/suggestions/`, `src/features/board/translation/`        | Owns Built-in AI policy such as warm-up, custom instructions, and engine language options. Every call must tolerate unavailable engines.                                    |
-| Playback output           | `src/shared/playback/`                                                      | The only gateway to Web Speech and HTML Audio. Playback is single-flight; a new request interrupts the current request without surfacing an error to the user.              |
-| Voices                    | `src/shared/speech/`                                                        | Owns voice discovery, persisted speech configuration, and voice-language synchronization; it does not produce output.                                                       |
-| Language and presentation | `src/shared/language/`, `src/shared/theme/`                                 | Own the active language, direction, and theme. UI text comes from Paraglide messages.                                                                                       |
-| Shared state primitives   | `src/shared/utils/external-store.ts`, `src/shared/utils/persisted-store.ts` | Cross-cutting stores build on these primitives instead of defining new subscription or localStorage machinery.                                                              |
-| UI messages               | `messages/*.json`, `project.inlang/`                                        | Message sources compile through Paraglide into generated `src/paraglide/`; generated files are never edited manually.                                                       |
+| Concern                   | Owner                                                                       | Ownership rule                                                                                                                                                                                  |
+| ------------------------- | --------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Composition               | `src/main.tsx`, `src/app/`, `src/pages/`, `src/shared/providers/`           | `main` composes providers and routing; shared providers assemble cross-cutting services; the router and pages assemble features.                                                                |
+| Active-board data         | `src/app/routing/loaders/`                                                  | The local source board enters the render tree through `boardLoader`; optional translation and label stability belong to the board presentation.                                                 |
+| Board domain              | `src/features/board/`                                                       | `communication-board.tsx` composes presentation and adapters; `session/` exclusively owns the ephemeral draft and pending message operations.                                                   |
+| OBF runtime mapping       | `src/features/board/obf/`                                                   | `obfToBoard` and `parseAction` normalize OBF into explicit button behaviors, source locale, and retained media values.                                                                          |
+| Board ingestion           | `src/features/board/import/`                                                | File picker, drag-and-drop, `?board=` URL, and PWA file-handler inputs converge on `importBoardSets` before storage writes.                                                                     |
+| Board persistence         | `src/features/board/storage/`                                               | This is the only production reader/writer of IndexedDB. Schema changes belong in the `idb` upgrade path.                                                                                        |
+| Board-set catalog         | `src/features/board/board-sets/`                                            | Projects IndexedDB metadata into a reactive, cross-tab catalog. Creates and deletes pass through it so every projection stays current.                                                          |
+| Board appearance          | `src/features/board/appearance/`                                            | Owns persisted tile saturation, border visibility, and label placement.                                                                                                                         |
+| Board playback            | `src/features/board/playback/`                                              | Converts message parts into playback steps and owns board-specific tracking, highlighting preferences, and UI adapters; device output remains delegated to shared playback.                     |
+| Optional language help    | `src/features/board/suggestions/`, `src/features/board/translation/`        | Owns Built-in AI policy, translation timing and presentation stability, warm-up, and engine options. AI work cannot block local board loading.                                                  |
+| Playback output           | `src/shared/playback/`                                                      | The only gateway to Web Speech and HTML Audio. Playback is single-flight; nonempty requests interrupt previous output. Outcomes distinguish completion, interruption, failure, and empty plans. |
+| Voices                    | `src/shared/speech/`                                                        | Owns voice discovery, persisted speech configuration, and voice-language synchronization; it does not produce output.                                                                           |
+| Language and presentation | `src/shared/language/`, `src/shared/theme/`                                 | Own the active language, direction, and theme. UI text comes from Paraglide messages.                                                                                                           |
+| Shared state primitives   | `src/shared/utils/external-store.ts`, `src/shared/utils/persisted-store.ts` | Cross-cutting stores build on these primitives instead of defining new subscription or localStorage machinery.                                                                                  |
+| UI messages               | `messages/*.json`, `project.inlang/`                                        | Message sources compile through Paraglide into generated `src/paraglide/`; generated files are never edited manually.                                                                           |
 
 Two companion packages own reusable mechanics outside the application:
 [`@shayc/open-board-format`](https://github.com/shayc/open-board-format) parses
@@ -212,25 +245,28 @@ product policy around both interfaces.
 
 ## Data and state model
 
-Application state has six lifetimes, each with one owner:
+Application state has seven lifetimes, each with one owner:
 
 | Kind                         | Home                                           | Includes                                                                                                                                                                                                     |
 | ---------------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Durable board data           | IndexedDB via `src/features/board/storage/`    | `boardSets` metadata, source `OBFBoard` records, and image/sound asset blobs.                                                                                                                                |
-| Loaded route data            | React Router loaders                           | The hydrated, optionally translated active `Board` for each navigation.                                                                                                                                      |
+| Loaded route data            | React Router loaders                           | The local source `Board` and owning set ID for each navigation, with retained asset blobs.                                                                                                                   |
 | Navigation history state     | React Router `location.state`                  | The bounded board back-stack carried by board-to-board navigation.                                                                                                                                           |
 | Reactive cross-cutting state | `createExternalStore` + `useSyncExternalStore` | Board-set catalog, TTS voice catalog, and active playback coordinator.                                                                                                                                       |
 | Persisted settings           | `createPersistedStore` + localStorage          | Language, speech, message-part highlighting, board appearance, suggestion custom instructions, and onboarding state. MUI theme mode persists separately as `mui-mode` and is read pre-paint in `index.html`. |
-| Ephemeral interaction state  | Local React state                              | In-progress message parts and remembered grid focus.                                                                                                                                                         |
+| Communication session        | App-shell scoped external store                | Message parts, their revision, and pending message operations.                                                                                                                                               |
+| Ephemeral interaction state  | Local React state                              | Remembered grid focus, board presentation, and its interaction lock.                                                                                                                                         |
 
-Hydrated asset object URLs have an explicit resource lifecycle rather than a
-state lifetime. A loader owns them provisionally, the app-shell route observer
-commits them with the rendered board, and replacement, abort, or failure disposes
-them.
+Local blob contents follow their board, message, and playback snapshot lifetimes.
+Object URLs have a shorter browser-resource lifetime: their individual image or
+audio consumer acquires and releases them. Route loaders never allocate them.
 
 The IndexedDB schema is versioned in `boards-db.ts`. A schema change increments
 `DB_VERSION` and adds its migration to the `idb` upgrade callback. A tab holding
 an old connection closes it when a newer version needs to upgrade.
+
+Imperative catalog reads propagate read errors rather than presenting a failed
+read as an empty library. The reactive projection retains its own error state.
 
 Board-set catalog coherence uses one module-level `BroadcastChannel`
 (`board-sets-sync`) listener per tab. Other persisted settings rely on their local
@@ -257,11 +293,16 @@ rerender only subscribers to the changed slice.
   `updateBoardStrings` later adds cached locale entries to `obf.strings`;
   `obfToBoard` derives the in-memory model on every read so its shape can evolve
   without rewriting imported records.
-- **The active board is loader-owned.** Hydration and optional translation finish
-  before the new route renders. Its media remains provisional until the route
-  commits, and leaving the route releases the committed media. Ancillary board
-  summaries may load through the storage API without becoming another
-  active-board path.
+- **The active source board is loader-owned.** Source reads and local media
+  retention finish before the route renders. Optional translation is independent
+  and cannot change a presentation once interaction starts. Ancillary summaries may load
+  through the storage API without becoming another active-board path.
+- **The communication session owns the draft.** Every edit goes through its
+  methods. Pending output uses immutable snapshots, and delayed actions cannot
+  overwrite a newer draft.
+- **Media lifetime follows its consumer.** Messages retain selected local blobs
+  across navigation and deletion. Each rendered image and audio request releases
+  only its own temporary URL.
 - **Optional AI is capability-detected and failure-tolerant.** Consumers use
   `@shayc/react-built-in-ai`, never User-Agent checks. Suggestions are omitted
   when unsupported and surface an unavailable state when supported but unusable;
@@ -298,8 +339,15 @@ longer holds.
 - **Store the OBF source model and derive `Board` on read.** Keeping the
   interchange and runtime models separate preserves imported fields while
   allowing the runtime model to evolve without data migrations.
-- **Hydrate and translate in route loaders.** Components receive coherent board
-  data without managing their own loading or translation orchestration.
+- **Load local source in routes; translate in a board presentation.** Opening the board
+  does not wait for AI. A focused or activated presentation keeps its labels stable, while
+  a future navigation or explicit language change may use a cached translation.
+- **Retain blob values, acquire URLs at output boundaries.** Browser-managed blob
+  lifetime preserves selected media after navigation or deletion, with independent
+  cleanup for image and audio URLs.
+- **Use a focused communication session.** The session owns the draft, revision,
+  and pending message actions. Existing pure transforms handle message editing,
+  and playback adapters handle audible output.
 - **Accessible primitives plus real-browser tests.** Accessibility behavior is
   verified in Chromium through Playwright-backed Vitest and axe-core rather than
   a simulated DOM.
@@ -340,12 +388,25 @@ rise with meaningful coverage gains and are not lowered to admit a regression.
   board set with assets (`.obz`). The current interchange contract is import-only.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
+- **Button** — a board entry containing communication content and a behavior.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
-- **Tile** — an interactive board button containing a communication symbol. It
-  adds to the message or navigates to a linked board when activated.
+- **Tile** — the interactive control that displays a button's symbol and activates
+  its behavior.
 - **Vocalization** — what a button speaks when it differs from the visible label.
-- **Message bar** — the selected symbols accumulated into the message to speak.
+- **Message** — the ordered content composed for playback.
+- **Draft** — the current editable message owned by the communication session.
+- **Message snapshot** — the message parts, derived display text, and revision
+  captured at a point in time.
+- **Message part** — one selected occurrence in the draft, with an identity
+  independent of its originating button.
+- **Communication session** — the app-shell owner of the draft and its editing
+  and playback operations, retained across board navigation.
+- **Board presentation** — the source or translated board content displayed to
+  the user and held stable during an interaction.
+- **Playback run** — one execution of a nonempty playback request.
+- **Message bar** — the control that displays the message and starts or stops its
+  playback.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.

@@ -5,99 +5,131 @@ import {
   type PlaybackOutcome,
   type PlaybackRequest,
   type PlaybackState,
-} from "./playback-context";
+  type PlaybackStep,
+  type PlaybackStepOutcome,
+} from "./playback-types";
 import { playAudio } from "./transports/play-audio";
 import { speak } from "./transports/speak";
 
-interface PlaybackSession {
+interface PlaybackRun {
   controller: AbortController;
   request: PlaybackRequest;
 }
 
 export function createPlaybackCoordinator(): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
-  let currentSession: PlaybackSession | null = null;
+  let currentRun: PlaybackRun | null = null;
 
   function setActiveTrackingKey(
-    session: PlaybackSession,
+    run: PlaybackRun,
     activeTrackingKey: string | null,
   ) {
-    if (currentSession !== session) {
+    if (currentRun !== run) {
       return;
     }
 
     store.setState({
       status: "playing",
-      source: session.request.source,
+      origin: run.request.origin,
       activeTrackingKey,
     });
   }
 
-  function interruptCurrentSession() {
-    const session = currentSession;
-    currentSession = null;
-    session?.controller.abort();
+  function interruptCurrentRun() {
+    const run = currentRun;
+    currentRun = null;
+    run?.controller.abort();
   }
 
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
-    interruptCurrentSession();
+    if (request.steps.length === 0) {
+      return { status: "empty", completedSteps: 0 };
+    }
 
-    const session: PlaybackSession = {
+    interruptCurrentRun();
+
+    const run: PlaybackRun = {
       controller: new AbortController(),
       request,
     };
-    currentSession = session;
-    setActiveTrackingKey(session, null);
+    currentRun = run;
+    setActiveTrackingKey(run, null);
 
-    const { signal } = session.controller;
+    const { signal } = run.controller;
+    let completedSteps = 0;
 
     try {
       for (const step of request.steps) {
         if (signal.aborted) {
-          return "interrupted";
+          return { status: "interrupted", completedSteps };
         }
 
-        switch (step.kind) {
-          case "audio":
-            setActiveTrackingKey(session, step.trackingKey ?? null);
-            await playAudio(step.src, { signal });
-            break;
+        const outcome = await playStep(step, run);
+        if (outcome.status === "completed") {
+          completedSteps += 1;
+        }
 
-          case "speech":
-            setActiveTrackingKey(session, step.trackingKeyAt?.(0) ?? null);
-            await speak(step.text, {
-              signal,
-              onBoundary: step.trackingKeyAt
-                ? (charIndex) =>
-                    setActiveTrackingKey(
-                      session,
-                      step.trackingKeyAt?.(charIndex) ?? null,
-                    )
-                : undefined,
-            });
-            break;
+        if (signal.aborted || outcome.status === "interrupted") {
+          return { status: "interrupted", completedSteps };
+        }
 
-          default:
-            assertNever(step);
+        if (outcome.status === "failed") {
+          return {
+            status: "failed",
+            completedSteps,
+            failedStepIndex: completedSteps,
+            error: outcome.error,
+          };
         }
       }
 
-      return signal.aborted ? "interrupted" : "completed";
+      return { status: "completed", completedSteps };
+    } catch (error) {
+      return signal.aborted
+        ? { status: "interrupted", completedSteps }
+        : {
+            status: "failed",
+            completedSteps,
+            failedStepIndex: completedSteps,
+            error: error instanceof Error ? error : new Error(String(error)),
+          };
     } finally {
-      if (currentSession === session) {
-        currentSession = null;
+      if (currentRun === run) {
+        currentRun = null;
         store.setState({ status: "idle" });
       }
     }
   }
 
+  function playStep(
+    step: PlaybackStep,
+    run: PlaybackRun,
+  ): Promise<PlaybackStepOutcome> {
+    const { signal } = run.controller;
+
+    switch (step.kind) {
+      case "audio":
+        setActiveTrackingKey(run, step.trackingKey ?? null);
+        return playAudio(step.src, { signal });
+      case "speech":
+        setActiveTrackingKey(run, step.trackingKeyAt?.(0) ?? null);
+        return speak(step.text, {
+          signal,
+          onBoundary: (charIndex) =>
+            setActiveTrackingKey(run, step.trackingKeyAt?.(charIndex) ?? null),
+        });
+      default:
+        return assertNever(step);
+    }
+  }
+
   function stop() {
-    interruptCurrentSession();
+    interruptCurrentRun();
     store.setState({ status: "idle" });
   }
 
   function dispose() {
-    interruptCurrentSession();
+    stop();
   }
 
   return {

@@ -7,7 +7,7 @@ export function findTranslatedBoard(
   board: Board,
   language: string,
 ): Board | undefined {
-  if (getBoardLanguage(board) === language) {
+  if (getBoardSourceLanguage(board) === language) {
     return board;
   }
 
@@ -16,8 +16,10 @@ export function findTranslatedBoard(
   return cached ? applyTranslations(board, cached) : undefined;
 }
 
-export function getBoardLanguage(board: Board): string {
-  return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
+export function getBoardSourceLanguage(board: Board): string {
+  return board.sourceLocale
+    ? getLanguageCode(board.sourceLocale)
+    : DEFAULT_BOARD_LANGUAGE;
 }
 
 export function findTranslations(

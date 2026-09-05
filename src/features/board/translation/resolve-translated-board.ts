@@ -5,7 +5,7 @@ import {
   applyTranslations,
   collectTranslatablePhrases,
   findTranslatedBoard,
-  getBoardLanguage,
+  getBoardSourceLanguage,
 } from "./board-strings";
 
 export async function resolveTranslatedBoard(
@@ -26,13 +26,14 @@ export async function resolveTranslatedBoard(
 
   try {
     const translator = await createTranslator({
-      sourceLanguage: getBoardLanguage(board),
+      sourceLanguage: getBoardSourceLanguage(board),
       targetLanguage: language,
       signal,
     });
 
     try {
       const translations = await translatePhrases(phrases, translator, signal);
+      signal?.throwIfAborted();
 
       void persistTranslations(setId, board.id, language, translations);
 

@@ -28,7 +28,7 @@ describe("useBoardPlayback", () => {
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
       { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { id: "2", label: "ding", sound: "ding.mp3" },
       { id: "3", label: "after" },
     ];
 
@@ -130,7 +130,11 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    await expect(result.current.playMessage(parts)).resolves.toBe("completed");
+    await expect(result.current.playMessage(parts)).resolves.toMatchObject({
+      status: "failed",
+      failedStepIndex: 0,
+      completedSteps: 0,
+    });
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
@@ -210,7 +214,7 @@ describe("useBoardPlayback", () => {
 
     const parts: MessagePart[] = [
       { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { id: "2", label: "ding", sound: "ding.mp3" },
       { id: "3", label: "after" },
     ];
 

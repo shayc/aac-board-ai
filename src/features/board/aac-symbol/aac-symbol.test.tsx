@@ -20,10 +20,8 @@ describe("AACSymbol", () => {
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders image when imageSrc is provided", async () => {
-    const screen = await render(
-      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
-    );
+  test("renders image when image is provided", async () => {
+    const screen = await render(<AACSymbol image={TEST_IMAGE_SRC} label="" />);
 
     const img = screen.container.querySelector("img");
     expect(img).not.toBeNull();
@@ -33,11 +31,7 @@ describe("AACSymbol", () => {
 
   test("places the label above the image when labelPlacement is top", async () => {
     const screen = await render(
-      <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
-        label="Action"
-        labelPlacement="top"
-      />,
+      <AACSymbol image={TEST_IMAGE_SRC} label="Action" labelPlacement="top" />,
     );
 
     const container = screen.getByText("Action").element().parentElement;
@@ -50,7 +44,7 @@ describe("AACSymbol", () => {
   test("keeps the label accessible when labelPlacement is hidden", async () => {
     const screen = await render(
       <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
+        image={TEST_IMAGE_SRC}
         label="Action"
         labelPlacement="hidden"
       />,
@@ -62,7 +56,7 @@ describe("AACSymbol", () => {
   test("takes no layout space for the label when labelPlacement is hidden", async () => {
     const screen = await render(
       <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
+        image={TEST_IMAGE_SRC}
         label="Action"
         labelPlacement="hidden"
       />,

@@ -13,11 +13,16 @@ function makeBoard(overrides: Partial<Board> = {}): Board {
   return {
     id: "board-1",
     name: "Food",
-    locale: "en-US",
+    sourceLocale: "en-US",
     grid: { rows: 1, columns: 2 },
     buttons: [
-      { id: "btn-eat", label: "eat", vocalization: "eat" },
-      { id: "btn-drink", label: "drink" },
+      {
+        id: "btn-eat",
+        behavior: { kind: "compose" },
+        label: "eat",
+        vocalization: "eat",
+      },
+      { id: "btn-drink", behavior: { kind: "compose" }, label: "drink" },
     ],
     ...overrides,
   };

@@ -34,9 +34,9 @@ function resolveColorInSrgb(cssColor: string): string {
 }
 
 describe("Tile", () => {
-  test("renders with image when imageSrc is provided", async () => {
+  test("renders with image when image is provided", async () => {
     const screen = await render(
-      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onActivate={vi.fn()} />,
+      <Tile label="Cat" image={TEST_IMAGE_SRC} onActivate={vi.fn()} />,
     );
 
     await expect

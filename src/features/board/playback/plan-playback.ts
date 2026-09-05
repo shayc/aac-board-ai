@@ -1,4 +1,4 @@
-import type { PlaybackStep } from "@shared/playback/playback-context";
+import type { PlaybackStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
 import {
   createSpokenPartTracker,
@@ -10,7 +10,7 @@ function getSpokenText(part: MessagePart): string | undefined {
   return (part.vocalization ?? part.label)?.toLowerCase();
 }
 
-export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
+export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];
 
@@ -29,11 +29,11 @@ export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
   }
 
   for (const part of parts) {
-    if (part.soundSrc) {
+    if (part.sound) {
       flushSpeech();
       steps.push({
         kind: "audio",
-        src: part.soundSrc,
+        src: part.sound,
         trackingKey: part.id,
       });
       continue;

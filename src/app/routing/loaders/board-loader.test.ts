@@ -3,15 +3,14 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
-import type { HydratedBoard } from "@features/board";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
-import { boardLoader } from "./board-loader";
+import { boardLoader, type BoardRouteData } from "./board-loader";
 
 function callLoader(
   setId: string | undefined,
   boardId: string | undefined,
-): Promise<HydratedBoard> {
+): Promise<BoardRouteData> {
   const args = {
     request: new Request("http://localhost/"),
     params: { setId, boardId },
@@ -43,7 +42,7 @@ describe("boardLoader", () => {
     });
   });
 
-  test("returns the hydrated board on the happy path", async () => {
+  test("returns the local board and its owning set", async () => {
     await seedBoardSets([
       {
         setId: "set-1",
@@ -62,6 +61,6 @@ describe("boardLoader", () => {
 
     expect(loadedBoard.board).toMatchObject({ id: "root-1", name: "Home" });
 
-    loadedBoard.media.dispose();
+    expect(loadedBoard.setId).toBe("set-1");
   });
 });

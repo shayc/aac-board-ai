@@ -3,6 +3,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { MemoryRouter, type InitialEntry } from "react-router";
 import { render } from "vitest-browser-react";
 import { CommunicationBoard } from "../communication-board";
+import { CommunicationSessionProvider } from "../session/communication-session-provider";
 import { obfToBoard } from "../obf/obf-to-board";
 
 export const TWO_BUTTON_BOARD: OBFBoard = {
@@ -23,9 +24,11 @@ export function renderCommunicationBoard(
   return render(
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
-        <div style={{ height: "100vh" }}>
-          <CommunicationBoard board={obfToBoard(obfBoard)} />
-        </div>
+        <CommunicationSessionProvider>
+          <div style={{ height: "100vh" }}>
+            <CommunicationBoard board={obfToBoard(obfBoard)} />
+          </div>
+        </CommunicationSessionProvider>
       </AppProviders>
     </MemoryRouter>,
   );
