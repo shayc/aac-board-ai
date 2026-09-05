@@ -1,5 +1,4 @@
 import Button, { buttonClasses } from "@mui/material/Button";
-import { alpha } from "@mui/material/styles";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { TileLabelPlacement } from "../appearance/appearance-store";
 
@@ -96,11 +95,7 @@ export function Tile({
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          outline: `4px solid ${
-            theme.vars
-              ? `rgba(${theme.vars.palette.text.primaryChannel} / 0.8)`
-              : alpha(theme.palette.text.primary, 0.8)
-          }`,
+          outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
           boxShadow: (theme.vars ?? theme).shadows[6],
         },
