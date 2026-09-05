@@ -1,6 +1,5 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
-import { rewriterLanguageOptions } from "./engine-language-options";
 import { prepareQuietly } from "./prepare-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
@@ -22,7 +21,9 @@ export function useRewriteSuggestion({
     length: "shorter",
     format: "plain-text",
     tone,
-    ...rewriterLanguageOptions(language),
+    expectedInputLanguages: [language],
+    expectedContextLanguages: [language],
+    outputLanguage: language,
   });
   const hasText = text.trim().length > 0;
 
