@@ -107,14 +107,14 @@ describe("resolveBoardForLanguage", () => {
 
     const result = await resolveBoardForLanguage(
       obfToBoard(active.obf),
-      [active, other, unnamed],
+      [other, active, unnamed],
       "es",
     );
 
-    expect(result.board.name).toBe(result.summaries[0].name);
+    expect(result.board.name).toBe(result.summaries[1].name);
     expect(result.summaries.map(({ name }) => name)).toEqual([
-      "[es] Food",
       "[es] Animals",
+      "[es] Food",
       "identifier",
     ]);
     expect(create).toHaveBeenCalledOnce();
@@ -123,6 +123,25 @@ describe("resolveBoardForLanguage", () => {
       "eat",
       "drink",
       "Animals",
+    ]);
+  });
+
+  test("uses the same identifier fallback for an unnamed active board and its summary", async () => {
+    const { translate } = stubTranslator((input) => `[es] ${input}`);
+    const result = await resolve(makeRecord({ name: undefined }));
+
+    expect(result.board).toMatchObject({
+      name: "board-1",
+      nameLanguage: undefined,
+    });
+    expect(result.summaries[0]).toEqual({
+      boardId: "board-1",
+      name: "board-1",
+      nameLanguage: undefined,
+    });
+    expect(translate.mock.calls.map(([input]) => input)).toEqual([
+      "eat",
+      "drink",
     ]);
   });
 

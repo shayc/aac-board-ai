@@ -1,5 +1,6 @@
-import { hydrateBoard, type HydratedBoard } from "@features/board";
+import type { HydratedBoard } from "@features/board";
 import {
+  hydrateBoard,
   loadTestImageBlob,
   makeOBFBoard,
   seedBoardSets,

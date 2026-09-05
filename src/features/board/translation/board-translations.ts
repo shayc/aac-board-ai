@@ -1,6 +1,6 @@
 import { normalizeLocale } from "@shared/utils/locale";
 import type { OBFBoard } from "@shayc/open-board-format";
-import type { Board } from "../types";
+import type { BoardButton } from "../types";
 
 export interface ResolvedPhrase {
   text: string;
@@ -14,6 +14,11 @@ export interface BoardSummary {
   boardId: string;
   name: string;
   nameLanguage?: string;
+}
+
+interface TranslationDictionary {
+  locale: string;
+  phrases: Record<string, string>;
 }
 
 export function getSourceLanguage(
@@ -44,17 +49,16 @@ export function areLanguagesCompatible(
   }
 }
 
-function findTranslation(
+function selectDictionaries(
   dictionaries: OBFBoard["strings"],
   language: string | undefined,
-  key: string,
-): { text: string; language: string } | undefined {
+): TranslationDictionary[] {
   if (!dictionaries || !language) {
-    return undefined;
+    return [];
   }
 
   const target = normalizeLocale(language);
-  const candidates = Object.entries(dictionaries)
+  return Object.entries(dictionaries)
     .map(([locale, phrases]) => ({ locale: normalizeLocale(locale), phrases }))
     .filter(({ locale }) => areLanguagesCompatible(locale, target))
     .sort((left, right) => {
@@ -63,8 +67,13 @@ function findTranslation(
         left.locale.localeCompare(right.locale, "en")
       );
     });
+}
 
-  for (const { locale, phrases } of candidates) {
+function findTranslation(
+  dictionaries: readonly TranslationDictionary[],
+  key: string,
+): { text: string; language: string } | undefined {
+  for (const { locale, phrases } of dictionaries) {
     if (Object.hasOwn(phrases, key) && typeof phrases[key] === "string") {
       return { text: phrases[key], language: locale };
     }
@@ -81,30 +90,34 @@ function rankLocale(locale: string, target: string): number {
   return locale.includes("-") ? 2 : 1;
 }
 
-export function resolvePhrase(
+function createPhraseResolver(
   source: OBFBoard,
-  key: string,
   targetLanguage: string,
-): ResolvedPhrase {
+): (key: string) => ResolvedPhrase {
   const sourceLanguage = getSourceLanguage(source.locale);
-  const original = findTranslation(source.strings, sourceLanguage, key);
-  const sourceText = original?.text ?? key;
-  const translated = findTranslation(source.strings, targetLanguage, key);
+  const sourceDictionaries = selectDictionaries(source.strings, sourceLanguage);
+  const targetDictionaries = selectDictionaries(source.strings, targetLanguage);
   const isSourceLanguage =
     sourceLanguage !== undefined &&
     areLanguagesCompatible(sourceLanguage, targetLanguage);
 
-  return {
-    text: translated?.text ?? sourceText,
-    language: translated?.language ?? original?.language ?? sourceLanguage,
-    sourceText,
-    sourceLanguage: original?.language ?? sourceLanguage,
-    shouldTranslate:
-      !translated &&
-      !isSourceLanguage &&
-      sourceLanguage !== undefined &&
-      sourceText.trim().length > 0 &&
-      (original !== undefined || !key.startsWith(":")),
+  return (key) => {
+    const original = findTranslation(sourceDictionaries, key);
+    const sourceText = original?.text ?? key;
+    const translated = findTranslation(targetDictionaries, key);
+
+    return {
+      text: translated?.text ?? sourceText,
+      language: translated?.language ?? original?.language ?? sourceLanguage,
+      sourceText,
+      sourceLanguage: original?.language ?? sourceLanguage,
+      shouldTranslate:
+        !translated &&
+        !isSourceLanguage &&
+        sourceLanguage !== undefined &&
+        sourceText.trim().length > 0 &&
+        (original !== undefined || !key.startsWith(":")),
+    };
   };
 }
 
@@ -129,35 +142,27 @@ export function collectBoardPhrases(
     }
   }
 
-  return new Map(
-    [...keys].map((key) => [key, resolvePhrase(source, key, targetLanguage)]),
-  );
+  const resolvePhrase = createPhraseResolver(source, targetLanguage);
+  return new Map([...keys].map((key) => [key, resolvePhrase(key)]));
 }
 
-export function applyResolvedPhrases(
-  board: Board,
+export function applyButtonPhrases(
+  buttons: readonly BoardButton[],
   phrases: ReadonlyMap<string, ResolvedPhrase>,
-): Board {
+): BoardButton[] {
   const lookup = (key: string | undefined) =>
     key === undefined ? undefined : phrases.get(key);
-  const name = lookup(board.name);
 
-  return {
-    ...board,
-    translations: undefined,
-    name: name?.text ?? board.name,
-    nameLanguage: name?.language,
-    buttons: board.buttons.map((button) => {
-      const label = lookup(button.label);
-      const vocalization = lookup(button.vocalization);
+  return buttons.map((button) => {
+    const label = lookup(button.label);
+    const vocalization = lookup(button.vocalization);
 
-      return {
-        ...button,
-        label: label?.text ?? button.label,
-        labelLanguage: label?.language,
-        vocalization: vocalization?.text ?? button.vocalization,
-        vocalizationLanguage: vocalization?.language,
-      };
-    }),
-  };
+    return {
+      ...button,
+      label: label?.text ?? button.label,
+      labelLanguage: label?.language,
+      vocalization: vocalization?.text ?? button.vocalization,
+      vocalizationLanguage: vocalization?.language,
+    };
+  });
 }

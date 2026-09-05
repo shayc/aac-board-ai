@@ -35,7 +35,7 @@ export {
   BoardNotFoundError,
   listBoards,
 } from "./storage/board-content-storage";
-export { hydrateBoard, hydrateBoardRecord } from "./storage/board-hydration";
+export { hydrateBoardRecord } from "./storage/board-hydration";
 export type {
   BoardMediaResource,
   HydratedBoard,

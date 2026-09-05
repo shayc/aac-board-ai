@@ -1,12 +1,7 @@
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../types";
-import {
-  BoardNotFoundError,
-  getAssetBlob,
-  getBoard,
-  type BoardRecord,
-} from "./board-content-storage";
+import { getAssetBlob, type BoardRecord } from "./board-content-storage";
 import { createObjectUrlRegistry, type ObjectUrlRegistry } from "./object-url";
 
 export interface BoardMediaResource {
@@ -17,19 +12,6 @@ export interface BoardMediaResource {
 export interface HydratedBoard {
   board: Board;
   media: BoardMediaResource;
-}
-
-export async function hydrateBoard(
-  setId: string,
-  boardId: string,
-  signal?: AbortSignal,
-): Promise<HydratedBoard> {
-  const record = await getBoard(setId, boardId);
-  if (!record) {
-    throw new BoardNotFoundError(setId, boardId);
-  }
-
-  return hydrateBoardRecord(record, signal);
 }
 
 export async function hydrateBoardRecord(

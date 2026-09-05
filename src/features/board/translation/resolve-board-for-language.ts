@@ -5,7 +5,7 @@ import {
 } from "../storage/board-content-storage";
 import type { Board } from "../types";
 import {
-  applyResolvedPhrases,
+  applyButtonPhrases,
   collectBoardPhrases,
   type BoardSummary,
   type ResolvedPhrase,
@@ -44,12 +44,18 @@ export async function resolveBoardForLanguage(
     generated: new Map<string, string>(),
   }));
 
-  const active = resolutions.find(
+  const activeIndex = resolutions.findIndex(
     ({ record }) => record.boardId === activeBoard.id,
   );
-  const prioritized = active
-    ? [active, ...resolutions.filter((resolution) => resolution !== active)]
-    : resolutions;
+  if (activeIndex === -1) {
+    throw new Error("Active board is missing from its source records");
+  }
+
+  const active = resolutions[activeIndex];
+  const prioritized = [
+    active,
+    ...resolutions.filter((resolution) => resolution !== active),
+  ];
   await translateWithinDeadline(prioritized, targetLanguage, signal);
   signal?.throwIfAborted();
 
@@ -73,6 +79,7 @@ export async function resolveBoardForLanguage(
     }
   }
 
+  // Source ordering stays stable across locale changes and duplicate translated names.
   const summaries = resolutions.map(({ record, phrases }) => {
     const name = record.obf.name ? phrases.get(record.obf.name) : undefined;
 
@@ -82,17 +89,14 @@ export async function resolveBoardForLanguage(
       nameLanguage: name?.language,
     };
   });
-  // Source ordering stays stable across locale changes and duplicate translated names.
-  const localized = active
-    ? applyResolvedPhrases(activeBoard, active.phrases)
-    : activeBoard;
-  const summary = summaries.find(({ boardId }) => boardId === activeBoard.id);
+  const { name, nameLanguage } = summaries[activeIndex];
 
   return {
     board: {
-      ...localized,
-      name: summary?.name ?? localized.name,
-      nameLanguage: summary?.nameLanguage,
+      ...activeBoard,
+      name,
+      nameLanguage,
+      buttons: applyButtonPhrases(activeBoard.buttons, active.phrases),
     },
     summaries,
     sourceLanguages: [...sourceLanguages].sort(),

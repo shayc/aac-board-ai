@@ -2,9 +2,9 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
-import { loadTestImageBlob, resetBoardsDB } from "../testing";
+import { hydrateBoard, loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
-import { hydrateBoard, type HydratedBoard } from "./board-hydration";
+import type { HydratedBoard } from "./board-hydration";
 import { createBoardSet } from "./board-set-storage";
 
 const SET_ID = "loader-test-set";

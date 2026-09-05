@@ -1,6 +1,5 @@
 import {
   DEFAULT_LANGUAGE,
-  getStoredLanguage,
   setStoredLanguage,
 } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
@@ -10,49 +9,32 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
-import { createBoardSet } from "../storage/board-set-storage";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { resetBoardsDB } from "../testing";
+import type { BoardSummary } from "../translation/board-translations";
 import { BoardSelector } from "./board-selector";
-import {
-  listBoards,
-  updateBoardStrings,
-} from "../storage/board-content-storage";
-import { obfToBoard } from "../obf/obf-to-board";
-import {
-  resolveBoardForLanguage,
-  type LocalizedBoardContent,
-} from "../translation/resolve-board-for-language";
+
+const BOARD_SUMMARIES: BoardSummary[] = [
+  { boardId: "animals", name: "Animals", nameLanguage: "en" },
+  { boardId: "food", name: "Food", nameLanguage: "en" },
+  { boardId: "root", name: "Home", nameLanguage: "en" },
+];
 
 function SelectorRoute() {
-  const { summaries } = useLoaderData<LocalizedBoardContent>();
+  const summaries = useLoaderData<BoardSummary[]>();
   return <BoardSelector boards={summaries} />;
 }
 
-async function renderSelector(initialPath: string) {
+async function renderSelector(
+  initialPath: string,
+  initialSummaries = BOARD_SUMMARIES,
+) {
+  let currentSummaries = initialSummaries;
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:setId/boards/:boardId",
         Component: SelectorRoute,
-        loader: async ({ params, request }) => {
-          const records = await listBoards(params.setId ?? "");
-          records.sort((left, right) =>
-            left.name.localeCompare(right.name, "en"),
-          );
-          const source = records.find(
-            (record) => record.boardId === params.boardId,
-          );
-          if (!source) {
-            throw new Error("Missing test board");
-          }
-
-          return resolveBoardForLanguage(
-            obfToBoard(source.obf),
-            records,
-            getStoredLanguage(),
-            request.signal,
-          );
-        },
+        loader: () => currentSummaries,
       },
     ],
     { initialEntries: [initialPath] },
@@ -64,52 +46,37 @@ async function renderSelector(initialPath: string) {
     </AppProviders>,
   );
 
-  return { router, screen };
+  function updateBoards(summaries: BoardSummary[]) {
+    currentSummaries = summaries;
+    return router.revalidate();
+  }
+
+  return { router, screen, updateBoards };
 }
 
 beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
   await resetBoardsDB();
-  await createBoardSet({
-    boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
-    boards: [
-      {
-        boardId: "root",
-        name: "Home",
-        obf: makeOBFBoard({ id: "root", name: "Home" }),
-      },
-      {
-        boardId: "animals",
-        name: "Animals",
-        obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-      },
-      {
-        boardId: "food",
-        name: "Food",
-        obf: makeOBFBoard({ id: "food", name: "Food" }),
-      },
-    ],
-    assets: [],
-  });
 });
 
 describe("BoardSelector", () => {
   test("keeps a filtered keyboard target while new names arrive, including duplicate names", async () => {
-    for (const [id, name] of [
-      ["root", "Home"],
-      ["animals", "Animals"],
-      ["food", "Food"],
-    ]) {
-      await updateBoardStrings("set-1", id, "es", { [name]: "Igual" });
-    }
-    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    const { router, screen, updateBoards } = await renderSelector(
+      "/sets/set-1/boards/root",
+    );
     await screen.getByRole("combobox").fill("ani");
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .toBeVisible();
 
     setStoredLanguage("es");
-    await router.revalidate();
+    await updateBoards(
+      BOARD_SUMMARIES.map((summary) => ({
+        ...summary,
+        name: "Igual",
+        nameLanguage: "es",
+      })),
+    );
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("ani");
     await expect
@@ -128,7 +95,7 @@ describe("BoardSelector", () => {
       .element(screen.getByRole("option").nth(1))
       .toHaveAttribute("aria-selected", "false");
   });
-  test("opens the popup with boards listed alphabetically and the current board selected", async () => {
+  test("opens the popup in the supplied order with the current board selected", async () => {
     const { screen } = await renderSelector("/sets/set-1/boards/root");
 
     await screen.getByRole("combobox").click();
@@ -204,38 +171,26 @@ describe("BoardSelector", () => {
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
   });
 
-  test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
-    await createBoardSet({
-      boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
-      boards: [
-        {
-          boardId: "root",
-          name: "Home",
-          obf: makeOBFBoard({
-            id: "root",
-            name: "Home",
-            strings: { es: { Home: "Inicio" } },
-          }),
-        },
-        {
-          boardId: "animals",
-          name: "Animals",
-          obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-        },
-      ],
-      assets: [],
-    });
-
+  test("displays supplied translated and fallback names with their languages", async () => {
     setStoredLanguage("es");
 
-    const { screen } = await renderSelector("/sets/set-2/boards/root");
+    const { screen } = await renderSelector("/sets/set-2/boards/root", [
+      { boardId: "animals", name: "Animals", nameLanguage: "en" },
+      { boardId: "root", name: "Inicio", nameLanguage: "es" },
+    ]);
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
+    await expect
+      .element(screen.getByRole("combobox"))
+      .toHaveAttribute("lang", "es");
 
     await screen.getByRole("combobox").click();
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .toBeInTheDocument();
+    await expect
+      .element(screen.getByText("Animals", { exact: true }))
+      .toHaveAttribute("lang", "en");
   });
 
   test("keeps the UI label language separate from a fallback board name during language changes", async () => {

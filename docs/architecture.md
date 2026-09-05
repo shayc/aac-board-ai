@@ -256,10 +256,11 @@ rerender only subscribers to the changed slice.
   production access goes through `src/features/board/storage/`.
 - **IndexedDB stores an OBF-shaped source model.** OBZ imports preserve source
   fields while enriching path-only `load_board` entries with resolved board IDs.
-  `updateBoardStrings` later adds cached locale entries to `obf.strings`;
-  `obfToBoard` maps those entries to `Board.translations`, indexed by target
-  locale → original board text → translated text. It derives the in-memory
-  model on every read so its shape can evolve without rewriting imported records.
+  `updateBoardStrings` later adds cached locale entries to `obf.strings`, indexed
+  by target locale → original OBF key → translated text. The resolver reads these
+  dictionaries directly from source records and applies resolved wording to the
+  runtime board. The in-memory model is derived on every read so its shape can
+  evolve without rewriting imported records.
 - **Board presentation is loader-owned.** One result supplies the active board
   and switcher names for the requested language. Hydration and bounded
   optional translation finish before the new route renders. Its media remains
