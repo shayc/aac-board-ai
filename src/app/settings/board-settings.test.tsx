@@ -25,6 +25,9 @@ describe("BoardSettings", () => {
 
     await expect.element(saturationSlider).toBeVisible();
     expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe("1");
+    await expect
+      .element(saturationSlider)
+      .toHaveAttribute("aria-valuetext", "100%");
     await expect.element(screen.getByText("100%")).toBeVisible();
 
     await expect.element(bordersSwitch).not.toBeChecked();

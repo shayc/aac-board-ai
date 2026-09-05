@@ -3,6 +3,7 @@ import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { assertNever } from "@shared/utils/assert-never";
 import type { SuggestionStatusView } from "./derive-suggestion-status";
 
 interface SuggestionStatusProps {
@@ -43,6 +44,6 @@ export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
         </Typography>
       );
     default:
-      return status satisfies never;
+      return assertNever(status);
   }
 }

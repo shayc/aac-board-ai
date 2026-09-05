@@ -62,24 +62,20 @@ describe("SpeechSettings", () => {
 
     await expect
       .element(screen.getByRole("slider", { name: "Rate" }))
-      .toBeInTheDocument();
+      .toHaveAttribute("aria-valuetext", "1x");
     await expect
       .element(screen.getByRole("slider", { name: "Pitch" }))
-      .toBeInTheDocument();
+      .toHaveAttribute("aria-valuetext", "1x");
     await expect
       .element(screen.getByRole("slider", { name: "Speech volume" }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("group", { name: "Rate" }).getByText("1x"))
-      .toBeVisible();
-    await expect
-      .element(screen.getByRole("group", { name: "Pitch" }).getByText("1x"))
-      .toBeVisible();
-    await expect
-      .element(
-        screen.getByRole("group", { name: "Speech volume" }).getByText("100%"),
-      )
-      .toBeVisible();
+      .toHaveAttribute("aria-valuetext", "100%");
+
+    const multiplierLabels = screen.getByText("1x").all();
+    expect(multiplierLabels).toHaveLength(2);
+    for (const label of multiplierLabels) {
+      await expect.element(label).toBeVisible();
+    }
+    await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
       .element(screen.getByRole("switch", { name: "Highlight spoken words" }))
       .not.toBeChecked();

@@ -5,15 +5,11 @@ import {
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
@@ -29,6 +25,8 @@ import {
   useSpeechConfig,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { SettingsSlider } from "./settings-slider";
+import { SettingsSwitch } from "./settings-switch";
 
 export function SpeechSettings() {
   const t = useTranslate();
@@ -117,43 +115,23 @@ export function SpeechSettings() {
 
       {speechControls.map(
         ({ id, label, value, min, max, onChange, formatValue }) => (
-          <Stack key={id} role="group" aria-label={label} spacing={0.5}>
-            <Stack
-              direction="row"
-              sx={{ justifyContent: "space-between", gap: 2 }}
-            >
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {label}
-              </Typography>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>
-                {formatValue(value)}
-              </Typography>
-            </Stack>
-            <Slider
-              aria-label={label}
-              getAriaValueText={formatValue}
-              value={value}
-              onChange={(_event, newValue) => onChange(newValue)}
-              min={min}
-              max={max}
-              step={0.1}
-            />
-          </Stack>
+          <SettingsSlider
+            key={id}
+            label={label}
+            value={value}
+            onChange={onChange}
+            min={min}
+            max={max}
+            step={0.1}
+            formatValue={formatValue}
+          />
         ),
       )}
 
-      <FormControlLabel
+      <SettingsSwitch
         label={t(m.playbackHighlight)}
-        control={
-          <Switch
-            checked={isMessagePartHighlightingEnabled}
-            onChange={(event) =>
-              setMessagePartHighlightingEnabled(event.target.checked)
-            }
-          />
-        }
-        labelPlacement="start"
-        sx={{ justifyContent: "space-between", m: 0 }}
+        checked={isMessagePartHighlightingEnabled}
+        onChange={setMessagePartHighlightingEnabled}
       />
 
       <Button

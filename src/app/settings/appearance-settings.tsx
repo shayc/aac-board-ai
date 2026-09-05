@@ -30,7 +30,7 @@ export function AppearanceSettings() {
         onChange={(event) =>
           setMode(event.target.value as "system" | "light" | "dark")
         }
-        row={true}
+        row
       >
         <FormControlLabel
           value="system"

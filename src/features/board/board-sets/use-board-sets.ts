@@ -2,16 +2,10 @@ import { useSyncExternalStore } from "react";
 import {
   getBoardSetsSnapshot,
   subscribeBoardSets,
-  type BoardSetRecord,
+  type BoardSetsSnapshot,
 } from "./board-sets-store";
 
-interface UseBoardSetsReturn {
-  boardSets: BoardSetRecord[];
-  isLoading: boolean;
-  error: Error | null;
-}
-
-export function useBoardSets(): UseBoardSetsReturn {
+export function useBoardSets(): BoardSetsSnapshot {
   const { boardSets, isLoading, error } = useSyncExternalStore(
     subscribeBoardSets,
     getBoardSetsSnapshot,

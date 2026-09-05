@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useState } from "react";
+import { useState, type MouseEvent } from "react";
 import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
@@ -38,11 +38,11 @@ export function BoardSetList({
     boardSet: BoardSetRecord;
   } | null>(null);
 
-  const menuOpen = Boolean(menuAnchor);
+  const isMenuOpen = Boolean(menuAnchor);
   const activeMenuSetId = menuAnchor?.boardSet.setId;
 
   function handleMenuOpen(
-    event: React.MouseEvent<HTMLElement>,
+    event: MouseEvent<HTMLElement>,
     boardSet: BoardSetRecord,
   ) {
     setMenuAnchor({ element: event.currentTarget, boardSet });
@@ -97,61 +97,24 @@ export function BoardSetList({
             },
           })}
         >
-          {boardSets.map((boardSet) => {
-            const isMenuOpen = activeMenuSetId === boardSet.setId;
-
-            return (
-              <ListItem
-                key={boardSet.setId}
-                data-menu-open={isMenuOpen || undefined}
-                secondaryAction={
-                  <Tooltip title={t(m.libraryMoreOptions)}>
-                    <IconButton
-                      aria-label={t(m.libraryMoreOptionsFor, {
-                        name: boardSet.name,
-                      })}
-                      aria-controls={isMenuOpen ? "board-set-menu" : undefined}
-                      aria-haspopup="menu"
-                      aria-expanded={isMenuOpen ? "true" : undefined}
-                      edge="end"
-                      onClick={(event) => handleMenuOpen(event, boardSet)}
-                      sx={{ border: "none" }}
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Tooltip>
-                }
-                disablePadding
-              >
-                <ListItemButton
-                  selected={boardSet.setId === selectedSetId}
-                  onClick={() => onSelect(boardSet)}
-                >
-                  <ListItemText
-                    primary={
-                      <Box
-                        sx={{
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        {boardSet.name}
-                      </Box>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
+          {boardSets.map((boardSet) => (
+            <BoardSetListItem
+              key={boardSet.setId}
+              name={boardSet.name}
+              isSelected={boardSet.setId === selectedSetId}
+              isMenuOpen={boardSet.setId === activeMenuSetId}
+              onSelect={() => onSelect(boardSet)}
+              onMenuOpen={(event) => handleMenuOpen(event, boardSet)}
+            />
+          ))}
         </List>
       </Box>
 
       <Menu
         id="board-set-menu"
-        anchorEl={menuAnchor?.element}
-        open={menuOpen}
+        open={isMenuOpen}
         onClose={handleMenuClose}
+        anchorEl={menuAnchor?.element}
       >
         <MenuItem onClick={handleShowDetails}>
           <ListItemIcon>
@@ -167,5 +130,61 @@ export function BoardSetList({
         </MenuItem>
       </Menu>
     </>
+  );
+}
+
+interface BoardSetListItemProps {
+  name: string;
+  isSelected: boolean;
+  isMenuOpen: boolean;
+  onSelect: () => void;
+  onMenuOpen: (event: MouseEvent<HTMLElement>) => void;
+}
+
+function BoardSetListItem({
+  name,
+  isSelected,
+  isMenuOpen,
+  onSelect,
+  onMenuOpen,
+}: BoardSetListItemProps) {
+  const t = useTranslate();
+
+  return (
+    <ListItem
+      data-menu-open={isMenuOpen || undefined}
+      secondaryAction={
+        <Tooltip title={t(m.libraryMoreOptions)}>
+          <IconButton
+            aria-label={t(m.libraryMoreOptionsFor, { name })}
+            aria-controls={isMenuOpen ? "board-set-menu" : undefined}
+            aria-haspopup="menu"
+            aria-expanded={isMenuOpen ? "true" : undefined}
+            edge="end"
+            onClick={onMenuOpen}
+            sx={{ border: "none" }}
+          >
+            <MoreVertIcon />
+          </IconButton>
+        </Tooltip>
+      }
+      disablePadding
+    >
+      <ListItemButton selected={isSelected} onClick={onSelect}>
+        <ListItemText
+          primary={
+            <Box
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {name}
+            </Box>
+          }
+        />
+      </ListItemButton>
+    </ListItem>
   );
 }
