@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useState, type MouseEvent } from "react";
+import { useId, useState } from "react";
 import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
@@ -33,6 +33,8 @@ export function BoardSetList({
   selectedSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
+  const menuId = useId();
+  const subheaderId = useId();
   const [menuAnchor, setMenuAnchor] = useState<{
     element: HTMLElement;
     boardSet: BoardSetRecord;
@@ -41,11 +43,8 @@ export function BoardSetList({
   const isMenuOpen = Boolean(menuAnchor);
   const activeMenuSetId = menuAnchor?.boardSet.setId;
 
-  function handleMenuOpen(
-    event: MouseEvent<HTMLElement>,
-    boardSet: BoardSetRecord,
-  ) {
-    setMenuAnchor({ element: event.currentTarget, boardSet });
+  function handleMenuOpen(element: HTMLElement, boardSet: BoardSetRecord) {
+    setMenuAnchor({ element, boardSet });
   }
 
   function handleMenuClose() {
@@ -70,48 +69,29 @@ export function BoardSetList({
 
   return (
     <>
-      <Box aria-labelledby="board-set-list-subheader" component="nav">
+      <Box aria-labelledby={subheaderId} component="nav">
         <List
           subheader={
-            <ListSubheader id="board-set-list-subheader">
-              {t(m.libraryBoards)}
-            </ListSubheader>
+            <ListSubheader id={subheaderId}>{t(m.libraryBoards)}</ListSubheader>
           }
-          sx={(theme) => ({
-            px: 1,
-            "@media (hover: hover)": {
-              [theme.breakpoints.up("md")]: {
-                "& .MuiListItemSecondaryAction-root": {
-                  opacity: 0,
-                  pointerEvents: "none",
-                  transition: theme.transitions.create("opacity", {
-                    duration: theme.transitions.duration.shortest,
-                  }),
-                  "@media (prefers-reduced-motion: reduce)": {
-                    transition: "none",
-                  },
-                },
-                "& .MuiListItem-root:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
-                  { opacity: 1, pointerEvents: "auto" },
-              },
-            },
-          })}
+          sx={{ px: 1 }}
         >
           {boardSets.map((boardSet) => (
             <BoardSetListItem
               key={boardSet.setId}
+              menuId={menuId}
               name={boardSet.name}
               isSelected={boardSet.setId === selectedSetId}
               isMenuOpen={boardSet.setId === activeMenuSetId}
               onSelect={() => onSelect(boardSet)}
-              onMenuOpen={(event) => handleMenuOpen(event, boardSet)}
+              onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />
           ))}
         </List>
       </Box>
 
       <Menu
-        id="board-set-menu"
+        id={menuId}
         open={isMenuOpen}
         onClose={handleMenuClose}
         anchorEl={menuAnchor?.element}
@@ -134,14 +114,16 @@ export function BoardSetList({
 }
 
 interface BoardSetListItemProps {
+  menuId: string;
   name: string;
   isSelected: boolean;
   isMenuOpen: boolean;
   onSelect: () => void;
-  onMenuOpen: (event: MouseEvent<HTMLElement>) => void;
+  onMenuOpen: (element: HTMLElement) => void;
 }
 
 function BoardSetListItem({
+  menuId,
   name,
   isSelected,
   isMenuOpen,
@@ -157,11 +139,11 @@ function BoardSetListItem({
         <Tooltip title={t(m.libraryMoreOptions)}>
           <IconButton
             aria-label={t(m.libraryMoreOptionsFor, { name })}
-            aria-controls={isMenuOpen ? "board-set-menu" : undefined}
+            aria-controls={isMenuOpen ? menuId : undefined}
             aria-haspopup="menu"
             aria-expanded={isMenuOpen ? "true" : undefined}
             edge="end"
-            onClick={onMenuOpen}
+            onClick={(event) => onMenuOpen(event.currentTarget)}
             sx={{ border: "none" }}
           >
             <MoreVertIcon />
@@ -169,6 +151,24 @@ function BoardSetListItem({
         </Tooltip>
       }
       disablePadding
+      sx={(theme) => ({
+        "@media (hover: hover)": {
+          [theme.breakpoints.up("md")]: {
+            "& .MuiListItemSecondaryAction-root": {
+              opacity: 0,
+              pointerEvents: "none",
+              transition: theme.transitions.create("opacity", {
+                duration: theme.transitions.duration.shortest,
+              }),
+              "@media (prefers-reduced-motion: reduce)": {
+                transition: "none",
+              },
+            },
+            "&:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
+              { opacity: 1, pointerEvents: "auto" },
+          },
+        },
+      })}
     >
       <ListItemButton selected={isSelected} onClick={onSelect}>
         <ListItemText
