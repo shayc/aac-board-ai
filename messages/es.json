@@ -99,7 +99,7 @@
   "speechVolume": "Volumen de voz",
   "speechPreview": "Escuchar",
   "speechVoicePreview": "¡Hola, esta es mi voz!",
-  "playbackHighlight": "Resaltar palabras pronunciadas",
+  "playbackHighlight": "Resaltar el mensaje mientras se reproduce",
   "tileSaturation": "Intensidad de color de las casillas",
   "tileBorders": "Mostrar bordes de las casillas",
   "tileLabelPosition": "Etiquetas de las casillas",

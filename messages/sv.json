@@ -99,7 +99,7 @@
   "speechVolume": "Talvolym",
   "speechPreview": "Lyssna",
   "speechVoicePreview": "Hej, det här är min röst!",
-  "playbackHighlight": "Markera talade ord",
+  "playbackHighlight": "Markera meddelandet medan det spelas upp",
   "tileSaturation": "Färgintensitet för rutor",
   "tileBorders": "Visa kantlinjer på rutor",
   "tileLabelPosition": "Rutornas etiketter",

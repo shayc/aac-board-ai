@@ -151,13 +151,12 @@ sequenceDiagram
 
 ### Activate a tile
 
-Every activation becomes a typed intent before it changes state or produces
-output:
-
-1. A tile activation goes through `resolveButtonIntents`, yielding `navigate`,
-   `composeAndPlay`, or `runAction`.
-2. `activateButton` dispatches the intents by updating the message, navigating,
-   or submitting playable content.
+1. `activateButton` navigates immediately when a tile links to another board.
+   Otherwise, it runs the tile's actions in order, or composes and plays a new
+   message part when the tile has no actions.
+2. Actions update the pending message in sequence. A speak action captures the
+   message at that point; later mutations commit only after playback completes,
+   keeping the spoken message visible and preserving it if playback is interrupted.
 3. The board playback adapter calls `planPlayback`; the app-wide playback
    coordinator serializes speech and recorded audio and publishes progress for
    per-part highlighting.

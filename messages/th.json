@@ -99,7 +99,7 @@
   "speechVolume": "ระดับเสียงพูด",
   "speechPreview": "ฟัง",
   "speechVoicePreview": "สวัสดี นี่คือเสียงของฉัน!",
-  "playbackHighlight": "ไฮไลต์คำที่พูด",
+  "playbackHighlight": "ไฮไลต์ข้อความขณะเล่น",
   "tileSaturation": "ความเข้มของสีไทล์",
   "tileBorders": "แสดงขอบไทล์",
   "tileLabelPosition": "ป้ายกำกับไทล์",

@@ -99,7 +99,7 @@
   "speechVolume": "音声の音量",
   "speechPreview": "試聴",
   "speechVoicePreview": "こんにちは、これが私の声です！",
-  "playbackHighlight": "読み上げ中の単語をハイライト",
+  "playbackHighlight": "再生中のメッセージをハイライト",
   "tileSaturation": "タイルの色の濃さ",
   "tileBorders": "タイルの枠線を表示",
   "tileLabelPosition": "タイルのラベル",
