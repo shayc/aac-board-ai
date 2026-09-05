@@ -45,7 +45,7 @@ export {
   useBoardSuggestionConfig,
 } from "./suggestions/suggestion-config-store";
 export type { BoardSummary } from "./translation/board-translations";
-export { prepareBoardLanguage } from "./translation/prepare-board-language";
+export { prepareBoardTranslationModels } from "./translation/prepare-board-translation-models";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 export type { LocalizedBoardContent } from "./translation/resolve-board-for-language";
 

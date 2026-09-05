@@ -28,14 +28,16 @@ describe("board phrase resolution", () => {
     expect(resolvePhrase(source, "Hello", "fr-CA")).toMatchObject({
       text: "Allô",
       language: "fr-CA",
-      isMissing: false,
+      shouldTranslate: false,
     });
     expect(resolvePhrase(source, "Food", "fr-CA")).toMatchObject({
       text: "Nourriture",
       language: "fr",
     });
     expect(resolvePhrase(source, "Bye", "fr-CA").text).toBe("Au revoir");
-    expect(resolvePhrase(source, "Unknown", "fr-CA").isMissing).toBe(true);
+    expect(resolvePhrase(source, "Unknown", "fr-CA").shouldTranslate).toBe(
+      true,
+    );
   });
 
   test("does not use an incompatible Chinese script", () => {
@@ -43,7 +45,7 @@ describe("board phrase resolution", () => {
     expect(resolvePhrase(source, "Hello", "zh-Hant")).toMatchObject({
       text: "Hello",
       language: "en",
-      isMissing: true,
+      shouldTranslate: true,
     });
   });
 
@@ -79,18 +81,20 @@ describe("board phrase resolution", () => {
     expect(source.buttons[0].label).toBe(":time");
     expect(resolvePhrase(source, ":utterance", "es")).toMatchObject({
       sourceText: "What time is it?",
-      isMissing: true,
+      shouldTranslate: true,
     });
   });
 
   test("own dictionary keys and identity translations count as covered", () => {
     const source = makeOBFBoard({ strings: { es: { Oslo: "Oslo" } } });
-    expect(resolvePhrase(source, "Oslo", "es").isMissing).toBe(false);
+    expect(resolvePhrase(source, "Oslo", "es").shouldTranslate).toBe(false);
     expect(resolvePhrase(source, "toString", "es")).toMatchObject({
       text: "toString",
-      isMissing: true,
+      shouldTranslate: true,
     });
-    expect(resolvePhrase(source, ":unresolved", "es").isMissing).toBe(false);
+    expect(resolvePhrase(source, ":unresolved", "es").shouldTranslate).toBe(
+      false,
+    );
   });
 
   test("name requests do not collect tile text or a missing-name identifier", () => {

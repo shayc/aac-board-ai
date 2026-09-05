@@ -24,8 +24,8 @@ import {
 } from "../translation/resolve-board-for-language";
 
 function SelectorRoute() {
-  const { boards } = useLoaderData<LocalizedBoardContent>();
-  return <BoardSelector boards={boards} />;
+  const { summaries } = useLoaderData<LocalizedBoardContent>();
+  return <BoardSelector boards={summaries} />;
 }
 
 async function renderSelector(initialPath: string) {
@@ -236,5 +236,35 @@ describe("BoardSelector", () => {
     await expect
       .element(screen.getByRole("option", { name: "Animals" }))
       .toBeInTheDocument();
+  });
+
+  test("keeps the UI label language separate from a fallback board name during language changes", async () => {
+    const { screen } = await renderSelector("/sets/set-1/boards/root");
+    await expect
+      .element(screen.getByRole("combobox", { name: "Board" }))
+      .toHaveValue("Home");
+
+    setStoredLanguage("es");
+    const selector = screen.getByRole("combobox", { name: "Tablero" });
+    await expect.element(selector).toHaveValue("Home");
+    await expect.element(selector).toHaveAttribute("lang", "en");
+
+    const labelId = selector.element().getAttribute("aria-labelledby") ?? "";
+    const label = document.getElementById(labelId);
+    await expect.element(label).toHaveTextContent("Tablero");
+    await expect.element(label).toHaveAttribute("lang", "es");
+
+    await selector.click();
+    await screen.getByRole("option", { name: "Animals" }).click();
+    await expect.element(selector).toHaveValue("Animals");
+    await expect.element(selector).toHaveAttribute("lang", "en");
+    await expect.element(label).toHaveAttribute("lang", "es");
+
+    setStoredLanguage("es-MX");
+    await expect
+      .element(screen.getByRole("combobox", { name: "Board" }))
+      .toHaveValue("Animals");
+    await expect.element(label).toHaveTextContent("Board");
+    await expect.element(label).toHaveAttribute("lang", "en");
   });
 });

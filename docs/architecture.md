@@ -107,7 +107,7 @@ React Router loaders prepare the active board before its route renders:
    assets only for the active record, creates provisional object URLs, and maps
    it through `obfToBoard` into the in-memory `Board`.
 3. `resolveBoardForLanguage` resolves the active board's text and every board
-   name into one route snapshot, including the requested language. Supplied and
+   name into one route snapshot for the requested language. Supplied and
    cached phrases apply individually; missing phrases use prepared Translator
    pairs within a shared one-second optional wait. Successful phrases survive
    unrelated failures or the deadline. Source/cached wording fills remaining
@@ -136,7 +136,7 @@ sequenceDiagram
     Router->>Storage: Read set records, hydrate active record
     Storage->>Storage: Load active assets, create media URLs
     Storage-->>Router: Source records + Board + provisional media
-    Router->>Translation: Resolve active text and set names for requested language
+    Router->>Translation: Resolve active text and all board names for requested language
     Translation->>Translation: Resolve source tokens and cached target phrases
 
     opt Missing text with prepared language pairs
@@ -145,7 +145,7 @@ sequenceDiagram
         Translation->>Storage: Merge cache with source check (not awaited)
     end
 
-    Translation-->>Router: Localized Board + summaries + requested language
+    Translation-->>Router: Localized Board + summaries + source languages
     Router-->>Route: Shared snapshot + provisional media
     Route->>Route: Commit media, dispose previous
 
@@ -261,7 +261,7 @@ rerender only subscribers to the changed slice.
   locale → original board text → translated text. It derives the in-memory
   model on every read so its shape can evolve without rewriting imported records.
 - **Board presentation is loader-owned.** One result supplies the active board
-  and switcher names, together with the requested language. Hydration and bounded
+  and switcher names for the requested language. Hydration and bounded
   optional translation finish before the new route renders. Its media remains
   provisional until the route commits, and leaving the route releases the
   committed media. Summaries do not independently read storage or request AI.

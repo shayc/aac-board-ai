@@ -16,8 +16,7 @@ export const TRANSLATION_WAIT_MS = 1_000;
 
 export interface LocalizedBoardContent {
   board: Board;
-  boards: BoardSummary[];
-  language: string;
+  summaries: BoardSummary[];
   sourceLanguages: string[];
 }
 
@@ -31,7 +30,7 @@ interface BoardResolution {
 export async function resolveBoardForLanguage(
   activeBoard: Board,
   records: readonly BoardRecord[],
-  language: string,
+  targetLanguage: string,
   signal?: AbortSignal,
 ): Promise<LocalizedBoardContent> {
   signal?.throwIfAborted();
@@ -40,7 +39,7 @@ export async function resolveBoardForLanguage(
     phrases: collectBoardPhrases(
       record.obf,
       record.boardId === activeBoard.id,
-      language,
+      targetLanguage,
     ),
     generated: new Map<string, string>(),
   }));
@@ -51,7 +50,7 @@ export async function resolveBoardForLanguage(
   const prioritized = active
     ? [active, ...resolutions.filter((resolution) => resolution !== active)]
     : resolutions;
-  await translateWithinDeadline(prioritized, language, signal);
+  await translateWithinDeadline(prioritized, targetLanguage, signal);
   signal?.throwIfAborted();
 
   const sourceLanguages = new Set<string>();
@@ -67,7 +66,7 @@ export async function resolveBoardForLanguage(
       void updateBoardStrings(
         record.setId,
         record.boardId,
-        language,
+        targetLanguage,
         Object.fromEntries(generated),
         record.obf,
       ).catch(() => undefined);
@@ -95,15 +94,14 @@ export async function resolveBoardForLanguage(
       name: summary?.name ?? localized.name,
       nameLanguage: summary?.nameLanguage,
     },
-    boards: summaries,
-    language,
+    summaries,
     sourceLanguages: [...sourceLanguages].sort(),
   };
 }
 
 async function translateWithinDeadline(
   resolutions: BoardResolution[],
-  language: string,
+  targetLanguage: string,
   requestSignal?: AbortSignal,
 ): Promise<void> {
   const controller = new AbortController();
@@ -121,7 +119,7 @@ async function translateWithinDeadline(
 
   try {
     await Promise.race([
-      translateMissingPhrases(resolutions, language, signal),
+      translateMissingPhrases(resolutions, targetLanguage, signal),
       stopped,
     ]);
   } finally {
@@ -141,7 +139,7 @@ async function translateMissingPhrases(
   >();
   for (const resolution of resolutions) {
     for (const [key, phrase] of resolution.phrases) {
-      if (!phrase.isMissing || !phrase.sourceLanguage) {
+      if (!phrase.shouldTranslate || !phrase.sourceLanguage) {
         continue;
       }
       const requests = groups.get(phrase.sourceLanguage) ?? [];
@@ -182,7 +180,7 @@ async function translateMissingPhrases(
             ...phrase,
             text,
             language: targetLanguage,
-            isMissing: false,
+            shouldTranslate: false,
           });
           resolution.generated.set(key, text);
         } catch {

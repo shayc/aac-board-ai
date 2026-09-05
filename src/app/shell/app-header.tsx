@@ -71,7 +71,7 @@ export function AppHeader({
           {loadedBoard && (
             <BoardSelector
               key={loadedBoard.setId}
-              boards={loadedBoard.boards}
+              boards={loadedBoard.summaries}
             />
           )}
         </Box>

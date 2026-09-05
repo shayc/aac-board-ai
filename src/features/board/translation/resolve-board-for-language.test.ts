@@ -111,13 +111,12 @@ describe("resolveBoardForLanguage", () => {
       "es",
     );
 
-    expect(result.board.name).toBe(result.boards[0].name);
-    expect(result.boards.map(({ name }) => name)).toEqual([
+    expect(result.board.name).toBe(result.summaries[0].name);
+    expect(result.summaries.map(({ name }) => name)).toEqual([
       "[es] Food",
       "[es] Animals",
       "identifier",
     ]);
-    expect(result.language).toBe("es");
     expect(create).toHaveBeenCalledOnce();
     expect(translate.mock.calls.map(([input]) => input)).toEqual([
       "Food",
@@ -168,7 +167,7 @@ describe("resolveBoardForLanguage", () => {
     stubTranslator((input) => `[es] ${input}`);
     const result = await resolve(makeRecord());
     expect(result.board.name).toBe("[es] Food");
-    expect(result.boards[0].name).toBe("[es] Food");
+    expect(result.summaries[0].name).toBe("[es] Food");
     expect(await getBoard("set-1", "board-1")).toBeUndefined();
   });
 

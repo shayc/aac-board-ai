@@ -7,7 +7,7 @@ export interface ResolvedPhrase {
   language?: string;
   sourceText: string;
   sourceLanguage?: string;
-  isMissing: boolean;
+  shouldTranslate: boolean;
 }
 
 export interface BoardSummary {
@@ -84,22 +84,22 @@ function rankLocale(locale: string, target: string): number {
 export function resolvePhrase(
   source: OBFBoard,
   key: string,
-  language: string,
+  targetLanguage: string,
 ): ResolvedPhrase {
   const sourceLanguage = getSourceLanguage(source.locale);
   const original = findTranslation(source.strings, sourceLanguage, key);
   const sourceText = original?.text ?? key;
-  const translated = findTranslation(source.strings, language, key);
+  const translated = findTranslation(source.strings, targetLanguage, key);
   const isSourceLanguage =
     sourceLanguage !== undefined &&
-    areLanguagesCompatible(sourceLanguage, language);
+    areLanguagesCompatible(sourceLanguage, targetLanguage);
 
   return {
     text: translated?.text ?? sourceText,
     language: translated?.language ?? original?.language ?? sourceLanguage,
     sourceText,
     sourceLanguage: original?.language ?? sourceLanguage,
-    isMissing:
+    shouldTranslate:
       !translated &&
       !isSourceLanguage &&
       sourceLanguage !== undefined &&
@@ -111,7 +111,7 @@ export function resolvePhrase(
 export function collectBoardPhrases(
   source: OBFBoard,
   includeButtons: boolean,
-  language: string,
+  targetLanguage: string,
 ): Map<string, ResolvedPhrase> {
   const keys = new Set<string>();
   if (source.name?.trim()) {
@@ -130,7 +130,7 @@ export function collectBoardPhrases(
   }
 
   return new Map(
-    [...keys].map((key) => [key, resolvePhrase(source, key, language)]),
+    [...keys].map((key) => [key, resolvePhrase(source, key, targetLanguage)]),
   );
 }
 

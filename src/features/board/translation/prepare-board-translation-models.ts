@@ -2,16 +2,16 @@ import { checkAvailability, createTranslator } from "@shayc/react-built-in-ai";
 import { areLanguagesCompatible } from "./board-translations";
 
 /** Call directly from language selection, before any storage reads lose activation. */
-export async function prepareBoardLanguage(
+export async function prepareBoardTranslationModels(
   sourceLanguages: readonly string[],
   targetLanguage: string,
   signal: AbortSignal,
 ): Promise<boolean> {
-  const pairs = sourceLanguages.filter(
+  const sourceLanguagesToPrepare = sourceLanguages.filter(
     (sourceLanguage) => !areLanguagesCompatible(sourceLanguage, targetLanguage),
   );
   const results = await Promise.allSettled(
-    pairs.map(async (sourceLanguage) => {
+    sourceLanguagesToPrepare.map(async (sourceLanguage) => {
       const options = { sourceLanguage, targetLanguage };
       const availability = await checkAvailability("Translator", options);
       signal.throwIfAborted();
