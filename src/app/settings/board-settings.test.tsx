@@ -17,7 +17,7 @@ describe("BoardSettings", () => {
       name: "Tile color intensity",
     });
     const labelPositionGroup = screen.getByRole("radiogroup", {
-      name: "Tile label position",
+      name: "Tile labels",
     });
     const bordersSwitch = screen.getByRole("switch", {
       name: "Show tile borders",
@@ -25,14 +25,17 @@ describe("BoardSettings", () => {
 
     await expect.element(saturationSlider).toBeVisible();
     expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe("1");
+    await expect
+      .element(saturationSlider)
+      .toHaveAttribute("aria-valuetext", "100%");
     await expect.element(screen.getByText("100%")).toBeVisible();
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Top" }))
+      .element(screen.getByRole("radio", { name: "Above image" }))
       .toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Bottom" }))
+      .element(screen.getByRole("radio", { name: "Below image" }))
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("radio", { name: "Hidden" }))
@@ -106,18 +109,33 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("changing the tile label position persists the selection", async () => {
+  test("changing the tile label position updates repeated controls and persists", async () => {
     const screen = await render(
       <AppProviders>
+        <BoardSettings />
         <BoardSettings />
       </AppProviders>,
     );
 
-    const bottomRadio = screen.getByRole("radio", { name: "Bottom" });
+    const groups = screen
+      .getByRole("radiogroup", { name: "Tile labels" })
+      .all();
+    expect(groups).toHaveLength(2);
+    expect(
+      new Set(
+        groups.map((group) => group.element().getAttribute("aria-labelledby")),
+      ).size,
+    ).toBe(2);
+
+    const bottomRadio = groups[0].getByRole("radio", { name: "Below image" });
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();
-    await expect.element(bottomRadio).toBeChecked();
+    for (const group of groups) {
+      await expect
+        .element(group.getByRole("radio", { name: "Below image" }))
+        .toBeChecked();
+    }
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-appearance");

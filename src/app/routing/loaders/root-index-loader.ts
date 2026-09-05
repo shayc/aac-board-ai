@@ -4,7 +4,7 @@ import {
   importBoardFromUrl,
 } from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
-import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
+import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 
 const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
@@ -20,7 +20,7 @@ async function importFromBoardUrl(boardUrl: string): Promise<Response> {
 }
 
 function importFailed() {
-  return data(createLocalizedRouteError(routeErrorCodes.boardUrlImportFailed), {
+  return data(createRouteErrorPayload(routeErrorCodes.boardUrlImportFailed), {
     status: 400,
   });
 }

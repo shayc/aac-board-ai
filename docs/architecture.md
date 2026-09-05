@@ -105,7 +105,7 @@ React Router loaders prepare the active board before its route renders:
 1. Navigate to `/sets/:setId/boards/:boardId`.
 2. `hydrateBoard` reads the stored OBF and asset blobs, creates provisional media
    object URLs, and maps them through `obfToBoard` into the in-memory `Board`.
-3. `resolveTranslatedBoard` uses the original language or a cached translation
+3. `resolveBoardForLanguage` uses the original language or a cached translation
    when possible; otherwise it attempts optional translation. A successful
    translation is returned without waiting for the best-effort IndexedDB cache
    write. Failure returns the untranslated board.
@@ -255,8 +255,9 @@ rerender only subscribers to the changed slice.
 - **IndexedDB stores an OBF-shaped source model.** OBZ imports preserve source
   fields while enriching path-only `load_board` entries with resolved board IDs.
   `updateBoardStrings` later adds cached locale entries to `obf.strings`;
-  `obfToBoard` derives the in-memory model on every read so its shape can evolve
-  without rewriting imported records.
+  `obfToBoard` maps those entries to `Board.translations`, indexed by target
+  locale → original board text → translated text. It derives the in-memory
+  model on every read so its shape can evolve without rewriting imported records.
 - **The active board is loader-owned.** Hydration and optional translation finish
   before the new route renders. Its media remains provisional until the route
   commits, and leaving the route releases the committed media. Ancillary board

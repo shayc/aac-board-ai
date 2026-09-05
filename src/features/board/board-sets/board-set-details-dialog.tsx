@@ -23,14 +23,8 @@ export function BoardSetDetailsDialog({
   const chipLabels = boardSet ? buildChipLabels(t, boardSet) : [];
 
   return (
-    <Dialog
-      aria-labelledby="details-dialog-title"
-      open={boardSet !== null}
-      onClose={onClose}
-      fullWidth
-      maxWidth="sm"
-    >
-      <DialogTitle id="details-dialog-title">
+    <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>
         {boardSet?.name}
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>

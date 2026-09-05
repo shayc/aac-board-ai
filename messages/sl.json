@@ -18,7 +18,7 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Uvažanje datoteke tabele...",
+        "countPlural=one": "Uvažanje datoteke table...",
         "countPlural=*": "Uvažanje datotek tabel..."
       }
     }
@@ -38,7 +38,7 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Datoteke tabele ni bilo mogoče uvoziti",
+        "countPlural=one": "Datoteke table ni bilo mogoče uvoziti",
         "countPlural=*": "Datotek tabel ni bilo mogoče uvoziti"
       }
     }
@@ -48,7 +48,7 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Datoteka tabele je prevelika za uvoz",
+        "countPlural=one": "Datoteka table je prevelika za uvoz",
         "countPlural=*": "Datoteke tabel so prevelike za uvoz"
       }
     }
@@ -68,7 +68,7 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tabela v tem kompletu bo izbrisana. Tega dejanja ni mogoče razveljaviti.",
+        "countPlural=one": "Tabla v tem kompletu bo izbrisana. Tega dejanja ni mogoče razveljaviti.",
         "countPlural=*": "Vseh {count} tabel v tem kompletu bo izbrisanih. Tega dejanja ni mogoče razveljaviti."
       }
     }
@@ -91,10 +91,10 @@
   "themeLight": "Svetla",
   "themeDark": "Temna",
   "languageLabel": "Jezik",
-  "languageDownloading": "Prenašanje jezika",
-  "languageDownloadProgress": "{progress} % dokončano...",
+  "languageDownloading": "Prenašanje prevajalskega modela...",
+  "languageDownloadProgress": "{progress} % dokončano",
   "speechVoice": "Glas",
-  "speechRate": "Hitrost",
+  "speechRate": "Hitrost govora",
   "speechPitch": "Višina",
   "speechVolume": "Glasnost govora",
   "speechPreview": "Poslušaj",
@@ -102,12 +102,12 @@
   "playbackHighlight": "Označi izgovorjene besede",
   "tileSaturation": "Intenzivnost barve ploščic",
   "tileBorders": "Prikaži obrobe ploščic",
-  "tileLabelPosition": "Položaj oznake ploščice",
-  "tileLabelTop": "Zgoraj",
-  "tileLabelBottom": "Spodaj",
-  "tileLabelHidden": "Skrita",
+  "tileLabelPosition": "Oznake ploščic",
+  "tileLabelTop": "Nad sliko",
+  "tileLabelBottom": "Pod sliko",
+  "tileLabelHidden": "Skrite",
   "aiCustomInstructions": "Navodila po meri",
-  "aiCustomInstructionsPlaceholder": "npr. govori sarkastičnim tonom",
+  "aiCustomInstructionsPlaceholder": "Uporabi kratke povedi in vsakdanje besede",
   "aiCustomInstructionsHelper": "Oblikujte predloge s svojimi besedami.",
   "suggestionsUnsupported": "Predlogi zahtevajo vgrajeno umetno inteligenco, nastavljeno v namiznem Chromu ali Edgeu.",
   "suggestionsEnable": "Vklopi predloge",
@@ -117,11 +117,11 @@
   "navBack": "Nazaj",
   "navHome": "Pojdi domov",
   "messageBackspace": "Briši",
-  "messageBackspaceLongPressHint": "Za izbris sporočila pridržite.",
+  "messageBackspaceLongPressHint": "Pritisnite in pridržite za izbris sporočila.",
   "messagePlay": "Predvajaj sporočilo",
-  "messageStop": "Ustavi",
-  "onboardingSmartRewritingDescription": "Razširite dotike ploščic v naravne stavke in prilagodite ton: neposreden, profesionalen ali prijazen.",
-  "onboardingTranslationDescription": "Prevajajte table lokalno za komunikacijo v več jezikih.",
+  "messageStop": "Ustavi sporočilo",
+  "onboardingSmartRewritingDescription": "Povejte več z manj dotiki. Umetna inteligenca pomaga, da vaša sporočila zvenijo jasno in naravno.",
+  "onboardingTranslationDescription": "Komunicirajte v različnih jezikih neposredno s svoje table.",
   "onboardingPrivacyDescription": "Brez računov in sledenja v aplikaciji. Sestavljajte sporočila brez povezave.",
   "onboardingContinue": "Nadaljuj",
   "errorGenericTitle": "Nekaj je šlo narobe",
@@ -129,5 +129,5 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "boardUrlImportFailed": "Datoteke tabele ni bilo mogoče uvoziti s povezave"
+  "boardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
 }

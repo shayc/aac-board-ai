@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { toPhrases } from "./to-phrases";
+import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 
-describe("toPhrases", () => {
+describe("selectSuggestionPhrases", () => {
   test("combines candidates, dropping duplicates and the original text", () => {
     expect(
-      toPhrases("want eat", [
+      selectSuggestionPhrases("want eat", [
         "I want to eat.",
         "I would like to eat.",
         "I want to eat.",
@@ -14,14 +14,18 @@ describe("toPhrases", () => {
   });
 
   test("ignores empty candidate slots", () => {
-    expect(toPhrases("want eat", [undefined, "I want to eat."])).toEqual([
-      "I want to eat.",
-    ]);
+    expect(
+      selectSuggestionPhrases("want eat", [undefined, "I want to eat."]),
+    ).toEqual(["I want to eat."]);
   });
 
   test("filters candidates with underscored tokens or double quotes", () => {
     expect(
-      toPhrases("seed", ["raw_token", 'he said "hi"', "looks good"]),
+      selectSuggestionPhrases("seed", [
+        "raw_token",
+        'he said "hi"',
+        "looks good",
+      ]),
     ).toEqual(["looks good"]);
   });
 });

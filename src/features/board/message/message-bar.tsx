@@ -81,7 +81,7 @@ export function MessageBar({
                   p: 1,
                   borderRadius: 4,
                   outline: isActive
-                    ? `2px solid ${theme.vars?.palette.primary.main ?? theme.palette.primary.main}`
+                    ? `2px solid ${(theme.vars ?? theme).palette.primary.main}`
                     : "none",
                   outlineOffset: -2,
                 })}

@@ -13,12 +13,12 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import Switch from "@mui/material/Switch";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useId } from "react";
+import { SettingsSlider } from "./settings-slider";
+import { SettingsSwitch } from "./settings-switch";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -53,34 +53,33 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
       }
       label={label}
       labelPlacement="bottom"
-      sx={{ flex: 1, gap: 0.25, m: 0 }}
+      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
     />
   );
 }
 
 export function BoardSettings() {
   const t = useTranslate();
+  const labelPositionId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardAppearanceConfig();
-  const saturationLabel = formatSaturation(tileSaturation);
 
   return (
     <Stack spacing={3}>
       <FormControl>
         <FormLabel
-          id="tile-label-position"
+          id={labelPositionId}
           sx={{ typography: "body2", color: "text.secondary" }}
         >
           {t(m.tileLabelPosition)}
         </FormLabel>
         <RadioGroup
-          aria-labelledby="tile-label-position"
-          name="tile-label-position"
+          aria-labelledby={labelPositionId}
           value={tileLabelPlacement}
-          row
           onChange={(event) =>
             setTileLabelPlacement(event.target.value as TileLabelPlacement)
           }
+          row
           sx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}
         >
           <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
@@ -95,37 +94,21 @@ export function BoardSettings() {
         </RadioGroup>
       </FormControl>
 
-      <FormControlLabel
+      <SettingsSwitch
         label={t(m.tileBorders)}
-        control={
-          <Switch
-            checked={areTileBordersVisible}
-            onChange={(event) => setTileBordersVisible(event.target.checked)}
-          />
-        }
-        labelPlacement="start"
-        sx={{ justifyContent: "space-between", m: 0 }}
+        checked={areTileBordersVisible}
+        onChange={setTileBordersVisible}
       />
 
-      <Stack spacing={0.5}>
-        <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {t(m.tileSaturation)}
-          </Typography>
-          <Typography variant="body2" sx={{ fontWeight: 600 }}>
-            {saturationLabel}
-          </Typography>
-        </Stack>
-        <Slider
-          aria-label={t(m.tileSaturation)}
-          getAriaValueText={formatSaturation}
-          value={tileSaturation}
-          onChange={(_event, newValue) => setTileSaturation(newValue)}
-          min={TILE_SATURATION.min}
-          max={TILE_SATURATION.max}
-          step={0.1}
-        />
-      </Stack>
+      <SettingsSlider
+        label={t(m.tileSaturation)}
+        value={tileSaturation}
+        onChange={setTileSaturation}
+        min={TILE_SATURATION.min}
+        max={TILE_SATURATION.max}
+        step={0.1}
+        formatValue={formatSaturation}
+      />
     </Stack>
   );
 }

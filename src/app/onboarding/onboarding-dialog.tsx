@@ -23,7 +23,7 @@ interface OnboardingDialogProps {
 
 export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
-  const fullScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const highlights: {
     id: string;
@@ -49,10 +49,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
   return (
     <Dialog
-      aria-labelledby="onboarding-dialog-title"
       open={open}
       onClose={onClose}
-      fullScreen={fullScreen}
+      fullScreen={isSmallScreen}
       fullWidth
       maxWidth="xs"
       slotProps={{
@@ -79,7 +78,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       />
 
       <DialogTitle
-        id="onboarding-dialog-title"
         variant="h4"
         sx={{
           fontWeight: "bold",

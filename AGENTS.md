@@ -76,6 +76,13 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - User-facing strings go through Paraglide: add keys to `messages/en.json` (and sibling locales); import `m` from `@paraglide/messages.js`. Never hardcode UI text. In React, call messages through `useTranslate()` as `t(m.messageKey)` so renders subscribe to locale changes; Sherlock extraction emits `m.messageKey()` and must be adapted before committing.
 - The React Compiler is enabled: write Compiler-native code; don't add `useMemo`/`useCallback` for performance.
 
+### Locale Maintenance
+
+- Update `messages/en.json` and all sibling catalogs together when adding, removing, or changing a message's meaning. Matching keys alone do not ensure translation consistency.
+- Preserve interpolation names and plural inputs across locales; review plural sentences with representative values.
+- Follow the [domain glossary](docs/architecture.md#glossary): keep board, board set, tile, and symbol distinct, using each locale's established terms and appropriate grammatical inflections across sentences, labels, hints, and accessible names.
+- Review visible text and accessible labels together, including both the action and its target (for example, stopping a message). Suggestion instructions describe wording; speech settings describe voice output.
+
 ### Comments
 
 - Comments document non-obvious whys — business requirements, edge cases — never what the code does.

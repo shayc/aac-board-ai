@@ -4,7 +4,7 @@ export interface Board {
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
-  strings?: BoardStrings;
+  translations?: BoardTranslations;
 }
 
 export interface BoardGrid {
@@ -37,4 +37,5 @@ export type BoardAction =
   | { kind: "speak" }
   | { kind: "spell"; text: string };
 
-export type BoardStrings = Record<string, Record<string, string>>;
+/** Target locale → original board text → translated text. */
+export type BoardTranslations = Record<string, Record<string, string>>;

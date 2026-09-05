@@ -5,10 +5,10 @@ import {
   findTranslations,
   getBoardLanguage,
   findTranslatedBoard,
-} from "./board-strings";
+} from "./board-translations";
 import type { Board } from "../types";
 
-const mockStrings = {
+const mockTranslations = {
   "es-ES": {
     "My Board": "Mi Tablero",
     Hello: "Hola",
@@ -36,10 +36,10 @@ const mockBoard: Board = {
     },
   ],
   locale: "en-US",
-  strings: mockStrings,
+  translations: mockTranslations,
 };
 
-describe("board-strings", () => {
+describe("board-translations", () => {
   test("getBoardLanguage() extracts the base language code", () => {
     expect(getBoardLanguage(mockBoard)).toBe("en");
     expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
@@ -47,17 +47,17 @@ describe("board-strings", () => {
   });
 
   test("findTranslations() matches language codes correctly", () => {
-    expect(findTranslations(mockBoard.strings, "es")).toEqual(
-      mockStrings["es-ES"],
+    expect(findTranslations(mockBoard.translations, "es")).toEqual(
+      mockTranslations["es-ES"],
     );
-    expect(findTranslations(mockBoard.strings, "fr")).toEqual(
-      mockStrings["fr-CA"],
+    expect(findTranslations(mockBoard.translations, "fr")).toEqual(
+      mockTranslations["fr-CA"],
     );
-    expect(findTranslations(mockBoard.strings, "de")).toBeUndefined();
+    expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
     expect(findTranslations(undefined, "es")).toBeUndefined();
   });
 
-  test("applyTranslations() maps string record onto board structure", () => {
+  test("applyTranslations() maps translations onto board structure", () => {
     const translations = {
       "My Board": "Mi Tablero",
       Hello: "Hola",
@@ -83,7 +83,7 @@ describe("board-strings", () => {
     expect(findTranslatedBoard(mockBoard, "en")).toBe(mockBoard);
   });
 
-  test("findTranslatedBoard() returns translated board if cached strings exist", () => {
+  test("findTranslatedBoard() returns translated board if cached translations exist", () => {
     const translated = findTranslatedBoard(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");

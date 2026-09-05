@@ -53,34 +53,51 @@ export function Grid<TItem extends { id: string }>({
         direction="column"
         sx={(theme) => createGridContentSx(theme, { rows, columns, gap })}
       >
-        {grid.map((row, rowIndex) => {
-          const cells = row.map((item, colIndex) => {
-            const isActive =
-              rowIndex === activeCell.row && colIndex === activeCell.col;
-
-            return (
-              <Stack
-                key={colIndex}
-                role="gridcell"
-                aria-rowindex={rowIndex + 1}
-                aria-colindex={colIndex + 1}
-                sx={gridCellSx}
-              >
-                {item &&
-                  renderItem(item, {
-                    tabIndex: isActive ? 0 : -1,
-                  })}
-              </Stack>
-            );
-          });
-
-          return (
-            <Stack key={rowIndex} role="row" direction="row" sx={gridRowSx}>
-              {cells}
-            </Stack>
-          );
-        })}
+        {grid.map((row, rowIndex) => (
+          <GridRow
+            key={rowIndex}
+            items={row}
+            rowIndex={rowIndex}
+            activeColumn={
+              rowIndex === activeCell.row ? activeCell.col : undefined
+            }
+            renderItem={renderItem}
+          />
+        ))}
       </Stack>
     </Box>
+  );
+}
+
+interface GridRowProps<TItem extends { id: string }> {
+  items: readonly (TItem | undefined)[];
+  rowIndex: number;
+  activeColumn: number | undefined;
+  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
+}
+
+function GridRow<TItem extends { id: string }>({
+  items,
+  rowIndex,
+  activeColumn,
+  renderItem,
+}: GridRowProps<TItem>) {
+  return (
+    <Stack role="row" direction="row" sx={gridRowSx}>
+      {items.map((item, columnIndex) => (
+        <Stack
+          key={columnIndex}
+          role="gridcell"
+          aria-rowindex={rowIndex + 1}
+          aria-colindex={columnIndex + 1}
+          sx={gridCellSx}
+        >
+          {item &&
+            renderItem(item, {
+              tabIndex: columnIndex === activeColumn ? 0 : -1,
+            })}
+        </Stack>
+      ))}
+    </Stack>
   );
 }

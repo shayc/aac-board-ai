@@ -7,19 +7,19 @@ export const routeErrorCodes = {
 export type RouteErrorCode =
   (typeof routeErrorCodes)[keyof typeof routeErrorCodes];
 
-export interface LocalizedRouteError {
+export interface RouteErrorPayload {
   code: RouteErrorCode;
 }
 
-export function createLocalizedRouteError(
+export function createRouteErrorPayload(
   code: RouteErrorCode,
-): LocalizedRouteError {
+): RouteErrorPayload {
   return { code };
 }
 
-export function isLocalizedRouteError(
+export function isRouteErrorPayload(
   error: unknown,
-): error is LocalizedRouteError {
+): error is RouteErrorPayload {
   if (!error || typeof error !== "object" || !("code" in error)) {
     return false;
   }

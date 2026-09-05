@@ -5,7 +5,7 @@ import type { MessagePart } from "./message-types";
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
-  setFromText: (input: string) => void;
+  replaceWithText: (input: string) => void;
   backspace: () => void;
   setParts: (parts: MessagePart[]) => void;
   clear: () => void;
@@ -15,7 +15,7 @@ export function useMessage(): UseMessageReturn {
   const [parts, setParts] = useState<MessagePart[]>([]);
   const text = parts.map((part) => part.label).join(" ");
 
-  function setFromText(input: string) {
+  function replaceWithText(input: string) {
     setParts(
       input
         .trim()
@@ -36,7 +36,7 @@ export function useMessage(): UseMessageReturn {
   return {
     parts,
     text,
-    setFromText,
+    replaceWithText,
     backspace,
     setParts,
     clear,

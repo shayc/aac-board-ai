@@ -20,7 +20,16 @@ describe("BoardSetDeleteDialog", () => {
       />,
     );
 
-    await expect.element(screen.getByRole("dialog")).toBeVisible();
+    const dialog = screen.getByRole("dialog", {
+      name: 'Delete board set "Core Words"?',
+    });
+
+    await expect.element(dialog).toBeVisible();
+    await expect
+      .element(dialog)
+      .toHaveAccessibleDescription(
+        "The board in this set will be deleted. This cannot be undone.",
+      );
     await expectNoA11yViolations(document.body);
   });
 

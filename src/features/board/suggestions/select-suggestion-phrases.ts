@@ -1,6 +1,6 @@
 const UNDERSCORED_WORD = /\b[A-Za-z]+_[A-Za-z]+\b/;
 
-export function toPhrases(
+export function selectSuggestionPhrases(
   text: string,
   candidates: readonly (string | undefined)[],
 ): string[] {

@@ -6,6 +6,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useId } from "react";
 import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetDeleteDialogProps {
@@ -20,22 +21,22 @@ export function BoardSetDeleteDialog({
   onClose,
 }: BoardSetDeleteDialogProps) {
   const t = useTranslate();
+  const descriptionId = useId();
 
   return (
     <Dialog
-      aria-labelledby="delete-dialog-title"
-      aria-describedby="delete-dialog-description"
+      aria-describedby={descriptionId}
       open={boardSet !== null}
       onClose={onClose}
     >
-      <DialogTitle id="delete-dialog-title">
+      <DialogTitle>
         {boardSet
           ? t(m.libraryDeleteConfirmTitle, { name: boardSet.name })
           : null}
       </DialogTitle>
 
       <DialogContent>
-        <DialogContentText id="delete-dialog-description">
+        <DialogContentText id={descriptionId}>
           {boardSet
             ? t(m.libraryDeleteIrreversible, { count: boardSet.boardCount })
             : null}

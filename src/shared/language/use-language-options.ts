@@ -2,7 +2,7 @@ import { locales } from "@paraglide/runtime";
 import { useVoicesByLanguage } from "@shared/speech/speech-store";
 import { getNativeLanguageName } from "@shared/utils/locale";
 
-export function useAvailableLanguages() {
+export function useLanguageOptions() {
   const voicesByLanguage = useVoicesByLanguage();
   const languages = new Set([...locales, ...Object.keys(voicesByLanguage)]);
 

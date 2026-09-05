@@ -1,10 +1,10 @@
 import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
+import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { ErrorState } from "@shared/ui/error-state";
-import { useTranslate } from "@shared/language/use-translate";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
 import {
-  isLocalizedRouteError,
+  isRouteErrorPayload,
   routeErrorCodes,
   type RouteErrorCode,
 } from "./route-error";
@@ -29,25 +29,19 @@ export function RouteErrorBoundary() {
   );
 }
 
-function getErrorTitle(
-  error: unknown,
-  t: ReturnType<typeof useTranslate>,
-): string {
+function getErrorTitle(error: unknown, t: Translate): string {
   if (!isRouteErrorResponse(error)) {
     return t(m.errorGenericTitle);
   }
 
-  if (isLocalizedRouteError(error.data)) {
+  if (isRouteErrorPayload(error.data)) {
     return translateRouteError(error.data.code, t);
   }
 
   return typeof error.data === "string" ? error.data : t(m.errorGenericTitle);
 }
 
-function translateRouteError(
-  code: RouteErrorCode,
-  t: ReturnType<typeof useTranslate>,
-): string {
+function translateRouteError(code: RouteErrorCode, t: Translate): string {
   switch (code) {
     case routeErrorCodes.boardNotFound:
       return t(m.errorBoardNotFound);

@@ -18,7 +18,7 @@ import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { AppearanceSettings } from "./appearance-settings";
+import { ThemeSettings } from "./theme-settings";
 import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
@@ -101,7 +101,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           {t(m.settingsSectionGeneral)}
         </Typography>
         <Stack spacing={3}>
-          <AppearanceSettings />
+          <ThemeSettings />
           <LanguageSettings />
         </Stack>
 

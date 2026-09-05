@@ -20,7 +20,7 @@ export type {
   BoardSetRecord,
 } from "../storage/board-set-storage";
 
-interface BoardSetsSnapshot {
+export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
   isLoading: boolean;
   error: Error | null;

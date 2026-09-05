@@ -46,27 +46,63 @@ describe("BoardSetList", () => {
     expect(onSelect.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
   });
 
-  test("opens the row menu and routes the details action to onShowDetails", async () => {
+  test("keeps labels, menus, and details actions associated with their list", async () => {
+    const boardSets = [
+      makeBoardSet({ setId: "core", name: "Core Words" }),
+      makeBoardSet({ setId: "animals", name: "Animals" }),
+    ];
     const onShowDetails = vi.fn();
     const onDelete = vi.fn();
     const screen = await renderWithProviders(
-      <BoardSetList
-        boardSets={[makeBoardSet({ name: "Core Words" })]}
-        onSelect={vi.fn()}
-        onShowDetails={onShowDetails}
-        onDelete={onDelete}
-      />,
+      <>
+        {boardSets.map((boardSet) => (
+          <BoardSetList
+            key={boardSet.setId}
+            boardSets={[boardSet]}
+            onSelect={vi.fn()}
+            onShowDetails={onShowDetails}
+            onDelete={onDelete}
+          />
+        ))}
+      </>,
     );
 
-    await screen
-      .getByRole("button", { name: "More options for Core Words" })
-      .click();
-    await screen.getByRole("menuitem", { name: "Info" }).click();
+    const navigations = screen
+      .getByRole("navigation", { name: "Board sets" })
+      .all();
+    expect(navigations).toHaveLength(2);
 
-    expect(onShowDetails).toHaveBeenCalledOnce();
-    expect(onShowDetails.mock.calls[0][0]).toMatchObject({
-      name: "Core Words",
+    const labelIds = navigations.map((navigation) => {
+      const element = navigation.element();
+      const labelId = element.getAttribute("aria-labelledby") ?? "";
+      expect(element.contains(document.getElementById(labelId))).toBe(true);
+
+      return labelId;
     });
+    expect(new Set(labelIds).size).toBe(2);
+
+    const menuIds: string[] = [];
+    for (const [index, boardSet] of boardSets.entries()) {
+      const trigger = screen.getByRole("button", {
+        name: `More options for ${boardSet.name}`,
+      });
+      const button = trigger.element();
+      await trigger.click();
+
+      const menuId = button.getAttribute("aria-controls") ?? "";
+      expect(
+        document
+          .getElementById(menuId)
+          ?.contains(screen.getByRole("menu").element()),
+      ).toBe(true);
+      menuIds.push(menuId);
+
+      await screen.getByRole("menuitem", { name: "Info" }).click();
+      expect(onShowDetails).toHaveBeenNthCalledWith(index + 1, boardSet);
+    }
+
+    expect(new Set(menuIds).size).toBe(2);
+    expect(onShowDetails).toHaveBeenCalledTimes(2);
     expect(onDelete).not.toHaveBeenCalled();
   });
 
