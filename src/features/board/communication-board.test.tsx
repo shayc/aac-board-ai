@@ -58,10 +58,11 @@ const LARGE_GRID_BOARD: OBFBoard = {
 
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
+  let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(() => {
     speech = stubSpeech();
-    stubAudio();
+    audio = stubAudio();
   });
 
   test("composing tiles and pressing play speaks the merged message", async () => {
@@ -112,6 +113,88 @@ describe("CommunicationBoard", () => {
       expect(speech.speak.mock.calls[0][0].text).toBe("s");
     });
   });
+
+  test("a linked tile navigates without running its actions or playing its content", async () => {
+    await seedBoardSets([{ setId: "set-1", rootBoardId: "test-board" }]);
+    const board: OBFBoard = {
+      ...TWO_BUTTON_BOARD,
+      buttons: [
+        { id: "btn-1", label: "hello" },
+        {
+          id: "btn-2",
+          label: "Folder",
+          load_board: { id: "child-board" },
+          actions: [":clear", ":speak", ":home"],
+          sound_id: "recording",
+        },
+      ],
+      sounds: [{ id: "recording", url: "/folder.mp3" }],
+    };
+    const screen = await renderCommunicationBoard(board, [
+      "/sets/set-1/boards/test-board",
+    ]);
+    const back = screen.getByRole("button", { name: "Go back" });
+
+    await expect.element(back).toBeDisabled();
+    await screen.getByRole("button", { name: "hello" }).click();
+    speech.speak.mockClear();
+
+    await screen.getByRole("button", { name: "Folder" }).click();
+
+    await expect.element(back).toBeEnabled();
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeEnabled();
+    expect(speech.speak).not.toHaveBeenCalled();
+    expect(audio.play).not.toHaveBeenCalled();
+  });
+
+  test.each(["completed", "interrupted"] as const)(
+    "preserves speak-then-clear behavior when playback is %s",
+    async (outcome) => {
+      speech.speak.mockImplementation(() => undefined);
+      const board: OBFBoard = {
+        ...SPELL_THEN_SPEAK_BOARD,
+        buttons: [
+          {
+            id: "btn-1",
+            label: "Say then clear",
+            vocalization: "Ignore this vocalization",
+            sound_id: "recording",
+            actions: ["+hi", ":speak", ":clear"],
+          },
+        ],
+        sounds: [{ id: "recording", url: "/recording.mp3" }],
+      };
+      const screen = await renderCommunicationBoard(board);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+
+      await expect
+        .element(screen.getByText("hi", { exact: true }))
+        .toBeVisible();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      expect(speech.speak).toHaveBeenCalledTimes(1);
+      const [utterance] = speech.speak.mock.calls[0];
+      expect(utterance.text).toBe("hi");
+      expect(audio.play).not.toHaveBeenCalled();
+
+      if (outcome === "interrupted") {
+        await screen.getByRole("button", { name: "Stop message" }).click();
+      } else {
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+      }
+
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toHaveProperty("disabled", outcome === "completed");
+      expect(screen.getByText("hi", { exact: true }).query() !== null).toBe(
+        outcome === "interrupted",
+      );
+    },
+  );
 
   test("names the tile grid with the board's name", async () => {
     const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };

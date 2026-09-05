@@ -8,7 +8,6 @@ import {
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../types";
-import { resolveButtonIntents } from "./button-intent-resolver";
 
 interface ActivationMessage {
   parts: MessagePart[];
@@ -39,49 +38,51 @@ export function createButtonActivator({
   navigation,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
-    const intents = resolveButtonIntents(button);
+    const targetBoardId = button.loadBoard?.id;
+    if (targetBoardId) {
+      navigation.goToBoard(targetBoardId);
+      return;
+    }
+
+    if (!button.actions?.length) {
+      const part = createPart({
+        label: button.label,
+        vocalization: button.vocalization,
+        imageSrc: button.imageSrc,
+        soundSrc: button.soundSrc,
+      });
+
+      message.setParts([...message.parts, part]);
+      void playback.playPart(part);
+      return;
+    }
 
     let parts = message.parts;
     let partsToSpeak: MessagePart[] | null = null;
-    let partToPlay: MessagePart | null = null;
 
-    for (const intent of intents) {
-      switch (intent.kind) {
-        case "navigate":
-          navigation.goToBoard(intent.targetBoardId);
+    for (const action of button.actions) {
+      switch (action.kind) {
+        case "spell":
+          parts = appendTextToLastPart(parts, action.text);
           break;
-        case "composeAndPlay":
-          partToPlay = createPart(intent.content);
-          parts = [...parts, partToPlay];
+        case "space":
+          parts = appendSpace(parts);
           break;
-        case "runAction":
-          switch (intent.action.kind) {
-            case "spell":
-              parts = appendTextToLastPart(parts, intent.action.text);
-              break;
-            case "space":
-              parts = appendSpace(parts);
-              break;
-            case "backspace":
-              parts = applyBackspace(parts);
-              break;
-            case "clear":
-              parts = [];
-              break;
-            case "home":
-              navigation.goHome();
-              break;
-            case "speak":
-              partsToSpeak = parts;
-              break;
-
-            default:
-              assertNever(intent.action);
-          }
+        case "backspace":
+          parts = applyBackspace(parts);
+          break;
+        case "clear":
+          parts = [];
+          break;
+        case "home":
+          navigation.goHome();
+          break;
+        case "speak":
+          partsToSpeak = parts;
           break;
 
         default:
-          assertNever(intent);
+          assertNever(action);
       }
     }
 
@@ -100,10 +101,6 @@ export function createButtonActivator({
       });
     } else if (parts !== message.parts) {
       message.setParts(parts);
-    }
-
-    if (partToPlay) {
-      void playback.playPart(partToPlay);
     }
   }
 
