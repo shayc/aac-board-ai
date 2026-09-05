@@ -49,7 +49,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
 
   return (
     <Dialog
-      aria-labelledby="onboarding-dialog-title"
       open={open}
       onClose={onClose}
       fullScreen={isSmallScreen}
@@ -79,7 +78,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       />
 
       <DialogTitle
-        id="onboarding-dialog-title"
         variant="h4"
         sx={{
           fontWeight: "bold",

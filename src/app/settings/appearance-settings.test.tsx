@@ -5,25 +5,38 @@ import { render } from "vitest-browser-react";
 import { AppearanceSettings } from "./appearance-settings";
 
 describe("AppearanceSettings", () => {
-  test("offers the three theme modes with system preselected, with no a11y violations", async () => {
+  test("keeps repeated theme controls synchronized with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
+        <AppearanceSettings />
         <AppearanceSettings />
       </AppProviders>,
     );
 
-    await expect
-      .element(screen.getByRole("radio", { name: "System" }))
-      .toBeChecked();
-    await expect
-      .element(screen.getByRole("radio", { name: "Light" }))
-      .not.toBeChecked();
+    const groups = screen.getByRole("radiogroup", { name: "Theme" }).all();
+    expect(groups).toHaveLength(2);
+    expect(
+      new Set(
+        groups.map((group) => group.element().getAttribute("aria-labelledby")),
+      ).size,
+    ).toBe(2);
 
-    await screen.getByRole("radio", { name: "Dark" }).click();
+    for (const group of groups) {
+      await expect
+        .element(group.getByRole("radio", { name: "System" }))
+        .toBeChecked();
+      await expect
+        .element(group.getByRole("radio", { name: "Light" }))
+        .not.toBeChecked();
+    }
 
-    await expect
-      .element(screen.getByRole("radio", { name: "Dark" }))
-      .toBeChecked();
+    await groups[0].getByRole("radio", { name: "Dark" }).click();
+
+    for (const group of groups) {
+      await expect
+        .element(group.getByRole("radio", { name: "Dark" }))
+        .toBeChecked();
+    }
 
     await expectNoA11yViolations(screen.container);
   });

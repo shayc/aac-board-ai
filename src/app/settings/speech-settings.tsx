@@ -25,11 +25,14 @@ import {
   useSpeechConfig,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { useId } from "react";
 import { SettingsSlider } from "./settings-slider";
 import { SettingsSwitch } from "./settings-switch";
 
 export function SpeechSettings() {
   const t = useTranslate();
+  const selectId = useId();
+  const labelId = useId();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
@@ -98,10 +101,10 @@ export function SpeechSettings() {
   return (
     <Stack spacing={3}>
       <FormControl size="small" fullWidth>
-        <InputLabel id="voice-select-label">{t(m.speechVoice)}</InputLabel>
+        <InputLabel id={labelId}>{t(m.speechVoice)}</InputLabel>
         <Select
-          id="voice-select"
-          labelId="voice-select-label"
+          id={selectId}
+          labelId={labelId}
           label={t(m.speechVoice)}
           value={selectedVoiceURI}
           onChange={(event) =>

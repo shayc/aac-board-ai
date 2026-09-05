@@ -19,7 +19,9 @@ describe("BoardSetDetailsDialog", () => {
       />,
     );
 
-    await expect.element(screen.getByRole("dialog")).toBeVisible();
+    await expect
+      .element(screen.getByRole("dialog", { name: "Core Words By Jane" }))
+      .toBeVisible();
     await expectNoA11yViolations(document.body);
   });
 

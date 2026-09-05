@@ -109,18 +109,33 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("changing the tile label position persists the selection", async () => {
+  test("changing the tile label position updates repeated controls and persists", async () => {
     const screen = await render(
       <AppProviders>
+        <BoardSettings />
         <BoardSettings />
       </AppProviders>,
     );
 
-    const bottomRadio = screen.getByRole("radio", { name: "Bottom" });
+    const groups = screen
+      .getByRole("radiogroup", { name: "Tile label position" })
+      .all();
+    expect(groups).toHaveLength(2);
+    expect(
+      new Set(
+        groups.map((group) => group.element().getAttribute("aria-labelledby")),
+      ).size,
+    ).toBe(2);
+
+    const bottomRadio = groups[0].getByRole("radio", { name: "Bottom" });
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();
-    await expect.element(bottomRadio).toBeChecked();
+    for (const group of groups) {
+      await expect
+        .element(group.getByRole("radio", { name: "Bottom" }))
+        .toBeChecked();
+    }
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-appearance");

@@ -6,9 +6,11 @@ import RadioGroup from "@mui/material/RadioGroup";
 import { useColorScheme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useId } from "react";
 
 export function AppearanceSettings() {
   const t = useTranslate();
+  const labelId = useId();
   const { mode, setMode } = useColorScheme();
 
   if (!mode) {
@@ -18,14 +20,13 @@ export function AppearanceSettings() {
   return (
     <FormControl>
       <FormLabel
-        id="theme-toggle"
+        id={labelId}
         sx={{ typography: "body2", color: "text.secondary" }}
       >
         {t(m.themeLabel)}
       </FormLabel>
       <RadioGroup
-        aria-labelledby="theme-toggle"
-        name="theme-toggle"
+        aria-labelledby={labelId}
         value={mode}
         onChange={(event) =>
           setMode(event.target.value as "system" | "light" | "dark")

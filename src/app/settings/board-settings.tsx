@@ -16,6 +16,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useId } from "react";
 import { SettingsSlider } from "./settings-slider";
 import { SettingsSwitch } from "./settings-switch";
 
@@ -59,6 +60,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function BoardSettings() {
   const t = useTranslate();
+  const labelPositionId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardAppearanceConfig();
 
@@ -66,14 +68,13 @@ export function BoardSettings() {
     <Stack spacing={3}>
       <FormControl>
         <FormLabel
-          id="tile-label-position"
+          id={labelPositionId}
           sx={{ typography: "body2", color: "text.secondary" }}
         >
           {t(m.tileLabelPosition)}
         </FormLabel>
         <RadioGroup
-          aria-labelledby="tile-label-position"
-          name="tile-label-position"
+          aria-labelledby={labelPositionId}
           value={tileLabelPlacement}
           onChange={(event) =>
             setTileLabelPlacement(event.target.value as TileLabelPlacement)
