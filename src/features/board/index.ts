@@ -41,6 +41,6 @@ export {
   setSuggestionCustomInstructions,
   useBoardSuggestionConfig,
 } from "./suggestions/suggestion-config-store";
-export { resolveTranslatedBoard } from "./translation/resolve-translated-board";
+export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 
 export type { Board } from "./types";

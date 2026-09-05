@@ -3,10 +3,10 @@ import { useLanguage } from "@shared/language/use-language";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import {
   deriveSuggestionStatus,
-  type SuggestionStatusView,
+  type SuggestionDisplayState,
 } from "./derive-suggestion-status";
 import { useBoardSuggestionConfig } from "./suggestion-config-store";
-import { toPhrases } from "./to-phrases";
+import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useProofreadSuggestion } from "./use-proofread-suggestion";
 import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 
@@ -14,7 +14,7 @@ const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
 interface MessageSuggestions {
   isSupported: boolean;
-  status: SuggestionStatusView;
+  status: SuggestionDisplayState;
   phrases: string[];
   enable: () => void;
 }
@@ -52,7 +52,7 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
     "Rewriter",
   ]);
 
-  const phrases = toPhrases(
+  const phrases = selectSuggestionPhrases(
     text,
     sources.map(({ candidate }) => candidate),
   );

@@ -1,7 +1,7 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import { listBoards } from "../storage/board-content-storage";
-import { findTranslations } from "../translation/board-strings";
+import { findTranslations } from "../translation/board-translations";
 
 interface BoardSummary {
   boardId: string;

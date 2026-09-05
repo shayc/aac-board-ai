@@ -4,10 +4,10 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { assertNever } from "@shared/utils/assert-never";
-import type { SuggestionStatusView } from "./derive-suggestion-status";
+import type { SuggestionDisplayState } from "./derive-suggestion-status";
 
 interface SuggestionStatusProps {
-  status: SuggestionStatusView;
+  status: SuggestionDisplayState;
   onEnable: () => void;
 }
 
@@ -19,7 +19,7 @@ export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
   }
 
   switch (status.kind) {
-    case "needs-activation":
+    case "needs-setup":
       return (
         <Chip
           icon={<AutoAwesomeIcon />}

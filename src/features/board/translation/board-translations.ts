@@ -11,7 +11,7 @@ export function findTranslatedBoard(
     return board;
   }
 
-  const cached = findTranslations(board.strings, language);
+  const cached = findTranslations(board.translations, language);
 
   return cached ? applyTranslations(board, cached) : undefined;
 }
@@ -21,14 +21,14 @@ export function getBoardLanguage(board: Board): string {
 }
 
 export function findTranslations(
-  strings: Board["strings"],
+  translations: Board["translations"],
   language: string,
 ): Record<string, string> | undefined {
-  if (!strings) {
+  if (!translations) {
     return;
   }
 
-  const match = Object.entries(strings).find(
+  const match = Object.entries(translations).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
 

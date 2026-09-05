@@ -1,6 +1,6 @@
 import { getBoardSet, InvalidIdError, rootBoardPath } from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
-import { createLocalizedRouteError, routeErrorCodes } from "../route-error";
+import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 
 export async function boardSetIndexLoader({
   params,
@@ -18,7 +18,7 @@ export async function boardSetIndexLoader({
   }
 
   if (!boardSet) {
-    throw data(createLocalizedRouteError(routeErrorCodes.boardSetNotFound), {
+    throw data(createRouteErrorPayload(routeErrorCodes.boardSetNotFound), {
       status: 404,
     });
   }

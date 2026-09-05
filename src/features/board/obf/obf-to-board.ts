@@ -11,7 +11,7 @@ import type {
   BoardAction,
   BoardButton,
   BoardGrid,
-  BoardStrings,
+  BoardTranslations,
   LoadBoard,
 } from "../types";
 import { sanitizeColor } from "./css-color";
@@ -29,7 +29,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
       transformButton(obfButton, imageSourceById, soundSourceById),
     ),
     grid: transformGrid(obfBoard.grid),
-    strings: transformStrings(obfBoard.strings),
+    translations: transformTranslations(obfBoard.strings),
   };
 
   return board;
@@ -97,9 +97,9 @@ function transformLoadBoard(
   return obfLoadBoard?.id ? { id: obfLoadBoard.id } : undefined;
 }
 
-function transformStrings(
+function transformTranslations(
   strings: OBFBoard["strings"],
-): BoardStrings | undefined {
+): BoardTranslations | undefined {
   if (!strings) {
     return undefined;
   }

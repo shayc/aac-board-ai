@@ -6,9 +6,13 @@ import {
   collectTranslatablePhrases,
   findTranslatedBoard,
   getBoardLanguage,
-} from "./board-strings";
+} from "./board-translations";
 
-export async function resolveTranslatedBoard(
+/**
+ * Resolves a board for the requested language, falling back to the source board
+ * when translation is unavailable or fails.
+ */
+export async function resolveBoardForLanguage(
   setId: string,
   board: Board,
   language: string,

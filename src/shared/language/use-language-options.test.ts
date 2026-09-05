@@ -1,13 +1,13 @@
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { useAvailableLanguages } from "./use-available-languages";
+import { useLanguageOptions } from "./use-language-options";
 
-describe("useAvailableLanguages", () => {
+describe("useLanguageOptions", () => {
   test("includes translated UI languages without installed voices", async () => {
     stubVoices([]);
 
-    const { result } = await renderHook(() => useAvailableLanguages());
+    const { result } = await renderHook(() => useLanguageOptions());
 
     expect(result.current).toEqual(
       expect.arrayContaining([
@@ -23,7 +23,7 @@ describe("useAvailableLanguages", () => {
       { voiceURI: "malay", name: "Malay", lang: "ms-MY" },
     ]);
 
-    const { result } = await renderHook(() => useAvailableLanguages());
+    const { result } = await renderHook(() => useLanguageOptions());
 
     expect(result.current).toEqual(
       expect.arrayContaining([

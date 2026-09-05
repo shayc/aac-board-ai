@@ -8,7 +8,7 @@ import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { useAvailableLanguages } from "@shared/language/use-available-languages";
+import { useLanguageOptions } from "@shared/language/use-language-options";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import {
@@ -22,7 +22,7 @@ export function LanguageSettings() {
   const selectId = useId();
   const labelId = useId();
   const { language, setLanguage } = useLanguage();
-  const availableLanguages = useAvailableLanguages();
+  const languageOptions = useLanguageOptions();
   const progress = useGlobalDownloadProgress("Translator");
   const isTranslationSupported = isSupported("Translator");
 
@@ -38,7 +38,7 @@ export function LanguageSettings() {
           onChange={(event) => setLanguage(event.target.value)}
           variant="outlined"
         >
-          {availableLanguages.map(({ code, name }) => (
+          {languageOptions.map(({ code, name }) => (
             <MenuItem key={code} value={code}>
               {name}
             </MenuItem>

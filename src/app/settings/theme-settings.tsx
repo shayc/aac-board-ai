@@ -8,7 +8,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useId } from "react";
 
-export function AppearanceSettings() {
+export function ThemeSettings() {
   const t = useTranslate();
   const labelId = useId();
   const { mode, setMode } = useColorScheme();

@@ -4,7 +4,7 @@ import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { ErrorState } from "@shared/ui/error-state";
 import { isRouteErrorResponse, Link, useRouteError } from "react-router";
 import {
-  isLocalizedRouteError,
+  isRouteErrorPayload,
   routeErrorCodes,
   type RouteErrorCode,
 } from "./route-error";
@@ -34,7 +34,7 @@ function getErrorTitle(error: unknown, t: Translate): string {
     return t(m.errorGenericTitle);
   }
 
-  if (isLocalizedRouteError(error.data)) {
+  if (isRouteErrorPayload(error.data)) {
     return translateRouteError(error.data.code, t);
   }
 

@@ -1,12 +1,12 @@
-interface OpenFilesOptions {
+interface PickFilesOptions {
   accept?: string;
   multiple?: boolean;
 }
 
-export function openFiles({
+export function pickFiles({
   accept,
   multiple = false,
-}: OpenFilesOptions = {}): Promise<File[]> {
+}: PickFilesOptions = {}): Promise<File[]> {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";

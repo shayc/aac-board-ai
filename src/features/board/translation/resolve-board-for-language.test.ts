@@ -7,7 +7,7 @@ import { getBoard } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import type { Board } from "../types";
-import { resolveTranslatedBoard } from "./resolve-translated-board";
+import { resolveBoardForLanguage } from "./resolve-board-for-language";
 
 function makeBoard(overrides: Partial<Board> = {}): Board {
   return {
@@ -23,7 +23,7 @@ function makeBoard(overrides: Partial<Board> = {}): Board {
   };
 }
 
-describe("resolveTranslatedBoard", () => {
+describe("resolveBoardForLanguage", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -32,7 +32,7 @@ describe("resolveTranslatedBoard", () => {
     const board = makeBoard();
     const { create } = stubTranslator();
 
-    const result = await resolveTranslatedBoard("set-1", board, "en");
+    const result = await resolveBoardForLanguage("set-1", board, "en");
 
     expect(result).toBe(board);
     expect(create).not.toHaveBeenCalled();
@@ -40,11 +40,13 @@ describe("resolveTranslatedBoard", () => {
 
   test("applies cached translations without invoking the Translator", async () => {
     const board = makeBoard({
-      strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
+      translations: {
+        "es-ES": { Food: "Comida", eat: "comer", drink: "beber" },
+      },
     });
     const { create } = stubTranslator();
 
-    const result = await resolveTranslatedBoard("set-1", board, "es");
+    const result = await resolveBoardForLanguage("set-1", board, "es");
 
     expect(result.name).toBe("Comida");
     expect(result.buttons[0].label).toBe("comer");
@@ -57,7 +59,7 @@ describe("resolveTranslatedBoard", () => {
     const board = makeBoard();
     const { create, translate } = stubTranslator((input) => `[es] ${input}`);
 
-    const result = await resolveTranslatedBoard("set-1", board, "es");
+    const result = await resolveBoardForLanguage("set-1", board, "es");
 
     expect(result.name).toBe("[es] Food");
     expect(result.buttons[0].label).toBe("[es] eat");
@@ -95,7 +97,7 @@ describe("resolveTranslatedBoard", () => {
     });
     stubTranslator((input) => `[es] ${input}`);
 
-    await resolveTranslatedBoard("set-1", makeBoard(), "es");
+    await resolveBoardForLanguage("set-1", makeBoard(), "es");
 
     const persistedStrings = {
       es: { Food: "[es] Food", eat: "[es] eat", drink: "[es] drink" },
@@ -110,7 +112,7 @@ describe("resolveTranslatedBoard", () => {
     const board = makeBoard();
     stubBuiltInAIUnsupported("Translator");
 
-    const result = await resolveTranslatedBoard("set-1", board, "es");
+    const result = await resolveBoardForLanguage("set-1", board, "es");
 
     expect(result).toBe(board);
   });
@@ -121,7 +123,7 @@ describe("resolveTranslatedBoard", () => {
       Promise.reject(new DOMException("model failure", "UnknownError")),
     );
 
-    const result = await resolveTranslatedBoard("set-1", board, "es");
+    const result = await resolveBoardForLanguage("set-1", board, "es");
 
     expect(result).toBe(board);
   });

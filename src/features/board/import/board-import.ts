@@ -16,7 +16,7 @@ import {
 } from "../board-sets/board-sets-store";
 import { htmlToText } from "./html-to-text";
 
-export interface ImportResult {
+export interface BoardImportResult {
   setId: string;
   rootBoardId: string;
 }
@@ -37,9 +37,9 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
 
 export async function importBoardSets(
   files: File | File[],
-): Promise<ImportResult[]> {
+): Promise<BoardImportResult[]> {
   const fileList = Array.isArray(files) ? files : [files];
-  const results: ImportResult[] = [];
+  const results: BoardImportResult[] = [];
 
   for (const file of fileList) {
     const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
@@ -70,7 +70,7 @@ async function importOBZArchive(
   archive: ParsedOBZ,
   setId: string,
   fileName: string,
-): Promise<ImportResult> {
+): Promise<BoardImportResult> {
   const { manifest, boards, rootBoard, resources } = archive;
   const boardPathToId = buildBoardPathToId(manifest);
 
@@ -87,7 +87,7 @@ async function importOBFBoard(
   board: OBFBoard,
   setId: string,
   fileName: string,
-): Promise<ImportResult> {
+): Promise<BoardImportResult> {
   await createBoardSet({
     boardSet: buildBoardSetInput(setId, board, fileName),
     boards: [{ boardId: board.id, name: board.name ?? board.id, obf: board }],

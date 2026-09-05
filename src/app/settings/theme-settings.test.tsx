@@ -2,14 +2,14 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import { AppearanceSettings } from "./appearance-settings";
+import { ThemeSettings } from "./theme-settings";
 
-describe("AppearanceSettings", () => {
+describe("ThemeSettings", () => {
   test("keeps repeated theme controls synchronized with no a11y violations", async () => {
     const screen = await render(
       <AppProviders>
-        <AppearanceSettings />
-        <AppearanceSettings />
+        <ThemeSettings />
+        <ThemeSettings />
       </AppProviders>,
     );
 

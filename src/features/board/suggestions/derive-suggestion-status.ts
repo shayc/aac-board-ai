@@ -1,7 +1,7 @@
 import type { Status } from "@shayc/react-built-in-ai";
 
-export type SuggestionStatusView =
-  | { kind: "needs-activation" }
+export type SuggestionDisplayState =
+  | { kind: "needs-setup" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
   | { kind: "unavailable" }
@@ -26,14 +26,14 @@ export function deriveSuggestionStatus({
   hasText,
   isPending,
   phraseCount,
-}: SuggestionStatusInput): SuggestionStatusView {
+}: SuggestionStatusInput): SuggestionDisplayState {
   const supported = engines.filter(({ status }) => status !== "unsupported");
   if (supported.length === 0) {
     return null;
   }
 
   if (supported.some(({ status }) => status === "downloadable")) {
-    return { kind: "needs-activation" };
+    return { kind: "needs-setup" };
   }
 
   if (downloadProgress !== null) {

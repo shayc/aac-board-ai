@@ -39,14 +39,14 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toBeNull();
   });
 
-  test("asks for activation ahead of any download state", () => {
+  test("asks for setup ahead of any download state", () => {
     const input = makeInput({
       engines: engines("downloadable", "ready"),
       downloadProgress: 0.5,
     });
 
     expect(deriveSuggestionStatus(input)).toEqual({
-      kind: "needs-activation",
+      kind: "needs-setup",
     });
   });
 
