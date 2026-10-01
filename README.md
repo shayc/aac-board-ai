@@ -18,8 +18,6 @@ On supported browsers, **Built-in AI** uses the browser’s on-device models to 
 
 ## Expanding a message with Built-in AI
 
-AAC users may select a few key concepts instead of composing every word explicitly:
-
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
 Board message:   "want eat pizza"
