@@ -57,7 +57,7 @@ chrome://flags/#proofreader-api
 chrome://flags/#rewriter-api
 ```
 
-**Microsoft Edge Canary or Dev**
+**Microsoft Edge**
 
 ```text
 edge://flags/#edge-proofreader-api
