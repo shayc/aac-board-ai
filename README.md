@@ -12,7 +12,7 @@
 
 **AAC Board AI** is a local-first augmentative and alternative communication (AAC) app for people who cannot rely on speech. Users select symbols to build messages and speak them aloud.
 
-On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
@@ -31,7 +31,7 @@ Suggestions are optional and replace the original message only when accepted.
 - Quick Core 24 starter board with linked vocabulary
 - Touch and keyboard navigation
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
-- 35 interface languages and right-to-left layouts
+- 35 interface languages, including right-to-left layouts
 - Installable PWA with offline communication
 
 ## Privacy and offline use
