@@ -10,13 +10,13 @@
 
 </div>
 
-**AAC Board AI** is a local-first Augmentative and Alternative Communication (AAC) board for people who cannot rely on speech. It helps users build messages with symbols and speak them aloud.
+**AAC Board AI** is a local-first augmentative and alternative communication (AAC) app for people who cannot rely on speech. Users select symbols to build messages and speak them aloud.
 
-On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
-## Expanding a message with Built-in AI
+## From tiles to a sentence
 
 ```text
 Selected tiles:  [ want ] → [ eat ] → [ pizza ]
@@ -30,7 +30,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 - Quick Core 24 starter board with linked vocabulary
 - Touch and keyboard navigation
-- [Open Board Format](https://www.openboardformat.org) (`.obf` and `.obz`) imports from a device or URL
+- Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages and right-to-left layouts
 - Installable PWA with offline communication
 
@@ -42,7 +42,7 @@ Stored boards remain available offline. URL imports and remote resources require
 
 ## Limitations
 
-Boards can be imported and stored, but not edited, exported, or synchronized between devices. Prepare custom boards with an Open Board Format-compatible tool and import them on each device.
+The app supports importing and storing boards. Editing, exporting, and cross-device sync are not available. To create a custom board, use an Open Board Format-compatible tool, then import it on each device.
 
 ## Built-in AI availability
 
@@ -92,7 +92,7 @@ See [docs/architecture.md](docs/architecture.md) for the stack, module boundarie
 
 ## Contributing
 
-The project is currently maintained by a single developer, so contributions are limited. Bug reports and feedback are welcome.
+Bug reports and feedback are welcome. With a single maintainer, the project currently has limited capacity for code contributions.
 
 ## License
 
