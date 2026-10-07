@@ -38,7 +38,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 AAC Board AI has no accounts, backend, telemetry, or tracking. Boards, messages, settings, and cached translations stay on the device. Loading third-party media contacts external hosts.
 
-Stored boards remain available offline. URL imports and remote resources require a connection. Media and text-to-speech availability depend on the platform and selected voice.
+Stored boards remain available offline. URL imports and remote resources require a connection. Offline speech availability depends on the device and selected voice.
 
 ## Limitations
 
@@ -66,10 +66,8 @@ edge://flags/#edge-llm-rewriter-api-for-phi-mini
 
 Enable the flags and restart your browser. See the API documentation for current requirements:
 
-| Browser        | API documentation                                                                                                                                                                                                                                                                             |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Google Chrome  | [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) · [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api) · [Translator](https://developer.chrome.com/docs/ai/translator-api)                                                                                       |
-| Microsoft Edge | [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api) · [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis) · [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api) |
+- **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) · [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api) · [Translator](https://developer.chrome.com/docs/ai/translator-api)
+- **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api) · [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis) · [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)
 
 ## Develop locally
 
@@ -88,7 +86,7 @@ Tests run in Chromium; install Playwright with `npx playwright install --with-de
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md) for the stack, module boundaries, storage model, and accessibility invariants. The Open Board Format and Built-in AI integrations are also available as [@shayc/open-board-format](https://github.com/shayc/open-board-format) and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai).
+See [docs/architecture.md](docs/architecture.md) for the stack, module boundaries, storage model, and accessibility invariants.
 
 ## Contributing
 
