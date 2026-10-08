@@ -1,7 +1,6 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
-import { refreshBoardSets } from "../board-sets/board-sets-store";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
 import { hydrateBoard, type HydratedBoard } from "./board-hydration";
@@ -28,8 +27,6 @@ async function seedTestBoard(): Promise<void> {
     boards: [{ boardId: BOARD_ID, name: "Test Board", obf: obfBoard }],
     assets: [{ path: IMAGE_PATH, blob: pngBlob }],
   });
-
-  await refreshBoardSets();
 }
 
 async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
@@ -65,10 +62,7 @@ function getImageUrl(loadedBoard: HydratedBoard): string {
 }
 
 describe("hydrateBoard", () => {
-  beforeEach(async () => {
-    await resetBoardsDB();
-    await refreshBoardSets();
-  });
+  beforeEach(resetBoardsDB);
 
   test("returns a hydrated board on the happy path", async () => {
     await seedTestBoard();

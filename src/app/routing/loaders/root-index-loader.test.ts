@@ -1,7 +1,7 @@
 import { getBoardSets } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
@@ -25,10 +25,6 @@ function callLoader(searchParams = ""): Promise<Response> {
 describe("rootIndexLoader", () => {
   beforeEach(async () => {
     await resetBoardsDB();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   test("imports the URL from ?board and redirects to its board route", async () => {

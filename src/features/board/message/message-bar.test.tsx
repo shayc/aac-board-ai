@@ -1,7 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import type { ReactNode } from "react";
 import {
-  afterEach,
   beforeEach,
   describe,
   expect,
@@ -45,10 +44,6 @@ beforeEach(() => {
   scrollIntoView = vi
     .spyOn(Element.prototype, "scrollIntoView")
     .mockImplementation(() => undefined);
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
 });
 
 describe("MessageBar", () => {
