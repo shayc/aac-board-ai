@@ -70,6 +70,36 @@ describe("board-translations", () => {
     expect(translated.buttons[1].label).toBeUndefined();
   });
 
+  test.each(["", " \t\n\u00a0 "])(
+    "applyTranslations() normalizes blank translated button text %j",
+    (text) => {
+      const translated = applyTranslations(mockBoard, {
+        Hello: text,
+        "Hello there": text,
+      });
+
+      expect(translated.buttons[0].label).toBeUndefined();
+      expect(translated.buttons[0].vocalization).toBeUndefined();
+    },
+  );
+
+  test("applyTranslations() preserves exact source keys and nonblank translated text", () => {
+    const board: Board = {
+      ...mockBoard,
+      buttons: [
+        { id: "btn-1", label: " Hello ", vocalization: "\tHello there\n" },
+      ],
+    };
+
+    const translated = applyTranslations(board, {
+      " Hello ": " Hola ",
+      "\tHello there\n": "\tHola a todos\n",
+    });
+
+    expect(translated.buttons[0].label).toBe(" Hola ");
+    expect(translated.buttons[0].vocalization).toBe("\tHola a todos\n");
+  });
+
   test("collectTranslatablePhrases() extracts all unique UI text", () => {
     const phrases = collectTranslatablePhrases(mockBoard);
 

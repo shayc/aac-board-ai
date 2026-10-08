@@ -1,5 +1,6 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { Board } from "../board-types";
+import { normalizeButtonText } from "../normalize-button-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
@@ -47,8 +48,8 @@ export function applyTranslations(
     name: lookup(board.name),
     buttons: board.buttons.map((button) => ({
       ...button,
-      label: lookup(button.label),
-      vocalization: lookup(button.vocalization),
+      label: normalizeButtonText(lookup(button.label)),
+      vocalization: normalizeButtonText(lookup(button.vocalization)),
     })),
   };
 }

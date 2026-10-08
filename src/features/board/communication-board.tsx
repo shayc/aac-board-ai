@@ -8,6 +8,7 @@ import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
+import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activation";
 import { useBoardAppearanceConfig } from "./appearance/appearance-store";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -81,24 +82,23 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   };
 
   const renderTile = (button: BoardButton, props: GridItemProps) => {
-    const ariaLabel = button.label?.trim()
-      ? undefined
-      : button.vocalization?.trim() || undefined;
-
     return (
       <Tile
         key={button.id}
-        ariaLabel={ariaLabel}
-        label={button.label ?? ""}
-        imageSrc={button.imageSrc}
+        ariaLabel={button.label ? undefined : button.vocalization}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
-        labelPlacement={tileLabelPlacement}
         variant={button.loadBoard?.id ? "folder" : undefined}
         borderHidden={!areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...props}
-      />
+      >
+        <AACSymbol
+          label={button.label ?? ""}
+          imageSrc={button.imageSrc}
+          labelPlacement={tileLabelPlacement}
+        />
+      </Tile>
     );
   };
 

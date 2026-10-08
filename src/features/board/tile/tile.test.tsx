@@ -5,6 +5,7 @@ import {
 import type { CSSProperties } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
 import { Tile } from "./tile";
 
@@ -34,9 +35,11 @@ function resolveColorInSrgb(cssColor: string): string {
 }
 
 describe("Tile", () => {
-  test("renders with image when imageSrc is provided", async () => {
+  test("renders an AACSymbol child with its accessible label and decorative image", async () => {
     const screen = await render(
-      <Tile label="Cat" imageSrc={TEST_IMAGE_SRC} onActivate={vi.fn()} />,
+      <Tile onActivate={vi.fn()}>
+        <AACSymbol label="Cat" imageSrc={TEST_IMAGE_SRC} />
+      </Tile>,
     );
 
     await expect
@@ -47,17 +50,32 @@ describe("Tile", () => {
     const img = screen.container.querySelector("img");
     expect(img).not.toBeNull();
     expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
+    expect(img?.getAttribute("alt")).toBe("");
+  });
+
+  test("uses ariaLabel to name custom content", async () => {
+    const screen = await render(
+      <Tile ariaLabel="Speak Hello" onActivate={vi.fn()}>
+        <span aria-hidden="true">Hello</span>
+      </Tile>,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "Speak Hello" }))
+      .toBeVisible();
+    await expect.element(screen.getByText("Hello")).toBeVisible();
   });
 
   test("renders the folder corner as a translucent readable text color", async () => {
     const screen = await render(
       <Tile
-        label="Folder"
-        variant="folder"
         backgroundColor="#000000"
         borderColor="#000000"
+        variant="folder"
         onActivate={vi.fn()}
-      />,
+      >
+        Folder
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
@@ -73,7 +91,9 @@ describe("Tile", () => {
 
   test("applies backgroundColor and a readable text color", async () => {
     const screen = await render(
-      <Tile label="Colored" backgroundColor="#000000" onActivate={vi.fn()} />,
+      <Tile backgroundColor="#000000" onActivate={vi.fn()}>
+        Colored
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Colored" });
@@ -89,7 +109,9 @@ describe("Tile", () => {
     const theme = createTheme({ transitions: { duration: { short: 0 } } });
     const screen = await render(
       <MUIThemeProvider theme={theme}>
-        <Tile label="Colored" backgroundColor="#ff0000" onActivate={vi.fn()} />
+        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+          Colored
+        </Tile>
       </MUIThemeProvider>,
     );
 
@@ -109,7 +131,9 @@ describe("Tile", () => {
 
   test("applies borderColor when provided", async () => {
     const screen = await render(
-      <Tile label="Bordered" borderColor="#00ff00" onActivate={vi.fn()} />,
+      <Tile borderColor="#00ff00" onActivate={vi.fn()}>
+        Bordered
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Bordered" });
@@ -120,7 +144,9 @@ describe("Tile", () => {
 
   test("defaults borderColor to backgroundColor when borderColor is omitted", async () => {
     const screen = await render(
-      <Tile label="Match" backgroundColor="#ff0000" onActivate={vi.fn()} />,
+      <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+        Match
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Match" });
@@ -132,7 +158,9 @@ describe("Tile", () => {
   test("desaturates the background when --tile-saturation is set", async () => {
     const screen = await render(
       <div style={{ "--tile-saturation": 0 } as CSSProperties}>
-        <Tile label="Muted" backgroundColor="#ff0000" onActivate={vi.fn()} />
+        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+          Muted
+        </Tile>
       </div>,
     );
 
@@ -148,12 +176,13 @@ describe("Tile", () => {
   test("borderHidden renders a transparent border but keeps its width", async () => {
     const screen = await render(
       <Tile
-        label="Borderless"
         backgroundColor="#ff0000"
         borderColor="#00ff00"
         borderHidden
         onActivate={vi.fn()}
-      />,
+      >
+        Borderless
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Borderless" });
@@ -169,13 +198,14 @@ describe("Tile", () => {
   test("borderHidden keeps the folder corner visible", async () => {
     const screen = await render(
       <Tile
-        label="Folder"
-        variant="folder"
         backgroundColor="#000000"
         borderColor="#000000"
+        variant="folder"
         borderHidden
         onActivate={vi.fn()}
-      />,
+      >
+        Folder
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
@@ -192,7 +222,9 @@ describe("Tile", () => {
     const onActivate = vi.fn();
 
     const screen = await render(
-      <Tile label="Click me" onActivate={onActivate} />,
+      <Tile onActivate={onActivate}>
+        <span>Click me</span>
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Click me" });
@@ -205,7 +237,9 @@ describe("Tile", () => {
     const onActivate = vi.fn();
 
     const screen = await render(
-      <Tile label="Disabled tile" disabled onActivate={onActivate} />,
+      <Tile disabled onActivate={onActivate}>
+        Disabled tile
+      </Tile>,
     );
 
     const button = screen.getByRole("button", { name: "Disabled tile" });

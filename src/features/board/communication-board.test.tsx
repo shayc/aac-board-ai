@@ -308,7 +308,7 @@ describe("CommunicationBoard", () => {
       });
 
       await expect.element(tile).toBeVisible();
-      expect(tile.element().textContent).toBe(label ?? "");
+      expect(tile.element().textContent).toBe("");
       await expectNoA11yViolations(screen.container);
 
       await tile.click();
@@ -316,6 +316,25 @@ describe("CommunicationBoard", () => {
       await vi.waitFor(() => {
         expect(speech.speak).toHaveBeenCalledTimes(1);
         expect(speech.speak.mock.calls[0][0].text).toBe("i need help");
+      });
+    },
+  );
+
+  test.each(["", " \t\n "])(
+    "speaks the label when vocalization is blank %j",
+    async (vocalization) => {
+      const board: OBFBoard = {
+        ...TWO_BUTTON_BOARD,
+        buttons: [{ id: "btn-1", label: "hello", vocalization }],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      };
+      const screen = await renderCommunicationBoard(board);
+
+      await screen.getByRole("button", { name: "hello", exact: true }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.speak).toHaveBeenCalledTimes(1);
+        expect(speech.speak.mock.calls[0][0].text).toBe("hello");
       });
     },
   );

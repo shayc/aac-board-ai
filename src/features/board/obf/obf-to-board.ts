@@ -14,6 +14,7 @@ import type {
   BoardTranslations,
   LoadBoard,
 } from "../board-types";
+import { normalizeButtonText } from "../normalize-button-text";
 import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 
@@ -65,8 +66,8 @@ function transformButton(
 ): BoardButton {
   return {
     id: obfButton.id,
-    label: obfButton.label,
-    vocalization: obfButton.vocalization,
+    label: normalizeButtonText(obfButton.label),
+    vocalization: normalizeButtonText(obfButton.vocalization),
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),
     imageSrc: obfButton.image_id

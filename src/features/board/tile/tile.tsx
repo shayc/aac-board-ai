@@ -1,17 +1,14 @@
 import Button, { buttonClasses } from "@mui/material/Button";
-import { AACSymbol } from "../aac-symbol/aac-symbol";
-import type { TileLabelPlacement } from "../appearance/appearance-store";
+import type { ReactNode } from "react";
 
 interface TileProps {
   ariaLabel?: string;
-  label: string;
-  imageSrc?: string;
+  children: ReactNode;
   backgroundColor?: string;
   borderColor?: string;
   disabled?: boolean;
   variant?: "folder";
   borderHidden?: boolean;
-  labelPlacement?: TileLabelPlacement;
   tabIndex?: number;
   onActivate: () => void;
 }
@@ -26,14 +23,12 @@ function darken(color: string, percentage: number): string {
 
 export function Tile({
   ariaLabel,
-  label,
-  imageSrc,
+  children,
   backgroundColor,
   borderColor,
   disabled,
   variant,
   borderHidden,
-  labelPlacement,
   tabIndex,
   onActivate,
 }: TileProps) {
@@ -117,11 +112,7 @@ export function Tile({
         }),
       })}
     >
-      <AACSymbol
-        label={label}
-        imageSrc={imageSrc}
-        labelPlacement={labelPlacement}
-      />
+      {children}
     </Button>
   );
 }
