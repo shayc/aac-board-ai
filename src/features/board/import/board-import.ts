@@ -1,4 +1,4 @@
-import { normalizeLocale } from "@shared/utils/locale";
+import { normalizeLocale } from "@shared/language/locale";
 import {
   loadBoard,
   type OBFBoard,

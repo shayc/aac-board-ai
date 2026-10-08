@@ -1,5 +1,5 @@
-import { getLanguageCode } from "@shared/utils/locale";
-import type { Board } from "../types";
+import { getLanguageCode } from "@shared/language/locale";
+import type { Board } from "../board-types";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 

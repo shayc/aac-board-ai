@@ -1,4 +1,4 @@
-import type { BoardAction } from "../types";
+import type { BoardAction } from "../board-types";
 
 export function parseAction(raw: string): BoardAction | null {
   if (raw.startsWith("+")) {

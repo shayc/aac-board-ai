@@ -2,7 +2,7 @@ import {
   getLanguageCode,
   getLikelyRegion,
   getRegionCode,
-} from "@shared/utils/locale";
+} from "@shared/language/locale";
 import { useEffect } from "react";
 import {
   getSpeechConfig,

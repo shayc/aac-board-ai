@@ -21,7 +21,7 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import type { Board, BoardButton } from "./types";
+import type { Board, BoardButton } from "./board-types";
 
 interface CommunicationBoardProps {
   board: Board;
