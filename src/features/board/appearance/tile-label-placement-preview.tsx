@@ -1,6 +1,5 @@
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
-import { SymbolLayout } from "../aac-symbol/symbol-layout";
 import type { TileLabelPlacement } from "./appearance-store";
 
 interface TileLabelPlacementPreviewProps {
@@ -30,34 +29,41 @@ export function TileLabelPlacementPreview({
         bgcolor: selected ? "action.selected" : "background.paper",
       }}
     >
-      <SymbolLayout
-        image={
-          <ImageOutlinedIcon
+      <Box
+        component="span"
+        sx={{
+          display: "flex",
+          flexDirection: placement === "top" ? "column-reverse" : "column",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+          gap: 0.5,
+          overflow: "hidden",
+          textAlign: "center",
+        }}
+      >
+        <ImageOutlinedIcon
+          sx={{
+            alignSelf: "center",
+            flexShrink: 0,
+            width: isLabelVisible ? 34 : 42,
+            height: isLabelVisible ? 34 : 42,
+          }}
+        />
+        {isLabelVisible && (
+          <Box
+            component="span"
             sx={{
               alignSelf: "center",
               flexShrink: 0,
-              width: isLabelVisible ? 34 : 42,
-              height: isLabelVisible ? 34 : 42,
+              width: "60%",
+              height: 3,
+              borderRadius: 1,
+              bgcolor: "currentColor",
             }}
           />
-        }
-        label={
-          isLabelVisible ? (
-            <Box
-              component="span"
-              sx={{
-                alignSelf: "center",
-                flexShrink: 0,
-                width: "60%",
-                height: 3,
-                borderRadius: 1,
-                bgcolor: "currentColor",
-              }}
-            />
-          ) : null
-        }
-        labelPlacement={placement}
-      />
+        )}
+      </Box>
     </Box>
   );
 }
