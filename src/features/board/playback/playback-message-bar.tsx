@@ -6,7 +6,7 @@ import {
   type UseBoardPlaybackReturn,
 } from "./use-board-playback";
 
-interface BoardPlaybackMessageBarProps {
+interface PlaybackMessageBarProps {
   parts: MessagePart[];
   playback: Pick<
     UseBoardPlaybackReturn,
@@ -14,10 +14,10 @@ interface BoardPlaybackMessageBarProps {
   >;
 }
 
-export function BoardPlaybackMessageBar({
+export function PlaybackMessageBar({
   parts,
   playback,
-}: BoardPlaybackMessageBarProps) {
+}: PlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
   const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
 

@@ -11,18 +11,18 @@ import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activation";
 import { useBoardAppearanceConfig } from "./appearance/appearance-store";
+import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
-import { BoardPlaybackMessageBar } from "./playback/board-playback-message-bar";
+import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import type { Board, BoardButton } from "./board-types";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -109,7 +109,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       style={boardRootStyle}
       sx={boardRootSx}
     >
-      <BoardPlaybackMessageBar parts={message.parts} playback={playback} />
+      <PlaybackMessageBar parts={message.parts} playback={playback} />
 
       <Stack
         direction="row"
