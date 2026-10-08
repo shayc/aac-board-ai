@@ -11,10 +11,17 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetDetailsDialog", () => {
-  test("has no a11y violations when open", async () => {
+  test("shows the available metadata with no a11y violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDetailsDialog
-        boardSet={makeBoardSet({ name: "Core Words", author: "Jane" })}
+        boardSet={makeBoardSet({
+          name: "Core Words",
+          author: "Jane",
+          gridRows: 2,
+          gridColumns: 3,
+          license: "CC BY-SA 4.0",
+          description: "A starter vocabulary board.",
+        })}
         onClose={vi.fn()}
       />,
     );
@@ -22,38 +29,19 @@ describe("BoardSetDetailsDialog", () => {
     await expect
       .element(screen.getByRole("dialog", { name: "Core Words By Jane" }))
       .toBeVisible();
-    await expectNoA11yViolations(document.body);
-  });
-
-  test("shows the name and author", async () => {
-    const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
-        boardSet={makeBoardSet({ name: "Core Words", author: "Jane" })}
-        onClose={vi.fn()}
-      />,
-    );
-
     await expect
       .element(screen.getByRole("heading", { name: "Core Words By Jane" }))
       .toBeInTheDocument();
     await expect.element(screen.getByText("By Jane")).toBeInTheDocument();
-  });
-
-  test("builds chips from grid dimensions and license", async () => {
-    const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
-        boardSet={makeBoardSet({
-          gridRows: 2,
-          gridColumns: 3,
-          locale: "en",
-          license: "CC BY-SA 4.0",
-        })}
-        onClose={vi.fn()}
-      />,
-    );
-
-    await expect.element(screen.getByText("2×3 grid")).toBeInTheDocument();
+    await expect
+      .element(screen.getByText(/grid$/))
+      .toHaveTextContent("2×3 grid");
     await expect.element(screen.getByText("CC BY-SA 4.0")).toBeInTheDocument();
+    await expect
+      .element(screen.getByText("A starter vocabulary board."))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
   });
 
   test("omits the author line and chips when those fields are absent", async () => {
@@ -63,20 +51,10 @@ describe("BoardSetDetailsDialog", () => {
 
     await expect.element(screen.getByText("My Board")).toBeInTheDocument();
     await expect.element(screen.getByText(/^By /)).not.toBeInTheDocument();
-    await expect.element(screen.getByText(/Grid$/)).not.toBeInTheDocument();
-  });
-
-  test("shows the description when present", async () => {
-    const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
-        boardSet={makeBoardSet({ description: "A starter vocabulary board." })}
-        onClose={vi.fn()}
-      />,
-    );
-
+    await expect.element(screen.getByText(/grid$/)).not.toBeInTheDocument();
     await expect
-      .element(screen.getByText("A starter vocabulary board."))
-      .toBeInTheDocument();
+      .element(screen.getByText("CC BY-SA 4.0"))
+      .not.toBeInTheDocument();
   });
 
   test("renders nothing when no board set is targeted", async () => {

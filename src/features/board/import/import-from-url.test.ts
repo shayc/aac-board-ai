@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   importBoardFromUrl,
@@ -11,10 +11,6 @@ const OBZ_FIXTURE = "lots-of-stuff.obz";
 describe("importBoardFromUrl", () => {
   beforeEach(async () => {
     await resetBoardsDB();
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
   });
 
   test("imports a board from a URL and derives the setId from the filename", async () => {

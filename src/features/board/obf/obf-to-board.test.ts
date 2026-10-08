@@ -1,9 +1,10 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { describe, expect, test } from "vitest";
+import { makeOBFBoard } from "../testing";
 import { obfToBoard } from "./obf-to-board";
 
 describe("obfToBoard", () => {
-  test("maps a minimal board (id, buttons, grid)", () => {
+  test("maps a minimal board and defaults omitted optional fields", () => {
     const obfBoard: OBFBoard = {
       format: "open-board-0.1",
       id: "minimal-board",
@@ -18,8 +19,10 @@ describe("obfToBoard", () => {
     const board = obfToBoard(obfBoard);
 
     expect(board.id).toBe("minimal-board");
+    expect(board.name).toBeUndefined();
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
+    expect(board.buttons[0]?.actions).toEqual([]);
     expect(board.grid.rows).toBe(1);
     expect(board.grid.columns).toBe(1);
     expect(board.grid.order).toEqual([["btn-1"]]);
@@ -27,18 +30,7 @@ describe("obfToBoard", () => {
 
   describe("board fields", () => {
     test("maps the optional locale", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-top-level",
-        name: "My Board",
-        locale: "en-US",
-        buttons: [],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [[null]],
-        },
-      };
+      const obfBoard = makeOBFBoard({ locale: "en-US" });
 
       const board = obfToBoard(obfBoard);
 
@@ -46,43 +38,17 @@ describe("obfToBoard", () => {
     });
 
     test("normalizes the locale to BCP-47 casing on import", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-locale-casing",
-        locale: "en_us",
-        buttons: [],
-        grid: { rows: 1, columns: 1, order: [[null]] },
-      };
+      const obfBoard = makeOBFBoard({ locale: "en_us" });
 
       const board = obfToBoard(obfBoard);
 
       expect(board.locale).toBe("en-US");
     });
-
-    test("handles board without optional name field", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-no-name",
-        buttons: [],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [[null]],
-        },
-      };
-
-      const board = obfToBoard(obfBoard);
-
-      expect(board.id).toBe("board-no-name");
-      expect(board.name).toBeUndefined();
-    });
   });
 
   describe("grid", () => {
     test("keeps grid shape and preserves null slots", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-grid",
+      const obfBoard = makeOBFBoard({
         buttons: [
           { id: "btn-1", label: "A" },
           { id: "btn-2", label: "B" },
@@ -95,7 +61,7 @@ describe("obfToBoard", () => {
             [null, "btn-2"],
           ],
         },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -112,9 +78,7 @@ describe("obfToBoard", () => {
 
   describe("buttons", () => {
     test("maps button visual fields + vocalization", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-visuals",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -129,7 +93,7 @@ describe("obfToBoard", () => {
           columns: 1,
           order: [["btn-1"]],
         },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -143,9 +107,7 @@ describe("obfToBoard", () => {
     });
 
     test("drops a CSS-unsafe button color", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-unsafe-color",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -160,7 +122,7 @@ describe("obfToBoard", () => {
           columns: 1,
           order: [["btn-1"]],
         },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -169,9 +131,7 @@ describe("obfToBoard", () => {
     });
 
     test("maps a load_board id to the runtime navigation target", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-load",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -190,7 +150,7 @@ describe("obfToBoard", () => {
           columns: 1,
           order: [["btn-1"]],
         },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -200,9 +160,7 @@ describe("obfToBoard", () => {
     });
 
     test("ignores a load_board without a resolved id", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-load-path-only",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -211,33 +169,15 @@ describe("obfToBoard", () => {
           },
         ],
         grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
       expect(board.buttons[0]?.loadBoard).toBeUndefined();
     });
 
-    test("defaults actions to empty array when none provided", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-actions-empty",
-        buttons: [{ id: "btn-1", label: "No actions" }],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
-      };
-
-      const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([]);
-    });
-
     test("uses actions and ignores the action fallback when both are present", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-2",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -251,7 +191,7 @@ describe("obfToBoard", () => {
           columns: 1,
           order: [["btn-1"]],
         },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
       expect(board.buttons[0]?.actions).toEqual([
@@ -261,35 +201,29 @@ describe("obfToBoard", () => {
     });
 
     test("treats an explicit empty actions array as no actions, ignoring action", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-actions-empty-array",
+      const obfBoard = makeOBFBoard({
         buttons: [
           { id: "btn-1", label: "Speak", action: ":speak", actions: [] },
         ],
         grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
       expect(board.buttons[0]?.actions).toEqual([]);
     });
 
     test("falls back to the single action when actions is absent", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-2-fallback",
+      const obfBoard = makeOBFBoard({
         buttons: [{ id: "btn-1", label: "Speak", action: ":speak" }],
         grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
       expect(board.buttons[0]?.actions).toEqual([{ kind: "speak" }]);
     });
 
     test("parses spell actions and drops unknown ones", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-actions-parse",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -298,7 +232,7 @@ describe("obfToBoard", () => {
           },
         ],
         grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      };
+      });
 
       const board = obfToBoard(obfBoard);
       expect(board.buttons[0]?.actions).toEqual([
@@ -310,10 +244,7 @@ describe("obfToBoard", () => {
 
   describe("media resolution", () => {
     test("chooses imageSrc/soundSrc by data > path > url precedence", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-1",
-        name: "Test Board",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -342,7 +273,7 @@ describe("obfToBoard", () => {
             url: "https://example.com/snd-1.mp3",
           },
         ],
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -351,9 +282,7 @@ describe("obfToBoard", () => {
     });
 
     test("falls back to url when no data/path is available", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-url-fallback",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -379,7 +308,7 @@ describe("obfToBoard", () => {
             url: "https://example.com/snd.mp3",
           },
         ],
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -388,9 +317,7 @@ describe("obfToBoard", () => {
     });
 
     test("returns undefined imageSrc/soundSrc for unknown ids", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-missing-media",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -406,7 +333,7 @@ describe("obfToBoard", () => {
         },
         images: [{ id: "img-1", data: "data:image/png;base64,AAA" }],
         sounds: [{ id: "snd-1", data: "data:audio/mp3;base64,BBB" }],
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 
@@ -440,9 +367,7 @@ describe("obfToBoard", () => {
     });
 
     test("ignores media entries without any source (no data, path, or url)", () => {
-      const obfBoard: OBFBoard = {
-        format: "open-board-0.1",
-        id: "board-empty-media",
+      const obfBoard = makeOBFBoard({
         buttons: [
           {
             id: "btn-1",
@@ -466,7 +391,7 @@ describe("obfToBoard", () => {
             id: "snd-empty",
           },
         ],
-      };
+      });
 
       const board = obfToBoard(obfBoard);
 

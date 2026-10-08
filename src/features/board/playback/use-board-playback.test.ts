@@ -56,28 +56,6 @@ describe("useBoardPlayback", () => {
     expect(callOrder).toEqual(["speak:before", "play:ding.mp3", "speak:after"]);
   });
 
-  test("reports isMessagePlaying true during playback and false after it resolves", async () => {
-    let resolveSpeak: (() => void) | undefined;
-    speech.speak.mockImplementationOnce((utterance) => {
-      resolveSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
-      };
-    });
-
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
-
-    const { result, rerender } = await renderPlayback();
-
-    const playPromise = result.current.playMessage(parts);
-    await rerender();
-    expect(result.current.isMessagePlaying).toBe(true);
-
-    resolveSpeak?.();
-    await playPromise;
-    await rerender();
-    expect(result.current.isMessagePlaying).toBe(false);
-  });
-
   test("does not present tile speech as message playback", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
@@ -92,9 +70,10 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("stop() cancels speech and clears isMessagePlaying", async () => {
+  test("stop() cancels speech and clears playing and active-part state", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
+      utterance.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
       resolveSpeak = () => {
         utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
       };
@@ -106,12 +85,15 @@ describe("useBoardPlayback", () => {
 
     const playPromise = result.current.playMessage(parts);
     await rerender();
+    expect(result.current.isMessagePlaying).toBe(true);
+    expect(result.current.activePartId).toBe("1");
 
     result.current.stop();
     await rerender();
 
     expect(speech.cancel).toHaveBeenCalled();
     expect(result.current.isMessagePlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
 
     resolveSpeak?.();
     await playPromise;
@@ -136,13 +118,7 @@ describe("useBoardPlayback", () => {
     expect(result.current.isMessagePlaying).toBe(false);
   });
 
-  test("has no active part before playback starts", async () => {
-    const { result } = await renderPlayback();
-
-    expect(result.current.activePartId).toBeNull();
-  });
-
-  test("highlights the part at the current speech boundary, then clears it", async () => {
+  test("tracks playing state and active parts through speech boundaries and completion", async () => {
     let fireBoundary: ((charIndex: number) => void) | undefined;
     let endSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
@@ -162,42 +138,24 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
+    expect(result.current.isMessagePlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
+
     const playPromise = result.current.playMessage(parts);
     await rerender();
+    expect(result.current.isMessagePlaying).toBe(true);
+    expect(result.current.activePartId).toBe("1");
 
     fireBoundary?.(2); // "want" begins at offset 2 in "i want"
     await rerender();
+    expect(result.current.isMessagePlaying).toBe(true);
     expect(result.current.activePartId).toBe("2");
 
     endSpeak?.();
     await playPromise;
     await rerender();
+    expect(result.current.isMessagePlaying).toBe(false);
     expect(result.current.activePartId).toBeNull();
-  });
-
-  test("clears the active part on stop", async () => {
-    let resolveSpeak: (() => void) | undefined;
-    speech.speak.mockImplementationOnce((utterance) => {
-      utterance.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
-      resolveSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
-      };
-    });
-
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
-
-    const { result, rerender } = await renderPlayback();
-
-    const playPromise = result.current.playMessage(parts);
-    await rerender();
-    expect(result.current.activePartId).toBe("1");
-
-    result.current.stop();
-    await rerender();
-    expect(result.current.activePartId).toBeNull();
-
-    resolveSpeak?.();
-    await playPromise;
   });
 
   test("does not advance to later segments after stop", async () => {

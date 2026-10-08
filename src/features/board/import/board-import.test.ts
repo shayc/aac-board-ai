@@ -31,9 +31,11 @@ describe("importBoardSets", () => {
     await resetBoardsDB();
   });
 
-  test("imports an OBF file into IndexedDB", async () => {
+  test("imports an OBF file into IndexedDB and refreshes the board-set catalog", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
+
+    expect(await getBoardSets()).toHaveLength(0);
 
     const importResults = await importBoardSets(fixtureFile);
 
@@ -42,6 +44,10 @@ describe("importBoardSets", () => {
         setId: IMPORTED_SET_ID,
         rootBoardId: board.id,
       },
+    ]);
+
+    expect(await getBoardSets()).toEqual([
+      expect.objectContaining({ setId: IMPORTED_SET_ID }),
     ]);
 
     const boardSets = await listBoardSets();
@@ -65,18 +71,6 @@ describe("importBoardSets", () => {
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
     expect((await countStoredBoardContent(IMPORTED_SET_ID)).assets).toBe(0);
-  });
-
-  test("refreshes the board-set catalog after an import", async () => {
-    const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
-
-    expect(await getBoardSets()).toHaveLength(0);
-
-    await importBoardSets(fixtureFile);
-
-    expect(await getBoardSets()).toEqual([
-      expect.objectContaining({ setId: IMPORTED_SET_ID }),
-    ]);
   });
 
   test("imports an OBZ file into IndexedDB", async () => {
