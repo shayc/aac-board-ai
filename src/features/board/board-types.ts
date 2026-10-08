@@ -21,7 +21,7 @@ export interface BoardButton {
   soundSrc?: string;
   backgroundColor?: string;
   borderColor?: string;
-  actions?: BoardAction[];
+  actions: BoardAction[];
   loadBoard?: LoadBoard;
 }
 

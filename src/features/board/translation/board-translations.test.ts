@@ -28,11 +28,13 @@ const mockBoard: Board = {
       id: "btn-1",
       label: "Hello",
       vocalization: "Hello there",
+      actions: [],
     },
     {
       id: "btn-2",
       label: undefined,
       vocalization: undefined,
+      actions: [],
     },
   ],
   locale: "en-US",
@@ -71,13 +73,15 @@ describe("board-translations", () => {
   });
 
   test.each(["", " \t\n\u00a0 "])(
-    "applyTranslations() normalizes blank translated button text %j",
+    "applyTranslations() normalizes blank translated board text %j",
     (text) => {
       const translated = applyTranslations(mockBoard, {
+        "My Board": text,
         Hello: text,
         "Hello there": text,
       });
 
+      expect(translated.name).toBeUndefined();
       expect(translated.buttons[0].label).toBeUndefined();
       expect(translated.buttons[0].vocalization).toBeUndefined();
     },
@@ -86,16 +90,24 @@ describe("board-translations", () => {
   test("applyTranslations() preserves exact source keys and nonblank translated text", () => {
     const board: Board = {
       ...mockBoard,
+      name: " My Board ",
       buttons: [
-        { id: "btn-1", label: " Hello ", vocalization: "\tHello there\n" },
+        {
+          id: "btn-1",
+          label: " Hello ",
+          vocalization: "\tHello there\n",
+          actions: [],
+        },
       ],
     };
 
     const translated = applyTranslations(board, {
+      " My Board ": " Mi Tablero ",
       " Hello ": " Hola ",
       "\tHello there\n": "\tHola a todos\n",
     });
 
+    expect(translated.name).toBe(" Mi Tablero ");
     expect(translated.buttons[0].label).toBe(" Hola ");
     expect(translated.buttons[0].vocalization).toBe("\tHola a todos\n");
   });

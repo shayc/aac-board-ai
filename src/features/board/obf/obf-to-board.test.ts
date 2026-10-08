@@ -29,6 +29,23 @@ describe("obfToBoard", () => {
   });
 
   describe("board fields", () => {
+    test.each([
+      { description: "missing", name: undefined },
+      { description: "empty", name: "" },
+      { description: "whitespace-only", name: " \t\n\u00a0 " },
+    ])("normalizes $description board names to undefined", ({ name }) => {
+      const board = obfToBoard(makeOBFBoard({ name }));
+
+      expect(board.name).toBeUndefined();
+    });
+
+    test("preserves nonblank board names verbatim", () => {
+      const name = "\tCore words \n";
+      const board = obfToBoard(makeOBFBoard({ name }));
+
+      expect(board.name).toBe(name);
+    });
+
     test("maps the optional locale", () => {
       const obfBoard = makeOBFBoard({ locale: "en-US" });
 

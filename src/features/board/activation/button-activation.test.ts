@@ -56,6 +56,7 @@ describe("createButtonActivator", () => {
     const button: BoardButton = {
       id: "btn",
       label: "Folder",
+      actions: [],
       loadBoard: { id: "child-board" },
     };
 
@@ -223,6 +224,7 @@ describe("createButtonActivator", () => {
       label: "hi",
       vocalization: "hello",
       imageSrc: "img.png",
+      actions: [],
     });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
@@ -243,6 +245,7 @@ describe("createButtonActivator", () => {
       id: "btn",
       label: "bell",
       soundSrc: "bell.mp3",
+      actions: [],
     });
 
     expect(playback.playPart).toHaveBeenCalledTimes(1);
@@ -258,6 +261,7 @@ describe("createButtonActivator", () => {
       id: "btn",
       label: "I",
       vocalization: "Hello",
+      actions: [],
     });
 
     expect(playback.playPart).toHaveBeenCalledWith(
@@ -268,7 +272,7 @@ describe("createButtonActivator", () => {
   test("delegates inaudible content so playback policy stays centralized", () => {
     const { activateButton, message, playback } = setup();
 
-    activateButton({ id: "btn" });
+    activateButton({ id: "btn", actions: [] });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
     expect(playback.playPart).toHaveBeenCalledTimes(1);

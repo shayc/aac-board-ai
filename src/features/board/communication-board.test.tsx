@@ -206,6 +206,20 @@ describe("CommunicationBoard", () => {
       .toBeVisible();
   });
 
+  test.each([undefined, "", " \t\n\u00a0 "])(
+    "gives the tile grid a default accessible name when the board name is %j",
+    async (name) => {
+      const screen = await renderCommunicationBoard({
+        ...TWO_BUTTON_BOARD,
+        name,
+      });
+
+      await expect
+        .element(screen.getByRole("grid", { name: "Communication board" }))
+        .toBeVisible();
+    },
+  );
+
   test("does not scroll the grid when Home navigates to the home board", async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
 
