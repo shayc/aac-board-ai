@@ -32,10 +32,10 @@ describe("BoardSettings", () => {
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Above image" }))
+      .element(screen.getByRole("radio", { name: "Top" }))
       .toBeChecked();
     await expect
-      .element(screen.getByRole("radio", { name: "Below image" }))
+      .element(screen.getByRole("radio", { name: "Bottom" }))
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("radio", { name: "Hidden" }))
@@ -127,13 +127,13 @@ describe("BoardSettings", () => {
       ).size,
     ).toBe(2);
 
-    const bottomRadio = groups[0].getByRole("radio", { name: "Below image" });
+    const bottomRadio = groups[0].getByRole("radio", { name: "Bottom" });
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();
     for (const group of groups) {
       await expect
-        .element(group.getByRole("radio", { name: "Below image" }))
+        .element(group.getByRole("radio", { name: "Bottom" }))
         .toBeChecked();
     }
 
