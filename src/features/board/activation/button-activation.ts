@@ -38,13 +38,12 @@ export function createButtonActivator({
   navigation,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
-    const targetBoardId = button.loadBoard?.id;
-    if (targetBoardId) {
-      navigation.goToBoard(targetBoardId);
+    if (button.loadBoard) {
+      navigation.goToBoard(button.loadBoard.id);
       return;
     }
 
-    if (!button.actions?.length) {
+    if (button.actions.length === 0) {
       const part = createPart({
         label: button.label,
         vocalization: button.vocalization,

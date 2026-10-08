@@ -19,7 +19,9 @@ describe("obfToBoard", () => {
     const board = obfToBoard(obfBoard);
 
     expect(board.id).toBe("minimal-board");
-    expect(board.name).toBeUndefined();
+    expect(board.name).toBe("");
+    expect(board.locale).toBeUndefined();
+    expect(board.translations).toEqual({});
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
     expect(board.buttons[0]?.actions).toEqual([]);
@@ -29,6 +31,23 @@ describe("obfToBoard", () => {
   });
 
   describe("board fields", () => {
+    test.each([
+      { description: "missing", name: undefined },
+      { description: "empty", name: "" },
+      { description: "whitespace-only", name: " \t\n\u00a0 " },
+    ])("normalizes $description board names to empty strings", ({ name }) => {
+      const board = obfToBoard(makeOBFBoard({ name }));
+
+      expect(board.name).toBe("");
+    });
+
+    test("preserves nonblank board names verbatim", () => {
+      const name = "\tCore words \n";
+      const board = obfToBoard(makeOBFBoard({ name }));
+
+      expect(board.name).toBe(name);
+    });
+
     test("maps the optional locale", () => {
       const obfBoard = makeOBFBoard({ locale: "en-US" });
 
@@ -43,6 +62,22 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.locale).toBe("en-US");
+    });
+
+    test("maps cached translations with canonical locale keys", () => {
+      const board = obfToBoard(
+        makeOBFBoard({
+          strings: {
+            es_es: { Hello: "Hola" },
+            "fr-CA": { Hello: "Bonjour" },
+          },
+        }),
+      );
+
+      expect(board.translations).toEqual({
+        "es-ES": { Hello: "Hola" },
+        "fr-CA": { Hello: "Bonjour" },
+      });
     });
   });
 
@@ -77,6 +112,39 @@ describe("obfToBoard", () => {
   });
 
   describe("buttons", () => {
+    test.each([
+      { description: "missing", text: undefined },
+      { description: "empty", text: "" },
+      { description: "whitespace-only", text: " \t\n\u00a0 " },
+    ])(
+      "normalizes $description button labels to empty strings and vocalizations to undefined",
+      ({ text }) => {
+        const obfBoard = makeOBFBoard({
+          buttons: [{ id: "btn-1", label: text, vocalization: text }],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        });
+
+        const board = obfToBoard(obfBoard);
+
+        expect(board.buttons[0].label).toBe("");
+        expect(board.buttons[0].vocalization).toBeUndefined();
+      },
+    );
+
+    test("preserves nonblank button text verbatim", () => {
+      const obfBoard = makeOBFBoard({
+        buttons: [
+          { id: "btn-1", label: " Hi ", vocalization: "\tHello there\n" },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      });
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0].label).toBe(" Hi ");
+      expect(board.buttons[0].vocalization).toBe("\tHello there\n");
+    });
+
     test("maps button visual fields + vocalization", () => {
       const obfBoard = makeOBFBoard({
         buttons: [

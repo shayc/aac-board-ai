@@ -8,20 +8,21 @@ import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
+import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activation";
 import { useBoardAppearanceConfig } from "./appearance/appearance-store";
+import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
 import { NavButtons } from "./navigation/nav-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
-import { BoardPlaybackMessageBar } from "./playback/board-playback-message-bar";
+import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import type { Board, BoardButton } from "./board-types";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -31,34 +32,35 @@ type BoardRootStyle = CSSProperties & {
   "--tile-saturation": string;
 };
 
-const boardRootSx = (theme: Theme) => ({
-  height: "100%",
-  ...theme.applyStyles("dark", {
-    backgroundImage:
-      "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
-    backgroundRepeat: "no-repeat",
-  }),
-  [theme.breakpoints.up("sm")]: {
-    pl: safeAreaInset("left"),
-    pr: safeAreaInset("right"),
-  },
-});
-
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
   const { direction } = useLanguage();
+
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardAppearanceConfig();
-  const message = useMessage();
-  const playback = useBoardPlayback();
-  const suggestions = useMessageSuggestions(message.text);
-  const navigation = useBoardNavigation();
-  const gridRef = useRef<HTMLDivElement>(null);
 
-  function scrollGridToOrigin() {
-    gridRef.current?.scrollTo({ left: 0, top: 0 });
-  }
+  const message = useMessage();
+  const suggestions = useMessageSuggestions(message.text);
+
+  const playback = useBoardPlayback();
+
+  const navigation = useBoardNavigation();
+  const gridViewportRef = useRef<HTMLDivElement>(null);
+
+  const activateButton = createButtonActivator({
+    message,
+    playback,
+    navigation,
+  });
+  const keyboard = useBoardKeyboard({ message, playback });
+
+  const hasMessage = message.parts.length > 0;
+  const isInBoardSet = Boolean(navigation.setId);
+
+  const boardRootStyle: BoardRootStyle = {
+    "--tile-saturation": String(tileSaturation),
+  };
 
   function handleHome() {
     if (navigation.isHome) {
@@ -68,37 +70,28 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     navigation.goHome();
   }
 
-  const activateButton = createButtonActivator({
-    message,
-    playback,
-    navigation,
-  });
+  function scrollGridToOrigin() {
+    gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
+  }
 
-  const keyboard = useBoardKeyboard({ message, playback });
-  const hasMessage = message.parts.length > 0;
-  const boardRootStyle: BoardRootStyle = {
-    "--tile-saturation": String(tileSaturation),
-  };
-
-  const renderTile = (button: BoardButton, props: GridItemProps) => {
-    const ariaLabel = button.label?.trim()
-      ? undefined
-      : button.vocalization?.trim() || undefined;
-
+  const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
     return (
       <Tile
         key={button.id}
-        ariaLabel={ariaLabel}
-        label={button.label ?? ""}
-        imageSrc={button.imageSrc}
+        ariaLabel={button.label ? undefined : button.vocalization}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
-        labelPlacement={tileLabelPlacement}
-        variant={button.loadBoard?.id ? "folder" : undefined}
+        variant={button.loadBoard ? "folder" : undefined}
         borderHidden={!areTileBordersVisible}
         onActivate={() => activateButton(button)}
-        {...props}
-      />
+        {...gridItemProps}
+      >
+        <AACSymbol
+          label={button.label}
+          imageSrc={button.imageSrc}
+          labelPlacement={tileLabelPlacement}
+        />
+      </Tile>
     );
   };
 
@@ -107,9 +100,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       {...keyboard.rootProps}
       direction="column"
       style={boardRootStyle}
-      sx={boardRootSx}
+      sx={createBoardRootSx}
     >
-      <BoardPlaybackMessageBar parts={message.parts} playback={playback} />
+      <PlaybackMessageBar parts={message.parts} playback={playback} />
 
       <Stack
         direction="row"
@@ -117,7 +110,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-          {!isSmallScreen && navigation.setId && (
+          {!isSmallScreen && isInBoardSet && (
             <NavButtons
               canGoBack={navigation.canGoBack}
               canGoHome={navigation.canGoHome}
@@ -147,8 +140,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
-          ref={gridRef}
-          ariaLabel={board.name ?? t(m.boardGridLabel)}
+          ref={gridViewportRef}
+          ariaLabel={board.name || t(m.boardGridLabel)}
           dir={direction}
           items={board.buttons}
           rows={board.grid.rows}
@@ -158,22 +151,24 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         />
       </Box>
 
-      {isSmallScreen && navigation.setId && (
+      {isSmallScreen && (
         <Toolbar
           sx={{
             alignItems: "flex-end",
-            justifyContent: "space-between",
+            justifyContent: isInBoardSet ? "space-between" : "flex-end",
             gap: 2,
             px: { xs: 3 },
             pb: safeAreaInset("bottom"),
           }}
         >
-          <NavButtons
-            canGoBack={navigation.canGoBack}
-            canGoHome={navigation.canGoHome}
-            onBack={navigation.goBack}
-            onHome={handleHome}
-          />
+          {isInBoardSet && (
+            <NavButtons
+              canGoBack={navigation.canGoBack}
+              canGoHome={navigation.canGoHome}
+              onBack={navigation.goBack}
+              onHome={handleHome}
+            />
+          )}
 
           <BackspaceButton
             disabled={!hasMessage}
@@ -184,4 +179,19 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       )}
     </Stack>
   );
+}
+
+function createBoardRootSx(theme: Theme) {
+  return {
+    height: "100%",
+    ...theme.applyStyles("dark", {
+      backgroundImage:
+        "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
+      backgroundRepeat: "no-repeat",
+    }),
+    [theme.breakpoints.up("sm")]: {
+      pl: safeAreaInset("left"),
+      pr: safeAreaInset("right"),
+    },
+  };
 }

@@ -3,7 +3,7 @@ import {
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
-  TileLabelPlacementPreview,
+  LabelPlacementPreview,
   useBoardAppearanceConfig,
   type TileLabelPlacement,
 } from "@features/board";
@@ -35,10 +35,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
       value={placement}
       control={
         <Radio
-          checkedIcon={
-            <TileLabelPlacementPreview placement={placement} selected />
-          }
-          icon={<TileLabelPlacementPreview placement={placement} />}
+          checkedIcon={<LabelPlacementPreview placement={placement} selected />}
+          icon={<LabelPlacementPreview placement={placement} />}
           disableRipple
           sx={{
             p: 0.5,
@@ -60,7 +58,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const labelPositionId = useId();
+  const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardAppearanceConfig();
 
@@ -68,13 +66,13 @@ export function BoardSettings() {
     <Stack spacing={3}>
       <FormControl>
         <FormLabel
-          id={labelPositionId}
+          id={labelPlacementId}
           sx={{ typography: "body2", color: "text.secondary" }}
         >
           {t(m.tileLabelPosition)}
         </FormLabel>
         <RadioGroup
-          aria-labelledby={labelPositionId}
+          aria-labelledby={labelPlacementId}
           value={tileLabelPlacement}
           onChange={(event) =>
             setTileLabelPlacement(event.target.value as TileLabelPlacement)

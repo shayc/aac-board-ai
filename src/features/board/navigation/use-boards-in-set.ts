@@ -27,7 +27,7 @@ export function useBoardsInSet(
   const records = value ?? [];
 
   const boards = records.map((record) => {
-    const translated = findTranslations(record.obf.strings, language)?.[
+    const translated = findTranslations(record.obf.strings ?? {}, language)?.[
       record.name
     ];
 

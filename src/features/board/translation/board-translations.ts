@@ -1,5 +1,6 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { Board } from "../board-types";
+import { normalizeBoardText } from "../normalize-board-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
@@ -24,10 +25,6 @@ export function findTranslations(
   translations: Board["translations"],
   language: string,
 ): Record<string, string> | undefined {
-  if (!translations) {
-    return;
-  }
-
   const match = Object.entries(translations).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
@@ -44,11 +41,11 @@ export function applyTranslations(
 
   return {
     ...board,
-    name: lookup(board.name),
+    name: normalizeBoardText(lookup(board.name)) ?? "",
     buttons: board.buttons.map((button) => ({
       ...button,
-      label: lookup(button.label),
-      vocalization: lookup(button.vocalization),
+      label: normalizeBoardText(lookup(button.label)) ?? "",
+      vocalization: normalizeBoardText(lookup(button.vocalization)),
     })),
   };
 }

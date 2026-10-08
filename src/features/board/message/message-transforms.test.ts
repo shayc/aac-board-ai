@@ -92,6 +92,17 @@ describe("appendTextToLastPart", () => {
 });
 
 describe("applyBackspace", () => {
+  const graphemes = [
+    "😀",
+    "e\u0301",
+    "ש\u05C1\u05B8",
+    "👍🏽",
+    "👨‍👩‍👧‍👦",
+    "🇮🇱",
+    "✌️",
+    "1️⃣",
+  ];
+
   test("removes a single character if the last part is text-only", () => {
     const parts = applyBackspace([
       { id: "1", label: "hello" },
@@ -104,14 +115,32 @@ describe("applyBackspace", () => {
     ]);
   });
 
-  test("removes the entire part if it is text-only but has 1 or 0 characters", () => {
-    const parts = applyBackspace([
+  test.each(graphemes)("removes the complete final grapheme %s", (grapheme) => {
+    const original: MessagePart[] = [
       { id: "1", label: "hello" },
-      { id: "2", label: "w" },
-    ]);
+      { id: "2", label: `a${grapheme}` },
+    ];
 
-    expect(parts).toEqual([{ id: "1", label: "hello" }]);
+    const parts = applyBackspace(original);
+
+    expect(parts).toEqual([
+      { id: "1", label: "hello" },
+      { id: "2", label: "a" },
+    ]);
+    expect(original[1].label).toBe(`a${grapheme}`);
   });
+
+  test.each(["w", "", ...graphemes])(
+    "removes the entire text-only part containing at most one grapheme (%s)",
+    (label) => {
+      const parts = applyBackspace([
+        { id: "1", label: "hello" },
+        { id: "2", label },
+      ]);
+
+      expect(parts).toEqual([{ id: "1", label: "hello" }]);
+    },
+  );
 
   test("removes the entire part if it is not text-only", () => {
     const parts = applyBackspace([

@@ -14,6 +14,7 @@ import type {
   BoardTranslations,
   LoadBoard,
 } from "../board-types";
+import { normalizeBoardText } from "../normalize-board-text";
 import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 
@@ -23,7 +24,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
   const board: Board = {
     id: obfBoard.id,
-    name: obfBoard.name,
+    name: normalizeBoardText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
@@ -65,8 +66,8 @@ function transformButton(
 ): BoardButton {
   return {
     id: obfButton.id,
-    label: obfButton.label,
-    vocalization: obfButton.vocalization,
+    label: normalizeBoardText(obfButton.label) ?? "",
+    vocalization: normalizeBoardText(obfButton.vocalization),
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),
     imageSrc: obfButton.image_id
@@ -99,9 +100,9 @@ function transformLoadBoard(
 
 function transformTranslations(
   strings: OBFBoard["strings"],
-): BoardTranslations | undefined {
+): BoardTranslations {
   if (!strings) {
-    return undefined;
+    return {};
   }
 
   return Object.fromEntries(
