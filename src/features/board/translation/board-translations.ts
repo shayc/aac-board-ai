@@ -48,7 +48,7 @@ export function applyTranslations(
     name: normalizeBoardText(lookup(board.name)),
     buttons: board.buttons.map((button) => ({
       ...button,
-      label: normalizeBoardText(lookup(button.label)),
+      label: normalizeBoardText(lookup(button.label)) ?? "",
       vocalization: normalizeBoardText(lookup(button.vocalization)),
     })),
   };

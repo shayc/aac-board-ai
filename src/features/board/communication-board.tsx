@@ -87,7 +87,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         {...gridItemProps}
       >
         <AACSymbol
-          label={button.label ?? ""}
+          label={button.label}
           imageSrc={button.imageSrc}
           labelPlacement={tileLabelPlacement}
         />

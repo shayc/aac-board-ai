@@ -15,7 +15,7 @@ export interface BoardGrid {
 
 export interface BoardButton {
   id: string;
-  label?: string;
+  label: string;
   vocalization?: string;
   imageSrc?: string;
   soundSrc?: string;

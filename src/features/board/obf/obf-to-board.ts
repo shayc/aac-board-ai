@@ -66,7 +66,7 @@ function transformButton(
 ): BoardButton {
   return {
     id: obfButton.id,
-    label: normalizeBoardText(obfButton.label),
+    label: normalizeBoardText(obfButton.label) ?? "",
     vocalization: normalizeBoardText(obfButton.vocalization),
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),

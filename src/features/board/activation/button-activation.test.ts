@@ -71,7 +71,7 @@ describe("createButtonActivator", () => {
   test("maps home to navigation.goHome", () => {
     const { activateButton, navigation } = setup();
 
-    activateButton({ id: "btn", actions: [{ kind: "home" }] });
+    activateButton({ id: "btn", label: "", actions: [{ kind: "home" }] });
 
     expect(navigation.goHome).toHaveBeenCalledTimes(1);
   });
@@ -83,7 +83,7 @@ describe("createButtonActivator", () => {
     ]);
     const { activateButton } = setup({ message });
 
-    activateButton({ id: "btn", actions: [{ kind: "backspace" }] });
+    activateButton({ id: "btn", label: "", actions: [{ kind: "backspace" }] });
 
     expect(message.setParts).toHaveBeenCalledWith([
       { id: "1", label: "hello" },
@@ -95,7 +95,7 @@ describe("createButtonActivator", () => {
     const message = createMessageStub([{ id: "1", label: "hello" }]);
     const { activateButton } = setup({ message });
 
-    activateButton({ id: "btn", actions: [{ kind: "clear" }] });
+    activateButton({ id: "btn", label: "", actions: [{ kind: "clear" }] });
 
     expect(message.setParts).toHaveBeenCalledWith([]);
   });
@@ -107,6 +107,7 @@ describe("createButtonActivator", () => {
 
     activateButton({
       id: "btn",
+      label: "",
       actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
     });
 
@@ -133,6 +134,7 @@ describe("createButtonActivator", () => {
 
     activateButton({
       id: "btn",
+      label: "",
       actions: [{ kind: "speak" }, { kind: "clear" }],
     });
 
@@ -156,6 +158,7 @@ describe("createButtonActivator", () => {
 
     activateButton({
       id: "btn",
+      label: "",
       actions: [{ kind: "speak" }, { kind: "clear" }],
     });
     await Promise.resolve();
@@ -170,6 +173,7 @@ describe("createButtonActivator", () => {
 
     activateButton({
       id: "btn",
+      label: "",
       actions: [
         { kind: "spell", text: "h" },
         { kind: "spell", text: "i" },
@@ -189,7 +193,7 @@ describe("createButtonActivator", () => {
     const playback = createPlaybackStub();
     const { activateButton } = setup({ message, playback });
 
-    activateButton({ id: "btn", actions: [{ kind: "speak" }] });
+    activateButton({ id: "btn", label: "", actions: [{ kind: "speak" }] });
 
     expect(playback.playMessage).toHaveBeenCalledWith(initialParts);
 
@@ -272,7 +276,7 @@ describe("createButtonActivator", () => {
   test("delegates inaudible content so playback policy stays centralized", () => {
     const { activateButton, message, playback } = setup();
 
-    activateButton({ id: "btn", actions: [] });
+    activateButton({ id: "btn", label: "", actions: [] });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
     expect(playback.playPart).toHaveBeenCalledTimes(1);

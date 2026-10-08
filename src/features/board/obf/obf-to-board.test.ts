@@ -98,17 +98,20 @@ describe("obfToBoard", () => {
       { description: "missing", text: undefined },
       { description: "empty", text: "" },
       { description: "whitespace-only", text: " \t\n\u00a0 " },
-    ])("normalizes $description button text to undefined", ({ text }) => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", label: text, vocalization: text }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      });
+    ])(
+      "normalizes $description button labels to empty strings and vocalizations to undefined",
+      ({ text }) => {
+        const obfBoard = makeOBFBoard({
+          buttons: [{ id: "btn-1", label: text, vocalization: text }],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        });
 
-      const board = obfToBoard(obfBoard);
+        const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0].label).toBeUndefined();
-      expect(board.buttons[0].vocalization).toBeUndefined();
-    });
+        expect(board.buttons[0].label).toBe("");
+        expect(board.buttons[0].vocalization).toBeUndefined();
+      },
+    );
 
     test("preserves nonblank button text verbatim", () => {
       const obfBoard = makeOBFBoard({
