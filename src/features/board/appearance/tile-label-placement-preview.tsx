@@ -56,7 +56,7 @@ export function TileLabelPlacementPreview({
               alignSelf: "center",
               flexShrink: 0,
               width: "33.3%",
-              height: 2,
+              height: 3,
               bgcolor: "currentColor",
             }}
           />
