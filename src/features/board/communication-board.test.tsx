@@ -4,7 +4,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { userEvent } from "vitest/browser";
+import { page, userEvent } from "vitest/browser";
 import { setTileLabelPlacement } from "./appearance/appearance-store";
 import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
@@ -102,6 +102,50 @@ describe("CommunicationBoard", () => {
 
     await expect.element(play).toBeEnabled();
   });
+
+  test.each([390, 1024])(
+    "keeps Backspace usable outside a board set at a viewport width of %i",
+    async (width) => {
+      const originalWidth = window.innerWidth;
+      const originalHeight = window.innerHeight;
+
+      try {
+        await page.viewport(width, 800);
+        const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+        const backspace = screen.getByRole("button", { name: "Backspace" });
+        const play = screen.getByRole("button", { name: "Play message" });
+
+        await expect.element(backspace).toBeVisible();
+        await expect.element(backspace).toBeDisabled();
+        await expect
+          .element(screen.getByRole("button", { name: "Go back" }))
+          .not.toBeInTheDocument();
+        await expect
+          .element(screen.getByRole("button", { name: "Go home" }))
+          .not.toBeInTheDocument();
+
+        await screen.getByRole("button", { name: "hello" }).click();
+        await screen.getByRole("button", { name: "world" }).click();
+        await expect.element(backspace).toBeEnabled();
+
+        await backspace.click();
+        speech.speak.mockClear();
+        await play.click();
+
+        await vi.waitFor(() => {
+          expect(speech.speak).toHaveBeenCalledTimes(1);
+          expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+        });
+
+        await backspace.click();
+
+        await expect.element(backspace).toBeDisabled();
+        await expect.element(play).toBeDisabled();
+      } finally {
+        await page.viewport(originalWidth, originalHeight);
+      }
+    },
+  );
 
   test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
     const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
@@ -246,15 +290,21 @@ describe("CommunicationBoard", () => {
     expect(scrollContainer.scrollTop).toBeGreaterThan(0);
   });
 
-  test("scrolls the grid to both origins when Home is clicked from Home", async () => {
+  test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
     await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
 
     const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
-      "/sets/set-1/boards/root-board",
+      {
+        pathname: "/sets/set-1/boards/root-board",
+        state: { backStack: ["other-board"] },
+      },
     ]);
+    const back = screen.getByRole("button", { name: "Go back" });
     const grid = screen.getByRole("grid").element();
     const scrollContainer = grid.parentElement;
     assertDefined(scrollContainer);
+
+    await expect.element(back).toBeEnabled();
 
     scrollContainer.scrollTo({
       left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
@@ -272,6 +322,8 @@ describe("CommunicationBoard", () => {
       expect(scrollContainer.scrollLeft).toBe(0);
       expect(scrollContainer.scrollTop).toBe(0);
     });
+
+    await expect.element(back).toBeDisabled();
   });
 
   test("falls back to a generic grid name when the board is unnamed", async () => {

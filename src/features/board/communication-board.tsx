@@ -46,7 +46,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const playback = useBoardPlayback();
 
   const navigation = useBoardNavigation();
-  const gridRef = useRef<HTMLDivElement>(null);
+  const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const activateButton = createButtonActivator({
     message,
@@ -71,7 +71,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   }
 
   function scrollGridToOrigin() {
-    gridRef.current?.scrollTo({ left: 0, top: 0 });
+    gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
@@ -140,7 +140,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
-          ref={gridRef}
+          ref={gridViewportRef}
           ariaLabel={board.name ?? t(m.boardGridLabel)}
           dir={direction}
           items={board.buttons}
@@ -151,22 +151,24 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         />
       </Box>
 
-      {isSmallScreen && isInBoardSet && (
+      {isSmallScreen && (
         <Toolbar
           sx={{
             alignItems: "flex-end",
-            justifyContent: "space-between",
+            justifyContent: isInBoardSet ? "space-between" : "flex-end",
             gap: 2,
             px: { xs: 3 },
             pb: safeAreaInset("bottom"),
           }}
         >
-          <NavButtons
-            canGoBack={navigation.canGoBack}
-            canGoHome={navigation.canGoHome}
-            onBack={navigation.goBack}
-            onHome={handleHome}
-          />
+          {isInBoardSet && (
+            <NavButtons
+              canGoBack={navigation.canGoBack}
+              canGoHome={navigation.canGoHome}
+              onBack={navigation.goBack}
+              onHome={handleHome}
+            />
+          )}
 
           <BackspaceButton
             disabled={!hasMessage}
