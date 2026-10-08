@@ -1,6 +1,6 @@
 import { locales } from "@paraglide/runtime";
 import { useVoicesByLanguage } from "@shared/speech/speech-store";
-import { getNativeLanguageName } from "@shared/utils/locale";
+import { getNativeLanguageName } from "@shared/language/locale";
 
 export function useLanguageOptions() {
   const voicesByLanguage = useVoicesByLanguage();

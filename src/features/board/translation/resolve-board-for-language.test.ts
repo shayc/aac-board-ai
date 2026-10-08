@@ -6,7 +6,7 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { getBoard } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
-import type { Board } from "../types";
+import type { Board } from "../board-types";
 import { resolveBoardForLanguage } from "./resolve-board-for-language";
 
 function makeBoard(overrides: Partial<Board> = {}): Board {

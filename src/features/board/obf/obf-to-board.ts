@@ -1,4 +1,4 @@
-import { normalizeLocale } from "@shared/utils/locale";
+import { normalizeLocale } from "@shared/language/locale";
 import type {
   OBFBoard,
   OBFButton,
@@ -13,7 +13,7 @@ import type {
   BoardGrid,
   BoardTranslations,
   LoadBoard,
-} from "../types";
+} from "../board-types";
 import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 

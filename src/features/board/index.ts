@@ -43,4 +43,4 @@ export {
 } from "./suggestions/suggestion-config-store";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 
-export type { Board } from "./types";
+export type { Board } from "./board-types";

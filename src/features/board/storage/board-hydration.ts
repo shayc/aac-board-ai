@@ -1,6 +1,6 @@
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
-import type { Board } from "../types";
+import type { Board } from "../board-types";
 import {
   BoardNotFoundError,
   getAssetBlob,

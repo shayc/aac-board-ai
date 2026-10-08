@@ -1,7 +1,7 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-context";
 import { describe, expect, test, vi } from "vitest";
 import type { MessagePart } from "../message/message-types";
-import type { BoardButton } from "../types";
+import type { BoardButton } from "../board-types";
 import { createButtonActivator } from "./button-activation";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];

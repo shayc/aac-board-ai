@@ -6,7 +6,7 @@ import {
   getBoardLanguage,
   findTranslatedBoard,
 } from "./board-translations";
-import type { Board } from "../types";
+import type { Board } from "../board-types";
 
 const mockTranslations = {
   "es-ES": {
