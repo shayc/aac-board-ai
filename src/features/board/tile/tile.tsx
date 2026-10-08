@@ -3,13 +3,13 @@ import type { ReactNode } from "react";
 
 interface TileProps {
   ariaLabel?: string;
+  tabIndex?: number;
   children: ReactNode;
-  backgroundColor?: string;
-  borderColor?: string;
   disabled?: boolean;
   variant?: "folder";
+  backgroundColor?: string;
+  borderColor?: string;
   borderHidden?: boolean;
-  tabIndex?: number;
   onActivate: () => void;
 }
 
@@ -23,13 +23,13 @@ function darken(color: string, percentage: number): string {
 
 export function Tile({
   ariaLabel,
+  tabIndex,
   children,
-  backgroundColor,
-  borderColor,
   disabled,
   variant,
+  backgroundColor,
+  borderColor,
   borderHidden,
-  tabIndex,
   onActivate,
 }: TileProps) {
   const resolvedBorderColor = borderColor ?? backgroundColor;
