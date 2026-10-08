@@ -2,15 +2,15 @@ import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
 import type { TileLabelPlacement } from "./appearance-store";
 
-interface TileLabelPlacementPreviewProps {
+interface LabelPlacementPreviewProps {
   placement: TileLabelPlacement;
   selected?: boolean;
 }
 
-export function TileLabelPlacementPreview({
+export function LabelPlacementPreview({
   placement,
   selected = false,
-}: TileLabelPlacementPreviewProps) {
+}: LabelPlacementPreviewProps) {
   const isLabelVisible = placement !== "hidden";
 
   return (

@@ -5,7 +5,7 @@ export {
   TILE_SATURATION,
   useBoardAppearanceConfig,
 } from "./appearance/appearance-store";
-export { TileLabelPlacementPreview } from "./appearance/tile-label-placement-preview";
+export { LabelPlacementPreview } from "./appearance/label-placement-preview";
 export type {
   BoardAppearanceConfig,
   TileLabelPlacement,
