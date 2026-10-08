@@ -1,10 +1,10 @@
 export interface Board {
   id: string;
-  name?: string;
+  name: string;
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
-  translations?: BoardTranslations;
+  translations: BoardTranslations;
 }
 
 export interface BoardGrid {

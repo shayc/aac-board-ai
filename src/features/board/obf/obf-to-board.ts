@@ -24,7 +24,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
   const board: Board = {
     id: obfBoard.id,
-    name: normalizeBoardText(obfBoard.name),
+    name: normalizeBoardText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
@@ -100,9 +100,9 @@ function transformLoadBoard(
 
 function transformTranslations(
   strings: OBFBoard["strings"],
-): BoardTranslations | undefined {
+): BoardTranslations {
   if (!strings) {
-    return undefined;
+    return {};
   }
 
   return Object.fromEntries(

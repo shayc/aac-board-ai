@@ -56,7 +56,7 @@ describe("board-translations", () => {
       mockTranslations["fr-CA"],
     );
     expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
-    expect(findTranslations(undefined, "es")).toBeUndefined();
+    expect(findTranslations({}, "es")).toBeUndefined();
   });
 
   test("applyTranslations() maps translations onto board structure", () => {
@@ -81,7 +81,7 @@ describe("board-translations", () => {
         "Hello there": text,
       });
 
-      expect(translated.name).toBeUndefined();
+      expect(translated.name).toBe("");
       expect(translated.buttons[0].label).toBe("");
       expect(translated.buttons[0].vocalization).toBeUndefined();
     },

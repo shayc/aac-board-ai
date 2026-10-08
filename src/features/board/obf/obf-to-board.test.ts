@@ -19,7 +19,9 @@ describe("obfToBoard", () => {
     const board = obfToBoard(obfBoard);
 
     expect(board.id).toBe("minimal-board");
-    expect(board.name).toBeUndefined();
+    expect(board.name).toBe("");
+    expect(board.locale).toBeUndefined();
+    expect(board.translations).toEqual({});
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
     expect(board.buttons[0]?.actions).toEqual([]);
@@ -33,10 +35,10 @@ describe("obfToBoard", () => {
       { description: "missing", name: undefined },
       { description: "empty", name: "" },
       { description: "whitespace-only", name: " \t\n\u00a0 " },
-    ])("normalizes $description board names to undefined", ({ name }) => {
+    ])("normalizes $description board names to empty strings", ({ name }) => {
       const board = obfToBoard(makeOBFBoard({ name }));
 
-      expect(board.name).toBeUndefined();
+      expect(board.name).toBe("");
     });
 
     test("preserves nonblank board names verbatim", () => {
@@ -60,6 +62,22 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.locale).toBe("en-US");
+    });
+
+    test("maps cached translations with canonical locale keys", () => {
+      const board = obfToBoard(
+        makeOBFBoard({
+          strings: {
+            es_es: { Hello: "Hola" },
+            "fr-CA": { Hello: "Bonjour" },
+          },
+        }),
+      );
+
+      expect(board.translations).toEqual({
+        "es-ES": { Hello: "Hola" },
+        "fr-CA": { Hello: "Bonjour" },
+      });
     });
   });
 

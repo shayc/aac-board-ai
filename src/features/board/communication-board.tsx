@@ -141,7 +141,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
           ref={gridViewportRef}
-          ariaLabel={board.name ?? t(m.boardGridLabel)}
+          ariaLabel={board.name || t(m.boardGridLabel)}
           dir={direction}
           items={board.buttons}
           rows={board.grid.rows}

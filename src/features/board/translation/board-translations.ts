@@ -25,10 +25,6 @@ export function findTranslations(
   translations: Board["translations"],
   language: string,
 ): Record<string, string> | undefined {
-  if (!translations) {
-    return;
-  }
-
   const match = Object.entries(translations).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
@@ -45,7 +41,7 @@ export function applyTranslations(
 
   return {
     ...board,
-    name: normalizeBoardText(lookup(board.name)),
+    name: normalizeBoardText(lookup(board.name)) ?? "",
     buttons: board.buttons.map((button) => ({
       ...button,
       label: normalizeBoardText(lookup(button.label)) ?? "",

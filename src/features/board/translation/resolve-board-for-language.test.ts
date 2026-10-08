@@ -19,6 +19,7 @@ function makeBoard(overrides: Partial<Board> = {}): Board {
       { id: "btn-eat", label: "eat", vocalization: "eat", actions: [] },
       { id: "btn-drink", label: "drink", actions: [] },
     ],
+    translations: {},
     ...overrides,
   };
 }
