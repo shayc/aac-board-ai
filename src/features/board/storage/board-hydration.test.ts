@@ -29,16 +29,6 @@ async function seedTestBoard(): Promise<void> {
   });
 }
 
-async function expectThrown(promise: Promise<unknown>): Promise<unknown> {
-  try {
-    await promise;
-  } catch (error) {
-    return error;
-  }
-
-  throw new Error("Expected hydrateBoard to throw, but it resolved");
-}
-
 function isObjectUrlAlive(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const img = new Image();
@@ -78,14 +68,6 @@ describe("hydrateBoard", () => {
     loadedBoard.media.dispose();
   });
 
-  test("throws BoardNotFoundError when the board is not in IDB", async () => {
-    await seedTestBoard();
-
-    const error = await expectThrown(hydrateBoard(SET_ID, "missing-board"));
-
-    expect(error).toBeInstanceOf(BoardNotFoundError);
-  });
-
   test("keeps concurrent hydration resources independent", async () => {
     await seedTestBoard();
 
@@ -105,10 +87,12 @@ describe("hydrateBoard", () => {
     second.media.dispose();
   });
 
-  test("a missing-board error does not affect a later success", async () => {
+  test("rejects a missing board and remains usable for a later load", async () => {
     await seedTestBoard();
 
-    await expectThrown(hydrateBoard(SET_ID, "missing-board"));
+    await expect(hydrateBoard(SET_ID, "missing-board")).rejects.toBeInstanceOf(
+      BoardNotFoundError,
+    );
 
     const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID);
     const url = getImageUrl(loadedBoard);
@@ -127,11 +111,10 @@ describe("hydrateBoard", () => {
 
     const aborted = new AbortController();
     aborted.abort();
-    const error = await expectThrown(
+    await expect(
       hydrateBoard(SET_ID, BOARD_ID, aborted.signal),
-    );
+    ).rejects.toMatchObject({ name: "AbortError" });
 
-    expect((error as Error).name).toBe("AbortError");
     expect(await isObjectUrlAlive(liveUrl)).toBe(true);
 
     live.media.dispose();
@@ -176,7 +159,9 @@ describe("hydrateBoard", () => {
 
     const aborted = new AbortController();
     aborted.abort();
-    await expectThrown(hydrateBoard(SET_ID, BOARD_ID, aborted.signal));
+    await expect(
+      hydrateBoard(SET_ID, BOARD_ID, aborted.signal),
+    ).rejects.toMatchObject({ name: "AbortError" });
 
     const loadedBoard = await hydrateBoard(SET_ID, BOARD_ID);
     const url = getImageUrl(loadedBoard);

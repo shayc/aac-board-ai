@@ -2,13 +2,15 @@ import { describe, expect, test } from "vitest";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 
 describe("selectSuggestionPhrases", () => {
-  test("combines candidates, dropping duplicates and the original text", () => {
+  test("drops duplicates and the original text regardless of case and whitespace", () => {
     expect(
       selectSuggestionPhrases("want eat", [
         "I want to eat.",
         "I would like to eat.",
         "I want to eat.",
+        "  I WANT TO EAT.  ",
         "want eat",
+        "  WANT EAT  ",
       ]),
     ).toEqual(["I want to eat.", "I would like to eat."]);
   });

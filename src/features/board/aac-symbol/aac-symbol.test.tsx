@@ -47,7 +47,7 @@ describe("AACSymbol", () => {
     expect(getComputedStyle(container).flexDirection).toBe("column-reverse");
   });
 
-  test("keeps the label accessible when labelPlacement is hidden", async () => {
+  test("keeps a hidden label in the DOM without occupying layout space", async () => {
     const screen = await render(
       <AACSymbol
         imageSrc={TEST_IMAGE_SRC}
@@ -56,19 +56,11 @@ describe("AACSymbol", () => {
       />,
     );
 
-    await expect.element(screen.getByText("Action")).toBeInTheDocument();
-  });
+    const label = screen.getByText("Action");
 
-  test("takes no layout space for the label when labelPlacement is hidden", async () => {
-    const screen = await render(
-      <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
-        label="Action"
-        labelPlacement="hidden"
-      />,
+    await expect.element(label).toBeInTheDocument();
+    expect(label.element().getBoundingClientRect().width).toBeLessThanOrEqual(
+      1,
     );
-
-    const label = screen.getByText("Action").element();
-    expect(label.getBoundingClientRect().width).toBeLessThanOrEqual(1);
   });
 });

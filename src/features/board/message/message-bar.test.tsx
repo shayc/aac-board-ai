@@ -1,14 +1,9 @@
 import { AppProviders } from "@shared/providers/app-providers";
+import { assertDefined } from "@shared/testing/assert-defined";
 import type { ReactNode } from "react";
-import {
-  beforeEach,
-  describe,
-  expect,
-  test,
-  vi,
-  type MockInstance,
-} from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { TEST_IMAGE_SRC } from "../testing";
 import { MessageBar, type MessageBarProps } from "./message-bar";
 import type { MessagePart } from "./message-types";
 
@@ -29,22 +24,34 @@ function createProps(
   };
 }
 
-let scrollIntoView: MockInstance<Element["scrollIntoView"]>;
+const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
+  id: String(index),
+  label: `Part ${index + 1}`,
+  imageSrc: TEST_IMAGE_SRC,
+}));
 
-function lastScrollCall() {
-  const { calls, contexts } = scrollIntoView.mock;
-  const index = calls.length - 1;
-  return {
-    options: calls[index][0] as ScrollIntoViewOptions,
-    element: contexts[index] as Element,
-  };
+function ScrollableMessageBar(props: MessageBarProps) {
+  return (
+    <AppProviders>
+      <div style={{ width: 320 }}>
+        <MessageBar {...props} />
+      </div>
+    </AppProviders>
+  );
 }
 
-beforeEach(() => {
-  scrollIntoView = vi
-    .spyOn(Element.prototype, "scrollIntoView")
-    .mockImplementation(() => undefined);
-});
+function getScrollContainer(container: Element): HTMLElement {
+  const scroller = Array.from(
+    container.querySelectorAll<HTMLElement>("div"),
+  ).find((element) => getComputedStyle(element).overflowX === "auto");
+  assertDefined(scroller);
+
+  return scroller;
+}
+
+function waitForAnimationFrame(): Promise<void> {
+  return new Promise((resolve) => requestAnimationFrame(() => resolve()));
+}
 
 describe("MessageBar", () => {
   test("renders a label for each message part", async () => {
@@ -78,88 +85,81 @@ describe("MessageBar", () => {
 
   describe("scroll-into-view", () => {
     test("scrolls the newest part to the trailing edge when a part is added", async () => {
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ parts: [] })} />,
-      );
+      const props = createProps();
+      const screen = await render(<ScrollableMessageBar {...props} />);
+      const scroller = getScrollContainer(screen.container);
 
-      expect(scrollIntoView).not.toHaveBeenCalled();
+      expect(scroller.scrollLeft).toBe(0);
 
       await screen.rerender(
-        <AppProviders>
-          <MessageBar
-            {...createProps({
-              parts: [
-                { id: "a", label: "I" },
-                { id: "b", label: "want" },
-              ],
-            })}
-          />
-        </AppProviders>,
+        <ScrollableMessageBar {...props} parts={SCROLL_PARTS} />,
       );
+      await waitForAnimationFrame();
 
-      await vi.waitFor(() => {
-        expect(scrollIntoView).toHaveBeenCalled();
-        const { options, element } = lastScrollCall();
-        expect(options).toEqual({
-          block: "nearest",
-          inline: "end",
-          behavior: "instant",
-        });
-        expect(element.textContent).toContain("want");
-      });
+      const lastPart = scroller.lastElementChild;
+      assertDefined(lastPart);
+      expect(scroller.scrollWidth).toBeGreaterThan(scroller.clientWidth);
+      expect(scroller.scrollLeft).toBeGreaterThan(0);
+      expect(lastPart.getBoundingClientRect().right).toBeCloseTo(
+        scroller.getBoundingClientRect().right,
+        0,
+      );
     });
 
     test("scrolls the active part into view when it changes during playback", async () => {
-      const parts: MessagePart[] = [
-        { id: "a", label: "I" },
-        { id: "b", label: "want" },
-        { id: "c", label: "water" },
-      ];
+      const props = createProps({ parts: SCROLL_PARTS });
+      const screen = await render(<ScrollableMessageBar {...props} />);
+      const scroller = getScrollContainer(screen.container);
+      await waitForAnimationFrame();
 
-      const screen = await renderWithProviders(
-        <MessageBar {...createProps({ parts })} />,
+      const activePart = scroller.children[3];
+      const initialScrollLeft = scroller.scrollLeft;
+      expect(activePart.getBoundingClientRect().right).toBeLessThan(
+        scroller.getBoundingClientRect().left,
       );
 
-      // Drain the mount-time scroll-to-end so only the active-part scroll remains.
-      await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
-      scrollIntoView.mockClear();
-
-      // Same `parts` reference: the append effect stays put, isolating the
-      // active-part effect we are asserting on.
+      // Keep the parts reference so only active-part scrolling is triggered.
       await screen.rerender(
-        <AppProviders>
-          <MessageBar {...createProps({ parts, activePartId: "b" })} />
-        </AppProviders>,
+        <ScrollableMessageBar
+          {...props}
+          isPlaying
+          activePartId={SCROLL_PARTS[3].id}
+        />,
       );
+      await waitForAnimationFrame();
 
-      await vi.waitFor(() => {
-        expect(scrollIntoView).toHaveBeenCalled();
-        const { options, element } = lastScrollCall();
-        expect(options).toEqual({
-          block: "nearest",
-          inline: "nearest",
-          behavior: "instant",
-        });
-        expect(element.textContent).toContain("want");
-      });
+      expect(scroller.scrollLeft).toBeLessThan(initialScrollLeft);
+      expect(activePart.getBoundingClientRect().left).toBeCloseTo(
+        scroller.getBoundingClientRect().left,
+        0,
+      );
+      expect(activePart.getBoundingClientRect().right).toBeLessThanOrEqual(
+        scroller.getBoundingClientRect().right,
+      );
     });
 
-    test("performs no active-part scroll while idle", async () => {
-      const parts: MessagePart[] = [
-        { id: "a", label: "I" },
-        { id: "b", label: "want" },
-      ];
+    test("preserves the scroll position when playback becomes idle", async () => {
+      const props = createProps({
+        parts: SCROLL_PARTS,
+        activePartId: SCROLL_PARTS[3].id,
+        isPlaying: true,
+      });
+      const screen = await render(<ScrollableMessageBar {...props} />);
+      const scroller = getScrollContainer(screen.container);
+      await waitForAnimationFrame();
+      expect(scroller.scrollLeft).toBeGreaterThan(0);
 
-      await renderWithProviders(
-        <MessageBar {...createProps({ parts, activePartId: null })} />,
+      scroller.scrollLeft = 0;
+      await screen.rerender(
+        <ScrollableMessageBar
+          {...props}
+          activePartId={null}
+          isPlaying={false}
+        />,
       );
+      await waitForAnimationFrame();
 
-      await vi.waitFor(() => expect(scrollIntoView).toHaveBeenCalled());
-
-      const scrolledToActive = scrollIntoView.mock.calls.some(
-        ([options]) => (options as ScrollIntoViewOptions).inline === "nearest",
-      );
-      expect(scrolledToActive).toBe(false);
+      expect(scroller.scrollLeft).toBe(0);
     });
   });
 

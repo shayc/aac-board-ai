@@ -97,28 +97,6 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("dedupes proofread and rewrite outputs that differ only in case", async () => {
-    stubProofreader(() => makeProofreadResult("My movies"));
-    stubRewriter(() => "my movies");
-
-    const { result } = await renderMessageSuggestions("movies");
-
-    await vi.waitFor(() => {
-      expect(result.current.phrases).toEqual(["My movies"]);
-    });
-  });
-
-  test("drops a candidate that is identical to the original text", async () => {
-    stubProofreader((input) => makeProofreadResult(input));
-    stubRewriter(() => "Something different.");
-
-    const { result } = await renderMessageSuggestions("unchanged");
-
-    await vi.waitFor(() => {
-      expect(result.current.phrases).toEqual(["Something different."]);
-    });
-  });
-
   test("still suggests the rewrite when the proofread fails", async () => {
     stubProofreader(() => Promise.reject(new Error("input too long")));
     stubRewriter(() => "I would like to eat.");

@@ -11,10 +11,10 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetDeleteDialog", () => {
-  test("has no a11y violations when open", async () => {
+  test("shows the single-board warning with no a11y violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet({ name: "Core Words" })}
+        boardSet={makeBoardSet({ name: "Core Words", boardCount: 1 })}
         onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
@@ -30,18 +30,6 @@ describe("BoardSetDeleteDialog", () => {
       .toHaveAccessibleDescription(
         "The board in this set will be deleted. This cannot be undone.",
       );
-    await expectNoA11yViolations(document.body);
-  });
-
-  test("shows the board set name and the single-board warning", async () => {
-    const screen = await renderWithProviders(
-      <BoardSetDeleteDialog
-        boardSet={makeBoardSet({ name: "Core Words", boardCount: 1 })}
-        onDelete={vi.fn()}
-        onClose={vi.fn()}
-      />,
-    );
-
     await expect
       .element(screen.getByText('Delete board set "Core Words"?'))
       .toBeInTheDocument();
@@ -52,6 +40,8 @@ describe("BoardSetDeleteDialog", () => {
         ),
       )
       .toBeInTheDocument();
+
+    await expectNoA11yViolations(document.body);
   });
 
   test("shows the board count in the multiple-board warning", async () => {
@@ -81,13 +71,7 @@ describe("BoardSetDeleteDialog", () => {
       />,
     );
 
-    await expect
-      .element(
-        screen.getByText(
-          "The board in this set will be deleted. This cannot be undone.",
-        ),
-      )
-      .not.toBeInTheDocument();
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
   });
 
   test("calls onDelete when Delete is clicked", async () => {

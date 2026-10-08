@@ -22,9 +22,11 @@ function makeProps(
 }
 
 describe("SuggestionBar", () => {
-  test("calls onPhraseSelect with the correct value when a phrase chip is clicked", async () => {
+  test("renders accessible phrase chips and selects their corresponding phrases", async () => {
     const props = makeProps({ phrases: ["Hello", "Goodbye"] });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
+
+    await expectNoA11yViolations(screen.container);
 
     await screen.getByRole("button", { name: "Hello" }).click();
 
@@ -78,16 +80,6 @@ describe("SuggestionBar", () => {
     await expect
       .element(screen.getByText("Suggestions unavailable"))
       .toBeVisible();
-
-    await expectNoA11yViolations(screen.container);
-  });
-
-  test("has no accessibility violations", async () => {
-    const screen = await renderWithProviders(
-      <SuggestionBar
-        {...makeProps({ phrases: ["Hello", "How are you?", "Thank you"] })}
-      />,
-    );
 
     await expectNoA11yViolations(screen.container);
   });

@@ -51,7 +51,7 @@ describe("RouteErrorBoundary", () => {
     await expect.element(screen.getByText("Custom title")).toBeVisible();
   });
 
-  test("shows the generic title for a plain error", async () => {
+  test("shows a generic error with a link to the root route", async () => {
     const screen = await renderWithLoader(() => {
       throw new Error("boom");
     });
@@ -59,13 +59,6 @@ describe("RouteErrorBoundary", () => {
     await expect
       .element(screen.getByText("Something went wrong"))
       .toBeVisible();
-  });
-
-  test("links go home to the root route", async () => {
-    const screen = await renderWithLoader(() => {
-      throw new Error("boom");
-    });
-
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))
       .toHaveAttribute("href", "/");

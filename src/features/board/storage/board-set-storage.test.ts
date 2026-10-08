@@ -196,34 +196,13 @@ describe("listBoardSets", () => {
 });
 
 describe("deleteBoardSet", () => {
-  test("removes the board set record", async () => {
-    await createBoardSet(makeBoardSetInput());
-
-    await deleteBoardSet("set-1");
-
-    const sets = await listBoardSets();
-    expect(sets).toHaveLength(0);
-  });
-
-  test("cascade-deletes all boards in the set", async () => {
+  test("deletes the set and all its content while preserving another set", async () => {
     await createBoardSet(
       makeBoardSetInput({
         boards: [
           { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
           { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
         ],
-      }),
-    );
-
-    await deleteBoardSet("set-1");
-
-    expect(await getBoard("set-1", "b1")).toBeUndefined();
-    expect(await getBoard("set-1", "b2")).toBeUndefined();
-  });
-
-  test("cascade-deletes all assets in the set", async () => {
-    await createBoardSet(
-      makeBoardSetInput({
         assets: [
           { path: "img1.png", blob: new Blob(["a"]) },
           { path: "img2.png", blob: new Blob(["b"]) },
@@ -231,38 +210,29 @@ describe("deleteBoardSet", () => {
       }),
     );
 
-    await deleteBoardSet("set-1");
-
-    expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
-    expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
-  });
-
-  test("does not affect other board sets", async () => {
-    await createBoardSet(
-      makeBoardSetInput({
-        boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "root-1" },
-        boards: [
-          { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
-        ],
-      }),
-    );
     await createBoardSet(
       makeBoardSetInput({
         boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "root-1" },
         boards: [
-          { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
+          { boardId: "b1", name: "Survivor", obf: makeOBFBoard({ id: "b1" }) },
         ],
+        assets: [{ path: "img1.png", blob: new Blob(["survivor"]) }],
       }),
     );
 
     await deleteBoardSet("set-1");
 
     const sets = await listBoardSets();
-    expect(sets).toHaveLength(1);
-    expect(sets[0].setId).toBe("set-2");
+    expect(sets.map((set) => set.setId)).toEqual(["set-2"]);
+    expect(await getBoard("set-1", "b1")).toBeUndefined();
+    expect(await getBoard("set-1", "b2")).toBeUndefined();
+    expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
+    expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
 
-    const board = await getBoard("set-2", "b2");
-    expect(board).toBeDefined();
+    expect(await getBoard("set-2", "b1")).toMatchObject({ name: "Survivor" });
+    const asset = await getAssetBlob("set-2", "img1.png");
+    assertDefined(asset);
+    expect(await asset.text()).toBe("survivor");
   });
 
   test("rejects empty setId", async () => {

@@ -57,7 +57,13 @@ describe("useVoiceLanguageSync", () => {
     });
   });
 
-  test("keeps the current voice when it already matches the language", async () => {
+  test("keeps a matching selected voice even when another voice is the default", async () => {
+    stubLanguages(["en-US"]);
+    vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
+      makeVoice("en-US", "en-default", true),
+      makeVoice("en-US", "en-voice"),
+    ]);
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
     setVoiceURI("en-voice");
 
     await renderHook(() => useVoiceLanguageSync("en"));

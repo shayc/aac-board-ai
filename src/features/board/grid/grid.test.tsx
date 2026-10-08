@@ -10,6 +10,59 @@ import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
+// The test viewport is below "sm", where the grid uses compact padding.
+const PAD = 16;
+const GAP = 8;
+const MIN_CELL = 96;
+
+function calculateExpectedCellSize(containerSize: number, tracks: number) {
+  const fit = Math.floor((containerSize - 2 * PAD + GAP) / (MIN_CELL + GAP));
+  const visible = Math.min(tracks, Math.max(1, fit));
+
+  return (containerSize - 2 * PAD - (visible - 1) * GAP) / visible;
+}
+
+async function renderGridLayout({
+  width,
+  height,
+  rows,
+  columns,
+}: {
+  width: number;
+  height: number;
+  rows: number;
+  columns: number;
+}) {
+  const items = Array.from({ length: rows * columns }, (_, index) => ({
+    id: String(index + 1),
+    label: `Item ${index + 1}`,
+  }));
+
+  const screen = await render(
+    <MUIThemeProvider theme={cssVariableTheme}>
+      <CssBaseline />
+      <div style={{ width, height }}>
+        <Grid
+          items={items}
+          rows={rows}
+          columns={columns}
+          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+        />
+      </div>
+    </MUIThemeProvider>,
+  );
+
+  const grid = screen.getByRole("grid").element();
+  const cell = grid.querySelector("[role='gridcell']");
+  const scroller = grid.parentElement;
+
+  if (!(cell instanceof HTMLElement) || !scroller) {
+    throw new Error("Grid cell or scroll container not found");
+  }
+
+  return { cellBounds: cell.getBoundingClientRect(), scroller };
+}
+
 function getCellPosition(item: Locator): { row: number; col: number } {
   const cell = item.element().closest("[role='gridcell']");
 
@@ -236,58 +289,17 @@ describe("Grid", () => {
   });
 
   describe("responsive column sizing", () => {
-    // This suite's test viewport is narrower than the theme's "sm" breakpoint,
-    // so the grid's --pad is theme.spacing(2) here, not the theme.spacing(3)
-    // default used above that breakpoint.
-    const PAD = 16;
-    const GAP = 8;
-    const MIN_CELL = 96;
-
-    const expectedCellWidth = (containerWidth: number, columns: number) => {
-      const fit = Math.floor(
-        (containerWidth - 2 * PAD + GAP) / (MIN_CELL + GAP),
-      );
-      const visible = Math.min(columns, Math.max(1, fit));
-
-      return (containerWidth - 2 * PAD - (visible - 1) * GAP) / visible;
-    };
-
     const renderSizedGrid = async (containerWidth: number, columns: number) => {
-      const items = Array.from({ length: columns }, (_, i) => ({
-        id: String(i + 1),
-        label: `Item ${i + 1}`,
-      }));
-
-      const screen = await render(
-        <MUIThemeProvider theme={cssVariableTheme}>
-          <CssBaseline />
-          <div style={{ width: `${containerWidth}px`, height: "400px" }}>
-            <Grid
-              rows={1}
-              columns={columns}
-              items={items}
-              renderItem={(item, props) => (
-                <button {...props}>{item.label}</button>
-              )}
-            />
-          </div>
-        </MUIThemeProvider>,
-      );
-
-      const gridEl = screen.getByRole("grid").element();
-      const cellEl = gridEl.querySelector("[role='gridcell']");
-      if (!(cellEl instanceof HTMLElement)) {
-        throw new Error("grid rendered no cell");
-      }
-
-      const scroller = gridEl.parentElement;
-      if (!scroller) {
-        throw new Error("grid has no scroll container");
-      }
+      const { cellBounds, scroller } = await renderGridLayout({
+        width: containerWidth,
+        height: 400,
+        rows: 1,
+        columns,
+      });
 
       return {
-        cellWidth: cellEl.getBoundingClientRect().width,
-        expectedWidth: expectedCellWidth(containerWidth, columns),
+        cellWidth: cellBounds.width,
+        expectedWidth: calculateExpectedCellSize(containerWidth, columns),
         overflows: scroller.scrollWidth > scroller.clientWidth + 1,
       };
     };
@@ -333,56 +345,17 @@ describe("Grid", () => {
   });
 
   describe("responsive row sizing", () => {
-    // Same narrower-than-"sm" test viewport as the column-sizing suite above.
-    const PAD = 16;
-    const GAP = 8;
-    const MIN_CELL = 96;
-
-    const expectedCellHeight = (containerHeight: number, rows: number) => {
-      const fit = Math.floor(
-        (containerHeight - 2 * PAD + GAP) / (MIN_CELL + GAP),
-      );
-      const visible = Math.min(rows, Math.max(1, fit));
-
-      return (containerHeight - 2 * PAD - (visible - 1) * GAP) / visible;
-    };
-
     const renderSizedGrid = async (containerHeight: number, rows: number) => {
-      const items = Array.from({ length: rows }, (_, i) => ({
-        id: String(i + 1),
-        label: `Item ${i + 1}`,
-      }));
-
-      const screen = await render(
-        <MUIThemeProvider theme={cssVariableTheme}>
-          <CssBaseline />
-          <div style={{ width: "400px", height: `${containerHeight}px` }}>
-            <Grid
-              rows={rows}
-              columns={1}
-              items={items}
-              renderItem={(item, props) => (
-                <button {...props}>{item.label}</button>
-              )}
-            />
-          </div>
-        </MUIThemeProvider>,
-      );
-
-      const gridEl = screen.getByRole("grid").element();
-      const cellEl = gridEl.querySelector("[role='gridcell']");
-      if (!(cellEl instanceof HTMLElement)) {
-        throw new Error("grid rendered no cell");
-      }
-
-      const scroller = gridEl.parentElement;
-      if (!scroller) {
-        throw new Error("grid has no scroll container");
-      }
+      const { cellBounds, scroller } = await renderGridLayout({
+        width: 400,
+        height: containerHeight,
+        rows,
+        columns: 1,
+      });
 
       return {
-        cellHeight: cellEl.getBoundingClientRect().height,
-        expectedHeight: expectedCellHeight(containerHeight, rows),
+        cellHeight: cellBounds.height,
+        expectedHeight: calculateExpectedCellSize(containerHeight, rows),
         overflows: scroller.scrollHeight > scroller.clientHeight + 1,
       };
     };

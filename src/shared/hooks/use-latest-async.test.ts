@@ -48,7 +48,7 @@ describe("useLatestAsync", () => {
     });
   });
 
-  test("returns to pending the instant deps change, until the next resolves", async () => {
+  test("clears the previous value and stays pending until the new deps resolve", async () => {
     const pending: ((value: string) => void)[] = [];
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
@@ -62,11 +62,22 @@ describe("useLatestAsync", () => {
 
     await vi.waitFor(() => expect(pending).toHaveLength(1));
     pending[0]("value-a");
-    await vi.waitFor(() => expect(result.current.isPending).toBe(false));
+    await vi.waitFor(() => {
+      expect(result.current.value).toBe("value-a");
+      expect(result.current.isPending).toBe(false);
+    });
 
     await rerender({ id: "b" });
     expect(result.current.isPending).toBe(true);
     expect(result.current.value).toBeUndefined();
+
+    await vi.waitFor(() => expect(pending).toHaveLength(2));
+    pending[1]("value-b");
+
+    await vi.waitFor(() => {
+      expect(result.current.value).toBe("value-b");
+      expect(result.current.isPending).toBe(false);
+    });
   });
 
   test("starts a new round for dependency tuples that join to the same string", async () => {
@@ -98,47 +109,7 @@ describe("useLatestAsync", () => {
     expect(run).toHaveBeenCalledTimes(2);
   });
 
-  test("hides the previous value the instant deps change, until the next resolves", async () => {
-    const pending: ((value: string) => void)[] = [];
-    const { result, rerender } = await renderHook(
-      ({ id }: { id: string } = { id: "a" }) =>
-        useLatestAsync({
-          enabled: true,
-          deps: [id],
-          run: () => new Promise<string>((r) => pending.push(r)),
-        }),
-      { initialProps: { id: "a" } },
-    );
-
-    await vi.waitFor(() => expect(pending).toHaveLength(1));
-    pending[0]("value-a");
-    await vi.waitFor(() => expect(result.current.value).toBe("value-a"));
-
-    await rerender({ id: "b" });
-    expect(result.current.value).toBeUndefined();
-
-    await vi.waitFor(() => expect(pending).toHaveLength(2));
-    pending[1]("value-b");
-    await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
-  });
-
-  test("exposes a non-abort rejection as error state", async () => {
-    const { result } = await renderHook(() =>
-      useLatestAsync({
-        enabled: true,
-        deps: ["a"],
-        run: () => Promise.reject(new Error("model exploded")),
-      }),
-    );
-
-    await vi.waitFor(() => {
-      expect(result.current.error?.message).toBe("model exploded");
-    });
-    expect(result.current.value).toBeUndefined();
-    expect(result.current.isPending).toBe(false);
-  });
-
-  test("clears the error the instant deps change, and recovers on success", async () => {
+  test("exposes a rejection, clears the error on new deps, and recovers on success", async () => {
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
@@ -154,6 +125,8 @@ describe("useLatestAsync", () => {
 
     await vi.waitFor(() => {
       expect(result.current.error?.message).toBe("bad round");
+      expect(result.current.value).toBeUndefined();
+      expect(result.current.isPending).toBe(false);
     });
 
     await rerender({ id: "b" });
@@ -161,8 +134,9 @@ describe("useLatestAsync", () => {
 
     await vi.waitFor(() => {
       expect(result.current.value).toBe("good round");
+      expect(result.current.error).toBeUndefined();
+      expect(result.current.isPending).toBe(false);
     });
-    expect(result.current.error).toBeUndefined();
   });
 
   test("stays silent when the rejection comes from its own abort", async () => {
