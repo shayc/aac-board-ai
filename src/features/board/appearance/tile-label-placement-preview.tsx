@@ -37,7 +37,6 @@ export function TileLabelPlacementPreview({
           justifyContent: "center",
           width: "100%",
           height: "100%",
-          gap: 0.5,
           overflow: "hidden",
           textAlign: "center",
         }}
@@ -56,9 +55,8 @@ export function TileLabelPlacementPreview({
             sx={{
               alignSelf: "center",
               flexShrink: 0,
-              width: "60%",
-              height: 3,
-              borderRadius: 1,
+              width: "33.3%",
+              height: 2,
               bgcolor: "currentColor",
             }}
           />
