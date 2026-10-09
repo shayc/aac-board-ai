@@ -57,7 +57,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const handleClose = (
-    _event?: React.SyntheticEvent | Event,
+    _event?: React.SyntheticEvent | Event | null,
     reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") {
