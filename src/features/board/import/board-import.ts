@@ -42,28 +42,29 @@ export async function importBoardSets(
   const results: BoardImportResult[] = [];
 
   for (const file of fileList) {
-    const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-    const baseSetId = deriveSetId(file.name);
-
-    for (let candidateNumber = 1; ; candidateNumber += 1) {
-      const setId = buildSetIdCandidate(baseSetId, candidateNumber);
-
-      try {
-        results.push(
-          loaded.format === "obz"
-            ? await importOBZArchive(loaded.archive, setId, file.name)
-            : await importOBFBoard(loaded.board, setId, file.name),
-        );
-        break;
-      } catch (error) {
-        if (!(error instanceof BoardSetAlreadyExistsError)) {
-          throw error;
-        }
-      }
-    }
+    results.push(await importBoardFile(file));
   }
 
   return results;
+}
+
+async function importBoardFile(file: File): Promise<BoardImportResult> {
+  const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+  const baseSetId = deriveSetId(file.name);
+
+  for (let candidateNumber = 1; ; candidateNumber += 1) {
+    const setId = buildSetIdCandidate(baseSetId, candidateNumber);
+
+    try {
+      return loaded.format === "obz"
+        ? await importOBZArchive(loaded.archive, setId, file.name)
+        : await importOBFBoard(loaded.board, setId, file.name);
+    } catch (error) {
+      if (!(error instanceof BoardSetAlreadyExistsError)) {
+        throw error;
+      }
+    }
+  }
 }
 
 async function importOBZArchive(
