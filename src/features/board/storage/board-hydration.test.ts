@@ -24,7 +24,7 @@ async function seedTestBoard(): Promise<void> {
 
   await createBoardSet({
     boardSet: { setId: SET_ID, name: "Loader Test", rootBoardId: BOARD_ID },
-    boards: [{ boardId: BOARD_ID, name: "Test Board", obf: obfBoard }],
+    boards: [obfBoard],
     assets: [{ path: IMAGE_PATH, blob: pngBlob }],
   });
 }

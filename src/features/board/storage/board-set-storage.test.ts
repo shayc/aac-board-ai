@@ -34,7 +34,7 @@ describe("createBoardSet", () => {
     await createBoardSet(
       makeBoardSetInput({
         boardSet: { setId: "set-1", name: "Original", rootBoardId: "a" },
-        boards: [{ boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) }],
+        boards: [makeOBFBoard({ id: "a", name: "A" })],
         assets: [{ path: "x.png", blob: new Blob(["x"]) }],
       }),
     );
@@ -47,7 +47,7 @@ describe("createBoardSet", () => {
             name: "Replacement",
             rootBoardId: "b",
           },
-          boards: [{ boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) }],
+          boards: [makeOBFBoard({ id: "b", name: "B" })],
           assets: [],
         }),
       ),
@@ -75,9 +75,9 @@ describe("createBoardSet", () => {
 
   test("counts boards from the boards array, not a recount", async () => {
     const boards = [
-      { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
-      { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
-      { boardId: "b3", name: "B3", obf: makeOBFBoard({ id: "b3" }) },
+      makeOBFBoard({ id: "b1", name: "B1" }),
+      makeOBFBoard({ id: "b2", name: "B2" }),
+      makeOBFBoard({ id: "b3", name: "B3" }),
     ];
 
     await createBoardSet(makeBoardSetInput({ boards }));
@@ -90,6 +90,27 @@ describe("createBoardSet", () => {
     expect(board.name).toBe("B2");
   });
 
+  test.each([
+    { name: "Home", expectedName: "Home" },
+    { name: undefined, expectedName: "root-1" },
+    { name: "", expectedName: "" },
+  ])(
+    "derives display names without changing the OBF source ($name)",
+    async ({ name, expectedName }) => {
+      const obf = makeOBFBoard({ id: "root-1", name });
+
+      await createBoardSet(makeBoardSetInput({ boards: [obf] }));
+
+      expect(await getBoard("set-1", "root-1")).toEqual({
+        setId: "set-1",
+        boardId: "root-1",
+        name: expectedName,
+        obf,
+      });
+      expect(obf.name).toBe(name);
+    },
+  );
+
   test("aborts the entire transaction when a board fails to clone", async () => {
     const uncloneableObf = {
       ...makeOBFBoard({ id: "b" }),
@@ -99,7 +120,7 @@ describe("createBoardSet", () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
-          boards: [{ boardId: "b", name: "B", obf: uncloneableObf }],
+          boards: [uncloneableObf],
           assets: [{ path: "x.png", blob: new Blob(["x"]) }],
         }),
       ),
@@ -148,7 +169,7 @@ describe("createBoardSet", () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
-          boards: [{ boardId: "", name: "B", obf: makeOBFBoard() }],
+          boards: [makeOBFBoard({ id: "" })],
         }),
       ),
     ).rejects.toThrow("Invalid boardId");
@@ -158,9 +179,7 @@ describe("createBoardSet", () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
-          boards: [
-            { boardId: "x".repeat(256), name: "B", obf: makeOBFBoard() },
-          ],
+          boards: [makeOBFBoard({ id: "x".repeat(256) })],
         }),
       ),
     ).rejects.toThrow("Invalid boardId");
@@ -200,8 +219,8 @@ describe("deleteBoardSet", () => {
     await createBoardSet(
       makeBoardSetInput({
         boards: [
-          { boardId: "b1", name: "B1", obf: makeOBFBoard({ id: "b1" }) },
-          { boardId: "b2", name: "B2", obf: makeOBFBoard({ id: "b2" }) },
+          makeOBFBoard({ id: "b1", name: "B1" }),
+          makeOBFBoard({ id: "b2", name: "B2" }),
         ],
         assets: [
           { path: "img1.png", blob: new Blob(["a"]) },
@@ -213,9 +232,7 @@ describe("deleteBoardSet", () => {
     await createBoardSet(
       makeBoardSetInput({
         boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "root-1" },
-        boards: [
-          { boardId: "b1", name: "Survivor", obf: makeOBFBoard({ id: "b1" }) },
-        ],
+        boards: [makeOBFBoard({ id: "b1", name: "Survivor" })],
         assets: [{ path: "img1.png", blob: new Blob(["survivor"]) }],
       }),
     );

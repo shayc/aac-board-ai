@@ -102,15 +102,13 @@ function getImageUrl(loadedBoard: HydratedBoard): string {
 }
 
 function makeBoard(boardId: string, name: string) {
-  const obf = makeOBFBoard({
+  return makeOBFBoard({
     id: boardId,
     name,
     grid: { rows: 1, columns: 1, order: [["button-1"]] },
     buttons: [{ id: "button-1", label: name, image_id: "image-1" }],
     images: [{ id: "image-1", path: IMAGE_PATH, content_type: "image/png" }],
   });
-
-  return { boardId, name, obf };
 }
 
 async function seedBoards(): Promise<void> {

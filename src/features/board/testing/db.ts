@@ -1,6 +1,5 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
-import type { BoardRecord } from "../storage/board-content-storage";
 import {
   createBoardSet,
   type AssetInput,
@@ -13,7 +12,7 @@ const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 interface SeedBoardSet extends Partial<BoardSetRecord> {
   setId: string;
   rootBoardId: string;
-  boards?: Omit<BoardRecord, "setId">[];
+  boards?: readonly OBFBoard[];
   assets?: AssetInput[];
 }
 

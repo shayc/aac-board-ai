@@ -120,13 +120,7 @@ function seedExistingLotsOfStuffSet() {
     {
       setId: "lots-of-stuff",
       rootBoardId: "root-1",
-      boards: [
-        {
-          boardId: "root-1",
-          name: "Old Board",
-          obf: makeOBFBoard({ id: "root-1", name: "Old Board" }),
-        },
-      ],
+      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
     },
   ]);
 }
