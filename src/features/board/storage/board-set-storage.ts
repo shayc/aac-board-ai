@@ -28,12 +28,6 @@ export interface BoardSetInput {
   readonly gridColumns?: number;
 }
 
-export interface BoardInput {
-  readonly boardId: string;
-  readonly name: string;
-  readonly obf: OBFBoard;
-}
-
 export interface AssetInput {
   readonly path: string;
   readonly blob: Blob;
@@ -41,7 +35,7 @@ export interface AssetInput {
 
 export interface BoardSetCreateInput {
   readonly boardSet: BoardSetInput;
-  readonly boards: readonly BoardInput[];
+  readonly boards: readonly OBFBoard[];
   readonly assets: readonly AssetInput[];
 }
 
@@ -87,8 +81,8 @@ export async function createBoardSet(
   const { boardSet, boards, assets } = input;
   validateId(boardSet.setId, "setId");
   validateId(boardSet.rootBoardId, "rootBoardId");
-  for (const board of boards) {
-    validateId(board.boardId, "boardId");
+  for (const obf of boards) {
+    validateId(obf.id, "boardId");
   }
 
   const { setId } = boardSet;
@@ -125,13 +119,13 @@ export async function createBoardSet(
   const requests: Promise<unknown>[] = [tx.done];
 
   try {
-    for (const board of boards) {
+    for (const obf of boards) {
       requests.push(
         boardStore.put({
           setId,
-          boardId: board.boardId,
-          name: board.name,
-          obf: board.obf,
+          boardId: obf.id,
+          name: obf.name ?? obf.id,
+          obf,
         }),
       );
     }

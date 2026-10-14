@@ -14,7 +14,6 @@ export {
 } from "../storage/board-set-storage";
 export type {
   AssetInput,
-  BoardInput,
   BoardSetCreateInput,
   BoardSetInput,
   BoardSetRecord,

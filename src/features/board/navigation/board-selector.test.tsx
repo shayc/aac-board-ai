@@ -39,21 +39,9 @@ beforeEach(async () => {
   await createBoardSet({
     boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
     boards: [
-      {
-        boardId: "root",
-        name: "Home",
-        obf: makeOBFBoard({ id: "root", name: "Home" }),
-      },
-      {
-        boardId: "animals",
-        name: "Animals",
-        obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-      },
-      {
-        boardId: "food",
-        name: "Food",
-        obf: makeOBFBoard({ id: "food", name: "Food" }),
-      },
+      makeOBFBoard({ id: "root", name: "Home" }),
+      makeOBFBoard({ id: "animals", name: "Animals" }),
+      makeOBFBoard({ id: "food", name: "Food" }),
     ],
     assets: [],
   });
@@ -140,20 +128,12 @@ describe("BoardSelector", () => {
     await createBoardSet({
       boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
       boards: [
-        {
-          boardId: "root",
+        makeOBFBoard({
+          id: "root",
           name: "Home",
-          obf: makeOBFBoard({
-            id: "root",
-            name: "Home",
-            strings: { es: { Home: "Inicio" } },
-          }),
-        },
-        {
-          boardId: "animals",
-          name: "Animals",
-          obf: makeOBFBoard({ id: "animals", name: "Animals" }),
-        },
+          strings: { es: { Home: "Inicio" } },
+        }),
+        makeOBFBoard({ id: "animals", name: "Animals" }),
       ],
       assets: [],
     });

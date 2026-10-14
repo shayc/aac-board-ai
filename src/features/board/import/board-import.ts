@@ -11,7 +11,6 @@ import {
   BoardSetAlreadyExistsError,
   createBoardSet,
   type AssetInput,
-  type BoardInput,
   type BoardSetInput,
 } from "../board-sets/board-sets-store";
 import { htmlToText } from "./html-to-text";
@@ -77,7 +76,9 @@ async function importOBZArchive(
 
   await createBoardSet({
     boardSet: buildBoardSetInput(setId, rootBoard, fileName),
-    boards: buildBoardInputs(boards, boardPathToId),
+    boards: Array.from(boards.values(), (board) =>
+      resolveLoadBoardPaths(board, boardPathToId),
+    ),
     assets: buildAssetInputs(resources),
   });
 
@@ -91,7 +92,7 @@ async function importOBFBoard(
 ): Promise<BoardImportResult> {
   await createBoardSet({
     boardSet: buildBoardSetInput(setId, board, fileName),
-    boards: [{ boardId: board.id, name: board.name ?? board.id, obf: board }],
+    boards: [board],
     assets: [],
   });
 
@@ -125,17 +126,6 @@ export function resolveLoadBoardPaths(
   });
 
   return { ...board, buttons };
-}
-
-function buildBoardInputs(
-  boards: Map<string, OBFBoard>,
-  boardPathToId: Map<string, string>,
-): BoardInput[] {
-  return Array.from(boards.entries()).map(([id, board]) => ({
-    boardId: id,
-    name: board.name ?? id,
-    obf: resolveLoadBoardPaths(board, boardPathToId),
-  }));
 }
 
 export function buildAssetInputs(

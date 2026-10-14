@@ -42,15 +42,15 @@ describe("listBoards", () => {
       makeBoardSetInput({
         boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "a" },
         boards: [
-          { boardId: "a", name: "A", obf: makeOBFBoard({ id: "a" }) },
-          { boardId: "b", name: "B", obf: makeOBFBoard({ id: "b" }) },
+          makeOBFBoard({ id: "a", name: "A" }),
+          makeOBFBoard({ id: "b", name: "B" }),
         ],
       }),
     );
     await createBoardSet(
       makeBoardSetInput({
         boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "c" },
-        boards: [{ boardId: "c", name: "C", obf: makeOBFBoard({ id: "c" }) }],
+        boards: [makeOBFBoard({ id: "c", name: "C" })],
       }),
     );
 
@@ -94,10 +94,10 @@ describe("getAssetBlob", () => {
 
 describe("updateBoardStrings", () => {
   test("adds localized strings to a board", async () => {
-    const obf = makeOBFBoard({ id: "b1" });
+    const obf = makeOBFBoard({ id: "b1", name: "B1" });
     await createBoardSet(
       makeBoardSetInput({
-        boards: [{ boardId: "b1", name: "B1", obf }],
+        boards: [obf],
       }),
     );
 
@@ -116,11 +116,12 @@ describe("updateBoardStrings", () => {
   test("preserves existing locale strings when adding a new locale", async () => {
     const obf = makeOBFBoard({
       id: "b1",
+      name: "B1",
       strings: { fr: { hello: "bonjour" } },
     });
     await createBoardSet(
       makeBoardSetInput({
-        boards: [{ boardId: "b1", name: "B1", obf }],
+        boards: [obf],
       }),
     );
 
@@ -135,10 +136,10 @@ describe("updateBoardStrings", () => {
   });
 
   test("replaces all strings when updating an existing locale", async () => {
-    const obf = makeOBFBoard({ id: "b1" });
+    const obf = makeOBFBoard({ id: "b1", name: "B1" });
     await createBoardSet(
       makeBoardSetInput({
-        boards: [{ boardId: "b1", name: "B1", obf }],
+        boards: [obf],
       }),
     );
 

@@ -84,14 +84,11 @@ describe("resolveBoardForLanguage", () => {
       boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
       boards: [
         {
-          boardId: "board-1",
+          format: "open-board-0.1",
+          id: "board-1",
           name: "Food",
-          obf: {
-            format: "open-board-0.1",
-            id: "board-1",
-            buttons: [],
-            grid: { rows: 1, columns: 1, order: [[null]] },
-          },
+          buttons: [],
+          grid: { rows: 1, columns: 1, order: [[null]] },
         },
       ],
       assets: [],

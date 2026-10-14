@@ -48,13 +48,7 @@ describe("boardLoader", () => {
       {
         setId: "set-1",
         rootBoardId: "root-1",
-        boards: [
-          {
-            boardId: "root-1",
-            name: "Home",
-            obf: makeOBFBoard({ id: "root-1", name: "Home" }),
-          },
-        ],
+        boards: [makeOBFBoard({ id: "root-1", name: "Home" })],
       },
     ]);
 
