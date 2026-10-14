@@ -34,19 +34,17 @@ Suggestions are optional and replace the original message only when accepted.
 - 35 interface languages, including right-to-left layouts
 - Installable PWA with offline communication
 
-## Privacy and offline use
+## Privacy
 
-AAC Board AI has no accounts, backend, telemetry, or tracking. Boards, messages, settings, and cached translations stay on the device. Loading third-party media contacts external hosts.
-
-Stored boards remain available offline. URL imports and remote resources require a connection. Offline speech availability depends on the device and selected voice.
+No accounts, backend, or tracking. Boards, messages, and settings stay on the device.
 
 ## Limitations
 
-The app supports importing and storing boards. Editing, exporting, and cross-device sync are not available. To create a custom board, use an Open Board Format-compatible tool, then import it on each device.
+Boards can be imported and stored, but not edited, exported, or synced across devices. To create a custom board, use an Open Board Format-compatible tool and import it on each device.
 
 ## Built-in AI availability
 
-Support varies by browser, device, language, and model availability.
+Support depends on browser, device, language, and model availability.
 
 Proofreading and rewriting currently require experimental browser flags:
 
