@@ -45,8 +45,7 @@ export async function resolveBoardForLanguage(
       translator.destroy();
     }
   } catch {
-    // Total by design: translation is an enhancement, not a requirement —
-    // symbols carry the meaning, so a failure must never block the board.
+    // Translation is optional; failures must leave the source board usable.
     return board;
   }
 }
