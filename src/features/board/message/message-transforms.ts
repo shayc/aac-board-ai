@@ -1,17 +1,17 @@
-import type { MessagePart, MessagePartContent } from "./message-types";
+import type { MessagePart, MessagePartInput } from "./message-types";
 import { randomId } from "./random-id";
 
 const graphemeSegmenter = new Intl.Segmenter(undefined, {
   granularity: "grapheme",
 });
 
-export function createPart(content: MessagePartContent): MessagePart {
-  return { ...content, id: randomId() };
+export function createPart(content: MessagePartInput): MessagePart {
+  return { ...content, id: randomId(), label: content.label ?? "" };
 }
 
 export function appendPart(
   parts: MessagePart[],
-  content: MessagePartContent,
+  content: MessagePartInput,
 ): MessagePart[] {
   return [...parts, createPart(content)];
 }
@@ -32,7 +32,7 @@ export function appendTextToLastPart(
 
   return parts.with(-1, {
     ...lastPart,
-    label: `${lastPart.label ?? ""}${text}`,
+    label: `${lastPart.label}${text}`,
   });
 }
 

@@ -44,11 +44,11 @@ export function BoardSetLibrary({
       return;
     }
 
-    const { setId, name } = deleteTarget;
+    const { id, name } = deleteTarget;
     setDeleteTarget(null);
 
     try {
-      await deleteBoardSet(setId);
+      await deleteBoardSet(id);
       showSnackbar({
         message: (translate) => translate(m.libraryDeleted, { name }),
         severity: "success",

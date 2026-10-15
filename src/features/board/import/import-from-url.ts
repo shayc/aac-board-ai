@@ -1,4 +1,4 @@
-import { importBoardSets, type BoardImportResult } from "./board-import";
+import { importBoardSets, type BoardSetImportResult } from "./board-import";
 
 /**
  * Hard cap on a board download, enforced while the response streams so an
@@ -42,7 +42,7 @@ function deriveFilename(url: URL): string {
 
 export async function importBoardFromUrl(
   url: string,
-): Promise<BoardImportResult> {
+): Promise<BoardSetImportResult> {
   const boardUrl = parseBoardUrl(url);
   const blob = await downloadBoard(boardUrl);
 

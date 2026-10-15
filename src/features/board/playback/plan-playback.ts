@@ -6,8 +6,8 @@ import {
   type SpokenPartTracker,
 } from "./spoken-part-tracker";
 
-function getSpokenText(part: MessagePart): string | undefined {
-  return (part.vocalization ?? part.label)?.toLowerCase();
+function getSpokenText(part: MessagePart): string {
+  return (part.vocalization ?? part.label).toLowerCase();
 }
 
 export function planPlayback(parts: MessagePart[]): PlaybackStep[] {

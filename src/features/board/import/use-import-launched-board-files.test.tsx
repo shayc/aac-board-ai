@@ -82,12 +82,12 @@ describe("useImportLaunchedBoardFiles", () => {
     await vi.waitFor(async () => {
       const boardSets = await listBoardSets();
       expect(boardSets).toHaveLength(1);
-      expect(boardSets[0]?.setId).toBe(IMPORTED_SET_ID);
+      expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
     });
 
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
-        setId: IMPORTED_SET_ID,
+        id: IMPORTED_SET_ID,
         rootBoardId: "lots_of_stuff",
       }),
     );

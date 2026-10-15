@@ -81,7 +81,9 @@ describe("resolveBoardForLanguage", () => {
 
   test("persists a fresh translation", async () => {
     await createBoardSet({
-      boardSet: { setId: "set-1", name: "set-1", rootBoardId: "board-1" },
+      id: "set-1",
+      name: "set-1",
+      rootBoardId: "board-1",
       boards: [
         {
           format: "open-board-0.1",

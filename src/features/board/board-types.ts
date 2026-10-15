@@ -37,5 +37,7 @@ export type BoardAction =
   | { kind: "speak" }
   | { kind: "spell"; text: string };
 
+export type PhraseTranslations = Partial<Record<string, string>>;
+
 /** Target locale → original board text → translated text. */
-export type BoardTranslations = Record<string, Record<string, string>>;
+export type BoardTranslations = Partial<Record<string, PhraseTranslations>>;

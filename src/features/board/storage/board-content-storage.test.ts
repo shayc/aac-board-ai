@@ -13,9 +13,13 @@ import { closeBoardsDB } from "./boards-db";
 function makeBoardSetInput(
   overrides: Partial<BoardSetCreateInput> = {},
 ): BoardSetCreateInput {
+  const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
+
   return {
-    boardSet: { setId: "set-1", name: "Set", rootBoardId: "root-1" },
-    boards: [],
+    id: "set-1",
+    name: "Set",
+    rootBoardId: boards[0]?.id ?? "root-1",
+    boards,
     assets: [],
     ...overrides,
   };
@@ -40,7 +44,9 @@ describe("listBoards", () => {
   test("returns only the set's boards", async () => {
     await createBoardSet(
       makeBoardSetInput({
-        boardSet: { setId: "set-1", name: "Set 1", rootBoardId: "a" },
+        id: "set-1",
+        name: "Set 1",
+        rootBoardId: "a",
         boards: [
           makeOBFBoard({ id: "a", name: "A" }),
           makeOBFBoard({ id: "b", name: "B" }),
@@ -49,20 +55,20 @@ describe("listBoards", () => {
     );
     await createBoardSet(
       makeBoardSetInput({
-        boardSet: { setId: "set-2", name: "Set 2", rootBoardId: "c" },
+        id: "set-2",
+        name: "Set 2",
+        rootBoardId: "c",
         boards: [makeOBFBoard({ id: "c", name: "C" })],
       }),
     );
 
     const boards = await listBoards("set-1");
 
-    expect(boards.map((board) => board.boardId).sort()).toEqual(["a", "b"]);
+    expect(boards.map((board) => board.id).sort()).toEqual(["a", "b"]);
   });
 
-  test("returns empty array for a set with no boards", async () => {
-    await createBoardSet(makeBoardSetInput());
-
-    const boards = await listBoards("set-1");
+  test("returns empty array for a nonexistent set", async () => {
+    const boards = await listBoards("missing");
 
     expect(boards).toEqual([]);
   });

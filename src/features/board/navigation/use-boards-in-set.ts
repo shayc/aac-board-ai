@@ -4,7 +4,7 @@ import { listBoards } from "../storage/board-content-storage";
 import { findTranslations } from "../translation/board-translations";
 
 interface BoardSummary {
-  boardId: string;
+  id: string;
   name: string;
 }
 
@@ -31,7 +31,7 @@ export function useBoardsInSet(
       record.name
     ];
 
-    return { boardId: record.boardId, name: translated ?? record.name };
+    return { id: record.id, name: translated ?? record.name };
   });
 
   return {

@@ -15,11 +15,11 @@ export function boardPath({
 }
 
 export function rootBoardPath({
-  setId,
+  id,
   rootBoardId,
 }: {
-  setId: string;
+  id: string;
   rootBoardId: string;
 }): string {
-  return boardPath({ setId, boardId: rootBoardId });
+  return boardPath({ setId: id, boardId: rootBoardId });
 }

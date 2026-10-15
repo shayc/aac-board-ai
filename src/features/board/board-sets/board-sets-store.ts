@@ -15,14 +15,13 @@ export {
 export type {
   AssetInput,
   BoardSetCreateInput,
-  BoardSetInput,
   BoardSetRecord,
 } from "../storage/board-set-storage";
 
 export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
   isLoading: boolean;
-  error: Error | null;
+  error: Error | undefined;
 }
 
 const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
@@ -33,7 +32,7 @@ boardSetsSyncChannel.addEventListener("message", () => {
 const store = createExternalStore<BoardSetsSnapshot>({
   boardSets: [],
   isLoading: true,
-  error: null,
+  error: undefined,
 });
 
 let hasLoaded = false;
@@ -42,7 +41,7 @@ let pendingLoad: Promise<void> | null = null;
 async function loadBoardSets(): Promise<void> {
   try {
     const boardSets = await listBoardSets();
-    store.setState({ boardSets, isLoading: false, error: null });
+    store.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {
     const { boardSets } = store.getSnapshot();

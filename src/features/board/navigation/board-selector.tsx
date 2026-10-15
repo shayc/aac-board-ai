@@ -10,7 +10,7 @@ export function BoardSelector() {
   const { setId, boardId, goToBoard } = useBoardNavigation();
   const { boards } = useBoardsInSet(setId);
 
-  const selectedBoard = boards.find((board) => board.boardId === boardId);
+  const selectedBoard = boards.find((board) => board.id === boardId);
 
   if (!selectedBoard) {
     return null;
@@ -20,7 +20,7 @@ export function BoardSelector() {
     <Autocomplete
       options={boards}
       value={selectedBoard}
-      onChange={(_event, board) => goToBoard(board.boardId)}
+      onChange={(_event, board) => goToBoard(board.id)}
       disableClearable
       autoHighlight
       size="small"
@@ -28,10 +28,8 @@ export function BoardSelector() {
         popupIndicator: { sx: { border: "none" } },
       }}
       getOptionLabel={(board) => board.name}
-      getOptionKey={(board) => board.boardId}
-      isOptionEqualToValue={(option, selected) =>
-        option.boardId === selected.boardId
-      }
+      getOptionKey={(board) => board.id}
+      isOptionEqualToValue={(option, selected) => option.id === selected.id}
       renderInput={(params) => (
         <TextField
           {...params}

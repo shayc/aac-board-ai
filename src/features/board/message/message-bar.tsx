@@ -86,7 +86,7 @@ export function MessageBar({
                   outlineOffset: -2,
                 })}
               >
-                <AACSymbol label={part.label ?? ""} imageSrc={part.imageSrc} />
+                <AACSymbol label={part.label} imageSrc={part.imageSrc} />
               </Stack>
             );
           })}

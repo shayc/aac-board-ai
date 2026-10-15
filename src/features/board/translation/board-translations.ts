@@ -1,5 +1,5 @@
 import { getLanguageCode } from "@shared/language/locale";
-import type { Board } from "../board-types";
+import type { Board, PhraseTranslations } from "../board-types";
 import { normalizeBoardText } from "../normalize-board-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
@@ -24,7 +24,7 @@ export function getBoardLanguage(board: Board): string {
 export function findTranslations(
   translations: Board["translations"],
   language: string,
-): Record<string, string> | undefined {
+): PhraseTranslations | undefined {
   const match = Object.entries(translations).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
@@ -34,7 +34,7 @@ export function findTranslations(
 
 export function applyTranslations(
   board: Board,
-  translations: Record<string, string>,
+  translations: PhraseTranslations,
 ): Board {
   const lookup = (phrase: string | undefined) =>
     phrase ? (translations[phrase] ?? phrase) : phrase;

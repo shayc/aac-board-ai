@@ -10,8 +10,8 @@ function makeInput(
 ): SuggestionStatusInput {
   return {
     engines: [
-      { status: "ready", requestFailed: false },
-      { status: "ready", requestFailed: false },
+      { status: "ready", hasRequestFailed: false },
+      { status: "ready", hasRequestFailed: false },
     ],
     downloadProgress: null,
     hasText: false,
@@ -22,7 +22,7 @@ function makeInput(
 }
 
 function engines(...statuses: Status[]) {
-  return statuses.map((status) => ({ status, requestFailed: false }));
+  return statuses.map((status) => ({ status, hasRequestFailed: false }));
 }
 
 describe("deriveSuggestionStatus", () => {
@@ -95,8 +95,8 @@ describe("deriveSuggestionStatus", () => {
   test("counts a failed request as a broken engine", () => {
     const input = makeInput({
       engines: [
-        { status: "ready", requestFailed: true },
-        { status: "unavailable", requestFailed: false },
+        { status: "ready", hasRequestFailed: true },
+        { status: "unavailable", hasRequestFailed: false },
       ],
       hasText: true,
     });
@@ -107,8 +107,8 @@ describe("deriveSuggestionStatus", () => {
   test("partial failure stays silent while one engine still works", () => {
     const input = makeInput({
       engines: [
-        { status: "ready", requestFailed: true },
-        { status: "ready", requestFailed: false },
+        { status: "ready", hasRequestFailed: true },
+        { status: "ready", hasRequestFailed: false },
       ],
       hasText: true,
     });

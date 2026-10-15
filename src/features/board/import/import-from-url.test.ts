@@ -18,7 +18,7 @@ describe("importBoardFromUrl", () => {
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
 
-    expect(result.setId).toBe("lots-of-stuff");
+    expect(result.id).toBe("lots-of-stuff");
     expect(result.rootBoardId).toBeTruthy();
   });
 
@@ -30,8 +30,8 @@ describe("importBoardFromUrl", () => {
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
 
-    expect(first.setId).toBe("lots-of-stuff");
-    expect(second.setId).toBe("lots-of-stuff-2");
+    expect(first.id).toBe("lots-of-stuff");
+    expect(second.id).toBe("lots-of-stuff-2");
   });
 
   test("derives the setId from the last non-empty segment when the URL path ends with a slash", async () => {
@@ -40,7 +40,7 @@ describe("importBoardFromUrl", () => {
 
     const result = await importBoardFromUrl("https://example.com/boards/");
 
-    expect(result.setId).toBe("boards");
+    expect(result.id).toBe("boards");
   });
 
   test("falls back to the default filename when the URL has no path segments", async () => {
@@ -49,7 +49,7 @@ describe("importBoardFromUrl", () => {
 
     const result = await importBoardFromUrl("https://example.com/");
 
-    expect(result.setId).toBe("board");
+    expect(result.id).toBe("board");
   });
 
   test("throws on HTTP error responses", async () => {

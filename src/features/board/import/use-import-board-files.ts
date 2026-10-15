@@ -4,12 +4,14 @@ import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
-import { importBoardSets, type BoardImportResult } from "./board-import";
+import { importBoardSets, type BoardSetImportResult } from "./board-import";
 import { pickFiles } from "./file-picker";
 
 interface UseImportBoardFilesReturn {
   pickAndImportBoardFiles: () => Promise<void>;
-  importBoardFiles: (files: File[]) => Promise<BoardImportResult[] | undefined>;
+  importBoardFiles: (
+    files: File[],
+  ) => Promise<BoardSetImportResult[] | undefined>;
   importAndOpenBoardFiles: (files: File[]) => Promise<void>;
 }
 
@@ -19,7 +21,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importBoardFiles(
     files: File[],
-  ): Promise<BoardImportResult[] | undefined> {
+  ): Promise<BoardSetImportResult[] | undefined> {
     if (files.length === 0) {
       return [];
     }

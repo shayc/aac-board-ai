@@ -116,7 +116,7 @@ async function seedBoards(): Promise<void> {
 
   await seedBoardSets([
     {
-      setId: SET_ID,
+      id: SET_ID,
       name: "Media Lifetime",
       rootBoardId: "first",
       boards: [

@@ -159,7 +159,7 @@ describe("CommunicationBoard", () => {
   });
 
   test("a linked tile navigates without running its actions or playing its content", async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "test-board" }]);
+    await seedBoardSets([{ id: "set-1", rootBoardId: "test-board" }]);
     const board: OBFBoard = {
       ...TWO_BUTTON_BOARD,
       buttons: [
@@ -265,7 +265,7 @@ describe("CommunicationBoard", () => {
   );
 
   test("does not scroll the grid when Home navigates to the home board", async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
+    await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
 
     const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
       "/sets/set-1/boards/other-board",
@@ -291,7 +291,7 @@ describe("CommunicationBoard", () => {
   });
 
   test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-board" }]);
+    await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
 
     const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
       {

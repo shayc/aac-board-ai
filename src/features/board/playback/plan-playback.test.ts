@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { MessagePart } from "../message/message-types";
+import { createPart } from "../message/message-transforms";
 import { planPlayback } from "./plan-playback";
 
 describe("planPlayback", () => {
@@ -27,12 +28,11 @@ describe("planPlayback", () => {
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
-    const steps = planPlayback([
-      { id: "1", label: "bell", soundSrc: "bell.mp3" },
-    ]);
+    const part = createPart({ soundSrc: "bell.mp3" });
+    const steps = planPlayback([part]);
 
     expect(steps).toEqual([
-      { kind: "audio", trackingKey: "1", src: "bell.mp3" },
+      { kind: "audio", trackingKey: part.id, src: "bell.mp3" },
     ]);
   });
 

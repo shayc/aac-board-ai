@@ -3,7 +3,7 @@ import type { DBSchema, IDBPDatabase } from "idb";
 import { openDB } from "idb";
 
 export interface BoardSetRecord {
-  readonly setId: string;
+  readonly id: string;
   readonly name: string;
   readonly rootBoardId: string;
   readonly updatedAt: number;
@@ -18,7 +18,7 @@ export interface BoardSetRecord {
 
 export interface BoardRecord {
   readonly setId: string;
-  readonly boardId: string;
+  readonly id: string;
   readonly name: string;
   readonly obf: OBFBoard;
 }
@@ -106,13 +106,11 @@ function openConnection(): Promise<BoardsDB> {
   return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
       if (oldVersion < 1) {
-        const boardSets = db.createObjectStore("boardSets", {
-          keyPath: "setId",
-        });
+        const boardSets = db.createObjectStore("boardSets", { keyPath: "id" });
         boardSets.createIndex("byUpdatedAt", "updatedAt");
 
         const boards = db.createObjectStore("boards", {
-          keyPath: ["setId", "boardId"],
+          keyPath: ["setId", "id"],
         });
         boards.createIndex("bySetId", "setId");
 

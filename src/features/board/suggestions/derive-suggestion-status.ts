@@ -9,7 +9,7 @@ export type SuggestionDisplayState =
 
 interface EngineCondition {
   status: Status;
-  requestFailed: boolean;
+  hasRequestFailed: boolean;
 }
 
 export interface SuggestionStatusInput {
@@ -47,8 +47,8 @@ export function deriveSuggestionStatus({
 
   // A healthy engine that merely had nothing to suggest keeps the bar quiet.
   const hasWorkingEngine = supported.some(
-    ({ status, requestFailed }) =>
-      status !== "unavailable" && status !== "error" && !requestFailed,
+    ({ status, hasRequestFailed }) =>
+      status !== "unavailable" && status !== "error" && !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingEngine) {
     return { kind: "unavailable" };
