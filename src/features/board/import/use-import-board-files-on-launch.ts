@@ -4,7 +4,7 @@ import { useEffect, useEffectEvent } from "react";
 import { isBoardFile } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
-export function useImportLaunchedBoardFiles(): void {
+export function useImportBoardFilesOnLaunch(): void {
   const { importAndOpenBoardFiles } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
 

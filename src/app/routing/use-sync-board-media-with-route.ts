@@ -5,7 +5,7 @@ import { useRouteLoaderData } from "react-router";
 
 let committedMedia: BoardMediaResource | undefined;
 
-export function useBoardRouteMediaLifecycle(): void {
+export function useSyncBoardMediaWithRoute(): void {
   const loadedBoard = useRouteLoaderData<HydratedBoard>(BOARD_ROUTE_ID);
   const media = loadedBoard?.media;
 

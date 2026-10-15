@@ -5,13 +5,13 @@ import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../navigation/board-paths";
 import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
-import { useImportLaunchedBoardFiles } from "./use-import-launched-board-files";
+import { useImportBoardFilesOnLaunch } from "./use-import-board-files-on-launch";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
 function LaunchHarness() {
-  useImportLaunchedBoardFiles();
+  useImportBoardFilesOnLaunch();
 
   return <div data-testid="path">{useLocation().pathname}</div>;
 }
@@ -53,7 +53,7 @@ function renderLaunchHandler() {
   );
 }
 
-describe("useImportLaunchedBoardFiles", () => {
+describe("useImportBoardFilesOnLaunch", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
