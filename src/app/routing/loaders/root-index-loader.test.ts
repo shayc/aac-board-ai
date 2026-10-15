@@ -42,7 +42,7 @@ describe("rootIndexLoader", () => {
 
   test("keeps the existing set when a URL import has the same filename", async () => {
     await seedBoardSets([
-      { setId: "lots-of-stuff", rootBoardId: "root-1", name: "My Vocabulary" },
+      { id: "lots-of-stuff", rootBoardId: "root-1", name: "My Vocabulary" },
     ]);
 
     const response = await callLoader(
@@ -53,7 +53,7 @@ describe("rootIndexLoader", () => {
     expect(response.headers.get("Location")).toMatch(
       /^\/sets\/lots-of-stuff-2\/boards\/[^/]+$/,
     );
-    expect(new Set((await getBoardSets()).map((set) => set.setId))).toEqual(
+    expect(new Set((await getBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff-2", "lots-of-stuff"]),
     );
   });
@@ -87,8 +87,8 @@ describe("rootIndexLoader", () => {
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
     await seedBoardSets([
-      { setId: "set-1", rootBoardId: "root-1" },
-      { setId: "set-2", rootBoardId: "root-2" },
+      { id: "set-1", rootBoardId: "root-1" },
+      { id: "set-2", rootBoardId: "root-2" },
     ]);
 
     const response = await callLoader();

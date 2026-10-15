@@ -56,7 +56,7 @@ function setup(
 
 describe("useBoardNavigation", () => {
   beforeEach(async () => {
-    await seedBoardSets([{ setId: "set-1", rootBoardId: "root-1" }]);
+    await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
   });
 
   describe("canGoBack", () => {

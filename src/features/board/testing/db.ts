@@ -2,18 +2,15 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   createBoardSet,
-  type AssetInput,
-  type BoardSetRecord,
+  type BoardSetCreateInput,
 } from "../storage/board-set-storage";
 import { getBoardsDB } from "../storage/boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
-interface SeedBoardSet extends Partial<BoardSetRecord> {
-  setId: string;
+interface SeedBoardSet extends Partial<BoardSetCreateInput> {
+  id: string;
   rootBoardId: string;
-  boards?: readonly OBFBoard[];
-  assets?: AssetInput[];
 }
 
 export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
@@ -46,24 +43,27 @@ export async function resetBoardsDB(): Promise<void> {
 }
 
 export async function countStoredBoardContent(setId: string): Promise<{
-  boards: number;
-  assets: number;
+  boardCount: number;
+  assetCount: number;
 }> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets"], "readonly");
-  const boardCount = tx.objectStore("boards").index("bySetId").count(setId);
-  const assetCount = tx.objectStore("assets").index("bySetId").count(setId);
-  const [boards, assets] = await Promise.all([boardCount, assetCount, tx.done]);
+  const [boardCount, assetCount] = await Promise.all([
+    tx.objectStore("boards").index("bySetId").count(setId),
+    tx.objectStore("assets").index("bySetId").count(setId),
+    tx.done,
+  ]);
 
-  return { boards, assets };
+  return { boardCount, assetCount };
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   await clearBoardsDB();
-  for (const { boards = [], assets = [], ...record } of records) {
+  for (const { boards, assets = [], ...record } of records) {
     await createBoardSet({
-      boardSet: { name: record.setId, ...record },
-      boards,
+      name: record.id,
+      ...record,
+      boards: boards ?? [makeOBFBoard({ id: record.rootBoardId })],
       assets,
     });
   }

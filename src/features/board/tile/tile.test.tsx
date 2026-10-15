@@ -173,7 +173,7 @@ describe("Tile", () => {
     );
   });
 
-  test("borderHidden renders a transparent border but keeps its width", async () => {
+  test("hides the border without changing its width", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#ff0000"
@@ -195,7 +195,7 @@ describe("Tile", () => {
     );
   });
 
-  test("borderHidden keeps the folder corner visible", async () => {
+  test("keeps the folder corner visible when the border is hidden", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#000000"

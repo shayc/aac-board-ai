@@ -36,7 +36,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const { setId, boardId } = match?.params ?? {};
   const { boardSets } = useBoardSets();
   const rootBoardId = boardSets.find(
-    (boardSet) => boardSet.setId === setId,
+    (boardSet) => boardSet.id === setId,
   )?.rootBoardId;
 
   const backStack = readBackStack(location.state);
@@ -68,7 +68,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
       return;
     }
 
-    void navigate(rootBoardPath({ setId, rootBoardId }), {
+    void navigate(rootBoardPath({ id: setId, rootBoardId }), {
       state: { backStack: [] },
       replace: true,
     });

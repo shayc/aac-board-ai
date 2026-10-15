@@ -18,7 +18,7 @@ export {
 } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
-export { importBoardFromUrl } from "./import/import-from-url";
+export { importBoardSetFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportLaunchedBoardFiles } from "./import/use-import-launched-board-files";
 export {

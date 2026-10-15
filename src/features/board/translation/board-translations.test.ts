@@ -4,7 +4,7 @@ import {
   collectTranslatablePhrases,
   findTranslations,
   getBoardLanguage,
-  findTranslatedBoard,
+  findBoardForLanguage,
 } from "./board-translations";
 import type { Board } from "../board-types";
 
@@ -121,18 +121,18 @@ describe("board-translations", () => {
     expect(phrases.has("Hello there")).toBe(true);
   });
 
-  test("findTranslatedBoard() returns early if languages match", () => {
-    expect(findTranslatedBoard(mockBoard, "en")).toBe(mockBoard);
+  test("findBoardForLanguage() returns early if languages match", () => {
+    expect(findBoardForLanguage(mockBoard, "en")).toBe(mockBoard);
   });
 
-  test("findTranslatedBoard() returns translated board if cached translations exist", () => {
-    const translated = findTranslatedBoard(mockBoard, "es");
+  test("findBoardForLanguage() returns translated board if cached translations exist", () => {
+    const translated = findBoardForLanguage(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0].label).toBe("Hola");
   });
 
-  test("findTranslatedBoard() returns undefined if translations are missing", () => {
-    expect(findTranslatedBoard(mockBoard, "de")).toBeUndefined();
+  test("findBoardForLanguage() returns undefined if translations are missing", () => {
+    expect(findBoardForLanguage(mockBoard, "de")).toBeUndefined();
   });
 });

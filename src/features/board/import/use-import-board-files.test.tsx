@@ -65,7 +65,7 @@ describe("useImportBoardFiles", () => {
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board set imported");
 
-    expect(new Set((await listBoardSets()).map((set) => set.setId))).toEqual(
+    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
   });

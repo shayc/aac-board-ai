@@ -36,7 +36,7 @@ describe("LibraryDrawer", () => {
 
   test("selecting a set navigates to it and closes the drawer", async () => {
     await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
 
     const onClose = vi.fn();

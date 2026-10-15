@@ -88,7 +88,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={state.current?.duration ?? 4000}
+        autoHideDuration={state.current?.durationMs ?? 4000}
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",

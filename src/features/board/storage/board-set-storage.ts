@@ -1,4 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
+import { normalizeLocale } from "@shared/language/locale";
+import { htmlToText } from "./html-to-text";
 import {
   getBoardsDB,
   normalizeAssetPath,
@@ -16,25 +18,15 @@ export class BoardSetAlreadyExistsError extends Error {
   }
 }
 
-export interface BoardSetInput {
-  readonly setId: string;
-  readonly name: string;
-  readonly rootBoardId: string;
-  readonly author?: string;
-  readonly description?: string;
-  readonly license?: string;
-  readonly locale?: string;
-  readonly gridRows?: number;
-  readonly gridColumns?: number;
-}
-
 export interface AssetInput {
   readonly path: string;
   readonly blob: Blob;
 }
 
 export interface BoardSetCreateInput {
-  readonly boardSet: BoardSetInput;
+  readonly id: string;
+  readonly rootBoardId: string;
+  readonly name?: string;
   readonly boards: readonly OBFBoard[];
   readonly assets: readonly AssetInput[];
 }
@@ -78,39 +70,21 @@ export async function deleteBoardSet(setId: string): Promise<void> {
 export async function createBoardSet(
   input: BoardSetCreateInput,
 ): Promise<void> {
-  const { boardSet, boards, assets } = input;
-  validateId(boardSet.setId, "setId");
-  validateId(boardSet.rootBoardId, "rootBoardId");
-  for (const obf of boards) {
-    validateId(obf.id, "boardId");
-  }
+  const { id, boards, assets } = input;
+  const rootBoard = validateBoardSetInput(input);
+  const record = buildBoardSetRecord(input, rootBoard);
 
-  const { setId } = boardSet;
   const db = await getBoardsDB();
   const tx = db.transaction(["boardSets", "boards", "assets"], "readwrite");
   const boardSetStore = tx.objectStore("boardSets");
   const boardStore = tx.objectStore("boards");
   const assetStore = tx.objectStore("assets");
 
-  const existing = await boardSetStore.get(setId);
+  const existing = await boardSetStore.get(id);
   if (existing) {
     await tx.done;
-    throw new BoardSetAlreadyExistsError(setId);
+    throw new BoardSetAlreadyExistsError(id);
   }
-
-  const record: BoardSetRecord = {
-    setId,
-    name: boardSet.name,
-    rootBoardId: boardSet.rootBoardId,
-    updatedAt: Date.now(),
-    boardCount: boards.length,
-    author: boardSet.author,
-    description: boardSet.description,
-    license: boardSet.license,
-    locale: boardSet.locale,
-    gridRows: boardSet.gridRows,
-    gridColumns: boardSet.gridColumns,
-  };
 
   // idb creates tx.done eagerly when the transaction is opened, and requests
   // already issued before a synchronous put() failure (e.g. a non-cloneable
@@ -122,8 +96,8 @@ export async function createBoardSet(
     for (const obf of boards) {
       requests.push(
         boardStore.put({
-          setId,
-          boardId: obf.id,
+          setId: id,
+          id: obf.id,
           name: obf.name ?? obf.id,
           obf,
         }),
@@ -133,7 +107,7 @@ export async function createBoardSet(
     for (const asset of assets) {
       requests.push(
         assetStore.put({
-          setId,
+          setId: id,
           path: normalizeAssetPath(asset.path),
           blob: asset.blob,
         }),
@@ -153,4 +127,51 @@ export async function createBoardSet(
     await Promise.allSettled(requests);
     throw error;
   }
+}
+
+function validateBoardSetInput({
+  id,
+  rootBoardId,
+  boards,
+}: BoardSetCreateInput): OBFBoard {
+  validateId(id, "setId");
+  validateId(rootBoardId, "rootBoardId");
+
+  const boardIds = new Set<string>();
+  for (const obf of boards) {
+    validateId(obf.id, "boardId");
+    if (boardIds.has(obf.id)) {
+      throw new Error(`Duplicate board ID: ${obf.id}`);
+    }
+
+    boardIds.add(obf.id);
+  }
+
+  const rootBoard = boards.find((obf) => obf.id === rootBoardId);
+  if (!rootBoard) {
+    throw new Error(`Root board not found: ${rootBoardId}`);
+  }
+
+  return rootBoard;
+}
+
+function buildBoardSetRecord(
+  { id, rootBoardId, name, boards }: BoardSetCreateInput,
+  rootBoard: OBFBoard,
+): BoardSetRecord {
+  return {
+    id,
+    name: name ?? rootBoard.name ?? id,
+    rootBoardId,
+    updatedAt: Date.now(),
+    boardCount: boards.length,
+    author: rootBoard.license?.author_name,
+    description: rootBoard.description_html
+      ? htmlToText(rootBoard.description_html)
+      : undefined,
+    license: rootBoard.license?.type,
+    locale: rootBoard.locale ? normalizeLocale(rootBoard.locale) : undefined,
+    gridRows: rootBoard.grid.rows,
+    gridColumns: rootBoard.grid.columns,
+  };
 }

@@ -46,7 +46,7 @@ describe("boardLoader", () => {
   test("returns the hydrated board on the happy path", async () => {
     await seedBoardSets([
       {
-        setId: "set-1",
+        id: "set-1",
         rootBoardId: "root-1",
         boards: [makeOBFBoard({ id: "root-1", name: "Home" })],
       },

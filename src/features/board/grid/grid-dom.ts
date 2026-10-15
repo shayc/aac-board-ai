@@ -17,7 +17,7 @@ export function findFocusableInGridPosition(
   position: GridPosition,
 ): HTMLElement | null {
   return root.querySelector<HTMLElement>(
-    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.col + 1}'] ${GRID_FOCUS_TARGET_SELECTOR}`,
+    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUS_TARGET_SELECTOR}`,
   );
 }
 
@@ -53,7 +53,7 @@ export function isSameGridPosition(
   first: GridPosition,
   second: GridPosition,
 ): boolean {
-  return first.row === second.row && first.col === second.col;
+  return first.row === second.row && first.column === second.column;
 }
 
 function readGridPosition(cell: Element | null): GridPosition | null {
@@ -62,10 +62,11 @@ function readGridPosition(cell: Element | null): GridPosition | null {
   }
 
   const row = Number.parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
-  const col = Number.parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
-  if (Number.isNaN(row) || Number.isNaN(col)) {
+  const column =
+    Number.parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
+  if (Number.isNaN(row) || Number.isNaN(column)) {
     return null;
   }
 
-  return { row, col };
+  return { row, column };
 }

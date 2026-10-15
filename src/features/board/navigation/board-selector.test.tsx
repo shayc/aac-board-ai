@@ -37,7 +37,9 @@ beforeEach(async () => {
   setStoredLanguage(DEFAULT_LANGUAGE);
   await resetBoardsDB();
   await createBoardSet({
-    boardSet: { setId: "set-1", name: "Set", rootBoardId: "root" },
+    id: "set-1",
+    name: "Set",
+    rootBoardId: "root",
     boards: [
       makeOBFBoard({ id: "root", name: "Home" }),
       makeOBFBoard({ id: "animals", name: "Animals" }),
@@ -126,7 +128,9 @@ describe("BoardSelector", () => {
 
   test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
     await createBoardSet({
-      boardSet: { setId: "set-2", name: "Set", rootBoardId: "root" },
+      id: "set-2",
+      name: "Set",
+      rootBoardId: "root",
       boards: [
         makeOBFBoard({
           id: "root",

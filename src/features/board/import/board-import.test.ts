@@ -41,20 +41,20 @@ describe("importBoardSets", () => {
 
     expect(importResults).toEqual([
       {
-        setId: IMPORTED_SET_ID,
+        id: IMPORTED_SET_ID,
         rootBoardId: board.id,
       },
     ]);
 
     expect(await getBoardSets()).toEqual([
-      expect.objectContaining({ setId: IMPORTED_SET_ID }),
+      expect.objectContaining({ id: IMPORTED_SET_ID }),
     ]);
 
     const boardSets = await listBoardSets();
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
+      id: IMPORTED_SET_ID,
       rootBoardId: board.id,
       boardCount: 1,
       name: board.name,
@@ -70,7 +70,7 @@ describe("importBoardSets", () => {
     expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
-    expect((await countStoredBoardContent(IMPORTED_SET_ID)).assets).toBe(0);
+    expect((await countStoredBoardContent(IMPORTED_SET_ID)).assetCount).toBe(0);
   });
 
   test("imports an OBZ file into IndexedDB", async () => {
@@ -91,7 +91,7 @@ describe("importBoardSets", () => {
 
     expect(importResults).toEqual([
       {
-        setId: IMPORTED_SET_ID,
+        id: IMPORTED_SET_ID,
         rootBoardId,
       },
     ]);
@@ -100,15 +100,15 @@ describe("importBoardSets", () => {
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
+      id: IMPORTED_SET_ID,
       rootBoardId,
       boardCount: archive.boards.size,
       name: archive.boards.get(rootBoardId)?.name,
     });
 
-    const storedContent = await countStoredBoardContent(IMPORTED_SET_ID);
-    expect(storedContent.boards).toBe(archive.boards.size);
-    expect(storedContent.assets).toBe(assetEntries.length);
+    const counts = await countStoredBoardContent(IMPORTED_SET_ID);
+    expect(counts.boardCount).toBe(archive.boards.size);
+    expect(counts.assetCount).toBe(assetEntries.length);
 
     const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
     assertDefined(storedRootBoard);
@@ -157,12 +157,12 @@ describe("importBoardSets", () => {
     const importResults = await importBoardSets(zipNamedFile);
 
     expect(importResults).toHaveLength(1);
-    expect(importResults[0].setId).toBe(IMPORTED_SET_ID);
+    expect(importResults[0].id).toBe(IMPORTED_SET_ID);
 
     const boardSets = await listBoardSets();
     expect(archive.boards.size).toBeGreaterThan(1);
     expect(boardSets[0]).toMatchObject({
-      setId: IMPORTED_SET_ID,
+      id: IMPORTED_SET_ID,
       boardCount: archive.boards.size,
     });
   });
@@ -175,7 +175,7 @@ describe("importBoardSets", () => {
 
     const importResults = await importBoardSets(extensionOnlyFile);
 
-    expect(importResults[0].setId).toBe("imported-board");
+    expect(importResults[0].id).toBe("imported-board");
   });
 
   test("clamps the derived setId to 255 characters", async () => {
@@ -186,20 +186,20 @@ describe("importBoardSets", () => {
 
     const importResults = await importBoardSets(longNamedFile);
 
-    expect(importResults[0].setId).toBe("x".repeat(255));
+    expect(importResults[0].id).toBe("x".repeat(255));
   });
 
   test("re-importing the same filename keeps both board sets", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
 
     const first = await importBoardSets(fixtureFile);
-    expect(first[0].setId).toBe(IMPORTED_SET_ID);
+    expect(first[0].id).toBe(IMPORTED_SET_ID);
 
     const second = await importBoardSets(fixtureFile);
-    expect(second[0].setId).toBe(`${IMPORTED_SET_ID}-2`);
+    expect(second[0].id).toBe(`${IMPORTED_SET_ID}-2`);
 
     const boardSets = await listBoardSets();
-    expect(new Set(boardSets.map((set) => set.setId))).toEqual(
+    expect(new Set(boardSets.map((set) => set.id))).toEqual(
       new Set([`${IMPORTED_SET_ID}-2`, IMPORTED_SET_ID]),
     );
   });
@@ -219,7 +219,7 @@ describe("importBoardSets", () => {
     const collidingFile = new File([obfFile], "BOARD.json");
     const [result] = await importBoardSets(collidingFile);
 
-    expect(result.setId).toBe("board-2");
+    expect(result.id).toBe("board-2");
     expect(await getBoard("board", archive.rootBoard.id)).toBeDefined();
     expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
     expect(await listBoardSets()).toHaveLength(2);
@@ -254,7 +254,7 @@ describe("importBoardSets", () => {
     await expect(importBoardSets([goodFile, corruptFile])).rejects.toThrow();
 
     const boardSets = await listBoardSets();
-    expect(boardSets.map((set) => set.setId)).toContain(IMPORTED_SET_ID);
+    expect(boardSets.map((set) => set.id)).toContain(IMPORTED_SET_ID);
   });
 });
 

@@ -1,55 +1,55 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
-  importBoardFromUrl,
+  importBoardSetFromUrl,
   MAX_BOARD_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
-describe("importBoardFromUrl", () => {
+describe("importBoardSetFromUrl", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
 
   test("imports a board from a URL and derives the setId from the filename", async () => {
-    const result = await importBoardFromUrl(
+    const result = await importBoardSetFromUrl(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
 
-    expect(result.setId).toBe("lots-of-stuff");
+    expect(result.id).toBe("lots-of-stuff");
     expect(result.rootBoardId).toBeTruthy();
   });
 
   test("keeps both sets when URL imports share a filename", async () => {
-    const first = await importBoardFromUrl(
+    const first = await importBoardSetFromUrl(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
-    const second = await importBoardFromUrl(
+    const second = await importBoardSetFromUrl(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
 
-    expect(first.setId).toBe("lots-of-stuff");
-    expect(second.setId).toBe("lots-of-stuff-2");
+    expect(first.id).toBe("lots-of-stuff");
+    expect(second.id).toBe("lots-of-stuff-2");
   });
 
   test("derives the setId from the last non-empty segment when the URL path ends with a slash", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
-    const result = await importBoardFromUrl("https://example.com/boards/");
+    const result = await importBoardSetFromUrl("https://example.com/boards/");
 
-    expect(result.setId).toBe("boards");
+    expect(result.id).toBe("boards");
   });
 
   test("falls back to the default filename when the URL has no path segments", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
-    const result = await importBoardFromUrl("https://example.com/");
+    const result = await importBoardSetFromUrl("https://example.com/");
 
-    expect(result.setId).toBe("board");
+    expect(result.id).toBe("board");
   });
 
   test("throws on HTTP error responses", async () => {
@@ -58,7 +58,7 @@ describe("importBoardFromUrl", () => {
     );
 
     await expect(
-      importBoardFromUrl("https://example.com/missing.obz"),
+      importBoardSetFromUrl("https://example.com/missing.obz"),
     ).rejects.toThrow("Failed to fetch board: HTTP 404");
   });
 
@@ -66,7 +66,7 @@ describe("importBoardFromUrl", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     await expect(
-      importBoardFromUrl("data:application/zip;base64,UEsDBA=="),
+      importBoardSetFromUrl("data:application/zip;base64,UEsDBA=="),
     ).rejects.toMatchObject({
       name: "BoardUrlError",
       code: "unsupported-scheme",
@@ -88,7 +88,7 @@ describe("importBoardFromUrl", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(endlessBody));
 
     await expect(
-      importBoardFromUrl("https://example.com/huge.obz"),
+      importBoardSetFromUrl("https://example.com/huge.obz"),
     ).rejects.toMatchObject({
       name: "BoardUrlError",
       code: "download-too-large",

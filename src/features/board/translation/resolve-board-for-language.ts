@@ -4,7 +4,7 @@ import type { Board } from "../board-types";
 import {
   applyTranslations,
   collectTranslatablePhrases,
-  findTranslatedBoard,
+  findBoardForLanguage,
   getBoardLanguage,
 } from "./board-translations";
 
@@ -18,7 +18,7 @@ export async function resolveBoardForLanguage(
   language: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const existing = findTranslatedBoard(board, language);
+  const existing = findBoardForLanguage(board, language);
   if (existing) {
     return existing;
   }

@@ -55,7 +55,7 @@ describe("BoardSetLibrary", () => {
 
   test("deletes a set after confirmation and announces it", async () => {
     await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
 
     const screen = await renderBoardSetLibrary();
@@ -80,7 +80,7 @@ describe("BoardSetLibrary", () => {
 
   test("keeps the set when the delete dialog is cancelled", async () => {
     await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
 
     const screen = await renderBoardSetLibrary();
@@ -99,8 +99,8 @@ describe("BoardSetLibrary", () => {
 
   test("lists the stored board sets with no a11y violations", async () => {
     await seedBoardSets([
-      { setId: "animals", rootBoardId: "root", name: "Animals" },
-      { setId: "core-words", rootBoardId: "root", name: "Core Words" },
+      { id: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "core-words", rootBoardId: "root", name: "Core Words" },
     ]);
 
     const screen = await renderBoardSetLibrary();

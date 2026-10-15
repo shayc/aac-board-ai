@@ -61,7 +61,7 @@ export function useMessageSuggestions(text: string): MessageSuggestions {
   const status = deriveSuggestionStatus({
     engines: sources.map(({ engineStatus, hasRequestFailed }) => ({
       status: engineStatus,
-      requestFailed: hasRequestFailed,
+      hasRequestFailed,
     })),
     downloadProgress,
     hasText,

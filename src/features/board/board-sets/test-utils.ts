@@ -4,7 +4,7 @@ export function makeBoardSet(
   overrides: Partial<BoardSetRecord> = {},
 ): BoardSetRecord {
   return {
-    setId: "set-1",
+    id: "set-1",
     name: "My Board",
     rootBoardId: "root",
     updatedAt: 0,

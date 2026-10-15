@@ -1,4 +1,4 @@
-import { getBoardSets, importBoardFromUrl } from "@features/board";
+import { getBoardSets, importBoardSetFromUrl } from "@features/board";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -40,7 +40,7 @@ describe("app flow", () => {
   });
 
   test("first run: imported board set opens, composes across boards, and speaks", async () => {
-    await importBoardFromUrl(OBZ_FIXTURE_URL);
+    await importBoardSetFromUrl(OBZ_FIXTURE_URL);
 
     const { screen } = await renderApp();
 
@@ -90,7 +90,7 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
 
-    expect(new Set((await getBoardSets()).map((set) => set.setId))).toEqual(
+    expect(new Set((await getBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
   });
@@ -118,7 +118,7 @@ describe("app flow", () => {
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {
-      setId: "lots-of-stuff",
+      id: "lots-of-stuff",
       rootBoardId: "root-1",
       boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
     },

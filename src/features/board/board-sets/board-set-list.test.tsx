@@ -14,8 +14,8 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[
-          makeBoardSet({ setId: "a", name: "Core Words" }),
-          makeBoardSet({ setId: "b", name: "Animals" }),
+          makeBoardSet({ id: "a", name: "Core Words" }),
+          makeBoardSet({ id: "b", name: "Animals" }),
         ]}
         onSelect={vi.fn()}
         onShowDetails={vi.fn()}
@@ -48,8 +48,8 @@ describe("BoardSetList", () => {
 
   test("keeps labels, menus, and details actions associated with their list", async () => {
     const boardSets = [
-      makeBoardSet({ setId: "core", name: "Core Words" }),
-      makeBoardSet({ setId: "animals", name: "Animals" }),
+      makeBoardSet({ id: "core", name: "Core Words" }),
+      makeBoardSet({ id: "animals", name: "Animals" }),
     ];
     const onShowDetails = vi.fn();
     const onDelete = vi.fn();
@@ -57,7 +57,7 @@ describe("BoardSetList", () => {
       <>
         {boardSets.map((boardSet) => (
           <BoardSetList
-            key={boardSet.setId}
+            key={boardSet.id}
             boardSets={[boardSet]}
             onSelect={vi.fn()}
             onShowDetails={onShowDetails}
