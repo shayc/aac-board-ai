@@ -98,6 +98,13 @@ export function SpeechSettings() {
     },
   ];
 
+  function handlePreviewSpeech() {
+    void playback.play({
+      source: "speech-preview",
+      steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
+    });
+  }
+
   return (
     <Stack spacing={3}>
       <FormControl size="small" fullWidth>
@@ -141,12 +148,7 @@ export function SpeechSettings() {
         variant="contained"
         color="primary"
         startIcon={<PlayArrowIcon />}
-        onClick={() =>
-          void playback.play({
-            source: "speech-preview",
-            steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
-          })
-        }
+        onClick={handlePreviewSpeech}
         sx={{ alignSelf: "flex-start" }}
       >
         {t(m.speechPreview)}

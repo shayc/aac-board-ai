@@ -32,6 +32,11 @@ export function LibraryDrawer({
 
   const closeOnNavigate = variant === "temporary" ? onClose : undefined;
 
+  function handleBoardSetSelect(boardSet: { id: string; rootBoardId: string }) {
+    void navigate(rootBoardPath(boardSet));
+    closeOnNavigate?.();
+  }
+
   return (
     <Drawer
       open={open}
@@ -86,10 +91,7 @@ export function LibraryDrawer({
       >
         <BoardSetLibrary
           selectedSetId={activeSetId}
-          onSelect={(boardSet) => {
-            void navigate(rootBoardPath(boardSet));
-            closeOnNavigate?.();
-          }}
+          onSelect={handleBoardSetSelect}
         />
       </Box>
     </Drawer>

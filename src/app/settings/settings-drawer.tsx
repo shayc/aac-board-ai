@@ -18,6 +18,7 @@ import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import type { ReactNode } from "react";
 import { ThemeSettings } from "./theme-settings";
 import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
@@ -28,15 +29,6 @@ interface SettingsDrawerProps {
   open: boolean;
   onClose: () => void;
 }
-
-const sectionHeadingSx = {
-  display: "flex",
-  alignItems: "center",
-  gap: 1,
-  mb: 2,
-  fontWeight: 700,
-  "& > svg": { color: "primary.main" },
-} as const;
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const t = useTranslate();
@@ -96,60 +88,89 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           }),
         ]}
       >
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <TuneOutlinedIcon fontSize="small" />
-          {t(m.settingsSectionGeneral)}
-        </Typography>
-        <Stack spacing={3}>
+        <SettingsSection
+          title={t(m.settingsSectionGeneral)}
+          icon={<TuneOutlinedIcon fontSize="small" />}
+        >
           <ThemeSettings />
           <LanguageSettings />
-        </Stack>
+        </SettingsSection>
 
         <Divider sx={{ my: 3 }} />
 
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <GridViewOutlinedIcon fontSize="small" />
-          {t(m.settingsSectionBoard)}
-        </Typography>
-        <Stack spacing={3}>
-          <BoardSettings />
-        </Stack>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <VolumeUpOutlinedIcon fontSize="small" />
-          {t(m.settingsSectionSpeech)}
-        </Typography>
-        <Stack spacing={3}>
-          <SpeechSettings />
-        </Stack>
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <AutoAwesomeIcon fontSize="small" />
-          {t(m.settingsSectionSuggestions)}
-        </Typography>
-        <SuggestionsSettings />
-
-        <Divider sx={{ my: 3 }} />
-
-        <Typography component="h3" variant="subtitle1" sx={sectionHeadingSx}>
-          <InfoOutlinedIcon fontSize="small" />
-          {t(m.settingsSectionAbout)}
-        </Typography>
-        <ExternalLink
-          href="https://github.com/shayc/aac-board-ai"
-          color="text.secondary"
+        <SettingsSection
+          title={t(m.settingsSectionBoard)}
+          icon={<GridViewOutlinedIcon fontSize="small" />}
         >
-          <GitHubIcon
-            fontSize="small"
-            sx={{ mr: 2, verticalAlign: "text-bottom" }}
-          />
-          {t(m.aboutSourceCode)}
-        </ExternalLink>
+          <BoardSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection
+          title={t(m.settingsSectionSpeech)}
+          icon={<VolumeUpOutlinedIcon fontSize="small" />}
+        >
+          <SpeechSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection
+          title={t(m.settingsSectionSuggestions)}
+          icon={<AutoAwesomeIcon fontSize="small" />}
+        >
+          <SuggestionsSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection
+          title={t(m.settingsSectionAbout)}
+          icon={<InfoOutlinedIcon fontSize="small" />}
+        >
+          <ExternalLink
+            href="https://github.com/shayc/aac-board-ai"
+            color="text.secondary"
+            sx={{ alignSelf: "flex-start" }}
+          >
+            <GitHubIcon
+              fontSize="small"
+              sx={{ mr: 2, verticalAlign: "text-bottom" }}
+            />
+            {t(m.aboutSourceCode)}
+          </ExternalLink>
+        </SettingsSection>
       </Box>
     </Drawer>
+  );
+}
+
+interface SettingsSectionProps {
+  title: string;
+  icon: ReactNode;
+  children: ReactNode;
+}
+
+function SettingsSection({ title, icon, children }: SettingsSectionProps) {
+  return (
+    <>
+      <Typography
+        component="h3"
+        variant="subtitle1"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          mb: 2,
+          fontWeight: 700,
+          "& > svg": { color: "primary.main" },
+        }}
+      >
+        {icon}
+        {title}
+      </Typography>
+      <Stack spacing={3}>{children}</Stack>
+    </>
   );
 }
