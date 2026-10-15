@@ -59,7 +59,7 @@ export function Grid<TItem extends { id: string }>({
             items={row}
             rowIndex={rowIndex}
             activeColumn={
-              rowIndex === activeCell.row ? activeCell.col : undefined
+              rowIndex === activeCell.row ? activeCell.column : undefined
             }
             renderItem={renderItem}
           />

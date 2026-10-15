@@ -70,7 +70,7 @@ describe("importBoardSets", () => {
     expect(storedBoard.obf.buttons.length).toBe(board.buttons.length);
     expect(storedBoard.obf.grid).toEqual(board.grid);
 
-    expect((await countStoredBoardContent(IMPORTED_SET_ID)).assets).toBe(0);
+    expect((await countStoredBoardContent(IMPORTED_SET_ID)).assetCount).toBe(0);
   });
 
   test("imports an OBZ file into IndexedDB", async () => {
@@ -106,9 +106,9 @@ describe("importBoardSets", () => {
       name: archive.boards.get(rootBoardId)?.name,
     });
 
-    const storedContent = await countStoredBoardContent(IMPORTED_SET_ID);
-    expect(storedContent.boards).toBe(archive.boards.size);
-    expect(storedContent.assets).toBe(assetEntries.length);
+    const counts = await countStoredBoardContent(IMPORTED_SET_ID);
+    expect(counts.boardCount).toBe(archive.boards.size);
+    expect(counts.assetCount).toBe(assetEntries.length);
 
     const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
     assertDefined(storedRootBoard);

@@ -94,7 +94,7 @@ export function useGridKeyboard({
     target?.focus();
   }, [grid]);
 
-  const activeCell = grid[rememberedPosition.row]?.[rememberedPosition.col]
+  const activeCell = grid[rememberedPosition.row]?.[rememberedPosition.column]
     ? rememberedPosition
     : findFirstOccupiedPosition(grid);
 

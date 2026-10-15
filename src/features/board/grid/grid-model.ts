@@ -2,7 +2,7 @@ export type GridOrder = readonly (readonly (string | null)[])[];
 
 export interface GridPosition {
   row: number;
-  col: number;
+  column: number;
 }
 
 export function buildGrid<TItem extends { id: string }>(
@@ -38,12 +38,12 @@ export function findFirstOccupiedPosition(
   grid: readonly (readonly unknown[])[],
 ): GridPosition {
   for (let row = 0; row < grid.length; row++) {
-    for (let col = 0; col < grid[row].length; col++) {
-      if (grid[row][col]) {
-        return { row, col };
+    for (let column = 0; column < grid[row].length; column++) {
+      if (grid[row][column]) {
+        return { row, column };
       }
     }
   }
 
-  return { row: 0, col: 0 };
+  return { row: 0, column: 0 };
 }

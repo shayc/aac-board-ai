@@ -8,7 +8,7 @@ import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
-const LONG_DURATION = 60_000;
+const LONG_DURATION_MS = 60_000;
 
 function ShowButtons({
   snackbars,
@@ -41,8 +41,8 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
 describe("SnackbarProvider", () => {
   test("a new message replaces the current one after its exit transition", async () => {
     const screen = await renderSnackbars({
-      "show-first": { message: "first", duration: LONG_DURATION },
-      "show-second": { message: "second", duration: LONG_DURATION },
+      "show-first": { message: "first", durationMs: LONG_DURATION_MS },
+      "show-second": { message: "second", durationMs: LONG_DURATION_MS },
     });
 
     await screen.getByRole("button", { name: "show-first" }).click();
@@ -55,7 +55,7 @@ describe("SnackbarProvider", () => {
 
   test("ignores clickaway so the message stays visible", async () => {
     const screen = await renderSnackbars({
-      "show-sticky": { message: "sticky", duration: LONG_DURATION },
+      "show-sticky": { message: "sticky", durationMs: LONG_DURATION_MS },
     });
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
@@ -95,7 +95,7 @@ describe("SnackbarProvider", () => {
     const screen = await renderSnackbars({
       "show-imported": {
         message: (t) => t(m.libraryImportedBoards, { count: 1 }),
-        duration: LONG_DURATION,
+        durationMs: LONG_DURATION_MS,
       },
     });
 

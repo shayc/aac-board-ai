@@ -4,7 +4,7 @@ import { normalizeBoardText } from "../normalize-board-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
-export function findTranslatedBoard(
+export function findBoardForLanguage(
   board: Board,
   language: string,
 ): Board | undefined {

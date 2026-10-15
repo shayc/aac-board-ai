@@ -79,10 +79,10 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       <Tile
         key={button.id}
         ariaLabel={button.label ? undefined : button.vocalization}
+        isBorderVisible={areTileBordersVisible}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
         variant={button.loadBoard ? "folder" : undefined}
-        borderHidden={!areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}
       >

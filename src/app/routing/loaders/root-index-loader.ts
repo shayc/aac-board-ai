@@ -1,7 +1,7 @@
 import {
   rootBoardPath,
   getBoardSets,
-  importBoardFromUrl,
+  importBoardSetFromUrl,
 } from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
@@ -13,7 +13,7 @@ const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 // ID, while rejected URLs and failed imports surface as localized errors.
 async function importFromBoardUrl(boardUrl: string): Promise<Response> {
   try {
-    return redirect(rootBoardPath(await importBoardFromUrl(boardUrl)));
+    return redirect(rootBoardPath(await importBoardSetFromUrl(boardUrl)));
   } catch {
     throw importFailed();
   }
@@ -39,5 +39,7 @@ export async function rootIndexLoader({
     return redirect(rootBoardPath(boardSet));
   }
 
-  return redirect(rootBoardPath(await importBoardFromUrl(DEFAULT_BOARD_URL)));
+  return redirect(
+    rootBoardPath(await importBoardSetFromUrl(DEFAULT_BOARD_URL)),
+  );
 }

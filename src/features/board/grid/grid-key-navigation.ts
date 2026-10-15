@@ -11,7 +11,7 @@ interface GridKeyEvent {
 
 interface GridStep {
   row: -1 | 0 | 1;
-  col: -1 | 0 | 1;
+  column: -1 | 0 | 1;
 }
 
 export function findGridKeyTarget(
@@ -62,13 +62,13 @@ function resolveArrowStep(
 
   switch (key) {
     case "ArrowUp":
-      return { row: -1, col: 0 };
+      return { row: -1, column: 0 };
     case "ArrowDown":
-      return { row: 1, col: 0 };
+      return { row: 1, column: 0 };
     case "ArrowLeft":
-      return { row: 0, col: isRtl ? 1 : -1 };
+      return { row: 0, column: isRtl ? 1 : -1 };
     case "ArrowRight":
-      return { row: 0, col: isRtl ? -1 : 1 };
+      return { row: 0, column: isRtl ? -1 : 1 };
     default:
       return null;
   }
@@ -87,11 +87,11 @@ function findNearestTarget(
     const movesAlongRows = step.row !== 0;
     const primaryDelta = movesAlongRows
       ? position.row - from.row
-      : position.col - from.col;
+      : position.column - from.column;
     const crossDelta = movesAlongRows
-      ? position.col - from.col
+      ? position.column - from.column
       : position.row - from.row;
-    const direction = movesAlongRows ? step.row : step.col;
+    const direction = movesAlongRows ? step.row : step.column;
 
     if (Math.sign(primaryDelta) !== direction) {
       continue;

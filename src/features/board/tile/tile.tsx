@@ -6,10 +6,10 @@ interface TileProps {
   tabIndex?: number;
   children: ReactNode;
   disabled?: boolean;
+  isBorderVisible?: boolean;
   variant?: "folder";
   backgroundColor?: string;
   borderColor?: string;
-  borderHidden?: boolean;
   onActivate: () => void;
 }
 
@@ -26,10 +26,10 @@ export function Tile({
   tabIndex,
   children,
   disabled,
+  isBorderVisible = true,
   variant,
   backgroundColor,
   borderColor,
-  borderHidden,
   onActivate,
 }: TileProps) {
   const resolvedBorderColor = borderColor ?? backgroundColor;
@@ -58,7 +58,7 @@ export function Tile({
           ? `contrast-color(${resolvedBackgroundColor})`
           : "inherit",
         border: `4px solid ${
-          !borderHidden && resolvedBorderColor
+          isBorderVisible && resolvedBorderColor
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,

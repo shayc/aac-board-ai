@@ -173,12 +173,12 @@ describe("Tile", () => {
     );
   });
 
-  test("borderHidden renders a transparent border but keeps its width", async () => {
+  test("hides the border without changing its width", async () => {
     const screen = await render(
       <Tile
+        isBorderVisible={false}
         backgroundColor="#ff0000"
         borderColor="#00ff00"
-        borderHidden
         onActivate={vi.fn()}
       >
         Borderless
@@ -195,13 +195,13 @@ describe("Tile", () => {
     );
   });
 
-  test("borderHidden keeps the folder corner visible", async () => {
+  test("keeps the folder corner visible when the border is hidden", async () => {
     const screen = await render(
       <Tile
+        isBorderVisible={false}
         backgroundColor="#000000"
         borderColor="#000000"
         variant="folder"
-        borderHidden
         onActivate={vi.fn()}
       >
         Folder

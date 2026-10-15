@@ -16,7 +16,7 @@ function renderButton(item: TestItem, props: GridItemProps) {
   return <button {...props}>{item.label}</button>;
 }
 
-function getCellPosition(item: Locator): { row: number; col: number } {
+function getCellPosition(item: Locator): { row: number; column: number } {
   const cell = item.element().closest("[role='gridcell']");
 
   if (!cell) {
@@ -24,13 +24,13 @@ function getCellPosition(item: Locator): { row: number; col: number } {
   }
 
   const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
-  const col = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
+  const column = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
 
-  if (isNaN(row) || isNaN(col)) {
+  if (isNaN(row) || isNaN(column)) {
     throw new Error("Grid cell missing valid aria-rowindex or aria-colindex");
   }
 
-  return { row, col };
+  return { row, column };
 }
 
 async function press(
@@ -94,8 +94,8 @@ describe("useGridKeyboard", () => {
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
-      expect(getCellPosition(item2)).toEqual({ row: 0, col: 1 });
-      expect(getCellPosition(item1)).toEqual({ row: 1, col: 0 });
+      expect(getCellPosition(item2)).toEqual({ row: 0, column: 1 });
+      expect(getCellPosition(item1)).toEqual({ row: 1, column: 0 });
 
       await expect.element(item2).toHaveAttribute("tabindex", "0");
       await expect.element(item1).toHaveAttribute("tabindex", "-1");
