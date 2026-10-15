@@ -47,8 +47,8 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
-// The [] upper bound exploits IDB key ordering — arrays sort after strings,
-// so [setId, []] is the smallest key greater than every [setId, "..."].
+// Arrays sort after strings in IDB, so [setId, []] is an upper bound
+// for this set's board IDs and asset paths.
 function boardSetRange(setId: string): IDBKeyRange {
   return IDBKeyRange.bound([setId], [setId, []]);
 }

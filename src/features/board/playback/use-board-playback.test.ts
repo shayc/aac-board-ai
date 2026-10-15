@@ -182,8 +182,8 @@ describe("useBoardPlayback", () => {
     await playPromise;
     await rerender();
 
-    expect(speech.speak).toHaveBeenCalledTimes(1); // only "before", not "after"
-    expect(audio.play).not.toHaveBeenCalled(); // the sound segment is skipped
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(audio.play).not.toHaveBeenCalled();
     expect(result.current.activePartId).toBeNull();
   });
 

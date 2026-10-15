@@ -10,11 +10,8 @@ import { reloadPersistedStores } from "@shared/utils/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 
-// Real SpeechSynthesisUtterance rejects assigning a `.voice` that isn't a
-// platform-native SpeechSynthesisVoice, so stubbed voice objects can't be
-// assigned directly. Replace the native accessor with a plain in-memory one
-// so buildUtterance's voice-matching logic can be observed; restoreMocks in
-// vite.config restores the native accessor after each test.
+// Stub voices are not native SpeechSynthesisVoice objects, so replace the
+// accessor to test voice selection.
 function stubUtteranceVoiceAccessor(): void {
   const voices = new WeakMap<
     SpeechSynthesisUtterance,
