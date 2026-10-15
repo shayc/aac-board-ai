@@ -77,33 +77,10 @@ describe("SpeechSettings", () => {
     }
     await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
-      .element(
-        screen.getByRole("switch", {
-          name: "Highlight the message as it plays",
-        }),
-      )
-      .not.toBeChecked();
-    await expect
       .element(screen.getByRole("button", { name: "Preview" }))
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
-  });
-
-  test("toggles message highlighting during playback", async () => {
-    const screen = await renderSpeechSettings();
-    const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight the message as it plays",
-    });
-
-    await highlightSwitch.click();
-
-    await expect.element(highlightSwitch).toBeChecked();
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("board-playback")).toBe(
-        JSON.stringify({ isMessagePartHighlightingEnabled: true }),
-      ),
-    );
   });
 
   test("selects and persists a voice", async () => {

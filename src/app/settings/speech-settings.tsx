@@ -1,7 +1,3 @@
-import {
-  setMessagePartHighlightingEnabled,
-  useBoardPlaybackConfig,
-} from "@features/board";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -27,7 +23,6 @@ import {
 } from "@shared/speech/speech-store";
 import { useId } from "react";
 import { SettingsSlider } from "./settings-slider";
-import { SettingsSwitch } from "./settings-switch";
 
 export function SpeechSettings() {
   const t = useTranslate();
@@ -36,7 +31,6 @@ export function SpeechSettings() {
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechConfig();
-  const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
@@ -137,12 +131,6 @@ export function SpeechSettings() {
           />
         ),
       )}
-
-      <SettingsSwitch
-        label={t(m.playbackHighlight)}
-        checked={isMessagePartHighlightingEnabled}
-        onChange={setMessagePartHighlightingEnabled}
-      />
 
       <Button
         variant="contained"
