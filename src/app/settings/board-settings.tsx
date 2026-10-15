@@ -1,10 +1,12 @@
 import {
+  setMessagePartHighlightingEnabled,
   setTileBordersVisible,
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
   LabelPlacementPreview,
   useBoardAppearanceConfig,
+  useBoardPlaybackConfig,
   type TileLabelPlacement,
 } from "@features/board";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
@@ -61,6 +63,7 @@ export function BoardSettings() {
   const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardAppearanceConfig();
+  const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
 
   return (
     <Stack spacing={3}>
@@ -106,6 +109,12 @@ export function BoardSettings() {
         max={TILE_SATURATION.max}
         step={0.1}
         formatValue={formatSaturation}
+      />
+
+      <SettingsSwitch
+        label={t(m.playbackHighlight)}
+        checked={isMessagePartHighlightingEnabled}
+        onChange={setMessagePartHighlightingEnabled}
       />
     </Stack>
   );

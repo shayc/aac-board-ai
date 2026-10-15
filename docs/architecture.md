@@ -126,7 +126,7 @@ translation before rendering, keeping that work out of UI components:
    board on failure. Successful translations render without waiting for the cache
    write and remain usable if it fails.
 3. The route renders the `Board`. The app shell's
-   [media lifecycle observer](../src/app/routing/use-board-route-media-lifecycle.ts)
+   [media lifecycle observer](../src/app/routing/use-sync-board-media-with-route.ts)
    takes ownership of the new media URLs and revokes the previous board's URLs.
 
 Failed or aborted loads revoke their own URLs without affecting the active board.

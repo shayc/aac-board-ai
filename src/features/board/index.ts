@@ -20,7 +20,7 @@ export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardSetFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
-export { useImportLaunchedBoardFiles } from "./import/use-import-launched-board-files";
+export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
 export {
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
