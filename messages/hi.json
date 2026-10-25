@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "छोटे वाक्य और रोज़मर्रा के शब्द इस्तेमाल करें",
   "aiCustomInstructionsHelper": "सुझावों को अपने शब्दों में ढालें।",
   "suggestionsUnsupported": "सुझावों के लिए डेस्कटॉप पर Chrome या Edge चाहिए, जिसमें बिल्ट-इन AI चालू हो।",
+  "suggestionsSetupHelp": "सुझाव कैसे चालू करें",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI मॉडल डाउनलोड हो रहा है…",

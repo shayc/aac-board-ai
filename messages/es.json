@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Usa frases cortas y palabras cotidianas",
   "aiCustomInstructionsHelper": "Da forma a las sugerencias con tus propias palabras.",
   "suggestionsUnsupported": "Las sugerencias requieren Chrome o Edge en un ordenador, con la IA integrada activada.",
+  "suggestionsSetupHelp": "Cómo activar las sugerencias",
   "suggestionsEnable": "Activar sugerencias",
   "suggestionsDownloading": "Descargando modelo de IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Descargando modelo de IA…",

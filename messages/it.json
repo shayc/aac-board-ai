@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Usa frasi brevi e parole di uso quotidiano",
   "aiCustomInstructionsHelper": "Modella i suggerimenti con le tue parole.",
   "suggestionsUnsupported": "I suggerimenti richiedono Chrome o Edge su computer, con l’IA integrata attivata.",
+  "suggestionsSetupHelp": "Come attivare i suggerimenti",
   "suggestionsEnable": "Attiva i suggerimenti",
   "suggestionsDownloading": "Download del modello IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Download del modello IA…",

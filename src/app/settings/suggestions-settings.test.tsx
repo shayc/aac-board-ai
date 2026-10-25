@@ -27,13 +27,28 @@ describe("SuggestionsSettings", () => {
     await expect
       .element(
         screen.getByText(
-          "Suggestions require Chrome or Edge on desktop, with built-in AI enabled.",
+          "Suggestions require Chrome or Edge for desktop with built-in AI enabled.",
+          { exact: false },
         ),
       )
       .toBeVisible();
+
+    const helpLink = screen.getByRole("link", {
+      name: "How to enable suggestions (opens in new tab)",
+    });
+
+    await expect.element(helpLink).toBeVisible();
+    await expect
+      .element(helpLink)
+      .toHaveAttribute(
+        "href",
+        "https://github.com/shayc/aac-board-ai#enable-suggestions",
+      );
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .not.toBeInTheDocument();
+
+    await expectNoA11yViolations(screen.container);
   });
 
   test("shows custom instructions when the rewriter is supported, with no a11y violations", async () => {

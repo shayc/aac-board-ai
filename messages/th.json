@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "ใช้ประโยคสั้น ๆ และคำที่ใช้ในชีวิตประจำวัน",
   "aiCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",
   "suggestionsUnsupported": "คำแนะนำต้องใช้ Chrome หรือ Edge บนเดสก์ท็อป โดยเปิดใช้งาน AI ในตัว",
+  "suggestionsSetupHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "กำลังดาวน์โหลดโมเดล AI…",

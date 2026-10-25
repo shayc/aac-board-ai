@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "చిన్న వాక్యాలు, రోజువారీ పదాలు ఉపయోగించండి",
   "aiCustomInstructionsHelper": "మీ సొంత మాటల్లో సూచనలను రూపొందించండి.",
   "suggestionsUnsupported": "సూచనలకు అంతర్నిర్మిత AI ప్రారంభించబడిన డెస్క్‌టాప్ Chrome లేదా Edge అవసరం.",
+  "suggestionsSetupHelp": "సూచనలను ప్రారంభించడం ఎలా",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది…",

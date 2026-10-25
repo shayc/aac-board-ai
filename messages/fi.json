@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Käytä lyhyitä lauseita ja arkisia sanoja",
   "aiCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",
   "suggestionsUnsupported": "Ehdotukset vaativat Chromen tai Edgen työpöytäversion, jossa sisäänrakennettu tekoäly on käytössä.",
+  "suggestionsSetupHelp": "Ehdotusten ottaminen käyttöön",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsDownloadingIndeterminate": "Ladataan tekoälymallia…",

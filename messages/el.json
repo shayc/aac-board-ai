@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Χρησιμοποίησε σύντομες προτάσεις και καθημερινές λέξεις",
   "aiCustomInstructionsHelper": "Διαμορφώστε τις προτάσεις με τα δικά σας λόγια.",
   "suggestionsUnsupported": "Οι προτάσεις απαιτούν Chrome ή Edge σε υπολογιστή με ενεργοποιημένη την ενσωματωμένη AI.",
+  "suggestionsSetupHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Λήψη μοντέλου AI…",

@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "குறுகிய வாக்கியங்களையும் அன்றாடச் சொற்களையும் பயன்படுத்தவும்",
   "aiCustomInstructionsHelper": "உங்கள் சொந்த வார்த்தைகளில் பரிந்துரைகளை வடிவமைக்கவும்.",
   "suggestionsUnsupported": "பரிந்துரைகளுக்கு உள்ளமைக்கப்பட்ட AI இயக்கப்பட்டுள்ள டெஸ்க்டாப் Chrome அல்லது Edge தேவை.",
+  "suggestionsSetupHelp": "பரிந்துரைகளை இயக்குவது எப்படி",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI மாடல் பதிவிறக்கப்படுகிறது…",

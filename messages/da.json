@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Brug korte sætninger og almindelige ord",
   "aiCustomInstructionsHelper": "Form forslagene med dine egne ord.",
   "suggestionsUnsupported": "Forslag kræver Chrome eller Edge på en computer med indbygget AI aktiveret.",
+  "suggestionsSetupHelp": "Sådan aktiverer du forslag",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model… {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloader AI-model…",
