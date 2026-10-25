@@ -13,9 +13,12 @@ const localizedImportFailure = {
   init: { status: 400 },
 };
 
-function callLoader(searchParams = ""): Promise<Response> {
+function callLoader(
+  searchParams = "",
+  signal?: AbortSignal,
+): Promise<Response> {
   const args = {
-    request: new Request(`http://localhost/${searchParams}`),
+    request: new Request(`http://localhost/${searchParams}`, { signal }),
     params: {},
   } as unknown as LoaderFunctionArgs;
 
@@ -81,6 +84,25 @@ describe("rootIndexLoader", () => {
       ),
     ).rejects.toMatchObject(localizedImportFailure);
   });
+
+  test.each([
+    {
+      name: "URL import",
+      searchParams: `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
+    },
+    { name: "starter import", searchParams: "" },
+  ])(
+    "preserves navigation cancellation for $name",
+    async ({ searchParams }) => {
+      const controller = new AbortController();
+      controller.abort();
+
+      await expect(callLoader(searchParams, controller.signal)).rejects.toBe(
+        controller.signal.reason,
+      );
+      expect(await getBoardSets()).toEqual([]);
+    },
+  );
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
     let now = 1000;

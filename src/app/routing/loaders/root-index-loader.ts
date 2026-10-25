@@ -11,10 +11,16 @@ const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 // The ?board= param is attacker-controlled: a crafted link must never
 // silently replace a user's vocabulary. Every import allocates a separate set
 // ID, while rejected URLs and failed imports surface as localized errors.
-async function importFromBoardUrl(boardUrl: string): Promise<Response> {
+async function importFromBoardUrl(
+  boardUrl: string,
+  signal: AbortSignal,
+): Promise<Response> {
   try {
-    return redirect(rootBoardPath(await importBoardSetFromUrl(boardUrl)));
+    return redirect(
+      rootBoardPath(await importBoardSetFromUrl(boardUrl, signal)),
+    );
   } catch {
+    signal.throwIfAborted();
     throw importFailed();
   }
 }
@@ -31,7 +37,7 @@ export async function rootIndexLoader({
   const boardUrl = new URL(request.url).searchParams.get("board");
 
   if (boardUrl) {
-    return importFromBoardUrl(boardUrl);
+    return importFromBoardUrl(boardUrl, request.signal);
   }
 
   const [boardSet] = await getBoardSets();
@@ -40,6 +46,8 @@ export async function rootIndexLoader({
   }
 
   return redirect(
-    rootBoardPath(await importBoardSetFromUrl(DEFAULT_BOARD_URL)),
+    rootBoardPath(
+      await importBoardSetFromUrl(DEFAULT_BOARD_URL, request.signal),
+    ),
   );
 }

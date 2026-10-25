@@ -41,21 +41,24 @@ function deriveFilename(url: URL): string {
 
 export async function importBoardSetFromUrl(
   url: string,
+  signal?: AbortSignal,
 ): Promise<BoardSetImportResult> {
   const boardUrl = parseBoardUrl(url);
-  const blob = await downloadBoard(boardUrl);
+  const blob = await downloadBoard(boardUrl, signal);
+  signal?.throwIfAborted();
 
   const file = new File([blob], deriveFilename(boardUrl), {
     type: blob.type || "application/octet-stream",
   });
 
+  // Once local importing starts, let its atomic write finish even if navigation changes.
   const [result] = await importBoardSets(file);
 
   return result;
 }
 
-async function downloadBoard(url: URL): Promise<Blob> {
-  const response = await fetch(url);
+async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
+  const response = await fetch(url, { signal });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
