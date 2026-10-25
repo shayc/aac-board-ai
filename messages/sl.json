@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Uporabi kratke povedi in vsakdanje besede",
   "aiCustomInstructionsHelper": "Oblikujte predloge s svojimi besedami.",
   "suggestionsUnsupported": "Predlogi zahtevajo Chrome ali Edge na računalniku z omogočeno vgrajeno umetno inteligenco.",
+  "suggestionsSetupHelp": "Kako omogočiti predloge",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Prenašanje modela UI…",

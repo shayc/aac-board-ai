@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Използвай кратки изречения и ежедневни думи",
   "aiCustomInstructionsHelper": "Оформете предложенията с ваши думи.",
   "suggestionsUnsupported": "Предложенията изискват Chrome или Edge на компютър с активиран вграден AI.",
+  "suggestionsSetupHelp": "Как да включите предложенията",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Изтегляне на модела на ИИ…",

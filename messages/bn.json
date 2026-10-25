@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "ছোট বাক্য ও দৈনন্দিন শব্দ ব্যবহার করুন",
   "aiCustomInstructionsHelper": "নিজের ভাষায় পরামর্শগুলো গঠন করুন।",
   "suggestionsUnsupported": "পরামর্শের জন্য কম্পিউটারে Chrome বা Edge ব্যবহার করতে হবে এবং বিল্ট-ইন AI চালু থাকতে হবে।",
+  "suggestionsSetupHelp": "কীভাবে পরামর্শ চালু করবেন",
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI মডেল ডাউনলোড হচ্ছে…",

@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Dùng câu ngắn và từ ngữ hằng ngày",
   "aiCustomInstructionsHelper": "Định hình gợi ý theo cách nói của riêng bạn.",
   "suggestionsUnsupported": "Gợi ý yêu cầu Chrome hoặc Edge trên máy tính, với AI tích hợp sẵn được bật.",
+  "suggestionsSetupHelp": "Cách bật gợi ý",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
   "suggestionsDownloadingIndeterminate": "Đang tải mô hình AI xuống…",

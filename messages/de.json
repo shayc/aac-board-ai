@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Verwende kurze Sätze und alltägliche Wörter",
   "aiCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",
   "suggestionsUnsupported": "Vorschläge erfordern Chrome oder Edge auf einem Computer mit aktivierter integrierter KI.",
+  "suggestionsSetupHelp": "So aktivieren Sie Vorschläge",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
   "suggestionsDownloadingIndeterminate": "KI-Modell wird heruntergeladen…",

@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "使用短句和日常用语",
   "aiCustomInstructionsHelper": "用你自己的话塑造建议。",
   "suggestionsUnsupported": "建议功能需要使用桌面版 Chrome 或 Edge，并启用内置 AI。",
+  "suggestionsSetupHelp": "如何启用建议",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsDownloadingIndeterminate": "正在下载 AI 模型…",

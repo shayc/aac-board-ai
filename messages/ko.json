@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "짧은 문장과 일상적인 단어를 사용해 주세요",
   "aiCustomInstructionsHelper": "자신만의 언어로 제안을 다듬어 보세요.",
   "suggestionsUnsupported": "제안 기능을 사용하려면 내장 AI가 활성화된 데스크톱용 Chrome 또는 Edge가 필요합니다.",
+  "suggestionsSetupHelp": "제안 기능을 활성화하는 방법",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI 모델 다운로드 중…",

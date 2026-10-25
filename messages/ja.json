@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "短い文と日常的な言葉を使う",
   "aiCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",
   "suggestionsUnsupported": "提案には、組み込みAIが有効になっているデスクトップ版のChromeまたはEdgeが必要です。",
+  "suggestionsSetupHelp": "提案を有効にする方法",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI モデルをダウンロード中…",

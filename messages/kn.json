@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "ಚಿಕ್ಕ ವಾಕ್ಯಗಳು ಮತ್ತು ದಿನನಿತ್ಯದ ಪದಗಳನ್ನು ಬಳಸಿ",
   "aiCustomInstructionsHelper": "ನಿಮ್ಮ ಸ್ವಂತ ಮಾತುಗಳಲ್ಲಿ ಸಲಹೆಗಳನ್ನು ರೂಪಿಸಿ.",
   "suggestionsUnsupported": "ಸಲಹೆಗಳಿಗೆ ಅಂತರ್ನಿರ್ಮಿತ AI ಸಕ್ರಿಯವಾಗಿರುವ ಡೆಸ್ಕ್‌ಟಾಪ್ Chrome ಅಥವಾ Edge ಅಗತ್ಯವಿದೆ.",
+  "suggestionsSetupHelp": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುವುದು ಹೇಗೆ",
   "suggestionsEnable": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "suggestionsDownloading": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",

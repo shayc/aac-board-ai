@@ -42,11 +42,9 @@ No accounts, backend, or tracking. Boards, messages, and settings stay on the de
 
 Boards can be imported and stored, but not edited, exported, or synced across devices. To create a custom board, use an Open Board Format-compatible tool and import it on each device.
 
-## Built-in AI availability
+## Enable suggestions
 
-Support depends on browser, device, language, and model availability.
-
-Proofreading and rewriting currently require experimental browser flags:
+To use suggestions in Chrome or Edge for desktop, enable the following experimental browser flags:
 
 **Google Chrome**
 
@@ -62,7 +60,7 @@ edge://flags/#edge-proofreader-api
 edge://flags/#edge-llm-rewriter-api-for-phi-mini
 ```
 
-Enable the flags and restart your browser. See the API documentation for current requirements:
+Restart your browser to apply the changes. See the API documentation for current requirements:
 
 - **Google Chrome:** [Proofreader](https://developer.chrome.com/docs/ai/proofreader-api) · [Rewriter](https://developer.chrome.com/docs/ai/rewriter-api) · [Translator](https://developer.chrome.com/docs/ai/translator-api)
 - **Microsoft Edge:** [Proofreader](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/proofreader-api) · [Rewriter](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/writing-assistance-apis) · [Translator](https://learn.microsoft.com/en-us/microsoft-edge/web-platform/translator-api)

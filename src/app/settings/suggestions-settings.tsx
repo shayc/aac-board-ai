@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { ExternalLink } from "@shared/ui/external-link";
 import { isSupported } from "@shayc/react-built-in-ai";
 
 export function SuggestionsSettings() {
@@ -15,7 +16,13 @@ export function SuggestionsSettings() {
   if (!isSupported("Rewriter")) {
     return (
       <Typography sx={{ typography: "body2", color: "text.secondary" }}>
-        {t(m.suggestionsUnsupported)}
+        {t(m.suggestionsUnsupported)}{" "}
+        <ExternalLink
+          href="https://github.com/shayc/aac-board-ai#enable-suggestions"
+          sx={{ whiteSpace: "normal" }}
+        >
+          {t(m.suggestionsSetupHelp)}
+        </ExternalLink>
       </Typography>
     );
   }

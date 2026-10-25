@@ -110,6 +110,7 @@
   "aiCustomInstructionsPlaceholder": "Gunakan kalimat pendek dan kata sehari-hari",
   "aiCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",
   "suggestionsUnsupported": "Saran memerlukan Chrome atau Edge di komputer dengan AI bawaan yang diaktifkan.",
+  "suggestionsSetupHelp": "Cara mengaktifkan saran",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Mengunduh model AI…",
