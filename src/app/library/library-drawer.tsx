@@ -1,5 +1,5 @@
 import { LIBRARY_DRAWER_WIDTH } from "@app/shell/drawer-width";
-import { BoardSetLibrary, rootBoardPath } from "@features/board";
+import { BoardSetLibrary } from "@features/board";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
@@ -11,7 +11,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
-import { useMatches, useNavigate } from "react-router";
+import { useMatches } from "react-router";
 
 interface LibraryDrawerProps {
   open: boolean;
@@ -26,16 +26,10 @@ export function LibraryDrawer({
 }: LibraryDrawerProps) {
   const t = useTranslate();
 
-  const navigate = useNavigate();
   const activeMatch = useMatches().find((match) => match.params.setId);
   const activeSetId = activeMatch?.params.setId;
 
-  const closeOnNavigate = variant === "temporary" ? onClose : undefined;
-
-  function handleBoardSetSelect(boardSet: { id: string; rootBoardId: string }) {
-    void navigate(rootBoardPath(boardSet));
-    closeOnNavigate?.();
-  }
+  const closeOnActivate = variant === "temporary" ? onClose : undefined;
 
   return (
     <Drawer
@@ -90,8 +84,8 @@ export function LibraryDrawer({
         })}
       >
         <BoardSetLibrary
-          selectedSetId={activeSetId}
-          onSelect={handleBoardSetSelect}
+          activeSetId={activeSetId}
+          onActivate={closeOnActivate}
         />
       </Box>
     </Drawer>

@@ -1,49 +1,61 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import type { ReactNode } from "react";
+import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetList } from "./board-set-list";
 import { makeBoardSet } from "./test-utils";
 
 function renderWithProviders(children: ReactNode) {
-  return render(<AppProviders>{children}</AppProviders>);
+  return render(
+    <MemoryRouter>
+      <AppProviders>{children}</AppProviders>
+    </MemoryRouter>,
+  );
 }
 
 describe("BoardSetList", () => {
-  test("renders an item per board set with its name", async () => {
+  test("renders board links and identifies the active set", async () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[
-          makeBoardSet({ id: "a", name: "Core Words" }),
+          makeBoardSet({ id: "a", name: "Core Words", rootBoardId: "home" }),
           makeBoardSet({ id: "b", name: "Animals" }),
         ]}
-        onSelect={vi.fn()}
+        activeSetId="a"
+        onActivate={vi.fn()}
         onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
 
-    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+    const coreLink = screen.getByRole("link", { name: "Core Words" });
+    const animalsLink = screen.getByRole("link", { name: "Animals" });
+
+    await expect
+      .element(coreLink)
+      .toHaveAttribute("href", "/sets/a/boards/home");
+    await expect.element(coreLink).toHaveAttribute("aria-current", "true");
+    await expect
+      .element(animalsLink)
+      .toHaveAttribute("href", "/sets/b/boards/root");
+    await expect.element(animalsLink).not.toHaveAttribute("aria-current");
   });
 
-  test("calls onSelect with the board set when its row is clicked", async () => {
-    const onSelect = vi.fn();
+  test("notifies the parent when a board link is activated", async () => {
+    const onActivate = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
-        onSelect={onSelect}
+        onActivate={onActivate}
         onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
     );
 
-    await screen
-      .getByRole("button", { name: "Core Words", exact: true })
-      .click();
+    await screen.getByRole("link", { name: "Core Words", exact: true }).click();
 
-    expect(onSelect).toHaveBeenCalledOnce();
-    expect(onSelect.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
+    expect(onActivate).toHaveBeenCalledOnce();
   });
 
   test("keeps labels, menus, and details actions associated with their list", async () => {
@@ -59,7 +71,7 @@ describe("BoardSetList", () => {
           <BoardSetList
             key={boardSet.id}
             boardSets={[boardSet]}
-            onSelect={vi.fn()}
+            onActivate={vi.fn()}
             onShowDetails={onShowDetails}
             onDelete={onDelete}
           />
@@ -112,7 +124,7 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
-        onSelect={vi.fn()}
+        onActivate={vi.fn()}
         onShowDetails={onShowDetails}
         onDelete={onDelete}
       />,

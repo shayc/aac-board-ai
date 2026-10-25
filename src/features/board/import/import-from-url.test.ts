@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { listBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   importBoardSetFromUrl,
@@ -32,6 +33,37 @@ describe("importBoardSetFromUrl", () => {
 
     expect(first.id).toBe("lots-of-stuff");
     expect(second.id).toBe("lots-of-stuff-2");
+  });
+
+  test("aborts an in-flight download without importing a board set", async () => {
+    const controller = new AbortController();
+    const importing = importBoardSetFromUrl(
+      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
+      controller.signal,
+    );
+
+    controller.abort();
+
+    await expect(importing).rejects.toBe(controller.signal.reason);
+    expect(await listBoardSets()).toEqual([]);
+  });
+
+  test("does not start importing if cancellation races with a completed download", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    const controller = new AbortController();
+    vi.spyOn(globalThis, "fetch").mockImplementation(async () => {
+      controller.abort();
+
+      return new Response(fixtureFile);
+    });
+
+    await expect(
+      importBoardSetFromUrl(
+        `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
+        controller.signal,
+      ),
+    ).rejects.toBe(controller.signal.reason);
+    expect(await listBoardSets()).toEqual([]);
   });
 
   test("derives the setId from the last non-empty segment when the URL path ends with a slash", async () => {

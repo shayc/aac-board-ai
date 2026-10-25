@@ -2,17 +2,17 @@ import { resetBoardsDB, seedBoardSets } from "../testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { MemoryRouter } from "react-router";
-import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
 import { BoardSetLibrary } from "./board-set-library";
 import { refreshBoardSets } from "./board-sets-store";
 
-function renderBoardSetLibrary(onSelect = vi.fn()) {
+function renderBoardSetLibrary() {
   return render(
     <MemoryRouter>
       <AppProviders>
-        <BoardSetLibrary onSelect={onSelect} />
+        <BoardSetLibrary />
       </AppProviders>
     </MemoryRouter>,
   );

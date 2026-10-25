@@ -14,23 +14,25 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useId, useState } from "react";
+import { useId, useState, type MouseEvent } from "react";
+import { Link } from "react-router";
+import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
-  onSelect: (boardSet: BoardSetRecord) => void;
+  onActivate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
   onDelete: (boardSet: BoardSetRecord) => void;
-  selectedSetId?: string;
+  activeSetId?: string;
 }
 
 export function BoardSetList({
   boardSets,
-  onSelect,
+  onActivate,
   onShowDetails,
   onDelete,
-  selectedSetId,
+  activeSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
   const menuId = useId();
@@ -81,9 +83,10 @@ export function BoardSetList({
               key={boardSet.id}
               menuId={menuId}
               name={boardSet.name}
-              isSelected={boardSet.id === selectedSetId}
+              to={rootBoardPath(boardSet)}
+              isActive={boardSet.id === activeSetId}
               isMenuOpen={boardSet.id === activeMenuSetId}
-              onSelect={() => onSelect(boardSet)}
+              onActivate={onActivate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />
           ))}
@@ -116,21 +119,38 @@ export function BoardSetList({
 interface BoardSetListItemProps {
   menuId: string;
   name: string;
-  isSelected: boolean;
+  to: string;
+  isActive: boolean;
   isMenuOpen: boolean;
-  onSelect: () => void;
+  onActivate?: () => void;
   onMenuOpen: (element: HTMLElement) => void;
 }
 
 function BoardSetListItem({
   menuId,
   name,
-  isSelected,
+  to,
+  isActive,
   isMenuOpen,
-  onSelect,
+  onActivate,
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
+
+  function handleLinkClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (
+      event.defaultPrevented ||
+      event.button !== 0 ||
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey
+    ) {
+      return;
+    }
+
+    onActivate?.();
+  }
 
   return (
     <ListItem
@@ -170,7 +190,13 @@ function BoardSetListItem({
         },
       })}
     >
-      <ListItemButton selected={isSelected} onClick={onSelect}>
+      <ListItemButton
+        aria-current={isActive ? "true" : undefined}
+        component={Link}
+        to={to}
+        selected={isActive}
+        onClick={handleLinkClick}
+      >
         <ListItemText
           primary={
             <Box
