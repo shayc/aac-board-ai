@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Impossible de charger la bibliothèque",
   "libraryEmptyTitle": "La bibliothèque est vide",
   "libraryEmptyDescription": "Importez des fichiers de tableaux pour commencer.",
-  "libraryImportBoards": "Importer des fichiers de tableaux",
-  "libraryBoards": "Ensembles de tableaux",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Importer des fichiers de tableaux",
+  "libraryBoardSets": "Ensembles de tableaux",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

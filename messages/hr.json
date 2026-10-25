@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Nije moguće učitati knjižnicu",
   "libraryEmptyTitle": "Knjižnica je prazna",
   "libraryEmptyDescription": "Za početak uvezite datoteke ploča.",
-  "libraryImportBoards": "Uvezi datoteke ploča",
-  "libraryBoards": "Skupovi ploča",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Uvezi datoteke ploča",
+  "libraryBoardSets": "Skupovi ploča",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

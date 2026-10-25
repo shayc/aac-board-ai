@@ -11,9 +11,9 @@
   "libraryLoadFailed": "లైబ్రరీని లోడ్ చేయడం సాధ్యపడలేదు",
   "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
   "libraryEmptyDescription": "ప్రారంభించడానికి బోర్డు ఫైళ్లను దిగుమతి చేయండి.",
-  "libraryImportBoards": "బోర్డు ఫైళ్లను దిగుమతి చేయి",
-  "libraryBoards": "బోర్డు సెట్లు",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయి",
+  "libraryBoardSets": "బోర్డు సెట్లు",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

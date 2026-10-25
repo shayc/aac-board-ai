@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Библиотеката не можа да се зареди",
   "libraryEmptyTitle": "Библиотеката е празна",
   "libraryEmptyDescription": "Импортирайте файлове с дъски, за да започнете.",
-  "libraryImportBoards": "Импортиране на файлове с дъски",
-  "libraryBoards": "Набори от дъски",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Импортиране на файлове с дъски",
+  "libraryBoardSets": "Набори от дъски",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

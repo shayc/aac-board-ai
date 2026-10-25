@@ -11,9 +11,9 @@
   "libraryLoadFailed": "无法加载板库",
   "libraryEmptyTitle": "板库为空",
   "libraryEmptyDescription": "导入沟通板文件即可开始。",
-  "libraryImportBoards": "导入沟通板文件",
-  "libraryBoards": "沟通板集",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "导入沟通板文件",
+  "libraryBoardSets": "沟通板集",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

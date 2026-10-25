@@ -94,7 +94,7 @@ describe("SnackbarProvider", () => {
   test("retranslates a visible localized message when the locale changes", async () => {
     const screen = await renderSnackbars({
       "show-imported": {
-        message: (t) => t(m.libraryImportedBoards, { count: 1 }),
+        message: (t) => t(m.libraryImportedBoardSets, { count: 1 }),
         durationMs: LONG_DURATION_MS,
       },
     });

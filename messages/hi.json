@@ -11,9 +11,9 @@
   "libraryLoadFailed": "लाइब्रेरी लोड नहीं हो सकी",
   "libraryEmptyTitle": "लाइब्रेरी खाली है",
   "libraryEmptyDescription": "शुरू करने के लिए बोर्ड फ़ाइलें आयात करें।",
-  "libraryImportBoards": "बोर्ड फ़ाइलें आयात करें",
-  "libraryBoards": "बोर्ड सेट",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "बोर्ड फ़ाइलें आयात करें",
+  "libraryBoardSets": "बोर्ड सेट",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
