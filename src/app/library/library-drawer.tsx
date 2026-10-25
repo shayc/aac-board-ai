@@ -84,7 +84,7 @@ export function LibraryDrawer({
         })}
       >
         <BoardSetLibrary
-          selectedSetId={activeSetId}
+          activeSetId={activeSetId}
           onActivate={closeOnActivate}
         />
       </Box>

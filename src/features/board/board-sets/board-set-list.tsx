@@ -24,7 +24,7 @@ interface BoardSetListProps {
   onActivate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
   onDelete: (boardSet: BoardSetRecord) => void;
-  selectedSetId?: string;
+  activeSetId?: string;
 }
 
 export function BoardSetList({
@@ -32,7 +32,7 @@ export function BoardSetList({
   onActivate,
   onShowDetails,
   onDelete,
-  selectedSetId,
+  activeSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
   const menuId = useId();
@@ -84,7 +84,7 @@ export function BoardSetList({
               menuId={menuId}
               name={boardSet.name}
               to={rootBoardPath(boardSet)}
-              isSelected={boardSet.id === selectedSetId}
+              isActive={boardSet.id === activeSetId}
               isMenuOpen={boardSet.id === activeMenuSetId}
               onActivate={onActivate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
@@ -120,7 +120,7 @@ interface BoardSetListItemProps {
   menuId: string;
   name: string;
   to: string;
-  isSelected: boolean;
+  isActive: boolean;
   isMenuOpen: boolean;
   onActivate?: () => void;
   onMenuOpen: (element: HTMLElement) => void;
@@ -130,7 +130,7 @@ function BoardSetListItem({
   menuId,
   name,
   to,
-  isSelected,
+  isActive,
   isMenuOpen,
   onActivate,
   onMenuOpen,
@@ -191,10 +191,10 @@ function BoardSetListItem({
       })}
     >
       <ListItemButton
-        aria-current={isSelected ? "true" : undefined}
+        aria-current={isActive ? "true" : undefined}
         component={Link}
         to={to}
-        selected={isSelected}
+        selected={isActive}
         onClick={handleLinkClick}
       >
         <ListItemText

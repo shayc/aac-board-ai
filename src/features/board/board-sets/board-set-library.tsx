@@ -21,12 +21,12 @@ import { deleteBoardSet, type BoardSetRecord } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {
-  selectedSetId?: string;
+  activeSetId?: string;
   onActivate?: () => void;
 }
 
 export function BoardSetLibrary({
-  selectedSetId,
+  activeSetId,
   onActivate,
 }: BoardSetLibraryProps) {
   const t = useTranslate();
@@ -112,7 +112,7 @@ export function BoardSetLibrary({
 
       <BoardSetList
         boardSets={boardSets}
-        selectedSetId={selectedSetId}
+        activeSetId={activeSetId}
         onActivate={onActivate}
         onDelete={setDeleteTarget}
         onShowDetails={setDetailsTarget}

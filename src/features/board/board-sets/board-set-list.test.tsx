@@ -15,14 +15,14 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetList", () => {
-  test("renders board links and identifies the selected set", async () => {
+  test("renders board links and identifies the active set", async () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[
           makeBoardSet({ id: "a", name: "Core Words", rootBoardId: "home" }),
           makeBoardSet({ id: "b", name: "Animals" }),
         ]}
-        selectedSetId="a"
+        activeSetId="a"
         onActivate={vi.fn()}
         onShowDetails={vi.fn()}
         onDelete={vi.fn()}
