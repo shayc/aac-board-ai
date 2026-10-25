@@ -10,9 +10,9 @@
   "libraryLoadFailed": "Couldn't load library",
   "libraryEmptyTitle": "Library is empty",
   "libraryEmptyDescription": "Import board files to get started.",
-  "libraryImportBoards": "Import board files",
-  "libraryBoards": "Board sets",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Import board files",
+  "libraryBoardSets": "Board sets",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -22,7 +22,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -32,7 +32,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -42,7 +42,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

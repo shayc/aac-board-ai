@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Bibliothek konnte nicht geladen werden",
   "libraryEmptyTitle": "Die Bibliothek ist leer",
   "libraryEmptyDescription": "Importiere Tafeldateien, um loszulegen.",
-  "libraryImportBoards": "Tafeldateien importieren",
-  "libraryBoards": "Tafelsätze",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Tafeldateien importieren",
+  "libraryBoardSets": "Tafelsätze",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

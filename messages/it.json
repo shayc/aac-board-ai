@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Impossibile caricare la libreria",
   "libraryEmptyTitle": "La libreria è vuota",
   "libraryEmptyDescription": "Importa file di tabelle per iniziare.",
-  "libraryImportBoards": "Importa file di tabelle",
-  "libraryBoards": "Set di tabelle",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Importa file di tabelle",
+  "libraryBoardSets": "Set di tabelle",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

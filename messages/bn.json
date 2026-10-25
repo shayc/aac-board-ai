@@ -11,9 +11,9 @@
   "libraryLoadFailed": "লাইব্রেরি লোড করা যায়নি",
   "libraryEmptyTitle": "লাইব্রেরি খালি",
   "libraryEmptyDescription": "শুরু করতে বোর্ড ফাইল আমদানি করুন।",
-  "libraryImportBoards": "বোর্ড ফাইল আমদানি করুন",
-  "libraryBoards": "বোর্ড সেট",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "বোর্ড ফাইল আমদানি করুন",
+  "libraryBoardSets": "বোর্ড সেট",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

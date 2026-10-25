@@ -11,9 +11,9 @@
   "libraryLoadFailed": "நூலகத்தை ஏற்ற முடியவில்லை",
   "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
   "libraryEmptyDescription": "தொடங்க பலகைக் கோப்புகளை இறக்குமதி செய்யுங்கள்.",
-  "libraryImportBoards": "பலகைக் கோப்புகளை இறக்குமதி செய்",
-  "libraryBoards": "பலகைத் தொகுப்புகள்",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "பலகைக் கோப்புகளை இறக்குமதி செய்",
+  "libraryBoardSets": "பலகைத் தொகுப்புகள்",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

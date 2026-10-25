@@ -74,7 +74,9 @@ export function BoardSetList({
       <Box aria-labelledby={subheaderId} component="nav">
         <List
           subheader={
-            <ListSubheader id={subheaderId}>{t(m.libraryBoards)}</ListSubheader>
+            <ListSubheader id={subheaderId}>
+              {t(m.libraryBoardSets)}
+            </ListSubheader>
           }
           sx={{ px: 1 }}
         >

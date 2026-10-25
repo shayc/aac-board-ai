@@ -11,9 +11,9 @@
   "libraryLoadFailed": "ಲೈಬ್ರರಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "libraryEmptyTitle": "ಗ್ರಂಥಾಲಯ ಖಾಲಿಯಾಗಿದೆ",
   "libraryEmptyDescription": "ಪ್ರಾರಂಭಿಸಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
-  "libraryImportBoards": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
-  "libraryBoards": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
+  "libraryBoardSets": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

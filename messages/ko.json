@@ -11,9 +11,9 @@
   "libraryLoadFailed": "라이브러리를 불러올 수 없습니다",
   "libraryEmptyTitle": "라이브러리가 비어 있습니다",
   "libraryEmptyDescription": "보드 파일을 가져와 시작하세요.",
-  "libraryImportBoards": "보드 파일 가져오기",
-  "libraryBoards": "보드 세트",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "보드 파일 가져오기",
+  "libraryBoardSets": "보드 세트",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

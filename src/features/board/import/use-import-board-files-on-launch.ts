@@ -18,7 +18,9 @@ export function useImportBoardFilesOnLaunch(): void {
       } catch {
         showSnackbar({
           message: (translate) =>
-            translate(m.libraryImportFailedBoards, { count: handles.length }),
+            translate(m.libraryImportFailedBoardFiles, {
+              count: handles.length,
+            }),
           severity: "error",
         });
       }

@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Bibliotheek kan niet worden geladen",
   "libraryEmptyTitle": "De bibliotheek is leeg",
   "libraryEmptyDescription": "Importeer bordbestanden om te beginnen.",
-  "libraryImportBoards": "Bordbestanden importeren",
-  "libraryBoards": "Bordsets",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Bordbestanden importeren",
+  "libraryBoardSets": "Bordsets",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

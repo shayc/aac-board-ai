@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Не вдалося завантажити бібліотеку",
   "libraryEmptyTitle": "Бібліотека порожня",
   "libraryEmptyDescription": "Імпортуйте файли дошок, щоб почати.",
-  "libraryImportBoards": "Імпортувати файли дошок",
-  "libraryBoards": "Набори дошок",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Імпортувати файли дошок",
+  "libraryBoardSets": "Набори дошок",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],

@@ -89,7 +89,7 @@ export function BoardSetLibrary({
               startIcon={<LibraryAddOutlinedIcon />}
               onClick={() => void pickAndImportBoardFiles()}
             >
-              {t(m.libraryImportBoards)}
+              {t(m.libraryImportBoardFiles)}
             </Button>
           }
         />
@@ -105,7 +105,7 @@ export function BoardSetLibrary({
             <ListItemIcon>
               <LibraryAddOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={t(m.libraryImportBoards)} />
+            <ListItemText primary={t(m.libraryImportBoardFiles)} />
           </ListItemButton>
         </ListItem>
       </List>

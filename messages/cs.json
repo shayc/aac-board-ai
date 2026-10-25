@@ -11,9 +11,9 @@
   "libraryLoadFailed": "Knihovnu se nepodařilo načíst",
   "libraryEmptyTitle": "Knihovna je prázdná",
   "libraryEmptyDescription": "Začněte importem souborů tabulek.",
-  "libraryImportBoards": "Importovat soubory tabulek",
-  "libraryBoards": "Sady tabulek",
-  "libraryImportingBoards": [
+  "libraryImportBoardFiles": "Importovat soubory tabulek",
+  "libraryBoardSets": "Sady tabulek",
+  "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -23,7 +23,7 @@
       }
     }
   ],
-  "libraryImportedBoards": [
+  "libraryImportedBoardSets": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -33,7 +33,7 @@
       }
     }
   ],
-  "libraryImportFailedBoards": [
+  "libraryImportFailedBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
@@ -43,7 +43,7 @@
       }
     }
   ],
-  "libraryImportTooLargeBoards": [
+  "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
