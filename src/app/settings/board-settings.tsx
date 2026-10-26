@@ -40,15 +40,19 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
           checkedIcon={<LabelPlacementPreview placement={placement} selected />}
           icon={<LabelPlacementPreview placement={placement} />}
           disableRipple
-          sx={{
+          sx={(theme) => ({
             p: 0.5,
             borderRadius: 4,
             [`&.${buttonBaseClasses.focusVisible}`]: {
-              outline: "3px solid",
-              outlineColor: "primary.main",
-              outlineOffset: 1,
+              ...theme.focusVisible,
+              // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
+              "& svg:first-of-type": {
+                borderRadius: 0,
+                outline: "none",
+                boxShadow: "none",
+              },
             },
-          }}
+          })}
         />
       }
       label={label}
