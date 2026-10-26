@@ -23,7 +23,7 @@ export function LoadingState({ message }: LoadingStateProps) {
           gap: 2,
         }}
       >
-        <CircularProgress />
+        <CircularProgress aria-label={resolvedMessage || t(m.loading)} />
         {resolvedMessage && (
           <Typography color="text.secondary">{resolvedMessage}</Typography>
         )}
