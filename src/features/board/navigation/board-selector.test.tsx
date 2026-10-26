@@ -110,6 +110,29 @@ describe("BoardSelector", () => {
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/animals");
   });
 
+  test("updates popup labels and empty results when the locale changes", async () => {
+    const { screen } = await renderSelector("/sets/set-1/boards/root");
+
+    await screen.getByRole("button", { name: "Open board list" }).click();
+    await screen.getByRole("combobox", { name: "Board" }).fill("no-match");
+
+    await expect
+      .element(screen.getByRole("button", { name: "Close board list" }))
+      .toBeVisible();
+    await expect.element(screen.getByText("No matching boards")).toBeVisible();
+
+    setStoredLanguage("he");
+
+    await expect
+      .element(screen.getByText("לא נמצאו לוחות תואמים"))
+      .toBeVisible();
+    await screen.getByRole("button", { name: "סגירת רשימת הלוחות" }).click();
+
+    await expect
+      .element(screen.getByRole("button", { name: "פתיחת רשימת הלוחות" }))
+      .toBeVisible();
+  });
+
   test("closes the popup on Escape and restores the current board name on blur", async () => {
     const { router, screen } = await renderSelector("/sets/set-1/boards/root");
 

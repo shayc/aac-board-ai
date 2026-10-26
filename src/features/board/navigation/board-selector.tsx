@@ -18,6 +18,9 @@ export function BoardSelector() {
 
   return (
     <Autocomplete
+      openText={t(m.boardSelectorOpen)}
+      closeText={t(m.boardSelectorClose)}
+      noOptionsText={t(m.boardSelectorNoOptions)}
       options={boards}
       value={selectedBoard}
       onChange={(_event, board) => goToBoard(board.id)}
