@@ -24,6 +24,7 @@ const rtlCache = createCache({
 });
 
 const themeOptions = {
+  focusVisible: true,
   cssVariables: {
     colorSchemeSelector: "class",
     // index.html owns color-scheme; MUI only emits the palette vars.
