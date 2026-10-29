@@ -1,15 +1,4 @@
-export {
-  setTileBordersVisible,
-  setTileLabelPlacement,
-  setTileSaturation,
-  TILE_SATURATION,
-  useBoardAppearanceConfig,
-} from "./appearance/appearance-store";
-export { LabelPlacementPreview } from "./appearance/label-placement-preview";
-export type {
-  BoardAppearanceConfig,
-  TileLabelPlacement,
-} from "./appearance/appearance-store";
+export { BoardSettings } from "./board-settings";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export {
   getBoardSet,
@@ -27,20 +16,13 @@ export {
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
-export {
-  setMessagePartHighlightingEnabled,
-  useBoardPlaybackConfig,
-} from "./playback/playback-config-store";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { hydrateBoard } from "./storage/board-hydration";
 export type {
   BoardMediaResource,
   HydratedBoard,
 } from "./storage/board-hydration";
-export {
-  setSuggestionCustomInstructions,
-  useBoardSuggestionConfig,
-} from "./suggestions/suggestion-config-store";
+export { SuggestionsSettings } from "./suggestions/suggestions-settings";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 
 export type { Board } from "./board-types";

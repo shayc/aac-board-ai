@@ -1,14 +1,3 @@
-import {
-  setMessagePartHighlightingEnabled,
-  setTileBordersVisible,
-  setTileLabelPlacement,
-  setTileSaturation,
-  TILE_SATURATION,
-  LabelPlacementPreview,
-  useBoardAppearanceConfig,
-  useBoardPlaybackConfig,
-  type TileLabelPlacement,
-} from "@features/board";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -18,9 +7,22 @@ import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { SettingsSlider } from "@shared/ui/settings-slider";
+import { SettingsSwitch } from "@shared/ui/settings-switch";
 import { useId } from "react";
-import { SettingsSlider } from "./settings-slider";
-import { SettingsSwitch } from "./settings-switch";
+import {
+  setTileBordersVisible,
+  setTileLabelPlacement,
+  setTileSaturation,
+  TILE_SATURATION,
+  useBoardAppearanceConfig,
+  type TileLabelPlacement,
+} from "./appearance/appearance-store";
+import { LabelPlacementPreview } from "./appearance/label-placement-preview";
+import {
+  setMessagePartHighlightingEnabled,
+  useBoardPlaybackConfig,
+} from "./playback/playback-config-store";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
