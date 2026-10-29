@@ -6,7 +6,7 @@ import {
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
-import { reloadPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { speak } from "./speak";
 

@@ -1,13 +1,13 @@
-import {
-  setSuggestionCustomInstructions,
-  useBoardSuggestionConfig,
-} from "@features/board";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
 import { isSupported } from "@shayc/react-built-in-ai";
+import {
+  setSuggestionCustomInstructions,
+  useBoardSuggestionConfig,
+} from "./suggestion-config-store";
 
 export function SuggestionsSettings() {
   const t = useTranslate();

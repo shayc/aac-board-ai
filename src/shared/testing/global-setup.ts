@@ -1,4 +1,4 @@
-import { reloadPersistedStores } from "@shared/utils/persisted-store";
+import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { afterEach, beforeEach, vi } from "vitest";
 
 // Built-in AI namespaces the app reads off globalThis. Their ambient state can

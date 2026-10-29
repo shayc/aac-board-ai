@@ -21,8 +21,8 @@ import {
   useSpeechConfig,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { SettingsSlider } from "@shared/ui/settings-slider";
 import { useId } from "react";
-import { SettingsSlider } from "./settings-slider";
 
 export function SpeechSettings() {
   const t = useTranslate();

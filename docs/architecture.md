@@ -196,6 +196,22 @@ for aliased imports:
 Inside the board feature, folders group related code and collaborate through
 relative imports; they are not separate feature boundaries.
 
+### Settings composition
+
+The [settings drawer](../src/app/settings/settings-drawer.tsx) explicitly composes
+settings components exported by features. The app owns section headings, order,
+layout, and drawer behavior; each feature owns its controls, capability checks,
+and persisted preferences. Board settings live in
+[`board-settings.tsx`](../src/features/board/board-settings.tsx), and suggestion
+settings live beside their store in
+[`suggestions/`](../src/features/board/suggestions/). App-wide language, theme,
+and speech settings remain in `app/settings/`. Reusable field controls live in
+`shared/ui/` so features do not depend on the app layer.
+
+Add or remove a feature's settings through its public entry point and the drawer's
+composition. Removing a feature also requires an explicit decision about any
+persisted preferences; closing or unmounting settings does not delete them.
+
 ### Board feature
 
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
@@ -220,7 +236,7 @@ Paths in this table are relative to `src/`.
 | Device output          | [shared/playback/](../src/shared/playback/)                                                                                                        | Own all Web Speech and HTML Audio output.                 |
 | Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                               | Coordinate communication language and voice selection.    |
 | Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                              | Apply theme and directional styling.                      |
-| Shared stores          | [shared/utils/external-store.ts](../src/shared/utils/external-store.ts), [shared/utils/persisted-store.ts](../src/shared/utils/persisted-store.ts) | Provide subscription and settings persistence primitives. |
+| Shared stores          | [shared/state/external-store.ts](../src/shared/state/external-store.ts), [shared/state/persisted-store.ts](../src/shared/state/persisted-store.ts) | Provide subscription and settings persistence primitives. |
 
 At the repository root, [messages/](../messages/) holds UI catalogs and
 [project.inlang/](../project.inlang/) configures Paraglide, which compiles them into

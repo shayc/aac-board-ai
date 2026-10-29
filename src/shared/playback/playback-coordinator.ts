@@ -1,5 +1,5 @@
 import { assertNever } from "@shared/utils/assert-never";
-import { createExternalStore } from "@shared/utils/external-store";
+import { createExternalStore } from "@shared/state/external-store";
 import {
   type PlaybackCoordinator,
   type PlaybackOutcome,

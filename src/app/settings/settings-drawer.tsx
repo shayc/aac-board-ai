@@ -1,4 +1,5 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
+import { BoardSettings, SuggestionsSettings } from "@features/board";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -20,10 +21,8 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import type { ReactNode } from "react";
 import { ThemeSettings } from "./theme-settings";
-import { BoardSettings } from "./board-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
-import { SuggestionsSettings } from "./suggestions-settings";
 
 interface SettingsDrawerProps {
   open: boolean;

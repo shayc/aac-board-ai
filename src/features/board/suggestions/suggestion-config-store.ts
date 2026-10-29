@@ -1,4 +1,4 @@
-import { createPersistedStore } from "@shared/utils/persisted-store";
+import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
 interface BoardSuggestionConfig {

@@ -1,6 +1,6 @@
-import { createExternalStore } from "@shared/utils/external-store";
+import { createExternalStore } from "@shared/state/external-store";
 import { getLanguageCode } from "@shared/language/locale";
-import { createPersistedStore } from "@shared/utils/persisted-store";
+import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
