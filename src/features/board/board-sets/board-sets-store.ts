@@ -1,4 +1,4 @@
-import { createExternalStore } from "@shared/utils/external-store";
+import { createExternalStore } from "@shared/state/external-store";
 import {
   createBoardSet as createStoredBoardSet,
   deleteBoardSet as deleteStoredBoardSet,

@@ -6,7 +6,7 @@ import {
   type Locale,
 } from "@paraglide/runtime";
 import { getLanguageCode } from "@shared/language/locale";
-import { createPersistedStore } from "@shared/utils/persisted-store";
+import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
 const LANGUAGE_STORAGE_KEY = "language";
