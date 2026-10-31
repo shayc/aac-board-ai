@@ -37,7 +37,7 @@
   "devDependencies": {
     "@inlang/paraglide-js": "^2.29.3",
     "@playwright/test": "^1.64.1",
-    "@types/dom-chromium-ai": "^0.0.17",
+    "@types/dom-chromium-ai": "^0.0.18",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
