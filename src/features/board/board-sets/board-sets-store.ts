@@ -2,7 +2,6 @@ import { createExternalStore } from "@shared/state/external-store";
 import {
   createBoardSet as createStoredBoardSet,
   deleteBoardSet as deleteStoredBoardSet,
-  getBoardSet as getStoredBoardSet,
   listBoardSets,
   type BoardSetCreateInput,
   type BoardSetRecord,
@@ -10,6 +9,7 @@ import {
 
 export {
   BoardSetAlreadyExistsError,
+  getBoardSet,
   InvalidIdError,
 } from "../storage/board-set-storage";
 export type {
@@ -88,12 +88,6 @@ export async function getBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
 
   return store.getSnapshot().boardSets;
-}
-
-export function getBoardSet(
-  setId: string,
-): Promise<BoardSetRecord | undefined> {
-  return getStoredBoardSet(setId);
 }
 
 export async function createBoardSet(

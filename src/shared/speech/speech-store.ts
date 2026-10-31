@@ -1,14 +1,12 @@
 import { createExternalStore } from "@shared/state/external-store";
 import { getLanguageCode } from "@shared/language/locale";
 import { createPersistedStore } from "@shared/state/persisted-store";
+import {
+  parseClampedNumber,
+  type ClampedNumberOptions,
+} from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
 import { getSpeechSynthesis } from "./speech-synthesis";
-
-interface SpeechParamSpec {
-  min: number;
-  max: number;
-  fallback: number;
-}
 
 interface SpeechConfig {
   voiceURI: string | null;
@@ -24,27 +22,30 @@ interface VoiceCatalogState {
   voicesByLanguage: VoicesByLanguage;
 }
 
-export const SPEECH_RATE: SpeechParamSpec = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_PITCH: SpeechParamSpec = { min: 0.1, max: 2, fallback: 1 };
-export const SPEECH_VOLUME: SpeechParamSpec = { min: 0, max: 1, fallback: 1 };
-
-function clamp(
-  value: unknown,
-  { min, max, fallback }: SpeechParamSpec,
-): number {
-  return typeof value === "number" && Number.isFinite(value)
-    ? Math.min(Math.max(value, min), max)
-    : fallback;
-}
+export const SPEECH_RATE: ClampedNumberOptions = {
+  min: 0.1,
+  max: 2,
+  fallback: 1,
+};
+export const SPEECH_PITCH: ClampedNumberOptions = {
+  min: 0.1,
+  max: 2,
+  fallback: 1,
+};
+export const SPEECH_VOLUME: ClampedNumberOptions = {
+  min: 0,
+  max: 1,
+  fallback: 1,
+};
 
 export function parseSpeechConfig(raw: unknown): SpeechConfig {
   const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
     voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
-    rate: clamp(parsed.rate, SPEECH_RATE),
-    pitch: clamp(parsed.pitch, SPEECH_PITCH),
-    volume: clamp(parsed.volume, SPEECH_VOLUME),
+    rate: parseClampedNumber(parsed.rate, SPEECH_RATE),
+    pitch: parseClampedNumber(parsed.pitch, SPEECH_PITCH),
+    volume: parseClampedNumber(parsed.volume, SPEECH_VOLUME),
   };
 }
 
