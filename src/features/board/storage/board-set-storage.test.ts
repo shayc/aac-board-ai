@@ -1,31 +1,15 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import { getAssetBlob, getBoard } from "./board-content-storage";
 import {
   BoardSetAlreadyExistsError,
   createBoardSet,
   deleteBoardSet,
   listBoardSets,
-  type BoardSetCreateInput,
 } from "./board-set-storage";
 import { closeBoardsDB, InvalidIdError } from "./boards-db";
-
-function makeBoardSetInput(
-  overrides: Partial<BoardSetCreateInput> = {},
-): BoardSetCreateInput {
-  const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
-
-  return {
-    id: "set-1",
-    name: "Set",
-    rootBoardId: boards[0]?.id ?? "root-1",
-    boards,
-    assets: [],
-    ...overrides,
-  };
-}
 
 beforeEach(async () => {
   await resetBoardsDB();

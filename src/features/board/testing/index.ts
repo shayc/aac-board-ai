@@ -1,5 +1,6 @@
 export {
   countStoredBoardContent,
+  makeBoardSetInput,
   makeOBFBoard,
   resetBoardsDB,
   seedBoardSets,
