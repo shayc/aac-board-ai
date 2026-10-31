@@ -3,7 +3,7 @@ import { assertNever } from "@shared/utils/assert-never";
 import {
   applyBackspace,
   appendSpace,
-  appendTextToLastPart,
+  appendText,
   createPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -62,7 +62,7 @@ export function createButtonActivator({
     for (const action of button.actions) {
       switch (action.kind) {
         case "spell":
-          parts = appendTextToLastPart(parts, action.text);
+          parts = appendText(parts, action.text);
           break;
         case "space":
           parts = appendSpace(parts);

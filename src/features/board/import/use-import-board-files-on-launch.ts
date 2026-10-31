@@ -1,7 +1,7 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect, useEffectEvent } from "react";
-import { isBoardFile } from "./board-file-formats";
+import { hasBoardFileExtension } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
@@ -14,7 +14,7 @@ export function useImportBoardFilesOnLaunch(): void {
         const opened = await Promise.all(
           handles.map((handle) => handle.getFile()),
         );
-        await importAndOpenBoardFiles(opened.filter(isBoardFile));
+        await importAndOpenBoardFiles(opened.filter(hasBoardFileExtension));
       } catch {
         showSnackbar({
           message: (translate) =>

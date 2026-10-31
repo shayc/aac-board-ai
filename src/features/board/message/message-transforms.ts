@@ -20,10 +20,7 @@ export function appendSpace(parts: MessagePart[]): MessagePart[] {
   return appendPart(parts, { label: "" });
 }
 
-export function appendTextToLastPart(
-  parts: MessagePart[],
-  text: string,
-): MessagePart[] {
+export function appendText(parts: MessagePart[], text: string): MessagePart[] {
   const lastPart = parts.at(-1);
 
   if (!lastPart || !isTextOnlyPart(lastPart)) {

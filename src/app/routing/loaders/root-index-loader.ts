@@ -21,11 +21,11 @@ async function importFromBoardUrl(
     return redirect(rootBoardPath(importedBoardSet));
   } catch {
     signal.throwIfAborted();
-    throw importFailed();
+    throw createImportFailure();
   }
 }
 
-function importFailed() {
+function createImportFailure() {
   return data(createRouteErrorPayload(routeErrorCodes.boardUrlImportFailed), {
     status: 400,
   });

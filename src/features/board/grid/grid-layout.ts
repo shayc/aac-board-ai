@@ -64,13 +64,13 @@ export function createGridContentSx(
     minHeight: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
     gap: GRID_GAP,
     p: GRID_PADDING,
-    [theme.breakpoints.down("sm")]: visibleTrackQueries(
+    [theme.breakpoints.down("sm")]: createVisibleTrackQueries(
       rows,
       columns,
       gapPx,
       GRID_COMPACT_PADDING_PX,
     ),
-    [theme.breakpoints.up("sm")]: visibleTrackQueries(
+    [theme.breakpoints.up("sm")]: createVisibleTrackQueries(
       rows,
       columns,
       gapPx,
@@ -79,21 +79,21 @@ export function createGridContentSx(
   };
 }
 
-function visibleTrackQueries(
+function createVisibleTrackQueries(
   rows: number,
   columns: number,
   gapPx: number,
   paddingPx: number,
 ): Record<string, Record<string, number>> {
   return {
-    ...trackAxisQueries(
+    ...createTrackAxisQueries(
       "min-width",
       "--grid-visible-columns",
       columns,
       gapPx,
       paddingPx,
     ),
-    ...trackAxisQueries(
+    ...createTrackAxisQueries(
       "min-height",
       "--grid-visible-rows",
       rows,
@@ -103,7 +103,7 @@ function visibleTrackQueries(
   };
 }
 
-function trackAxisQueries(
+function createTrackAxisQueries(
   feature: "min-width" | "min-height",
   property: "--grid-visible-columns" | "--grid-visible-rows",
   count: number,

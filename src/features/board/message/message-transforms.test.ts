@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import {
   appendPart,
   appendSpace,
-  appendTextToLastPart,
+  appendText,
   applyBackspace,
 } from "./message-transforms";
 import type { MessagePart } from "./message-types";
@@ -42,9 +42,9 @@ describe("appendSpace", () => {
   });
 });
 
-describe("appendTextToLastPart", () => {
+describe("appendText", () => {
   test("appends text as a new part when the message is empty", () => {
-    const parts = appendTextToLastPart([], "h");
+    const parts = appendText([], "h");
 
     expect(parts).toHaveLength(1);
     expect(parts[0].label).toBe("h");
@@ -54,7 +54,7 @@ describe("appendTextToLastPart", () => {
   test("appends text to a purely text-only last part", () => {
     const original: MessagePart[] = [{ id: "1", label: "ca" }];
 
-    const parts = appendTextToLastPart(original, "t");
+    const parts = appendText(original, "t");
 
     expect(parts).toHaveLength(1);
     expect(parts[0].id).toBe("1");
@@ -66,7 +66,7 @@ describe("appendTextToLastPart", () => {
       { id: "1", label: "ca", imageSrc: "img.png" },
     ];
 
-    const parts = appendTextToLastPart(original, "t");
+    const parts = appendText(original, "t");
 
     expect(parts).toHaveLength(2);
     expect(parts[1].label).toBe("t");
@@ -74,8 +74,8 @@ describe("appendTextToLastPart", () => {
   });
 
   test("accumulates rapid appends into a single part", () => {
-    const afterFirst = appendTextToLastPart([{ id: "1", label: "" }], "h");
-    const afterSecond = appendTextToLastPart(afterFirst, "i");
+    const afterFirst = appendText([{ id: "1", label: "" }], "h");
+    const afterSecond = appendText(afterFirst, "i");
 
     expect(afterSecond).toHaveLength(1);
     expect(afterSecond[0].id).toBe("1");
@@ -85,7 +85,7 @@ describe("appendTextToLastPart", () => {
   test("leaves the input array untouched", () => {
     const original: MessagePart[] = [{ id: "1", label: "ca" }];
 
-    appendTextToLastPart(original, "t");
+    appendText(original, "t");
 
     expect(original[0].label).toBe("ca");
   });

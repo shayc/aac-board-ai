@@ -1,5 +1,5 @@
 import { useRef, useState, type DragEvent } from "react";
-import { isBoardFile } from "./board-file-formats";
+import { hasBoardFileExtension } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 interface BoardFileDropHandlers {
@@ -66,7 +66,9 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
     event.preventDefault();
     clearDrag();
 
-    const files = Array.from(event.dataTransfer.files).filter(isBoardFile);
+    const files = Array.from(event.dataTransfer.files).filter(
+      hasBoardFileExtension,
+    );
     void importAndOpenBoardFiles(files);
   }
 
