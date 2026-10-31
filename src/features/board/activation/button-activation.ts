@@ -85,22 +85,26 @@ export function createButtonActivator({
       }
     }
 
-    if (partsToPlay) {
-      if (partsToPlay !== message.parts) {
-        message.setParts(partsToPlay);
+    if (partsToPlay === null) {
+      if (parts !== message.parts) {
+        message.setParts(parts);
       }
 
-      // Mutations after ":speak" (such as ":clear") wait for playback to
-      // complete without interruption, keeping the message visible while it plays.
-      const finalParts = parts;
-      void playback.playMessage(partsToPlay).then((outcome) => {
-        if (outcome === "completed" && finalParts !== partsToPlay) {
-          message.setParts(finalParts);
-        }
-      });
-    } else if (parts !== message.parts) {
-      message.setParts(parts);
+      return;
     }
+
+    if (partsToPlay !== message.parts) {
+      message.setParts(partsToPlay);
+    }
+
+    // Mutations after ":speak" (such as ":clear") wait for playback to
+    // complete without interruption, keeping the message visible while it plays.
+    const finalParts = parts;
+    void playback.playMessage(partsToPlay).then((outcome) => {
+      if (outcome === "completed" && finalParts !== partsToPlay) {
+        message.setParts(finalParts);
+      }
+    });
   }
 
   return activateButton;
