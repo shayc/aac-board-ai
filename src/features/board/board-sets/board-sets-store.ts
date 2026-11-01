@@ -44,6 +44,7 @@ async function loadBoardSets(): Promise<void> {
     store.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {
+    hasLoaded = false;
     const { boardSets } = store.getSnapshot();
     store.setState({
       boardSets,
@@ -87,7 +88,12 @@ export function getBoardSetsSnapshot(): BoardSetsSnapshot {
 export async function getBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
 
-  return store.getSnapshot().boardSets;
+  const { boardSets, error } = store.getSnapshot();
+  if (error) {
+    throw error;
+  }
+
+  return boardSets;
 }
 
 export async function createBoardSet(

@@ -1,7 +1,13 @@
 import { getBoardSets } from "@features/board";
-import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
+import {
+  closeBoardsDB,
+  getBoardsDB,
+  refreshBoardSets,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
@@ -29,6 +35,38 @@ describe("rootIndexLoader", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
+
+  afterEach(async () => {
+    await closeBoardsDB();
+  });
+
+  test.each([
+    { name: "empty", boardSets: [] },
+    {
+      name: "populated",
+      boardSets: [{ id: "set-1", rootBoardId: "root-1" }],
+    },
+  ])(
+    "surfaces a failed $name catalog read without importing and retries after storage recovers",
+    async ({ boardSets }) => {
+      await seedBoardSets(boardSets);
+      const db = await getBoardsDB();
+      db.close();
+      await refreshBoardSets();
+      const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+      await expect(callLoader()).rejects.toMatchObject({
+        name: "InvalidStateError",
+      });
+      expect(fetchSpy).not.toHaveBeenCalled();
+
+      await closeBoardsDB();
+      const response = await callLoader();
+
+      expect(response.status).toBe(302);
+      expect(await getBoardSets()).not.toHaveLength(0);
+    },
+  );
 
   test("imports the URL from ?board and redirects to its board route", async () => {
     const response = await callLoader(
