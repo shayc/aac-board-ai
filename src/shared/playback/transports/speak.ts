@@ -1,5 +1,6 @@
 import { getSpeechConfig, getVoices } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
+import type { PlaybackOutcome } from "../playback-context";
 
 interface SpeakOptions {
   signal?: AbortSignal;
@@ -22,22 +23,26 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 export function speak(
   text: string,
   { signal, onBoundary }: SpeakOptions = {},
-): Promise<void> {
-  const synthesis = getSpeechSynthesis();
-  if (!synthesis || signal?.aborted) {
-    return Promise.resolve();
+): Promise<PlaybackOutcome> {
+  if (signal?.aborted) {
+    return Promise.resolve("interrupted");
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
+  const synthesis = getSpeechSynthesis();
+  if (!synthesis) {
+    return Promise.resolve("failed");
+  }
+
+  const { promise, resolve } = Promise.withResolvers<PlaybackOutcome>();
   const utterance = buildUtterance(text);
   let settled = false;
 
   const onAbort = () => {
+    finish("interrupted");
     synthesis.cancel();
-    finish();
   };
 
-  function finish() {
+  function finish(outcome: PlaybackOutcome) {
     if (settled) {
       return;
     }
@@ -48,7 +53,7 @@ export function speak(
     utterance.onboundary = null;
     signal?.removeEventListener("abort", onAbort);
 
-    resolve();
+    resolve(outcome);
   }
 
   if (onBoundary) {
@@ -59,11 +64,15 @@ export function speak(
     };
   }
 
-  utterance.onend = finish;
-  utterance.onerror = finish;
+  utterance.onend = () => finish("completed");
+  utterance.onerror = () => finish("failed");
   signal?.addEventListener("abort", onAbort, { once: true });
 
-  synthesis.speak(utterance);
+  try {
+    synthesis.speak(utterance);
+  } catch {
+    finish("failed");
+  }
 
   return promise;
 }

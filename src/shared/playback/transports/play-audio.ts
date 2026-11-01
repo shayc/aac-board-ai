@@ -1,3 +1,5 @@
+import type { PlaybackOutcome } from "../playback-context";
+
 interface PlayAudioOptions {
   signal?: AbortSignal;
 }
@@ -5,16 +7,18 @@ interface PlayAudioOptions {
 export function playAudio(
   src: string,
   { signal }: PlayAudioOptions = {},
-): Promise<void> {
+): Promise<PlaybackOutcome> {
   if (signal?.aborted) {
-    return Promise.resolve();
+    return Promise.resolve("interrupted");
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<PlaybackOutcome>();
   const audio = new Audio(src);
   let settled = false;
 
-  function finish() {
+  const onAbort = () => finish("interrupted");
+
+  function finish(outcome: PlaybackOutcome) {
     if (settled) {
       return;
     }
@@ -23,16 +27,20 @@ export function playAudio(
     audio.onended = null;
     audio.onerror = null;
     audio.pause();
-    signal?.removeEventListener("abort", finish);
+    signal?.removeEventListener("abort", onAbort);
 
-    resolve();
+    resolve(outcome);
   }
 
-  audio.onended = finish;
-  audio.onerror = finish;
+  audio.onended = () => finish("completed");
+  audio.onerror = () => finish("failed");
 
-  signal?.addEventListener("abort", finish, { once: true });
-  audio.play().catch(finish);
+  signal?.addEventListener("abort", onAbort, { once: true });
+  try {
+    void audio.play().catch(() => finish("failed"));
+  } catch {
+    finish("failed");
+  }
 
   return promise;
 }

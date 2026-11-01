@@ -57,15 +57,16 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
+        let outcome: PlaybackOutcome;
         switch (step.kind) {
           case "audio":
             setActiveTrackingKey(session, step.trackingKey ?? null);
-            await playAudio(step.src, { signal });
+            outcome = await playAudio(step.src, { signal });
             break;
 
           case "speech":
             setActiveTrackingKey(session, step.trackingKeyAt?.(0) ?? null);
-            await speak(step.text, {
+            outcome = await speak(step.text, {
               signal,
               onBoundary: step.trackingKeyAt
                 ? (charIndex) =>
@@ -80,9 +81,19 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           default:
             assertNever(step);
         }
+
+        if (signal.aborted) {
+          return "interrupted";
+        }
+
+        if (outcome !== "completed") {
+          return outcome;
+        }
       }
 
       return signal.aborted ? "interrupted" : "completed";
+    } catch {
+      return signal.aborted ? "interrupted" : "failed";
     } finally {
       if (currentSession === session) {
         currentSession = null;

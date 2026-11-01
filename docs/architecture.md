@@ -140,9 +140,9 @@ coordinates message updates, navigation, and playback:
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
 2. A speak action captures the message at that point. Changes from later actions,
-   such as clearing the message, apply only if playback finishes uninterrupted.
+   such as clearing the message, apply only if playback finishes successfully.
    The spoken message stays visible during playback and is preserved if playback
-   is interrupted.
+   is interrupted or fails, including when speech output is unavailable.
 3. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting.

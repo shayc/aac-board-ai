@@ -98,7 +98,7 @@ export function createButtonActivator({
     }
 
     // Mutations after ":speak" (such as ":clear") wait for playback to
-    // complete without interruption, keeping the message visible while it plays.
+    // complete successfully, keeping the message visible if output fails or stops.
     const finalParts = parts;
     void playback.playMessage(partsToPlay).then((outcome) => {
       if (outcome === "completed" && finalParts !== partsToPlay) {

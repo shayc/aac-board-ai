@@ -99,7 +99,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("resets isMessagePlaying to false after a speech error", async () => {
+  test("reports a speech failure, stops later segments, and resets playback state", async () => {
     speech.speak.mockImplementationOnce((utterance) => {
       queueMicrotask(() => {
         utterance.onerror?.({
@@ -108,14 +108,21 @@ describe("useBoardPlayback", () => {
       });
     });
 
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const parts: MessagePart[] = [
+      { id: "1", label: "hi" },
+      { id: "2", label: "ding", soundSrc: "ding.mp3" },
+      { id: "3", label: "later" },
+    ];
 
     const { result, rerender } = await renderPlayback();
 
-    await expect(result.current.playMessage(parts)).resolves.toBe("completed");
+    await expect(result.current.playMessage(parts)).resolves.toBe("failed");
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(audio.play).not.toHaveBeenCalled();
   });
 
   test("tracks playing state and active parts through speech boundaries and completion", async () => {

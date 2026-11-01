@@ -18,7 +18,7 @@ describe("playAudio transport", () => {
   });
 
   test("plays a url and resolves when the clip ends", async () => {
-    await expect(playAudio("bell.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("bell.mp3")).resolves.toBe("completed");
     expect(audio.play).toHaveBeenCalledTimes(1);
   });
 
@@ -29,32 +29,41 @@ describe("playAudio transport", () => {
 
     controller.abort();
 
-    await expect(promise).resolves.toBeUndefined();
+    await expect(promise).resolves.toBe("interrupted");
     expect(audio.pause).toHaveBeenCalled();
   });
 
   test("resolves without playing when the signal is already aborted", async () => {
     await expect(
       playAudio("a.mp3", { signal: AbortSignal.abort() }),
-    ).resolves.toBeUndefined();
+    ).resolves.toBe("interrupted");
     expect(audio.play).not.toHaveBeenCalled();
   });
 
-  test("resolves when the element reports a media error", async () => {
+  test("reports failure when the element reports a media error", async () => {
     audio.play.mockImplementation(function (this: HTMLAudioElement) {
       queueMicrotask(() => this.dispatchEvent(new Event("error")));
 
       return Promise.resolve();
     });
 
-    await expect(playAudio("boom.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("boom.mp3")).resolves.toBe("failed");
   });
 
-  test("resolves when playback is blocked", async () => {
+  test("reports failure when playback is blocked", async () => {
     audio.play.mockImplementation(() =>
       Promise.reject(new Error("NotAllowedError")),
     );
 
-    await expect(playAudio("a.mp3")).resolves.toBeUndefined();
+    await expect(playAudio("a.mp3")).resolves.toBe("failed");
+  });
+
+  test("reports failure when starting playback throws", async () => {
+    audio.play.mockImplementation(() => {
+      throw new Error("Playback unavailable");
+    });
+
+    await expect(playAudio("a.mp3")).resolves.toBe("failed");
+    expect(audio.pause).toHaveBeenCalled();
   });
 });

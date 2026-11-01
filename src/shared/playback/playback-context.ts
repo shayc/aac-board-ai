@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-export type PlaybackOutcome = "completed" | "interrupted";
+export type PlaybackOutcome = "completed" | "interrupted" | "failed";
 
 export type PlaybackStep =
   | {

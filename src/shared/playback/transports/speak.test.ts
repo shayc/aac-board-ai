@@ -39,8 +39,8 @@ describe("speak() without Web Speech API", () => {
     vi.stubGlobal("speechSynthesis", undefined);
   });
 
-  test("speak() resolves silently instead of throwing", async () => {
-    await expect(speak("hello")).resolves.toBeUndefined();
+  test("reports failure when speech output is unavailable", async () => {
+    await expect(speak("hello")).resolves.toBe("failed");
   });
 });
 
@@ -82,9 +82,9 @@ describe("speak() lifecycle", () => {
   test("does not speak when the signal is already aborted", async () => {
     const speech = stubSpeech();
 
-    await expect(
-      speak("hello", { signal: AbortSignal.abort() }),
-    ).resolves.toBeUndefined();
+    await expect(speak("hello", { signal: AbortSignal.abort() })).resolves.toBe(
+      "interrupted",
+    );
 
     expect(speech.speak).not.toHaveBeenCalled();
   });
@@ -99,10 +99,10 @@ describe("speak() lifecycle", () => {
     controller.abort();
 
     expect(speech.cancel.mock.calls.length).toBeGreaterThan(cancelsBeforeAbort);
-    await expect(playback).resolves.toBeUndefined();
+    await expect(playback).resolves.toBe("interrupted");
   });
 
-  test("resolves when speech synthesis fails", async () => {
+  test("reports failure when speech synthesis fails", async () => {
     const speech = stubSpeech();
     let utterance: SpeechSynthesisUtterance | undefined;
     speech.speak.mockImplementationOnce((spoken) => {
@@ -114,6 +114,15 @@ describe("speak() lifecycle", () => {
       error: "synthesis-failed",
     } as SpeechSynthesisErrorEvent);
 
-    await expect(playback).resolves.toBeUndefined();
+    await expect(playback).resolves.toBe("failed");
+  });
+
+  test("reports failure when starting speech throws", async () => {
+    const speech = stubSpeech();
+    speech.speak.mockImplementationOnce(() => {
+      throw new Error("Speech output unavailable");
+    });
+
+    await expect(speak("hello")).resolves.toBe("failed");
   });
 });
