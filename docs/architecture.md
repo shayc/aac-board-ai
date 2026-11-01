@@ -66,9 +66,7 @@ flowchart LR
     OUT -.->|voice-dependent| voice
 ```
 
-Dashed edges mark optional or platform-dependent integrations. URL imports and
-remote media contact their source hosts; some speech voices use external
-services.
+Dashed edges mark optional or platform-dependent integrations.
 
 Built-in AI runs on-device without per-request network access once a model is
 available. The app checks for AI capabilities directly rather than inferring
@@ -152,6 +150,8 @@ expected and do not surface as user errors.
 
 ## Accessibility, language, and presentation
 
+### Accessibility
+
 Controls have programmatic names and support pointer and keyboard input. The
 [board grid](../src/features/board/grid/grid.tsx) and its
 [keyboard behavior](../src/features/board/grid/use-grid-keyboard.ts) preserve
@@ -167,6 +167,8 @@ these rules:
 Behavior tests and axe-core accessibility checks run in real Chromium through
 Playwright-backed Vitest.
 
+### Language and direction
+
 The communication language setting coordinates UI locale, board translation,
 text direction, and text-to-speech (TTS) voice selection. Language choices combine
 UI locales and available voice languages. UI text, board translation, and speech
@@ -174,9 +176,9 @@ fall back independently, so selecting a language does not guarantee a matching
 voice or translation model.
 
 Paraglide message catalogs provide UI text. Direction-specific Emotion caches,
-right-to-left (RTL) styling, and logical CSS support both text directions. The
-[glossary](#glossary) keeps domain terms consistent across visible text and
-accessible labels.
+right-to-left (RTL) styling, and logical CSS support both text directions.
+
+### Theming
 
 Theme colors are defined centrally in
 [`theme-colors.ts`](../src/shared/theme/theme-colors.ts). Theme mode is set before
@@ -198,19 +200,18 @@ relative imports; they are not separate feature boundaries.
 
 ### Settings composition
 
-The [settings drawer](../src/app/settings/settings-drawer.tsx) explicitly composes
-settings components exported by features. The app owns section headings, order,
-layout, and drawer behavior; each feature owns its controls, capability checks,
-and persisted preferences. Board settings live in
-[`board-settings.tsx`](../src/features/board/board-settings.tsx), and suggestion
-settings live beside their store in
-[`suggestions/`](../src/features/board/suggestions/). App-wide language, theme,
-and speech settings remain in `app/settings/`. Reusable field controls live in
-`shared/ui/` so features do not depend on the app layer.
+The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
+[board settings](../src/features/board/board-settings.tsx) and
+[suggestion settings](../src/features/board/suggestions/suggestions-settings.tsx)
+through feature public entry points. The app owns headings, order, layout, and
+drawer behavior; features own controls, capability checks, and persisted
+preferences. App-wide language, theme, and speech settings live in `app/settings/`;
+reusable field controls live in `shared/ui/` so features do not depend on the app
+layer.
 
-Add or remove a feature's settings through its public entry point and the drawer's
-composition. Removing a feature also requires an explicit decision about any
-persisted preferences; closing or unmounting settings does not delete them.
+Closing or unmounting settings does not delete preferences. Removing a feature
+requires an explicit decision about retaining or deleting its persisted
+preferences.
 
 ### Board feature
 
@@ -244,12 +245,10 @@ generated `src/paraglide/` modules.
 
 ### Companion packages
 
-Two companion packages handle file formats and browser AI:
-[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) parses
-and creates OBF/OBZ files, while
-[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai) manages
-browser AI availability, provisioning, and lifecycle. The app determines when and
-how these capabilities are used.
+The app delegates OBF/OBZ parsing to
+[`@shayc/open-board-format`](https://github.com/shayc/open-board-format) and browser
+AI availability, provisioning, and session lifecycle to
+[`@shayc/react-built-in-ai`](https://github.com/shayc/react-built-in-ai).
 
 ## Current limitations
 
