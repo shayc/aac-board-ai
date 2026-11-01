@@ -1,4 +1,5 @@
 import { createExternalStore } from "@shared/state/external-store";
+import { releaseAssetUrlsExcept } from "../storage/asset-urls";
 import {
   createBoardSet as createStoredBoardSet,
   deleteBoardSet as deleteStoredBoardSet,
@@ -41,6 +42,8 @@ let pendingLoad: Promise<void> | null = null;
 async function loadBoardSets(): Promise<void> {
   try {
     const boardSets = await listBoardSets();
+    // Every tab refreshes after a delete, so this also covers other tabs.
+    releaseAssetUrlsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     store.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {

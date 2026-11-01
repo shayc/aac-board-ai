@@ -1,8 +1,8 @@
-import { CommunicationBoard, type HydratedBoard } from "@features/board";
+import { CommunicationBoard, type Board } from "@features/board";
 import { useLoaderData } from "react-router";
 
 export function BoardPage() {
-  const { board } = useLoaderData<HydratedBoard>();
+  const board = useLoaderData<Board>();
 
   return (
     <>

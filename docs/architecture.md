@@ -80,6 +80,7 @@ State has distinct owners and lifetimes:
 | --------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                      |
 | Active board          | React Router loaders                  | Hydrated, optionally translated `Board` for the current route                |
+| Asset URLs            | `asset-urls.ts`                       | One object URL per stored asset until its board set is deleted               |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
 | Persisted settings    | `createPersistedStore` + localStorage | Language, speech, board preferences, suggestion instructions, and onboarding |
@@ -117,18 +118,18 @@ File selection, drag and drop, URL imports, and PWA file handling all use
 translation before rendering, keeping that work out of UI components:
 
 1. Navigation to `/sets/:setId/boards/:boardId` calls `hydrateBoard`, which reads
-   the stored OBF and assets, creates media object URLs for the load, and maps the
-   result through `obfToBoard`.
+   the stored OBF, resolves its asset URLs, and maps the result through
+   `obfToBoard`.
 2. `resolveBoardForLanguage` uses the source board or a cached translation when
    possible. Otherwise, it attempts translation and falls back to the source
    board on failure. Successful translations render without waiting for the cache
    write and remain usable if it fails.
-3. The route renders the `Board`. The app shell's
-   [media lifecycle observer](../src/app/routing/use-sync-board-media-with-route.ts)
-   takes ownership of the new media URLs and revokes the previous board's URLs.
+3. The route renders the `Board`.
 
-Failed or aborted loads revoke their own URLs without affecting the active board.
-Leaving the board route revokes the active board's URLs.
+Stored assets are immutable, so
+[each asset has one object URL](../src/features/board/storage/asset-urls.ts) for
+as long as its board set exists. Message parts can therefore outlive the board
+they came from. A catalog refresh revokes the URLs of deleted board sets.
 
 ### Activate a tile
 

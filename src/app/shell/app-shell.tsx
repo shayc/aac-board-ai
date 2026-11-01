@@ -2,7 +2,6 @@ import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateBoardOnLanguageChange } from "@app/routing/use-revalidate-board-on-language-change";
-import { useSyncBoardMediaWithRoute } from "@app/routing/use-sync-board-media-with-route";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
@@ -28,7 +27,6 @@ export function AppShell() {
   const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
 
   useImportBoardFilesOnLaunch();
-  useSyncBoardMediaWithRoute();
   useRevalidateBoardOnLanguageChange();
 
   return (
