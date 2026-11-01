@@ -296,7 +296,7 @@ describe("CommunicationBoard", () => {
     const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
       {
         pathname: "/sets/set-1/boards/root-board",
-        state: { backStack: ["other-board"] },
+        state: { canGoBack: true },
       },
     ]);
     const back = screen.getByRole("button", { name: "Go back" });

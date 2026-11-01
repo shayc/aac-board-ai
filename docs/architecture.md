@@ -82,7 +82,7 @@ State has distinct owners and lifetimes:
 | --------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                      |
 | Active board          | React Router loaders                  | Hydrated, optionally translated `Board` for the current route                |
-| Navigation history    | React Router `location.state`         | Bounded board back-stack                                                     |
+| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
 | Persisted settings    | `createPersistedStore` + localStorage | Language, speech, board preferences, suggestion instructions, and onboarding |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                          |
