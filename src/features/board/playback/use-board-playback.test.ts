@@ -60,7 +60,10 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playPart({ id: "1", label: "hi" });
+    const playPromise = result.current.playTileFeedback({
+      id: "1",
+      label: "hi",
+    });
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);

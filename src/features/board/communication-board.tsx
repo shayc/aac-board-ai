@@ -81,7 +81,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         ariaLabel={button.label ? undefined : button.vocalization}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
-        variant={button.loadBoard ? "folder" : undefined}
+        variant={button.targetBoardId ? "folder" : undefined}
         borderHidden={!areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}

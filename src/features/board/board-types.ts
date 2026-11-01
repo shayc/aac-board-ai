@@ -22,11 +22,7 @@ export interface BoardButton {
   backgroundColor?: string;
   borderColor?: string;
   actions: BoardAction[];
-  loadBoard?: LoadBoard;
-}
-
-export interface LoadBoard {
-  id: string;
+  targetBoardId?: string;
 }
 
 export type BoardAction =

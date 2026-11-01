@@ -3,7 +3,6 @@ import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
-  OBFLoadBoard,
   OBFMedia,
 } from "@shayc/open-board-format";
 import type {
@@ -12,7 +11,6 @@ import type {
   BoardButton,
   BoardGrid,
   BoardTranslations,
-  LoadBoard,
 } from "../board-types";
 import { normalizeBoardText } from "../normalize-board-text";
 import { sanitizeColor } from "./css-color";
@@ -75,7 +73,7 @@ function transformButton(
       ? soundSourceById.get(obfButton.sound_id)
       : undefined,
     actions: collectActions(obfButton),
-    loadBoard: transformLoadBoard(obfButton.load_board),
+    targetBoardId: obfButton.load_board?.id || undefined,
   };
 }
 
@@ -88,12 +86,6 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
 
     return action ? [action] : [];
   });
-}
-
-function transformLoadBoard(
-  obfLoadBoard: OBFLoadBoard | undefined,
-): LoadBoard | undefined {
-  return obfLoadBoard?.id ? { id: obfLoadBoard.id } : undefined;
 }
 
 function transformTranslations(

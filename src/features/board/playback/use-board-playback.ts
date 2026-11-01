@@ -13,7 +13,7 @@ const TILE_SOURCE = "board-tile";
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
   playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
-  playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
+  playTileFeedback: (part: MessagePart) => Promise<PlaybackOutcome>;
   stop: () => void;
 }
 
@@ -28,14 +28,14 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
     });
   }
 
-  function playPart(part: MessagePart) {
+  function playTileFeedback(part: MessagePart) {
     return playback.play({ source: TILE_SOURCE, steps: planPlayback([part]) });
   }
 
   return {
     isMessagePlaying,
     playMessage,
-    playPart,
+    playTileFeedback,
     stop: playback.stop,
   };
 }

@@ -20,7 +20,7 @@ function createPlaybackStub(): ActivationOptions["playback"] {
     playMessage: vi.fn((): Promise<PlaybackOutcome> =>
       Promise.resolve("completed"),
     ),
-    playPart: vi.fn((): Promise<PlaybackOutcome> =>
+    playTileFeedback: vi.fn((): Promise<PlaybackOutcome> =>
       Promise.resolve("completed"),
     ),
   };
@@ -50,14 +50,14 @@ function setup(opts: SetupOptions = {}) {
 }
 
 describe("createButtonActivator", () => {
-  test("navigates to the linked board and skips message and audio when loadBoard.id is set", () => {
+  test("navigates to the target board and skips message and audio", () => {
     const { activateButton, message, playback, navigation } = setup();
 
     const button: BoardButton = {
       id: "btn",
       label: "Folder",
       actions: [],
-      loadBoard: { id: "child-board" },
+      targetBoardId: "child-board",
     };
 
     activateButton(button);
@@ -65,7 +65,7 @@ describe("createButtonActivator", () => {
     expect(navigation.goToBoard).toHaveBeenCalledWith("child-board");
     expect(message.setParts).not.toHaveBeenCalled();
     expect(playback.playMessage).not.toHaveBeenCalled();
-    expect(playback.playPart).not.toHaveBeenCalled();
+    expect(playback.playTileFeedback).not.toHaveBeenCalled();
   });
 
   test("maps home to navigation.goHome", () => {
@@ -212,14 +212,14 @@ describe("createButtonActivator", () => {
     });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
-    expect(playback.playPart).toHaveBeenCalledOnce();
-    expect(playback.playPart).toHaveBeenCalledWith(
+    expect(playback.playTileFeedback).toHaveBeenCalledOnce();
+    expect(playback.playTileFeedback).toHaveBeenCalledWith(
       expect.objectContaining({ label: "hi" }),
     );
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
-  test("adds the button as a message part when there are no actions and no loadBoard", () => {
+  test("adds the button as a message part when there are no actions or target board", () => {
     const message = createMessageStub([]);
     const { activateButton } = setup({ message });
 
@@ -252,8 +252,8 @@ describe("createButtonActivator", () => {
       actions: [],
     });
 
-    expect(playback.playPart).toHaveBeenCalledTimes(1);
-    expect(playback.playPart).toHaveBeenCalledWith(
+    expect(playback.playTileFeedback).toHaveBeenCalledTimes(1);
+    expect(playback.playTileFeedback).toHaveBeenCalledWith(
       expect.objectContaining({ label: "bell", soundSrc: "bell.mp3" }),
     );
   });
@@ -268,7 +268,7 @@ describe("createButtonActivator", () => {
       actions: [],
     });
 
-    expect(playback.playPart).toHaveBeenCalledWith(
+    expect(playback.playTileFeedback).toHaveBeenCalledWith(
       expect.objectContaining({ label: "I", vocalization: "Hello" }),
     );
   });
@@ -279,6 +279,6 @@ describe("createButtonActivator", () => {
     activateButton({ id: "btn", label: "", actions: [] });
 
     expect(message.setParts).toHaveBeenCalledTimes(1);
-    expect(playback.playPart).toHaveBeenCalledTimes(1);
+    expect(playback.playTileFeedback).toHaveBeenCalledTimes(1);
   });
 });

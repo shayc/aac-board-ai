@@ -16,7 +16,7 @@ interface ActivationMessage {
 
 interface ActivationPlayback {
   playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
-  playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
+  playTileFeedback: (part: MessagePart) => Promise<PlaybackOutcome>;
 }
 
 interface ActivationNavigation {
@@ -38,8 +38,8 @@ export function createButtonActivator({
   navigation,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
-    if (button.loadBoard) {
-      navigation.goToBoard(button.loadBoard.id);
+    if (button.targetBoardId) {
+      navigation.goToBoard(button.targetBoardId);
       return;
     }
 
@@ -52,7 +52,7 @@ export function createButtonActivator({
       });
 
       message.setParts([...message.parts, part]);
-      void playback.playPart(part);
+      void playback.playTileFeedback(part);
       return;
     }
 
