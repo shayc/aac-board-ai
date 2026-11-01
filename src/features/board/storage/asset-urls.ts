@@ -2,8 +2,9 @@ import { getAssetBlob } from "./board-content-storage";
 import { normalizeAssetPath } from "./boards-db";
 
 // Stored assets are immutable, so a URL stays correct for as long as its board
-// set exists. Message parts rely on this to outlive the board they came from.
-// Replacing an asset at the same path would need its URL released first.
+// set exists. Message parts rely on this to keep their media after leaving the
+// board they came from. Replacing an asset at the same path would need its URL
+// revoked first.
 const urlsBySetId = new Map<string, Map<string, string>>();
 
 export async function getAssetUrl(
@@ -24,29 +25,29 @@ export async function getAssetUrl(
   return cacheAssetUrl(setId, assetPath, blob);
 }
 
-function cacheAssetUrl(setId: string, path: string, blob: Blob): string {
-  const urls = urlsBySetId.get(setId) ?? new Map<string, string>();
-  urlsBySetId.set(setId, urls);
+function cacheAssetUrl(setId: string, assetPath: string, blob: Blob): string {
+  const urlsByPath = urlsBySetId.get(setId) ?? new Map<string, string>();
+  urlsBySetId.set(setId, urlsByPath);
 
   // A concurrent load of the same asset may have finished during the read.
-  const existingUrl = urls.get(path);
+  const existingUrl = urlsByPath.get(assetPath);
   if (existingUrl) {
     return existingUrl;
   }
 
   const url = URL.createObjectURL(blob);
-  urls.set(path, url);
+  urlsByPath.set(assetPath, url);
 
   return url;
 }
 
-export function releaseAssetUrlsExcept(setIds: ReadonlySet<string>): void {
-  for (const [setId, urls] of urlsBySetId) {
+export function revokeAssetUrlsExcept(setIds: ReadonlySet<string>): void {
+  for (const [setId, urlsByPath] of urlsBySetId) {
     if (setIds.has(setId)) {
       continue;
     }
 
-    for (const url of urls.values()) {
+    for (const url of urlsByPath.values()) {
       URL.revokeObjectURL(url);
     }
 

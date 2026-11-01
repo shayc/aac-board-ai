@@ -80,7 +80,7 @@ State has distinct owners and lifetimes:
 | --------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                      |
 | Active board          | React Router loaders                  | Hydrated, optionally translated `Board` for the current route                |
-| Asset URLs            | `asset-urls.ts`                       | One object URL per stored asset until its board set is deleted               |
+| Asset URLs            | Board storage                         | One object URL per stored asset until its board set is deleted               |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
 | Persisted settings    | `createPersistedStore` + localStorage | Language, speech, board preferences, suggestion instructions, and onboarding |
@@ -128,8 +128,9 @@ translation before rendering, keeping that work out of UI components:
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for
-as long as its board set exists. Message parts can therefore outlive the board
-they came from. A catalog refresh revokes the URLs of deleted board sets.
+as long as its board set exists. Message parts keep their media after leaving
+the board they came from. A catalog refresh revokes the URLs of deleted board
+sets.
 
 ### Activate a tile
 

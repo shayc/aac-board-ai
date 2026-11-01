@@ -30,7 +30,7 @@ async function renderApp(initialEntry = "/") {
   return { router, screen };
 }
 
-function seedRecordedWordSet() {
+function seedRecordedAudioSet() {
   const soundPath = "sounds/hello.wav";
 
   return seedBoardSets([
@@ -96,8 +96,8 @@ describe("app flow", () => {
     });
   });
 
-  test("a recorded word stays playable after its board is left", async () => {
-    await seedRecordedWordSet();
+  test("recorded audio stays playable after leaving its board", async () => {
+    await seedRecordedAudioSet();
 
     const { screen } = await renderApp();
 

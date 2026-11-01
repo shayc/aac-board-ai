@@ -62,7 +62,7 @@ describe("asset URLs", () => {
     await expect(getAssetUrl(SET_ID, "missing.txt")).resolves.toBeUndefined();
   });
 
-  test("releases URLs when their board set is deleted", async () => {
+  test("revokes URLs when their board set is deleted", async () => {
     await seedAsset("hello");
     const url = await requireAssetUrl(SET_ID);
 
