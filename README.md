@@ -36,15 +36,15 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Privacy
 
-No accounts, backend, or tracking. Boards, messages, and settings stay on the device.
+No accounts, backend, or tracking. Boards and settings are stored on the device. URL imports, remote media, and some speech voices use the network.
 
 ## Limitations
 
-Boards can be imported and stored, but not edited, exported, or synced across devices. To create a custom board, use an Open Board Format-compatible tool and import it on each device.
+Boards can be imported and stored, but not edited, exported, or synced across devices. Create custom boards in an Open Board Format-compatible tool, then import them on each device.
 
 ## Enable suggestions
 
-To use suggestions in Chrome or Edge for desktop, enable the following experimental browser flags:
+To use suggestions on desktop, enable the following experimental flags for your browser:
 
 **Google Chrome**
 
@@ -53,7 +53,7 @@ chrome://flags/#proofreader-api
 chrome://flags/#rewriter-api
 ```
 
-**Microsoft Edge**
+**Microsoft Edge Canary or Dev**
 
 ```text
 edge://flags/#edge-proofreader-api
@@ -78,15 +78,22 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-Tests run in Chromium; install Playwright with `npx playwright install --with-deps`, then run `npm test`.
+To run tests in Chromium, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
 ## Architecture
 
-See [docs/architecture.md](docs/architecture.md) for the stack, module boundaries, storage model, and accessibility invariants.
+Built with React 19, TypeScript, Vite, and MUI.
+
+- IndexedDB stores boards and assets; a service worker caches the app for offline use
+- Behavior and accessibility tests run in Chromium with Vitest and axe-core. CI uses Playwright to verify that stored boards reopen offline
+
+The app uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) to parse OBF/OBZ files and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) to manage browser AI availability and sessions.
+
+See [docs/architecture.md](docs/architecture.md) for design decisions, data flow, and accessibility invariants.
 
 ## Contributing
 
-Bug reports and feedback are welcome. With a single maintainer, the project currently has limited capacity for code contributions.
+Bug reports and feedback are welcome. The project has a single maintainer and limited capacity for code contributions.
 
 ## License
 
