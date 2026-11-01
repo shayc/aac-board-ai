@@ -28,7 +28,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Core features
 
-- Quick Core 24 starter board with linked vocabulary
+- Quick Core 24 starter board set
 - Touch and keyboard navigation
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages, including right-to-left layouts
@@ -84,8 +84,8 @@ To run tests in Chromium, install Playwright with `npx playwright install --with
 
 Built with React 19, TypeScript, Vite, and MUI.
 
-- IndexedDB stores boards and assets; a service worker caches the app for offline use
-- Behavior and accessibility tests run in Chromium with Vitest and axe-core. CI uses Playwright to verify that stored boards reopen offline
+- IndexedDB stores boards and assets; a service worker caches the app shell for offline use
+- Behavior and accessibility tests run in Chromium with Vitest and axe-core; Playwright verifies offline board loading in CI
 
 The app uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) to parse OBF/OBZ files and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) to manage browser AI availability and sessions.
 
