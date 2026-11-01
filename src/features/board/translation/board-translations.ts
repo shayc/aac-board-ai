@@ -36,16 +36,19 @@ export function applyTranslations(
   board: Board,
   translations: PhraseTranslations,
 ): Board {
-  const lookup = (phrase: string | undefined) =>
-    phrase ? (translations[phrase] ?? phrase) : phrase;
+  function translatePhrase(phrase: string | undefined) {
+    const translated = phrase ? (translations[phrase] ?? phrase) : phrase;
+
+    return normalizeBoardText(translated);
+  }
 
   return {
     ...board,
-    name: normalizeBoardText(lookup(board.name)) ?? "",
+    name: translatePhrase(board.name) ?? "",
     buttons: board.buttons.map((button) => ({
       ...button,
-      label: normalizeBoardText(lookup(button.label)) ?? "",
-      vocalization: normalizeBoardText(lookup(button.vocalization)),
+      label: translatePhrase(button.label) ?? "",
+      vocalization: translatePhrase(button.vocalization),
     })),
   };
 }

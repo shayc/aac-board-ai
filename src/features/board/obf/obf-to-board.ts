@@ -22,7 +22,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
   const imageSourceById = buildMediaSourceMap(obfBoard.images);
   const soundSourceById = buildMediaSourceMap(obfBoard.sounds);
 
-  const board: Board = {
+  return {
     id: obfBoard.id,
     name: normalizeBoardText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
@@ -32,8 +32,6 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
     grid: transformGrid(obfBoard.grid),
     translations: transformTranslations(obfBoard.strings),
   };
-
-  return board;
 }
 
 function buildMediaSourceMap(

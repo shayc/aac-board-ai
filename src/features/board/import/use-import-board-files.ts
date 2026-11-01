@@ -46,13 +46,12 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     } catch (error) {
       const isTooLarge =
         error instanceof OBFError && error.info.code === "archive-too-large";
+      const errorMessage = isTooLarge
+        ? m.libraryImportTooLargeBoardFiles
+        : m.libraryImportFailedBoardFiles;
 
       showSnackbar({
-        message: isTooLarge
-          ? (translate) =>
-              translate(m.libraryImportTooLargeBoardFiles, { count })
-          : (translate) =>
-              translate(m.libraryImportFailedBoardFiles, { count }),
+        message: (translate) => translate(errorMessage, { count }),
         severity: "error",
       });
 

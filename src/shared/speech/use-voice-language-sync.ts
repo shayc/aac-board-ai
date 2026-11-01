@@ -16,11 +16,13 @@ import {
  */
 function getPreferredRegion(language: string): string | undefined {
   for (const tag of navigator.languages) {
-    if (getLanguageCode(tag) === language) {
-      const region = getRegionCode(tag);
-      if (region) {
-        return region;
-      }
+    if (getLanguageCode(tag) !== language) {
+      continue;
+    }
+
+    const region = getRegionCode(tag);
+    if (region) {
+      return region;
     }
   }
 

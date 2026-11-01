@@ -1,29 +1,14 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   getAssetBlob,
   getBoard,
   listBoards,
   updateBoardStrings,
 } from "./board-content-storage";
-import { createBoardSet, type BoardSetCreateInput } from "./board-set-storage";
+import { createBoardSet } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
-
-function makeBoardSetInput(
-  overrides: Partial<BoardSetCreateInput> = {},
-): BoardSetCreateInput {
-  const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
-
-  return {
-    id: "set-1",
-    name: "Set",
-    rootBoardId: boards[0]?.id ?? "root-1",
-    boards,
-    assets: [],
-    ...overrides,
-  };
-}
 
 beforeEach(async () => {
   await resetBoardsDB();

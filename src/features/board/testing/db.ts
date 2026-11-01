@@ -27,6 +27,21 @@ export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   };
 }
 
+export function makeBoardSetInput(
+  overrides: Partial<BoardSetCreateInput> = {},
+): BoardSetCreateInput {
+  const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
+
+  return {
+    id: "set-1",
+    name: "Set",
+    rootBoardId: boards[0]?.id ?? "root-1",
+    boards,
+    assets: [],
+    ...overrides,
+  };
+}
+
 async function clearBoardsDB(): Promise<void> {
   const db = await getBoardsDB();
   const tx = db.transaction(STORE_NAMES, "readwrite");

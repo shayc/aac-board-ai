@@ -7,7 +7,7 @@ export function selectSuggestionPhrases(
   const seen = new Set<string>([normalize(text)]);
 
   return candidates.filter((candidate): candidate is string => {
-    if (!candidate || !isClean(candidate)) {
+    if (!candidate || hasSuggestionArtifacts(candidate)) {
       return false;
     }
 
@@ -22,8 +22,8 @@ export function selectSuggestionPhrases(
   });
 }
 
-function isClean(phrase: string): boolean {
-  return !UNDERSCORED_WORD.test(phrase) && !phrase.includes('"');
+function hasSuggestionArtifacts(phrase: string): boolean {
+  return UNDERSCORED_WORD.test(phrase) || phrase.includes('"');
 }
 
 function normalize(phrase: string): string {

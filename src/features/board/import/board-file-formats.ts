@@ -7,7 +7,7 @@ export const BOARD_FILE_ACCEPT = [
   "application/octet-stream",
 ].join(",");
 
-export function isBoardFile(file: File): boolean {
+export function hasBoardFileExtension(file: File): boolean {
   const name = file.name.toLowerCase();
   return BOARD_FILE_EXTENSIONS.some((extension) => name.endsWith(extension));
 }

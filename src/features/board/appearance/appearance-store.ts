@@ -1,4 +1,5 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
+import { parseClampedNumber } from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
 
 export interface BoardAppearanceConfig {
@@ -18,14 +19,9 @@ export function parseBoardAppearanceConfig(
   raw: unknown,
 ): BoardAppearanceConfig {
   const parsed = (raw ?? {}) as Record<string, unknown>;
-  const { min, max, fallback } = TILE_SATURATION;
 
   return {
-    tileSaturation:
-      typeof parsed.tileSaturation === "number" &&
-      Number.isFinite(parsed.tileSaturation)
-        ? Math.min(Math.max(parsed.tileSaturation, min), max)
-        : fallback,
+    tileSaturation: parseClampedNumber(parsed.tileSaturation, TILE_SATURATION),
     areTileBordersVisible:
       typeof parsed.areTileBordersVisible === "boolean"
         ? parsed.areTileBordersVisible

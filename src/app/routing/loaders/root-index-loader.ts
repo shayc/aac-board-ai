@@ -16,16 +16,16 @@ async function importFromBoardUrl(
   signal: AbortSignal,
 ): Promise<Response> {
   try {
-    return redirect(
-      rootBoardPath(await importBoardSetFromUrl(boardUrl, signal)),
-    );
+    const importedBoardSet = await importBoardSetFromUrl(boardUrl, signal);
+
+    return redirect(rootBoardPath(importedBoardSet));
   } catch {
     signal.throwIfAborted();
-    throw importFailed();
+    throw createImportFailure();
   }
 }
 
-function importFailed() {
+function createImportFailure() {
   return data(createRouteErrorPayload(routeErrorCodes.boardUrlImportFailed), {
     status: 400,
   });
@@ -45,9 +45,10 @@ export async function rootIndexLoader({
     return redirect(rootBoardPath(boardSet));
   }
 
-  return redirect(
-    rootBoardPath(
-      await importBoardSetFromUrl(DEFAULT_BOARD_URL, request.signal),
-    ),
+  const importedBoardSet = await importBoardSetFromUrl(
+    DEFAULT_BOARD_URL,
+    request.signal,
   );
+
+  return redirect(rootBoardPath(importedBoardSet));
 }

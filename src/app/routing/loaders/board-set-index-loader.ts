@@ -10,9 +10,7 @@ export async function boardSetIndexLoader({
   try {
     boardSet = setId ? await getBoardSet(setId) : undefined;
   } catch (error) {
-    if (error instanceof InvalidIdError) {
-      boardSet = undefined;
-    } else {
+    if (!(error instanceof InvalidIdError)) {
       throw error;
     }
   }
