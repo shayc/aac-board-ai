@@ -92,8 +92,14 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
       }
 
       return signal.aborted ? "interrupted" : "completed";
-    } catch {
-      return signal.aborted ? "interrupted" : "failed";
+    } catch (error) {
+      if (signal.aborted) {
+        return "interrupted";
+      }
+
+      console.error("Unexpected playback failure", error);
+
+      return "failed";
     } finally {
       if (currentSession === session) {
         currentSession = null;
