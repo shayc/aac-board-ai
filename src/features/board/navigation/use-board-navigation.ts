@@ -13,19 +13,12 @@ export interface UseBoardNavigationReturn {
   goHome: () => void;
 }
 
-const MAX_BACK_STACK = 50;
-
-function readBackStack(state: unknown): string[] {
-  if (
-    state !== null &&
-    typeof state === "object" &&
-    "backStack" in state &&
-    Array.isArray(state.backStack)
-  ) {
-    return state.backStack.filter((id) => typeof id === "string");
+function readCanGoBack(state: unknown): boolean {
+  if (state === null || typeof state !== "object") {
+    return false;
   }
 
-  return [];
+  return "canGoBack" in state && state.canGoBack === true;
 }
 
 export function useBoardNavigation(): UseBoardNavigationReturn {
@@ -39,9 +32,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
     (boardSet) => boardSet.id === setId,
   )?.rootBoardId;
 
-  const backStack = readBackStack(location.state);
-
-  const canGoBack = backStack.length > 0;
+  const canGoBack = readCanGoBack(location.state);
   const canGoHome = Boolean(rootBoardId);
   const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
@@ -51,7 +42,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
     }
 
     void navigate(boardPath({ setId, boardId: targetBoardId }), {
-      state: { backStack: [...backStack, boardId].slice(-MAX_BACK_STACK) },
+      state: { canGoBack: true },
     });
   }
 
@@ -69,7 +60,7 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
     }
 
     void navigate(rootBoardPath({ id: setId, rootBoardId }), {
-      state: { backStack: [] },
+      state: { canGoBack: false },
       replace: true,
     });
   }
