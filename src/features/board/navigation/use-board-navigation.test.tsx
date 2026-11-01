@@ -73,30 +73,13 @@ describe("useBoardNavigation", () => {
     test.each([
       null,
       "history",
+      {},
       { canGoBack: "true" },
-      { canGoBack: false, backStack: ["board-1"] },
-      { backStack: "board-1" },
-      { backStack: [null, 1] },
+      { canGoBack: false },
     ])("ignores disabled or malformed history state %j", async (state) => {
       const { result } = await setup(DEFAULT_PATH, state);
 
       expect(result.current.nav.canGoBack).toBe(false);
-    });
-
-    test("accepts board history created before the flag was introduced", async () => {
-      const { result, act } = await setup(DEFAULT_PATH, {
-        backStack: ["root-1"],
-      });
-
-      expect(result.current.nav.canGoBack).toBe(true);
-
-      await act(() => result.current.nav.goToBoard("board-2"));
-
-      expect(result.current.location.state).toEqual({ canGoBack: true });
-      await act(() => result.current.nav.goBack());
-
-      expect(result.current.location.pathname).toBe(DEFAULT_PATH);
-      expect(result.current.nav.canGoBack).toBe(true);
     });
   });
 

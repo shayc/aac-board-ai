@@ -18,16 +18,7 @@ function readCanGoBack(state: unknown): boolean {
     return false;
   }
 
-  if ("canGoBack" in state) {
-    return state.canGoBack === true;
-  }
-
-  // Browser history can retain entries written before an app update.
-  return (
-    "backStack" in state &&
-    Array.isArray(state.backStack) &&
-    state.backStack.some((id) => typeof id === "string")
-  );
+  return "canGoBack" in state && state.canGoBack === true;
 }
 
 export function useBoardNavigation(): UseBoardNavigationReturn {
