@@ -4,8 +4,8 @@ import type { Board } from "../board-types";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
-import { hydrateBoard } from "./board-hydration";
 import { createBoardSet } from "./board-set-storage";
+import { loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";
 const BOARD_ID = "loader-test-board";
@@ -58,13 +58,13 @@ function getImageUrl(board: Board): string {
   return imageUrl;
 }
 
-describe("hydrateBoard", () => {
+describe("loadStoredBoard", () => {
   beforeEach(resetBoardsDB);
 
-  test("returns a hydrated board on the happy path", async () => {
+  test("returns a board with asset URLs on the happy path", async () => {
     await seedTestBoard();
 
-    const board = await hydrateBoard(SET_ID, BOARD_ID);
+    const board = await loadStoredBoard(SET_ID, BOARD_ID);
 
     expect(board.id).toBe(BOARD_ID);
 
@@ -76,8 +76,8 @@ describe("hydrateBoard", () => {
   test("keeps asset URLs usable after another board loads", async () => {
     await seedTestBoard();
 
-    const url = getImageUrl(await hydrateBoard(SET_ID, BOARD_ID));
-    await hydrateBoard(SET_ID, OTHER_BOARD_ID);
+    const url = getImageUrl(await loadStoredBoard(SET_ID, BOARD_ID));
+    await loadStoredBoard(SET_ID, OTHER_BOARD_ID);
 
     expect(await isObjectUrlAlive(url)).toBe(true);
   });
@@ -85,8 +85,8 @@ describe("hydrateBoard", () => {
   test("reuses asset URLs when a board loads again", async () => {
     await seedTestBoard();
 
-    const first = await hydrateBoard(SET_ID, BOARD_ID);
-    const second = await hydrateBoard(SET_ID, BOARD_ID);
+    const first = await loadStoredBoard(SET_ID, BOARD_ID);
+    const second = await loadStoredBoard(SET_ID, BOARD_ID);
 
     expect(getImageUrl(second)).toBe(getImageUrl(first));
   });
@@ -94,11 +94,11 @@ describe("hydrateBoard", () => {
   test("rejects a missing board and remains usable for a later load", async () => {
     await seedTestBoard();
 
-    await expect(hydrateBoard(SET_ID, "missing-board")).rejects.toBeInstanceOf(
-      BoardNotFoundError,
-    );
+    await expect(
+      loadStoredBoard(SET_ID, "missing-board"),
+    ).rejects.toBeInstanceOf(BoardNotFoundError);
 
-    const board = await hydrateBoard(SET_ID, BOARD_ID);
+    const board = await loadStoredBoard(SET_ID, BOARD_ID);
 
     expect(await isObjectUrlAlive(getImageUrl(board))).toBe(true);
   });
@@ -106,12 +106,12 @@ describe("hydrateBoard", () => {
   test("an aborted load does not disturb a loaded board", async () => {
     await seedTestBoard();
 
-    const url = getImageUrl(await hydrateBoard(SET_ID, BOARD_ID));
+    const url = getImageUrl(await loadStoredBoard(SET_ID, BOARD_ID));
 
     const aborted = new AbortController();
     aborted.abort();
     await expect(
-      hydrateBoard(SET_ID, BOARD_ID, aborted.signal),
+      loadStoredBoard(SET_ID, BOARD_ID, aborted.signal),
     ).rejects.toMatchObject({ name: "AbortError" });
 
     expect(await isObjectUrlAlive(url)).toBe(true);
