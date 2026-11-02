@@ -37,8 +37,6 @@ function deepen(color: string): string {
   return `oklch(from ${color} 0.42 calc(c * 1.6) h)`;
 }
 
-export const TILE_LENS_ANCHOR = "--tile-lens";
-
 const TILE_RADIUS = 30;
 const TILE_RADIUS_FALLBACK = 16;
 
@@ -119,7 +117,6 @@ export function Tile({
         },
         "&:hover": {
           "@media (hover: hover)": {
-            anchorName: TILE_LENS_ANCHOR,
             backgroundColor:
               resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
           },
@@ -131,13 +128,8 @@ export function Tile({
           boxShadow: TILE_SHADOW_PRESSED_LIGHT,
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          anchorName: TILE_LENS_ANCHOR,
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
-          // The gliding focus lens draws the ring where anchors are supported.
-          "@supports (anchor-name: --a)": {
-            outline: "none",
-          },
         },
         [`&.${buttonClasses.disabled}`]: {
           boxShadow: "none",

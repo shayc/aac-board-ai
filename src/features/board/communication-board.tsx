@@ -23,7 +23,6 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import { TileFocusLens } from "./tile/tile-focus-lens";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -150,7 +149,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           order={board.grid.order}
           renderItem={renderTile}
         />
-        <TileFocusLens />
       </Box>
 
       {isSmallScreen && (
