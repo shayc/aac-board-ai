@@ -4,14 +4,12 @@ import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import { AppHeader } from "@app/shell/app-header";
-import { ContentColumn } from "@app/shell/content-column";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
   useImportBoardFilesOnLaunch,
 } from "@features/board";
 import Box from "@mui/material/Box";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { useState } from "react";
 import { Outlet } from "react-router";
 
@@ -21,33 +19,27 @@ export function AppShell() {
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
 
-  const isPersistentLibrary = useMediaQuery((theme) =>
-    theme.breakpoints.up("md"),
-  );
-  const isLibraryPushingContent = isPersistentLibrary && isLibraryOpen;
-
   useImportBoardFilesOnLaunch();
   useRevalidateOnLanguageChange();
 
   return (
-    <Box {...fileDrop.rootProps} sx={{ display: "flex", height: "100svh" }}>
+    <Box
+      {...fileDrop.rootProps}
+      sx={{ display: "flex", flexDirection: "column", height: "100svh" }}
+    >
+      <AppHeader
+        onOpenLibrary={() => setIsLibraryOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+      />
+
+      <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
+        <Outlet />
+      </Box>
+
       <LibraryDrawer
         open={isLibraryOpen}
         onClose={() => setIsLibraryOpen(false)}
-        variant={isPersistentLibrary ? "persistent" : "temporary"}
       />
-
-      <ContentColumn isShifted={isLibraryPushingContent}>
-        <AppHeader
-          isLibraryButtonVisible={!isLibraryPushingContent}
-          onOpenLibrary={() => setIsLibraryOpen(true)}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-        />
-
-        <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
-          <Outlet />
-        </Box>
-      </ContentColumn>
 
       <SettingsDrawer
         open={isSettingsOpen}

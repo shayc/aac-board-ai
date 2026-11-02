@@ -1,4 +1,4 @@
-import { LIBRARY_DRAWER_WIDTH } from "@app/shell/drawer-width";
+import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
 import { BoardSetLibrary } from "@features/board";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
 import Box from "@mui/material/Box";
@@ -16,35 +16,26 @@ import { useMatches } from "react-router";
 interface LibraryDrawerProps {
   open: boolean;
   onClose: () => void;
-  variant?: "temporary" | "persistent";
 }
 
-export function LibraryDrawer({
-  open,
-  onClose,
-  variant = "temporary",
-}: LibraryDrawerProps) {
+export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
   const t = useTranslate();
 
   const activeMatch = useMatches().find((match) => match.params.boardSetId);
   const activeBoardSetId = activeMatch?.params.boardSetId;
-
-  const closeOnNavigate = variant === "temporary" ? onClose : undefined;
 
   return (
     <Drawer
       open={open}
       onClose={onClose}
       anchor="left"
-      variant={variant}
       slotProps={{
         paper: {
           "aria-label": t(m.libraryTitle),
-          ...(variant === "persistent" && { component: "aside" }),
           sx: {
             display: "flex",
             flexDirection: "column",
-            width: LIBRARY_DRAWER_WIDTH,
+            width: safeAreaGutter(DRAWER_BASE_WIDTH, "left"),
           },
         },
       }}
@@ -85,7 +76,7 @@ export function LibraryDrawer({
       >
         <BoardSetLibrary
           activeBoardSetId={activeBoardSetId}
-          onNavigate={closeOnNavigate}
+          onNavigate={onClose}
         />
       </Box>
     </Drawer>

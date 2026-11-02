@@ -22,7 +22,7 @@ import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {
   activeBoardSetId?: string;
-  onNavigate?: () => void;
+  onNavigate: () => void;
 }
 
 export function BoardSetLibrary({

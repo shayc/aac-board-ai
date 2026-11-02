@@ -12,16 +12,11 @@ import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 
 interface AppHeaderProps {
-  isLibraryButtonVisible?: boolean;
   onOpenLibrary: () => void;
   onOpenSettings: () => void;
 }
 
-export function AppHeader({
-  isLibraryButtonVisible = true,
-  onOpenLibrary,
-  onOpenSettings,
-}: AppHeaderProps) {
+export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
 
   return (
@@ -48,19 +43,17 @@ export function AppHeader({
             gap: 2,
           }}
         >
-          {isLibraryButtonVisible && (
-            <Tooltip title={t(m.libraryOpen)}>
-              <IconButton
-                aria-label={t(m.libraryOpen)}
-                size="large"
-                edge="start"
-                color="inherit"
-                onClick={onOpenLibrary}
-              >
-                <ViewSidebarOutlinedIcon sx={flipForLtr} />
-              </IconButton>
-            </Tooltip>
-          )}
+          <Tooltip title={t(m.libraryOpen)}>
+            <IconButton
+              aria-label={t(m.libraryOpen)}
+              size="large"
+              edge="start"
+              color="inherit"
+              onClick={onOpenLibrary}
+            >
+              <ViewSidebarOutlinedIcon sx={flipForLtr} />
+            </IconButton>
+          </Tooltip>
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
