@@ -5,6 +5,13 @@ import { EDIT_DARK, EDIT_LIGHT } from "@shared/theme/theme-colors";
 // Quiet chrome for back, home and backspace, so the grid and the speak button
 // stay the loudest things on screen. Same flat surface + hairline as the
 // message bar.
+// MUI's hover strength, as a solid color so it transitions like other buttons.
+function hoverTint(theme: Theme, color: string): string {
+  const palette = (theme.vars ?? theme).palette;
+
+  return `color-mix(in srgb, ${palette.text.primary} calc(${palette.action.hoverOpacity} * 100%), ${color})`;
+}
+
 export function controlButtonSx(theme: Theme) {
   const palette = (theme.vars ?? theme).palette;
   const hairline = `inset 0 0 0 1px ${palette.divider}`;
@@ -19,8 +26,7 @@ export function controlButtonSx(theme: Theme) {
       boxShadow: hairline,
     },
     "&:hover": {
-      backgroundColor: palette.background.paper,
-      backgroundImage: `linear-gradient(${palette.action.hover}, ${palette.action.hover})`,
+      backgroundColor: hoverTint(theme, palette.background.paper),
     },
     [`&.${buttonClasses.disabled}`]: {
       backgroundColor: "transparent",
@@ -37,7 +43,7 @@ export function backspaceAccentSx(theme: Theme) {
       color: EDIT_LIGHT.ink,
       backgroundColor: EDIT_LIGHT.fill,
       "&:hover": {
-        backgroundColor: EDIT_LIGHT.fill,
+        backgroundColor: hoverTint(theme, EDIT_LIGHT.fill),
       },
     },
     ...theme.applyStyles("dark", {
@@ -45,7 +51,7 @@ export function backspaceAccentSx(theme: Theme) {
         color: EDIT_DARK.ink,
         backgroundColor: EDIT_DARK.fill,
         "&:hover": {
-          backgroundColor: EDIT_DARK.fill,
+          backgroundColor: hoverTint(theme, EDIT_DARK.fill),
         },
       },
     }),
