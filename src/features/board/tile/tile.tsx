@@ -44,9 +44,12 @@ const TILE_BORDER_WIDTH = 4;
 // draws the same outline shrunk inward, for the fill inside a visible border.
 function folderShape(inset: number): string {
   const radius = 18 - inset;
-  const step = 10 - inset;
+  // The frame's padding already moves the inset shape down by `inset`, so the
+  // step below the tab keeps the same local height to leave a full border.
+  const step = 10;
+  const tabEnd = `calc(42% + ${4 + inset / 2}px)`;
 
-  return `shape(from 0 ${radius}px, curve to ${radius}px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) ${step}px with 42% 0, hline to calc(100% - ${radius}px), curve to 100% ${step + radius}px with 100% ${step}px, vline to calc(100% - ${radius}px), curve to calc(100% - ${radius}px) 100% with 100% 100%, hline to ${radius}px, curve to 0 calc(100% - ${radius}px) with 0 100%, close)`;
+  return `shape(from 0 ${radius}px, curve to ${radius}px 0 with 0 0, hline to calc(42% - 12px), curve to ${tabEnd} ${step}px with 42% 0, hline to calc(100% - ${radius}px), curve to 100% ${step + radius}px with 100% ${step}px, vline to calc(100% - ${radius}px), curve to calc(100% - ${radius}px) 100% with 100% 100%, hline to ${radius}px, curve to 0 calc(100% - ${radius}px) with 0 100%, close)`;
 }
 
 const SUPPORTS_SHAPE = "@supports (clip-path: shape(from 0 0, line to 1px 0))";
