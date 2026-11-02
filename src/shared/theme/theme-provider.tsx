@@ -152,10 +152,11 @@ const themeOptions = {
                   "--variant-outlinedBg": "transparent",
                 },
                 ...theme.applyStyles("light", {
-                  [`&:not(.${buttonClasses.disabled})`]: {
-                    borderColor: "transparent",
-                    boxShadow: (theme.vars ?? theme).shadows[1],
-                  },
+                  [`&:not(.${buttonClasses.disabled}, .${buttonGroupClasses.grouped})`]:
+                    {
+                      borderColor: "transparent",
+                      boxShadow: (theme.vars ?? theme).shadows[1],
+                    },
                 }),
               },
             },
@@ -184,7 +185,6 @@ const themeOptions = {
               boxShadow: (theme.vars ?? theme).shadows[1],
               [`& .${buttonGroupClasses.grouped}`]: {
                 borderColor: "transparent",
-                boxShadow: "none",
               },
               [`& .${buttonGroupClasses.lastButton}`]: {
                 borderLeftColor: palette.divider,
