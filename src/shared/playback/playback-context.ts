@@ -15,7 +15,7 @@ export type PlaybackStep =
     };
 
 export interface PlaybackRequest {
-  source: string;
+  owner: string;
   steps: readonly PlaybackStep[];
 }
 
@@ -23,7 +23,7 @@ export type PlaybackState =
   | { status: "idle" }
   | {
       status: "playing";
-      source: string;
+      owner: string;
       activeTrackingKey: string | null;
     };
 

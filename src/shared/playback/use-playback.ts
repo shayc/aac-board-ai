@@ -11,7 +11,7 @@ export function usePlayback(): PlaybackController {
   return context;
 }
 
-export function useIsPlaybackActive(source?: string): boolean {
+export function useIsPlaybackActive(owner?: string): boolean {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
@@ -19,12 +19,12 @@ export function useIsPlaybackActive(source?: string): boolean {
 
     return (
       state.status === "playing" &&
-      (source === undefined || state.source === source)
+      (owner === undefined || state.owner === owner)
     );
   });
 }
 
-export function useActivePlaybackTrackingKey(source?: string): string | null {
+export function useActiveTrackingKey(owner?: string): string | null {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
@@ -32,7 +32,7 @@ export function useActivePlaybackTrackingKey(source?: string): string | null {
 
     if (
       state.status !== "playing" ||
-      (source !== undefined && state.source !== source)
+      (owner !== undefined && state.owner !== owner)
     ) {
       return null;
     }

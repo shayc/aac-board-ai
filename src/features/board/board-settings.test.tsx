@@ -111,7 +111,7 @@ describe("BoardSettings", () => {
 
     await expect.element(highlightSwitch).toBeChecked();
     await vi.waitFor(() =>
-      expect(localStorage.getItem("board-playback")).toBe(
+      expect(localStorage.getItem("playback-preferences")).toBe(
         JSON.stringify({ isPartHighlightingEnabled: true }),
       ),
     );
@@ -133,7 +133,7 @@ describe("BoardSettings", () => {
     await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-appearance");
+      const stored = localStorage.getItem("appearance-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         areTileBordersVisible: boolean;
@@ -163,7 +163,7 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-appearance");
+      const stored = localStorage.getItem("appearance-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileSaturation: number;
@@ -201,7 +201,7 @@ describe("BoardSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-appearance");
+      const stored = localStorage.getItem("appearance-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileLabelPlacement: string;

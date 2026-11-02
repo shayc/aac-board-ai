@@ -3,7 +3,7 @@ import {
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { getBoard } from "../storage/board-content-storage";
+import { getBoardRecord } from "../storage/board-content-storage";
 import { createBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import type { Board } from "../board-types";
@@ -104,7 +104,7 @@ describe("resolveBoardForLanguage", () => {
     };
 
     await expect
-      .poll(async () => (await getBoard("set-1", "board-1"))?.obf.strings)
+      .poll(async () => (await getBoardRecord("set-1", "board-1"))?.obf.strings)
       .toEqual(persistedStrings);
   });
 

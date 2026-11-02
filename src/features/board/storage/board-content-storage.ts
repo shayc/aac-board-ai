@@ -14,7 +14,7 @@ export class BoardNotFoundError extends Error {
   }
 }
 
-export async function getBoard(
+export async function getBoardRecord(
   setId: string,
   boardId: string,
 ): Promise<BoardRecord | undefined> {
@@ -25,7 +25,7 @@ export async function getBoard(
   return db.get("boards", [setId, boardId]);
 }
 
-export async function listBoards(setId: string): Promise<BoardRecord[]> {
+export async function listBoardRecords(setId: string): Promise<BoardRecord[]> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
 

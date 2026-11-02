@@ -9,7 +9,7 @@ interface TileProps {
   variant?: "folder";
   backgroundColor?: string;
   borderColor?: string;
-  borderHidden?: boolean;
+  isBorderVisible?: boolean;
   onActivate: () => void;
 }
 
@@ -29,7 +29,7 @@ export function Tile({
   variant,
   backgroundColor,
   borderColor,
-  borderHidden,
+  isBorderVisible = true,
   onActivate,
 }: TileProps) {
   const resolvedBorderColor = borderColor ?? backgroundColor;
@@ -58,7 +58,7 @@ export function Tile({
           ? `contrast-color(${resolvedBackgroundColor})`
           : "inherit",
         border: `4px solid ${
-          !borderHidden && resolvedBorderColor
+          isBorderVisible && resolvedBorderColor
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,

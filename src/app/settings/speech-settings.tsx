@@ -94,7 +94,7 @@ export function SpeechSettings() {
 
   function handlePreviewSpeech() {
     void playback.play({
-      source: "speech-preview",
+      owner: "speech-preview",
       steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
     });
   }

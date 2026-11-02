@@ -25,7 +25,7 @@ describe("BoardSetList", () => {
         activeSetId="a"
         onNavigate={vi.fn()}
         onShowDetails={vi.fn()}
-        onDelete={vi.fn()}
+        onRequestDelete={vi.fn()}
       />,
     );
 
@@ -49,7 +49,7 @@ describe("BoardSetList", () => {
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onNavigate={onNavigate}
         onShowDetails={vi.fn()}
-        onDelete={vi.fn()}
+        onRequestDelete={vi.fn()}
       />,
     );
 
@@ -64,7 +64,7 @@ describe("BoardSetList", () => {
       makeBoardSet({ id: "animals", name: "Animals" }),
     ];
     const onShowDetails = vi.fn();
-    const onDelete = vi.fn();
+    const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <>
         {boardSets.map((boardSet) => (
@@ -73,7 +73,7 @@ describe("BoardSetList", () => {
             boardSets={[boardSet]}
             onNavigate={vi.fn()}
             onShowDetails={onShowDetails}
-            onDelete={onDelete}
+            onRequestDelete={onRequestDelete}
           />
         ))}
       </>,
@@ -115,18 +115,18 @@ describe("BoardSetList", () => {
 
     expect(new Set(menuIds).size).toBe(2);
     expect(onShowDetails).toHaveBeenCalledTimes(2);
-    expect(onDelete).not.toHaveBeenCalled();
+    expect(onRequestDelete).not.toHaveBeenCalled();
   });
 
-  test("routes the menu's Delete to onDelete", async () => {
+  test("routes the menu's Delete to onRequestDelete", async () => {
     const onShowDetails = vi.fn();
-    const onDelete = vi.fn();
+    const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
         onNavigate={vi.fn()}
         onShowDetails={onShowDetails}
-        onDelete={onDelete}
+        onRequestDelete={onRequestDelete}
       />,
     );
 
@@ -135,8 +135,10 @@ describe("BoardSetList", () => {
       .click();
     await screen.getByRole("menuitem", { name: "Delete" }).click();
 
-    expect(onDelete).toHaveBeenCalledOnce();
-    expect(onDelete.mock.calls[0][0]).toMatchObject({ name: "Core Words" });
+    expect(onRequestDelete).toHaveBeenCalledOnce();
+    expect(onRequestDelete.mock.calls[0][0]).toMatchObject({
+      name: "Core Words",
+    });
     expect(onShowDetails).not.toHaveBeenCalled();
   });
 });

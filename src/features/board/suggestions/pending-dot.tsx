@@ -3,12 +3,15 @@ import { orange } from "@mui/material/colors";
 import Fade from "@mui/material/Fade";
 
 interface PendingDotProps {
-  show: boolean;
+  isVisible: boolean;
 }
 
-export function PendingDot({ show }: PendingDotProps) {
+export function PendingDot({ isVisible }: PendingDotProps) {
   return (
-    <Fade in={show} style={{ transitionDelay: show ? "300ms" : "0ms" }}>
+    <Fade
+      in={isVisible}
+      style={{ transitionDelay: isVisible ? "300ms" : "0ms" }}
+    >
       <Box
         sx={{
           flexShrink: 0,

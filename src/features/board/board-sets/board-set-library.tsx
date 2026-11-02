@@ -114,7 +114,7 @@ export function BoardSetLibrary({
         boardSets={boardSets}
         activeSetId={activeSetId}
         onNavigate={onNavigate}
-        onDelete={setDeleteTarget}
+        onRequestDelete={setDeleteTarget}
         onShowDetails={setDetailsTarget}
       />
 

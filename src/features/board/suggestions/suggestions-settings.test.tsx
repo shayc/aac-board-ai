@@ -78,7 +78,7 @@ describe("SuggestionSettings", () => {
       .element(instructions)
       .toHaveValue("Prefer short, everyday words");
     await vi.waitFor(() =>
-      expect(localStorage.getItem("board-suggestions")).toBe(
+      expect(localStorage.getItem("suggestion-preferences")).toBe(
         JSON.stringify({ customInstructions: "Prefer short, everyday words" }),
       ),
     );

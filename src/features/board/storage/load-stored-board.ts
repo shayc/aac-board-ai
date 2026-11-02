@@ -2,7 +2,7 @@ import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../board-types";
 import { getAssetUrl } from "./asset-urls";
-import { BoardNotFoundError, getBoard } from "./board-content-storage";
+import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
 
 export async function loadStoredBoard(
   setId: string,
@@ -21,7 +21,7 @@ export async function loadStoredBoard(
 }
 
 async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
-  const record = await getBoard(setId, boardId);
+  const record = await getBoardRecord(setId, boardId);
   if (!record) {
     throw new BoardNotFoundError(setId, boardId);
   }

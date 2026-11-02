@@ -8,7 +8,7 @@ import {
 } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoardSets } from "../board-sets/board-sets-store";
-import { getAssetBlob, getBoard } from "../storage/board-content-storage";
+import { getAssetBlob, getBoardRecord } from "../storage/board-content-storage";
 import { listBoardSets } from "../storage/board-set-storage";
 import {
   countStoredBoardContent,
@@ -63,7 +63,7 @@ describe("importBoardSets", () => {
       gridColumns: board.grid.columns,
     });
 
-    const storedBoard = await getBoard(IMPORTED_SET_ID, board.id);
+    const storedBoard = await getBoardRecord(IMPORTED_SET_ID, board.id);
     assertDefined(storedBoard);
 
     expect(storedBoard.name).toBe(board.name ?? board.id);
@@ -110,7 +110,7 @@ describe("importBoardSets", () => {
     expect(counts.boardCount).toBe(archive.boards.size);
     expect(counts.assetCount).toBe(assetEntries.length);
 
-    const storedRootBoard = await getBoard(IMPORTED_SET_ID, rootBoardId);
+    const storedRootBoard = await getBoardRecord(IMPORTED_SET_ID, rootBoardId);
     assertDefined(storedRootBoard);
 
     const boardLinks = storedRootBoard.obf.buttons.flatMap((button) =>
@@ -134,7 +134,7 @@ describe("importBoardSets", () => {
 
       expect(link.id).toBe(expectedChildBoardId);
 
-      const storedChildBoard = await getBoard(
+      const storedChildBoard = await getBoardRecord(
         IMPORTED_SET_ID,
         expectedChildBoardId,
       );
@@ -220,7 +220,7 @@ describe("importBoardSets", () => {
     const [result] = await importBoardSets(collidingFile);
 
     expect(result.id).toBe("board-2");
-    expect(await getBoard("board", archive.rootBoard.id)).toBeDefined();
+    expect(await getBoardRecord("board", archive.rootBoard.id)).toBeDefined();
     expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
     expect(await listBoardSets()).toHaveLength(2);
   });

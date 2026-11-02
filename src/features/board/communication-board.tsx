@@ -82,7 +82,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
         variant={button.linkedBoardId ? "folder" : undefined}
-        borderHidden={!areTileBordersVisible}
+        isBorderVisible={areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}
       >

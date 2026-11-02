@@ -31,7 +31,7 @@ export function SuggestionBar({
         overflow: "hidden",
       }}
     >
-      {(status === null || isPending) && <PendingDot show={isPending} />}
+      {(status === null || isPending) && <PendingDot isVisible={isPending} />}
 
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
 

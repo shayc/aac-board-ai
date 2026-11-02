@@ -37,9 +37,9 @@ export function AppShell() {
         variant={isPersistentLibrary ? "persistent" : "temporary"}
       />
 
-      <ContentColumn shifted={isLibraryPushingContent}>
+      <ContentColumn isShifted={isLibraryPushingContent}>
         <AppHeader
-          libraryButtonHidden={isLibraryPushingContent}
+          isLibraryButtonHidden={isLibraryPushingContent}
           onOpenLibrary={() => setIsLibraryOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
         />

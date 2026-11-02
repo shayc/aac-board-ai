@@ -23,7 +23,7 @@ interface BoardSetListProps {
   boardSets: BoardSetRecord[];
   onNavigate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
-  onDelete: (boardSet: BoardSetRecord) => void;
+  onRequestDelete: (boardSet: BoardSetRecord) => void;
   activeSetId?: string;
 }
 
@@ -31,7 +31,7 @@ export function BoardSetList({
   boardSets,
   onNavigate,
   onShowDetails,
-  onDelete,
+  onRequestDelete,
   activeSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
@@ -61,9 +61,9 @@ export function BoardSetList({
     handleMenuClose();
   }
 
-  function handleDelete() {
+  function handleRequestDelete() {
     if (menuAnchor) {
-      onDelete(menuAnchor.boardSet);
+      onRequestDelete(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -107,7 +107,7 @@ export function BoardSetList({
           </ListItemIcon>
           <ListItemText>{t(m.libraryDetails)}</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleDelete}>
+        <MenuItem onClick={handleRequestDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>

@@ -28,7 +28,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
 
     store.setState({
       status: "playing",
-      source: session.request.source,
+      owner: session.request.owner,
       activeTrackingKey,
     });
   }
