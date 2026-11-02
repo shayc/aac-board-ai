@@ -35,51 +35,44 @@ describe("LibraryDrawer", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  test.each(["temporary", "persistent"] as const)(
-    "activating a board link navigates and only closes a temporary drawer (%s)",
-    async (variant) => {
-      await seedBoardSets([
-        { id: "animals", rootBoardId: "root", name: "Animals" },
-      ]);
+  test("activating a board link navigates and closes the drawer", async () => {
+    await seedBoardSets([
+      { id: "animals", rootBoardId: "root", name: "Animals" },
+    ]);
 
-      const onClose = vi.fn();
-      const router = createMemoryRouter(
-        [
-          {
-            path: "/",
-            element: <LibraryDrawer open onClose={onClose} variant={variant} />,
-          },
-          {
-            path: "/sets/:boardSetId/boards/:boardId",
-            element: <p>board page</p>,
-          },
-        ],
-        { initialEntries: ["/"] },
-      );
+    const onClose = vi.fn();
+    const router = createMemoryRouter(
+      [
+        {
+          path: "/",
+          element: <LibraryDrawer open onClose={onClose} />,
+        },
+        {
+          path: "/sets/:boardSetId/boards/:boardId",
+          element: <p>board page</p>,
+        },
+      ],
+      { initialEntries: ["/"] },
+    );
 
-      const screen = await render(
-        <AppProviders>
-          <RouterProvider router={router} />
-        </AppProviders>,
-      );
+    const screen = await render(
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>,
+    );
 
-      const link = screen.getByRole("link", { name: "Animals", exact: true });
-      await expect
-        .element(link)
-        .toHaveAttribute("href", "/sets/animals/boards/root");
+    const link = screen.getByRole("link", { name: "Animals", exact: true });
+    await expect
+      .element(link)
+      .toHaveAttribute("href", "/sets/animals/boards/root");
 
-      if (variant === "temporary") {
-        link.element().focus();
-        await userEvent.keyboard("{Enter}");
-      } else {
-        await link.click();
-      }
+    link.element().focus();
+    await userEvent.keyboard("{Enter}");
 
-      await expect.element(screen.getByText("board page")).toBeInTheDocument();
-      expect(router.state.location.pathname).toBe("/sets/animals/boards/root");
-      expect(onClose).toHaveBeenCalledTimes(variant === "temporary" ? 1 : 0);
-    },
-  );
+    await expect.element(screen.getByText("board page")).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe("/sets/animals/boards/root");
+    expect(onClose).toHaveBeenCalledOnce();
+  });
 
   test("modified clicks keep the temporary drawer and current route open", async () => {
     await seedBoardSets([
@@ -90,7 +83,7 @@ describe("LibraryDrawer", () => {
     const router = createMemoryRouter([
       {
         path: "/",
-        element: <LibraryDrawer open onClose={onClose} variant="temporary" />,
+        element: <LibraryDrawer open onClose={onClose} />,
       },
     ]);
     const screen = await render(
@@ -105,30 +98,5 @@ describe("LibraryDrawer", () => {
     expect(router.state.location.pathname).toBe("/");
     expect(onClose).not.toHaveBeenCalled();
     await expect.element(link).toBeVisible();
-  });
-
-  test("exposes a complementary landmark when persistent, no a11y violations", async () => {
-    const router = createMemoryRouter(
-      [
-        {
-          path: "/",
-          element: (
-            <LibraryDrawer open onClose={vi.fn()} variant="persistent" />
-          ),
-        },
-      ],
-      { initialEntries: ["/"] },
-    );
-
-    const screen = await render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
-
-    await expect
-      .element(screen.getByRole("complementary", { name: "Library" }))
-      .toBeInTheDocument();
-    await expectNoA11yViolations(document.body);
   });
 });

@@ -21,7 +21,7 @@ import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
-  onNavigate?: () => void;
+  onNavigate: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
   activeBoardSetId?: string;
@@ -124,7 +124,7 @@ interface BoardSetListItemProps {
   to: string;
   isActive: boolean;
   isMenuOpen: boolean;
-  onNavigate?: () => void;
+  onNavigate: () => void;
   onMenuOpen: (element: HTMLElement) => void;
 }
 
@@ -151,7 +151,7 @@ function BoardSetListItem({
       return;
     }
 
-    onNavigate?.();
+    onNavigate();
   }
 
   return (
