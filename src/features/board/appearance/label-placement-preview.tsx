@@ -1,15 +1,15 @@
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
-import type { TileLabelPlacement } from "./appearance-store";
+import type { TileLabelPlacement } from "./appearance-preferences-store";
 
 interface LabelPlacementPreviewProps {
   placement: TileLabelPlacement;
-  selected?: boolean;
+  isSelected?: boolean;
 }
 
 export function LabelPlacementPreview({
   placement,
-  selected = false,
+  isSelected = false,
 }: LabelPlacementPreviewProps) {
   const isLabelVisible = placement !== "hidden";
 
@@ -23,10 +23,10 @@ export function LabelPlacementPreview({
         height: 54,
         p: 0.5,
         border: 2,
-        borderColor: selected ? "primary.main" : "divider",
+        borderColor: isSelected ? "primary.main" : "divider",
         borderRadius: 3,
-        color: selected ? "primary.main" : "text.secondary",
-        bgcolor: selected ? "action.selected" : "background.paper",
+        color: isSelected ? "primary.main" : "text.secondary",
+        bgcolor: isSelected ? "action.selected" : "background.paper",
       }}
     >
       <Box

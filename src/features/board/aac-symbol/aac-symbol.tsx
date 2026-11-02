@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
-import type { TileLabelPlacement } from "../appearance/appearance-store";
+import type { TileLabelPlacement } from "../appearance/appearance-preferences-store";
 
 interface AACSymbolProps {
   imageSrc?: string;

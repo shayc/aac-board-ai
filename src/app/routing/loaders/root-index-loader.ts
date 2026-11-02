@@ -9,8 +9,9 @@ import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
 // The ?board= param is attacker-controlled: a crafted link must never
-// silently replace a user's vocabulary. Every import allocates a separate set
-// ID, while rejected URLs and failed imports surface as localized errors.
+// silently replace a user's vocabulary. Every import allocates a separate
+// board set ID, while rejected URLs and failed imports surface as localized
+// errors.
 async function importAndRedirect(
   boardUrl: string,
   signal: AbortSignal,

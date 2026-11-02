@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { parseAppearancePreferences } from "./appearance-store";
+import { parseAppearancePreferences } from "./appearance-preferences-store";
 
-describe("appearance-store", () => {
+describe("appearance-preferences-store", () => {
   describe("parseAppearancePreferences", () => {
     test("defaults tileSaturation to 1 when absent", () => {
       expect(parseAppearancePreferences(undefined).tileSaturation).toBe(1);

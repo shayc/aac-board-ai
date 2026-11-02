@@ -1,16 +1,16 @@
 import { createExternalStore } from "@shared/state/external-store";
 import { revokeAssetUrlsExcept } from "../storage/asset-urls";
 import {
-  createBoardSet as createStoredBoardSet,
-  deleteBoardSet as deleteStoredBoardSet,
-  listBoardSets,
+  createStoredBoardSet,
+  deleteStoredBoardSet,
+  listStoredBoardSets,
   type BoardSetInput,
   type BoardSetRecord,
 } from "../storage/board-set-storage";
 
 export {
   BoardSetAlreadyExistsError,
-  getBoardSet,
+  getStoredBoardSet,
   InvalidIdError,
 } from "../storage/board-set-storage";
 export type {
@@ -41,7 +41,7 @@ let pendingLoad: Promise<void> | null = null;
 
 async function loadBoardSets(): Promise<void> {
   try {
-    const boardSets = await listBoardSets();
+    const boardSets = await listStoredBoardSets();
     // URLs are per tab, and every tab refreshes after a delete.
     revokeAssetUrlsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
@@ -71,7 +71,7 @@ export async function refreshBoardSets(): Promise<void> {
   await pendingLoad;
 }
 
-export async function syncBoardSets(): Promise<void> {
+async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);
 }

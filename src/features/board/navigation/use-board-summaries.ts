@@ -8,15 +8,15 @@ interface BoardSummary {
   name: string;
 }
 
-interface UseBoardsInSetReturn {
+interface UseBoardSummariesReturn {
   boards: BoardSummary[];
   isLoading: boolean;
   error: Error | undefined;
 }
 
-export function useBoardsInSet(
+export function useBoardSummaries(
   boardSetId: string | undefined,
-): UseBoardsInSetReturn {
+): UseBoardSummariesReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
     enabled: boardSetId !== undefined,

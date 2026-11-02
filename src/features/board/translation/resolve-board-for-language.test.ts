@@ -4,7 +4,7 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
-import { createBoardSet } from "../storage/board-set-storage";
+import { createStoredBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import type { Board } from "../board-types";
 import { resolveBoardForLanguage } from "./resolve-board-for-language";
@@ -80,7 +80,7 @@ describe("resolveBoardForLanguage", () => {
   });
 
   test("persists a fresh translation", async () => {
-    await createBoardSet({
+    await createStoredBoardSet({
       id: "set-1",
       name: "set-1",
       rootBoardId: "board-1",

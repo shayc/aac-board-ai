@@ -19,12 +19,12 @@ export function PlaybackMessageBar({
   playback,
 }: PlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
-  const { isPartHighlightingEnabled } = usePlaybackPreferences();
+  const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
     <MessageBar
       parts={parts}
-      activePartId={isPartHighlightingEnabled ? activePartId : null}
+      activePartId={isHighlightingEnabled ? activePartId : null}
       isPlaying={playback.isMessagePlaying}
       onPlay={() => void playback.playMessage(parts)}
       onStop={playback.stop}

@@ -8,10 +8,10 @@ import {
   updateBoardStrings,
 } from "./board-content-storage";
 import {
-  createBoardSet,
-  getBoardSet,
-  listBoardSets,
-  deleteBoardSet,
+  createStoredBoardSet,
+  getStoredBoardSet,
+  listStoredBoardSets,
+  deleteStoredBoardSet,
 } from "./board-set-storage";
 import { closeBoardsDB, getBoardsDB, normalizeAssetPath } from "./boards-db";
 
@@ -30,7 +30,7 @@ describe("getBoardsDB", () => {
       strings: { fr: { Hello: "Bonjour" } },
     });
 
-    await createBoardSet({
+    await createStoredBoardSet({
       id: "vocabulary",
       name: "Vocabulary",
       rootBoardId: "root",
@@ -40,7 +40,7 @@ describe("getBoardsDB", () => {
     await closeBoardsDB();
 
     expect((await getBoardsDB()).version).toBe(1);
-    expect(await getBoardSet("vocabulary")).toMatchObject({
+    expect(await getStoredBoardSet("vocabulary")).toMatchObject({
       id: "vocabulary",
       name: "Vocabulary",
       rootBoardId: "root",
@@ -52,7 +52,7 @@ describe("getBoardsDB", () => {
       name: obf.name,
       obf,
     });
-    expect(await listBoardSets()).toHaveLength(1);
+    expect(await listStoredBoardSets()).toHaveLength(1);
     expect(await listBoardRecords("vocabulary")).toHaveLength(1);
     expect(await (await getAssetBlob("vocabulary", "image.png"))?.text()).toBe(
       "image",
@@ -64,9 +64,9 @@ describe("getBoardsDB", () => {
       es: { Hello: "Hola" },
     });
 
-    await deleteBoardSet("vocabulary");
+    await deleteStoredBoardSet("vocabulary");
     expect(await listBoardRecords("vocabulary")).toEqual([]);
-    expect(await getBoardSet("vocabulary")).toBeUndefined();
+    expect(await getStoredBoardSet("vocabulary")).toBeUndefined();
     expect(await getAssetBlob("vocabulary", "image.png")).toBeUndefined();
   });
 

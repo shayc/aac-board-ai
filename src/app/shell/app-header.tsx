@@ -12,13 +12,13 @@ import { flipForLtr } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 
 interface AppHeaderProps {
-  isLibraryButtonHidden?: boolean;
+  isLibraryButtonVisible?: boolean;
   onOpenLibrary: () => void;
   onOpenSettings: () => void;
 }
 
 export function AppHeader({
-  isLibraryButtonHidden = false,
+  isLibraryButtonVisible = true,
   onOpenLibrary,
   onOpenSettings,
 }: AppHeaderProps) {
@@ -48,7 +48,7 @@ export function AppHeader({
             gap: 2,
           }}
         >
-          {!isLibraryButtonHidden && (
+          {isLibraryButtonVisible && (
             <Tooltip title={t(m.libraryOpen)}>
               <IconButton
                 aria-label={t(m.libraryOpen)}

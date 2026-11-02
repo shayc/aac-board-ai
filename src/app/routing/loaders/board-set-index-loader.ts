@@ -1,4 +1,8 @@
-import { getBoardSet, InvalidIdError, rootBoardPath } from "@features/board";
+import {
+  getStoredBoardSet,
+  InvalidIdError,
+  rootBoardPath,
+} from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 
@@ -8,7 +12,7 @@ export async function boardSetIndexLoader({
   const { boardSetId } = params;
   let boardSet;
   try {
-    boardSet = boardSetId ? await getBoardSet(boardSetId) : undefined;
+    boardSet = boardSetId ? await getStoredBoardSet(boardSetId) : undefined;
   } catch (error) {
     if (!(error instanceof InvalidIdError)) {
       throw error;

@@ -4,24 +4,24 @@ import { parsePlaybackPreferences } from "./playback-preferences-store";
 describe("playback-preferences-store", () => {
   describe("parsePlaybackPreferences", () => {
     test("disables message-part highlighting when absent", () => {
-      expect(
-        parsePlaybackPreferences(undefined).isPartHighlightingEnabled,
-      ).toBe(false);
+      expect(parsePlaybackPreferences(undefined).isHighlightingEnabled).toBe(
+        false,
+      );
     });
 
     test("ignores a non-boolean stored value", () => {
       expect(
         parsePlaybackPreferences({
-          isPartHighlightingEnabled: "yes",
-        }).isPartHighlightingEnabled,
+          isHighlightingEnabled: "yes",
+        }).isHighlightingEnabled,
       ).toBe(false);
     });
 
     test("keeps a stored boolean", () => {
       expect(
         parsePlaybackPreferences({
-          isPartHighlightingEnabled: true,
-        }).isPartHighlightingEnabled,
+          isHighlightingEnabled: true,
+        }).isHighlightingEnabled,
       ).toBe(true);
     });
   });

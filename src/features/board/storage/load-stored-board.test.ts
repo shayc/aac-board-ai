@@ -4,7 +4,7 @@ import type { Board } from "../board-types";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
-import { createBoardSet } from "./board-set-storage";
+import { createStoredBoardSet } from "./board-set-storage";
 import { loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";
@@ -24,7 +24,7 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   };
 
-  await createBoardSet({
+  await createStoredBoardSet({
     id: SET_ID,
     name: "Loader Test",
     rootBoardId: BOARD_ID,

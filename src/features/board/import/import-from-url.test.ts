@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { listBoardSets } from "../storage/board-set-storage";
+import { listStoredBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   importBoardSetFromUrl,
@@ -45,7 +45,7 @@ describe("importBoardSetFromUrl", () => {
     controller.abort();
 
     await expect(importing).rejects.toBe(controller.signal.reason);
-    expect(await listBoardSets()).toEqual([]);
+    expect(await listStoredBoardSets()).toEqual([]);
   });
 
   test("does not start importing if cancellation races with a completed download", async () => {
@@ -63,7 +63,7 @@ describe("importBoardSetFromUrl", () => {
         controller.signal,
       ),
     ).rejects.toBe(controller.signal.reason);
-    expect(await listBoardSets()).toEqual([]);
+    expect(await listStoredBoardSets()).toEqual([]);
   });
 
   test("derives the boardSetId from the last non-empty segment when the URL path ends with a slash", async () => {

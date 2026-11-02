@@ -17,10 +17,10 @@ import {
   TILE_SATURATION,
   useAppearancePreferences,
   type TileLabelPlacement,
-} from "./appearance/appearance-store";
+} from "./appearance/appearance-preferences-store";
 import { LabelPlacementPreview } from "./appearance/label-placement-preview";
 import {
-  setPartHighlightingEnabled,
+  setPlaybackHighlightingEnabled,
   usePlaybackPreferences,
 } from "./playback/playback-preferences-store";
 
@@ -39,7 +39,9 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
       value={placement}
       control={
         <Radio
-          checkedIcon={<LabelPlacementPreview placement={placement} selected />}
+          checkedIcon={
+            <LabelPlacementPreview placement={placement} isSelected />
+          }
           icon={<LabelPlacementPreview placement={placement} />}
           disableRipple
           sx={(theme) => ({
@@ -69,7 +71,7 @@ export function BoardSettings() {
   const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useAppearancePreferences();
-  const { isPartHighlightingEnabled } = usePlaybackPreferences();
+  const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
     <Stack spacing={3}>
@@ -119,8 +121,8 @@ export function BoardSettings() {
 
       <SettingsSwitch
         label={t(m.playbackHighlight)}
-        checked={isPartHighlightingEnabled}
-        onChange={setPartHighlightingEnabled}
+        checked={isHighlightingEnabled}
+        onChange={setPlaybackHighlightingEnabled}
       />
     </Stack>
   );
