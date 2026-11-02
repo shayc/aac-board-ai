@@ -1,62 +1,49 @@
 import { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
+import { hairline, hoverTint } from "@shared/theme/surface";
 import { EDIT_DARK, EDIT_LIGHT } from "@shared/theme/theme-colors";
 
 // Quiet chrome for back, home and backspace, so the grid and the speak button
-// stay the loudest things on screen. Same flat surface + hairline as the
-// message bar.
-// MUI's hover strength, as a solid color so it transitions like other buttons.
-function hoverTint(theme: Theme, color: string): string {
-  const palette = (theme.vars ?? theme).palette;
-
-  return `color-mix(in srgb, ${palette.text.primary} calc(${palette.action.hoverOpacity} * 100%), ${color})`;
-}
-
+// stay the loudest things on screen: the same flat surface and hairline as the
+// message bar, in every state.
 export function controlButtonSx(theme: Theme) {
   const palette = (theme.vars ?? theme).palette;
-  const hairline = `inset 0 0 0 1px ${palette.divider}`;
 
   return {
     width: 72,
-    color: palette.text.secondary,
+    color: palette.action.active,
     backgroundColor: palette.background.paper,
-    boxShadow: hairline,
-    // Contained buttons raise on hover, press and focus; keep them flat.
-    [`&:hover, &:active, &.${buttonClasses.focusVisible}`]: {
-      boxShadow: hairline,
-    },
+    // Contained buttons raise on hover, press and focus, and MUI clears the
+    // shadow when disabled; keep the hairline so only fill and icon change.
+    [`&, &:hover, &:active, &.${buttonClasses.focusVisible}, &.${buttonClasses.disabled}`]:
+      { boxShadow: hairline(theme) },
     "&:hover": {
       backgroundColor: hoverTint(theme, palette.background.paper),
     },
-    // MUI clears shadows on disabled buttons; keep the hairline so the shape
-    // stays put and only the fill and icon dim.
     [`&.${buttonClasses.disabled}`]: {
       backgroundColor: "transparent",
-      boxShadow: hairline,
     },
   };
 }
 
 // Backspace edits the message, so it gets an amber fill, distinct from
 // navigation (neutral) and speaking (primary). Disabled stays neutral.
+// Amber is a plain constant rather than a palette color: it has one use, and
+// a custom palette entry would need TypeScript module augmentation.
 // Apply after controlButtonSx: sx={[controlButtonSx, backspaceAccentSx]}.
 export function backspaceAccentSx(theme: Theme) {
-  return {
+  const accent = (edit: typeof EDIT_LIGHT) => ({
     [`&:not(.${buttonClasses.disabled})`]: {
-      color: EDIT_LIGHT.ink,
-      backgroundColor: EDIT_LIGHT.fill,
+      color: edit.ink,
+      backgroundColor: edit.fill,
       "&:hover": {
-        backgroundColor: hoverTint(theme, EDIT_LIGHT.fill),
+        backgroundColor: hoverTint(theme, edit.fill),
       },
     },
-    ...theme.applyStyles("dark", {
-      [`&:not(.${buttonClasses.disabled})`]: {
-        color: EDIT_DARK.ink,
-        backgroundColor: EDIT_DARK.fill,
-        "&:hover": {
-          backgroundColor: hoverTint(theme, EDIT_DARK.fill),
-        },
-      },
-    }),
+  });
+
+  return {
+    ...accent(EDIT_LIGHT),
+    ...theme.applyStyles("dark", accent(EDIT_DARK)),
   };
 }

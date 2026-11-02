@@ -1,4 +1,5 @@
 import Stack from "@mui/material/Stack";
+import { hairline } from "@shared/theme/surface";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { MessagePart } from "./message-types";
@@ -54,8 +55,7 @@ export function MessageBar({
           overflow: "hidden",
           borderRadius: 32,
           bgcolor: "background.paper",
-          boxShadow: (theme) =>
-            `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
+          boxShadow: (theme) => hairline(theme),
         }}
       >
         <Stack

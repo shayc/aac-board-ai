@@ -8,6 +8,7 @@ import {
 } from "@mui/material/styles";
 import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
+import { hairline } from "@shared/theme/surface";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import {
   ICON_DARK,
@@ -88,7 +89,7 @@ const themeOptions = {
             backgroundColor: palette.background.default,
             color: palette.text.primary,
             backgroundImage: "none",
-            boxShadow: `inset 0 -1px 0 ${palette.divider}`,
+            boxShadow: hairline(theme, "bottom"),
           };
         },
       },

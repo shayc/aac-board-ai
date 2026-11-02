@@ -1,6 +1,6 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import StopIcon from "@mui/icons-material/Stop";
-import Fab from "@mui/material/Fab";
+import Fab, { fabClasses } from "@mui/material/Fab";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 
@@ -36,7 +36,9 @@ export function PlayButton({
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
-        boxShadow: "none",
+        // Flat like the rest of the chrome; Fab otherwise raises on press and
+        // focus. Keyboard focus stays visible: the theme's ring is an outline.
+        [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
       }}
     >
       {isPlaying ? <StopIcon sx={iconSx} /> : <PlayArrowIcon sx={iconSx} />}

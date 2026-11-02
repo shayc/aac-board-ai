@@ -15,11 +15,12 @@ export const SURFACE_DARK = "#1a1d23";
 export const ICON_LIGHT = "rgba(0, 0, 0, 0.6)";
 export const ICON_DARK = "rgba(255, 255, 255, 0.7)";
 
-// Primary is an Apple-style system blue at matched tones in both modes: the
-// color people already read as "tap this", and saturated enough to stay
-// distinct from the pale blue Fitzgerald tiles.
-export const PRIMARY_LIGHT = { main: "#007aff", contrastText: "#ffffff" };
-export const PRIMARY_DARK = { main: "#0a84ff", contrastText: "#ffffff" };
+// Primary is system blue, the color people already read as "tap this", at
+// the darker shade Apple uses for accessible links: text and white labels on it
+// meet WCAG AA (>= 4.5:1). Dark mode uses a lighter tone with navy ink for the
+// same contrast. Saturated enough to stay distinct from the pale blue tiles.
+export const PRIMARY_LIGHT = { main: "#0066cc", contrastText: "#ffffff" };
+export const PRIMARY_DARK = { main: "#4ca2ff", contrastText: "#001a33" };
 
 // Amber marks editing (backspace), distinct from navigating and speaking.
 export const EDIT_LIGHT = { fill: "#ffe7bf", ink: "#7a4f00" };

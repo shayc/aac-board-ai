@@ -22,20 +22,46 @@ function darken(color: string, percentage: number): string {
 }
 
 // Tiles are the only raised elements: the chrome around them is flat, so
-// depth marks what you communicate with. They press in when activated.
-// Hover tints about as much as MUI's hover overlay; the lift carries the cue.
-const TILE_ELEVATION = {
+// depth marks what you communicate with. They lift on hover and press in when
+// activated. Like MUI's hover overlay (4% light, 8% dark), tints double in dark
+// mode, where the same change reads weaker and a shadow lift barely shows.
+const TILE_STATES = {
   light: {
     rest: "0 1px 2px rgb(16 24 40 / 0.08), 0 2px 6px rgb(16 24 40 / 0.10)",
     hover: "0 2px 4px rgb(16 24 40 / 0.10), 0 6px 14px rgb(16 24 40 / 0.14)",
     pressed: "0 1px 1px rgb(16 24 40 / 0.10)",
+    hoverTint: 6,
+    pressedTint: 12,
   },
   dark: {
     rest: "0 1px 2px rgb(0 0 0 / 0.6), 0 3px 8px rgb(0 0 0 / 0.45)",
     hover: "0 2px 4px rgb(0 0 0 / 0.6), 0 8px 18px rgb(0 0 0 / 0.55)",
     pressed: "0 1px 1px rgb(0 0 0 / 0.6)",
+    hoverTint: 12,
+    pressedTint: 24,
   },
 };
+
+function tileStatesSx(
+  states: (typeof TILE_STATES)["light"],
+  backgroundColor: string | undefined,
+) {
+  return {
+    boxShadow: states.rest,
+    "&:hover": {
+      "@media (hover: hover)": {
+        backgroundColor:
+          backgroundColor && darken(backgroundColor, states.hoverTint),
+        boxShadow: states.hover,
+      },
+    },
+    "&:active": {
+      backgroundColor:
+        backgroundColor && darken(backgroundColor, states.pressedTint),
+      boxShadow: states.pressed,
+    },
+  };
+}
 
 export function Tile({
   ariaLabel,
@@ -80,7 +106,6 @@ export function Tile({
         }`,
         borderRadius: 4,
         backgroundColor: resolvedBackgroundColor,
-        boxShadow: TILE_ELEVATION.light.rest,
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
@@ -90,35 +115,11 @@ export function Tile({
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
-        "&:hover": {
-          "@media (hover: hover)": {
-            backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 6),
-            boxShadow: TILE_ELEVATION.light.hover,
-          },
-        },
-        "&:active": {
-          backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 12),
-          boxShadow: TILE_ELEVATION.light.pressed,
-        },
-        // Like MUI's hover overlay, tints are doubled in dark mode, where the
-        // same change reads weaker and the shadow lift barely shows.
-        ...theme.applyStyles("dark", {
-          boxShadow: TILE_ELEVATION.dark.rest,
-          "&:hover": {
-            "@media (hover: hover)": {
-              backgroundColor:
-                resolvedBackgroundColor && darken(resolvedBackgroundColor, 12),
-              boxShadow: TILE_ELEVATION.dark.hover,
-            },
-          },
-          "&:active": {
-            backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 24),
-            boxShadow: TILE_ELEVATION.dark.pressed,
-          },
-        }),
+        ...tileStatesSx(TILE_STATES.light, resolvedBackgroundColor),
+        ...theme.applyStyles(
+          "dark",
+          tileStatesSx(TILE_STATES.dark, resolvedBackgroundColor),
+        ),
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
