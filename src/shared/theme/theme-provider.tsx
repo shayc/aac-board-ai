@@ -78,6 +78,15 @@ const themeOptions = {
         },
       },
     },
+    // Flat surfaces in dark mode too: MUI's elevation overlay would lighten
+    // menus past their sticky subheaders, which paint plain paper.
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundImage: "none",
+        },
+      },
+    },
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
@@ -89,7 +98,6 @@ const themeOptions = {
           return {
             backgroundColor: palette.background.default,
             color: palette.text.primary,
-            backgroundImage: "none",
             borderBottom: `1px solid ${palette.divider}`,
           };
         },
@@ -99,7 +107,6 @@ const themeOptions = {
       styleOverrides: {
         paper: ({ theme }) => ({
           backgroundColor: (theme.vars ?? theme).palette.background.default,
-          backgroundImage: "none",
         }),
       },
     },
