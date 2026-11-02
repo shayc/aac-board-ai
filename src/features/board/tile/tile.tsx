@@ -21,19 +21,39 @@ function darken(color: string, percentage: number): string {
   return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
 }
 
-// Tiles read as physical keys: a hairline ring, a 2px bottom edge and a soft
-// drop shadow. Outer shadows (not inset) keep the ring on the tile's edge
-// instead of 4px inside it, past the border.
+// Dark mode caps each tile's lightness so the grid stops glaring while the
+// Fitzgerald hues stay recognizable. min() leaves already-dark tiles alone.
+function dim(color: string, maxLightness: number): string {
+  return `oklch(from ${color} min(l, ${maxLightness}) calc(c * 0.95) h)`;
+}
+
+// Labels and the key edge use a shade of the tile's own hue: deep on light
+// tiles, pale on dark ones, so contrast holds for any board's colors.
+function ink(color: string): string {
+  return `oklch(from ${color} calc(0.685 - 0.265 * sign(l - 0.6)) calc(c * 1.6) h)`;
+}
+
+function deepen(color: string): string {
+  return `oklch(from ${color} 0.42 calc(c * 1.6) h)`;
+}
+
+export const TILE_LENS_ANCHOR = "--tile-lens";
+
+const TILE_RADIUS = 30;
+const TILE_RADIUS_FALLBACK = 16;
+
+// Folder tiles take a folder silhouette (tab on the leading side) instead of
+// a corner triangle, so folders read by shape, not by a small mark.
+const FOLDER_SHAPE =
+  "shape(from 0 18px, curve to 18px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) 10px with 42% 0, hline to calc(100% - 18px), curve to 100% 28px with 100% 10px, vline to calc(100% - 18px), curve to calc(100% - 18px) 100% with 100% 100%, hline to 18px, curve to 0 calc(100% - 18px) with 0 100%, close)";
+
 const TILE_SHADOW_LIGHT =
   "0 0 0 1px rgb(0 0 0 / 0.10), 0 2px 0 rgb(0 0 0 / 0.10), 0 1px 2px rgb(16 24 40 / 0.06), 0 4px 10px -4px rgb(16 24 40 / 0.14)";
-const TILE_SHADOW_DARK =
-  "0 0 0 1px rgb(0 0 0 / 0.35), 0 2px 0 rgb(0 0 0 / 0.16), 0 1px 0 rgb(0 0 0 / 0.4), 0 6px 14px -6px rgb(0 0 0 / 0.7)";
 const TILE_SHADOW_PRESSED_LIGHT =
   "0 0 0 1px rgb(0 0 0 / 0.10), 0 1px 0 rgb(0 0 0 / 0.10)";
-const TILE_SHADOW_PRESSED_DARK =
-  "0 0 0 1px rgb(0 0 0 / 0.35), 0 1px 0 rgb(0 0 0 / 0.16)";
+const TILE_DROP_DARK = "0 8px 18px -10px rgb(0 0 0 / 0.9)";
 const TILE_GLOSS =
-  "linear-gradient(180deg, rgb(255 255 255 / 0.3), transparent 45%)";
+  "linear-gradient(180deg, rgb(255 255 255 / 0.28), transparent 45%)";
 
 export function Tile({
   ariaLabel,
@@ -46,10 +66,13 @@ export function Tile({
   isBorderVisible = true,
   onActivate,
 }: TileProps) {
-  const resolvedBorderColor = borderColor ?? backgroundColor;
   const resolvedBackgroundColor = backgroundColor
     ? desaturate(backgroundColor)
     : undefined;
+  const resolvedBorderColor = borderColor
+    ? desaturate(borderColor)
+    : resolvedBackgroundColor;
+  const isFolder = variant === "folder";
 
   return (
     <Button
@@ -69,14 +92,14 @@ export function Tile({
         overflow: "hidden",
         textTransform: "none",
         color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
+          ? ink(resolvedBackgroundColor)
           : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
-            ? desaturate(resolvedBorderColor)
+            ? resolvedBorderColor
             : "transparent"
         }`,
-        borderRadius: 4,
+        borderRadius: `${TILE_RADIUS_FALLBACK}px`,
         backgroundColor: resolvedBackgroundColor,
         backgroundImage: resolvedBackgroundColor ? TILE_GLOSS : undefined,
         backgroundOrigin: "border-box",
@@ -84,14 +107,19 @@ export function Tile({
         transition: theme.transitions.create(
           ["background-color", "box-shadow", "transform"],
           {
-            duration: theme.transitions.duration.shortest,
+            duration: theme.transitions.duration.short,
           },
         ),
+        "@supports (corner-shape: squircle)": {
+          borderRadius: `${TILE_RADIUS}px`,
+          cornerShape: "squircle",
+        },
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
         "&:hover": {
           "@media (hover: hover)": {
+            anchorName: TILE_LENS_ANCHOR,
             backgroundColor:
               resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
           },
@@ -103,19 +131,38 @@ export function Tile({
           boxShadow: TILE_SHADOW_PRESSED_LIGHT,
         },
         [`&.${buttonClasses.focusVisible}`]: {
+          anchorName: TILE_LENS_ANCHOR,
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
+          // The gliding focus lens draws the ring where anchors are supported.
+          "@supports (anchor-name: --a)": {
+            outline: "none",
+          },
         },
         [`&.${buttonClasses.disabled}`]: {
           boxShadow: "none",
         },
-        ...theme.applyStyles("dark", {
-          boxShadow: TILE_SHADOW_DARK,
-          "&:active": {
-            boxShadow: TILE_SHADOW_PRESSED_DARK,
-          },
-        }),
-        ...(variant === "folder" && {
+        ...(resolvedBackgroundColor &&
+          theme.applyStyles("dark", {
+            color: ink(dim(resolvedBackgroundColor, 0.86)),
+            backgroundColor: dim(resolvedBackgroundColor, 0.86),
+            borderColor:
+              isBorderVisible && !borderColor
+                ? dim(resolvedBackgroundColor, 0.86)
+                : undefined,
+            boxShadow: `inset 0 -3px 0 ${deepen(resolvedBackgroundColor)}, ${TILE_DROP_DARK}`,
+            "&:hover": {
+              "@media (hover: hover)": {
+                backgroundColor: dim(resolvedBackgroundColor, 0.8),
+              },
+            },
+            "&:active": {
+              backgroundColor: dim(resolvedBackgroundColor, 0.76),
+              boxShadow: `inset 0 -1px 0 ${deepen(resolvedBackgroundColor)}`,
+            },
+          })),
+        ...(isFolder && {
+          // Fallback marker for browsers without shape(): a corner fold.
           "&::after": {
             content: '""',
             position: "absolute",
@@ -126,8 +173,18 @@ export function Tile({
             borderInlineEnd:
               "32px solid color-mix(in srgb, currentColor 75%, transparent)",
             borderBottom: "32px solid transparent",
-            // A light edge makes the corner read as a folded page.
-            filter: "drop-shadow(-1px 1px 0 rgb(255 255 255 / 0.35))",
+          },
+          "@supports (clip-path: shape(from 0 0, line to 1px 0))": {
+            borderRadius: 0,
+            clipPath: FOLDER_SHAPE,
+            paddingTop: "16px",
+            "&::after": {
+              display: "none",
+            },
+            // clip-path would cut an outside focus ring; draw it inside.
+            [`&.${buttonClasses.focusVisible}`]: {
+              outlineOffset: -8,
+            },
           },
         }),
       })}

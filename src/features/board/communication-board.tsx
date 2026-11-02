@@ -23,6 +23,7 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
+import { TileFocusLens } from "./tile/tile-focus-lens";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -149,6 +150,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           order={board.grid.order}
           renderItem={renderTile}
         />
+        <TileFocusLens />
       </Box>
 
       {isSmallScreen && (
@@ -186,7 +188,7 @@ function createBoardRootSx(theme: Theme) {
     height: "100%",
     ...theme.applyStyles("dark", {
       backgroundImage:
-        "radial-gradient(70% 35% at 50% 0%, rgb(138 180 248 / 0.06), transparent)",
+        "radial-gradient(70% 35% at 50% 0%, rgb(138 180 248 / 0.07), transparent)",
       backgroundRepeat: "no-repeat",
     }),
     [theme.breakpoints.up("sm")]: {

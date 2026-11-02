@@ -19,10 +19,16 @@ export function controlButtonSx(theme: Theme) {
       backgroundColor: "transparent",
       boxShadow: `inset 0 0 0 1px ${palette.divider}`,
     },
+    "@supports (corner-shape: squircle)": {
+      borderRadius: "22px",
+      cornerShape: "squircle",
+    },
     ...theme.applyStyles("dark", {
-      backgroundColor: "#262a31",
+      color: "#d6dae2",
+      backgroundColor: "#1d2128",
+      boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.1)",
       "&:hover": {
-        backgroundColor: "#2f343c",
+        backgroundColor: "#262b33",
       },
     }),
   };

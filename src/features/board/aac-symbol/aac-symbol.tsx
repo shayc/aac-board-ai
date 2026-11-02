@@ -58,7 +58,7 @@ export function AACSymbol({
         noWrap
         variant={imageSrc ? "body2" : "h5"}
         sx={[
-          { lineHeight: 1.2, fontWeight: 600 },
+          { lineHeight: 1.2, fontWeight: 700 },
           labelPlacement === "hidden" && visuallyHidden,
         ]}
       >
