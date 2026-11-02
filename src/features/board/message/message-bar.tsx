@@ -54,9 +54,17 @@ export function MessageBar({
             gap: 2,
             overflow: "hidden",
             borderRadius: 32,
-            bgcolor: "grey.200",
+            bgcolor: "common.white",
           },
-          (theme) => theme.applyStyles("dark", { bgcolor: "grey.800" }),
+          (theme) => ({
+            // An "input well": hairline edge plus a soft inner shadow.
+            boxShadow: `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}, inset 0 2px 4px rgb(0 0 0 / 0.06)`,
+            ...theme.applyStyles("dark", {
+              bgcolor: "#1c1f24",
+              boxShadow:
+                "inset 0 0 0 1px rgb(255 255 255 / 0.12), inset 0 2px 6px rgb(0 0 0 / 0.45)",
+            }),
+          }),
         ]}
       >
         <Stack

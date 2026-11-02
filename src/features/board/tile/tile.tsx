@@ -21,6 +21,20 @@ function darken(color: string, percentage: number): string {
   return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
 }
 
+// Tiles read as physical keys: a hairline ring, a 2px bottom edge and a soft
+// drop shadow. Outer shadows (not inset) keep the ring on the tile's edge
+// instead of 4px inside it, past the border.
+const TILE_SHADOW_LIGHT =
+  "0 0 0 1px rgb(0 0 0 / 0.10), 0 2px 0 rgb(0 0 0 / 0.10), 0 1px 2px rgb(16 24 40 / 0.06), 0 4px 10px -4px rgb(16 24 40 / 0.14)";
+const TILE_SHADOW_DARK =
+  "0 0 0 1px rgb(0 0 0 / 0.35), 0 2px 0 rgb(0 0 0 / 0.16), 0 1px 0 rgb(0 0 0 / 0.4), 0 6px 14px -6px rgb(0 0 0 / 0.7)";
+const TILE_SHADOW_PRESSED_LIGHT =
+  "0 0 0 1px rgb(0 0 0 / 0.10), 0 1px 0 rgb(0 0 0 / 0.10)";
+const TILE_SHADOW_PRESSED_DARK =
+  "0 0 0 1px rgb(0 0 0 / 0.35), 0 1px 0 rgb(0 0 0 / 0.16)";
+const TILE_GLOSS =
+  "linear-gradient(180deg, rgb(255 255 255 / 0.3), transparent 45%)";
+
 export function Tile({
   ariaLabel,
   tabIndex,
@@ -64,39 +78,43 @@ export function Tile({
         }`,
         borderRadius: 4,
         backgroundColor: resolvedBackgroundColor,
-        boxShadow: (theme.vars ?? theme).shadows[2],
+        backgroundImage: resolvedBackgroundColor ? TILE_GLOSS : undefined,
+        backgroundOrigin: "border-box",
+        boxShadow: TILE_SHADOW_LIGHT,
         transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
+          ["background-color", "box-shadow", "transform"],
           {
-            duration: theme.transitions.duration.short,
+            duration: theme.transitions.duration.shortest,
           },
         ),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
         "&:hover": {
-          boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
             backgroundColor:
               resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
           },
-          "@media (hover: none)": {
-            boxShadow: (theme.vars ?? theme).shadows[2],
-          },
         },
         "&:active": {
+          transform: "translateY(1px)",
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
-          boxShadow: (theme.vars ?? theme).shadows[8],
+          boxShadow: TILE_SHADOW_PRESSED_LIGHT,
         },
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
-          boxShadow: (theme.vars ?? theme).shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
-          boxShadow: (theme.vars ?? theme).shadows[0],
+          boxShadow: "none",
         },
+        ...theme.applyStyles("dark", {
+          boxShadow: TILE_SHADOW_DARK,
+          "&:active": {
+            boxShadow: TILE_SHADOW_PRESSED_DARK,
+          },
+        }),
         ...(variant === "folder" && {
           "&::after": {
             content: '""',
@@ -108,6 +126,8 @@ export function Tile({
             borderInlineEnd:
               "32px solid color-mix(in srgb, currentColor 75%, transparent)",
             borderBottom: "32px solid transparent",
+            // A light edge makes the corner read as a folded page.
+            filter: "drop-shadow(-1px 1px 0 rgb(255 255 255 / 0.35))",
           },
         }),
       })}

@@ -4,6 +4,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRtl } from "@shared/theme/rtl";
 import { mergeProps, useLongPress, usePress } from "react-aria";
+import { backspaceAccentSx, controlButtonSx } from "../control-button-sx";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
 
@@ -35,7 +36,7 @@ export function BackspaceButton({
       size="large"
       color="inherit"
       variant="contained"
-      sx={{ width: 72 }}
+      sx={[controlButtonSx, backspaceAccentSx]}
     >
       <BackspaceOutlinedIcon sx={flipForRtl} />
     </Button>

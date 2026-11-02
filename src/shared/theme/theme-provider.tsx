@@ -67,6 +67,7 @@ const themeOptions = {
             backgroundColor: palette.background.default,
             color: palette.text.primary,
             backgroundImage: "none",
+            boxShadow: `inset 0 -1px 0 ${palette.divider}`,
           };
         },
       },

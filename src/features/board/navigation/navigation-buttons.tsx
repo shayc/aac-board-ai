@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRtl } from "@shared/theme/rtl";
+import { controlButtonSx } from "../control-button-sx";
 
 interface NavigationButtonsProps {
   canGoBack: boolean;
@@ -30,7 +31,7 @@ export function NavigationButtons({
         color="inherit"
         variant="contained"
         onClick={onBack}
-        sx={{ width: 72 }}
+        sx={controlButtonSx}
       >
         <ArrowBackOutlinedIcon sx={flipForRtl} />
       </Button>
@@ -42,7 +43,7 @@ export function NavigationButtons({
         color="inherit"
         variant="contained"
         onClick={onHome}
-        sx={{ width: 72 }}
+        sx={controlButtonSx}
       >
         <HomeOutlinedIcon />
       </Button>
