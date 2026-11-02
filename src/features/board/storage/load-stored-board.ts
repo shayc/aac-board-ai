@@ -9,11 +9,11 @@ export async function loadStoredBoard(
   boardId: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const obf = await readOBFBoard(setId, boardId);
+  const obfBoard = await readOBFBoard(setId, boardId);
 
   signal?.throwIfAborted();
 
-  const obfWithUrls = await attachAssetUrls(setId, obf);
+  const obfWithUrls = await attachAssetUrls(setId, obfBoard);
 
   signal?.throwIfAborted();
 
