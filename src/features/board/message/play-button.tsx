@@ -36,8 +36,11 @@ export function PlayButton({
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
-        // Speaking is the primary action: a soft glow in its own color.
+        // Speaking is the primary action: a soft glow in its own color (light only).
         boxShadow: `0 6px 18px -6px ${theme.alpha((theme.vars ?? theme).palette.primary.main, 0.55)}, 0 1px 2px rgb(0 0 0 / 0.2)`,
+        ...theme.applyStyles("dark", {
+          boxShadow: "none",
+        }),
         [`&.${fabClasses.disabled}`]: {
           boxShadow: `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
         },
