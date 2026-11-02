@@ -23,6 +23,7 @@ function darken(color: string, percentage: number): string {
 
 // Tiles are the only raised elements: the chrome around them is flat, so
 // depth marks what you communicate with. They press in when activated.
+// Hover tints about as much as MUI's hover overlay; the lift carries the cue.
 const TILE_ELEVATION = {
   light: {
     rest: "0 1px 2px rgb(16 24 40 / 0.08), 0 2px 6px rgb(16 24 40 / 0.10)",
@@ -92,13 +93,13 @@ export function Tile({
         "&:hover": {
           "@media (hover: hover)": {
             backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 6),
             boxShadow: TILE_ELEVATION.light.hover,
           },
         },
         "&:active": {
           backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, 12),
           boxShadow: TILE_ELEVATION.light.pressed,
         },
         ...theme.applyStyles("dark", {
