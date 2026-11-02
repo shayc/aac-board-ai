@@ -14,7 +14,7 @@ describe("importBoardSetFromUrl", () => {
     await resetBoardsDB();
   });
 
-  test("imports a board from a URL and derives the setId from the filename", async () => {
+  test("imports a board from a URL and derives the boardSetId from the filename", async () => {
     const result = await importBoardSetFromUrl(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
@@ -66,7 +66,7 @@ describe("importBoardSetFromUrl", () => {
     expect(await listBoardSets()).toEqual([]);
   });
 
-  test("derives the setId from the last non-empty segment when the URL path ends with a slash", async () => {
+  test("derives the boardSetId from the last non-empty segment when the URL path ends with a slash", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 

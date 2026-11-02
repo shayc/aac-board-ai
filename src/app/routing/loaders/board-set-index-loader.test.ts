@@ -3,10 +3,10 @@ import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetIndexLoader } from "./board-set-index-loader";
 
-function callLoader(setId: string): Promise<Response> {
+function callLoader(boardSetId: string): Promise<Response> {
   const args = {
     request: new Request("http://localhost/"),
-    params: { setId },
+    params: { boardSetId },
   } as unknown as LoaderFunctionArgs;
 
   return boardSetIndexLoader(args);
@@ -34,7 +34,7 @@ describe("boardSetIndexLoader", () => {
     });
   });
 
-  test("throws 404 for an oversize setId", async () => {
+  test("throws 404 for an oversize boardSetId", async () => {
     await seedBoardSets([]);
 
     await expect(callLoader("x".repeat(256))).rejects.toMatchObject({

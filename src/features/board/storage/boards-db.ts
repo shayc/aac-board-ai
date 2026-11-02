@@ -17,14 +17,14 @@ export interface BoardSetRecord {
 }
 
 export interface BoardRecord {
-  readonly setId: string;
+  readonly boardSetId: string;
   readonly id: string;
   readonly name: string;
   readonly obf: OBFBoard;
 }
 
 interface AssetRecord {
-  readonly setId: string;
+  readonly boardSetId: string;
   readonly path: string;
   readonly blob: Blob;
 }
@@ -47,18 +47,18 @@ interface BoardsDBSchema extends DBSchema {
   boards: {
     key: [string, string];
     value: BoardRecord;
-    indexes: { bySetId: string };
+    indexes: { byBoardSetId: string };
   };
   assets: {
     key: [string, string];
     value: AssetRecord;
-    indexes: { bySetId: string };
+    indexes: { byBoardSetId: string };
   };
 }
 
 type BoardsDB = IDBPDatabase<BoardsDBSchema>;
 
-const DB_NAME = "aac-boards-db";
+const DB_NAME = "boards-db";
 const DB_VERSION = 1;
 
 export function normalizeAssetPath(rawPath: string): string {
@@ -110,14 +110,14 @@ function openConnection(): Promise<BoardsDB> {
         boardSets.createIndex("byUpdatedAt", "updatedAt");
 
         const boards = db.createObjectStore("boards", {
-          keyPath: ["setId", "id"],
+          keyPath: ["boardSetId", "id"],
         });
-        boards.createIndex("bySetId", "setId");
+        boards.createIndex("byBoardSetId", "boardSetId");
 
         const assets = db.createObjectStore("assets", {
-          keyPath: ["setId", "path"],
+          keyPath: ["boardSetId", "path"],
         });
-        assets.createIndex("bySetId", "setId");
+        assets.createIndex("byBoardSetId", "boardSetId");
       }
     },
     blocked(currentVersion, blockedVersion) {

@@ -117,7 +117,7 @@ File selection, drag and drop, URL imports, and PWA file handling all use
 [`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
 translation before rendering, keeping that work out of UI components:
 
-1. Navigation to `/sets/:setId/boards/:boardId` calls `loadStoredBoard`, which
+1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadStoredBoard`, which
    reads the stored OBF, attaches its asset URLs, and maps the result through
    `obfToBoard`.
 2. `resolveBoardForLanguage` uses the source board or a cached translation when

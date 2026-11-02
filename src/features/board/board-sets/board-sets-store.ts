@@ -98,7 +98,7 @@ export async function createBoardSet(input: BoardSetInput): Promise<void> {
   await syncBoardSets();
 }
 
-export async function deleteBoardSet(setId: string): Promise<void> {
-  await deleteStoredBoardSet(setId);
+export async function deleteBoardSet(boardSetId: string): Promise<void> {
+  await deleteStoredBoardSet(boardSetId);
   await syncBoardSets();
 }

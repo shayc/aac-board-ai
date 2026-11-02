@@ -167,7 +167,7 @@ describe("importBoardSets", () => {
     });
   });
 
-  test("falls back to a default setId when the filename is only an extension", async () => {
+  test("falls back to a default boardSetId when the filename is only an extension", async () => {
     const obzFile = await loadFixtureFile(OBZ_FIXTURE);
     const extensionOnlyFile = new File([obzFile], ".obz", {
       type: "application/octet-stream",
@@ -178,7 +178,7 @@ describe("importBoardSets", () => {
     expect(importResults[0].id).toBe("imported-board");
   });
 
-  test("clamps the derived setId to 255 characters", async () => {
+  test("clamps the derived boardSetId to 255 characters", async () => {
     const obfFile = await loadFixtureFile(OBF_FIXTURE);
     const longNamedFile = new File([obfFile], `${"x".repeat(300)}.obf`, {
       type: "application/octet-stream",

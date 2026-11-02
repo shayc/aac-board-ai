@@ -3,7 +3,7 @@ import { useBoardSets } from "../board-sets/use-board-sets";
 import { BOARD_ROUTE_PATTERN, boardPath, rootBoardPath } from "./board-paths";
 
 export interface UseBoardNavigationReturn {
-  setId: string | undefined;
+  boardSetId: string | undefined;
   boardId: string | undefined;
   canGoBack: boolean;
   canGoHome: boolean;
@@ -26,10 +26,10 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const location = useLocation();
 
   const match = useMatch(BOARD_ROUTE_PATTERN);
-  const { setId, boardId } = match?.params ?? {};
+  const { boardSetId, boardId } = match?.params ?? {};
   const { boardSets } = useBoardSets();
   const rootBoardId = boardSets.find(
-    (boardSet) => boardSet.id === setId,
+    (boardSet) => boardSet.id === boardSetId,
   )?.rootBoardId;
 
   const canGoBack = readCanGoBack(location.state);
@@ -37,17 +37,17 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
   function goToBoard(targetBoardId: string) {
-    if (!setId || !targetBoardId || targetBoardId === boardId) {
+    if (!boardSetId || !targetBoardId || targetBoardId === boardId) {
       return;
     }
 
-    void navigate(boardPath({ setId, boardId: targetBoardId }), {
+    void navigate(boardPath({ boardSetId, boardId: targetBoardId }), {
       state: { canGoBack: true },
     });
   }
 
   function goBack() {
-    if (!setId || !canGoBack) {
+    if (!boardSetId || !canGoBack) {
       return;
     }
 
@@ -55,18 +55,18 @@ export function useBoardNavigation(): UseBoardNavigationReturn {
   }
 
   function goHome() {
-    if (!setId || !rootBoardId) {
+    if (!boardSetId || !rootBoardId) {
       return;
     }
 
-    void navigate(rootBoardPath({ id: setId, rootBoardId }), {
+    void navigate(rootBoardPath({ id: boardSetId, rootBoardId }), {
       state: { canGoBack: false },
       replace: true,
     });
   }
 
   return {
-    setId,
+    boardSetId,
     boardId,
     canGoBack,
     canGoHome,

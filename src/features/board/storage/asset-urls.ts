@@ -5,33 +5,34 @@ import { normalizeAssetPath } from "./boards-db";
 // set exists. Message parts rely on this to keep their media after leaving the
 // board they came from. Replacing an asset at the same path would need its URL
 // revoked first.
-const urlsBySetId = new Map<string, Map<string, string>>();
+const urlsByBoardSetId = new Map<string, Map<string, string>>();
 
 export async function getAssetUrl(
-  setId: string,
+  boardSetId: string,
   path: string,
 ): Promise<string | undefined> {
   const normalizedPath = normalizeAssetPath(path);
-  const cachedUrl = urlsBySetId.get(setId)?.get(normalizedPath);
+  const cachedUrl = urlsByBoardSetId.get(boardSetId)?.get(normalizedPath);
   if (cachedUrl) {
     return cachedUrl;
   }
 
-  const blob = await getAssetBlob(setId, normalizedPath);
+  const blob = await getAssetBlob(boardSetId, normalizedPath);
   if (!blob) {
     return undefined;
   }
 
-  return ensureAssetUrl(setId, normalizedPath, blob);
+  return ensureAssetUrl(boardSetId, normalizedPath, blob);
 }
 
 function ensureAssetUrl(
-  setId: string,
+  boardSetId: string,
   normalizedPath: string,
   blob: Blob,
 ): string {
-  const urlsByPath = urlsBySetId.get(setId) ?? new Map<string, string>();
-  urlsBySetId.set(setId, urlsByPath);
+  const urlsByPath =
+    urlsByBoardSetId.get(boardSetId) ?? new Map<string, string>();
+  urlsByBoardSetId.set(boardSetId, urlsByPath);
 
   // A concurrent load of the same asset may have finished during the read.
   const existingUrl = urlsByPath.get(normalizedPath);
@@ -45,9 +46,9 @@ function ensureAssetUrl(
   return url;
 }
 
-export function revokeAssetUrlsExcept(setIds: ReadonlySet<string>): void {
-  for (const [setId, urlsByPath] of urlsBySetId) {
-    if (setIds.has(setId)) {
+export function revokeAssetUrlsExcept(boardSetIds: ReadonlySet<string>): void {
+  for (const [boardSetId, urlsByPath] of urlsByBoardSetId) {
+    if (boardSetIds.has(boardSetId)) {
       continue;
     }
 
@@ -55,6 +56,6 @@ export function revokeAssetUrlsExcept(setIds: ReadonlySet<string>): void {
       URL.revokeObjectURL(url);
     }
 
-    urlsBySetId.delete(setId);
+    urlsByBoardSetId.delete(boardSetId);
   }
 }

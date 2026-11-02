@@ -24,7 +24,7 @@ interface BoardSetListProps {
   onNavigate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
-  activeSetId?: string;
+  activeBoardSetId?: string;
 }
 
 export function BoardSetList({
@@ -32,7 +32,7 @@ export function BoardSetList({
   onNavigate,
   onShowDetails,
   onRequestDelete,
-  activeSetId,
+  activeBoardSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
   const menuId = useId();
@@ -43,7 +43,7 @@ export function BoardSetList({
   } | null>(null);
 
   const isMenuOpen = Boolean(menuAnchor);
-  const activeMenuSetId = menuAnchor?.boardSet.id;
+  const activeMenuBoardSetId = menuAnchor?.boardSet.id;
 
   function handleMenuOpen(element: HTMLElement, boardSet: BoardSetRecord) {
     setMenuAnchor({ element, boardSet });
@@ -86,8 +86,8 @@ export function BoardSetList({
               menuId={menuId}
               name={boardSet.name}
               to={rootBoardPath(boardSet)}
-              isActive={boardSet.id === activeSetId}
-              isMenuOpen={boardSet.id === activeMenuSetId}
+              isActive={boardSet.id === activeBoardSetId}
+              isMenuOpen={boardSet.id === activeMenuBoardSetId}
               onNavigate={onNavigate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />

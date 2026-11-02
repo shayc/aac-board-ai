@@ -12,8 +12,8 @@ export type { BoardSetRecord } from "./boards-db";
 export { InvalidIdError } from "./boards-db";
 
 export class BoardSetAlreadyExistsError extends Error {
-  constructor(setId: string) {
-    super(`Board set already exists: ${setId}`);
+  constructor(boardSetId: string) {
+    super(`Board set already exists: ${boardSetId}`);
     this.name = "BoardSetAlreadyExistsError";
   }
 }
@@ -32,12 +32,12 @@ export interface BoardSetInput {
 }
 
 export async function getBoardSet(
-  setId: string,
+  boardSetId: string,
 ): Promise<BoardSetRecord | undefined> {
-  validateId(setId, "setId");
+  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
 
-  return db.get("boardSets", setId);
+  return db.get("boardSets", boardSetId);
 }
 
 export async function listBoardSets(): Promise<BoardSetRecord[]> {
@@ -47,22 +47,22 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
-// Arrays sort after strings in IDB, so [setId, []] is an upper bound
+// Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
 // for this set's board IDs and asset paths.
-function boardSetRange(setId: string): IDBKeyRange {
-  return IDBKeyRange.bound([setId], [setId, []]);
+function boardSetRange(boardSetId: string): IDBKeyRange {
+  return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
-export async function deleteBoardSet(setId: string): Promise<void> {
-  validateId(setId, "setId");
+export async function deleteBoardSet(boardSetId: string): Promise<void> {
+  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
-  const keyRange = boardSetRange(setId);
+  const keyRange = boardSetRange(boardSetId);
 
   await Promise.all([
     tx.objectStore("boards").delete(keyRange),
     tx.objectStore("assets").delete(keyRange),
-    tx.objectStore("boardSets").delete(setId),
+    tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
 }
@@ -94,7 +94,7 @@ export async function createBoardSet(input: BoardSetInput): Promise<void> {
     for (const obf of boards) {
       requests.push(
         boardStore.put({
-          setId: id,
+          boardSetId: id,
           id: obf.id,
           name: obf.name ?? obf.id,
           obf,
@@ -105,7 +105,7 @@ export async function createBoardSet(input: BoardSetInput): Promise<void> {
     for (const asset of assets) {
       requests.push(
         assetStore.put({
-          setId: id,
+          boardSetId: id,
           path: normalizeAssetPath(asset.path),
           blob: asset.blob,
         }),
@@ -132,7 +132,7 @@ function validateBoardSetInput({
   rootBoardId,
   boards,
 }: BoardSetInput): OBFBoard {
-  validateId(id, "setId");
+  validateId(id, "boardSetId");
   validateId(rootBoardId, "rootBoardId");
 
   const boardIds = new Set<string>();

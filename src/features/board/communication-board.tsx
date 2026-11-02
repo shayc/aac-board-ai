@@ -56,7 +56,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const keyboard = useBoardKeyboard({ message, playback });
 
   const hasMessage = message.parts.length > 0;
-  const isInBoardSet = Boolean(navigation.setId);
+  const isInBoardSet = Boolean(navigation.boardSetId);
 
   const boardRootStyle: BoardRootStyle = {
     "--tile-saturation": String(tileSaturation),

@@ -168,7 +168,7 @@ describe("app flow", () => {
   });
 });
 
-// A set whose setId collides with what the OBZ fixture URL derives.
+// A set whose boardSetId collides with what the OBZ fixture URL derives.
 function seedExistingLotsOfStuffSet() {
   return seedBoardSets([
     {

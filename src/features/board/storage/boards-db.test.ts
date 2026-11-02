@@ -24,7 +24,7 @@ afterEach(closeBoardsDB);
 describe("getBoardsDB", () => {
   test("creates a fresh database that persists boards, translations, and assets", async () => {
     await closeBoardsDB();
-    await deleteDB("aac-boards-db");
+    await deleteDB("boards-db");
     const obf = makeOBFBoard({
       id: "root",
       strings: { fr: { Hello: "Bonjour" } },
@@ -47,7 +47,7 @@ describe("getBoardsDB", () => {
       boardCount: 1,
     });
     expect(await getBoardRecord("vocabulary", "root")).toEqual({
-      setId: "vocabulary",
+      boardSetId: "vocabulary",
       id: "root",
       name: obf.name,
       obf,

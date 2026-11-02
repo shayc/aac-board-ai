@@ -17,7 +17,7 @@ async function renderSelector(initialPath: string) {
   const router = createMemoryRouter(
     [
       {
-        path: "/sets/:setId/boards/:boardId",
+        path: "/sets/:boardSetId/boards/:boardId",
         element: <BoardSelector />,
       },
     ],

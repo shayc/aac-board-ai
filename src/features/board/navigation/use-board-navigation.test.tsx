@@ -39,7 +39,7 @@ function setup(
         <MemoryRouter initialEntries={[{ pathname, state }]}>
           <Routes>
             <Route
-              path="/sets/:setId/boards/:boardId"
+              path="/sets/:boardSetId/boards/:boardId"
               element={<>{children}</>}
             />
             <Route path="/boards/:boardId" element={<>{children}</>} />
@@ -143,7 +143,7 @@ describe("useBoardNavigation", () => {
       expect(result.current.location.state).toBeNull();
     });
 
-    test("does nothing when setId is missing from the route", async () => {
+    test("does nothing when boardSetId is missing from the route", async () => {
       const { result, act } = await setup("/boards/board-1");
 
       await act(() => result.current.nav.goToBoard("board-2"));
@@ -182,7 +182,7 @@ describe("useBoardNavigation", () => {
       expect(result.current.location.pathname).toBe(DEFAULT_PATH);
     });
 
-    test("does nothing when setId is missing from the route", async () => {
+    test("does nothing when boardSetId is missing from the route", async () => {
       const { result, act } = await setup("/boards/board-1", {
         canGoBack: true,
       });
@@ -239,7 +239,7 @@ describe("useBoardNavigation", () => {
       expect(result.current.location.pathname).toBe(DEFAULT_PATH);
     });
 
-    test("does nothing when setId is missing from the route", async () => {
+    test("does nothing when boardSetId is missing from the route", async () => {
       const { result, act } = await setup("/boards/board-1");
 
       await act(() => result.current.nav.goHome());

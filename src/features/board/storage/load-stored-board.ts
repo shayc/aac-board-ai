@@ -5,44 +5,47 @@ import { getAssetUrl } from "./asset-urls";
 import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
 
 export async function loadStoredBoard(
-  setId: string,
+  boardSetId: string,
   boardId: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const obfBoard = await readOBFBoard(setId, boardId);
+  const obfBoard = await readOBFBoard(boardSetId, boardId);
 
   signal?.throwIfAborted();
 
-  const obfWithUrls = await attachAssetUrls(setId, obfBoard);
+  const obfWithUrls = await attachAssetUrls(boardSetId, obfBoard);
 
   signal?.throwIfAborted();
 
   return obfToBoard(obfWithUrls);
 }
 
-async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
-  const record = await getBoardRecord(setId, boardId);
+async function readOBFBoard(
+  boardSetId: string,
+  boardId: string,
+): Promise<OBFBoard> {
+  const record = await getBoardRecord(boardSetId, boardId);
   if (!record) {
-    throw new BoardNotFoundError(setId, boardId);
+    throw new BoardNotFoundError(boardSetId, boardId);
   }
 
   return record.obf;
 }
 
 async function attachAssetUrls(
-  setId: string,
+  boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<OBFBoard> {
   const [images, sounds] = await Promise.all([
-    attachUrlsToMedia(setId, obfBoard.images),
-    attachUrlsToMedia(setId, obfBoard.sounds),
+    attachUrlsToMedia(boardSetId, obfBoard.images),
+    attachUrlsToMedia(boardSetId, obfBoard.sounds),
   ]);
 
   return { ...obfBoard, images, sounds };
 }
 
 async function attachUrlsToMedia(
-  setId: string,
+  boardSetId: string,
   media: OBFMedia[] | undefined,
 ): Promise<OBFMedia[] | undefined> {
   if (!media?.length) {
@@ -56,7 +59,7 @@ async function attachUrlsToMedia(
       }
 
       try {
-        const url = await getAssetUrl(setId, item.path);
+        const url = await getAssetUrl(boardSetId, item.path);
 
         return url ? { ...item, data: url } : item;
       } catch {

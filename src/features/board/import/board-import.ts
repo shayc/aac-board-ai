@@ -46,15 +46,18 @@ export async function importBoardSets(
 
 async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-  const baseSetId = deriveSetId(file.name);
+  const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const setId = buildSetIdCandidate(baseSetId, candidateNumber);
+    const boardSetId = buildBoardSetIdCandidate(
+      baseBoardSetId,
+      candidateNumber,
+    );
 
     try {
       return loaded.format === "obz"
-        ? await importOBZArchive(loaded.archive, setId, file.name)
-        : await importOBFBoard(loaded.board, setId, file.name);
+        ? await importOBZArchive(loaded.archive, boardSetId, file.name)
+        : await importOBFBoard(loaded.board, boardSetId, file.name);
     } catch (error) {
       if (!(error instanceof BoardSetAlreadyExistsError)) {
         throw error;
@@ -65,14 +68,14 @@ async function importBoardFile(file: File): Promise<ImportedBoardSet> {
 
 async function importOBZArchive(
   archive: ParsedOBZ,
-  setId: string,
+  boardSetId: string,
   fileName: string,
 ): Promise<ImportedBoardSet> {
   const { manifest, boards, rootBoard, resources } = archive;
   const boardIdByPath = buildBoardIdByPath(manifest);
 
   await createBoardSet({
-    id: setId,
+    id: boardSetId,
     rootBoardId: rootBoard.id,
     name: rootBoard.name ?? fileName,
     boards: Array.from(boards.values(), (board) =>
@@ -81,23 +84,23 @@ async function importOBZArchive(
     assets: buildAssetInputs(resources),
   });
 
-  return { id: setId, rootBoardId: rootBoard.id };
+  return { id: boardSetId, rootBoardId: rootBoard.id };
 }
 
 async function importOBFBoard(
   board: OBFBoard,
-  setId: string,
+  boardSetId: string,
   fileName: string,
 ): Promise<ImportedBoardSet> {
   await createBoardSet({
-    id: setId,
+    id: boardSetId,
     rootBoardId: board.id,
     name: board.name ?? fileName,
     boards: [board],
     assets: [],
   });
 
-  return { id: setId, rootBoardId: board.id };
+  return { id: boardSetId, rootBoardId: board.id };
 }
 
 function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
@@ -147,18 +150,21 @@ export function buildAssetInputs(
     });
 }
 
-function deriveSetId(fileName: string): string {
+function deriveBoardSetId(fileName: string): string {
   const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";
 }
 
-function buildSetIdCandidate(baseSetId: string, candidateNumber: number) {
+function buildBoardSetIdCandidate(
+  baseBoardSetId: string,
+  candidateNumber: number,
+) {
   if (candidateNumber === 1) {
-    return baseSetId;
+    return baseBoardSetId;
   }
 
   const suffix = `-${candidateNumber}`;
 
-  return `${baseSetId.slice(0, 255 - suffix.length)}${suffix}`;
+  return `${baseBoardSetId.slice(0, 255 - suffix.length)}${suffix}`;
 }

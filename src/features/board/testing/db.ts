@@ -57,15 +57,15 @@ export async function resetBoardsDB(): Promise<void> {
   await refreshBoardSets();
 }
 
-export async function countStoredBoardContent(setId: string): Promise<{
+export async function countStoredBoardContent(boardSetId: string): Promise<{
   boardCount: number;
   assetCount: number;
 }> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets"], "readonly");
   const [boardCount, assetCount] = await Promise.all([
-    tx.objectStore("boards").index("bySetId").count(setId),
-    tx.objectStore("assets").index("bySetId").count(setId),
+    tx.objectStore("boards").index("byBoardSetId").count(boardSetId),
+    tx.objectStore("assets").index("byBoardSetId").count(boardSetId),
     tx.done,
   ]);
 

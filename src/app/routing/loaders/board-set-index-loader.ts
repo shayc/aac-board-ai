@@ -5,10 +5,10 @@ import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 export async function boardSetIndexLoader({
   params,
 }: LoaderFunctionArgs): Promise<Response> {
-  const { setId } = params;
+  const { boardSetId } = params;
   let boardSet;
   try {
-    boardSet = setId ? await getBoardSet(setId) : undefined;
+    boardSet = boardSetId ? await getBoardSet(boardSetId) : undefined;
   } catch (error) {
     if (!(error instanceof InvalidIdError)) {
       throw error;

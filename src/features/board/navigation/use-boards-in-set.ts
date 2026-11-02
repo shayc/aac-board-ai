@@ -15,14 +15,16 @@ interface UseBoardsInSetReturn {
 }
 
 export function useBoardsInSet(
-  setId: string | undefined,
+  boardSetId: string | undefined,
 ): UseBoardsInSetReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
-    enabled: setId !== undefined,
-    deps: [setId ?? ""],
+    enabled: boardSetId !== undefined,
+    deps: [boardSetId ?? ""],
     run: () =>
-      setId === undefined ? Promise.resolve([]) : listBoardRecords(setId),
+      boardSetId === undefined
+        ? Promise.resolve([])
+        : listBoardRecords(boardSetId),
   });
 
   const records = value ?? [];

@@ -162,7 +162,7 @@ describe("createBoardSet", () => {
       );
 
       expect(await getBoardRecord("set-1", "root-1")).toEqual({
-        setId: "set-1",
+        boardSetId: "set-1",
         id: "root-1",
         name: expectedName,
         obf,
@@ -192,7 +192,7 @@ describe("createBoardSet", () => {
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
-  test("rejects empty setId with a typed InvalidIdError", async () => {
+  test("rejects empty boardSetId with a typed InvalidIdError", async () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
@@ -204,7 +204,7 @@ describe("createBoardSet", () => {
     ).rejects.toBeInstanceOf(InvalidIdError);
   });
 
-  test("rejects setId longer than 255 characters", async () => {
+  test("rejects boardSetId longer than 255 characters", async () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
@@ -213,7 +213,7 @@ describe("createBoardSet", () => {
           rootBoardId: "root-1",
         }),
       ),
-    ).rejects.toThrow("Invalid setId");
+    ).rejects.toThrow("Invalid boardSetId");
   });
 
   test("rejects empty rootBoardId", async () => {
@@ -326,7 +326,7 @@ describe("deleteBoardSet", () => {
     expect(await asset.text()).toBe("survivor");
   });
 
-  test("rejects empty setId", async () => {
-    await expect(deleteBoardSet("")).rejects.toThrow("Invalid setId");
+  test("rejects empty boardSetId", async () => {
+    await expect(deleteBoardSet("")).rejects.toThrow("Invalid boardSetId");
   });
 });

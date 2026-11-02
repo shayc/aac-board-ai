@@ -22,7 +22,7 @@ describe("BoardSetList", () => {
           makeBoardSet({ id: "a", name: "Core Words", rootBoardId: "home" }),
           makeBoardSet({ id: "b", name: "Animals" }),
         ]}
-        activeSetId="a"
+        activeBoardSetId="a"
         onNavigate={vi.fn()}
         onShowDetails={vi.fn()}
         onRequestDelete={vi.fn()}

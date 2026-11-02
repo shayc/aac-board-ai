@@ -8,56 +8,58 @@ import {
 export type { BoardRecord } from "./boards-db";
 
 export class BoardNotFoundError extends Error {
-  constructor(setId: string, boardId: string) {
-    super(`Board not found: ${setId}/${boardId}`);
+  constructor(boardSetId: string, boardId: string) {
+    super(`Board not found: ${boardSetId}/${boardId}`);
     this.name = "BoardNotFoundError";
   }
 }
 
 export async function getBoardRecord(
-  setId: string,
+  boardSetId: string,
   boardId: string,
 ): Promise<BoardRecord | undefined> {
-  validateId(setId, "setId");
+  validateId(boardSetId, "boardSetId");
   validateId(boardId, "boardId");
   const db = await getBoardsDB();
 
-  return db.get("boards", [setId, boardId]);
+  return db.get("boards", [boardSetId, boardId]);
 }
 
-export async function listBoardRecords(setId: string): Promise<BoardRecord[]> {
-  validateId(setId, "setId");
+export async function listBoardRecords(
+  boardSetId: string,
+): Promise<BoardRecord[]> {
+  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
 
-  return db.getAllFromIndex("boards", "bySetId", setId);
+  return db.getAllFromIndex("boards", "byBoardSetId", boardSetId);
 }
 
 export async function getAssetBlob(
-  setId: string,
+  boardSetId: string,
   path: string,
 ): Promise<Blob | undefined> {
-  validateId(setId, "setId");
+  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
   const normalizedPath = normalizeAssetPath(path);
-  const asset = await db.get("assets", [setId, normalizedPath]);
+  const asset = await db.get("assets", [boardSetId, normalizedPath]);
 
   return asset?.blob;
 }
 
 export async function updateBoardStrings(
-  setId: string,
+  boardSetId: string,
   boardId: string,
   language: string,
   translations: Record<string, string>,
 ): Promise<void> {
-  validateId(setId, "setId");
+  validateId(boardSetId, "boardSetId");
   validateId(boardId, "boardId");
   const db = await getBoardsDB();
   const tx = db.transaction("boards", "readwrite");
-  const record = await tx.store.get([setId, boardId]);
+  const record = await tx.store.get([boardSetId, boardId]);
 
   if (!record) {
-    throw new BoardNotFoundError(setId, boardId);
+    throw new BoardNotFoundError(boardSetId, boardId);
   }
 
   const updatedObf = {
