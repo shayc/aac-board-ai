@@ -133,5 +133,10 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
+  "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
+  "boardLinkTitle": "להוסיף את ערכת הלוחות הזו?",
+  "boardLinkSource": "מאת {host}",
+  "boardLinkTrustWarning": "יש להוסיף ערכות לוחות רק מאנשים שסומכים עליהם.",
+  "boardLinkAdd": "הוספה",
+  "boardLinkRetry": "ניסיון חוזר"
 }

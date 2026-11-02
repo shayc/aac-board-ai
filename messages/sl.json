@@ -133,5 +133,10 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "errorBoardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
+  "errorBoardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
+  "boardLinkTitle": "Želite dodati ta komplet tabel?",
+  "boardLinkSource": "Vir: {host}",
+  "boardLinkTrustWarning": "Dodajajte komplete tabel samo od oseb, ki jim zaupate.",
+  "boardLinkAdd": "Dodaj",
+  "boardLinkRetry": "Poskusi znova"
 }

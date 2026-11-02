@@ -133,5 +133,10 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी"
+  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "boardLinkTitle": "यह बोर्ड सेट जोड़ें?",
+  "boardLinkSource": "{host} से",
+  "boardLinkTrustWarning": "केवल उन लोगों से बोर्ड सेट जोड़ें जिन पर आप भरोसा करते हैं।",
+  "boardLinkAdd": "जोड़ें",
+  "boardLinkRetry": "फिर से कोशिश करें"
 }

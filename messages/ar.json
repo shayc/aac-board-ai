@@ -133,5 +133,10 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
-  "errorBoardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط"
+  "errorBoardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
+  "boardLinkTitle": "هل تريد إضافة مجموعة اللوحات هذه؟",
+  "boardLinkSource": "من {host}",
+  "boardLinkTrustWarning": "لا تُضف مجموعات اللوحات إلا من أشخاص تثق بهم.",
+  "boardLinkAdd": "إضافة",
+  "boardLinkRetry": "إعادة المحاولة"
 }

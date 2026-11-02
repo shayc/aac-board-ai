@@ -133,5 +133,10 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+  "errorBoardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "boardLinkTitle": "ಈ ಬೋರ್ಡ್ ಸೆಟ್ ಅನ್ನು ಸೇರಿಸಬೇಕೇ?",
+  "boardLinkSource": "{host} ನಿಂದ",
+  "boardLinkTrustWarning": "ನೀವು ನಂಬುವ ಜನರಿಂದ ಮಾತ್ರ ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳನ್ನು ಸೇರಿಸಿ.",
+  "boardLinkAdd": "ಸೇರಿಸಿ",
+  "boardLinkRetry": "ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ"
 }

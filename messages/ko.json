@@ -133,5 +133,10 @@
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
   "errorBoardSetNotFound": "보드 세트를 찾을 수 없음",
-  "errorBoardUrlImportFailed": "링크에서 보드 파일을 가져올 수 없습니다"
+  "errorBoardUrlImportFailed": "링크에서 보드 파일을 가져올 수 없습니다",
+  "boardLinkTitle": "이 보드 세트를 추가할까요?",
+  "boardLinkSource": "출처: {host}",
+  "boardLinkTrustWarning": "신뢰하는 사람의 보드 세트만 추가하세요.",
+  "boardLinkAdd": "추가",
+  "boardLinkRetry": "다시 시도"
 }

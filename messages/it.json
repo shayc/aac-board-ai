@@ -133,5 +133,10 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "errorBoardUrlImportFailed": "Impossibile importare il file di tabella dal link"
+  "errorBoardUrlImportFailed": "Impossibile importare il file di tabella dal link",
+  "boardLinkTitle": "Aggiungere questo set di tabelle?",
+  "boardLinkSource": "Da {host}",
+  "boardLinkTrustWarning": "Aggiungi set di tabelle solo da persone di cui ti fidi.",
+  "boardLinkAdd": "Aggiungi",
+  "boardLinkRetry": "Riprova"
 }

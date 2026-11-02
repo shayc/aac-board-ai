@@ -133,5 +133,10 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "errorBoardUrlImportFailed": "Couldn't import board file from link"
+  "errorBoardUrlImportFailed": "Couldn't import board file from link",
+  "boardLinkTitle": "Add this board set?",
+  "boardLinkSource": "From {host}",
+  "boardLinkTrustWarning": "Only add board sets from people you trust.",
+  "boardLinkAdd": "Add",
+  "boardLinkRetry": "Try again"
 }

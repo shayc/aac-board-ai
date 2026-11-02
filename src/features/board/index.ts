@@ -5,8 +5,13 @@ export {
   InvalidIdError,
   listBoardSets,
 } from "./board-sets/board-sets-store";
+export {
+  rememberBoardSet,
+  selectLaunchBoardSet,
+} from "./board-sets/last-board-set-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
+export { BoardLinkPrompt } from "./import/board-link-prompt";
 export { importBoardSetFromUrl } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";

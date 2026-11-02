@@ -133,5 +133,10 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Набір дошок не знайдено",
-  "errorBoardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням"
+  "errorBoardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
+  "boardLinkTitle": "Додати цей набір дошок?",
+  "boardLinkSource": "Джерело: {host}",
+  "boardLinkTrustWarning": "Додавайте набори дошок лише від людей, яким довіряєте.",
+  "boardLinkAdd": "Додати",
+  "boardLinkRetry": "Повторити"
 }

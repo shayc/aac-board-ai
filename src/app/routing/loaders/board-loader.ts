@@ -2,6 +2,7 @@ import {
   BoardNotFoundError,
   InvalidIdError,
   loadStoredBoard,
+  rememberBoardSet,
   resolveBoardForLanguage,
   type Board,
 } from "@features/board";
@@ -36,6 +37,7 @@ export async function boardLoader({
     );
 
     request.signal.throwIfAborted();
+    rememberBoardSet(boardSetId);
 
     return board;
   } catch (error) {

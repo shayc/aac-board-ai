@@ -133,5 +133,10 @@
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
-  "errorBoardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ"
+  "errorBoardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ",
+  "boardLinkTitle": "เพิ่มชุดบอร์ดนี้ไหม",
+  "boardLinkSource": "จาก {host}",
+  "boardLinkTrustWarning": "เพิ่มชุดบอร์ดจากคนที่คุณไว้ใจเท่านั้น",
+  "boardLinkAdd": "เพิ่ม",
+  "boardLinkRetry": "ลองอีกครั้ง"
 }

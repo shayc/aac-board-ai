@@ -6,6 +6,7 @@ import {
 } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -28,6 +29,13 @@ async function renderApp(initialEntry = "/") {
   );
 
   return { router, screen };
+}
+
+async function renderBoardLink(boardUrl: string) {
+  const app = await renderApp(`/?board=${encodeURIComponent(boardUrl)}`);
+  await app.screen.getByRole("button", { name: "Continue" }).click();
+
+  return app;
 }
 
 function seedRecordedAudioSet() {
@@ -131,22 +139,149 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
-  test("?board= link that collides with an existing set keeps both", async () => {
+  test("?board= link asks first, then adds the set beside a colliding one", async () => {
+    await seedExistingLotsOfStuffSet();
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const { router, screen } = await renderBoardLink(OBZ_FIXTURE_URL);
+
+    await expect
+      .element(screen.getByRole("dialog", { name: "Add this board set?" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByText(`From ${window.location.host}`))
+      .toBeVisible();
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    await screen.getByRole("button", { name: "Add", exact: true }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .toBeVisible();
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+    expect(router.state.location.search).toBe("");
+    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
+      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
+    );
+  });
+
+  test("the ?board= prompt has no accessibility violations", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const { screen } = await renderBoardLink(OBZ_FIXTURE_URL);
+    const dialog = screen.getByRole("dialog", { name: "Add this board set?" });
+    await expect.element(dialog).toBeVisible();
+
+    // Axe would otherwise measure contrast partway through the dialog's fade.
+    await Promise.allSettled(
+      document.getAnimations().map((animation) => animation.finished),
+    );
+
+    await expectNoA11yViolations(dialog.element());
+  });
+
+  test("declining a ?board= link keeps the current board and stores nothing", async () => {
+    await seedExistingLotsOfStuffSet();
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const { router, screen } = await renderBoardLink(OBZ_FIXTURE_URL);
+
+    await screen.getByRole("button", { name: "Cancel" }).click();
+
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+    await expect
+      .element(screen.getByRole("grid", { name: "Old Board" }))
+      .toBeVisible();
+    expect(router.state.location.search).toBe("");
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(await listBoardSets()).toHaveLength(1);
+  });
+
+  test("a failed ?board= import keeps the current board and can be retried", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const { screen } = await renderBoardLink(OBZ_FIXTURE_URL);
+
+    vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
+      new Response(null, { status: 404 }),
+    );
+    await screen.getByRole("button", { name: "Add", exact: true }).click();
+
+    await expect
+      .element(screen.getByText("Couldn't import board file from link"))
+      .toBeVisible();
+    expect(await listBoardSets()).toHaveLength(1);
+
+    await screen.getByRole("button", { name: "Try again" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .toBeVisible();
+  });
+
+  test("canceling a ?board= download aborts it and stores nothing", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const { screen } = await renderBoardLink(OBZ_FIXTURE_URL);
+
+    const { promise: fetchStarted, resolve: markFetchStarted } =
+      Promise.withResolvers<AbortSignal>();
+    vi.spyOn(globalThis, "fetch").mockImplementation((_input, init) => {
+      const signal = init?.signal;
+      if (!signal) {
+        throw new Error("Expected the board download to be abortable");
+      }
+
+      markFetchStarted(signal);
+
+      return new Promise((_resolve, reject) => {
+        signal.addEventListener("abort", () => reject(signal.reason));
+      });
+    });
+
+    await screen.getByRole("button", { name: "Add", exact: true }).click();
+    const signal = await fetchStarted;
+    await screen.getByRole("button", { name: "Cancel" }).click();
+
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+    expect(signal.aborted).toBe(true);
+    expect(await listBoardSets()).toHaveLength(1);
+  });
+
+  test("a non-http(s) ?board= link fails without offering to add it", async () => {
+    await seedExistingLotsOfStuffSet();
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    const { screen } = await renderBoardLink(
+      "data:application/zip;base64,UEsDBA==",
+    );
+
+    await expect
+      .element(screen.getByText("Couldn't import board file from link"))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("button", { name: "Add", exact: true }))
+      .not.toBeInTheDocument();
+    expect(fetchSpy).not.toHaveBeenCalled();
+
+    await screen.getByRole("button", { name: "Close" }).click();
+
+    await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
+  });
+
+  test("the ?board= prompt waits for onboarding", async () => {
     await seedExistingLotsOfStuffSet();
 
     const { screen } = await renderApp(
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
 
-    await screen.getByRole("button", { name: "Continue" }).click();
-
     await expect
-      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .element(screen.getByRole("button", { name: "Continue" }))
       .toBeVisible();
-
-    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
-    );
+    await expect
+      .element(screen.getByRole("dialog", { name: "Add this board set?" }))
+      .not.toBeInTheDocument();
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {

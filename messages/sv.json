@@ -133,5 +133,10 @@
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
-  "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken"
+  "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken",
+  "boardLinkTitle": "Vill du lägga till den här taveluppsättningen?",
+  "boardLinkSource": "Från {host}",
+  "boardLinkTrustWarning": "Lägg bara till taveluppsättningar från personer du litar på.",
+  "boardLinkAdd": "Lägg till",
+  "boardLinkRetry": "Försök igen"
 }

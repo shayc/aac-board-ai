@@ -1,18 +1,12 @@
-import { listBoardSets } from "@features/board";
+import { listBoardSets, rememberBoardSet } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
-const localizedImportFailure = {
-  data: { code: routeErrorCodes.boardUrlImportFailed },
-  init: { status: 400 },
-};
-
 function callLoader(
   searchParams = "",
   signal?: AbortSignal,
@@ -30,79 +24,53 @@ describe("rootIndexLoader", () => {
     await resetBoardsDB();
   });
 
-  test("imports the URL from ?board and redirects to its board route", async () => {
-    const response = await callLoader(
-      `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
-    );
-
-    expect(response.status).toBe(302);
-    const location = response.headers.get("Location");
-    expect(location).toMatch(/^\/sets\/[^/]+\/boards\/[^/]+$/);
-
-    const sets = await listBoardSets();
-    expect(sets).toHaveLength(1);
-  });
-
-  test("keeps the existing set when a URL import has the same filename", async () => {
-    await seedBoardSets([
-      { id: "lots-of-stuff", rootBoardId: "root-1", name: "My Vocabulary" },
-    ]);
-
-    const response = await callLoader(
-      `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
-    );
-
-    expect(response.status).toBe(302);
-    expect(response.headers.get("Location")).toMatch(
-      /^\/sets\/lots-of-stuff-2\/boards\/[^/]+$/,
-    );
-    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff-2", "lots-of-stuff"]),
-    );
-  });
-
-  test("throws a localized 400 instead of fetching a non-http(s) board URL", async () => {
+  test("keeps a ?board link on the redirect without fetching or importing it", async () => {
+    await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
     const fetchSpy = vi.spyOn(globalThis, "fetch");
+    const search = `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`;
 
-    await expect(
-      callLoader(
-        `?board=${encodeURIComponent("data:application/zip;base64,UEsDBA==")}`,
-      ),
-    ).rejects.toMatchObject(localizedImportFailure);
+    const response = await callLoader(search);
 
-    expect(fetchSpy).not.toHaveBeenCalled();
-  });
-
-  test("throws a localized 400 when the board URL cannot be imported", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(null, { status: 404 }),
+    expect(response.headers.get("Location")).toBe(
+      `/sets/set-1/boards/root-1${search}`,
     );
-
-    await expect(
-      callLoader(
-        `?board=${encodeURIComponent("https://example.com/gone.obz")}`,
-      ),
-    ).rejects.toMatchObject(localizedImportFailure);
+    expect(fetchSpy).not.toHaveBeenCalled();
+    expect(await listBoardSets()).toHaveLength(1);
   });
 
-  test.each([
-    {
-      name: "URL import",
-      searchParams: `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
-    },
-    { name: "starter import", searchParams: "" },
-  ])(
-    "preserves navigation cancellation for $name",
-    async ({ searchParams }) => {
-      const controller = new AbortController();
-      controller.abort();
+  test("preserves navigation cancellation for the starter import", async () => {
+    const controller = new AbortController();
+    controller.abort();
 
-      await expect(callLoader(searchParams, controller.signal)).rejects.toBe(
-        controller.signal.reason,
-      );
-      expect(await listBoardSets()).toEqual([]);
-    },
-  );
+    await expect(callLoader("", controller.signal)).rejects.toBe(
+      controller.signal.reason,
+    );
+    expect(await listBoardSets()).toEqual([]);
+  });
+
+  test("opens the last-used set instead of the newest one", async () => {
+    let now = 1000;
+    vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
+
+    await seedBoardSets([
+      { id: "set-1", rootBoardId: "root-1" },
+      { id: "set-2", rootBoardId: "root-2" },
+    ]);
+    rememberBoardSet("set-1");
+
+    const response = await callLoader();
+
+    expect(response.headers.get("Location")).toBe("/sets/set-1/boards/root-1");
+  });
+
+  test("falls back to the newest set when the last-used set is gone", async () => {
+    await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
+    rememberBoardSet("deleted-set");
+
+    const response = await callLoader();
+
+    expect(response.headers.get("Location")).toBe("/sets/set-1/boards/root-1");
+  });
 
   test("redirects to the root board of the most recently updated set when no param is given", async () => {
     let now = 1000;

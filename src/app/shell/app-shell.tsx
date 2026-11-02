@@ -7,6 +7,7 @@ import { AppHeader } from "@app/shell/app-header";
 import { ContentColumn } from "@app/shell/content-column";
 import {
   BoardFileDropOverlay,
+  BoardLinkPrompt,
   useBoardFileDrop,
   useImportBoardFilesOnLaunch,
 } from "@features/board";
@@ -58,6 +59,8 @@ export function AppShell() {
         open={onboarding.shouldShow}
         onClose={onboarding.dismiss}
       />
+
+      {!onboarding.shouldShow && <BoardLinkPrompt />}
 
       <BoardFileDropOverlay open={fileDrop.isDraggingFiles} />
     </Box>

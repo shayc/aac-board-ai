@@ -133,5 +133,10 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link"
+  "errorBoardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link",
+  "boardLinkTitle": "Adaugi acest set de table?",
+  "boardLinkSource": "De la {host}",
+  "boardLinkTrustWarning": "Adaugă seturi de table doar de la persoane în care ai încredere.",
+  "boardLinkAdd": "Adaugă",
+  "boardLinkRetry": "Încearcă din nou"
 }

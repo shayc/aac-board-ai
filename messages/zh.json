@@ -133,5 +133,10 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
-  "errorBoardUrlImportFailed": "无法从链接导入沟通板文件"
+  "errorBoardUrlImportFailed": "无法从链接导入沟通板文件",
+  "boardLinkTitle": "要添加此沟通板集吗？",
+  "boardLinkSource": "来源：{host}",
+  "boardLinkTrustWarning": "请仅添加你信任的人提供的沟通板集。",
+  "boardLinkAdd": "添加",
+  "boardLinkRetry": "重试"
 }

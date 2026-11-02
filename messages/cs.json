@@ -133,5 +133,10 @@
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
-  "errorBoardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu"
+  "errorBoardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu",
+  "boardLinkTitle": "Přidat tuto sadu tabulek?",
+  "boardLinkSource": "Z webu {host}",
+  "boardLinkTrustWarning": "Přidávejte sady tabulek pouze od lidí, kterým důvěřujete.",
+  "boardLinkAdd": "Přidat",
+  "boardLinkRetry": "Zkusit znovu"
 }

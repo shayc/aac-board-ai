@@ -35,6 +35,14 @@ function parseBoardUrl(url: string): URL {
   return resolved;
 }
 
+export function getBoardUrlHost(url: string): string | undefined {
+  try {
+    return parseBoardUrl(url).host;
+  } catch {
+    return undefined;
+  }
+}
+
 function deriveFileName(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }

@@ -83,7 +83,7 @@ State has distinct owners and lifetimes:
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set library, voice catalog, and playback progress                      |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board display, suggestion instructions, and onboarding     |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board display, suggestions, onboarding, and last-used set  |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                          |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
@@ -105,12 +105,17 @@ persists and synchronizes theme mode separately.
 
 ## Core flows
 
-At `/`, a board URL supplied through `?board=` takes precedence. Otherwise, the app
-opens the first stored board set or imports the bundled starter board if the
-library is empty.
+At `/`, the app opens the home board of the last-used board set. If that set no
+longer exists, it opens the newest stored set, or imports the bundled starter
+board if the library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
 `importBoardSets`. Each imported file creates a separate board set.
+
+A `?board=` link is the one import someone else starts, so
+[`BoardLinkPrompt`](../src/features/board/import/board-link-prompt.tsx) asks over
+the user's current board first. Nothing is downloaded or stored until the user
+accepts, and failures stay in the dialog so the board remains available.
 
 ### Open a board
 

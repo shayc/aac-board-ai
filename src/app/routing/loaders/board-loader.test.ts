@@ -3,7 +3,12 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
-import type { Board } from "@features/board";
+import {
+  listBoardSets,
+  rememberBoardSet,
+  selectLaunchBoardSet,
+  type Board,
+} from "@features/board";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardLoader } from "./board-loader";
@@ -18,6 +23,23 @@ function callLoader(
   } as unknown as LoaderFunctionArgs;
 
   return boardLoader(args);
+}
+
+async function seedLaunchCandidates() {
+  await seedBoardSets([
+    {
+      id: "set-1",
+      rootBoardId: "root-1",
+      boards: [makeOBFBoard({ id: "root-1" })],
+    },
+    {
+      id: "set-2",
+      rootBoardId: "root-2",
+      boards: [makeOBFBoard({ id: "root-2" })],
+    },
+  ]);
+
+  return listBoardSets();
 }
 
 describe("boardLoader", () => {
@@ -55,5 +77,24 @@ describe("boardLoader", () => {
     const board = await callLoader("set-1", "root-1");
 
     expect(board).toMatchObject({ id: "root-1", name: "Home" });
+  });
+
+  test("remembers the set of a loaded board for the next launch", async () => {
+    const boardSets = await seedLaunchCandidates();
+
+    await callLoader("set-2", "root-2");
+
+    expect(selectLaunchBoardSet(boardSets)?.id).toBe("set-2");
+  });
+
+  test("does not remember a set whose board failed to load", async () => {
+    const boardSets = await seedLaunchCandidates();
+    rememberBoardSet("set-1");
+
+    await expect(callLoader("set-2", "missing")).rejects.toMatchObject({
+      init: { status: 404 },
+    });
+
+    expect(selectLaunchBoardSet(boardSets)?.id).toBe("set-1");
   });
 });

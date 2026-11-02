@@ -133,5 +133,10 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "errorBoardUrlImportFailed": "Не удалось импортировать файл доски по ссылке"
+  "errorBoardUrlImportFailed": "Не удалось импортировать файл доски по ссылке",
+  "boardLinkTitle": "Добавить этот набор досок?",
+  "boardLinkSource": "Источник: {host}",
+  "boardLinkTrustWarning": "Добавляйте наборы досок только от людей, которым доверяете.",
+  "boardLinkAdd": "Добавить",
+  "boardLinkRetry": "Повторить"
 }

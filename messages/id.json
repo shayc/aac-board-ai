@@ -133,5 +133,10 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
+  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "boardLinkTitle": "Tambahkan set papan ini?",
+  "boardLinkSource": "Dari {host}",
+  "boardLinkTrustWarning": "Hanya tambahkan set papan dari orang yang Anda percayai.",
+  "boardLinkAdd": "Tambahkan",
+  "boardLinkRetry": "Coba lagi"
 }

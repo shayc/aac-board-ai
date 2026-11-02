@@ -133,5 +133,10 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "errorBoardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace"
+  "errorBoardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
+  "boardLinkTitle": "¿Agregar este conjunto de tableros?",
+  "boardLinkSource": "De {host}",
+  "boardLinkTrustWarning": "Agrega conjuntos de tableros solo de personas en las que confíes.",
+  "boardLinkAdd": "Agregar",
+  "boardLinkRetry": "Reintentar"
 }

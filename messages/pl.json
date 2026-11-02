@@ -133,5 +133,10 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
+  "errorBoardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
+  "boardLinkTitle": "Dodać ten zestaw tablic?",
+  "boardLinkSource": "Źródło: {host}",
+  "boardLinkTrustWarning": "Dodawaj zestawy tablic tylko od osób, którym ufasz.",
+  "boardLinkAdd": "Dodaj",
+  "boardLinkRetry": "Spróbuj ponownie"
 }

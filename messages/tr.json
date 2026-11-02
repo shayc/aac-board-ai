@@ -133,5 +133,10 @@
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
-  "errorBoardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı"
+  "errorBoardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
+  "boardLinkTitle": "Bu pano seti eklensin mi?",
+  "boardLinkSource": "Kaynak: {host}",
+  "boardLinkTrustWarning": "Yalnızca güvendiğiniz kişilerden pano seti ekleyin.",
+  "boardLinkAdd": "Ekle",
+  "boardLinkRetry": "Tekrar dene"
 }

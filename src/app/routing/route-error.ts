@@ -1,7 +1,6 @@
 export const routeErrorCodes = {
   boardNotFound: "board-not-found",
   boardSetNotFound: "board-set-not-found",
-  boardUrlImportFailed: "board-url-import-failed",
 } as const;
 
 export type RouteErrorCode =

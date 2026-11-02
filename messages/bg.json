@@ -133,5 +133,10 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
-  "errorBoardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
+  "errorBoardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
+  "boardLinkTitle": "Да се добави ли този набор от дъски?",
+  "boardLinkSource": "От {host}",
+  "boardLinkTrustWarning": "Добавяйте набори от дъски само от хора, на които имате доверие.",
+  "boardLinkAdd": "Добавяне",
+  "boardLinkRetry": "Опитайте отново"
 }
