@@ -6,12 +6,12 @@ interface PlaybackPreferences {
 }
 
 export function parsePlaybackPreferences(raw: unknown): PlaybackPreferences {
-  const parsed = (raw ?? {}) as Record<string, unknown>;
+  const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
     isPartHighlightingEnabled:
-      typeof parsed.isPartHighlightingEnabled === "boolean"
-        ? parsed.isPartHighlightingEnabled
+      typeof stored.isPartHighlightingEnabled === "boolean"
+        ? stored.isPartHighlightingEnabled
         : false,
   };
 }

@@ -11,11 +11,11 @@ const OBF_FIXTURE = "lots-of-stuff.obf";
 const IMPORTED_SET_ID = "lots-of-stuff";
 
 function DropHarness() {
-  const { isDraggingFiles, dropHandlers } = useBoardFileDrop();
+  const { isDraggingFiles, rootProps } = useBoardFileDrop();
 
   return (
     <>
-      <div data-testid="zone" {...dropHandlers}>
+      <div data-testid="zone" {...rootProps}>
         {isDraggingFiles ? "active" : "idle"}
       </div>
       <div data-testid="path">{useLocation().pathname}</div>

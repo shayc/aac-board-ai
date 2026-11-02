@@ -11,10 +11,10 @@ export function useImportBoardFilesOnLaunch(): void {
   const importLaunchedFiles = useEffectEvent(
     async (handles: readonly FileSystemFileHandle[]) => {
       try {
-        const opened = await Promise.all(
+        const files = await Promise.all(
           handles.map((handle) => handle.getFile()),
         );
-        await importAndOpen(opened.filter(hasBoardFileExtension));
+        await importAndOpen(files.filter(hasBoardFileExtension));
       } catch {
         showSnackbar({
           message: (translate) =>

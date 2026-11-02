@@ -17,22 +17,22 @@ import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSourceById = buildMediaSourceMap(obfBoard.images);
-  const soundSourceById = buildMediaSourceMap(obfBoard.sounds);
+  const imageSourceById = buildMediaSourceById(obfBoard.images);
+  const soundSourceById = buildMediaSourceById(obfBoard.sounds);
 
   return {
     id: obfBoard.id,
     name: nonBlankText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
-      transformButton(obfButton, imageSourceById, soundSourceById),
+      obfToBoardButton(obfButton, imageSourceById, soundSourceById),
     ),
-    grid: transformGrid(obfBoard.grid),
-    translations: transformTranslations(obfBoard.strings),
+    grid: obfToBoardGrid(obfBoard.grid),
+    translations: obfToBoardTranslations(obfBoard.strings),
   };
 }
 
-function buildMediaSourceMap(
+function buildMediaSourceById(
   media: OBFMedia[] | undefined,
 ): Map<string, string> {
   const mediaSourceById = new Map<string, string>();
@@ -55,7 +55,7 @@ function resolveMediaSource(media: OBFMedia): string | undefined {
   return media.data ?? media.path ?? media.url;
 }
 
-function transformButton(
+function obfToBoardButton(
   obfButton: OBFButton,
   imageSourceById: Map<string, string>,
   soundSourceById: Map<string, string>,
@@ -88,7 +88,7 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   });
 }
 
-function transformTranslations(
+function obfToBoardTranslations(
   strings: OBFBoard["strings"],
 ): BoardTranslations {
   if (!strings) {
@@ -103,7 +103,7 @@ function transformTranslations(
   );
 }
 
-function transformGrid(obfGrid: OBFGrid): BoardGrid {
+function obfToBoardGrid(obfGrid: OBFGrid): BoardGrid {
   return {
     rows: obfGrid.rows,
     columns: obfGrid.columns,

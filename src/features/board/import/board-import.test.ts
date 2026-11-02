@@ -19,7 +19,7 @@ import {
   BOARD_IMPORT_LIMITS,
   buildAssetInputs,
   importBoardSets,
-  resolveLoadBoardPaths,
+  resolveBoardLinks,
 } from "./board-import";
 
 const OBZ_FIXTURE = "lots-of-stuff.obz";
@@ -258,7 +258,7 @@ describe("importBoardSets", () => {
   });
 });
 
-describe("resolveLoadBoardPaths", () => {
+describe("resolveBoardLinks", () => {
   const minimalBoard: OBFBoard = {
     format: "open-board-0.1",
     id: "board-1",
@@ -275,7 +275,7 @@ describe("resolveLoadBoardPaths", () => {
     };
     const pathToId = new Map([["boards/child.obf", "child-1"]]);
 
-    const result = resolveLoadBoardPaths(board, pathToId);
+    const result = resolveBoardLinks(board, pathToId);
 
     expect(result.buttons[0]?.load_board?.id).toBe("child-1");
     expect(result.buttons[0]?.load_board?.path).toBe("boards/child.obf");
@@ -294,7 +294,7 @@ describe("resolveLoadBoardPaths", () => {
     };
     const pathToId = new Map([["boards/child.obf", "different-id"]]);
 
-    const result = resolveLoadBoardPaths(board, pathToId);
+    const result = resolveBoardLinks(board, pathToId);
 
     expect(result.buttons[0]?.load_board?.id).toBe("existing-id");
   });
@@ -312,7 +312,7 @@ describe("resolveLoadBoardPaths", () => {
     };
     const pathToId = new Map([["boards/child.obf", "child-1"]]);
 
-    const result = resolveLoadBoardPaths(board, pathToId);
+    const result = resolveBoardLinks(board, pathToId);
 
     expect(result.buttons[0]?.load_board?.id).toBeUndefined();
   });
@@ -324,7 +324,7 @@ describe("resolveLoadBoardPaths", () => {
     };
     const pathToId = new Map([["boards/child.obf", "child-1"]]);
 
-    const result = resolveLoadBoardPaths(board, pathToId);
+    const result = resolveBoardLinks(board, pathToId);
 
     expect(result.buttons[0]?.load_board).toBeUndefined();
     expect(result.buttons[0]?.label).toBe("Hello");

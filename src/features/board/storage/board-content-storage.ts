@@ -62,11 +62,11 @@ export async function updateBoardStrings(
     throw new BoardNotFoundError(boardSetId, boardId);
   }
 
-  const updatedObf = {
+  const updatedOBF = {
     ...record.obf,
     strings: { ...record.obf.strings, [language]: translations },
   };
 
-  await tx.store.put({ ...record, obf: updatedObf });
+  await tx.store.put({ ...record, obf: updatedOBF });
   await tx.done;
 }

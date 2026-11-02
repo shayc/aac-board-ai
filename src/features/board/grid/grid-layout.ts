@@ -112,11 +112,15 @@ function createTrackAxisQueries(
 ): Record<string, Record<string, number>> {
   const queries: Record<string, Record<string, number>> = {};
 
-  for (let visible = 2; visible <= count; visible++) {
-    const thresholdPx = calculateTrackFitThresholdPx(visible, gapPx, paddingPx);
+  for (let visibleTracks = 2; visibleTracks <= count; visibleTracks++) {
+    const thresholdPx = calculateTrackFitThresholdPx(
+      visibleTracks,
+      gapPx,
+      paddingPx,
+    );
 
     queries[`@container (${feature}: ${formatPx(thresholdPx)})`] = {
-      [property]: visible,
+      [property]: visibleTracks,
     };
   }
 

@@ -8,12 +8,12 @@ interface SuggestionPreferences {
 export function parseSuggestionPreferences(
   raw: unknown,
 ): SuggestionPreferences {
-  const parsed = (raw ?? {}) as Record<string, unknown>;
+  const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
     customInstructions:
-      typeof parsed.customInstructions === "string"
-        ? parsed.customInstructions
+      typeof stored.customInstructions === "string"
+        ? stored.customInstructions
         : "",
   };
 }

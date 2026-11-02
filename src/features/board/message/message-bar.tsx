@@ -22,7 +22,7 @@ export function MessageBar({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return scrollElementIntoView(
+    return scheduleScrollIntoView(
       scrollContainerRef.current?.lastElementChild ?? undefined,
       "end",
     );
@@ -38,7 +38,7 @@ export function MessageBar({
       return;
     }
 
-    return scrollElementIntoView(
+    return scheduleScrollIntoView(
       scrollContainerRef.current?.children[index],
       "nearest",
     );
@@ -103,7 +103,7 @@ export function MessageBar({
   );
 }
 
-function scrollElementIntoView(
+function scheduleScrollIntoView(
   element: Element | undefined,
   inline: ScrollLogicalPosition,
 ): () => void {

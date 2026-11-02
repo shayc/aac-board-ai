@@ -39,13 +39,13 @@ export const SPEECH_VOLUME: ClampedNumberOptions = {
 };
 
 export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
-  const parsed = (raw ?? {}) as Record<string, unknown>;
+  const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
-    voiceURI: typeof parsed.voiceURI === "string" ? parsed.voiceURI : null,
-    rate: parseClampedNumber(parsed.rate, SPEECH_RATE),
-    pitch: parseClampedNumber(parsed.pitch, SPEECH_PITCH),
-    volume: parseClampedNumber(parsed.volume, SPEECH_VOLUME),
+    voiceURI: typeof stored.voiceURI === "string" ? stored.voiceURI : null,
+    rate: parseClampedNumber(stored.rate, SPEECH_RATE),
+    pitch: parseClampedNumber(stored.pitch, SPEECH_PITCH),
+    volume: parseClampedNumber(stored.volume, SPEECH_VOLUME),
   };
 }
 

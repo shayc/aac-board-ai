@@ -18,7 +18,7 @@ function desaturate(color: string): string {
 }
 
 function darken(color: string, percentage: number): string {
-  return `color-mix(in srgb, ${color} ${percentage}%, black)`;
+  return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
 }
 
 export function Tile({
@@ -78,7 +78,7 @@ export function Tile({
           boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
             backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 85),
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
           },
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
@@ -86,7 +86,7 @@ export function Tile({
         },
         "&:active": {
           backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 75),
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {

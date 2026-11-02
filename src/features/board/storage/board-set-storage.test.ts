@@ -173,7 +173,7 @@ describe("createBoardSet", () => {
   );
 
   test("aborts the entire transaction when a board fails to clone", async () => {
-    const uncloneableObf = {
+    const uncloneableOBF = {
       ...makeOBFBoard({ id: "b" }),
       onFail: () => "noop",
     } as unknown as OBFBoard;
@@ -181,7 +181,7 @@ describe("createBoardSet", () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
-          boards: [uncloneableObf],
+          boards: [uncloneableOBF],
           assets: [{ path: "x.png", blob: new Blob(["x"]) }],
         }),
       ),
