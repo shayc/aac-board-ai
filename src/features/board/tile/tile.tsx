@@ -21,11 +21,6 @@ function darken(color: string, percentage: number): string {
   return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
 }
 
-// Dark mode caps tile lightness so the grid doesn't glare, keeping each hue.
-function dim(color: string): string {
-  return `oklch(from ${color} min(l, 0.82) c h)`;
-}
-
 // Tiles are the only raised elements: the chrome around them is flat, so
 // depth marks what you communicate with. They press in when activated.
 const TILE_ELEVATION = {
@@ -52,8 +47,10 @@ export function Tile({
   isBorderVisible = true,
   onActivate,
 }: TileProps) {
-  const fill = backgroundColor ? "var(--tile-fill)" : undefined;
-  const resolvedBorderColor = borderColor ? "var(--tile-border)" : fill;
+  const resolvedBorderColor = borderColor ?? backgroundColor;
+  const resolvedBackgroundColor = backgroundColor
+    ? desaturate(backgroundColor)
+    : undefined;
 
   return (
     <Button
@@ -63,8 +60,6 @@ export function Tile({
       disableRipple
       onClick={onActivate}
       sx={(theme) => ({
-        ...(backgroundColor && { "--tile-fill": desaturate(backgroundColor) }),
-        ...(borderColor && { "--tile-border": desaturate(borderColor) }),
         position: "relative",
         display: "grid",
         alignItems: "stretch",
@@ -74,14 +69,16 @@ export function Tile({
         p: 1,
         overflow: "hidden",
         textTransform: "none",
-        color: fill ? `contrast-color(${fill})` : "inherit",
+        color: resolvedBackgroundColor
+          ? `contrast-color(${resolvedBackgroundColor})`
+          : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
-            ? resolvedBorderColor
+            ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,
         borderRadius: 4,
-        backgroundColor: fill,
+        backgroundColor: resolvedBackgroundColor,
         boxShadow: TILE_ELEVATION.light.rest,
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
@@ -94,19 +91,17 @@ export function Tile({
         },
         "&:hover": {
           "@media (hover: hover)": {
-            backgroundColor: fill && darken(fill, 15),
+            backgroundColor:
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
             boxShadow: TILE_ELEVATION.light.hover,
           },
         },
         "&:active": {
-          backgroundColor: fill && darken(fill, 25),
+          backgroundColor:
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
           boxShadow: TILE_ELEVATION.light.pressed,
         },
         ...theme.applyStyles("dark", {
-          ...(backgroundColor && {
-            "--tile-fill": dim(desaturate(backgroundColor)),
-          }),
-          ...(borderColor && { "--tile-border": dim(desaturate(borderColor)) }),
           boxShadow: TILE_ELEVATION.dark.rest,
           "&:hover": {
             "@media (hover: hover)": {
