@@ -29,9 +29,9 @@ export function SuggestionSettings() {
 
   return (
     <TextField
-      label={t(m.aiCustomInstructions)}
-      placeholder={t(m.aiCustomInstructionsPlaceholder)}
-      helperText={t(m.aiCustomInstructionsHelper)}
+      label={t(m.suggestionsCustomInstructions)}
+      placeholder={t(m.suggestionsCustomInstructionsPlaceholder)}
+      helperText={t(m.suggestionsCustomInstructionsHelper)}
       value={customInstructions}
       onChange={(event) => setSuggestionCustomInstructions(event.target.value)}
       variant="outlined"

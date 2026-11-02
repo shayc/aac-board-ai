@@ -48,6 +48,6 @@ function translateRouteError(code: RouteErrorCode, t: Translate): string {
     case routeErrorCodes.boardSetNotFound:
       return t(m.errorBoardSetNotFound);
     case routeErrorCodes.boardUrlImportFailed:
-      return t(m.boardUrlImportFailed);
+      return t(m.errorBoardUrlImportFailed);
   }
 }

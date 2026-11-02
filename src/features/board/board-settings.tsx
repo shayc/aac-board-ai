@@ -78,7 +78,7 @@ export function BoardSettings() {
           id={labelPlacementId}
           sx={{ typography: "body2", color: "text.secondary" }}
         >
-          {t(m.tileLabelPosition)}
+          {t(m.tileLabelPlacement)}
         </FormLabel>
         <RadioGroup
           aria-labelledby={labelPlacementId}
