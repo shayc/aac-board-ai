@@ -1,89 +1,23 @@
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../board-types";
-import {
-  BoardNotFoundError,
-  getAssetBlob,
-  getBoard,
-} from "./board-content-storage";
-import { createObjectUrlRegistry, type ObjectUrlRegistry } from "./object-url";
-
-export interface BoardMediaResource {
-  commit(): void;
-  dispose(): void;
-}
-
-export interface HydratedBoard {
-  board: Board;
-  media: BoardMediaResource;
-}
+import { getAssetUrl } from "./asset-urls";
+import { BoardNotFoundError, getBoard } from "./board-content-storage";
 
 export async function hydrateBoard(
   setId: string,
   boardId: string,
   signal?: AbortSignal,
-): Promise<HydratedBoard> {
-  const registry = createObjectUrlRegistry();
-  try {
-    const obf = await readOBFBoard(setId, boardId);
+): Promise<Board> {
+  const obf = await readOBFBoard(setId, boardId);
 
-    signal?.throwIfAborted();
+  signal?.throwIfAborted();
 
-    const hydrated = await hydrateOBFBoard(setId, obf, registry);
-    const board = obfToBoard(hydrated);
+  const hydrated = await hydrateOBFBoard(setId, obf);
 
-    signal?.throwIfAborted();
+  signal?.throwIfAborted();
 
-    return { board, media: createBoardMediaResource(registry, signal) };
-  } catch (error) {
-    registry.revokeAll();
-    throw error;
-  }
-}
-
-function createBoardMediaResource(
-  registry: ObjectUrlRegistry,
-  signal?: AbortSignal,
-): BoardMediaResource {
-  let state: "provisional" | "committed" | "disposed" = "provisional";
-
-  function removeAbortListener() {
-    signal?.removeEventListener("abort", disposeProvisional);
-  }
-
-  function dispose() {
-    if (state === "disposed") {
-      return;
-    }
-
-    state = "disposed";
-    removeAbortListener();
-    registry.revokeAll();
-  }
-
-  function disposeProvisional() {
-    if (state === "provisional") {
-      dispose();
-    }
-  }
-
-  signal?.addEventListener("abort", disposeProvisional, { once: true });
-
-  return {
-    commit() {
-      if (state === "disposed") {
-        throw new Error("Cannot commit disposed board media");
-      }
-
-      if (state === "committed") {
-        return;
-      }
-
-      state = "committed";
-      removeAbortListener();
-    },
-    dispose,
-  };
+  return obfToBoard(hydrated);
 }
 
 async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
@@ -98,11 +32,10 @@ async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
 async function hydrateOBFBoard(
   setId: string,
   board: OBFBoard,
-  registry: ObjectUrlRegistry,
 ): Promise<OBFBoard> {
   const [images, sounds] = await Promise.all([
-    hydrateAssets(setId, board.images, registry),
-    hydrateAssets(setId, board.sounds, registry),
+    hydrateAssets(setId, board.images),
+    hydrateAssets(setId, board.sounds),
   ]);
 
   return { ...board, images, sounds };
@@ -111,7 +44,6 @@ async function hydrateOBFBoard(
 async function hydrateAssets(
   setId: string,
   assets: OBFMedia[] | undefined,
-  registry: ObjectUrlRegistry,
 ): Promise<OBFMedia[] | undefined> {
   if (!assets?.length) {
     return assets;
@@ -124,8 +56,7 @@ async function hydrateAssets(
       }
 
       try {
-        const blob = await getAssetBlob(setId, asset.path);
-        const url = blob ? registry.create(blob) : null;
+        const url = await getAssetUrl(setId, asset.path);
 
         return url ? { ...asset, data: url } : asset;
       } catch {

@@ -73,7 +73,7 @@ export async function countStoredBoardContent(setId: string): Promise<{
 }
 
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
-  await clearBoardsDB();
+  await resetBoardsDB();
   for (const { boards, assets = [], ...record } of records) {
     await createBoardSet({
       name: record.id,

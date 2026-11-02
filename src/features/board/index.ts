@@ -18,10 +18,6 @@ export {
 export { BoardSelector } from "./navigation/board-selector";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { hydrateBoard } from "./storage/board-hydration";
-export type {
-  BoardMediaResource,
-  HydratedBoard,
-} from "./storage/board-hydration";
 export { SuggestionsSettings } from "./suggestions/suggestions-settings";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 

@@ -30,12 +30,40 @@ async function renderApp(initialEntry = "/") {
   return { router, screen };
 }
 
+function seedRecordedAudioSet() {
+  const soundPath = "sounds/hello.wav";
+
+  return seedBoardSets([
+    {
+      id: "recorded-set",
+      rootBoardId: "home",
+      boards: [
+        makeOBFBoard({
+          id: "home",
+          name: "Home",
+          buttons: [
+            { id: "hello", label: "hello", sound_id: "hello-sound" },
+            { id: "more", label: "more", load_board: { id: "next" } },
+          ],
+          grid: { rows: 1, columns: 2, order: [["hello", "more"]] },
+          sounds: [
+            { id: "hello-sound", path: soundPath, content_type: "audio/wav" },
+          ],
+        }),
+        makeOBFBoard({ id: "next", name: "Next" }),
+      ],
+      assets: [{ path: soundPath, blob: new Blob(["recording"]) }],
+    },
+  ]);
+}
+
 describe("app flow", () => {
   let speech: ReturnType<typeof stubSpeech>;
+  let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(async () => {
     speech = stubSpeech();
-    stubAudio();
+    audio = stubAudio();
     await resetBoardsDB();
   });
 
@@ -66,6 +94,32 @@ describe("app flow", () => {
       expect(speech.speak.mock.calls).toHaveLength(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("no way feline");
     });
+  });
+
+  test("recorded audio stays playable after leaving its board", async () => {
+    await seedRecordedAudioSet();
+
+    const { screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("button", { name: "hello" }).click();
+    await screen.getByRole("button", { name: "more" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Next" }))
+      .toBeVisible();
+
+    audio.play.mockClear();
+    await screen.getByRole("button", { name: "Play message" }).click();
+
+    await vi.waitFor(() => {
+      expect(audio.play).toHaveBeenCalledTimes(1);
+    });
+
+    const [element] = audio.play.mock.contexts as HTMLAudioElement[];
+    const response = await fetch(element.src);
+
+    expect(await response.text()).toBe("recording");
   });
 
   test("empty database: imports and opens the bundled starter board", async () => {
