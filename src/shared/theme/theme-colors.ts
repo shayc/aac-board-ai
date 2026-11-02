@@ -10,10 +10,11 @@ export const CONTENT_DARK = "#0e1014";
 export const SURFACE_LIGHT = "#ffffff";
 export const SURFACE_DARK = "#1a1d23";
 
-// Teal, at matched tones in both modes: distinct from every Fitzgerald tile
-// category color. Dark pairs it with dark ink for icon contrast.
-export const PRIMARY_LIGHT = { main: "#0d9488", contrastText: "#ffffff" };
-export const PRIMARY_DARK = { main: "#38c6b4", contrastText: "#042f2e" };
+// Primary is an Apple-style system blue at matched tones in both modes: the
+// color people already read as "tap this", and saturated enough to stay
+// distinct from the pale blue Fitzgerald tiles.
+export const PRIMARY_LIGHT = { main: "#007aff", contrastText: "#ffffff" };
+export const PRIMARY_DARK = { main: "#0a84ff", contrastText: "#ffffff" };
 
 // Amber marks editing (backspace), distinct from navigating and speaking.
 export const EDIT_LIGHT = { fill: "#ffe7bf", ink: "#7a4f00" };
