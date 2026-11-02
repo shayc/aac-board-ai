@@ -1,10 +1,12 @@
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { buttonClasses } from "@mui/material/Button";
+import { buttonGroupClasses } from "@mui/material/ButtonGroup";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
+  type Shadows,
   type ThemeOptions,
 } from "@mui/material/styles";
 import rtlPlugin from "@mui/stylis-plugin-rtl";
@@ -34,8 +36,17 @@ const rtlCache = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
+// Elevation 1 is the soft lift that floats light-mode chrome off the page.
+const [none, , ...higherShadows] = createTheme().shadows;
+const shadows = [
+  none,
+  "0 1px 2px rgb(16 24 40 / 0.08), 0 2px 6px rgb(16 24 40 / 0.07)",
+  ...higherShadows,
+] as Shadows;
+
 const themeOptions = {
   focusVisible: true,
+  shadows,
   cssVariables: {
     colorSchemeSelector: "class",
     // index.html owns color-scheme; MUI only emits the palette vars.
@@ -140,6 +151,12 @@ const themeOptions = {
                 [`&.${buttonClasses.disabled}`]: {
                   "--variant-outlinedBg": "transparent",
                 },
+                ...theme.applyStyles("light", {
+                  [`&:not(.${buttonClasses.disabled})`]: {
+                    borderColor: "transparent",
+                    boxShadow: (theme.vars ?? theme).shadows[1],
+                  },
+                }),
               },
             },
             {
@@ -155,11 +172,39 @@ const themeOptions = {
         }),
       },
     },
+    MuiButtonGroup: {
+      styleOverrides: {
+        root: ({ theme }) => {
+          const palette = (theme.vars ?? theme).palette;
+
+          return {
+            borderRadius: 32,
+            ...theme.applyStyles("light", {
+              backgroundColor: palette.background.paper,
+              boxShadow: (theme.vars ?? theme).shadows[1],
+              [`& .${buttonGroupClasses.grouped}`]: {
+                borderColor: "transparent",
+                boxShadow: "none",
+              },
+              [`& .${buttonGroupClasses.lastButton}`]: {
+                borderLeftColor: palette.divider,
+              },
+            }),
+          };
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           borderRadius: 32,
-        },
+          ...theme.applyStyles("light", {
+            backgroundColor: (theme.vars ?? theme).palette.background.paper,
+            boxShadow: (theme.vars ?? theme).shadows[1],
+          }),
+        }),
+        notchedOutline: ({ theme }) =>
+          theme.applyStyles("light", { borderColor: "transparent" }),
       },
     },
     MuiListItemButton: {

@@ -48,15 +48,22 @@ export function MessageBar({
     <Stack direction="row" sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}>
       <Stack
         direction="row"
-        sx={{
-          flexGrow: 1,
-          gap: 2,
-          overflow: "hidden",
-          border: 1,
-          borderColor: "divider",
-          borderRadius: 32,
-          bgcolor: "background.paper",
-        }}
+        sx={[
+          {
+            flexGrow: 1,
+            gap: 2,
+            overflow: "hidden",
+            border: 1,
+            borderColor: "divider",
+            borderRadius: 32,
+            bgcolor: "background.paper",
+          },
+          (theme) =>
+            theme.applyStyles("light", {
+              borderColor: "transparent",
+              boxShadow: (theme.vars ?? theme).shadows[1],
+            }),
+        ]}
       >
         <Stack
           ref={scrollContainerRef}
