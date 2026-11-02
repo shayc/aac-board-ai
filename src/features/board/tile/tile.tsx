@@ -27,14 +27,10 @@ function dim(color: string, maxLightness: number): string {
   return `oklch(from ${color} min(l, ${maxLightness}) calc(c * 0.95) h)`;
 }
 
-// Labels and the key edge use a shade of the tile's own hue: deep on light
+// Labels use a shade of the tile's own hue: deep on light
 // tiles, pale on dark ones, so contrast holds for any board's colors.
 function ink(color: string): string {
   return `oklch(from ${color} calc(0.685 - 0.265 * sign(l - 0.6)) calc(c * 1.6) h)`;
-}
-
-function deepen(color: string): string {
-  return `oklch(from ${color} 0.42 calc(c * 1.6) h)`;
 }
 
 const TILE_RADIUS = 30;
@@ -142,7 +138,7 @@ export function Tile({
               isBorderVisible && !borderColor
                 ? dim(resolvedBackgroundColor, 0.86)
                 : undefined,
-            boxShadow: `inset 0 -3px 0 ${deepen(resolvedBackgroundColor)}, ${TILE_DROP_DARK}`,
+            boxShadow: TILE_DROP_DARK,
             "&:hover": {
               "@media (hover: hover)": {
                 backgroundColor: dim(resolvedBackgroundColor, 0.8),
@@ -150,7 +146,7 @@ export function Tile({
             },
             "&:active": {
               backgroundColor: dim(resolvedBackgroundColor, 0.76),
-              boxShadow: `inset 0 -1px 0 ${deepen(resolvedBackgroundColor)}`,
+              boxShadow: "none",
             },
           })),
         ...(isFolder && {
