@@ -26,6 +26,21 @@ function dim(color: string): string {
   return `oklch(from ${color} min(l, 0.82) c h)`;
 }
 
+// Tiles are the only raised elements: the chrome around them is flat, so
+// depth marks what you communicate with. They press in when activated.
+const TILE_ELEVATION = {
+  light: {
+    rest: "0 1px 2px rgb(16 24 40 / 0.08), 0 2px 6px rgb(16 24 40 / 0.10)",
+    hover: "0 2px 4px rgb(16 24 40 / 0.10), 0 6px 14px rgb(16 24 40 / 0.14)",
+    pressed: "0 1px 1px rgb(16 24 40 / 0.10)",
+  },
+  dark: {
+    rest: "0 1px 2px rgb(0 0 0 / 0.6), 0 3px 8px rgb(0 0 0 / 0.45)",
+    hover: "0 2px 4px rgb(0 0 0 / 0.6), 0 8px 18px rgb(0 0 0 / 0.55)",
+    pressed: "0 1px 1px rgb(0 0 0 / 0.6)",
+  },
+};
+
 export function Tile({
   ariaLabel,
   tabIndex,
@@ -50,12 +65,6 @@ export function Tile({
       sx={(theme) => ({
         ...(backgroundColor && { "--tile-fill": desaturate(backgroundColor) }),
         ...(borderColor && { "--tile-border": desaturate(borderColor) }),
-        ...theme.applyStyles("dark", {
-          ...(backgroundColor && {
-            "--tile-fill": dim(desaturate(backgroundColor)),
-          }),
-          ...(borderColor && { "--tile-border": dim(desaturate(borderColor)) }),
-        }),
         position: "relative",
         display: "grid",
         alignItems: "stretch",
@@ -73,22 +82,41 @@ export function Tile({
         }`,
         borderRadius: 4,
         backgroundColor: fill,
-        // A hairline edge, like the rest of the chrome, instead of elevation.
-        boxShadow: `0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
-        transition: theme.transitions.create("background-color", {
-          duration: theme.transitions.duration.short,
-        }),
+        boxShadow: TILE_ELEVATION.light.rest,
+        transition: theme.transitions.create(
+          ["background-color", "box-shadow"],
+          {
+            duration: theme.transitions.duration.short,
+          },
+        ),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
         "&:hover": {
           "@media (hover: hover)": {
             backgroundColor: fill && darken(fill, 15),
+            boxShadow: TILE_ELEVATION.light.hover,
           },
         },
         "&:active": {
           backgroundColor: fill && darken(fill, 25),
+          boxShadow: TILE_ELEVATION.light.pressed,
         },
+        ...theme.applyStyles("dark", {
+          ...(backgroundColor && {
+            "--tile-fill": dim(desaturate(backgroundColor)),
+          }),
+          ...(borderColor && { "--tile-border": dim(desaturate(borderColor)) }),
+          boxShadow: TILE_ELEVATION.dark.rest,
+          "&:hover": {
+            "@media (hover: hover)": {
+              boxShadow: TILE_ELEVATION.dark.hover,
+            },
+          },
+          "&:active": {
+            boxShadow: TILE_ELEVATION.dark.pressed,
+          },
+        }),
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
