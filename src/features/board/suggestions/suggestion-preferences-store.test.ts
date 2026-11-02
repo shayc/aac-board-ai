@@ -1,22 +1,22 @@
 import { describe, expect, test } from "vitest";
-import { parseBoardSuggestionConfig } from "./suggestion-config-store";
+import { parseSuggestionPreferences } from "./suggestion-preferences-store";
 
-describe("suggestion-config-store", () => {
-  describe("parseBoardSuggestionConfig", () => {
+describe("suggestion-preferences-store", () => {
+  describe("parseSuggestionPreferences", () => {
     test("defaults custom instructions to an empty string", () => {
-      expect(parseBoardSuggestionConfig(undefined).customInstructions).toBe("");
+      expect(parseSuggestionPreferences(undefined).customInstructions).toBe("");
     });
 
     test("ignores non-string custom instructions", () => {
       expect(
-        parseBoardSuggestionConfig({ customInstructions: true })
+        parseSuggestionPreferences({ customInstructions: true })
           .customInstructions,
       ).toBe("");
     });
 
     test("keeps stored custom instructions", () => {
       expect(
-        parseBoardSuggestionConfig({ customInstructions: "Be concise" })
+        parseSuggestionPreferences({ customInstructions: "Be concise" })
           .customInstructions,
       ).toBe("Be concise");
     });

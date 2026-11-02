@@ -10,7 +10,7 @@ import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activation";
-import { useBoardAppearanceConfig } from "./appearance/appearance-store";
+import { useAppearancePreferences } from "./appearance/appearance-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
@@ -38,7 +38,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardAppearanceConfig();
+    useAppearancePreferences();
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);

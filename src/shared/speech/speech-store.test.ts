@@ -1,10 +1,10 @@
 import { describe, expect, test } from "vitest";
-import { parseSpeechConfig } from "./speech-store";
+import { parseSpeechPreferences } from "./speech-store";
 
 describe("speech-store", () => {
-  describe("parseSpeechConfig", () => {
-    test("uses defaults when the config is absent", () => {
-      expect(parseSpeechConfig(undefined)).toEqual({
+  describe("parseSpeechPreferences", () => {
+    test("uses defaults when the preferences are absent", () => {
+      expect(parseSpeechPreferences(undefined)).toEqual({
         voiceURI: null,
         rate: 1,
         pitch: 1,
@@ -14,7 +14,7 @@ describe("speech-store", () => {
 
     test("keeps valid stored values", () => {
       expect(
-        parseSpeechConfig({
+        parseSpeechPreferences({
           voiceURI: "voice-1",
           rate: 1.2,
           pitch: 0.8,
@@ -30,7 +30,7 @@ describe("speech-store", () => {
 
     test("ignores invalid stored values", () => {
       expect(
-        parseSpeechConfig({
+        parseSpeechPreferences({
           voiceURI: false,
           rate: "fast",
           pitch: NaN,
@@ -54,7 +54,7 @@ describe("speech-store", () => {
     ] as const)(
       "clamps %s values to their supported range",
       (key, value, expected) => {
-        expect(parseSpeechConfig({ [key]: value })[key]).toBe(expected);
+        expect(parseSpeechPreferences({ [key]: value })[key]).toBe(expected);
       },
     );
   });

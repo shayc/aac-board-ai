@@ -96,7 +96,7 @@ describe("SpeechSettings", () => {
 
     await expect.element(voiceSelect).toHaveTextContent("Alex");
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-config");
+      const stored = localStorage.getItem("speech-preferences");
       expect(stored).not.toBeNull();
       expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-2" });
     });
@@ -120,7 +120,7 @@ describe("SpeechSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("speech-config");
+      const stored = localStorage.getItem("speech-preferences");
       expect(stored).not.toBeNull();
       expect(JSON.parse(stored ?? "{}")).toMatchObject({
         rate: 1.1,

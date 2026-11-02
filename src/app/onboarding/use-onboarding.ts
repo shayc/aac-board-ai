@@ -1,7 +1,7 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
-const store = createPersistedStore<boolean>("hasSeenOnboarding", (raw) =>
+const store = createPersistedStore<boolean>("has-seen-onboarding", (raw) =>
   typeof raw === "boolean" ? raw : false,
 );
 

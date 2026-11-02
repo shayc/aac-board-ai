@@ -8,7 +8,7 @@ import {
 import { useSyncExternalStore } from "react";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
-interface SpeechConfig {
+interface SpeechPreferences {
   voiceURI: string | null;
   rate: number;
   pitch: number;
@@ -38,7 +38,7 @@ export const SPEECH_VOLUME: ClampedNumberOptions = {
   fallback: 1,
 };
 
-export function parseSpeechConfig(raw: unknown): SpeechConfig {
+export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
   const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -68,33 +68,36 @@ synthesis?.addEventListener("voiceschanged", () => {
   voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
 });
 
-const speechConfigStore = createPersistedStore<SpeechConfig>(
-  "speech-config",
-  parseSpeechConfig,
+const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
+  "speech-preferences",
+  parseSpeechPreferences,
 );
 
-function updateConfig(patch: Partial<SpeechConfig>): void {
-  speechConfigStore.setState({ ...speechConfigStore.getSnapshot(), ...patch });
+function updatePreferences(patch: Partial<SpeechPreferences>): void {
+  speechPreferencesStore.setState({
+    ...speechPreferencesStore.getSnapshot(),
+    ...patch,
+  });
 }
 
-export function getSpeechConfig(): SpeechConfig {
-  return speechConfigStore.getSnapshot();
+export function getSpeechPreferences(): SpeechPreferences {
+  return speechPreferencesStore.getSnapshot();
 }
 
 export function setVoiceURI(voiceURI: string | null): void {
-  updateConfig({ voiceURI });
+  updatePreferences({ voiceURI });
 }
 
 export function setRate(rate: number): void {
-  updateConfig({ rate });
+  updatePreferences({ rate });
 }
 
 export function setPitch(pitch: number): void {
-  updateConfig({ pitch });
+  updatePreferences({ pitch });
 }
 
 export function setVolume(volume: number): void {
-  updateConfig({ volume });
+  updatePreferences({ volume });
 }
 
 export function getVoices(): SpeechSynthesisVoice[] {
@@ -108,9 +111,9 @@ export function useVoicesByLanguage(): VoicesByLanguage {
   );
 }
 
-export function useSpeechConfig(): SpeechConfig {
+export function useSpeechPreferences(): SpeechPreferences {
   return useSyncExternalStore(
-    speechConfigStore.subscribe,
-    speechConfigStore.getSnapshot,
+    speechPreferencesStore.subscribe,
+    speechPreferencesStore.getSnapshot,
   );
 }

@@ -6,12 +6,12 @@ import { ExternalLink } from "@shared/ui/external-link";
 import { isSupported } from "@shayc/react-built-in-ai";
 import {
   setSuggestionCustomInstructions,
-  useBoardSuggestionConfig,
-} from "./suggestion-config-store";
+  useSuggestionPreferences,
+} from "./suggestion-preferences-store";
 
 export function SuggestionsSettings() {
   const t = useTranslate();
-  const { customInstructions } = useBoardSuggestionConfig();
+  const { customInstructions } = useSuggestionPreferences();
 
   if (!isSupported("Rewriter")) {
     return (

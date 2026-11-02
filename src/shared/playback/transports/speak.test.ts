@@ -68,7 +68,7 @@ describe("speak() utterance mapping", () => {
 
   test("clamps an out-of-range stored rate to the configured max", async () => {
     const speech = stubSpeech();
-    localStorage.setItem("speech-config", JSON.stringify({ rate: 99 }));
+    localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
     reloadPersistedStores();
 
     await speak("hi");

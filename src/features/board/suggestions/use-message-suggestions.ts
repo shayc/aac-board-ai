@@ -5,7 +5,7 @@ import {
   deriveSuggestionStatus,
   type SuggestionStatus,
 } from "./derive-suggestion-status";
-import { useBoardSuggestionConfig } from "./suggestion-config-store";
+import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
 import { useProofreadSuggestion } from "./use-proofread-suggestion";
 import { useRewriteSuggestion } from "./use-rewrite-suggestion";
@@ -20,7 +20,7 @@ interface MessageSuggestions {
 }
 
 export function useMessageSuggestions(text: string): MessageSuggestions {
-  const { customInstructions } = useBoardSuggestionConfig();
+  const { customInstructions } = useSuggestionPreferences();
   const debouncedCustomInstructions = useDebouncedValue(
     customInstructions,
     CUSTOM_INSTRUCTIONS_DEBOUNCE_MS,

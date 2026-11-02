@@ -1,13 +1,13 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
-interface BoardSuggestionConfig {
+interface SuggestionPreferences {
   customInstructions: string;
 }
 
-export function parseBoardSuggestionConfig(
+export function parseSuggestionPreferences(
   raw: unknown,
-): BoardSuggestionConfig {
+): SuggestionPreferences {
   const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -18,23 +18,23 @@ export function parseBoardSuggestionConfig(
   };
 }
 
-const suggestionConfigStore = createPersistedStore<BoardSuggestionConfig>(
+const suggestionPreferencesStore = createPersistedStore<SuggestionPreferences>(
   "board-suggestions",
-  parseBoardSuggestionConfig,
+  parseSuggestionPreferences,
 );
 
 export function setSuggestionCustomInstructions(
   customInstructions: string,
 ): void {
-  suggestionConfigStore.setState({
-    ...suggestionConfigStore.getSnapshot(),
+  suggestionPreferencesStore.setState({
+    ...suggestionPreferencesStore.getSnapshot(),
     customInstructions,
   });
 }
 
-export function useBoardSuggestionConfig(): BoardSuggestionConfig {
+export function useSuggestionPreferences(): SuggestionPreferences {
   return useSyncExternalStore(
-    suggestionConfigStore.subscribe,
-    suggestionConfigStore.getSnapshot,
+    suggestionPreferencesStore.subscribe,
+    suggestionPreferencesStore.getSnapshot,
   );
 }

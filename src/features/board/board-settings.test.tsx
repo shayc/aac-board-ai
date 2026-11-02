@@ -112,7 +112,7 @@ describe("BoardSettings", () => {
     await expect.element(highlightSwitch).toBeChecked();
     await vi.waitFor(() =>
       expect(localStorage.getItem("board-playback")).toBe(
-        JSON.stringify({ isMessagePartHighlightingEnabled: true }),
+        JSON.stringify({ isPartHighlightingEnabled: true }),
       ),
     );
   });
@@ -135,10 +135,10 @@ describe("BoardSettings", () => {
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
-      const config = JSON.parse(stored ?? "{}") as {
+      const preferences = JSON.parse(stored ?? "{}") as {
         areTileBordersVisible: boolean;
       };
-      expect(config.areTileBordersVisible).toBe(true);
+      expect(preferences.areTileBordersVisible).toBe(true);
     });
   });
 
@@ -165,10 +165,10 @@ describe("BoardSettings", () => {
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
-      const config = JSON.parse(stored ?? "{}") as {
+      const preferences = JSON.parse(stored ?? "{}") as {
         tileSaturation: number;
       };
-      expect(config.tileSaturation).toBe(valueNow);
+      expect(preferences.tileSaturation).toBe(valueNow);
     });
   });
 
@@ -203,10 +203,10 @@ describe("BoardSettings", () => {
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-appearance");
       expect(stored).not.toBeNull();
-      const config = JSON.parse(stored ?? "{}") as {
+      const preferences = JSON.parse(stored ?? "{}") as {
         tileLabelPlacement: string;
       };
-      expect(config.tileLabelPlacement).toBe("bottom");
+      expect(preferences.tileLabelPlacement).toBe("bottom");
     });
   });
 });

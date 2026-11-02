@@ -1,4 +1,4 @@
-import { getSpeechConfig, getVoices } from "@shared/speech/speech-store";
+import { getSpeechPreferences, getVoices } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
 
 interface SpeakOptions {
@@ -8,7 +8,7 @@ interface SpeakOptions {
 
 function buildUtterance(text: string): SpeechSynthesisUtterance {
   const voices = getVoices();
-  const { voiceURI, rate, pitch, volume } = getSpeechConfig();
+  const { voiceURI, rate, pitch, volume } = getSpeechPreferences();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.voice = voices.find((voice) => voice.voiceURI === voiceURI) ?? null;

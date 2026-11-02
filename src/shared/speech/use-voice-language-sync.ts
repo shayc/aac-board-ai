@@ -5,7 +5,7 @@ import {
 } from "@shared/language/locale";
 import { useEffect } from "react";
 import {
-  getSpeechConfig,
+  getSpeechPreferences,
   setVoiceURI,
   useVoicesByLanguage,
 } from "./speech-store";
@@ -38,7 +38,7 @@ export function useVoiceLanguageSync(language: string): void {
       return;
     }
 
-    const { voiceURI } = getSpeechConfig();
+    const { voiceURI } = getSpeechPreferences();
     const hasMatchingVoice = voices.some(
       (voice) => voice.voiceURI === voiceURI,
     );

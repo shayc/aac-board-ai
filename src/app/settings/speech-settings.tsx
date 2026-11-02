@@ -18,7 +18,7 @@ import {
   SPEECH_PITCH,
   SPEECH_RATE,
   SPEECH_VOLUME,
-  useSpeechConfig,
+  useSpeechPreferences,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
 import { SettingsSlider } from "@shared/ui/settings-slider";
@@ -30,7 +30,7 @@ export function SpeechSettings() {
   const labelId = useId();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
-  const { voiceURI, rate, pitch, volume } = useSpeechConfig();
+  const { voiceURI, rate, pitch, volume } = useSpeechPreferences();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];

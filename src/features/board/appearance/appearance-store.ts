@@ -2,7 +2,7 @@ import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseClampedNumber } from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
 
-export interface BoardAppearanceConfig {
+export interface AppearancePreferences {
   tileSaturation: number;
   areTileBordersVisible: boolean;
   tileLabelPlacement: TileLabelPlacement;
@@ -15,9 +15,9 @@ function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
-export function parseBoardAppearanceConfig(
+export function parseAppearancePreferences(
   raw: unknown,
-): BoardAppearanceConfig {
+): AppearancePreferences {
   const parsed = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -32,9 +32,9 @@ export function parseBoardAppearanceConfig(
   };
 }
 
-const appearanceStore = createPersistedStore<BoardAppearanceConfig>(
+const appearanceStore = createPersistedStore<AppearancePreferences>(
   "board-appearance",
-  parseBoardAppearanceConfig,
+  parseAppearancePreferences,
 );
 
 export function setTileSaturation(tileSaturation: number): void {
@@ -60,7 +60,7 @@ export function setTileLabelPlacement(
   });
 }
 
-export function useBoardAppearanceConfig(): BoardAppearanceConfig {
+export function useAppearancePreferences(): AppearancePreferences {
   return useSyncExternalStore(
     appearanceStore.subscribe,
     appearanceStore.getSnapshot,
