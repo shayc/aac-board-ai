@@ -56,7 +56,6 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
             aria-label={t(m.libraryClose)}
             size="large"
             edge="end"
-            color="inherit"
             onClick={onClose}
           >
             <ViewSidebarOutlinedIcon sx={flipForLtr} />

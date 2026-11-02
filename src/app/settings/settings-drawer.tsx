@@ -69,7 +69,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             aria-label={t(m.settingsClose)}
             size="large"
             edge="end"
-            color="inherit"
             onClick={onClose}
           >
             <CloseIcon />
@@ -163,7 +162,7 @@ function SettingsSection({ title, icon, children }: SettingsSectionProps) {
           gap: 1,
           mb: 2,
           fontWeight: 700,
-          "& > svg": { color: "primary.main" },
+          "& > svg": { color: "action.active" },
         }}
       >
         {icon}

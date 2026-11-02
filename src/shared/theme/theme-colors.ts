@@ -10,6 +10,11 @@ export const CONTENT_DARK = "#0e1014";
 export const SURFACE_LIGHT = "#ffffff";
 export const SURFACE_DARK = "#1a1d23";
 
+// One neutral tone for every icon, matched to text.secondary in both modes
+// (MUI's default action.active is 54% in light but full white in dark).
+export const ICON_LIGHT = "rgba(0, 0, 0, 0.6)";
+export const ICON_DARK = "rgba(255, 255, 255, 0.7)";
+
 // Primary is an Apple-style system blue at matched tones in both modes: the
 // color people already read as "tap this", and saturated enough to stay
 // distinct from the pale blue Fitzgerald tiles.

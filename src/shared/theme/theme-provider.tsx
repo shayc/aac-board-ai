@@ -10,6 +10,8 @@ import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import {
+  ICON_DARK,
+  ICON_LIGHT,
   PRIMARY_DARK,
   PRIMARY_LIGHT,
   SHELL_DARK,
@@ -42,12 +44,14 @@ const themeOptions = {
       palette: {
         primary: PRIMARY_LIGHT,
         background: { default: SHELL_LIGHT, paper: SURFACE_LIGHT },
+        action: { active: ICON_LIGHT },
       },
     },
     dark: {
       palette: {
         primary: PRIMARY_DARK,
         background: { default: SHELL_DARK, paper: SURFACE_DARK },
+        action: { active: ICON_DARK },
       },
     },
   },
@@ -125,6 +129,9 @@ const themeOptions = {
         root: {
           borderRadius: 32,
         },
+        notchedOutline: ({ theme }) => ({
+          borderColor: (theme.vars ?? theme).palette.divider,
+        }),
       },
     },
     MuiListItemButton: {
