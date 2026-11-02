@@ -30,14 +30,14 @@ export const gridRowSx = {
 
 export function createGridViewportSx(theme: Theme) {
   return {
-    "--grid-padding": toPx(GRID_REGULAR_PADDING_PX),
+    "--grid-padding": formatPx(GRID_REGULAR_PADDING_PX),
     containerType: "size",
     height: "100%",
     overflow: "auto",
     scrollSnapType: "both proximity",
     scrollPadding: GRID_PADDING,
     [theme.breakpoints.down("sm")]: {
-      "--grid-padding": toPx(GRID_COMPACT_PADDING_PX),
+      "--grid-padding": formatPx(GRID_COMPACT_PADDING_PX),
     },
   };
 }
@@ -46,12 +46,12 @@ export function createGridContentSx(
   theme: Theme,
   { rows, columns, gap }: GridLayoutOptions,
 ) {
-  const gapPx = gapToPx(gap);
+  const gapPx = gapUnitsToPx(gap);
 
   return {
     "--grid-visible-columns": 1,
     "--grid-visible-rows": 1,
-    "--grid-gap": toPx(gapPx),
+    "--grid-gap": formatPx(gapPx),
     "--grid-cell-width": createCellSizeExpression(
       "100cqi",
       "var(--grid-visible-columns)",
@@ -115,7 +115,7 @@ function createTrackAxisQueries(
   for (let visible = 2; visible <= count; visible++) {
     const thresholdPx = calculateTrackFitThresholdPx(visible, gapPx, paddingPx);
 
-    queries[`@container (${feature}: ${toPx(thresholdPx)})`] = {
+    queries[`@container (${feature}: ${formatPx(thresholdPx)})`] = {
       [property]: visible,
     };
   }
@@ -137,17 +137,17 @@ function createCellSizeExpression(
 ): string {
   const availableSize = `${viewportSize} - 2 * ${GRID_PADDING} - (${visibleTracks} - 1) * ${GRID_GAP}`;
 
-  return `max(${toPx(GRID_MIN_CELL_SIZE_PX)}, calc((${availableSize}) / ${visibleTracks}))`;
+  return `max(${formatPx(GRID_MIN_CELL_SIZE_PX)}, calc((${availableSize}) / ${visibleTracks}))`;
 }
 
 function createGridExtentExpression(cellSize: string, count: number): string {
   return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * ${GRID_PADDING})`;
 }
 
-function gapToPx(gap: number): number {
+function gapUnitsToPx(gap: number): number {
   return gap * GRID_GAP_UNIT_PX;
 }
 
-function toPx(value: number): string {
+function formatPx(value: number): string {
   return `${value}px`;
 }

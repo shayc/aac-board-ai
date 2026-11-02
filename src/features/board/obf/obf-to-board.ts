@@ -3,7 +3,6 @@ import type {
   OBFBoard,
   OBFButton,
   OBFGrid,
-  OBFLoadBoard,
   OBFMedia,
 } from "@shayc/open-board-format";
 import type {
@@ -12,9 +11,8 @@ import type {
   BoardButton,
   BoardGrid,
   BoardTranslations,
-  LoadBoard,
 } from "../board-types";
-import { normalizeBoardText } from "../normalize-board-text";
+import { nonBlankText } from "../normalize-board-text";
 import { sanitizeColor } from "./css-color";
 import { parseAction } from "./parse-action";
 
@@ -24,7 +22,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
   return {
     id: obfBoard.id,
-    name: normalizeBoardText(obfBoard.name) ?? "",
+    name: nonBlankText(obfBoard.name) ?? "",
     locale: obfBoard.locale ? normalizeLocale(obfBoard.locale) : undefined,
     buttons: obfBoard.buttons.map((obfButton) =>
       transformButton(obfButton, imageSourceById, soundSourceById),
@@ -64,8 +62,8 @@ function transformButton(
 ): BoardButton {
   return {
     id: obfButton.id,
-    label: normalizeBoardText(obfButton.label) ?? "",
-    vocalization: normalizeBoardText(obfButton.vocalization),
+    label: nonBlankText(obfButton.label) ?? "",
+    vocalization: nonBlankText(obfButton.vocalization),
     backgroundColor: sanitizeColor(obfButton.background_color),
     borderColor: sanitizeColor(obfButton.border_color),
     imageSrc: obfButton.image_id
@@ -75,7 +73,7 @@ function transformButton(
       ? soundSourceById.get(obfButton.sound_id)
       : undefined,
     actions: collectActions(obfButton),
-    loadBoard: transformLoadBoard(obfButton.load_board),
+    linkedBoardId: obfButton.load_board?.id,
   };
 }
 
@@ -88,12 +86,6 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
 
     return action ? [action] : [];
   });
-}
-
-function transformLoadBoard(
-  obfLoadBoard: OBFLoadBoard | undefined,
-): LoadBoard | undefined {
-  return obfLoadBoard?.id ? { id: obfLoadBoard.id } : undefined;
 }
 
 function transformTranslations(

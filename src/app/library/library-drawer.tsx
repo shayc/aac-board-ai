@@ -29,7 +29,7 @@ export function LibraryDrawer({
   const activeMatch = useMatches().find((match) => match.params.setId);
   const activeSetId = activeMatch?.params.setId;
 
-  const closeOnActivate = variant === "temporary" ? onClose : undefined;
+  const closeOnNavigate = variant === "temporary" ? onClose : undefined;
 
   return (
     <Drawer
@@ -85,7 +85,7 @@ export function LibraryDrawer({
       >
         <BoardSetLibrary
           activeSetId={activeSetId}
-          onActivate={closeOnActivate}
+          onNavigate={closeOnNavigate}
         />
       </Box>
     </Drawer>

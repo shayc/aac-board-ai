@@ -11,7 +11,7 @@ const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 // The ?board= param is attacker-controlled: a crafted link must never
 // silently replace a user's vocabulary. Every import allocates a separate set
 // ID, while rejected URLs and failed imports surface as localized errors.
-async function importFromBoardUrl(
+async function importAndRedirect(
   boardUrl: string,
   signal: AbortSignal,
 ): Promise<Response> {
@@ -37,7 +37,7 @@ export async function rootIndexLoader({
   const boardUrl = new URL(request.url).searchParams.get("board");
 
   if (boardUrl) {
-    return importFromBoardUrl(boardUrl, request.signal);
+    return importAndRedirect(boardUrl, request.signal);
   }
 
   const [boardSet] = await getBoardSets();

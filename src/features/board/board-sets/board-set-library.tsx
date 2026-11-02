@@ -22,12 +22,12 @@ import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {
   activeSetId?: string;
-  onActivate?: () => void;
+  onNavigate?: () => void;
 }
 
 export function BoardSetLibrary({
   activeSetId,
-  onActivate,
+  onNavigate,
 }: BoardSetLibraryProps) {
   const t = useTranslate();
   const { boardSets, isLoading, error } = useBoardSets();
@@ -113,7 +113,7 @@ export function BoardSetLibrary({
       <BoardSetList
         boardSets={boardSets}
         activeSetId={activeSetId}
-        onActivate={onActivate}
+        onNavigate={onNavigate}
         onDelete={setDeleteTarget}
         onShowDetails={setDetailsTarget}
       />

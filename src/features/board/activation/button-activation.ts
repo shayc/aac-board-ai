@@ -38,8 +38,8 @@ export function createButtonActivator({
   navigation,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
-    if (button.loadBoard) {
-      navigation.goToBoard(button.loadBoard.id);
+    if (button.linkedBoardId) {
+      navigation.goToBoard(button.linkedBoardId);
       return;
     }
 

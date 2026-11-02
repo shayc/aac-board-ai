@@ -1,6 +1,6 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { Board, PhraseTranslations } from "../board-types";
-import { normalizeBoardText } from "../normalize-board-text";
+import { nonBlankText } from "../normalize-board-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
@@ -39,7 +39,7 @@ export function applyTranslations(
   function translatePhrase(phrase: string | undefined) {
     const translated = phrase ? (translations[phrase] ?? phrase) : phrase;
 
-    return normalizeBoardText(translated);
+    return nonBlankText(translated);
   }
 
   return {

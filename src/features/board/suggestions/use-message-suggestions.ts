@@ -3,7 +3,7 @@ import { useLanguage } from "@shared/language/use-language";
 import { useGlobalDownloadProgress } from "@shayc/react-built-in-ai";
 import {
   deriveSuggestionStatus,
-  type SuggestionDisplayState,
+  type SuggestionStatus,
 } from "./derive-suggestion-status";
 import { useBoardSuggestionConfig } from "./suggestion-config-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
@@ -14,7 +14,7 @@ const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
 interface MessageSuggestions {
   isSupported: boolean;
-  status: SuggestionDisplayState;
+  status: SuggestionStatus;
   phrases: string[];
   enable: () => void;
 }

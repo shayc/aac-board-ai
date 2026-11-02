@@ -1,6 +1,6 @@
 import type { Status } from "@shayc/react-built-in-ai";
 
-export type SuggestionDisplayState =
+export type SuggestionStatus =
   | { kind: "needs-setup" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
@@ -26,7 +26,7 @@ export function deriveSuggestionStatus({
   hasText,
   isPending,
   phraseCount,
-}: SuggestionStatusInput): SuggestionDisplayState {
+}: SuggestionStatusInput): SuggestionStatus {
   const supported = engines.filter(({ status }) => status !== "unsupported");
   if (supported.length === 0) {
     return null;

@@ -50,14 +50,14 @@ function setup(opts: SetupOptions = {}) {
 }
 
 describe("createButtonActivator", () => {
-  test("navigates to the linked board and skips message and audio when loadBoard.id is set", () => {
+  test("navigates to the linked board and skips message and audio when linkedBoardId is set", () => {
     const { activateButton, message, playback, navigation } = setup();
 
     const button: BoardButton = {
       id: "btn",
       label: "Folder",
       actions: [],
-      loadBoard: { id: "child-board" },
+      linkedBoardId: "child-board",
     };
 
     activateButton(button);
@@ -219,7 +219,7 @@ describe("createButtonActivator", () => {
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
-  test("adds the button as a message part when there are no actions and no loadBoard", () => {
+  test("adds the button as a message part when there are no actions and no linkedBoardId", () => {
     const message = createMessageStub([]);
     const { activateButton } = setup({ message });
 

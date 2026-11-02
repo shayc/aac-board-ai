@@ -222,9 +222,7 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.loadBoard).toEqual({
-        id: "child-1",
-      });
+      expect(board.buttons[0]?.linkedBoardId).toBe("child-1");
     });
 
     test("ignores a load_board without a resolved id", () => {
@@ -241,7 +239,7 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.loadBoard).toBeUndefined();
+      expect(board.buttons[0]?.linkedBoardId).toBeUndefined();
     });
 
     test("uses actions and ignores the action fallback when both are present", () => {
