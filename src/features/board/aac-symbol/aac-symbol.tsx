@@ -59,7 +59,6 @@ export function AACSymbol({
         variant={imageSrc ? "body2" : "h5"}
         sx={[
           { lineHeight: 1.2 },
-          // Semibold like body2 emphasis elsewhere; large text-only labels stay regular.
           Boolean(imageSrc) && { fontWeight: 600 },
           labelPlacement === "hidden" && visuallyHidden,
         ]}

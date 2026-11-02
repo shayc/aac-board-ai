@@ -36,8 +36,6 @@ export function PlayButton({
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
-        // Flat like the rest of the chrome; Fab otherwise raises on press and
-        // focus. Keyboard focus stays visible: the theme's ring is an outline.
         [`&, &:active, &.${fabClasses.focusVisible}`]: { boxShadow: "none" },
       }}
     >

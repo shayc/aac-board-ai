@@ -1,4 +1,5 @@
 import Button, { buttonClasses } from "@mui/material/Button";
+import type { Theme } from "@mui/material/styles";
 import type { ReactNode } from "react";
 
 interface TileProps {
@@ -17,50 +18,11 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, percentage: number): string {
-  return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
-}
+// Tints scale with MUI's hover opacity, which doubles in dark mode.
+function darken(theme: Theme, color: string, hoverMultiple: number): string {
+  const opacity = (theme.vars ?? theme).palette.action.hoverOpacity;
 
-// Tiles are the only raised elements: the chrome around them is flat, so
-// depth marks what you communicate with. They lift on hover and press in when
-// activated. Like MUI's hover overlay (4% light, 8% dark), tints double in dark
-// mode, where the same change reads weaker and a shadow lift barely shows.
-const TILE_STATES = {
-  light: {
-    rest: "0 1px 2px rgb(16 24 40 / 0.08), 0 2px 6px rgb(16 24 40 / 0.10)",
-    hover: "0 2px 4px rgb(16 24 40 / 0.10), 0 6px 14px rgb(16 24 40 / 0.14)",
-    pressed: "0 1px 1px rgb(16 24 40 / 0.10)",
-    hoverTint: 6,
-    pressedTint: 12,
-  },
-  dark: {
-    rest: "0 1px 2px rgb(0 0 0 / 0.6), 0 3px 8px rgb(0 0 0 / 0.45)",
-    hover: "0 2px 4px rgb(0 0 0 / 0.6), 0 8px 18px rgb(0 0 0 / 0.55)",
-    pressed: "0 1px 1px rgb(0 0 0 / 0.6)",
-    hoverTint: 12,
-    pressedTint: 24,
-  },
-};
-
-function tileStatesSx(
-  states: (typeof TILE_STATES)["light"],
-  backgroundColor: string | undefined,
-) {
-  return {
-    boxShadow: states.rest,
-    "&:hover": {
-      "@media (hover: hover)": {
-        backgroundColor:
-          backgroundColor && darken(backgroundColor, states.hoverTint),
-        boxShadow: states.hover,
-      },
-    },
-    "&:active": {
-      backgroundColor:
-        backgroundColor && darken(backgroundColor, states.pressedTint),
-      boxShadow: states.pressed,
-    },
-  };
+  return `color-mix(in srgb, ${color} calc(100% - ${opacity} * ${hoverMultiple * 100}%), black)`;
 }
 
 export function Tile({
@@ -106,6 +68,7 @@ export function Tile({
         }`,
         borderRadius: 4,
         backgroundColor: resolvedBackgroundColor,
+        boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
@@ -115,17 +78,30 @@ export function Tile({
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
-        ...tileStatesSx(TILE_STATES.light, resolvedBackgroundColor),
-        ...theme.applyStyles(
-          "dark",
-          tileStatesSx(TILE_STATES.dark, resolvedBackgroundColor),
-        ),
+        "&:hover": {
+          boxShadow: (theme.vars ?? theme).shadows[4],
+          "@media (hover: hover)": {
+            backgroundColor:
+              resolvedBackgroundColor &&
+              darken(theme, resolvedBackgroundColor, 1.5),
+          },
+          "@media (hover: none)": {
+            boxShadow: (theme.vars ?? theme).shadows[2],
+          },
+        },
+        "&:active": {
+          backgroundColor:
+            resolvedBackgroundColor &&
+            darken(theme, resolvedBackgroundColor, 3),
+          boxShadow: (theme.vars ?? theme).shadows[8],
+        },
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
+          boxShadow: (theme.vars ?? theme).shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
-          boxShadow: "none",
+          boxShadow: (theme.vars ?? theme).shadows[0],
         },
         ...(variant === "folder" && {
           "&::after": {

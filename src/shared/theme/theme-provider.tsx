@@ -8,7 +8,6 @@ import {
 } from "@mui/material/styles";
 import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
-import { hairline } from "@shared/theme/surface";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import {
   ICON_DARK,
@@ -19,6 +18,7 @@ import {
   SHELL_LIGHT,
   SURFACE_DARK,
   SURFACE_LIGHT,
+  WARNING_LIGHT,
 } from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
 import { prefixer } from "stylis";
@@ -44,6 +44,7 @@ const themeOptions = {
     light: {
       palette: {
         primary: PRIMARY_LIGHT,
+        warning: WARNING_LIGHT,
         background: { default: SHELL_LIGHT, paper: SURFACE_LIGHT },
         action: { active: ICON_LIGHT },
       },
@@ -89,7 +90,7 @@ const themeOptions = {
             backgroundColor: palette.background.default,
             color: palette.text.primary,
             backgroundImage: "none",
-            boxShadow: hairline(theme, "bottom"),
+            borderBottom: `1px solid ${palette.divider}`,
           };
         },
       },
@@ -118,11 +119,20 @@ const themeOptions = {
     },
     MuiButton: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           borderRadius: 32,
           paddingTop: 12,
           paddingBottom: 12,
-        },
+          variants: [
+            {
+              props: { variant: "outlined", color: "inherit" },
+              style: {
+                color: (theme.vars ?? theme).palette.action.active,
+                borderColor: (theme.vars ?? theme).palette.divider,
+              },
+            },
+          ],
+        }),
       },
     },
     MuiOutlinedInput: {
