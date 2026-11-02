@@ -27,6 +27,6 @@ describe("useOnboarding", () => {
       .element(second.getByText("onboarding hidden"))
       .toBeInTheDocument();
 
-    expect(localStorage.getItem("hasSeenOnboarding")).toBe("true");
+    expect(localStorage.getItem("has-seen-onboarding")).toBe("true");
   });
 });

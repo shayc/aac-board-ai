@@ -83,7 +83,7 @@ State has distinct owners and lifetimes:
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
-| Persisted settings    | `createPersistedStore` + localStorage | Language, speech, board preferences, suggestion instructions, and onboarding |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board display, suggestion instructions, and onboarding     |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                          |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
@@ -100,7 +100,7 @@ it needs. Word-boundary updates rerender only components whose selected fields
 change.
 
 The board-set catalog broadcasts changes so other tabs can refresh their lists.
-Settings managed by `createPersistedStore` do not synchronize across tabs. MUI
+Preferences managed by `createPersistedStore` do not synchronize across tabs. MUI
 persists and synchronizes theme mode separately.
 
 ## Core flows

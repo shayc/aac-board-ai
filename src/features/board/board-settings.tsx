@@ -15,14 +15,14 @@ import {
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
-  useBoardAppearanceConfig,
+  useAppearancePreferences,
   type TileLabelPlacement,
 } from "./appearance/appearance-store";
 import { LabelPlacementPreview } from "./appearance/label-placement-preview";
 import {
-  setMessagePartHighlightingEnabled,
-  useBoardPlaybackConfig,
-} from "./playback/playback-config-store";
+  setPartHighlightingEnabled,
+  usePlaybackPreferences,
+} from "./playback/playback-preferences-store";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -68,8 +68,8 @@ export function BoardSettings() {
   const t = useTranslate();
   const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardAppearanceConfig();
-  const { isMessagePartHighlightingEnabled } = useBoardPlaybackConfig();
+    useAppearancePreferences();
+  const { isPartHighlightingEnabled } = usePlaybackPreferences();
 
   return (
     <Stack spacing={3}>
@@ -119,8 +119,8 @@ export function BoardSettings() {
 
       <SettingsSwitch
         label={t(m.playbackHighlight)}
-        checked={isMessagePartHighlightingEnabled}
-        onChange={setMessagePartHighlightingEnabled}
+        checked={isPartHighlightingEnabled}
+        onChange={setPartHighlightingEnabled}
       />
     </Stack>
   );

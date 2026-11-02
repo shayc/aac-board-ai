@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { getSpeechConfig, setVoiceURI } from "./speech-store";
+import { getSpeechPreferences, setVoiceURI } from "./speech-store";
 import { useVoiceLanguageSync } from "./use-voice-language-sync";
 
 function stubLanguages(languages: readonly string[]): void {
@@ -47,13 +47,13 @@ describe("useVoiceLanguageSync", () => {
     );
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("en-voice");
+      expect(getSpeechPreferences().voiceURI).toBe("en-voice");
     });
 
     await rerender({ language: "he" });
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("he-voice");
+      expect(getSpeechPreferences().voiceURI).toBe("he-voice");
     });
   });
 
@@ -68,7 +68,7 @@ describe("useVoiceLanguageSync", () => {
 
     await renderHook(() => useVoiceLanguageSync("en"));
 
-    expect(getSpeechConfig().voiceURI).toBe("en-voice");
+    expect(getSpeechPreferences().voiceURI).toBe("en-voice");
   });
 
   test("prefers the default voice when multiple voices exist for the language", async () => {
@@ -81,7 +81,7 @@ describe("useVoiceLanguageSync", () => {
     await renderHook(() => useVoiceLanguageSync("en"));
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("en-default");
+      expect(getSpeechPreferences().voiceURI).toBe("en-default");
     });
   });
 
@@ -96,7 +96,7 @@ describe("useVoiceLanguageSync", () => {
     await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("fr-fr-voice");
+      expect(getSpeechPreferences().voiceURI).toBe("fr-fr-voice");
     });
   });
 
@@ -111,7 +111,7 @@ describe("useVoiceLanguageSync", () => {
     await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
+      expect(getSpeechPreferences().voiceURI).toBe("fr-ca-voice");
     });
   });
 
@@ -126,7 +126,7 @@ describe("useVoiceLanguageSync", () => {
     await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("fr-ca-voice");
+      expect(getSpeechPreferences().voiceURI).toBe("fr-ca-voice");
     });
   });
 
@@ -141,7 +141,7 @@ describe("useVoiceLanguageSync", () => {
     await renderHook(() => useVoiceLanguageSync("fr"));
 
     await vi.waitFor(() => {
-      expect(getSpeechConfig().voiceURI).toBe("fr-be-default");
+      expect(getSpeechPreferences().voiceURI).toBe("fr-be-default");
     });
   });
 });

@@ -11,7 +11,7 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { setSuggestionCustomInstructions } from "./suggestion-config-store";
+import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
 
 function renderMessageSuggestions(text: string) {
