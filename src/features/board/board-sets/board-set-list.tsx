@@ -74,7 +74,11 @@ export function BoardSetList({
       <Box aria-labelledby={subheaderId} component="nav">
         <List
           subheader={
-            <ListSubheader id={subheaderId}>
+            <ListSubheader
+              id={subheaderId}
+              // Match the drawer, which paints background.default, not paper.
+              sx={{ bgcolor: "background.default" }}
+            >
               {t(m.libraryBoardSets)}
             </ListSubheader>
           }
