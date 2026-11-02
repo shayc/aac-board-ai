@@ -102,14 +102,20 @@ export function Tile({
             resolvedBackgroundColor && darken(resolvedBackgroundColor, 12),
           boxShadow: TILE_ELEVATION.light.pressed,
         },
+        // Like MUI's hover overlay, tints are doubled in dark mode, where the
+        // same change reads weaker and the shadow lift barely shows.
         ...theme.applyStyles("dark", {
           boxShadow: TILE_ELEVATION.dark.rest,
           "&:hover": {
             "@media (hover: hover)": {
+              backgroundColor:
+                resolvedBackgroundColor && darken(resolvedBackgroundColor, 12),
               boxShadow: TILE_ELEVATION.dark.hover,
             },
           },
           "&:active": {
+            backgroundColor:
+              resolvedBackgroundColor && darken(resolvedBackgroundColor, 24),
             boxShadow: TILE_ELEVATION.dark.pressed,
           },
         }),
