@@ -91,6 +91,33 @@ describe("Tile", () => {
     expect(afterStyles.display).toBe("none");
   });
 
+  test("paints a visible folder border along the folder outline", async () => {
+    const screen = await render(
+      <Tile
+        backgroundColor="#ffffff"
+        borderColor="#00ff00"
+        variant="folder"
+        onActivate={vi.fn()}
+      >
+        Folder
+      </Tile>,
+    );
+
+    const button = screen.getByRole("button", { name: "Folder" });
+    const frame = button.element().parentElement;
+    if (!frame) {
+      throw new Error("Expected a folder frame");
+    }
+    const frameStyles = getComputedStyle(frame);
+
+    expect(frameStyles.clipPath).toMatch(/^shape\(/);
+    expect(frameStyles.backgroundColor).toBe(
+      resolveBackgroundColor("oklch(from #00ff00 l c h)"),
+    );
+    expect(frameStyles.paddingTop).toBe("4px");
+    expect(getComputedStyle(button.element()).borderTopWidth).toBe("0px");
+  });
+
   test("applies backgroundColor and a readable text color", async () => {
     const screen = await render(
       <Tile backgroundColor="#000000" onActivate={vi.fn()}>

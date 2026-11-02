@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { ReactNode } from "react";
 
@@ -36,10 +37,19 @@ function ink(color: string): string {
 const TILE_RADIUS = 30;
 const TILE_RADIUS_FALLBACK = 16;
 
+const TILE_BORDER_WIDTH = 4;
+
 // Folder tiles take a folder silhouette (tab on the leading side) instead of
-// a corner triangle, so folders read by shape, not by a small mark.
-const FOLDER_SHAPE =
-  "shape(from 0 18px, curve to 18px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) 10px with 42% 0, hline to calc(100% - 18px), curve to 100% 28px with 100% 10px, vline to calc(100% - 18px), curve to calc(100% - 18px) 100% with 100% 100%, hline to 18px, curve to 0 calc(100% - 18px) with 0 100%, close)";
+// a corner triangle, so folders read by shape, not by a small mark. `inset`
+// draws the same outline shrunk inward, for the fill inside a visible border.
+function folderShape(inset: number): string {
+  const radius = 18 - inset;
+  const step = 10 - inset;
+
+  return `shape(from 0 ${radius}px, curve to ${radius}px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) ${step}px with 42% 0, hline to calc(100% - ${radius}px), curve to 100% ${step + radius}px with 100% ${step}px, vline to calc(100% - ${radius}px), curve to calc(100% - ${radius}px) 100% with 100% 100%, hline to ${radius}px, curve to 0 calc(100% - ${radius}px) with 0 100%, close)`;
+}
+
+const SUPPORTS_SHAPE = "@supports (clip-path: shape(from 0 0, line to 1px 0))";
 
 const TILE_SHADOW_LIGHT =
   "0 0 0 1px rgb(0 0 0 / 0.10), 0 2px 0 rgb(0 0 0 / 0.10), 0 1px 2px rgb(16 24 40 / 0.06), 0 4px 10px -4px rgb(16 24 40 / 0.14)";
@@ -67,8 +77,12 @@ export function Tile({
     ? desaturate(borderColor)
     : resolvedBackgroundColor;
   const isFolder = variant === "folder";
+  // A CSS border follows the box, not the clip-path, so a visible border on a
+  // folder tile is painted by a frame that carries the folder outline.
+  const isFolderFramed =
+    isFolder && isBorderVisible && Boolean(resolvedBorderColor);
 
-  return (
+  const button = (
     <Button
       aria-label={ariaLabel}
       tabIndex={tabIndex}
@@ -88,7 +102,7 @@ export function Tile({
         color: resolvedBackgroundColor
           ? ink(resolvedBackgroundColor)
           : "inherit",
-        border: `4px solid ${
+        border: `${TILE_BORDER_WIDTH}px solid ${
           isBorderVisible && resolvedBorderColor
             ? resolvedBorderColor
             : "transparent"
@@ -162,9 +176,13 @@ export function Tile({
               "32px solid color-mix(in srgb, currentColor 75%, transparent)",
             borderBottom: "32px solid transparent",
           },
-          "@supports (clip-path: shape(from 0 0, line to 1px 0))": {
+          [SUPPORTS_SHAPE]: {
             borderRadius: 0,
-            clipPath: FOLDER_SHAPE,
+            clipPath: folderShape(0),
+            ...(isFolderFramed && {
+              borderWidth: 0,
+              clipPath: folderShape(TILE_BORDER_WIDTH),
+            }),
             "&::after": {
               display: "none",
             },
@@ -178,5 +196,31 @@ export function Tile({
     >
       {children}
     </Button>
+  );
+
+  if (!isFolderFramed) {
+    return button;
+  }
+
+  return (
+    <Box
+      sx={(theme) => ({
+        display: "grid",
+        width: "100%",
+        height: "100%",
+        [SUPPORTS_SHAPE]: {
+          p: `${TILE_BORDER_WIDTH}px`,
+          backgroundColor: resolvedBorderColor,
+          clipPath: folderShape(0),
+          ...(resolvedBackgroundColor &&
+            !borderColor &&
+            theme.applyStyles("dark", {
+              backgroundColor: dim(resolvedBackgroundColor, 0.86),
+            })),
+        },
+      })}
+    >
+      {button}
+    </Box>
   );
 }
