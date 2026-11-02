@@ -8,7 +8,7 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { SuggestionSettings } from "./suggestions-settings";
+import { SuggestionSettings } from "./suggestion-settings";
 
 function renderSuggestionsSettings() {
   return render(

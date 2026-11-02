@@ -1,4 +1,4 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-context";
+import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertNever } from "@shared/utils/assert-never";
 import {
   applyBackspace,

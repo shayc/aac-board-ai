@@ -5,9 +5,9 @@ import {
   type PlaybackOutcome,
   type PlaybackRequest,
   type PlaybackState,
-} from "./playback-context";
-import { playAudio } from "./transports/play-audio";
-import { speak } from "./transports/speak";
+} from "./playback-types";
+import { playAudio } from "./outputs/play-audio";
+import { speak } from "./outputs/speak";
 
 interface PlaybackSession {
   abortController: AbortController;

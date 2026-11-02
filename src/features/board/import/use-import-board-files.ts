@@ -5,7 +5,7 @@ import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
 import { importBoardSets, type ImportedBoardSet } from "./board-import";
-import { pickFiles } from "./file-picker";
+import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
   pickAndImport: () => Promise<void>;

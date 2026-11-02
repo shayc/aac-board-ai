@@ -9,7 +9,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
-import { createButtonActivator } from "./activation/button-activation";
+import { createButtonActivator } from "./activation/button-activator";
 import { useAppearancePreferences } from "./appearance/appearance-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";

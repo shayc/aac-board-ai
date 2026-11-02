@@ -4,7 +4,7 @@ import { MemoryRouter } from "react-router";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetList } from "./board-set-list";
-import { makeBoardSet } from "./test-utils";
+import { makeBoardSetRecord } from "../testing";
 
 function renderWithProviders(children: ReactNode) {
   return render(
@@ -19,8 +19,12 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[
-          makeBoardSet({ id: "a", name: "Core Words", rootBoardId: "home" }),
-          makeBoardSet({ id: "b", name: "Animals" }),
+          makeBoardSetRecord({
+            id: "a",
+            name: "Core Words",
+            rootBoardId: "home",
+          }),
+          makeBoardSetRecord({ id: "b", name: "Animals" }),
         ]}
         activeBoardSetId="a"
         onNavigate={vi.fn()}
@@ -46,7 +50,7 @@ describe("BoardSetList", () => {
     const onNavigate = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
-        boardSets={[makeBoardSet({ name: "Core Words" })]}
+        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         onNavigate={onNavigate}
         onShowDetails={vi.fn()}
         onRequestDelete={vi.fn()}
@@ -60,8 +64,8 @@ describe("BoardSetList", () => {
 
   test("keeps labels, menus, and details actions associated with their list", async () => {
     const boardSets = [
-      makeBoardSet({ id: "core", name: "Core Words" }),
-      makeBoardSet({ id: "animals", name: "Animals" }),
+      makeBoardSetRecord({ id: "core", name: "Core Words" }),
+      makeBoardSetRecord({ id: "animals", name: "Animals" }),
     ];
     const onShowDetails = vi.fn();
     const onRequestDelete = vi.fn();
@@ -123,7 +127,7 @@ describe("BoardSetList", () => {
     const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
-        boardSets={[makeBoardSet({ name: "Core Words" })]}
+        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         onNavigate={vi.fn()}
         onShowDetails={onShowDetails}
         onRequestDelete={onRequestDelete}

@@ -3,7 +3,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { PendingDot } from "./pending-dot";
-import { SuggestionStatusNotice } from "./suggestion-status";
+import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;

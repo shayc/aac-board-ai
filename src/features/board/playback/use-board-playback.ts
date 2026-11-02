@@ -1,4 +1,4 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-context";
+import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import {
   useActiveTrackingKey,
   useIsPlaybackActive,

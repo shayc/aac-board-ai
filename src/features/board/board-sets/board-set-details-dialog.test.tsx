@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetDetailsDialog } from "./board-set-details-dialog";
-import { makeBoardSet } from "./test-utils";
+import { makeBoardSetRecord } from "../testing";
 
 function renderWithProviders(children: ReactNode) {
   return render(<AppProviders>{children}</AppProviders>);
@@ -14,7 +14,7 @@ describe("BoardSetDetailsDialog", () => {
   test("shows the available metadata with no a11y violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDetailsDialog
-        boardSet={makeBoardSet({
+        boardSet={makeBoardSetRecord({
           name: "Core Words",
           author: "Jane",
           gridRows: 2,
@@ -46,7 +46,10 @@ describe("BoardSetDetailsDialog", () => {
 
   test("omits the author line and chips when those fields are absent", async () => {
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog boardSet={makeBoardSet()} onClose={vi.fn()} />,
+      <BoardSetDetailsDialog
+        boardSet={makeBoardSetRecord()}
+        onClose={vi.fn()}
+      />,
     );
 
     await expect.element(screen.getByText("My Board")).toBeInTheDocument();
@@ -68,7 +71,10 @@ describe("BoardSetDetailsDialog", () => {
   test("calls onClose when Close is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog boardSet={makeBoardSet()} onClose={onClose} />,
+      <BoardSetDetailsDialog
+        boardSet={makeBoardSetRecord()}
+        onClose={onClose}
+      />,
     );
 
     await screen.getByRole("button", { name: "Close" }).click();

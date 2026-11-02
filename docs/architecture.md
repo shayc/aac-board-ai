@@ -134,7 +134,7 @@ sets.
 
 ### Activate a tile
 
-[`activateButton`](../src/features/board/activation/button-activation.ts)
+[`activateButton`](../src/features/board/activation/button-activator.ts)
 coordinates message updates, navigation, and playback:
 
 1. A tile linking to another board navigates immediately. A tile without actions
@@ -204,7 +204,7 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [board settings](../src/features/board/board-settings.tsx) and
-[suggestion settings](../src/features/board/suggestions/suggestions-settings.tsx)
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;

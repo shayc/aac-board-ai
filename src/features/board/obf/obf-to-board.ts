@@ -12,8 +12,8 @@ import type {
   BoardGrid,
   BoardTranslations,
 } from "../board-types";
-import { nonBlankText } from "../normalize-board-text";
-import { sanitizeColor } from "./css-color";
+import { nonBlankText } from "../non-blank-text";
+import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";
 
 export function obfToBoard(obfBoard: OBFBoard): Board {

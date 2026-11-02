@@ -3,7 +3,7 @@ import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
-import { resolveBoardKey } from "./board-key-resolver";
+import { resolveBoardKey } from "./resolve-board-key";
 
 interface UseBoardKeyboardOptions {
   message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;

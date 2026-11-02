@@ -1,5 +1,6 @@
 import { use, useSyncExternalStore } from "react";
-import { PlaybackContext, type PlaybackController } from "./playback-context";
+import { PlaybackContext } from "./playback-context";
+import type { PlaybackController } from "./playback-types";
 
 export function usePlayback(): PlaybackController {
   const context = use(PlaybackContext);

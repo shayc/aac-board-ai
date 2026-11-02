@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
-import { makeBoardSet } from "./test-utils";
+import { makeBoardSetRecord } from "../testing";
 
 function renderWithProviders(children: ReactNode) {
   return render(<AppProviders>{children}</AppProviders>);
@@ -14,7 +14,7 @@ describe("BoardSetDeleteDialog", () => {
   test("shows the single-board warning with no a11y violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet({ name: "Core Words", boardCount: 1 })}
+        boardSet={makeBoardSetRecord({ name: "Core Words", boardCount: 1 })}
         onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
@@ -47,7 +47,7 @@ describe("BoardSetDeleteDialog", () => {
   test("shows the board count in the multiple-board warning", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet({ boardCount: 5 })}
+        boardSet={makeBoardSetRecord({ boardCount: 5 })}
         onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
@@ -79,7 +79,7 @@ describe("BoardSetDeleteDialog", () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet()}
+        boardSet={makeBoardSetRecord()}
         onDelete={onDelete}
         onClose={onClose}
       />,
@@ -96,7 +96,7 @@ describe("BoardSetDeleteDialog", () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSet()}
+        boardSet={makeBoardSetRecord()}
         onDelete={onDelete}
         onClose={onClose}
       />,
