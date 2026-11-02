@@ -165,7 +165,6 @@ export function Tile({
           "@supports (clip-path: shape(from 0 0, line to 1px 0))": {
             borderRadius: 0,
             clipPath: FOLDER_SHAPE,
-            paddingTop: "16px",
             "&::after": {
               display: "none",
             },
