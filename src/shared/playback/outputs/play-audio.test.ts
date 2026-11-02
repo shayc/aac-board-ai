@@ -2,7 +2,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { beforeEach, describe, expect, test } from "vitest";
 import { playAudio } from "./play-audio";
 
-function pendingPlayback(audio: ReturnType<typeof stubAudio>) {
+function preventAudioEnd(audio: ReturnType<typeof stubAudio>) {
   audio.play.mockImplementation(function (this: HTMLAudioElement) {
     queueMicrotask(() => this.dispatchEvent(new Event("play")));
 
@@ -23,7 +23,7 @@ describe("playAudio output", () => {
   });
 
   test("resolves and stops playback when the signal aborts", async () => {
-    pendingPlayback(audio);
+    preventAudioEnd(audio);
     const controller = new AbortController();
     const promise = playAudio("a.mp3", { signal: controller.signal });
 

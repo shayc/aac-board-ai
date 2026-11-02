@@ -1,82 +1,79 @@
 import { describe, expect, test } from "vitest";
-import { parseAppearancePreferences } from "./appearance-preferences-store";
+import { parseBoardPreferences } from "./board-preferences-store";
 
-describe("appearance-preferences-store", () => {
-  describe("parseAppearancePreferences", () => {
+describe("board-preferences-store", () => {
+  describe("parseBoardPreferences", () => {
     test("defaults tileSaturation to 1 when absent", () => {
-      expect(parseAppearancePreferences(undefined).tileSaturation).toBe(1);
+      expect(parseBoardPreferences(undefined).tileSaturation).toBe(1);
     });
 
     test("ignores a non-number stored tileSaturation", () => {
       expect(
-        parseAppearancePreferences({ tileSaturation: "high" }).tileSaturation,
+        parseBoardPreferences({ tileSaturation: "high" }).tileSaturation,
       ).toBe(1);
     });
 
     test("ignores a non-finite stored tileSaturation", () => {
       expect(
-        parseAppearancePreferences({ tileSaturation: NaN }).tileSaturation,
+        parseBoardPreferences({ tileSaturation: NaN }).tileSaturation,
       ).toBe(1);
     });
 
     test("clamps tileSaturation below the minimum", () => {
       expect(
-        parseAppearancePreferences({ tileSaturation: -0.5 }).tileSaturation,
+        parseBoardPreferences({ tileSaturation: -0.5 }).tileSaturation,
       ).toBe(0);
     });
 
     test("clamps tileSaturation above the maximum", () => {
-      expect(
-        parseAppearancePreferences({ tileSaturation: 5 }).tileSaturation,
-      ).toBe(1);
+      expect(parseBoardPreferences({ tileSaturation: 5 }).tileSaturation).toBe(
+        1,
+      );
     });
 
     test("keeps an in-range tileSaturation", () => {
       expect(
-        parseAppearancePreferences({ tileSaturation: 0.4 }).tileSaturation,
+        parseBoardPreferences({ tileSaturation: 0.4 }).tileSaturation,
       ).toBe(0.4);
     });
 
     test("defaults areTileBordersVisible to false when absent", () => {
-      expect(parseAppearancePreferences(undefined).areTileBordersVisible).toBe(
+      expect(parseBoardPreferences(undefined).areTileBordersVisible).toBe(
         false,
       );
     });
 
     test("ignores a non-boolean stored areTileBordersVisible", () => {
       expect(
-        parseAppearancePreferences({ areTileBordersVisible: "no" })
+        parseBoardPreferences({ areTileBordersVisible: "no" })
           .areTileBordersVisible,
       ).toBe(false);
       expect(
-        parseAppearancePreferences({ areTileBordersVisible: 0 })
+        parseBoardPreferences({ areTileBordersVisible: 0 })
           .areTileBordersVisible,
       ).toBe(false);
     });
 
     test("keeps a stored areTileBordersVisible value of true", () => {
       expect(
-        parseAppearancePreferences({ areTileBordersVisible: true })
+        parseBoardPreferences({ areTileBordersVisible: true })
           .areTileBordersVisible,
       ).toBe(true);
     });
 
     test("keeps other fields when only areTileBordersVisible is stored", () => {
       expect(
-        parseAppearancePreferences({ areTileBordersVisible: false })
-          .tileSaturation,
+        parseBoardPreferences({ areTileBordersVisible: false }).tileSaturation,
       ).toBe(1);
     });
 
     test("defaults tileLabelPlacement to top when absent", () => {
-      expect(parseAppearancePreferences(undefined).tileLabelPlacement).toBe(
-        "top",
-      );
+      expect(parseBoardPreferences(undefined).tileLabelPlacement).toBe("top");
     });
 
     test("ignores an unsupported stored tileLabelPlacement", () => {
       expect(
-        parseAppearancePreferences({ tileLabelPlacement: "center" })
+        parseBoardPreferences({ tileLabelPlacement: "center" })
           .tileLabelPlacement,
       ).toBe("top");
     });
@@ -85,7 +82,7 @@ describe("appearance-preferences-store", () => {
       "keeps a supported tileLabelPlacement of %s",
       (tileLabelPlacement) => {
         expect(
-          parseAppearancePreferences({ tileLabelPlacement }).tileLabelPlacement,
+          parseBoardPreferences({ tileLabelPlacement }).tileLabelPlacement,
         ).toBe(tileLabelPlacement);
       },
     );

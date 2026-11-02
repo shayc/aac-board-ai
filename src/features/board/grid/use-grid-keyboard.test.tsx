@@ -57,7 +57,7 @@ async function press(
 
 describe("useGridKeyboard", () => {
   describe("tab stops", () => {
-    test("sets tabIndex so only the active cell is tabbable", async () => {
+    test("sets tabIndex so only the tab stop is tabbable", async () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
@@ -101,7 +101,7 @@ describe("useGridKeyboard", () => {
       await expect.element(item1).toHaveAttribute("tabindex", "-1");
     });
 
-    test("keeps a tab stop when the grid changes and the active cell becomes empty while focus is outside the grid", async () => {
+    test("keeps a tab stop when the grid changes and the tab stop becomes empty while focus is outside the grid", async () => {
       const oldItems = makeItems(1, 2, 3, 4);
       const newItems = makeItems(5);
 

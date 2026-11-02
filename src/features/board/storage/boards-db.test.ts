@@ -5,7 +5,7 @@ import {
   getAssetBlob,
   getBoardRecord,
   listBoardRecords,
-  updateBoardStrings,
+  replaceBoardTranslations,
 } from "./board-content-storage";
 import {
   createStoredBoardSet,
@@ -58,7 +58,9 @@ describe("getBoardsDB", () => {
       "image",
     );
 
-    await updateBoardStrings("vocabulary", "root", "es", { Hello: "Hola" });
+    await replaceBoardTranslations("vocabulary", "root", "es", {
+      Hello: "Hola",
+    });
     expect((await getBoardRecord("vocabulary", "root"))?.obf.strings).toEqual({
       fr: { Hello: "Bonjour" },
       es: { Hello: "Hola" },

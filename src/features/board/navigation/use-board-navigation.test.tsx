@@ -10,7 +10,7 @@ import {
 } from "react-router";
 import { beforeEach, describe, expect, test } from "vitest";
 import { renderHook, type RenderHookResult } from "vitest-browser-react";
-import { seedBoardSets } from "../testing";
+import { resetBoardsDB, seedBoardSets } from "../testing";
 import {
   useBoardNavigation,
   type UseBoardNavigationReturn,
@@ -52,6 +52,7 @@ function setup(
 
 describe("useBoardNavigation", () => {
   beforeEach(async () => {
+    await resetBoardsDB();
     await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
   });
 
@@ -91,7 +92,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("is false when the board set is missing", async () => {
-      await seedBoardSets([]);
+      await resetBoardsDB();
 
       const { result } = await setup();
 
@@ -230,7 +231,7 @@ describe("useBoardNavigation", () => {
     });
 
     test("does nothing when the board set has no root board", async () => {
-      await seedBoardSets([]);
+      await resetBoardsDB();
 
       const { result, act } = await setup();
 

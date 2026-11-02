@@ -6,7 +6,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { NavButtons } from "./nav-buttons";
+import { NavigationButtons } from "./navigation-buttons";
 
 interface RenderOptions {
   canGoBack?: boolean;
@@ -24,7 +24,7 @@ async function renderButtons(options: RenderOptions = {}) {
   const screen = await render(
     <AppProviders>
       <MUIThemeProvider theme={theme}>
-        <NavButtons
+        <NavigationButtons
           canGoBack={options.canGoBack ?? false}
           canGoHome={options.canGoHome ?? false}
           onBack={onBack}
@@ -37,7 +37,7 @@ async function renderButtons(options: RenderOptions = {}) {
   return { onBack, onHome, screen };
 }
 
-describe("NavButtons", () => {
+describe("NavigationButtons", () => {
   test("calls onBack when the enabled back button is clicked", async () => {
     const onBack = vi.fn();
     const { screen } = await renderButtons({ canGoBack: true, onBack });

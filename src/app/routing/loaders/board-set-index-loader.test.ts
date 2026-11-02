@@ -27,16 +27,12 @@ describe("boardSetIndexLoader", () => {
   });
 
   test("throws 404 when the board set is missing", async () => {
-    await seedBoardSets([]);
-
     await expect(callLoader("missing-set")).rejects.toMatchObject({
       init: { status: 404 },
     });
   });
 
   test("throws 404 for an oversize boardSetId", async () => {
-    await seedBoardSets([]);
-
     await expect(callLoader("x".repeat(256))).rejects.toMatchObject({
       init: { status: 404 },
     });

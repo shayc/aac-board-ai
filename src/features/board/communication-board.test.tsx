@@ -5,8 +5,8 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setTileLabelPlacement } from "./appearance/appearance-preferences-store";
-import { seedBoardSets, TEST_IMAGE_SRC } from "./testing";
+import { setTileLabelPlacement } from "./board-preferences-store";
+import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
@@ -60,9 +60,10 @@ describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     speech = stubSpeech();
     audio = stubAudio();
+    await resetBoardsDB();
   });
 
   test("composing tiles and pressing play speaks the merged message", async () => {

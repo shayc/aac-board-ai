@@ -10,13 +10,13 @@ import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
-import { useAppearancePreferences } from "./appearance/appearance-preferences-store";
+import { useBoardPreferences } from "./board-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
-import { useBoardKeyboard } from "./keyboard/use-board-keyboard";
+import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
 import { BackspaceButton } from "./message/backspace-button";
 import { useMessage } from "./message/use-message";
-import { NavButtons } from "./navigation/nav-buttons";
+import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
@@ -38,7 +38,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useAppearancePreferences();
+    useBoardPreferences();
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -53,7 +53,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     playback,
     navigation,
   });
-  const keyboard = useBoardKeyboard({ message, playback });
+  const shortcuts = useBoardShortcuts({ message, playback });
 
   const hasMessage = message.parts.length > 0;
   const isInBoardSet = Boolean(navigation.boardSetId);
@@ -97,7 +97,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   return (
     <Stack
-      {...keyboard.rootProps}
+      {...shortcuts.rootProps}
       direction="column"
       style={boardRootStyle}
       sx={createBoardRootSx}
@@ -111,7 +111,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       >
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
           {!isSmallScreen && isInBoardSet && (
-            <NavButtons
+            <NavigationButtons
               canGoBack={navigation.canGoBack}
               canGoHome={navigation.canGoHome}
               onBack={navigation.goBack}
@@ -162,7 +162,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           }}
         >
           {isInBoardSet && (
-            <NavButtons
+            <NavigationButtons
               canGoBack={navigation.canGoBack}
               canGoHome={navigation.canGoHome}
               onBack={navigation.goBack}

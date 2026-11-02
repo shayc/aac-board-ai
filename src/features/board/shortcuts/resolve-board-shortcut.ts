@@ -1,4 +1,4 @@
-type BoardKeyAction =
+type BoardShortcutAction =
   | { kind: "backspace" }
   | { kind: "clear" }
   | { kind: "speak" }
@@ -15,10 +15,10 @@ export interface BoardKeyEvent {
  * unclaimed keys so native control activation and browser shortcuts can
  * continue.
  */
-export function resolveBoardKey(
+export function resolveBoardShortcut(
   event: BoardKeyEvent,
   isMessagePlaying: boolean,
-): BoardKeyAction | null {
+): BoardShortcutAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
       return isMessagePlaying ? null : { kind: "speak" };
