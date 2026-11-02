@@ -17,7 +17,7 @@ export {
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
 export { BoardNotFoundError } from "./storage/board-content-storage";
-export { hydrateBoard } from "./storage/board-hydration";
+export { loadStoredBoard } from "./storage/load-stored-board";
 export { SuggestionsSettings } from "./suggestions/suggestions-settings";
 export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
 

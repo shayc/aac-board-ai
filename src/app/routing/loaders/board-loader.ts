@@ -1,7 +1,7 @@
 import {
   BoardNotFoundError,
-  hydrateBoard,
   InvalidIdError,
+  loadStoredBoard,
   resolveBoardForLanguage,
   type Board,
 } from "@features/board";
@@ -21,7 +21,7 @@ export async function boardLoader({
   }
 
   try {
-    const sourceBoard = await hydrateBoard(setId, boardId, request.signal);
+    const sourceBoard = await loadStoredBoard(setId, boardId, request.signal);
 
     const language = getStoredLanguage();
     const board = await resolveBoardForLanguage(

@@ -38,8 +38,8 @@ export async function getAssetBlob(
 ): Promise<Blob | undefined> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
-  const cleanPath = normalizeAssetPath(path);
-  const asset = await db.get("assets", [setId, cleanPath]);
+  const normalizedPath = normalizeAssetPath(path);
+  const asset = await db.get("assets", [setId, normalizedPath]);
 
   return asset?.blob;
 }

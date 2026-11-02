@@ -79,7 +79,7 @@ State has distinct owners and lifetimes:
 | State                 | Owner                                 | Contents                                                                     |
 | --------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                      |
-| Active board          | React Router loaders                  | Hydrated, optionally translated `Board` for the current route                |
+| Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                  |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
 | Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
@@ -114,11 +114,11 @@ File selection, drag and drop, URL imports, and PWA file handling all use
 
 ### Open a board
 
-[`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles hydration and
+[`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
 translation before rendering, keeping that work out of UI components:
 
-1. Navigation to `/sets/:setId/boards/:boardId` calls `hydrateBoard`, which reads
-   the stored OBF, resolves its asset URLs, and maps the result through
+1. Navigation to `/sets/:setId/boards/:boardId` calls `loadStoredBoard`, which
+   reads the stored OBF, attaches its asset URLs, and maps the result through
    `obfToBoard`.
 2. `resolveBoardForLanguage` uses the source board or a cached translation when
    possible. Otherwise, it attempts translation and falls back to the source

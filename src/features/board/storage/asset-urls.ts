@@ -11,32 +11,36 @@ export async function getAssetUrl(
   setId: string,
   path: string,
 ): Promise<string | undefined> {
-  const assetPath = normalizeAssetPath(path);
-  const cachedUrl = urlsBySetId.get(setId)?.get(assetPath);
+  const normalizedPath = normalizeAssetPath(path);
+  const cachedUrl = urlsBySetId.get(setId)?.get(normalizedPath);
   if (cachedUrl) {
     return cachedUrl;
   }
 
-  const blob = await getAssetBlob(setId, assetPath);
+  const blob = await getAssetBlob(setId, normalizedPath);
   if (!blob) {
     return undefined;
   }
 
-  return ensureAssetUrl(setId, assetPath, blob);
+  return ensureAssetUrl(setId, normalizedPath, blob);
 }
 
-function ensureAssetUrl(setId: string, assetPath: string, blob: Blob): string {
+function ensureAssetUrl(
+  setId: string,
+  normalizedPath: string,
+  blob: Blob,
+): string {
   const urlsByPath = urlsBySetId.get(setId) ?? new Map<string, string>();
   urlsBySetId.set(setId, urlsByPath);
 
   // A concurrent load of the same asset may have finished during the read.
-  const existingUrl = urlsByPath.get(assetPath);
+  const existingUrl = urlsByPath.get(normalizedPath);
   if (existingUrl) {
     return existingUrl;
   }
 
   const url = URL.createObjectURL(blob);
-  urlsByPath.set(assetPath, url);
+  urlsByPath.set(normalizedPath, url);
 
   return url;
 }

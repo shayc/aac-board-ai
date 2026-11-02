@@ -4,20 +4,20 @@ import type { Board } from "../board-types";
 import { getAssetUrl } from "./asset-urls";
 import { BoardNotFoundError, getBoard } from "./board-content-storage";
 
-export async function hydrateBoard(
+export async function loadStoredBoard(
   setId: string,
   boardId: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const obf = await readOBFBoard(setId, boardId);
+  const obfBoard = await readOBFBoard(setId, boardId);
 
   signal?.throwIfAborted();
 
-  const hydrated = await hydrateOBFBoard(setId, obf);
+  const obfWithUrls = await attachAssetUrls(setId, obfBoard);
 
   signal?.throwIfAborted();
 
-  return obfToBoard(hydrated);
+  return obfToBoard(obfWithUrls);
 }
 
 async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
@@ -29,38 +29,38 @@ async function readOBFBoard(setId: string, boardId: string): Promise<OBFBoard> {
   return record.obf;
 }
 
-async function hydrateOBFBoard(
+async function attachAssetUrls(
   setId: string,
-  board: OBFBoard,
+  obfBoard: OBFBoard,
 ): Promise<OBFBoard> {
   const [images, sounds] = await Promise.all([
-    hydrateAssets(setId, board.images),
-    hydrateAssets(setId, board.sounds),
+    attachUrlsToMedia(setId, obfBoard.images),
+    attachUrlsToMedia(setId, obfBoard.sounds),
   ]);
 
-  return { ...board, images, sounds };
+  return { ...obfBoard, images, sounds };
 }
 
-async function hydrateAssets(
+async function attachUrlsToMedia(
   setId: string,
-  assets: OBFMedia[] | undefined,
+  media: OBFMedia[] | undefined,
 ): Promise<OBFMedia[] | undefined> {
-  if (!assets?.length) {
-    return assets;
+  if (!media?.length) {
+    return media;
   }
 
   return Promise.all(
-    assets.map(async (asset) => {
-      if (!asset.path) {
-        return asset;
+    media.map(async (item) => {
+      if (!item.path) {
+        return item;
       }
 
       try {
-        const url = await getAssetUrl(setId, asset.path);
+        const url = await getAssetUrl(setId, item.path);
 
-        return url ? { ...asset, data: url } : asset;
+        return url ? { ...item, data: url } : item;
       } catch {
-        return asset;
+        return item;
       }
     }),
   );
