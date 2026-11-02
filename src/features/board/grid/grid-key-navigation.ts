@@ -79,8 +79,8 @@ function findNearestTarget(
   from: GridPosition,
   step: GridStep,
 ): GridFocusTarget | null {
-  const movesAlongRows = step.row !== 0;
-  const stepDirection = movesAlongRows ? step.row : step.column;
+  const movesVertically = step.row !== 0;
+  const stepDirection = movesVertically ? step.row : step.column;
   let best: {
     target: GridFocusTarget;
     primaryDistance: number;
@@ -89,10 +89,10 @@ function findNearestTarget(
 
   for (const target of listGridFocusTargets(root)) {
     const { position } = target;
-    const primaryDelta = movesAlongRows
+    const primaryDelta = movesVertically
       ? position.row - from.row
       : position.column - from.column;
-    const crossDelta = movesAlongRows
+    const crossDelta = movesVertically
       ? position.column - from.column
       : position.row - from.row;
 

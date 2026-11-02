@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import type { SuggestionDisplayState } from "./derive-suggestion-status";
+import type { SuggestionStatus } from "./derive-suggestion-status";
 import { PendingDot } from "./pending-dot";
-import { SuggestionStatus } from "./suggestion-status";
+import { SuggestionStatusNotice } from "./suggestion-status";
 
 export interface SuggestionBarProps {
-  status: SuggestionDisplayState;
+  status: SuggestionStatus;
   phrases: string[];
   onEnable: () => void;
   onPhraseSelect: (phrase: string) => void;
@@ -33,7 +33,7 @@ export function SuggestionBar({
     >
       {(status === null || isPending) && <PendingDot show={isPending} />}
 
-      <SuggestionStatus status={status} onEnable={onEnable} />
+      <SuggestionStatusNotice status={status} onEnable={onEnable} />
 
       <Box
         sx={{

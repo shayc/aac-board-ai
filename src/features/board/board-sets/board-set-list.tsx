@@ -21,7 +21,7 @@ import type { BoardSetRecord } from "./board-sets-store";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
-  onActivate?: () => void;
+  onNavigate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
   onDelete: (boardSet: BoardSetRecord) => void;
   activeSetId?: string;
@@ -29,7 +29,7 @@ interface BoardSetListProps {
 
 export function BoardSetList({
   boardSets,
-  onActivate,
+  onNavigate,
   onShowDetails,
   onDelete,
   activeSetId,
@@ -88,7 +88,7 @@ export function BoardSetList({
               to={rootBoardPath(boardSet)}
               isActive={boardSet.id === activeSetId}
               isMenuOpen={boardSet.id === activeMenuSetId}
-              onActivate={onActivate}
+              onNavigate={onNavigate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />
           ))}
@@ -124,7 +124,7 @@ interface BoardSetListItemProps {
   to: string;
   isActive: boolean;
   isMenuOpen: boolean;
-  onActivate?: () => void;
+  onNavigate?: () => void;
   onMenuOpen: (element: HTMLElement) => void;
 }
 
@@ -134,7 +134,7 @@ function BoardSetListItem({
   to,
   isActive,
   isMenuOpen,
-  onActivate,
+  onNavigate,
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
@@ -151,7 +151,7 @@ function BoardSetListItem({
       return;
     }
 
-    onActivate?.();
+    onNavigate?.();
   }
 
   return (

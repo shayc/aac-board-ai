@@ -4,14 +4,17 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { assertNever } from "@shared/utils/assert-never";
-import type { SuggestionDisplayState } from "./derive-suggestion-status";
+import type { SuggestionStatus } from "./derive-suggestion-status";
 
-interface SuggestionStatusProps {
-  status: SuggestionDisplayState;
+interface SuggestionStatusNoticeProps {
+  status: SuggestionStatus;
   onEnable: () => void;
 }
 
-export function SuggestionStatus({ status, onEnable }: SuggestionStatusProps) {
+export function SuggestionStatusNotice({
+  status,
+  onEnable,
+}: SuggestionStatusNoticeProps) {
   const t = useTranslate();
 
   if (status === null || status.kind === "pending") {

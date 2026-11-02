@@ -23,7 +23,7 @@ describe("BoardSetList", () => {
           makeBoardSet({ id: "b", name: "Animals" }),
         ]}
         activeSetId="a"
-        onActivate={vi.fn()}
+        onNavigate={vi.fn()}
         onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
@@ -42,12 +42,12 @@ describe("BoardSetList", () => {
     await expect.element(animalsLink).not.toHaveAttribute("aria-current");
   });
 
-  test("notifies the parent when a board link is activated", async () => {
-    const onActivate = vi.fn();
+  test("notifies the parent when a board link is followed", async () => {
+    const onNavigate = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
-        onActivate={onActivate}
+        onNavigate={onNavigate}
         onShowDetails={vi.fn()}
         onDelete={vi.fn()}
       />,
@@ -55,7 +55,7 @@ describe("BoardSetList", () => {
 
     await screen.getByRole("link", { name: "Core Words", exact: true }).click();
 
-    expect(onActivate).toHaveBeenCalledOnce();
+    expect(onNavigate).toHaveBeenCalledOnce();
   });
 
   test("keeps labels, menus, and details actions associated with their list", async () => {
@@ -71,7 +71,7 @@ describe("BoardSetList", () => {
           <BoardSetList
             key={boardSet.id}
             boardSets={[boardSet]}
-            onActivate={vi.fn()}
+            onNavigate={vi.fn()}
             onShowDetails={onShowDetails}
             onDelete={onDelete}
           />
@@ -124,7 +124,7 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSet({ name: "Core Words" })]}
-        onActivate={vi.fn()}
+        onNavigate={vi.fn()}
         onShowDetails={onShowDetails}
         onDelete={onDelete}
       />,

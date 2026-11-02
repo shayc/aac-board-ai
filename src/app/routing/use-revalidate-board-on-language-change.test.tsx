@@ -3,10 +3,10 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { useRevalidateBoardOnLanguageChange } from "./use-revalidate-board-on-language-change";
+import { useRevalidateOnLanguageChange } from "./use-revalidate-board-on-language-change";
 
 function Probe() {
-  useRevalidateBoardOnLanguageChange();
+  useRevalidateOnLanguageChange();
 
   return <p>probe ready</p>;
 }
@@ -15,7 +15,7 @@ function TestHydrateFallback() {
   return null;
 }
 
-describe("useRevalidateBoardOnLanguageChange", () => {
+describe("useRevalidateOnLanguageChange", () => {
   test("re-runs route loaders only when the language actually changes", async () => {
     setStoredLanguage("en");
     const loader = vi.fn(() => null);

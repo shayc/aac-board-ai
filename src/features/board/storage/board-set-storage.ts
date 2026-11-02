@@ -57,11 +57,11 @@ export async function deleteBoardSet(setId: string): Promise<void> {
   validateId(setId, "setId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
-  const setRange = boardSetRange(setId);
+  const keyRange = boardSetRange(setId);
 
   await Promise.all([
-    tx.objectStore("boards").delete(setRange),
-    tx.objectStore("assets").delete(setRange),
+    tx.objectStore("boards").delete(keyRange),
+    tx.objectStore("assets").delete(keyRange),
     tx.objectStore("boardSets").delete(setId),
     tx.done,
   ]);
