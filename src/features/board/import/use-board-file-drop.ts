@@ -11,7 +11,7 @@ interface BoardFileDropHandlers {
 
 interface UseBoardFileDropReturn {
   isDraggingFiles: boolean;
-  dropHandlers: BoardFileDropHandlers;
+  rootProps: BoardFileDropHandlers;
 }
 
 function containsFiles(event: DragEvent<HTMLElement>): boolean {
@@ -74,6 +74,6 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
 
   return {
     isDraggingFiles,
-    dropHandlers: { onDragEnter, onDragOver, onDragLeave, onDrop },
+    rootProps: { onDragEnter, onDragOver, onDragLeave, onDrop },
   };
 }

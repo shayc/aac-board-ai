@@ -32,7 +32,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      const importedSets = await importBoardSets(files);
+      const importedBoardSets = await importBoardSets(files);
 
       showSnackbar({
         message: (translate) =>
@@ -40,7 +40,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         severity: "success",
       });
 
-      return importedSets;
+      return importedBoardSets;
     } catch (error) {
       const isTooLarge =
         error instanceof OBFError && error.info.code === "archive-too-large";
@@ -58,13 +58,13 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   }
 
   async function importAndOpen(files: File[]) {
-    const importedSets = await importFiles(files);
+    const importedBoardSets = await importFiles(files);
 
-    if (importedSets?.length !== 1) {
+    if (importedBoardSets?.length !== 1) {
       return;
     }
 
-    const [boardSet] = importedSets;
+    const [boardSet] = importedBoardSets;
     void navigate(rootBoardPath(boardSet));
   }
 

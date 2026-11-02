@@ -35,13 +35,13 @@ export async function importBoardSets(
   files: File | File[],
 ): Promise<ImportedBoardSet[]> {
   const fileList = Array.isArray(files) ? files : [files];
-  const importedSets: ImportedBoardSet[] = [];
+  const importedBoardSets: ImportedBoardSet[] = [];
 
   for (const file of fileList) {
-    importedSets.push(await importBoardFile(file));
+    importedBoardSets.push(await importBoardFile(file));
   }
 
-  return importedSets;
+  return importedBoardSets;
 }
 
 async function importBoardFile(file: File): Promise<ImportedBoardSet> {
@@ -79,7 +79,7 @@ async function importOBZArchive(
     rootBoardId: rootBoard.id,
     name: rootBoard.name ?? fileName,
     boards: Array.from(boards.values(), (board) =>
-      resolveLoadBoardPaths(board, boardIdByPath),
+      resolveBoardLinks(board, boardIdByPath),
     ),
     assets: buildAssetInputs(resources),
   });
@@ -109,7 +109,7 @@ function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
   );
 }
 
-export function resolveLoadBoardPaths(
+export function resolveBoardLinks(
   board: OBFBoard,
   boardIdByPath: Map<string, string>,
 ): OBFBoard {

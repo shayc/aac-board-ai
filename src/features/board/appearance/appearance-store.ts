@@ -18,16 +18,16 @@ function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
 export function parseAppearancePreferences(
   raw: unknown,
 ): AppearancePreferences {
-  const parsed = (raw ?? {}) as Record<string, unknown>;
+  const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
-    tileSaturation: parseClampedNumber(parsed.tileSaturation, TILE_SATURATION),
+    tileSaturation: parseClampedNumber(stored.tileSaturation, TILE_SATURATION),
     areTileBordersVisible:
-      typeof parsed.areTileBordersVisible === "boolean"
-        ? parsed.areTileBordersVisible
+      typeof stored.areTileBordersVisible === "boolean"
+        ? stored.areTileBordersVisible
         : false,
-    tileLabelPlacement: isTileLabelPlacement(parsed.tileLabelPlacement)
-      ? parsed.tileLabelPlacement
+    tileLabelPlacement: isTileLabelPlacement(stored.tileLabelPlacement)
+      ? stored.tileLabelPlacement
       : "top",
   };
 }
