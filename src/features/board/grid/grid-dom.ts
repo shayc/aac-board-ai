@@ -1,7 +1,7 @@
 import type { GridPosition } from "./grid-model";
 
 const GRID_CELL_SELECTOR = "[role='gridcell']";
-const GRID_FOCUS_TARGET_SELECTOR = "[tabindex]";
+const GRID_FOCUSABLE_SELECTOR = "[tabindex]";
 
 export interface GridFocusTarget {
   element: HTMLElement;
@@ -17,13 +17,13 @@ export function findGridFocusableAt(
   position: GridPosition,
 ): HTMLElement | null {
   return root.querySelector<HTMLElement>(
-    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUS_TARGET_SELECTOR}`,
+    `${GRID_CELL_SELECTOR}[aria-rowindex='${position.row + 1}'][aria-colindex='${position.column + 1}'] ${GRID_FOCUSABLE_SELECTOR}`,
   );
 }
 
 export function findFirstGridFocusable(root: HTMLElement): HTMLElement | null {
   return root.querySelector<HTMLElement>(
-    `${GRID_CELL_SELECTOR} ${GRID_FOCUS_TARGET_SELECTOR}`,
+    `${GRID_CELL_SELECTOR} ${GRID_FOCUSABLE_SELECTOR}`,
   );
 }
 
@@ -40,7 +40,7 @@ export function listGridFocusTargets(
     }
 
     for (const element of cell.querySelectorAll<HTMLElement>(
-      GRID_FOCUS_TARGET_SELECTOR,
+      GRID_FOCUSABLE_SELECTOR,
     )) {
       targets.push({ element, position });
     }

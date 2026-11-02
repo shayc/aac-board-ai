@@ -6,7 +6,7 @@
   "close": "Κλείσιμο",
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",
   "boardGridLabel": "Πίνακας επικοινωνίας",
-  "board": "Πίνακας",
+  "boardSelectorLabel": "Πίνακας",
   "boardSelectorOpen": "Άνοιγμα λίστας πινάκων",
   "boardSelectorClose": "Κλείσιμο λίστας πινάκων",
   "boardSelectorNoOptions": "Δεν βρέθηκαν αντίστοιχοι πίνακες",

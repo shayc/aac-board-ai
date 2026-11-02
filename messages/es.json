@@ -6,7 +6,7 @@
   "close": "Cerrar",
   "opensInNewTab": "(se abre en una pestaña nueva)",
   "boardGridLabel": "Tablero de comunicación",
-  "board": "Tablero",
+  "boardSelectorLabel": "Tablero",
   "boardSelectorOpen": "Abrir lista de tableros",
   "boardSelectorClose": "Cerrar lista de tableros",
   "boardSelectorNoOptions": "No hay tableros coincidentes",

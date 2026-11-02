@@ -6,7 +6,7 @@
   "close": "Zatvori",
   "opensInNewTab": "(otvara se u novoj kartici)",
   "boardGridLabel": "Komunikacijska ploča",
-  "board": "Ploča",
+  "boardSelectorLabel": "Ploča",
   "boardSelectorOpen": "Otvori popis ploča",
   "boardSelectorClose": "Zatvori popis ploča",
   "boardSelectorNoOptions": "Nema odgovarajućih ploča",

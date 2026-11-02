@@ -6,7 +6,7 @@
   "close": "Stäng",
   "opensInNewTab": "(öppnas i en ny flik)",
   "boardGridLabel": "Kommunikationstavla",
-  "board": "Tavla",
+  "boardSelectorLabel": "Tavla",
   "boardSelectorOpen": "Öppna listan med tavlor",
   "boardSelectorClose": "Stäng listan med tavlor",
   "boardSelectorNoOptions": "Inga matchande tavlor",

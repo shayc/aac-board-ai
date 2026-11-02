@@ -6,7 +6,7 @@
   "close": "বন্ধ করুন",
   "opensInNewTab": "(নতুন ট্যাবে খোলে)",
   "boardGridLabel": "যোগাযোগ বোর্ড",
-  "board": "বোর্ড",
+  "boardSelectorLabel": "বোর্ড",
   "boardSelectorOpen": "বোর্ডের তালিকা খুলুন",
   "boardSelectorClose": "বোর্ডের তালিকা বন্ধ করুন",
   "boardSelectorNoOptions": "মিলে যায় এমন কোনো বোর্ড নেই",

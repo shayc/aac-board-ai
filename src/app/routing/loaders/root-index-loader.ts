@@ -1,6 +1,6 @@
 import {
   rootBoardPath,
-  getBoardSets,
+  listBoardSets,
   importBoardSetFromUrl,
 } from "@features/board";
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
@@ -41,7 +41,7 @@ export async function rootIndexLoader({
     return importAndRedirect(boardUrl, request.signal);
   }
 
-  const [boardSet] = await getBoardSets();
+  const [boardSet] = await listBoardSets();
   if (boardSet) {
     return redirect(rootBoardPath(boardSet));
   }

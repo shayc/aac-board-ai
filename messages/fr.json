@@ -6,7 +6,7 @@
   "close": "Fermer",
   "opensInNewTab": "(s'ouvre dans un nouvel onglet)",
   "boardGridLabel": "Tableau de communication",
-  "board": "Tableau",
+  "boardSelectorLabel": "Tableau",
   "boardSelectorOpen": "Ouvrir la liste des tableaux",
   "boardSelectorClose": "Fermer la liste des tableaux",
   "boardSelectorNoOptions": "Aucun tableau correspondant",

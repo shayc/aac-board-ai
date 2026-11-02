@@ -6,7 +6,7 @@
   "close": "Kapat",
   "opensInNewTab": "(yeni sekmede açılır)",
   "boardGridLabel": "İletişim panosu",
-  "board": "Pano",
+  "boardSelectorLabel": "Pano",
   "boardSelectorOpen": "Pano listesini aç",
   "boardSelectorClose": "Pano listesini kapat",
   "boardSelectorNoOptions": "Eşleşen pano yok",

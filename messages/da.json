@@ -6,7 +6,7 @@
   "close": "Luk",
   "opensInNewTab": "(åbner i nyt faneblad)",
   "boardGridLabel": "Kommunikationstavle",
-  "board": "Tavle",
+  "boardSelectorLabel": "Tavle",
   "boardSelectorOpen": "Åbn listen over tavler",
   "boardSelectorClose": "Luk listen over tavler",
   "boardSelectorNoOptions": "Ingen matchende tavler",

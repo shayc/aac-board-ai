@@ -12,7 +12,7 @@ export function usePlayback(): PlaybackController {
   return context;
 }
 
-export function useIsPlaybackActive(owner?: string): boolean {
+export function useIsPlaying(owner?: string): boolean {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {

@@ -6,7 +6,7 @@
   "close": "Zamknij",
   "opensInNewTab": "(otwiera się w nowej karcie)",
   "boardGridLabel": "Tablica komunikacyjna",
-  "board": "Tablica",
+  "boardSelectorLabel": "Tablica",
   "boardSelectorOpen": "Otwórz listę tablic",
   "boardSelectorClose": "Zamknij listę tablic",
   "boardSelectorNoOptions": "Brak pasujących tablic",

@@ -6,7 +6,7 @@
   "close": "Închide",
   "opensInNewTab": "(se deschide într-o filă nouă)",
   "boardGridLabel": "Tablă de comunicare",
-  "board": "Tablă",
+  "boardSelectorLabel": "Tablă",
   "boardSelectorOpen": "Deschide lista de table",
   "boardSelectorClose": "Închide lista de table",
   "boardSelectorNoOptions": "Nu există table corespunzătoare",

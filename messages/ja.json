@@ -6,7 +6,7 @@
   "close": "閉じる",
   "opensInNewTab": "(新しいタブで開きます)",
   "boardGridLabel": "コミュニケーションボード",
-  "board": "ボード",
+  "boardSelectorLabel": "ボード",
   "boardSelectorOpen": "ボード一覧を開く",
   "boardSelectorClose": "ボード一覧を閉じる",
   "boardSelectorNoOptions": "一致するボードがありません",

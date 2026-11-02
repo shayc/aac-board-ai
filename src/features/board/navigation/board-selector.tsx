@@ -44,7 +44,7 @@ export function BoardSelector() {
             },
             htmlInput: {
               ...params.slotProps?.htmlInput,
-              "aria-label": t(m.board),
+              "aria-label": t(m.boardSelectorLabel),
             },
           }}
         />

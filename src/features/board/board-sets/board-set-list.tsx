@@ -43,7 +43,7 @@ export function BoardSetList({
   } | null>(null);
 
   const isMenuOpen = Boolean(menuAnchor);
-  const activeMenuBoardSetId = menuAnchor?.boardSet.id;
+  const openMenuBoardSetId = menuAnchor?.boardSet.id;
 
   function handleMenuOpen(element: HTMLElement, boardSet: BoardSetRecord) {
     setMenuAnchor({ element, boardSet });
@@ -87,7 +87,7 @@ export function BoardSetList({
               name={boardSet.name}
               to={rootBoardPath(boardSet)}
               isActive={boardSet.id === activeBoardSetId}
-              isMenuOpen={boardSet.id === activeMenuBoardSetId}
+              isMenuOpen={boardSet.id === openMenuBoardSetId}
               onNavigate={onNavigate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />
