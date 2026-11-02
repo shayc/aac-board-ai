@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Button, { buttonClasses } from "@mui/material/Button";
 import type { ReactNode } from "react";
 
@@ -40,19 +39,14 @@ const TILE_RADIUS_FALLBACK = 16;
 const TILE_BORDER_WIDTH = 4;
 
 // Folder tiles take a folder silhouette (tab on the leading side) instead of
-// a corner triangle, so folders read by shape, not by a small mark. `inset`
-// draws the same outline shrunk inward, for the fill inside a visible border.
-function folderShape(inset: number): string {
-  const radius = 18 - inset;
-  // The frame's padding already moves the inset shape down by `inset`, so the
-  // step below the tab keeps the same local height to leave a full border.
-  const step = 10;
-  const tabEnd = `calc(42% + ${4 + inset / 2}px)`;
+// a corner triangle, so folders read by shape, not by a small mark.
+// border-shape (unlike clip-path) makes the border, shadow and focus ring
+// follow the outline too, so tile borders stay even around the tab.
+const FOLDER_SHAPE =
+  "shape(from 0 18px, curve to 18px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) 10px with 42% 0, hline to calc(100% - 18px), curve to 100% 28px with 100% 10px, vline to calc(100% - 18px), curve to calc(100% - 18px) 100% with 100% 100%, hline to 18px, curve to 0 calc(100% - 18px) with 0 100%, close)";
 
-  return `shape(from 0 ${radius}px, curve to ${radius}px 0 with 0 0, hline to calc(42% - 12px), curve to ${tabEnd} ${step}px with 42% 0, hline to calc(100% - ${radius}px), curve to 100% ${step + radius}px with 100% ${step}px, vline to calc(100% - ${radius}px), curve to calc(100% - ${radius}px) 100% with 100% 100%, hline to ${radius}px, curve to 0 calc(100% - ${radius}px) with 0 100%, close)`;
-}
-
-const SUPPORTS_SHAPE = "@supports (clip-path: shape(from 0 0, line to 1px 0))";
+const SUPPORTS_BORDER_SHAPE =
+  "@supports (border-shape: shape(from 0 0, line to 1px 0, line to 0 1px, close))";
 
 const TILE_SHADOW_LIGHT =
   "0 0 0 1px rgb(0 0 0 / 0.10), 0 2px 0 rgb(0 0 0 / 0.10), 0 1px 2px rgb(16 24 40 / 0.06), 0 4px 10px -4px rgb(16 24 40 / 0.14)";
@@ -80,12 +74,8 @@ export function Tile({
     ? desaturate(borderColor)
     : resolvedBackgroundColor;
   const isFolder = variant === "folder";
-  // A CSS border follows the box, not the clip-path, so a visible border on a
-  // folder tile is painted by a frame that carries the folder outline.
-  const isFolderFramed =
-    isFolder && isBorderVisible && Boolean(resolvedBorderColor);
 
-  const button = (
+  return (
     <Button
       aria-label={ariaLabel}
       tabIndex={tabIndex}
@@ -167,7 +157,7 @@ export function Tile({
             },
           })),
         ...(isFolder && {
-          // Fallback marker for browsers without shape(): a corner fold.
+          // Fallback marker for browsers without border-shape: a corner fold.
           "&::after": {
             content: '""',
             position: "absolute",
@@ -179,19 +169,11 @@ export function Tile({
               "32px solid color-mix(in srgb, currentColor 75%, transparent)",
             borderBottom: "32px solid transparent",
           },
-          [SUPPORTS_SHAPE]: {
+          [SUPPORTS_BORDER_SHAPE]: {
             borderRadius: 0,
-            clipPath: folderShape(0),
-            ...(isFolderFramed && {
-              borderWidth: 0,
-              clipPath: folderShape(TILE_BORDER_WIDTH),
-            }),
+            borderShape: FOLDER_SHAPE,
             "&::after": {
               display: "none",
-            },
-            // clip-path would cut an outside focus ring; draw it inside.
-            [`&.${buttonClasses.focusVisible}`]: {
-              outlineOffset: -8,
             },
           },
         }),
@@ -199,31 +181,5 @@ export function Tile({
     >
       {children}
     </Button>
-  );
-
-  if (!isFolderFramed) {
-    return button;
-  }
-
-  return (
-    <Box
-      sx={(theme) => ({
-        display: "grid",
-        width: "100%",
-        height: "100%",
-        [SUPPORTS_SHAPE]: {
-          p: `${TILE_BORDER_WIDTH}px`,
-          backgroundColor: resolvedBorderColor,
-          clipPath: folderShape(0),
-          ...(resolvedBackgroundColor &&
-            !borderColor &&
-            theme.applyStyles("dark", {
-              backgroundColor: dim(resolvedBackgroundColor, 0.86),
-            })),
-        },
-      })}
-    >
-      {button}
-    </Box>
   );
 }

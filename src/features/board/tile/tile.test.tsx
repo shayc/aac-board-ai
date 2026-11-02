@@ -87,11 +87,11 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
     const afterStyles = getComputedStyle(button.element(), "::after");
 
-    expect(styles.clipPath).toMatch(/^shape\(/);
+    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
     expect(afterStyles.display).toBe("none");
   });
 
-  test("paints a visible folder border along the folder outline", async () => {
+  test("draws a visible folder border along the folder outline", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#ffffff"
@@ -104,18 +104,13 @@ describe("Tile", () => {
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
-    const frame = button.element().parentElement;
-    if (!frame) {
-      throw new Error("Expected a folder frame");
-    }
-    const frameStyles = getComputedStyle(frame);
+    const styles = getComputedStyle(button.element());
 
-    expect(frameStyles.clipPath).toMatch(/^shape\(/);
-    expect(frameStyles.backgroundColor).toBe(
-      resolveBackgroundColor("oklch(from #00ff00 l c h)"),
+    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
+    expect(styles.borderTopWidth).toBe("4px");
+    expect(styles.borderTopColor).toBe(
+      resolveColor("oklch(from #00ff00 l c h)"),
     );
-    expect(frameStyles.paddingTop).toBe("4px");
-    expect(getComputedStyle(button.element()).borderTopWidth).toBe("0px");
   });
 
   test("applies backgroundColor and a readable text color", async () => {
@@ -253,7 +248,7 @@ describe("Tile", () => {
     const button = screen.getByRole("button", { name: "Folder" });
     const styles = getComputedStyle(button.element());
 
-    expect(styles.clipPath).toMatch(/^shape\(/);
+    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
   });
 
   test("calls onActivate when clicked", async () => {
