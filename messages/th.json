@@ -6,7 +6,7 @@
   "close": "ปิด",
   "opensInNewTab": "(เปิดในแท็บใหม่)",
   "boardGridLabel": "บอร์ดสื่อสาร",
-  "board": "บอร์ด",
+  "boardSelectorLabel": "บอร์ด",
   "boardSelectorOpen": "เปิดรายการบอร์ด",
   "boardSelectorClose": "ปิดรายการบอร์ด",
   "boardSelectorNoOptions": "ไม่พบบอร์ดที่ตรงกัน",

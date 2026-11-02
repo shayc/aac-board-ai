@@ -1,9 +1,9 @@
 export { BoardSettings } from "./board-settings";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export {
-  getBoardSets,
   getStoredBoardSet,
   InvalidIdError,
+  listBoardSets,
 } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";

@@ -5,7 +5,7 @@ import { renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
 import {
   useActiveTrackingKey,
-  useIsPlaybackActive,
+  useIsPlaying,
   usePlayback,
 } from "./use-playback";
 
@@ -97,7 +97,7 @@ describe("PlaybackProvider", () => {
 
         return {
           controls: usePlayback(),
-          isPlaying: useIsPlaybackActive(),
+          isPlaying: useIsPlaying(),
         };
       },
       { wrapper: PlaybackProvider },

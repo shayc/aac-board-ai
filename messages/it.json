@@ -6,7 +6,7 @@
   "close": "Chiudi",
   "opensInNewTab": "(si apre in una nuova scheda)",
   "boardGridLabel": "Tabella di comunicazione",
-  "board": "Tabella",
+  "boardSelectorLabel": "Tabella",
   "boardSelectorOpen": "Apri l'elenco delle tabelle",
   "boardSelectorClose": "Chiudi l'elenco delle tabelle",
   "boardSelectorNoOptions": "Nessuna tabella corrispondente",

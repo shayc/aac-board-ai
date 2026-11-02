@@ -6,7 +6,7 @@
   "close": "닫기",
   "opensInNewTab": "(새 탭에서 열림)",
   "boardGridLabel": "의사소통 보드",
-  "board": "보드",
+  "boardSelectorLabel": "보드",
   "boardSelectorOpen": "보드 목록 열기",
   "boardSelectorClose": "보드 목록 닫기",
   "boardSelectorNoOptions": "일치하는 보드 없음",

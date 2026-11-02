@@ -6,7 +6,7 @@
   "close": "Закрыть",
   "opensInNewTab": "(открывается в новой вкладке)",
   "boardGridLabel": "Коммуникационная доска",
-  "board": "Доска",
+  "boardSelectorLabel": "Доска",
   "boardSelectorOpen": "Открыть список досок",
   "boardSelectorClose": "Закрыть список досок",
   "boardSelectorNoOptions": "Нет подходящих досок",

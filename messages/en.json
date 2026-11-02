@@ -5,7 +5,7 @@
   "close": "Close",
   "opensInNewTab": "(opens in new tab)",
   "boardGridLabel": "Communication board",
-  "board": "Board",
+  "boardSelectorLabel": "Board",
   "boardSelectorOpen": "Open board list",
   "boardSelectorClose": "Close board list",
   "boardSelectorNoOptions": "No matching boards",

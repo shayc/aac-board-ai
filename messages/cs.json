@@ -6,7 +6,7 @@
   "close": "Zavřít",
   "opensInNewTab": "(otevře se na nové kartě)",
   "boardGridLabel": "Komunikační tabulka",
-  "board": "Tabulka",
+  "boardSelectorLabel": "Tabulka",
   "boardSelectorOpen": "Otevřít seznam tabulek",
   "boardSelectorClose": "Zavřít seznam tabulek",
   "boardSelectorNoOptions": "Žádné odpovídající tabulky",

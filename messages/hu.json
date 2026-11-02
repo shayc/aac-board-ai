@@ -6,7 +6,7 @@
   "close": "Bezárás",
   "opensInNewTab": "(új lapon nyílik meg)",
   "boardGridLabel": "Kommunikációs tábla",
-  "board": "Tábla",
+  "boardSelectorLabel": "Tábla",
   "boardSelectorOpen": "Táblák listájának megnyitása",
   "boardSelectorClose": "Táblák listájának bezárása",
   "boardSelectorNoOptions": "Nincs megfelelő tábla",

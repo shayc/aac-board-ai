@@ -6,7 +6,7 @@
   "close": "إغلاق",
   "opensInNewTab": "(يفتح في علامة تبويب جديدة)",
   "boardGridLabel": "لوحة تواصل",
-  "board": "لوحة",
+  "boardSelectorLabel": "لوحة",
   "boardSelectorOpen": "فتح قائمة اللوحات",
   "boardSelectorClose": "إغلاق قائمة اللوحات",
   "boardSelectorNoOptions": "لا توجد لوحات مطابقة",

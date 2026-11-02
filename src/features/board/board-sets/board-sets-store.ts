@@ -87,7 +87,7 @@ export function getBoardSetsSnapshot(): BoardSetsSnapshot {
   return boardSetsStore.getSnapshot();
 }
 
-export async function getBoardSets(): Promise<BoardSetRecord[]> {
+export async function listBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
 
   return boardSetsStore.getSnapshot().boardSets;

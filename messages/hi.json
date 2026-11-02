@@ -6,7 +6,7 @@
   "close": "बंद करें",
   "opensInNewTab": "(नए टैब में खुलता है)",
   "boardGridLabel": "संचार बोर्ड",
-  "board": "बोर्ड",
+  "boardSelectorLabel": "बोर्ड",
   "boardSelectorOpen": "बोर्ड की सूची खोलें",
   "boardSelectorClose": "बोर्ड की सूची बंद करें",
   "boardSelectorNoOptions": "कोई मेल खाता बोर्ड नहीं मिला",

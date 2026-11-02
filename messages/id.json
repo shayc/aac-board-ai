@@ -6,7 +6,7 @@
   "close": "Tutup",
   "opensInNewTab": "(dibuka di tab baru)",
   "boardGridLabel": "Papan komunikasi",
-  "board": "Papan",
+  "boardSelectorLabel": "Papan",
   "boardSelectorOpen": "Buka daftar papan",
   "boardSelectorClose": "Tutup daftar papan",
   "boardSelectorNoOptions": "Tidak ada papan yang cocok",

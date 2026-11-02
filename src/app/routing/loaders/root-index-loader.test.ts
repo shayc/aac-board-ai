@@ -1,4 +1,4 @@
-import { getBoardSets } from "@features/board";
+import { listBoardSets } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -39,7 +39,7 @@ describe("rootIndexLoader", () => {
     const location = response.headers.get("Location");
     expect(location).toMatch(/^\/sets\/[^/]+\/boards\/[^/]+$/);
 
-    const sets = await getBoardSets();
+    const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
   });
 
@@ -56,7 +56,7 @@ describe("rootIndexLoader", () => {
     expect(response.headers.get("Location")).toMatch(
       /^\/sets\/lots-of-stuff-2\/boards\/[^/]+$/,
     );
-    expect(new Set((await getBoardSets()).map((set) => set.id))).toEqual(
+    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff-2", "lots-of-stuff"]),
     );
   });
@@ -100,7 +100,7 @@ describe("rootIndexLoader", () => {
       await expect(callLoader(searchParams, controller.signal)).rejects.toBe(
         controller.signal.reason,
       );
-      expect(await getBoardSets()).toEqual([]);
+      expect(await listBoardSets()).toEqual([]);
     },
   );
 
@@ -132,7 +132,7 @@ describe("rootIndexLoader", () => {
       /^\/sets\/[^/]+\/boards\/[^/]+$/,
     );
 
-    const sets = await getBoardSets();
+    const sets = await listBoardSets();
     expect(sets).toHaveLength(1);
   });
 });

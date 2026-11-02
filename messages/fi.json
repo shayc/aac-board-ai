@@ -6,7 +6,7 @@
   "close": "Sulje",
   "opensInNewTab": "(avautuu uuteen välilehteen)",
   "boardGridLabel": "Kommunikointitaulu",
-  "board": "Taulu",
+  "boardSelectorLabel": "Taulu",
   "boardSelectorOpen": "Avaa taululuettelo",
   "boardSelectorClose": "Sulje taululuettelo",
   "boardSelectorNoOptions": "Ei vastaavia tauluja",
