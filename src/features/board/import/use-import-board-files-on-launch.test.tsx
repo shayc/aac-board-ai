@@ -3,7 +3,7 @@ import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../navigation/board-paths";
-import { listBoardSets } from "../storage/board-set-storage";
+import { listStoredBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { useImportBoardFilesOnLaunch } from "./use-import-board-files-on-launch";
 
@@ -63,7 +63,7 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     const screen = await renderLaunchHandler();
 
-    expect(await listBoardSets()).toHaveLength(0);
+    expect(await listStoredBoardSets()).toHaveLength(0);
     await expect.element(screen.getByTestId("path")).toHaveTextContent("/");
   });
 
@@ -80,7 +80,7 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
 
     await vi.waitFor(async () => {
-      const boardSets = await listBoardSets();
+      const boardSets = await listStoredBoardSets();
       expect(boardSets).toHaveLength(1);
       expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
     });

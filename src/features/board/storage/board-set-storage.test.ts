@@ -5,9 +5,9 @@ import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import { getAssetBlob, getBoardRecord } from "./board-content-storage";
 import {
   BoardSetAlreadyExistsError,
-  createBoardSet,
-  deleteBoardSet,
-  listBoardSets,
+  createStoredBoardSet,
+  deleteStoredBoardSet,
+  listStoredBoardSets,
 } from "./board-set-storage";
 import { closeBoardsDB, InvalidIdError } from "./boards-db";
 
@@ -17,7 +17,7 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-describe("createBoardSet", () => {
+describe("createStoredBoardSet", () => {
   test("derives set metadata from the selected root without changing its source", async () => {
     const rootBoard = makeOBFBoard({
       id: "root",
@@ -36,14 +36,14 @@ describe("createBoardSet", () => {
     });
     const source = structuredClone(rootBoard);
 
-    await createBoardSet({
+    await createStoredBoardSet({
       id: "vocabulary",
       rootBoardId: "root",
       boards: [makeOBFBoard({ id: "child", name: "Child" }), rootBoard],
       assets: [],
     });
 
-    expect(await listBoardSets()).toEqual([
+    expect(await listStoredBoardSets()).toEqual([
       expect.objectContaining({
         id: "vocabulary",
         name: "Core words",
@@ -63,16 +63,16 @@ describe("createBoardSet", () => {
 
   test("rejects a missing root without storing a partial set", async () => {
     await expect(
-      createBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
+      createStoredBoardSet(makeBoardSetInput({ rootBoardId: "missing" })),
     ).rejects.toThrow("Root board not found");
 
-    expect(await listBoardSets()).toEqual([]);
+    expect(await listStoredBoardSets()).toEqual([]);
     expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
   });
 
   test("rejects duplicate board IDs without overwriting a board", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           boards: [
             makeOBFBoard({ id: "root-1", name: "Original" }),
@@ -82,12 +82,12 @@ describe("createBoardSet", () => {
       ),
     ).rejects.toThrow("Duplicate board ID");
 
-    expect(await listBoardSets()).toEqual([]);
+    expect(await listStoredBoardSets()).toEqual([]);
     expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
   });
 
   test("rejects a conflicting ID without changing the existing set", async () => {
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         id: "set-1",
         name: "Original",
@@ -98,7 +98,7 @@ describe("createBoardSet", () => {
     );
 
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           id: "set-1",
           name: "Replacement",
@@ -112,11 +112,11 @@ describe("createBoardSet", () => {
     expect(await getBoardRecord("set-1", "a")).toBeDefined();
     expect(await getBoardRecord("set-1", "b")).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
-    expect((await listBoardSets())[0]?.name).toBe("Original");
+    expect((await listStoredBoardSets())[0]?.name).toBe("Original");
   });
 
   test("inserts a new board set", async () => {
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         id: "set-1",
         name: "My Set",
@@ -124,7 +124,7 @@ describe("createBoardSet", () => {
       }),
     );
 
-    const sets = await listBoardSets();
+    const sets = await listStoredBoardSets();
     expect(sets).toHaveLength(1);
     expect(sets[0].id).toBe("set-1");
     expect(sets[0].name).toBe("My Set");
@@ -138,9 +138,9 @@ describe("createBoardSet", () => {
       makeOBFBoard({ id: "b3", name: "B3" }),
     ];
 
-    await createBoardSet(makeBoardSetInput({ boards }));
+    await createStoredBoardSet(makeBoardSetInput({ boards }));
 
-    const sets = await listBoardSets();
+    const sets = await listStoredBoardSets();
     expect(sets[0].boardCount).toBe(3);
 
     const board = await getBoardRecord("set-1", "b2");
@@ -157,7 +157,7 @@ describe("createBoardSet", () => {
     async ({ name, expectedName, expectedSetName }) => {
       const obf = makeOBFBoard({ id: "root-1", name });
 
-      await createBoardSet(
+      await createStoredBoardSet(
         makeBoardSetInput({ name: undefined, boards: [obf] }),
       );
 
@@ -168,7 +168,7 @@ describe("createBoardSet", () => {
         obf,
       });
       expect(obf.name).toBe(name);
-      expect((await listBoardSets())[0].name).toBe(expectedSetName);
+      expect((await listStoredBoardSets())[0].name).toBe(expectedSetName);
     },
   );
 
@@ -179,7 +179,7 @@ describe("createBoardSet", () => {
     } as unknown as OBFBoard;
 
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           boards: [uncloneableOBF],
           assets: [{ path: "x.png", blob: new Blob(["x"]) }],
@@ -187,14 +187,14 @@ describe("createBoardSet", () => {
       ),
     ).rejects.toThrow();
 
-    expect(await listBoardSets()).toEqual([]);
+    expect(await listStoredBoardSets()).toEqual([]);
     expect(await getBoardRecord("set-1", "b")).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
   test("rejects empty boardSetId with a typed InvalidIdError", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           id: "",
           name: "Bad",
@@ -206,7 +206,7 @@ describe("createBoardSet", () => {
 
   test("rejects boardSetId longer than 255 characters", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           id: "x".repeat(256),
           name: "Bad",
@@ -218,7 +218,7 @@ describe("createBoardSet", () => {
 
   test("rejects empty rootBoardId", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           id: "set-1",
           name: "Bad",
@@ -230,7 +230,7 @@ describe("createBoardSet", () => {
 
   test("rejects empty boardId", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           boards: [makeOBFBoard({ id: "root-1" }), makeOBFBoard({ id: "" })],
         }),
@@ -240,7 +240,7 @@ describe("createBoardSet", () => {
 
   test("rejects boardId longer than 255 characters", async () => {
     await expect(
-      createBoardSet(
+      createStoredBoardSet(
         makeBoardSetInput({
           boards: [
             makeOBFBoard({ id: "root-1" }),
@@ -252,9 +252,9 @@ describe("createBoardSet", () => {
   });
 });
 
-describe("listBoardSets", () => {
+describe("listStoredBoardSets", () => {
   test("returns empty array when no sets exist", async () => {
-    const sets = await listBoardSets();
+    const sets = await listStoredBoardSets();
     expect(sets).toEqual([]);
   });
 
@@ -262,14 +262,14 @@ describe("listBoardSets", () => {
     let now = 1000;
     vi.spyOn(Date, "now").mockImplementation(() => (now += 1000));
 
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         id: "old",
         name: "Old",
         rootBoardId: "root-1",
       }),
     );
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         id: "new",
         name: "New",
@@ -277,16 +277,16 @@ describe("listBoardSets", () => {
       }),
     );
 
-    const sets = await listBoardSets();
+    const sets = await listStoredBoardSets();
     expect(sets).toHaveLength(2);
     expect(sets[0].id).toBe("new");
     expect(sets[1].id).toBe("old");
   });
 });
 
-describe("deleteBoardSet", () => {
+describe("deleteStoredBoardSet", () => {
   test("deletes the set and all its content while preserving another set", async () => {
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         boards: [
           makeOBFBoard({ id: "b1", name: "B1" }),
@@ -299,7 +299,7 @@ describe("deleteBoardSet", () => {
       }),
     );
 
-    await createBoardSet(
+    await createStoredBoardSet(
       makeBoardSetInput({
         id: "set-2",
         name: "Set 2",
@@ -309,9 +309,9 @@ describe("deleteBoardSet", () => {
       }),
     );
 
-    await deleteBoardSet("set-1");
+    await deleteStoredBoardSet("set-1");
 
-    const sets = await listBoardSets();
+    const sets = await listStoredBoardSets();
     expect(sets.map((set) => set.id)).toEqual(["set-2"]);
     expect(await getBoardRecord("set-1", "b1")).toBeUndefined();
     expect(await getBoardRecord("set-1", "b2")).toBeUndefined();
@@ -327,6 +327,8 @@ describe("deleteBoardSet", () => {
   });
 
   test("rejects empty boardSetId", async () => {
-    await expect(deleteBoardSet("")).rejects.toThrow("Invalid boardSetId");
+    await expect(deleteStoredBoardSet("")).rejects.toThrow(
+      "Invalid boardSetId",
+    );
   });
 });

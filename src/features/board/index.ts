@@ -1,8 +1,8 @@
 export { BoardSettings } from "./board-settings";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export {
-  getBoardSet,
   getBoardSets,
+  getStoredBoardSet,
   InvalidIdError,
 } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";

@@ -10,7 +10,7 @@ function pendingPlayback(audio: ReturnType<typeof stubAudio>) {
   });
 }
 
-describe("playAudio transport", () => {
+describe("playAudio output", () => {
   let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(() => {

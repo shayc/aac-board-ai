@@ -1,7 +1,7 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
-  createBoardSet,
+  createStoredBoardSet,
   type BoardSetInput,
   type BoardSetRecord,
 } from "../storage/board-set-storage";
@@ -89,7 +89,7 @@ export async function countStoredBoardContent(boardSetId: string): Promise<{
 export async function seedBoardSets(records: SeedBoardSet[]): Promise<void> {
   await resetBoardsDB();
   for (const { boards, assets = [], ...record } of records) {
-    await createBoardSet({
+    await createStoredBoardSet({
       name: record.id,
       ...record,
       boards: boards ?? [makeOBFBoard({ id: record.rootBoardId })],

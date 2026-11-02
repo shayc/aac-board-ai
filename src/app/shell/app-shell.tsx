@@ -39,7 +39,7 @@ export function AppShell() {
 
       <ContentColumn isShifted={isLibraryPushingContent}>
         <AppHeader
-          isLibraryButtonHidden={isLibraryPushingContent}
+          isLibraryButtonVisible={!isLibraryPushingContent}
           onOpenLibrary={() => setIsLibraryOpen(true)}
           onOpenSettings={() => setIsSettingsOpen(true)}
         />

@@ -2,16 +2,16 @@ import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
 interface PlaybackPreferences {
-  isPartHighlightingEnabled: boolean;
+  isHighlightingEnabled: boolean;
 }
 
 export function parsePlaybackPreferences(raw: unknown): PlaybackPreferences {
   const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
-    isPartHighlightingEnabled:
-      typeof stored.isPartHighlightingEnabled === "boolean"
-        ? stored.isPartHighlightingEnabled
+    isHighlightingEnabled:
+      typeof stored.isHighlightingEnabled === "boolean"
+        ? stored.isHighlightingEnabled
         : false,
   };
 }
@@ -21,12 +21,12 @@ const playbackPreferencesStore = createPersistedStore<PlaybackPreferences>(
   parsePlaybackPreferences,
 );
 
-export function setPartHighlightingEnabled(
-  isPartHighlightingEnabled: boolean,
+export function setPlaybackHighlightingEnabled(
+  isHighlightingEnabled: boolean,
 ): void {
   playbackPreferencesStore.setState({
     ...playbackPreferencesStore.getSnapshot(),
-    isPartHighlightingEnabled,
+    isHighlightingEnabled,
   });
 }
 

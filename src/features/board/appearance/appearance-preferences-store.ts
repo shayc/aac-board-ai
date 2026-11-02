@@ -32,21 +32,21 @@ export function parseAppearancePreferences(
   };
 }
 
-const appearanceStore = createPersistedStore<AppearancePreferences>(
+const appearancePreferencesStore = createPersistedStore<AppearancePreferences>(
   "appearance-preferences",
   parseAppearancePreferences,
 );
 
 export function setTileSaturation(tileSaturation: number): void {
-  appearanceStore.setState({
-    ...appearanceStore.getSnapshot(),
+  appearancePreferencesStore.setState({
+    ...appearancePreferencesStore.getSnapshot(),
     tileSaturation,
   });
 }
 
 export function setTileBordersVisible(areTileBordersVisible: boolean): void {
-  appearanceStore.setState({
-    ...appearanceStore.getSnapshot(),
+  appearancePreferencesStore.setState({
+    ...appearancePreferencesStore.getSnapshot(),
     areTileBordersVisible,
   });
 }
@@ -54,15 +54,15 @@ export function setTileBordersVisible(areTileBordersVisible: boolean): void {
 export function setTileLabelPlacement(
   tileLabelPlacement: TileLabelPlacement,
 ): void {
-  appearanceStore.setState({
-    ...appearanceStore.getSnapshot(),
+  appearancePreferencesStore.setState({
+    ...appearancePreferencesStore.getSnapshot(),
     tileLabelPlacement,
   });
 }
 
 export function useAppearancePreferences(): AppearancePreferences {
   return useSyncExternalStore(
-    appearanceStore.subscribe,
-    appearanceStore.getSnapshot,
+    appearancePreferencesStore.subscribe,
+    appearancePreferencesStore.getSnapshot,
   );
 }

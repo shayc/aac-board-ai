@@ -275,6 +275,7 @@ AI availability, provisioning, and session lifecycle to
 - **Board** — a grid of communication tiles.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
+- **Library** — the board sets stored on this device.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It
@@ -284,6 +285,8 @@ AI availability, provisioning, and session lifecycle to
 - **Vocalization** — the text a tile speaks when it differs from its visible label.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
+- **Message part** — one item in the message, with its own label and any
+  vocalization, image, or sound.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.

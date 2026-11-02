@@ -112,7 +112,7 @@ describe("BoardSettings", () => {
     await expect.element(highlightSwitch).toBeChecked();
     await vi.waitFor(() =>
       expect(localStorage.getItem("playback-preferences")).toBe(
-        JSON.stringify({ isPartHighlightingEnabled: true }),
+        JSON.stringify({ isHighlightingEnabled: true }),
       ),
     );
   });
