@@ -1,5 +1,6 @@
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
+import { buttonClasses } from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import {
   createTheme,
@@ -131,6 +132,16 @@ const themeOptions = {
           paddingTop: 12,
           paddingBottom: 12,
           variants: [
+            {
+              props: { variant: "outlined" },
+              style: {
+                "--variant-outlinedBg": (theme.vars ?? theme).palette.background
+                  .paper,
+                [`&.${buttonClasses.disabled}`]: {
+                  "--variant-outlinedBg": "transparent",
+                },
+              },
+            },
             {
               props: { variant: "outlined", color: "inherit" },
               style: {
