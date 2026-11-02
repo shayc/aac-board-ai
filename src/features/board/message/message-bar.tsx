@@ -59,10 +59,6 @@ export function MessageBar({
           (theme) => ({
             // An "input well": hairline edge plus a soft inner shadow.
             boxShadow: `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}, inset 0 2px 4px rgb(0 0 0 / 0.06)`,
-            "@supports (corner-shape: squircle)": {
-              borderRadius: "56px",
-              cornerShape: "squircle",
-            },
             ...theme.applyStyles("dark", {
               bgcolor: "#171a20",
               boxShadow:

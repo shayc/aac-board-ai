@@ -19,10 +19,6 @@ export function controlButtonSx(theme: Theme) {
       backgroundColor: "transparent",
       boxShadow: `inset 0 0 0 1px ${palette.divider}`,
     },
-    "@supports (corner-shape: squircle)": {
-      borderRadius: "22px",
-      cornerShape: "squircle",
-    },
     ...theme.applyStyles("dark", {
       color: "#d6dae2",
       backgroundColor: "#1d2128",

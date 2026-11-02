@@ -9,7 +9,12 @@ import {
 import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
-import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
+import {
+  PRIMARY_DARK,
+  PRIMARY_LIGHT,
+  SHELL_DARK,
+  SHELL_LIGHT,
+} from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
 import { prefixer } from "stylis";
 
@@ -31,8 +36,18 @@ const themeOptions = {
     disableCssColorScheme: true,
   },
   colorSchemes: {
-    light: { palette: { background: { default: SHELL_LIGHT } } },
-    dark: { palette: { background: { default: SHELL_DARK } } },
+    light: {
+      palette: {
+        primary: PRIMARY_LIGHT,
+        background: { default: SHELL_LIGHT },
+      },
+    },
+    dark: {
+      palette: {
+        primary: PRIMARY_DARK,
+        background: { default: SHELL_DARK },
+      },
+    },
   },
   motion: {
     reducedMotion: "system",
