@@ -2,13 +2,14 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   createBoardSet,
-  type BoardSetCreateInput,
+  type BoardSetInput,
+  type BoardSetRecord,
 } from "../storage/board-set-storage";
 import { getBoardsDB } from "../storage/boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
-interface SeedBoardSet extends Partial<BoardSetCreateInput> {
+interface SeedBoardSet extends Partial<BoardSetInput> {
   id: string;
   rootBoardId: string;
 }
@@ -28,8 +29,8 @@ export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
 }
 
 export function makeBoardSetInput(
-  overrides: Partial<BoardSetCreateInput> = {},
-): BoardSetCreateInput {
+  overrides: Partial<BoardSetInput> = {},
+): BoardSetInput {
   const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
 
   return {
@@ -38,6 +39,19 @@ export function makeBoardSetInput(
     rootBoardId: boards[0]?.id ?? "root-1",
     boards,
     assets: [],
+    ...overrides,
+  };
+}
+
+export function makeBoardSetRecord(
+  overrides: Partial<BoardSetRecord> = {},
+): BoardSetRecord {
+  return {
+    id: "set-1",
+    name: "My Board",
+    rootBoardId: "root",
+    updatedAt: 0,
+    boardCount: 1,
     ...overrides,
   };
 }
@@ -57,15 +71,15 @@ export async function resetBoardsDB(): Promise<void> {
   await refreshBoardSets();
 }
 
-export async function countStoredBoardContent(setId: string): Promise<{
+export async function countStoredBoardContent(boardSetId: string): Promise<{
   boardCount: number;
   assetCount: number;
 }> {
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets"], "readonly");
   const [boardCount, assetCount] = await Promise.all([
-    tx.objectStore("boards").index("bySetId").count(setId),
-    tx.objectStore("assets").index("bySetId").count(setId),
+    tx.objectStore("boards").index("byBoardSetId").count(boardSetId),
+    tx.objectStore("assets").index("byBoardSetId").count(boardSetId),
     tx.done,
   ]);
 

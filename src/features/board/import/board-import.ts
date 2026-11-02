@@ -12,7 +12,7 @@ import {
   type AssetInput,
 } from "../board-sets/board-sets-store";
 
-export interface BoardSetImportResult {
+export interface ImportedBoardSet {
   id: string;
   rootBoardId: string;
 }
@@ -33,28 +33,31 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
 
 export async function importBoardSets(
   files: File | File[],
-): Promise<BoardSetImportResult[]> {
+): Promise<ImportedBoardSet[]> {
   const fileList = Array.isArray(files) ? files : [files];
-  const results: BoardSetImportResult[] = [];
+  const importedSets: ImportedBoardSet[] = [];
 
   for (const file of fileList) {
-    results.push(await importBoardFile(file));
+    importedSets.push(await importBoardFile(file));
   }
 
-  return results;
+  return importedSets;
 }
 
-async function importBoardFile(file: File): Promise<BoardSetImportResult> {
+async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-  const baseSetId = deriveSetId(file.name);
+  const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const setId = buildSetIdCandidate(baseSetId, candidateNumber);
+    const boardSetId = buildBoardSetIdCandidate(
+      baseBoardSetId,
+      candidateNumber,
+    );
 
     try {
       return loaded.format === "obz"
-        ? await importOBZArchive(loaded.archive, setId, file.name)
-        : await importOBFBoard(loaded.board, setId, file.name);
+        ? await importOBZArchive(loaded.archive, boardSetId, file.name)
+        : await importOBFBoard(loaded.board, boardSetId, file.name);
     } catch (error) {
       if (!(error instanceof BoardSetAlreadyExistsError)) {
         throw error;
@@ -65,42 +68,42 @@ async function importBoardFile(file: File): Promise<BoardSetImportResult> {
 
 async function importOBZArchive(
   archive: ParsedOBZ,
-  setId: string,
+  boardSetId: string,
   fileName: string,
-): Promise<BoardSetImportResult> {
+): Promise<ImportedBoardSet> {
   const { manifest, boards, rootBoard, resources } = archive;
-  const boardPathToId = buildBoardPathToId(manifest);
+  const boardIdByPath = buildBoardIdByPath(manifest);
 
   await createBoardSet({
-    id: setId,
+    id: boardSetId,
     rootBoardId: rootBoard.id,
     name: rootBoard.name ?? fileName,
     boards: Array.from(boards.values(), (board) =>
-      resolveLoadBoardPaths(board, boardPathToId),
+      resolveLoadBoardPaths(board, boardIdByPath),
     ),
     assets: buildAssetInputs(resources),
   });
 
-  return { id: setId, rootBoardId: rootBoard.id };
+  return { id: boardSetId, rootBoardId: rootBoard.id };
 }
 
 async function importOBFBoard(
   board: OBFBoard,
-  setId: string,
+  boardSetId: string,
   fileName: string,
-): Promise<BoardSetImportResult> {
+): Promise<ImportedBoardSet> {
   await createBoardSet({
-    id: setId,
+    id: boardSetId,
     rootBoardId: board.id,
     name: board.name ?? fileName,
     boards: [board],
     assets: [],
   });
 
-  return { id: setId, rootBoardId: board.id };
+  return { id: boardSetId, rootBoardId: board.id };
 }
 
-function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
+function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
   return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
@@ -108,14 +111,14 @@ function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
 
 export function resolveLoadBoardPaths(
   board: OBFBoard,
-  boardPathToId: Map<string, string>,
+  boardIdByPath: Map<string, string>,
 ): OBFBoard {
   const buttons = board.buttons.map((button) => {
     if (!button.load_board?.path || button.load_board.id) {
       return button;
     }
 
-    const targetBoardId = boardPathToId.get(button.load_board.path);
+    const targetBoardId = boardIdByPath.get(button.load_board.path);
     if (!targetBoardId) {
       return button;
     }
@@ -147,18 +150,21 @@ export function buildAssetInputs(
     });
 }
 
-function deriveSetId(fileName: string): string {
+function deriveBoardSetId(fileName: string): string {
   const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";
 }
 
-function buildSetIdCandidate(baseSetId: string, candidateNumber: number) {
+function buildBoardSetIdCandidate(
+  baseBoardSetId: string,
+  candidateNumber: number,
+) {
   if (candidateNumber === 1) {
-    return baseSetId;
+    return baseBoardSetId;
   }
 
   const suffix = `-${candidateNumber}`;
 
-  return `${baseSetId.slice(0, 255 - suffix.length)}${suffix}`;
+  return `${baseBoardSetId.slice(0, 255 - suffix.length)}${suffix}`;
 }

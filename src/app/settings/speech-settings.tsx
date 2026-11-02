@@ -11,10 +11,10 @@ import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
 import {
-  setPitch,
-  setRate,
+  setSpeechPitch,
+  setSpeechRate,
   setVoiceURI,
-  setVolume,
+  setSpeechVolume,
   SPEECH_PITCH,
   SPEECH_RATE,
   SPEECH_VOLUME,
@@ -69,7 +69,7 @@ export function SpeechSettings() {
       value: rate,
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
-      onChange: setRate,
+      onChange: setSpeechRate,
       formatValue: (value: number) => `${value}x`,
     },
     {
@@ -78,7 +78,7 @@ export function SpeechSettings() {
       value: pitch,
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
-      onChange: setPitch,
+      onChange: setSpeechPitch,
       formatValue: (value: number) => `${value}x`,
     },
     {
@@ -87,15 +87,15 @@ export function SpeechSettings() {
       value: volume,
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
-      onChange: setVolume,
+      onChange: setSpeechVolume,
       formatValue: (value: number) => `${Math.round(value * 100)}%`,
     },
   ];
 
   function handlePreviewSpeech() {
     void playback.play({
-      source: "speech-preview",
-      steps: [{ kind: "speech", text: t(m.speechVoicePreview) }],
+      owner: "speech-preview",
+      steps: [{ kind: "speech", text: t(m.speechPreviewSample) }],
     });
   }
 

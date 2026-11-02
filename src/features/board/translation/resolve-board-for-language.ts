@@ -13,7 +13,7 @@ import {
  * when translation is unavailable or fails.
  */
 export async function resolveBoardForLanguage(
-  setId: string,
+  boardSetId: string,
   board: Board,
   language: string,
   signal?: AbortSignal,
@@ -38,7 +38,7 @@ export async function resolveBoardForLanguage(
     try {
       const translations = await translatePhrases(phrases, translator, signal);
 
-      void persistTranslations(setId, board.id, language, translations);
+      void persistTranslations(boardSetId, board.id, language, translations);
 
       return applyTranslations(board, translations);
     } finally {
@@ -67,13 +67,13 @@ async function translatePhrases(
 }
 
 async function persistTranslations(
-  setId: string,
+  boardSetId: string,
   boardId: string,
   language: string,
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await updateBoardStrings(setId, boardId, language, translations);
+    await updateBoardStrings(boardSetId, boardId, language, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }

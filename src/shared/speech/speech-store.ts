@@ -88,15 +88,15 @@ export function setVoiceURI(voiceURI: string | null): void {
   updatePreferences({ voiceURI });
 }
 
-export function setRate(rate: number): void {
+export function setSpeechRate(rate: number): void {
   updatePreferences({ rate });
 }
 
-export function setPitch(pitch: number): void {
+export function setSpeechPitch(pitch: number): void {
   updatePreferences({ pitch });
 }
 
-export function setVolume(volume: number): void {
+export function setSpeechVolume(volume: number): void {
   updatePreferences({ volume });
 }
 

@@ -8,17 +8,17 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { SuggestionsSettings } from "./suggestions-settings";
+import { SuggestionSettings } from "./suggestion-settings";
 
 function renderSuggestionsSettings() {
   return render(
     <AppProviders>
-      <SuggestionsSettings />
+      <SuggestionSettings />
     </AppProviders>,
   );
 }
 
-describe("SuggestionsSettings", () => {
+describe("SuggestionSettings", () => {
   test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
     stubBuiltInAIUnsupported("Proofreader", "Rewriter", "Translator");
 
@@ -78,7 +78,7 @@ describe("SuggestionsSettings", () => {
       .element(instructions)
       .toHaveValue("Prefer short, everyday words");
     await vi.waitFor(() =>
-      expect(localStorage.getItem("board-suggestions")).toBe(
+      expect(localStorage.getItem("suggestion-preferences")).toBe(
         JSON.stringify({ customInstructions: "Prefer short, everyday words" }),
       ),
     );

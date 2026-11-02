@@ -21,17 +21,17 @@ import { deleteBoardSet, type BoardSetRecord } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {
-  activeSetId?: string;
+  activeBoardSetId?: string;
   onNavigate?: () => void;
 }
 
 export function BoardSetLibrary({
-  activeSetId,
+  activeBoardSetId,
   onNavigate,
 }: BoardSetLibraryProps) {
   const t = useTranslate();
   const { boardSets, isLoading, error } = useBoardSets();
-  const { pickAndImportBoardFiles } = useImportBoardFiles();
+  const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
@@ -87,7 +87,7 @@ export function BoardSetLibrary({
             <Button
               variant="contained"
               startIcon={<LibraryAddOutlinedIcon />}
-              onClick={() => void pickAndImportBoardFiles()}
+              onClick={() => void pickAndImport()}
             >
               {t(m.libraryImportBoardFiles)}
             </Button>
@@ -101,7 +101,7 @@ export function BoardSetLibrary({
     <>
       <List sx={{ mb: 2, px: 1 }}>
         <ListItem disablePadding>
-          <ListItemButton onClick={() => void pickAndImportBoardFiles()}>
+          <ListItemButton onClick={() => void pickAndImport()}>
             <ListItemIcon>
               <LibraryAddOutlinedIcon />
             </ListItemIcon>
@@ -112,9 +112,9 @@ export function BoardSetLibrary({
 
       <BoardSetList
         boardSets={boardSets}
-        activeSetId={activeSetId}
+        activeBoardSetId={activeBoardSetId}
         onNavigate={onNavigate}
-        onDelete={setDeleteTarget}
+        onRequestDelete={setDeleteTarget}
         onShowDetails={setDetailsTarget}
       />
 

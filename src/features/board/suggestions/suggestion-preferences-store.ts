@@ -19,7 +19,7 @@ export function parseSuggestionPreferences(
 }
 
 const suggestionPreferencesStore = createPersistedStore<SuggestionPreferences>(
-  "board-suggestions",
+  "suggestion-preferences",
   parseSuggestionPreferences,
 );
 

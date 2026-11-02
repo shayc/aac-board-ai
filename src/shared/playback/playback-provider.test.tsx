@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
 import {
-  useActivePlaybackTrackingKey,
+  useActiveTrackingKey,
   useIsPlaybackActive,
   usePlayback,
 } from "./use-playback";
@@ -18,18 +18,18 @@ describe("PlaybackProvider", () => {
     audio = stubAudio();
   });
 
-  test("a new audio request interrupts speech from another source", async () => {
+  test("a new audio request interrupts speech from another owner", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: PlaybackProvider,
     });
 
     const speechResult = result.current.play({
-      source: "message",
+      owner: "message",
       steps: [{ kind: "speech", text: "hello" }],
     });
     const audioResult = result.current.play({
-      source: "tile",
+      owner: "tile",
       steps: [{ kind: "audio", src: "bell.mp3" }],
     });
 
@@ -46,11 +46,11 @@ describe("PlaybackProvider", () => {
     });
 
     const audioResult = result.current.play({
-      source: "tile",
+      owner: "tile",
       steps: [{ kind: "audio", src: "bell.mp3" }],
     });
     const speechResult = result.current.play({
-      source: "message",
+      owner: "message",
       steps: [{ kind: "speech", text: "hello" }],
     });
 
@@ -74,7 +74,7 @@ describe("PlaybackProvider", () => {
     const initialRenderCount = renderCount;
 
     const playbackResult = result.current.play({
-      source: "message",
+      owner: "message",
       steps: [{ kind: "speech", text: "hello" }],
     });
     await Promise.resolve();
@@ -104,7 +104,7 @@ describe("PlaybackProvider", () => {
     );
 
     const playbackResult = result.current.controls.play({
-      source: "message",
+      owner: "message",
       steps: [
         {
           kind: "speech",
@@ -133,13 +133,13 @@ describe("PlaybackProvider", () => {
     const { result } = await renderHook(
       () => ({
         controls: usePlayback(),
-        activeTrackingKey: useActivePlaybackTrackingKey(),
+        activeTrackingKey: useActiveTrackingKey(),
       }),
       { wrapper: PlaybackProvider },
     );
 
     const playbackResult = result.current.controls.play({
-      source: "message",
+      owner: "message",
       steps: [
         {
           kind: "speech",

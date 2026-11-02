@@ -13,19 +13,23 @@ export async function boardLoader({
   params,
   request,
 }: LoaderFunctionArgs): Promise<Board> {
-  const { setId, boardId } = params;
-  if (!setId || !boardId) {
+  const { boardSetId, boardId } = params;
+  if (!boardSetId || !boardId) {
     throw data(createRouteErrorPayload(routeErrorCodes.boardNotFound), {
       status: 404,
     });
   }
 
   try {
-    const sourceBoard = await loadStoredBoard(setId, boardId, request.signal);
+    const sourceBoard = await loadStoredBoard(
+      boardSetId,
+      boardId,
+      request.signal,
+    );
 
     const language = getStoredLanguage();
     const board = await resolveBoardForLanguage(
-      setId,
+      boardSetId,
       sourceBoard,
       language,
       request.signal,

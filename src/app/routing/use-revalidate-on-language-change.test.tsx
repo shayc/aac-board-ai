@@ -3,7 +3,7 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import { useRevalidateOnLanguageChange } from "./use-revalidate-board-on-language-change";
+import { useRevalidateOnLanguageChange } from "./use-revalidate-on-language-change";
 
 function Probe() {
   useRevalidateOnLanguageChange();

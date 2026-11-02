@@ -63,7 +63,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 
 - All files and folders under `src/` are kebab-case.
 - Avoid vague filler words (`data`, `info`, `manager`) when a precise domain name is available, and avoid cryptic abbreviations (`usr`, `amt`) — standard loop counters excepted.
-- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs; React components use descriptive PascalCase nouns.
+- Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`); React components use descriptive PascalCase nouns.
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
 

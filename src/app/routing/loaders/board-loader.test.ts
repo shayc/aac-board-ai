@@ -9,12 +9,12 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { boardLoader } from "./board-loader";
 
 function callLoader(
-  setId: string | undefined,
+  boardSetId: string | undefined,
   boardId: string | undefined,
 ): Promise<Board> {
   const args = {
     request: new Request("http://localhost/"),
-    params: { setId, boardId },
+    params: { boardSetId, boardId },
   } as unknown as LoaderFunctionArgs;
 
   return boardLoader(args);

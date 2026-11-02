@@ -1,14 +1,14 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-context";
+import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import {
-  useActivePlaybackTrackingKey,
+  useActiveTrackingKey,
   useIsPlaybackActive,
   usePlayback,
 } from "@shared/playback/use-playback";
 import type { MessagePart } from "../message/message-types";
 import { planPlayback } from "./plan-playback";
 
-const MESSAGE_SOURCE = "board-message";
-const TILE_SOURCE = "board-tile";
+const MESSAGE_OWNER = "board-message";
+const TILE_OWNER = "board-tile";
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
@@ -19,17 +19,17 @@ export interface UseBoardPlaybackReturn {
 
 export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
-  const isMessagePlaying = useIsPlaybackActive(MESSAGE_SOURCE);
+  const isMessagePlaying = useIsPlaybackActive(MESSAGE_OWNER);
 
   function playMessage(parts: MessagePart[]) {
     return playback.play({
-      source: MESSAGE_SOURCE,
+      owner: MESSAGE_OWNER,
       steps: planPlayback(parts),
     });
   }
 
   function playPart(part: MessagePart) {
-    return playback.play({ source: TILE_SOURCE, steps: planPlayback([part]) });
+    return playback.play({ owner: TILE_OWNER, steps: planPlayback([part]) });
   }
 
   return {
@@ -41,5 +41,5 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
 }
 
 export function useActiveMessagePartId(): string | null {
-  return useActivePlaybackTrackingKey(MESSAGE_SOURCE);
+  return useActiveTrackingKey(MESSAGE_OWNER);
 }

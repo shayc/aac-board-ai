@@ -23,16 +23,16 @@ interface BoardSetListProps {
   boardSets: BoardSetRecord[];
   onNavigate?: () => void;
   onShowDetails: (boardSet: BoardSetRecord) => void;
-  onDelete: (boardSet: BoardSetRecord) => void;
-  activeSetId?: string;
+  onRequestDelete: (boardSet: BoardSetRecord) => void;
+  activeBoardSetId?: string;
 }
 
 export function BoardSetList({
   boardSets,
   onNavigate,
   onShowDetails,
-  onDelete,
-  activeSetId,
+  onRequestDelete,
+  activeBoardSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
   const menuId = useId();
@@ -43,7 +43,7 @@ export function BoardSetList({
   } | null>(null);
 
   const isMenuOpen = Boolean(menuAnchor);
-  const activeMenuSetId = menuAnchor?.boardSet.id;
+  const activeMenuBoardSetId = menuAnchor?.boardSet.id;
 
   function handleMenuOpen(element: HTMLElement, boardSet: BoardSetRecord) {
     setMenuAnchor({ element, boardSet });
@@ -61,9 +61,9 @@ export function BoardSetList({
     handleMenuClose();
   }
 
-  function handleDelete() {
+  function handleRequestDelete() {
     if (menuAnchor) {
-      onDelete(menuAnchor.boardSet);
+      onRequestDelete(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -86,8 +86,8 @@ export function BoardSetList({
               menuId={menuId}
               name={boardSet.name}
               to={rootBoardPath(boardSet)}
-              isActive={boardSet.id === activeSetId}
-              isMenuOpen={boardSet.id === activeMenuSetId}
+              isActive={boardSet.id === activeBoardSetId}
+              isMenuOpen={boardSet.id === activeMenuBoardSetId}
               onNavigate={onNavigate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
             />
@@ -107,7 +107,7 @@ export function BoardSetList({
           </ListItemIcon>
           <ListItemText>{t(m.libraryDetails)}</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleDelete}>
+        <MenuItem onClick={handleRequestDelete}>
           <ListItemIcon>
             <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>

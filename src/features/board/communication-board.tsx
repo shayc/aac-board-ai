@@ -9,7 +9,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
-import { createButtonActivator } from "./activation/button-activation";
+import { createButtonActivator } from "./activation/button-activator";
 import { useAppearancePreferences } from "./appearance/appearance-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
@@ -56,7 +56,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const keyboard = useBoardKeyboard({ message, playback });
 
   const hasMessage = message.parts.length > 0;
-  const isInBoardSet = Boolean(navigation.setId);
+  const isInBoardSet = Boolean(navigation.boardSetId);
 
   const boardRootStyle: BoardRootStyle = {
     "--tile-saturation": String(tileSaturation),
@@ -82,7 +82,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
         variant={button.linkedBoardId ? "folder" : undefined}
-        borderHidden={!areTileBordersVisible}
+        isBorderVisible={areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}
       >

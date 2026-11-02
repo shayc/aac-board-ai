@@ -12,14 +12,16 @@ import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
-interface MessageSuggestions {
+interface UseMessageSuggestionsReturn {
   isSupported: boolean;
   status: SuggestionStatus;
   phrases: string[];
   enable: () => void;
 }
 
-export function useMessageSuggestions(text: string): MessageSuggestions {
+export function useMessageSuggestions(
+  text: string,
+): UseMessageSuggestionsReturn {
   const { customInstructions } = useSuggestionPreferences();
   const debouncedCustomInstructions = useDebouncedValue(
     customInstructions,

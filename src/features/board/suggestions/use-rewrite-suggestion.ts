@@ -3,7 +3,7 @@ import { useRewriter } from "@shayc/react-built-in-ai";
 import { prepareQuietly } from "./prepare-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
-interface RewriteSuggestionOptions {
+interface UseRewriteSuggestionOptions {
   text: string;
   customInstructions: string;
   language: string;
@@ -15,7 +15,7 @@ export function useRewriteSuggestion({
   customInstructions,
   language,
   tone,
-}: RewriteSuggestionOptions): SuggestionSource {
+}: UseRewriteSuggestionOptions): SuggestionSource {
   const rewriter = useRewriter({
     sharedContext: customInstructions,
     length: "shorter",

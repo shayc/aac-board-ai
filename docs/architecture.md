@@ -82,7 +82,7 @@ State has distinct owners and lifetimes:
 | Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                  |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
-| Reactive shared state | `createExternalStore`                 | Board-set catalog, voice catalog, and playback progress                      |
+| Reactive shared state | `createExternalStore`                 | Board-set library, voice catalog, and playback progress                      |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board display, suggestion instructions, and onboarding     |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                          |
 
@@ -99,7 +99,7 @@ Playback uses slice subscriptions: each component tracks only the progress field
 it needs. Word-boundary updates rerender only components whose selected fields
 change.
 
-The board-set catalog broadcasts changes so other tabs can refresh their lists.
+The board-set library broadcasts changes so other tabs can refresh their lists.
 Preferences managed by `createPersistedStore` do not synchronize across tabs. MUI
 persists and synchronizes theme mode separately.
 
@@ -107,7 +107,7 @@ persists and synchronizes theme mode separately.
 
 At `/`, a board URL supplied through `?board=` takes precedence. Otherwise, the app
 opens the first stored board set or imports the bundled starter board if the
-catalog is empty.
+library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
 `importBoardSets`. Each imported file creates a separate board set.
@@ -117,7 +117,7 @@ File selection, drag and drop, URL imports, and PWA file handling all use
 [`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
 translation before rendering, keeping that work out of UI components:
 
-1. Navigation to `/sets/:setId/boards/:boardId` calls `loadStoredBoard`, which
+1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadStoredBoard`, which
    reads the stored OBF, attaches its asset URLs, and maps the result through
    `obfToBoard`.
 2. `resolveBoardForLanguage` uses the source board or a cached translation when
@@ -129,12 +129,12 @@ translation before rendering, keeping that work out of UI components:
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for
 as long as its board set exists. Message parts keep their media after leaving
-the board they came from. A catalog refresh revokes the URLs of deleted board
+the board they came from. A library refresh revokes the URLs of deleted board
 sets.
 
 ### Activate a tile
 
-[`activateButton`](../src/features/board/activation/button-activation.ts)
+[`activateButton`](../src/features/board/activation/button-activator.ts)
 coordinates message updates, navigation, and playback:
 
 1. A tile linking to another board navigates immediately. A tile without actions
@@ -204,7 +204,7 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [board settings](../src/features/board/board-settings.tsx) and
-[suggestion settings](../src/features/board/suggestions/suggestions-settings.tsx)
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
@@ -225,7 +225,7 @@ are relative to `src/features/board/`.
 | Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                   |
 | Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                              |
 | Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                             |
-| Board-set catalog      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive catalog and coordinate board-set creation and deletion.    |
+| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.    |
 | Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.     |
 | Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Prepare suggestion models, apply rewrite instructions, and translate board text. |
 
@@ -279,6 +279,8 @@ AI availability, provisioning, and session lifecycle to
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It
   adds to the message, navigates to a linked board, or runs an action.
+- **Button** — the data model behind a tile, named after the OBF button. Code uses
+  `BoardButton` for the data and `Tile` for the view.
 - **Vocalization** — the text a tile speaks when it differs from its visible label.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.

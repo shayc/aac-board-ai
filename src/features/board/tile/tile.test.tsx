@@ -178,7 +178,7 @@ describe("Tile", () => {
       <Tile
         backgroundColor="#ff0000"
         borderColor="#00ff00"
-        borderHidden
+        isBorderVisible={false}
         onActivate={vi.fn()}
       >
         Borderless
@@ -201,7 +201,7 @@ describe("Tile", () => {
         backgroundColor="#000000"
         borderColor="#000000"
         variant="folder"
-        borderHidden
+        isBorderVisible={false}
         onActivate={vi.fn()}
       >
         Folder

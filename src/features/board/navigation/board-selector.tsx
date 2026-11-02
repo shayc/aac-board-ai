@@ -7,8 +7,8 @@ import { useBoardsInSet } from "./use-boards-in-set";
 
 export function BoardSelector() {
   const t = useTranslate();
-  const { setId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useBoardsInSet(setId);
+  const { boardSetId, boardId, goToBoard } = useBoardNavigation();
+  const { boards } = useBoardsInSet(boardSetId);
 
   const selectedBoard = boards.find((board) => board.id === boardId);
 

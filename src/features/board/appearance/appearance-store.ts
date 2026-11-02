@@ -33,7 +33,7 @@ export function parseAppearancePreferences(
 }
 
 const appearanceStore = createPersistedStore<AppearancePreferences>(
-  "board-appearance",
+  "appearance-preferences",
   parseAppearancePreferences,
 );
 

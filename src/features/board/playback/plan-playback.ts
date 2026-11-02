@@ -1,4 +1,4 @@
-import type { PlaybackStep } from "@shared/playback/playback-context";
+import type { PlaybackStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
 import {
   createSpokenPartTracker,

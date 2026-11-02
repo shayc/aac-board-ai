@@ -1,6 +1,6 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { Board, PhraseTranslations } from "../board-types";
-import { nonBlankText } from "../normalize-board-text";
+import { nonBlankText } from "../non-blank-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 

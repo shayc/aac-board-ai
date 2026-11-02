@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   getAssetBlob,
-  getBoard,
-  listBoards,
+  getBoardRecord,
+  listBoardRecords,
   updateBoardStrings,
 } from "./board-content-storage";
 import { createBoardSet } from "./board-set-storage";
@@ -16,16 +16,16 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-describe("getBoard", () => {
+describe("getBoardRecord", () => {
   test("returns undefined for nonexistent board", async () => {
     await createBoardSet(makeBoardSetInput());
 
-    const board = await getBoard("set-1", "nonexistent");
+    const board = await getBoardRecord("set-1", "nonexistent");
     expect(board).toBeUndefined();
   });
 });
 
-describe("listBoards", () => {
+describe("listBoardRecords", () => {
   test("returns only the set's boards", async () => {
     await createBoardSet(
       makeBoardSetInput({
@@ -47,13 +47,13 @@ describe("listBoards", () => {
       }),
     );
 
-    const boards = await listBoards("set-1");
+    const boards = await listBoardRecords("set-1");
 
     expect(boards.map((board) => board.id).sort()).toEqual(["a", "b"]);
   });
 
   test("returns empty array for a nonexistent set", async () => {
-    const boards = await listBoards("missing");
+    const boards = await listBoardRecords("missing");
 
     expect(boards).toEqual([]);
   });
@@ -97,7 +97,7 @@ describe("updateBoardStrings", () => {
       world: "mundo",
     });
 
-    const board = await getBoard("set-1", "b1");
+    const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
     expect(board.obf.strings).toEqual({
       es: { hello: "hola", world: "mundo" },
@@ -118,7 +118,7 @@ describe("updateBoardStrings", () => {
 
     await updateBoardStrings("set-1", "b1", "es", { hello: "hola" });
 
-    const board = await getBoard("set-1", "b1");
+    const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
     expect(board.obf.strings).toEqual({
       fr: { hello: "bonjour" },
@@ -140,7 +140,7 @@ describe("updateBoardStrings", () => {
     });
     await updateBoardStrings("set-1", "b1", "es", { hello: "ey" });
 
-    const board = await getBoard("set-1", "b1");
+    const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
     expect(board.obf.strings).toEqual({ es: { hello: "ey" } });
   });

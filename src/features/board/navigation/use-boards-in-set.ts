@@ -1,6 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
-import { listBoards } from "../storage/board-content-storage";
+import { listBoardRecords } from "../storage/board-content-storage";
 import { findTranslations } from "../translation/board-translations";
 
 interface BoardSummary {
@@ -15,13 +15,16 @@ interface UseBoardsInSetReturn {
 }
 
 export function useBoardsInSet(
-  setId: string | undefined,
+  boardSetId: string | undefined,
 ): UseBoardsInSetReturn {
   const { language } = useLanguage();
   const { value, error, isPending } = useLatestAsync({
-    enabled: setId !== undefined,
-    deps: [setId ?? ""],
-    run: () => (setId === undefined ? Promise.resolve([]) : listBoards(setId)),
+    enabled: boardSetId !== undefined,
+    deps: [boardSetId ?? ""],
+    run: () =>
+      boardSetId === undefined
+        ? Promise.resolve([])
+        : listBoardRecords(boardSetId),
   });
 
   const records = value ?? [];

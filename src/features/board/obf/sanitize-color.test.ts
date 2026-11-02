@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { sanitizeColor } from "./css-color";
+import { sanitizeColor } from "./sanitize-color";
 
 describe("sanitizeColor", () => {
   it.each([

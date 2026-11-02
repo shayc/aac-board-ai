@@ -4,7 +4,7 @@ import {
   createBoardSet as createStoredBoardSet,
   deleteBoardSet as deleteStoredBoardSet,
   listBoardSets,
-  type BoardSetCreateInput,
+  type BoardSetInput,
   type BoardSetRecord,
 } from "../storage/board-set-storage";
 
@@ -15,7 +15,7 @@ export {
 } from "../storage/board-set-storage";
 export type {
   AssetInput,
-  BoardSetCreateInput,
+  BoardSetInput,
   BoardSetRecord,
 } from "../storage/board-set-storage";
 
@@ -30,7 +30,7 @@ boardSetsSyncChannel.addEventListener("message", () => {
   void refreshBoardSets();
 });
 
-const store = createExternalStore<BoardSetsSnapshot>({
+const boardSetsStore = createExternalStore<BoardSetsSnapshot>({
   boardSets: [],
   isLoading: true,
   error: undefined,
@@ -44,11 +44,11 @@ async function loadBoardSets(): Promise<void> {
     const boardSets = await listBoardSets();
     // URLs are per tab, and every tab refreshes after a delete.
     revokeAssetUrlsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
-    store.setState({ boardSets, isLoading: false, error: undefined });
+    boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {
-    const { boardSets } = store.getSnapshot();
-    store.setState({
+    const { boardSets } = boardSetsStore.getSnapshot();
+    boardSetsStore.setState({
       boardSets,
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
@@ -71,36 +71,34 @@ export async function refreshBoardSets(): Promise<void> {
   await pendingLoad;
 }
 
-export async function refreshAndBroadcastBoardSets(): Promise<void> {
+export async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);
 }
 
 export function subscribeBoardSets(listener: () => void): () => void {
-  const unsubscribe = store.subscribe(listener);
+  const unsubscribe = boardSetsStore.subscribe(listener);
   void ensureLoaded();
 
   return unsubscribe;
 }
 
 export function getBoardSetsSnapshot(): BoardSetsSnapshot {
-  return store.getSnapshot();
+  return boardSetsStore.getSnapshot();
 }
 
 export async function getBoardSets(): Promise<BoardSetRecord[]> {
   await ensureLoaded();
 
-  return store.getSnapshot().boardSets;
+  return boardSetsStore.getSnapshot().boardSets;
 }
 
-export async function createBoardSet(
-  input: BoardSetCreateInput,
-): Promise<void> {
+export async function createBoardSet(input: BoardSetInput): Promise<void> {
   await createStoredBoardSet(input);
-  await refreshAndBroadcastBoardSets();
+  await syncBoardSets();
 }
 
-export async function deleteBoardSet(setId: string): Promise<void> {
-  await deleteStoredBoardSet(setId);
-  await refreshAndBroadcastBoardSets();
+export async function deleteBoardSet(boardSetId: string): Promise<void> {
+  await deleteStoredBoardSet(boardSetId);
+  await syncBoardSets();
 }

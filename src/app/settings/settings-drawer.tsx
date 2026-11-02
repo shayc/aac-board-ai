@@ -1,5 +1,5 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
-import { BoardSettings, SuggestionsSettings } from "@features/board";
+import { BoardSettings, SuggestionSettings } from "@features/board";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -119,7 +119,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           title={t(m.settingsSectionSuggestions)}
           icon={<AutoAwesomeIcon fontSize="small" />}
         >
-          <SuggestionsSettings />
+          <SuggestionSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />

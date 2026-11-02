@@ -1,4 +1,4 @@
-import { importBoardSets, type BoardSetImportResult } from "./board-import";
+import { importBoardSets, type ImportedBoardSet } from "./board-import";
 
 /**
  * Hard cap on a board download, enforced while the response streams so an
@@ -35,26 +35,26 @@ function parseBoardUrl(url: string): URL {
   return resolved;
 }
 
-function deriveFilename(url: URL): string {
+function deriveFileName(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }
 
 export async function importBoardSetFromUrl(
   url: string,
   signal?: AbortSignal,
-): Promise<BoardSetImportResult> {
+): Promise<ImportedBoardSet> {
   const boardUrl = parseBoardUrl(url);
   const blob = await downloadBoard(boardUrl, signal);
   signal?.throwIfAborted();
 
-  const file = new File([blob], deriveFilename(boardUrl), {
+  const file = new File([blob], deriveFileName(boardUrl), {
     type: blob.type || "application/octet-stream",
   });
 
   // Once local importing starts, let its atomic write finish even if navigation changes.
-  const [result] = await importBoardSets(file);
+  const [boardSet] = await importBoardSets(file);
 
-  return result;
+  return boardSet;
 }
 
 async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {

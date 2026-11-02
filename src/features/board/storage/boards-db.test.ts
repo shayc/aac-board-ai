@@ -3,8 +3,8 @@ import { afterEach, beforeEach, describe, expect, test } from "vitest";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import {
   getAssetBlob,
-  getBoard,
-  listBoards,
+  getBoardRecord,
+  listBoardRecords,
   updateBoardStrings,
 } from "./board-content-storage";
 import {
@@ -24,7 +24,7 @@ afterEach(closeBoardsDB);
 describe("getBoardsDB", () => {
   test("creates a fresh database that persists boards, translations, and assets", async () => {
     await closeBoardsDB();
-    await deleteDB("aac-boards-db");
+    await deleteDB("boards-db");
     const obf = makeOBFBoard({
       id: "root",
       strings: { fr: { Hello: "Bonjour" } },
@@ -46,26 +46,26 @@ describe("getBoardsDB", () => {
       rootBoardId: "root",
       boardCount: 1,
     });
-    expect(await getBoard("vocabulary", "root")).toEqual({
-      setId: "vocabulary",
+    expect(await getBoardRecord("vocabulary", "root")).toEqual({
+      boardSetId: "vocabulary",
       id: "root",
       name: obf.name,
       obf,
     });
     expect(await listBoardSets()).toHaveLength(1);
-    expect(await listBoards("vocabulary")).toHaveLength(1);
+    expect(await listBoardRecords("vocabulary")).toHaveLength(1);
     expect(await (await getAssetBlob("vocabulary", "image.png"))?.text()).toBe(
       "image",
     );
 
     await updateBoardStrings("vocabulary", "root", "es", { Hello: "Hola" });
-    expect((await getBoard("vocabulary", "root"))?.obf.strings).toEqual({
+    expect((await getBoardRecord("vocabulary", "root"))?.obf.strings).toEqual({
       fr: { Hello: "Bonjour" },
       es: { Hello: "Hola" },
     });
 
     await deleteBoardSet("vocabulary");
-    expect(await listBoards("vocabulary")).toEqual([]);
+    expect(await listBoardRecords("vocabulary")).toEqual([]);
     expect(await getBoardSet("vocabulary")).toBeUndefined();
     expect(await getAssetBlob("vocabulary", "image.png")).toBeUndefined();
   });

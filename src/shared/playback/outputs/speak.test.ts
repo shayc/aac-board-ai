@@ -1,8 +1,8 @@
 import {
-  setPitch,
-  setRate,
+  setSpeechPitch,
+  setSpeechRate,
   setVoiceURI,
-  setVolume,
+  setSpeechVolume,
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
@@ -53,9 +53,9 @@ describe("speak() utterance mapping", () => {
     stubUtteranceVoiceAccessor();
     const speech = stubSpeech();
     setVoiceURI("voice-1");
-    setRate(1.5);
-    setPitch(0.5);
-    setVolume(0.25);
+    setSpeechRate(1.5);
+    setSpeechPitch(0.5);
+    setSpeechVolume(0.25);
 
     await speak("hi");
 

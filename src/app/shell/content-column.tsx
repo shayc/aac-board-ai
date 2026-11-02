@@ -4,12 +4,12 @@ import type { ReactNode } from "react";
 
 interface ContentColumnProps {
   children: ReactNode;
-  shifted?: boolean;
+  isShifted?: boolean;
 }
 
 export function ContentColumn({
   children,
-  shifted = false,
+  isShifted = false,
 }: ContentColumnProps) {
   return (
     <Box
@@ -17,8 +17,8 @@ export function ContentColumn({
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
-        width: shifted ? `calc(100% - ${LIBRARY_DRAWER_WIDTH})` : "100%",
-        marginLeft: shifted ? LIBRARY_DRAWER_WIDTH : 0,
+        width: isShifted ? `calc(100% - ${LIBRARY_DRAWER_WIDTH})` : "100%",
+        marginLeft: isShifted ? LIBRARY_DRAWER_WIDTH : 0,
       }}
     >
       {children}

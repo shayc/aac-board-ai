@@ -7,10 +7,10 @@ import { getAssetUrl } from "./asset-urls";
 const SET_ID = "asset-url-set";
 const ASSET_PATH = "notes/hello.txt";
 
-function seedAsset(content: string, setId = SET_ID): Promise<void> {
+function seedAsset(content: string, boardSetId = SET_ID): Promise<void> {
   return createBoardSet(
     makeBoardSetInput({
-      id: setId,
+      id: boardSetId,
       assets: [{ path: ASSET_PATH, blob: new Blob([content]) }],
     }),
   );
@@ -22,8 +22,8 @@ async function readAssetUrl(url: string): Promise<string> {
   return response.text();
 }
 
-async function requireAssetUrl(setId: string): Promise<string> {
-  const url = await getAssetUrl(setId, ASSET_PATH);
+async function requireAssetUrl(boardSetId: string): Promise<string> {
+  const url = await getAssetUrl(boardSetId, ASSET_PATH);
   assertDefined(url);
 
   return url;

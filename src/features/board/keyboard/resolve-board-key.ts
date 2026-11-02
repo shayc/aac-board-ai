@@ -4,7 +4,7 @@ type BoardKeyAction =
   | { kind: "speak" }
   | { kind: "stop" };
 
-export interface KeyEventLike {
+export interface BoardKeyEvent {
   key: string;
   metaKey: boolean;
   ctrlKey: boolean;
@@ -16,7 +16,7 @@ export interface KeyEventLike {
  * continue.
  */
 export function resolveBoardKey(
-  event: KeyEventLike,
+  event: BoardKeyEvent,
   isMessagePlaying: boolean,
 ): BoardKeyAction | null {
   if (event.metaKey || event.ctrlKey) {

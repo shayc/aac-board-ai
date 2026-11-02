@@ -17,7 +17,7 @@ export function parsePlaybackPreferences(raw: unknown): PlaybackPreferences {
 }
 
 const playbackPreferencesStore = createPersistedStore<PlaybackPreferences>(
-  "board-playback",
+  "playback-preferences",
   parsePlaybackPreferences,
 );
 

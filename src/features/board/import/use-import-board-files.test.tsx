@@ -11,9 +11,9 @@ import { useImportBoardFiles } from "./use-import-board-files";
 const OBF_FIXTURE = "lots-of-stuff.obf";
 
 function ImportTrigger({ files }: { files: File[] }) {
-  const { importBoardFiles } = useImportBoardFiles();
+  const { importFiles } = useImportBoardFiles();
 
-  return <button onClick={() => void importBoardFiles(files)}>import</button>;
+  return <button onClick={() => void importFiles(files)}>import</button>;
 }
 
 function renderImport(files: File[]) {

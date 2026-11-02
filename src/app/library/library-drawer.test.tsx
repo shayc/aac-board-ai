@@ -49,7 +49,10 @@ describe("LibraryDrawer", () => {
             path: "/",
             element: <LibraryDrawer open onClose={onClose} variant={variant} />,
           },
-          { path: "/sets/:setId/boards/:boardId", element: <p>board page</p> },
+          {
+            path: "/sets/:boardSetId/boards/:boardId",
+            element: <p>board page</p>,
+          },
         ],
         { initialEntries: ["/"] },
       );

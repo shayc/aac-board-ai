@@ -1,8 +1,9 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
 
-const store = createPersistedStore<boolean>("has-seen-onboarding", (raw) =>
-  typeof raw === "boolean" ? raw : false,
+const onboardingStore = createPersistedStore<boolean>(
+  "has-seen-onboarding",
+  (raw) => (typeof raw === "boolean" ? raw : false),
 );
 
 interface UseOnboardingReturn {
@@ -11,10 +12,13 @@ interface UseOnboardingReturn {
 }
 
 export function useOnboarding(): UseOnboardingReturn {
-  const hasSeen = useSyncExternalStore(store.subscribe, store.getSnapshot);
+  const hasSeen = useSyncExternalStore(
+    onboardingStore.subscribe,
+    onboardingStore.getSnapshot,
+  );
 
   return {
     shouldShow: !hasSeen,
-    dismiss: () => store.setState(true),
+    dismiss: () => onboardingStore.setState(true),
   };
 }

@@ -9,8 +9,8 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
   const listeners = new Set<() => void>();
 
   function emit() {
-    for (const fn of listeners) {
-      fn();
+    for (const notify of listeners) {
+      notify();
     }
   }
 

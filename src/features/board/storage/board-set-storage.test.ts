@@ -2,7 +2,7 @@ import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
-import { getAssetBlob, getBoard } from "./board-content-storage";
+import { getAssetBlob, getBoardRecord } from "./board-content-storage";
 import {
   BoardSetAlreadyExistsError,
   createBoardSet,
@@ -57,7 +57,7 @@ describe("createBoardSet", () => {
         gridColumns: 3,
       }),
     ]);
-    expect((await getBoard("vocabulary", "root"))?.obf).toEqual(source);
+    expect((await getBoardRecord("vocabulary", "root"))?.obf).toEqual(source);
     expect(rootBoard).toEqual(source);
   });
 
@@ -67,7 +67,7 @@ describe("createBoardSet", () => {
     ).rejects.toThrow("Root board not found");
 
     expect(await listBoardSets()).toEqual([]);
-    expect(await getBoard("set-1", "root-1")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
   });
 
   test("rejects duplicate board IDs without overwriting a board", async () => {
@@ -83,7 +83,7 @@ describe("createBoardSet", () => {
     ).rejects.toThrow("Duplicate board ID");
 
     expect(await listBoardSets()).toEqual([]);
-    expect(await getBoard("set-1", "root-1")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
   });
 
   test("rejects a conflicting ID without changing the existing set", async () => {
@@ -109,8 +109,8 @@ describe("createBoardSet", () => {
       ),
     ).rejects.toBeInstanceOf(BoardSetAlreadyExistsError);
 
-    expect(await getBoard("set-1", "a")).toBeDefined();
-    expect(await getBoard("set-1", "b")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "a")).toBeDefined();
+    expect(await getBoardRecord("set-1", "b")).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
     expect((await listBoardSets())[0]?.name).toBe("Original");
   });
@@ -143,7 +143,7 @@ describe("createBoardSet", () => {
     const sets = await listBoardSets();
     expect(sets[0].boardCount).toBe(3);
 
-    const board = await getBoard("set-1", "b2");
+    const board = await getBoardRecord("set-1", "b2");
     assertDefined(board);
     expect(board.name).toBe("B2");
   });
@@ -161,8 +161,8 @@ describe("createBoardSet", () => {
         makeBoardSetInput({ name: undefined, boards: [obf] }),
       );
 
-      expect(await getBoard("set-1", "root-1")).toEqual({
-        setId: "set-1",
+      expect(await getBoardRecord("set-1", "root-1")).toEqual({
+        boardSetId: "set-1",
         id: "root-1",
         name: expectedName,
         obf,
@@ -188,11 +188,11 @@ describe("createBoardSet", () => {
     ).rejects.toThrow();
 
     expect(await listBoardSets()).toEqual([]);
-    expect(await getBoard("set-1", "b")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "b")).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
-  test("rejects empty setId with a typed InvalidIdError", async () => {
+  test("rejects empty boardSetId with a typed InvalidIdError", async () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
@@ -204,7 +204,7 @@ describe("createBoardSet", () => {
     ).rejects.toBeInstanceOf(InvalidIdError);
   });
 
-  test("rejects setId longer than 255 characters", async () => {
+  test("rejects boardSetId longer than 255 characters", async () => {
     await expect(
       createBoardSet(
         makeBoardSetInput({
@@ -213,7 +213,7 @@ describe("createBoardSet", () => {
           rootBoardId: "root-1",
         }),
       ),
-    ).rejects.toThrow("Invalid setId");
+    ).rejects.toThrow("Invalid boardSetId");
   });
 
   test("rejects empty rootBoardId", async () => {
@@ -313,18 +313,20 @@ describe("deleteBoardSet", () => {
 
     const sets = await listBoardSets();
     expect(sets.map((set) => set.id)).toEqual(["set-2"]);
-    expect(await getBoard("set-1", "b1")).toBeUndefined();
-    expect(await getBoard("set-1", "b2")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "b1")).toBeUndefined();
+    expect(await getBoardRecord("set-1", "b2")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
 
-    expect(await getBoard("set-2", "b1")).toMatchObject({ name: "Survivor" });
+    expect(await getBoardRecord("set-2", "b1")).toMatchObject({
+      name: "Survivor",
+    });
     const asset = await getAssetBlob("set-2", "img1.png");
     assertDefined(asset);
     expect(await asset.text()).toBe("survivor");
   });
 
-  test("rejects empty setId", async () => {
-    await expect(deleteBoardSet("")).rejects.toThrow("Invalid setId");
+  test("rejects empty boardSetId", async () => {
+    await expect(deleteBoardSet("")).rejects.toThrow("Invalid boardSetId");
   });
 });
