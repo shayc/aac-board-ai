@@ -128,7 +128,9 @@ const themeOptions = {
               props: { variant: "outlined", color: "inherit" },
               style: {
                 color: (theme.vars ?? theme).palette.action.active,
-                borderColor: (theme.vars ?? theme).palette.divider,
+                // MUI's rule for colored outlined buttons: 50% of their color.
+                borderColor:
+                  "color-mix(in srgb, currentColor 50%, transparent)",
               },
             },
           ],
@@ -140,9 +142,6 @@ const themeOptions = {
         root: {
           borderRadius: 32,
         },
-        notchedOutline: ({ theme }) => ({
-          borderColor: (theme.vars ?? theme).palette.divider,
-        }),
       },
     },
     MuiListItemButton: {
