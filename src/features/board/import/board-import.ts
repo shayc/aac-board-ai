@@ -12,7 +12,7 @@ import {
   type AssetInput,
 } from "../board-sets/board-sets-store";
 
-export interface BoardSetImportResult {
+export interface ImportedBoardSet {
   id: string;
   rootBoardId: string;
 }
@@ -33,18 +33,18 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
 
 export async function importBoardSets(
   files: File | File[],
-): Promise<BoardSetImportResult[]> {
+): Promise<ImportedBoardSet[]> {
   const fileList = Array.isArray(files) ? files : [files];
-  const results: BoardSetImportResult[] = [];
+  const importedSets: ImportedBoardSet[] = [];
 
   for (const file of fileList) {
-    results.push(await importBoardFile(file));
+    importedSets.push(await importBoardFile(file));
   }
 
-  return results;
+  return importedSets;
 }
 
-async function importBoardFile(file: File): Promise<BoardSetImportResult> {
+async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
   const baseSetId = deriveSetId(file.name);
 
@@ -67,16 +67,16 @@ async function importOBZArchive(
   archive: ParsedOBZ,
   setId: string,
   fileName: string,
-): Promise<BoardSetImportResult> {
+): Promise<ImportedBoardSet> {
   const { manifest, boards, rootBoard, resources } = archive;
-  const boardPathToId = buildBoardPathToId(manifest);
+  const boardIdByPath = buildBoardIdByPath(manifest);
 
   await createBoardSet({
     id: setId,
     rootBoardId: rootBoard.id,
     name: rootBoard.name ?? fileName,
     boards: Array.from(boards.values(), (board) =>
-      resolveLoadBoardPaths(board, boardPathToId),
+      resolveLoadBoardPaths(board, boardIdByPath),
     ),
     assets: buildAssetInputs(resources),
   });
@@ -88,7 +88,7 @@ async function importOBFBoard(
   board: OBFBoard,
   setId: string,
   fileName: string,
-): Promise<BoardSetImportResult> {
+): Promise<ImportedBoardSet> {
   await createBoardSet({
     id: setId,
     rootBoardId: board.id,
@@ -100,7 +100,7 @@ async function importOBFBoard(
   return { id: setId, rootBoardId: board.id };
 }
 
-function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
+function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
   return new Map(
     Object.entries(manifest.paths.boards).map(([id, path]) => [path, id]),
   );
@@ -108,14 +108,14 @@ function buildBoardPathToId(manifest: OBFManifest): Map<string, string> {
 
 export function resolveLoadBoardPaths(
   board: OBFBoard,
-  boardPathToId: Map<string, string>,
+  boardIdByPath: Map<string, string>,
 ): OBFBoard {
   const buttons = board.buttons.map((button) => {
     if (!button.load_board?.path || button.load_board.id) {
       return button;
     }
 
-    const targetBoardId = boardPathToId.get(button.load_board.path);
+    const targetBoardId = boardIdByPath.get(button.load_board.path);
     if (!targetBoardId) {
       return button;
     }

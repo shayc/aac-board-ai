@@ -12,7 +12,7 @@ export function findGridPosition(target: Element | null): GridPosition | null {
   return readGridPosition(target?.closest(GRID_CELL_SELECTOR) ?? null);
 }
 
-export function findFocusableInGridPosition(
+export function findGridFocusableAt(
   root: HTMLElement,
   position: GridPosition,
 ): HTMLElement | null {

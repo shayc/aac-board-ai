@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
-import { resolveBoardKey, type KeyEventLike } from "./board-key-resolver";
+import { resolveBoardKey, type BoardKeyEvent } from "./board-key-resolver";
 
-function key(overrides: Partial<KeyEventLike>): KeyEventLike {
+function key(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
   return { key: "", metaKey: false, ctrlKey: false, ...overrides };
 }
 

@@ -32,7 +32,7 @@ export function speak(
   const utterance = buildUtterance(text);
   let settled = false;
 
-  const onAbort = () => {
+  const handleAbort = () => {
     synthesis.cancel();
     finish();
   };
@@ -46,7 +46,7 @@ export function speak(
     utterance.onend = null;
     utterance.onerror = null;
     utterance.onboundary = null;
-    signal?.removeEventListener("abort", onAbort);
+    signal?.removeEventListener("abort", handleAbort);
 
     resolve();
   }
@@ -61,7 +61,7 @@ export function speak(
 
   utterance.onend = finish;
   utterance.onerror = finish;
-  signal?.addEventListener("abort", onAbort, { once: true });
+  signal?.addEventListener("abort", handleAbort, { once: true });
 
   synthesis.speak(utterance);
 

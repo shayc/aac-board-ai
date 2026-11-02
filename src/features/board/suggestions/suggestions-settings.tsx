@@ -9,7 +9,7 @@ import {
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
 
-export function SuggestionsSettings() {
+export function SuggestionSettings() {
   const t = useTranslate();
   const { customInstructions } = useSuggestionPreferences();
 

@@ -6,7 +6,7 @@ import {
 import { data, redirect, type LoaderFunctionArgs } from "react-router";
 import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 
-const DEFAULT_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
+const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
 // The ?board= param is attacker-controlled: a crafted link must never
 // silently replace a user's vocabulary. Every import allocates a separate set
@@ -46,7 +46,7 @@ export async function rootIndexLoader({
   }
 
   const importedBoardSet = await importBoardSetFromUrl(
-    DEFAULT_BOARD_URL,
+    STARTER_BOARD_URL,
     request.signal,
   );
 

@@ -29,7 +29,7 @@ export function parseStoredLanguage(raw: unknown): string {
   return typeof raw === "string" && raw !== "" ? raw : getPreferredLanguage();
 }
 
-const store = createPersistedStore<string>(
+const languageStore = createPersistedStore<string>(
   LANGUAGE_STORAGE_KEY,
   parseStoredLanguage,
 );
@@ -39,15 +39,18 @@ export function resolveUiLocale(language: string): Locale {
 }
 
 export function getStoredLanguage(): string {
-  return store.getSnapshot();
+  return languageStore.getSnapshot();
 }
 
 export function setStoredLanguage(language: string): void {
-  store.setState(language);
+  languageStore.setState(language);
 }
 
 export function useStoredLanguage(): string {
-  return useSyncExternalStore(store.subscribe, store.getSnapshot);
+  return useSyncExternalStore(
+    languageStore.subscribe,
+    languageStore.getSnapshot,
+  );
 }
 
 export function getUiLocale(): Locale {

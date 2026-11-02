@@ -4,24 +4,22 @@ import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
-import { importBoardSets, type BoardSetImportResult } from "./board-import";
+import { importBoardSets, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./file-picker";
 
 interface UseImportBoardFilesReturn {
-  pickAndImportBoardFiles: () => Promise<void>;
-  importBoardFiles: (
-    files: File[],
-  ) => Promise<BoardSetImportResult[] | undefined>;
-  importAndOpenBoardFiles: (files: File[]) => Promise<void>;
+  pickAndImport: () => Promise<void>;
+  importFiles: (files: File[]) => Promise<ImportedBoardSet[] | undefined>;
+  importAndOpen: (files: File[]) => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importBoardFiles(
+  async function importFiles(
     files: File[],
-  ): Promise<BoardSetImportResult[] | undefined> {
+  ): Promise<ImportedBoardSet[] | undefined> {
     if (files.length === 0) {
       return [];
     }
@@ -34,7 +32,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      const results = await importBoardSets(files);
+      const importedSets = await importBoardSets(files);
 
       showSnackbar({
         message: (translate) =>
@@ -42,7 +40,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         severity: "success",
       });
 
-      return results;
+      return importedSets;
     } catch (error) {
       const isTooLarge =
         error instanceof OBFError && error.info.code === "archive-too-large";
@@ -59,29 +57,29 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  async function importAndOpenBoardFiles(files: File[]) {
-    const results = await importBoardFiles(files);
+  async function importAndOpen(files: File[]) {
+    const importedSets = await importFiles(files);
 
-    if (results?.length !== 1) {
+    if (importedSets?.length !== 1) {
       return;
     }
 
-    const [result] = results;
-    void navigate(rootBoardPath(result));
+    const [boardSet] = importedSets;
+    void navigate(rootBoardPath(boardSet));
   }
 
-  async function pickAndImportBoardFiles() {
+  async function pickAndImport() {
     const files = await pickFiles({
       accept: BOARD_FILE_ACCEPT,
       multiple: true,
     });
 
-    await importBoardFiles(files);
+    await importFiles(files);
   }
 
   return {
-    pickAndImportBoardFiles,
-    importBoardFiles,
-    importAndOpenBoardFiles,
+    pickAndImport,
+    importFiles,
+    importAndOpen,
   };
 }

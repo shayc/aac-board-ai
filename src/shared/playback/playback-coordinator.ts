@@ -10,7 +10,7 @@ import { playAudio } from "./transports/play-audio";
 import { speak } from "./transports/speak";
 
 interface PlaybackSession {
-  controller: AbortController;
+  abortController: AbortController;
   request: PlaybackRequest;
 }
 
@@ -36,20 +36,20 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
   function interruptCurrentSession() {
     const session = currentSession;
     currentSession = null;
-    session?.controller.abort();
+    session?.abortController.abort();
   }
 
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
     interruptCurrentSession();
 
     const session: PlaybackSession = {
-      controller: new AbortController(),
+      abortController: new AbortController(),
       request,
     };
     currentSession = session;
     setActiveTrackingKey(session, null);
 
-    const { signal } = session.controller;
+    const { signal } = session.abortController;
 
     try {
       for (const step of request.steps) {

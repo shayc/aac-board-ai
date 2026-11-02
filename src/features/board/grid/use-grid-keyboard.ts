@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useKeyboard } from "react-aria";
 import {
   findFirstGridFocusable,
-  findFocusableInGridPosition,
+  findGridFocusableAt,
   findGridPosition,
   isSameGridPosition,
 } from "./grid-dom";
@@ -89,7 +89,7 @@ export function useGridKeyboard({
     }
 
     const target =
-      findFocusableInGridPosition(root, rememberedPositionRef.current) ??
+      findGridFocusableAt(root, rememberedPositionRef.current) ??
       findFirstGridFocusable(root);
     target?.focus();
   }, [grid]);

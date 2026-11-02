@@ -5,7 +5,7 @@ import { hasBoardFileExtension } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
-  const { importAndOpenBoardFiles } = useImportBoardFiles();
+  const { importAndOpen } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
 
   const importLaunchedFiles = useEffectEvent(
@@ -14,7 +14,7 @@ export function useImportBoardFilesOnLaunch(): void {
         const opened = await Promise.all(
           handles.map((handle) => handle.getFile()),
         );
-        await importAndOpenBoardFiles(opened.filter(hasBoardFileExtension));
+        await importAndOpen(opened.filter(hasBoardFileExtension));
       } catch {
         showSnackbar({
           message: (translate) =>

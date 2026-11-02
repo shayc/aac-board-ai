@@ -2,13 +2,13 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   createBoardSet,
-  type BoardSetCreateInput,
+  type BoardSetInput,
 } from "../storage/board-set-storage";
 import { getBoardsDB } from "../storage/boards-db";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
-interface SeedBoardSet extends Partial<BoardSetCreateInput> {
+interface SeedBoardSet extends Partial<BoardSetInput> {
   id: string;
   rootBoardId: string;
 }
@@ -28,8 +28,8 @@ export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
 }
 
 export function makeBoardSetInput(
-  overrides: Partial<BoardSetCreateInput> = {},
-): BoardSetCreateInput {
+  overrides: Partial<BoardSetInput> = {},
+): BoardSetInput {
   const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
 
   return {

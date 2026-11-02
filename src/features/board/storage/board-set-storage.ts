@@ -23,7 +23,7 @@ export interface AssetInput {
   readonly blob: Blob;
 }
 
-export interface BoardSetCreateInput {
+export interface BoardSetInput {
   readonly id: string;
   readonly rootBoardId: string;
   readonly name?: string;
@@ -67,9 +67,7 @@ export async function deleteBoardSet(setId: string): Promise<void> {
   ]);
 }
 
-export async function createBoardSet(
-  input: BoardSetCreateInput,
-): Promise<void> {
+export async function createBoardSet(input: BoardSetInput): Promise<void> {
   const { id, boards, assets } = input;
   const rootBoard = validateBoardSetInput(input);
   const record = buildBoardSetRecord(input, rootBoard);
@@ -133,7 +131,7 @@ function validateBoardSetInput({
   id,
   rootBoardId,
   boards,
-}: BoardSetCreateInput): OBFBoard {
+}: BoardSetInput): OBFBoard {
   validateId(id, "setId");
   validateId(rootBoardId, "rootBoardId");
 
@@ -156,7 +154,7 @@ function validateBoardSetInput({
 }
 
 function buildBoardSetRecord(
-  { id, rootBoardId, name, boards }: BoardSetCreateInput,
+  { id, rootBoardId, name, boards }: BoardSetInput,
   rootBoard: OBFBoard,
 ): BoardSetRecord {
   return {
