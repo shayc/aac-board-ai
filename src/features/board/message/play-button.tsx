@@ -31,8 +31,8 @@ export function PlayButton({
       sx={{
         alignSelf: "center",
         flexShrink: 0,
-        width: 72,
-        height: 72,
+        width: 80,
+        height: 80,
         my: 2,
         marginInlineStart: 0,
         marginInlineEnd: 2,
