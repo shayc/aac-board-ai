@@ -42,8 +42,33 @@ const TILE_BORDER_WIDTH = 4;
 // a corner triangle, so folders read by shape, not by a small mark.
 // border-shape (unlike clip-path) makes the border, shadow and focus ring
 // follow the outline too, so tile borders stay even around the tab.
-const FOLDER_SHAPE =
-  "shape(from 0 18px, curve to 18px 0 with 0 0, hline to calc(42% - 12px), curve to calc(42% + 4px) 10px with 42% 0, hline to calc(100% - 18px), curve to 100% 28px with 100% 10px, vline to calc(100% - 18px), curve to calc(100% - 18px) 100% with 100% 100%, hline to 18px, curve to 0 calc(100% - 18px) with 0 100%, close)";
+// Corners approximate the other tiles' 30px squircle with cubic handles.
+const FOLDER_TAB_HEIGHT = 10;
+
+function folderShape(isRtl: boolean): string {
+  const x = (value: string) => (isRtl ? `calc(100% - (${value}))` : value);
+  const tab = FOLDER_TAB_HEIGHT;
+
+  return [
+    `shape(from ${x("0px")} calc(100% - 30px)`,
+    `vline to ${tab}px`,
+    `curve to ${x("10px")} 0px with ${x("0px")} 2.2px / ${x("2.2px")} 0px`,
+    `hline to ${x("calc(40% - 10px)")}`,
+    `curve to ${x("calc(40% + 8px)")} ${tab}px with ${x("calc(40% - 1px)")} 0px / ${x("calc(40% - 1px)")} ${tab}px`,
+    `hline to ${x("calc(100% - 30px)")}`,
+    `curve to ${x("100%")} ${tab + 30}px with ${x("calc(100% - 6.6px)")} ${tab}px / ${x("100%")} ${tab + 6.6}px`,
+    "vline to calc(100% - 30px)",
+    `curve to ${x("calc(100% - 30px)")} 100% with ${x("100%")} calc(100% - 6.6px) / ${x("calc(100% - 6.6px)")} 100%`,
+    `hline to ${x("30px")}`,
+    `curve to ${x("0px")} calc(100% - 30px) with ${x("6.6px")} 100% / ${x("0px")} calc(100% - 6.6px)`,
+    "close)",
+  ].join(", ");
+}
+
+// Every tile gets the same extra space above and below its content: enough
+// for a folder's label to clear the tab, and symmetric so symbols and labels
+// stay vertically centered and aligned across the row.
+const TILE_PADDING_BLOCK = "14px";
 
 const SUPPORTS_BORDER_SHAPE =
   "@supports (border-shape: shape(from 0 0, line to 1px 0, line to 0 1px, close))";
@@ -89,7 +114,8 @@ export function Tile({
         justifyContent: "stretch",
         width: "100%",
         height: "100%",
-        p: 1,
+        px: 1,
+        py: TILE_PADDING_BLOCK,
         overflow: "hidden",
         textTransform: "none",
         color: resolvedBackgroundColor
@@ -171,7 +197,10 @@ export function Tile({
           },
           [SUPPORTS_BORDER_SHAPE]: {
             borderRadius: 0,
-            borderShape: FOLDER_SHAPE,
+            borderShape: folderShape(false),
+            "&:dir(rtl)": {
+              borderShape: folderShape(true),
+            },
             "&::after": {
               display: "none",
             },

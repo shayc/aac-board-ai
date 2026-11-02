@@ -113,6 +113,37 @@ describe("Tile", () => {
     );
   });
 
+  test("puts the folder tab on the leading side in right-to-left layouts", async () => {
+    const screen = await render(
+      <div dir="rtl">
+        <Tile variant="folder" onActivate={vi.fn()}>
+          Folder
+        </Tile>
+      </div>,
+    );
+
+    const button = screen.getByRole("button", { name: "Folder" });
+    const shape = getComputedStyle(button.element()).getPropertyValue(
+      "border-shape",
+    );
+
+    expect(shape).toMatch(/^shape\(from 100% /);
+  });
+
+  test("pads every tile equally above and below so content stays centered", async () => {
+    const screen = await render(
+      <Tile onActivate={vi.fn()}>
+        <span>Plain</span>
+      </Tile>,
+    );
+
+    const styles = getComputedStyle(
+      screen.getByRole("button", { name: "Plain" }).element(),
+    );
+
+    expect(styles.paddingTop).toBe(styles.paddingBottom);
+  });
+
   test("applies backgroundColor and a readable text color", async () => {
     const screen = await render(
       <Tile backgroundColor="#000000" onActivate={vi.fn()}>
