@@ -184,11 +184,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 function createBoardRootSx(theme: Theme) {
   return {
     height: "100%",
-    ...theme.applyStyles("dark", {
-      backgroundImage:
-        "radial-gradient(70% 35% at 50% 0%, rgb(45 212 191 / 0.06), transparent)",
-      backgroundRepeat: "no-repeat",
-    }),
     [theme.breakpoints.up("sm")]: {
       pl: safeAreaInset("left"),
       pr: safeAreaInset("right"),

@@ -21,6 +21,11 @@ function darken(color: string, percentage: number): string {
   return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
 }
 
+// Dark mode caps tile lightness so the grid doesn't glare, keeping each hue.
+function dim(color: string): string {
+  return `oklch(from ${color} min(l, 0.82) c h)`;
+}
+
 export function Tile({
   ariaLabel,
   tabIndex,
@@ -32,10 +37,8 @@ export function Tile({
   isBorderVisible = true,
   onActivate,
 }: TileProps) {
-  const resolvedBorderColor = borderColor ?? backgroundColor;
-  const resolvedBackgroundColor = backgroundColor
-    ? desaturate(backgroundColor)
-    : undefined;
+  const fill = backgroundColor ? "var(--tile-fill)" : undefined;
+  const resolvedBorderColor = borderColor ? "var(--tile-border)" : fill;
 
   return (
     <Button
@@ -45,6 +48,14 @@ export function Tile({
       disableRipple
       onClick={onActivate}
       sx={(theme) => ({
+        ...(backgroundColor && { "--tile-fill": desaturate(backgroundColor) }),
+        ...(borderColor && { "--tile-border": desaturate(borderColor) }),
+        ...theme.applyStyles("dark", {
+          ...(backgroundColor && {
+            "--tile-fill": dim(desaturate(backgroundColor)),
+          }),
+          ...(borderColor && { "--tile-border": dim(desaturate(borderColor)) }),
+        }),
         position: "relative",
         display: "grid",
         alignItems: "stretch",
@@ -54,48 +65,36 @@ export function Tile({
         p: 1,
         overflow: "hidden",
         textTransform: "none",
-        color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
-          : "inherit",
+        color: fill ? `contrast-color(${fill})` : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
-            ? desaturate(resolvedBorderColor)
+            ? resolvedBorderColor
             : "transparent"
         }`,
         borderRadius: 4,
-        backgroundColor: resolvedBackgroundColor,
-        boxShadow: (theme.vars ?? theme).shadows[2],
-        transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
-          {
-            duration: theme.transitions.duration.short,
-          },
-        ),
+        backgroundColor: fill,
+        // A hairline edge, like the rest of the chrome, instead of elevation.
+        boxShadow: `0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
+        transition: theme.transitions.create("background-color", {
+          duration: theme.transitions.duration.short,
+        }),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
         "&:hover": {
-          boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
-            backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
-          },
-          "@media (hover: none)": {
-            boxShadow: (theme.vars ?? theme).shadows[2],
+            backgroundColor: fill && darken(fill, 15),
           },
         },
         "&:active": {
-          backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
-          boxShadow: (theme.vars ?? theme).shadows[8],
+          backgroundColor: fill && darken(fill, 25),
         },
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
           outlineOffset: 2,
-          boxShadow: (theme.vars ?? theme).shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
-          boxShadow: (theme.vars ?? theme).shadows[0],
+          boxShadow: "none",
         },
         ...(variant === "folder" && {
           "&::after": {

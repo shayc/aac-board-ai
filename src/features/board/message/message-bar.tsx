@@ -48,24 +48,15 @@ export function MessageBar({
     <Stack direction="row" sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}>
       <Stack
         direction="row"
-        sx={[
-          {
-            flexGrow: 1,
-            gap: 2,
-            overflow: "hidden",
-            borderRadius: 32,
-            bgcolor: "common.white",
-          },
-          (theme) => ({
-            // An "input well": hairline edge plus a soft inner shadow.
-            boxShadow: `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}, inset 0 2px 4px rgb(0 0 0 / 0.06)`,
-            ...theme.applyStyles("dark", {
-              bgcolor: "#171a20",
-              boxShadow:
-                "inset 0 0 0 1px rgb(255 255 255 / 0.09), inset 0 2px 8px rgb(0 0 0 / 0.5)",
-            }),
-          }),
-        ]}
+        sx={{
+          flexGrow: 1,
+          gap: 2,
+          overflow: "hidden",
+          borderRadius: 32,
+          bgcolor: "background.paper",
+          boxShadow: (theme) =>
+            `inset 0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
+        }}
       >
         <Stack
           ref={scrollContainerRef}

@@ -14,6 +14,8 @@ import {
   PRIMARY_LIGHT,
   SHELL_DARK,
   SHELL_LIGHT,
+  SURFACE_DARK,
+  SURFACE_LIGHT,
 } from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
 import { prefixer } from "stylis";
@@ -39,13 +41,13 @@ const themeOptions = {
     light: {
       palette: {
         primary: PRIMARY_LIGHT,
-        background: { default: SHELL_LIGHT },
+        background: { default: SHELL_LIGHT, paper: SURFACE_LIGHT },
       },
     },
     dark: {
       palette: {
         primary: PRIMARY_DARK,
-        background: { default: SHELL_DARK },
+        background: { default: SHELL_DARK, paper: SURFACE_DARK },
       },
     },
   },

@@ -1,55 +1,51 @@
 import { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
+import { EDIT_DARK, EDIT_LIGHT } from "@shared/theme/theme-colors";
 
-// Quiet, outlined chrome for back, home and backspace, so the grid and the
-// speak button stay the loudest things on screen.
+// Quiet chrome for back, home and backspace, so the grid and the speak button
+// stay the loudest things on screen. Same flat surface + hairline as the
+// message bar.
 export function controlButtonSx(theme: Theme) {
   const palette = (theme.vars ?? theme).palette;
+  const hairline = `inset 0 0 0 1px ${palette.divider}`;
 
   return {
     width: 72,
     color: palette.text.secondary,
-    backgroundColor: palette.common.white,
-    boxShadow: `inset 0 0 0 1px ${palette.divider}, 0 1px 2px rgb(0 0 0 / 0.08)`,
+    backgroundColor: palette.background.paper,
+    boxShadow: hairline,
+    // Contained buttons raise on hover, press and focus; keep them flat.
+    [`&:hover, &:active, &.${buttonClasses.focusVisible}`]: {
+      boxShadow: hairline,
+    },
     "&:hover": {
-      backgroundColor: palette.grey[100],
-      boxShadow: `inset 0 0 0 1px ${palette.divider}, 0 1px 3px rgb(0 0 0 / 0.12)`,
+      backgroundColor: palette.background.paper,
+      backgroundImage: `linear-gradient(${palette.action.hover}, ${palette.action.hover})`,
     },
     [`&.${buttonClasses.disabled}`]: {
       backgroundColor: "transparent",
-      boxShadow: `inset 0 0 0 1px ${palette.divider}`,
     },
-    ...theme.applyStyles("dark", {
-      color: "#d6dae2",
-      backgroundColor: "#1d2128",
-      boxShadow: "inset 0 0 0 1px rgb(255 255 255 / 0.1)",
-      "&:hover": {
-        backgroundColor: "#262b33",
-      },
-    }),
   };
 }
 
-// Backspace edits the message, so it gets its own amber "edit" color, distinct
-// from navigation (neutral) and speaking (primary). Disabled stays neutral.
+// Backspace edits the message, so it gets an amber fill, distinct from
+// navigation (neutral) and speaking (primary). Disabled stays neutral.
 // Apply after controlButtonSx: sx={[controlButtonSx, backspaceAccentSx]}.
 export function backspaceAccentSx(theme: Theme) {
   return {
     [`&:not(.${buttonClasses.disabled})`]: {
-      color: "#6b4500",
-      backgroundColor: "#ffe0b2",
-      boxShadow: "inset 0 0 0 1.5px #c98a2b, 0 1px 2px rgb(0 0 0 / 0.1)",
+      color: EDIT_LIGHT.ink,
+      backgroundColor: EDIT_LIGHT.fill,
       "&:hover": {
-        backgroundColor: "#ffd59a",
+        backgroundColor: EDIT_LIGHT.fill,
       },
     },
     ...theme.applyStyles("dark", {
       [`&:not(.${buttonClasses.disabled})`]: {
-        color: "#ffd180",
-        backgroundColor: "#5a4214",
-        boxShadow: "0 1px 2px rgb(0 0 0 / 0.3)",
+        color: EDIT_DARK.ink,
+        backgroundColor: EDIT_DARK.fill,
         "&:hover": {
-          backgroundColor: "#6a4e18",
+          backgroundColor: EDIT_DARK.fill,
         },
       },
     }),
