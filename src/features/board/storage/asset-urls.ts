@@ -22,10 +22,10 @@ export async function getAssetUrl(
     return undefined;
   }
 
-  return cacheAssetUrl(setId, assetPath, blob);
+  return ensureAssetUrl(setId, assetPath, blob);
 }
 
-function cacheAssetUrl(setId: string, assetPath: string, blob: Blob): string {
+function ensureAssetUrl(setId: string, assetPath: string, blob: Blob): string {
   const urlsByPath = urlsBySetId.get(setId) ?? new Map<string, string>();
   urlsBySetId.set(setId, urlsByPath);
 
