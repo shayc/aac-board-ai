@@ -28,8 +28,11 @@ export function controlButtonSx(theme: Theme) {
     "&:hover": {
       backgroundColor: hoverTint(theme, palette.background.paper),
     },
+    // MUI clears shadows on disabled buttons; keep the hairline so the shape
+    // stays put and only the fill and icon dim.
     [`&.${buttonClasses.disabled}`]: {
       backgroundColor: "transparent",
+      boxShadow: hairline,
     },
   };
 }
