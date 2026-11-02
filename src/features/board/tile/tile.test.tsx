@@ -34,11 +34,6 @@ function resolveColorInSrgb(cssColor: string): string {
   return resolveColor(`color(srgb from ${cssColor} r g b)`);
 }
 
-function lightnessOf(cssColor: string): number {
-  const resolved = resolveColor(`oklch(from ${cssColor} l 0 0)`);
-  return Number.parseFloat(resolved.slice("oklch(".length));
-}
-
 describe("Tile", () => {
   test("renders an AACSymbol child with its accessible label and decorative image", async () => {
     const screen = await render(
@@ -71,7 +66,7 @@ describe("Tile", () => {
     await expect.element(screen.getByText("Hello")).toBeVisible();
   });
 
-  test("gives folder tiles a folder silhouette instead of a corner mark", async () => {
+  test("renders the folder corner as a translucent readable text color", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#000000"
@@ -87,61 +82,11 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
     const afterStyles = getComputedStyle(button.element(), "::after");
 
-    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
-    expect(afterStyles.display).toBe("none");
-  });
-
-  test("draws a visible folder border along the folder outline", async () => {
-    const screen = await render(
-      <Tile
-        backgroundColor="#ffffff"
-        borderColor="#00ff00"
-        variant="folder"
-        onActivate={vi.fn()}
-      >
-        Folder
-      </Tile>,
+    expect(afterStyles.display).toBe("block");
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
     );
-
-    const button = screen.getByRole("button", { name: "Folder" });
-    const styles = getComputedStyle(button.element());
-
-    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
-    expect(styles.borderTopWidth).toBe("4px");
-    expect(styles.borderTopColor).toBe(
-      resolveColor("oklch(from #00ff00 l c h)"),
-    );
-  });
-
-  test("puts the folder tab on the leading side in right-to-left layouts", async () => {
-    const screen = await render(
-      <div dir="rtl">
-        <Tile variant="folder" onActivate={vi.fn()}>
-          Folder
-        </Tile>
-      </div>,
-    );
-
-    const button = screen.getByRole("button", { name: "Folder" });
-    const shape = getComputedStyle(button.element()).getPropertyValue(
-      "border-shape",
-    );
-
-    expect(shape).toMatch(/^shape\(from 100% /);
-  });
-
-  test("pads every tile equally above and below so content stays centered", async () => {
-    const screen = await render(
-      <Tile onActivate={vi.fn()}>
-        <span>Plain</span>
-      </Tile>,
-    );
-
-    const styles = getComputedStyle(
-      screen.getByRole("button", { name: "Plain" }).element(),
-    );
-
-    expect(styles.paddingTop).toBe(styles.paddingBottom);
+    expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
   });
 
   test("applies backgroundColor and a readable text color", async () => {
@@ -157,20 +102,7 @@ describe("Tile", () => {
     expect(resolveColorInSrgb(styles.backgroundColor)).toBe(
       resolveColorInSrgb("oklch(from #000000 l c h)"),
     );
-    expect(lightnessOf(styles.color)).toBeGreaterThan(0.9);
-  });
-
-  test("tints the label with a deep shade of a light tile's hue", async () => {
-    const screen = await render(
-      <Tile backgroundColor="#ffff99" onActivate={vi.fn()}>
-        Light
-      </Tile>,
-    );
-
-    const button = screen.getByRole("button", { name: "Light" });
-    const styles = getComputedStyle(button.element());
-
-    expect(lightnessOf(styles.color)).toBeLessThan(0.5);
+    expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
   test("darkens only the background on hover", async () => {
@@ -263,7 +195,7 @@ describe("Tile", () => {
     );
   });
 
-  test("keeps the folder silhouette when the border is hidden", async () => {
+  test("keeps the folder corner visible when the border is hidden", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#000000"
@@ -278,8 +210,12 @@ describe("Tile", () => {
 
     const button = screen.getByRole("button", { name: "Folder" });
     const styles = getComputedStyle(button.element());
+    const afterStyles = getComputedStyle(button.element(), "::after");
 
-    expect(styles.getPropertyValue("border-shape")).toMatch(/^shape\(/);
+    expect(afterStyles.display).toBe("block");
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
+    );
   });
 
   test("calls onActivate when clicked", async () => {

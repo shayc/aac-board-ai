@@ -8,15 +8,5 @@ export const CONTENT_DARK = "#0e1014";
 
 // Teal: distinct from every Fitzgerald tile category, and pairs with the
 // amber backspace. Dark uses a bright mint with dark ink for icon contrast.
-export const PRIMARY_LIGHT = {
-  main: "#0d9488",
-  light: "#14b8a6",
-  dark: "#0f766e",
-  contrastText: "#ffffff",
-};
-export const PRIMARY_DARK = {
-  main: "#2dd4bf",
-  light: "#99f6e4",
-  dark: "#14b8a6",
-  contrastText: "#042f2e",
-};
+export const PRIMARY_LIGHT = { main: "#0d9488", contrastText: "#ffffff" };
+export const PRIMARY_DARK = { main: "#2dd4bf", contrastText: "#042f2e" };
