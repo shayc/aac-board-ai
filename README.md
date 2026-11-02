@@ -10,9 +10,9 @@
 
 </div>
 
-**AAC Board AI** is a local-first augmentative and alternative communication (AAC) app for people who cannot rely on speech. Users select symbols to build messages and speak them aloud.
+**AAC Board AI** is an augmentative and alternative communication (AAC) app for people who cannot rely on speech. Users select symbols to build messages and have them spoken aloud.
 
-On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, rewrite them, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
+On supported browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, suggest more complete phrasing, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
 ![Demo: selecting “want,” “go,” and “my room,” accepting “I’m heading to my room now,” and playing the message aloud](demo.gif)
 
@@ -55,10 +55,7 @@ chrome://flags/#rewriter-api
 
 **Microsoft Edge Canary or Dev**
 
-```text
-edge://flags/#edge-proofreader-api
-edge://flags/#edge-llm-rewriter-api-for-phi-mini
-```
+Open `edge://flags`, search for `Proofreader API` and `Rewriter API`, and enable both flags.
 
 Restart your browser to apply the changes. See the API documentation for current requirements:
 
