@@ -6,19 +6,19 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRtl } from "@shared/theme/rtl";
 
-interface NavButtonsProps {
+interface NavigationButtonsProps {
   canGoBack: boolean;
   canGoHome: boolean;
   onBack: () => void;
   onHome: () => void;
 }
 
-export function NavButtons({
+export function NavigationButtons({
   canGoBack,
   canGoHome,
   onBack,
   onHome,
-}: NavButtonsProps) {
+}: NavigationButtonsProps) {
   const t = useTranslate();
 
   return (

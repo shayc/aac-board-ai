@@ -133,7 +133,7 @@ describe("BoardSettings", () => {
     await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("appearance-preferences");
+      const stored = localStorage.getItem("board-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         areTileBordersVisible: boolean;
@@ -163,7 +163,7 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("appearance-preferences");
+      const stored = localStorage.getItem("board-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileSaturation: number;
@@ -201,7 +201,7 @@ describe("BoardSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("appearance-preferences");
+      const stored = localStorage.getItem("board-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileLabelPlacement: string;

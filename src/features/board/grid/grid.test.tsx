@@ -11,15 +11,17 @@ import { Grid } from "./grid";
 const cssVariableTheme = createTheme({ cssVariables: true });
 
 // The test viewport is below "sm", where the grid uses compact padding.
-const PAD = 16;
-const GAP = 8;
-const MIN_CELL = 96;
+const PADDING_PX = 16;
+const GAP_PX = 8;
+const MIN_CELL_SIZE_PX = 96;
 
 function calculateExpectedCellSize(containerSize: number, tracks: number) {
-  const fit = Math.floor((containerSize - 2 * PAD + GAP) / (MIN_CELL + GAP));
+  const fit = Math.floor(
+    (containerSize - 2 * PADDING_PX + GAP_PX) / (MIN_CELL_SIZE_PX + GAP_PX),
+  );
   const visible = Math.min(tracks, Math.max(1, fit));
 
-  return (containerSize - 2 * PAD - (visible - 1) * GAP) / visible;
+  return (containerSize - 2 * PADDING_PX - (visible - 1) * GAP_PX) / visible;
 }
 
 async function renderGridLayout({
@@ -310,7 +312,7 @@ describe("Grid", () => {
         20,
       );
 
-      expect(cellWidth).toBeGreaterThan(MIN_CELL);
+      expect(cellWidth).toBeGreaterThan(MIN_CELL_SIZE_PX);
       expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
@@ -331,7 +333,7 @@ describe("Grid", () => {
         20,
       );
 
-      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
       expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
@@ -339,7 +341,7 @@ describe("Grid", () => {
     test("preserves the 96px floor when the container is narrower than one cell", async () => {
       const { cellWidth, overflows } = await renderSizedGrid(120, 1);
 
-      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
       expect(overflows).toBe(true);
     });
   });
@@ -366,7 +368,7 @@ describe("Grid", () => {
         20,
       );
 
-      expect(cellHeight).toBeGreaterThan(MIN_CELL);
+      expect(cellHeight).toBeGreaterThan(MIN_CELL_SIZE_PX);
       expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
@@ -387,7 +389,7 @@ describe("Grid", () => {
         20,
       );
 
-      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
       expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
       expect(overflows).toBe(true);
     });
@@ -395,7 +397,7 @@ describe("Grid", () => {
     test("preserves the 96px floor when the container is shorter than one cell", async () => {
       const { cellHeight, overflows } = await renderSizedGrid(120, 1);
 
-      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL);
+      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
       expect(overflows).toBe(true);
     });
   });

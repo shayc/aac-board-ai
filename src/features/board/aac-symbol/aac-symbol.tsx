@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
-import type { TileLabelPlacement } from "../appearance/appearance-preferences-store";
+import type { SymbolLabelPlacement } from "../board-types";
 
 interface AACSymbolProps {
   imageSrc?: string;
   label: string;
-  labelPlacement?: TileLabelPlacement;
+  labelPlacement?: SymbolLabelPlacement;
 }
 
 export function AACSymbol({

@@ -12,19 +12,19 @@ interface UseLatestAsyncReturn<T> {
   isPending: boolean;
 }
 
-type SettledRound<T> =
-  | { signature: string; status: "resolved"; value: T }
-  | { signature: string; status: "rejected"; error: Error };
+type SettledResult<T> =
+  | { dependencyKey: string; status: "resolved"; value: T }
+  | { dependencyKey: string; status: "rejected"; error: Error };
 
 export function useLatestAsync<T>({
   enabled,
   deps,
   run,
 }: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
-  const signature = JSON.stringify(deps);
+  const dependencyKey = JSON.stringify(deps);
   const runLatest = useEffectEvent(run);
 
-  const [round, setRound] = useState<SettledRound<T>>();
+  const [result, setResult] = useState<SettledResult<T>>();
 
   useEffect(() => {
     if (!enabled) {
@@ -37,7 +37,7 @@ export function useLatestAsync<T>({
     runLatest(signal)
       .then((value) => {
         if (!signal.aborted) {
-          setRound({ signature, status: "resolved", value });
+          setResult({ dependencyKey, status: "resolved", value });
         }
       })
       .catch((error: unknown) => {
@@ -45,21 +45,24 @@ export function useLatestAsync<T>({
           return;
         }
 
-        setRound({
-          signature,
+        setResult({
+          dependencyKey,
           status: "rejected",
           error: error instanceof Error ? error : new Error(String(error)),
         });
       });
 
     return () => controller.abort();
-  }, [enabled, signature]);
+  }, [enabled, dependencyKey]);
 
-  const settled = enabled && round?.signature === signature ? round : undefined;
+  const currentResult =
+    enabled && result?.dependencyKey === dependencyKey ? result : undefined;
 
   return {
-    value: settled?.status === "resolved" ? settled.value : undefined,
-    error: settled?.status === "rejected" ? settled.error : undefined,
-    isPending: enabled && round?.signature !== signature,
+    value:
+      currentResult?.status === "resolved" ? currentResult.value : undefined,
+    error:
+      currentResult?.status === "rejected" ? currentResult.error : undefined,
+    isPending: enabled && result?.dependencyKey !== dependencyKey,
   };
 }

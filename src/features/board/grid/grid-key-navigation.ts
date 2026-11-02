@@ -30,7 +30,7 @@ export function findGridKeyTarget(
 
   const step = resolveArrowStep(event.key, direction);
 
-  return step ? findNearestTarget(root, from, step) : null;
+  return step ? findArrowTarget(root, from, step) : null;
 }
 
 function findEdgeTarget(
@@ -74,7 +74,7 @@ function resolveArrowStep(
   }
 }
 
-function findNearestTarget(
+function findArrowTarget(
   root: HTMLElement,
   from: GridPosition,
   step: GridStep,

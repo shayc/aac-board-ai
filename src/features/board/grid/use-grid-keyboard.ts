@@ -18,7 +18,7 @@ interface UseGridKeyboardOptions {
 interface UseGridKeyboardReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
-  activeCell: GridPosition;
+  tabStopPosition: GridPosition;
 }
 
 export function useGridKeyboard({
@@ -94,13 +94,15 @@ export function useGridKeyboard({
     target?.focus();
   }, [grid]);
 
-  const activeCell = grid[rememberedPosition.row]?.[rememberedPosition.column]
+  const tabStopPosition = grid[rememberedPosition.row]?.[
+    rememberedPosition.column
+  ]
     ? rememberedPosition
     : findFirstOccupiedPosition(grid);
 
   return {
     rootRef,
     rootProps: { ...keyboardProps, onFocus: handleFocus },
-    activeCell,
+    tabStopPosition,
   };
 }

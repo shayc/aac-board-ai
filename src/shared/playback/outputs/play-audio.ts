@@ -12,14 +12,14 @@ export function playAudio(
 
   const { promise, resolve } = Promise.withResolvers<void>();
   const audio = new Audio(src);
-  let settled = false;
+  let isSettled = false;
 
   function finish() {
-    if (settled) {
+    if (isSettled) {
       return;
     }
 
-    settled = true;
+    isSettled = true;
     audio.onended = null;
     audio.onerror = null;
     audio.pause();

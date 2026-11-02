@@ -1,23 +1,21 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseClampedNumber } from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
+import type { SymbolLabelPlacement } from "./board-types";
 
-export interface AppearancePreferences {
+export interface BoardPreferences {
   tileSaturation: number;
   areTileBordersVisible: boolean;
-  tileLabelPlacement: TileLabelPlacement;
+  tileLabelPlacement: SymbolLabelPlacement;
 }
 
 export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
-export type TileLabelPlacement = "top" | "bottom" | "hidden";
 
-function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
+function isSymbolLabelPlacement(value: unknown): value is SymbolLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
-export function parseAppearancePreferences(
-  raw: unknown,
-): AppearancePreferences {
+export function parseBoardPreferences(raw: unknown): BoardPreferences {
   const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -26,43 +24,43 @@ export function parseAppearancePreferences(
       typeof stored.areTileBordersVisible === "boolean"
         ? stored.areTileBordersVisible
         : false,
-    tileLabelPlacement: isTileLabelPlacement(stored.tileLabelPlacement)
+    tileLabelPlacement: isSymbolLabelPlacement(stored.tileLabelPlacement)
       ? stored.tileLabelPlacement
       : "top",
   };
 }
 
-const appearancePreferencesStore = createPersistedStore<AppearancePreferences>(
-  "appearance-preferences",
-  parseAppearancePreferences,
+const boardPreferencesStore = createPersistedStore<BoardPreferences>(
+  "board-preferences",
+  parseBoardPreferences,
 );
 
 export function setTileSaturation(tileSaturation: number): void {
-  appearancePreferencesStore.setState({
-    ...appearancePreferencesStore.getSnapshot(),
+  boardPreferencesStore.setState({
+    ...boardPreferencesStore.getSnapshot(),
     tileSaturation,
   });
 }
 
 export function setTileBordersVisible(areTileBordersVisible: boolean): void {
-  appearancePreferencesStore.setState({
-    ...appearancePreferencesStore.getSnapshot(),
+  boardPreferencesStore.setState({
+    ...boardPreferencesStore.getSnapshot(),
     areTileBordersVisible,
   });
 }
 
 export function setTileLabelPlacement(
-  tileLabelPlacement: TileLabelPlacement,
+  tileLabelPlacement: SymbolLabelPlacement,
 ): void {
-  appearancePreferencesStore.setState({
-    ...appearancePreferencesStore.getSnapshot(),
+  boardPreferencesStore.setState({
+    ...boardPreferencesStore.getSnapshot(),
     tileLabelPlacement,
   });
 }
 
-export function useAppearancePreferences(): AppearancePreferences {
+export function useBoardPreferences(): BoardPreferences {
   return useSyncExternalStore(
-    appearancePreferencesStore.subscribe,
-    appearancePreferencesStore.getSnapshot,
+    boardPreferencesStore.subscribe,
+    boardPreferencesStore.getSnapshot,
   );
 }

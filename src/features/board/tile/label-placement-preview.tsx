@@ -1,9 +1,9 @@
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
-import type { TileLabelPlacement } from "./appearance-preferences-store";
+import type { SymbolLabelPlacement } from "../board-types";
 
 interface LabelPlacementPreviewProps {
-  placement: TileLabelPlacement;
+  placement: SymbolLabelPlacement;
   isSelected?: boolean;
 }
 

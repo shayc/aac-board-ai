@@ -294,8 +294,10 @@ describe("useMessageSuggestions", () => {
   });
 
   test("reports a pending status while a suggestion is in flight and clears it once resolved", async () => {
-    const pending: ((rewritten: string) => void)[] = [];
-    stubRewriter(() => new Promise<string>((resolve) => pending.push(resolve)));
+    const resolvers: ((rewritten: string) => void)[] = [];
+    stubRewriter(
+      () => new Promise<string>((resolve) => resolvers.push(resolve)),
+    );
     stubBuiltInAIUnsupported("Proofreader");
 
     const { result } = await renderMessageSuggestions("hi");
@@ -304,9 +306,9 @@ describe("useMessageSuggestions", () => {
       expect(result.current.status).toEqual({ kind: "pending" });
     });
 
-    await vi.waitFor(() => expect(pending).toHaveLength(2));
-    pending[0]("direct hi");
-    pending[1]("friendly hi");
+    await vi.waitFor(() => expect(resolvers).toHaveLength(2));
+    resolvers[0]("direct hi");
+    resolvers[1]("friendly hi");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["direct hi", "friendly hi"]);

@@ -3,9 +3,9 @@ import type { DOMAttributes } from "react";
 import { useKeyboard } from "react-aria";
 import type { UseMessageReturn } from "../message/use-message";
 import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
-import { resolveBoardKey } from "./resolve-board-key";
+import { resolveBoardShortcut } from "./resolve-board-shortcut";
 
-interface UseBoardKeyboardOptions {
+interface UseBoardShortcutsOptions {
   message: Pick<UseMessageReturn, "parts" | "backspace" | "clear">;
   playback: Pick<
     UseBoardPlaybackReturn,
@@ -13,17 +13,17 @@ interface UseBoardKeyboardOptions {
   >;
 }
 
-interface UseBoardKeyboardReturn {
+interface UseBoardShortcutsReturn {
   rootProps: DOMAttributes<HTMLElement>;
 }
 
-export function useBoardKeyboard({
+export function useBoardShortcuts({
   message,
   playback,
-}: UseBoardKeyboardOptions): UseBoardKeyboardReturn {
+}: UseBoardShortcutsOptions): UseBoardShortcutsReturn {
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
-      const action = resolveBoardKey(
+      const action = resolveBoardShortcut(
         { key: event.key, metaKey: event.metaKey, ctrlKey: event.ctrlKey },
         playback.isMessagePlaying,
       );

@@ -15,14 +15,14 @@ import {
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
-  useAppearancePreferences,
-  type TileLabelPlacement,
-} from "./appearance/appearance-preferences-store";
-import { LabelPlacementPreview } from "./appearance/label-placement-preview";
+  useBoardPreferences,
+} from "./board-preferences-store";
+import type { SymbolLabelPlacement } from "./board-types";
 import {
   setPlaybackHighlightingEnabled,
   usePlaybackPreferences,
 } from "./playback/playback-preferences-store";
+import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
 function formatSaturation(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -30,7 +30,7 @@ function formatSaturation(value: number): string {
 
 interface LabelPlacementOptionProps {
   label: string;
-  placement: TileLabelPlacement;
+  placement: SymbolLabelPlacement;
 }
 
 function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
@@ -70,7 +70,7 @@ export function BoardSettings() {
   const t = useTranslate();
   const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useAppearancePreferences();
+    useBoardPreferences();
   const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
@@ -86,7 +86,7 @@ export function BoardSettings() {
           aria-labelledby={labelPlacementId}
           value={tileLabelPlacement}
           onChange={(event) =>
-            setTileLabelPlacement(event.target.value as TileLabelPlacement)
+            setTileLabelPlacement(event.target.value as SymbolLabelPlacement)
           }
           row
           sx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}

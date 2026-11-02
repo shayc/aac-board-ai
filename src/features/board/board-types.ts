@@ -33,6 +33,8 @@ export type BoardAction =
   | { kind: "speak" }
   | { kind: "spell"; text: string };
 
+export type SymbolLabelPlacement = "top" | "bottom" | "hidden";
+
 export type PhraseTranslations = Partial<Record<string, string>>;
 
 /** Target locale → original board text → translated text. */

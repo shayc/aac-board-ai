@@ -30,7 +30,7 @@ export function speak(
 
   const { promise, resolve } = Promise.withResolvers<void>();
   const utterance = buildUtterance(text);
-  let settled = false;
+  let isSettled = false;
 
   const handleAbort = () => {
     synthesis.cancel();
@@ -38,11 +38,11 @@ export function speak(
   };
 
   function finish() {
-    if (settled) {
+    if (isSettled) {
       return;
     }
 
-    settled = true;
+    isSettled = true;
     utterance.onend = null;
     utterance.onerror = null;
     utterance.onboundary = null;

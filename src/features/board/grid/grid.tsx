@@ -38,7 +38,7 @@ export function Grid<TItem extends { id: string }>({
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, activeCell } = useGridKeyboard({
+  const { rootRef, rootProps, tabStopPosition } = useGridKeyboard({
     grid,
     dir,
   });
@@ -58,8 +58,10 @@ export function Grid<TItem extends { id: string }>({
             key={rowIndex}
             items={row}
             rowIndex={rowIndex}
-            activeColumn={
-              rowIndex === activeCell.row ? activeCell.column : undefined
+            tabStopColumn={
+              rowIndex === tabStopPosition.row
+                ? tabStopPosition.column
+                : undefined
             }
             renderItem={renderItem}
           />
@@ -72,14 +74,14 @@ export function Grid<TItem extends { id: string }>({
 interface GridRowProps<TItem extends { id: string }> {
   items: readonly (TItem | undefined)[];
   rowIndex: number;
-  activeColumn: number | undefined;
+  tabStopColumn: number | undefined;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
 }
 
 function GridRow<TItem extends { id: string }>({
   items,
   rowIndex,
-  activeColumn,
+  tabStopColumn,
   renderItem,
 }: GridRowProps<TItem>) {
   return (
@@ -94,7 +96,7 @@ function GridRow<TItem extends { id: string }>({
         >
           {item &&
             renderItem(item, {
-              tabIndex: columnIndex === activeColumn ? 0 : -1,
+              tabIndex: columnIndex === tabStopColumn ? 0 : -1,
             })}
         </Stack>
       ))}

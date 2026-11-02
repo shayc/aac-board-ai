@@ -27,20 +27,20 @@ describe("useLatestAsync", () => {
   });
 
   test("is pending from mount until it resolves", async () => {
-    const pending: ((value: string) => void)[] = [];
+    const resolvers: ((value: string) => void)[] = [];
     const { result } = await renderHook(() =>
       useLatestAsync({
         enabled: true,
         deps: ["a"],
-        run: () => new Promise<string>((r) => pending.push(r)),
+        run: () => new Promise<string>((resolve) => resolvers.push(resolve)),
       }),
     );
 
     expect(result.current.isPending).toBe(true);
     expect(result.current.value).toBeUndefined();
 
-    await vi.waitFor(() => expect(pending).toHaveLength(1));
-    pending[0]("value-a");
+    await vi.waitFor(() => expect(resolvers).toHaveLength(1));
+    resolvers[0]("value-a");
 
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-a");
@@ -49,19 +49,19 @@ describe("useLatestAsync", () => {
   });
 
   test("clears the previous value and stays pending until the new deps resolve", async () => {
-    const pending: ((value: string) => void)[] = [];
+    const resolvers: ((value: string) => void)[] = [];
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
           enabled: true,
           deps: [id],
-          run: () => new Promise<string>((r) => pending.push(r)),
+          run: () => new Promise<string>((resolve) => resolvers.push(resolve)),
         }),
       { initialProps: { id: "a" } },
     );
 
-    await vi.waitFor(() => expect(pending).toHaveLength(1));
-    pending[0]("value-a");
+    await vi.waitFor(() => expect(resolvers).toHaveLength(1));
+    resolvers[0]("value-a");
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-a");
       expect(result.current.isPending).toBe(false);
@@ -71,8 +71,8 @@ describe("useLatestAsync", () => {
     expect(result.current.isPending).toBe(true);
     expect(result.current.value).toBeUndefined();
 
-    await vi.waitFor(() => expect(pending).toHaveLength(2));
-    pending[1]("value-b");
+    await vi.waitFor(() => expect(resolvers).toHaveLength(2));
+    resolvers[1]("value-b");
 
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-b");
@@ -162,23 +162,24 @@ describe("useLatestAsync", () => {
   });
 
   test("ignores a stale in-flight result that resolves after deps moved on", async () => {
-    const pending = new Map<string, (value: string) => void>();
+    const resolvers = new Map<string, (value: string) => void>();
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
           enabled: true,
           deps: [id],
-          run: () => new Promise<string>((r) => pending.set(id, r)),
+          run: () =>
+            new Promise<string>((resolve) => resolvers.set(id, resolve)),
         }),
       { initialProps: { id: "a" } },
     );
 
-    await vi.waitFor(() => expect(pending.has("a")).toBe(true));
+    await vi.waitFor(() => expect(resolvers.has("a")).toBe(true));
     await rerender({ id: "b" });
-    await vi.waitFor(() => expect(pending.has("b")).toBe(true));
+    await vi.waitFor(() => expect(resolvers.has("b")).toBe(true));
 
-    pending.get("b")?.("value-b");
-    pending.get("a")?.("value-a");
+    resolvers.get("b")?.("value-b");
+    resolvers.get("a")?.("value-a");
 
     await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
   });
