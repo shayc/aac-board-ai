@@ -109,6 +109,7 @@
   "tileLabelTop": "Сверху",
   "tileLabelBottom": "Снизу",
   "tileLabelHidden": "Скрыты",
+  "tileOpensBoard": "Открывает доску",
   "suggestionsCustomInstructions": "Пользовательские инструкции",
   "suggestionsCustomInstructionsPlaceholder": "Используй короткие предложения и повседневные слова",
   "suggestionsCustomInstructionsHelper": "Формулируйте предложения своими словами.",

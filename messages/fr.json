@@ -109,6 +109,7 @@
   "tileLabelTop": "En haut",
   "tileLabelBottom": "En bas",
   "tileLabelHidden": "Masqués",
+  "tileOpensBoard": "Ouvre un tableau",
   "suggestionsCustomInstructions": "Instructions personnalisées",
   "suggestionsCustomInstructionsPlaceholder": "Utilise des phrases courtes et des mots courants",
   "suggestionsCustomInstructionsHelper": "Façonnez les suggestions avec vos propres mots.",

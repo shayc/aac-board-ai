@@ -109,6 +109,7 @@
   "tileLabelTop": "Ylhäällä",
   "tileLabelBottom": "Alhaalla",
   "tileLabelHidden": "Piilotetut",
+  "tileOpensBoard": "Avaa taulun",
   "suggestionsCustomInstructions": "Mukautetut ohjeet",
   "suggestionsCustomInstructionsPlaceholder": "Käytä lyhyitä lauseita ja arkisia sanoja",
   "suggestionsCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",

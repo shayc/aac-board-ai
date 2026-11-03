@@ -109,6 +109,7 @@
   "tileLabelTop": "Arriba",
   "tileLabelBottom": "Abajo",
   "tileLabelHidden": "Ocultas",
+  "tileOpensBoard": "Abre un tablero",
   "suggestionsCustomInstructions": "Instrucciones personalizadas",
   "suggestionsCustomInstructionsPlaceholder": "Usa frases cortas y palabras cotidianas",
   "suggestionsCustomInstructionsHelper": "Da forma a las sugerencias con tus propias palabras.",

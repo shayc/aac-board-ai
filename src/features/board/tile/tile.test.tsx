@@ -66,6 +66,26 @@ describe("Tile", () => {
     await expect.element(screen.getByText("Hello")).toBeVisible();
   });
 
+  test("describes folder tiles as opening a board", async () => {
+    const screen = await render(
+      <Tile variant="folder" onActivate={vi.fn()}>
+        Animals
+      </Tile>,
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "Animals" }))
+      .toHaveAccessibleDescription("Opens board");
+  });
+
+  test("gives word tiles no description", async () => {
+    const screen = await render(<Tile onActivate={vi.fn()}>Cat</Tile>);
+
+    await expect
+      .element(screen.getByRole("button", { name: "Cat" }))
+      .not.toHaveAccessibleDescription();
+  });
+
   test("renders the folder corner as a translucent readable text color", async () => {
     const screen = await render(
       <Tile

@@ -109,6 +109,7 @@
   "tileLabelTop": "Atas",
   "tileLabelBottom": "Bawah",
   "tileLabelHidden": "Tersembunyi",
+  "tileOpensBoard": "Membuka papan",
   "suggestionsCustomInstructions": "Instruksi khusus",
   "suggestionsCustomInstructionsPlaceholder": "Gunakan kalimat pendek dan kata sehari-hari",
   "suggestionsCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",

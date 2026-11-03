@@ -109,6 +109,7 @@
   "tileLabelTop": "ด้านบน",
   "tileLabelBottom": "ด้านล่าง",
   "tileLabelHidden": "ซ่อน",
+  "tileOpensBoard": "เปิดบอร์ด",
   "suggestionsCustomInstructions": "คำสั่งที่กำหนดเอง",
   "suggestionsCustomInstructionsPlaceholder": "ใช้ประโยคสั้น ๆ และคำที่ใช้ในชีวิตประจำวัน",
   "suggestionsCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",

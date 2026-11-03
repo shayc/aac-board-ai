@@ -109,6 +109,7 @@
   "tileLabelTop": "상단",
   "tileLabelBottom": "하단",
   "tileLabelHidden": "숨김",
+  "tileOpensBoard": "보드를 엽니다",
   "suggestionsCustomInstructions": "맞춤 지침",
   "suggestionsCustomInstructionsPlaceholder": "짧은 문장과 일상적인 단어를 사용해 주세요",
   "suggestionsCustomInstructionsHelper": "자신만의 언어로 제안을 다듬어 보세요.",
