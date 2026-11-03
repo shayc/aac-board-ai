@@ -99,7 +99,7 @@
   "speechVoice": "语音",
   "speechRate": "语速",
   "speechPitch": "音调",
-  "speechVolume": "语音音量",
+  "speechVolume": "音量",
   "speechPreview": "试听",
   "speechPreviewSample": "你好，这是我的声音！",
   "playbackHighlight": "播放时高亮显示消息",
