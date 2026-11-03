@@ -1,11 +1,9 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
@@ -21,13 +19,11 @@ import {
   useSpeechPreferences,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
-import { useId } from "react";
 
 export function SpeechSettings() {
   const t = useTranslate();
-  const selectId = useId();
-  const labelId = useId();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechPreferences();
@@ -35,9 +31,8 @@ export function SpeechSettings() {
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI = voices.some((voice) => voice.voiceURI === voiceURI)
-    ? voiceURI
-    : "";
+  const selectedVoiceURI =
+    voices.find((voice) => voice.voiceURI === voiceURI)?.voiceURI ?? "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );
@@ -101,21 +96,23 @@ export function SpeechSettings() {
 
   return (
     <Stack spacing={3}>
-      <FormControl size="small" fullWidth>
-        <InputLabel id={labelId}>{t(m.speechVoice)}</InputLabel>
-        <Select
-          id={selectId}
-          labelId={labelId}
-          label={t(m.speechVoice)}
-          value={selectedVoiceURI}
-          onChange={(event) =>
-            setVoiceURI(event.target.value === "" ? null : event.target.value)
-          }
-          variant="outlined"
-        >
-          {locales.map(renderLocaleOptions)}
-        </Select>
-      </FormControl>
+      <SettingsSelect
+        label={t(m.speechVoice)}
+        value={selectedVoiceURI}
+        onChange={(value) => setVoiceURI(value === "" ? null : value)}
+        action={
+          <Tooltip title={t(m.speechPreviewVoice)}>
+            <IconButton
+              aria-label={t(m.speechPreviewVoice)}
+              onClick={handlePreviewSpeech}
+            >
+              <PlayArrowIcon />
+            </IconButton>
+          </Tooltip>
+        }
+      >
+        {locales.map(renderLocaleOptions)}
+      </SettingsSelect>
 
       {speechControls.map(
         ({ id, label, value, min, max, onChange, formatValue }) => (
@@ -131,16 +128,6 @@ export function SpeechSettings() {
           />
         ),
       )}
-
-      <Button
-        color="inherit"
-        variant="contained"
-        startIcon={<PlayArrowIcon />}
-        onClick={handlePreviewSpeech}
-        sx={{ alignSelf: "flex-start" }}
-      >
-        {t(m.speechPreview)}
-      </Button>
     </Stack>
   );
 }

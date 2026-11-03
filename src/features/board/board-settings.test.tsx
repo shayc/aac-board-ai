@@ -32,13 +32,6 @@ describe("BoardSettings", () => {
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
-      .element(
-        screen.getByRole("switch", {
-          name: "Highlight during playback",
-        }),
-      )
-      .not.toBeChecked();
-    await expect
       .element(screen.getByRole("radio", { name: "Top" }))
       .toBeChecked();
     await expect
@@ -114,26 +107,6 @@ describe("BoardSettings", () => {
 
     expect(styles[1]).toEqual(styles[0]);
     expect(styles[2]).toEqual(styles[0]);
-  });
-
-  test("toggles message highlighting during playback", async () => {
-    const screen = await render(
-      <AppProviders>
-        <BoardSettings />
-      </AppProviders>,
-    );
-    const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight during playback",
-    });
-
-    await highlightSwitch.click();
-
-    await expect.element(highlightSwitch).toBeChecked();
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("playback-preferences")).toBe(
-        JSON.stringify({ isHighlightingEnabled: true }),
-      ),
-    );
   });
 
   test("toggling tile borders persists their visibility", async () => {

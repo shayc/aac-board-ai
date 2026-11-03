@@ -15,10 +15,6 @@ import {
   useBoardPreferences,
 } from "./board-preferences-store";
 import type { SymbolLabelPlacement } from "./board-types";
-import {
-  setPlaybackHighlightingEnabled,
-  usePlaybackPreferences,
-} from "./playback/playback-preferences-store";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
 function formatSaturation(value: number): string {
@@ -67,7 +63,6 @@ export function BoardSettings() {
   const t = useTranslate();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
-  const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
     <Stack spacing={3}>
@@ -96,12 +91,6 @@ export function BoardSettings() {
         max={TILE_SATURATION.max}
         step={0.1}
         formatValue={formatSaturation}
-      />
-
-      <SettingsSwitch
-        label={t(m.playbackHighlight)}
-        checked={isHighlightingEnabled}
-        onChange={setPlaybackHighlightingEnabled}
       />
     </Stack>
   );

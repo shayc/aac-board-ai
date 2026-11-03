@@ -23,35 +23,26 @@ describe("SettingsDrawer", () => {
 
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
 
-    await expect
-      .element(screen.getByRole("heading", { name: "General" }))
-      .toBeInTheDocument();
-    await expect.element(screen.getByText("Theme")).toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("combobox", { name: "Language" }))
-      .toBeInTheDocument();
-
-    await expect
-      .element(screen.getByRole("heading", { name: "Board" }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("slider", { name: "Tile color intensity" }))
-      .toBeInTheDocument();
-
-    await expect
-      .element(
-        screen.getByRole("switch", {
-          name: "Highlight during playback",
-        }),
-      )
-      .toBeInTheDocument();
-
-    await expect
-      .element(screen.getByRole("heading", { name: "Speech" }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("combobox", { name: "Voice" }))
-      .toBeInTheDocument();
+    const sectionControls = [
+      screen.getByRole("heading", { name: "Language & voice" }),
+      screen.getByRole("combobox", { name: "Language" }),
+      screen.getByRole("combobox", { name: "Voice" }),
+      screen.getByRole("button", { name: "Preview voice" }),
+      screen.getByRole("switch", { name: "Highlight during playback" }),
+      screen.getByRole("heading", { name: "Appearance" }),
+      screen.getByRole("radiogroup", { name: "Theme" }),
+      screen.getByRole("slider", { name: "Tile color intensity" }),
+    ];
+    for (const control of sectionControls) {
+      await expect.element(control).toBeInTheDocument();
+    }
+    for (const [index, next] of sectionControls.slice(1).entries()) {
+      expect(
+        sectionControls[index]
+          .element()
+          .compareDocumentPosition(next.element()),
+      ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    }
 
     await expect
       .element(screen.getByRole("heading", { name: "Suggestions" }))
@@ -68,6 +59,54 @@ describe("SettingsDrawer", () => {
       .toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);
+  });
+
+  test("styles select labels like the other settings labels", async () => {
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    const labels = ["Theme", "Language", "Voice", "Speed"];
+    const styles = labels.map((label) => {
+      const { fontSize, fontWeight, color } = getComputedStyle(
+        screen.getByText(label, { exact: true }).element(),
+      );
+      return { fontSize, fontWeight, color };
+    });
+
+    for (const style of styles) {
+      expect(style).toEqual(styles[0]);
+    }
+  });
+
+  test("separates the header from the content once it scrolls", async () => {
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+    const header = screen
+      .getByRole("heading", { name: "Settings" })
+      .element().parentElement;
+    if (!header) {
+      throw new Error("Settings heading must sit in a header");
+    }
+    const transparent = "rgba(0, 0, 0, 0)";
+
+    await expect.element(header).toHaveStyle({
+      borderBottomColor: transparent,
+    });
+
+    screen
+      .getByRole("link", { name: /Source code/i })
+      .element()
+      .scrollIntoView();
+
+    await expect
+      .poll(() => getComputedStyle(header).borderBottomColor)
+      .not.toBe(transparent);
   });
 
   test("close button invokes onClose", async () => {

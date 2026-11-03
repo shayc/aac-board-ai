@@ -74,7 +74,7 @@ describe("SpeechSettings", () => {
     await expect.element(screen.getByText("1.0")).toBeVisible();
     await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
-      .element(screen.getByRole("button", { name: "Preview" }))
+      .element(screen.getByRole("button", { name: "Preview voice" }))
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
@@ -132,7 +132,7 @@ describe("SpeechSettings", () => {
     stubVoices([]);
     const screen = await renderSpeechSettings();
 
-    await screen.getByRole("button", { name: "Preview" }).click();
+    await screen.getByRole("button", { name: "Preview voice" }).click();
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("Hi, this is my voice!");
