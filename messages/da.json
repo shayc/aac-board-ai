@@ -109,6 +109,7 @@
   "tileLabelTop": "Øverst",
   "tileLabelBottom": "Nederst",
   "tileLabelHidden": "Skjulte",
+  "tileOpensBoard": "Åbner tavle",
   "suggestionsCustomInstructions": "Tilpassede instruktioner",
   "suggestionsCustomInstructionsPlaceholder": "Brug korte sætninger og almindelige ord",
   "suggestionsCustomInstructionsHelper": "Form forslagene med dine egne ord.",

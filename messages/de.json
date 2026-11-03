@@ -109,6 +109,7 @@
   "tileLabelTop": "Oben",
   "tileLabelBottom": "Unten",
   "tileLabelHidden": "Ausgeblendet",
+  "tileOpensBoard": "Öffnet Tafel",
   "suggestionsCustomInstructions": "Benutzerdefinierte Anweisungen",
   "suggestionsCustomInstructionsPlaceholder": "Verwende kurze Sätze und alltägliche Wörter",
   "suggestionsCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",

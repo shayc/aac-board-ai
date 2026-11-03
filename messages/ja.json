@@ -109,6 +109,7 @@
   "tileLabelTop": "上",
   "tileLabelBottom": "下",
   "tileLabelHidden": "非表示",
+  "tileOpensBoard": "ボードを開きます",
   "suggestionsCustomInstructions": "カスタム指示",
   "suggestionsCustomInstructionsPlaceholder": "短い文と日常的な言葉を使う",
   "suggestionsCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",

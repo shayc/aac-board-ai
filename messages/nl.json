@@ -109,6 +109,7 @@
   "tileLabelTop": "Bovenaan",
   "tileLabelBottom": "Onderaan",
   "tileLabelHidden": "Verborgen",
+  "tileOpensBoard": "Opent bord",
   "suggestionsCustomInstructions": "Aangepaste instructies",
   "suggestionsCustomInstructionsPlaceholder": "Gebruik korte zinnen en alledaagse woorden",
   "suggestionsCustomInstructionsHelper": "Geef de suggesties vorm in je eigen woorden.",

@@ -109,6 +109,7 @@
   "tileLabelTop": "Överst",
   "tileLabelBottom": "Nederst",
   "tileLabelHidden": "Dolda",
+  "tileOpensBoard": "Öppnar tavla",
   "suggestionsCustomInstructions": "Anpassade instruktioner",
   "suggestionsCustomInstructionsPlaceholder": "Använd korta meningar och vardagliga ord",
   "suggestionsCustomInstructionsHelper": "Forma förslagen med dina egna ord.",

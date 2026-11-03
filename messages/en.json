@@ -109,6 +109,7 @@
   "tileLabelTop": "Top",
   "tileLabelBottom": "Bottom",
   "tileLabelHidden": "Hidden",
+  "tileOpensBoard": "Opens board",
   "suggestionsCustomInstructions": "Custom instructions",
   "suggestionsCustomInstructionsPlaceholder": "Use short sentences and everyday words",
   "suggestionsCustomInstructionsHelper": "Shape suggestions in your own words.",

@@ -1,4 +1,6 @@
 import Button, { buttonClasses } from "@mui/material/Button";
+import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
 
 interface TileProps {
@@ -32,6 +34,8 @@ export function Tile({
   isBorderVisible = true,
   onActivate,
 }: TileProps) {
+  const t = useTranslate();
+
   const resolvedBorderColor = borderColor ?? backgroundColor;
   const resolvedBackgroundColor = backgroundColor
     ? desaturate(backgroundColor)
@@ -40,6 +44,7 @@ export function Tile({
   return (
     <Button
       aria-label={ariaLabel}
+      aria-description={variant === "folder" ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
       disabled={disabled}
       disableRipple
