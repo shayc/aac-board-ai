@@ -16,6 +16,17 @@ interface SettingsSliderProps {
   endIcon?: ReactNode;
 }
 
+interface SliderRange {
+  min: number;
+  max: number;
+  step: number;
+}
+
+function pageStep({ min, max, step }: SliderRange): number {
+  const stepsPerPage = Math.max(1, Math.round((max - min) / 10 / step));
+  return stepsPerPage * step;
+}
+
 export function SettingsSlider({
   label,
   value,
@@ -29,7 +40,6 @@ export function SettingsSlider({
   endIcon,
 }: SettingsSliderProps) {
   const labelId = useId();
-  const pageStep = Math.max(step, Math.round((max - min) / 10 / step) * step);
 
   return (
     <Stack spacing={0.5}>
@@ -57,7 +67,7 @@ export function SettingsSlider({
           min={min}
           max={max}
           step={step}
-          shiftStep={pageStep}
+          shiftStep={pageStep({ min, max, step })}
         />
         {endIcon}
       </Stack>

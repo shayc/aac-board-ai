@@ -1,5 +1,4 @@
 import Button, { buttonClasses } from "@mui/material/Button";
-import GlobalStyles from "@mui/material/GlobalStyles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
@@ -16,24 +15,14 @@ interface TileProps {
   onActivate: () => void;
 }
 
-function adjustColor(color: string): string {
+function applyColorSettings(color: string): string {
   const brightness = "var(--tile-brightness, 1)";
   const saturation = "var(--tile-saturation, 1)";
   return `oklch(from ${color} calc(l * ${brightness}) calc(c * ${saturation} * ${brightness}) h)`;
 }
 
-export function TileDarkeningProperty() {
-  return (
-    <GlobalStyles
-      styles={{
-        "@property --tile-darkening": {
-          syntax: "'<percentage>'",
-          inherits: String(false),
-          initialValue: "0%",
-        },
-      }}
-    />
-  );
+function darken(color: string): string {
+  return `color-mix(in xyz, ${color}, black var(--tile-darkening, 0%))`;
 }
 
 export function Tile({
@@ -51,7 +40,7 @@ export function Tile({
 
   const resolvedBorderColor = borderColor ?? backgroundColor;
   const resolvedBackgroundColor = backgroundColor
-    ? adjustColor(backgroundColor)
+    ? applyColorSettings(backgroundColor)
     : undefined;
 
   return (
@@ -77,13 +66,12 @@ export function Tile({
           : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
-            ? adjustColor(resolvedBorderColor)
+            ? applyColorSettings(resolvedBorderColor)
             : "transparent"
         }`,
         borderRadius: (theme.vars ?? theme).shape.borderRadius,
         backgroundColor:
-          resolvedBackgroundColor &&
-          `color-mix(in xyz, ${resolvedBackgroundColor}, black var(--tile-darkening, 0%))`,
+          resolvedBackgroundColor && darken(resolvedBackgroundColor),
         boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(
           ["--tile-darkening", "box-shadow"],

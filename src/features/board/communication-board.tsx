@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -6,13 +5,10 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useId, useRef, type CSSProperties } from "react";
+import { useRef } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
-import {
-  TILE_BRIGHTNESS,
-  useBoardPreferences,
-} from "./board-preferences-store";
+import { useBoardPreferences } from "./board-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -24,18 +20,12 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
-import { Tile, TileDarkeningProperty } from "./tile/tile";
-import { SymbolDimmingFilter } from "./aac-symbol/symbol-dimming-filter";
+import { Tile } from "./tile/tile";
+import { TileColorScope } from "./tile/tile-color-scope";
 
 interface CommunicationBoardProps {
   board: Board;
 }
-
-type TileGridStyle = CSSProperties & {
-  "--tile-saturation": string;
-  "--tile-brightness": string;
-  "--symbol-image-filter": string;
-};
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
@@ -66,17 +56,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const hasMessage = message.parts.length > 0;
   const isInBoardSet = Boolean(navigation.boardSetId);
-
-  const dimmingFilterId = useId();
-  const areTilesDimmed = tileBrightness < TILE_BRIGHTNESS.max;
-
-  const tileGridStyle: TileGridStyle = {
-    "--tile-saturation": String(tileSaturation),
-    "--tile-brightness": String(tileBrightness),
-    "--symbol-image-filter": areTilesDimmed
-      ? `url("#${dimmingFilterId}")`
-      : "none",
-  };
 
   function handleHome() {
     if (navigation.isHome) {
@@ -157,16 +136,11 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         )}
       </Stack>
 
-      <Box style={tileGridStyle} sx={{ flex: 1, minHeight: 0 }}>
-        <TileDarkeningProperty />
-
-        {areTilesDimmed && (
-          <SymbolDimmingFilter
-            id={dimmingFilterId}
-            brightness={tileBrightness}
-          />
-        )}
-
+      <TileColorScope
+        saturation={tileSaturation}
+        brightness={tileBrightness}
+        sx={{ flex: 1, minHeight: 0 }}
+      >
         <Grid<BoardButton>
           ref={gridViewportRef}
           ariaLabel={board.name || t(m.boardGridLabel)}
@@ -177,7 +151,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           order={board.grid.order}
           renderItem={renderTile}
         />
-      </Box>
+      </TileColorScope>
 
       {isSmallScreen && (
         <Toolbar

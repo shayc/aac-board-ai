@@ -7,7 +7,8 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
-import { Tile, TileDarkeningProperty } from "./tile";
+import { Tile } from "./tile";
+import { TileColorScope } from "./tile-color-scope";
 
 // Colors are rendered through oklch(from ...), so the browser serializes computed
 // values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
@@ -141,29 +142,23 @@ describe("Tile", () => {
 
   test("applies color setting changes instantly but fades hover darkening", async () => {
     const theme = createTheme({ transitions: { duration: { short: 60_000 } } });
-    const screen = await render(
+    const tileAtBrightness = (brightness: number) => (
       <MUIThemeProvider theme={theme}>
-        <div
-          data-testid="settings"
-          style={{ "--tile-brightness": 1 } as CSSProperties}
-        >
-          <TileDarkeningProperty />
+        <TileColorScope saturation={1} brightness={brightness}>
           <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
             Fading
           </Tile>
-        </div>
-      </MUIThemeProvider>,
+        </TileColorScope>
+      </MUIThemeProvider>
     );
+    const screen = await render(tileAtBrightness(1));
 
     const tile = screen.getByRole("button", { name: "Fading" });
     expect(getComputedStyle(tile.element()).backgroundColor).toBe(
       resolveRestingBackground("oklch(from #ff0000 l c h)"),
     );
 
-    screen
-      .getByTestId("settings")
-      .element()
-      .setAttribute("style", "--tile-brightness: 0.7");
+    await screen.rerender(tileAtBrightness(0.7));
     expect(getComputedStyle(tile.element()).backgroundColor).toBe(
       resolveRestingBackground(
         "oklch(from #ff0000 calc(l * 0.7) calc(c * 0.7) h)",
