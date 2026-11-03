@@ -235,8 +235,8 @@ const themeOptions = {
     MuiChip: {
       styleOverrides: {
         clickable: ({ theme }) => ({
-          ...theme.typography.body1,
-          height: 48,
+          ...theme.typography.body2,
+          height: 40,
           borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
           [`& .${chipClasses.label}`]: {
             paddingLeft: 15,
