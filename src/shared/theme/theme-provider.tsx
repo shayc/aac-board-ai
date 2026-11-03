@@ -74,8 +74,7 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        // Chips and inputs share this outline; each scheme's alpha clears
-        // WCAG 1.4.11's 3:1 against its shell.
+        // Alphas differ per scheme so each outline clears WCAG 1.4.11's 3:1.
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
@@ -182,8 +181,6 @@ const themeOptions = {
     },
     MuiChip: {
       styleOverrides: {
-        // Tappable chips are options, so they match list items: 48px pills
-        // with body text. Static chips keep MUI's compact tag style.
         clickable: ({ theme }) => ({
           ...theme.typography.body1,
           height: 48,
