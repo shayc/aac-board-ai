@@ -12,7 +12,6 @@ interface SettingsSliderProps {
   step: number;
   formatValue: (value: number) => string;
   isValueVisible?: boolean;
-  hasStepMarks?: boolean;
   startIcon?: ReactNode;
   endIcon?: ReactNode;
 }
@@ -26,7 +25,6 @@ export function SettingsSlider({
   step,
   formatValue,
   isValueVisible = true,
-  hasStepMarks = false,
   startIcon,
   endIcon,
 }: SettingsSliderProps) {
@@ -58,7 +56,6 @@ export function SettingsSlider({
           min={min}
           max={max}
           step={step}
-          marks={hasStepMarks}
         />
         {endIcon}
       </Stack>

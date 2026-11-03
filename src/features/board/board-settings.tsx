@@ -25,10 +25,13 @@ import {
 } from "./playback/playback-preferences-store";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
-const TILE_BRIGHTNESS_STEP = 0.1;
-
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`;
+}
+
+function formatBrightnessPosition(value: number): string {
+  const { min, max } = TILE_BRIGHTNESS;
+  return formatPercent((value - min) / (max - min));
 }
 
 interface LabelPlacementOptionProps {
@@ -79,20 +82,6 @@ export function BoardSettings() {
   } = useBoardPreferences();
   const { isHighlightingEnabled } = usePlaybackPreferences();
 
-  const brightnessStepNames = [
-    t(m.tileBrightnessDimmest),
-    t(m.tileBrightnessDimmed),
-    t(m.tileBrightnessSlightlyDimmed),
-    t(m.tileBrightnessFull),
-  ];
-
-  function formatBrightness(value: number): string {
-    const stepIndex = Math.round(
-      (value - TILE_BRIGHTNESS.min) / TILE_BRIGHTNESS_STEP,
-    );
-    return brightnessStepNames[stepIndex];
-  }
-
   return (
     <Stack spacing={3}>
       <SettingsRadioGroup
@@ -128,11 +117,10 @@ export function BoardSettings() {
         onChange={setTileBrightness}
         min={TILE_BRIGHTNESS.min}
         max={TILE_BRIGHTNESS.max}
-        step={TILE_BRIGHTNESS_STEP}
-        formatValue={formatBrightness}
+        step={0.01}
+        formatValue={formatBrightnessPosition}
         isValueVisible={false}
-        hasStepMarks
-        startIcon={<BrightnessLowIcon />}
+        startIcon={<BrightnessLowIcon fontSize="small" />}
         endIcon={<BrightnessHighIcon />}
       />
 
