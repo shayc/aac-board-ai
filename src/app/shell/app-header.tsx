@@ -44,12 +44,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           }}
         >
           <Tooltip title={t(m.libraryOpen)}>
-            <IconButton
-              aria-label={t(m.libraryOpen)}
-              size="large"
-              edge="start"
-              onClick={onOpenLibrary}
-            >
+            <IconButton size="large" edge="start" onClick={onOpenLibrary}>
               <ViewSidebarOutlinedIcon sx={flipForLtr} />
             </IconButton>
           </Tooltip>
@@ -61,12 +56,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>
           <Tooltip title={t(m.settingsOpen)}>
-            <IconButton
-              aria-label={t(m.settingsOpen)}
-              size="large"
-              edge="end"
-              onClick={onOpenSettings}
-            >
+            <IconButton size="large" edge="end" onClick={onOpenSettings}>
               <SettingsOutlinedIcon />
             </IconButton>
           </Tooltip>
