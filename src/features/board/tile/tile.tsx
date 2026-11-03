@@ -72,12 +72,9 @@ export function Tile({
         borderRadius: (theme.vars ?? theme).shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: (theme.vars ?? theme).shadows[2],
-        transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
-          {
-            duration: theme.transitions.duration.short,
-          },
-        ),
+        transition: theme.transitions.create("box-shadow", {
+          duration: theme.transitions.duration.short,
+        }),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },

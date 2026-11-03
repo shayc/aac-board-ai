@@ -125,6 +125,20 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
+  test("changes the background color in step with its symbol image", async () => {
+    const screen = await render(
+      <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+        Instant
+      </Tile>,
+    );
+
+    const button = screen.getByRole("button", { name: "Instant" });
+
+    expect(getComputedStyle(button.element()).transitionProperty).toBe(
+      "box-shadow",
+    );
+  });
+
   test("darkens only the background on hover", async () => {
     const theme = createTheme({ transitions: { duration: { short: 0 } } });
     const screen = await render(
