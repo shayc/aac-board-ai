@@ -192,7 +192,14 @@ const themeOptions = {
     MuiDialog: {
       styleOverrides: {
         paper: ({ theme }) => ({
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+          variants: [
+            {
+              props: { fullScreen: false },
+              style: {
+                borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+              },
+            },
+          ],
         }),
       },
     },
