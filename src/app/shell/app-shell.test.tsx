@@ -31,7 +31,7 @@ async function renderAppShellPastOnboarding() {
 
   await screen.getByRole("button", { name: "Continue" }).click();
   await expect
-    .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+    .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
     .not.toBeInTheDocument();
 
   return screen;
@@ -99,13 +99,13 @@ describe("AppShell", () => {
     const screen = await renderAppShell();
 
     await expect
-      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
       .toBeVisible();
 
     await screen.getByRole("button", { name: "Continue" }).click();
 
     await expect
-      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
       .not.toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe("AppShell", () => {
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
-      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
       .not.toBeInTheDocument();
 
     const openSettings = screen.getByRole("button", {

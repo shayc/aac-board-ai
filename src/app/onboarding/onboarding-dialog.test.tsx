@@ -1,5 +1,10 @@
+import { locales } from "@paraglide/runtime";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import {
+  stubBuiltInAIUnsupported,
+  stubRewriter,
+} from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { OnboardingDialog } from "./onboarding-dialog";
@@ -14,21 +19,49 @@ function renderDialog(onClose: () => void) {
 
 describe("OnboardingDialog", () => {
   test("renders the onboarding content with no a11y violations", async () => {
+    stubBuiltInAIUnsupported("Rewriter");
     const screen = await renderDialog(vi.fn());
 
     await expect
-      .element(screen.getByRole("dialog", { name: "AAC Board AI" }))
+      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
       .toBeVisible();
 
-    for (const benefit of [
-      "Say more with fewer taps. AI helps your messages sound clear and natural.",
-      "Communicate across languages, right from your board.",
-      "No accounts or app tracking. Build messages offline.",
+    for (const text of [
+      "Tap to Speak",
+      "Build a message with symbols and hear it spoken aloud.",
+      "Free and Private",
+      "No account, no ads and no tracking. It works offline.",
     ]) {
-      await expect.element(screen.getByText(benefit)).toBeVisible();
+      await expect.element(screen.getByText(text)).toBeVisible();
     }
 
     await expectNoA11yViolations(document.body);
+  });
+
+  test("promises the interface languages when suggestions are unsupported", async () => {
+    stubBuiltInAIUnsupported("Rewriter");
+    const screen = await renderDialog(vi.fn());
+
+    await expect
+      .element(
+        screen.getByText(`Use the app in any of ${locales.length} languages.`),
+      )
+      .toBeVisible();
+    await expect
+      .element(screen.getByText("Say More with Fewer Taps"))
+      .not.toBeInTheDocument();
+  });
+
+  test("promises suggestions when the Rewriter is supported", async () => {
+    stubRewriter();
+    const screen = await renderDialog(vi.fn());
+
+    await expect
+      .element(screen.getByText("Say More with Fewer Taps"))
+      .toBeVisible();
+    await expect
+      .element(screen.getByText("In Your Language"))
+      .not.toBeInTheDocument();
   });
 
   test("continue invokes onClose", async () => {
