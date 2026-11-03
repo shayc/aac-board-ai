@@ -1,3 +1,5 @@
+import BrightnessHighIcon from "@mui/icons-material/BrightnessHigh";
+import BrightnessLowIcon from "@mui/icons-material/BrightnessLow";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -22,6 +24,8 @@ import {
   usePlaybackPreferences,
 } from "./playback/playback-preferences-store";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
+
+const TILE_BRIGHTNESS_STEP = 0.1;
 
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -75,6 +79,20 @@ export function BoardSettings() {
   } = useBoardPreferences();
   const { isHighlightingEnabled } = usePlaybackPreferences();
 
+  const brightnessStepNames = [
+    t(m.tileBrightnessDimmest),
+    t(m.tileBrightnessDimmed),
+    t(m.tileBrightnessSlightlyDimmed),
+    t(m.tileBrightnessFull),
+  ];
+
+  function formatBrightness(value: number): string {
+    const stepIndex = Math.round(
+      (value - TILE_BRIGHTNESS.min) / TILE_BRIGHTNESS_STEP,
+    );
+    return brightnessStepNames[stepIndex];
+  }
+
   return (
     <Stack spacing={3}>
       <SettingsRadioGroup
@@ -110,8 +128,12 @@ export function BoardSettings() {
         onChange={setTileBrightness}
         min={TILE_BRIGHTNESS.min}
         max={TILE_BRIGHTNESS.max}
-        step={0.1}
-        formatValue={formatPercent}
+        step={TILE_BRIGHTNESS_STEP}
+        formatValue={formatBrightness}
+        isValueVisible={false}
+        hasStepMarks
+        startIcon={<BrightnessLowIcon />}
+        endIcon={<BrightnessHighIcon />}
       />
 
       <SettingsSwitch

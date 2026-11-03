@@ -1,7 +1,7 @@
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useId } from "react";
+import { useId, type ReactNode } from "react";
 
 interface SettingsSliderProps {
   label: string;
@@ -11,6 +11,10 @@ interface SettingsSliderProps {
   max: number;
   step: number;
   formatValue: (value: number) => string;
+  isValueVisible?: boolean;
+  hasStepMarks?: boolean;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
 }
 
 export function SettingsSlider({
@@ -21,6 +25,10 @@ export function SettingsSlider({
   max,
   step,
   formatValue,
+  isValueVisible = true,
+  hasStepMarks = false,
+  startIcon,
+  endIcon,
 }: SettingsSliderProps) {
   const labelId = useId();
 
@@ -31,22 +39,29 @@ export function SettingsSlider({
         sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 2 }}
       >
         <Typography id={labelId}>{label}</Typography>
-        <Typography
-          variant="body2"
-          sx={{ color: "text.secondary", fontWeight: "fontWeightBold" }}
-        >
-          {formatValue(value)}
-        </Typography>
+        {isValueVisible && (
+          <Typography
+            variant="body2"
+            sx={{ color: "text.secondary", fontWeight: "fontWeightBold" }}
+          >
+            {formatValue(value)}
+          </Typography>
+        )}
       </Stack>
-      <Slider
-        aria-labelledby={labelId}
-        getAriaValueText={formatValue}
-        value={value}
-        onChange={(_event, newValue) => onChange(newValue)}
-        min={min}
-        max={max}
-        step={step}
-      />
+      <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
+        {startIcon}
+        <Slider
+          aria-labelledby={labelId}
+          getAriaValueText={formatValue}
+          value={value}
+          onChange={(_event, newValue) => onChange(newValue)}
+          min={min}
+          max={max}
+          step={step}
+          marks={hasStepMarks}
+        />
+        {endIcon}
+      </Stack>
     </Stack>
   );
 }

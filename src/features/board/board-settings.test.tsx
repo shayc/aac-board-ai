@@ -33,8 +33,8 @@ describe("BoardSettings", () => {
       .toHaveAttribute("aria-valuetext", "100%");
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "100%");
-    expect(screen.getByText("100%").all()).toHaveLength(2);
+      .toHaveAttribute("aria-valuetext", "Full brightness");
+    expect(screen.getByText("100%").all()).toHaveLength(1);
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -202,7 +202,7 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("lowering brightness persists tile brightness", async () => {
+  test("lowering brightness announces the step and persists tile brightness", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -224,7 +224,13 @@ describe("BoardSettings", () => {
     );
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "90%");
+      .toHaveAttribute("aria-valuetext", "Slightly dimmed");
+
+    await userEvent.keyboard("{Home}");
+
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "Dimmest");
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-preferences");
@@ -232,7 +238,7 @@ describe("BoardSettings", () => {
       const preferences = JSON.parse(stored ?? "{}") as {
         tileBrightness: number;
       };
-      expect(preferences.tileBrightness).toBe(0.9);
+      expect(preferences.tileBrightness).toBe(0.7);
     });
   });
 
