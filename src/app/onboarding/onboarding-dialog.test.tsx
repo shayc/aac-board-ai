@@ -30,7 +30,7 @@ describe("OnboardingDialog", () => {
       "Tap to Speak",
       "Build a message with symbols and hear it spoken aloud.",
       "Free and Private",
-      "No account, no ads, no tracking. Works offline.",
+      "No account, ads or tracking. Works offline.",
     ]) {
       await expect.element(screen.getByText(text)).toBeVisible();
     }
