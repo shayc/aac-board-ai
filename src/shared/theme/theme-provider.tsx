@@ -73,8 +73,9 @@ function softShadow(elevation: number) {
 const themeOptions = {
   focusVisible: true,
   shadows,
-  // Strings keep sx from multiplying radii by the base; MUI's Paper-based
-  // surfaces (menus, popovers, alerts, snackbars) and tooltips inherit the base.
+  // Strings so radii returned from sx callbacks pass through as lengths; a
+  // number would be multiplied by the base again. MUI's Paper-based surfaces
+  // (menus, popovers, alerts, snackbars) and tooltips inherit the base.
   shape: {
     borderRadius: "16px",
     borderRadiusSm: "12px",
@@ -196,12 +197,11 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
-              style: ({ theme }) =>
-                theme.applyStyles("light", {
-                  [`&.${buttonClasses.disabled}`]: {
-                    backgroundColor: "transparent",
-                  },
-                }),
+              style: theme.applyStyles("light", {
+                [`&.${buttonClasses.disabled}`]: {
+                  backgroundColor: "transparent",
+                },
+              }),
             },
           ],
         }),
