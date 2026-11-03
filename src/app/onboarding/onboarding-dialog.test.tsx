@@ -27,9 +27,9 @@ describe("OnboardingDialog", () => {
       .toBeVisible();
 
     for (const text of [
-      "Tap to Speak",
+      "Tap to speak",
       "Build a message with symbols and hear it spoken aloud.",
-      "Free and Private",
+      "Free and private",
       "No account, ads or tracking. Works offline.",
     ]) {
       await expect.element(screen.getByText(text)).toBeVisible();
@@ -48,7 +48,7 @@ describe("OnboardingDialog", () => {
       )
       .toBeVisible();
     await expect
-      .element(screen.getByText("Say More with Fewer Taps"))
+      .element(screen.getByText("Say more with fewer taps"))
       .not.toBeInTheDocument();
   });
 
@@ -57,10 +57,10 @@ describe("OnboardingDialog", () => {
     const screen = await renderDialog(vi.fn());
 
     await expect
-      .element(screen.getByText("Say More with Fewer Taps"))
+      .element(screen.getByText("Say more with fewer taps"))
       .toBeVisible();
     await expect
-      .element(screen.getByText("In Your Language"))
+      .element(screen.getByText("In your language"))
       .not.toBeInTheDocument();
   });
 
