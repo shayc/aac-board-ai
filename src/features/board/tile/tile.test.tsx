@@ -155,7 +155,7 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
     expect(styles.backgroundColor).toBe(
       resolveBackgroundColor(
-        "color-mix(in srgb, oklch(from #ff0000 l c h) 92%, black)",
+        "color-mix(in xyz, oklch(from #ff0000 l c h) 84%, black)",
       ),
     );
     expect(styles.filter).toBe("none");
@@ -181,7 +181,7 @@ describe("Tile", () => {
 
     expect(getComputedStyle(button.element()).backgroundColor).toBe(
       resolveBackgroundColor(
-        "color-mix(in srgb, oklch(from #ff0000 l c h) 84%, black)",
+        "color-mix(in xyz, oklch(from #ff0000 l c h) 68%, black)",
       ),
     );
 

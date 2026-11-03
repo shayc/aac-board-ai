@@ -29,7 +29,7 @@ function folderCornerColor(backgroundColor: string | undefined): string {
 }
 
 function darken(color: string, amount: string): string {
-  return `color-mix(in srgb, ${color}, black ${amount})`;
+  return `color-mix(in xyz, ${color}, black ${amount})`;
 }
 
 export function Tile({
@@ -92,7 +92,7 @@ export function Tile({
               resolvedBackgroundColor &&
               darken(
                 resolvedBackgroundColor,
-                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
+                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 400%)`,
               ),
           },
           "@media (hover: none)": {
@@ -101,7 +101,7 @@ export function Tile({
         },
         "&:active": {
           backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, "45%"),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
