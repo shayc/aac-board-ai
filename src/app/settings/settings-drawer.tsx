@@ -161,7 +161,7 @@ function SettingsSection({ title, icon, children }: SettingsSectionProps) {
           alignItems: "center",
           gap: 1,
           mb: 2,
-          fontWeight: 700,
+          fontWeight: "fontWeightBold",
           "& > svg": { color: "primary.main" },
         }}
       >

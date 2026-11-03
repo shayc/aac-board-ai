@@ -27,7 +27,7 @@ export function SettingsSlider({
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {label}
         </Typography>
-        <Typography variant="body2" sx={{ fontWeight: 600 }}>
+        <Typography variant="body2" sx={{ fontWeight: "fontWeightBold" }}>
           {formatValue(value)}
         </Typography>
       </Stack>

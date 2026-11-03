@@ -26,7 +26,7 @@ export function SuggestionBar({
       sx={{
         flex: "1",
         alignItems: "center",
-        minHeight: 32,
+        minHeight: 48,
         gap: 2,
         overflow: "hidden",
       }}

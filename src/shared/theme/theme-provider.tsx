@@ -1,7 +1,9 @@
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { buttonClasses } from "@mui/material/Button";
+import { chipClasses } from "@mui/material/Chip";
 import CssBaseline from "@mui/material/CssBaseline";
+import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
@@ -72,7 +74,9 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        Chip: { defaultBorder: "rgba(0, 0, 0, 0.23)" },
+        // Chips and inputs share this outline; each scheme's alpha clears
+        // WCAG 1.4.11's 3:1 against its shell.
+        Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
     },
@@ -81,7 +85,7 @@ const themeOptions = {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
         error: { main: "#f2b8b5" },
-        Chip: { defaultBorder: "rgba(255, 255, 255, 0.23)" },
+        Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
     },
@@ -92,6 +96,7 @@ const themeOptions = {
   typography: {
     fontFamily: "system-ui, sans-serif",
     fontWeightLight: 400,
+    fontWeightBold: 600,
     button: {
       textTransform: "none",
     },
@@ -162,9 +167,35 @@ const themeOptions = {
     },
     MuiOutlinedInput: {
       styleOverrides: {
-        root: {
+        root: ({ theme }) => ({
           borderRadius: 32,
-        },
+          "@media (hover: none)": {
+            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+              borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
+            },
+          },
+        }),
+        notchedOutline: ({ theme }) => ({
+          borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
+        }),
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        // Tappable chips are options, so they match list items: 48px pills
+        // with body text. Static chips keep MUI's compact tag style.
+        clickable: ({ theme }) => ({
+          ...theme.typography.body1,
+          height: 48,
+          borderRadius: 32,
+          [`& .${chipClasses.label}`]: {
+            paddingLeft: 15,
+            paddingRight: 15,
+          },
+          [`& .${chipClasses.icon}`]: {
+            marginLeft: 12,
+          },
+        }),
       },
     },
     MuiListItemButton: {

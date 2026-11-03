@@ -59,7 +59,7 @@ export function AACSymbol({
         variant={imageSrc ? "body2" : "h5"}
         sx={[
           { lineHeight: 1.2 },
-          Boolean(imageSrc) && { fontWeight: 600 },
+          Boolean(imageSrc) && { fontWeight: "fontWeightBold" },
           labelPlacement === "hidden" && visuallyHidden,
         ]}
       >
