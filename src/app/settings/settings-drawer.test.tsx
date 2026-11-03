@@ -24,14 +24,15 @@ describe("SettingsDrawer", () => {
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
 
     const sectionControls = [
+      screen.getByRole("heading", { name: "Appearance" }),
+      screen.getByRole("radiogroup", { name: "Theme" }),
       screen.getByRole("heading", { name: "Language & voice" }),
       screen.getByRole("combobox", { name: "Language" }),
       screen.getByRole("combobox", { name: "Voice" }),
       screen.getByRole("button", { name: "Preview voice" }),
-      screen.getByRole("switch", { name: "Highlight during playback" }),
-      screen.getByRole("heading", { name: "Appearance" }),
-      screen.getByRole("radiogroup", { name: "Theme" }),
+      screen.getByRole("heading", { name: "Board" }),
       screen.getByRole("slider", { name: "Tile color intensity" }),
+      screen.getByRole("switch", { name: "Highlight words as they're spoken" }),
     ];
     for (const control of sectionControls) {
       await expect.element(control).toBeInTheDocument();

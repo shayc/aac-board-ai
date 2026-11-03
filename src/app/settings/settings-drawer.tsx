@@ -88,17 +88,22 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           },
         })}
       >
-        <SettingsSection title={t(m.settingsSectionLanguageVoice)}>
-          <LanguageSettings />
-          <SpeechSettings />
-          <PlaybackSettings />
+        <SettingsSection title={t(m.settingsSectionAppearance)}>
+          <ThemeSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />
 
-        <SettingsSection title={t(m.settingsSectionAppearance)}>
-          <ThemeSettings />
+        <SettingsSection title={t(m.settingsSectionLanguageVoice)}>
+          <LanguageSettings />
+          <SpeechSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection title={t(m.settingsSectionBoard)}>
           <BoardSettings />
+          <PlaybackSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />

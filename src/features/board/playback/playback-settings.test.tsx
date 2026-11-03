@@ -11,7 +11,7 @@ describe("PlaybackSettings", () => {
       </AppProviders>,
     );
     const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight during playback",
+      name: "Highlight words as they're spoken",
     });
 
     await expect.element(highlightSwitch).not.toBeChecked();
