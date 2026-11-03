@@ -59,7 +59,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           {t(m.settingsTitle)}
         </Typography>
 
-        <Tooltip title={t(m.settingsClose)}>
+        <Tooltip title={t(m.settingsClose)} placement="left">
           <IconButton
             aria-label={t(m.settingsClose)}
             size="large"
