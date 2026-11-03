@@ -80,6 +80,7 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
+        error: { main: "#f2b8b5" },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.23)" },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
