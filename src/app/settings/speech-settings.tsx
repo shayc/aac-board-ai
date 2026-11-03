@@ -79,7 +79,7 @@ export function SpeechSettings() {
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
       onChange: setSpeechPitch,
-      formatValue: (value: number) => `${value}x`,
+      formatValue: (value: number) => value.toFixed(1),
     },
     {
       id: "volume",
