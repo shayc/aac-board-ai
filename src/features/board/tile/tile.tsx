@@ -54,7 +54,9 @@ export function Tile({
         p: 1,
         overflow: "hidden",
         textTransform: "none",
-        color: resolvedBackgroundColor ? "#000" : "inherit",
+        color: resolvedBackgroundColor
+          ? (theme.vars ?? theme).palette.common.black
+          : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
             ? desaturate(resolvedBorderColor)
