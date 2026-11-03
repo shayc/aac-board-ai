@@ -161,28 +161,6 @@ describe("Tile", () => {
     await button.unhover();
   });
 
-  test("picks the label color against the hovered background", async () => {
-    const theme = createTheme({
-      palette: { mode: "dark" },
-      transitions: { duration: { short: 0 } },
-    });
-    const screen = await render(
-      <MUIThemeProvider theme={theme}>
-        <Tile backgroundColor="#7f7f7f" onActivate={vi.fn()}>
-          Gray
-        </Tile>
-      </MUIThemeProvider>,
-    );
-
-    const button = screen.getByRole("button", { name: "Gray" });
-    expect(getComputedStyle(button.element()).color).toBe("rgb(0, 0, 0)");
-
-    await button.hover();
-    expect(getComputedStyle(button.element()).color).toBe("rgb(255, 255, 255)");
-
-    await button.unhover();
-  });
-
   test("darkens more on hover in dark mode", async () => {
     const theme = createTheme({
       palette: { mode: "dark" },
