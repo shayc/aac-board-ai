@@ -52,7 +52,12 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
         </Typography>
 
         <Tooltip title={t(m.libraryClose)}>
-          <IconButton size="large" edge="end" onClick={onClose}>
+          <IconButton
+            aria-label={t(m.libraryClose)}
+            size="large"
+            edge="end"
+            onClick={onClose}
+          >
             <ViewSidebarOutlinedIcon sx={flipForLtr} />
           </IconButton>
         </Tooltip>

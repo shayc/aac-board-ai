@@ -60,7 +60,12 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         </Typography>
 
         <Tooltip title={t(m.settingsClose)}>
-          <IconButton size="large" edge="end" onClick={onClose}>
+          <IconButton
+            aria-label={t(m.settingsClose)}
+            size="large"
+            edge="end"
+            onClick={onClose}
+          >
             <CloseIcon />
           </IconButton>
         </Tooltip>
