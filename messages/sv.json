@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hej, det här är min röst!",
   "playbackHighlight": "Markera meddelandet medan det spelas upp",
   "tileSaturation": "Färgintensitet för rutor",
+  "tileBrightness": "Ljusstyrka för rutor",
   "tileBorders": "Visa kantlinjer på rutor",
   "tileLabelPlacement": "Rutornas etiketter",
   "tileLabelTop": "Överst",

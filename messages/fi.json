@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hei, tämä on minun ääneni!",
   "playbackHighlight": "Korosta viestiä toiston aikana",
   "tileSaturation": "Ruutujen värien voimakkuus",
+  "tileBrightness": "Ruutujen kirkkaus",
   "tileBorders": "Näytä ruutujen reunat",
   "tileLabelPlacement": "Ruutujen tekstit",
   "tileLabelTop": "Ylhäällä",

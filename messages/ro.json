@@ -104,6 +104,7 @@
   "speechPreviewSample": "Bună, aceasta este vocea mea!",
   "playbackHighlight": "Evidențiază mesajul în timpul redării",
   "tileSaturation": "Intensitatea culorii casetelor",
+  "tileBrightness": "Luminozitatea casetelor",
   "tileBorders": "Afișează marginile casetelor",
   "tileLabelPlacement": "Etichetele casetelor",
   "tileLabelTop": "Sus",

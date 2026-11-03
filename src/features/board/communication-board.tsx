@@ -29,6 +29,7 @@ interface CommunicationBoardProps {
 
 type BoardRootStyle = CSSProperties & {
   "--tile-saturation": string;
+  "--tile-brightness": string;
 };
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
@@ -36,8 +37,12 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const { direction } = useLanguage();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardPreferences();
+  const {
+    tileSaturation,
+    tileBrightness,
+    areTileBordersVisible,
+    tileLabelPlacement,
+  } = useBoardPreferences();
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -59,6 +64,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const boardRootStyle: BoardRootStyle = {
     "--tile-saturation": String(tileSaturation),
+    "--tile-brightness": String(tileBrightness),
   };
 
   function handleHome() {

@@ -104,6 +104,7 @@
   "speechPreviewSample": "Olá, esta é a minha voz!",
   "playbackHighlight": "Destacar a mensagem durante a reprodução",
   "tileSaturation": "Intensidade da cor dos blocos",
+  "tileBrightness": "Brilho dos blocos",
   "tileBorders": "Mostrar contornos dos blocos",
   "tileLabelPlacement": "Etiquetas dos blocos",
   "tileLabelTop": "Em cima",

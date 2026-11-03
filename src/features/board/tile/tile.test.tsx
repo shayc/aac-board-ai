@@ -218,6 +218,23 @@ describe("Tile", () => {
     );
   });
 
+  test("dims the background when --tile-brightness is set", async () => {
+    const screen = await render(
+      <div style={{ "--tile-brightness": 0.5 } as CSSProperties}>
+        <Tile backgroundColor="#ffff00" onActivate={vi.fn()}>
+          Dim
+        </Tile>
+      </div>,
+    );
+
+    const button = screen.getByRole("button", { name: "Dim" });
+    const styles = getComputedStyle(button.element());
+
+    expect(styles.backgroundColor).toBe(
+      resolveColor("oklch(from #ffff00 calc(l * 0.5) calc(c * 0.5) h)"),
+    );
+  });
+
   test("hides the border without changing its width", async () => {
     const screen = await render(
       <Tile

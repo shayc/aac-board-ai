@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hallo, das ist meine Stimme!",
   "playbackHighlight": "Nachricht während der Wiedergabe hervorheben",
   "tileSaturation": "Farbstärke der Kacheln",
+  "tileBrightness": "Helligkeit der Kacheln",
   "tileBorders": "Kachel-Rahmen anzeigen",
   "tileLabelPlacement": "Kachelbeschriftungen",
   "tileLabelTop": "Oben",

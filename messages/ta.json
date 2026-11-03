@@ -104,6 +104,7 @@
   "speechPreviewSample": "வணக்கம், இது என் குரல்!",
   "playbackHighlight": "செய்தி இயங்கும்போது அதைத் தனிப்படுத்திக் காட்டு",
   "tileSaturation": "கட்டங்களின் வண்ணத் தீவிரம்",
+  "tileBrightness": "கட்டங்களின் ஒளிர்வு",
   "tileBorders": "கட்டங்களின் எல்லைகளைக் காட்டு",
   "tileLabelPlacement": "கட்ட லேபிள்கள்",
   "tileLabelTop": "மேலே",

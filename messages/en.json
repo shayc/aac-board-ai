@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hi, this is my voice!",
   "playbackHighlight": "Highlight during playback",
   "tileSaturation": "Tile color intensity",
+  "tileBrightness": "Tile brightness",
   "tileBorders": "Show tile borders",
   "tileLabelPlacement": "Tile labels",
   "tileLabelTop": "Top",

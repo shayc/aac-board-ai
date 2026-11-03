@@ -104,6 +104,7 @@
   "speechPreviewSample": "Привет, это мой голос!",
   "playbackHighlight": "Подсвечивать сообщение во время воспроизведения",
   "tileSaturation": "Насыщенность цвета плиток",
+  "tileBrightness": "Яркость плиток",
   "tileBorders": "Показывать границы плиток",
   "tileLabelPlacement": "Подписи плиток",
   "tileLabelTop": "Сверху",

@@ -104,6 +104,7 @@
   "speechPreviewSample": "Szia, ez az én hangom!",
   "playbackHighlight": "Üzenet kiemelése lejátszás közben",
   "tileSaturation": "Csempék színintenzitása",
+  "tileBrightness": "Csempék fényereje",
   "tileBorders": "Csempék szegélyének megjelenítése",
   "tileLabelPlacement": "Csempefeliratok",
   "tileLabelTop": "Felül",

@@ -9,8 +9,10 @@ import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
 import {
   setTileBordersVisible,
+  setTileBrightness,
   setTileLabelPlacement,
   setTileSaturation,
+  TILE_BRIGHTNESS,
   TILE_SATURATION,
   useBoardPreferences,
 } from "./board-preferences-store";
@@ -21,7 +23,7 @@ import {
 } from "./playback/playback-preferences-store";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
-function formatSaturation(value: number): string {
+function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
@@ -65,8 +67,12 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardPreferences();
+  const {
+    tileSaturation,
+    tileBrightness,
+    areTileBordersVisible,
+    tileLabelPlacement,
+  } = useBoardPreferences();
   const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
@@ -95,7 +101,17 @@ export function BoardSettings() {
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
         step={0.1}
-        formatValue={formatSaturation}
+        formatValue={formatPercent}
+      />
+
+      <SettingsSlider
+        label={t(m.tileBrightness)}
+        value={tileBrightness}
+        onChange={setTileBrightness}
+        min={TILE_BRIGHTNESS.min}
+        max={TILE_BRIGHTNESS.max}
+        step={0.1}
+        formatValue={formatPercent}
       />
 
       <SettingsSwitch

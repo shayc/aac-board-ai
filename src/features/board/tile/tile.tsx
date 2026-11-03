@@ -15,8 +15,10 @@ interface TileProps {
   onActivate: () => void;
 }
 
-function desaturate(color: string): string {
-  return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
+function adjustColor(color: string): string {
+  const brightness = "var(--tile-brightness, 1)";
+  const saturation = "var(--tile-saturation, 1)";
+  return `oklch(from ${color} calc(l * ${brightness}) calc(c * ${saturation} * ${brightness}) h)`;
 }
 
 function darken(color: string, amount: string): string {
@@ -38,7 +40,7 @@ export function Tile({
 
   const resolvedBorderColor = borderColor ?? backgroundColor;
   const resolvedBackgroundColor = backgroundColor
-    ? desaturate(backgroundColor)
+    ? adjustColor(backgroundColor)
     : undefined;
 
   return (
@@ -64,7 +66,7 @@ export function Tile({
           : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
-            ? desaturate(resolvedBorderColor)
+            ? adjustColor(resolvedBorderColor)
             : "transparent"
         }`,
         borderRadius: (theme.vars ?? theme).shape.borderRadius,

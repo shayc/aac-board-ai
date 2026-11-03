@@ -104,6 +104,7 @@
   "speechPreviewSample": "Ciao, questa è la mia voce!",
   "playbackHighlight": "Evidenzia il messaggio durante la riproduzione",
   "tileSaturation": "Intensità del colore delle caselle",
+  "tileBrightness": "Luminosità delle caselle",
   "tileBorders": "Mostra i bordi delle caselle",
   "tileLabelPlacement": "Etichette delle caselle",
   "tileLabelTop": "In alto",

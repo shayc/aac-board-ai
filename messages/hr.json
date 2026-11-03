@@ -104,6 +104,7 @@
   "speechPreviewSample": "Bok, ovo je moj glas!",
   "playbackHighlight": "Istakni poruku tijekom reprodukcije",
   "tileSaturation": "Intenzitet boje pločica",
+  "tileBrightness": "Svjetlina pločica",
   "tileBorders": "Prikaži obrube pločica",
   "tileLabelPlacement": "Oznake pločica",
   "tileLabelTop": "Gore",

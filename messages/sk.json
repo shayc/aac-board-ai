@@ -104,6 +104,7 @@
   "speechPreviewSample": "Ahoj, toto je môj hlas!",
   "playbackHighlight": "Zvýrazňovať správu počas prehrávania",
   "tileSaturation": "Intenzita farieb dlaždíc",
+  "tileBrightness": "Jas dlaždíc",
   "tileBorders": "Zobraziť okraje dlaždíc",
   "tileLabelPlacement": "Označenia dlaždíc",
   "tileLabelTop": "Hore",

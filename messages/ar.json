@@ -104,6 +104,7 @@
   "speechPreviewSample": "مرحبًا، هذا هو صوتي!",
   "playbackHighlight": "تمييز الرسالة أثناء تشغيلها",
   "tileSaturation": "شدة ألوان المربعات",
+  "tileBrightness": "سطوع المربعات",
   "tileBorders": "إظهار حدود المربعات",
   "tileLabelPlacement": "تسميات المربعات",
   "tileLabelTop": "أعلى",

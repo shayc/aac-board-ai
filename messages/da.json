@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hej, det er min stemme!",
   "playbackHighlight": "Fremhæv beskeden under afspilning",
   "tileSaturation": "Felternes farveintensitet",
+  "tileBrightness": "Felternes lysstyrke",
   "tileBorders": "Vis kant på felter",
   "tileLabelPlacement": "Feltetiketter",
   "tileLabelTop": "Øverst",

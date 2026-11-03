@@ -104,6 +104,7 @@
   "speechPreviewSample": "नमस्ते, यह मेरी आवाज़ है!",
   "playbackHighlight": "संदेश चलने के दौरान उसे हाइलाइट करें",
   "tileSaturation": "टाइल के रंग की तीव्रता",
+  "tileBrightness": "टाइल की चमक",
   "tileBorders": "टाइल की सीमाएँ दिखाएं",
   "tileLabelPlacement": "टाइल लेबल",
   "tileLabelTop": "ऊपर",

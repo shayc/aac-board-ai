@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hoi, dit is mijn stem!",
   "playbackHighlight": "Bericht markeren tijdens het afspelen",
   "tileSaturation": "Kleurintensiteit van tegels",
+  "tileBrightness": "Helderheid van tegels",
   "tileBorders": "Tegelranden weergeven",
   "tileLabelPlacement": "Tegellabels",
   "tileLabelTop": "Bovenaan",

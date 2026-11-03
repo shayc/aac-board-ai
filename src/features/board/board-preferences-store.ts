@@ -5,11 +5,13 @@ import type { SymbolLabelPlacement } from "./board-types";
 
 export interface BoardPreferences {
   tileSaturation: number;
+  tileBrightness: number;
   areTileBordersVisible: boolean;
   tileLabelPlacement: SymbolLabelPlacement;
 }
 
 export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
+export const TILE_BRIGHTNESS = { min: 0.5, max: 1, fallback: 1 };
 
 function isSymbolLabelPlacement(value: unknown): value is SymbolLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
@@ -20,6 +22,7 @@ export function parseBoardPreferences(raw: unknown): BoardPreferences {
 
   return {
     tileSaturation: parseClampedNumber(stored.tileSaturation, TILE_SATURATION),
+    tileBrightness: parseClampedNumber(stored.tileBrightness, TILE_BRIGHTNESS),
     areTileBordersVisible:
       typeof stored.areTileBordersVisible === "boolean"
         ? stored.areTileBordersVisible
@@ -39,6 +42,13 @@ export function setTileSaturation(tileSaturation: number): void {
   boardPreferencesStore.setState({
     ...boardPreferencesStore.getSnapshot(),
     tileSaturation,
+  });
+}
+
+export function setTileBrightness(tileBrightness: number): void {
+  boardPreferencesStore.setState({
+    ...boardPreferencesStore.getSnapshot(),
+    tileBrightness,
   });
 }
 

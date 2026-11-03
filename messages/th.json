@@ -104,6 +104,7 @@
   "speechPreviewSample": "สวัสดี นี่คือเสียงของฉัน!",
   "playbackHighlight": "ไฮไลต์ข้อความขณะเล่น",
   "tileSaturation": "ความเข้มของสีไทล์",
+  "tileBrightness": "ความสว่างของไทล์",
   "tileBorders": "แสดงขอบไทล์",
   "tileLabelPlacement": "ป้ายกำกับไทล์",
   "tileLabelTop": "ด้านบน",

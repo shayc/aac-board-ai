@@ -104,6 +104,7 @@
   "speechPreviewSample": "こんにちは、これが私の声です！",
   "playbackHighlight": "再生中のメッセージをハイライト",
   "tileSaturation": "タイルの色の濃さ",
+  "tileBrightness": "タイルの明るさ",
   "tileBorders": "タイルの枠線を表示",
   "tileLabelPlacement": "タイルのラベル",
   "tileLabelTop": "上",

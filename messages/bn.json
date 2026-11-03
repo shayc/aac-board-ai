@@ -104,6 +104,7 @@
   "speechPreviewSample": "হ্যালো, এটা আমার কণ্ঠস্বর!",
   "playbackHighlight": "চলার সময় বার্তাটি হাইলাইট করুন",
   "tileSaturation": "টাইলের রঙের তীব্রতা",
+  "tileBrightness": "টাইলের উজ্জ্বলতা",
   "tileBorders": "টাইলের সীমানা দেখান",
   "tileLabelPlacement": "টাইল লেবেল",
   "tileLabelTop": "উপরে",

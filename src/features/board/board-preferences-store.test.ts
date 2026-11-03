@@ -37,6 +37,28 @@ describe("board-preferences-store", () => {
       ).toBe(0.4);
     });
 
+    test("defaults tileBrightness to 1 when absent", () => {
+      expect(parseBoardPreferences(undefined).tileBrightness).toBe(1);
+    });
+
+    test("clamps tileBrightness below the minimum", () => {
+      expect(parseBoardPreferences({ tileBrightness: 0 }).tileBrightness).toBe(
+        0.5,
+      );
+    });
+
+    test("clamps tileBrightness above the maximum", () => {
+      expect(parseBoardPreferences({ tileBrightness: 2 }).tileBrightness).toBe(
+        1,
+      );
+    });
+
+    test("keeps an in-range tileBrightness", () => {
+      expect(
+        parseBoardPreferences({ tileBrightness: 0.7 }).tileBrightness,
+      ).toBe(0.7);
+    });
+
     test("defaults areTileBordersVisible to false when absent", () => {
       expect(parseBoardPreferences(undefined).areTileBordersVisible).toBe(
         false,

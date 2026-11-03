@@ -16,6 +16,9 @@ describe("BoardSettings", () => {
     const saturationSlider = screen.getByRole("slider", {
       name: "Tile color intensity",
     });
+    const brightnessSlider = screen.getByRole("slider", {
+      name: "Tile brightness",
+    });
     const labelPositionGroup = screen.getByRole("radiogroup", {
       name: "Tile labels",
     });
@@ -28,7 +31,10 @@ describe("BoardSettings", () => {
     await expect
       .element(saturationSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    await expect.element(screen.getByText("100%")).toBeVisible();
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "100%");
+    expect(screen.getByText("100%").all()).toHaveLength(2);
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -56,6 +62,11 @@ describe("BoardSettings", () => {
       bordersSwitch
         .element()
         .compareDocumentPosition(saturationSlider.element()),
+    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    expect(
+      saturationSlider
+        .element()
+        .compareDocumentPosition(brightnessSlider.element()),
     ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
 
     await expectNoA11yViolations(screen.container);
@@ -188,6 +199,40 @@ describe("BoardSettings", () => {
         tileSaturation: number;
       };
       expect(preferences.tileSaturation).toBe(valueNow);
+    });
+  });
+
+  test("lowering brightness persists tile brightness", async () => {
+    const screen = await render(
+      <AppProviders>
+        <BoardSettings />
+      </AppProviders>,
+    );
+
+    const brightnessSlider = screen.getByRole("slider", {
+      name: "Tile brightness",
+    });
+
+    expect(brightnessSlider.element().getAttribute("aria-valuemin")).toBe(
+      "0.5",
+    );
+    brightnessSlider.element().focus();
+    await userEvent.keyboard("{ArrowLeft}");
+
+    expect(brightnessSlider.element().getAttribute("aria-valuenow")).toBe(
+      "0.9",
+    );
+    await expect
+      .element(brightnessSlider)
+      .toHaveAttribute("aria-valuetext", "90%");
+
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("board-preferences");
+      expect(stored).not.toBeNull();
+      const preferences = JSON.parse(stored ?? "{}") as {
+        tileBrightness: number;
+      };
+      expect(preferences.tileBrightness).toBe(0.9);
     });
   });
 

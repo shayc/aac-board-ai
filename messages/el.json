@@ -104,6 +104,7 @@
   "speechPreviewSample": "Γεια, αυτή είναι η φωνή μου!",
   "playbackHighlight": "Επισήμανση του μηνύματος κατά την αναπαραγωγή",
   "tileSaturation": "Ένταση χρώματος πλακιδίων",
+  "tileBrightness": "Φωτεινότητα πλακιδίων",
   "tileBorders": "Εμφάνιση περιγράμματος πλακιδίων",
   "tileLabelPlacement": "Ετικέτες πλακιδίων",
   "tileLabelTop": "Πάνω",

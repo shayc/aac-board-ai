@@ -104,6 +104,7 @@
   "speechPreviewSample": "Bonjour, voici ma voix !",
   "playbackHighlight": "Surligner le message pendant la lecture",
   "tileSaturation": "Intensité des couleurs des cases",
+  "tileBrightness": "Luminosité des cases",
   "tileBorders": "Afficher les bordures des cases",
   "tileLabelPlacement": "Libellés des cases",
   "tileLabelTop": "En haut",

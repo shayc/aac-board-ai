@@ -104,6 +104,7 @@
   "speechPreviewSample": "你好，这是我的声音！",
   "playbackHighlight": "播放时高亮显示消息",
   "tileSaturation": "图块颜色强度",
+  "tileBrightness": "图块亮度",
   "tileBorders": "显示图块边框",
   "tileLabelPlacement": "图块标签",
   "tileLabelTop": "顶部",

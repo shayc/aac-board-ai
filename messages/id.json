@@ -104,6 +104,7 @@
   "speechPreviewSample": "Hai, ini suara saya!",
   "playbackHighlight": "Sorot pesan saat diputar",
   "tileSaturation": "Intensitas warna petak",
+  "tileBrightness": "Kecerahan petak",
   "tileBorders": "Tampilkan batas petak",
   "tileLabelPlacement": "Label petak",
   "tileLabelTop": "Atas",
