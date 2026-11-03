@@ -104,7 +104,6 @@ export function SpeechSettings() {
           <Tooltip title={t(m.speechPreviewVoice)}>
             <IconButton
               aria-label={t(m.speechPreviewVoice)}
-              size="large"
               onClick={handlePreviewSpeech}
             >
               <PlayArrowIcon />

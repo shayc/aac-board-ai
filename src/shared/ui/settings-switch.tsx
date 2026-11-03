@@ -22,7 +22,7 @@ export function SettingsSwitch({
         />
       }
       labelPlacement="start"
-      sx={{ minHeight: 48, justifyContent: "space-between", m: 0 }}
+      sx={{ justifyContent: "space-between", m: 0 }}
     />
   );
 }

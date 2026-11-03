@@ -30,7 +30,7 @@ export function SettingsSelect({
           onChange={(event) => onChange(event.target.value)}
           size="small"
           fullWidth
-          sx={{ minWidth: 0, minHeight: 48 }}
+          sx={{ minWidth: 0 }}
         >
           {children}
         </Select>
