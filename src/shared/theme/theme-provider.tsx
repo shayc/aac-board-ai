@@ -74,7 +74,6 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        // Alphas differ per scheme so each outline clears WCAG 1.4.11's 3:1.
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
