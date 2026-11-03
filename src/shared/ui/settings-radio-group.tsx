@@ -9,7 +9,7 @@ interface SettingsRadioGroupProps<Value extends string> {
   value: Value;
   onChange: (value: Value) => void;
   children: ReactNode;
-  sx?: SxProps<Theme>;
+  optionsSx?: SxProps<Theme>;
 }
 
 export function SettingsRadioGroup<Value extends string>({
@@ -17,7 +17,7 @@ export function SettingsRadioGroup<Value extends string>({
   value,
   onChange,
   children,
-  sx,
+  optionsSx,
 }: SettingsRadioGroupProps<Value>) {
   const labelId = useId();
 
@@ -31,7 +31,7 @@ export function SettingsRadioGroup<Value extends string>({
         value={value}
         onChange={(event) => onChange(event.target.value as Value)}
         row
-        sx={sx}
+        sx={optionsSx}
       >
         {children}
       </RadioGroup>
