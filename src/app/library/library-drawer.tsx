@@ -43,7 +43,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
-            pl: safeAreaGutter(theme.spacing(2), "left"),
+            pl: safeAreaGutter(theme.spacing(3), "left"),
           },
         })}
       >

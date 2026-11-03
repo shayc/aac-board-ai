@@ -160,7 +160,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
             alignItems: "flex-end",
             justifyContent: isInBoardSet ? "space-between" : "flex-end",
             gap: 2,
-            px: { xs: 3 },
             pb: safeAreaInset("bottom"),
           }}
         >
