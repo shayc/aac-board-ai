@@ -15,7 +15,7 @@ export function ExternalLink({ children, sx, ...props }: ExternalLinkProps) {
       target="_blank"
       rel="noopener noreferrer"
       underline="always"
-      sx={mergeSx({ whiteSpace: "nowrap" }, sx)}
+      sx={mergeSx({ position: "relative", whiteSpace: "nowrap" }, sx)}
     >
       {children}
       <span style={visuallyHidden}> {t(m.opensInNewTab)}</span>

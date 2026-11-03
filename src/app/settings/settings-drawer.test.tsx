@@ -82,4 +82,21 @@ describe("SettingsDrawer", () => {
 
     expect(onClose).toHaveBeenCalledOnce();
   });
+
+  test("keeps the close button in view after scrolling to the end", async () => {
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    screen
+      .getByRole("link", { name: /Source code/i })
+      .element()
+      .scrollIntoView();
+
+    await expect
+      .element(screen.getByRole("button", { name: "Close settings" }))
+      .toBeInViewport();
+  });
 });
