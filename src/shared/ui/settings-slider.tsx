@@ -16,13 +16,11 @@ interface SettingsSliderProps {
   endIcon?: ReactNode;
 }
 
-interface SliderRange {
-  min: number;
-  max: number;
-  step: number;
-}
-
-function pageStep({ min, max, step }: SliderRange): number {
+function pageStep({
+  min,
+  max,
+  step,
+}: Pick<SettingsSliderProps, "min" | "max" | "step">): number {
   const stepsPerPage = Math.max(1, Math.round((max - min) / 10 / step));
   return stepsPerPage * step;
 }
