@@ -134,7 +134,7 @@
   "onboardingLanguageTitle": "Omalla kielelläsi",
   "onboardingLanguageDescription": "Käytä sovellusta millä tahansa {count} kielestä.",
   "onboardingFreePrivateTitle": "Ilmainen ja yksityinen",
-  "onboardingFreePrivateDescription": "Ei tiliä, ei mainoksia eikä seurantaa. Toimii myös ilman verkkoyhteyttä.",
+  "onboardingFreePrivateDescription": "Ei tiliä, ei mainoksia, ei seurantaa. Toimii ilman verkkoyhteyttä.",
   "errorGenericTitle": "Jokin meni pieleen",
   "errorPageNotFound": "Sivua ei löytynyt",
   "errorGoHome": "Siirry etusivulle",

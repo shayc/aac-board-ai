@@ -134,7 +134,7 @@
   "onboardingLanguageTitle": "In deiner Sprache",
   "onboardingLanguageDescription": "Nutze die App in jeder der {count} Sprachen.",
   "onboardingFreePrivateTitle": "Kostenlos und privat",
-  "onboardingFreePrivateDescription": "Kein Konto, keine Werbung, kein Tracking. Funktioniert auch offline.",
+  "onboardingFreePrivateDescription": "Kein Konto, keine Werbung, kein Tracking. Funktioniert offline.",
   "errorGenericTitle": "Etwas ist schiefgelaufen",
   "errorPageNotFound": "Seite nicht gefunden",
   "errorGoHome": "Zur Startseite",

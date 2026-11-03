@@ -134,7 +134,7 @@
   "onboardingLanguageTitle": "使用你的语言",
   "onboardingLanguageDescription": "可在 {count} 种语言中任选一种使用本应用。",
   "onboardingFreePrivateTitle": "免费且私密",
-  "onboardingFreePrivateDescription": "无需账户，没有广告，也不追踪。可离线使用。",
+  "onboardingFreePrivateDescription": "无需账户，没有广告，没有追踪。可离线使用。",
   "errorGenericTitle": "出了点问题",
   "errorPageNotFound": "页面未找到",
   "errorGoHome": "返回主页",

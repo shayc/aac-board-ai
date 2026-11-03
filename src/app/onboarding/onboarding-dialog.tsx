@@ -100,6 +100,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             mx: "auto",
             mb: 2,
             borderRadius: "22%",
+            boxShadow: (theme) => `0 0 0 1px ${theme.palette.divider}`,
           }}
         />
 
@@ -122,8 +123,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
               display: "flex",
               flexDirection: "column",
               gap: 3,
-              mt: 5,
-              px: 2,
+              mt: 4,
             }}
           >
             {highlights.map((highlight) => (
@@ -131,9 +131,17 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                 key={highlight.id}
                 disableGutters
                 disablePadding
-                sx={{ alignItems: "center" }}
+                sx={{ alignItems: "flex-start", gap: 2 }}
               >
-                <ListItemIcon sx={{ mr: 2, fontSize: "40px" }}>
+                <ListItemIcon
+                  sx={{
+                    justifyContent: "center",
+                    width: 40,
+                    minWidth: 0,
+                    pt: 0.5,
+                    fontSize: "36px",
+                  }}
+                >
                   {highlight.icon}
                 </ListItemIcon>
                 <ListItemText
@@ -142,7 +150,10 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                   sx={{ my: 0 }}
                   slotProps={{
                     primary: { sx: { fontWeight: "fontWeightBold" } },
-                    secondary: { variant: "body1" },
+                    secondary: {
+                      variant: "body1",
+                      sx: { textWrap: "balance" },
+                    },
                   }}
                 />
               </ListItem>
