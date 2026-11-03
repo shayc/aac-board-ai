@@ -17,8 +17,8 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, percentage: number): string {
-  return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
+function darken(color: string, amount: string): string {
+  return `color-mix(in srgb, ${color}, black ${amount})`;
 }
 
 export function Tile({
@@ -76,17 +76,23 @@ export function Tile({
         },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
+          // Twice MUI's hover opacity, which already doubles in dark mode.
           "@media (hover: hover)": {
             backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
+              resolvedBackgroundColor &&
+              darken(
+                resolvedBackgroundColor,
+                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
+              ),
           },
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
           },
         },
         "&:active": {
+          // Constant across modes, like MUI's press ripple.
           backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {

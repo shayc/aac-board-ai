@@ -121,10 +121,35 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
     expect(styles.backgroundColor).toBe(
       resolveBackgroundColor(
-        "color-mix(in srgb, oklch(from #ff0000 l c h) 85%, black)",
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 92%, black)",
       ),
     );
     expect(styles.filter).toBe("none");
+
+    await button.unhover();
+  });
+
+  test("darkens more on hover in dark mode", async () => {
+    const theme = createTheme({
+      palette: { mode: "dark" },
+      transitions: { duration: { short: 0 } },
+    });
+    const screen = await render(
+      <MUIThemeProvider theme={theme}>
+        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+          Colored
+        </Tile>
+      </MUIThemeProvider>,
+    );
+
+    const button = screen.getByRole("button", { name: "Colored" });
+    await button.hover();
+
+    expect(getComputedStyle(button.element()).backgroundColor).toBe(
+      resolveBackgroundColor(
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 84%, black)",
+      ),
+    );
 
     await button.unhover();
   });
