@@ -1,7 +1,9 @@
 import FormControl from "@mui/material/FormControl";
+import { formControlLabelClasses } from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import RadioGroup from "@mui/material/RadioGroup";
 import type { SxProps, Theme } from "@mui/material/styles";
+import { mergeSx } from "@shared/theme/merge-sx";
 import { useId, type ReactNode } from "react";
 
 interface SettingsRadioGroupProps<Value extends string> {
@@ -31,7 +33,10 @@ export function SettingsRadioGroup<Value extends string>({
         value={value}
         onChange={(event) => onChange(event.target.value as Value)}
         row
-        sx={optionsSx}
+        sx={mergeSx(
+          { [`& .${formControlLabelClasses.root}`]: { minHeight: 48 } },
+          optionsSx,
+        )}
       >
         {children}
       </RadioGroup>

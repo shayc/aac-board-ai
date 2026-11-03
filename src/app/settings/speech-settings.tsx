@@ -65,7 +65,7 @@ export function SpeechSettings() {
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
       onChange: setSpeechRate,
-      formatValue: (value: number) => `${value}x`,
+      formatValue: (value: number) => `${value.toFixed(1)}x`,
     },
     {
       id: "pitch",
@@ -74,7 +74,7 @@ export function SpeechSettings() {
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
       onChange: setSpeechPitch,
-      formatValue: (value: number) => value.toFixed(1),
+      formatValue: (value: number) => `${value.toFixed(1)}x`,
     },
     {
       id: "volume",
@@ -104,6 +104,7 @@ export function SpeechSettings() {
           <Tooltip title={t(m.speechPreviewVoice)}>
             <IconButton
               aria-label={t(m.speechPreviewVoice)}
+              size="large"
               onClick={handlePreviewSpeech}
             >
               <PlayArrowIcon />

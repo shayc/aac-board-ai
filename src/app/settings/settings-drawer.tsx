@@ -117,6 +117,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <SettingsSection title={t(m.settingsSectionAbout)}>
           <ExternalLink
             href="https://github.com/shayc/aac-board-ai"
+            variant="body2"
             color="text.secondary"
             sx={{ alignSelf: "flex-start" }}
           >
@@ -142,8 +143,8 @@ function SettingsSection({ title, children }: SettingsSectionProps) {
     <>
       <Typography
         component="h3"
-        variant="subtitle1"
-        sx={{ mb: 2, fontWeight: "fontWeightBold" }}
+        variant="subtitle2"
+        sx={{ mb: 2, color: "text.secondary" }}
       >
         {title}
       </Typography>

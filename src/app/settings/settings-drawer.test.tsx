@@ -5,6 +5,7 @@ import {
   stubRewriter,
   stubTranslator,
 } from "@shared/testing/stub-built-in-ai";
+import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
@@ -79,6 +80,31 @@ describe("SettingsDrawer", () => {
 
     for (const style of styles) {
       expect(style).toEqual(styles[0]);
+    }
+  });
+
+  test("gives every control a touch target of at least 48px", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    const targets = [
+      screen.getByRole("radio", { name: "System" }).element().closest("label"),
+      screen.getByRole("combobox", { name: "Language" }).element()
+        .parentElement,
+      screen.getByRole("combobox", { name: "Voice" }).element().parentElement,
+      screen.getByRole("button", { name: "Preview voice" }).element(),
+      screen
+        .getByRole("switch", { name: "Show tile borders" })
+        .element()
+        .closest("label"),
+    ];
+
+    for (const target of targets) {
+      expect(target?.getBoundingClientRect().height).toBeGreaterThanOrEqual(48);
     }
   });
 

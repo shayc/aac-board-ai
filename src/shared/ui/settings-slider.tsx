@@ -46,6 +46,7 @@ export function SettingsSlider({
         min={min}
         max={max}
         step={step}
+        sx={{ py: 1.5, "@media (pointer: coarse)": { py: 1.5 } }}
       />
     </Stack>
   );
