@@ -289,6 +289,16 @@ const themeOptions = {
         }),
       },
     },
+    MuiTooltip: {
+      defaultProps: {
+        enterDelay: 500,
+      },
+      styleOverrides: {
+        tooltip: ({ theme }) => ({
+          fontSize: theme.typography.pxToRem(13),
+        }),
+      },
+    },
   },
 } satisfies ThemeOptions;
 
