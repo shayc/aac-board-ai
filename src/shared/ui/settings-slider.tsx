@@ -1,6 +1,7 @@
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { useId } from "react";
 
 interface SettingsSliderProps {
   label: string;
@@ -21,18 +22,21 @@ export function SettingsSlider({
   step,
   formatValue,
 }: SettingsSliderProps) {
+  const labelId = useId();
+
   return (
     <Stack spacing={0.5}>
       <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {label}
-        </Typography>
-        <Typography variant="body2" sx={{ fontWeight: "fontWeightBold" }}>
+        <Typography id={labelId}>{label}</Typography>
+        <Typography
+          variant="body2"
+          sx={{ color: "text.secondary", fontWeight: "fontWeightBold" }}
+        >
           {formatValue(value)}
         </Typography>
       </Stack>
       <Slider
-        aria-label={label}
+        aria-labelledby={labelId}
         getAriaValueText={formatValue}
         value={value}
         onChange={(_event, newValue) => onChange(newValue)}

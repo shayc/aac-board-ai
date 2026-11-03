@@ -97,6 +97,25 @@ describe("BoardSettings", () => {
     }
   });
 
+  test("styles radio group, switch, and slider labels alike", async () => {
+    const screen = await render(
+      <AppProviders>
+        <BoardSettings />
+      </AppProviders>,
+    );
+
+    const labels = ["Tile labels", "Show tile borders", "Tile color intensity"];
+    const styles = labels.map((label) => {
+      const { fontSize, fontWeight, color } = getComputedStyle(
+        screen.getByText(label, { exact: true }).element(),
+      );
+      return { fontSize, fontWeight, color };
+    });
+
+    expect(styles[1]).toEqual(styles[0]);
+    expect(styles[2]).toEqual(styles[0]);
+  });
+
   test("toggles message highlighting during playback", async () => {
     const screen = await render(
       <AppProviders>

@@ -1,15 +1,12 @@
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
-import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
-import { useId } from "react";
 import {
   setTileBordersVisible,
   setTileLabelPlacement,
@@ -68,40 +65,22 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function BoardSettings() {
   const t = useTranslate();
-  const labelPlacementId = useId();
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
   const { isHighlightingEnabled } = usePlaybackPreferences();
 
   return (
     <Stack spacing={3}>
-      <FormControl>
-        <FormLabel
-          id={labelPlacementId}
-          sx={{ typography: "body2", color: "text.secondary" }}
-        >
-          {t(m.tileLabelPlacement)}
-        </FormLabel>
-        <RadioGroup
-          aria-labelledby={labelPlacementId}
-          value={tileLabelPlacement}
-          onChange={(event) =>
-            setTileLabelPlacement(event.target.value as SymbolLabelPlacement)
-          }
-          row
-          sx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}
-        >
-          <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
-          <LabelPlacementOption
-            label={t(m.tileLabelBottom)}
-            placement="bottom"
-          />
-          <LabelPlacementOption
-            label={t(m.tileLabelHidden)}
-            placement="hidden"
-          />
-        </RadioGroup>
-      </FormControl>
+      <SettingsRadioGroup
+        label={t(m.tileLabelPlacement)}
+        value={tileLabelPlacement}
+        onChange={setTileLabelPlacement}
+        optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}
+      >
+        <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
+        <LabelPlacementOption label={t(m.tileLabelBottom)} placement="bottom" />
+        <LabelPlacementOption label={t(m.tileLabelHidden)} placement="hidden" />
+      </SettingsRadioGroup>
 
       <SettingsSwitch
         label={t(m.tileBorders)}
