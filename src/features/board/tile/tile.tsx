@@ -54,9 +54,7 @@ export function Tile({
         p: 1,
         overflow: "hidden",
         textTransform: "none",
-        color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
-          : "inherit",
+        color: resolvedBackgroundColor ? "#000" : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
             ? desaturate(resolvedBorderColor)
@@ -71,6 +69,13 @@ export function Tile({
             duration: theme.transitions.duration.short,
           },
         ),
+        // Older engines drop contrast-color(); every bundled tile color is
+        // light, so black keeps labels readable there, even in dark mode.
+        ...(resolvedBackgroundColor && {
+          "@supports (color: contrast-color(red))": {
+            color: `contrast-color(${resolvedBackgroundColor})`,
+          },
+        }),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
