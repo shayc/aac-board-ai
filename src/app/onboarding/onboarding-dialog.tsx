@@ -43,7 +43,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const reachHighlight: Highlight = isSupported("Rewriter")
+  const suggestionsOrLanguageHighlight: Highlight = isSupported("Rewriter")
     ? {
         id: "suggestions",
         icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,
@@ -66,7 +66,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
-    reachHighlight,
+    suggestionsOrLanguageHighlight,
     {
       id: "free-private",
       icon: <LockOutlinedIcon color="primary" fontSize="inherit" />,
@@ -100,7 +100,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             mx: "auto",
             mb: 2,
             borderRadius: "22%",
-            boxShadow: (theme) => `0 0 0 1px ${theme.palette.divider}`,
+            boxShadow: (theme) =>
+              `0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
           }}
         />
 
