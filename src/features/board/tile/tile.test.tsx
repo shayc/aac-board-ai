@@ -86,7 +86,7 @@ describe("Tile", () => {
       .not.toHaveAccessibleDescription();
   });
 
-  test("renders the folder corner as translucent black regardless of text color", async () => {
+  test("renders the folder corner in the contrast color of the board's tile color", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#000000"
@@ -104,7 +104,9 @@ describe("Tile", () => {
 
     expect(afterStyles.display).toBe("block");
     expect(styles.color).toBe("rgb(255, 255, 255)");
-    expect(afterStyles.borderInlineEndColor).toBe("rgba(0, 0, 0, 0.75)");
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor("color-mix(in srgb, white 75%, transparent)"),
+    );
   });
 
   test("applies backgroundColor and a readable text color", async () => {
@@ -286,7 +288,27 @@ describe("Tile", () => {
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe("rgba(0, 0, 0, 0.75)");
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor("color-mix(in srgb, white 75%, transparent)"),
+    );
+  });
+
+  test("keeps the folder corner color when dimming flips the label color", async () => {
+    const screen = await render(
+      <div style={{ "--tile-brightness": 0.7 } as CSSProperties}>
+        <Tile backgroundColor="#9a9a9a" variant="folder" onActivate={vi.fn()}>
+          Dimmed folder
+        </Tile>
+      </div>,
+    );
+
+    const button = screen.getByRole("button", { name: "Dimmed folder" });
+    const afterStyles = getComputedStyle(button.element(), "::after");
+
+    expect(getComputedStyle(button.element()).color).toBe("rgb(255, 255, 255)");
+    expect(afterStyles.borderInlineEndColor).toBe(
+      resolveColor("color-mix(in srgb, black 75%, transparent)"),
+    );
   });
 
   test("calls onActivate when clicked", async () => {

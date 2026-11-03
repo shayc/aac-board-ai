@@ -375,6 +375,23 @@ describe("CommunicationBoard", () => {
     }
   });
 
+  test("dims symbols only on tiles, not in the message bar", async () => {
+    setTileBrightness(0.8);
+
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+    const tile = screen.getByRole("button", { name: "hello" });
+    await tile.click();
+
+    const images = [...screen.container.querySelectorAll("img")];
+    const messageImage = images.find((image) => !image.closest("button"));
+    const tileImage = tile.element().querySelector("img");
+
+    assertDefined(messageImage);
+    assertDefined(tileImage);
+    expect(getComputedStyle(messageImage).filter).toBe("none");
+    expect(getComputedStyle(tileImage).filter).not.toBe("none");
+  });
+
   test("hides tile labels visually without removing accessible names", async () => {
     setTileLabelPlacement("hidden");
 

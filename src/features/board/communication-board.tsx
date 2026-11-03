@@ -31,7 +31,7 @@ interface CommunicationBoardProps {
   board: Board;
 }
 
-type BoardRootStyle = CSSProperties & {
+type TileGridStyle = CSSProperties & {
   "--tile-saturation": string;
   "--tile-brightness": string;
   "--symbol-image-filter": string;
@@ -70,7 +70,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const dimmingFilterId = useId();
   const areTilesDimmed = tileBrightness < TILE_BRIGHTNESS.max;
 
-  const boardRootStyle: BoardRootStyle = {
+  const tileGridStyle: TileGridStyle = {
     "--tile-saturation": String(tileSaturation),
     "--tile-brightness": String(tileBrightness),
     "--symbol-image-filter": areTilesDimmed
@@ -115,17 +115,12 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...shortcuts.rootProps}
       direction="column"
-      style={boardRootStyle}
       sx={{
         height: "100%",
         pl: { sm: safeAreaInset("left") },
         pr: { sm: safeAreaInset("right") },
       }}
     >
-      {areTilesDimmed && (
-        <TileDimmingFilter id={dimmingFilterId} brightness={tileBrightness} />
-      )}
-
       <PlaybackMessageBar parts={message.parts} playback={playback} />
 
       <Stack
@@ -162,7 +157,11 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         )}
       </Stack>
 
-      <Box sx={{ flex: 1, minHeight: 0 }}>
+      <Box style={tileGridStyle} sx={{ flex: 1, minHeight: 0 }}>
+        {areTilesDimmed && (
+          <TileDimmingFilter id={dimmingFilterId} brightness={tileBrightness} />
+        )}
+
         <Grid<BoardButton>
           ref={gridViewportRef}
           ariaLabel={board.name || t(m.boardGridLabel)}

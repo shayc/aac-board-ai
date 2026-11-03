@@ -21,6 +21,13 @@ function adjustColor(color: string): string {
   return `oklch(from ${color} calc(l * ${brightness}) calc(c * ${saturation} * ${brightness}) h)`;
 }
 
+function folderCornerColor(backgroundColor: string | undefined): string {
+  const ink = backgroundColor
+    ? `contrast-color(${backgroundColor})`
+    : "currentColor";
+  return `color-mix(in srgb, ${ink} 75%, transparent)`;
+}
+
 function darken(color: string, amount: string): string {
   return `color-mix(in srgb, ${color}, black ${amount})`;
 }
@@ -113,7 +120,7 @@ export function Tile({
             insetInlineEnd: -2,
             width: 0,
             height: 0,
-            borderInlineEnd: "32px solid rgb(0 0 0 / 75%)",
+            borderInlineEnd: `32px solid ${folderCornerColor(backgroundColor)}`,
             borderBottom: "32px solid transparent",
           },
         }),
