@@ -6,10 +6,13 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useRef, type CSSProperties } from "react";
+import { useId, useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
-import { useBoardPreferences } from "./board-preferences-store";
+import {
+  TILE_BRIGHTNESS,
+  useBoardPreferences,
+} from "./board-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -22,6 +25,7 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
+import { TileDimmingFilter } from "./tile/tile-dimming-filter";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -30,6 +34,7 @@ interface CommunicationBoardProps {
 type BoardRootStyle = CSSProperties & {
   "--tile-saturation": string;
   "--tile-brightness": string;
+  "--tile-image-filter": string;
 };
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
@@ -62,9 +67,15 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const hasMessage = message.parts.length > 0;
   const isInBoardSet = Boolean(navigation.boardSetId);
 
+  const dimmingFilterId = useId();
+  const areTilesDimmed = tileBrightness < TILE_BRIGHTNESS.max;
+
   const boardRootStyle: BoardRootStyle = {
     "--tile-saturation": String(tileSaturation),
     "--tile-brightness": String(tileBrightness),
+    "--tile-image-filter": areTilesDimmed
+      ? `url("#${dimmingFilterId}")`
+      : "none",
   };
 
   function handleHome() {
@@ -111,6 +122,10 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         pr: { sm: safeAreaInset("right") },
       }}
     >
+      {areTilesDimmed && (
+        <TileDimmingFilter id={dimmingFilterId} brightness={tileBrightness} />
+      )}
+
       <PlaybackMessageBar parts={message.parts} playback={playback} />
 
       <Stack

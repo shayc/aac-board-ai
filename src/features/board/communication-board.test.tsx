@@ -5,7 +5,10 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setTileLabelPlacement } from "./board-preferences-store";
+import {
+  setTileBrightness,
+  setTileLabelPlacement,
+} from "./board-preferences-store";
 import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
@@ -333,6 +336,40 @@ describe("CommunicationBoard", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Communication board" }))
       .toBeVisible();
+  });
+
+  test("leaves symbol images unfiltered at full tile brightness", async () => {
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+    const image = screen
+      .getByRole("button", { name: "hello" })
+      .element()
+      .querySelector("img");
+
+    assertDefined(image);
+    expect(getComputedStyle(image).filter).toBe("none");
+  });
+
+  test("dims symbol images in linear light to match tile brightness", async () => {
+    setTileBrightness(0.5);
+
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+    const image = screen
+      .getByRole("button", { name: "hello" })
+      .element()
+      .querySelector("img");
+
+    assertDefined(image);
+    const filterId = /url\("#(.+)"\)/.exec(getComputedStyle(image).filter)?.[1];
+    assertDefined(filterId);
+    const filter = document.getElementById(filterId);
+    assertDefined(filter);
+    expect(filter.getAttribute("color-interpolation-filters")).toBe(
+      "linearRGB",
+    );
+    const slopes = [
+      ...filter.querySelectorAll("feFuncR, feFuncG, feFuncB"),
+    ].map((channel) => channel.getAttribute("slope"));
+    expect(slopes).toEqual(["0.125", "0.125", "0.125"]);
   });
 
   test("hides tile labels visually without removing accessible names", async () => {
