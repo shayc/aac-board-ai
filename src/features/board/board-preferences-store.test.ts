@@ -43,7 +43,7 @@ describe("board-preferences-store", () => {
 
     test("clamps tileBrightness below the minimum", () => {
       expect(parseBoardPreferences({ tileBrightness: 0 }).tileBrightness).toBe(
-        0.5,
+        0.7,
       );
     });
 
@@ -55,8 +55,8 @@ describe("board-preferences-store", () => {
 
     test("keeps an in-range tileBrightness", () => {
       expect(
-        parseBoardPreferences({ tileBrightness: 0.7 }).tileBrightness,
-      ).toBe(0.7);
+        parseBoardPreferences({ tileBrightness: 0.8 }).tileBrightness,
+      ).toBe(0.8);
     });
 
     test("defaults areTileBordersVisible to false when absent", () => {

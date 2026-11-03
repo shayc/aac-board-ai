@@ -359,7 +359,7 @@ describe("CommunicationBoard", () => {
   });
 
   test("dims symbol images by the same light as the tiles", async () => {
-    setTileBrightness(0.5);
+    setTileBrightness(0.8);
 
     const screen = await renderCommunicationBoard(SYMBOL_BOARD);
     const image = screen
@@ -369,7 +369,7 @@ describe("CommunicationBoard", () => {
 
     assertDefined(image);
     const dimmed = paintPixel("#ff8040", getComputedStyle(image).filter);
-    const expected = paintPixel("color-mix(in xyz, #ff8040 12.5%, black)");
+    const expected = paintPixel("color-mix(in xyz, #ff8040 51.2%, black)");
     for (const [channel, value] of dimmed.entries()) {
       expect(Math.abs(value - expected[channel])).toBeLessThanOrEqual(8);
     }

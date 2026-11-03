@@ -214,7 +214,7 @@ describe("BoardSettings", () => {
     });
 
     expect(brightnessSlider.element().getAttribute("aria-valuemin")).toBe(
-      "0.5",
+      "0.7",
     );
     brightnessSlider.element().focus();
     await userEvent.keyboard("{ArrowLeft}");
