@@ -25,9 +25,7 @@ const rtlCache = createCache({
   stylisPlugins: [prefixer, rtlPlugin],
 });
 
-// MUI's grey lightness steps, tinted to the shell's cool hue so default
-// buttons, chips, and tooltips match the surfaces instead of reading as
-// neutral grey.
+// MUI's greys tinted to the shell's hue so default components match surfaces.
 const grey = {
   50: "#f8faff",
   100: "#f3f5fa",
@@ -45,8 +43,7 @@ const grey = {
   A700: "#5e6167",
 };
 
-// One soft, cool-tinted recipe at every elevation, so tiles, buttons, and
-// chrome all lift the same way instead of mixing in MUI's black shadows.
+// One soft, cool-tinted shadow at every elevation, replacing MUI's black ones.
 const shadows = [
   "none",
   ...Array.from({ length: 24 }, (_, index) => softShadow(index + 1)),
@@ -73,14 +70,12 @@ const themeOptions = {
         primary: { main: "#0967d4" },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
-        // Grey on the tinted page has no edge; white reads as raised, like
-        // the message bar.
+        // White reads as raised on the tinted page; grey has no edge.
         Button: {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        // Chips share the outlined input's border so every interactive
-        // outline has one strength, a step above dividers.
+        // Outlined inputs' border, so all control outlines share one strength.
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.23)" },
       },
     },
@@ -161,9 +156,7 @@ const themeOptions = {
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
-              // A filled disabled button looks more solid than the white
-              // enabled ones, so drop the fill and let the faded icon carry
-              // the state.
+              // MUI's disabled fill outweighs the white enabled buttons.
               style: ({ theme }) =>
                 theme.applyStyles("light", {
                   [`&.${buttonClasses.disabled}`]: {
