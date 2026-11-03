@@ -65,16 +65,13 @@ describe("SpeechSettings", () => {
       .toHaveAttribute("aria-valuetext", "1x");
     await expect
       .element(screen.getByRole("slider", { name: "Pitch" }))
-      .toHaveAttribute("aria-valuetext", "1x");
+      .toHaveAttribute("aria-valuetext", "1.0");
     await expect
       .element(screen.getByRole("slider", { name: "Speech volume" }))
       .toHaveAttribute("aria-valuetext", "100%");
 
-    const multiplierLabels = screen.getByText("1x").all();
-    expect(multiplierLabels).toHaveLength(2);
-    for (const label of multiplierLabels) {
-      await expect.element(label).toBeVisible();
-    }
+    await expect.element(screen.getByText("1x")).toBeVisible();
+    await expect.element(screen.getByText("1.0")).toBeVisible();
     await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
       .element(screen.getByRole("button", { name: "Preview" }))
