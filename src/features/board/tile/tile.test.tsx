@@ -86,7 +86,7 @@ describe("Tile", () => {
       .not.toHaveAccessibleDescription();
   });
 
-  test("renders the folder corner as a translucent readable text color", async () => {
+  test("renders the folder corner as translucent black regardless of text color", async () => {
     const screen = await render(
       <Tile
         backgroundColor="#000000"
@@ -103,10 +103,8 @@ describe("Tile", () => {
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
-    );
-    expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
+    expect(styles.color).toBe("rgb(255, 255, 255)");
+    expect(afterStyles.borderInlineEndColor).toBe("rgba(0, 0, 0, 0.75)");
   });
 
   test("applies backgroundColor and a readable text color", async () => {
@@ -285,13 +283,10 @@ describe("Tile", () => {
     );
 
     const button = screen.getByRole("button", { name: "Folder" });
-    const styles = getComputedStyle(button.element());
     const afterStyles = getComputedStyle(button.element(), "::after");
 
     expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
-    );
+    expect(afterStyles.borderInlineEndColor).toBe("rgba(0, 0, 0, 0.75)");
   });
 
   test("calls onActivate when clicked", async () => {
