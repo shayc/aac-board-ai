@@ -26,7 +26,10 @@ export function SettingsSlider({
 
   return (
     <Stack spacing={0.5}>
-      <Stack direction="row" sx={{ justifyContent: "space-between", gap: 2 }}>
+      <Stack
+        direction="row"
+        sx={{ justifyContent: "space-between", alignItems: "baseline", gap: 2 }}
+      >
         <Typography id={labelId}>{label}</Typography>
         <Typography
           variant="body2"

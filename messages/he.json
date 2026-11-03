@@ -97,7 +97,7 @@
   "languageDownloading": "הורדת מודל תרגום...",
   "languageDownloadProgress": "הושלמו {progress}%",
   "speechVoice": "קול",
-  "speechRate": "קצב דיבור",
+  "speechRate": "קצב",
   "speechPitch": "גובה הקול",
   "speechVolume": "עוצמת קול",
   "speechPreview": "השמעה לדוגמה",

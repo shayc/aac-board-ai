@@ -18,7 +18,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import type { ReactNode } from "react";
 import { ThemeSettings } from "./theme-settings";
 import { LanguageSettings } from "./language-settings";
@@ -40,23 +40,18 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       slotProps={{
         paper: {
           "aria-label": t(m.settingsTitle),
-          sx: [
-            {
-              width: safeAreaGutter(DRAWER_BASE_WIDTH, "right"),
-            },
-            (theme) => ({
-              [theme.breakpoints.up("sm")]: {
-                pr: 3,
-              },
-            }),
-          ],
+          sx: {
+            display: "flex",
+            flexDirection: "column",
+            width: safeAreaGutter(DRAWER_BASE_WIDTH, "right"),
+          },
         },
       }}
     >
       <Toolbar
         sx={(theme) => ({
           [theme.breakpoints.up("sm")]: {
-            pr: safeAreaInset("right"),
+            pr: safeAreaGutter(theme.spacing(3), "right"),
           },
         })}
       >
@@ -64,7 +59,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           {t(m.settingsTitle)}
         </Typography>
 
-        <Tooltip title={t(m.settingsClose)}>
+        <Tooltip title={t(m.settingsClose)} placement="left">
           <IconButton
             aria-label={t(m.settingsClose)}
             size="large"
@@ -77,14 +72,16 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       </Toolbar>
 
       <Box
-        sx={[
-          { px: 3, pb: 3 },
-          (theme) => ({
-            [theme.breakpoints.up("sm")]: {
-              pr: safeAreaInset("right"),
-            },
-          }),
-        ]}
+        sx={(theme) => ({
+          flexGrow: 1,
+          minHeight: 0,
+          px: 3,
+          pb: 3,
+          overflow: "auto",
+          [theme.breakpoints.up("sm")]: {
+            pr: safeAreaGutter(theme.spacing(3), "right"),
+          },
+        })}
       >
         <SettingsSection
           title={t(m.settingsSectionGeneral)}
