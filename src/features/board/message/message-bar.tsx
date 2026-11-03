@@ -53,10 +53,16 @@ export function MessageBar({
             flexGrow: 1,
             gap: 2,
             overflow: "hidden",
+            border: 1,
+            borderColor: "divider",
             borderRadius: 32,
-            bgcolor: "grey.200",
+            bgcolor: "background.paper",
           },
-          (theme) => theme.applyStyles("dark", { bgcolor: "grey.800" }),
+          (theme) =>
+            theme.applyStyles("light", {
+              borderColor: "transparent",
+              boxShadow: (theme.vars ?? theme).shadows[1],
+            }),
         ]}
       >
         <Stack

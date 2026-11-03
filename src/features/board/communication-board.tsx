@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import type { Theme } from "@mui/material/styles";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
@@ -100,7 +99,11 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       {...shortcuts.rootProps}
       direction="column"
       style={boardRootStyle}
-      sx={createBoardRootSx}
+      sx={{
+        height: "100%",
+        pl: { sm: safeAreaInset("left") },
+        pr: { sm: safeAreaInset("right") },
+      }}
     >
       <PlaybackMessageBar parts={message.parts} playback={playback} />
 
@@ -179,19 +182,4 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       )}
     </Stack>
   );
-}
-
-function createBoardRootSx(theme: Theme) {
-  return {
-    height: "100%",
-    ...theme.applyStyles("dark", {
-      backgroundImage:
-        "radial-gradient(80% 50% at 50% -20%, rgb(0, 41, 82), transparent)",
-      backgroundRepeat: "no-repeat",
-    }),
-    [theme.breakpoints.up("sm")]: {
-      pl: safeAreaInset("left"),
-      pr: safeAreaInset("right"),
-    },
-  };
 }

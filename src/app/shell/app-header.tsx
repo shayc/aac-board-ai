@@ -48,7 +48,6 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
               aria-label={t(m.libraryOpen)}
               size="large"
               edge="start"
-              color="inherit"
               onClick={onOpenLibrary}
             >
               <ViewSidebarOutlinedIcon sx={flipForLtr} />
@@ -66,7 +65,6 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
               aria-label={t(m.settingsOpen)}
               size="large"
               edge="end"
-              color="inherit"
               onClick={onOpenSettings}
             >
               <SettingsOutlinedIcon />
