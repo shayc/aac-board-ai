@@ -25,6 +25,17 @@ function darken(color: string, amount: string): string {
   return `color-mix(in srgb, ${color}, black ${amount})`;
 }
 
+function fillWithReadableText(background: string | undefined) {
+  if (!background) {
+    return { color: "inherit" };
+  }
+
+  return {
+    color: `contrast-color(${background})`,
+    backgroundColor: background,
+  };
+}
+
 export function Tile({
   ariaLabel,
   tabIndex,
@@ -61,16 +72,13 @@ export function Tile({
         p: 1,
         overflow: "hidden",
         textTransform: "none",
-        color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
-          : "inherit",
+        ...fillWithReadableText(resolvedBackgroundColor),
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
             ? adjustColor(resolvedBorderColor)
             : "transparent"
         }`,
         borderRadius: (theme.vars ?? theme).shape.borderRadius,
-        backgroundColor: resolvedBackgroundColor,
         boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create("box-shadow", {
           duration: theme.transitions.duration.short,
@@ -80,21 +88,21 @@ export function Tile({
         },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
-          "@media (hover: hover)": {
-            backgroundColor:
-              resolvedBackgroundColor &&
+          "@media (hover: hover)": fillWithReadableText(
+            resolvedBackgroundColor &&
               darken(
                 resolvedBackgroundColor,
                 `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
               ),
-          },
+          ),
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
           },
         },
         "&:active": {
-          backgroundColor:
+          ...fillWithReadableText(
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
+          ),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
