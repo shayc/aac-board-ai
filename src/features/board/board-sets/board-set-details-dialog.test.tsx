@@ -39,7 +39,7 @@ describe("BoardSetDetailsDialog", () => {
     await expect.element(screen.getByText("CC BY-SA 4.0")).toBeInTheDocument();
     await expect
       .element(screen.getByText("A starter vocabulary board."))
-      .toBeInTheDocument();
+      .toHaveAttribute("dir", "auto");
 
     await expectNoA11yViolations(document.body);
   });

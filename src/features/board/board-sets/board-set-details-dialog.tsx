@@ -25,7 +25,7 @@ export function BoardSetDetailsDialog({
   return (
     <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
       <DialogTitle>
-        {boardSet?.name}
+        <bdi>{boardSet?.name}</bdi>
         {boardSet?.author && (
           <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {t(m.libraryByAuthor, { author: boardSet.author })}
@@ -48,7 +48,11 @@ export function BoardSetDetailsDialog({
         )}
 
         {boardSet?.description && (
-          <Typography variant="body1" sx={{ mt: 2, whiteSpace: "pre-line" }}>
+          <Typography
+            dir="auto"
+            variant="body1"
+            sx={{ mt: 2, whiteSpace: "pre-line" }}
+          >
             {boardSet.description}
           </Typography>
         )}
