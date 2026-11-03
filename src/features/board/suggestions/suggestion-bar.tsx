@@ -49,6 +49,7 @@ export function SuggestionBar({
           <Chip
             key={phrase}
             label={phrase}
+            variant="outlined"
             onClick={() => onPhraseSelect(phrase)}
           />
         ))}

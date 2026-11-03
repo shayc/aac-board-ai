@@ -79,12 +79,16 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
+        // Chips share the outlined input's border so every interactive
+        // outline has one strength, a step above dividers.
+        Chip: { defaultBorder: "rgba(0, 0, 0, 0.23)" },
       },
     },
     dark: {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
+        Chip: { defaultBorder: "rgba(255, 255, 255, 0.23)" },
       },
     },
   },
