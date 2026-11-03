@@ -48,6 +48,7 @@ export function AACSymbol({
               width: "100%",
               height: "100%",
               objectFit: "contain",
+              filter: "var(--symbol-image-filter, none)",
               pointerEvents: "none",
             }}
           />

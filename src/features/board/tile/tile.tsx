@@ -102,9 +102,6 @@ export function Tile({
           outlineOffset: 2,
           boxShadow: (theme.vars ?? theme).shadows[6],
         },
-        "& img": {
-          filter: "var(--tile-image-filter, none)",
-        },
         [`&.${buttonClasses.disabled}`]: {
           boxShadow: (theme.vars ?? theme).shadows[0],
         },

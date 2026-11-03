@@ -125,7 +125,7 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
-  test("changes the background color in step with its symbol image", async () => {
+  test("animates only its shadow so color changes apply instantly", async () => {
     const screen = await render(
       <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
         Instant

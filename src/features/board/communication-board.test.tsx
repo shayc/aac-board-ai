@@ -59,6 +59,15 @@ const LARGE_GRID_BOARD: OBFBoard = {
   },
 };
 
+function paintPixel(color: string, filter = "none"): number[] {
+  const context = document.createElement("canvas").getContext("2d");
+  assertDefined(context);
+  context.filter = filter;
+  context.fillStyle = color;
+  context.fillRect(0, 0, 1, 1);
+  return [...context.getImageData(0, 0, 1, 1).data.subarray(0, 3)];
+}
+
 describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -349,7 +358,7 @@ describe("CommunicationBoard", () => {
     expect(getComputedStyle(image).filter).toBe("none");
   });
 
-  test("dims symbol images in linear light to match tile brightness", async () => {
+  test("dims symbol images by the same light as the tiles", async () => {
     setTileBrightness(0.5);
 
     const screen = await renderCommunicationBoard(SYMBOL_BOARD);
@@ -359,17 +368,11 @@ describe("CommunicationBoard", () => {
       .querySelector("img");
 
     assertDefined(image);
-    const filterId = /url\("#(.+)"\)/.exec(getComputedStyle(image).filter)?.[1];
-    assertDefined(filterId);
-    const filter = document.getElementById(filterId);
-    assertDefined(filter);
-    expect(filter.getAttribute("color-interpolation-filters")).toBe(
-      "linearRGB",
-    );
-    const slopes = [
-      ...filter.querySelectorAll("feFuncR, feFuncG, feFuncB"),
-    ].map((channel) => channel.getAttribute("slope"));
-    expect(slopes).toEqual(["0.125", "0.125", "0.125"]);
+    const dimmed = paintPixel("#ff8040", getComputedStyle(image).filter);
+    const expected = paintPixel("color-mix(in xyz, #ff8040 12.5%, black)");
+    for (const [channel, value] of dimmed.entries()) {
+      expect(Math.abs(value - expected[channel])).toBeLessThanOrEqual(8);
+    }
   });
 
   test("hides tile labels visually without removing accessible names", async () => {

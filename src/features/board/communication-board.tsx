@@ -34,7 +34,7 @@ interface CommunicationBoardProps {
 type BoardRootStyle = CSSProperties & {
   "--tile-saturation": string;
   "--tile-brightness": string;
-  "--tile-image-filter": string;
+  "--symbol-image-filter": string;
 };
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
@@ -73,7 +73,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const boardRootStyle: BoardRootStyle = {
     "--tile-saturation": String(tileSaturation),
     "--tile-brightness": String(tileBrightness),
-    "--tile-image-filter": areTilesDimmed
+    "--symbol-image-filter": areTilesDimmed
       ? `url("#${dimmingFilterId}")`
       : "none",
   };

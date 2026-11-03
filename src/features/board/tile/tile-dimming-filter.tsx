@@ -6,7 +6,7 @@ interface TileDimmingFilterProps {
 }
 
 export function TileDimmingFilter({ id, brightness }: TileDimmingFilterProps) {
-  const slope = brightness ** 3;
+  const linearLightScale = brightness ** 3;
 
   return (
     <Box
@@ -16,9 +16,9 @@ export function TileDimmingFilter({ id, brightness }: TileDimmingFilterProps) {
     >
       <filter id={id} colorInterpolationFilters="linearRGB">
         <feComponentTransfer>
-          <feFuncR type="linear" slope={slope} />
-          <feFuncG type="linear" slope={slope} />
-          <feFuncB type="linear" slope={slope} />
+          <feFuncR type="linear" slope={linearLightScale} />
+          <feFuncG type="linear" slope={linearLightScale} />
+          <feFuncB type="linear" slope={linearLightScale} />
         </feComponentTransfer>
       </filter>
     </Box>
