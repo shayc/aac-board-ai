@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -5,10 +6,13 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useRef } from "react";
+import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
-import { useBoardPreferences } from "./board-preferences-store";
+import {
+  TILE_BRIGHTNESS,
+  useBoardPreferences,
+} from "./board-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -21,10 +25,26 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import { TileColorScope } from "./tile/tile-color-scope";
 
 interface CommunicationBoardProps {
   board: Board;
+}
+
+type BoardRootStyle = CSSProperties & {
+  "--tile-saturation": string;
+  "--tile-brightness": string;
+  "--tile-image-filter": string;
+};
+
+const SRGB_GAMMA = 2.2;
+
+function tileImageFilter(tileBrightness: number): string {
+  if (tileBrightness >= TILE_BRIGHTNESS.max) {
+    return "none";
+  }
+
+  const linearLightScale = tileBrightness ** 3;
+  return `brightness(${linearLightScale ** (1 / SRGB_GAMMA)})`;
 }
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
@@ -56,6 +76,12 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const hasMessage = message.parts.length > 0;
   const isInBoardSet = Boolean(navigation.boardSetId);
+
+  const boardRootStyle: BoardRootStyle = {
+    "--tile-saturation": String(tileSaturation),
+    "--tile-brightness": String(tileBrightness),
+    "--tile-image-filter": tileImageFilter(tileBrightness),
+  };
 
   function handleHome() {
     if (navigation.isHome) {
@@ -94,6 +120,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     <Stack
       {...shortcuts.rootProps}
       direction="column"
+      style={boardRootStyle}
       sx={{
         height: "100%",
         pl: { sm: safeAreaInset("left") },
@@ -136,11 +163,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         )}
       </Stack>
 
-      <TileColorScope
-        saturation={tileSaturation}
-        brightness={tileBrightness}
-        sx={{ flex: 1, minHeight: 0 }}
-      >
+      <Box sx={{ flex: 1, minHeight: 0 }}>
         <Grid<BoardButton>
           ref={gridViewportRef}
           ariaLabel={board.name || t(m.boardGridLabel)}
@@ -151,7 +174,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           order={board.grid.order}
           renderItem={renderTile}
         />
-      </TileColorScope>
+      </Box>
 
       {isSmallScreen && (
         <Toolbar

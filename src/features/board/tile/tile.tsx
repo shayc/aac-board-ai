@@ -21,8 +21,8 @@ function applyColorSettings(color: string): string {
   return `oklch(from ${color} calc(l * ${brightness}) calc(c * ${saturation} * ${brightness}) h)`;
 }
 
-function darken(color: string): string {
-  return `color-mix(in xyz, ${color}, black var(--tile-darkening, 0%))`;
+function darken(color: string, amount: string): string {
+  return `color-mix(in srgb, ${color}, black ${amount})`;
 }
 
 export function Tile({
@@ -70,11 +70,10 @@ export function Tile({
             : "transparent"
         }`,
         borderRadius: (theme.vars ?? theme).shape.borderRadius,
-        backgroundColor:
-          resolvedBackgroundColor && darken(resolvedBackgroundColor),
+        backgroundColor: resolvedBackgroundColor,
         boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(
-          ["--tile-darkening", "box-shadow"],
+          ["background-color", "box-shadow"],
           {
             duration: theme.transitions.duration.short,
           },
@@ -82,17 +81,26 @@ export function Tile({
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
+        "& img": {
+          filter: "var(--tile-image-filter, none)",
+        },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
-            "--tile-darkening": `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 400%)`,
+            backgroundColor:
+              resolvedBackgroundColor &&
+              darken(
+                resolvedBackgroundColor,
+                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
+              ),
           },
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
           },
         },
         "&:active": {
-          "--tile-darkening": "45%",
+          backgroundColor:
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {

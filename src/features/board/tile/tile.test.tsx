@@ -8,7 +8,6 @@ import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
 import { Tile } from "./tile";
-import { TileColorScope } from "./tile-color-scope";
 
 // Colors are rendered through oklch(from ...), so the browser serializes computed
 // values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
@@ -29,20 +28,6 @@ function resolveBackgroundColor(cssColor: string): string {
   const resolved = getComputedStyle(probe).backgroundColor;
   probe.remove();
   return resolved;
-}
-
-function resolveRestingBackground(cssColor: string): string {
-  return resolveBackgroundColor(`color-mix(in xyz, ${cssColor}, black 0%)`);
-}
-
-function hasTransition(element: Element, property: string): boolean {
-  return element
-    .getAnimations()
-    .some(
-      (animation) =>
-        animation instanceof CSSTransition &&
-        animation.transitionProperty === property,
-    );
 }
 
 function resolveColorInSrgb(cssColor: string): string {
@@ -140,35 +125,6 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
-  test("applies color setting changes instantly but fades hover darkening", async () => {
-    const theme = createTheme({ transitions: { duration: { short: 60_000 } } });
-    const tileAtBrightness = (brightness: number) => (
-      <MUIThemeProvider theme={theme}>
-        <TileColorScope saturation={1} brightness={brightness}>
-          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-            Fading
-          </Tile>
-        </TileColorScope>
-      </MUIThemeProvider>
-    );
-    const screen = await render(tileAtBrightness(1));
-
-    const tile = screen.getByRole("button", { name: "Fading" });
-    expect(getComputedStyle(tile.element()).backgroundColor).toBe(
-      resolveRestingBackground("oklch(from #ff0000 l c h)"),
-    );
-
-    await screen.rerender(tileAtBrightness(0.7));
-    expect(getComputedStyle(tile.element()).backgroundColor).toBe(
-      resolveRestingBackground(
-        "oklch(from #ff0000 calc(l * 0.7) calc(c * 0.7) h)",
-      ),
-    );
-
-    await tile.hover();
-    expect(hasTransition(tile.element(), "--tile-darkening")).toBe(true);
-  });
-
   test("darkens only the background on hover", async () => {
     const theme = createTheme({ transitions: { duration: { short: 0 } } });
     const screen = await render(
@@ -185,7 +141,7 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
     expect(styles.backgroundColor).toBe(
       resolveBackgroundColor(
-        "color-mix(in xyz, oklch(from #ff0000 l c h) 84%, black)",
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 92%, black)",
       ),
     );
     expect(styles.filter).toBe("none");
@@ -211,7 +167,7 @@ describe("Tile", () => {
 
     expect(getComputedStyle(button.element()).backgroundColor).toBe(
       resolveBackgroundColor(
-        "color-mix(in xyz, oklch(from #ff0000 l c h) 68%, black)",
+        "color-mix(in srgb, oklch(from #ff0000 l c h) 84%, black)",
       ),
     );
 
@@ -258,7 +214,7 @@ describe("Tile", () => {
 
     // chroma × 0 → achromatic gray at the original lightness
     expect(styles.backgroundColor).toBe(
-      resolveRestingBackground("oklch(from #ff0000 l 0 h)"),
+      resolveColor("oklch(from #ff0000 l 0 h)"),
     );
   });
 
@@ -272,12 +228,9 @@ describe("Tile", () => {
     );
 
     const button = screen.getByRole("button", { name: "Dim" });
-    const styles = getComputedStyle(button.element());
 
-    expect(styles.backgroundColor).toBe(
-      resolveRestingBackground(
-        "oklch(from #ffff00 calc(l * 0.5) calc(c * 0.5) h)",
-      ),
+    expect(getComputedStyle(button.element()).backgroundColor).toBe(
+      resolveColor("oklch(from #ffff00 calc(l * 0.5) calc(c * 0.5) h)"),
     );
   });
 
@@ -299,7 +252,7 @@ describe("Tile", () => {
     expect(styles.borderColor).toBe("rgba(0, 0, 0, 0)");
     expect(styles.borderTopWidth).toBe("4px");
     expect(styles.backgroundColor).toBe(
-      resolveRestingBackground("oklch(from #ff0000 l c h)"),
+      resolveColor("oklch(from #ff0000 l c h)"),
     );
   });
 
