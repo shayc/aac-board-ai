@@ -70,6 +70,10 @@ function softShadow(elevation: number) {
   return `0 ${keyOffset}px ${elevation + 1}px rgb(16 24 40 / 0.08), 0 ${elevation + 1}px ${3 * elevation + 3}px rgb(16 24 40 / ${ambientAlpha})`;
 }
 
+// Theme overrides follow MUI's state rules, so the sticky touch hover would
+// otherwise repaint the focused, error, and disabled outlines.
+const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+
 const themeOptions = {
   focusVisible: true,
   shadows,
@@ -212,7 +216,7 @@ const themeOptions = {
         root: ({ theme }) => ({
           borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
           "@media (hover: none)": {
-            [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
+            [idleTouchHoverOutline]: {
               borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
             },
           },
