@@ -80,7 +80,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       <DialogTitle
         variant="h4"
         sx={{
-          fontWeight: "bold",
+          fontWeight: "fontWeightBold",
           textAlign: "center",
         }}
       >

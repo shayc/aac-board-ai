@@ -26,7 +26,7 @@ export function SuggestionBar({
       sx={{
         flex: "1",
         alignItems: "center",
-        minHeight: 32,
+        minHeight: 48,
         gap: 2,
         overflow: "hidden",
       }}
@@ -49,6 +49,7 @@ export function SuggestionBar({
           <Chip
             key={phrase}
             label={phrase}
+            variant="outlined"
             onClick={() => onPhraseSelect(phrase)}
           />
         ))}

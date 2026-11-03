@@ -24,7 +24,7 @@ export function LabelPlacementPreview({
         p: 0.5,
         border: 2,
         borderColor: isSelected ? "primary.main" : "divider",
-        borderRadius: 3,
+        borderRadius: (theme) => (theme.vars ?? theme).shape.borderRadiusSm,
         color: isSelected ? "primary.main" : "text.secondary",
         bgcolor: isSelected ? "action.selected" : "background.paper",
       }}

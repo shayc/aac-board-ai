@@ -45,7 +45,11 @@ export function StatusLayout({
       )}
 
       <Box sx={{ my: 1 }}>
-        <Typography component="p" variant="h5" sx={{ fontWeight: "bold" }}>
+        <Typography
+          component="p"
+          variant="h5"
+          sx={{ fontWeight: "fontWeightBold" }}
+        >
           {title}
         </Typography>
 

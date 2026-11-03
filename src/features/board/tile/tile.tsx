@@ -17,8 +17,8 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, percentage: number): string {
-  return `color-mix(in srgb, ${color} ${100 - percentage}%, black)`;
+function darken(color: string, amount: string): string {
+  return `color-mix(in srgb, ${color}, black ${amount})`;
 }
 
 export function Tile({
@@ -62,7 +62,7 @@ export function Tile({
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,
-        borderRadius: 4,
+        borderRadius: (theme.vars ?? theme).shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(
@@ -78,7 +78,11 @@ export function Tile({
           boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
             backgroundColor:
-              resolvedBackgroundColor && darken(resolvedBackgroundColor, 15),
+              resolvedBackgroundColor &&
+              darken(
+                resolvedBackgroundColor,
+                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
+              ),
           },
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
@@ -86,7 +90,7 @@ export function Tile({
         },
         "&:active": {
           backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, 25),
+            resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {

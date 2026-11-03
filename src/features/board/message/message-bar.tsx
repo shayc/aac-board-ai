@@ -53,10 +53,17 @@ export function MessageBar({
             flexGrow: 1,
             gap: 2,
             overflow: "hidden",
-            borderRadius: 32,
-            bgcolor: "grey.200",
+            border: 1,
+            borderColor: "divider",
+            borderRadius: (theme) =>
+              (theme.vars ?? theme).shape.borderRadiusFull,
+            bgcolor: "background.paper",
           },
-          (theme) => theme.applyStyles("dark", { bgcolor: "grey.800" }),
+          (theme) =>
+            theme.applyStyles("light", {
+              borderColor: "transparent",
+              boxShadow: (theme.vars ?? theme).shadows[1],
+            }),
         ]}
       >
         <Stack
@@ -79,7 +86,7 @@ export function MessageBar({
                 direction="row"
                 sx={(theme) => ({
                   p: 1,
-                  borderRadius: 4,
+                  borderRadius: (theme.vars ?? theme).shape.borderRadius,
                   outline: isActive
                     ? `2px solid ${(theme.vars ?? theme).palette.primary.main}`
                     : "none",

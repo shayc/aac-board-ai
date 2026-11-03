@@ -38,7 +38,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             px: 6,
             py: 5,
             border: `2px dashed ${(theme.vars ?? theme).palette.primary.main}`,
-            borderRadius: 4,
+            borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
           })}
         >
           <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />
