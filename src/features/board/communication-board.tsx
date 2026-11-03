@@ -25,7 +25,7 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
-import { TileDimmingFilter } from "./tile/tile-dimming-filter";
+import { SymbolDimmingFilter } from "./aac-symbol/symbol-dimming-filter";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -159,7 +159,10 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
       <Box style={tileGridStyle} sx={{ flex: 1, minHeight: 0 }}>
         {areTilesDimmed && (
-          <TileDimmingFilter id={dimmingFilterId} brightness={tileBrightness} />
+          <SymbolDimmingFilter
+            id={dimmingFilterId}
+            brightness={tileBrightness}
+          />
         )}
 
         <Grid<BoardButton>

@@ -1,11 +1,14 @@
 import Box from "@mui/material/Box";
 
-interface TileDimmingFilterProps {
+interface SymbolDimmingFilterProps {
   id: string;
   brightness: number;
 }
 
-export function TileDimmingFilter({ id, brightness }: TileDimmingFilterProps) {
+export function SymbolDimmingFilter({
+  id,
+  brightness,
+}: SymbolDimmingFilterProps) {
   const linearLightScale = brightness ** 3;
 
   return (
