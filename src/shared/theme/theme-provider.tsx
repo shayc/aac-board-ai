@@ -296,6 +296,21 @@ const themeOptions = {
         }),
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          variants: [
+            {
+              props: { orientation: "horizontal" },
+              style: {
+                padding: "12px 0",
+                "@media (pointer: coarse)": { padding: "12px 0" },
+              },
+            },
+          ],
+        },
+      },
+    },
     MuiTooltip: {
       defaultProps: {
         enterDelay: 500,

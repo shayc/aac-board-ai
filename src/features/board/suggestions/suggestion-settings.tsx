@@ -1,5 +1,5 @@
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
@@ -15,7 +15,7 @@ export function SuggestionSettings() {
 
   if (!isSupported("Rewriter")) {
     return (
-      <Typography sx={{ typography: "body2", color: "text.secondary" }}>
+      <Alert role="note" severity="info" variant="outlined">
         {t(m.suggestionsUnsupported)}{" "}
         <ExternalLink
           href="https://github.com/shayc/aac-board-ai#enable-suggestions"
@@ -23,7 +23,7 @@ export function SuggestionSettings() {
         >
           {t(m.suggestionsSetupHelp)}
         </ExternalLink>
-      </Typography>
+      </Alert>
     );
   }
 

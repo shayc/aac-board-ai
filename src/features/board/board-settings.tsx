@@ -3,6 +3,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
@@ -16,10 +17,6 @@ import {
 } from "./board-preferences-store";
 import type { SymbolLabelPlacement } from "./board-types";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
-
-function formatSaturation(value: number): string {
-  return `${Math.round(value * 100)}%`;
-}
 
 interface LabelPlacementOptionProps {
   label: string;
@@ -61,6 +58,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function BoardSettings() {
   const t = useTranslate();
+  const { language } = useLanguage();
+  const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
 
@@ -90,7 +89,7 @@ export function BoardSettings() {
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
         step={0.1}
-        formatValue={formatSaturation}
+        formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>
   );

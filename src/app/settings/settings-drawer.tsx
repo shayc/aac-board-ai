@@ -49,6 +49,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       }}
     >
       <Toolbar
+        component="header"
         sx={(theme) => ({
           borderBottom: 1,
           borderColor: isContentScrolled ? "divider" : "transparent",

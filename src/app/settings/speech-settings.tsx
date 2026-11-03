@@ -41,6 +41,11 @@ export function SpeechSettings() {
   const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });
+  const multiplierFormat = new Intl.NumberFormat(language, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
 
   function renderLocaleOptions(voiceLocale: string) {
     const header = hasMultipleLocales && (
@@ -65,7 +70,7 @@ export function SpeechSettings() {
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
       onChange: setSpeechRate,
-      formatValue: (value: number) => `${value.toFixed(1)}x`,
+      formatValue: (value: number) => `${multiplierFormat.format(value)}×`,
     },
     {
       id: "pitch",
@@ -74,7 +79,7 @@ export function SpeechSettings() {
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
       onChange: setSpeechPitch,
-      formatValue: (value: number) => `${value.toFixed(1)}x`,
+      formatValue: (value: number) => percentFormat.format(value),
     },
     {
       id: "volume",
@@ -83,7 +88,7 @@ export function SpeechSettings() {
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
       onChange: setSpeechVolume,
-      formatValue: (value: number) => `${Math.round(value * 100)}%`,
+      formatValue: (value: number) => percentFormat.format(value),
     },
   ];
 

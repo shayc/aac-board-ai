@@ -90,7 +90,8 @@ describe("SettingsDrawer", () => {
     );
     const header = screen
       .getByRole("heading", { name: "Settings" })
-      .element().parentElement;
+      .element()
+      .closest("header");
     if (!header) {
       throw new Error("Settings heading must sit in a header");
     }
@@ -108,6 +109,24 @@ describe("SettingsDrawer", () => {
     await expect
       .poll(() => getComputedStyle(header).borderBottomColor)
       .not.toBe(transparent);
+  });
+
+  test("formats setting values for the selected language", async () => {
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    await screen.getByRole("combobox", { name: "Language" }).click();
+    await screen.getByRole("option", { name: "Deutsch" }).click();
+
+    await expect
+      .element(screen.getByRole("slider", { name: "Geschwindigkeit" }))
+      .toHaveAttribute("aria-valuetext", "1,0×");
+    await expect
+      .element(screen.getByRole("slider", { name: "Lautstärke" }))
+      .toHaveAttribute("aria-valuetext", expect.stringMatching(/^100\s%$/));
   });
 
   test("close button invokes onClose", async () => {

@@ -60,22 +60,22 @@ describe("SpeechSettings", () => {
 
     const screen = await renderSpeechSettings();
 
-    await expect
-      .element(screen.getByRole("slider", { name: "Speed" }))
-      .toHaveAttribute("aria-valuetext", "1.0x");
-    await expect
-      .element(screen.getByRole("slider", { name: "Pitch" }))
-      .toHaveAttribute("aria-valuetext", "1.0x");
-    await expect
-      .element(screen.getByRole("slider", { name: "Volume" }))
-      .toHaveAttribute("aria-valuetext", "100%");
-
-    const multiplierValues = screen.getByText("1.0x").all();
-    expect(multiplierValues).toHaveLength(2);
-    for (const value of multiplierValues) {
+    const expectedValues = [
+      { name: "Speed", text: "1.0×" },
+      { name: "Pitch", text: "100%" },
+      { name: "Volume", text: "100%" },
+    ];
+    for (const { name, text } of expectedValues) {
+      await expect
+        .element(screen.getByRole("slider", { name }))
+        .toHaveAttribute("aria-valuetext", text);
+    }
+    await expect.element(screen.getByText("1.0×")).toBeVisible();
+    const percentValues = screen.getByText("100%").all();
+    expect(percentValues).toHaveLength(2);
+    for (const value of percentValues) {
       await expect.element(value).toBeVisible();
     }
-    await expect.element(screen.getByText("100%")).toBeVisible();
     await expect
       .element(screen.getByRole("button", { name: "Preview voice" }))
       .toBeInTheDocument();
