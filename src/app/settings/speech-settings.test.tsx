@@ -127,6 +127,16 @@ describe("SpeechSettings", () => {
     });
   });
 
+  test("pages through speed in whole steps", async () => {
+    const screen = await renderSpeechSettings();
+    const speedSlider = screen.getByRole("slider", { name: "Speed" });
+
+    speedSlider.element().focus();
+    await userEvent.keyboard("{PageUp}");
+
+    expect(speedSlider.element().getAttribute("aria-valuenow")).toBe("1.2");
+  });
+
   test("plays the voice preview through app playback", async () => {
     const speech = stubSpeech();
     stubVoices([]);

@@ -107,7 +107,7 @@ export function BoardSettings() {
         onChange={setTileSaturation}
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
-        step={0.1}
+        step={0.01}
         formatValue={formatPercent}
       />
 

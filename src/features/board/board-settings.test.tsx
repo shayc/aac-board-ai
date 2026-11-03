@@ -172,7 +172,7 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("lowering color intensity persists tile saturation", async () => {
+  test("lowering color intensity moves smoothly and persists tile saturation", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -186,11 +186,18 @@ describe("BoardSettings", () => {
     saturationSlider.element().focus();
     await userEvent.keyboard("{ArrowLeft}");
 
+    expect(saturationSlider.element().getAttribute("aria-valuenow")).toBe(
+      "0.99",
+    );
+    await expect.element(screen.getByText("99%")).toBeVisible();
+
+    await userEvent.keyboard("{PageDown}");
+
     const valueNow = Number(
       saturationSlider.element().getAttribute("aria-valuenow"),
     );
-    expect(valueNow).toBe(0.9);
-    await expect.element(screen.getByText("90%")).toBeVisible();
+    expect(valueNow).toBe(0.89);
+    await expect.element(screen.getByText("89%")).toBeVisible();
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("board-preferences");
@@ -225,6 +232,12 @@ describe("BoardSettings", () => {
     await expect
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "97%");
+
+    await userEvent.keyboard("{PageDown}");
+
+    expect(brightnessSlider.element().getAttribute("aria-valuenow")).toBe(
+      "0.96",
+    );
 
     await userEvent.keyboard("{Home}");
 

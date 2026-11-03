@@ -139,30 +139,39 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
-  test("fades hover darkening but applies color setting changes instantly", async () => {
+  test("applies color setting changes instantly but fades hover darkening", async () => {
+    const theme = createTheme({ transitions: { duration: { short: 60_000 } } });
     const screen = await render(
-      <div
-        data-testid="settings"
-        style={{ "--tile-brightness": 1 } as CSSProperties}
-      >
-        <TileDarkeningProperty />
-        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-          Fading
-        </Tile>
-      </div>,
+      <MUIThemeProvider theme={theme}>
+        <div
+          data-testid="settings"
+          style={{ "--tile-brightness": 1 } as CSSProperties}
+        >
+          <TileDarkeningProperty />
+          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+            Fading
+          </Tile>
+        </div>
+      </MUIThemeProvider>,
     );
 
-    const button = screen.getByRole("button", { name: "Fading" }).element();
-
-    await screen.getByRole("button", { name: "Fading" }).hover();
-    expect(hasTransition(button, "--tile-darkening")).toBe(true);
-    await screen.getByRole("button", { name: "Fading" }).unhover();
+    const tile = screen.getByRole("button", { name: "Fading" });
+    expect(getComputedStyle(tile.element()).backgroundColor).toBe(
+      resolveRestingBackground("oklch(from #ff0000 l c h)"),
+    );
 
     screen
       .getByTestId("settings")
       .element()
       .setAttribute("style", "--tile-brightness: 0.7");
-    expect(hasTransition(button, "background-color")).toBe(false);
+    expect(getComputedStyle(tile.element()).backgroundColor).toBe(
+      resolveRestingBackground(
+        "oklch(from #ff0000 calc(l * 0.7) calc(c * 0.7) h)",
+      ),
+    );
+
+    await tile.hover();
+    expect(hasTransition(tile.element(), "--tile-darkening")).toBe(true);
   });
 
   test("darkens only the background on hover", async () => {

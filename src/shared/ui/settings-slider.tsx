@@ -29,6 +29,7 @@ export function SettingsSlider({
   endIcon,
 }: SettingsSliderProps) {
   const labelId = useId();
+  const pageStep = Math.max(step, Math.round((max - min) / 10 / step) * step);
 
   return (
     <Stack spacing={0.5}>
@@ -56,6 +57,7 @@ export function SettingsSlider({
           min={min}
           max={max}
           step={step}
+          shiftStep={pageStep}
         />
         {endIcon}
       </Stack>
