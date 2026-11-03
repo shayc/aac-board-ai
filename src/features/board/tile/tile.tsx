@@ -76,7 +76,6 @@ export function Tile({
         },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
-          // Twice MUI's hover opacity, which already doubles in dark mode.
           "@media (hover: hover)": {
             backgroundColor:
               resolvedBackgroundColor &&
@@ -90,7 +89,6 @@ export function Tile({
           },
         },
         "&:active": {
-          // Constant across modes, like MUI's press ripple.
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: (theme.vars ?? theme).shadows[8],

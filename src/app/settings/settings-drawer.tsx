@@ -69,7 +69,6 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             aria-label={t(m.settingsClose)}
             size="large"
             edge="end"
-            color="inherit"
             onClick={onClose}
           >
             <CloseIcon />
