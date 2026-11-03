@@ -122,6 +122,9 @@ const themeOptions = {
     fontFamily: "system-ui, sans-serif",
     fontWeightLight: 400,
     fontWeightBold: 600,
+    h6: {
+      fontWeight: 600,
+    },
     button: {
       textTransform: "none",
     },
@@ -145,6 +148,14 @@ const themeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           borderBottom: `1px solid ${(theme.vars ?? theme).palette.divider}`,
+        }),
+      },
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        gutters: ({ theme }) => ({
+          paddingLeft: theme.spacing(3),
+          paddingRight: theme.spacing(3),
         }),
       },
     },
