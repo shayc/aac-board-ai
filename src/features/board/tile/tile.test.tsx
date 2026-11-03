@@ -7,7 +7,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
-import { Tile } from "./tile";
+import { Tile, TileGlobalStyles } from "./tile";
 
 // Colors are rendered through oklch(from ...), so the browser serializes computed
 // values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
@@ -28,6 +28,20 @@ function resolveBackgroundColor(cssColor: string): string {
   const resolved = getComputedStyle(probe).backgroundColor;
   probe.remove();
   return resolved;
+}
+
+function resolveRestingBackground(cssColor: string): string {
+  return resolveBackgroundColor(`color-mix(in xyz, ${cssColor}, black 0%)`);
+}
+
+function hasTransition(element: Element, property: string): boolean {
+  return element
+    .getAnimations()
+    .some(
+      (animation) =>
+        animation instanceof CSSTransition &&
+        animation.transitionProperty === property,
+    );
 }
 
 function resolveColorInSrgb(cssColor: string): string {
@@ -125,18 +139,30 @@ describe("Tile", () => {
     expect(styles.color).toBe("rgb(255, 255, 255)");
   });
 
-  test("animates only its shadow so color changes apply instantly", async () => {
+  test("fades hover darkening but applies color setting changes instantly", async () => {
     const screen = await render(
-      <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-        Instant
-      </Tile>,
+      <div
+        data-testid="settings"
+        style={{ "--tile-brightness": 1 } as CSSProperties}
+      >
+        <TileGlobalStyles />
+        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+          Fading
+        </Tile>
+      </div>,
     );
 
-    const button = screen.getByRole("button", { name: "Instant" });
+    const button = screen.getByRole("button", { name: "Fading" }).element();
 
-    expect(getComputedStyle(button.element()).transitionProperty).toBe(
-      "box-shadow",
-    );
+    await screen.getByRole("button", { name: "Fading" }).hover();
+    expect(hasTransition(button, "--tile-darkening")).toBe(true);
+    await screen.getByRole("button", { name: "Fading" }).unhover();
+
+    screen
+      .getByTestId("settings")
+      .element()
+      .setAttribute("style", "--tile-brightness: 0.7");
+    expect(hasTransition(button, "background-color")).toBe(false);
   });
 
   test("darkens only the background on hover", async () => {
@@ -228,7 +254,7 @@ describe("Tile", () => {
 
     // chroma × 0 → achromatic gray at the original lightness
     expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #ff0000 l 0 h)"),
+      resolveRestingBackground("oklch(from #ff0000 l 0 h)"),
     );
   });
 
@@ -245,7 +271,9 @@ describe("Tile", () => {
     const styles = getComputedStyle(button.element());
 
     expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #ffff00 calc(l * 0.5) calc(c * 0.5) h)"),
+      resolveRestingBackground(
+        "oklch(from #ffff00 calc(l * 0.5) calc(c * 0.5) h)",
+      ),
     );
   });
 
@@ -267,7 +295,7 @@ describe("Tile", () => {
     expect(styles.borderColor).toBe("rgba(0, 0, 0, 0)");
     expect(styles.borderTopWidth).toBe("4px");
     expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #ff0000 l c h)"),
+      resolveRestingBackground("oklch(from #ff0000 l c h)"),
     );
   });
 

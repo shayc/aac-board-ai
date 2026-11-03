@@ -1,4 +1,5 @@
 import Button, { buttonClasses } from "@mui/material/Button";
+import GlobalStyles from "@mui/material/GlobalStyles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
@@ -28,8 +29,18 @@ function folderCornerColor(backgroundColor: string | undefined): string {
   return `color-mix(in srgb, ${ink} 75%, transparent)`;
 }
 
-function darken(color: string, amount: string): string {
-  return `color-mix(in xyz, ${color}, black ${amount})`;
+export function TileGlobalStyles() {
+  return (
+    <GlobalStyles
+      styles={{
+        "@property --tile-darkening": {
+          syntax: "'<percentage>'",
+          inherits: "false",
+          initialValue: "0%",
+        },
+      }}
+    />
+  );
 }
 
 export function Tile({
@@ -77,31 +88,30 @@ export function Tile({
             : "transparent"
         }`,
         borderRadius: (theme.vars ?? theme).shape.borderRadius,
-        backgroundColor: resolvedBackgroundColor,
+        backgroundColor:
+          resolvedBackgroundColor &&
+          `color-mix(in xyz, ${resolvedBackgroundColor}, black var(--tile-darkening, 0%))`,
         boxShadow: (theme.vars ?? theme).shadows[2],
-        transition: theme.transitions.create("box-shadow", {
-          duration: theme.transitions.duration.short,
-        }),
+        transition: theme.transitions.create(
+          ["--tile-darkening", "box-shadow"],
+          {
+            duration: theme.transitions.duration.short,
+          },
+        ),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
         },
         "&:hover": {
           boxShadow: (theme.vars ?? theme).shadows[4],
           "@media (hover: hover)": {
-            backgroundColor:
-              resolvedBackgroundColor &&
-              darken(
-                resolvedBackgroundColor,
-                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 400%)`,
-              ),
+            "--tile-darkening": `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 400%)`,
           },
           "@media (hover: none)": {
             boxShadow: (theme.vars ?? theme).shadows[2],
           },
         },
         "&:active": {
-          backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, "45%"),
+          "--tile-darkening": "45%",
           boxShadow: (theme.vars ?? theme).shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
