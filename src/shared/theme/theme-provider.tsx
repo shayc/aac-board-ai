@@ -17,6 +17,20 @@ import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
 import { prefixer } from "stylis";
 
+declare module "@mui/material/styles" {
+  interface Shape {
+    borderRadiusSm: string;
+    borderRadiusLg: string;
+    borderRadiusFull: string;
+  }
+
+  interface ShapeOptions {
+    borderRadiusSm?: string;
+    borderRadiusLg?: string;
+    borderRadiusFull?: string;
+  }
+}
+
 interface ThemeProviderProps {
   children: ReactNode;
 }
@@ -59,6 +73,14 @@ function softShadow(elevation: number) {
 const themeOptions = {
   focusVisible: true,
   shadows,
+  // Strings keep sx from multiplying radii by the base; MUI's Paper-based
+  // surfaces (menus, popovers, alerts, snackbars) and tooltips inherit the base.
+  shape: {
+    borderRadius: "16px",
+    borderRadiusSm: "12px",
+    borderRadiusLg: "32px",
+    borderRadiusFull: "9999px",
+  },
   cssVariables: {
     colorSchemeSelector: "class",
     // index.html owns color-scheme; MUI only emits the palette vars.
@@ -123,17 +145,39 @@ const themeOptions = {
     },
     MuiDrawer: {
       styleOverrides: {
-        paper: ({ theme }) => ({
-          backgroundColor: (theme.vars ?? theme).palette.background.default,
-          backgroundImage: "none",
-        }),
+        paper: ({ theme }) => {
+          const radius = (theme.vars ?? theme).shape.borderRadius;
+
+          return {
+            backgroundColor: (theme.vars ?? theme).palette.background.default,
+            backgroundImage: "none",
+            // Physical corners, like the drawer's own `left`/`right` offset, are
+            // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
+            variants: [
+              {
+                props: { anchor: "left" },
+                style: {
+                  borderTopRightRadius: radius,
+                  borderBottomRightRadius: radius,
+                },
+              },
+              {
+                props: { anchor: "right" },
+                style: {
+                  borderTopLeftRadius: radius,
+                  borderBottomLeftRadius: radius,
+                },
+              },
+            ],
+          };
+        },
       },
     },
     MuiDialog: {
       styleOverrides: {
-        paper: {
-          borderRadius: 32,
-        },
+        paper: ({ theme }) => ({
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+        }),
       },
     },
     MuiDialogActions: {
@@ -145,8 +189,8 @@ const themeOptions = {
     },
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderRadius: 32,
+        root: ({ theme }) => ({
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
           paddingTop: 12,
           paddingBottom: 12,
           variants: [
@@ -160,18 +204,24 @@ const themeOptions = {
                 }),
             },
           ],
-        },
+        }),
       },
     },
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          borderRadius: 32,
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
           "@media (hover: none)": {
             [`&:hover .${outlinedInputClasses.notchedOutline}`]: {
               borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
             },
           },
+          variants: [
+            {
+              props: { multiline: true },
+              style: { borderRadius: (theme.vars ?? theme).shape.borderRadius },
+            },
+          ],
         }),
         notchedOutline: ({ theme }) => ({
           borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
@@ -183,7 +233,7 @@ const themeOptions = {
         clickable: ({ theme }) => ({
           ...theme.typography.body1,
           height: 48,
-          borderRadius: 32,
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
           [`& .${chipClasses.label}`]: {
             paddingLeft: 15,
             paddingRight: 15,
@@ -196,9 +246,32 @@ const themeOptions = {
     },
     MuiListItemButton: {
       styleOverrides: {
-        root: {
-          borderRadius: 32,
+        root: ({ theme }) => ({
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
+        }),
+      },
+    },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          marginInline: 4,
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusSm,
+        }),
+      },
+    },
+    MuiAutocomplete: {
+      defaultProps: {
+        slotProps: {
+          popper: {
+            modifiers: [{ name: "offset", options: { offset: [0, 4] } }],
+          },
         },
+      },
+      styleOverrides: {
+        option: ({ theme }) => ({
+          marginInline: 4,
+          borderRadius: (theme.vars ?? theme).shape.borderRadiusSm,
+        }),
       },
     },
   },

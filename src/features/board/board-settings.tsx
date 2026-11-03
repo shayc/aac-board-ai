@@ -46,7 +46,7 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
           disableRipple
           sx={(theme) => ({
             p: 0.5,
-            borderRadius: 4,
+            borderRadius: (theme.vars ?? theme).shape.borderRadius,
             [`&.${buttonBaseClasses.focusVisible}`]: {
               ...theme.focusVisible,
               // MUI's radio ring targets nested SVGs; the preview uses this outer ring.

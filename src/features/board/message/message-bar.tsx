@@ -55,7 +55,8 @@ export function MessageBar({
             overflow: "hidden",
             border: 1,
             borderColor: "divider",
-            borderRadius: 32,
+            borderRadius: (theme) =>
+              (theme.vars ?? theme).shape.borderRadiusFull,
             bgcolor: "background.paper",
           },
           (theme) =>
@@ -85,7 +86,7 @@ export function MessageBar({
                 direction="row"
                 sx={(theme) => ({
                   p: 1,
-                  borderRadius: 4,
+                  borderRadius: (theme.vars ?? theme).shape.borderRadius,
                   outline: isActive
                     ? `2px solid ${(theme.vars ?? theme).palette.primary.main}`
                     : "none",

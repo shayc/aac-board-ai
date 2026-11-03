@@ -62,7 +62,7 @@ export function Tile({
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,
-        borderRadius: 4,
+        borderRadius: (theme.vars ?? theme).shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: (theme.vars ?? theme).shadows[2],
         transition: theme.transitions.create(

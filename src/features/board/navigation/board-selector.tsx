@@ -38,10 +38,6 @@ export function BoardSelector() {
           {...params}
           slotProps={{
             ...params.slotProps,
-            input: {
-              ...params.slotProps?.input,
-              sx: { borderRadius: 8 },
-            },
             htmlInput: {
               ...params.slotProps?.htmlInput,
               "aria-label": t(m.boardSelectorLabel),
