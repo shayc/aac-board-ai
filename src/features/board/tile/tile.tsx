@@ -29,13 +29,13 @@ function folderCornerColor(backgroundColor: string | undefined): string {
   return `color-mix(in srgb, ${ink} 75%, transparent)`;
 }
 
-export function TileGlobalStyles() {
+export function TileDarkeningProperty() {
   return (
     <GlobalStyles
       styles={{
         "@property --tile-darkening": {
           syntax: "'<percentage>'",
-          inherits: "false",
+          inherits: String(false),
           initialValue: "0%",
         },
       }}

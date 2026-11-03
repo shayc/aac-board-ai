@@ -7,7 +7,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
-import { Tile, TileGlobalStyles } from "./tile";
+import { Tile, TileDarkeningProperty } from "./tile";
 
 // Colors are rendered through oklch(from ...), so the browser serializes computed
 // values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
@@ -145,7 +145,7 @@ describe("Tile", () => {
         data-testid="settings"
         style={{ "--tile-brightness": 1 } as CSSProperties}
       >
-        <TileGlobalStyles />
+        <TileDarkeningProperty />
         <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
           Fading
         </Tile>
