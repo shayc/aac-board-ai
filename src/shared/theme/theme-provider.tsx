@@ -122,8 +122,6 @@ const themeOptions = {
     fontFamily: "system-ui, sans-serif",
     fontWeightLight: 400,
     fontWeightBold: 600,
-    // Drawer and dialog titles must not read lighter than the bold section
-    // headings beneath them; labels (buttons, subheaders) stay at medium.
     h6: {
       fontWeight: 600,
     },
@@ -155,8 +153,6 @@ const themeOptions = {
     },
     MuiToolbar: {
       styleOverrides: {
-        // MUI narrows gutters to 16px below `sm`; the app keeps one 24px inset
-        // so toolbar titles line up with the content beneath them.
         gutters: ({ theme }) => ({
           paddingLeft: theme.spacing(3),
           paddingRight: theme.spacing(3),
