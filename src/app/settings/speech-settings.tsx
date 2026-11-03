@@ -133,8 +133,8 @@ export function SpeechSettings() {
       )}
 
       <Button
+        color="inherit"
         variant="contained"
-        color="primary"
         startIcon={<PlayArrowIcon />}
         onClick={handlePreviewSpeech}
         sx={{ alignSelf: "flex-start" }}
