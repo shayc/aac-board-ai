@@ -160,7 +160,6 @@ function BoardSetListItem({
 
   return (
     <ListItem
-      data-menu-open={isMenuOpen || undefined}
       secondaryAction={
         <Tooltip title={t(m.libraryMoreOptions)}>
           <IconButton
@@ -190,7 +189,7 @@ function BoardSetListItem({
                 transition: "none",
               },
             },
-            [`&:is(:hover, :focus-within, [data-menu-open]) .${listItemSecondaryActionClasses.root}`]:
+            [`&:is(:hover, :focus-within, :has([aria-expanded="true"])) .${listItemSecondaryActionClasses.root}`]:
               { opacity: 1, pointerEvents: "auto" },
           },
         },
