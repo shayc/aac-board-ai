@@ -125,7 +125,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 3,
+              gap: 2,
               mt: 4,
             }}
           >
