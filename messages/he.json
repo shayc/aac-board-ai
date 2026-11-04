@@ -142,7 +142,7 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
+  "errorBoardUrlImportFailed": "לא ניתן היה להוסיף את הלוח",
   "boardUrlImportTitle": "להוסיף לוח?",
   "boardUrlImportDescription": "לוח מ-{host} יתווסף לספרייה שלכם. הוסיפו אותו רק אם אתם סומכים על המקור שלו.",
   "boardUrlImportConfirm": "הוספה"

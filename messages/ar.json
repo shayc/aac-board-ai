@@ -142,7 +142,7 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
-  "errorBoardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
+  "errorBoardUrlImportFailed": "تعذّرت إضافة اللوحة",
   "boardUrlImportTitle": "إضافة لوحة؟",
   "boardUrlImportDescription": "ستُضاف لوحة من {host} إلى مكتبتك. لا تُضفها إلا إذا كنت تثق بمصدرها.",
   "boardUrlImportConfirm": "إضافة"

@@ -142,7 +142,7 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
-  "errorBoardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link",
+  "errorBoardUrlImportFailed": "Não foi possível adicionar a prancha",
   "boardUrlImportTitle": "Adicionar prancha?",
   "boardUrlImportDescription": "Uma prancha de {host} será adicionada à sua biblioteca. Adicione apenas se você confiar na origem dela.",
   "boardUrlImportConfirm": "Adicionar"

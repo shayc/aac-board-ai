@@ -142,7 +142,7 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "errorBoardUrlImportFailed": "Не удалось импортировать файл доски по ссылке",
+  "errorBoardUrlImportFailed": "Не удалось добавить доску",
   "boardUrlImportTitle": "Добавить доску?",
   "boardUrlImportDescription": "В библиотеку будет добавлена доска с сайта {host}. Добавляйте её, только если доверяете её источнику.",
   "boardUrlImportConfirm": "Добавить"

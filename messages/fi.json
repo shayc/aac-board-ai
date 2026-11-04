@@ -142,7 +142,7 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
-  "errorBoardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
+  "errorBoardUrlImportFailed": "Taulua ei voitu lisätä",
   "boardUrlImportTitle": "Lisätäänkö taulu?",
   "boardUrlImportDescription": "Kirjastoosi lisätään taulu lähteestä {host}. Lisää se vain, jos luotat sen lähteeseen.",
   "boardUrlImportConfirm": "Lisää"

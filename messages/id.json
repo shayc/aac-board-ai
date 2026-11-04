@@ -142,7 +142,7 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "errorBoardUrlImportFailed": "Tidak dapat menambahkan papan",
   "boardUrlImportTitle": "Tambahkan papan?",
   "boardUrlImportDescription": "Papan dari {host} akan ditambahkan ke pustaka Anda. Tambahkan hanya jika Anda memercayai sumbernya.",
   "boardUrlImportConfirm": "Tambahkan"

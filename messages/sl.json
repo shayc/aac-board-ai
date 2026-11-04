@@ -142,7 +142,7 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "errorBoardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
+  "errorBoardUrlImportFailed": "Table ni bilo mogoče dodati",
   "boardUrlImportTitle": "Dodam tablo?",
   "boardUrlImportDescription": "V knjižnico bo dodana tabla s spletnega mesta {host}. Dodajte jo le, če zaupate njenemu viru.",
   "boardUrlImportConfirm": "Dodaj"

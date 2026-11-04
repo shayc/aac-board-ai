@@ -142,7 +142,7 @@
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
-  "errorBoardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ",
+  "errorBoardUrlImportFailed": "เพิ่มบอร์ดไม่สำเร็จ",
   "boardUrlImportTitle": "เพิ่มบอร์ดไหม",
   "boardUrlImportDescription": "บอร์ดจาก {host} จะถูกเพิ่มลงในคลังของคุณ เพิ่มเฉพาะเมื่อคุณเชื่อถือแหล่งที่มาของบอร์ดนี้",
   "boardUrlImportConfirm": "เพิ่ม"

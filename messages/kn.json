@@ -142,7 +142,7 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "errorBoardUrlImportFailed": "ಬೋರ್ಡ್ ಸೇರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "boardUrlImportTitle": "ಬೋರ್ಡ್ ಸೇರಿಸುವುದೇ?",
   "boardUrlImportDescription": "{host} ನಿಂದ ಒಂದು ಬೋರ್ಡ್ ಅನ್ನು ನಿಮ್ಮ ಗ್ರಂಥಾಲಯಕ್ಕೆ ಸೇರಿಸಲಾಗುತ್ತದೆ. ಅದರ ಮೂಲವನ್ನು ನೀವು ನಂಬಿದರೆ ಮಾತ್ರ ಸೇರಿಸಿ.",
   "boardUrlImportConfirm": "ಸೇರಿಸಿ"

@@ -142,7 +142,7 @@
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
-  "errorBoardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο",
+  "errorBoardUrlImportFailed": "Δεν ήταν δυνατή η προσθήκη του πίνακα",
   "boardUrlImportTitle": "Προσθήκη πίνακα;",
   "boardUrlImportDescription": "Ένας πίνακας από το {host} θα προστεθεί στη βιβλιοθήκη σας. Προσθέστε τον μόνο αν εμπιστεύεστε την πηγή του.",
   "boardUrlImportConfirm": "Προσθήκη"

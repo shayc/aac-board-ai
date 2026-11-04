@@ -142,7 +142,7 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
+  "errorBoardUrlImportFailed": "Tafel konnte nicht hinzugefügt werden",
   "boardUrlImportTitle": "Tafel hinzufügen?",
   "boardUrlImportDescription": "Eine Tafel von {host} wird deiner Bibliothek hinzugefügt. Füge sie nur hinzu, wenn du ihrer Quelle vertraust.",
   "boardUrlImportConfirm": "Hinzufügen"

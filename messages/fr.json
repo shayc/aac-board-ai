@@ -142,7 +142,7 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "errorBoardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
+  "errorBoardUrlImportFailed": "Impossible d’ajouter le tableau",
   "boardUrlImportTitle": "Ajouter le tableau ?",
   "boardUrlImportDescription": "Un tableau provenant de {host} sera ajouté à votre bibliothèque. Ne l’ajoutez que si vous faites confiance à sa source.",
   "boardUrlImportConfirm": "Ajouter"

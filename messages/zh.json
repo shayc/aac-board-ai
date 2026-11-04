@@ -142,7 +142,7 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
-  "errorBoardUrlImportFailed": "无法从链接导入沟通板文件",
+  "errorBoardUrlImportFailed": "无法添加沟通板",
   "boardUrlImportTitle": "要添加沟通板吗？",
   "boardUrlImportDescription": "来自 {host} 的沟通板将添加到你的板库。只有在你信任其来源时才添加。",
   "boardUrlImportConfirm": "添加"

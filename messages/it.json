@@ -142,7 +142,7 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "errorBoardUrlImportFailed": "Impossibile importare il file di tabella dal link",
+  "errorBoardUrlImportFailed": "Impossibile aggiungere la tabella",
   "boardUrlImportTitle": "Aggiungere la tabella?",
   "boardUrlImportDescription": "Una tabella da {host} verrà aggiunta alla tua libreria. Aggiungila solo se ti fidi della sua fonte.",
   "boardUrlImportConfirm": "Aggiungi"

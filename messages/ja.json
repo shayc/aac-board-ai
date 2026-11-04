@@ -142,7 +142,7 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "errorBoardUrlImportFailed": "リンクからボードファイルをインポートできませんでした",
+  "errorBoardUrlImportFailed": "ボードを追加できませんでした",
   "boardUrlImportTitle": "ボードを追加しますか？",
   "boardUrlImportDescription": "{host} のボードがライブラリに追加されます。提供元が信頼できる場合にのみ追加してください。",
   "boardUrlImportConfirm": "追加"

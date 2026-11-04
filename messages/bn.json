@@ -142,7 +142,7 @@
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
-  "errorBoardUrlImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
+  "errorBoardUrlImportFailed": "বোর্ড যোগ করা যায়নি",
   "boardUrlImportTitle": "বোর্ড যোগ করবেন?",
   "boardUrlImportDescription": "{host} থেকে একটি বোর্ড আপনার লাইব্রেরিতে যোগ হবে। এর উৎসে ভরসা থাকলে তবেই যোগ করুন।",
   "boardUrlImportConfirm": "যোগ করুন"

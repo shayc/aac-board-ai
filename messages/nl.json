@@ -142,7 +142,7 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
-  "errorBoardUrlImportFailed": "Kan bordbestand niet importeren via de link",
+  "errorBoardUrlImportFailed": "Bord kan niet worden toegevoegd",
   "boardUrlImportTitle": "Bord toevoegen?",
   "boardUrlImportDescription": "Er wordt een bord van {host} aan je bibliotheek toegevoegd. Voeg het alleen toe als je de bron vertrouwt.",
   "boardUrlImportConfirm": "Toevoegen"

@@ -142,7 +142,7 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Набір дошок не знайдено",
-  "errorBoardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
+  "errorBoardUrlImportFailed": "Не вдалося додати дошку",
   "boardUrlImportTitle": "Додати дошку?",
   "boardUrlImportDescription": "До бібліотеки буде додано дошку із сайту {host}. Додавайте її, лише якщо довіряєте її джерелу.",
   "boardUrlImportConfirm": "Додати"

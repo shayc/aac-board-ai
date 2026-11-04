@@ -142,7 +142,7 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "errorBoardUrlImportFailed": "Couldn't import board file from link",
+  "errorBoardUrlImportFailed": "Couldn't add board",
   "boardUrlImportTitle": "Add board?",
   "boardUrlImportDescription": "A board from {host} will be added to your library. Only add it if you trust its source.",
   "boardUrlImportConfirm": "Add"

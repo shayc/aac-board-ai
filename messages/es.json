@@ -142,7 +142,7 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "errorBoardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
+  "errorBoardUrlImportFailed": "No se pudo añadir el tablero",
   "boardUrlImportTitle": "¿Añadir tablero?",
   "boardUrlImportDescription": "Se añadirá a tu biblioteca un tablero de {host}. Añádelo solo si confías en su origen.",
   "boardUrlImportConfirm": "Añadir"

@@ -142,7 +142,7 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "errorBoardUrlImportFailed": "बोर्ड नहीं जोड़ा जा सका",
   "boardUrlImportTitle": "बोर्ड जोड़ें?",
   "boardUrlImportDescription": "{host} से एक बोर्ड आपकी लाइब्रेरी में जोड़ा जाएगा। इसे तभी जोड़ें जब आपको इसके स्रोत पर भरोसा हो।",
   "boardUrlImportConfirm": "जोड़ें"

@@ -142,7 +142,7 @@
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
-  "errorBoardUrlImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
+  "errorBoardUrlImportFailed": "Tabuľku sa nepodarilo pridať",
   "boardUrlImportTitle": "Pridať tabuľku?",
   "boardUrlImportDescription": "Do knižnice sa pridá tabuľka z webu {host}. Pridajte ju, len ak dôverujete jej zdroju.",
   "boardUrlImportConfirm": "Pridať"

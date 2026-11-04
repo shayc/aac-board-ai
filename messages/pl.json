@@ -142,7 +142,7 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
+  "errorBoardUrlImportFailed": "Nie udało się dodać tablicy",
   "boardUrlImportTitle": "Dodać tablicę?",
   "boardUrlImportDescription": "Do biblioteki zostanie dodana tablica ze strony {host}. Dodaj ją tylko wtedy, gdy ufasz jej źródłu.",
   "boardUrlImportConfirm": "Dodaj"
