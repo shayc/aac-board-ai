@@ -126,7 +126,7 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("syncs repeated label position controls and persists the choice", async () => {
+  test("keeps repeated label position controls synchronized and persists the choice", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />

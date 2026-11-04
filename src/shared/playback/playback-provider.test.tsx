@@ -51,7 +51,7 @@ describe("PlaybackProvider", () => {
     audio = stubAudio();
   });
 
-  test("a new audio request interrupts speech from another owner", async () => {
+  test("interrupts speech from another owner when new audio is requested", async () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: PlaybackProvider,
@@ -72,7 +72,7 @@ describe("PlaybackProvider", () => {
     expect(audio.play).toHaveBeenCalledTimes(1);
   });
 
-  test("a new speech request interrupts and pauses audio", async () => {
+  test("interrupts and pauses audio when new speech is requested", async () => {
     audio.play.mockImplementationOnce(() => Promise.resolve());
     const { result } = await renderHook(() => usePlayback(), {
       wrapper: PlaybackProvider,

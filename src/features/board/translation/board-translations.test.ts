@@ -50,13 +50,16 @@ describe("getBoardLanguage", () => {
 });
 
 describe("findTranslations", () => {
-  test("matches regional translations by base language and returns nothing for an untranslated language", () => {
+  test("matches regional translations by base language", () => {
     expect(findTranslations(mockBoard.translations, "es")).toEqual(
       mockTranslations["es-ES"],
     );
     expect(findTranslations(mockBoard.translations, "fr")).toEqual(
       mockTranslations["fr-CA"],
     );
+  });
+
+  test("returns nothing for an untranslated language", () => {
     expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
     expect(findTranslations({}, "es")).toBeUndefined();
   });
@@ -77,7 +80,7 @@ describe("applyTranslations", () => {
   });
 
   test.each(["", " \t\n\u00a0 "])(
-    "normalizes blank translated text (%j)",
+    "clears text whose translation is blank (%j)",
     (text) => {
       const translated = applyTranslations(mockBoard, {
         "My Board": text,
