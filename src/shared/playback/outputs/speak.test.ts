@@ -34,86 +34,90 @@ function stubUtteranceVoiceAccessor(): void {
   });
 }
 
-describe("speak() without Web Speech API", () => {
-  beforeEach(() => {
-    vi.stubGlobal("speechSynthesis", undefined);
-  });
-
-  test("speak() resolves silently instead of throwing", async () => {
-    await expect(speak("hello")).resolves.toBeUndefined();
-  });
-});
-
-describe("speak() utterance mapping", () => {
-  beforeEach(() => {
-    stubVoices([{ voiceURI: "voice-1", name: "Voice One", lang: "en-US" }]);
-  });
-
-  test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
-    stubUtteranceVoiceAccessor();
-    const speech = stubSpeech();
-    setVoiceURI("voice-1");
-    setSpeechRate(1.5);
-    setSpeechPitch(0.5);
-    setSpeechVolume(0.25);
-
-    await speak("hi");
-
-    const utterance = speech.speak.mock.calls[0][0];
-    expect(utterance.rate).toBe(1.5);
-    expect(utterance.pitch).toBe(0.5);
-    expect(utterance.volume).toBe(0.25);
-    expect(utterance.voice?.voiceURI).toBe("voice-1");
-  });
-
-  test("clamps an out-of-range stored rate to the configured max", async () => {
-    const speech = stubSpeech();
-    localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
-    reloadPersistedStores();
-
-    await speak("hi");
-
-    const utterance = speech.speak.mock.calls[0][0];
-    expect(utterance.rate).toBe(SPEECH_RATE.max);
-  });
-});
-
-describe("speak() lifecycle", () => {
-  test("does not speak when the signal is already aborted", async () => {
-    const speech = stubSpeech();
-
-    await expect(
-      speak("hello", { signal: AbortSignal.abort() }),
-    ).resolves.toBeUndefined();
-
-    expect(speech.speak).not.toHaveBeenCalled();
-  });
-
-  test("cancels active speech and resolves when aborted", async () => {
-    const speech = stubSpeech();
-    speech.speak.mockImplementationOnce(() => undefined);
-    const controller = new AbortController();
-
-    const playback = speak("hello", { signal: controller.signal });
-    const cancelsBeforeAbort = speech.cancel.mock.calls.length;
-    controller.abort();
-
-    expect(speech.cancel.mock.calls.length).toBeGreaterThan(cancelsBeforeAbort);
-    await expect(playback).resolves.toBeUndefined();
-  });
-
-  test("resolves when speech synthesis fails", async () => {
-    const speech = stubSpeech();
-    let utterance: SpeechSynthesisUtterance | undefined;
-    speech.speak.mockImplementationOnce((spoken) => {
-      utterance = spoken;
+describe("speak", () => {
+  describe("without the Web Speech API", () => {
+    beforeEach(() => {
+      vi.stubGlobal("speechSynthesis", undefined);
     });
-    const playback = speak("hello");
 
-    utterance?.onerror?.({
-      error: "synthesis-failed",
-    } as SpeechSynthesisErrorEvent);
+    test("resolves silently instead of throwing", async () => {
+      await expect(speak("hello")).resolves.toBeUndefined();
+    });
+  });
 
-    await expect(playback).resolves.toBeUndefined();
+  describe("utterance mapping", () => {
+    beforeEach(() => {
+      stubVoices([{ voiceURI: "voice-1", name: "Voice One", lang: "en-US" }]);
+    });
+
+    test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
+      stubUtteranceVoiceAccessor();
+      const speech = stubSpeech();
+      setVoiceURI("voice-1");
+      setSpeechRate(1.5);
+      setSpeechPitch(0.5);
+      setSpeechVolume(0.25);
+
+      await speak("hi");
+
+      const utterance = speech.speak.mock.calls[0][0];
+      expect(utterance.rate).toBe(1.5);
+      expect(utterance.pitch).toBe(0.5);
+      expect(utterance.volume).toBe(0.25);
+      expect(utterance.voice?.voiceURI).toBe("voice-1");
+    });
+
+    test("clamps an out-of-range stored rate to the configured max", async () => {
+      const speech = stubSpeech();
+      localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
+      reloadPersistedStores();
+
+      await speak("hi");
+
+      const utterance = speech.speak.mock.calls[0][0];
+      expect(utterance.rate).toBe(SPEECH_RATE.max);
+    });
+  });
+
+  describe("lifecycle", () => {
+    test("does not speak when the signal is already aborted", async () => {
+      const speech = stubSpeech();
+
+      await expect(
+        speak("hello", { signal: AbortSignal.abort() }),
+      ).resolves.toBeUndefined();
+
+      expect(speech.speak).not.toHaveBeenCalled();
+    });
+
+    test("cancels active speech and resolves when aborted", async () => {
+      const speech = stubSpeech();
+      speech.speak.mockImplementationOnce(() => undefined);
+      const controller = new AbortController();
+
+      const playback = speak("hello", { signal: controller.signal });
+      const cancelsBeforeAbort = speech.cancel.mock.calls.length;
+      controller.abort();
+
+      expect(speech.cancel.mock.calls.length).toBeGreaterThan(
+        cancelsBeforeAbort,
+      );
+      await expect(playback).resolves.toBeUndefined();
+    });
+
+    test("resolves when speech synthesis fails", async () => {
+      const speech = stubSpeech();
+      let utterance: SpeechSynthesisUtterance | undefined;
+      speech.speak.mockImplementationOnce((spoken) => {
+        utterance = spoken;
+      });
+      const playback = speak("hello");
+
+      utterance?.onerror?.({
+        error: "synthesis-failed",
+      } as SpeechSynthesisErrorEvent);
+
+      await expect(playback).resolves.toBeUndefined();
+    });
   });
 });

@@ -30,7 +30,7 @@ describe("createPersistedStore", () => {
     expect(store.getSnapshot()).toEqual({ count: 5 });
   });
 
-  test("falls back to parse(undefined) on malformed JSON", () => {
+  test("falls back to the parsed default on malformed JSON", () => {
     localStorage.setItem("counter", "{ not json");
 
     const store = createPersistedStore("counter", parseCounter);

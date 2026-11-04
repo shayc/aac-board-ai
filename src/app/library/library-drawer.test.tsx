@@ -13,29 +13,38 @@ describe("LibraryDrawer", () => {
     await resetBoardsDB();
   });
 
-  test("shows the library title and closes via the close button, no a11y violations", async () => {
-    const onClose = vi.fn();
+  async function renderOpenDrawer(onClose = vi.fn()) {
     const router = createMemoryRouter(
       [{ path: "/", element: <LibraryDrawer open onClose={onClose} /> }],
       { initialEntries: ["/"] },
     );
 
-    const screen = await render(
+    return render(
       <AppProviders>
         <RouterProvider router={router} />
       </AppProviders>,
     );
+  }
+
+  test("shows the library title with no accessibility violations", async () => {
+    const screen = await renderOpenDrawer();
 
     await expect
       .element(screen.getByText("Library", { exact: true }))
       .toBeInTheDocument();
     await expectNoA11yViolations(document.body);
+  });
+
+  test("closes via the close button", async () => {
+    const onClose = vi.fn();
+    const screen = await renderOpenDrawer(onClose);
 
     await screen.getByRole("button", { name: "Close library" }).click();
+
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  test("activating a board link navigates and closes the drawer", async () => {
+  test("navigates and closes the drawer when a board link is activated", async () => {
     await seedBoardSets([
       { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
@@ -74,7 +83,7 @@ describe("LibraryDrawer", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  test("modified clicks keep the temporary drawer and current route open", async () => {
+  test("keeps the drawer and current route open on modified clicks", async () => {
     await seedBoardSets([
       { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);

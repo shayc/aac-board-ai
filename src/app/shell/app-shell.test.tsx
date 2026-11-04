@@ -42,13 +42,13 @@ describe("AppShell", () => {
     await page.viewport(originalViewport.width, originalViewport.height);
   });
 
-  test("has no a11y violations", async () => {
+  test("has no accessibility violations", async () => {
     await renderAppShell();
 
     await expectNoA11yViolations(document.body);
   });
 
-  test("library takes focus on open and returns it on close on desktop", async () => {
+  test("moves focus into the library on open and back on close on desktop", async () => {
     await page.viewport(1200, 800);
     const screen = await renderAppShellPastOnboarding();
 
@@ -65,7 +65,7 @@ describe("AppShell", () => {
       .toHaveFocus();
   });
 
-  test("settings drawer takes focus on open and returns it on close", async () => {
+  test("moves focus into the settings drawer on open and back on close", async () => {
     const screen = await renderAppShellPastOnboarding();
 
     await screen.getByRole("button", { name: "Open settings" }).click();
@@ -81,7 +81,7 @@ describe("AppShell", () => {
       .toHaveFocus();
   });
 
-  test("library returns focus to its opener on Escape", async () => {
+  test("returns focus from the library to its opener on Escape", async () => {
     const screen = await renderAppShellPastOnboarding();
     const openButton = screen.getByRole("button", { name: "Open library" });
 

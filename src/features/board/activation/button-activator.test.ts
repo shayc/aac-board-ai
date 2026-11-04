@@ -95,7 +95,7 @@ describe("createButtonActivator", () => {
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
 
-  test("maps home to navigation.goHome", () => {
+  test("navigates home for a home action", () => {
     const { activateButton, navigation } = setup();
 
     activateButton({ id: "btn", label: "", actions: [{ kind: "home" }] });

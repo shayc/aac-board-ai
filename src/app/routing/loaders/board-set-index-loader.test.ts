@@ -17,7 +17,7 @@ describe("boardSetIndexLoader", () => {
     await resetBoardsDB();
   });
 
-  test("redirects to the root board route on the happy path", async () => {
+  test("redirects to the board set's root board", async () => {
     await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
 
     const response = await callLoader("set-1");

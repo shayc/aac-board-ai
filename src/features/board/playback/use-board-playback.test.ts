@@ -70,7 +70,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("stop() cancels speech and clears playing and active-part state", async () => {
+  test("cancels speech and clears playing and active-part state on stop", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       utterance.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
@@ -219,7 +219,7 @@ describe("useBoardPlayback", () => {
     await playPromise;
   });
 
-  test("a second playMessage() call aborts the first and speaks only its own parts", async () => {
+  test("aborts the playing message and speaks only the new one when playMessage() is called again", async () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => {

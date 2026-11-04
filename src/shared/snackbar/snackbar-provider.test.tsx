@@ -39,7 +39,7 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
 }
 
 describe("SnackbarProvider", () => {
-  test("a new message replaces the current one after its exit transition", async () => {
+  test("replaces the current message with a new one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
       "show-second": { message: "second", durationMs: LONG_DURATION_MS },
@@ -75,7 +75,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
-  test("shows a plain-string message with no a11y violations", async () => {
+  test("shows a plain-string message with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();

@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, test } from "vitest";
 import { sanitizeColor } from "./sanitize-color";
 
 describe("sanitizeColor", () => {
-  it.each([
+  test.each([
     "#ff0000",
     "rgb(0 0 0)",
     "rgba(0, 0, 0, 0.5)",
@@ -13,20 +13,20 @@ describe("sanitizeColor", () => {
     expect(sanitizeColor(color)).toBe(color);
   });
 
-  it("rejects a CSS breakout payload", () => {
+  test("rejects a CSS breakout payload", () => {
     expect(
       sanitizeColor("x); } a { background-image: url(https://evil.example) }"),
     ).toBeUndefined();
   });
 
-  it.each(["", "not-a-color", "red; background: url(x)"])(
-    "rejects invalid value %s",
+  test.each(["", "not-a-color", "red; background: url(x)"])(
+    "rejects invalid color %j",
     (color) => {
       expect(sanitizeColor(color)).toBeUndefined();
     },
   );
 
-  it("returns undefined for undefined input", () => {
+  test("returns undefined for undefined input", () => {
     expect(sanitizeColor(undefined)).toBeUndefined();
   });
 });

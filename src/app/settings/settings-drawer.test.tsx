@@ -10,7 +10,7 @@ import { render } from "vitest-browser-react";
 import { SettingsDrawer } from "./settings-drawer";
 
 describe("SettingsDrawer", () => {
-  test("renders every settings section when open, with no a11y violations", async () => {
+  test("renders every settings section when open with no accessibility violations", async () => {
     stubProofreader();
     stubRewriter();
     stubTranslator();
@@ -105,7 +105,7 @@ describe("SettingsDrawer", () => {
       .toHaveAttribute("aria-valuetext", expect.stringMatching(/^100\s%$/));
   });
 
-  test("close button invokes onClose", async () => {
+  test("calls onClose when the close button is clicked", async () => {
     const onClose = vi.fn();
     const screen = await render(
       <AppProviders>
