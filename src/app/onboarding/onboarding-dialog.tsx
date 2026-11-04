@@ -88,7 +88,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         },
       }}
     >
-      <Box sx={{ my: "auto", pt: 4 }}>
+      <Box sx={{ my: "auto", pt: 6 }}>
         <Box
           component="img"
           alt=""
@@ -125,8 +125,9 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 3,
+              gap: 2,
               mt: 4,
+              pl: 2,
             }}
           >
             {highlights.map((highlight) => (
