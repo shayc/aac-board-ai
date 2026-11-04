@@ -50,10 +50,12 @@ const shadows = [
 ] as Shadows;
 
 function softShadow(elevation: number) {
-  const keyOffset = Math.round(elevation / 2);
-  const ambientAlpha = (0.07 + elevation * 0.003).toFixed(3);
+  const ring = "0 0 0 1px rgb(16 24 40 / 0.05)";
+  const key = `0 ${Math.ceil(elevation / 2)}px ${elevation + 1}px rgb(16 24 40 / 0.06)`;
+  const ambientAlpha = (0.1 + elevation * 0.003).toFixed(3);
+  const ambient = `0 ${2 * elevation}px ${4 * elevation}px -${1.5 * elevation}px rgb(16 24 40 / ${ambientAlpha})`;
 
-  return `0 ${keyOffset}px ${elevation + 1}px rgb(16 24 40 / 0.08), 0 ${elevation + 1}px ${3 * elevation + 3}px rgb(16 24 40 / ${ambientAlpha})`;
+  return `${ring}, ${key}, ${ambient}`;
 }
 
 // Theme overrides follow MUI's state rules, so the sticky touch hover would
