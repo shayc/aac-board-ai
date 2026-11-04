@@ -72,7 +72,7 @@ describe("importBoardSetFromUrl", () => {
     expect(result.id).toBe("board");
   });
 
-  test("throws on HTTP error responses", async () => {
+  test("rejects with the HTTP status when the download fails", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(null, { status: 404 }),
     );

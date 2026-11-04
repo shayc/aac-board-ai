@@ -75,7 +75,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
-  test("shows a plain-string message with no a11y violations", async () => {
+  test("shows a plain-string message with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();

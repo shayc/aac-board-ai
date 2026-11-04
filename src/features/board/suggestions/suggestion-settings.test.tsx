@@ -51,7 +51,7 @@ describe("SuggestionSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
-  test("shows custom instructions when the rewriter is supported, with no a11y violations", async () => {
+  test("shows custom instructions when the rewriter is supported with no accessibility violations", async () => {
     stubProofreader();
     stubRewriter();
     stubTranslator();

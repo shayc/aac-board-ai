@@ -10,7 +10,7 @@ function preventAudioEnd(audio: ReturnType<typeof stubAudio>) {
   });
 }
 
-describe("playAudio output", () => {
+describe("playAudio", () => {
   let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(() => {

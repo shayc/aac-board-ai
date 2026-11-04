@@ -5,7 +5,7 @@ import { render } from "vitest-browser-react";
 import { ThemeSettings } from "./theme-settings";
 
 describe("ThemeSettings", () => {
-  test("keeps repeated theme controls synchronized with no a11y violations", async () => {
+  test("keeps repeated theme controls synchronized with no accessibility violations", async () => {
     const screen = await render(
       <AppProviders>
         <ThemeSettings />

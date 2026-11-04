@@ -12,7 +12,7 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetDetailsDialog", () => {
-  test("shows the available metadata with no a11y violations", async () => {
+  test("shows the available metadata with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDetailsDialog
         boardSet={makeBoardSetRecord({

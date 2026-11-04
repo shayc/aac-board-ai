@@ -61,7 +61,7 @@ function getImageUrl(board: Board): string {
 describe("loadStoredBoard", () => {
   beforeEach(resetBoardsDB);
 
-  test("returns a board with asset URLs on the happy path", async () => {
+  test("returns the board with its asset URLs", async () => {
     await seedTestBoard();
 
     const board = await loadStoredBoard(SET_ID, BOARD_ID);

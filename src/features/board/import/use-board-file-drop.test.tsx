@@ -87,7 +87,7 @@ describe("useBoardFileDrop", () => {
     await expect.element(zone).toHaveTextContent("idle");
   });
 
-  test("stays visible while crossing nested elements (no flicker)", async () => {
+  test("stays visible while crossing nested elements", async () => {
     const { zone } = await renderDropZone();
     const dataTransfer = dataTransferWithFiles(new File([""], "notes.txt"));
     const insideApp = zone;

@@ -41,14 +41,16 @@ const mockBoard: Board = {
   translations: mockTranslations,
 };
 
-describe("board-translations", () => {
-  test("getBoardLanguage() extracts the base language code", () => {
+describe("getBoardLanguage", () => {
+  test("returns the base language of the board locale, defaulting to English", () => {
     expect(getBoardLanguage(mockBoard)).toBe("en");
     expect(getBoardLanguage({ ...mockBoard, locale: undefined })).toBe("en");
     expect(getBoardLanguage({ ...mockBoard, locale: "pt-BR" })).toBe("pt");
   });
+});
 
-  test("findTranslations() matches language codes correctly", () => {
+describe("findTranslations", () => {
+  test("matches regional translations by base language and returns nothing for an untranslated language", () => {
     expect(findTranslations(mockBoard.translations, "es")).toEqual(
       mockTranslations["es-ES"],
     );
@@ -58,8 +60,10 @@ describe("board-translations", () => {
     expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
     expect(findTranslations({}, "es")).toBeUndefined();
   });
+});
 
-  test("applyTranslations() maps translations onto board structure", () => {
+describe("applyTranslations", () => {
+  test("translates the board name and labels, leaving untranslated text unchanged", () => {
     const translations = {
       "My Board": "Mi Tablero",
       Hello: "Hola",
@@ -73,7 +77,7 @@ describe("board-translations", () => {
   });
 
   test.each(["", " \t\n\u00a0 "])(
-    "applyTranslations() normalizes blank translated board text %j",
+    "normalizes blank translated text (%j)",
     (text) => {
       const translated = applyTranslations(mockBoard, {
         "My Board": text,
@@ -87,7 +91,7 @@ describe("board-translations", () => {
     },
   );
 
-  test("applyTranslations() preserves exact source keys and nonblank translated text", () => {
+  test("matches source text exactly and keeps translated whitespace", () => {
     const board: Board = {
       ...mockBoard,
       name: " My Board ",
@@ -111,8 +115,10 @@ describe("board-translations", () => {
     expect(translated.buttons[0].label).toBe(" Hola ");
     expect(translated.buttons[0].vocalization).toBe("\tHola a todos\n");
   });
+});
 
-  test("collectTranslatablePhrases() extracts all unique UI text", () => {
+describe("collectTranslatablePhrases", () => {
+  test("collects each unique nonblank name, label, and vocalization", () => {
     const phrases = collectTranslatablePhrases(mockBoard);
 
     expect(phrases.size).toBe(3);
@@ -120,19 +126,21 @@ describe("board-translations", () => {
     expect(phrases.has("Hello")).toBe(true);
     expect(phrases.has("Hello there")).toBe(true);
   });
+});
 
-  test("findBoardForLanguage() returns early if languages match", () => {
+describe("findBoardForLanguage", () => {
+  test("returns the board itself when its language matches", () => {
     expect(findBoardForLanguage(mockBoard, "en")).toBe(mockBoard);
   });
 
-  test("findBoardForLanguage() returns translated board if cached translations exist", () => {
+  test("returns a translated board from cached translations", () => {
     const translated = findBoardForLanguage(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0].label).toBe("Hola");
   });
 
-  test("findBoardForLanguage() returns undefined if translations are missing", () => {
+  test("returns nothing when the language has no cached translations", () => {
     expect(findBoardForLanguage(mockBoard, "de")).toBeUndefined();
   });
 });

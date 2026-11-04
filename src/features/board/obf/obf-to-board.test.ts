@@ -407,7 +407,7 @@ describe("obfToBoard", () => {
       expect(board.buttons[0]?.soundSrc).toBeUndefined();
     });
 
-    test("handles missing images and sounds arrays gracefully", () => {
+    test("leaves a button without image or sound when the board lists no media", () => {
       const obfBoard: OBFBoard = {
         format: "open-board-0.1",
         id: "board-no-media-arrays",

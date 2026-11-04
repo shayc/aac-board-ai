@@ -15,7 +15,7 @@ describe("normalizeLocale", () => {
     ["zh-TW", "zh-TW"],
     ["zh-hant", "zh-Hant"],
     ["zh-hant-cn", "zh-Hant-CN"],
-  ])("normalizes %s → %s", (input, expected) => {
+  ])("normalizes %j to %j", (input, expected) => {
     expect(normalizeLocale(input)).toBe(expected);
   });
 
@@ -31,7 +31,7 @@ describe("getLanguageCode", () => {
     ["pt_BR", "pt"],
     ["EN-GB", "en"],
     ["zh-Hant-CN", "zh"],
-  ])("extracts primary language from %s → %s", (input, expected) => {
+  ])("extracts the primary language of %j as %j", (input, expected) => {
     expect(getLanguageCode(input)).toBe(expected);
   });
 });

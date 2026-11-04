@@ -42,7 +42,7 @@ describe("AppShell", () => {
     await page.viewport(originalViewport.width, originalViewport.height);
   });
 
-  test("has no a11y violations", async () => {
+  test("has no accessibility violations", async () => {
     await renderAppShell();
 
     await expectNoA11yViolations(document.body);

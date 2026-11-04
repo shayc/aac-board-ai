@@ -9,7 +9,7 @@ function key(overrides: Partial<BoardKeyEvent>): BoardKeyEvent {
 }
 
 describe("resolveBoardShortcut", () => {
-  test("Backspace applies message backspace behavior", () => {
+  test("Backspace resolves to the backspace action", () => {
     expect(resolveBoardShortcut(key({ key: "Backspace" }), false)).toEqual({
       kind: "backspace",
     });
@@ -28,7 +28,7 @@ describe("resolveBoardShortcut", () => {
     });
   });
 
-  test("⌘/Ctrl+Enter speaks, but is inert while already speaking", () => {
+  test("⌘/Ctrl+Enter speaks only while idle", () => {
     expect(
       resolveBoardShortcut(key({ key: "Enter", metaKey: true }), false),
     ).toEqual({
@@ -55,7 +55,7 @@ describe("resolveBoardShortcut", () => {
     expect(resolveBoardShortcut(key({ key: "Enter" }), false)).toBeNull();
   });
 
-  test("typing keys are not yet claimed — spelling comes later", () => {
+  test("does not claim printable keys", () => {
     for (const typed of ["h", "5", "!", " "]) {
       expect(resolveBoardShortcut(key({ key: typed }), false)).toBeNull();
     }

@@ -66,7 +66,7 @@ describe("CommunicationBoard", () => {
     await resetBoardsDB();
   });
 
-  test("composing tiles and pressing play speaks the merged message", async () => {
+  test("speaks the composed message when play is pressed", async () => {
     const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
     await screen.getByRole("button", { name: "hello" }).click();
@@ -148,7 +148,7 @@ describe("CommunicationBoard", () => {
     },
   );
 
-  test("a button that spells then speaks in one tap speaks the spelled letter", async () => {
+  test("speaks a letter spelled earlier in the same tap", async () => {
     const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
 
     await screen.getByRole("button", { name: "S", exact: true }).click();
@@ -159,7 +159,7 @@ describe("CommunicationBoard", () => {
     });
   });
 
-  test("a linked tile navigates without running its actions or playing its content", async () => {
+  test("navigates from a linked tile without running its actions or playing its content", async () => {
     await seedBoardSets([{ id: "set-1", rootBoardId: "test-board" }]);
     const board: OBFBoard = {
       ...TWO_BUTTON_BOARD,
@@ -380,7 +380,7 @@ describe("CommunicationBoard", () => {
   );
 
   test.each(["", " \t\n "])(
-    "speaks the label when vocalization is blank %j",
+    "speaks the label when the vocalization is blank (%j)",
     async (vocalization) => {
       const board: OBFBoard = {
         ...TWO_BUTTON_BOARD,

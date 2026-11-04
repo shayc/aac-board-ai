@@ -30,7 +30,7 @@ describe("LanguageSettings", () => {
       .toBeInTheDocument();
   });
 
-  test("enables the language select when the Translator is available, with no a11y violations", async () => {
+  test("enables the language select when the Translator is available with no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
     stubTranslator();
 

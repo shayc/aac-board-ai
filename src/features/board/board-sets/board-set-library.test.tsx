@@ -97,7 +97,7 @@ describe("BoardSetLibrary", () => {
       .not.toBeInTheDocument();
   });
 
-  test("lists the stored board sets with no a11y violations", async () => {
+  test("lists the stored board sets with no accessibility violations", async () => {
     await seedBoardSets([
       { id: "animals", rootBoardId: "root", name: "Animals" },
       { id: "core-words", rootBoardId: "root", name: "Core Words" },

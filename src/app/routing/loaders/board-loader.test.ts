@@ -43,7 +43,7 @@ describe("boardLoader", () => {
     });
   });
 
-  test("returns the stored board on the happy path", async () => {
+  test("returns the stored board", async () => {
     await seedBoardSets([
       {
         id: "set-1",

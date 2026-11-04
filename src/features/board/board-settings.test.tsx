@@ -6,7 +6,7 @@ import { render } from "vitest-browser-react";
 import { BoardSettings } from "./board-settings";
 
 describe("BoardSettings", () => {
-  test("renders the board controls with no a11y violations", async () => {
+  test("renders the board controls with no accessibility violations", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -71,7 +71,7 @@ describe("BoardSettings", () => {
     }
   });
 
-  test("toggling tile borders persists their visibility", async () => {
+  test("persists tile border visibility when toggled", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -96,7 +96,7 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("lowering color intensity persists tile saturation", async () => {
+  test("persists tile saturation when color intensity is lowered", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />
@@ -126,7 +126,7 @@ describe("BoardSettings", () => {
     });
   });
 
-  test("changing the tile label position updates repeated controls and persists", async () => {
+  test("syncs repeated label position controls and persists the choice", async () => {
     const screen = await render(
       <AppProviders>
         <BoardSettings />

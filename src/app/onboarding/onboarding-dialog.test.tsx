@@ -18,7 +18,7 @@ function renderDialog(onClose: () => void) {
 }
 
 describe("OnboardingDialog", () => {
-  test("renders the onboarding content with no a11y violations", async () => {
+  test("renders the onboarding content with no accessibility violations", async () => {
     stubBuiltInAIUnsupported("Rewriter");
     const screen = await renderDialog(vi.fn());
 
@@ -64,7 +64,7 @@ describe("OnboardingDialog", () => {
       .not.toBeInTheDocument();
   });
 
-  test("continue invokes onClose", async () => {
+  test("calls onClose when Continue is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderDialog(onClose);
 

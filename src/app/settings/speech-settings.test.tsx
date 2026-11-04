@@ -55,7 +55,7 @@ describe("SpeechSettings", () => {
       .not.toBeInTheDocument();
   });
 
-  test("renders the speech sliders and preview action with no a11y violations", async () => {
+  test("renders the speech sliders and preview action with no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
 
     const screen = await renderSpeechSettings();

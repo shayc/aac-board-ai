@@ -11,7 +11,7 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetDeleteDialog", () => {
-  test("shows the single-board warning with no a11y violations", async () => {
+  test("shows the single-board warning with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
         boardSet={makeBoardSetRecord({ name: "Core Words", boardCount: 1 })}
