@@ -191,13 +191,16 @@ describe("Tile", () => {
     const restingLuminance = backgroundLuminance(lightTile);
 
     await lightTile.hover();
+    await expect
+      .poll(() => backgroundLuminance(lightTile))
+      .toBeLessThan(restingLuminance);
     const lightHoverLuminance = backgroundLuminance(lightTile);
-    await darkTile.hover();
-    const darkHoverLuminance = backgroundLuminance(darkTile);
-    await darkTile.unhover();
 
-    expect(lightHoverLuminance).toBeLessThan(restingLuminance);
-    expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
+    await darkTile.hover();
+    await expect
+      .poll(() => backgroundLuminance(darkTile))
+      .toBeLessThan(lightHoverLuminance);
+    await darkTile.unhover();
   });
 
   test.each([
