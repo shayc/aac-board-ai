@@ -1,8 +1,11 @@
-import Alert from "@mui/material/Alert";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert, { alertClasses } from "@mui/material/Alert";
+import IconButton from "@mui/material/IconButton";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { STATUS_DARK, STATUS_LIGHT } from "@shared/theme/theme-colors";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -12,6 +15,7 @@ import {
 } from "./snackbar-context";
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
+const AUTO_HIDE_DURATION_MS = 5000;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -79,6 +83,21 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     typeof state.current?.message === "function"
       ? state.current.message(t)
       : state.current?.message;
+  const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const action = state.current?.action && (
+    <>
+      {state.current.action}
+      <IconButton
+        aria-label={t(m.close)}
+        title={t(m.close)}
+        size="small"
+        color="inherit"
+        onClick={() => handleClose()}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </>
+  );
 
   return (
     <SnackbarContext value={contextValue}>
@@ -88,7 +107,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={state.current?.durationMs ?? 4000}
+        autoHideDuration={state.current && autoHideDurationMs(state.current)}
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",
@@ -97,16 +116,49 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       >
         <Alert
           closeText={t(m.close)}
-          action={state.current?.action}
-          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
+          action={action}
+          severity={severity}
+          variant={severity === "error" ? "filled" : "standard"}
           onClose={handleClose}
-          sx={{ width: "100%" }}
+          sx={[
+            (theme) => ({
+              width: "100%",
+              boxShadow: theme.vars.shadows[6],
+            }),
+            severity !== "error" &&
+              ((theme) => ({
+                color: theme.vars.palette.SnackbarContent.color,
+                backgroundColor: theme.vars.palette.SnackbarContent.bg,
+                [`& .${alertClasses.icon}`]: {
+                  color: STATUS_DARK[severity],
+                  ...theme.applyStyles("dark", {
+                    color: STATUS_LIGHT[severity],
+                  }),
+                },
+              })),
+          ]}
         >
           {message}
         </Alert>
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function autoHideDurationMs({
+  durationMs,
+  severity,
+  action,
+}: SnackbarOptions): number | null {
+  if (durationMs !== undefined) {
+    return durationMs;
+  }
+
+  if (severity === "error" || action) {
+    return null;
+  }
+
+  return AUTO_HIDE_DURATION_MS;
 }
 
 function snackbarReducer(

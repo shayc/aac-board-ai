@@ -2,7 +2,7 @@ import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
@@ -39,6 +39,53 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
 }
 
 describe("SnackbarProvider", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test("auto-hides a success message after a few seconds", async () => {
+    vi.useFakeTimers();
+    const screen = await renderSnackbars({
+      "show-saved": { message: "Saved", severity: "success" },
+    });
+
+    await screen.getByRole("button", { name: "show-saved" }).click();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+
+    await vi.advanceTimersByTimeAsync(10_000);
+
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+  });
+
+  test.each([
+    { name: "an error", options: { message: "Failed", severity: "error" } },
+    {
+      name: "a message with an action",
+      options: { message: "Failed", action: <button>Retry</button> },
+    },
+  ] satisfies { name: string; options: SnackbarOptions }[])(
+    "keeps $name open until closed",
+    async ({ options }) => {
+      vi.useFakeTimers();
+      const screen = await renderSnackbars({ "show-sticky": options });
+
+      await screen.getByRole("button", { name: "show-sticky" }).click();
+      await expect
+        .element(screen.getByRole("alert"))
+        .toMatchTextContent("Failed");
+
+      await vi.advanceTimersByTimeAsync(10 * 60_000);
+      await expect
+        .element(screen.getByRole("alert"))
+        .toMatchTextContent("Failed");
+
+      await screen.getByRole("button", { name: "Close" }).click();
+      await vi.advanceTimersByTimeAsync(1000);
+
+      await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    },
+  );
+
   test("replaces the current message with a new one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
@@ -90,6 +137,27 @@ describe("SnackbarProvider", () => {
 
     await expectNoA11yViolations(document.body);
   });
+
+  test.each(["success", "info", "warning", "error"] as const)(
+    "shows a %s message with no accessibility violations",
+    async (severity) => {
+      const screen = await renderSnackbars({
+        "show-status": {
+          message: "Status",
+          severity,
+          durationMs: LONG_DURATION_MS,
+        },
+      });
+
+      await screen.getByRole("button", { name: "show-status" }).click();
+      await vi.waitFor(() => {
+        const alert = screen.getByRole("alert").element();
+        expect(getComputedStyle(alert).opacity).toBe("1");
+      });
+
+      await expectNoA11yViolations(document.body);
+    },
+  );
 
   test("retranslates a visible localized message when the locale changes", async () => {
     const screen = await renderSnackbars({

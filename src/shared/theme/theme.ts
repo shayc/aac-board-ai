@@ -7,7 +7,14 @@ import {
   type ThemeOptions,
 } from "@mui/material/styles";
 import { safeAreaInset } from "./safe-area";
-import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
+import {
+  INVERSE_SURFACE_DARK,
+  INVERSE_SURFACE_LIGHT,
+  SHELL_DARK,
+  SHELL_LIGHT,
+  STATUS_DARK,
+  STATUS_LIGHT,
+} from "./theme-colors";
 
 declare module "@mui/material/styles" {
   interface CssThemeVariables {
@@ -80,7 +87,11 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: "#0967d4" },
+        primary: { main: STATUS_LIGHT.info },
+        info: { main: STATUS_LIGHT.info },
+        success: { main: STATUS_LIGHT.success },
+        warning: { main: STATUS_LIGHT.warning },
+        error: { main: STATUS_LIGHT.error },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -88,6 +99,7 @@ const themeOptions = {
           inheritContainedHoverBg: grey[100],
         },
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
+        SnackbarContent: { bg: INVERSE_SURFACE_LIGHT, color: grey[100] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
     },
@@ -95,8 +107,16 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
-        error: { main: "#f2b8b5" },
+        info: { main: STATUS_DARK.info },
+        success: { main: STATUS_DARK.success },
+        warning: { main: STATUS_DARK.warning },
+        error: { main: STATUS_DARK.error },
+        Alert: {
+          errorFilledBg: STATUS_DARK.error,
+          errorFilledColor: "#601410",
+        },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
+        SnackbarContent: { bg: INVERSE_SURFACE_DARK, color: grey[900] },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
     },
