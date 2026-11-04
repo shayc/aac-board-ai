@@ -1,3 +1,4 @@
+import Dialog from "@mui/material/Dialog";
 import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
@@ -9,6 +10,7 @@ import { useSnackbar } from "./use-snackbar";
 
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
+const APP_BAR_CLEARANCE_PX = 96;
 
 function ShowButtons({
   snackbars,
@@ -18,7 +20,7 @@ function ShowButtons({
   const { showSnackbar } = useSnackbar();
 
   return (
-    <>
+    <div style={{ paddingTop: APP_BAR_CLEARANCE_PX }}>
       {Object.entries(snackbars).map(([name, options]) => (
         <button key={name} onClick={() => showSnackbar(options)}>
           {name}
@@ -26,7 +28,7 @@ function ShowButtons({
       ))}
       <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
       <button>outside</button>
-    </>
+    </div>
   );
 }
 
@@ -94,6 +96,20 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("failed");
   });
 
+  test("announces a message while a modal hides the rest of the page", async () => {
+    const screen = await render(
+      <AppProviders>
+        <Dialog open>
+          <ShowButtons snackbars={{ "show-saved": "saved" }} />
+        </Dialog>
+      </AppProviders>,
+    );
+
+    await screen.getByRole("button", { name: "show-saved" }).click();
+
+    await expect.element(screen.getByRole("status")).toHaveTextContent("saved");
+  });
+
   test("hides a success message after its default duration", async () => {
     const screen = await renderSnackbars({
       "show-saved": { message: "saved", severity: "success" },
@@ -104,7 +120,7 @@ describe("SnackbarProvider", () => {
     await vi.advanceTimersByTimeAsync(60_000);
     vi.useRealTimers();
 
-    await expect.element(screen.getByText("saved")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
   });
 
   test("keeps an error visible until it is dismissed", async () => {
@@ -117,11 +133,11 @@ describe("SnackbarProvider", () => {
     await vi.advanceTimersByTimeAsync(60_000);
     vi.useRealTimers();
 
-    await expect.element(screen.getByText("failed")).toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("failed");
 
     await screen.getByRole("button", { name: "Close" }).click();
 
-    await expect.element(screen.getByText("failed")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
   test("shows a plain-string message with no accessibility violations", async () => {
@@ -133,8 +149,7 @@ describe("SnackbarProvider", () => {
     // Axe computes color contrast against blended colors while the Grow
     // transition is still animating opacity, so wait for it to settle.
     await vi.waitFor(() => {
-      const message = screen.getByRole("status").element();
-      expect(getComputedStyle(message).opacity).toBe("1");
+      expect(document.getAnimations()).toHaveLength(0);
     });
 
     await expectNoA11yViolations(document.body);

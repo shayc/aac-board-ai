@@ -3,6 +3,7 @@
   "appName": "AAC Board AI",
   "loading": "Loading...",
   "close": "Close",
+  "notifications": "Notifications",
   "opensInNewTab": "(opens in new tab)",
   "boardGridLabel": "Communication board",
   "boardSelectorLabel": "Board",

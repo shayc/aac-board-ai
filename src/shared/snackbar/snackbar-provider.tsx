@@ -11,6 +11,7 @@ import {
   type SnackbarOptions,
   type SnackbarSeverity,
 } from "./snackbar-context";
+import { SnackbarAnnouncement } from "./snackbar-announcement";
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const DEFAULT_SNACKBAR_DURATION_MS = 5000;
@@ -92,19 +93,30 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     <SnackbarContext value={contextValue}>
       {children}
 
+      {state.current && message && (
+        <SnackbarAnnouncement
+          key={`announcement-${state.current.key}`}
+          message={message}
+          isAssertive={isError}
+        />
+      )}
+
       <Snackbar
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
         autoHideDuration={durationMs}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        slotProps={{ transition: { onExited: handleExited } }}
+        slotProps={{
+          root: { role: "region", "aria-label": t(m.notifications) },
+          transition: { onExited: handleExited },
+        }}
         sx={overAppBar}
       >
         <Alert
           closeText={t(m.close)}
           action={state.current?.action}
-          role={isError ? "alert" : "status"}
+          role="presentation"
           severity={severity}
           variant={isError ? "filled" : "standard"}
           onClose={handleClose}
