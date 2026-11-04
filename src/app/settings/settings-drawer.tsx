@@ -131,7 +131,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             >
               <GitHubIcon
                 fontSize="small"
-                sx={{ mr: 2, verticalAlign: "text-bottom" }}
+                sx={{ mr: 1, verticalAlign: "text-bottom" }}
               />
               {t(m.aboutSourceCode)}
             </ExternalLink>
