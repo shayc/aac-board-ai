@@ -37,11 +37,10 @@ export function buildGrid<TItem extends { id: string }>(
 export function findFirstOccupiedPosition(
   grid: readonly (readonly unknown[])[],
 ): GridPosition {
-  for (let row = 0; row < grid.length; row++) {
-    for (let column = 0; column < grid[row].length; column++) {
-      if (grid[row][column]) {
-        return { row, column };
-      }
+  for (const [row, cells] of grid.entries()) {
+    const column = cells.findIndex(Boolean);
+    if (column !== -1) {
+      return { row, column };
     }
   }
 

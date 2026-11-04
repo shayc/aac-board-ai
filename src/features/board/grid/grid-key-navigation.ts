@@ -49,9 +49,7 @@ function findEdgeTarget(
   );
   const goesToFirst = event.key === "Home";
 
-  return (
-    (goesToFirst ? candidates[0] : candidates[candidates.length - 1]) ?? null
-  );
+  return (goesToFirst ? candidates[0] : candidates.at(-1)) ?? null;
 }
 
 function resolveArrowStep(

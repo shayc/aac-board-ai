@@ -1,5 +1,5 @@
 function parseLocale(locale: string): Intl.Locale {
-  return new Intl.Locale(locale.replace(/_/g, "-"));
+  return new Intl.Locale(locale.replaceAll("_", "-"));
 }
 
 /**
