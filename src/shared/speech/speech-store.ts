@@ -33,7 +33,7 @@ export const SPEECH_PITCH: ClampedNumberOptions = {
   fallback: 1,
 };
 export const SPEECH_VOLUME: ClampedNumberOptions = {
-  min: 0,
+  min: 0.1,
   max: 1,
   fallback: 1,
 };

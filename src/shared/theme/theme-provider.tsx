@@ -309,6 +309,14 @@ const themeOptions = {
             },
           ],
         },
+        mark: {
+          width: 2,
+          height: 12,
+          borderRadius: 1,
+        },
+        markActive: ({ theme }) => ({
+          backgroundColor: (theme.vars ?? theme).palette.background.default,
+        }),
       },
     },
     MuiTooltip: {

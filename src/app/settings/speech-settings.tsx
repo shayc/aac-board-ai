@@ -69,6 +69,7 @@ export function SpeechSettings() {
       value: rate,
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
+      normalValue: SPEECH_RATE.fallback,
       onChange: setSpeechRate,
       formatValue: (value: number) => `${multiplierFormat.format(value)}×`,
     },
@@ -78,6 +79,7 @@ export function SpeechSettings() {
       value: pitch,
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
+      normalValue: SPEECH_PITCH.fallback,
       onChange: setSpeechPitch,
       formatValue: (value: number) => percentFormat.format(value),
     },
@@ -120,7 +122,16 @@ export function SpeechSettings() {
       </SettingsSelect>
 
       {speechControls.map(
-        ({ id, label, value, min, max, onChange, formatValue }) => (
+        ({
+          id,
+          label,
+          value,
+          min,
+          max,
+          normalValue,
+          onChange,
+          formatValue,
+        }) => (
           <SettingsSlider
             key={id}
             label={label}
@@ -129,6 +140,7 @@ export function SpeechSettings() {
             min={min}
             max={max}
             step={0.1}
+            normalValue={normalValue}
             formatValue={formatValue}
           />
         ),

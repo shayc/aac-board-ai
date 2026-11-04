@@ -1,3 +1,4 @@
+import { sliderClasses } from "@mui/material/Slider";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
@@ -83,6 +84,20 @@ describe("SpeechSettings", () => {
     await expectNoA11yViolations(screen.container);
   });
 
+  test("marks the normal value on speed and pitch only", async () => {
+    const screen = await renderSpeechSettings();
+    const markCounts = ["Speed", "Pitch", "Volume"].map(
+      (name) =>
+        screen
+          .getByRole("slider", { name })
+          .element()
+          .closest(`.${sliderClasses.root}`)
+          ?.querySelectorAll(`.${sliderClasses.mark}`).length,
+    );
+
+    expect(markCounts).toEqual([1, 1, 0]);
+  });
+
   test("selects and persists a voice", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
@@ -128,6 +143,17 @@ describe("SpeechSettings", () => {
         volume: 0.9,
       });
     });
+  });
+
+  test("keeps volume above silence at the lowest setting", async () => {
+    const screen = await renderSpeechSettings();
+    const volumeSlider = screen.getByRole("slider", { name: "Volume" });
+
+    volumeSlider.element().focus();
+    await userEvent.keyboard("{Home}");
+
+    await expect.element(volumeSlider).toHaveAttribute("aria-valuenow", "0.1");
+    await expect.element(volumeSlider).toHaveAttribute("aria-valuetext", "10%");
   });
 
   test("plays the voice preview through app playback", async () => {
