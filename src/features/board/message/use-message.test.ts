@@ -46,4 +46,18 @@ describe("useMessage", () => {
 
     expect(result.current.parts).toHaveLength(0);
   });
+
+  test("exposes each edit to handlers before the next render", async () => {
+    const { result } = await renderHook(() => useMessage());
+    const message = result.current;
+
+    message.replaceWithText("I want water");
+    message.backspace();
+
+    expect(message.getParts().map((part) => part.label)).toEqual([
+      "I",
+      "want",
+      "wate",
+    ]);
+  });
 });

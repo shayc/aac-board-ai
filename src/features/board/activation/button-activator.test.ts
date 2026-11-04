@@ -10,7 +10,7 @@ type ActivationPlayback = ActivationOptions["playback"];
 
 function setup(parts: MessagePart[] = []) {
   const message = {
-    parts,
+    getParts: () => parts,
     setParts: vi.fn<(parts: MessagePart[]) => void>(),
   };
   const playback = {

@@ -82,19 +82,42 @@ function GridRow<TItem extends { id: string }>({
   return (
     <Stack role="row" direction="row" sx={gridRowSx}>
       {items.map((item, columnIndex) => (
-        <Stack
+        <GridCell
           key={columnIndex}
-          role="gridcell"
-          aria-rowindex={rowIndex + 1}
-          aria-colindex={columnIndex + 1}
-          sx={gridCellSx}
-        >
-          {item &&
-            renderItem(item, {
-              tabIndex: columnIndex === tabStopColumn ? 0 : -1,
-            })}
-        </Stack>
+          item={item}
+          rowIndex={rowIndex}
+          columnIndex={columnIndex}
+          isTabStop={columnIndex === tabStopColumn}
+          renderItem={renderItem}
+        />
       ))}
+    </Stack>
+  );
+}
+
+interface GridCellProps<TItem extends { id: string }> {
+  item: TItem | undefined;
+  rowIndex: number;
+  columnIndex: number;
+  isTabStop: boolean;
+  renderItem: (item: TItem, props: GridItemProps) => ReactNode;
+}
+
+function GridCell<TItem extends { id: string }>({
+  item,
+  rowIndex,
+  columnIndex,
+  isTabStop,
+  renderItem,
+}: GridCellProps<TItem>) {
+  return (
+    <Stack
+      role="gridcell"
+      aria-rowindex={rowIndex + 1}
+      aria-colindex={columnIndex + 1}
+      sx={gridCellSx}
+    >
+      {item && renderItem(item, { tabIndex: isTabStop ? 0 : -1 })}
     </Stack>
   );
 }
