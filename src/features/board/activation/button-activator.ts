@@ -10,7 +10,7 @@ import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../board-types";
 
 interface ActivationMessage {
-  parts: MessagePart[];
+  getParts: () => MessagePart[];
   setParts: (parts: MessagePart[]) => void;
 }
 
@@ -43,6 +43,8 @@ export function createButtonActivator({
       return;
     }
 
+    const currentParts = message.getParts();
+
     if (button.actions.length === 0) {
       const part = createPart({
         label: button.label,
@@ -51,12 +53,12 @@ export function createButtonActivator({
         soundSrc: button.soundSrc,
       });
 
-      message.setParts([...message.parts, part]);
+      message.setParts([...currentParts, part]);
       void playback.playPart(part);
       return;
     }
 
-    let parts = message.parts;
+    let parts = currentParts;
     let partsToPlay: MessagePart[] | null = null;
 
     for (const action of button.actions) {
@@ -86,14 +88,14 @@ export function createButtonActivator({
     }
 
     if (partsToPlay === null) {
-      if (parts !== message.parts) {
+      if (parts !== currentParts) {
         message.setParts(parts);
       }
 
       return;
     }
 
-    if (partsToPlay !== message.parts) {
+    if (partsToPlay !== currentParts) {
       message.setParts(partsToPlay);
     }
 

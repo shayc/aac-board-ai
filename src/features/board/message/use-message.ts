@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { applyBackspace, createPart } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
+  getParts: () => MessagePart[];
   replaceWithText: (input: string) => void;
   backspace: () => void;
   setParts: (parts: MessagePart[]) => void;
@@ -12,8 +13,18 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(): UseMessageReturn {
-  const [parts, setParts] = useState<MessagePart[]>([]);
+  const [parts, setPartsState] = useState<MessagePart[]>([]);
+  const partsRef = useRef(parts);
   const text = parts.map((part) => part.label).join(" ");
+
+  function getParts() {
+    return partsRef.current;
+  }
+
+  function setParts(next: MessagePart[]) {
+    partsRef.current = next;
+    setPartsState(next);
+  }
 
   function replaceWithText(input: string) {
     setParts(
@@ -26,7 +37,7 @@ export function useMessage(): UseMessageReturn {
   }
 
   function backspace() {
-    setParts((prev) => applyBackspace(prev));
+    setParts(applyBackspace(getParts()));
   }
 
   function clear() {
@@ -36,6 +47,7 @@ export function useMessage(): UseMessageReturn {
   return {
     parts,
     text,
+    getParts,
     replaceWithText,
     backspace,
     setParts,
