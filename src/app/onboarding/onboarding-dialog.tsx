@@ -108,6 +108,8 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
         <DialogTitle
           variant="h4"
           sx={{
+            maxWidth: 320,
+            mx: "auto",
             py: 0,
             fontWeight: "fontWeightBold",
             textAlign: "center",
