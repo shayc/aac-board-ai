@@ -4,7 +4,6 @@ import type {
   BoardSetRecord,
 } from "../storage/board-set-storage";
 
-/** Inline 1×1 PNG, so tests get an image source without a network request. */
 export const TEST_IMAGE_SRC =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==";
 

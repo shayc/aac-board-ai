@@ -31,7 +31,8 @@ let pendingLoad: Promise<void> | null = null;
 async function loadBoardSets(): Promise<void> {
   try {
     const boardSets = await listStoredBoardSets();
-    // URLs are per tab, and every tab refreshes after a delete.
+    // Asset object URLs belong to this tab, and every tab reloads its board
+    // sets after a delete, so each tab revokes its own URLs for deleted sets.
     revokeAssetUrlsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;

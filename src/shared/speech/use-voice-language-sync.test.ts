@@ -35,8 +35,6 @@ describe("useVoiceLanguageSync", () => {
   });
 
   afterEach(() => {
-    // Drop the instance override so the real navigator.languages getter
-    // returns.
     Reflect.deleteProperty(navigator, "languages");
   });
 

@@ -8,10 +8,6 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
-/**
- * Resolves a board for the requested language, falling back to the source board
- * when translation is unavailable or fails.
- */
 export async function resolveBoardForLanguage(
   boardSetId: string,
   board: Board,

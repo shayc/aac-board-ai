@@ -10,11 +10,6 @@ export interface BoardKeyEvent {
   ctrlKey: boolean;
 }
 
-/**
- * Resolves board-owned keyboard shortcuts to actions. Returns `null` for
- * unclaimed keys so native control activation and browser shortcuts can
- * continue.
- */
 export function resolveBoardShortcut(
   event: BoardKeyEvent,
   isMessagePlaying: boolean,

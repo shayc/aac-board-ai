@@ -85,7 +85,6 @@ describe("app flow", () => {
       .toBeVisible();
 
     await screen.getByRole("button", { name: "cat" }).click();
-    // Tile taps speak per-tile feedback; only the played message is asserted.
     speech.speak.mockClear();
 
     await screen.getByRole("button", { name: "Play message" }).click();

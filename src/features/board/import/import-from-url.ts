@@ -1,10 +1,5 @@
 import { importBoardSets, type ImportedBoardSet } from "./board-import";
 
-/**
- * Hard cap on a board download, enforced while the response streams so an
- * oversized transfer is cancelled mid-flight instead of buffered whole.
- * Sized like `BOARD_IMPORT_LIMITS`, its decompression-side counterpart.
- */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
@@ -64,7 +59,6 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
-  // A null body has no payload to exceed the download cap.
   const reader = response.body?.getReader();
   if (!reader) {
     return response.blob();

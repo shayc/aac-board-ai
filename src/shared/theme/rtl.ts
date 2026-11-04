@@ -1,4 +1,3 @@
-/** Mirrors directional icons such as Back and Backspace horizontally in RTL. */
 export const flipForRtl = {
   "&:dir(rtl)": { transform: "scaleX(-1)" },
 } as const;

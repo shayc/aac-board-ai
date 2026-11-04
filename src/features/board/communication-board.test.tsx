@@ -71,7 +71,6 @@ describe("CommunicationBoard", () => {
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "world" }).click();
-    // Tile taps speak per-tile feedback; only the played message is asserted.
     speech.speak.mockClear();
 
     await screen.getByRole("button", { name: "Play message" }).click();
