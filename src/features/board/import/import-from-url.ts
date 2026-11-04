@@ -1,5 +1,10 @@
 import { importBoardSets, type ImportedBoardSet } from "./board-import";
 
+/**
+ * Enforced while the response streams, so an oversized download is cancelled
+ * instead of buffered. Like `BOARD_IMPORT_LIMITS`, it sits well above observed
+ * boards (~70 MB) while bounding memory.
+ */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
@@ -14,8 +19,8 @@ class BoardUrlError extends Error {
   }
 }
 
-// Only http(s) may reach fetch: schemes like data: would smuggle a payload
-// past any host-based reasoning.
+// Board URLs come from untrusted links, so only http(s) may reach fetch;
+// schemes like data: would let a link carry its own payload.
 function parseBoardUrl(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
@@ -59,6 +64,7 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
   }
 
+  // A null body has no payload to exceed the download cap.
   const reader = response.body?.getReader();
   if (!reader) {
     return response.blob();

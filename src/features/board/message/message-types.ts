@@ -5,11 +5,11 @@ export interface MessagePartInput {
   soundSrc?: string;
 }
 
-/**
- * `id` is minted when the part is created. A button's id cannot serve: the
- * same button can be added twice, and ids can collide across boards.
- */
 export interface MessagePart extends MessagePartInput {
+  /**
+   * Minted when the part is created. A button's id cannot serve: the same
+   * button can be added twice, and ids can collide across boards.
+   */
   id: string;
   label: string;
 }

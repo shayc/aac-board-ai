@@ -10,6 +10,10 @@ export interface BoardKeyEvent {
   ctrlKey: boolean;
 }
 
+/**
+ * Returns `null` for keys the board doesn't claim, so native control
+ * activation and browser shortcuts keep working.
+ */
 export function resolveBoardShortcut(
   event: BoardKeyEvent,
   isMessagePlaying: boolean,
