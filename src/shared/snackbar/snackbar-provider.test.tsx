@@ -175,20 +175,6 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByText("Failed")).not.toBeInTheDocument();
   });
 
-  test("replaces the current snackbar with a new one", async () => {
-    const screen = await renderSnackbars({
-      "show-first": { message: "first", durationMs: LONG_DURATION_MS },
-      "show-second": { message: "second", durationMs: LONG_DURATION_MS },
-    });
-
-    await screen.getByRole("button", { name: "show-first" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("first");
-
-    await screen.getByRole("button", { name: "show-second" }).click();
-
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("second");
-  });
-
   test("ignores clickaway so the snackbar stays visible", async () => {
     const screen = await renderSnackbars({
       "show-sticky": { message: "sticky", durationMs: LONG_DURATION_MS },

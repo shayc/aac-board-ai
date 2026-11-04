@@ -158,7 +158,10 @@ function inverseSurfaceStyles(
     color: theme.vars.palette.SnackbarContent.color,
     backgroundColor: theme.vars.palette.SnackbarContent.bg,
     [`& .${alertClasses.icon}`]: {
-      color: theme.vars.palette.SnackbarContent[`${severity}IconColor`],
+      color: theme.colorSchemes.dark?.palette[severity].main,
+      ...theme.applyStyles("dark", {
+        color: theme.colorSchemes.light?.palette[severity].main,
+      }),
     },
   };
 }

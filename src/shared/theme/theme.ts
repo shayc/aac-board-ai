@@ -7,16 +7,7 @@ import {
   type ThemeOptions,
 } from "@mui/material/styles";
 import { safeAreaInset } from "./safe-area";
-import {
-  INVERSE_SURFACE_DARK,
-  INVERSE_SURFACE_LIGHT,
-  ON_ERROR_DARK,
-  PRIMARY_LIGHT,
-  SHELL_DARK,
-  SHELL_LIGHT,
-  STATUS_DARK,
-  STATUS_LIGHT,
-} from "./theme-colors";
+import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
 
 declare module "@mui/material/styles" {
   interface CssThemeVariables {
@@ -34,13 +25,9 @@ declare module "@mui/material/styles" {
     borderRadiusLg?: string;
     borderRadiusFull?: string;
   }
-
-  interface PaletteSnackbarContent {
-    infoIconColor: string;
-    successIconColor: string;
-    warningIconColor: string;
-  }
 }
+
+const brandBlue = "#0967d4";
 
 const grey = {
   50: "#f8faff",
@@ -95,11 +82,11 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: PRIMARY_LIGHT },
-        info: { main: STATUS_LIGHT.info },
-        success: { main: STATUS_LIGHT.success },
-        warning: { main: STATUS_LIGHT.warning },
-        error: { main: STATUS_LIGHT.error },
+        primary: { main: brandBlue },
+        info: { main: brandBlue },
+        success: { main: "#1b7a3d" },
+        warning: { main: "#9a5800" },
+        error: { main: "#c5221f" },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -107,36 +94,21 @@ const themeOptions = {
           inheritContainedHoverBg: grey[100],
         },
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
-        SnackbarContent: {
-          bg: INVERSE_SURFACE_LIGHT,
-          color: grey[100],
-          infoIconColor: STATUS_DARK.info,
-          successIconColor: STATUS_DARK.success,
-          warningIconColor: STATUS_DARK.warning,
-        },
+        SnackbarContent: { bg: grey[900], color: grey[100] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
     },
     dark: {
       palette: {
+        info: { main: "#90caf9" },
+        success: { main: "#81c995" },
+        warning: { main: "#fdd663" },
+        error: { main: "#f2b8b5" },
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
-        info: { main: STATUS_DARK.info },
-        success: { main: STATUS_DARK.success },
-        warning: { main: STATUS_DARK.warning },
-        error: { main: STATUS_DARK.error },
-        Alert: {
-          errorFilledBg: STATUS_DARK.error,
-          errorFilledColor: ON_ERROR_DARK,
-        },
+        Alert: { errorFilledBg: "#f2b8b5", errorFilledColor: "#601410" },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
-        SnackbarContent: {
-          bg: INVERSE_SURFACE_DARK,
-          color: grey[900],
-          infoIconColor: STATUS_LIGHT.info,
-          successIconColor: STATUS_LIGHT.success,
-          warningIconColor: STATUS_LIGHT.warning,
-        },
+        SnackbarContent: { bg: grey[100], color: grey[900] },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
     },
