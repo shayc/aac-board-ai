@@ -188,19 +188,17 @@ describe("Tile", () => {
     );
     const lightTile = screen.getByRole("button", { name: "Light" });
     const darkTile = screen.getByRole("button", { name: "Dark" });
-    const restingLuminance = backgroundLuminance(lightTile);
-
-    await lightTile.hover();
-    await expect
-      .poll(() => backgroundLuminance(lightTile))
-      .toBeLessThan(restingLuminance);
-    const lightHoverLuminance = backgroundLuminance(lightTile);
 
     await darkTile.hover();
-    await expect
-      .poll(() => backgroundLuminance(darkTile))
-      .toBeLessThan(lightHoverLuminance);
+    const restingLuminance = backgroundLuminance(lightTile);
+    await lightTile.hover();
+    const lightHoverLuminance = backgroundLuminance(lightTile);
+    await darkTile.hover();
+    const darkHoverLuminance = backgroundLuminance(darkTile);
     await darkTile.unhover();
+
+    expect(lightHoverLuminance).toBeLessThan(restingLuminance);
+    expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
   });
 
   test.each([
