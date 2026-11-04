@@ -75,6 +75,36 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
+  test("hides a success message after its default duration", async () => {
+    const screen = await renderSnackbars({
+      "show-saved": { message: "saved", severity: "success" },
+    });
+
+    vi.useFakeTimers();
+    await screen.getByRole("button", { name: "show-saved" }).click();
+    await vi.advanceTimersByTimeAsync(60_000);
+    vi.useRealTimers();
+
+    await expect.element(screen.getByText("saved")).not.toBeInTheDocument();
+  });
+
+  test("keeps an error visible until it is dismissed", async () => {
+    const screen = await renderSnackbars({
+      "show-failed": { message: "failed", severity: "error" },
+    });
+
+    vi.useFakeTimers();
+    await screen.getByRole("button", { name: "show-failed" }).click();
+    await vi.advanceTimersByTimeAsync(60_000);
+    vi.useRealTimers();
+
+    await expect.element(screen.getByText("failed")).toBeInTheDocument();
+
+    await screen.getByRole("button", { name: "Close" }).click();
+
+    await expect.element(screen.getByText("failed")).not.toBeInTheDocument();
+  });
+
   test("shows a plain-string message with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 

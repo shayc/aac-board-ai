@@ -12,6 +12,7 @@ import {
 } from "./snackbar-context";
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
+const DEFAULT_SNACKBAR_DURATION_MS = 5000;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -75,6 +76,12 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     showSnackbar,
   };
 
+  const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const durationMs =
+    state.current?.durationMs === undefined
+      ? defaultDurationMs(severity)
+      : state.current.durationMs;
+
   const message =
     typeof state.current?.message === "function"
       ? state.current.message(t)
@@ -88,7 +95,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={state.current?.durationMs ?? 4000}
+        autoHideDuration={durationMs}
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",
@@ -98,7 +105,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           closeText={t(m.close)}
           action={state.current?.action}
-          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
+          severity={severity}
           onClose={handleClose}
           sx={{ width: "100%" }}
         >
@@ -107,6 +114,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function defaultDurationMs(severity: SnackbarSeverity): number | null {
+  return severity === "error" ? null : DEFAULT_SNACKBAR_DURATION_MS;
 }
 
 function snackbarReducer(
