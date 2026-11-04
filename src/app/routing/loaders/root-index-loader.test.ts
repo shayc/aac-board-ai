@@ -49,7 +49,7 @@ describe("rootIndexLoader", () => {
       `?board=${encodeURIComponent("https://boards.example.com/core.obz")}`,
     );
 
-    expect(result).toEqual({ boardUrlHost: "boards.example.com" });
+    expect(result).toEqual({ host: "boards.example.com" });
     expect(fetchSpy).not.toHaveBeenCalled();
     expect(await listBoardSets()).toEqual([]);
   });
@@ -59,7 +59,7 @@ describe("rootIndexLoader", () => {
       `?board=${encodeURIComponent("www.example.com/core.obz")}`,
     );
 
-    expect(result).toEqual({ boardUrlHost: "www.example.com" });
+    expect(result).toEqual({ host: "www.example.com" });
   });
 
   test("names the site and port of a board URL shared without a scheme", async () => {
@@ -67,7 +67,7 @@ describe("rootIndexLoader", () => {
       `?board=${encodeURIComponent("boards.example.com:8443/core.obz")}`,
     );
 
-    expect(result).toEqual({ boardUrlHost: "boards.example.com:8443" });
+    expect(result).toEqual({ host: "boards.example.com:8443" });
   });
 
   test("throws a localized 400 instead of asking about a non-http(s) board URL", async () => {

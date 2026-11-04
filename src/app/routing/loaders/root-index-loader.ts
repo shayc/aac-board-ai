@@ -15,7 +15,7 @@ import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
 const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
 export interface BoardUrlImportPromptData {
-  boardUrlHost: string;
+  host: string;
 }
 
 // The ?board= param is attacker-controlled: a crafted link must never
@@ -28,7 +28,7 @@ export async function rootIndexLoader({
   const boardUrl = readBoardUrl(request);
 
   if (boardUrl) {
-    return { boardUrlHost: resolveBoardUrlHost(boardUrl) };
+    return { host: resolveBoardUrlHost(boardUrl) };
   }
 
   const [boardSet] = await listBoardSets();

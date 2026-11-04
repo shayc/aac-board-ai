@@ -11,7 +11,7 @@ const HOST_PLACEHOLDER = "{host}";
 
 export function BoardUrlImportPrompt() {
   const t = useTranslate();
-  const { boardUrlHost } = useLoaderData<BoardUrlImportPromptData>();
+  const { host } = useLoaderData<BoardUrlImportPromptData>();
   const navigation = useNavigation();
 
   if (navigation.formData) {
@@ -29,14 +29,7 @@ export function BoardUrlImportPrompt() {
         kind="empty"
         title={title}
         titleComponent="h1"
-        description={
-          <BoardUrlImportDescription
-            template={t(m.boardUrlImportDescription, {
-              host: HOST_PLACEHOLDER,
-            })}
-            host={boardUrlHost}
-          />
-        }
+        description={<BoardUrlImportDescription host={host} />}
         action={
           <Form method="post">
             <Box
@@ -62,13 +55,9 @@ export function BoardUrlImportPrompt() {
   );
 }
 
-function BoardUrlImportDescription({
-  template,
-  host,
-}: {
-  template: string;
-  host: string;
-}) {
+function BoardUrlImportDescription({ host }: { host: string }) {
+  const t = useTranslate();
+  const template = t(m.boardUrlImportDescription, { host: HOST_PLACEHOLDER });
   const [beforeHost, afterHost = ""] = template.split(HOST_PLACEHOLDER);
 
   return (
