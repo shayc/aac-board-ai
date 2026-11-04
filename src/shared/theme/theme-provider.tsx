@@ -176,6 +176,7 @@ const themeOptions = {
                 style: {
                   borderTopRightRadius: radius,
                   borderBottomRightRadius: radius,
+                  paddingLeft: safeAreaInset("left"),
                 },
               },
               {
@@ -183,6 +184,7 @@ const themeOptions = {
                 style: {
                   borderTopLeftRadius: radius,
                   borderBottomLeftRadius: radius,
+                  paddingRight: safeAreaInset("right"),
                 },
               },
             ],

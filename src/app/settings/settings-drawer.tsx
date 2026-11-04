@@ -51,13 +51,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
     >
       <Toolbar
         component="header"
-        sx={(theme) => ({
+        sx={{
           borderBottom: 1,
           borderColor: isContentScrolled ? "divider" : "transparent",
-          [theme.breakpoints.up("sm")]: {
-            pr: safeAreaGutter(theme.spacing(3), "right"),
-          },
-        })}
+        }}
       >
         <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
           {t(m.settingsTitle)}
@@ -79,16 +76,13 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         onScroll={(event) =>
           setIsContentScrolled(event.currentTarget.scrollTop > 0)
         }
-        sx={(theme) => ({
+        sx={{
           flexGrow: 1,
           minHeight: 0,
           px: 3,
           pb: 3,
           overflow: "auto",
-          [theme.breakpoints.up("sm")]: {
-            pr: safeAreaGutter(theme.spacing(3), "right"),
-          },
-        })}
+        }}
       >
         <SettingsSection title={t(m.settingsSectionAppearance)}>
           <ThemeSettings />

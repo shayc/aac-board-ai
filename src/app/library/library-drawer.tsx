@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLtr } from "@shared/theme/rtl";
-import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useMatches } from "react-router";
 
 interface LibraryDrawerProps {
@@ -40,13 +40,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
         },
       }}
     >
-      <Toolbar
-        sx={(theme) => ({
-          [theme.breakpoints.up("sm")]: {
-            pl: safeAreaGutter(theme.spacing(3), "left"),
-          },
-        })}
-      >
+      <Toolbar>
         <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
           {t(m.libraryTitle)}
         </Typography>
@@ -63,16 +57,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
         </Tooltip>
       </Toolbar>
 
-      <Box
-        sx={(theme) => ({
-          flexGrow: 1,
-          minHeight: 0,
-          overflow: "auto",
-          [theme.breakpoints.up("sm")]: {
-            pl: safeAreaInset("left"),
-          },
-        })}
-      >
+      <Box sx={{ flexGrow: 1, minHeight: 0, overflow: "auto" }}>
         <BoardSetLibrary
           activeBoardSetId={activeBoardSetId}
           onNavigate={onClose}
