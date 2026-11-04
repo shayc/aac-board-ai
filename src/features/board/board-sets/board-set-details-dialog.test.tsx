@@ -2,6 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { BoardSetDetailsDialog } from "./board-set-details-dialog";
 import { makeBoardSetRecord } from "../testing";
@@ -43,6 +44,38 @@ describe("BoardSetDetailsDialog", () => {
 
     await expectNoA11yViolations(document.body);
   });
+
+  test.each([
+    { width: 390, isFullScreen: true },
+    { width: 1024, isFullScreen: false },
+  ])(
+    "fills the viewport only on small screens (width $width)",
+    async ({ width, isFullScreen }) => {
+      const originalWidth = window.innerWidth;
+      const originalHeight = window.innerHeight;
+
+      try {
+        await page.viewport(width, 800);
+        const screen = await renderWithProviders(
+          <BoardSetDetailsDialog
+            boardSet={makeBoardSetRecord()}
+            onClose={vi.fn()}
+          />,
+        );
+        const dialog = screen.getByRole("dialog");
+
+        await expect.element(dialog).toBeVisible();
+
+        const bounds = dialog.element().getBoundingClientRect();
+        const fillsViewport =
+          bounds.width === window.innerWidth &&
+          bounds.height === window.innerHeight;
+        expect(fillsViewport).toBe(isFullScreen);
+      } finally {
+        await page.viewport(originalWidth, originalHeight);
+      }
+    },
+  );
 
   test("omits the author line and chips when those fields are absent", async () => {
     const screen = await renderWithProviders(
