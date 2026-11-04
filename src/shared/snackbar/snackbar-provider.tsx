@@ -1,8 +1,9 @@
 import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -13,6 +14,7 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const DEFAULT_SNACKBAR_DURATION_MS = 5000;
+const APP_BAR_GAP_PX = 8;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -43,7 +45,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -96,11 +97,9 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={state.open}
         onClose={handleClose}
         autoHideDuration={durationMs}
-        anchorOrigin={{
-          vertical: isSmallScreen ? "bottom" : "top",
-          horizontal: "center",
-        }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
+        sx={belowAppBar}
       >
         <Alert
           closeText={t(m.close)}
@@ -115,6 +114,22 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function belowAppBar(theme: Theme) {
+  return {
+    top: offsetBelowToolbar(56),
+    [`${theme.breakpoints.up("xs")} and (orientation: landscape)`]: {
+      top: offsetBelowToolbar(48),
+    },
+    [theme.breakpoints.up("sm")]: {
+      top: offsetBelowToolbar(64),
+    },
+  };
+}
+
+function offsetBelowToolbar(toolbarHeightPx: number): string {
+  return safeAreaGutter(toolbarHeightPx + APP_BAR_GAP_PX, "top");
 }
 
 function defaultDurationMs(severity: SnackbarSeverity): number | null {
