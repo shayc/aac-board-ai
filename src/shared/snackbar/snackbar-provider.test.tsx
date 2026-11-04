@@ -138,7 +138,23 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
-  test("skips messages superseded while the current one closes", async () => {
+  test("keeps showing messages after several are sent at once", async () => {
+    const screen = await renderSnackbars({
+      "show-burst": [
+        { message: "Importing", durationMs: LONG_DURATION_MS },
+        { message: "Saved", severity: "success", durationMs: LONG_DURATION_MS },
+      ],
+      "show-later": { message: "Later", durationMs: LONG_DURATION_MS },
+    });
+
+    await screen.getByRole("button", { name: "show-burst" }).click();
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+
+    await screen.getByRole("button", { name: "show-later" }).click();
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Later");
+  });
+
+  test("shows only the newest of messages sent while one is open", async () => {
     const screen = await renderSnackbars({
       "show-importing": { message: "Importing", durationMs: LONG_DURATION_MS },
       "show-outcomes": [
@@ -158,7 +174,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
-  test("replaces the current message with a new one after its exit transition", async () => {
+  test("replaces the current message with a new one", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
       "show-second": { message: "second", durationMs: LONG_DURATION_MS },

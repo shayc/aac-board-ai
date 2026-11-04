@@ -13,7 +13,7 @@ import {
   STATUS_DARK,
   STATUS_LIGHT,
 } from "@shared/theme/theme-colors";
-import { type ReactNode, useReducer, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -28,30 +28,14 @@ interface KeyedSnackbar extends SnackbarOptions {
   key: number;
 }
 
-interface SnackbarState {
-  current: KeyedSnackbar | undefined;
-  next: KeyedSnackbar | undefined;
-  open: boolean;
-}
-
-type SnackbarAction =
-  | { type: "show"; snackbar: KeyedSnackbar }
-  | { type: "close" }
-  | { type: "exited" };
-
-const initialState: SnackbarState = {
-  current: undefined,
-  next: undefined,
-  open: false,
-};
-
 interface SnackbarProviderProps {
   children: ReactNode;
 }
 
 export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
-  const [state, dispatch] = useReducer(snackbarReducer, initialState);
+  const [current, setCurrent] = useState<KeyedSnackbar>();
+  const [isOpen, setIsOpen] = useState(false);
   const nextKeyRef = useRef(0);
 
   const showSnackbar = (options: SnackbarOptions | string) => {
@@ -63,7 +47,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       key: nextKeyRef.current++,
     };
 
-    dispatch({ type: "show", snackbar });
+    setCurrent(snackbar);
+    setIsOpen(true);
   };
 
   const handleClose = (
@@ -74,11 +59,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       return;
     }
 
-    dispatch({ type: "close" });
-  };
-
-  const handleExited = () => {
-    dispatch({ type: "exited" });
+    setIsOpen(false);
   };
 
   const contextValue: SnackbarContextValue = {
@@ -86,14 +67,14 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const message =
-    typeof state.current?.message === "function"
-      ? state.current.message(t)
-      : state.current?.message;
-  const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+    typeof current?.message === "function"
+      ? current.message(t)
+      : current?.message;
+  const severity = current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
   const isError = severity === "error";
   const action = (
     <>
-      {state.current?.action}
+      {current?.action}
       <Tooltip title={t(m.close)}>
         <IconButton
           aria-label={t(m.close)}
@@ -115,12 +96,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       {children}
 
       <Snackbar
-        key={state.current?.key}
-        open={state.open}
+        key={current?.key}
+        open={isOpen}
         onClose={handleClose}
-        autoHideDuration={state.current && autoHideDurationMs(state.current)}
+        autoHideDuration={current && autoHideDurationMs(current)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        slotProps={{ transition: { onExited: handleExited } }}
         sx={snackbarPlacementStyles}
       >
         <Alert
@@ -215,29 +195,4 @@ function autoHideDurationMs({
   }
 
   return AUTO_HIDE_DURATION_MS;
-}
-
-function snackbarReducer(
-  state: SnackbarState,
-  action: SnackbarAction,
-): SnackbarState {
-  switch (action.type) {
-    case "show": {
-      if (!state.current) {
-        return { ...state, current: action.snackbar, open: true };
-      }
-
-      return { ...state, next: action.snackbar, open: false };
-    }
-
-    case "close":
-      return { ...state, open: false };
-
-    case "exited":
-      return {
-        current: state.next,
-        next: undefined,
-        open: state.next !== undefined,
-      };
-  }
 }
