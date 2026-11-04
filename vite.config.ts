@@ -28,6 +28,7 @@ export default defineConfig({
     react({ compiler: true }),
     paraglideVitePlugin({
       project: "./project.inlang",
+      outputStructure: "message-modules",
     }),
     VitePWA({
       registerType: "autoUpdate",
