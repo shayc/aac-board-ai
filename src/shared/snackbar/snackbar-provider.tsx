@@ -1,4 +1,4 @@
-import Alert from "@mui/material/Alert";
+import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
@@ -78,6 +78,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const isError = severity === "error";
   const durationMs =
     state.current?.durationMs === undefined
       ? defaultDurationMs(severity)
@@ -104,16 +105,44 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           closeText={t(m.close)}
           action={state.current?.action}
-          role={severity === "error" ? "alert" : "status"}
+          role={isError ? "alert" : "status"}
           severity={severity}
+          variant={isError ? "filled" : "standard"}
           onClose={handleClose}
-          sx={{ width: "100%" }}
+          sx={[
+            { width: "100%", boxShadow: 6 },
+            isError ? filledErrorSurface : inverseSurface(severity),
+          ]}
         >
           {message}
         </Alert>
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function filledErrorSurface(theme: Theme) {
+  return theme.applyStyles("dark", {
+    backgroundColor: theme.vars.palette.error.main,
+    color: theme.vars.palette.error.contrastText,
+  });
+}
+
+function inverseSurface(severity: SnackbarSeverity) {
+  return (theme: Theme) => {
+    const { light, dark } = theme.colorSchemes;
+
+    return {
+      backgroundColor: dark?.palette.background.paper,
+      color: dark?.palette.text.primary,
+      [`& .${alertClasses.icon}`]: { color: dark?.palette[severity].main },
+      ...theme.applyStyles("dark", {
+        backgroundColor: light?.palette.background.paper,
+        color: light?.palette.text.primary,
+        [`& .${alertClasses.icon}`]: { color: light?.palette[severity].main },
+      }),
+    };
+  };
 }
 
 function belowAppBar(theme: Theme) {
