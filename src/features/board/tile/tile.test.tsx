@@ -14,7 +14,6 @@ import { Tile } from "./tile";
 type Rgb = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
-const WCAG_NON_TEXT_CONTRAST = 3;
 
 const cssVariableTheme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
@@ -140,12 +139,13 @@ describe("Tile", () => {
   );
 
   test.each([true, false])(
-    "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
+    "shapes folder tiles as a tabbed folder with a readable front panel (borders visible: %s)",
     async (isBorderVisible) => {
       const screen = await renderInTheme(
         <>
           <Tile
             backgroundColor="#3f51b5"
+            borderColor="#00ff00"
             isBorderVisible={isBorderVisible}
             variant="folder"
             onActivate={vi.fn()}
@@ -158,18 +158,25 @@ describe("Tile", () => {
         </>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });
-      const corner = styleOf(folder, "::after");
-      const background = styleOf(folder).backgroundColor;
+      const back = styleOf(folder, "::before");
+      const front = styleOf(folder, "::after");
+      const frontFill = paint(front.backgroundColor);
 
-      expect(corner.content).not.toBe("none");
+      expect(back.clipPath).toMatch(/^shape\(/);
+      expect(relativeLuminance(paint(back.backgroundColor))).toBeLessThan(
+        relativeLuminance(frontFill),
+      );
       expect(
-        contrastRatio(
-          paint(background, corner.borderInlineEndColor),
-          paint(background),
+        contrastRatio(paint(styleOf(folder).color), frontFill),
+      ).toBeGreaterThan(WCAG_TEXT_CONTRAST);
+      expect(
+        channelDistance(
+          paint(front.backgroundColor, front.borderTopColor),
+          isBorderVisible ? paint("#00ff00") : frontFill,
         ),
-      ).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
+      ).toBeLessThanOrEqual(1);
       expect(
-        styleOf(screen.getByRole("button", { name: "Word" }), "::after")
+        styleOf(screen.getByRole("button", { name: "Word" }), "::before")
           .content,
       ).toBe("none");
     },
