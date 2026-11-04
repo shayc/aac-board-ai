@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
   "errorBoardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu",
-  "boardUrlImportTitle": "Importovat soubor tabulky z {host}?",
+  "boardUrlImportTitle": "Importovat soubor tabulky?",
   "boardUrlImportDescription": "Importujte soubory tabulek jen ze zdrojů, kterým důvěřujete.",
   "boardUrlImportConfirm": "Importovat"
 }

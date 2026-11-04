@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
   "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
-  "boardUrlImportTitle": "Impor berkas papan dari {host}?",
+  "boardUrlImportTitle": "Impor berkas papan?",
   "boardUrlImportDescription": "Impor berkas papan hanya dari sumber yang Anda percayai.",
   "boardUrlImportConfirm": "Impor"
 }

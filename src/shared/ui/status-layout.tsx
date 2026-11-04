@@ -7,7 +7,9 @@ export interface StatusLayoutProps {
   kind: "empty" | "error";
   icon?: ReactNode;
   title: string;
+  titleComponent?: "h1" | "p";
   description?: string;
+  children?: ReactNode;
   action?: ReactNode;
 }
 
@@ -15,7 +17,9 @@ export function StatusLayout({
   kind,
   icon,
   title,
+  titleComponent = "p",
   description,
+  children,
   action,
 }: StatusLayoutProps) {
   const iconColor = kind === "error" ? "error.main" : "text.disabled";
@@ -27,6 +31,7 @@ export function StatusLayout({
         justifyContent: "center",
         height: "100%",
         gap: 2,
+        px: 2,
         py: 8,
         textAlign: "center",
       }}
@@ -46,12 +51,14 @@ export function StatusLayout({
 
       <Box sx={{ my: 1 }}>
         <Typography
-          component="p"
+          component={titleComponent}
           variant="h5"
           sx={{ fontWeight: "fontWeightBold" }}
         >
           {title}
         </Typography>
+
+        {children}
 
         {description && (
           <Typography

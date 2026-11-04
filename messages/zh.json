@@ -143,7 +143,7 @@
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
   "errorBoardUrlImportFailed": "无法从链接导入沟通板文件",
-  "boardUrlImportTitle": "要从 {host} 导入沟通板文件吗？",
+  "boardUrlImportTitle": "要导入沟通板文件吗？",
   "boardUrlImportDescription": "请仅从你信任的来源导入沟通板文件。",
   "boardUrlImportConfirm": "导入"
 }

@@ -143,7 +143,7 @@
   "errorBoardNotFound": "보드를 찾을 수 없음",
   "errorBoardSetNotFound": "보드 세트를 찾을 수 없음",
   "errorBoardUrlImportFailed": "링크에서 보드 파일을 가져올 수 없습니다",
-  "boardUrlImportTitle": "{host}에서 보드 파일을 가져오시겠어요?",
+  "boardUrlImportTitle": "보드 파일을 가져오시겠어요?",
   "boardUrlImportDescription": "신뢰할 수 있는 출처의 보드 파일만 가져오세요.",
   "boardUrlImportConfirm": "가져오기"
 }

@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
   "errorBoardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket",
-  "boardUrlImportTitle": "Vil du importere en tavlefil fra {host}?",
+  "boardUrlImportTitle": "Vil du importere en tavlefil?",
   "boardUrlImportDescription": "Importér kun tavlefiler fra kilder, du har tillid til.",
   "boardUrlImportConfirm": "Importér"
 }

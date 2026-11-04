@@ -140,11 +140,10 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
-      .element(screen.getByRole("button", { name: "Import" }))
+      .element(screen.getByRole("heading", { name: "Import board file?" }))
       .toBeVisible();
-    expect(document.title.replace(/[\u2068\u2069]/g, "")).toBe(
-      `Import board file from ${location.host}?`,
-    );
+    await expect.element(screen.getByText(location.host)).toBeVisible();
+    expect(document.title).toBe("Import board file?");
     expect(await listBoardSets()).toHaveLength(1);
 
     await screen.getByRole("button", { name: "Import" }).click();
@@ -184,7 +183,9 @@ describe("app flow", () => {
 
     await router.navigate("/nonexistent");
 
-    await expect.element(screen.getByText("Page not found")).toBeVisible();
+    await expect
+      .element(screen.getByRole("heading", { name: "Page not found" }))
+      .toBeVisible();
     expect(document.title).toBe("Page not found");
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))

@@ -19,6 +19,7 @@ export function RouteErrorBoundary() {
       <title>{title}</title>
       <ErrorState
         title={title}
+        titleComponent="h1"
         action={
           <Button component={Link} to="/" variant="contained">
             {t(m.errorGoHome)}

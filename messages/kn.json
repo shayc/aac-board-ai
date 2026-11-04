@@ -143,7 +143,7 @@
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "boardUrlImportTitle": "{host} ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡುವುದೇ?",
+  "boardUrlImportTitle": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡುವುದೇ?",
   "boardUrlImportDescription": "ನೀವು ನಂಬುವ ಮೂಲಗಳಿಂದ ಮಾತ್ರ ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ.",
   "boardUrlImportConfirm": "ಆಮದು ಮಾಡಿ"
 }

@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
   "errorBoardUrlImportFailed": "Couldn't import board file from link",
-  "boardUrlImportTitle": "Import board file from {host}?",
+  "boardUrlImportTitle": "Import board file?",
   "boardUrlImportDescription": "Only import board files from sources you trust.",
   "boardUrlImportConfirm": "Import"
 }
