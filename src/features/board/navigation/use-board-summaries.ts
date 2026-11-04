@@ -21,21 +21,27 @@ export function useBoardSummaries(
   const { value, error, isPending } = useLatestAsync({
     enabled: boardSetId !== undefined,
     deps: [boardSetId ?? ""],
-    run: () =>
-      boardSetId === undefined
-        ? Promise.resolve([])
-        : listBoardRecords(boardSetId),
+    run: async () => {
+      if (boardSetId === undefined) {
+        return [];
+      }
+
+      const records = await listBoardRecords(boardSetId);
+
+      return records.map(({ id, name, obf }) => ({
+        id,
+        name,
+        strings: obf.strings ?? {},
+      }));
+    },
   });
 
-  const records = value ?? [];
+  const untranslatedBoards = value ?? [];
 
-  const boards = records.map((record) => {
-    const translated = findTranslations(record.obf.strings ?? {}, language)?.[
-      record.name
-    ];
-
-    return { id: record.id, name: translated ?? record.name };
-  });
+  const boards = untranslatedBoards.map(({ id, name, strings }) => ({
+    id,
+    name: findTranslations(strings, language)?.[name] ?? name,
+  }));
 
   return {
     boards: boards.sort((a, b) => a.name.localeCompare(b.name, language)),
