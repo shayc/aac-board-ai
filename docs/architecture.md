@@ -163,8 +163,8 @@ these rules:
   cell.
 - Arrow keys move between focusable cells; horizontal movement follows text
   direction.
-- Home and End move to the first or last tile in the row; with Ctrl or Cmd,
-  to the first or last tile in the grid.
+- Home and End move to the first or last focusable cell in the row; with Ctrl
+  or Cmd, in the grid.
 - When grid content changes, focus returns to the remembered cell or first
   focusable tile only if no other control holds focus.
 
