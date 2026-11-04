@@ -90,17 +90,23 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       ? state.current.message(t)
       : state.current?.message;
   const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
-  const action = state.current?.action && (
+  const action = (
     <>
-      {state.current.action}
+      {state.current?.action}
       <IconButton
         aria-label={t(m.close)}
         title={t(m.close)}
-        size="small"
         color="inherit"
         onClick={() => handleClose()}
+        sx={{
+          backgroundColor: "color-mix(in srgb, currentColor 12%, transparent)",
+          "&:hover": {
+            backgroundColor:
+              "color-mix(in srgb, currentColor 20%, transparent)",
+          },
+        }}
       >
-        <CloseIcon fontSize="small" />
+        <CloseIcon />
       </IconButton>
     </>
   );
@@ -121,15 +127,25 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         slotProps={{ transition: { onExited: handleExited } }}
       >
         <Alert
-          closeText={t(m.close)}
           action={action}
           severity={severity}
           variant={severity === "error" ? "filled" : "standard"}
-          onClose={handleClose}
           sx={[
             (theme) => ({
+              alignItems: "center",
               width: "100%",
+              minHeight: 56,
+              paddingBlock: 1,
+              paddingInlineStart: 2.5,
+              paddingInlineEnd: 1,
               boxShadow: theme.vars.shadows[6],
+              [`& .${alertClasses.action}`]: {
+                alignItems: "center",
+                gap: 1,
+                marginInlineEnd: 0,
+                paddingBlock: 0,
+                paddingInlineStart: 3,
+              },
             }),
             severity === "error"
               ? errorSurfaceStyles
