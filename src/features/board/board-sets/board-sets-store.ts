@@ -8,17 +8,6 @@ import {
   type BoardSetRecord,
 } from "../storage/board-set-storage";
 
-export {
-  BoardSetAlreadyExistsError,
-  getStoredBoardSet,
-  InvalidIdError,
-} from "../storage/board-set-storage";
-export type {
-  AssetInput,
-  BoardSetInput,
-  BoardSetRecord,
-} from "../storage/board-set-storage";
-
 export interface BoardSetsSnapshot {
   boardSets: BoardSetRecord[];
   isLoading: boolean;

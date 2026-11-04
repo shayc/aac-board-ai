@@ -1,32 +1,18 @@
-import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
-import { ErrorState } from "@shared/ui/error-state";
-import { isRouteErrorResponse, Link, useRouteError } from "react-router";
+import { isRouteErrorResponse, useRouteError } from "react-router";
 import {
   isRouteErrorPayload,
   routeErrorCodes,
   type RouteErrorCode,
 } from "./route-error";
+import { RouteErrorPage } from "./route-error-page";
 
 export function RouteErrorBoundary() {
   const t = useTranslate();
   const error = useRouteError();
-  const title = getErrorTitle(error, t);
 
-  return (
-    <>
-      <title>{title}</title>
-      <ErrorState
-        title={title}
-        action={
-          <Button component={Link} to="/" variant="contained">
-            {t(m.errorGoHome)}
-          </Button>
-        }
-      />
-    </>
-  );
+  return <RouteErrorPage title={getErrorTitle(error, t)} />;
 }
 
 function getErrorTitle(error: unknown, t: Translate): string {

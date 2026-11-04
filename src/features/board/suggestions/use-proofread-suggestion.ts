@@ -1,7 +1,10 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
-import { prepareQuietly } from "./prepare-quietly";
-import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
+import {
+  isRequestFailure,
+  prepareQuietly,
+  type SuggestionSource,
+} from "./suggestion-source";
 
 export function useProofreadSuggestion(
   text: string,

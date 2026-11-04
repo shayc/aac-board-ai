@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
-import type { BoardSetRecord } from "./board-sets-store";
+import type { BoardSetRecord } from "../storage/board-set-storage";
 
 interface BoardSetDetailsDialogProps {
   boardSet: BoardSetRecord | null;

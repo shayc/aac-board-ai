@@ -3,8 +3,8 @@ import {
   listBoardSets,
   importBoardSetFromUrl,
 } from "@features/board";
-import { data, redirect, type LoaderFunctionArgs } from "react-router";
-import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
+import { redirect, type LoaderFunctionArgs } from "react-router";
+import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
 
@@ -22,14 +22,8 @@ async function importAndRedirect(
     return redirect(rootBoardPath(importedBoardSet));
   } catch {
     signal.throwIfAborted();
-    throw createImportFailure();
+    throw routeErrorResponse(routeErrorCodes.boardUrlImportFailed);
   }
-}
-
-function createImportFailure() {
-  return data(createRouteErrorPayload(routeErrorCodes.boardUrlImportFailed), {
-    status: 400,
-  });
 }
 
 export async function rootIndexLoader({

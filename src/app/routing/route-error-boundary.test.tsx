@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router/dom";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { RouteErrorBoundary } from "./route-error-boundary";
-import { createRouteErrorPayload, routeErrorCodes } from "./route-error";
+import { routeErrorCodes, routeErrorResponse } from "./route-error";
 
 function TestRoute() {
   return null;
@@ -65,9 +65,9 @@ describe("RouteErrorBoundary", () => {
   });
 
   test("retranslates a loader error that is already being displayed", async () => {
-    const screen = await renderWithLoader(() =>
-      throwDataResponse(createRouteErrorPayload(routeErrorCodes.boardNotFound)),
-    );
+    const screen = await renderWithLoader(() => {
+      throw routeErrorResponse(routeErrorCodes.boardNotFound);
+    });
 
     await expect.element(screen.getByText("Board not found")).toBeVisible();
     expect(document.title).toBe("Board not found");
@@ -78,11 +78,9 @@ describe("RouteErrorBoundary", () => {
   });
 
   test("distinguishes a missing board set from a missing board", async () => {
-    const screen = await renderWithLoader(() =>
-      throwDataResponse(
-        createRouteErrorPayload(routeErrorCodes.boardSetNotFound),
-      ),
-    );
+    const screen = await renderWithLoader(() => {
+      throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
+    });
 
     await expect.element(screen.getByText("Board set not found")).toBeVisible();
     await expect

@@ -1,3 +1,5 @@
+import { data } from "react-router";
+
 export const routeErrorCodes = {
   boardNotFound: "board-not-found",
   boardSetNotFound: "board-set-not-found",
@@ -7,22 +9,28 @@ export const routeErrorCodes = {
 export type RouteErrorCode =
   (typeof routeErrorCodes)[keyof typeof routeErrorCodes];
 
-export interface RouteErrorPayload {
+interface RouteErrorPayload {
   code: RouteErrorCode;
 }
 
-export function createRouteErrorPayload(
-  code: RouteErrorCode,
-): RouteErrorPayload {
-  return { code };
+const statusByCode: Record<RouteErrorCode, number> = {
+  [routeErrorCodes.boardNotFound]: 404,
+  [routeErrorCodes.boardSetNotFound]: 404,
+  [routeErrorCodes.boardUrlImportFailed]: 400,
+};
+
+export function routeErrorResponse(code: RouteErrorCode) {
+  const payload: RouteErrorPayload = { code };
+
+  return data(payload, { status: statusByCode[code] });
 }
 
 export function isRouteErrorPayload(
-  error: unknown,
-): error is RouteErrorPayload {
-  if (!error || typeof error !== "object" || !("code" in error)) {
+  value: unknown,
+): value is RouteErrorPayload {
+  if (!value || typeof value !== "object" || !("code" in value)) {
     return false;
   }
 
-  return Object.values(routeErrorCodes).includes(error.code as RouteErrorCode);
+  return Object.values(routeErrorCodes).includes(value.code as RouteErrorCode);
 }

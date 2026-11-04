@@ -1,59 +1,16 @@
-import type { OBFBoard } from "@shayc/open-board-format";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   createStoredBoardSet,
   type BoardSetInput,
-  type BoardSetRecord,
 } from "../storage/board-set-storage";
 import { getBoardsDB } from "../storage/boards-db";
+import { makeOBFBoard } from "./fixtures";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
 
 interface SeedBoardSet extends Partial<BoardSetInput> {
   id: string;
   rootBoardId: string;
-}
-
-export function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
-  return {
-    format: "open-board-0.1",
-    id: "board-1",
-    locale: "en",
-    name: "Test Board",
-    buttons: [],
-    grid: { rows: 1, columns: 1, order: [[null]] },
-    images: [],
-    sounds: [],
-    ...overrides,
-  };
-}
-
-export function makeBoardSetInput(
-  overrides: Partial<BoardSetInput> = {},
-): BoardSetInput {
-  const boards = overrides.boards ?? [makeOBFBoard({ id: "root-1" })];
-
-  return {
-    id: "set-1",
-    name: "Set",
-    rootBoardId: boards[0]?.id ?? "root-1",
-    boards,
-    assets: [],
-    ...overrides,
-  };
-}
-
-export function makeBoardSetRecord(
-  overrides: Partial<BoardSetRecord> = {},
-): BoardSetRecord {
-  return {
-    id: "set-1",
-    name: "My Board",
-    rootBoardId: "root",
-    updatedAt: 0,
-    boardCount: 1,
-    ...overrides,
-  };
 }
 
 async function clearBoardsDB(): Promise<void> {

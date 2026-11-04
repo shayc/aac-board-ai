@@ -6,11 +6,12 @@ import {
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
+import { createBoardSet } from "../board-sets/board-sets-store";
 import {
   BoardSetAlreadyExistsError,
-  createBoardSet,
   type AssetInput,
-} from "../board-sets/board-sets-store";
+} from "../storage/board-set-storage";
+import { stripBoardFileExtension } from "./board-file-formats";
 
 export interface ImportedBoardSet {
   id: string;
@@ -151,7 +152,7 @@ export function buildAssetInputs(
 }
 
 function deriveBoardSetId(fileName: string): string {
-  const stem = fileName.replace(/\.(obz|obf|zip|json)$/i, "").toLowerCase();
+  const stem = stripBoardFileExtension(fileName).toLowerCase();
 
   return stem.slice(0, 255) || "imported-board";
 }

@@ -17,7 +17,8 @@ import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetDetailsDialog } from "./board-set-details-dialog";
 import { BoardSetList } from "./board-set-list";
-import { deleteBoardSet, type BoardSetRecord } from "./board-sets-store";
+import type { BoardSetRecord } from "../storage/board-set-storage";
+import { deleteBoardSet } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {

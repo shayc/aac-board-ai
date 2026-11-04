@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useId } from "react";
-import type { BoardSetRecord } from "./board-sets-store";
+import type { BoardSetRecord } from "../storage/board-set-storage";
 
 interface BoardSetDeleteDialogProps {
   boardSet: BoardSetRecord | null;

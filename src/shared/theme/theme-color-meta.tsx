@@ -1,5 +1,5 @@
 import { useColorScheme } from "@mui/material/styles";
-import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
+import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
 
 export function ThemeColorMeta() {
   const { mode, systemMode } = useColorScheme();

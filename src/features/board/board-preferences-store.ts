@@ -35,27 +35,25 @@ const boardPreferencesStore = createPersistedStore<BoardPreferences>(
   parseBoardPreferences,
 );
 
-export function setTileSaturation(tileSaturation: number): void {
+function updatePreferences(patch: Partial<BoardPreferences>): void {
   boardPreferencesStore.setState({
     ...boardPreferencesStore.getSnapshot(),
-    tileSaturation,
+    ...patch,
   });
 }
 
+export function setTileSaturation(tileSaturation: number): void {
+  updatePreferences({ tileSaturation });
+}
+
 export function setTileBordersVisible(areTileBordersVisible: boolean): void {
-  boardPreferencesStore.setState({
-    ...boardPreferencesStore.getSnapshot(),
-    areTileBordersVisible,
-  });
+  updatePreferences({ areTileBordersVisible });
 }
 
 export function setTileLabelPlacement(
   tileLabelPlacement: SymbolLabelPlacement,
 ): void {
-  boardPreferencesStore.setState({
-    ...boardPreferencesStore.getSnapshot(),
-    tileLabelPlacement,
-  });
+  updatePreferences({ tileLabelPlacement });
 }
 
 export function useBoardPreferences(): BoardPreferences {
