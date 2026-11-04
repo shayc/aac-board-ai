@@ -3,10 +3,9 @@ import Alert, { alertClasses } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import type { Theme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
+import { safeAreaGutter } from "@shared/theme/safe-area";
 import {
   ON_ERROR_DARK,
   ON_ERROR_LIGHT,
@@ -23,8 +22,6 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const AUTO_HIDE_DURATION_MS = 5000;
-const APP_BAR_HEIGHT = 64;
-const BOTTOM_TOOLBAR_HEIGHT = 56;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -55,7 +52,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
-  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -124,10 +120,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={state.open}
         onClose={handleClose}
         autoHideDuration={state.current && autoHideDurationMs(state.current)}
-        anchorOrigin={{
-          vertical: isSmallScreen ? "bottom" : "top",
-          horizontal: "center",
-        }}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
         sx={snackbarPlacementStyles}
       >
@@ -139,8 +132,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
             (theme) => ({
               alignItems: "center",
               width: "100%",
-              minHeight: 64,
-              paddingBlock: 1,
+              minHeight: { xs: 56, sm: 64 },
+              paddingBlock: { xs: 0.5, sm: 1 },
               paddingInlineStart: 3,
               paddingInlineEnd: 1,
               ...theme.typography.body1,
@@ -176,12 +169,12 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 function snackbarPlacementStyles(theme: Theme) {
   return {
     [theme.breakpoints.down("sm")]: {
+      top: safeAreaGutter(theme.spacing(1), "top"),
       right: safeAreaGutter(theme.spacing(2), "right"),
-      bottom: `calc(${BOTTOM_TOOLBAR_HEIGHT}px + ${theme.spacing(1)} + ${safeAreaInset("bottom")})`,
       left: safeAreaGutter(theme.spacing(2), "left"),
     },
     [theme.breakpoints.up("sm")]: {
-      top: `calc(${APP_BAR_HEIGHT}px + ${theme.spacing(2)})`,
+      top: safeAreaGutter(theme.spacing(1), "top"),
     },
   };
 }

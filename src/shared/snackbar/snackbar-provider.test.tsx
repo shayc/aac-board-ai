@@ -24,7 +24,7 @@ function ShowButtons({
   const { showSnackbar } = useSnackbar();
 
   return (
-    <>
+    <div style={{ paddingTop: 96 }}>
       {Object.entries(snackbars).map(([name, options]) => (
         <button key={name} onClick={() => showSnackbar(options)}>
           {name}
@@ -32,7 +32,7 @@ function ShowButtons({
       ))}
       <button onClick={() => setStoredLanguage("he")}>switch-to-hebrew</button>
       <button>outside</button>
-    </>
+    </div>
   );
 }
 
@@ -202,18 +202,22 @@ describe("SnackbarProvider", () => {
     },
   );
 
-  test("places the message above the bottom toolbar on small screens", async () => {
+  test.each([390, 1200])(
+    "places the message 8px from the top at a viewport width of %i",
+    async (width) => {
+      const bounds = await showErrorAtViewportWidth(width);
+
+      expect(bounds.top).toBe(8);
+      expect(bounds.left + bounds.width / 2).toBe(window.innerWidth / 2);
+    },
+  );
+
+  test("matches the phone app bar height with 16px side margins on small screens", async () => {
     const bounds = await showErrorAtViewportWidth(390);
 
-    expect(window.innerHeight - bounds.bottom).toBe(56 + 8);
+    expect(bounds.height).toBe(56);
     expect(bounds.left).toBe(16);
     expect(window.innerWidth - bounds.right).toBe(16);
-  });
-
-  test("places the message below the app bar on wide screens", async () => {
-    const bounds = await showErrorAtViewportWidth(1200);
-
-    expect(bounds.top).toBe(64 + 16);
   });
 
   test("retranslates a visible localized message when the locale changes", async () => {
