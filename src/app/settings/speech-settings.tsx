@@ -121,30 +121,9 @@ export function SpeechSettings() {
         {locales.map(renderLocaleOptions)}
       </SettingsSelect>
 
-      {speechControls.map(
-        ({
-          id,
-          label,
-          value,
-          min,
-          max,
-          normalValue,
-          onChange,
-          formatValue,
-        }) => (
-          <SettingsSlider
-            key={id}
-            label={label}
-            value={value}
-            onChange={onChange}
-            min={min}
-            max={max}
-            step={0.1}
-            normalValue={normalValue}
-            formatValue={formatValue}
-          />
-        ),
-      )}
+      {speechControls.map(({ id, ...control }) => (
+        <SettingsSlider key={id} {...control} step={0.1} />
+      ))}
     </Stack>
   );
 }
