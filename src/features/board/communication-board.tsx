@@ -3,7 +3,6 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
-import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
@@ -33,7 +32,6 @@ type BoardRootStyle = CSSProperties & {
 
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
-  const { direction } = useLanguage();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
@@ -145,7 +143,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Grid<BoardButton>
           ref={gridViewportRef}
           ariaLabel={board.name || t(m.boardGridLabel)}
-          dir={direction}
           items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}

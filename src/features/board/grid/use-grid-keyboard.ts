@@ -12,7 +12,6 @@ import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
 
 interface UseGridKeyboardOptions {
   grid: readonly (readonly unknown[])[];
-  dir: "ltr" | "rtl";
 }
 
 interface UseGridKeyboardReturn {
@@ -23,7 +22,6 @@ interface UseGridKeyboardReturn {
 
 export function useGridKeyboard({
   grid,
-  dir,
 }: UseGridKeyboardOptions): UseGridKeyboardReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
@@ -51,7 +49,8 @@ export function useGridKeyboard({
         return;
       }
 
-      const next = findGridKeyTarget(event, root, from, dir);
+      const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
+      const next = findGridKeyTarget(event, root, from, direction);
       if (!next || isSameGridPosition(next.position, from)) {
         event.continuePropagation();
 

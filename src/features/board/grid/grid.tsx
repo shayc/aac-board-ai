@@ -21,7 +21,6 @@ interface GridProps<TItem extends { id: string }> {
   columns: number;
   order?: GridOrder;
   renderItem: (item: TItem, props: GridItemProps) => ReactNode;
-  dir?: "ltr" | "rtl";
   gap?: number;
   ref?: Ref<HTMLDivElement>;
 }
@@ -33,18 +32,14 @@ export function Grid<TItem extends { id: string }>({
   columns,
   order,
   renderItem,
-  dir = "ltr",
   gap = 1,
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridKeyboard({
-    grid,
-    dir,
-  });
+  const { rootRef, rootProps, tabStopPosition } = useGridKeyboard({ grid });
 
   return (
-    <Box ref={ref} dir={dir} sx={createGridViewportSx}>
+    <Box ref={ref} sx={createGridViewportSx}>
       <Stack
         {...rootProps}
         ref={rootRef}

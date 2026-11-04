@@ -363,13 +363,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2);
 
       const screen = await render(
-        <Grid
-          rows={1}
-          columns={2}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -384,13 +380,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2);
 
       const screen = await render(
-        <Grid
-          rows={1}
-          columns={2}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -410,14 +402,15 @@ describe("useGridKeyboard", () => {
       ];
 
       const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          order={order}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid
+            rows={2}
+            columns={2}
+            items={items}
+            order={order}
+            renderItem={renderButton}
+          />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -432,13 +425,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid
-          rows={1}
-          columns={3}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -453,13 +442,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid
-          rows={1}
-          columns={3}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -474,13 +459,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2, 3, 4);
 
       const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -495,13 +476,9 @@ describe("useGridKeyboard", () => {
       const items = makeItems(1, 2, 3, 4);
 
       const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          dir="rtl"
-          renderItem={renderButton}
-        />,
+        <div dir="rtl">
+          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
+        </div>,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
