@@ -69,7 +69,7 @@ const themeOptions = {
   // number would be multiplied by the base again. MUI's Paper-based surfaces
   // (menus, popovers, alerts, snackbars) and tooltips inherit the base.
   shape: {
-    borderRadius: "16px",
+    borderRadius: "20px",
     borderRadiusSm: "12px",
     borderRadiusLg: "32px",
     borderRadiusFull: "9999px",
