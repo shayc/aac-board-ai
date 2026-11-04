@@ -116,15 +116,11 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
                 paddingBlock: 0,
                 fontSize: 24,
               },
-              [`& .${alertClasses.message}`]: {
-                paddingBlock: 1,
-              },
               [`& .${alertClasses.action}`]: {
                 alignItems: "center",
                 gap: 1,
                 marginInlineEnd: 0,
                 paddingBlock: 0,
-                paddingInlineStart: 2,
               },
             }),
             !isError && ((theme) => inverseSurfaceStyles(theme, severity)),
