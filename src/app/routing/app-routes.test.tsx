@@ -180,6 +180,20 @@ describe("app flow", () => {
     expect(await listBoardSets()).toHaveLength(1);
   });
 
+  test("cancelling a ?board= link on an empty library opens the starter board set", async () => {
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("link", { name: "Cancel" }).click();
+
+    await expect.element(screen.getByRole("grid")).toBeVisible();
+    expect((await listBoardSets()).map((set) => set.id)).not.toContain(
+      "lots-of-stuff",
+    );
+  });
+
   test("client navigation from a board sets the localized not-found title", async () => {
     const { router, screen } = await renderApp();
 

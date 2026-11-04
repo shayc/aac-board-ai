@@ -62,6 +62,14 @@ describe("rootIndexLoader", () => {
     expect(result).toEqual({ boardUrlHost: "www.example.com" });
   });
 
+  test("names the site and port of a board URL shared without a scheme", async () => {
+    const result = await callLoader(
+      `?board=${encodeURIComponent("boards.example.com:8443/core.obz")}`,
+    );
+
+    expect(result).toEqual({ boardUrlHost: "boards.example.com:8443" });
+  });
+
   test("throws a localized 400 instead of asking about a non-http(s) board URL", async () => {
     await expect(
       callLoader(

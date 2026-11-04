@@ -5,7 +5,9 @@ import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
 import { StatusLayout } from "@shared/ui/status-layout";
 import { Form, Link, useLoaderData, useNavigation } from "react-router";
-import type { BoardUrlImportPromptData } from "./loaders/root-index-loader";
+import type { BoardUrlImportPromptData } from "@app/routing/loaders/root-index-loader";
+
+const HOST_PLACEHOLDER = "{host}";
 
 export function BoardUrlImportPrompt() {
   const t = useTranslate();
@@ -29,7 +31,9 @@ export function BoardUrlImportPrompt() {
         titleComponent="h1"
         description={
           <BoardUrlImportDescription
-            text={t(m.boardUrlImportDescription, { host: boardUrlHost })}
+            template={t(m.boardUrlImportDescription, {
+              host: HOST_PLACEHOLDER,
+            })}
             host={boardUrlHost}
           />
         }
@@ -59,20 +63,17 @@ export function BoardUrlImportPrompt() {
 }
 
 function BoardUrlImportDescription({
-  text,
+  template,
   host,
 }: {
-  text: string;
+  template: string;
   host: string;
 }) {
-  const hostIndex = text.indexOf(host);
-  if (hostIndex === -1) {
-    return text;
-  }
+  const [beforeHost, afterHost = ""] = template.split(HOST_PLACEHOLDER);
 
   return (
     <>
-      {text.slice(0, hostIndex)}
+      {beforeHost}
       <Box
         component="strong"
         dir="ltr"
@@ -80,7 +81,7 @@ function BoardUrlImportDescription({
       >
         {host}
       </Box>
-      {text.slice(hostIndex + host.length)}
+      {afterHost}
     </>
   );
 }

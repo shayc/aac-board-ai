@@ -4,6 +4,7 @@ import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
   importBoardSetFromUrl,
   MAX_BOARD_DOWNLOAD_BYTES,
+  parseBoardUrl,
 } from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
@@ -128,4 +129,33 @@ describe("importBoardSetFromUrl", () => {
 
     expect(cancelled).toBe(true);
   });
+});
+
+describe("parseBoardUrl", () => {
+  test.each([
+    {
+      url: "www.example.com/core.obz",
+      href: "https://www.example.com/core.obz",
+    },
+    {
+      url: "boards.example.com:8443/core.obz",
+      href: "https://boards.example.com:8443/core.obz",
+    },
+    { url: "http://example.com/core.obz", href: "http://example.com/core.obz" },
+  ])("resolves $url as a site", ({ url, href }) => {
+    expect(parseBoardUrl(url).href).toBe(href);
+  });
+
+  test("resolves a path against this app", () => {
+    expect(parseBoardUrl("/boards/core.obz").href).toBe(
+      `${location.origin}/boards/core.obz`,
+    );
+  });
+
+  test.each(["data:application/zip;base64,UEsDBA==", "javascript:alert(1)"])(
+    "rejects %s",
+    (url) => {
+      expect(() => parseBoardUrl(url)).toThrow("Unsupported board URL scheme");
+    },
+  );
 });
