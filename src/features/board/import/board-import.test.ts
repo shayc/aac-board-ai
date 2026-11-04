@@ -181,11 +181,11 @@ describe("importBoardSets", () => {
 
   test("names the board set after its file when the root board name is blank", async () => {
     const board = makeOBFBoard({ id: "root", name: "  " });
-    const blankNamedFile = new File([JSON.stringify(board)], "core.obf", {
+    const boardFile = new File([JSON.stringify(board)], "core.obf", {
       type: "application/json",
     });
 
-    await importBoardSets(blankNamedFile);
+    await importBoardSets(boardFile);
 
     expect((await listStoredBoardSets())[0]?.name).toBe("core.obf");
   });
