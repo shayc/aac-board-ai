@@ -1,9 +1,8 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import type { SymbolLabelPlacement } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
-import { AACSymbol } from "./aac-symbol";
+import { AACSymbol, type SymbolLabelPlacement } from "./aac-symbol";
 
 async function renderSymbol(labelPlacement?: SymbolLabelPlacement) {
   const screen = await render(

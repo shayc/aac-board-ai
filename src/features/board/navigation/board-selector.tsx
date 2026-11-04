@@ -3,12 +3,12 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardSummaries } from "./use-board-summaries";
+import { useBoardOptions } from "./use-board-options";
 
 export function BoardSelector() {
   const t = useTranslate();
   const { boardSetId, boardId, goToBoard } = useBoardNavigation();
-  const { boards } = useBoardSummaries(boardSetId);
+  const boards = useBoardOptions(boardSetId);
 
   const selectedBoard = boards.find((board) => board.id === boardId);
 

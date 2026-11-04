@@ -88,7 +88,7 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   });
 }
 
-function obfToBoardTranslations(
+export function obfToBoardTranslations(
   strings: OBFBoard["strings"],
 ): BoardTranslations {
   if (!strings) {

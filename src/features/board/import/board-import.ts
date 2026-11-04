@@ -7,6 +7,7 @@ import {
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
 import { createBoardSet } from "../board-sets/board-sets-store";
+import { nonBlankText } from "../non-blank-text";
 import {
   BoardSetAlreadyExistsError,
   type AssetInput,
@@ -78,7 +79,7 @@ async function importOBZArchive(
   await createBoardSet({
     id: boardSetId,
     rootBoardId: rootBoard.id,
-    name: rootBoard.name ?? fileName,
+    name: nonBlankText(rootBoard.name) ?? fileName,
     boards: Array.from(boards.values(), (board) =>
       resolveBoardLinks(board, boardIdByPath),
     ),
@@ -96,7 +97,7 @@ async function importOBFBoard(
   await createBoardSet({
     id: boardSetId,
     rootBoardId: board.id,
-    name: board.name ?? fileName,
+    name: nonBlankText(board.name) ?? fileName,
     boards: [board],
     assets: [],
   });

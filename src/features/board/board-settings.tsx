@@ -15,7 +15,7 @@ import {
   TILE_SATURATION,
   useBoardPreferences,
 } from "./board-preferences-store";
-import type { SymbolLabelPlacement } from "./board-types";
+import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
 interface LabelPlacementOptionProps {
