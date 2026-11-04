@@ -3,9 +3,15 @@ import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
+
+const originalViewport = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+};
 
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
@@ -38,9 +44,25 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
   );
 }
 
+async function showErrorAtViewportWidth(width: number) {
+  await page.viewport(width, 800);
+  const screen = await renderSnackbars({
+    "show-failed": { message: "Failed", severity: "error" },
+  });
+
+  await screen.getByRole("button", { name: "show-failed" }).click();
+  await vi.waitFor(() => {
+    const alert = screen.getByRole("alert").element();
+    expect(getComputedStyle(alert).opacity).toBe("1");
+  });
+
+  return screen.getByRole("alert").element().getBoundingClientRect();
+}
+
 describe("SnackbarProvider", () => {
-  afterEach(() => {
+  afterEach(async () => {
     vi.useRealTimers();
+    await page.viewport(originalViewport.width, originalViewport.height);
   });
 
   test("auto-hides a success message after a few seconds", async () => {
@@ -179,6 +201,20 @@ describe("SnackbarProvider", () => {
       await expectNoA11yViolations(document.body);
     },
   );
+
+  test("places the message above the bottom toolbar on small screens", async () => {
+    const bounds = await showErrorAtViewportWidth(390);
+
+    expect(window.innerHeight - bounds.bottom).toBe(56 + 8);
+    expect(bounds.left).toBe(16);
+    expect(window.innerWidth - bounds.right).toBe(16);
+  });
+
+  test("places the message below the app bar on wide screens", async () => {
+    const bounds = await showErrorAtViewportWidth(1200);
+
+    expect(bounds.top).toBe(64 + 16);
+  });
 
   test("retranslates a visible localized message when the locale changes", async () => {
     const screen = await renderSnackbars({

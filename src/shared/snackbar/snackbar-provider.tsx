@@ -6,6 +6,7 @@ import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { safeAreaGutter, safeAreaInset } from "@shared/theme/safe-area";
 import {
   ON_ERROR_DARK,
   ON_ERROR_LIGHT,
@@ -22,6 +23,8 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const AUTO_HIDE_DURATION_MS = 5000;
+const APP_BAR_HEIGHT = 64;
+const BOTTOM_TOOLBAR_HEIGHT = 56;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -126,6 +129,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           horizontal: "center",
         }}
         slotProps={{ transition: { onExited: handleExited } }}
+        sx={snackbarPlacementStyles}
       >
         <Alert
           action={action}
@@ -167,6 +171,19 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function snackbarPlacementStyles(theme: Theme) {
+  return {
+    [theme.breakpoints.down("sm")]: {
+      right: safeAreaGutter(theme.spacing(2), "right"),
+      bottom: `calc(${BOTTOM_TOOLBAR_HEIGHT}px + ${theme.spacing(1)} + ${safeAreaInset("bottom")})`,
+      left: safeAreaGutter(theme.spacing(2), "left"),
+    },
+    [theme.breakpoints.up("sm")]: {
+      top: `calc(${APP_BAR_HEIGHT}px + ${theme.spacing(2)})`,
+    },
+  };
 }
 
 function errorSurfaceStyles(theme: Theme) {
