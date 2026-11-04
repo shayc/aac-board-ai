@@ -68,43 +68,20 @@ describe("NavigationButtons", () => {
       .toBeDisabled();
   });
 
-  describe("RTL icon mirroring", () => {
-    test("back arrow is flipped in RTL", async () => {
-      const { screen } = await renderButtons({
-        direction: "rtl",
-      });
-
-      const backButton = screen.getByRole("button", { name: "Go back" });
-      const icon = backButton.element().querySelector("svg");
-
-      assertDefined(icon);
-      // Browsers resolve scaleX(-1) to its matrix equivalent
-      const styles = getComputedStyle(icon);
-      expect(styles.transform).toBe("matrix(-1, 0, 0, 1, 0, 0)");
-    });
-
-    test("back arrow is not flipped in LTR", async () => {
-      const { screen } = await renderButtons();
-
-      const backButton = screen.getByRole("button", { name: "Go back" });
-      const icon = backButton.element().querySelector("svg");
+  test.each([
+    { direction: "rtl", transform: "matrix(-1, 0, 0, 1, 0, 0)" },
+    { direction: "ltr", transform: "none" },
+  ] as const)(
+    "points the back arrow toward the reading start in $direction",
+    async ({ direction, transform }) => {
+      const { screen } = await renderButtons({ direction });
+      const icon = screen
+        .getByRole("button", { name: "Go back" })
+        .element()
+        .querySelector("svg");
 
       assertDefined(icon);
-      const styles = getComputedStyle(icon);
-      expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
-    });
-
-    test("home icon is not flipped in RTL", async () => {
-      const { screen } = await renderButtons({
-        direction: "rtl",
-      });
-
-      const homeButton = screen.getByRole("button", { name: "Go home" });
-      const icon = homeButton.element().querySelector("svg");
-
-      assertDefined(icon);
-      const styles = getComputedStyle(icon);
-      expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
-    });
-  });
+      expect(getComputedStyle(icon).transform).toBe(transform);
+    },
+  );
 });

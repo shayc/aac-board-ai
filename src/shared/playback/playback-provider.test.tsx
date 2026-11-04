@@ -1,13 +1,46 @@
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
-import { beforeEach, describe, expect, test, vi } from "vitest";
-import { renderHook } from "vitest-browser-react";
+import { Profiler, type ProfilerOnRenderCallback } from "react";
+import { beforeEach, describe, expect, test } from "vitest";
+import { render, renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
 import {
   useActiveTrackingKey,
   useIsPlaying,
   usePlayback,
 } from "./use-playback";
+
+function PlaybackControls() {
+  const playback = usePlayback();
+
+  const play = () => {
+    void playback.play({
+      owner: "message",
+      steps: [
+        {
+          kind: "speech",
+          text: "hello world",
+          trackingKeyAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
+        },
+      ],
+    });
+  };
+
+  return (
+    <>
+      <button onClick={play}>Play</button>
+      <button onClick={playback.stop}>Stop</button>
+    </>
+  );
+}
+
+function PlayingStatus() {
+  return <p>{useIsPlaying() ? "Playing" : "Idle"}</p>;
+}
+
+function ActiveTrackingKey() {
+  return <p>Active key: {useActiveTrackingKey() ?? "none"}</p>;
+}
 
 describe("PlaybackProvider", () => {
   let speech: ReturnType<typeof stubSpeech>;
@@ -60,100 +93,44 @@ describe("PlaybackProvider", () => {
     expect(speech.speak).toHaveBeenCalledTimes(1);
   });
 
-  test("playback controls do not rerender when playback state changes", async () => {
-    speech.speak.mockImplementationOnce(() => undefined);
-    let renderCount = 0;
-    const { result } = await renderHook(
-      () => {
-        renderCount += 1;
-
-        return usePlayback();
-      },
-      { wrapper: PlaybackProvider },
-    );
-    const initialRenderCount = renderCount;
-
-    const playbackResult = result.current.play({
-      owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
-    });
-    await Promise.resolve();
-
-    expect(renderCount).toBe(initialRenderCount);
-
-    result.current.stop();
-    await playbackResult;
-  });
-
-  test("playing-state subscribers do not rerender for word boundaries", async () => {
+  test("rerenders each subscriber only for the playback state it reads", async () => {
     let utterance: SpeechSynthesisUtterance | undefined;
     speech.speak.mockImplementationOnce((spoken) => {
       utterance = spoken;
     });
-    let renderCount = 0;
-    const { result } = await renderHook(
-      () => {
-        renderCount += 1;
-
-        return {
-          controls: usePlayback(),
-          isPlaying: useIsPlaying(),
-        };
-      },
-      { wrapper: PlaybackProvider },
+    const commits = { controls: 0, playing: 0, tracking: 0 };
+    const countCommit: ProfilerOnRenderCallback = (id) => {
+      commits[id as keyof typeof commits] += 1;
+    };
+    const screen = await render(
+      <PlaybackProvider>
+        <Profiler id="controls" onRender={countCommit}>
+          <PlaybackControls />
+        </Profiler>
+        <Profiler id="playing" onRender={countCommit}>
+          <PlayingStatus />
+        </Profiler>
+        <Profiler id="tracking" onRender={countCommit}>
+          <ActiveTrackingKey />
+        </Profiler>
+      </PlaybackProvider>,
     );
 
-    const playbackResult = result.current.controls.play({
-      owner: "message",
-      steps: [
-        {
-          kind: "speech",
-          text: "hello world",
-          trackingKeyAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
-        },
-      ],
-    });
-    await vi.waitFor(() => expect(result.current.isPlaying).toBe(true));
-    const playingRenderCount = renderCount;
+    await screen.getByRole("button", { name: "Play" }).click();
+    await expect.element(screen.getByText("Playing")).toBeInTheDocument();
+    await expect.element(screen.getByText("Active key: 1")).toBeInTheDocument();
+    const commitsWhilePlaying = { ...commits };
 
     utterance?.onboundary?.({ charIndex: 6 } as SpeechSynthesisEvent);
-    await Promise.resolve();
+    await expect.element(screen.getByText("Active key: 2")).toBeInTheDocument();
 
-    expect(renderCount).toBe(playingRenderCount);
-
-    result.current.controls.stop();
-    await playbackResult;
-  });
-
-  test("tracking subscribers receive the active key", async () => {
-    let utterance: SpeechSynthesisUtterance | undefined;
-    speech.speak.mockImplementationOnce((spoken) => {
-      utterance = spoken;
+    expect(commitsWhilePlaying.controls).toBe(1);
+    expect(commits).toEqual({
+      ...commitsWhilePlaying,
+      tracking: commitsWhilePlaying.tracking + 1,
     });
-    const { result } = await renderHook(
-      () => ({
-        controls: usePlayback(),
-        activeTrackingKey: useActiveTrackingKey(),
-      }),
-      { wrapper: PlaybackProvider },
-    );
 
-    const playbackResult = result.current.controls.play({
-      owner: "message",
-      steps: [
-        {
-          kind: "speech",
-          text: "hello world",
-          trackingKeyAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
-        },
-      ],
-    });
-    await vi.waitFor(() => expect(result.current.activeTrackingKey).toBe("1"));
-
-    utterance?.onboundary?.({ charIndex: 6 } as SpeechSynthesisEvent);
-    await vi.waitFor(() => expect(result.current.activeTrackingKey).toBe("2"));
-
-    result.current.controls.stop();
-    await playbackResult;
+    await screen.getByRole("button", { name: "Stop" }).click();
+    await expect.element(screen.getByText("Idle")).toBeInTheDocument();
   });
 });

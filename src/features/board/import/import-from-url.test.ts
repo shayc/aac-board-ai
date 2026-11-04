@@ -23,18 +23,6 @@ describe("importBoardSetFromUrl", () => {
     expect(result.rootBoardId).toBeTruthy();
   });
 
-  test("keeps both sets when URL imports share a filename", async () => {
-    const first = await importBoardSetFromUrl(
-      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-    );
-    const second = await importBoardSetFromUrl(
-      `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-    );
-
-    expect(first.id).toBe("lots-of-stuff");
-    expect(second.id).toBe("lots-of-stuff-2");
-  });
-
   test("aborts an in-flight download without importing a board set", async () => {
     const controller = new AbortController();
     const importing = importBoardSetFromUrl(

@@ -69,42 +69,24 @@ describe("BackspaceButton", () => {
     expect(handlers.onPress).not.toHaveBeenCalled();
   });
 
-  describe("RTL icon mirroring", () => {
-    test("backspace icon is flipped in RTL", async () => {
-      const theme = createTheme({ direction: "rtl" });
-      const handlers = createHandlers();
-
+  test.each([
+    { direction: "rtl", transform: "matrix(-1, 0, 0, 1, 0, 0)" },
+    { direction: "ltr", transform: "none" },
+  ] as const)(
+    "points the backspace icon toward the reading start in $direction",
+    async ({ direction, transform }) => {
       const screen = await renderWithProviders(
-        <MUIThemeProvider theme={theme}>
-          <BackspaceButton {...handlers} />
+        <MUIThemeProvider theme={createTheme({ direction })}>
+          <BackspaceButton {...createHandlers()} />
         </MUIThemeProvider>,
       );
-
-      const button = screen.getByRole("button", { name: "Backspace" });
-      const icon = button.element().querySelector("svg");
-
-      assertDefined(icon);
-      // Browsers resolve scaleX(-1) to its matrix equivalent
-      const styles = getComputedStyle(icon);
-      expect(styles.transform).toBe("matrix(-1, 0, 0, 1, 0, 0)");
-    });
-
-    test("backspace icon is not flipped in LTR", async () => {
-      const theme = createTheme({ direction: "ltr" });
-      const handlers = createHandlers();
-
-      const screen = await renderWithProviders(
-        <MUIThemeProvider theme={theme}>
-          <BackspaceButton {...handlers} />
-        </MUIThemeProvider>,
-      );
-
-      const button = screen.getByRole("button", { name: "Backspace" });
-      const icon = button.element().querySelector("svg");
+      const icon = screen
+        .getByRole("button", { name: "Backspace" })
+        .element()
+        .querySelector("svg");
 
       assertDefined(icon);
-      const styles = getComputedStyle(icon);
-      expect(styles.transform).not.toBe("matrix(-1, 0, 0, 1, 0, 0)");
-    });
-  });
+      expect(getComputedStyle(icon).transform).toBe(transform);
+    },
+  );
 });

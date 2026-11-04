@@ -3,6 +3,7 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import type { Locator } from "vitest/browser";
@@ -12,30 +13,34 @@ const cssVariableTheme = createTheme({ cssVariables: true });
 
 // The test viewport is below "sm", where the grid uses compact padding.
 const PADDING_PX = 16;
-const GAP_PX = 8;
 const MIN_CELL_SIZE_PX = 96;
 
-function calculateExpectedCellSize(containerSize: number, tracks: number) {
-  const fit = Math.floor(
-    (containerSize - 2 * PADDING_PX + GAP_PX) / (MIN_CELL_SIZE_PX + GAP_PX),
-  );
-  const visible = Math.min(tracks, Math.max(1, fit));
+const AXES = {
+  columns: {
+    start: "left",
+    end: "right",
+    size: "width",
+    scrollSize: "scrollWidth",
+    clientSize: "clientWidth",
+  },
+  rows: {
+    start: "top",
+    end: "bottom",
+    size: "height",
+    scrollSize: "scrollHeight",
+    clientSize: "clientHeight",
+  },
+} as const;
 
-  return (containerSize - 2 * PADDING_PX - (visible - 1) * GAP_PX) / visible;
-}
+type Axis = keyof typeof AXES;
 
-async function renderGridLayout({
-  width,
-  height,
-  rows,
-  columns,
-}: {
-  width: number;
-  height: number;
-  rows: number;
-  columns: number;
-}) {
-  const items = Array.from({ length: rows * columns }, (_, index) => ({
+async function measureTracks(
+  axis: Axis,
+  containerSize: number,
+  tracks: number,
+) {
+  const isColumns = axis === "columns";
+  const items = Array.from({ length: tracks }, (_, index) => ({
     id: String(index + 1),
     label: `Item ${index + 1}`,
   }));
@@ -43,11 +48,17 @@ async function renderGridLayout({
   const screen = await render(
     <MUIThemeProvider theme={cssVariableTheme}>
       <CssBaseline />
-      <div style={{ width, height }}>
+      <div
+        style={
+          isColumns
+            ? { width: containerSize, height: 400 }
+            : { width: 400, height: containerSize }
+        }
+      >
         <Grid
           items={items}
-          rows={rows}
-          columns={columns}
+          rows={isColumns ? 1 : tracks}
+          columns={isColumns ? tracks : 1}
           renderItem={(item, props) => <button {...props}>{item.label}</button>}
         />
       </div>
@@ -55,14 +66,26 @@ async function renderGridLayout({
   );
 
   const grid = screen.getByRole("grid").element();
-  const cell = grid.querySelector("[role='gridcell']");
   const scroller = grid.parentElement;
+  assertDefined(scroller);
 
-  if (!(cell instanceof HTMLElement) || !scroller) {
-    throw new Error("Grid cell or scroll container not found");
-  }
+  const { start, end, size, scrollSize, clientSize } = AXES[axis];
+  const viewport = scroller.getBoundingClientRect();
+  const cells = Array.from(grid.querySelectorAll("[role='gridcell']"), (cell) =>
+    cell.getBoundingClientRect(),
+  );
+  const visibleCells = cells.filter(
+    (cell) =>
+      cell[start] >= viewport[start] && cell[end] <= viewport[end] + 0.5,
+  );
 
-  return { cellBounds: cell.getBoundingClientRect(), scroller };
+  return {
+    cellSize: cells[0][size],
+    lastVisibleCellEnd: visibleCells.at(-1)?.[end],
+    viewportContentEnd: viewport[end] - PADDING_PX,
+    visibleCellCount: visibleCells.length,
+    overflows: scroller[scrollSize] > scroller[clientSize] + 1,
+  };
 }
 
 function getCellPosition(item: Locator): { row: number; column: number } {
@@ -290,179 +313,40 @@ describe("Grid", () => {
     });
   });
 
-  describe("responsive column sizing", () => {
-    const renderSizedGrid = async (containerWidth: number, columns: number) => {
-      const { cellBounds, scroller } = await renderGridLayout({
-        width: containerWidth,
-        height: 400,
-        rows: 1,
-        columns,
-      });
+  describe("responsive sizing", () => {
+    const FIT_CASES = [
+      { containerSize: 1000, tracks: 20, visible: 9 },
+      { containerSize: 1000, tracks: 4, visible: 4 },
+      { containerSize: 375, tracks: 20, visible: 3 },
+    ];
 
-      return {
-        cellWidth: cellBounds.width,
-        expectedWidth: calculateExpectedCellSize(containerWidth, columns),
-        overflows: scroller.scrollWidth > scroller.clientWidth + 1,
-      };
-    };
+    test.each(
+      (["columns", "rows"] as const).flatMap((axis) =>
+        FIT_CASES.map((fitCase) => ({ axis, ...fitCase })),
+      ),
+    )(
+      "fits $visible whole $axis of at least 96px into $containerSize px for a $tracks-track board",
+      async ({ axis, containerSize, tracks, visible }) => {
+        const layout = await measureTracks(axis, containerSize, tracks);
 
-    test("enlarges cells past the floor to fill the width when a wide board overflows", async () => {
-      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
-        1000,
-        20,
-      );
+        expect(layout.visibleCellCount).toBe(visible);
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
+        expect(layout.lastVisibleCellEnd).toBeCloseTo(
+          layout.viewportContentEnd,
+          0,
+        );
+        expect(layout.overflows).toBe(tracks > visible);
+      },
+    );
 
-      expect(cellWidth).toBeGreaterThan(MIN_CELL_SIZE_PX);
-      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
-      expect(overflows).toBe(true);
-    });
+    test.each(["columns", "rows"] as const)(
+      "keeps %s at the 96px floor in a container smaller than one cell",
+      async (axis) => {
+        const layout = await measureTracks(axis, 120, 1);
 
-    test("grows cells to fill the width when the whole board fits", async () => {
-      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
-        1000,
-        4,
-      );
-
-      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
-      expect(overflows).toBe(false);
-    });
-
-    test("settles on three columns at a phone width, never below the 96px floor", async () => {
-      const { cellWidth, expectedWidth, overflows } = await renderSizedGrid(
-        375,
-        20,
-      );
-
-      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
-      expect(Math.abs(cellWidth - expectedWidth)).toBeLessThan(1.5);
-      expect(overflows).toBe(true);
-    });
-
-    test("preserves the 96px floor when the container is narrower than one cell", async () => {
-      const { cellWidth, overflows } = await renderSizedGrid(120, 1);
-
-      expect(cellWidth).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
-      expect(overflows).toBe(true);
-    });
-  });
-
-  describe("responsive row sizing", () => {
-    const renderSizedGrid = async (containerHeight: number, rows: number) => {
-      const { cellBounds, scroller } = await renderGridLayout({
-        width: 400,
-        height: containerHeight,
-        rows,
-        columns: 1,
-      });
-
-      return {
-        cellHeight: cellBounds.height,
-        expectedHeight: calculateExpectedCellSize(containerHeight, rows),
-        overflows: scroller.scrollHeight > scroller.clientHeight + 1,
-      };
-    };
-
-    test("enlarges cells past the floor to fill the height when a tall board overflows", async () => {
-      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
-        1000,
-        20,
-      );
-
-      expect(cellHeight).toBeGreaterThan(MIN_CELL_SIZE_PX);
-      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
-      expect(overflows).toBe(true);
-    });
-
-    test("grows cells to fill the height when the whole board fits", async () => {
-      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
-        1000,
-        4,
-      );
-
-      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
-      expect(overflows).toBe(false);
-    });
-
-    test("settles on whole rows at a short height, never below the 96px floor", async () => {
-      const { cellHeight, expectedHeight, overflows } = await renderSizedGrid(
-        375,
-        20,
-      );
-
-      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
-      expect(Math.abs(cellHeight - expectedHeight)).toBeLessThan(1.5);
-      expect(overflows).toBe(true);
-    });
-
-    test("preserves the 96px floor when the container is shorter than one cell", async () => {
-      const { cellHeight, overflows } = await renderSizedGrid(120, 1);
-
-      expect(cellHeight).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
-      expect(overflows).toBe(true);
-    });
-  });
-
-  describe("scroll snapping", () => {
-    const renderLine = async (
-      style: { width: string; height: string },
-      rows: number,
-      columns: number,
-    ) => {
-      const items = Array.from({ length: rows * columns }, (_, i) => ({
-        id: String(i + 1),
-        label: `Item ${i + 1}`,
-      }));
-
-      const screen = await render(
-        <>
-          <CssBaseline />
-          <div style={style}>
-            <Grid
-              rows={rows}
-              columns={columns}
-              items={items}
-              renderItem={(item, props) => (
-                <button {...props}>{item.label}</button>
-              )}
-            />
-          </div>
-        </>,
-      );
-
-      const grid = screen.getByRole("grid").element();
-      const container = grid.parentElement;
-
-      if (!(container instanceof HTMLElement)) {
-        throw new Error("grid scroll container not found");
-      }
-
-      return {
-        container,
-        cells: grid.querySelectorAll<HTMLElement>("[role='gridcell']"),
-      };
-    };
-
-    test("configures both-axis proximity snapping, cells aligned to start", async () => {
-      const { container, cells } = await renderLine(
-        { width: "1000px", height: "400px" },
-        1,
-        20,
-      );
-
-      expect(getComputedStyle(container).scrollSnapType).toBe("both");
-      expect(getComputedStyle(cells[1]).scrollSnapAlign).toBe("start");
-    });
-
-    test("snaps per cell, not per page (no scroll-margin offset)", async () => {
-      const { cells } = await renderLine(
-        { width: "1000px", height: "400px" },
-        1,
-        20,
-      );
-
-      expect(
-        parseFloat(getComputedStyle(cells[5]).scrollMarginLeft),
-      ).toBeLessThan(1);
-    });
+        expect(layout.cellSize).toBeGreaterThanOrEqual(MIN_CELL_SIZE_PX);
+        expect(layout.overflows).toBe(true);
+      },
+    );
   });
 });

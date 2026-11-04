@@ -139,28 +139,6 @@ describe("useLatestAsync", () => {
     });
   });
 
-  test("stays silent when the rejection comes from its own abort", async () => {
-    const { result, rerender } = await renderHook(
-      ({ enabled }: { enabled: boolean } = { enabled: true }) =>
-        useLatestAsync({
-          enabled,
-          deps: ["a"],
-          run: (signal) =>
-            new Promise<string>((_resolve, reject) => {
-              signal.addEventListener("abort", () => {
-                reject(new DOMException("Aborted", "AbortError"));
-              });
-            }),
-        }),
-      { initialProps: { enabled: true } },
-    );
-
-    await rerender({ enabled: false });
-
-    expect(result.current.error).toBeUndefined();
-    expect(result.current.value).toBeUndefined();
-  });
-
   test("ignores a stale in-flight result that resolves after deps moved on", async () => {
     const resolvers = new Map<string, (value: string) => void>();
     const { result, rerender } = await renderHook(

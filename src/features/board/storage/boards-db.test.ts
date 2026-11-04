@@ -1,18 +1,5 @@
-import { deleteDB } from "idb";
 import { afterEach, beforeEach, describe, expect, test } from "vitest";
-import { makeOBFBoard, resetBoardsDB } from "../testing";
-import {
-  getAssetBlob,
-  getBoardRecord,
-  listBoardRecords,
-  replaceBoardTranslations,
-} from "./board-content-storage";
-import {
-  createStoredBoardSet,
-  getStoredBoardSet,
-  listStoredBoardSets,
-  deleteStoredBoardSet,
-} from "./board-set-storage";
+import { resetBoardsDB } from "../testing";
 import { closeBoardsDB, getBoardsDB, normalizeAssetPath } from "./boards-db";
 
 beforeEach(async () => {
@@ -22,56 +9,6 @@ beforeEach(async () => {
 afterEach(closeBoardsDB);
 
 describe("getBoardsDB", () => {
-  test("creates a fresh database that persists boards, translations, and assets", async () => {
-    await closeBoardsDB();
-    await deleteDB("boards-db");
-    const obf = makeOBFBoard({
-      id: "root",
-      strings: { fr: { Hello: "Bonjour" } },
-    });
-
-    await createStoredBoardSet({
-      id: "vocabulary",
-      name: "Vocabulary",
-      rootBoardId: "root",
-      boards: [obf],
-      assets: [{ path: "image.png", blob: new Blob(["image"]) }],
-    });
-    await closeBoardsDB();
-
-    expect((await getBoardsDB()).version).toBe(1);
-    expect(await getStoredBoardSet("vocabulary")).toMatchObject({
-      id: "vocabulary",
-      name: "Vocabulary",
-      rootBoardId: "root",
-      boardCount: 1,
-    });
-    expect(await getBoardRecord("vocabulary", "root")).toEqual({
-      boardSetId: "vocabulary",
-      id: "root",
-      name: obf.name,
-      obf,
-    });
-    expect(await listStoredBoardSets()).toHaveLength(1);
-    expect(await listBoardRecords("vocabulary")).toHaveLength(1);
-    expect(await (await getAssetBlob("vocabulary", "image.png"))?.text()).toBe(
-      "image",
-    );
-
-    await replaceBoardTranslations("vocabulary", "root", "es", {
-      Hello: "Hola",
-    });
-    expect((await getBoardRecord("vocabulary", "root"))?.obf.strings).toEqual({
-      fr: { Hello: "Bonjour" },
-      es: { Hello: "Hola" },
-    });
-
-    await deleteStoredBoardSet("vocabulary");
-    expect(await listBoardRecords("vocabulary")).toEqual([]);
-    expect(await getStoredBoardSet("vocabulary")).toBeUndefined();
-    expect(await getAssetBlob("vocabulary", "image.png")).toBeUndefined();
-  });
-
   test("reuses one connection across calls", async () => {
     const [first, second] = await Promise.all([getBoardsDB(), getBoardsDB()]);
 

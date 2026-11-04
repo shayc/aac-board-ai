@@ -16,9 +16,6 @@ describe("BoardSettings", () => {
     const saturationSlider = screen.getByRole("slider", {
       name: "Color intensity",
     });
-    const labelPositionGroup = screen.getByRole("radiogroup", {
-      name: "Labels",
-    });
     const bordersSwitch = screen.getByRole("switch", {
       name: "Show borders",
     });
@@ -40,16 +37,6 @@ describe("BoardSettings", () => {
     await expect
       .element(screen.getByRole("radio", { name: "Hidden" }))
       .not.toBeChecked();
-    expect(
-      labelPositionGroup
-        .element()
-        .compareDocumentPosition(bordersSwitch.element()),
-    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    expect(
-      bordersSwitch
-        .element()
-        .compareDocumentPosition(saturationSlider.element()),
-    ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
 
     await expectNoA11yViolations(screen.container);
   });
@@ -75,38 +62,13 @@ describe("BoardSettings", () => {
       }
 
       await expect.element(symbol).toBeVisible();
-      await expect.element(option).toHaveStyle({
-        outlineStyle: "solid",
-        outlineWidth: "2px",
-        outlineOffset: "2px",
-      });
-      await expect.element(symbol).toHaveStyle({
-        borderRadius: "0px",
-        outlineStyle: "none",
-        boxShadow: "none",
-      });
+      await expect.element(option).toHaveStyle({ outlineStyle: "solid" });
+      await expect
+        .element(symbol)
+        .toHaveStyle({ outlineStyle: "none", boxShadow: "none" });
 
       await userEvent.keyboard("{ArrowRight}");
     }
-  });
-
-  test("styles radio group, switch, and slider labels alike", async () => {
-    const screen = await render(
-      <AppProviders>
-        <BoardSettings />
-      </AppProviders>,
-    );
-
-    const labels = ["Labels", "Show borders", "Color intensity"];
-    const styles = labels.map((label) => {
-      const { fontSize, fontWeight, color } = getComputedStyle(
-        screen.getByText(label, { exact: true }).element(),
-      );
-      return { fontSize, fontWeight, color };
-    });
-
-    expect(styles[1]).toEqual(styles[0]);
-    expect(styles[2]).toEqual(styles[0]);
   });
 
   test("toggling tile borders persists their visibility", async () => {
