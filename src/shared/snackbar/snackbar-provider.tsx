@@ -2,6 +2,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import Alert, { alertClasses } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import Tooltip from "@mui/material/Tooltip";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
@@ -92,22 +93,19 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const action = (
     <>
       {state.current?.action}
-      <IconButton
-        aria-label={t(m.close)}
-        title={t(m.close)}
-        size="large"
-        color="inherit"
-        onClick={() => handleClose()}
-        sx={{
-          backgroundColor: "color-mix(in srgb, currentColor 12%, transparent)",
-          "&:hover": {
-            backgroundColor:
-              "color-mix(in srgb, currentColor 20%, transparent)",
-          },
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
+      <Tooltip title={t(m.close)}>
+        <IconButton
+          aria-label={t(m.close)}
+          size="large"
+          color="inherit"
+          onClick={() => handleClose()}
+          sx={(theme) => ({
+            "--IconButton-hoverBg": `color-mix(in srgb, currentColor calc(${theme.vars.palette.action.hoverOpacity} * 100%), transparent)`,
+          })}
+        >
+          <CloseIcon />
+        </IconButton>
+      </Tooltip>
     </>
   );
 
