@@ -8,28 +8,13 @@ import { importBoardSets, type ImportedBoardSet } from "./board-import";
  */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
-
-class BoardUrlError extends Error {
-  readonly code: BoardUrlErrorCode;
-
-  constructor(code: BoardUrlErrorCode, message: string) {
-    super(message);
-    this.name = "BoardUrlError";
-    this.code = code;
-  }
-}
-
 // The ?board= param is attacker-controlled, so only http(s) may reach fetch —
 // schemes like data: would smuggle a payload past any host-based reasoning.
 function parseBoardUrl(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
-    throw new BoardUrlError(
-      "unsupported-scheme",
-      `Unsupported board URL scheme: ${resolved.protocol}`,
-    );
+    throw new Error(`Unsupported board URL scheme: ${resolved.protocol}`);
   }
 
   return resolved;
@@ -82,8 +67,7 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     receivedBytes += value.byteLength;
     if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
       await reader.cancel();
-      throw new BoardUrlError(
-        "download-too-large",
+      throw new Error(
         `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
       );
     }

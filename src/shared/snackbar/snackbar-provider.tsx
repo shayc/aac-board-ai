@@ -12,6 +12,7 @@ import {
 } from "./snackbar-context";
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
+const DEFAULT_AUTO_HIDE_MS = 4000;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -88,7 +89,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={state.current?.durationMs ?? 4000}
+        autoHideDuration={getAutoHideDuration(state.current)}
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",
@@ -107,6 +108,16 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function getAutoHideDuration(
+  snackbar: QueuedSnackbar | undefined,
+): number | null {
+  if (snackbar?.durationMs !== undefined) {
+    return snackbar.durationMs;
+  }
+
+  return snackbar?.severity === "error" ? null : DEFAULT_AUTO_HIDE_MS;
 }
 
 function snackbarReducer(

@@ -4,7 +4,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
-import type { SnackbarOptions } from "./snackbar-context";
+import type { SnackbarOptions, SnackbarSeverity } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
 
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
@@ -36,6 +36,19 @@ function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
       <ShowButtons snackbars={snackbars} />
     </AppProviders>,
   );
+}
+
+async function showAndOutlastDefaultDuration(severity: SnackbarSeverity) {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
+  const screen = await renderSnackbars({
+    show: { message: "Couldn't import", severity },
+  });
+
+  await screen.getByRole("button", { name: "show" }).click();
+  await vi.advanceTimersByTimeAsync(60_000);
+  vi.useRealTimers();
+
+  return screen;
 }
 
 describe("SnackbarProvider", () => {
@@ -73,6 +86,20 @@ describe("SnackbarProvider", () => {
     ).rejects.toThrow();
 
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
+  });
+
+  test("hides an info message after the default duration", async () => {
+    const screen = await showAndOutlastDefaultDuration("info");
+
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+  });
+
+  test("keeps an error message until it is dismissed", async () => {
+    const screen = await showAndOutlastDefaultDuration("error");
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Couldn't import");
   });
 
   test("shows a plain-string message with no accessibility violations", async () => {

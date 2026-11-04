@@ -87,10 +87,7 @@ describe("importBoardSetFromUrl", () => {
 
     await expect(
       importBoardSetFromUrl("data:application/zip;base64,UEsDBA=="),
-    ).rejects.toMatchObject({
-      name: "BoardUrlError",
-      code: "unsupported-scheme",
-    });
+    ).rejects.toThrow("Unsupported board URL scheme: data:");
 
     expect(fetchSpy).not.toHaveBeenCalled();
   });
@@ -109,10 +106,9 @@ describe("importBoardSetFromUrl", () => {
 
     await expect(
       importBoardSetFromUrl("https://example.com/huge.obz"),
-    ).rejects.toMatchObject({
-      name: "BoardUrlError",
-      code: "download-too-large",
-    });
+    ).rejects.toThrow(
+      `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
+    );
 
     expect(cancelled).toBe(true);
   });

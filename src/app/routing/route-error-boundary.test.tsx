@@ -43,12 +43,17 @@ function throwDataResponse(errorData: unknown): never {
 }
 
 describe("RouteErrorBoundary", () => {
-  test("shows the custom title for a data() response with a string message", async () => {
+  test("shows the generic title instead of a raw data() string", async () => {
     const screen = await renderWithLoader(() =>
-      throwDataResponse("Custom title"),
+      throwDataResponse('No route matches URL "/missing"'),
     );
 
-    await expect.element(screen.getByText("Custom title")).toBeVisible();
+    await expect
+      .element(screen.getByText("Something went wrong"))
+      .toBeVisible();
+    await expect
+      .element(screen.getByText('No route matches URL "/missing"'))
+      .not.toBeInTheDocument();
   });
 
   test("shows a generic error with a link to the root route", async () => {

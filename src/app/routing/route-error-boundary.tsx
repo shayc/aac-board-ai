@@ -16,15 +16,11 @@ export function RouteErrorBoundary() {
 }
 
 function getErrorTitle(error: unknown, t: Translate): string {
-  if (!isRouteErrorResponse(error)) {
-    return t(m.errorGenericTitle);
-  }
-
-  if (isRouteErrorPayload(error.data)) {
+  if (isRouteErrorResponse(error) && isRouteErrorPayload(error.data)) {
     return translateRouteError(error.data.code, t);
   }
 
-  return typeof error.data === "string" ? error.data : t(m.errorGenericTitle);
+  return t(m.errorGenericTitle);
 }
 
 function translateRouteError(code: RouteErrorCode, t: Translate): string {
