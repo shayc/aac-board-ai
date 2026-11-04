@@ -81,42 +81,43 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
 
     await vi.advanceTimersByTimeAsync(10_000);
 
-    await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
   test.each([
     {
       name: "an error",
-      role: "alert",
       options: { message: "Failed", severity: "error" },
     },
     {
       name: "a message with an action",
-      role: "status",
       options: { message: "Failed", action: <button>Retry</button> },
     },
   ] satisfies {
     name: string;
-    role: "alert" | "status";
     options: SnackbarOptions;
-  }[])("keeps $name open until closed", async ({ role, options }) => {
+  }[])("keeps $name open until closed", async ({ options }) => {
     vi.useFakeTimers();
     const screen = await renderSnackbars({ "show-sticky": options });
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
-    await expect.element(screen.getByRole(role)).toMatchTextContent("Failed");
+    await expect
+      .element(screen.getByRole("alert"))
+      .toMatchTextContent("Failed");
 
     await vi.advanceTimersByTimeAsync(10 * 60_000);
-    await expect.element(screen.getByRole(role)).toMatchTextContent("Failed");
+    await expect
+      .element(screen.getByRole("alert"))
+      .toMatchTextContent("Failed");
 
     await screen.getByRole("button", { name: "Close" }).click();
     await vi.advanceTimersByTimeAsync(1000);
 
-    await expect.element(screen.getByRole(role)).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
   test("replaces an open error with a later message", async () => {
@@ -134,8 +135,8 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-saved" }).click();
 
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
-    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+    await expect.element(screen.getByText("Failed")).not.toBeInTheDocument();
   });
 
   test("keeps showing messages after several are sent at once", async () => {
@@ -148,10 +149,10 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-burst" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
 
     await screen.getByRole("button", { name: "show-later" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Later");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Later");
   });
 
   test("shows only the newest of messages sent while one is open", async () => {
@@ -165,13 +166,13 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-importing" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("alert"))
       .toHaveTextContent("Importing");
 
     await screen.getByRole("button", { name: "show-outcomes" }).click();
 
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
-    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+    await expect.element(screen.getByText("Failed")).not.toBeInTheDocument();
   });
 
   test("replaces the current message with a new one", async () => {
@@ -181,13 +182,11 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-first" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("first");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("first");
 
     await screen.getByRole("button", { name: "show-second" }).click();
 
-    await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent("second");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("second");
   });
 
   test("ignores clickaway so the message stays visible", async () => {
@@ -196,9 +195,7 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
-    await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent("sticky");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
 
     await screen.getByRole("button", { name: "outside" }).click();
 
@@ -207,25 +204,23 @@ describe("SnackbarProvider", () => {
     // matcher must time out.
     await expect(
       expect
-        .element(screen.getByRole("status"), { timeout: 500 })
+        .element(screen.getByRole("alert"), { timeout: 500 })
         .not.toBeInTheDocument(),
     ).rejects.toThrow();
 
-    await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent("sticky");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
   test("shows a plain-string message with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
 
     // Axe computes color contrast against blended colors while the Grow
     // transition is still animating opacity, so wait for it to settle.
     await vi.waitFor(() => {
-      const alert = screen.getByRole("status").element();
+      const alert = screen.getByRole("alert").element();
       expect(getComputedStyle(alert).opacity).toBe("1");
     });
 
@@ -235,7 +230,6 @@ describe("SnackbarProvider", () => {
   test.each(["success", "info", "warning", "error"] as const)(
     "shows a %s message with no accessibility violations",
     async (severity) => {
-      const role = severity === "error" ? "alert" : "status";
       const screen = await renderSnackbars({
         "show-status": {
           message: "Status",
@@ -246,7 +240,7 @@ describe("SnackbarProvider", () => {
 
       await screen.getByRole("button", { name: "show-status" }).click();
       await vi.waitFor(() => {
-        const alert = screen.getByRole(role).element();
+        const alert = screen.getByRole("alert").element();
         expect(getComputedStyle(alert).opacity).toBe("1");
       });
 
@@ -282,7 +276,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-imported" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("alert"))
       .toHaveTextContent("Board set imported");
     await expect
       .element(screen.getByRole("button", { name: "Close" }))
@@ -290,7 +284,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("alert"))
       .toHaveTextContent("ערכת הלוחות יובאה בהצלחה");
     await expect
       .element(screen.getByRole("button", { name: "סגירה" }))

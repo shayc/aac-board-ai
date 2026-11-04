@@ -71,7 +71,7 @@ describe("BoardSetLibrary", () => {
     await screen.getByRole("button", { name: "Delete" }).click();
 
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("alert"))
       .toHaveTextContent('Board set "Animals" deleted');
     await expect
       .element(screen.getByText("Library is empty"))

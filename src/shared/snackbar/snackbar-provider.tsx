@@ -7,7 +7,7 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, type SyntheticEvent, useRef, useState } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -46,7 +46,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const handleClose = (
-    _event?: React.SyntheticEvent | Event | null,
+    _event?: SyntheticEvent | Event | null,
     reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") {
@@ -98,7 +98,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         sx={snackbarPlacementStyles}
       >
         <Alert
-          role={isError ? "alert" : "status"}
           action={action}
           severity={severity}
           variant={isError ? "filled" : "standard"}
