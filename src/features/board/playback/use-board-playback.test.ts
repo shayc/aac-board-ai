@@ -36,7 +36,7 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementation((utterance) => {
       callOrder.push(`speak:${utterance.text}`);
       queueMicrotask(() => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       });
     });
     audio.play.mockImplementation(function (this: HTMLAudioElement) {
@@ -73,9 +73,11 @@ describe("useBoardPlayback", () => {
   test("cancels speech and clears playing and active-part state on stop", async () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
-      utterance.onboundary?.({ charIndex: 0 } as SpeechSynthesisEvent);
+      utterance.dispatchEvent(
+        new SpeechSynthesisEvent("boundary", { utterance, charIndex: 0 }),
+      );
       resolveSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       };
     });
 
@@ -102,9 +104,12 @@ describe("useBoardPlayback", () => {
   test("resets isMessagePlaying to false after a speech error", async () => {
     speech.speak.mockImplementationOnce((utterance) => {
       queueMicrotask(() => {
-        utterance.onerror?.({
-          error: "synthesis-failed",
-        } as unknown as SpeechSynthesisErrorEvent);
+        utterance.dispatchEvent(
+          new SpeechSynthesisErrorEvent("error", {
+            utterance,
+            error: "synthesis-failed",
+          }),
+        );
       });
     });
 
@@ -123,11 +128,13 @@ describe("useBoardPlayback", () => {
     let endSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       fireBoundary = (charIndex) => {
-        utterance.onboundary?.({ charIndex } as SpeechSynthesisEvent);
+        utterance.dispatchEvent(
+          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
+        );
       };
 
       endSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       };
     });
 
@@ -162,7 +169,7 @@ describe("useBoardPlayback", () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       };
     });
 
@@ -192,11 +199,13 @@ describe("useBoardPlayback", () => {
     let resolveSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       fireBoundary = (charIndex) => {
-        utterance.onboundary?.({ charIndex } as SpeechSynthesisEvent);
+        utterance.dispatchEvent(
+          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
+        );
       };
 
       resolveSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       };
     });
 
@@ -223,12 +232,12 @@ describe("useBoardPlayback", () => {
     let resolveFirstSpeak: (() => void) | undefined;
     speech.speak.mockImplementationOnce((utterance) => {
       resolveFirstSpeak = () => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       };
     });
     speech.speak.mockImplementationOnce((utterance) => {
       queueMicrotask(() => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       });
     });
 

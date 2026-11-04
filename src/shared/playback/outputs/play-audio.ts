@@ -12,26 +12,18 @@ export function playAudio(
 
   const { promise, resolve } = Promise.withResolvers<void>();
   const audio = new Audio(src);
-  let isSettled = false;
+  const settled = new AbortController();
+  const listenerOptions = { signal: settled.signal };
 
   function finish() {
-    if (isSettled) {
-      return;
-    }
-
-    isSettled = true;
-    audio.onended = null;
-    audio.onerror = null;
+    settled.abort();
     audio.pause();
-    signal?.removeEventListener("abort", finish);
-
     resolve();
   }
 
-  audio.onended = finish;
-  audio.onerror = finish;
-
-  signal?.addEventListener("abort", finish, { once: true });
+  audio.addEventListener("ended", finish, listenerOptions);
+  audio.addEventListener("error", finish, listenerOptions);
+  signal?.addEventListener("abort", finish, listenerOptions);
   audio.play().catch(finish);
 
   return promise;

@@ -8,7 +8,7 @@ export function stubSpeech(): {
     .spyOn(speechSynthesis, "speak")
     .mockImplementation((utterance) => {
       queueMicrotask(() => {
-        utterance.onend?.({ utterance } as unknown as SpeechSynthesisEvent);
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
       });
     });
   const cancel = vi.spyOn(speechSynthesis, "cancel").mockReturnValue(undefined);

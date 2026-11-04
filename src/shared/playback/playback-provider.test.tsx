@@ -121,7 +121,9 @@ describe("PlaybackProvider", () => {
     await expect.element(screen.getByText("Active key: 1")).toBeInTheDocument();
     const commitsWhilePlaying = { ...commits };
 
-    utterance?.onboundary?.({ charIndex: 6 } as SpeechSynthesisEvent);
+    utterance?.dispatchEvent(
+      new SpeechSynthesisEvent("boundary", { utterance, charIndex: 6 }),
+    );
     await expect.element(screen.getByText("Active key: 2")).toBeInTheDocument();
 
     expect(commitsWhilePlaying.controls).toBe(1);

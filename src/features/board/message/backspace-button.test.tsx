@@ -1,7 +1,3 @@
-import {
-  createTheme,
-  ThemeProvider as MUIThemeProvider,
-} from "@mui/material/styles";
 import { AppProviders } from "@shared/providers/app-providers";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
@@ -76,9 +72,9 @@ describe("BackspaceButton", () => {
     "points the backspace icon toward the reading start in $direction",
     async ({ direction, transform }) => {
       const screen = await renderWithProviders(
-        <MUIThemeProvider theme={createTheme({ direction })}>
+        <div dir={direction}>
           <BackspaceButton {...createHandlers()} />
-        </MUIThemeProvider>,
+        </div>,
       );
       const icon = screen
         .getByRole("button", { name: "Backspace" })

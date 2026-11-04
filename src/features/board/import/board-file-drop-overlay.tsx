@@ -20,7 +20,7 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
       sx={(theme) => ({
         zIndex: theme.zIndex.modal,
         backgroundColor: theme.alpha(
-          (theme.vars ?? theme).palette.background.default,
+          theme.vars.palette.background.default,
           0.7,
         ),
         backdropFilter: "blur(2px)",
@@ -37,8 +37,8 @@ export function BoardFileDropOverlay({ open }: BoardFileDropOverlayProps) {
             gap: 2,
             px: 6,
             py: 5,
-            border: `2px dashed ${(theme.vars ?? theme).palette.primary.main}`,
-            borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+            border: `2px dashed ${theme.vars.palette.primary.main}`,
+            borderRadius: theme.vars.shape.borderRadiusLg,
           })}
         >
           <FileDownloadOutlinedIcon color="primary" sx={{ fontSize: 56 }} />

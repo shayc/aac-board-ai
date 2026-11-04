@@ -113,9 +113,12 @@ describe("speak", () => {
       });
       const playback = speak("hello");
 
-      utterance?.onerror?.({
-        error: "synthesis-failed",
-      } as SpeechSynthesisErrorEvent);
+      utterance?.dispatchEvent(
+        new SpeechSynthesisErrorEvent("error", {
+          utterance,
+          error: "synthesis-failed",
+        }),
+      );
 
       await expect(playback).resolves.toBeUndefined();
     });

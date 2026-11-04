@@ -30,38 +30,32 @@ export function speak(
 
   const { promise, resolve } = Promise.withResolvers<void>();
   const utterance = buildUtterance(text);
-  let isSettled = false;
-
-  const handleAbort = () => {
-    synthesis.cancel();
-    finish();
-  };
+  const settled = new AbortController();
+  const listenerOptions = { signal: settled.signal };
 
   function finish() {
-    if (isSettled) {
-      return;
-    }
-
-    isSettled = true;
-    utterance.onend = null;
-    utterance.onerror = null;
-    utterance.onboundary = null;
-    signal?.removeEventListener("abort", handleAbort);
-
+    settled.abort();
     resolve();
   }
 
   if (onBoundary) {
-    utterance.onboundary = (event) => {
-      if (!signal?.aborted) {
-        onBoundary(event.charIndex);
-      }
-    };
+    utterance.addEventListener(
+      "boundary",
+      (event) => onBoundary(event.charIndex),
+      listenerOptions,
+    );
   }
 
-  utterance.onend = finish;
-  utterance.onerror = finish;
-  signal?.addEventListener("abort", handleAbort, { once: true });
+  utterance.addEventListener("end", finish, listenerOptions);
+  utterance.addEventListener("error", finish, listenerOptions);
+  signal?.addEventListener(
+    "abort",
+    () => {
+      synthesis.cancel();
+      finish();
+    },
+    listenerOptions,
+  );
 
   synthesis.speak(utterance);
 

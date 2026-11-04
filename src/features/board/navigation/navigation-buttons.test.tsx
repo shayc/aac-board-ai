@@ -1,7 +1,3 @@
-import {
-  createTheme,
-  ThemeProvider as MUIThemeProvider,
-} from "@mui/material/styles";
 import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test, vi } from "vitest";
@@ -17,20 +13,19 @@ interface RenderOptions {
 }
 
 async function renderButtons(options: RenderOptions = {}) {
-  const theme = createTheme({ direction: options.direction ?? "ltr" });
   const onBack = options.onBack ?? vi.fn();
   const onHome = options.onHome ?? vi.fn();
 
   const screen = await render(
     <AppProviders>
-      <MUIThemeProvider theme={theme}>
+      <div dir={options.direction ?? "ltr"}>
         <NavigationButtons
           canGoBack={options.canGoBack ?? false}
           canGoHome={options.canGoHome ?? false}
           onBack={onBack}
           onHome={onHome}
         />
-      </MUIThemeProvider>
+      </div>
     </AppProviders>,
   );
 

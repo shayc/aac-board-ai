@@ -67,9 +67,9 @@ export function Tile({
             ? desaturate(resolvedBorderColor)
             : "transparent"
         }`,
-        borderRadius: (theme.vars ?? theme).shape.borderRadius,
+        borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
-        boxShadow: (theme.vars ?? theme).shadows[2],
+        boxShadow: theme.vars.shadows[2],
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
@@ -80,31 +80,31 @@ export function Tile({
           transition: "none",
         },
         "&:hover": {
-          boxShadow: (theme.vars ?? theme).shadows[4],
+          boxShadow: theme.vars.shadows[4],
           "@media (hover: hover)": {
             backgroundColor:
               resolvedBackgroundColor &&
               darken(
                 resolvedBackgroundColor,
-                `calc(${(theme.vars ?? theme).palette.action.hoverOpacity} * 200%)`,
+                `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
               ),
           },
           "@media (hover: none)": {
-            boxShadow: (theme.vars ?? theme).shadows[2],
+            boxShadow: theme.vars.shadows[2],
           },
         },
         "&:active": {
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
-          boxShadow: (theme.vars ?? theme).shadows[8],
+          boxShadow: theme.vars.shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          outline: `4px solid ${theme.alpha((theme.vars ?? theme).palette.text.primary, 0.8)}`,
+          outline: `4px solid ${theme.alpha(theme.vars.palette.text.primary, 0.8)}`,
           outlineOffset: 2,
-          boxShadow: (theme.vars ?? theme).shadows[6],
+          boxShadow: theme.vars.shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
-          boxShadow: (theme.vars ?? theme).shadows[0],
+          boxShadow: theme.vars.shadows[0],
         },
         ...(variant === "folder" && {
           "&::after": {
