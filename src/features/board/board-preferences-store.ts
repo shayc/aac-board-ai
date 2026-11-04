@@ -1,7 +1,7 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseClampedNumber } from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
-import type { SymbolLabelPlacement } from "./board-types";
+import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 
 export interface BoardPreferences {
   tileSaturation: number;

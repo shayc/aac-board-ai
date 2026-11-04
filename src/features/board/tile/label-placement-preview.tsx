@@ -1,6 +1,6 @@
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
-import type { SymbolLabelPlacement } from "../board-types";
+import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
 
 interface LabelPlacementPreviewProps {
   placement: SymbolLabelPlacement;

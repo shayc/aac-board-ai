@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
-import type { SymbolLabelPlacement } from "../board-types";
+
+export type SymbolLabelPlacement = "top" | "bottom" | "hidden";
 
 interface AACSymbolProps {
   imageSrc?: string;
