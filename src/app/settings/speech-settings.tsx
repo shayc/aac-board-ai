@@ -62,7 +62,7 @@ export function SpeechSettings() {
     return [header, ...items];
   }
 
-  const speechControls = [
+  const speechSliders = [
     {
       id: "rate",
       label: t(m.speechRate),
@@ -121,8 +121,8 @@ export function SpeechSettings() {
         {locales.map(renderLocaleOptions)}
       </SettingsSelect>
 
-      {speechControls.map(({ id, ...control }) => (
-        <SettingsSlider key={id} {...control} step={0.1} />
+      {speechSliders.map(({ id, ...slider }) => (
+        <SettingsSlider key={id} {...slider} step={0.1} />
       ))}
     </Stack>
   );

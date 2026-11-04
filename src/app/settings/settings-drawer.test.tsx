@@ -23,7 +23,7 @@ describe("SettingsDrawer", () => {
 
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
 
-    const sectionControls = [
+    const drawerItemsInOrder = [
       screen.getByRole("heading", { name: "Appearance" }),
       screen.getByRole("radiogroup", { name: "Theme" }),
       screen.getByRole("heading", { name: "Language & voice" }),
@@ -36,12 +36,12 @@ describe("SettingsDrawer", () => {
       screen.getByRole("switch", { name: "Highlight while speaking" }),
       screen.getByRole("heading", { name: "Suggestions" }),
     ];
-    for (const control of sectionControls) {
-      await expect.element(control).toBeInTheDocument();
+    for (const item of drawerItemsInOrder) {
+      await expect.element(item).toBeInTheDocument();
     }
-    for (const [index, next] of sectionControls.slice(1).entries()) {
+    for (const [index, next] of drawerItemsInOrder.slice(1).entries()) {
       expect(
-        sectionControls[index]
+        drawerItemsInOrder[index]
           .element()
           .compareDocumentPosition(next.element()),
       ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
