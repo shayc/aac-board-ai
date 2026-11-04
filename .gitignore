@@ -21,3 +21,6 @@ test-results
 
 # Paraglide compiler output
 src/paraglide/
+
+# Claude Code worktrees
+.claude/worktrees/
