@@ -30,3 +30,16 @@ test("maps stored boards to summaries with normalized translation locales", asyn
     { id: "a", name: "Food", translations: { "es-MX": { Food: "Comida" } } },
   ]);
 });
+
+test("falls back to the board id when the name is blank", async () => {
+  await createStoredBoardSet(
+    makeBoardSetInput({
+      rootBoardId: "a",
+      boards: [makeOBFBoard({ id: "a", name: "  " })],
+    }),
+  );
+
+  const [summary] = await listBoardSummaries("set-1");
+
+  expect(summary?.name).toBe("a");
+});

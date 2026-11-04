@@ -1,4 +1,5 @@
 import type { BoardTranslations } from "../board-types";
+import { nonBlankText } from "../non-blank-text";
 import { obfToBoardTranslations } from "../obf/obf-to-board";
 import { listBoardRecords } from "./board-content-storage";
 
@@ -15,7 +16,7 @@ export async function listBoardSummaries(
 
   return records.map(({ id, name, obf }) => ({
     id,
-    name,
+    name: nonBlankText(name) ?? id,
     translations: obfToBoardTranslations(obf.strings),
   }));
 }
