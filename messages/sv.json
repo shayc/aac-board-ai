@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
   "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken",
-  "boardUrlImportTitle": "Importera tavelfil?",
-  "boardUrlImportDescription": "Importera bara tavelfiler från källor du litar på.",
-  "boardUrlImportConfirm": "Importera"
+  "boardUrlImportTitle": "Lägga till tavla?",
+  "boardUrlImportDescription": "En tavla från {host} läggs till i ditt bibliotek. Lägg bara till den om du litar på den som skickade länken.",
+  "boardUrlImportConfirm": "Lägg till"
 }

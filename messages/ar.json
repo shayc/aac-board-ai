@@ -143,7 +143,7 @@
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
   "errorBoardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط",
-  "boardUrlImportTitle": "استيراد ملف لوحة؟",
-  "boardUrlImportDescription": "استورد ملفات اللوحات من مصادر تثق بها فقط.",
-  "boardUrlImportConfirm": "استيراد"
+  "boardUrlImportTitle": "إضافة لوحة؟",
+  "boardUrlImportDescription": "ستُضاف لوحة من {host} إلى مكتبتك. لا تُضفها إلا إذا كنت تثق بمن أرسل إليك الرابط.",
+  "boardUrlImportConfirm": "إضافة"
 }

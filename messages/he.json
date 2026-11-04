@@ -143,7 +143,7 @@
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
   "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
-  "boardUrlImportTitle": "לייבא קובץ לוח?",
-  "boardUrlImportDescription": "ייבאו קובצי לוחות רק ממקורות שאתם סומכים עליהם.",
-  "boardUrlImportConfirm": "ייבוא"
+  "boardUrlImportTitle": "להוסיף לוח?",
+  "boardUrlImportDescription": "לוח מ-{host} יתווסף לספרייה שלכם. הוסיפו אותו רק אם אתם סומכים על מי ששלח לכם את הקישור.",
+  "boardUrlImportConfirm": "הוספה"
 }

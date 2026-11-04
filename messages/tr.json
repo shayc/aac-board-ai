@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
   "errorBoardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı",
-  "boardUrlImportTitle": "Pano dosyası içe aktarılsın mı?",
-  "boardUrlImportDescription": "Pano dosyalarını yalnızca güvendiğiniz kaynaklardan içe aktarın.",
-  "boardUrlImportConfirm": "İçe aktar"
+  "boardUrlImportTitle": "Pano eklensin mi?",
+  "boardUrlImportDescription": "{host} adresinden bir pano kitaplığınıza eklenecek. Yalnızca bağlantıyı gönderen kişiye güveniyorsanız ekleyin.",
+  "boardUrlImportConfirm": "Ekle"
 }

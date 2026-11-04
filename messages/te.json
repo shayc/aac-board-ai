@@ -143,7 +143,7 @@
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
   "errorBoardUrlImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-  "boardUrlImportTitle": "బోర్డు ఫైల్‌ను దిగుమతి చేయాలా?",
-  "boardUrlImportDescription": "మీరు నమ్మే మూలాల నుండి మాత్రమే బోర్డు ఫైళ్లను దిగుమతి చేయండి.",
-  "boardUrlImportConfirm": "దిగుమతి చేయి"
+  "boardUrlImportTitle": "బోర్డును జోడించాలా?",
+  "boardUrlImportDescription": "{host} నుండి ఒక బోర్డు మీ లైబ్రరీకి జోడించబడుతుంది. లింక్ పంపినవారిని మీరు నమ్మితేనే జోడించండి.",
+  "boardUrlImportConfirm": "జోడించు"
 }

@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
   "errorBoardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
-  "boardUrlImportTitle": "Uvozim datoteko table?",
-  "boardUrlImportDescription": "Datoteke tabel uvažajte samo iz virov, ki jim zaupate.",
-  "boardUrlImportConfirm": "Uvozi"
+  "boardUrlImportTitle": "Dodam tablo?",
+  "boardUrlImportDescription": "V knjižnico bo dodana tabla s spletnega mesta {host}. Dodajte jo le, če zaupate osebi, ki vam je poslala povezavo.",
+  "boardUrlImportConfirm": "Dodaj"
 }

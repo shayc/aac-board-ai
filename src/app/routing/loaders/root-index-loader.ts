@@ -67,7 +67,16 @@ export async function rootIndexAction({
 }
 
 function readBoardUrl(request: Request): string | null {
-  return new URL(request.url).searchParams.get("board");
+  const boardUrl = new URL(request.url).searchParams.get("board");
+  if (!boardUrl || hasScheme(boardUrl) || boardUrl.startsWith("/")) {
+    return boardUrl;
+  }
+
+  return `https://${boardUrl}`;
+}
+
+function hasScheme(url: string): boolean {
+  return /^[a-z][a-z\d+.-]*:/i.test(url);
 }
 
 function resolveBoardUrlHost(boardUrl: string): string {

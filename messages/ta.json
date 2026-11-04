@@ -143,7 +143,7 @@
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
   "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை",
   "errorBoardUrlImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை",
-  "boardUrlImportTitle": "பலகைக் கோப்பை இறக்குமதி செய்யவா?",
-  "boardUrlImportDescription": "நம்பகமான மூலங்களிலிருந்து மட்டுமே பலகைக் கோப்புகளை இறக்குமதி செய்யுங்கள்.",
-  "boardUrlImportConfirm": "இறக்குமதி செய்"
+  "boardUrlImportTitle": "பலகையைச் சேர்க்கவா?",
+  "boardUrlImportDescription": "{host} இலிருந்து ஒரு பலகை உங்கள் நூலகத்தில் சேர்க்கப்படும். இணைப்பை அனுப்பியவரை நீங்கள் நம்பினால் மட்டுமே சேர்க்கவும்.",
+  "boardUrlImportConfirm": "சேர்"
 }

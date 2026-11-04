@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
   "errorBoardUrlImportFailed": "Kan bordbestand niet importeren via de link",
-  "boardUrlImportTitle": "Bordbestand importeren?",
-  "boardUrlImportDescription": "Importeer alleen bordbestanden uit bronnen die je vertrouwt.",
-  "boardUrlImportConfirm": "Importeren"
+  "boardUrlImportTitle": "Bord toevoegen?",
+  "boardUrlImportDescription": "Er wordt een bord van {host} aan je bibliotheek toegevoegd. Voeg het alleen toe als je de afzender van de link vertrouwt.",
+  "boardUrlImportConfirm": "Toevoegen"
 }

@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
   "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
-  "boardUrlImportTitle": "Tafeldatei importieren?",
-  "boardUrlImportDescription": "Importiere Tafeldateien nur aus Quellen, denen du vertraust.",
-  "boardUrlImportConfirm": "Importieren"
+  "boardUrlImportTitle": "Tafel hinzufügen?",
+  "boardUrlImportDescription": "Eine Tafel von {host} wird deiner Bibliothek hinzugefügt. Füge sie nur hinzu, wenn du der Person vertraust, die dir den Link geschickt hat.",
+  "boardUrlImportConfirm": "Hinzufügen"
 }

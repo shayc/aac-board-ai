@@ -143,7 +143,7 @@
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A táblakészlet nem található",
   "errorBoardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült",
-  "boardUrlImportTitle": "Importálod a táblafájlt?",
-  "boardUrlImportDescription": "Csak megbízható forrásból importálj táblafájlokat.",
-  "boardUrlImportConfirm": "Importálás"
+  "boardUrlImportTitle": "Hozzáadod a táblát?",
+  "boardUrlImportDescription": "Egy tábla kerül a könyvtáradba innen: {host}. Csak akkor add hozzá, ha megbízol abban, aki a hivatkozást küldte.",
+  "boardUrlImportConfirm": "Hozzáadás"
 }

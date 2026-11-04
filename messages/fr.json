@@ -143,7 +143,7 @@
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
   "errorBoardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
-  "boardUrlImportTitle": "Importer un fichier de tableau ?",
-  "boardUrlImportDescription": "N’importez des fichiers de tableaux que depuis des sources de confiance.",
-  "boardUrlImportConfirm": "Importer"
+  "boardUrlImportTitle": "Ajouter le tableau ?",
+  "boardUrlImportDescription": "Un tableau provenant de {host} sera ajouté à votre bibliothèque. Ne l’ajoutez que si vous faites confiance à la personne qui vous a envoyé le lien.",
+  "boardUrlImportConfirm": "Ajouter"
 }

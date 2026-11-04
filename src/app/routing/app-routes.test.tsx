@@ -139,14 +139,19 @@ describe("app flow", () => {
     );
 
     await screen.getByRole("button", { name: "Continue" }).click();
+    const title = "Add board?";
     await expect
-      .element(screen.getByRole("heading", { name: "Import board file?" }))
+      .element(screen.getByRole("heading", { name: title }))
       .toBeVisible();
-    await expect.element(screen.getByText(location.host)).toBeVisible();
-    expect(document.title).toBe("Import board file?");
+    expect(document.title).toBe(title);
+    await expect
+      .element(
+        screen.getByText(`A board from ${location.host}`, { exact: false }),
+      )
+      .toBeVisible();
     expect(await listBoardSets()).toHaveLength(1);
 
-    await screen.getByRole("button", { name: "Import" }).click();
+    await screen.getByRole("button", { name: "Add" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))

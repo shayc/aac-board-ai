@@ -9,7 +9,6 @@ export interface StatusLayoutProps {
   title: string;
   titleComponent?: "h1" | "p";
   description?: string;
-  children?: ReactNode;
   action?: ReactNode;
 }
 
@@ -19,7 +18,6 @@ export function StatusLayout({
   title,
   titleComponent = "p",
   description,
-  children,
   action,
 }: StatusLayoutProps) {
   const iconColor = kind === "error" ? "error.main" : "text.disabled";
@@ -57,8 +55,6 @@ export function StatusLayout({
         >
           {title}
         </Typography>
-
-        {children}
 
         {description && (
           <Typography
