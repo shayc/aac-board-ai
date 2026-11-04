@@ -14,6 +14,7 @@ import { Tile } from "./tile";
 type Rgb = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
+const WCAG_NON_TEXT_CONTRAST = 3;
 
 const cssVariableTheme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
@@ -163,9 +164,6 @@ describe("Tile", () => {
       const frontFill = paint(front.backgroundColor);
 
       expect(back.clipPath).toMatch(/^shape\(/);
-      expect(relativeLuminance(paint(back.backgroundColor))).toBeLessThan(
-        relativeLuminance(frontFill),
-      );
       expect(
         contrastRatio(paint(styleOf(folder).color), frontFill),
       ).toBeGreaterThan(WCAG_TEXT_CONTRAST);
@@ -179,6 +177,38 @@ describe("Tile", () => {
         styleOf(screen.getByRole("button", { name: "Word" }), "::before")
           .content,
       ).toBe("none");
+    },
+  );
+
+  test.each([
+    undefined,
+    "#ffffff",
+    "#c8f7a8",
+    "#ffeb3b",
+    "#808080",
+    "#ff0000",
+    "#3f51b5",
+    "#000000",
+  ])(
+    "sets the folder tab apart from the front panel on a %s background",
+    async (backgroundColor) => {
+      const screen = await renderInTheme(
+        <Tile
+          backgroundColor={backgroundColor}
+          variant="folder"
+          onActivate={vi.fn()}
+        >
+          Folder
+        </Tile>,
+      );
+      const folder = screen.getByRole("button", { name: "Folder" });
+
+      expect(
+        contrastRatio(
+          paint(styleOf(folder, "::before").backgroundColor),
+          paint(styleOf(folder, "::after").backgroundColor),
+        ),
+      ).toBeGreaterThanOrEqual(WCAG_NON_TEXT_CONTRAST);
     },
   );
 

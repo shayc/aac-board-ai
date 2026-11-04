@@ -16,10 +16,24 @@ interface TileProps {
   onActivate: () => void;
 }
 
+const FOLDER_TAB_WIDTH = "34%";
+const FOLDER_TAB_SLOPE_PX = 32;
 const FOLDER_TAB_DEPTH_PX = 12;
-const FOLDER_FRONT_TOP_PX = 17;
+const FOLDER_BODY_RADIUS_PX = 16;
+const FOLDER_FRONT_TOP_PX = FOLDER_TAB_DEPTH_PX + 5;
+const FOLDER_TAB_INK = "60%";
 
-const folderBackShape = `shape(from 0 0, hline to calc(38% - 10px), curve to calc(38% + 6px) 7px with 38% 0, curve to calc(38% + 22px) ${FOLDER_TAB_DEPTH_PX}px with calc(38% + 12px) ${FOLDER_TAB_DEPTH_PX}px, hline to calc(100% - 16px), curve to 100% ${FOLDER_TAB_DEPTH_PX + 16}px with 100% ${FOLDER_TAB_DEPTH_PX}px, vline to 100%, hline to 0, close)`;
+const folderTabSlopeMid = `calc(${FOLDER_TAB_WIDTH} + ${FOLDER_TAB_SLOPE_PX / 2}px)`;
+
+const folderBackShape = `shape(from 0 0,
+  hline to ${FOLDER_TAB_WIDTH},
+  curve to calc(${FOLDER_TAB_WIDTH} + ${FOLDER_TAB_SLOPE_PX}px) ${FOLDER_TAB_DEPTH_PX}px
+    with ${folderTabSlopeMid} 0 / ${folderTabSlopeMid} ${FOLDER_TAB_DEPTH_PX}px,
+  hline to calc(100% - ${FOLDER_BODY_RADIUS_PX}px),
+  curve to 100% ${FOLDER_TAB_DEPTH_PX + FOLDER_BODY_RADIUS_PX}px with 100% ${FOLDER_TAB_DEPTH_PX}px,
+  vline to 100%,
+  hline to 0,
+  close)`;
 
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
@@ -39,11 +53,7 @@ function folderSx(theme: Theme, border: string) {
     p: 1.5,
     pt: `${FOLDER_FRONT_TOP_PX + 8}px`,
     backgroundColor: "transparent",
-    filter:
-      "drop-shadow(0 1px 1px rgb(16 24 40 / 0.08)) drop-shadow(0 3px 5px rgb(16 24 40 / 0.1))",
-    [`&, &:hover, &:active, &.${buttonClasses.focusVisible}`]: {
-      boxShadow: "none",
-    },
+    boxShadow: "none",
     "&::before, &::after": {
       content: '""',
       position: "absolute",
@@ -52,14 +62,21 @@ function folderSx(theme: Theme, border: string) {
     "&::before": {
       inset: 0,
       clipPath: folderBackShape,
-      backgroundColor: darken(fill, "20%"),
+      backgroundColor: `color-mix(in srgb, ${fill}, currentColor ${FOLDER_TAB_INK})`,
+      "@media (forced-colors: active)": {
+        forcedColorAdjust: "none",
+        backgroundColor: "CanvasText",
+      },
     },
     "&::after": {
       inset: `${FOLDER_FRONT_TOP_PX}px 0 0`,
       border,
       borderRadius: `${borderRadiusSm} ${borderRadiusSm} ${borderRadius} ${borderRadius}`,
       backgroundColor: fill,
-      boxShadow: "0 -1px 2px rgb(16 24 40 / 0.12)",
+      boxShadow: "var(--tile-shadow)",
+      transition: theme.transitions.create("box-shadow", {
+        duration: theme.transitions.duration.short,
+      }),
     },
   } as const;
 }
@@ -97,6 +114,7 @@ export function Tile({
       onClick={onActivate}
       sx={(theme) => ({
         "--tile-fill": resolvedBackgroundColor,
+        "--tile-shadow": theme.vars.shadows[2],
         position: "relative",
         display: "grid",
         alignItems: "stretch",
@@ -112,7 +130,7 @@ export function Tile({
         border,
         borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: "var(--tile-fill)",
-        boxShadow: theme.vars.shadows[2],
+        boxShadow: "var(--tile-shadow)",
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
@@ -120,10 +138,10 @@ export function Tile({
           },
         ),
         "@media (prefers-reduced-motion: reduce)": {
-          transition: "none",
+          "&, &::after": { transition: "none" },
         },
         "&:hover": {
-          boxShadow: theme.vars.shadows[4],
+          "--tile-shadow": theme.vars.shadows[4],
           "@media (hover: hover)": {
             "--tile-fill":
               resolvedBackgroundColor &&
@@ -133,21 +151,21 @@ export function Tile({
               ),
           },
           "@media (hover: none)": {
-            boxShadow: theme.vars.shadows[2],
+            "--tile-shadow": theme.vars.shadows[2],
           },
         },
         "&:active": {
           "--tile-fill":
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
-          boxShadow: theme.vars.shadows[8],
+          "--tile-shadow": theme.vars.shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
+          "--tile-shadow": theme.vars.shadows[6],
           outline: `4px solid ${theme.alpha(theme.vars.palette.text.primary, 0.8)}`,
           outlineOffset: 2,
-          boxShadow: theme.vars.shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
-          boxShadow: theme.vars.shadows[0],
+          "--tile-shadow": theme.vars.shadows[0],
         },
         ...(variant === "folder" && folderSx(theme, border)),
       })}
