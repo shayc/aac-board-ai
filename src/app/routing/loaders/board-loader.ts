@@ -1,13 +1,12 @@
 import {
   BoardNotFoundError,
-  InvalidIdError,
   loadStoredBoard,
   resolveBoardForLanguage,
   type Board,
 } from "@features/board";
 import { getStoredLanguage } from "@shared/language/language-store";
-import { data, type LoaderFunctionArgs } from "react-router";
-import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
+import type { LoaderFunctionArgs } from "react-router";
+import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 export async function boardLoader({
   params,
@@ -15,9 +14,7 @@ export async function boardLoader({
 }: LoaderFunctionArgs): Promise<Board> {
   const { boardSetId, boardId } = params;
   if (!boardSetId || !boardId) {
-    throw data(createRouteErrorPayload(routeErrorCodes.boardNotFound), {
-      status: 404,
-    });
+    throw routeErrorResponse(routeErrorCodes.boardNotFound);
   }
 
   try {
@@ -39,13 +36,8 @@ export async function boardLoader({
 
     return board;
   } catch (error) {
-    if (
-      error instanceof BoardNotFoundError ||
-      error instanceof InvalidIdError
-    ) {
-      throw data(createRouteErrorPayload(routeErrorCodes.boardNotFound), {
-        status: 404,
-      });
+    if (error instanceof BoardNotFoundError) {
+      throw routeErrorResponse(routeErrorCodes.boardNotFound);
     }
 
     throw error;

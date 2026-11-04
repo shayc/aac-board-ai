@@ -9,7 +9,6 @@ import {
 } from "./boards-db";
 
 export type { BoardSetRecord } from "./boards-db";
-export { InvalidIdError } from "./boards-db";
 
 export class BoardSetAlreadyExistsError extends Error {
   constructor(boardSetId: string) {
@@ -34,7 +33,6 @@ export interface BoardSetInput {
 export async function getStoredBoardSet(
   boardSetId: string,
 ): Promise<BoardSetRecord | undefined> {
-  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
 
   return db.get("boardSets", boardSetId);

@@ -22,6 +22,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   return (
     <AppBar position="static">
       <Toolbar
+        disableGutters
         sx={(theme) => ({
           display: "grid",
           gridTemplateColumns: "1fr minmax(0, auto) 1fr",
@@ -29,19 +30,10 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           gap: theme.spacing(2),
           pl: safeAreaGutter(theme.spacing(3), "left"),
           pr: safeAreaGutter(theme.spacing(3), "right"),
-          [theme.breakpoints.up("sm")]: {
-            pl: safeAreaGutter(theme.spacing(3), "left"),
-            pr: safeAreaGutter(theme.spacing(3), "right"),
-          },
         })}
       >
         <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifySelf: "start",
-            gap: 2,
-          }}
+          sx={{ display: "flex", alignItems: "center", justifySelf: "start" }}
         >
           <Tooltip title={t(m.libraryOpen)}>
             <IconButton

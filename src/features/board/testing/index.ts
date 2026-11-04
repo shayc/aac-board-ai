@@ -1,9 +1,9 @@
+export { countStoredBoardContent, resetBoardsDB, seedBoardSets } from "./db";
 export {
-  countStoredBoardContent,
+  loadFixtureFile,
+  loadTestImageBlob,
   makeBoardSetInput,
   makeBoardSetRecord,
   makeOBFBoard,
-  resetBoardsDB,
-  seedBoardSets,
-} from "./db";
-export { loadFixtureFile, loadTestImageBlob, TEST_IMAGE_SRC } from "./fixtures";
+  TEST_IMAGE_SRC,
+} from "./fixtures";

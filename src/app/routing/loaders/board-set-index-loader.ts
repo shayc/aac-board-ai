@@ -1,28 +1,15 @@
-import {
-  getStoredBoardSet,
-  InvalidIdError,
-  rootBoardPath,
-} from "@features/board";
-import { data, redirect, type LoaderFunctionArgs } from "react-router";
-import { createRouteErrorPayload, routeErrorCodes } from "../route-error";
+import { getStoredBoardSet, rootBoardPath } from "@features/board";
+import { redirect, type LoaderFunctionArgs } from "react-router";
+import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
 export async function boardSetIndexLoader({
   params,
 }: LoaderFunctionArgs): Promise<Response> {
   const { boardSetId } = params;
-  let boardSet;
-  try {
-    boardSet = boardSetId ? await getStoredBoardSet(boardSetId) : undefined;
-  } catch (error) {
-    if (!(error instanceof InvalidIdError)) {
-      throw error;
-    }
-  }
+  const boardSet = boardSetId ? await getStoredBoardSet(boardSetId) : undefined;
 
   if (!boardSet) {
-    throw data(createRouteErrorPayload(routeErrorCodes.boardSetNotFound), {
-      status: 404,
-    });
+    throw routeErrorResponse(routeErrorCodes.boardSetNotFound);
   }
 
   return redirect(rootBoardPath(boardSet));

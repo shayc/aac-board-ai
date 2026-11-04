@@ -6,6 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
+import { listItemSecondaryActionClasses } from "@mui/material/ListItemSecondaryAction";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ListSubheader from "@mui/material/ListSubheader";
@@ -17,7 +18,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { useId, useState, type MouseEvent } from "react";
 import { Link } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
-import type { BoardSetRecord } from "./board-sets-store";
+import type { BoardSetRecord } from "../storage/board-set-storage";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
@@ -179,7 +180,7 @@ function BoardSetListItem({
       sx={(theme) => ({
         "@media (hover: hover)": {
           [theme.breakpoints.up("md")]: {
-            "& .MuiListItemSecondaryAction-root": {
+            [`& .${listItemSecondaryActionClasses.root}`]: {
               opacity: 0,
               pointerEvents: "none",
               transition: theme.transitions.create("opacity", {
@@ -189,7 +190,7 @@ function BoardSetListItem({
                 transition: "none",
               },
             },
-            "&:is(:hover, :focus-within, [data-menu-open]) .MuiListItemSecondaryAction-root":
+            [`&:is(:hover, :focus-within, [data-menu-open]) .${listItemSecondaryActionClasses.root}`]:
               { opacity: 1, pointerEvents: "auto" },
           },
         },

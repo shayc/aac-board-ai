@@ -18,8 +18,6 @@ export async function getBoardRecord(
   boardSetId: string,
   boardId: string,
 ): Promise<BoardRecord | undefined> {
-  validateId(boardSetId, "boardSetId");
-  validateId(boardId, "boardId");
   const db = await getBoardsDB();
 
   return db.get("boards", [boardSetId, boardId]);
@@ -28,7 +26,6 @@ export async function getBoardRecord(
 export async function listBoardRecords(
   boardSetId: string,
 ): Promise<BoardRecord[]> {
-  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
 
   return db.getAllFromIndex("boards", "byBoardSetId", boardSetId);
@@ -38,7 +35,6 @@ export async function getAssetBlob(
   boardSetId: string,
   path: string,
 ): Promise<Blob | undefined> {
-  validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
   const normalizedPath = normalizeAssetPath(path);
   const asset = await db.get("assets", [boardSetId, normalizedPath]);
