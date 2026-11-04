@@ -13,10 +13,10 @@ const originalViewport = {
   height: window.innerHeight,
 };
 
-// Keeps queued messages from auto-hiding mid-assertion on real timers.
+// Keeps snackbars from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
 
-const TOAST_CLEARANCE_PX = 96;
+const SNACKBAR_CLEARANCE_PX = 96;
 
 type ShowRequest = SnackbarOptions | string;
 
@@ -28,7 +28,7 @@ function ShowButtons({
   const { showSnackbar } = useSnackbar();
 
   return (
-    <div style={{ paddingTop: TOAST_CLEARANCE_PX }}>
+    <div style={{ paddingTop: SNACKBAR_CLEARANCE_PX }}>
       {Object.entries(snackbars).map(([name, requests]) => (
         <button
           key={name}
@@ -74,7 +74,7 @@ describe("SnackbarProvider", () => {
     await page.viewport(originalViewport.width, originalViewport.height);
   });
 
-  test("auto-hides a success message after a few seconds", async () => {
+  test("auto-hides a success snackbar after a few seconds", async () => {
     vi.useFakeTimers();
     const screen = await renderSnackbars({
       "show-saved": { message: "Saved", severity: "success" },
@@ -94,7 +94,7 @@ describe("SnackbarProvider", () => {
       options: { message: "Failed", severity: "error" },
     },
     {
-      name: "a message with an action",
+      name: "a snackbar with an action",
       options: { message: "Failed", action: <button>Retry</button> },
     },
   ] satisfies {
@@ -120,7 +120,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
-  test("replaces an open error with a later message", async () => {
+  test("replaces an open error with a later snackbar", async () => {
     const screen = await renderSnackbars({
       "show-error": { message: "Failed", severity: "error" },
       "show-saved": {
@@ -139,7 +139,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByText("Failed")).not.toBeInTheDocument();
   });
 
-  test("keeps showing messages after several are sent at once", async () => {
+  test("keeps showing snackbars after several are sent at once", async () => {
     const screen = await renderSnackbars({
       "show-burst": [
         { message: "Importing", durationMs: LONG_DURATION_MS },
@@ -155,7 +155,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("Later");
   });
 
-  test("shows only the newest of messages sent while one is open", async () => {
+  test("shows only the newest of snackbars sent while one is open", async () => {
     const screen = await renderSnackbars({
       "show-importing": { message: "Importing", durationMs: LONG_DURATION_MS },
       "show-outcomes": [
@@ -175,7 +175,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByText("Failed")).not.toBeInTheDocument();
   });
 
-  test("replaces the current message with a new one", async () => {
+  test("replaces the current snackbar with a new one", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
       "show-second": { message: "second", durationMs: LONG_DURATION_MS },
@@ -189,7 +189,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("second");
   });
 
-  test("ignores clickaway so the message stays visible", async () => {
+  test("ignores clickaway so the snackbar stays visible", async () => {
     const screen = await renderSnackbars({
       "show-sticky": { message: "sticky", durationMs: LONG_DURATION_MS },
     });
@@ -211,7 +211,7 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
   });
 
-  test("shows a plain-string message with no accessibility violations", async () => {
+  test("shows a snackbar from a plain string with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
@@ -228,7 +228,7 @@ describe("SnackbarProvider", () => {
   });
 
   test.each(["success", "info", "warning", "error"] as const)(
-    "shows a %s message with no accessibility violations",
+    "shows a %s snackbar with no accessibility violations",
     async (severity) => {
       const screen = await renderSnackbars({
         "show-status": {
@@ -249,7 +249,7 @@ describe("SnackbarProvider", () => {
   );
 
   test.each([390, 1200])(
-    "places the message 8px from the top at a viewport width of %i",
+    "places the snackbar 8px from the top at a viewport width of %i",
     async (width) => {
       const bounds = await showErrorAtViewportWidth(width);
 
@@ -266,7 +266,7 @@ describe("SnackbarProvider", () => {
     expect(window.innerWidth - bounds.right).toBe(16);
   });
 
-  test("retranslates a visible localized message when the locale changes", async () => {
+  test("retranslates a visible snackbar when the locale changes", async () => {
     const screen = await renderSnackbars({
       "show-imported": {
         message: (t) => t(m.libraryImportedBoardSets, { count: 1 }),

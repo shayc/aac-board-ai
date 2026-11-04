@@ -15,7 +15,7 @@ import {
   type SnackbarSeverity,
 } from "./snackbar-context";
 
-const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
+const DEFAULT_SEVERITY: SnackbarSeverity = "info";
 const AUTO_HIDE_DURATION_MS = 5000;
 
 interface KeyedSnackbar extends SnackbarOptions {
@@ -64,7 +64,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     typeof current?.message === "function"
       ? current.message(t)
       : current?.message;
-  const severity = current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const severity = current?.severity ?? DEFAULT_SEVERITY;
   const isError = severity === "error";
   const action = (
     <>
@@ -95,7 +95,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         onClose={handleClose}
         autoHideDuration={current && autoHideDurationMs(current)}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        sx={snackbarPlacementStyles}
+        sx={placementStyles}
       >
         <Alert
           action={action}
@@ -127,7 +127,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
                 paddingInlineStart: 2,
               },
             }),
-            !isError && inverseSurfaceStyles(severity),
+            !isError && ((theme) => inverseSurfaceStyles(theme, severity)),
           ]}
         >
           {message}
@@ -137,7 +137,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   );
 }
 
-function snackbarPlacementStyles(theme: Theme) {
+function placementStyles(theme: Theme) {
   return {
     [theme.breakpoints.down("sm")]: {
       top: safeAreaGutter(theme.spacing(1), "top"),
@@ -150,14 +150,17 @@ function snackbarPlacementStyles(theme: Theme) {
   };
 }
 
-function inverseSurfaceStyles(severity: Exclude<SnackbarSeverity, "error">) {
-  return (theme: Theme) => ({
+function inverseSurfaceStyles(
+  theme: Theme,
+  severity: Exclude<SnackbarSeverity, "error">,
+) {
+  return {
     color: theme.vars.palette.SnackbarContent.color,
     backgroundColor: theme.vars.palette.SnackbarContent.bg,
     [`& .${alertClasses.icon}`]: {
       color: theme.vars.palette.SnackbarContent[`${severity}IconColor`],
     },
-  });
+  };
 }
 
 function autoHideDurationMs({
