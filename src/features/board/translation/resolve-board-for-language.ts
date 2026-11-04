@@ -56,7 +56,7 @@ async function translatePhrases(
   signal?: AbortSignal,
 ): Promise<Record<string, string>> {
   const entries = await Promise.all(
-    Array.from(phrases).map(async (phrase) => {
+    Array.from(phrases, async (phrase) => {
       const translated = await translator.translate(phrase, { signal });
 
       return [phrase, translated] as const;

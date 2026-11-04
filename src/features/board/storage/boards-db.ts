@@ -63,7 +63,7 @@ const DB_VERSION = 1;
 
 export function normalizeAssetPath(rawPath: string): string {
   const path = rawPath
-    .replace(/\\/g, "/")
+    .replaceAll("\\", "/")
     .replace(/^\/+/, "")
     .replace(/\/{2,}/g, "/");
 

@@ -38,13 +38,15 @@ export function useBoardSummaries(
 
   const untranslatedBoards = value ?? [];
 
-  const boards = untranslatedBoards.map(({ id, name, strings }) => ({
-    id,
-    name: findTranslations(strings, language)?.[name] ?? name,
-  }));
+  const boards = untranslatedBoards
+    .map(({ id, name, strings }) => ({
+      id,
+      name: findTranslations(strings, language)?.[name] ?? name,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, language));
 
   return {
-    boards: boards.sort((a, b) => a.name.localeCompare(b.name, language)),
+    boards,
     isLoading: isPending,
     error,
   };
