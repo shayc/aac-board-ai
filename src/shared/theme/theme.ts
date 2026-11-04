@@ -10,10 +10,10 @@ import { safeAreaInset } from "./safe-area";
 import {
   INVERSE_SURFACE_DARK,
   INVERSE_SURFACE_LIGHT,
+  PRIMARY_LIGHT,
   SHELL_DARK,
   SHELL_LIGHT,
   STATUS_DARK,
-  STATUS_LIGHT,
 } from "./theme-colors";
 
 declare module "@mui/material/styles" {
@@ -87,7 +87,7 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: STATUS_LIGHT.info },
+        primary: { main: PRIMARY_LIGHT },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {

@@ -201,10 +201,6 @@ function inverseSurfaceStyles(severity: Exclude<SnackbarSeverity, "error">) {
   });
 }
 
-function isPersistent(snackbar: SnackbarOptions) {
-  return autoHideDurationMs(snackbar) === null;
-}
-
 function autoHideDurationMs({
   durationMs,
   severity,
@@ -231,13 +227,11 @@ function snackbarReducer(
         return { ...state, current: action.snackbar, open: true };
       }
 
-      const queue = [...state.queue, action.snackbar];
-
-      if (isPersistent(state.current)) {
-        return { ...state, queue };
-      }
-
-      return { ...state, queue, open: false };
+      return {
+        ...state,
+        queue: [...state.queue, action.snackbar],
+        open: false,
+      };
     }
 
     case "close":

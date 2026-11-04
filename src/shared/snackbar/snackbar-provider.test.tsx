@@ -16,6 +16,8 @@ const originalViewport = {
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
 
+const TOAST_CLEARANCE_PX = 96;
+
 function ShowButtons({
   snackbars,
 }: {
@@ -24,7 +26,7 @@ function ShowButtons({
   const { showSnackbar } = useSnackbar();
 
   return (
-    <div style={{ paddingTop: 96 }}>
+    <div style={{ paddingTop: TOAST_CLEARANCE_PX }}>
       {Object.entries(snackbars).map(([name, options]) => (
         <button key={name} onClick={() => showSnackbar(options)}>
           {name}
@@ -108,7 +110,7 @@ describe("SnackbarProvider", () => {
     },
   );
 
-  test("shows a later message only after an error is closed", async () => {
+  test("replaces an open error with a later message", async () => {
     const screen = await renderSnackbars({
       "show-error": { message: "Failed", severity: "error" },
       "show-saved": {
@@ -122,9 +124,6 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("alert")).toHaveTextContent("Failed");
 
     await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("Failed");
-
-    await screen.getByRole("button", { name: "Close" }).click();
 
     await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
   });

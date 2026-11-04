@@ -5,8 +5,10 @@ export const SHELL_DARK = "#0e1014";
 export const CONTENT_LIGHT = "#eef1f6";
 export const CONTENT_DARK = "#0e1014";
 
+export const PRIMARY_LIGHT = "#0967d4";
+
 export const STATUS_LIGHT = {
-  info: "#0967d4",
+  info: PRIMARY_LIGHT,
   success: "#1b7a3d",
   warning: "#9a5800",
   error: "#c5221f",
