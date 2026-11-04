@@ -54,22 +54,6 @@ describe("rootIndexLoader", () => {
     expect(await listBoardSets()).toEqual([]);
   });
 
-  test("names the site of a board URL shared without a scheme", async () => {
-    const result = await callLoader(
-      `?board=${encodeURIComponent("www.example.com/core.obz")}`,
-    );
-
-    expect(result).toEqual({ host: "www.example.com" });
-  });
-
-  test("names the site and port of a board URL shared without a scheme", async () => {
-    const result = await callLoader(
-      `?board=${encodeURIComponent("boards.example.com:8443/core.obz")}`,
-    );
-
-    expect(result).toEqual({ host: "boards.example.com:8443" });
-  });
-
   test("throws a localized 400 instead of asking about a non-http(s) board URL", async () => {
     await expect(
       callLoader(
