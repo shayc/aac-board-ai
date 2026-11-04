@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
   "errorBoardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket",
   "boardUrlImportTitle": "Vil du tilføje tavlen?",
-  "boardUrlImportDescription": "En tavle fra {host} bliver føjet til dit bibliotek. Tilføj den kun, hvis du stoler på den, der sendte dig linket.",
+  "boardUrlImportDescription": "En tavle fra {host} bliver føjet til dit bibliotek. Tilføj den kun, hvis du stoler på dens kilde.",
   "boardUrlImportConfirm": "Tilføj"
 }

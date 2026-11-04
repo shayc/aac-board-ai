@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
   "errorBoardUrlImportFailed": "Không thể nhập tệp bảng từ liên kết",
   "boardUrlImportTitle": "Thêm bảng?",
-  "boardUrlImportDescription": "Một bảng từ {host} sẽ được thêm vào thư viện của bạn. Chỉ thêm nếu bạn tin tưởng người đã gửi liên kết.",
+  "boardUrlImportDescription": "Một bảng từ {host} sẽ được thêm vào thư viện của bạn. Chỉ thêm nếu bạn tin tưởng nguồn của bảng này.",
   "boardUrlImportConfirm": "Thêm"
 }

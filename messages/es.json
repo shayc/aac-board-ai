@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
   "errorBoardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace",
   "boardUrlImportTitle": "¿Añadir tablero?",
-  "boardUrlImportDescription": "Se añadirá a tu biblioteca un tablero de {host}. Añádelo solo si confías en quien te envió el enlace.",
+  "boardUrlImportDescription": "Se añadirá a tu biblioteca un tablero de {host}. Añádelo solo si confías en su origen.",
   "boardUrlImportConfirm": "Añadir"
 }

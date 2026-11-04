@@ -149,6 +149,9 @@ describe("app flow", () => {
         screen.getByText(`A board from ${location.host}`, { exact: false }),
       )
       .toBeVisible();
+    await expect
+      .element(screen.getByRole("strong").filter({ hasText: location.host }))
+      .toBeVisible();
     expect(await listBoardSets()).toHaveLength(1);
 
     await screen.getByRole("button", { name: "Add" }).click();

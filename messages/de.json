@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
   "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
   "boardUrlImportTitle": "Tafel hinzufügen?",
-  "boardUrlImportDescription": "Eine Tafel von {host} wird deiner Bibliothek hinzugefügt. Füge sie nur hinzu, wenn du der Person vertraust, die dir den Link geschickt hat.",
+  "boardUrlImportDescription": "Eine Tafel von {host} wird deiner Bibliothek hinzugefügt. Füge sie nur hinzu, wenn du ihrer Quelle vertraust.",
   "boardUrlImportConfirm": "Hinzufügen"
 }

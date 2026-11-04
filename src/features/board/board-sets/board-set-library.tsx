@@ -86,6 +86,7 @@ export function BoardSetLibrary({
           action={
             <Button
               variant="contained"
+              size="large"
               startIcon={<LibraryAddOutlinedIcon />}
               onClick={() => void pickAndImport()}
             >

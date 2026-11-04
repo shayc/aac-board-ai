@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
   "errorBoardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
   "boardUrlImportTitle": "Lisätäänkö taulu?",
-  "boardUrlImportDescription": "Kirjastoosi lisätään taulu lähteestä {host}. Lisää se vain, jos luotat linkin lähettäjään.",
+  "boardUrlImportDescription": "Kirjastoosi lisätään taulu lähteestä {host}. Lisää se vain, jos luotat sen lähteeseen.",
   "boardUrlImportConfirm": "Lisää"
 }

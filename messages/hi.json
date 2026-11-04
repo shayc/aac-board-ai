@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
   "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
   "boardUrlImportTitle": "बोर्ड जोड़ें?",
-  "boardUrlImportDescription": "{host} से एक बोर्ड आपकी लाइब्रेरी में जोड़ा जाएगा। इसे तभी जोड़ें जब आपको लिंक भेजने वाले पर भरोसा हो।",
+  "boardUrlImportDescription": "{host} से एक बोर्ड आपकी लाइब्रेरी में जोड़ा जाएगा। इसे तभी जोड़ें जब आपको इसके स्रोत पर भरोसा हो।",
   "boardUrlImportConfirm": "जोड़ें"
 }

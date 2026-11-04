@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
   "errorBoardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
   "boardUrlImportTitle": "Да се добави ли дъската?",
-  "boardUrlImportDescription": "Дъска от {host} ще бъде добавена в библиотеката ви. Добавете я само ако имате доверие на човека, който ви е изпратил връзката.",
+  "boardUrlImportDescription": "Дъска от {host} ще бъде добавена в библиотеката ви. Добавете я само ако имате доверие на източника ѝ.",
   "boardUrlImportConfirm": "Добавяне"
 }

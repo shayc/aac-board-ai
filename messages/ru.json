@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Набор досок не найден",
   "errorBoardUrlImportFailed": "Не удалось импортировать файл доски по ссылке",
   "boardUrlImportTitle": "Добавить доску?",
-  "boardUrlImportDescription": "В библиотеку будет добавлена доска с сайта {host}. Добавляйте её, только если доверяете тому, кто прислал ссылку.",
+  "boardUrlImportDescription": "В библиотеку будет добавлена доска с сайта {host}. Добавляйте её, только если доверяете её источнику.",
   "boardUrlImportConfirm": "Добавить"
 }

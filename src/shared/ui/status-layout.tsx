@@ -8,7 +8,7 @@ export interface StatusLayoutProps {
   icon?: ReactNode;
   title: string;
   titleComponent?: "h1" | "p";
-  description?: string;
+  description?: ReactNode;
   action?: ReactNode;
 }
 
@@ -51,16 +51,21 @@ export function StatusLayout({
         <Typography
           component={titleComponent}
           variant="h5"
-          sx={{ fontWeight: "fontWeightBold" }}
+          sx={{ textWrap: "balance", fontWeight: "fontWeightBold" }}
         >
           {title}
         </Typography>
 
-        {description && (
+        {Boolean(description) && (
           <Typography
             component="p"
             variant="subtitle1"
-            sx={{ maxWidth: "sm", color: "text.secondary" }}
+            sx={{
+              maxWidth: "sm",
+              mt: 1,
+              textWrap: "balance",
+              color: "text.secondary",
+            }}
           >
             {description}
           </Typography>

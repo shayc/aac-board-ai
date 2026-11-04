@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
   "errorBoardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
   "boardUrlImportTitle": "Dodać tablicę?",
-  "boardUrlImportDescription": "Do biblioteki zostanie dodana tablica ze strony {host}. Dodaj ją tylko wtedy, gdy ufasz osobie, która wysłała Ci link.",
+  "boardUrlImportDescription": "Do biblioteki zostanie dodana tablica ze strony {host}. Dodaj ją tylko wtedy, gdy ufasz jej źródłu.",
   "boardUrlImportConfirm": "Dodaj"
 }

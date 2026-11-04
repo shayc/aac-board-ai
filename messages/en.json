@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Board set not found",
   "errorBoardUrlImportFailed": "Couldn't import board file from link",
   "boardUrlImportTitle": "Add board?",
-  "boardUrlImportDescription": "A board from {host} will be added to your library. Only add it if you trust who sent you the link.",
+  "boardUrlImportDescription": "A board from {host} will be added to your library. Only add it if you trust its source.",
   "boardUrlImportConfirm": "Add"
 }

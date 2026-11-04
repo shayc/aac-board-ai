@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
   "errorBoardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link",
   "boardUrlImportTitle": "Adicionar prancha?",
-  "boardUrlImportDescription": "Uma prancha de {host} será adicionada à sua biblioteca. Adicione apenas se você confiar em quem enviou o link.",
+  "boardUrlImportDescription": "Uma prancha de {host} será adicionada à sua biblioteca. Adicione apenas se você confiar na origem dela.",
   "boardUrlImportConfirm": "Adicionar"
 }

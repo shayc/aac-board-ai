@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Set di tabelle non trovato",
   "errorBoardUrlImportFailed": "Impossibile importare il file di tabella dal link",
   "boardUrlImportTitle": "Aggiungere la tabella?",
-  "boardUrlImportDescription": "Una tabella da {host} verrà aggiunta alla tua libreria. Aggiungila solo se ti fidi di chi ti ha inviato il link.",
+  "boardUrlImportDescription": "Una tabella da {host} verrà aggiunta alla tua libreria. Aggiungila solo se ti fidi della sua fonte.",
   "boardUrlImportConfirm": "Aggiungi"
 }

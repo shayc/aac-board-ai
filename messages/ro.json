@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
   "errorBoardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link",
   "boardUrlImportTitle": "Adaugi tabla?",
-  "boardUrlImportDescription": "O tablă de pe {host} va fi adăugată în bibliotecă. Adaug-o doar dacă ai încredere în cine ți-a trimis linkul.",
+  "boardUrlImportDescription": "O tablă de pe {host} va fi adăugată în bibliotecă. Adaug-o doar dacă ai încredere în sursa ei.",
   "boardUrlImportConfirm": "Adaugă"
 }

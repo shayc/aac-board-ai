@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
   "errorBoardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu",
   "boardUrlImportTitle": "Přidat tabulku?",
-  "boardUrlImportDescription": "Do vaší knihovny se přidá tabulka z webu {host}. Přidejte ji, jen pokud důvěřujete tomu, kdo vám odkaz poslal.",
+  "boardUrlImportDescription": "Do vaší knihovny se přidá tabulka z webu {host}. Přidejte ji, jen pokud důvěřujete jejímu zdroji.",
   "boardUrlImportConfirm": "Přidat"
 }

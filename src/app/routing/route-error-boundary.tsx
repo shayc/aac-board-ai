@@ -21,7 +21,7 @@ export function RouteErrorBoundary() {
         title={title}
         titleComponent="h1"
         action={
-          <Button component={Link} to="/" variant="contained">
+          <Button component={Link} to="/" variant="contained" size="large">
             {t(m.errorGoHome)}
           </Button>
         }

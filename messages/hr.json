@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Skup ploča nije pronađen",
   "errorBoardUrlImportFailed": "Datoteku ploče nije moguće uvesti s poveznice",
   "boardUrlImportTitle": "Dodati ploču?",
-  "boardUrlImportDescription": "Ploča s adrese {host} bit će dodana u vašu knjižnicu. Dodajte je samo ako vjerujete osobi koja vam je poslala poveznicu.",
+  "boardUrlImportDescription": "Ploča s adrese {host} bit će dodana u vašu knjižnicu. Dodajte je samo ako vjerujete njezinu izvoru.",
   "boardUrlImportConfirm": "Dodaj"
 }

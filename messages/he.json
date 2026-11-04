@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
   "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
   "boardUrlImportTitle": "להוסיף לוח?",
-  "boardUrlImportDescription": "לוח מ-{host} יתווסף לספרייה שלכם. הוסיפו אותו רק אם אתם סומכים על מי ששלח לכם את הקישור.",
+  "boardUrlImportDescription": "לוח מ-{host} יתווסף לספרייה שלכם. הוסיפו אותו רק אם אתם סומכים על המקור שלו.",
   "boardUrlImportConfirm": "הוספה"
 }

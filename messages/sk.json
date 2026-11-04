@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
   "errorBoardUrlImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
   "boardUrlImportTitle": "Pridať tabuľku?",
-  "boardUrlImportDescription": "Do knižnice sa pridá tabuľka z webu {host}. Pridajte ju, len ak dôverujete tomu, kto vám odkaz poslal.",
+  "boardUrlImportDescription": "Do knižnice sa pridá tabuľka z webu {host}. Pridajte ju, len ak dôverujete jej zdroju.",
   "boardUrlImportConfirm": "Pridať"
 }

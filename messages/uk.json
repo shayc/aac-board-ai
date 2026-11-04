@@ -144,6 +144,6 @@
   "errorBoardSetNotFound": "Набір дошок не знайдено",
   "errorBoardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням",
   "boardUrlImportTitle": "Додати дошку?",
-  "boardUrlImportDescription": "До бібліотеки буде додано дошку із сайту {host}. Додавайте її, лише якщо довіряєте тому, хто надіслав посилання.",
+  "boardUrlImportDescription": "До бібліотеки буде додано дошку із сайту {host}. Додавайте її, лише якщо довіряєте її джерелу.",
   "boardUrlImportConfirm": "Додати"
 }
