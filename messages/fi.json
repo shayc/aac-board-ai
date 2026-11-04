@@ -142,5 +142,8 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
-  "errorBoardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui"
+  "errorBoardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui",
+  "boardUrlImportTitle": "Tuodaanko taulutiedosto sivustolta {host}?",
+  "boardUrlImportDescription": "Tuo taulutiedostoja vain lähteistä, joihin luotat.",
+  "boardUrlImportConfirm": "Tuo"
 }

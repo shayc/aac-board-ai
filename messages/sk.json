@@ -142,5 +142,8 @@
   "errorGoHome": "Prejsť domov",
   "errorBoardNotFound": "Tabuľka sa nenašla",
   "errorBoardSetNotFound": "Súprava tabuliek sa nenašla",
-  "errorBoardUrlImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu"
+  "errorBoardUrlImportFailed": "Súbor tabuľky sa nepodarilo importovať z odkazu",
+  "boardUrlImportTitle": "Importovať súbor tabuľky z {host}?",
+  "boardUrlImportDescription": "Importujte súbory tabuliek len zo zdrojov, ktorým dôverujete.",
+  "boardUrlImportConfirm": "Importovať"
 }

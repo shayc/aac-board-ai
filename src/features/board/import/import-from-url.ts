@@ -22,7 +22,7 @@ class BoardUrlError extends Error {
 
 // The ?board= param is attacker-controlled, so only http(s) may reach fetch —
 // schemes like data: would smuggle a payload past any host-based reasoning.
-function parseBoardUrl(url: string): URL {
+export function parseBoardUrl(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {

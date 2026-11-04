@@ -142,5 +142,8 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "errorBoardUrlImportFailed": "リンクからボードファイルをインポートできませんでした"
+  "errorBoardUrlImportFailed": "リンクからボードファイルをインポートできませんでした",
+  "boardUrlImportTitle": "{host} からボードファイルをインポートしますか？",
+  "boardUrlImportDescription": "ボードファイルは信頼できる提供元からのみインポートしてください。",
+  "boardUrlImportConfirm": "インポート"
 }

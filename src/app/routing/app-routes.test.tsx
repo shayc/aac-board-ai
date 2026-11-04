@@ -131,7 +131,7 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
-  test("?board= link that collides with an existing set keeps both", async () => {
+  test("?board= link imports only after confirmation and keeps colliding sets", async () => {
     await seedExistingLotsOfStuffSet();
 
     const { screen } = await renderApp(
@@ -139,14 +139,38 @@ describe("app flow", () => {
     );
 
     await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("button", { name: "Import" }))
+      .toBeVisible();
+    expect(document.title.replace(/[\u2068\u2069]/g, "")).toBe(
+      `Import board file from ${location.host}?`,
+    );
+    expect(await listBoardSets()).toHaveLength(1);
+
+    await screen.getByRole("button", { name: "Import" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
-
     expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
+  });
+
+  test("cancelling a ?board= link opens the library without importing", async () => {
+    await seedExistingLotsOfStuffSet();
+
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("link", { name: "Cancel" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Old Board" }))
+      .toBeVisible();
+    expect(await listBoardSets()).toHaveLength(1);
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {

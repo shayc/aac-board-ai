@@ -142,5 +142,8 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden"
+  "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden",
+  "boardUrlImportTitle": "Tafeldatei von {host} importieren?",
+  "boardUrlImportDescription": "Importiere Tafeldateien nur aus Quellen, denen du vertraust.",
+  "boardUrlImportConfirm": "Importieren"
 }

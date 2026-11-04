@@ -142,5 +142,8 @@
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
-  "errorBoardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο"
+  "errorBoardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο",
+  "boardUrlImportTitle": "Εισαγωγή αρχείου πίνακα από {host};",
+  "boardUrlImportDescription": "Εισαγάγετε αρχεία πινάκων μόνο από πηγές που εμπιστεύεστε.",
+  "boardUrlImportConfirm": "Εισαγωγή"
 }

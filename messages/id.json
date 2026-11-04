@@ -142,5 +142,8 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
+  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan",
+  "boardUrlImportTitle": "Impor berkas papan dari {host}?",
+  "boardUrlImportDescription": "Impor berkas papan hanya dari sumber yang Anda percayai.",
+  "boardUrlImportConfirm": "Impor"
 }

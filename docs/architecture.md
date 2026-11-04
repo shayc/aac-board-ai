@@ -105,8 +105,9 @@ persists and synchronizes theme mode separately.
 
 ## Core flows
 
-At `/`, a board URL supplied through `?board=` takes precedence. Otherwise, the app
-opens the first stored board set or imports the bundled starter board if the
+At `/`, a board URL supplied through `?board=` takes precedence: the app names its
+host and imports it only after the user confirms. Otherwise, or on cancel, the
+app opens the first stored board set or imports the bundled starter board if the
 library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use

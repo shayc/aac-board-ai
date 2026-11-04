@@ -1,6 +1,10 @@
 import { boardLoader } from "@app/routing/loaders/board-loader";
 import { boardSetIndexLoader } from "@app/routing/loaders/board-set-index-loader";
-import { rootIndexLoader } from "@app/routing/loaders/root-index-loader";
+import { BoardUrlImportPrompt } from "@app/routing/board-url-import-prompt";
+import {
+  rootIndexAction,
+  rootIndexLoader,
+} from "@app/routing/loaders/root-index-loader";
 import { NotFound } from "@app/routing/not-found";
 import { RouteErrorBoundary } from "@app/routing/route-error-boundary";
 import { AppShell } from "@app/shell/app-shell";
@@ -20,8 +24,9 @@ export const appRoutes: RouteObject[] = [
         children: [
           {
             index: true,
-            Component: LoadingState,
             loader: rootIndexLoader,
+            action: rootIndexAction,
+            Component: BoardUrlImportPrompt,
           },
           {
             path: BOARD_SET_SEGMENT,

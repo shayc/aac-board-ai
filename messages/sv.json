@@ -142,5 +142,8 @@
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
-  "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken"
+  "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken",
+  "boardUrlImportTitle": "Importera tavelfil från {host}?",
+  "boardUrlImportDescription": "Importera bara tavelfiler från källor du litar på.",
+  "boardUrlImportConfirm": "Importera"
 }

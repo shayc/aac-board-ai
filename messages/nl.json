@@ -142,5 +142,8 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
-  "errorBoardUrlImportFailed": "Kan bordbestand niet importeren via de link"
+  "errorBoardUrlImportFailed": "Kan bordbestand niet importeren via de link",
+  "boardUrlImportTitle": "Bordbestand importeren van {host}?",
+  "boardUrlImportDescription": "Importeer alleen bordbestanden uit bronnen die je vertrouwt.",
+  "boardUrlImportConfirm": "Importeren"
 }

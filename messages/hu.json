@@ -142,5 +142,8 @@
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A táblakészlet nem található",
-  "errorBoardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült"
+  "errorBoardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült",
+  "boardUrlImportTitle": "Importálod a táblafájlt innen: {host}?",
+  "boardUrlImportDescription": "Csak megbízható forrásból importálj táblafájlokat.",
+  "boardUrlImportConfirm": "Importálás"
 }

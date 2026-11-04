@@ -142,5 +142,8 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी"
+  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी",
+  "boardUrlImportTitle": "{host} से बोर्ड फ़ाइल आयात करें?",
+  "boardUrlImportDescription": "केवल भरोसेमंद स्रोतों से बोर्ड फ़ाइलें आयात करें।",
+  "boardUrlImportConfirm": "आयात करें"
 }
