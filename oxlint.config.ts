@@ -43,7 +43,7 @@ export default defineConfig({
   rules: {
     curly: "error",
     "no-restricted-imports": restrictImports(),
-    // ARIA grids and MUI primitives intentionally express semantics without table-specific elements.
+    // ARIA grids and MUI primitives express semantics without table elements.
     "jsx-a11y/prefer-tag-over-role": "off",
     "react/only-export-components": ["error", { allowConstantExport: true }],
     "react/rules-of-hooks": "error",

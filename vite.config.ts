@@ -11,7 +11,8 @@ import {
   SHELL_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
 
-// Share theme-colors.ts with index.html's static styles instead of duplicating hex.
+// Shares theme-colors.ts with index.html's static styles instead of
+// duplicating hex values.
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
   transformIndexHtml: (html) =>

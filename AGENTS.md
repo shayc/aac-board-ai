@@ -86,6 +86,9 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 ### Comments
 
 - Comments document non-obvious whys — business requirements, edge cases — never what the code does.
+- Write comments in impersonal present tense (no "we"), as full sentences wrapped at 80 columns.
+- Use `/** */` only on exported declarations; use `//` everywhere else.
+- State each rationale once, where the decision is made, rather than repeating it at call sites.
 
 ## Boundaries (Safety Rules)
 

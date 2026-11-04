@@ -153,8 +153,9 @@ const themeOptions = {
           return {
             backgroundColor: theme.vars.palette.background.default,
             backgroundImage: "none",
-            // Physical corners, like the drawer's own `left`/`right` offset, are
-            // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
+            // Physical corners, like the drawer's own `left`/`right` offset,
+            // are mirrored by the RTL stylis plugin, so the inner edge stays
+            // rounded.
             variants: [
               {
                 props: { anchor: "left" },

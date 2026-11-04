@@ -1,4 +1,4 @@
 export function nonBlankText(text: string | undefined): string | undefined {
-  // Translation lookups use source text as keys, so preserve nonblank text verbatim.
+  // Translation lookups key on source text, so non-blank text stays verbatim.
   return text?.trim() ? text : undefined;
 }

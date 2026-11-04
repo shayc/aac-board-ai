@@ -42,7 +42,10 @@ export function getLikelyRegion(language: string): string | undefined {
   }
 }
 
-/** Returns the primary language's endonym (`es` → `español`; `fr` → `français`). */
+/**
+ * Returns the primary language's endonym (`es` → `español`; `fr` →
+ * `français`).
+ */
 export function getNativeLanguageName(locale: string): string {
   const language = getLanguageCode(locale);
 

@@ -1,8 +1,7 @@
 import { type Mock, vi } from "vitest";
 
-// Stubs the Built-in AI globals (Proofreader/Rewriter/Translator) that
-// @shayc/react-built-in-ai reads off globalThis. They're absent in CI Chromium,
-// so we fake them at the global boundary.
+// @shayc/react-built-in-ai reads Proofreader, Rewriter, and Translator off
+// globalThis. CI Chromium lacks them, so tests stub them at that boundary.
 
 type AINamespace = "Proofreader" | "Rewriter" | "Translator";
 

@@ -63,9 +63,8 @@ describe("BoardSelector", () => {
       .element(screen.getByRole("option", { name: "Home" }))
       .toHaveAttribute("aria-selected", "true");
 
-    // "region" flags the portaled popup for not being inside a landmark,
-    // which only exists in the full app shell, not this isolated component
-    // render.
+    // "region" flags the portaled popup for sitting outside a landmark, which
+    // only the full app shell provides.
     await expectNoA11yViolations(document.body, {
       rules: { region: { enabled: false } },
     });

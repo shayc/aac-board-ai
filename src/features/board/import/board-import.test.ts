@@ -226,9 +226,9 @@ describe("importBoardSets", () => {
   });
 
   test("rejects an OBZ whose declared uncompressed size exceeds the per-entry limit", async () => {
-    // A buffer of zeros compresses to a tiny archive, but its central-directory
-    // metadata declares the full uncompressed size — so the limit trips on the
-    // declared size before any inflation happens (zip-bomb defense).
+    // A buffer of zeros compresses to a tiny archive, but its
+    // central-directory metadata declares the full uncompressed size, so the
+    // limit trips on the declared size before any inflation (zip-bomb defense).
     const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
     const zipped = await zip(new Map([["big.bin", oversized]]));
     const file = new File([zipped as Uint8Array<ArrayBuffer>], "zip-bomb.obz", {

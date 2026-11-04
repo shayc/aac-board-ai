@@ -28,7 +28,8 @@ export function createPersistedStore<T>(
     try {
       localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
     } catch {
-      // Storage failures (quota, private mode) shouldn't break the in-memory store.
+      // Storage failures (quota, private mode) must not break the in-memory
+      // store.
     }
   };
 

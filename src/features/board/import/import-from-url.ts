@@ -3,8 +3,7 @@ import { importBoardSets, type ImportedBoardSet } from "./board-import";
 /**
  * Hard cap on a board download, enforced while the response streams so an
  * oversized transfer is cancelled mid-flight instead of buffered whole.
- * Generous versus real boards (observed up to ~70MB) but bounded — the
- * network-side counterpart of `BOARD_IMPORT_LIMITS`.
+ * Sized like `BOARD_IMPORT_LIMITS`, its decompression-side counterpart.
  */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
@@ -20,8 +19,8 @@ class BoardUrlError extends Error {
   }
 }
 
-// The ?board= param is attacker-controlled, so only http(s) may reach fetch —
-// schemes like data: would smuggle a payload past any host-based reasoning.
+// Only http(s) may reach fetch: schemes like data: would smuggle a payload
+// past any host-based reasoning.
 function parseBoardUrl(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
@@ -51,7 +50,8 @@ export async function importBoardSetFromUrl(
     type: blob.type || "application/octet-stream",
   });
 
-  // Once local importing starts, let its atomic write finish even if navigation changes.
+  // Once local importing starts, its atomic write finishes even if navigation
+  // changes.
   const [boardSet] = await importBoardSets(file);
 
   return boardSet;

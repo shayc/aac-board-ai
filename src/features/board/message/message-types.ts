@@ -5,8 +5,10 @@ export interface MessagePartInput {
   soundSrc?: string;
 }
 
-// Identity is ours, minted at creation — a button's id can't serve, since it isn't
-// unique across occurrences (same button added twice, or ids colliding across boards).
+/**
+ * `id` is minted when the part is created. A button's id cannot serve: the
+ * same button can be added twice, and ids can collide across boards.
+ */
 export interface MessagePart extends MessagePartInput {
   id: string;
   label: string;

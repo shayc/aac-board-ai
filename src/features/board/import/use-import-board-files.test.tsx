@@ -54,8 +54,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {
-    // Zeros compress to a tiny archive that still declares an oversized
-    // uncompressed size, so the limit trips before inflation.
+    // Same zip-bomb shape as board-import.test.ts.
     const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
     const zipped = await zip(new Map([["big.bin", oversized]]));
     const file = new File([zipped as Uint8Array<ArrayBuffer>], "zip-bomb.obz", {
