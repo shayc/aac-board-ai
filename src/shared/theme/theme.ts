@@ -10,6 +10,10 @@ import { safeAreaInset } from "./safe-area";
 import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
 
 declare module "@mui/material/styles" {
+  interface CssThemeVariables {
+    enabled: true;
+  }
+
   interface Shape {
     borderRadiusSm: string;
     borderRadiusLg: string;
@@ -129,7 +133,7 @@ const themeOptions = {
       },
       styleOverrides: {
         root: ({ theme }) => ({
-          borderBottom: `1px solid ${(theme.vars ?? theme).palette.divider}`,
+          borderBottom: `1px solid ${theme.vars.palette.divider}`,
         }),
       },
     },
@@ -144,10 +148,10 @@ const themeOptions = {
     MuiDrawer: {
       styleOverrides: {
         paper: ({ theme }) => {
-          const radius = (theme.vars ?? theme).shape.borderRadius;
+          const radius = theme.vars.shape.borderRadius;
 
           return {
-            backgroundColor: (theme.vars ?? theme).palette.background.default,
+            backgroundColor: theme.vars.palette.background.default,
             backgroundImage: "none",
             // Physical corners, like the drawer's own `left`/`right` offset, are
             // mirrored by the RTL stylis plugin, so the inner edge stays rounded.
@@ -180,7 +184,7 @@ const themeOptions = {
             {
               props: { fullScreen: false },
               style: {
-                borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+                borderRadius: theme.vars.shape.borderRadiusLg,
               },
             },
             {
@@ -206,7 +210,7 @@ const themeOptions = {
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
+          borderRadius: theme.vars.shape.borderRadiusFull,
           paddingTop: 12,
           paddingBottom: 12,
           variants: [
@@ -225,21 +229,21 @@ const themeOptions = {
     MuiOutlinedInput: {
       styleOverrides: {
         root: ({ theme }) => ({
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
+          borderRadius: theme.vars.shape.borderRadiusFull,
           "@media (hover: none)": {
             [idleTouchHoverOutline]: {
-              borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
+              borderColor: theme.vars.palette.Chip.defaultBorder,
             },
           },
           variants: [
             {
               props: { multiline: true },
-              style: { borderRadius: (theme.vars ?? theme).shape.borderRadius },
+              style: { borderRadius: theme.vars.shape.borderRadius },
             },
           ],
         }),
         notchedOutline: ({ theme }) => ({
-          borderColor: (theme.vars ?? theme).palette.Chip.defaultBorder,
+          borderColor: theme.vars.palette.Chip.defaultBorder,
         }),
       },
     },
@@ -248,7 +252,7 @@ const themeOptions = {
         clickable: ({ theme }) => ({
           ...theme.typography.body2,
           height: 40,
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
+          borderRadius: theme.vars.shape.borderRadiusFull,
           [`& .${chipClasses.label}`]: {
             paddingLeft: 15,
             paddingRight: 15,
@@ -262,7 +266,7 @@ const themeOptions = {
     MuiListItemButton: {
       styleOverrides: {
         root: ({ theme }) => ({
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusFull,
+          borderRadius: theme.vars.shape.borderRadiusFull,
         }),
       },
     },
@@ -270,7 +274,7 @@ const themeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           marginInline: 4,
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusSm,
+          borderRadius: theme.vars.shape.borderRadiusSm,
         }),
       },
     },
@@ -285,7 +289,7 @@ const themeOptions = {
       styleOverrides: {
         option: ({ theme }) => ({
           marginInline: 4,
-          borderRadius: (theme.vars ?? theme).shape.borderRadiusSm,
+          borderRadius: theme.vars.shape.borderRadiusSm,
         }),
       },
     },
@@ -308,7 +312,7 @@ const themeOptions = {
           borderRadius: 1,
         },
         markActive: ({ theme }) => ({
-          backgroundColor: (theme.vars ?? theme).palette.background.default,
+          backgroundColor: theme.vars.palette.background.default,
         }),
       },
     },

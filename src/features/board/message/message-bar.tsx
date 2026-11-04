@@ -55,14 +55,13 @@ export function MessageBar({
             overflow: "hidden",
             border: 1,
             borderColor: "divider",
-            borderRadius: (theme) =>
-              (theme.vars ?? theme).shape.borderRadiusFull,
+            borderRadius: (theme) => theme.vars.shape.borderRadiusFull,
             bgcolor: "background.paper",
           },
           (theme) =>
             theme.applyStyles("light", {
               borderColor: "transparent",
-              boxShadow: (theme.vars ?? theme).shadows[1],
+              boxShadow: theme.vars.shadows[1],
             }),
         ]}
       >
@@ -86,9 +85,9 @@ export function MessageBar({
                 direction="row"
                 sx={(theme) => ({
                   p: 1,
-                  borderRadius: (theme.vars ?? theme).shape.borderRadius,
+                  borderRadius: theme.vars.shape.borderRadius,
                   outline: isActive
-                    ? `2px solid ${(theme.vars ?? theme).palette.primary.main}`
+                    ? `2px solid ${theme.vars.palette.primary.main}`
                     : "none",
                   outlineOffset: -2,
                 })}

@@ -87,8 +87,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
             mx: "auto",
             mb: 2,
             borderRadius: "22%",
-            boxShadow: (theme) =>
-              `0 0 0 1px ${(theme.vars ?? theme).palette.divider}`,
+            boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
           }}
         />
 
