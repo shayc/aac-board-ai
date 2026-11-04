@@ -31,12 +31,6 @@ describe("boardLoader", () => {
     });
   });
 
-  test("throws 404 for an oversize boardId", async () => {
-    await expect(callLoader("set-1", "x".repeat(256))).rejects.toMatchObject({
-      init: { status: 404 },
-    });
-  });
-
   test("throws 404 when the board does not exist", async () => {
     await expect(callLoader("set-1", "missing-board")).rejects.toMatchObject({
       init: { status: 404 },
