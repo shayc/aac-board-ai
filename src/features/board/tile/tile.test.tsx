@@ -178,9 +178,11 @@ describe("Tile", () => {
   test("darkens the background on hover, and darkens it further in dark mode", async () => {
     const screen = await renderInTheme(
       <>
-        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-          Light
-        </Tile>
+        <div className="light">
+          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+            Light
+          </Tile>
+        </div>
         <div className="dark">
           <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
             Dark

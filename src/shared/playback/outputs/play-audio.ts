@@ -13,7 +13,7 @@ export function playAudio(
   const { promise, resolve } = Promise.withResolvers<void>();
   const audio = new Audio(src);
   const settled = new AbortController();
-  const listenerOptions = { once: true, signal: settled.signal };
+  const listenerOptions = { signal: settled.signal };
 
   function finish() {
     settled.abort();
