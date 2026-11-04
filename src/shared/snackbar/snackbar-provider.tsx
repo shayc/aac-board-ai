@@ -14,7 +14,6 @@ import {
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const DEFAULT_SNACKBAR_DURATION_MS = 5000;
-const APP_BAR_GAP_PX = 8;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -100,7 +99,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         autoHideDuration={durationMs}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         slotProps={{ transition: { onExited: handleExited } }}
-        sx={belowAppBar}
+        sx={overAppBar}
       >
         <Alert
           closeText={t(m.close)}
@@ -145,20 +144,10 @@ function inverseSurface(severity: SnackbarSeverity) {
   };
 }
 
-function belowAppBar(theme: Theme) {
-  return {
-    top: offsetBelowToolbar(56),
-    [`${theme.breakpoints.up("xs")} and (orientation: landscape)`]: {
-      top: offsetBelowToolbar(48),
-    },
-    [theme.breakpoints.up("sm")]: {
-      top: offsetBelowToolbar(64),
-    },
-  };
-}
+function overAppBar(theme: Theme) {
+  const top = safeAreaGutter(theme.spacing(1), "top");
 
-function offsetBelowToolbar(toolbarHeightPx: number): string {
-  return safeAreaGutter(toolbarHeightPx + APP_BAR_GAP_PX, "top");
+  return { top, [theme.breakpoints.up("sm")]: { top } };
 }
 
 function defaultDurationMs(severity: SnackbarSeverity): number | null {
