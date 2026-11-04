@@ -1,12 +1,11 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
-import { BoardSettings, SuggestionSettings } from "@features/board";
-import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
+import {
+  BoardSettings,
+  PlaybackSettings,
+  SuggestionSettings,
+} from "@features/board";
 import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import TuneOutlinedIcon from "@mui/icons-material/TuneOutlined";
-import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
@@ -19,7 +18,7 @@ import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import type { ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { ThemeSettings } from "./theme-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
@@ -31,6 +30,7 @@ interface SettingsDrawerProps {
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const t = useTranslate();
+  const [isContentScrolled, setIsContentScrolled] = useState(false);
 
   return (
     <Drawer
@@ -49,7 +49,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       }}
     >
       <Toolbar
+        component="header"
         sx={(theme) => ({
+          borderBottom: 1,
+          borderColor: isContentScrolled ? "divider" : "transparent",
           [theme.breakpoints.up("sm")]: {
             pr: safeAreaGutter(theme.spacing(3), "right"),
           },
@@ -72,6 +75,9 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       </Toolbar>
 
       <Box
+        onScroll={(event) =>
+          setIsContentScrolled(event.currentTarget.scrollTop > 0)
+        }
         sx={(theme) => ({
           flexGrow: 1,
           minHeight: 0,
@@ -83,49 +89,41 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           },
         })}
       >
-        <SettingsSection
-          title={t(m.settingsSectionGeneral)}
-          icon={<TuneOutlinedIcon fontSize="small" />}
-        >
+        <SettingsSection title={t(m.settingsSectionAppearance)}>
           <ThemeSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection title={t(m.settingsSectionLanguageVoice)}>
           <LanguageSettings />
-        </SettingsSection>
-
-        <Divider sx={{ my: 3 }} />
-
-        <SettingsSection
-          title={t(m.settingsSectionBoard)}
-          icon={<GridViewOutlinedIcon fontSize="small" />}
-        >
-          <BoardSettings />
-        </SettingsSection>
-
-        <Divider sx={{ my: 3 }} />
-
-        <SettingsSection
-          title={t(m.settingsSectionSpeech)}
-          icon={<VolumeUpOutlinedIcon fontSize="small" />}
-        >
           <SpeechSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />
 
-        <SettingsSection
-          title={t(m.settingsSectionSuggestions)}
-          icon={<AutoAwesomeIcon fontSize="small" />}
-        >
+        <SettingsSection title={t(m.settingsSectionBoard)}>
+          <BoardSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection title={t(m.settingsSectionMessage)}>
+          <PlaybackSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection title={t(m.settingsSectionSuggestions)}>
           <SuggestionSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />
 
-        <SettingsSection
-          title={t(m.settingsSectionAbout)}
-          icon={<InfoOutlinedIcon fontSize="small" />}
-        >
+        <SettingsSection title={t(m.settingsSectionAbout)}>
           <ExternalLink
             href="https://github.com/shayc/aac-board-ai"
+            variant="body2"
             color="text.secondary"
             sx={{ alignSelf: "flex-start" }}
           >
@@ -143,29 +141,23 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
 interface SettingsSectionProps {
   title: string;
-  icon: ReactNode;
   children: ReactNode;
 }
 
-function SettingsSection({ title, icon, children }: SettingsSectionProps) {
+function SettingsSection({ title, children }: SettingsSectionProps) {
+  const headingId = useId();
+
   return (
-    <>
+    <Box role="group" aria-labelledby={headingId}>
       <Typography
+        id={headingId}
         component="h3"
-        variant="subtitle1"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          mb: 2,
-          fontWeight: "fontWeightBold",
-          "& > svg": { color: "primary.main" },
-        }}
+        variant="subtitle2"
+        sx={{ mb: 2, color: "text.secondary" }}
       >
-        {icon}
         {title}
       </Typography>
       <Stack spacing={3}>{children}</Stack>
-    </>
+    </Box>
   );
 }

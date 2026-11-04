@@ -1,11 +1,9 @@
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
+import IconButton from "@mui/material/IconButton";
 import ListSubheader from "@mui/material/ListSubheader";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
+import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
@@ -21,13 +19,11 @@ import {
   useSpeechPreferences,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
+import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
-import { useId } from "react";
 
 export function SpeechSettings() {
   const t = useTranslate();
-  const selectId = useId();
-  const labelId = useId();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechPreferences();
@@ -35,9 +31,8 @@ export function SpeechSettings() {
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI = voices.some((voice) => voice.voiceURI === voiceURI)
-    ? voiceURI
-    : "";
+  const selectedVoiceURI =
+    voices.find((voice) => voice.voiceURI === voiceURI)?.voiceURI ?? "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );
@@ -46,6 +41,11 @@ export function SpeechSettings() {
   const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });
+  const multiplierFormat = new Intl.NumberFormat(language, {
+    minimumFractionDigits: 1,
+    maximumFractionDigits: 1,
+  });
+  const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
 
   function renderLocaleOptions(voiceLocale: string) {
     const header = hasMultipleLocales && (
@@ -62,15 +62,16 @@ export function SpeechSettings() {
     return [header, ...items];
   }
 
-  const speechControls = [
+  const speechSliders = [
     {
       id: "rate",
       label: t(m.speechRate),
       value: rate,
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
+      normalValue: SPEECH_RATE.fallback,
       onChange: setSpeechRate,
-      formatValue: (value: number) => `${value}x`,
+      formatValue: (value: number) => `${multiplierFormat.format(value)}×`,
     },
     {
       id: "pitch",
@@ -78,8 +79,9 @@ export function SpeechSettings() {
       value: pitch,
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
+      normalValue: SPEECH_PITCH.fallback,
       onChange: setSpeechPitch,
-      formatValue: (value: number) => value.toFixed(1),
+      formatValue: (value: number) => percentFormat.format(value),
     },
     {
       id: "volume",
@@ -88,7 +90,7 @@ export function SpeechSettings() {
       min: SPEECH_VOLUME.min,
       max: SPEECH_VOLUME.max,
       onChange: setSpeechVolume,
-      formatValue: (value: number) => `${Math.round(value * 100)}%`,
+      formatValue: (value: number) => percentFormat.format(value),
     },
   ];
 
@@ -101,46 +103,27 @@ export function SpeechSettings() {
 
   return (
     <Stack spacing={3}>
-      <FormControl size="small" fullWidth>
-        <InputLabel id={labelId}>{t(m.speechVoice)}</InputLabel>
-        <Select
-          id={selectId}
-          labelId={labelId}
-          label={t(m.speechVoice)}
-          value={selectedVoiceURI}
-          onChange={(event) =>
-            setVoiceURI(event.target.value === "" ? null : event.target.value)
-          }
-          variant="outlined"
-        >
-          {locales.map(renderLocaleOptions)}
-        </Select>
-      </FormControl>
-
-      {speechControls.map(
-        ({ id, label, value, min, max, onChange, formatValue }) => (
-          <SettingsSlider
-            key={id}
-            label={label}
-            value={value}
-            onChange={onChange}
-            min={min}
-            max={max}
-            step={0.1}
-            formatValue={formatValue}
-          />
-        ),
-      )}
-
-      <Button
-        color="inherit"
-        variant="contained"
-        startIcon={<PlayArrowIcon />}
-        onClick={handlePreviewSpeech}
-        sx={{ alignSelf: "flex-start" }}
+      <SettingsSelect
+        label={t(m.speechVoice)}
+        value={selectedVoiceURI}
+        onChange={(value) => setVoiceURI(value === "" ? null : value)}
+        action={
+          <Tooltip title={t(m.speechPreviewVoice)}>
+            <IconButton
+              aria-label={t(m.speechPreviewVoice)}
+              onClick={handlePreviewSpeech}
+            >
+              <PlayArrowIcon />
+            </IconButton>
+          </Tooltip>
+        }
       >
-        {t(m.speechPreview)}
-      </Button>
+        {locales.map(renderLocaleOptions)}
+      </SettingsSelect>
+
+      {speechSliders.map(({ id, ...slider }) => (
+        <SettingsSlider key={id} {...slider} step={0.1} />
+      ))}
     </Stack>
   );
 }

@@ -1,3 +1,4 @@
+import { sliderClasses } from "@mui/material/Slider";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
@@ -60,24 +61,41 @@ describe("SpeechSettings", () => {
 
     const screen = await renderSpeechSettings();
 
+    const expectedValues = [
+      { name: "Speed", text: "1.0×" },
+      { name: "Pitch", text: "100%" },
+      { name: "Volume", text: "100%" },
+    ];
+    for (const { name, text } of expectedValues) {
+      await expect
+        .element(screen.getByRole("slider", { name }))
+        .toHaveAttribute("aria-valuetext", text);
+    }
+    await expect.element(screen.getByText("1.0×")).toBeVisible();
+    const percentValues = screen.getByText("100%").all();
+    expect(percentValues).toHaveLength(2);
+    for (const value of percentValues) {
+      await expect.element(value).toBeVisible();
+    }
     await expect
-      .element(screen.getByRole("slider", { name: "Speed" }))
-      .toHaveAttribute("aria-valuetext", "1x");
-    await expect
-      .element(screen.getByRole("slider", { name: "Pitch" }))
-      .toHaveAttribute("aria-valuetext", "1.0");
-    await expect
-      .element(screen.getByRole("slider", { name: "Volume" }))
-      .toHaveAttribute("aria-valuetext", "100%");
-
-    await expect.element(screen.getByText("1x")).toBeVisible();
-    await expect.element(screen.getByText("1.0")).toBeVisible();
-    await expect.element(screen.getByText("100%")).toBeVisible();
-    await expect
-      .element(screen.getByRole("button", { name: "Preview" }))
+      .element(screen.getByRole("button", { name: "Preview voice" }))
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("marks the normal value on speed and pitch only", async () => {
+    const screen = await renderSpeechSettings();
+    const markCounts = ["Speed", "Pitch", "Volume"].map(
+      (name) =>
+        screen
+          .getByRole("slider", { name })
+          .element()
+          .closest(`.${sliderClasses.root}`)
+          ?.querySelectorAll(`.${sliderClasses.mark}`).length,
+    );
+
+    expect(markCounts).toEqual([1, 1, 0]);
   });
 
   test("selects and persists a voice", async () => {
@@ -127,12 +145,23 @@ describe("SpeechSettings", () => {
     });
   });
 
+  test("keeps volume above silence at the lowest setting", async () => {
+    const screen = await renderSpeechSettings();
+    const volumeSlider = screen.getByRole("slider", { name: "Volume" });
+
+    volumeSlider.element().focus();
+    await userEvent.keyboard("{Home}");
+
+    await expect.element(volumeSlider).toHaveAttribute("aria-valuenow", "0.1");
+    await expect.element(volumeSlider).toHaveAttribute("aria-valuetext", "10%");
+  });
+
   test("plays the voice preview through app playback", async () => {
     const speech = stubSpeech();
     stubVoices([]);
     const screen = await renderSpeechSettings();
 
-    await screen.getByRole("button", { name: "Preview" }).click();
+    await screen.getByRole("button", { name: "Preview voice" }).click();
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
     expect(speech.speak.mock.calls[0][0].text).toBe("Hi, this is my voice!");

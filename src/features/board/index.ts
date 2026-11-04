@@ -16,6 +16,7 @@ export {
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
+export { PlaybackSettings } from "./playback/playback-settings";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { loadStoredBoard } from "./storage/load-stored-board";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";

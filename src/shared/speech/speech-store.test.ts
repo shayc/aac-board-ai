@@ -49,7 +49,7 @@ describe("speech-store", () => {
       ["rate", 3, 2],
       ["pitch", -1, 0.1],
       ["pitch", 3, 2],
-      ["volume", -1, 0],
+      ["volume", 0, 0.1],
       ["volume", 2, 1],
     ] as const)(
       "clamps %s values to their supported range",

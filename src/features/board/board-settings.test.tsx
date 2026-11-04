@@ -14,13 +14,13 @@ describe("BoardSettings", () => {
     );
 
     const saturationSlider = screen.getByRole("slider", {
-      name: "Tile color intensity",
+      name: "Color intensity",
     });
     const labelPositionGroup = screen.getByRole("radiogroup", {
-      name: "Tile labels",
+      name: "Labels",
     });
     const bordersSwitch = screen.getByRole("switch", {
-      name: "Show tile borders",
+      name: "Show borders",
     });
 
     await expect.element(saturationSlider).toBeVisible();
@@ -31,13 +31,6 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("100%")).toBeVisible();
 
     await expect.element(bordersSwitch).not.toBeChecked();
-    await expect
-      .element(
-        screen.getByRole("switch", {
-          name: "Highlight during playback",
-        }),
-      )
-      .not.toBeChecked();
     await expect
       .element(screen.getByRole("radio", { name: "Top" }))
       .toBeChecked();
@@ -104,7 +97,7 @@ describe("BoardSettings", () => {
       </AppProviders>,
     );
 
-    const labels = ["Tile labels", "Show tile borders", "Tile color intensity"];
+    const labels = ["Labels", "Show borders", "Color intensity"];
     const styles = labels.map((label) => {
       const { fontSize, fontWeight, color } = getComputedStyle(
         screen.getByText(label, { exact: true }).element(),
@@ -116,26 +109,6 @@ describe("BoardSettings", () => {
     expect(styles[2]).toEqual(styles[0]);
   });
 
-  test("toggles message highlighting during playback", async () => {
-    const screen = await render(
-      <AppProviders>
-        <BoardSettings />
-      </AppProviders>,
-    );
-    const highlightSwitch = screen.getByRole("switch", {
-      name: "Highlight during playback",
-    });
-
-    await highlightSwitch.click();
-
-    await expect.element(highlightSwitch).toBeChecked();
-    await vi.waitFor(() =>
-      expect(localStorage.getItem("playback-preferences")).toBe(
-        JSON.stringify({ isHighlightingEnabled: true }),
-      ),
-    );
-  });
-
   test("toggling tile borders persists their visibility", async () => {
     const screen = await render(
       <AppProviders>
@@ -144,7 +117,7 @@ describe("BoardSettings", () => {
     );
 
     const bordersSwitch = screen.getByRole("switch", {
-      name: "Show tile borders",
+      name: "Show borders",
     });
 
     await expect.element(bordersSwitch).not.toBeChecked();
@@ -169,7 +142,7 @@ describe("BoardSettings", () => {
     );
 
     const saturationSlider = screen.getByRole("slider", {
-      name: "Tile color intensity",
+      name: "Color intensity",
     });
 
     saturationSlider.element().focus();
@@ -199,9 +172,7 @@ describe("BoardSettings", () => {
       </AppProviders>,
     );
 
-    const groups = screen
-      .getByRole("radiogroup", { name: "Tile labels" })
-      .all();
+    const groups = screen.getByRole("radiogroup", { name: "Labels" }).all();
     expect(groups).toHaveLength(2);
     expect(
       new Set(

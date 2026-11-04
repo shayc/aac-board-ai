@@ -296,6 +296,29 @@ const themeOptions = {
         }),
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          variants: [
+            {
+              props: { orientation: "horizontal" },
+              style: {
+                padding: "12px 0",
+                "@media (pointer: coarse)": { padding: "12px 0" },
+              },
+            },
+          ],
+        },
+        mark: {
+          width: 2,
+          height: 12,
+          borderRadius: 1,
+        },
+        markActive: ({ theme }) => ({
+          backgroundColor: (theme.vars ?? theme).palette.background.default,
+        }),
+      },
+    },
     MuiTooltip: {
       defaultProps: {
         enterDelay: 500,

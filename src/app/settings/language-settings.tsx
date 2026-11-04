@@ -1,26 +1,21 @@
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useLanguageOptions } from "@shared/language/use-language-options";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
+import { SettingsSelect } from "@shared/ui/settings-select";
 import {
   isSupported,
   useGlobalDownloadProgress,
 } from "@shayc/react-built-in-ai";
-import { useId } from "react";
 
 export function LanguageSettings() {
   const t = useTranslate();
-  const selectId = useId();
-  const labelId = useId();
   const { language, setLanguage } = useLanguage();
   const languageOptions = useLanguageOptions();
   const progress = useGlobalDownloadProgress("Translator");
@@ -28,23 +23,17 @@ export function LanguageSettings() {
 
   return (
     <Stack spacing={2}>
-      <FormControl size="small" fullWidth>
-        <InputLabel id={labelId}>{t(m.languageLabel)}</InputLabel>
-        <Select
-          id={selectId}
-          labelId={labelId}
-          label={t(m.languageLabel)}
-          value={language}
-          onChange={(event) => setLanguage(event.target.value)}
-          variant="outlined"
-        >
-          {languageOptions.map(({ code, name }) => (
-            <MenuItem key={code} value={code}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+      <SettingsSelect
+        label={t(m.languageLabel)}
+        value={language}
+        onChange={setLanguage}
+      >
+        {languageOptions.map(({ code, name }) => (
+          <MenuItem key={code} value={code}>
+            {name}
+          </MenuItem>
+        ))}
+      </SettingsSelect>
 
       {!isTranslationSupported && (
         <Typography sx={{ typography: "body2", color: "text.secondary" }}>
