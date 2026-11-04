@@ -39,6 +39,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
             borderRadius: theme.vars.shape.borderRadius,
             [`&.${buttonBaseClasses.focusVisible}`]: {
               ...theme.focusVisible,
+              // MUI's radio ring targets nested SVGs; the preview uses this
+              // outer ring.
               "& svg:first-of-type": {
                 borderRadius: 0,
                 outline: "none",
