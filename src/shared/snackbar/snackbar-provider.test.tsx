@@ -18,17 +18,22 @@ const LONG_DURATION_MS = 60_000;
 
 const TOAST_CLEARANCE_PX = 96;
 
+type ShowRequest = SnackbarOptions | string;
+
 function ShowButtons({
   snackbars,
 }: {
-  snackbars: Record<string, SnackbarOptions | string>;
+  snackbars: Record<string, ShowRequest | ShowRequest[]>;
 }) {
   const { showSnackbar } = useSnackbar();
 
   return (
     <div style={{ paddingTop: TOAST_CLEARANCE_PX }}>
-      {Object.entries(snackbars).map(([name, options]) => (
-        <button key={name} onClick={() => showSnackbar(options)}>
+      {Object.entries(snackbars).map(([name, requests]) => (
+        <button
+          key={name}
+          onClick={() => [requests].flat().forEach(showSnackbar)}
+        >
           {name}
         </button>
       ))}
@@ -38,7 +43,9 @@ function ShowButtons({
   );
 }
 
-function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
+function renderSnackbars(
+  snackbars: Record<string, ShowRequest | ShowRequest[]>,
+) {
   return render(
     <AppProviders>
       <ShowButtons snackbars={snackbars} />
@@ -74,41 +81,43 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
 
     await vi.advanceTimersByTimeAsync(10_000);
 
-    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
   });
 
   test.each([
-    { name: "an error", options: { message: "Failed", severity: "error" } },
+    {
+      name: "an error",
+      role: "alert",
+      options: { message: "Failed", severity: "error" },
+    },
     {
       name: "a message with an action",
+      role: "status",
       options: { message: "Failed", action: <button>Retry</button> },
     },
-  ] satisfies { name: string; options: SnackbarOptions }[])(
-    "keeps $name open until closed",
-    async ({ options }) => {
-      vi.useFakeTimers();
-      const screen = await renderSnackbars({ "show-sticky": options });
+  ] satisfies {
+    name: string;
+    role: "alert" | "status";
+    options: SnackbarOptions;
+  }[])("keeps $name open until closed", async ({ role, options }) => {
+    vi.useFakeTimers();
+    const screen = await renderSnackbars({ "show-sticky": options });
 
-      await screen.getByRole("button", { name: "show-sticky" }).click();
-      await expect
-        .element(screen.getByRole("alert"))
-        .toMatchTextContent("Failed");
+    await screen.getByRole("button", { name: "show-sticky" }).click();
+    await expect.element(screen.getByRole(role)).toMatchTextContent("Failed");
 
-      await vi.advanceTimersByTimeAsync(10 * 60_000);
-      await expect
-        .element(screen.getByRole("alert"))
-        .toMatchTextContent("Failed");
+    await vi.advanceTimersByTimeAsync(10 * 60_000);
+    await expect.element(screen.getByRole(role)).toMatchTextContent("Failed");
 
-      await screen.getByRole("button", { name: "Close" }).click();
-      await vi.advanceTimersByTimeAsync(1000);
+    await screen.getByRole("button", { name: "Close" }).click();
+    await vi.advanceTimersByTimeAsync(1000);
 
-      await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
-    },
-  );
+    await expect.element(screen.getByRole(role)).not.toBeInTheDocument();
+  });
 
   test("replaces an open error with a later message", async () => {
     const screen = await renderSnackbars({
@@ -125,7 +134,28 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-saved" }).click();
 
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+  });
+
+  test("skips messages superseded while the current one closes", async () => {
+    const screen = await renderSnackbars({
+      "show-importing": { message: "Importing", durationMs: LONG_DURATION_MS },
+      "show-outcomes": [
+        { message: "Failed", severity: "error" },
+        { message: "Saved", severity: "success", durationMs: LONG_DURATION_MS },
+      ],
+    });
+
+    await screen.getByRole("button", { name: "show-importing" }).click();
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("Importing");
+
+    await screen.getByRole("button", { name: "show-outcomes" }).click();
+
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
   });
 
   test("replaces the current message with a new one after its exit transition", async () => {
@@ -135,11 +165,13 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-first" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("first");
+    await expect.element(screen.getByRole("status")).toHaveTextContent("first");
 
     await screen.getByRole("button", { name: "show-second" }).click();
 
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("second");
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("second");
   });
 
   test("ignores clickaway so the message stays visible", async () => {
@@ -148,7 +180,9 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("sticky");
 
     await screen.getByRole("button", { name: "outside" }).click();
 
@@ -157,23 +191,25 @@ describe("SnackbarProvider", () => {
     // matcher must time out.
     await expect(
       expect
-        .element(screen.getByRole("alert"), { timeout: 500 })
+        .element(screen.getByRole("status"), { timeout: 500 })
         .not.toBeInTheDocument(),
     ).rejects.toThrow();
 
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("sticky");
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("sticky");
   });
 
   test("shows a plain-string message with no accessibility violations", async () => {
     const screen = await renderSnackbars({ "show-saved": "Saved" });
 
     await screen.getByRole("button", { name: "show-saved" }).click();
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+    await expect.element(screen.getByRole("status")).toHaveTextContent("Saved");
 
     // Axe computes color contrast against blended colors while the Grow
     // transition is still animating opacity, so wait for it to settle.
     await vi.waitFor(() => {
-      const alert = screen.getByRole("alert").element();
+      const alert = screen.getByRole("status").element();
       expect(getComputedStyle(alert).opacity).toBe("1");
     });
 
@@ -183,6 +219,7 @@ describe("SnackbarProvider", () => {
   test.each(["success", "info", "warning", "error"] as const)(
     "shows a %s message with no accessibility violations",
     async (severity) => {
+      const role = severity === "error" ? "alert" : "status";
       const screen = await renderSnackbars({
         "show-status": {
           message: "Status",
@@ -193,7 +230,7 @@ describe("SnackbarProvider", () => {
 
       await screen.getByRole("button", { name: "show-status" }).click();
       await vi.waitFor(() => {
-        const alert = screen.getByRole("alert").element();
+        const alert = screen.getByRole(role).element();
         expect(getComputedStyle(alert).opacity).toBe("1");
       });
 
@@ -229,7 +266,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-imported" }).click();
     await expect
-      .element(screen.getByRole("alert"))
+      .element(screen.getByRole("status"))
       .toHaveTextContent("Board set imported");
     await expect
       .element(screen.getByRole("button", { name: "Close" }))
@@ -237,7 +274,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect
-      .element(screen.getByRole("alert"))
+      .element(screen.getByRole("status"))
       .toHaveTextContent("ערכת הלוחות יובאה בהצלחה");
     await expect
       .element(screen.getByRole("button", { name: "סגירה" }))

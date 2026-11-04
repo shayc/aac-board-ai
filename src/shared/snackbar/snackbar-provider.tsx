@@ -24,24 +24,24 @@ import {
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
 const AUTO_HIDE_DURATION_MS = 5000;
 
-interface QueuedSnackbar extends SnackbarOptions {
+interface KeyedSnackbar extends SnackbarOptions {
   key: number;
 }
 
 interface SnackbarState {
-  queue: QueuedSnackbar[];
-  current: QueuedSnackbar | undefined;
+  current: KeyedSnackbar | undefined;
+  next: KeyedSnackbar | undefined;
   open: boolean;
 }
 
 type SnackbarAction =
-  | { type: "show"; snackbar: QueuedSnackbar }
+  | { type: "show"; snackbar: KeyedSnackbar }
   | { type: "close" }
   | { type: "exited" };
 
 const initialState: SnackbarState = {
-  queue: [],
   current: undefined,
+  next: undefined,
   open: false,
 };
 
@@ -58,7 +58,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
-    const snackbar: QueuedSnackbar = {
+    const snackbar: KeyedSnackbar = {
       ...snackbarOptions,
       key: nextKeyRef.current++,
     };
@@ -90,6 +90,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       ? state.current.message(t)
       : state.current?.message;
   const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
+  const isError = severity === "error";
   const action = (
     <>
       {state.current?.action}
@@ -123,9 +124,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         sx={snackbarPlacementStyles}
       >
         <Alert
+          role={isError ? "alert" : "status"}
           action={action}
           severity={severity}
-          variant={severity === "error" ? "filled" : "standard"}
+          variant={isError ? "filled" : "standard"}
           sx={[
             (theme) => ({
               alignItems: "center",
@@ -152,9 +154,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
                 paddingInlineStart: 2,
               },
             }),
-            severity === "error"
-              ? errorSurfaceStyles
-              : inverseSurfaceStyles(severity),
+            isError ? errorSurfaceStyles : inverseSurfaceStyles(severity),
           ]}
         >
           {message}
@@ -227,26 +227,17 @@ function snackbarReducer(
         return { ...state, current: action.snackbar, open: true };
       }
 
-      return {
-        ...state,
-        queue: [...state.queue, action.snackbar],
-        open: false,
-      };
+      return { ...state, next: action.snackbar, open: false };
     }
 
     case "close":
       return { ...state, open: false };
 
-    case "exited": {
-      if (state.queue.length > 0) {
-        return {
-          current: state.queue[0],
-          queue: state.queue.slice(1),
-          open: true,
-        };
-      }
-
-      return { ...state, current: undefined };
-    }
+    case "exited":
+      return {
+        current: state.next,
+        next: undefined,
+        open: state.next !== undefined,
+      };
   }
 }

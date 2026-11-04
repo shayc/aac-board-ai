@@ -37,7 +37,7 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
+      .element(screen.getByRole("status"))
       .toHaveTextContent("Board set imported");
   });
 
@@ -49,7 +49,7 @@ describe("useImportBoardFiles", () => {
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
-      .element(screen.getByRole("alert"))
+      .element(screen.getByRole("status"))
       .toHaveTextContent("Board sets imported");
   });
 
