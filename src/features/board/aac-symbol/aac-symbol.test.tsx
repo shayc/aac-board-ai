@@ -1,66 +1,66 @@
+import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
 import { AACSymbol } from "./aac-symbol";
 
+async function renderSymbol(labelPlacement: "top" | "bottom" | "hidden") {
+  const screen = await render(
+    <div style={{ width: 120, height: 120 }}>
+      <AACSymbol
+        imageSrc={TEST_IMAGE_SRC}
+        label="Action"
+        labelPlacement={labelPlacement}
+      />
+    </div>,
+  );
+  const image = screen.container.querySelector("img");
+  assertDefined(image);
+
+  return {
+    label: screen.locator.getByText("Action").element().getBoundingClientRect(),
+    image: image.getBoundingClientRect(),
+  };
+}
+
 describe("AACSymbol", () => {
-  test("renders no content when no image source or label is provided", async () => {
+  test("renders nothing without an image or label", async () => {
     const screen = await render(<AACSymbol label="" />);
 
     expect(screen.container.textContent).toBe("");
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders label when provided", async () => {
+  test("renders a text-only symbol without an image", async () => {
     const screen = await render(<AACSymbol label="Hello" />);
-    const label = screen.getByText("Hello");
 
-    await expect.element(label).toBeVisible();
-    expect(getComputedStyle(label.element()).fontWeight).toBe("700");
+    await expect.element(screen.getByText("Hello")).toBeVisible();
     expect(screen.container.querySelector("img")).toBeNull();
   });
 
-  test("renders image when imageSrc is provided", async () => {
+  test("renders the image as decorative so the label names the symbol", async () => {
     const screen = await render(
       <AACSymbol imageSrc={TEST_IMAGE_SRC} label="" />,
     );
 
-    const img = screen.container.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
-    expect(img?.getAttribute("alt")).toBe("");
+    const image = screen.container.querySelector("img");
+    expect(image?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
+    expect(image?.getAttribute("alt")).toBe("");
   });
 
-  test("places the label above the image when labelPlacement is top", async () => {
-    const screen = await render(
-      <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
-        label="Action"
-        labelPlacement="top"
-      />,
-    );
+  test("places the label below the image by default and above it when placed on top", async () => {
+    const bottom = await renderSymbol("bottom");
+    const top = await renderSymbol("top");
 
-    const container = screen.getByText("Action").element().parentElement;
-    if (!container) {
-      throw new Error("AAC symbol container not found");
-    }
-    expect(getComputedStyle(container).flexDirection).toBe("column-reverse");
+    expect(bottom.label.top).toBeGreaterThanOrEqual(bottom.image.bottom);
+    expect(top.label.bottom).toBeLessThanOrEqual(top.image.top);
   });
 
-  test("keeps a hidden label in the DOM without occupying layout space", async () => {
-    const screen = await render(
-      <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
-        label="Action"
-        labelPlacement="hidden"
-      />,
-    );
+  test("keeps a hidden label in the DOM without taking space from the image", async () => {
+    const visible = await renderSymbol("bottom");
+    const hidden = await renderSymbol("hidden");
 
-    const label = screen.getByText("Action");
-
-    await expect.element(label).toBeInTheDocument();
-    expect(label.element().getBoundingClientRect().width).toBeLessThanOrEqual(
-      1,
-    );
+    expect(hidden.label.width).toBeLessThanOrEqual(1);
+    expect(hidden.image.height).toBeGreaterThan(visible.image.height);
   });
 });

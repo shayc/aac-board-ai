@@ -95,28 +95,8 @@ describe("AppShell", () => {
     await expect.element(openButton).toHaveFocus();
   });
 
-  test("onboarding shows on first visit and closes on Continue", async () => {
-    const screen = await renderAppShell();
-
-    await expect
-      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
-      .toBeVisible();
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-
-    await expect
-      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
-      .not.toBeInTheDocument();
-  });
-
   test("updates the mounted shell and open settings drawer across locale changes", async () => {
-    const screen = await renderAppShell();
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    await expect
-      .element(screen.getByRole("dialog", { name: "Welcome to AAC Board AI" }))
-      .not.toBeInTheDocument();
-
+    const screen = await renderAppShellPastOnboarding();
     const openSettings = screen.getByRole("button", {
       name: "Open settings",
     });

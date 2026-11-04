@@ -1,7 +1,10 @@
 import { LanguageProvider } from "@shared/language/language-provider";
-import { setStoredLanguage } from "@shared/language/language-store";
+import {
+  getStoredLanguage,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { createMemoryRouter, RouterProvider } from "react-router";
-import { describe, expect, test, vi } from "vitest";
+import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { useRevalidateOnLanguageChange } from "./use-revalidate-on-language-change";
 
@@ -16,14 +19,17 @@ function TestHydrateFallback() {
 }
 
 describe("useRevalidateOnLanguageChange", () => {
-  test("re-runs route loaders only when the language actually changes", async () => {
+  test("re-runs route loaders once per language change, never on mount", async () => {
     setStoredLanguage("en");
-    const loader = vi.fn(() => null);
+    const loadedLanguages: string[] = [];
     const router = createMemoryRouter([
       {
         path: "/",
         element: <Probe />,
-        loader,
+        loader: () => {
+          loadedLanguages.push(getStoredLanguage());
+          return null;
+        },
         HydrateFallback: TestHydrateFallback,
       },
     ]);
@@ -33,25 +39,12 @@ describe("useRevalidateOnLanguageChange", () => {
         <RouterProvider router={router} />
       </LanguageProvider>,
     );
-
     await expect.element(screen.getByText("probe ready")).toBeInTheDocument();
-    expect(loader).toHaveBeenCalledTimes(1);
-
-    setStoredLanguage("en");
-    // Flush a render round trip so a wrongly-triggered revalidation would land.
-    await expect.element(screen.getByText("probe ready")).toBeInTheDocument();
-    expect(loader).toHaveBeenCalledTimes(1);
 
     setStoredLanguage("es");
-
-    await vi.waitFor(() => {
-      expect(loader).toHaveBeenCalledTimes(2);
-    });
+    await expect.poll(() => loadedLanguages).toEqual(["en", "es"]);
 
     setStoredLanguage("fr");
-
-    await vi.waitFor(() => {
-      expect(loader).toHaveBeenCalledTimes(3);
-    });
+    await expect.poll(() => loadedLanguages).toEqual(["en", "es", "fr"]);
   });
 });

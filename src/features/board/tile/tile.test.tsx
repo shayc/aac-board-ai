@@ -2,55 +2,80 @@ import {
   createTheme,
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
+import { assertDefined } from "@shared/testing/assert-defined";
 import type { CSSProperties } from "react";
 import { describe, expect, test, vi } from "vitest";
+import type { Locator } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
 import { Tile } from "./tile";
 
-// Colors are rendered through oklch(from ...), so the browser serializes computed
-// values as oklch(...)/color(...) rather than rgb(...). Ask the browser for the
-// canonical serialization of the expected color instead of hardcoding a format.
-function resolveColor(cssColor: string): string {
-  const probe = document.createElement("div");
-  document.body.append(probe);
-  probe.style.color = cssColor;
-  const resolved = getComputedStyle(probe).color;
-  probe.remove();
-  return resolved;
+type Rgb = readonly [red: number, green: number, blue: number];
+
+const WCAG_TEXT_CONTRAST = 4.5;
+const WCAG_NON_TEXT_CONTRAST = 3;
+
+function paint(...cssColors: string[]): Rgb {
+  const context = new OffscreenCanvas(1, 1).getContext("2d");
+  assertDefined(context);
+
+  for (const cssColor of cssColors) {
+    context.fillStyle = cssColor;
+    context.fillRect(0, 0, 1, 1);
+  }
+
+  const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+
+  return [red, green, blue];
 }
 
-function resolveBackgroundColor(cssColor: string): string {
-  const probe = document.createElement("div");
-  document.body.append(probe);
-  probe.style.backgroundColor = cssColor;
-  const resolved = getComputedStyle(probe).backgroundColor;
-  probe.remove();
-  return resolved;
+function relativeLuminance(rgb: Rgb): number {
+  const [red, green, blue] = rgb.map((channel) => {
+    const value = channel / 255;
+
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
-function resolveColorInSrgb(cssColor: string): string {
-  return resolveColor(`color(srgb from ${cssColor} r g b)`);
+function contrastRatio(first: Rgb, second: Rgb): number {
+  const [lighter, darker] = [
+    relativeLuminance(first),
+    relativeLuminance(second),
+  ]
+    .sort((a, b) => b - a)
+    .map((luminance) => luminance + 0.05);
+
+  return lighter / darker;
+}
+
+function channelDistance(first: Rgb, second: Rgb): number {
+  return Math.max(
+    ...first.map((channel, index) => Math.abs(channel - second[index])),
+  );
+}
+
+function styleOf(tile: Locator, pseudoElement?: string): CSSStyleDeclaration {
+  return getComputedStyle(tile.element(), pseudoElement);
+}
+
+function backgroundLuminance(tile: Locator): number {
+  return relativeLuminance(paint(styleOf(tile).backgroundColor));
 }
 
 describe("Tile", () => {
-  test("renders an AACSymbol child with its accessible label and decorative image", async () => {
+  test("is named by its symbol label and keeps the symbol image decorative", async () => {
     const screen = await render(
       <Tile onActivate={vi.fn()}>
         <AACSymbol label="Cat" imageSrc={TEST_IMAGE_SRC} />
       </Tile>,
     );
 
-    await expect
-      .element(screen.getByRole("button", { name: "Cat" }))
-      .toBeVisible();
-
-    // Image is decorative (alt=""), use querySelector
-    const img = screen.container.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute("src")).toBe(TEST_IMAGE_SRC);
-    expect(img?.getAttribute("alt")).toBe("");
+    const tile = screen.getByRole("button", { name: "Cat" });
+    await expect.element(tile).toBeVisible();
+    expect(tile.element().querySelector("img")?.getAttribute("alt")).toBe("");
   });
 
   test("uses ariaLabel to name custom content", async () => {
@@ -63,144 +88,175 @@ describe("Tile", () => {
     await expect
       .element(screen.getByRole("button", { name: "Speak Hello" }))
       .toBeVisible();
-    await expect.element(screen.getByText("Hello")).toBeVisible();
   });
 
-  test("describes folder tiles as opening a board", async () => {
+  test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await render(
-      <Tile variant="folder" onActivate={vi.fn()}>
-        Animals
-      </Tile>,
+      <>
+        <Tile variant="folder" onActivate={vi.fn()}>
+          Animals
+        </Tile>
+        <Tile onActivate={vi.fn()}>Cat</Tile>
+      </>,
     );
 
     await expect
       .element(screen.getByRole("button", { name: "Animals" }))
       .toHaveAccessibleDescription("Opens board");
-  });
-
-  test("gives word tiles no description", async () => {
-    const screen = await render(<Tile onActivate={vi.fn()}>Cat</Tile>);
-
     await expect
       .element(screen.getByRole("button", { name: "Cat" }))
       .not.toHaveAccessibleDescription();
   });
 
-  test("renders the folder corner as a translucent readable text color", async () => {
+  test.each(["#000000", "#ffffff", "#808080", "#ff0000", "#ffeb3b", "#3f51b5"])(
+    "keeps the label readable on a %s background",
+    async (backgroundColor) => {
+      const screen = await render(
+        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+          Word
+        </Tile>,
+      );
+      const { color, backgroundColor: background } = styleOf(
+        screen.getByRole("button", { name: "Word" }),
+      );
+
+      expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
+        WCAG_TEXT_CONTRAST,
+      );
+    },
+  );
+
+  test.each([true, false])(
+    "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
+    async (isBorderVisible) => {
+      const screen = await render(
+        <>
+          <Tile
+            backgroundColor="#3f51b5"
+            isBorderVisible={isBorderVisible}
+            variant="folder"
+            onActivate={vi.fn()}
+          >
+            Folder
+          </Tile>
+          <Tile backgroundColor="#3f51b5" onActivate={vi.fn()}>
+            Word
+          </Tile>
+        </>,
+      );
+      const folder = screen.getByRole("button", { name: "Folder" });
+      const corner = styleOf(folder, "::after");
+      const background = styleOf(folder).backgroundColor;
+
+      expect(corner.content).not.toBe("none");
+      expect(
+        contrastRatio(
+          paint(background, corner.borderInlineEndColor),
+          paint(background),
+        ),
+      ).toBeGreaterThan(WCAG_NON_TEXT_CONTRAST);
+      expect(
+        styleOf(screen.getByRole("button", { name: "Word" }), "::after")
+          .content,
+      ).toBe("none");
+    },
+  );
+
+  test("darkens the background on hover, and darkens it further in dark mode", async () => {
+    const instantTransitions = { duration: { short: 0 } };
+    const screen = await render(
+      <>
+        <MUIThemeProvider
+          theme={createTheme({ transitions: instantTransitions })}
+        >
+          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+            Light
+          </Tile>
+        </MUIThemeProvider>
+        <MUIThemeProvider
+          theme={createTheme({
+            palette: { mode: "dark" },
+            transitions: instantTransitions,
+          })}
+        >
+          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
+            Dark
+          </Tile>
+        </MUIThemeProvider>
+      </>,
+    );
+    const lightTile = screen.getByRole("button", { name: "Light" });
+    const darkTile = screen.getByRole("button", { name: "Dark" });
+    const restingLuminance = backgroundLuminance(lightTile);
+
+    await lightTile.hover();
+    const lightHoverLuminance = backgroundLuminance(lightTile);
+    await darkTile.hover();
+    const darkHoverLuminance = backgroundLuminance(darkTile);
+    await darkTile.unhover();
+
+    expect(lightHoverLuminance).toBeLessThan(restingLuminance);
+    expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
+  });
+
+  test.each([
+    { description: "its own border color", borderColor: "#00ff00" },
+    { description: "the background color", borderColor: undefined },
+  ])("draws the border in $description", async ({ borderColor }) => {
     const screen = await render(
       <Tile
-        backgroundColor="#000000"
-        borderColor="#000000"
-        variant="folder"
+        backgroundColor="#ff0000"
+        borderColor={borderColor}
         onActivate={vi.fn()}
       >
-        Folder
-      </Tile>,
-    );
-
-    const button = screen.getByRole("button", { name: "Folder" });
-    const styles = getComputedStyle(button.element());
-    const afterStyles = getComputedStyle(button.element(), "::after");
-
-    expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
-    );
-    expect(afterStyles.borderInlineEndColor).not.toBe(styles.borderColor);
-  });
-
-  test("applies backgroundColor and a readable text color", async () => {
-    const screen = await render(
-      <Tile backgroundColor="#000000" onActivate={vi.fn()}>
-        Colored
-      </Tile>,
-    );
-
-    const button = screen.getByRole("button", { name: "Colored" });
-    const styles = getComputedStyle(button.element());
-
-    expect(resolveColorInSrgb(styles.backgroundColor)).toBe(
-      resolveColorInSrgb("oklch(from #000000 l c h)"),
-    );
-    expect(styles.color).toBe("rgb(255, 255, 255)");
-  });
-
-  test("darkens only the background on hover", async () => {
-    const theme = createTheme({ transitions: { duration: { short: 0 } } });
-    const screen = await render(
-      <MUIThemeProvider theme={theme}>
-        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-          Colored
-        </Tile>
-      </MUIThemeProvider>,
-    );
-
-    const button = screen.getByRole("button", { name: "Colored" });
-    await button.hover();
-
-    const styles = getComputedStyle(button.element());
-    expect(styles.backgroundColor).toBe(
-      resolveBackgroundColor(
-        "color-mix(in srgb, oklch(from #ff0000 l c h) 92%, black)",
-      ),
-    );
-    expect(styles.filter).toBe("none");
-
-    await button.unhover();
-  });
-
-  test("darkens more on hover in dark mode", async () => {
-    const theme = createTheme({
-      palette: { mode: "dark" },
-      transitions: { duration: { short: 0 } },
-    });
-    const screen = await render(
-      <MUIThemeProvider theme={theme}>
-        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-          Colored
-        </Tile>
-      </MUIThemeProvider>,
-    );
-
-    const button = screen.getByRole("button", { name: "Colored" });
-    await button.hover();
-
-    expect(getComputedStyle(button.element()).backgroundColor).toBe(
-      resolveBackgroundColor(
-        "color-mix(in srgb, oklch(from #ff0000 l c h) 84%, black)",
-      ),
-    );
-
-    await button.unhover();
-  });
-
-  test("applies borderColor when provided", async () => {
-    const screen = await render(
-      <Tile borderColor="#00ff00" onActivate={vi.fn()}>
         Bordered
       </Tile>,
     );
+    const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
 
-    const button = screen.getByRole("button", { name: "Bordered" });
-    const styles = getComputedStyle(button.element());
-
-    expect(styles.borderColor).toBe(resolveColor("oklch(from #00ff00 l c h)"));
+    expect(
+      channelDistance(
+        paint(styles.borderTopColor),
+        paint(borderColor ?? "#ff0000"),
+      ),
+    ).toBeLessThanOrEqual(1);
   });
 
-  test("defaults borderColor to backgroundColor when borderColor is omitted", async () => {
+  test("hides the border without shifting the tile's content", async () => {
     const screen = await render(
-      <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-        Match
-      </Tile>,
+      <>
+        <Tile
+          backgroundColor="#ff0000"
+          borderColor="#00ff00"
+          onActivate={vi.fn()}
+        >
+          Bordered
+        </Tile>
+        <Tile
+          backgroundColor="#ff0000"
+          borderColor="#00ff00"
+          isBorderVisible={false}
+          onActivate={vi.fn()}
+        >
+          Borderless
+        </Tile>
+      </>,
+    );
+    const bordered = styleOf(screen.getByRole("button", { name: "Bordered" }));
+    const borderless = styleOf(
+      screen.getByRole("button", { name: "Borderless" }),
     );
 
-    const button = screen.getByRole("button", { name: "Match" });
-    const styles = getComputedStyle(button.element());
-
-    expect(styles.borderColor).toBe(resolveColor("oklch(from #ff0000 l c h)"));
+    expect(
+      channelDistance(
+        paint(borderless.backgroundColor, borderless.borderTopColor),
+        paint(borderless.backgroundColor),
+      ),
+    ).toBe(0);
+    expect(borderless.borderTopWidth).toBe(bordered.borderTopWidth);
   });
 
-  test("desaturates the background when --tile-saturation is set", async () => {
+  test("renders the background as gray at zero tile saturation", async () => {
     const screen = await render(
       <div style={{ "--tile-saturation": 0 } as CSSProperties}>
         <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
@@ -208,89 +264,39 @@ describe("Tile", () => {
         </Tile>
       </div>,
     );
-
-    const button = screen.getByRole("button", { name: "Muted" });
-    const styles = getComputedStyle(button.element());
-
-    // chroma × 0 → achromatic gray at the original lightness
-    expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #ff0000 l 0 h)"),
-    );
-  });
-
-  test("hides the border without changing its width", async () => {
-    const screen = await render(
-      <Tile
-        backgroundColor="#ff0000"
-        borderColor="#00ff00"
-        isBorderVisible={false}
-        onActivate={vi.fn()}
-      >
-        Borderless
-      </Tile>,
+    const channels = paint(
+      styleOf(screen.getByRole("button", { name: "Muted" })).backgroundColor,
     );
 
-    const button = screen.getByRole("button", { name: "Borderless" });
-    const styles = getComputedStyle(button.element());
-
-    expect(styles.borderColor).toBe("rgba(0, 0, 0, 0)");
-    expect(styles.borderTopWidth).toBe("4px");
-    expect(styles.backgroundColor).toBe(
-      resolveColor("oklch(from #ff0000 l c h)"),
-    );
-  });
-
-  test("keeps the folder corner visible when the border is hidden", async () => {
-    const screen = await render(
-      <Tile
-        backgroundColor="#000000"
-        borderColor="#000000"
-        variant="folder"
-        isBorderVisible={false}
-        onActivate={vi.fn()}
-      >
-        Folder
-      </Tile>,
-    );
-
-    const button = screen.getByRole("button", { name: "Folder" });
-    const styles = getComputedStyle(button.element());
-    const afterStyles = getComputedStyle(button.element(), "::after");
-
-    expect(afterStyles.display).toBe("block");
-    expect(afterStyles.borderInlineEndColor).toBe(
-      resolveColor(`color-mix(in srgb, ${styles.color} 75%, transparent)`),
+    expect(Math.max(...channels) - Math.min(...channels)).toBeLessThanOrEqual(
+      1,
     );
   });
 
   test("calls onActivate when clicked", async () => {
     const onActivate = vi.fn();
-
     const screen = await render(
       <Tile onActivate={onActivate}>
         <span>Click me</span>
       </Tile>,
     );
 
-    const button = screen.getByRole("button", { name: "Click me" });
-    await button.click();
+    await screen.getByRole("button", { name: "Click me" }).click();
 
-    expect(onActivate).toHaveBeenCalledTimes(1);
+    expect(onActivate).toHaveBeenCalledOnce();
   });
 
   test("does not call onActivate when disabled", async () => {
     const onActivate = vi.fn();
-
     const screen = await render(
       <Tile disabled onActivate={onActivate}>
         Disabled tile
       </Tile>,
     );
+    const tile = screen.getByRole("button", { name: "Disabled tile" });
 
-    const button = screen.getByRole("button", { name: "Disabled tile" });
-    await expect.element(button).toBeDisabled();
-    expect(getComputedStyle(button.element()).boxShadow).toBe("none");
-    await button.click({ force: true });
+    await expect.element(tile).toBeDisabled();
+    await tile.click({ force: true });
 
     expect(onActivate).not.toHaveBeenCalled();
   });

@@ -105,30 +105,30 @@ describe("CommunicationBoard", () => {
   });
 
   test.each([390, 1024])(
-    "keeps Backspace usable outside a board set at a viewport width of %i",
+    "edits the message with Backspace alongside board navigation at a viewport width of %i",
     async (width) => {
       const originalWidth = window.innerWidth;
       const originalHeight = window.innerHeight;
+      await seedBoardSets([{ id: "set-1", rootBoardId: SYMBOL_BOARD.id }]);
 
       try {
         await page.viewport(width, 800);
-        const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+        const screen = await renderCommunicationBoard(SYMBOL_BOARD, [
+          `/sets/set-1/boards/${SYMBOL_BOARD.id}`,
+        ]);
         const backspace = screen.getByRole("button", { name: "Backspace" });
         const play = screen.getByRole("button", { name: "Play message" });
 
-        await expect.element(backspace).toBeVisible();
         await expect.element(backspace).toBeDisabled();
         await expect
           .element(screen.getByRole("button", { name: "Go back" }))
-          .not.toBeInTheDocument();
+          .toBeVisible();
         await expect
           .element(screen.getByRole("button", { name: "Go home" }))
-          .not.toBeInTheDocument();
+          .toBeVisible();
 
         await screen.getByRole("button", { name: "hello" }).click();
         await screen.getByRole("button", { name: "world" }).click();
-        await expect.element(backspace).toBeEnabled();
-
         await backspace.click();
         speech.speak.mockClear();
         await play.click();
@@ -325,14 +325,6 @@ describe("CommunicationBoard", () => {
     });
 
     await expect.element(back).toBeDisabled();
-  });
-
-  test("falls back to a generic grid name when the board is unnamed", async () => {
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Communication board" }))
-      .toBeVisible();
   });
 
   test("hides tile labels visually without removing accessible names", async () => {

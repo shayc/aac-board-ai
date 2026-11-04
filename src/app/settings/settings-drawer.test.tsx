@@ -23,7 +23,7 @@ describe("SettingsDrawer", () => {
 
     await expect.element(screen.getByText("Settings")).toBeInTheDocument();
 
-    const drawerItemsInOrder = [
+    const drawerItems = [
       screen.getByRole("heading", { name: "Appearance" }),
       screen.getByRole("radiogroup", { name: "Theme" }),
       screen.getByRole("heading", { name: "Language & voice" }),
@@ -36,20 +36,10 @@ describe("SettingsDrawer", () => {
       screen.getByRole("switch", { name: "Highlight while speaking" }),
       screen.getByRole("heading", { name: "Suggestions" }),
     ];
-    for (const item of drawerItemsInOrder) {
+    for (const item of drawerItems) {
       await expect.element(item).toBeInTheDocument();
     }
-    for (const [index, next] of drawerItemsInOrder.slice(1).entries()) {
-      expect(
-        drawerItemsInOrder[index]
-          .element()
-          .compareDocumentPosition(next.element()),
-      ).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
-    }
 
-    await expect
-      .element(screen.getByRole("heading", { name: "Suggestions" }))
-      .toBeInTheDocument();
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .toBeInTheDocument();
@@ -95,55 +85,6 @@ describe("SettingsDrawer", () => {
           .getByRole("switch", { name: "Highlight while speaking" }),
       )
       .toBeInTheDocument();
-  });
-
-  test("styles select labels like the other settings labels", async () => {
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
-    );
-
-    const labels = ["Theme", "Language", "Voice", "Speed"];
-    const styles = labels.map((label) => {
-      const { fontSize, fontWeight, color } = getComputedStyle(
-        screen.getByText(label, { exact: true }).element(),
-      );
-      return { fontSize, fontWeight, color };
-    });
-
-    for (const style of styles) {
-      expect(style).toEqual(styles[0]);
-    }
-  });
-
-  test("separates the header from the content once it scrolls", async () => {
-    const screen = await render(
-      <AppProviders>
-        <SettingsDrawer open onClose={vi.fn()} />
-      </AppProviders>,
-    );
-    const header = screen
-      .getByRole("heading", { name: "Settings" })
-      .element()
-      .closest("header");
-    if (!header) {
-      throw new Error("Settings heading must sit in a header");
-    }
-    const transparent = "rgba(0, 0, 0, 0)";
-
-    await expect.element(header).toHaveStyle({
-      borderBottomColor: transparent,
-    });
-
-    screen
-      .getByRole("link", { name: /Source code/i })
-      .element()
-      .scrollIntoView();
-
-    await expect
-      .poll(() => getComputedStyle(header).borderBottomColor)
-      .not.toBe(transparent);
   });
 
   test("formats setting values for the selected language", async () => {

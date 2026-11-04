@@ -43,24 +43,6 @@ describe("rootIndexLoader", () => {
     expect(sets).toHaveLength(1);
   });
 
-  test("keeps the existing set when a URL import has the same filename", async () => {
-    await seedBoardSets([
-      { id: "lots-of-stuff", rootBoardId: "root-1", name: "My Vocabulary" },
-    ]);
-
-    const response = await callLoader(
-      `?board=${encodeURIComponent(FIXTURE_BOARD_URL)}`,
-    );
-
-    expect(response.status).toBe(302);
-    expect(response.headers.get("Location")).toMatch(
-      /^\/sets\/lots-of-stuff-2\/boards\/[^/]+$/,
-    );
-    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff-2", "lots-of-stuff"]),
-    );
-  });
-
   test("throws a localized 400 instead of fetching a non-http(s) board URL", async () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 

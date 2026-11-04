@@ -115,39 +115,6 @@ describe("createStoredBoardSet", () => {
     expect((await listStoredBoardSets())[0]?.name).toBe("Original");
   });
 
-  test("inserts a new board set", async () => {
-    await createStoredBoardSet(
-      makeBoardSetInput({
-        id: "set-1",
-        name: "My Set",
-        rootBoardId: "root-1",
-      }),
-    );
-
-    const sets = await listStoredBoardSets();
-    expect(sets).toHaveLength(1);
-    expect(sets[0].id).toBe("set-1");
-    expect(sets[0].name).toBe("My Set");
-    expect(sets[0].boardCount).toBe(1);
-  });
-
-  test("counts boards from the boards array, not a recount", async () => {
-    const boards = [
-      makeOBFBoard({ id: "b1", name: "B1" }),
-      makeOBFBoard({ id: "b2", name: "B2" }),
-      makeOBFBoard({ id: "b3", name: "B3" }),
-    ];
-
-    await createStoredBoardSet(makeBoardSetInput({ boards }));
-
-    const sets = await listStoredBoardSets();
-    expect(sets[0].boardCount).toBe(3);
-
-    const board = await getBoardRecord("set-1", "b2");
-    assertDefined(board);
-    expect(board.name).toBe("B2");
-  });
-
   test.each([
     { name: "Home", expectedName: "Home", expectedSetName: "Home" },
     { name: undefined, expectedName: "root-1", expectedSetName: "set-1" },

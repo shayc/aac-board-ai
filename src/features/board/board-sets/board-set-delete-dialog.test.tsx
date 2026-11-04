@@ -30,16 +30,6 @@ describe("BoardSetDeleteDialog", () => {
       .toHaveAccessibleDescription(
         "The board in this set will be deleted. This cannot be undone.",
       );
-    await expect
-      .element(screen.getByText('Delete board set "Core Words"?'))
-      .toBeInTheDocument();
-    await expect
-      .element(
-        screen.getByText(
-          "The board in this set will be deleted. This cannot be undone.",
-        ),
-      )
-      .toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);
   });

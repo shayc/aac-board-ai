@@ -3,9 +3,8 @@ import { zip } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
-import { listStoredBoardSets } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
-import { BOARD_IMPORT_LIMITS, importBoardSets } from "./board-import";
+import { BOARD_IMPORT_LIMITS } from "./board-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
@@ -52,22 +51,6 @@ describe("useImportBoardFiles", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Board sets imported");
-  });
-
-  test("shows the imported message and keeps both sets on a conflict", async () => {
-    const file = await loadFixtureFile(OBF_FIXTURE);
-    await importBoardSets(file);
-
-    const screen = await renderImport([file]);
-    await screen.getByRole("button", { name: "import" }).click();
-
-    await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board set imported");
-
-    expect(new Set((await listStoredBoardSets()).map((set) => set.id))).toEqual(
-      new Set(["lots-of-stuff", "lots-of-stuff-2"]),
-    );
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {

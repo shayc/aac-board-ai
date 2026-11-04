@@ -10,6 +10,7 @@ import {
   stubRewriter,
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { renderHook } from "vitest-browser-react";
 import { setSuggestionCustomInstructions } from "./suggestion-preferences-store";
 import { useMessageSuggestions } from "./use-message-suggestions";
@@ -35,6 +36,24 @@ function stubRewritesByTone(
   });
 
   return rewriter;
+}
+
+const ENGINE_STUBS = {
+  Proofreader: stubProofreader,
+  Rewriter: stubRewriter,
+};
+
+async function clickToRun(action: () => void): Promise<void> {
+  const trigger = document.createElement("button");
+  trigger.textContent = "Run with user activation";
+  trigger.addEventListener("click", action);
+  document.body.append(trigger);
+
+  try {
+    await userEvent.click(trigger);
+  } finally {
+    trigger.remove();
+  }
 }
 
 describe("useMessageSuggestions", () => {
@@ -164,43 +183,34 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("enable prepares the proofreader", async () => {
-    const proofreader = stubProofreader();
-    proofreader.availability.mockResolvedValue("downloadable");
-    stubBuiltInAIUnsupported("Rewriter");
+  test.each([
+    { engine: "Proofreader", unsupported: "Rewriter", sessions: 1 },
+    { engine: "Rewriter", unsupported: "Proofreader", sessions: 2 },
+  ] as const)(
+    "enabling from a user gesture downloads every $engine model",
+    async ({ engine, unsupported, sessions }) => {
+      const { availability, create } = ENGINE_STUBS[engine]();
+      availability.mockResolvedValue("downloadable");
+      stubBuiltInAIUnsupported(unsupported);
 
-    const { result } = await renderMessageSuggestions("want eat");
+      const { result } = await renderMessageSuggestions("want eat");
 
-    await vi.waitFor(() => {
-      expect(result.current.status).toEqual({ kind: "needs-setup" });
-      expect(proofreader.availability).toHaveBeenCalledOnce();
-    });
+      await vi.waitFor(() => {
+        expect(result.current.status).toEqual({ kind: "needs-setup" });
+      });
+      expect(create).not.toHaveBeenCalled();
 
-    result.current.enable();
+      await clickToRun(() => result.current.enable());
 
-    await vi.waitFor(() => {
-      expect(proofreader.availability).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  test("enable prepares every fixed-tone rewriter", async () => {
-    const rewriter = stubRewriter();
-    rewriter.availability.mockResolvedValue("downloadable");
-    stubBuiltInAIUnsupported("Proofreader");
-
-    const { result } = await renderMessageSuggestions("want eat");
-
-    await vi.waitFor(() => {
-      expect(result.current.status).toEqual({ kind: "needs-setup" });
-      expect(rewriter.availability).toHaveBeenCalledTimes(2);
-    });
-
-    result.current.enable();
-
-    await vi.waitFor(() => {
-      expect(rewriter.availability).toHaveBeenCalledTimes(4);
-    });
-  });
+      await vi.waitFor(() => {
+        expect(create).toHaveBeenCalledTimes(sessions);
+        expect(result.current.status).toBeNull();
+      });
+      for (const [options] of create.mock.calls) {
+        expect(options).toHaveProperty("monitor", expect.any(Function));
+      }
+    },
+  );
 
   test("forgets the previous language's availability while the new probe is in flight", async () => {
     const proofreader = stubProofreader();
