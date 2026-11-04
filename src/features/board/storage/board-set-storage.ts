@@ -1,5 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { normalizeLocale } from "@shared/language/locale";
+import { nonBlankText } from "../non-blank-text";
 import { htmlToText } from "./html-to-text";
 import {
   getBoardsDB,
@@ -96,7 +97,7 @@ export async function createStoredBoardSet(
         boardStore.put({
           boardSetId: id,
           id: obf.id,
-          name: obf.name ?? obf.id,
+          name: nonBlankText(obf.name) ?? obf.id,
           obf,
         }),
       );
@@ -159,7 +160,7 @@ function buildBoardSetRecord(
 ): BoardSetRecord {
   return {
     id,
-    name: name ?? rootBoard.name ?? id,
+    name: nonBlankText(name) ?? nonBlankText(rootBoard.name) ?? id,
     rootBoardId,
     updatedAt: Date.now(),
     boardCount: boards.length,

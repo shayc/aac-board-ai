@@ -118,7 +118,8 @@ describe("createStoredBoardSet", () => {
   test.each([
     { name: "Home", expectedName: "Home", expectedSetName: "Home" },
     { name: undefined, expectedName: "root-1", expectedSetName: "set-1" },
-    { name: "", expectedName: "", expectedSetName: "" },
+    { name: "", expectedName: "root-1", expectedSetName: "set-1" },
+    { name: "  ", expectedName: "root-1", expectedSetName: "set-1" },
   ])(
     "derives display names without changing the OBF source ($name)",
     async ({ name, expectedName, expectedSetName }) => {

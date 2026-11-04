@@ -13,6 +13,7 @@ import { listStoredBoardSets } from "../storage/board-set-storage";
 import {
   countStoredBoardContent,
   loadFixtureFile,
+  makeOBFBoard,
   resetBoardsDB,
 } from "../testing";
 import {
@@ -176,6 +177,17 @@ describe("importBoardSets", () => {
     const importResults = await importBoardSets(extensionOnlyFile);
 
     expect(importResults[0].id).toBe("imported-board");
+  });
+
+  test("names the board set after its file when the root board name is blank", async () => {
+    const board = makeOBFBoard({ id: "root", name: "  " });
+    const blankNamedFile = new File([JSON.stringify(board)], "core.obf", {
+      type: "application/json",
+    });
+
+    await importBoardSets(blankNamedFile);
+
+    expect((await listStoredBoardSets())[0]?.name).toBe("core.obf");
   });
 
   test("clamps the derived boardSetId to 255 characters", async () => {

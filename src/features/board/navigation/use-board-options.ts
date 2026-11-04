@@ -1,38 +1,26 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
-import {
-  listBoardSummaries,
-  type BoardSummary,
-} from "../storage/list-board-summaries";
+import { listBoardSummaries } from "../storage/list-board-summaries";
 import { findTranslations } from "../translation/board-translations";
 
-interface UseBoardSummariesReturn {
-  boards: Pick<BoardSummary, "id" | "name">[];
-  isLoading: boolean;
-  error: Error | undefined;
+interface BoardOption {
+  id: string;
+  name: string;
 }
 
-export function useBoardSummaries(
-  boardSetId: string | undefined,
-): UseBoardSummariesReturn {
+export function useBoardOptions(boardSetId: string | undefined): BoardOption[] {
   const { language } = useLanguage();
-  const { value, error, isPending } = useLatestAsync({
+  const { value: summaries = [] } = useLatestAsync({
     enabled: boardSetId !== undefined,
     deps: [boardSetId ?? ""],
     run: async () =>
       boardSetId === undefined ? [] : listBoardSummaries(boardSetId),
   });
 
-  const boards = (value ?? [])
+  return summaries
     .map(({ id, name, translations }) => ({
       id,
       name: findTranslations(translations, language)?.[name] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
-
-  return {
-    boards,
-    isLoading: isPending,
-    error,
-  };
 }
