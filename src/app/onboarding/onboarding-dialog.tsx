@@ -16,7 +16,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaInset } from "@shared/theme/safe-area";
 import { isSupported } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
 
@@ -24,13 +23,6 @@ interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
 }
-
-const fullScreenSafeArea = {
-  pt: safeAreaInset("top"),
-  pr: safeAreaInset("right"),
-  pb: safeAreaInset("bottom"),
-  pl: safeAreaInset("left"),
-};
 
 interface Highlight {
   id: string;
@@ -82,11 +74,6 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       fullScreen={isSmallScreen}
       fullWidth
       maxWidth="xs"
-      slotProps={{
-        paper: {
-          sx: isSmallScreen ? fullScreenSafeArea : undefined,
-        },
-      }}
     >
       <Box sx={{ my: "auto", pt: 6 }}>
         <Box

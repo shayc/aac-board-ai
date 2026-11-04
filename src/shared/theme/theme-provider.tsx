@@ -12,6 +12,7 @@ import {
 } from "@mui/material/styles";
 import rtlPlugin from "@mui/stylis-plugin-rtl";
 import { useLanguage } from "@shared/language/use-language";
+import { safeAreaInset } from "@shared/theme/safe-area";
 import { ThemeColorMeta } from "@shared/theme/theme-color-meta";
 import { SHELL_DARK, SHELL_LIGHT } from "@shared/theme/theme-colors";
 import type { ReactNode } from "react";
@@ -197,6 +198,15 @@ const themeOptions = {
               props: { fullScreen: false },
               style: {
                 borderRadius: (theme.vars ?? theme).shape.borderRadiusLg,
+              },
+            },
+            {
+              props: { fullScreen: true },
+              style: {
+                paddingTop: safeAreaInset("top"),
+                paddingRight: safeAreaInset("right"),
+                paddingBottom: safeAreaInset("bottom"),
+                paddingLeft: safeAreaInset("left"),
               },
             },
           ],

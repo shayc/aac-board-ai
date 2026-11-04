@@ -6,6 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "./board-sets-store";
@@ -20,10 +21,17 @@ export function BoardSetDetailsDialog({
   onClose,
 }: BoardSetDetailsDialogProps) {
   const t = useTranslate();
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const chipLabels = boardSet ? buildChipLabels(t, boardSet) : [];
 
   return (
-    <Dialog open={boardSet !== null} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={boardSet !== null}
+      onClose={onClose}
+      fullScreen={isSmallScreen}
+      fullWidth
+      maxWidth="sm"
+    >
       <DialogTitle>
         {boardSet?.name}
         {boardSet?.author && (
