@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Tafelsatz „{name}“ gelöscht",
   "libraryDeleteFailed": "Tafelsatz „{name}“ konnte nicht gelöscht werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",

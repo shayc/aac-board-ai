@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Το σύνολο πινάκων «{name}» διαγράφηκε",
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",

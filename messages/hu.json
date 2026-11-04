@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "A(z) „{name}” táblakészlet törölve",
   "libraryDeleteFailed": "A(z) „{name}” táblakészlet törlése nem sikerült",
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",

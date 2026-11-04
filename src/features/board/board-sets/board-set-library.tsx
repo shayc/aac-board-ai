@@ -50,10 +50,6 @@ export function BoardSetLibrary({
 
     try {
       await deleteBoardSet(id);
-      showSnackbar({
-        message: (translate) => translate(m.libraryDeleted, { name }),
-        severity: "success",
-      });
     } catch {
       showSnackbar({
         message: (translate) => translate(m.libraryDeleteFailed, { name }),

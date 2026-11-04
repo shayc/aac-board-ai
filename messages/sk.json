@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Súprava tabuliek „{name}“ odstránená",
   "libraryDeleteFailed": "Súpravu tabuliek „{name}“ sa nepodarilo odstrániť",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",

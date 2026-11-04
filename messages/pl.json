@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Zestaw tablic „{name}” usunięty",
   "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic „{name}”",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",

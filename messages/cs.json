@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Sada tabulek „{name}“ smazána",
   "libraryDeleteFailed": "Sadu tabulek „{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",

@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "보드 세트 \"{name}\"이(가) 삭제됨",
   "libraryDeleteFailed": "보드 세트 \"{name}\"을(를) 삭제할 수 없습니다",
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",

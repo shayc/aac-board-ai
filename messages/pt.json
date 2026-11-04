@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Conjunto de pranchas \"{name}\" excluído",
   "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

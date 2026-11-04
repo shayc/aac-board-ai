@@ -75,7 +75,6 @@
       }
     }
   ],
-  "libraryDeleted": "Board set \"{name}\" deleted",
   "libraryDeleteFailed": "Couldn't delete board set \"{name}\"",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",

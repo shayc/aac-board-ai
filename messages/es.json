@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Conjunto de tableros \"{name}\" eliminado",
   "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Набір дошок «{name}» видалено",
   "libraryDeleteFailed": "Не вдалося видалити набір дошок «{name}»",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",

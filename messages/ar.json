@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "تم حذف مجموعة اللوحات \"{name}\"",
   "libraryDeleteFailed": "تعذّر حذف مجموعة اللوحات \"{name}\"",
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",

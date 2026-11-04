@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "ערכת הלוחות \"{name}\" נמחקה",
   "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",

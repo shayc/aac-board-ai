@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Набор досок «{name}» удалён",
   "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",

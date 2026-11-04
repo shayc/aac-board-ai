@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Komplet tabel »{name}« izbrisan",
   "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",

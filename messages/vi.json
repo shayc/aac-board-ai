@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Đã xóa bộ bảng \"{name}\"",
   "libraryDeleteFailed": "Không thể xóa bộ bảng \"{name}\"",
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
