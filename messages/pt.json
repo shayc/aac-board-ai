@@ -81,6 +81,7 @@
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",
   "aboutSourceCode": "Código-fonte",
+  "aboutVersion": "Versão {version}",
   "settingsTitle": "Configurações",
   "settingsOpen": "Abrir configurações",
   "settingsClose": "Fechar configurações",

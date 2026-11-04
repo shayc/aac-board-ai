@@ -80,6 +80,7 @@
   "libraryTitle": "Library",
   "libraryOpen": "Open library",
   "aboutSourceCode": "Source code",
+  "aboutVersion": "Version {version}",
   "settingsTitle": "Settings",
   "settingsOpen": "Open settings",
   "settingsClose": "Close settings",

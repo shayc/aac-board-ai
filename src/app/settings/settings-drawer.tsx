@@ -19,6 +19,7 @@ import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useId, useState, type ReactNode } from "react";
+import { version } from "../../../package.json";
 import { ThemeSettings } from "./theme-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
@@ -121,18 +122,23 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionAbout)}>
-          <ExternalLink
-            href="https://github.com/shayc/aac-board-ai"
-            variant="body2"
-            color="text.secondary"
-            sx={{ alignSelf: "flex-start" }}
-          >
-            <GitHubIcon
-              fontSize="small"
-              sx={{ mr: 2, verticalAlign: "text-bottom" }}
-            />
-            {t(m.aboutSourceCode)}
-          </ExternalLink>
+          <Stack spacing={1}>
+            <ExternalLink
+              href="https://github.com/shayc/aac-board-ai"
+              variant="body2"
+              color="text.secondary"
+              sx={{ alignSelf: "flex-start" }}
+            >
+              <GitHubIcon
+                fontSize="small"
+                sx={{ mr: 1, verticalAlign: "text-bottom" }}
+              />
+              {t(m.aboutSourceCode)}
+            </ExternalLink>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
+              {t(m.aboutVersion, { version })}
+            </Typography>
+          </Stack>
         </SettingsSection>
       </Box>
     </Drawer>

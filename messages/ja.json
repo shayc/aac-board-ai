@@ -81,6 +81,7 @@
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",
   "aboutSourceCode": "ソースコード",
+  "aboutVersion": "バージョン {version}",
   "settingsTitle": "設定",
   "settingsOpen": "設定を開く",
   "settingsClose": "設定を閉じる",

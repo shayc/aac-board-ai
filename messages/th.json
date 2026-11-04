@@ -81,6 +81,7 @@
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
   "aboutSourceCode": "ซอร์สโค้ด",
+  "aboutVersion": "เวอร์ชัน {version}",
   "settingsTitle": "การตั้งค่า",
   "settingsOpen": "เปิดการตั้งค่า",
   "settingsClose": "ปิดการตั้งค่า",

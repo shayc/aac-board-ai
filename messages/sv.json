@@ -81,6 +81,7 @@
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",
   "aboutSourceCode": "Källkod",
+  "aboutVersion": "Version {version}",
   "settingsTitle": "Inställningar",
   "settingsOpen": "Öppna inställningar",
   "settingsClose": "Stäng inställningar",

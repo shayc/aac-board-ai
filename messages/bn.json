@@ -81,6 +81,7 @@
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",
   "aboutSourceCode": "সোর্স কোড",
+  "aboutVersion": "সংস্করণ {version}",
   "settingsTitle": "সেটিংস",
   "settingsOpen": "সেটিংস খুলুন",
   "settingsClose": "সেটিংস বন্ধ করুন",

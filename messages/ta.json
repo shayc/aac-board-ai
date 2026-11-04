@@ -81,6 +81,7 @@
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",
   "aboutSourceCode": "மூலக் குறியீடு",
+  "aboutVersion": "பதிப்பு {version}",
   "settingsTitle": "அமைப்புகள்",
   "settingsOpen": "அமைப்புகளைத் திற",
   "settingsClose": "அமைப்புகளை மூடு",
