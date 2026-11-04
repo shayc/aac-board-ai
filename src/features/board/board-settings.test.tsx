@@ -14,13 +14,13 @@ describe("BoardSettings", () => {
     );
 
     const saturationSlider = screen.getByRole("slider", {
-      name: "Tile color intensity",
+      name: "Color intensity",
     });
     const labelPositionGroup = screen.getByRole("radiogroup", {
-      name: "Tile labels",
+      name: "Labels",
     });
     const bordersSwitch = screen.getByRole("switch", {
-      name: "Show tile borders",
+      name: "Show borders",
     });
 
     await expect.element(saturationSlider).toBeVisible();
@@ -97,7 +97,7 @@ describe("BoardSettings", () => {
       </AppProviders>,
     );
 
-    const labels = ["Tile labels", "Show tile borders", "Tile color intensity"];
+    const labels = ["Labels", "Show borders", "Color intensity"];
     const styles = labels.map((label) => {
       const { fontSize, fontWeight, color } = getComputedStyle(
         screen.getByText(label, { exact: true }).element(),
@@ -117,7 +117,7 @@ describe("BoardSettings", () => {
     );
 
     const bordersSwitch = screen.getByRole("switch", {
-      name: "Show tile borders",
+      name: "Show borders",
     });
 
     await expect.element(bordersSwitch).not.toBeChecked();
@@ -142,7 +142,7 @@ describe("BoardSettings", () => {
     );
 
     const saturationSlider = screen.getByRole("slider", {
-      name: "Tile color intensity",
+      name: "Color intensity",
     });
 
     saturationSlider.element().focus();
@@ -172,9 +172,7 @@ describe("BoardSettings", () => {
       </AppProviders>,
     );
 
-    const groups = screen
-      .getByRole("radiogroup", { name: "Tile labels" })
-      .all();
+    const groups = screen.getByRole("radiogroup", { name: "Labels" }).all();
     expect(groups).toHaveLength(2);
     expect(
       new Set(

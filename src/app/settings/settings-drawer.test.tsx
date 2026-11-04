@@ -31,7 +31,7 @@ describe("SettingsDrawer", () => {
       screen.getByRole("combobox", { name: "Voice" }),
       screen.getByRole("button", { name: "Preview voice" }),
       screen.getByRole("heading", { name: "Board" }),
-      screen.getByRole("slider", { name: "Tile color intensity" }),
+      screen.getByRole("slider", { name: "Color intensity" }),
       screen.getByRole("heading", { name: "Message" }),
       screen.getByRole("switch", { name: "Highlight while speaking" }),
       screen.getByRole("heading", { name: "Suggestions" }),
@@ -62,6 +62,36 @@ describe("SettingsDrawer", () => {
       .toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);
+  });
+
+  test("names each section group after its heading", async () => {
+    const screen = await render(
+      <AppProviders>
+        <SettingsDrawer open onClose={vi.fn()} />
+      </AppProviders>,
+    );
+
+    await expect
+      .element(
+        screen
+          .getByRole("group", { name: "Board" })
+          .getByRole("slider", { name: "Color intensity" }),
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        screen
+          .getByRole("group", { name: "Board" })
+          .getByRole("switch", { name: "Show borders" }),
+      )
+      .toBeInTheDocument();
+    await expect
+      .element(
+        screen
+          .getByRole("group", { name: "Message" })
+          .getByRole("switch", { name: "Highlight while speaking" }),
+      )
+      .toBeInTheDocument();
   });
 
   test("styles select labels like the other settings labels", async () => {

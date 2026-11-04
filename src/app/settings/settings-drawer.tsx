@@ -18,7 +18,7 @@ import { m } from "@paraglide/messages.js";
 import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { ThemeSettings } from "./theme-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
@@ -145,9 +145,12 @@ interface SettingsSectionProps {
 }
 
 function SettingsSection({ title, children }: SettingsSectionProps) {
+  const headingId = useId();
+
   return (
-    <>
+    <Box role="group" aria-labelledby={headingId}>
       <Typography
+        id={headingId}
         component="h3"
         variant="subtitle2"
         sx={{ mb: 2, color: "text.secondary" }}
@@ -155,6 +158,6 @@ function SettingsSection({ title, children }: SettingsSectionProps) {
         {title}
       </Typography>
       <Stack spacing={3}>{children}</Stack>
-    </>
+    </Box>
   );
 }
