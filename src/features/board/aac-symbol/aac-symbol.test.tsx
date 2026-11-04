@@ -1,10 +1,11 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
+import type { SymbolLabelPlacement } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
 import { AACSymbol } from "./aac-symbol";
 
-async function renderSymbol(labelPlacement: "top" | "bottom" | "hidden") {
+async function renderSymbol(labelPlacement?: SymbolLabelPlacement) {
   const screen = await render(
     <div style={{ width: 120, height: 120 }}>
       <AACSymbol
@@ -49,10 +50,10 @@ describe("AACSymbol", () => {
   });
 
   test("places the label below the image by default and above it when placed on top", async () => {
-    const bottom = await renderSymbol("bottom");
+    const byDefault = await renderSymbol();
     const top = await renderSymbol("top");
 
-    expect(bottom.label.top).toBeGreaterThanOrEqual(bottom.image.bottom);
+    expect(byDefault.label.top).toBeGreaterThanOrEqual(byDefault.image.bottom);
     expect(top.label.bottom).toBeLessThanOrEqual(top.image.top);
   });
 

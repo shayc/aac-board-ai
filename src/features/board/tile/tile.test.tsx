@@ -25,7 +25,8 @@ function paint(...cssColors: string[]): Rgb {
     context.fillRect(0, 0, 1, 1);
   }
 
-  const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+  const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data;
+  expect(alpha, `painting ${cssColors.join(", ")} must end opaque`).toBe(255);
 
   return [red, green, blue];
 }
@@ -230,7 +231,7 @@ describe("Tile", () => {
           borderColor="#00ff00"
           onActivate={vi.fn()}
         >
-          Bordered
+          <span>Bordered</span>
         </Tile>
         <Tile
           backgroundColor="#ff0000"
@@ -238,11 +239,21 @@ describe("Tile", () => {
           isBorderVisible={false}
           onActivate={vi.fn()}
         >
-          Borderless
+          <span>Borderless</span>
         </Tile>
       </>,
     );
-    const bordered = styleOf(screen.getByRole("button", { name: "Bordered" }));
+    const contentOffset = (name: string) => {
+      const tile = screen.getByRole("button", { name }).element();
+      const content = screen.getByText(name, { exact: true }).element();
+      const tileBounds = tile.getBoundingClientRect();
+      const contentBounds = content.getBoundingClientRect();
+
+      return {
+        top: contentBounds.top - tileBounds.top,
+        left: contentBounds.left - tileBounds.left,
+      };
+    };
     const borderless = styleOf(
       screen.getByRole("button", { name: "Borderless" }),
     );
@@ -253,7 +264,7 @@ describe("Tile", () => {
         paint(borderless.backgroundColor),
       ),
     ).toBe(0);
-    expect(borderless.borderTopWidth).toBe(bordered.borderTopWidth);
+    expect(contentOffset("Borderless")).toEqual(contentOffset("Bordered"));
   });
 
   test("renders the background as gray at zero tile saturation", async () => {

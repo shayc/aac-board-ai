@@ -89,6 +89,7 @@ describe("createButtonActivator", () => {
       imageSrc: "bell.png",
       soundSrc: "bell.mp3",
     });
+    expect(appended.id).toBeTruthy();
     expect(appended.id).not.toBe("btn");
     expect(playback.playPart).toHaveBeenCalledExactlyOnceWith(appended);
     expect(playback.playMessage).not.toHaveBeenCalled();
