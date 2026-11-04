@@ -32,7 +32,7 @@ export function Grid<TItem extends { id: string }>({
   columns,
   order,
   renderItem,
-  gap = 1.5,
+  gap = 1,
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
