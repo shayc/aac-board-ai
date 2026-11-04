@@ -2,10 +2,16 @@ import CloseIcon from "@mui/icons-material/Close";
 import Alert, { alertClasses } from "@mui/material/Alert";
 import IconButton from "@mui/material/IconButton";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
+import type { Theme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { STATUS_DARK, STATUS_LIGHT } from "@shared/theme/theme-colors";
+import {
+  ON_ERROR_DARK,
+  ON_ERROR_LIGHT,
+  STATUS_DARK,
+  STATUS_LIGHT,
+} from "@shared/theme/theme-colors";
 import { type ReactNode, useReducer, useRef } from "react";
 import {
   SnackbarContext,
@@ -125,17 +131,9 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
               width: "100%",
               boxShadow: theme.vars.shadows[6],
             }),
-            severity !== "error" &&
-              ((theme) => ({
-                color: theme.vars.palette.SnackbarContent.color,
-                backgroundColor: theme.vars.palette.SnackbarContent.bg,
-                [`& .${alertClasses.icon}`]: {
-                  color: STATUS_DARK[severity],
-                  ...theme.applyStyles("dark", {
-                    color: STATUS_LIGHT[severity],
-                  }),
-                },
-              })),
+            severity === "error"
+              ? errorSurfaceStyles
+              : inverseSurfaceStyles(severity),
           ]}
         >
           {message}
@@ -143,6 +141,34 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function errorSurfaceStyles(theme: Theme) {
+  return {
+    color: ON_ERROR_LIGHT,
+    backgroundColor: STATUS_LIGHT.error,
+    ...theme.applyStyles("dark", {
+      color: ON_ERROR_DARK,
+      backgroundColor: STATUS_DARK.error,
+    }),
+  };
+}
+
+function inverseSurfaceStyles(severity: Exclude<SnackbarSeverity, "error">) {
+  return (theme: Theme) => ({
+    color: theme.vars.palette.SnackbarContent.color,
+    backgroundColor: theme.vars.palette.SnackbarContent.bg,
+    [`& .${alertClasses.icon}`]: {
+      color: STATUS_DARK[severity],
+      ...theme.applyStyles("dark", {
+        color: STATUS_LIGHT[severity],
+      }),
+    },
+  });
+}
+
+function isPersistent(snackbar: SnackbarOptions) {
+  return autoHideDurationMs(snackbar) === null;
 }
 
 function autoHideDurationMs({
@@ -167,15 +193,17 @@ function snackbarReducer(
 ): SnackbarState {
   switch (action.type) {
     case "show": {
-      if (state.current) {
-        return {
-          ...state,
-          queue: [...state.queue, action.snackbar],
-          open: false,
-        };
+      if (!state.current) {
+        return { ...state, current: action.snackbar, open: true };
       }
 
-      return { ...state, current: action.snackbar, open: true };
+      const queue = [...state.queue, action.snackbar];
+
+      if (isPersistent(state.current)) {
+        return { ...state, queue };
+      }
+
+      return { ...state, queue, open: false };
     }
 
     case "close":

@@ -88,10 +88,6 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: STATUS_LIGHT.info },
-        info: { main: STATUS_LIGHT.info },
-        success: { main: STATUS_LIGHT.success },
-        warning: { main: STATUS_LIGHT.warning },
-        error: { main: STATUS_LIGHT.error },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -107,14 +103,7 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
-        info: { main: STATUS_DARK.info },
-        success: { main: STATUS_DARK.success },
-        warning: { main: STATUS_DARK.warning },
         error: { main: STATUS_DARK.error },
-        Alert: {
-          errorFilledBg: STATUS_DARK.error,
-          errorFilledColor: "#601410",
-        },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
         SnackbarContent: { bg: INVERSE_SURFACE_DARK, color: grey[900] },
         action: { active: "rgba(255, 255, 255, 0.7)" },

@@ -86,6 +86,27 @@ describe("SnackbarProvider", () => {
     },
   );
 
+  test("shows a later message only after an error is closed", async () => {
+    const screen = await renderSnackbars({
+      "show-error": { message: "Failed", severity: "error" },
+      "show-saved": {
+        message: "Saved",
+        severity: "success",
+        durationMs: LONG_DURATION_MS,
+      },
+    });
+
+    await screen.getByRole("button", { name: "show-error" }).click();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Failed");
+
+    await screen.getByRole("button", { name: "show-saved" }).click();
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Failed");
+
+    await screen.getByRole("button", { name: "Close" }).click();
+
+    await expect.element(screen.getByRole("alert")).toHaveTextContent("Saved");
+  });
+
   test("replaces the current message with a new one after its exit transition", async () => {
     const screen = await renderSnackbars({
       "show-first": { message: "first", durationMs: LONG_DURATION_MS },
