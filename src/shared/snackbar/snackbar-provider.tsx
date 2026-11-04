@@ -105,6 +105,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         <Alert
           closeText={t(m.close)}
           action={state.current?.action}
+          role={severity === "error" ? "alert" : "status"}
           severity={severity}
           onClose={handleClose}
           sx={{ width: "100%" }}
