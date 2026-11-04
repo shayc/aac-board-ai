@@ -7,7 +7,7 @@ type SnackbarMessage = string | ((translate: Translate) => string);
 export interface SnackbarOptions {
   message: SnackbarMessage;
   severity?: SnackbarSeverity;
-  durationMs?: number | null;
+  durationMs?: number;
   action?: ReactNode;
 }
 

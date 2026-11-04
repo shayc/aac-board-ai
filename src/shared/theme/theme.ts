@@ -44,6 +44,8 @@ const grey = {
   A700: "#5e6167",
 };
 
+const brandBlue = { light: "#0967d4", dark: "#90caf9" };
+
 const shadows = [
   "none",
   ...Array.from({ length: 24 }, (_, index) => softShadow(index + 1)),
@@ -80,8 +82,8 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: "#0967d4" },
-        info: { main: "#0967d4" },
+        primary: { main: brandBlue.light },
+        info: { main: brandBlue.light },
         success: { main: "#1a7f37" },
         warning: { main: "#9a6700" },
         error: { main: "#c62828" },
@@ -99,10 +101,15 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
-        info: { main: "#90caf9" },
+        primary: { main: brandBlue.dark },
+        info: { main: brandBlue.dark },
         success: { main: "#81c995" },
         warning: { main: "#fdd663" },
         error: { main: "#f2b8b5" },
+        Alert: {
+          errorFilledBg: "var(--mui-palette-error-main)",
+          errorFilledColor: "var(--mui-palette-error-contrastText)",
+        },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },

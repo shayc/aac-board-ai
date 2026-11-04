@@ -1,6 +1,6 @@
-import Alert, { alertClasses } from "@mui/material/Alert";
+import Alert from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
-import type { Theme } from "@mui/material/styles";
+import { type Theme, useColorScheme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
@@ -45,6 +45,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const t = useTranslate();
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
+  const { colorScheme } = useColorScheme();
 
   const showSnackbar = (options: SnackbarOptions | string) => {
     const snackbarOptions: SnackbarOptions =
@@ -79,10 +80,8 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
   const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
   const isError = severity === "error";
-  const durationMs =
-    state.current?.durationMs === undefined
-      ? defaultDurationMs(severity)
-      : state.current.durationMs;
+  const durationMs = state.current?.durationMs ?? defaultDurationMs(severity);
+  const inverseColorScheme = colorScheme === "dark" ? "light" : "dark";
 
   const message =
     typeof state.current?.message === "function"
@@ -92,14 +91,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   return (
     <SnackbarContext value={contextValue}>
       {children}
-
-      {state.current && message && (
-        <SnackbarAnnouncement
-          key={`announcement-${state.current.key}`}
-          message={message}
-          isAssertive={isError}
-        />
-      )}
 
       <Snackbar
         key={state.current?.key}
@@ -111,48 +102,35 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
           root: { role: "region", "aria-label": t(m.notifications) },
           transition: { onExited: handleExited },
         }}
+        className={isError ? undefined : inverseColorScheme}
         sx={overAppBar}
       >
         <Alert
-          closeText={t(m.close)}
-          action={state.current?.action}
           role="presentation"
+          closeText={t(m.close)}
           severity={severity}
+          action={state.current?.action}
           variant={isError ? "filled" : "standard"}
           onClose={handleClose}
           sx={[
-            { width: "100%", boxShadow: 6 },
-            isError ? filledErrorSurface : inverseSurface(severity),
+            { width: "100%", minWidth: { sm: 344 }, boxShadow: 6 },
+            !isError && paperSurface,
           ]}
         >
           {message}
+          <SnackbarAnnouncement role={isError ? "alert" : "status"}>
+            {message}
+          </SnackbarAnnouncement>
         </Alert>
       </Snackbar>
     </SnackbarContext>
   );
 }
 
-function filledErrorSurface(theme: Theme) {
-  return theme.applyStyles("dark", {
-    backgroundColor: theme.vars.palette.error.main,
-    color: theme.vars.palette.error.contrastText,
-  });
-}
-
-function inverseSurface(severity: SnackbarSeverity) {
-  return (theme: Theme) => {
-    const { light, dark } = theme.colorSchemes;
-
-    return {
-      backgroundColor: dark?.palette.background.paper,
-      color: dark?.palette.text.primary,
-      [`& .${alertClasses.icon}`]: { color: dark?.palette[severity].main },
-      ...theme.applyStyles("dark", {
-        backgroundColor: light?.palette.background.paper,
-        color: light?.palette.text.primary,
-        [`& .${alertClasses.icon}`]: { color: light?.palette[severity].main },
-      }),
-    };
+function paperSurface(theme: Theme) {
+  return {
+    backgroundColor: theme.vars.palette.background.paper,
+    color: theme.vars.palette.text.primary,
   };
 }
 

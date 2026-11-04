@@ -48,12 +48,12 @@ describe("SnackbarProvider", () => {
     });
 
     await screen.getByRole("button", { name: "show-first" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("first");
+    await expect.element(screen.getByRole("region")).toHaveTextContent("first");
 
     await screen.getByRole("button", { name: "show-second" }).click();
 
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("region"))
       .toHaveTextContent("second");
   });
 
@@ -64,7 +64,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-sticky" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("region"))
       .toHaveTextContent("sticky");
 
     await screen.getByRole("button", { name: "outside" }).click();
@@ -74,12 +74,12 @@ describe("SnackbarProvider", () => {
     // matcher must time out.
     await expect(
       expect
-        .element(screen.getByRole("status"), { timeout: 500 })
+        .element(screen.getByRole("region"), { timeout: 500 })
         .not.toBeInTheDocument(),
     ).rejects.toThrow();
 
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("region"))
       .toHaveTextContent("sticky");
   });
 
@@ -120,7 +120,7 @@ describe("SnackbarProvider", () => {
     await vi.advanceTimersByTimeAsync(60_000);
     vi.useRealTimers();
 
-    await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("region")).not.toBeInTheDocument();
   });
 
   test("keeps an error visible until it is dismissed", async () => {
@@ -133,11 +133,13 @@ describe("SnackbarProvider", () => {
     await vi.advanceTimersByTimeAsync(60_000);
     vi.useRealTimers();
 
-    await expect.element(screen.getByRole("alert")).toHaveTextContent("failed");
+    await expect
+      .element(screen.getByRole("region"))
+      .toHaveTextContent("failed");
 
     await screen.getByRole("button", { name: "Close" }).click();
 
-    await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    await expect.element(screen.getByRole("region")).not.toBeInTheDocument();
   });
 
   test("shows a plain-string message with no accessibility violations", async () => {
@@ -165,7 +167,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-imported" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("region"))
       .toHaveTextContent("Board set imported");
     await expect
       .element(screen.getByRole("button", { name: "Close" }))
@@ -173,7 +175,7 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "switch-to-hebrew" }).click();
     await expect
-      .element(screen.getByRole("status"))
+      .element(screen.getByRole("region"))
       .toHaveTextContent("ערכת הלוחות יובאה בהצלחה");
     await expect
       .element(screen.getByRole("button", { name: "סגירה" }))

@@ -1,31 +1,31 @@
 import visuallyHidden from "@mui/utils/visuallyHidden";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 const ANNOUNCEMENT_DELAY_MS = 100;
 
 interface SnackbarAnnouncementProps {
-  message: string;
-  isAssertive: boolean;
+  role: "alert" | "status";
+  children: ReactNode;
 }
 
 export function SnackbarAnnouncement({
-  message,
-  isAssertive,
+  role,
+  children,
 }: SnackbarAnnouncementProps) {
-  const [announcedMessage, setAnnouncedMessage] = useState("");
+  const [announcement, setAnnouncement] = useState<ReactNode>(null);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setAnnouncedMessage(message);
+      setAnnouncement(children);
     }, ANNOUNCEMENT_DELAY_MS);
 
     return () => clearTimeout(timeoutId);
-  }, [message]);
+  }, [children]);
 
   return createPortal(
-    <div role={isAssertive ? "alert" : "status"} style={visuallyHidden}>
-      {announcedMessage}
+    <div role={role} style={visuallyHidden}>
+      {announcement}
     </div>,
     document.body,
   );
