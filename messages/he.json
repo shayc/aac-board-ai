@@ -81,6 +81,7 @@
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",
   "aboutSourceCode": "קוד מקור",
+  "aboutVersion": "גרסה {version}",
   "settingsTitle": "הגדרות",
   "settingsOpen": "פתיחת ההגדרות",
   "settingsClose": "סגירת ההגדרות",

@@ -81,6 +81,7 @@
   "libraryTitle": "라이브러리",
   "libraryOpen": "라이브러리 열기",
   "aboutSourceCode": "소스 코드",
+  "aboutVersion": "버전 {version}",
   "settingsTitle": "설정",
   "settingsOpen": "설정 열기",
   "settingsClose": "설정 닫기",

@@ -81,6 +81,7 @@
   "libraryTitle": "Thư viện",
   "libraryOpen": "Mở thư viện",
   "aboutSourceCode": "Mã nguồn",
+  "aboutVersion": "Phiên bản {version}",
   "settingsTitle": "Cài đặt",
   "settingsOpen": "Mở cài đặt",
   "settingsClose": "Đóng cài đặt",

@@ -60,6 +60,9 @@ describe("SettingsDrawer", () => {
     await expect
       .element(screen.getByRole("link", { name: /Source code/i }))
       .toBeInTheDocument();
+    await expect
+      .element(screen.getByText(/^Version \d+\.\d+\.\d+$/))
+      .toBeInTheDocument();
 
     await expectNoA11yViolations(document.body);
   });

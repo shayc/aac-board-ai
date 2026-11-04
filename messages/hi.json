@@ -81,6 +81,7 @@
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",
   "aboutSourceCode": "सोर्स कोड",
+  "aboutVersion": "संस्करण {version}",
   "settingsTitle": "सेटिंग्स",
   "settingsOpen": "सेटिंग्स खोलें",
   "settingsClose": "सेटिंग्स बंद करें",

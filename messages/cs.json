@@ -81,6 +81,7 @@
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",
   "aboutSourceCode": "Zdrojový kód",
+  "aboutVersion": "Verze {version}",
   "settingsTitle": "Nastavení",
   "settingsOpen": "Otevřít nastavení",
   "settingsClose": "Zavřít nastavení",

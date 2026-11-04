@@ -81,6 +81,7 @@
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",
   "aboutSourceCode": "Kode sumber",
+  "aboutVersion": "Versi {version}",
   "settingsTitle": "Setelan",
   "settingsOpen": "Buka setelan",
   "settingsClose": "Tutup setelan",

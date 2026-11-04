@@ -81,6 +81,7 @@
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",
   "aboutSourceCode": "الكود المصدري",
+  "aboutVersion": "الإصدار {version}",
   "settingsTitle": "الإعدادات",
   "settingsOpen": "فتح الإعدادات",
   "settingsClose": "إغلاق الإعدادات",

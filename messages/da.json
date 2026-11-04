@@ -81,6 +81,7 @@
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",
   "aboutSourceCode": "Kildekode",
+  "aboutVersion": "Version {version}",
   "settingsTitle": "Indstillinger",
   "settingsOpen": "Åbn indstillinger",
   "settingsClose": "Luk indstillinger",

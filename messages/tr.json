@@ -81,6 +81,7 @@
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
   "aboutSourceCode": "Kaynak kodu",
+  "aboutVersion": "Sürüm {version}",
   "settingsTitle": "Ayarlar",
   "settingsOpen": "Ayarları aç",
   "settingsClose": "Ayarları kapat",

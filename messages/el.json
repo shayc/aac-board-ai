@@ -81,6 +81,7 @@
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",
   "aboutSourceCode": "Πηγαίος κώδικας",
+  "aboutVersion": "Έκδοση {version}",
   "settingsTitle": "Ρυθμίσεις",
   "settingsOpen": "Άνοιγμα ρυθμίσεων",
   "settingsClose": "Κλείσιμο ρυθμίσεων",

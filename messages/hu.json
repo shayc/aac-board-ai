@@ -81,6 +81,7 @@
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",
   "aboutSourceCode": "Forráskód",
+  "aboutVersion": "Verzió: {version}",
   "settingsTitle": "Beállítások",
   "settingsOpen": "Beállítások megnyitása",
   "settingsClose": "Beállítások bezárása",

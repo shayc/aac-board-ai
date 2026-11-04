@@ -81,6 +81,7 @@
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",
   "aboutSourceCode": "Lähdekoodi",
+  "aboutVersion": "Versio {version}",
   "settingsTitle": "Asetukset",
   "settingsOpen": "Avaa asetukset",
   "settingsClose": "Sulje asetukset",

@@ -81,6 +81,7 @@
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",
   "aboutSourceCode": "Исходный код",
+  "aboutVersion": "Версия {version}",
   "settingsTitle": "Настройки",
   "settingsOpen": "Открыть настройки",
   "settingsClose": "Закрыть настройки",

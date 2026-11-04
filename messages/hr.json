@@ -81,6 +81,7 @@
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",
   "aboutSourceCode": "Izvorni kod",
+  "aboutVersion": "Verzija {version}",
   "settingsTitle": "Postavke",
   "settingsOpen": "Otvori postavke",
   "settingsClose": "Zatvori postavke",

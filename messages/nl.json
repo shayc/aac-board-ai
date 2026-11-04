@@ -81,6 +81,7 @@
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",
   "aboutSourceCode": "Broncode",
+  "aboutVersion": "Versie {version}",
   "settingsTitle": "Instellingen",
   "settingsOpen": "Instellingen openen",
   "settingsClose": "Instellingen sluiten",

@@ -81,6 +81,7 @@
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",
   "aboutSourceCode": "Cod sursă",
+  "aboutVersion": "Versiunea {version}",
   "settingsTitle": "Setări",
   "settingsOpen": "Deschide setările",
   "settingsClose": "Închide setările",
