@@ -106,7 +106,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
             (theme) => ({
               alignItems: "center",
               width: "100%",
-              minHeight: { xs: 56, sm: 64 },
+              ...theme.mixins.toolbar,
               paddingBlock: { xs: 0.5, sm: 1 },
               paddingInlineStart: 3,
               paddingInlineEnd: 1,
