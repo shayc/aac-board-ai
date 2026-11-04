@@ -21,7 +21,6 @@ export const STATUS_DARK = {
   error: "#f2b8b5",
 };
 
-export const ON_ERROR_LIGHT = "#ffffff";
 export const ON_ERROR_DARK = "#601410";
 
 export const INVERSE_SURFACE_LIGHT = "#1e2127";

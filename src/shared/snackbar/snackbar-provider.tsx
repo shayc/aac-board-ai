@@ -7,12 +7,6 @@ import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaGutter } from "@shared/theme/safe-area";
-import {
-  ON_ERROR_DARK,
-  ON_ERROR_LIGHT,
-  STATUS_DARK,
-  STATUS_LIGHT,
-} from "@shared/theme/theme-colors";
 import { type ReactNode, useRef, useState } from "react";
 import {
   SnackbarContext,
@@ -134,7 +128,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
                 paddingInlineStart: 2,
               },
             }),
-            isError ? errorSurfaceStyles : inverseSurfaceStyles(severity),
+            !isError && inverseSurfaceStyles(severity),
           ]}
         >
           {message}
@@ -157,26 +151,12 @@ function snackbarPlacementStyles(theme: Theme) {
   };
 }
 
-function errorSurfaceStyles(theme: Theme) {
-  return {
-    color: ON_ERROR_LIGHT,
-    backgroundColor: STATUS_LIGHT.error,
-    ...theme.applyStyles("dark", {
-      color: ON_ERROR_DARK,
-      backgroundColor: STATUS_DARK.error,
-    }),
-  };
-}
-
 function inverseSurfaceStyles(severity: Exclude<SnackbarSeverity, "error">) {
   return (theme: Theme) => ({
     color: theme.vars.palette.SnackbarContent.color,
     backgroundColor: theme.vars.palette.SnackbarContent.bg,
     [`& .${alertClasses.icon}`]: {
-      color: STATUS_DARK[severity],
-      ...theme.applyStyles("dark", {
-        color: STATUS_LIGHT[severity],
-      }),
+      color: theme.vars.palette.SnackbarContent[`${severity}IconColor`],
     },
   });
 }

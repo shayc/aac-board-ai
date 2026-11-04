@@ -10,10 +10,12 @@ import { safeAreaInset } from "./safe-area";
 import {
   INVERSE_SURFACE_DARK,
   INVERSE_SURFACE_LIGHT,
+  ON_ERROR_DARK,
   PRIMARY_LIGHT,
   SHELL_DARK,
   SHELL_LIGHT,
   STATUS_DARK,
+  STATUS_LIGHT,
 } from "./theme-colors";
 
 declare module "@mui/material/styles" {
@@ -31,6 +33,12 @@ declare module "@mui/material/styles" {
     borderRadiusSm?: string;
     borderRadiusLg?: string;
     borderRadiusFull?: string;
+  }
+
+  interface PaletteSnackbarContent {
+    infoIconColor: string;
+    successIconColor: string;
+    warningIconColor: string;
   }
 }
 
@@ -88,6 +96,10 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: PRIMARY_LIGHT },
+        info: { main: STATUS_LIGHT.info },
+        success: { main: STATUS_LIGHT.success },
+        warning: { main: STATUS_LIGHT.warning },
+        error: { main: STATUS_LIGHT.error },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -95,7 +107,13 @@ const themeOptions = {
           inheritContainedHoverBg: grey[100],
         },
         Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
-        SnackbarContent: { bg: INVERSE_SURFACE_LIGHT, color: grey[100] },
+        SnackbarContent: {
+          bg: INVERSE_SURFACE_LIGHT,
+          color: grey[100],
+          infoIconColor: STATUS_DARK.info,
+          successIconColor: STATUS_DARK.success,
+          warningIconColor: STATUS_DARK.warning,
+        },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
     },
@@ -103,9 +121,22 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
+        info: { main: STATUS_DARK.info },
+        success: { main: STATUS_DARK.success },
+        warning: { main: STATUS_DARK.warning },
         error: { main: STATUS_DARK.error },
+        Alert: {
+          errorFilledBg: STATUS_DARK.error,
+          errorFilledColor: ON_ERROR_DARK,
+        },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
-        SnackbarContent: { bg: INVERSE_SURFACE_DARK, color: grey[900] },
+        SnackbarContent: {
+          bg: INVERSE_SURFACE_DARK,
+          color: grey[900],
+          infoIconColor: STATUS_LIGHT.info,
+          successIconColor: STATUS_LIGHT.success,
+          warningIconColor: STATUS_LIGHT.warning,
+        },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
     },
