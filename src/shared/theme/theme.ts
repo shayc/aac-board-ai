@@ -81,6 +81,10 @@ const themeOptions = {
     light: {
       palette: {
         primary: { main: "#0967d4" },
+        info: { main: "#0967d4" },
+        success: { main: "#1a7f37" },
+        warning: { main: "#9a6700" },
+        error: { main: "#c62828" },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -95,6 +99,9 @@ const themeOptions = {
       palette: {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
+        info: { main: "#90caf9" },
+        success: { main: "#81c995" },
+        warning: { main: "#fdd663" },
         error: { main: "#f2b8b5" },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
         action: { active: "rgba(255, 255, 255, 0.7)" },
