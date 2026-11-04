@@ -44,7 +44,9 @@ Boards can be imported and stored, but not edited, exported, or synced across de
 
 ## Enable suggestions
 
-To use suggestions on desktop, enable the following experimental flags for your browser:
+Suggestions and translation work only in desktop browsers. In Chrome, suggestions also need about 22 GB of free disk space and either a GPU with more than 4 GB of VRAM or 16 GB of RAM and 4 CPU cores.
+
+To use suggestions, enable the following experimental flags for your browser:
 
 **Google Chrome**
 
