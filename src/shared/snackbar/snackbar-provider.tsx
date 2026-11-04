@@ -96,6 +96,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
       <IconButton
         aria-label={t(m.close)}
         title={t(m.close)}
+        size="large"
         color="inherit"
         onClick={() => handleClose()}
         sx={{
@@ -134,17 +135,26 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
             (theme) => ({
               alignItems: "center",
               width: "100%",
-              minHeight: 56,
+              minHeight: 64,
               paddingBlock: 1,
-              paddingInlineStart: 2.5,
+              paddingInlineStart: 3,
               paddingInlineEnd: 1,
+              ...theme.typography.body1,
               boxShadow: theme.vars.shadows[6],
+              [`& .${alertClasses.icon}`]: {
+                marginInlineEnd: 2,
+                paddingBlock: 0,
+                fontSize: 24,
+              },
+              [`& .${alertClasses.message}`]: {
+                paddingBlock: 1,
+              },
               [`& .${alertClasses.action}`]: {
                 alignItems: "center",
                 gap: 1,
                 marginInlineEnd: 0,
                 paddingBlock: 0,
-                paddingInlineStart: 3,
+                paddingInlineStart: 2,
               },
             }),
             severity === "error"
