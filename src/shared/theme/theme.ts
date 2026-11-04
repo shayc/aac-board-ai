@@ -96,7 +96,7 @@ const themeOptions = {
     dark: {
       palette: {
         grey,
-        background: { default: SHELL_DARK, paper: "#1a1d23" },
+        background: { default: SHELL_DARK, paper: "#1a1a1d" },
         error: { main: "#f2b8b5" },
         Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
         action: { active: "rgba(255, 255, 255, 0.7)" },
