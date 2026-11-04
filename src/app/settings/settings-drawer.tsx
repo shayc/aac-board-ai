@@ -104,6 +104,11 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <SettingsSection title={t(m.settingsSectionBoard)}>
           <BoardSettings />
+        </SettingsSection>
+
+        <Divider sx={{ my: 3 }} />
+
+        <SettingsSection title={t(m.settingsSectionMessage)}>
           <PlaybackSettings />
         </SettingsSection>
 

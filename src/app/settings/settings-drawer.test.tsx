@@ -32,7 +32,9 @@ describe("SettingsDrawer", () => {
       screen.getByRole("button", { name: "Preview voice" }),
       screen.getByRole("heading", { name: "Board" }),
       screen.getByRole("slider", { name: "Tile color intensity" }),
-      screen.getByRole("switch", { name: "Highlight words as they're spoken" }),
+      screen.getByRole("heading", { name: "Message" }),
+      screen.getByRole("switch", { name: "Highlight while speaking" }),
+      screen.getByRole("heading", { name: "Suggestions" }),
     ];
     for (const control of sectionControls) {
       await expect.element(control).toBeInTheDocument();
