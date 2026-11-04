@@ -69,7 +69,7 @@ export function BoardSettings() {
         label={t(m.tileLabelPlacement)}
         value={tileLabelPlacement}
         onChange={setTileLabelPlacement}
-        optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 1 }}
+        optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 0.5 }}
       >
         <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />
         <LabelPlacementOption label={t(m.tileLabelBottom)} placement="bottom" />
