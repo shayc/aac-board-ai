@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Ensemble de tableaux « {name} » supprimé",
   "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",

@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Наборът от дъски „{name}“ е изтрит",
   "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",

@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "已删除沟通板集“{name}”",
   "libraryDeleteFailed": "无法删除沟通板集“{name}”",
   "libraryTitle": "板库",
   "libraryOpen": "打开板库",

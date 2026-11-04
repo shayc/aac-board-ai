@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Set di tabelle \"{name}\" eliminato",
   "libraryDeleteFailed": "Impossibile eliminare il set di tabelle \"{name}\"",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",

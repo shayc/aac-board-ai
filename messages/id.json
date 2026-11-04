@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Set papan \"{name}\" dihapus",
   "libraryDeleteFailed": "Tidak dapat menghapus set papan \"{name}\"",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",

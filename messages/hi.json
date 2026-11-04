@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "बोर्ड सेट \"{name}\" हटा दिया गया",
   "libraryDeleteFailed": "बोर्ड सेट \"{name}\" को हटाया नहीं जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",

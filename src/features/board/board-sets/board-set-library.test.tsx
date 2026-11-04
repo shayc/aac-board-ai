@@ -53,7 +53,7 @@ describe("BoardSetLibrary", () => {
       .not.toBeInTheDocument();
   });
 
-  test("deletes a set after confirmation and announces it", async () => {
+  test("deletes a set after confirmation", async () => {
     await seedBoardSets([
       { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
@@ -70,9 +70,6 @@ describe("BoardSetLibrary", () => {
       .toBeInTheDocument();
     await screen.getByRole("button", { name: "Delete" }).click();
 
-    await expect
-      .element(screen.getByRole("alert"))
-      .toHaveTextContent('Board set "Animals" deleted');
     await expect
       .element(screen.getByText("Library is empty"))
       .toBeInTheDocument();

@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Bordset \"{name}\" verwijderd",
   "libraryDeleteFailed": "Kan bordset \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",

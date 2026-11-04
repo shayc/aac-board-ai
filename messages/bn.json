@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "বোর্ড সেট \"{name}\" মুছে ফেলা হয়েছে",
   "libraryDeleteFailed": "বোর্ড সেট \"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",

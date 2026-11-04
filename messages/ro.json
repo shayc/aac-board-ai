@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Setul de table „{name}” a fost șters",
   "libraryDeleteFailed": "Setul de table „{name}” nu a putut fi șters",
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",

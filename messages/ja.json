@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "ボードセット「{name}」を削除しました",
   "libraryDeleteFailed": "ボードセット「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",

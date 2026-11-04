@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "ลบชุดบอร์ด \"{name}\" แล้ว",
   "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",

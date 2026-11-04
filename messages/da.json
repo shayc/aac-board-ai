@@ -76,7 +76,6 @@
       }
     }
   ],
-  "libraryDeleted": "Tavlesættet \"{name}\" er slettet",
   "libraryDeleteFailed": "Tavlesættet \"{name}\" kunne ikke slettes",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",
