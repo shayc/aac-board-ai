@@ -49,7 +49,6 @@ export function Tile({
       disabled={disabled}
       onClick={onActivate}
       sx={(theme) => ({
-        position: "relative",
         display: "grid",
         alignItems: "stretch",
         justifyContent: "stretch",
@@ -57,7 +56,6 @@ export function Tile({
         height: "100%",
         p: 1,
         overflow: "hidden",
-        textTransform: "none",
         color: resolvedBackgroundColor
           ? `contrast-color(${resolvedBackgroundColor})`
           : "inherit",
