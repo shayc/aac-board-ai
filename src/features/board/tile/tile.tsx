@@ -73,7 +73,8 @@ export function Tile({
         transition: theme.transitions.create(
           ["background-color", "box-shadow"],
           {
-            duration: theme.transitions.duration.short,
+            duration: theme.transitions.duration.shortest,
+            easing: theme.transitions.easing.easeOut,
           },
         ),
         "@media (prefers-reduced-motion: reduce)": {
@@ -97,6 +98,7 @@ export function Tile({
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: theme.vars.shadows[8],
+          transitionDuration: "0ms",
         },
         [`&.${buttonClasses.focusVisible}`]: {
           outline: `4px solid ${theme.alpha(theme.vars.palette.text.primary, 0.8)}`,
