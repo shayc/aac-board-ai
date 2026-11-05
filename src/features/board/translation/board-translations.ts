@@ -1,5 +1,9 @@
 import { getLanguageCode } from "@shared/language/locale";
-import type { Board, PhraseTranslations } from "../board-types";
+import type {
+  Board,
+  BoardTranslations,
+  PhraseTranslations,
+} from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
@@ -22,7 +26,7 @@ export function getBoardLanguage(board: Board): string {
 }
 
 export function findTranslations(
-  translations: Board["translations"],
+  translations: BoardTranslations,
   language: string,
 ): PhraseTranslations | undefined {
   const match = Object.entries(translations).find(

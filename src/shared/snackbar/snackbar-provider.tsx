@@ -3,7 +3,7 @@ import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { type ReactNode, useReducer, useRef } from "react";
+import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -12,6 +12,7 @@ import {
 } from "./snackbar-context";
 
 const DEFAULT_SNACKBAR_SEVERITY: SnackbarSeverity = "info";
+const DEFAULT_SNACKBAR_DURATION_MS = 4000;
 
 interface QueuedSnackbar extends SnackbarOptions {
   key: number;
@@ -57,7 +58,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   };
 
   const handleClose = (
-    _event?: React.SyntheticEvent | Event | null,
+    _event?: SyntheticEvent | Event | null,
     reason?: SnackbarCloseReason,
   ) => {
     if (reason === "clickaway") {
@@ -88,7 +89,9 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         key={state.current?.key}
         open={state.open}
         onClose={handleClose}
-        autoHideDuration={state.current?.durationMs ?? 4000}
+        autoHideDuration={
+          state.current?.durationMs ?? DEFAULT_SNACKBAR_DURATION_MS
+        }
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
           horizontal: "center",

@@ -36,7 +36,7 @@ export function LanguageSettings() {
       </SettingsSelect>
 
       {!isTranslationSupported && (
-        <Typography sx={{ typography: "body2", color: "text.secondary" }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {t(m.languageTranslationUnavailable)}
         </Typography>
       )}

@@ -1,10 +1,10 @@
 import { assertNever } from "@shared/utils/assert-never";
 import { createExternalStore } from "@shared/state/external-store";
-import {
-  type PlaybackCoordinator,
-  type PlaybackOutcome,
-  type PlaybackRequest,
-  type PlaybackState,
+import type {
+  PlaybackCoordinator,
+  PlaybackOutcome,
+  PlaybackRequest,
+  PlaybackState,
 } from "./playback-types";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
