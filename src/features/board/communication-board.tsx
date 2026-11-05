@@ -77,7 +77,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
     return (
       <Tile
-        key={`${navigation.boardSetId}/${board.id}/${button.id}`}
+        key={`${board.id}/${button.id}`}
         ariaLabel={button.label ? undefined : button.vocalization}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
