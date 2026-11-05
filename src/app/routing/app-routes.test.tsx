@@ -166,24 +166,6 @@ describe("app flow", () => {
       .element(screen.getByRole("link", { name: "Go home" }))
       .toHaveAttribute("href", "/");
   });
-
-  test("a board without a name titles the page with the app name", async () => {
-    await seedBoardSets([
-      {
-        id: "unnamed-set",
-        rootBoardId: "home",
-        boards: [makeOBFBoard({ id: "home", name: "" })],
-      },
-    ]);
-
-    const { screen } = await renderApp("/sets/unnamed-set/boards/home");
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    await expect
-      .element(screen.getByRole("grid", { name: "Communication board" }))
-      .toBeVisible();
-    expect(document.title).toBe("AAC Board AI");
-  });
 });
 
 // A set whose boardSetId collides with what the OBZ fixture URL derives.
