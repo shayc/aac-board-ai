@@ -10,9 +10,9 @@ import { createBoardSet } from "../board-sets/board-sets-store";
 import { nonBlankText } from "../non-blank-text";
 import {
   BoardSetAlreadyExistsError,
+  MAX_ID_LENGTH,
   type AssetInput,
 } from "../storage/board-set-storage";
-import { MAX_ID_LENGTH } from "../storage/boards-db";
 import { stripBoardFileExtension } from "./board-file-formats";
 
 export interface ImportedBoardSet {

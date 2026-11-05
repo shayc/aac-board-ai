@@ -9,6 +9,7 @@ import {
   type BoardSetRecord,
 } from "./boards-db";
 
+export { MAX_ID_LENGTH } from "./boards-db";
 export type { BoardSetRecord } from "./boards-db";
 
 export class BoardSetAlreadyExistsError extends Error {
