@@ -5,9 +5,9 @@ import {
   overwriteSetLocale,
   type Locale,
 } from "@paraglide/runtime";
-import { getLanguageCode } from "@shared/language/locale";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { useSyncExternalStore } from "react";
+import { getLanguageCode } from "./locale";
 
 const LANGUAGE_STORAGE_KEY = "language";
 export const DEFAULT_LANGUAGE = baseLocale;

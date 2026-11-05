@@ -1,5 +1,8 @@
 import { createPersistedStore } from "@shared/state/persisted-store";
-import { parseClampedNumber } from "@shared/utils/parse-clamped-number";
+import {
+  parseClampedNumber,
+  type ClampedNumberOptions,
+} from "@shared/utils/parse-clamped-number";
 import { useSyncExternalStore } from "react";
 import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 
@@ -9,7 +12,11 @@ export interface BoardPreferences {
   tileLabelPlacement: SymbolLabelPlacement;
 }
 
-export const TILE_SATURATION = { min: 0, max: 1, fallback: 1 };
+export const TILE_SATURATION: ClampedNumberOptions = {
+  min: 0,
+  max: 1,
+  fallback: 1,
+};
 
 function isSymbolLabelPlacement(value: unknown): value is SymbolLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";

@@ -29,7 +29,7 @@ interface AssetRecord {
   readonly blob: Blob;
 }
 
-const MAX_ID_LENGTH = 255;
+export const MAX_ID_LENGTH = 255;
 
 export class InvalidIdError extends Error {
   constructor(fieldName: string) {

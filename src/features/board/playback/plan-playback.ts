@@ -3,7 +3,6 @@ import type { MessagePart } from "../message/message-types";
 import {
   createSpokenPartTracker,
   type SpokenPart,
-  type SpokenPartTracker,
 } from "./spoken-part-tracker";
 
 function getSpokenText(part: MessagePart): string {
@@ -19,7 +18,7 @@ export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
       return;
     }
 
-    const tracker: SpokenPartTracker = createSpokenPartTracker(spokenRun);
+    const tracker = createSpokenPartTracker(spokenRun);
     steps.push({
       kind: "speech",
       text: tracker.text,

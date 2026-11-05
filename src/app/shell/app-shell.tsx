@@ -3,7 +3,6 @@ import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
-import { AppHeader } from "@app/shell/app-header";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
@@ -12,6 +11,7 @@ import {
 import Box from "@mui/material/Box";
 import { useState } from "react";
 import { Outlet } from "react-router";
+import { AppHeader } from "./app-header";
 
 export function AppShell() {
   const [isLibraryOpen, setIsLibraryOpen] = useState(false);

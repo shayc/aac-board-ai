@@ -1,6 +1,6 @@
-import { appRoutes } from "@app/routing/app-routes";
 import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
+import { appRoutes } from "./app-routes";
 
 const router = createBrowserRouter(appRoutes);
 

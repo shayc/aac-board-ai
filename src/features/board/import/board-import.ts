@@ -12,6 +12,7 @@ import {
   BoardSetAlreadyExistsError,
   type AssetInput,
 } from "../storage/board-set-storage";
+import { MAX_ID_LENGTH } from "../storage/boards-db";
 import { stripBoardFileExtension } from "./board-file-formats";
 
 export interface ImportedBoardSet {
@@ -155,7 +156,7 @@ export function buildAssetInputs(
 function deriveBoardSetId(fileName: string): string {
   const stem = stripBoardFileExtension(fileName).toLowerCase();
 
-  return stem.slice(0, 255) || "imported-board";
+  return stem.slice(0, MAX_ID_LENGTH) || "imported-board";
 }
 
 function buildBoardSetIdCandidate(
@@ -168,5 +169,5 @@ function buildBoardSetIdCandidate(
 
   const suffix = `-${candidateNumber}`;
 
-  return `${baseBoardSetId.slice(0, 255 - suffix.length)}${suffix}`;
+  return `${baseBoardSetId.slice(0, MAX_ID_LENGTH - suffix.length)}${suffix}`;
 }
