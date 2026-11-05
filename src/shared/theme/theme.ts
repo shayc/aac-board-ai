@@ -209,6 +209,35 @@ const themeOptions = {
         },
       },
     },
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            borderRadius: "inherit",
+            backgroundColor: "currentColor",
+            opacity: 0,
+            pointerEvents: "none",
+            transition: theme.transitions.create("opacity", {
+              duration: theme.transitions.duration.shortest,
+              easing: theme.transitions.easing.easeOut,
+            }),
+            "@media (prefers-reduced-motion: reduce)": {
+              transition: "none",
+            },
+          },
+          "&:active::before": {
+            opacity: theme.vars.palette.action.activatedOpacity,
+            transitionDuration: "0ms",
+          },
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({

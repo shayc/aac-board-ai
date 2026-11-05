@@ -47,7 +47,6 @@ export function Tile({
       aria-description={variant === "folder" ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
       disabled={disabled}
-      disableRipple
       onClick={onActivate}
       sx={(theme) => ({
         position: "relative",
@@ -79,6 +78,9 @@ export function Tile({
         ),
         "@media (prefers-reduced-motion: reduce)": {
           transition: "none",
+        },
+        "&::before": {
+          display: "none",
         },
         "&:hover": {
           boxShadow: theme.vars.shadows[4],
