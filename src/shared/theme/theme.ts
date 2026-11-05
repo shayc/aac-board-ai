@@ -4,6 +4,7 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
 import { safeAreaInset } from "./safe-area";
@@ -61,6 +62,16 @@ function softShadow(elevation: number) {
 // Theme overrides follow MUI's state rules, so the sticky touch hover would
 // otherwise repaint the focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+
+function buttonFeedbackTiming(theme: Theme) {
+  return {
+    transitionDuration: `${theme.transitions.duration.shortest}ms`,
+    transitionTimingFunction: theme.transitions.easing.easeOut,
+    "&:active": {
+      transitionDuration: "0ms",
+    },
+  };
+}
 
 const themeOptions = {
   focusVisible: true,
@@ -244,6 +255,7 @@ const themeOptions = {
           borderRadius: theme.vars.shape.borderRadiusFull,
           paddingTop: 12,
           paddingBottom: 12,
+          ...buttonFeedbackTiming(theme),
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
@@ -255,6 +267,16 @@ const themeOptions = {
             },
           ],
         }),
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme }) => buttonFeedbackTiming(theme),
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: ({ theme }) => buttonFeedbackTiming(theme),
       },
     },
     MuiOutlinedInput: {
@@ -298,6 +320,7 @@ const themeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
+          ...buttonFeedbackTiming(theme),
         }),
       },
     },
