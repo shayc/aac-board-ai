@@ -69,16 +69,6 @@ export function Tile({
         borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: theme.vars.shadows[2],
-        transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
-          {
-            duration: theme.transitions.duration.shortest,
-            easing: theme.transitions.easing.easeOut,
-          },
-        ),
-        "@media (prefers-reduced-motion: reduce)": {
-          transition: "none",
-        },
         "&::before": {
           display: "none",
         },
@@ -100,7 +90,6 @@ export function Tile({
           backgroundColor:
             resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
           boxShadow: theme.vars.shadows[8],
-          transitionDuration: "0ms",
         },
         [`&.${buttonClasses.focusVisible}`]: {
           outlineWidth: 3,
