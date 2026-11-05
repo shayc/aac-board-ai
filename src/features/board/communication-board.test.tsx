@@ -3,11 +3,12 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { setTileLabelPlacement } from "./board-preferences-store";
 import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
+  communicationBoardTree,
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
 } from "./testing/render-communication-board";
@@ -240,6 +241,37 @@ describe("CommunicationBoard", () => {
       );
     },
   );
+
+  test("paints the next board's tile colors without fading from the previous board", async () => {
+    const slowTransitions = document.createElement("style");
+    slowTransitions.textContent = "* { transition-duration: 60s !important; }";
+    document.head.append(slowTransitions);
+    onTestFinished(() => slowTransitions.remove());
+
+    const coloredBoard = (id: string, color: string): OBFBoard => ({
+      ...TWO_BUTTON_BOARD,
+      id,
+      buttons: [
+        { id: "btn-1", label: "hello", background_color: color },
+        { id: "btn-2", label: "world" },
+      ],
+    });
+
+    const screen = await renderCommunicationBoard(
+      coloredBoard("board-a", "rgb(255, 0, 0)"),
+    );
+
+    await screen.rerender(
+      communicationBoardTree(coloredBoard("board-b", "rgb(0, 0, 255)")),
+    );
+    const tile = screen.getByRole("button", { name: "hello" }).element();
+
+    expect(
+      tile
+        .getAnimations()
+        .map((animation) => (animation as CSSTransition).transitionProperty),
+    ).not.toContain("background-color");
+  });
 
   test("names the tile grid with the board's name", async () => {
     const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
