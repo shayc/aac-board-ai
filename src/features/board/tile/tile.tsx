@@ -103,8 +103,7 @@ export function Tile({
           transitionDuration: "0ms",
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          outline: `4px solid ${theme.alpha(theme.vars.palette.text.primary, 0.8)}`,
-          outlineOffset: 2,
+          outlineWidth: 3,
           boxShadow: theme.vars.shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {
