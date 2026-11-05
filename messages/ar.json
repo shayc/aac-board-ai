@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "تعليمات مخصصة",
   "suggestionsCustomInstructionsPlaceholder": "استخدم جملًا قصيرة وكلمات يومية",
   "suggestionsCustomInstructionsHelper": "صِغ الاقتراحات بأسلوبك الخاص.",
-  "suggestionsUnsupported": "تتطلب الاقتراحات استخدام Chrome أو Edge على جهاز كمبيوتر، مع تفعيل الذكاء الاصطناعي المدمج.",
+  "suggestionsUnsupported": "الاقتراحات غير متاحة في هذا المتصفح.",
   "suggestionsSetupHelp": "كيفية تفعيل الاقتراحات",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",

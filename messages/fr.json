@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Instructions personnalisées",
   "suggestionsCustomInstructionsPlaceholder": "Utilise des phrases courtes et des mots courants",
   "suggestionsCustomInstructionsHelper": "Façonnez les suggestions avec vos propres mots.",
-  "suggestionsUnsupported": "Les suggestions nécessitent Chrome ou Edge sur ordinateur, avec l’IA intégrée activée.",
+  "suggestionsUnsupported": "Les suggestions ne sont pas disponibles dans ce navigateur.",
   "suggestionsSetupHelp": "Comment activer les suggestions",
   "suggestionsEnable": "Activer les suggestions",
   "suggestionsDownloading": "Téléchargement du modèle d'IA… {progress} %",

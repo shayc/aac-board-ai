@@ -26,10 +26,9 @@ describe("SuggestionSettings", () => {
 
     await expect
       .element(
-        screen.getByText(
-          "Suggestions require Chrome or Edge for desktop with built-in AI enabled.",
-          { exact: false },
-        ),
+        screen.getByText("Suggestions are unavailable in this browser.", {
+          exact: false,
+        }),
       )
       .toBeVisible();
 

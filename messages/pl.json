@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Instrukcje niestandardowe",
   "suggestionsCustomInstructionsPlaceholder": "Używaj krótkich zdań i codziennych słów",
   "suggestionsCustomInstructionsHelper": "Kształtuj sugestie własnymi słowami.",
-  "suggestionsUnsupported": "Sugestie wymagają Chrome lub Edge na komputerze z włączoną wbudowaną AI.",
+  "suggestionsUnsupported": "Sugestie są niedostępne w tej przeglądarce.",
   "suggestionsSetupHelp": "Jak włączyć sugestie",
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI… {progress}%",

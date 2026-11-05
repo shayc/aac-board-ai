@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Mukautetut ohjeet",
   "suggestionsCustomInstructionsPlaceholder": "Käytä lyhyitä lauseita ja arkisia sanoja",
   "suggestionsCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",
-  "suggestionsUnsupported": "Ehdotukset vaativat Chromen tai Edgen työpöytäversion, jossa sisäänrakennettu tekoäly on käytössä.",
+  "suggestionsUnsupported": "Ehdotukset eivät ole käytettävissä tässä selaimessa.",
   "suggestionsSetupHelp": "Ehdotusten ottaminen käyttöön",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",

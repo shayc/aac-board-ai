@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "คำสั่งที่กำหนดเอง",
   "suggestionsCustomInstructionsPlaceholder": "ใช้ประโยคสั้น ๆ และคำที่ใช้ในชีวิตประจำวัน",
   "suggestionsCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",
-  "suggestionsUnsupported": "คำแนะนำต้องใช้ Chrome หรือ Edge บนเดสก์ท็อป โดยเปิดใช้งาน AI ในตัว",
+  "suggestionsUnsupported": "เบราว์เซอร์นี้ไม่รองรับคำแนะนำ",
   "suggestionsSetupHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",

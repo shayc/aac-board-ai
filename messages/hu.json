@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Egyéni utasítások",
   "suggestionsCustomInstructionsPlaceholder": "Használj rövid mondatokat és hétköznapi szavakat",
   "suggestionsCustomInstructionsHelper": "Alakítsd a javaslatokat a saját szavaiddal.",
-  "suggestionsUnsupported": "A javaslatokhoz asztali Chrome vagy Edge szükséges, bekapcsolt beépített AI-val.",
+  "suggestionsUnsupported": "A javaslatok nem érhetők el ebben a böngészőben.",
   "suggestionsSetupHelp": "A javaslatok bekapcsolása",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",

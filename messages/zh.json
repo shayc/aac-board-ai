@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "自定义指令",
   "suggestionsCustomInstructionsPlaceholder": "使用短句和日常用语",
   "suggestionsCustomInstructionsHelper": "用你自己的话塑造建议。",
-  "suggestionsUnsupported": "建议功能需要使用桌面版 Chrome 或 Edge，并启用内置 AI。",
+  "suggestionsUnsupported": "此浏览器不支持建议功能。",
   "suggestionsSetupHelp": "如何启用建议",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",

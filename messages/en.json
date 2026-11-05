@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Custom instructions",
   "suggestionsCustomInstructionsPlaceholder": "Use short sentences and everyday words",
   "suggestionsCustomInstructionsHelper": "Shape suggestions in your own words.",
-  "suggestionsUnsupported": "Suggestions require Chrome or Edge for desktop with built-in AI enabled.",
+  "suggestionsUnsupported": "Suggestions are unavailable in this browser.",
   "suggestionsSetupHelp": "How to enable suggestions",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model... {progress}%",

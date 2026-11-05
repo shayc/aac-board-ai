@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Aangepaste instructies",
   "suggestionsCustomInstructionsPlaceholder": "Gebruik korte zinnen en alledaagse woorden",
   "suggestionsCustomInstructionsHelper": "Geef de suggesties vorm in je eigen woorden.",
-  "suggestionsUnsupported": "Suggesties vereisen Chrome of Edge op een computer met ingeschakelde ingebouwde AI.",
+  "suggestionsUnsupported": "Suggesties zijn niet beschikbaar in deze browser.",
   "suggestionsSetupHelp": "Suggesties inschakelen",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
