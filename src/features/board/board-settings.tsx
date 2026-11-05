@@ -33,7 +33,6 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
             <LabelPlacementPreview placement={placement} isSelected />
           }
           icon={<LabelPlacementPreview placement={placement} />}
-          disableRipple
           sx={(theme) => ({
             p: 0.5,
             borderRadius: theme.vars.shape.borderRadius,

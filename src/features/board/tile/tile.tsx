@@ -47,7 +47,6 @@ export function Tile({
       aria-description={variant === "folder" ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
       disabled={disabled}
-      disableRipple
       onClick={onActivate}
       sx={(theme) => ({
         position: "relative",
@@ -70,14 +69,8 @@ export function Tile({
         borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: theme.vars.shadows[2],
-        transition: theme.transitions.create(
-          ["background-color", "box-shadow"],
-          {
-            duration: theme.transitions.duration.short,
-          },
-        ),
-        "@media (prefers-reduced-motion: reduce)": {
-          transition: "none",
+        "&::before": {
+          display: "none",
         },
         "&:hover": {
           boxShadow: theme.vars.shadows[4],
@@ -99,8 +92,7 @@ export function Tile({
           boxShadow: theme.vars.shadows[8],
         },
         [`&.${buttonClasses.focusVisible}`]: {
-          outline: `4px solid ${theme.alpha(theme.vars.palette.text.primary, 0.8)}`,
-          outlineOffset: 2,
+          outlineWidth: 3,
           boxShadow: theme.vars.shadows[6],
         },
         [`&.${buttonClasses.disabled}`]: {

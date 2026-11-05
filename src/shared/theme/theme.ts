@@ -4,6 +4,7 @@ import { outlinedInputClasses } from "@mui/material/OutlinedInput";
 import {
   createTheme,
   type Shadows,
+  type Theme,
   type ThemeOptions,
 } from "@mui/material/styles";
 import { safeAreaInset } from "./safe-area";
@@ -61,6 +62,16 @@ function softShadow(elevation: number) {
 // Theme overrides follow MUI's state rules, so the sticky touch hover would
 // otherwise repaint the focused, error, and disabled outlines.
 const idleTouchHoverOutline = `&:hover:not(.${outlinedInputClasses.focused}, .${outlinedInputClasses.error}, .${outlinedInputClasses.disabled}) .${outlinedInputClasses.notchedOutline}`;
+
+function buttonFeedbackTiming(theme: Theme) {
+  return {
+    transitionDuration: `${theme.transitions.duration.shortest}ms`,
+    transitionTimingFunction: theme.transitions.easing.easeOut,
+    "&:active": {
+      transitionDuration: "0ms",
+    },
+  };
+}
 
 const themeOptions = {
   focusVisible: true,
@@ -209,12 +220,42 @@ const themeOptions = {
         },
       },
     },
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+      styleOverrides: {
+        root: ({ theme }) => ({
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            borderRadius: "inherit",
+            backgroundColor: "currentColor",
+            opacity: 0,
+            pointerEvents: "none",
+            transition: theme.transitions.create("opacity", {
+              duration: theme.transitions.duration.shortest,
+              easing: theme.transitions.easing.easeOut,
+            }),
+            "@media (prefers-reduced-motion: reduce)": {
+              transition: "none",
+            },
+          },
+          "&:active::before": {
+            opacity: theme.vars.palette.action.activatedOpacity,
+            transitionDuration: "0ms",
+          },
+        }),
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
           paddingTop: 12,
           paddingBottom: 12,
+          ...buttonFeedbackTiming(theme),
           variants: [
             {
               props: { variant: "contained", color: "inherit" },
@@ -226,6 +267,16 @@ const themeOptions = {
             },
           ],
         }),
+      },
+    },
+    MuiIconButton: {
+      styleOverrides: {
+        root: ({ theme }) => buttonFeedbackTiming(theme),
+      },
+    },
+    MuiFab: {
+      styleOverrides: {
+        root: ({ theme }) => buttonFeedbackTiming(theme),
       },
     },
     MuiOutlinedInput: {
@@ -255,6 +306,7 @@ const themeOptions = {
           ...theme.typography.body2,
           height: 40,
           borderRadius: theme.vars.shape.borderRadiusFull,
+          ...buttonFeedbackTiming(theme),
           [`& .${chipClasses.label}`]: {
             paddingLeft: 15,
             paddingRight: 15,
@@ -269,6 +321,7 @@ const themeOptions = {
       styleOverrides: {
         root: ({ theme }) => ({
           borderRadius: theme.vars.shape.borderRadiusFull,
+          ...buttonFeedbackTiming(theme),
         }),
       },
     },
