@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Власні інструкції",
   "suggestionsCustomInstructionsPlaceholder": "Використовуй короткі речення та повсякденні слова",
   "suggestionsCustomInstructionsHelper": "Формулюйте пропозиції власними словами.",
-  "suggestionsUnsupported": "Для пропозицій потрібен Chrome або Edge на комп’ютері з увімкненим вбудованим ШІ.",
+  "suggestionsUnsupported": "Пропозиції недоступні в цьому браузері.",
   "suggestionsSetupHelp": "Як увімкнути пропозиції",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",

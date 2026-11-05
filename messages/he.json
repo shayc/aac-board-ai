@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "הוראות מותאמות אישית",
   "suggestionsCustomInstructionsPlaceholder": "השתמש במשפטים קצרים ובמילים יומיומיות",
   "suggestionsCustomInstructionsHelper": "תארו במילים שלכם כיצד לנסח את ההצעות.",
-  "suggestionsUnsupported": "ההצעות דורשות Chrome או Edge במחשב, כשהבינה המלאכותית המובנית מופעלת.",
+  "suggestionsUnsupported": "ההצעות אינן זמינות בדפדפן הזה.",
   "suggestionsSetupHelp": "איך להפעיל הצעות",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",

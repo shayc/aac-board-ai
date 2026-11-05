@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Benutzerdefinierte Anweisungen",
   "suggestionsCustomInstructionsPlaceholder": "Verwende kurze Sätze und alltägliche Wörter",
   "suggestionsCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",
-  "suggestionsUnsupported": "Vorschläge erfordern Chrome oder Edge auf einem Computer mit aktivierter integrierter KI.",
+  "suggestionsUnsupported": "Vorschläge sind in diesem Browser nicht verfügbar.",
   "suggestionsSetupHelp": "So aktivieren Sie Vorschläge",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",

@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Пользовательские инструкции",
   "suggestionsCustomInstructionsPlaceholder": "Используй короткие предложения и повседневные слова",
   "suggestionsCustomInstructionsHelper": "Формулируйте предложения своими словами.",
-  "suggestionsUnsupported": "Для подсказок нужен Chrome или Edge на компьютере с включённым встроенным ИИ.",
+  "suggestionsUnsupported": "Подсказки недоступны в этом браузере.",
   "suggestionsSetupHelp": "Как включить подсказки",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",

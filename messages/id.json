@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Instruksi khusus",
   "suggestionsCustomInstructionsPlaceholder": "Gunakan kalimat pendek dan kata sehari-hari",
   "suggestionsCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",
-  "suggestionsUnsupported": "Saran memerlukan Chrome atau Edge di komputer dengan AI bawaan yang diaktifkan.",
+  "suggestionsUnsupported": "Saran tidak tersedia di browser ini.",
   "suggestionsSetupHelp": "Cara mengaktifkan saran",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",

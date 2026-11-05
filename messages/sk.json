@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Vlastné pokyny",
   "suggestionsCustomInstructionsPlaceholder": "Používaj krátke vety a bežné slová",
   "suggestionsCustomInstructionsHelper": "Formulujte návrhy vlastnými slovami.",
-  "suggestionsUnsupported": "Návrhy vyžadujú Chrome alebo Edge na počítači so zapnutou vstavanou AI.",
+  "suggestionsUnsupported": "Návrhy nie sú v tomto prehliadači k dispozícii.",
   "suggestionsSetupHelp": "Ako zapnúť návrhy",
   "suggestionsEnable": "Zapnúť návrhy",
   "suggestionsDownloading": "Sťahovanie modelu AI… {progress} %",

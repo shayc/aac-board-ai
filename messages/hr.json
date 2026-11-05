@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Prilagođene upute",
   "suggestionsCustomInstructionsPlaceholder": "Koristi kratke rečenice i svakodnevne riječi",
   "suggestionsCustomInstructionsHelper": "Oblikujte prijedloge svojim riječima.",
-  "suggestionsUnsupported": "Prijedlozi zahtijevaju Chrome ili Edge na računalu s uključenom ugrađenom AI.",
+  "suggestionsUnsupported": "Prijedlozi nisu dostupni u ovom pregledniku.",
   "suggestionsSetupHelp": "Kako uključiti prijedloge",
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela… {progress} %",

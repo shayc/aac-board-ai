@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Özel talimatlar",
   "suggestionsCustomInstructionsPlaceholder": "Kısa cümleler ve günlük kelimeler kullan",
   "suggestionsCustomInstructionsHelper": "Önerileri kendi kelimelerinizle şekillendirin.",
-  "suggestionsUnsupported": "Öneriler için yerleşik AI’ın etkin olduğu masaüstü Chrome veya Edge gerekir.",
+  "suggestionsUnsupported": "Öneriler bu tarayıcıda kullanılamıyor.",
   "suggestionsSetupHelp": "Öneriler nasıl etkinleştirilir",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",

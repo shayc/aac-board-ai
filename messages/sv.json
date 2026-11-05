@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Anpassade instruktioner",
   "suggestionsCustomInstructionsPlaceholder": "Använd korta meningar och vardagliga ord",
   "suggestionsCustomInstructionsHelper": "Forma förslagen med dina egna ord.",
-  "suggestionsUnsupported": "Förslag kräver Chrome eller Edge på en dator med inbyggd AI aktiverad.",
+  "suggestionsUnsupported": "Förslag är inte tillgängliga i den här webbläsaren.",
   "suggestionsSetupHelp": "Så aktiverar du förslag",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",

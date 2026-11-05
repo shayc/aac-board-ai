@@ -114,7 +114,7 @@
   "suggestionsCustomInstructions": "Προσαρμοσμένες οδηγίες",
   "suggestionsCustomInstructionsPlaceholder": "Χρησιμοποίησε σύντομες προτάσεις και καθημερινές λέξεις",
   "suggestionsCustomInstructionsHelper": "Διαμορφώστε τις προτάσεις με τα δικά σας λόγια.",
-  "suggestionsUnsupported": "Οι προτάσεις απαιτούν Chrome ή Edge σε υπολογιστή με ενεργοποιημένη την ενσωματωμένη AI.",
+  "suggestionsUnsupported": "Οι προτάσεις δεν είναι διαθέσιμες σε αυτό το πρόγραμμα περιήγησης.",
   "suggestionsSetupHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
