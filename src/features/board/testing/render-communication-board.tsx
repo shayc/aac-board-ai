@@ -20,13 +20,20 @@ export function renderCommunicationBoard(
   obfBoard: OBFBoard,
   initialEntries: InitialEntry[] = ["/"],
 ) {
-  return render(
+  return render(communicationBoardTree(obfBoard, initialEntries));
+}
+
+export function communicationBoardTree(
+  obfBoard: OBFBoard,
+  initialEntries: InitialEntry[] = ["/"],
+) {
+  return (
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
         <div style={{ height: "100vh" }}>
           <CommunicationBoard board={obfToBoard(obfBoard)} />
         </div>
       </AppProviders>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
 }

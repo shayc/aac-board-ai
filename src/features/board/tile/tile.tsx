@@ -15,9 +15,6 @@ interface TileProps {
   onActivate: () => void;
 }
 
-const feedbackTransitionProperty =
-  "background-color, box-shadow, border-color, color";
-
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
@@ -73,7 +70,6 @@ export function Tile({
         borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: theme.vars.shadows[2],
-        transitionProperty: "box-shadow, border-color, color",
         "&::before": {
           display: "none",
         },
@@ -84,13 +80,11 @@ export function Tile({
               `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
             ),
             boxShadow: theme.vars.shadows[4],
-            transitionProperty: feedbackTransitionProperty,
           },
         },
         "&:active": {
           backgroundColor: tintWithLabelColor(surfaceColor, "25%"),
           boxShadow: theme.vars.shadows[8],
-          transitionProperty: feedbackTransitionProperty,
         },
         [`&.${buttonClasses.focusVisible}`]: {
           outlineWidth: 3,
