@@ -2,6 +2,7 @@ import Button, { buttonClasses } from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
+import { blackOrWhiteOn } from "./contrasting-text-color";
 
 interface TileProps {
   ariaLabel?: string;
@@ -59,7 +60,7 @@ export function Tile({
         overflow: "hidden",
         textTransform: "none",
         color: resolvedBackgroundColor
-          ? `contrast-color(${resolvedBackgroundColor})`
+          ? blackOrWhiteOn(resolvedBackgroundColor)
           : "inherit",
         border: `4px solid ${
           isBorderVisible && resolvedBorderColor
@@ -69,6 +70,11 @@ export function Tile({
         borderRadius: theme.vars.shape.borderRadius,
         backgroundColor: resolvedBackgroundColor,
         boxShadow: theme.vars.shadows[2],
+        "@supports (color: contrast-color(red))": {
+          color:
+            resolvedBackgroundColor &&
+            `contrast-color(${resolvedBackgroundColor})`,
+        },
         "&::before": {
           display: "none",
         },

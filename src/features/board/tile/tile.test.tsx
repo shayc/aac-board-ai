@@ -9,6 +9,7 @@ import type { Locator } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
+import { blackOrWhiteOn } from "./contrasting-text-color";
 import { Tile } from "./tile";
 
 type Rgb = readonly [red: number, green: number, blue: number];
@@ -136,6 +137,28 @@ describe("Tile", () => {
       expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
         WCAG_TEXT_CONTRAST,
       );
+    },
+  );
+
+  test.each([
+    "#000000",
+    "#ffffff",
+    "#808080",
+    "#767676",
+    "#ff0000",
+    "#ffeb3b",
+    "#3f51b5",
+    "#008080",
+    "#9c27b0",
+  ])(
+    "keeps the label readable on a %s background without contrast-color() support",
+    (backgroundColor) => {
+      expect(
+        contrastRatio(
+          paint(blackOrWhiteOn(backgroundColor)),
+          paint(backgroundColor),
+        ),
+      ).toBeGreaterThan(WCAG_TEXT_CONTRAST);
     },
   );
 
