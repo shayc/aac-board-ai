@@ -5,7 +5,7 @@ import {
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { CSSProperties, ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
-import type { Locator } from "vitest/browser";
+import { userEvent, type Locator } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import { TEST_IMAGE_SRC } from "../testing";
@@ -15,6 +15,7 @@ type Rgb = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
 const WCAG_NON_TEXT_CONTRAST = 3;
+const MIN_PRESS_CONTRAST = 1.4;
 
 const cssVariableTheme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
@@ -76,6 +77,16 @@ function styleOf(tile: Locator, pseudoElement?: string): CSSStyleDeclaration {
 
 function backgroundLuminance(tile: Locator): number {
   return relativeLuminance(paint(styleOf(tile).backgroundColor));
+}
+
+async function whilePressed<T>(tile: Locator, measure: () => T): Promise<T> {
+  tile.element().focus();
+
+  await userEvent.keyboard("{Space>}");
+  const measurement = measure();
+  await userEvent.keyboard("{/Space}");
+
+  return measurement;
 }
 
 describe("Tile", () => {
@@ -203,6 +214,49 @@ describe("Tile", () => {
 
     expect(lightHoverLuminance).toBeLessThan(restingLuminance);
     expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
+  });
+
+  test.each(["#000000", "#ffffff", "#808080", "#ff0000", "#ffeb3b", "#3f51b5"])(
+    "shows a visible press on a %s background",
+    async (backgroundColor) => {
+      const screen = await renderInTheme(
+        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+          Word
+        </Tile>,
+      );
+      const tile = screen.getByRole("button", { name: "Word" });
+      const restingBackground = paint(styleOf(tile).backgroundColor);
+
+      const pressedBackground = await whilePressed(tile, () =>
+        paint(styleOf(tile).backgroundColor),
+      );
+
+      expect(
+        contrastRatio(pressedBackground, restingBackground),
+      ).toBeGreaterThan(MIN_PRESS_CONTRAST);
+    },
+  );
+
+  test("tints an uncolored tile with its label color on hover and press", async () => {
+    const screen = await renderInTheme(<Tile onActivate={vi.fn()}>Plain</Tile>);
+    const tile = screen.getByRole("button", { name: "Plain" });
+    const surface = "#ffffff";
+
+    await tile.hover();
+    const hoverBackground = paint(surface, styleOf(tile).backgroundColor);
+    const pressedBackground = await whilePressed(tile, () =>
+      paint(surface, styleOf(tile).backgroundColor),
+    );
+
+    for (const background of [hoverBackground, pressedBackground]) {
+      expect(
+        Math.max(...background) - Math.min(...background),
+      ).toBeLessThanOrEqual(1);
+    }
+    expect(contrastRatio(hoverBackground, paint(surface))).toBeGreaterThan(1);
+    expect(contrastRatio(pressedBackground, paint(surface))).toBeGreaterThan(
+      MIN_PRESS_CONTRAST,
+    );
   });
 
   test.each([

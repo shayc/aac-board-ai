@@ -22,8 +22,8 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, amount: string): string {
-  return `color-mix(in srgb, ${color}, black ${amount})`;
+function tintWithLabelColor(color: string, amount: string): string {
+  return `color-mix(in srgb, ${color}, currentColor ${amount})`;
 }
 
 export function Tile({
@@ -43,6 +43,7 @@ export function Tile({
   const resolvedBackgroundColor = backgroundColor
     ? desaturate(backgroundColor)
     : undefined;
+  const surfaceColor = resolvedBackgroundColor ?? "transparent";
 
   return (
     <Button
@@ -76,24 +77,18 @@ export function Tile({
         "&::before": {
           display: "none",
         },
-        "&:hover": {
-          boxShadow: theme.vars.shadows[4],
-          transitionProperty: feedbackTransitionProperty,
-          "@media (hover: hover)": {
-            backgroundColor:
-              resolvedBackgroundColor &&
-              darken(
-                resolvedBackgroundColor,
-                `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
-              ),
-          },
-          "@media (hover: none)": {
-            boxShadow: theme.vars.shadows[2],
+        "@media (hover: hover)": {
+          "&:hover": {
+            backgroundColor: tintWithLabelColor(
+              surfaceColor,
+              `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
+            ),
+            boxShadow: theme.vars.shadows[4],
+            transitionProperty: feedbackTransitionProperty,
           },
         },
         "&:active": {
-          backgroundColor:
-            resolvedBackgroundColor && darken(resolvedBackgroundColor, "25%"),
+          backgroundColor: tintWithLabelColor(surfaceColor, "25%"),
           boxShadow: theme.vars.shadows[8],
           transitionProperty: feedbackTransitionProperty,
         },
