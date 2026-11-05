@@ -1,5 +1,7 @@
 import { createExternalStore, type ExternalStore } from "./external-store";
 
+export type StorageArea = "local" | "session";
+
 const reloaders = new Set<() => void>();
 
 export function reloadPersistedStores(): void {
@@ -8,13 +10,18 @@ export function reloadPersistedStores(): void {
   }
 }
 
+function storageFor(area: StorageArea): Storage {
+  return area === "session" ? sessionStorage : localStorage;
+}
+
 export function createPersistedStore<T>(
   storageKey: string,
   parse: (raw: unknown) => T,
+  area: StorageArea = "local",
 ): ExternalStore<T> {
   function load(): T {
     try {
-      const raw = localStorage.getItem(storageKey);
+      const raw = storageFor(area).getItem(storageKey);
 
       return parse(raw === null ? undefined : JSON.parse(raw));
     } catch {
@@ -26,7 +33,7 @@ export function createPersistedStore<T>(
 
   const persist = () => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
+      storageFor(area).setItem(storageKey, JSON.stringify(store.getSnapshot()));
     } catch {
       // Storage failures (quota, private mode) shouldn't break the in-memory store.
     }

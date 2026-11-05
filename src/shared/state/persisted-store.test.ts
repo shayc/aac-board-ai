@@ -14,6 +14,7 @@ function parseCounter(raw: unknown): Counter {
 describe("createPersistedStore", () => {
   beforeEach(() => {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
   test("seeds state from the parsed default when storage is empty", () => {
@@ -54,5 +55,16 @@ describe("createPersistedStore", () => {
     reloadPersistedStores();
 
     expect(store.getSnapshot()).toEqual({ count: 0 });
+  });
+
+  test("keeps a session-scoped store out of localStorage", () => {
+    const store = createPersistedStore("counter", parseCounter, "session");
+
+    store.setState({ count: 3 });
+
+    expect(sessionStorage.getItem("counter")).toBe(
+      JSON.stringify({ count: 3 }),
+    );
+    expect(localStorage.getItem("counter")).toBeNull();
   });
 });

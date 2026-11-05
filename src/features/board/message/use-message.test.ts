@@ -1,3 +1,4 @@
+import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useMessage } from "./use-message";
@@ -59,5 +60,26 @@ describe("useMessage", () => {
       "want",
       "wate",
     ]);
+  });
+
+  test("restores the in-progress message after a page reload", async () => {
+    const { result } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I want water");
+    reloadPersistedStores();
+    const { result: reloaded } = await renderHook(() => useMessage());
+
+    expect(reloaded.current.text).toBe("I want water");
+  });
+
+  test("starts with an empty message once session storage is gone", async () => {
+    const { result } = await renderHook(() => useMessage());
+
+    result.current.replaceWithText("I want water");
+    sessionStorage.clear();
+    reloadPersistedStores();
+    const { result: reloaded } = await renderHook(() => useMessage());
+
+    expect(reloaded.current.parts).toHaveLength(0);
   });
 });
