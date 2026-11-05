@@ -306,6 +306,7 @@ const themeOptions = {
           ...theme.typography.body2,
           height: 40,
           borderRadius: theme.vars.shape.borderRadiusFull,
+          ...buttonFeedbackTiming(theme),
           [`& .${chipClasses.label}`]: {
             paddingLeft: 15,
             paddingRight: 15,
