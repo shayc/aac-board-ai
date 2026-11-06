@@ -27,7 +27,7 @@ export async function loadBoardInLanguage(
     return existing;
   }
 
-  const translations = await translateBoard(board, language, signal);
+  const translations = await translateBoardPhrases(board, language, signal);
   if (!translations) {
     return board;
   }
@@ -37,7 +37,7 @@ export async function loadBoardInLanguage(
   return applyTranslations(board, translations);
 }
 
-async function translateBoard(
+async function translateBoardPhrases(
   board: Board,
   language: string,
   signal?: AbortSignal,

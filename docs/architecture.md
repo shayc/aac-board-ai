@@ -119,7 +119,7 @@ translation before rendering, keeping that work out of UI components:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadBoardInLanguage`,
    which reads the stored OBF, resolves object URLs for its stored assets, and
-   maps both through `obfToBoard`. The OBF itself is never modified. Media paths
+   maps both through `obfToBoard`. Loading leaves the OBF unchanged. Media paths
    resolve only to stored assets; otherwise the item's `data` or `url` is used.
 2. It then uses the source board or a cached translation when possible.
    Otherwise, it attempts translation and falls back to the source board on
@@ -224,14 +224,14 @@ preferences.
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
 are relative to `src/features/board/`.
 
-| Area                   | Source                                                                                                 | Responsibility                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                   |
-| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                              |
-| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                             |
-| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.    |
-| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.     |
-| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Prepare suggestion models, apply rewrite instructions, and translate board text. |
+| Area                   | Source                                                                                                 | Responsibility                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                  |
+| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                             |
+| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
+| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
+| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
+| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text. |
 
 ### App and shared code
 

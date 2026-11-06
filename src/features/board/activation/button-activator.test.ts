@@ -142,9 +142,9 @@ describe("createButtonActivator", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
     });
 
-    const [[spokenParts]] = playback.playMessage.mock.calls;
-    expect(spokenParts.map((part) => part.label)).toEqual(["s"]);
-    expect(message.setParts).toHaveBeenCalledExactlyOnceWith(spokenParts);
+    const [[partsToPlay]] = playback.playMessage.mock.calls;
+    expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
+    expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
   });
 
   test("speaks the current message without committing when speak is the only action", async () => {
