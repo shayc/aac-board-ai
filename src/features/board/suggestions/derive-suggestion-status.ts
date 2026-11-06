@@ -1,7 +1,7 @@
 import type { Status } from "@shayc/react-built-in-ai";
 
 export type SuggestionStatus =
-  | { kind: "needs-setup" }
+  | { kind: "not-enabled" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
   | { kind: "unavailable" }
@@ -33,7 +33,7 @@ export function deriveSuggestionStatus({
   }
 
   if (supported.some(({ status }) => status === "downloadable")) {
-    return { kind: "needs-setup" };
+    return { kind: "not-enabled" };
   }
 
   if (downloadProgress !== null) {

@@ -3,17 +3,17 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
-import { isSupported } from "@shayc/react-built-in-ai";
 import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
+import { areSuggestionsSupported } from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();
   const { customInstructions } = useSuggestionPreferences();
 
-  if (!isSupported("Rewriter")) {
+  if (!areSuggestionsSupported()) {
     return (
       <Alert role="note" severity="info" variant="outlined">
         {t(m.suggestionsUnsupported)}{" "}
@@ -21,7 +21,7 @@ export function SuggestionSettings() {
           href="https://github.com/shayc/aac-board-ai#enable-suggestions"
           sx={{ whiteSpace: "normal" }}
         >
-          {t(m.suggestionsSetupHelp)}
+          {t(m.suggestionsEnableHelp)}
         </ExternalLink>
       </Alert>
     );

@@ -1,6 +1,6 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import {
-  useActiveTrackingKey,
+  useActiveCue,
   useIsPlaying,
   usePlayback,
 } from "@shared/playback/use-playback";
@@ -41,5 +41,5 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
 }
 
 export function useActiveMessagePartId(): string | null {
-  return useActiveTrackingKey(MESSAGE_OWNER);
+  return useActiveCue(MESSAGE_OWNER);
 }

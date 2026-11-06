@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Kısa cümleler ve günlük kelimeler kullan",
   "suggestionsCustomInstructionsHelper": "Önerileri kendi kelimelerinizle şekillendirin.",
   "suggestionsUnsupported": "Öneriler bu tarayıcıda kullanılamıyor.",
-  "suggestionsSetupHelp": "Öneriler nasıl etkinleştirilir",
+  "suggestionsEnableHelp": "Öneriler nasıl etkinleştirilir",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",
   "suggestionsDownloadingIndeterminate": "Yapay zeka modeli indiriliyor…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Ana sayfaya git",
   "errorBoardNotFound": "Pano bulunamadı",
   "errorBoardSetNotFound": "Pano seti bulunamadı",
-  "errorBoardUrlImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı"
+  "errorBoardURLImportFailed": "Pano dosyası bağlantıdan içe aktarılamadı"
 }

@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Koristi kratke rečenice i svakodnevne riječi",
   "suggestionsCustomInstructionsHelper": "Oblikujte prijedloge svojim riječima.",
   "suggestionsUnsupported": "Prijedlozi nisu dostupni u ovom pregledniku.",
-  "suggestionsSetupHelp": "Kako uključiti prijedloge",
+  "suggestionsEnableHelp": "Kako uključiti prijedloge",
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela… {progress} %",
   "suggestionsDownloadingIndeterminate": "Preuzimanje AI modela…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Skup ploča nije pronađen",
-  "errorBoardUrlImportFailed": "Datoteku ploče nije moguće uvesti s poveznice"
+  "errorBoardURLImportFailed": "Datoteku ploče nije moguće uvesti s poveznice"
 }

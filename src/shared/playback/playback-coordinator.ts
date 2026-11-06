@@ -18,10 +18,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
   const store = createExternalStore<PlaybackState>({ status: "idle" });
   let currentSession: PlaybackSession | null = null;
 
-  function setActiveTrackingKey(
-    session: PlaybackSession,
-    activeTrackingKey: string | null,
-  ) {
+  function setActiveCue(session: PlaybackSession, activeCue: string | null) {
     if (currentSession !== session) {
       return;
     }
@@ -29,7 +26,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     store.setState({
       status: "playing",
       owner: session.request.owner,
-      activeTrackingKey,
+      activeCue,
     });
   }
 
@@ -47,7 +44,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
       request,
     };
     currentSession = session;
-    setActiveTrackingKey(session, null);
+    setActiveCue(session, null);
 
     const { signal } = session.abortController;
 
@@ -59,20 +56,17 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
 
         switch (step.kind) {
           case "audio":
-            setActiveTrackingKey(session, step.trackingKey ?? null);
+            setActiveCue(session, step.cue ?? null);
             await playAudio(step.src, { signal });
             break;
 
           case "speech":
-            setActiveTrackingKey(session, step.trackingKeyAt?.(0) ?? null);
+            setActiveCue(session, step.cueAt?.(0) ?? null);
             await speak(step.text, {
               signal,
-              onBoundary: step.trackingKeyAt
+              onBoundary: step.cueAt
                 ? (charIndex) =>
-                    setActiveTrackingKey(
-                      session,
-                      step.trackingKeyAt?.(charIndex) ?? null,
-                    )
+                    setActiveCue(session, step.cueAt?.(charIndex) ?? null)
                 : undefined,
             });
             break;

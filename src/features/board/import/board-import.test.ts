@@ -9,7 +9,7 @@ import {
 import { beforeEach, describe, expect, test } from "vitest";
 import { listBoardSets } from "../board-sets/board-sets-store";
 import { getAssetBlob, getBoardRecord } from "../storage/board-content-storage";
-import { listStoredBoardSets } from "../storage/board-set-storage";
+import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   countStoredBoardContent,
   loadFixtureFile,
@@ -51,7 +51,7 @@ describe("importBoardSets", () => {
       expect.objectContaining({ id: IMPORTED_SET_ID }),
     ]);
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
@@ -97,7 +97,7 @@ describe("importBoardSets", () => {
       },
     ]);
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
 
     expect(boardSets).toHaveLength(1);
     expect(boardSets[0]).toMatchObject({
@@ -160,7 +160,7 @@ describe("importBoardSets", () => {
     expect(importResults).toHaveLength(1);
     expect(importResults[0].id).toBe(IMPORTED_SET_ID);
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
     expect(archive.boards.size).toBeGreaterThan(1);
     expect(boardSets[0]).toMatchObject({
       id: IMPORTED_SET_ID,
@@ -187,7 +187,7 @@ describe("importBoardSets", () => {
 
     await importBoardSets(boardFile);
 
-    expect((await listStoredBoardSets())[0]?.name).toBe("core.obf");
+    expect((await listBoardSetRecords())[0]?.name).toBe("core.obf");
   });
 
   test("clamps the derived boardSetId to 255 characters", async () => {
@@ -210,7 +210,7 @@ describe("importBoardSets", () => {
     const second = await importBoardSets(fixtureFile);
     expect(second[0].id).toBe(`${IMPORTED_SET_ID}-2`);
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
     expect(new Set(boardSets.map((set) => set.id))).toEqual(
       new Set([`${IMPORTED_SET_ID}-2`, IMPORTED_SET_ID]),
     );
@@ -234,7 +234,7 @@ describe("importBoardSets", () => {
     expect(result.id).toBe("board-2");
     expect(await getBoardRecord("board", archive.rootBoard.id)).toBeDefined();
     expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
-    expect(await listStoredBoardSets()).toHaveLength(2);
+    expect(await listBoardSetRecords()).toHaveLength(2);
   });
 
   test("rejects an OBZ whose declared uncompressed size exceeds the per-entry limit", async () => {
@@ -253,7 +253,7 @@ describe("importBoardSets", () => {
       info: { code: "archive-too-large", limit: "maxEntrySize" },
     });
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
     expect(boardSets).toHaveLength(0);
   });
 
@@ -265,7 +265,7 @@ describe("importBoardSets", () => {
 
     await expect(importBoardSets([goodFile, corruptFile])).rejects.toThrow();
 
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
     expect(boardSets.map((set) => set.id)).toContain(IMPORTED_SET_ID);
   });
 });

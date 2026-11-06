@@ -1,6 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
-import { prepareQuietly } from "./prepare-quietly";
+import { enableQuietly } from "./enable-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
 export function useProofreadSuggestion(
@@ -21,9 +21,9 @@ export function useProofreadSuggestion(
         .then((result) => result.correctedInput),
   });
 
-  const prepare = () => {
+  const enable = () => {
     if (proofreader.status === "downloadable") {
-      prepareQuietly(proofreader);
+      enableQuietly(proofreader);
     }
   };
 
@@ -32,6 +32,6 @@ export function useProofreadSuggestion(
     candidate: request.value,
     isRequestPending: request.isPending,
     hasRequestFailed: isRequestFailure(request.error),
-    prepare,
+    enable,
   };
 }

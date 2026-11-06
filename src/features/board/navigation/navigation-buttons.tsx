@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForRtl } from "@shared/theme/rtl";
+import { flipForRTL } from "@shared/theme/rtl";
 
 interface NavigationButtonsProps {
   canGoBack: boolean;
@@ -32,7 +32,7 @@ export function NavigationButtons({
         onClick={onBack}
         sx={{ width: 72 }}
       >
-        <ArrowBackOutlinedIcon sx={flipForRtl} />
+        <ArrowBackOutlinedIcon sx={flipForRTL} />
       </Button>
 
       <Button

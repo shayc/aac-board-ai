@@ -7,6 +7,10 @@ import {
 } from "./derive-suggestion-status";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import {
+  areSuggestionsSupported,
+  SUGGESTION_ENGINES,
+} from "./suggestion-support";
 import { useProofreadSuggestion } from "./use-proofread-suggestion";
 import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 
@@ -49,10 +53,7 @@ export function useMessageSuggestions(
 
   // Other hook instances can start these downloads; global progress keeps the
   // suggestion bar in sync with them.
-  const downloadProgress = useGlobalDownloadProgress([
-    "Proofreader",
-    "Rewriter",
-  ]);
+  const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
   const phrases = selectSuggestionPhrases(
     text,
@@ -73,16 +74,12 @@ export function useMessageSuggestions(
 
   const enable = () => {
     for (const source of sources) {
-      source.prepare();
+      source.enable();
     }
   };
 
-  const isSupported = sources.some(
-    ({ engineStatus }) => engineStatus !== "unsupported",
-  );
-
   return {
-    isSupported,
+    isSupported: areSuggestionsSupported(),
     status,
     phrases,
     enable,

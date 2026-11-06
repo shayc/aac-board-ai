@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Dùng câu ngắn và từ ngữ hằng ngày",
   "suggestionsCustomInstructionsHelper": "Định hình gợi ý theo cách nói của riêng bạn.",
   "suggestionsUnsupported": "Gợi ý không khả dụng trên trình duyệt này.",
-  "suggestionsSetupHelp": "Cách bật gợi ý",
+  "suggestionsEnableHelp": "Cách bật gợi ý",
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
   "suggestionsDownloadingIndeterminate": "Đang tải mô hình AI xuống…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
-  "errorBoardUrlImportFailed": "Không thể nhập tệp bảng từ liên kết"
+  "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết"
 }

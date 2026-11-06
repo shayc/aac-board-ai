@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "使用短句和日常用语",
   "suggestionsCustomInstructionsHelper": "用你自己的话塑造建议。",
   "suggestionsUnsupported": "此浏览器不支持建议功能。",
-  "suggestionsSetupHelp": "如何启用建议",
+  "suggestionsEnableHelp": "如何启用建议",
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsDownloadingIndeterminate": "正在下载 AI 模型…",
@@ -141,5 +141,5 @@
   "errorGoHome": "返回主页",
   "errorBoardNotFound": "未找到沟通板",
   "errorBoardSetNotFound": "未找到沟通板集",
-  "errorBoardUrlImportFailed": "无法从链接导入沟通板文件"
+  "errorBoardURLImportFailed": "无法从链接导入沟通板文件"
 }

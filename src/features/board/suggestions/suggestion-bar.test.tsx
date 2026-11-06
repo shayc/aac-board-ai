@@ -40,7 +40,7 @@ describe("SuggestionBar", () => {
   });
 
   test("offers an enable chip when setup is needed", async () => {
-    const props = makeProps({ status: { kind: "needs-setup" } });
+    const props = makeProps({ status: { kind: "not-enabled" } });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Enable suggestions" }).click();

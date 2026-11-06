@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Використовуй короткі речення та повсякденні слова",
   "suggestionsCustomInstructionsHelper": "Формулюйте пропозиції власними словами.",
   "suggestionsUnsupported": "Пропозиції недоступні в цьому браузері.",
-  "suggestionsSetupHelp": "Як увімкнути пропозиції",
+  "suggestionsEnableHelp": "Як увімкнути пропозиції",
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Завантаження моделі ШІ…",
@@ -141,5 +141,5 @@
   "errorGoHome": "На головну",
   "errorBoardNotFound": "Дошку не знайдено",
   "errorBoardSetNotFound": "Набір дошок не знайдено",
-  "errorBoardUrlImportFailed": "Не вдалося імпортувати файл дошки за посиланням"
+  "errorBoardURLImportFailed": "Не вдалося імпортувати файл дошки за посиланням"
 }

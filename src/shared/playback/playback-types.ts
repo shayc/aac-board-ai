@@ -4,12 +4,12 @@ export type PlaybackStep =
   | {
       kind: "audio";
       src: string;
-      trackingKey?: string;
+      cue?: string;
     }
   | {
       kind: "speech";
       text: string;
-      trackingKeyAt?: (charIndex: number) => string | null;
+      cueAt?: (charIndex: number) => string | null;
     };
 
 export interface PlaybackRequest {
@@ -22,7 +22,7 @@ export type PlaybackState =
   | {
       status: "playing";
       owner: string;
-      activeTrackingKey: string | null;
+      activeCue: string | null;
     };
 
 export interface PlaybackController {

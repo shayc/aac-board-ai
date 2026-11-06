@@ -1,7 +1,7 @@
 type BoardShortcutAction =
   | { kind: "backspace" }
   | { kind: "clear" }
-  | { kind: "speak" }
+  | { kind: "play" }
   | { kind: "stop" };
 
 export interface BoardKeyEvent {
@@ -21,7 +21,7 @@ export function resolveBoardShortcut(
 ): BoardShortcutAction | null {
   if (event.metaKey || event.ctrlKey) {
     if (event.key === "Enter") {
-      return isMessagePlaying ? null : { kind: "speak" };
+      return isMessagePlaying ? null : { kind: "play" };
     }
 
     if (event.key === "Backspace") {

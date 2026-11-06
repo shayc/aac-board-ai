@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "ಚಿಕ್ಕ ವಾಕ್ಯಗಳು ಮತ್ತು ದಿನನಿತ್ಯದ ಪದಗಳನ್ನು ಬಳಸಿ",
   "suggestionsCustomInstructionsHelper": "ನಿಮ್ಮ ಸ್ವಂತ ಮಾತುಗಳಲ್ಲಿ ಸಲಹೆಗಳನ್ನು ರೂಪಿಸಿ.",
   "suggestionsUnsupported": "ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಸಲಹೆಗಳು ಲಭ್ಯವಿಲ್ಲ.",
-  "suggestionsSetupHelp": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುವುದು ಹೇಗೆ",
+  "suggestionsEnableHelp": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸುವುದು ಹೇಗೆ",
   "suggestionsEnable": "ಸಲಹೆಗಳನ್ನು ಸಕ್ರಿಯಗೊಳಿಸಿ",
   "suggestionsDownloading": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
@@ -141,5 +141,5 @@
   "errorGoHome": "ಮುಖಪುಟಕ್ಕೆ ಹೋಗಿ",
   "errorBoardNotFound": "ಬೋರ್ಡ್ ಕಂಡುಬಂದಿಲ್ಲ",
   "errorBoardSetNotFound": "ಬೋರ್ಡ್ ಸೆಟ್ ಕಂಡುಬಂದಿಲ್ಲ",
-  "errorBoardUrlImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
+  "errorBoardURLImportFailed": "ಲಿಂಕ್‌ನಿಂದ ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
 }

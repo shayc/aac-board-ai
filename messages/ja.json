@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "短い文と日常的な言葉を使う",
   "suggestionsCustomInstructionsHelper": "自分の言葉で提案を形づくりましょう。",
   "suggestionsUnsupported": "このブラウザでは提案を利用できません。",
-  "suggestionsSetupHelp": "提案を有効にする方法",
+  "suggestionsEnableHelp": "提案を有効にする方法",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI モデルをダウンロード中…",
@@ -141,5 +141,5 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "errorBoardUrlImportFailed": "リンクからボードファイルをインポートできませんでした"
+  "errorBoardURLImportFailed": "リンクからボードファイルをインポートできませんでした"
 }

@@ -8,7 +8,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForLtr } from "@shared/theme/rtl";
+import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 
 interface AppHeaderProps {
@@ -42,7 +42,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
               edge="start"
               onClick={onOpenLibrary}
             >
-              <ViewSidebarOutlinedIcon sx={flipForLtr} />
+              <ViewSidebarOutlinedIcon sx={flipForLTR} />
             </IconButton>
           </Tooltip>
         </Box>

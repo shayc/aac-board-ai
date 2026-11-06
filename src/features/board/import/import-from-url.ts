@@ -8,25 +8,25 @@ import { importBoardSets, type ImportedBoardSet } from "./board-import";
  */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-type BoardUrlErrorCode = "unsupported-scheme" | "download-too-large";
+type BoardURLErrorCode = "unsupported-scheme" | "download-too-large";
 
-class BoardUrlError extends Error {
-  readonly code: BoardUrlErrorCode;
+class BoardURLError extends Error {
+  readonly code: BoardURLErrorCode;
 
-  constructor(code: BoardUrlErrorCode, message: string) {
+  constructor(code: BoardURLErrorCode, message: string) {
     super(message);
-    this.name = "BoardUrlError";
+    this.name = "BoardURLError";
     this.code = code;
   }
 }
 
 // The ?board= param is attacker-controlled, so only http(s) may reach fetch —
 // schemes like data: would smuggle a payload past any host-based reasoning.
-function parseBoardUrl(url: string): URL {
+function parseBoardURL(url: string): URL {
   const resolved = new URL(url, window.location.origin);
 
   if (resolved.protocol !== "http:" && resolved.protocol !== "https:") {
-    throw new BoardUrlError(
+    throw new BoardURLError(
       "unsupported-scheme",
       `Unsupported board URL scheme: ${resolved.protocol}`,
     );
@@ -39,15 +39,15 @@ function deriveFileName(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }
 
-export async function importBoardSetFromUrl(
+export async function importBoardSetFromURL(
   url: string,
   signal?: AbortSignal,
 ): Promise<ImportedBoardSet> {
-  const boardUrl = parseBoardUrl(url);
-  const blob = await downloadBoard(boardUrl, signal);
+  const boardURL = parseBoardURL(url);
+  const blob = await downloadBoard(boardURL, signal);
   signal?.throwIfAborted();
 
-  const file = new File([blob], deriveFileName(boardUrl), {
+  const file = new File([blob], deriveFileName(boardURL), {
     type: blob.type || "application/octet-stream",
   });
 
@@ -82,7 +82,7 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     receivedBytes += value.byteLength;
     if (receivedBytes > MAX_BOARD_DOWNLOAD_BYTES) {
       await reader.cancel();
-      throw new BoardUrlError(
+      throw new BoardURLError(
         "download-too-large",
         `Board download exceeded ${MAX_BOARD_DOWNLOAD_BYTES} bytes`,
       );

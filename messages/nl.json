@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Gebruik korte zinnen en alledaagse woorden",
   "suggestionsCustomInstructionsHelper": "Geef de suggesties vorm in je eigen woorden.",
   "suggestionsUnsupported": "Suggesties zijn niet beschikbaar in deze browser.",
-  "suggestionsSetupHelp": "Suggesties inschakelen",
+  "suggestionsEnableHelp": "Suggesties inschakelen",
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI-model downloaden…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Naar start",
   "errorBoardNotFound": "Bord niet gevonden",
   "errorBoardSetNotFound": "Bordset niet gevonden",
-  "errorBoardUrlImportFailed": "Kan bordbestand niet importeren via de link"
+  "errorBoardURLImportFailed": "Kan bordbestand niet importeren via de link"
 }

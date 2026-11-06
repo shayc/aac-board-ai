@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Χρησιμοποίησε σύντομες προτάσεις και καθημερινές λέξεις",
   "suggestionsCustomInstructionsHelper": "Διαμορφώστε τις προτάσεις με τα δικά σας λόγια.",
   "suggestionsUnsupported": "Οι προτάσεις δεν είναι διαθέσιμες σε αυτό το πρόγραμμα περιήγησης.",
-  "suggestionsSetupHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
+  "suggestionsEnableHelp": "Πώς να ενεργοποιήσετε τις προτάσεις",
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Λήψη μοντέλου AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Μετάβαση στην αρχική",
   "errorBoardNotFound": "Ο πίνακας δεν βρέθηκε",
   "errorBoardSetNotFound": "Το σύνολο πινάκων δεν βρέθηκε",
-  "errorBoardUrlImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο"
+  "errorBoardURLImportFailed": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα από τον σύνδεσμο"
 }

@@ -1,3 +1,4 @@
+import { areSuggestionsSupported } from "@features/board";
 import AutoAwesomeOutlinedIcon from "@mui/icons-material/AutoAwesomeOutlined";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import RecordVoiceOverOutlinedIcon from "@mui/icons-material/RecordVoiceOverOutlined";
@@ -16,7 +17,6 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-import { isSupported } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
 
 interface OnboardingDialogProps {
@@ -35,7 +35,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const t = useTranslate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const suggestionsOrLanguageHighlight: Highlight = isSupported("Rewriter")
+  const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
         icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,

@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Használj rövid mondatokat és hétköznapi szavakat",
   "suggestionsCustomInstructionsHelper": "Alakítsd a javaslatokat a saját szavaiddal.",
   "suggestionsUnsupported": "A javaslatok nem érhetők el ebben a böngészőben.",
-  "suggestionsSetupHelp": "A javaslatok bekapcsolása",
+  "suggestionsEnableHelp": "A javaslatok bekapcsolása",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",
   "suggestionsDownloadingIndeterminate": "MI-modell letöltése…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Ugrás a kezdőlapra",
   "errorBoardNotFound": "A tábla nem található",
   "errorBoardSetNotFound": "A táblakészlet nem található",
-  "errorBoardUrlImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült"
+  "errorBoardURLImportFailed": "A táblafájl importálása a hivatkozásról nem sikerült"
 }

@@ -5,7 +5,7 @@ export interface SuggestionSource {
   candidate: string | undefined;
   isRequestPending: boolean;
   hasRequestFailed: boolean;
-  prepare: () => void;
+  enable: () => void;
 }
 
 export function isRequestFailure(error: Error | undefined): boolean {

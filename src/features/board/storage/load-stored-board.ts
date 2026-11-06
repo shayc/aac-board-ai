@@ -1,7 +1,7 @@
 import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../board-types";
-import { getAssetUrl } from "./asset-urls";
+import { getAssetURL } from "./asset-urls";
 import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
 
 export async function loadStoredBoard(
@@ -13,11 +13,11 @@ export async function loadStoredBoard(
 
   signal?.throwIfAborted();
 
-  const obfWithUrls = await attachAssetUrls(boardSetId, obfBoard);
+  const obfWithURLs = await attachAssetURLs(boardSetId, obfBoard);
 
   signal?.throwIfAborted();
 
-  return obfToBoard(obfWithUrls);
+  return obfToBoard(obfWithURLs);
 }
 
 async function readOBFBoard(
@@ -32,19 +32,19 @@ async function readOBFBoard(
   return record.obf;
 }
 
-async function attachAssetUrls(
+async function attachAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
 ): Promise<OBFBoard> {
   const [images, sounds] = await Promise.all([
-    attachUrlsToMedia(boardSetId, obfBoard.images),
-    attachUrlsToMedia(boardSetId, obfBoard.sounds),
+    attachURLsToMedia(boardSetId, obfBoard.images),
+    attachURLsToMedia(boardSetId, obfBoard.sounds),
   ]);
 
   return { ...obfBoard, images, sounds };
 }
 
-async function attachUrlsToMedia(
+async function attachURLsToMedia(
   boardSetId: string,
   media: OBFMedia[] | undefined,
 ): Promise<OBFMedia[] | undefined> {
@@ -59,7 +59,7 @@ async function attachUrlsToMedia(
       }
 
       try {
-        const url = await getAssetUrl(boardSetId, item.path);
+        const url = await getAssetURL(boardSetId, item.path);
 
         return url ? { ...item, data: url } : item;
       } catch {

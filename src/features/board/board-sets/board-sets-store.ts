@@ -1,9 +1,9 @@
 import { createExternalStore } from "@shared/state/external-store";
-import { revokeAssetUrlsExcept } from "../storage/asset-urls";
+import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
-  createStoredBoardSet,
-  deleteStoredBoardSet,
-  listStoredBoardSets,
+  createBoardSetRecords,
+  deleteBoardSetRecords,
+  listBoardSetRecords,
   type BoardSetInput,
   type BoardSetRecord,
 } from "../storage/board-set-storage";
@@ -30,9 +30,9 @@ let pendingLoad: Promise<void> | null = null;
 
 async function loadBoardSets(): Promise<void> {
   try {
-    const boardSets = await listStoredBoardSets();
+    const boardSets = await listBoardSetRecords();
     // URLs are per tab, and every tab refreshes after a delete.
-    revokeAssetUrlsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
+    revokeAssetURLsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {
@@ -83,11 +83,11 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function createBoardSet(input: BoardSetInput): Promise<void> {
-  await createStoredBoardSet(input);
+  await createBoardSetRecords(input);
   await syncBoardSets();
 }
 
 export async function deleteBoardSet(boardSetId: string): Promise<void> {
-  await deleteStoredBoardSet(boardSetId);
+  await deleteBoardSetRecords(boardSetId);
   await syncBoardSets();
 }

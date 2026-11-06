@@ -19,7 +19,7 @@ function renderDialog(onClose: () => void) {
 
 describe("OnboardingDialog", () => {
   test("renders the onboarding content with no accessibility violations", async () => {
-    stubBuiltInAIUnsupported("Rewriter");
+    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
     const screen = await renderDialog(vi.fn());
 
     await expect
@@ -39,7 +39,7 @@ describe("OnboardingDialog", () => {
   });
 
   test("promises the interface languages when suggestions are unsupported", async () => {
-    stubBuiltInAIUnsupported("Rewriter");
+    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
     const screen = await renderDialog(vi.fn());
 
     await expect
@@ -52,7 +52,7 @@ describe("OnboardingDialog", () => {
       .not.toBeInTheDocument();
   });
 
-  test("promises suggestions when the Rewriter is supported", async () => {
+  test("promises suggestions when a suggestion engine is supported", async () => {
     stubRewriter();
     const screen = await renderDialog(vi.fn());
 

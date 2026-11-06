@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Käytä lyhyitä lauseita ja arkisia sanoja",
   "suggestionsCustomInstructionsHelper": "Muotoile ehdotukset omin sanoin.",
   "suggestionsUnsupported": "Ehdotukset eivät ole käytettävissä tässä selaimessa.",
-  "suggestionsSetupHelp": "Ehdotusten ottaminen käyttöön",
+  "suggestionsEnableHelp": "Ehdotusten ottaminen käyttöön",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsDownloadingIndeterminate": "Ladataan tekoälymallia…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Siirry etusivulle",
   "errorBoardNotFound": "Taulua ei löytynyt",
   "errorBoardSetNotFound": "Taulusarjaa ei löytynyt",
-  "errorBoardUrlImportFailed": "Taulutiedoston tuonti linkistä epäonnistui"
+  "errorBoardURLImportFailed": "Taulutiedoston tuonti linkistä epäonnistui"
 }

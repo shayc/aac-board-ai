@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "చిన్న వాక్యాలు, రోజువారీ పదాలు ఉపయోగించండి",
   "suggestionsCustomInstructionsHelper": "మీ సొంత మాటల్లో సూచనలను రూపొందించండి.",
   "suggestionsUnsupported": "ఈ బ్రౌజర్‌లో సూచనలు అందుబాటులో లేవు.",
-  "suggestionsSetupHelp": "సూచనలను ప్రారంభించడం ఎలా",
+  "suggestionsEnableHelp": "సూచనలను ప్రారంభించడం ఎలా",
   "suggestionsEnable": "సూచనలను ప్రారంభించండి",
   "suggestionsDownloading": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI మోడల్ డౌన్‌లోడ్ అవుతోంది…",
@@ -141,5 +141,5 @@
   "errorGoHome": "హోమ్‌కు వెళ్లు",
   "errorBoardNotFound": "బోర్డు కనుగొనబడలేదు",
   "errorBoardSetNotFound": "బోర్డు సెట్ కనుగొనబడలేదు",
-  "errorBoardUrlImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం"
+  "errorBoardURLImportFailed": "లింక్ నుండి బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం"
 }

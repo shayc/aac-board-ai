@@ -46,7 +46,7 @@ describe("deriveSuggestionStatus", () => {
     });
 
     expect(deriveSuggestionStatus(input)).toEqual({
-      kind: "needs-setup",
+      kind: "not-enabled",
     });
   });
 

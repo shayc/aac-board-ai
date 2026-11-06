@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Folosește propoziții scurte și cuvinte uzuale",
   "suggestionsCustomInstructionsHelper": "Modelează sugestiile cu propriile tale cuvinte.",
   "suggestionsUnsupported": "Sugestiile nu sunt disponibile în acest browser.",
-  "suggestionsSetupHelp": "Cum să activezi sugestiile",
+  "suggestionsEnableHelp": "Cum să activezi sugestiile",
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Se descarcă modelul AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardUrlImportFailed": "Fișierul tablei nu a putut fi importat din link"
+  "errorBoardURLImportFailed": "Fișierul tablei nu a putut fi importat din link"
 }

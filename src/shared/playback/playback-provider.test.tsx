@@ -4,11 +4,7 @@ import { Profiler, type ProfilerOnRenderCallback } from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
 import { PlaybackProvider } from "./playback-provider";
-import {
-  useActiveTrackingKey,
-  useIsPlaying,
-  usePlayback,
-} from "./use-playback";
+import { useActiveCue, useIsPlaying, usePlayback } from "./use-playback";
 
 function PlaybackControls() {
   const playback = usePlayback();
@@ -20,7 +16,7 @@ function PlaybackControls() {
         {
           kind: "speech",
           text: "hello world",
-          trackingKeyAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
+          cueAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
         },
       ],
     });
@@ -38,8 +34,8 @@ function PlayingStatus() {
   return <p>{useIsPlaying() ? "Playing" : "Idle"}</p>;
 }
 
-function ActiveTrackingKey() {
-  return <p>Active key: {useActiveTrackingKey() ?? "none"}</p>;
+function ActiveCue() {
+  return <p>Active cue: {useActiveCue() ?? "none"}</p>;
 }
 
 describe("PlaybackProvider", () => {
@@ -111,20 +107,20 @@ describe("PlaybackProvider", () => {
           <PlayingStatus />
         </Profiler>
         <Profiler id="tracking" onRender={countCommit}>
-          <ActiveTrackingKey />
+          <ActiveCue />
         </Profiler>
       </PlaybackProvider>,
     );
 
     await screen.getByRole("button", { name: "Play" }).click();
     await expect.element(screen.getByText("Playing")).toBeInTheDocument();
-    await expect.element(screen.getByText("Active key: 1")).toBeInTheDocument();
+    await expect.element(screen.getByText("Active cue: 1")).toBeInTheDocument();
     const commitsWhilePlaying = { ...commits };
 
     utterance?.dispatchEvent(
       new SpeechSynthesisEvent("boundary", { utterance, charIndex: 6 }),
     );
-    await expect.element(screen.getByText("Active key: 2")).toBeInTheDocument();
+    await expect.element(screen.getByText("Active cue: 2")).toBeInTheDocument();
 
     expect(commitsWhilePlaying.controls).toBe(1);
     expect(commits).toEqual({

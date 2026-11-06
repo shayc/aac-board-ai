@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Brug korte sætninger og almindelige ord",
   "suggestionsCustomInstructionsHelper": "Form forslagene med dine egne ord.",
   "suggestionsUnsupported": "Forslag er ikke tilgængelige i denne browser.",
-  "suggestionsSetupHelp": "Sådan aktiverer du forslag",
+  "suggestionsEnableHelp": "Sådan aktiverer du forslag",
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model… {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloader AI-model…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
-  "errorBoardUrlImportFailed": "Tavlefilen kunne ikke importeres fra linket"
+  "errorBoardURLImportFailed": "Tavlefilen kunne ikke importeres fra linket"
 }

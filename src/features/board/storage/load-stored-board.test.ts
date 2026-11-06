@@ -4,7 +4,7 @@ import type { Board } from "../board-types";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
 import { BoardNotFoundError } from "./board-content-storage";
-import { createStoredBoardSet } from "./board-set-storage";
+import { createBoardSetRecords } from "./board-set-storage";
 import { loadStoredBoard } from "./load-stored-board";
 
 const SET_ID = "loader-test-set";
@@ -24,7 +24,7 @@ async function seedTestBoard(): Promise<void> {
     images: [{ id: "img-1", path: IMAGE_PATH, content_type: "image/png" }],
   };
 
-  await createStoredBoardSet({
+  await createBoardSetRecords({
     id: SET_ID,
     name: "Loader Test",
     rootBoardId: BOARD_ID,
@@ -36,7 +36,7 @@ async function seedTestBoard(): Promise<void> {
   });
 }
 
-function isObjectUrlAlive(url: string): Promise<boolean> {
+function isObjectURLAlive(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const img = new Image();
     const settle = (result: boolean) => {
@@ -51,11 +51,11 @@ function isObjectUrlAlive(url: string): Promise<boolean> {
   });
 }
 
-function getImageUrl(board: Board): string {
-  const imageUrl = board.buttons[0].imageSrc;
-  assertDefined(imageUrl);
+function getImageURL(board: Board): string {
+  const imageURL = board.buttons[0].imageSrc;
+  assertDefined(imageURL);
 
-  return imageUrl;
+  return imageURL;
 }
 
 describe("loadStoredBoard", () => {
@@ -68,18 +68,18 @@ describe("loadStoredBoard", () => {
 
     expect(board.id).toBe(BOARD_ID);
 
-    const imageSrc = getImageUrl(board);
+    const imageSrc = getImageURL(board);
     expect(imageSrc.startsWith("blob:")).toBe(true);
-    expect(await isObjectUrlAlive(imageSrc)).toBe(true);
+    expect(await isObjectURLAlive(imageSrc)).toBe(true);
   });
 
   test("keeps asset URLs usable after another board loads", async () => {
     await seedTestBoard();
 
-    const url = getImageUrl(await loadStoredBoard(SET_ID, BOARD_ID));
+    const url = getImageURL(await loadStoredBoard(SET_ID, BOARD_ID));
     await loadStoredBoard(SET_ID, OTHER_BOARD_ID);
 
-    expect(await isObjectUrlAlive(url)).toBe(true);
+    expect(await isObjectURLAlive(url)).toBe(true);
   });
 
   test("reuses asset URLs when a board loads again", async () => {
@@ -88,7 +88,7 @@ describe("loadStoredBoard", () => {
     const first = await loadStoredBoard(SET_ID, BOARD_ID);
     const second = await loadStoredBoard(SET_ID, BOARD_ID);
 
-    expect(getImageUrl(second)).toBe(getImageUrl(first));
+    expect(getImageURL(second)).toBe(getImageURL(first));
   });
 
   test("rejects a missing board and remains usable for a later load", async () => {
@@ -100,13 +100,13 @@ describe("loadStoredBoard", () => {
 
     const board = await loadStoredBoard(SET_ID, BOARD_ID);
 
-    expect(await isObjectUrlAlive(getImageUrl(board))).toBe(true);
+    expect(await isObjectURLAlive(getImageURL(board))).toBe(true);
   });
 
   test("an aborted load does not disturb a loaded board", async () => {
     await seedTestBoard();
 
-    const url = getImageUrl(await loadStoredBoard(SET_ID, BOARD_ID));
+    const url = getImageURL(await loadStoredBoard(SET_ID, BOARD_ID));
 
     const aborted = new AbortController();
     aborted.abort();
@@ -114,6 +114,6 @@ describe("loadStoredBoard", () => {
       loadStoredBoard(SET_ID, BOARD_ID, aborted.signal),
     ).rejects.toMatchObject({ name: "AbortError" });
 
-    expect(await isObjectUrlAlive(url)).toBe(true);
+    expect(await isObjectURLAlive(url)).toBe(true);
   });
 });

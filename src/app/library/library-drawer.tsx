@@ -9,7 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForLtr } from "@shared/theme/rtl";
+import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useMatches } from "react-router";
 
@@ -52,7 +52,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
             edge="end"
             onClick={onClose}
           >
-            <ViewSidebarOutlinedIcon sx={flipForLtr} />
+            <ViewSidebarOutlinedIcon sx={flipForLTR} />
           </IconButton>
         </Tooltip>
       </Toolbar>

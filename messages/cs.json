@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Používej krátké věty a běžná slova",
   "suggestionsCustomInstructionsHelper": "Formulujte návrhy vlastními slovy.",
   "suggestionsUnsupported": "Návrhy nejsou v tomto prohlížeči k dispozici.",
-  "suggestionsSetupHelp": "Jak zapnout návrhy",
+  "suggestionsEnableHelp": "Jak zapnout návrhy",
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Stahování modelu AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Přejít domů",
   "errorBoardNotFound": "Tabulka nebyla nalezena",
   "errorBoardSetNotFound": "Sada tabulek nebyla nalezena",
-  "errorBoardUrlImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu"
+  "errorBoardURLImportFailed": "Soubor tabulky se nepodařilo importovat z odkazu"
 }

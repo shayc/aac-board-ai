@@ -7,7 +7,7 @@ import {
   listBoardRecords,
   replaceBoardTranslations,
 } from "./board-content-storage";
-import { createStoredBoardSet } from "./board-set-storage";
+import { createBoardSetRecords } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
 beforeEach(async () => {
@@ -18,7 +18,7 @@ afterEach(closeBoardsDB);
 
 describe("getBoardRecord", () => {
   test("returns undefined for nonexistent board", async () => {
-    await createStoredBoardSet(makeBoardSetInput());
+    await createBoardSetRecords(makeBoardSetInput());
 
     const board = await getBoardRecord("set-1", "nonexistent");
     expect(board).toBeUndefined();
@@ -27,7 +27,7 @@ describe("getBoardRecord", () => {
 
 describe("listBoardRecords", () => {
   test("returns only the set's boards", async () => {
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         id: "set-1",
         name: "Set 1",
@@ -38,7 +38,7 @@ describe("listBoardRecords", () => {
         ],
       }),
     );
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         id: "set-2",
         name: "Set 2",
@@ -61,7 +61,7 @@ describe("listBoardRecords", () => {
 
 describe("getAssetBlob", () => {
   test("retrieves asset blobs using normalized paths", async () => {
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         assets: [
           { path: "images\\photo.png", blob: new Blob(["data"]) },
@@ -86,7 +86,7 @@ describe("getAssetBlob", () => {
 describe("replaceBoardTranslations", () => {
   test("adds localized strings to a board", async () => {
     const obf = makeOBFBoard({ id: "b1", name: "B1" });
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         boards: [obf],
       }),
@@ -110,7 +110,7 @@ describe("replaceBoardTranslations", () => {
       name: "B1",
       strings: { fr: { hello: "bonjour" } },
     });
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         boards: [obf],
       }),
@@ -128,7 +128,7 @@ describe("replaceBoardTranslations", () => {
 
   test("replaces all strings when updating an existing locale", async () => {
     const obf = makeOBFBoard({ id: "b1", name: "B1" });
-    await createStoredBoardSet(
+    await createBoardSetRecords(
       makeBoardSetInput({
         boards: [obf],
       }),
@@ -146,7 +146,7 @@ describe("replaceBoardTranslations", () => {
   });
 
   test("throws when board does not exist", async () => {
-    await createStoredBoardSet(makeBoardSetInput());
+    await createBoardSetRecords(makeBoardSetInput());
 
     await expect(
       replaceBoardTranslations("set-1", "nonexistent", "es", {}),

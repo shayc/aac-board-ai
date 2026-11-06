@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Използвай кратки изречения и ежедневни думи",
   "suggestionsCustomInstructionsHelper": "Оформете предложенията с ваши думи.",
   "suggestionsUnsupported": "Предложенията не са налични в този браузър.",
-  "suggestionsSetupHelp": "Как да включите предложенията",
+  "suggestionsEnableHelp": "Как да включите предложенията",
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Изтегляне на модела на ИИ…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
-  "errorBoardUrlImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
+  "errorBoardURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
 }
