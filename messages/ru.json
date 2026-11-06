@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Перетащите файлы досок для импорта",
-  "libraryInfo": "Сведения",
+  "libraryDetails": "Подробности",
   "libraryDelete": "Удалить",
   "libraryCancel": "Отмена",
   "libraryClose": "Закрыть библиотеку",

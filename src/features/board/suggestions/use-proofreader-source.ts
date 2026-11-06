@@ -3,15 +3,15 @@ import { useProofreader } from "@shayc/react-built-in-ai";
 import { enableQuietly } from "./enable-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
-interface UseProofreadSuggestionOptions {
+interface UseProofreaderSourceOptions {
   text: string;
   language: string;
 }
 
-export function useProofreadSuggestion({
+export function useProofreaderSource({
   text,
   language,
-}: UseProofreadSuggestionOptions): SuggestionSource {
+}: UseProofreaderSourceOptions): SuggestionSource {
   const proofreader = useProofreader({
     expectedInputLanguages: [language],
   });

@@ -46,3 +46,10 @@ export function findFirstOccupiedPosition(
 
   return { row: 0, column: 0 };
 }
+
+export function isSameGridPosition(
+  first: GridPosition,
+  second: GridPosition,
+): boolean {
+  return first.row === second.row && first.column === second.column;
+}

@@ -3,19 +3,19 @@ import { useRewriter } from "@shayc/react-built-in-ai";
 import { enableQuietly } from "./enable-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
-interface UseRewriteSuggestionOptions {
+interface UseRewriterSourceOptions {
   text: string;
   customInstructions: string;
   language: string;
   tone: "as-is" | "more-casual";
 }
 
-export function useRewriteSuggestion({
+export function useRewriterSource({
   text,
   customInstructions,
   language,
   tone,
-}: UseRewriteSuggestionOptions): SuggestionSource {
+}: UseRewriterSourceOptions): SuggestionSource {
   const rewriter = useRewriter({
     sharedContext: customInstructions,
     length: "shorter",

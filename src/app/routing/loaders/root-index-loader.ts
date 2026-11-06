@@ -1,7 +1,7 @@
 import {
   rootBoardPath,
   listBoardSets,
-  importBoardSetFromURL,
+  importBoardFileFromURL,
 } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
@@ -17,7 +17,7 @@ async function importAndRedirect(
   signal: AbortSignal,
 ): Promise<Response> {
   try {
-    const importedBoardSet = await importBoardSetFromURL(boardURL, signal);
+    const importedBoardSet = await importBoardFileFromURL(boardURL, signal);
 
     return redirect(rootBoardPath(importedBoardSet));
   } catch {
@@ -40,7 +40,7 @@ export async function rootIndexLoader({
     return redirect(rootBoardPath(boardSet));
   }
 
-  const importedBoardSet = await importBoardSetFromURL(
+  const importedBoardSet = await importBoardFileFromURL(
     STARTER_BOARD_URL,
     request.signal,
   );

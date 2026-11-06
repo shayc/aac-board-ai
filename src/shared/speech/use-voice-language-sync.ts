@@ -1,6 +1,6 @@
 import {
   getLanguageCode,
-  getLikelyRegion,
+  getLikelyRegionCode,
   getRegionCode,
 } from "@shared/language/locale";
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ import {
  * The user's preferred regional variant for a language, drawn from OS/browser
  * preferences (`fr-CA` → `CA`).
  */
-function getPreferredRegion(language: string): string | undefined {
+function getPreferredRegionCode(language: string): string | undefined {
   for (const tag of navigator.languages) {
     if (getLanguageCode(tag) !== language) {
       continue;
@@ -47,7 +47,7 @@ export function useVoiceLanguageSync(language: string): void {
     }
 
     const preferredRegion =
-      getPreferredRegion(language) ?? getLikelyRegion(language);
+      getPreferredRegionCode(language) ?? getLikelyRegionCode(language);
     const regionVoices = voices.filter(
       (voice) => getRegionCode(voice.lang) === preferredRegion,
     );

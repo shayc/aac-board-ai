@@ -109,7 +109,7 @@ export function BoardSetList({
           <ListItemIcon>
             <InfoOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{t(m.libraryInfo)}</ListItemText>
+          <ListItemText>{t(m.libraryDetails)}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleRequestDelete}>
           <ListItemIcon>

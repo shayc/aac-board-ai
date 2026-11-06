@@ -38,7 +38,7 @@ async function resolveAssetURLs(
 ): Promise<Map<string, string>> {
   const entries = await Promise.all(
     Array.from(listMediaPaths(obfBoard), async (path) => {
-      const url = await findAssetURL(boardSetId, path);
+      const url = await getAssetURL(boardSetId, path).catch(() => undefined);
 
       return url ? [[path, url] as const] : [];
     }),
@@ -51,15 +51,4 @@ function listMediaPaths(obfBoard: OBFBoard): Set<string> {
   const media = [...(obfBoard.images ?? []), ...(obfBoard.sounds ?? [])];
 
   return new Set(media.flatMap((item) => (item.path ? [item.path] : [])));
-}
-
-async function findAssetURL(
-  boardSetId: string,
-  path: string,
-): Promise<string | undefined> {
-  try {
-    return await getAssetURL(boardSetId, path);
-  } catch {
-    return undefined;
-  }
 }

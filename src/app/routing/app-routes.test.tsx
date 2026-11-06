@@ -1,4 +1,4 @@
-import { listBoardSets, importBoardSetFromURL } from "@features/board";
+import { listBoardSets, importBoardFileFromURL } from "@features/board";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -68,7 +68,7 @@ describe("app flow", () => {
   });
 
   test("first run: imported board set opens, composes across boards, and speaks", async () => {
-    await importBoardSetFromURL(OBZ_FIXTURE_URL);
+    await importBoardFileFromURL(OBZ_FIXTURE_URL);
 
     const { screen } = await renderApp();
 

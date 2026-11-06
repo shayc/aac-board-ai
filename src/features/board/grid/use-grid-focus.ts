@@ -5,10 +5,13 @@ import {
   findFirstGridFocusable,
   findGridFocusableAt,
   findGridPosition,
-  isSameGridPosition,
 } from "./grid-dom";
 import { findGridKeyTarget } from "./grid-key-navigation";
-import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
+import {
+  findFirstOccupiedPosition,
+  isSameGridPosition,
+  type GridPosition,
+} from "./grid-model";
 
 interface UseGridFocusOptions {
   grid: readonly (readonly unknown[])[];

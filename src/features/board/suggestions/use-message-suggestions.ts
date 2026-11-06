@@ -11,8 +11,8 @@ import {
   areSuggestionsSupported,
   SUGGESTION_ENGINES,
 } from "./suggestion-support";
-import { useProofreadSuggestion } from "./use-proofread-suggestion";
-import { useRewriteSuggestion } from "./use-rewrite-suggestion";
+import { useProofreaderSource } from "./use-proofreader-source";
+import { useRewriterSource } from "./use-rewriter-source";
 
 const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 
@@ -37,21 +37,21 @@ export function useMessageSuggestions(
 
   const { language } = useLanguage();
 
-  const proofreadSource = useProofreadSuggestion({ text, language });
-  const rewriteSource = useRewriteSuggestion({
+  const proofreaderSource = useProofreaderSource({ text, language });
+  const rewriterSource = useRewriterSource({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "as-is",
   });
-  const casualRewriteSource = useRewriteSuggestion({
+  const casualRewriterSource = useRewriterSource({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "more-casual",
   });
 
-  const sources = [proofreadSource, rewriteSource, casualRewriteSource];
+  const sources = [proofreaderSource, rewriterSource, casualRewriterSource];
 
   // Other hook instances can start these downloads; global progress keeps the
   // suggestion bar in sync with them.
@@ -61,16 +61,10 @@ export function useMessageSuggestions(
     text,
     sources.map(({ candidate }) => candidate),
   );
-  const isPending = sources.some(({ isRequestPending }) => isRequestPending);
-
   const status = deriveSuggestionStatus({
-    engines: sources.map(({ engineStatus, hasRequestFailed }) => ({
-      status: engineStatus,
-      hasRequestFailed,
-    })),
+    sources,
     downloadProgress,
     hasText,
-    isPending,
     phraseCount: phrases.length,
   });
 

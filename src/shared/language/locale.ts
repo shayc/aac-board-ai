@@ -31,10 +31,10 @@ export function getRegionCode(locale: string): string | undefined {
 }
 
 /**
- * Returns the region inferred by `Intl.Locale.maximize()` (`fr` → `FR`;
+ * Returns the region code inferred by `Intl.Locale.maximize()` (`fr` → `FR`;
  * `en` → `US`), or `undefined` when no region can be inferred.
  */
-export function getLikelyRegion(language: string): string | undefined {
+export function getLikelyRegionCode(language: string): string | undefined {
   try {
     return parseLocale(language).maximize().region;
   } catch {

@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
-  "libraryInfo": "情報",
+  "libraryDetails": "詳細",
   "libraryDelete": "削除",
   "libraryCancel": "キャンセル",
   "libraryClose": "ライブラリを閉じる",

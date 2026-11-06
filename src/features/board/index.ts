@@ -3,7 +3,7 @@ export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { listBoardSets } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
-export { importBoardSetFromURL } from "./import/import-from-url";
+export { importBoardFileFromURL } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
 export {
