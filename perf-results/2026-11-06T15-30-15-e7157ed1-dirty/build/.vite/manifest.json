@@ -1,0 +1,64 @@
+{
+  "_mui-Dn5QIHeN.js": {
+    "file": "assets/mui-Dn5QIHeN.js",
+    "name": "mui",
+    "imports": [
+      "_rolldown-runtime-WkwZ5CU-.js",
+      "_react-D_UV-b0M.js"
+    ]
+  },
+  "_react-D_UV-b0M.js": {
+    "file": "assets/react-D_UV-b0M.js",
+    "name": "react",
+    "imports": [
+      "_rolldown-runtime-WkwZ5CU-.js"
+    ]
+  },
+  "_rolldown-runtime-WkwZ5CU-.js": {
+    "file": "assets/rolldown-runtime-WkwZ5CU-.js",
+    "name": "rolldown-runtime"
+  },
+  "_shayc-BBcfDVM6.js": {
+    "file": "assets/shayc-BBcfDVM6.js",
+    "name": "shayc",
+    "imports": [
+      "_rolldown-runtime-WkwZ5CU-.js",
+      "_react-D_UV-b0M.js"
+    ]
+  },
+  "_vendor-ga4E-l86.js": {
+    "file": "assets/vendor-ga4E-l86.js",
+    "name": "vendor",
+    "imports": [
+      "_rolldown-runtime-WkwZ5CU-.js",
+      "_react-D_UV-b0M.js",
+      "_mui-Dn5QIHeN.js"
+    ]
+  },
+  "index.html": {
+    "file": "assets/index-CkXwujBn.js",
+    "name": "index",
+    "src": "index.html",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-WkwZ5CU-.js",
+      "_react-D_UV-b0M.js",
+      "_vendor-ga4E-l86.js",
+      "_mui-Dn5QIHeN.js",
+      "_shayc-BBcfDVM6.js"
+    ],
+    "dynamicImports": [
+      "src/perf/collector.ts"
+    ]
+  },
+  "src/perf/collector.ts": {
+    "file": "assets/collector-0TWzxUZt.js",
+    "name": "collector",
+    "src": "src/perf/collector.ts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_vendor-ga4E-l86.js",
+      "index.html"
+    ]
+  }
+}

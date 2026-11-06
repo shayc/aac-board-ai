@@ -1,0 +1,44 @@
+[
+  {
+    "file": "assets/index-Czgw7Gq7.js",
+    "type": "js",
+    "bytes": 278073,
+    "gzipBytes": 93234,
+    "isInitial": true
+  },
+  {
+    "file": "assets/mui-DNEPiRm_.js",
+    "type": "js",
+    "bytes": 391042,
+    "gzipBytes": 121392,
+    "isInitial": true
+  },
+  {
+    "file": "assets/react-0v8SVoIf.js",
+    "type": "js",
+    "bytes": 218916,
+    "gzipBytes": 67549,
+    "isInitial": true
+  },
+  {
+    "file": "assets/rolldown-runtime-WkwZ5CU-.js",
+    "type": "js",
+    "bytes": 599,
+    "gzipBytes": 368,
+    "isInitial": true
+  },
+  {
+    "file": "assets/shayc-BPNdZ7YE.js",
+    "type": "js",
+    "bytes": 113321,
+    "gzipBytes": 34069,
+    "isInitial": true
+  },
+  {
+    "file": "assets/vendor-BC-CuJEn.js",
+    "type": "js",
+    "bytes": 130587,
+    "gzipBytes": 42260,
+    "isInitial": true
+  }
+]

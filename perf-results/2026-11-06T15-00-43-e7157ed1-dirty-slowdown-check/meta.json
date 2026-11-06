@@ -1,0 +1,60 @@
+{
+  "date": "2026-11-06T15:01:38.602Z",
+  "commit": "e7157ed1-dirty",
+  "browser": "Chromium 156.0.8078.4",
+  "node": "v26.13.0",
+  "runs": 5,
+  "settings": {
+    "warmups": 2,
+    "cpuSlowdown": 4,
+    "network": {
+      "latencyMs": 40,
+      "downloadKbps": 10240,
+      "uploadKbps": 5120
+    },
+    "viewport": {
+      "width": 1280,
+      "height": 800
+    },
+    "locale": "en-US",
+    "timezone": "UTC"
+  },
+  "flows": [
+    {
+      "id": "add-tile",
+      "title": "Add a tile to the message",
+      "span": "flow:message:add-tile",
+      "kind": "interaction"
+    },
+    {
+      "id": "go-back",
+      "title": "Go back to the previous board",
+      "span": "route:board:open",
+      "kind": "interaction"
+    },
+    {
+      "id": "go-home",
+      "title": "Go home from a nested board",
+      "span": "route:board:open",
+      "kind": "interaction"
+    },
+    {
+      "id": "open-folder",
+      "title": "Open a folder tile",
+      "span": "route:board:open",
+      "kind": "interaction"
+    },
+    {
+      "id": "repeat-visit",
+      "title": "Repeat visit (board from IndexedDB)",
+      "span": "load:app:board",
+      "kind": "load"
+    },
+    {
+      "id": "search-boards",
+      "title": "Search boards and open a match",
+      "span": "route:board:open",
+      "kind": "interaction"
+    }
+  ]
+}

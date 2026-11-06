@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+
+    <title>AAC Board AI</title>
+    <meta
+      name="description"
+      content="AAC Board AI helps people who cannot rely on speech communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device."
+    />
+
+    <meta name="color-scheme" content="light dark" />
+
+    <style>html.light{--lightningcss-light:initial;--lightningcss-dark: ;color-scheme:light}html.dark{--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark}body{background-color:var(--lightningcss-light,#eef1f6)var(--lightningcss-dark,#0e1014);margin:0}#root{background-color:var(--lightningcss-light,#eef1f6)var(--lightningcss-dark,#0e1014);height:100svh}</style>
+
+    <!-- Set the theme class before first paint so MUI adopts it without a flash. -->
+    <script>
+      {
+        const mode = localStorage.getItem("mui-mode") ?? "system";
+        const isDark =
+          mode === "system"
+            ? matchMedia("(prefers-color-scheme: dark)").matches
+            : mode === "dark";
+        document.documentElement.classList.add(isDark ? "dark" : "light");
+      }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/board.svg" />
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+    <script type="module" crossorigin src="/assets/index-CkXwujBn.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-WkwZ5CU-.js">
+    <link rel="modulepreload" crossorigin href="/assets/react-D_UV-b0M.js">
+    <link rel="modulepreload" crossorigin href="/assets/mui-Dn5QIHeN.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ga4E-l86.js">
+    <link rel="modulepreload" crossorigin href="/assets/shayc-BBcfDVM6.js">
+  <link rel="manifest" href="/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/registerSW.js"></script></head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
