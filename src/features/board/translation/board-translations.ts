@@ -8,7 +8,7 @@ import { nonBlankText } from "../non-blank-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
-export function findCachedTranslation(
+export function findBoardInLanguage(
   board: Board,
   language: string,
 ): Board | undefined {

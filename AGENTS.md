@@ -66,6 +66,7 @@ Oxfmt and Oxlint own formatting and mechanical rules; the guidance below covers 
 - Collections are plural nouns; booleans pose a true/false question (`isFeatureEnabled`); functions start with verbs, except conversions and pure value builders that read better as nouns (`obfToBoard`, `rootBoardPath`); React components use descriptive PascalCase nouns.
 - Don't keep variables in one scope that differ by a single character (`item` vs `items`), and rename property stuttering (`suggestions.suggestions` → `suggestions.phrases`).
 - Drop redundant parent prefixes in narrow scopes (inside a `User` type: `name`, not `userName`).
+- Write acronyms in uppercase (`boardURL`, `getUILocale`, `flipForLTR`) except at the start of a camelCase name (`url`, `uiLocale`) or where a library or platform API spells them otherwise (`CssBaseline`). `Id` is an abbreviation, not an acronym (`boardSetId`).
 
 ### Abstraction & Data Flow
 

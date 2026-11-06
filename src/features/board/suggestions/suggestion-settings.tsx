@@ -3,17 +3,17 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { ExternalLink } from "@shared/ui/external-link";
+import { isSupported } from "@shayc/react-built-in-ai";
 import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
-import { areSuggestionsSupported } from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();
   const { customInstructions } = useSuggestionPreferences();
 
-  if (!areSuggestionsSupported()) {
+  if (!isSupported("Rewriter")) {
     return (
       <Alert role="note" severity="info" variant="outlined">
         {t(m.suggestionsUnsupported)}{" "}

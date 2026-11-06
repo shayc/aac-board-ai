@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { deleteBackward, createPart } from "./message-transforms";
+import { createPart, deleteBackward } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
 export interface UseMessageReturn {

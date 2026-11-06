@@ -5,7 +5,7 @@ import { loadStoredBoard } from "../storage/load-stored-board";
 import {
   applyTranslations,
   collectTranslatablePhrases,
-  findCachedTranslation,
+  findBoardInLanguage,
   getBoardLanguage,
 } from "./board-translations";
 
@@ -22,9 +22,9 @@ export async function loadBoardInLanguage(
 ): Promise<Board> {
   const board = await loadStoredBoard(boardSetId, boardId, signal);
 
-  const cached = findCachedTranslation(board, language);
-  if (cached) {
-    return cached;
+  const existing = findBoardInLanguage(board, language);
+  if (existing) {
+    return existing;
   }
 
   const translations = await translateBoard(board, language, signal);

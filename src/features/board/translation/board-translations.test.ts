@@ -2,9 +2,9 @@ import { describe, expect, test } from "vitest";
 import {
   applyTranslations,
   collectTranslatablePhrases,
+  findBoardInLanguage,
   findPhraseTranslations,
   getBoardLanguage,
-  findCachedTranslation,
 } from "./board-translations";
 import type { Board } from "../board-types";
 
@@ -133,19 +133,19 @@ describe("collectTranslatablePhrases", () => {
   });
 });
 
-describe("findCachedTranslation", () => {
+describe("findBoardInLanguage", () => {
   test("returns the board itself when its language matches", () => {
-    expect(findCachedTranslation(mockBoard, "en")).toBe(mockBoard);
+    expect(findBoardInLanguage(mockBoard, "en")).toBe(mockBoard);
   });
 
   test("returns a translated board from cached translations", () => {
-    const translated = findCachedTranslation(mockBoard, "es");
+    const translated = findBoardInLanguage(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0].label).toBe("Hola");
   });
 
   test("returns nothing when the language has no cached translations", () => {
-    expect(findCachedTranslation(mockBoard, "de")).toBeUndefined();
+    expect(findBoardInLanguage(mockBoard, "de")).toBeUndefined();
   });
 });

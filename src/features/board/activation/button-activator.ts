@@ -1,10 +1,10 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  deleteBackward,
   appendSpace,
   appendText,
   createPart,
+  deleteBackward,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../board-types";

@@ -33,7 +33,6 @@ export type BoardAction =
   | { kind: "speak" }
   | { kind: "spell"; text: string };
 
-/** Original board text → translated text, for one locale. */
 export type PhraseTranslations = Record<string, string>;
 
 /**
