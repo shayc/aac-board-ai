@@ -25,17 +25,17 @@ interface VoiceCatalogState {
 export const SPEECH_RATE: ClampedNumberOptions = {
   min: 0.1,
   max: 2,
-  normalValue: 1,
+  defaultValue: 1,
 };
 export const SPEECH_PITCH: ClampedNumberOptions = {
   min: 0.1,
   max: 2,
-  normalValue: 1,
+  defaultValue: 1,
 };
 export const SPEECH_VOLUME: ClampedNumberOptions = {
   min: 0.1,
   max: 1,
-  normalValue: 1,
+  defaultValue: 1,
 };
 
 export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
