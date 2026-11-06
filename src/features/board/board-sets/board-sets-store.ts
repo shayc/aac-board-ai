@@ -1,9 +1,9 @@
 import { createExternalStore } from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
-  createBoardSetRecords,
-  deleteBoardSetRecords,
+  insertBoardSet,
   listBoardSetRecords,
+  removeBoardSet,
   type BoardSetInput,
   type BoardSetRecord,
 } from "../storage/board-set-storage";
@@ -83,11 +83,11 @@ export async function listBoardSets(): Promise<BoardSetRecord[]> {
 }
 
 export async function createBoardSet(input: BoardSetInput): Promise<void> {
-  await createBoardSetRecords(input);
+  await insertBoardSet(input);
   await syncBoardSets();
 }
 
 export async function deleteBoardSet(boardSetId: string): Promise<void> {
-  await deleteBoardSetRecords(boardSetId);
+  await removeBoardSet(boardSetId);
   await syncBoardSets();
 }

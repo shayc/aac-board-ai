@@ -33,7 +33,7 @@ export type BoardAction =
   | { kind: "speak" }
   | { kind: "spell"; text: string };
 
-export type PhraseTranslations = Record<string, string>;
+export type PhraseTranslations = Partial<Record<string, string>>;
 
 /**
  * BCP 47 locale → phrase translations. Imported boards may key by region

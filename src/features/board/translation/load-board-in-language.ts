@@ -1,5 +1,5 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import type { Board, PhraseTranslations } from "../board-types";
+import type { Board } from "../board-types";
 import { replacePhraseTranslations } from "../storage/board-content-storage";
 import { loadStoredBoard } from "../storage/load-stored-board";
 import {
@@ -41,7 +41,7 @@ async function translateBoard(
   board: Board,
   language: string,
   signal?: AbortSignal,
-): Promise<PhraseTranslations | undefined> {
+): Promise<Record<string, string> | undefined> {
   const phrases = collectTranslatablePhrases(board);
   if (phrases.size === 0) {
     return undefined;
@@ -69,7 +69,7 @@ async function translatePhrases(
   phrases: Set<string>,
   translator: Translator,
   signal?: AbortSignal,
-): Promise<PhraseTranslations> {
+): Promise<Record<string, string>> {
   const entries = await Promise.all(
     Array.from(phrases, async (phrase) => {
       const translated = await translator.translate(phrase, { signal });
@@ -85,7 +85,7 @@ async function cacheTranslations(
   boardSetId: string,
   boardId: string,
   language: string,
-  translations: PhraseTranslations,
+  translations: Record<string, string>,
 ): Promise<void> {
   try {
     await replacePhraseTranslations(

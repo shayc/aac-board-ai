@@ -53,7 +53,7 @@ function boardSetRange(boardSetId: string): IDBKeyRange {
   return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
-export async function deleteBoardSetRecords(boardSetId: string): Promise<void> {
+export async function removeBoardSet(boardSetId: string): Promise<void> {
   validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
@@ -67,9 +67,7 @@ export async function deleteBoardSetRecords(boardSetId: string): Promise<void> {
   ]);
 }
 
-export async function createBoardSetRecords(
-  input: BoardSetInput,
-): Promise<void> {
+export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const { id, boards, assets } = input;
   const rootBoard = validateBoardSetInput(input);
   const record = buildBoardSetRecord(input, rootBoard);

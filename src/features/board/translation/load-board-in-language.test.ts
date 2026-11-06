@@ -5,7 +5,7 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
-import { createBoardSetRecords } from "../storage/board-set-storage";
+import { insertBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import { loadBoardInLanguage } from "./load-board-in-language";
 
@@ -25,7 +25,7 @@ function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
 }
 
 async function storeBoard(overrides: Partial<OBFBoard> = {}): Promise<void> {
-  await createBoardSetRecords({
+  await insertBoardSet({
     id: "set-1",
     rootBoardId: "board-1",
     boards: [makeOBFBoard(overrides)],
