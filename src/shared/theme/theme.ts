@@ -93,7 +93,7 @@ const themeOptions = {
   colorSchemes: {
     light: {
       palette: {
-        primary: { main: "#0967d4" },
+        primary: { main: "#0b7468" },
         grey,
         background: { default: SHELL_LIGHT, paper: "#ffffff" },
         Button: {
@@ -106,7 +106,7 @@ const themeOptions = {
     },
     dark: {
       palette: {
-        primary: { main: "#4c9bf5" },
+        primary: { main: "#3fd0bd" },
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
         error: { main: "#f2b8b5" },
