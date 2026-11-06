@@ -1,11 +1,11 @@
-import type { BoardTranslations } from "../board-types";
-import { obfToBoardTranslations } from "../obf/obf-to-board";
+import type { TranslationsByLocale } from "../board-types";
+import { obfToTranslationsByLocale } from "../obf/obf-to-board";
 import { listBoardRecords } from "./board-content-storage";
 
 export interface BoardSummary {
   id: string;
   name: string;
-  translations: BoardTranslations;
+  translationsByLocale: TranslationsByLocale;
 }
 
 export async function listBoardSummaries(
@@ -16,6 +16,6 @@ export async function listBoardSummaries(
   return records.map(({ id, name, obf }) => ({
     id,
     name,
-    translations: obfToBoardTranslations(obf.strings),
+    translationsByLocale: obfToTranslationsByLocale(obf.strings),
   }));
 }

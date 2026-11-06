@@ -43,7 +43,7 @@ export function useBoardShortcuts({
         case "clear":
           message.clear();
           break;
-        case "speak":
+        case "play":
           void playback.playMessage(message.parts);
           break;
         case "stop":

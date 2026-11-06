@@ -1,14 +1,14 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type {
   Board,
-  BoardTranslations,
+  TranslationsByLocale,
   PhraseTranslations,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
-export function findBoardForLanguage(
+export function findBoardInLanguage(
   board: Board,
   language: string,
 ): Board | undefined {
@@ -16,7 +16,7 @@ export function findBoardForLanguage(
     return board;
   }
 
-  const cached = findTranslations(board.translations, language);
+  const cached = findPhraseTranslations(board.translationsByLocale, language);
 
   return cached ? applyTranslations(board, cached) : undefined;
 }
@@ -25,11 +25,11 @@ export function getBoardLanguage(board: Board): string {
   return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
-export function findTranslations(
-  translations: BoardTranslations,
+export function findPhraseTranslations(
+  translationsByLocale: TranslationsByLocale,
   language: string,
 ): PhraseTranslations | undefined {
-  const match = Object.entries(translations).find(
+  const match = Object.entries(translationsByLocale).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
 

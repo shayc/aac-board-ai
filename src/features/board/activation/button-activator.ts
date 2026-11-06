@@ -1,9 +1,9 @@
 import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertNever } from "@shared/utils/assert-never";
 import {
-  applyBackspace,
   appendSpace,
   appendText,
+  applyBackspace,
   createPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
@@ -43,7 +43,7 @@ export function createButtonActivator({
       return;
     }
 
-    const currentParts = message.getParts();
+    const startingParts = message.getParts();
 
     if (button.actions.length === 0) {
       const part = createPart({
@@ -53,33 +53,33 @@ export function createButtonActivator({
         soundSrc: button.soundSrc,
       });
 
-      message.setParts([...currentParts, part]);
+      message.setParts([...startingParts, part]);
       void playback.playPart(part);
       return;
     }
 
-    let parts = currentParts;
+    let editedParts = startingParts;
     let partsToPlay: MessagePart[] | null = null;
 
     for (const action of button.actions) {
       switch (action.kind) {
         case "spell":
-          parts = appendText(parts, action.text);
+          editedParts = appendText(editedParts, action.text);
           break;
         case "space":
-          parts = appendSpace(parts);
+          editedParts = appendSpace(editedParts);
           break;
         case "backspace":
-          parts = applyBackspace(parts);
+          editedParts = applyBackspace(editedParts);
           break;
         case "clear":
-          parts = [];
+          editedParts = [];
           break;
         case "home":
           navigation.goHome();
           break;
         case "speak":
-          partsToPlay = parts;
+          partsToPlay = editedParts;
           break;
 
         default:
@@ -88,23 +88,22 @@ export function createButtonActivator({
     }
 
     if (partsToPlay === null) {
-      if (parts !== currentParts) {
-        message.setParts(parts);
+      if (editedParts !== startingParts) {
+        message.setParts(editedParts);
       }
 
       return;
     }
 
-    if (partsToPlay !== currentParts) {
+    if (partsToPlay !== startingParts) {
       message.setParts(partsToPlay);
     }
 
-    // Mutations after ":speak" (such as ":clear") wait for playback to
-    // complete without interruption, keeping the message visible while it plays.
-    const finalParts = parts;
+    // Edits after ":speak" (such as ":clear") wait for playback to complete
+    // without interruption, keeping the message visible while it plays.
     void playback.playMessage(partsToPlay).then((outcome) => {
-      if (outcome === "completed" && finalParts !== partsToPlay) {
-        message.setParts(finalParts);
+      if (outcome === "completed" && editedParts !== partsToPlay) {
+        message.setParts(editedParts);
       }
     });
   }

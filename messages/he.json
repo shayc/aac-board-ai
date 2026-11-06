@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "גררו לכאן קובצי לוחות כדי לייבא אותם",
-  "libraryDetails": "פרטים",
+  "libraryInfo": "פרטים",
   "libraryDelete": "מחיקה",
   "libraryCancel": "ביטול",
   "libraryClose": "סגירת הספרייה",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "השתמש במשפטים קצרים ובמילים יומיומיות",
   "suggestionsCustomInstructionsHelper": "תארו במילים שלכם כיצד לנסח את ההצעות.",
   "suggestionsUnsupported": "ההצעות אינן זמינות בדפדפן הזה.",
-  "suggestionsSetupHelp": "איך להפעיל הצעות",
+  "suggestionsEnableHelp": "איך להפעיל הצעות",
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "הורדת מודל ה-AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardUrlImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
+  "errorBoardURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
 }

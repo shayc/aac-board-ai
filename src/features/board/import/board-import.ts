@@ -34,13 +34,12 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxEntries: 5000,
 };
 
-export async function importBoardSets(
-  files: File | File[],
+export async function importBoardFiles(
+  files: File[],
 ): Promise<ImportedBoardSet[]> {
-  const fileList = Array.isArray(files) ? files : [files];
   const importedBoardSets: ImportedBoardSet[] = [];
 
-  for (const file of fileList) {
+  for (const file of files) {
     importedBoardSets.push(await importBoardFile(file));
   }
 

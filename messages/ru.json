@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Перетащите файлы досок для импорта",
-  "libraryDetails": "Сведения",
+  "libraryInfo": "Сведения",
   "libraryDelete": "Удалить",
   "libraryCancel": "Отмена",
   "libraryClose": "Закрыть библиотеку",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Используй короткие предложения и повседневные слова",
   "suggestionsCustomInstructionsHelper": "Формулируйте предложения своими словами.",
   "suggestionsUnsupported": "Подсказки недоступны в этом браузере.",
-  "suggestionsSetupHelp": "Как включить подсказки",
+  "suggestionsEnableHelp": "Как включить подсказки",
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Загрузка модели ИИ…",
@@ -141,5 +141,5 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "errorBoardUrlImportFailed": "Не удалось импортировать файл доски по ссылке"
+  "errorBoardURLImportFailed": "Не удалось импортировать файл доски по ссылке"
 }

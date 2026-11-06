@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
-  "libraryDetails": "Info",
+  "libraryInfo": "Info",
   "libraryDelete": "Hapus",
   "libraryCancel": "Batal",
   "libraryClose": "Tutup pustaka",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Gunakan kalimat pendek dan kata sehari-hari",
   "suggestionsCustomInstructionsHelper": "Bentuk saran dengan kata-katamu sendiri.",
   "suggestionsUnsupported": "Saran tidak tersedia di browser ini.",
-  "suggestionsSetupHelp": "Cara mengaktifkan saran",
+  "suggestionsEnableHelp": "Cara mengaktifkan saran",
   "suggestionsEnable": "Aktifkan saran",
   "suggestionsDownloading": "Mengunduh model AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Mengunduh model AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Ke beranda",
   "errorBoardNotFound": "Papan tidak ditemukan",
   "errorBoardSetNotFound": "Set papan tidak ditemukan",
-  "errorBoardUrlImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
+  "errorBoardURLImportFailed": "Tidak dapat mengimpor berkas papan dari tautan"
 }

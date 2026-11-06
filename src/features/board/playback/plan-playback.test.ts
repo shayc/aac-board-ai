@@ -24,16 +24,14 @@ describe("planPlayback", () => {
     }
 
     expect(step.text).toBe("i want");
-    expect(step.trackingKeyAt?.(2)).toBe("2");
+    expect(step.cueAt?.(2)).toBe("2");
   });
 
   test("emits a sound part as its own step carrying its part id", () => {
     const part = createPart({ soundSrc: "bell.mp3" });
     const steps = planPlayback([part]);
 
-    expect(steps).toEqual([
-      { kind: "audio", trackingKey: part.id, src: "bell.mp3" },
-    ]);
+    expect(steps).toEqual([{ kind: "audio", cue: part.id, src: "bell.mp3" }]);
   });
 
   test("preserves order when a sound breaks a text run", () => {

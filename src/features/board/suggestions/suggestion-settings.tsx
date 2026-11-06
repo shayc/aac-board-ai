@@ -21,7 +21,7 @@ export function SuggestionSettings() {
           href="https://github.com/shayc/aac-board-ai#enable-suggestions"
           sx={{ whiteSpace: "normal" }}
         >
-          {t(m.suggestionsSetupHelp)}
+          {t(m.suggestionsEnableHelp)}
         </ExternalLink>
       </Alert>
     );

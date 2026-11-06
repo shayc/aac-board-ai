@@ -1,21 +1,21 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
-import { listStoredBoardSets } from "../storage/board-set-storage";
+import { listBoardSetRecords } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import {
-  importBoardSetFromUrl,
+  importBoardSetFromURL,
   MAX_BOARD_DOWNLOAD_BYTES,
 } from "./import-from-url";
 
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
-describe("importBoardSetFromUrl", () => {
+describe("importBoardSetFromURL", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
 
   test("imports a board from a URL and derives the boardSetId from the filename", async () => {
-    const result = await importBoardSetFromUrl(
+    const result = await importBoardSetFromURL(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
     );
 
@@ -25,7 +25,7 @@ describe("importBoardSetFromUrl", () => {
 
   test("aborts an in-flight download without importing a board set", async () => {
     const controller = new AbortController();
-    const importing = importBoardSetFromUrl(
+    const importing = importBoardSetFromURL(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
       controller.signal,
     );
@@ -33,7 +33,7 @@ describe("importBoardSetFromUrl", () => {
     controller.abort();
 
     await expect(importing).rejects.toBe(controller.signal.reason);
-    expect(await listStoredBoardSets()).toEqual([]);
+    expect(await listBoardSetRecords()).toEqual([]);
   });
 
   test("does not start importing if cancellation races with a completed download", async () => {
@@ -46,19 +46,19 @@ describe("importBoardSetFromUrl", () => {
     });
 
     await expect(
-      importBoardSetFromUrl(
+      importBoardSetFromURL(
         `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
         controller.signal,
       ),
     ).rejects.toBe(controller.signal.reason);
-    expect(await listStoredBoardSets()).toEqual([]);
+    expect(await listBoardSetRecords()).toEqual([]);
   });
 
   test("derives the boardSetId from the last non-empty segment when the URL path ends with a slash", async () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
-    const result = await importBoardSetFromUrl("https://example.com/boards/");
+    const result = await importBoardSetFromURL("https://example.com/boards/");
 
     expect(result.id).toBe("boards");
   });
@@ -67,7 +67,7 @@ describe("importBoardSetFromUrl", () => {
     const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(fixtureFile));
 
-    const result = await importBoardSetFromUrl("https://example.com/");
+    const result = await importBoardSetFromURL("https://example.com/");
 
     expect(result.id).toBe("board");
   });
@@ -78,7 +78,7 @@ describe("importBoardSetFromUrl", () => {
     );
 
     await expect(
-      importBoardSetFromUrl("https://example.com/missing.obz"),
+      importBoardSetFromURL("https://example.com/missing.obz"),
     ).rejects.toThrow("Failed to fetch board: HTTP 404");
   });
 
@@ -86,9 +86,9 @@ describe("importBoardSetFromUrl", () => {
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     await expect(
-      importBoardSetFromUrl("data:application/zip;base64,UEsDBA=="),
+      importBoardSetFromURL("data:application/zip;base64,UEsDBA=="),
     ).rejects.toMatchObject({
-      name: "BoardUrlError",
+      name: "BoardURLError",
       code: "unsupported-scheme",
     });
 
@@ -108,9 +108,9 @@ describe("importBoardSetFromUrl", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(endlessBody));
 
     await expect(
-      importBoardSetFromUrl("https://example.com/huge.obz"),
+      importBoardSetFromURL("https://example.com/huge.obz"),
     ).rejects.toMatchObject({
-      name: "BoardUrlError",
+      name: "BoardURLError",
       code: "download-too-large",
     });
 

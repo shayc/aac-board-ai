@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Suelta archivos de tableros para importar",
-  "libraryDetails": "Información",
+  "libraryInfo": "Información",
   "libraryDelete": "Eliminar",
   "libraryCancel": "Cancelar",
   "libraryClose": "Cerrar biblioteca",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Usa frases cortas y palabras cotidianas",
   "suggestionsCustomInstructionsHelper": "Da forma a las sugerencias con tus propias palabras.",
   "suggestionsUnsupported": "Las sugerencias no están disponibles en este navegador.",
-  "suggestionsSetupHelp": "Cómo activar las sugerencias",
+  "suggestionsEnableHelp": "Cómo activar las sugerencias",
   "suggestionsEnable": "Activar sugerencias",
   "suggestionsDownloading": "Descargando modelo de IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Descargando modelo de IA…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Ir al inicio",
   "errorBoardNotFound": "Tablero no encontrado",
   "errorBoardSetNotFound": "Conjunto de tableros no encontrado",
-  "errorBoardUrlImportFailed": "No se pudo importar el archivo de tablero desde el enlace"
+  "errorBoardURLImportFailed": "No se pudo importar el archivo de tablero desde el enlace"
 }

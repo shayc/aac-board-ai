@@ -1,31 +1,50 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import { replaceBoardTranslations } from "../storage/board-content-storage";
 import type { Board } from "../board-types";
+import { replacePhraseTranslations } from "../storage/board-content-storage";
+import { loadStoredBoard } from "../storage/load-stored-board";
 import {
   applyTranslations,
   collectTranslatablePhrases,
-  findBoardForLanguage,
+  findBoardInLanguage,
   getBoardLanguage,
 } from "./board-translations";
 
 /**
- * Resolves a board for the requested language, falling back to the source board
- * when translation is unavailable or fails.
+ * Loads a stored board in the requested language, translating and caching it
+ * on a cache miss, and falling back to the source board when translation is
+ * unavailable or fails.
  */
-export async function resolveBoardForLanguage(
+export async function loadBoardInLanguage(
   boardSetId: string,
-  board: Board,
+  boardId: string,
   language: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const existing = findBoardForLanguage(board, language);
+  const board = await loadStoredBoard(boardSetId, boardId, signal);
+
+  const existing = findBoardInLanguage(board, language);
   if (existing) {
     return existing;
   }
 
+  const translations = await translateBoardPhrases(board, language, signal);
+  if (!translations) {
+    return board;
+  }
+
+  void cacheTranslations(boardSetId, boardId, language, translations);
+
+  return applyTranslations(board, translations);
+}
+
+async function translateBoardPhrases(
+  board: Board,
+  language: string,
+  signal?: AbortSignal,
+): Promise<Record<string, string> | undefined> {
   const phrases = collectTranslatablePhrases(board);
   if (phrases.size === 0) {
-    return board;
+    return undefined;
   }
 
   try {
@@ -36,17 +55,13 @@ export async function resolveBoardForLanguage(
     });
 
     try {
-      const translations = await translatePhrases(phrases, translator, signal);
-
-      void persistTranslations(boardSetId, board.id, language, translations);
-
-      return applyTranslations(board, translations);
+      return await translatePhrases(phrases, translator, signal);
     } finally {
       translator.destroy();
     }
   } catch {
     // Translation is optional; failures must leave the source board usable.
-    return board;
+    return undefined;
   }
 }
 
@@ -66,14 +81,19 @@ async function translatePhrases(
   return Object.fromEntries(entries);
 }
 
-async function persistTranslations(
+async function cacheTranslations(
   boardSetId: string,
   boardId: string,
   language: string,
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await replaceBoardTranslations(boardSetId, boardId, language, translations);
+    await replacePhraseTranslations(
+      boardSetId,
+      boardId,
+      language,
+      translations,
+    );
   } catch {
     // Failure only costs a re-translation next load.
   }

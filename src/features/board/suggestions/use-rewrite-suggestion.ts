@@ -1,6 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
-import { prepareQuietly } from "./prepare-quietly";
+import { enableQuietly } from "./enable-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
 interface UseRewriteSuggestionOptions {
@@ -25,17 +25,16 @@ export function useRewriteSuggestion({
     expectedContextLanguages: [language],
     outputLanguage: language,
   });
-  const hasText = text.trim().length > 0;
 
   const request = useLatestAsync({
-    enabled: hasText && rewriter.status === "ready",
+    enabled: text !== "" && rewriter.status === "ready",
     deps: [text, customInstructions, language],
     run: (signal) => rewriter.rewrite(text, { signal }),
   });
 
-  const prepare = () => {
+  const enable = () => {
     if (rewriter.status === "downloadable") {
-      prepareQuietly(rewriter);
+      enableQuietly(rewriter);
     }
   };
 
@@ -44,6 +43,6 @@ export function useRewriteSuggestion({
     candidate: request.value,
     isRequestPending: request.isPending,
     hasRequestFailed: isRequestFailure(request.error),
-    prepare,
+    enable,
   };
 }

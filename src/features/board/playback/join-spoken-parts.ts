@@ -3,7 +3,7 @@ export interface SpokenPart {
   text: string;
 }
 
-export interface SpokenPartTracker {
+export interface JoinedSpokenParts {
   text: string;
   partIdAt: (charIndex: number) => string | null;
 }
@@ -14,9 +14,7 @@ interface PartSpan {
   end: number;
 }
 
-export function createSpokenPartTracker(
-  parts: SpokenPart[],
-): SpokenPartTracker {
+export function joinSpokenParts(parts: SpokenPart[]): JoinedSpokenParts {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
 

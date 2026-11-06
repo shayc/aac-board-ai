@@ -4,7 +4,7 @@ import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
-import { importBoardSets, type ImportedBoardSet } from "./board-import";
+import { importBoardFiles, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
@@ -27,16 +27,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     const count = files.length;
 
     showSnackbar({
-      message: (translate) =>
-        translate(m.libraryImportingBoardFiles, { count }),
+      message: (t) => t(m.libraryImportingBoardFiles, { count }),
     });
 
     try {
-      const importedBoardSets = await importBoardSets(files);
+      const importedBoardSets = await importBoardFiles(files);
 
       showSnackbar({
-        message: (translate) =>
-          translate(m.libraryImportedBoardSets, { count }),
+        message: (t) => t(m.libraryImportedBoardSets, { count }),
         severity: "success",
       });
 
@@ -49,7 +47,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         : m.libraryImportFailedBoardFiles;
 
       showSnackbar({
-        message: (translate) => translate(errorMessage, { count }),
+        message: (t) => t(errorMessage, { count }),
         severity: "error",
       });
 

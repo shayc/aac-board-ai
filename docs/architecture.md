@@ -110,20 +110,21 @@ opens the first stored board set or imports the bundled starter board if the
 library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
-`importBoardSets`. Each imported file creates a separate board set.
+`importBoardFiles`. Each imported file creates a separate board set.
 
 ### Open a board
 
 [`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
 translation before rendering, keeping that work out of UI components:
 
-1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadStoredBoard`, which
-   reads the stored OBF, attaches its asset URLs, and maps the result through
-   `obfToBoard`.
-2. `resolveBoardForLanguage` uses the source board or a cached translation when
-   possible. Otherwise, it attempts translation and falls back to the source
-   board on failure. Successful translations render without waiting for the cache
-   write and remain usable if it fails.
+1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadBoardInLanguage`,
+   which reads the stored OBF, resolves object URLs for its stored assets, and
+   maps both through `obfToBoard`. Loading leaves the OBF unchanged. Media paths
+   resolve only to stored assets; otherwise the item's `data` or `url` is used.
+2. It then uses the source board or a cached translation when possible.
+   Otherwise, it attempts translation and falls back to the source board on
+   failure. Successful translations render without waiting for the cache write
+   and remain usable if it fails.
 3. The route renders the `Board`.
 
 Stored assets are immutable, so
@@ -156,7 +157,7 @@ expected and do not surface as user errors.
 
 Controls have programmatic names and support pointer and keyboard input. The
 [board grid](../src/features/board/grid/grid.tsx) and its
-[keyboard behavior](../src/features/board/grid/use-grid-keyboard.ts) preserve
+[keyboard behavior](../src/features/board/grid/use-grid-focus.ts) preserve
 these rules:
 
 - A populated grid has one Tab stop, at the remembered tile or first occupied
@@ -223,14 +224,14 @@ preferences.
 Start with `communication-board.tsx` to follow the board UI. Paths in this table
 are relative to `src/features/board/`.
 
-| Area                   | Source                                                                                                 | Responsibility                                                                   |
-| ---------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                   |
-| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                              |
-| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                             |
-| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.    |
-| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.     |
-| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Prepare suggestion models, apply rewrite instructions, and translate board text. |
+| Area                   | Source                                                                                                 | Responsibility                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| Board interaction      | [communication-board.tsx](../src/features/board/communication-board.tsx)                               | Compose the board UI and interaction adapters.                                  |
+| Import and OBF mapping | [import/](../src/features/board/import/), [obf/](../src/features/board/obf/)                           | Unify imports and map OBF records to runtime types.                             |
+| Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
+| Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
+| Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
+| Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text. |
 
 ### App and shared code
 

@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
-  "libraryDetails": "Informacije",
+  "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",
   "libraryCancel": "Prekliči",
   "libraryClose": "Zapri knjižnico",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Uporabi kratke povedi in vsakdanje besede",
   "suggestionsCustomInstructionsHelper": "Oblikujte predloge s svojimi besedami.",
   "suggestionsUnsupported": "Predlogi v tem brskalniku niso na voljo.",
-  "suggestionsSetupHelp": "Kako omogočiti predloge",
+  "suggestionsEnableHelp": "Kako omogočiti predloge",
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Prenašanje modela UI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "errorBoardUrlImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
+  "errorBoardURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
 }

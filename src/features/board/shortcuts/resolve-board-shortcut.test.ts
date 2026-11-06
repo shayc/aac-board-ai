@@ -32,12 +32,12 @@ describe("resolveBoardShortcut", () => {
     expect(
       resolveBoardShortcut(key({ key: "Enter", metaKey: true }), false),
     ).toEqual({
-      kind: "speak",
+      kind: "play",
     });
     expect(
       resolveBoardShortcut(key({ key: "Enter", ctrlKey: true }), false),
     ).toEqual({
-      kind: "speak",
+      kind: "play",
     });
     expect(
       resolveBoardShortcut(key({ key: "Enter", metaKey: true }), true),

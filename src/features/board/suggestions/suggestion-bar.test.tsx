@@ -39,8 +39,8 @@ describe("SuggestionBar", () => {
     expect(props.onPhraseSelect).toHaveBeenCalledTimes(2);
   });
 
-  test("offers an enable chip when setup is needed", async () => {
-    const props = makeProps({ status: { kind: "needs-setup" } });
+  test("offers an enable chip when suggestions are not enabled", async () => {
+    const props = makeProps({ status: { kind: "not-enabled" } });
     const screen = await renderWithProviders(<SuggestionBar {...props} />);
 
     await screen.getByRole("button", { name: "Enable suggestions" }).click();

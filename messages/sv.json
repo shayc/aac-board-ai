@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Släpp tavelfiler för att importera",
-  "libraryDetails": "Info",
+  "libraryInfo": "Info",
   "libraryDelete": "Ta bort",
   "libraryCancel": "Avbryt",
   "libraryClose": "Stäng biblioteket",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Använd korta meningar och vardagliga ord",
   "suggestionsCustomInstructionsHelper": "Forma förslagen med dina egna ord.",
   "suggestionsUnsupported": "Förslag är inte tillgängliga i den här webbläsaren.",
-  "suggestionsSetupHelp": "Så aktiverar du förslag",
+  "suggestionsEnableHelp": "Så aktiverar du förslag",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",
   "suggestionsDownloadingIndeterminate": "Laddar ner AI-modell…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Till startsidan",
   "errorBoardNotFound": "Tavlan hittades inte",
   "errorBoardSetNotFound": "Taveluppsättningen hittades inte",
-  "errorBoardUrlImportFailed": "Det gick inte att importera tavelfilen från länken"
+  "errorBoardURLImportFailed": "Det gick inte att importera tavelfilen från länken"
 }

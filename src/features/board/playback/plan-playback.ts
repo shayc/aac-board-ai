@@ -1,9 +1,6 @@
 import type { PlaybackStep } from "@shared/playback/playback-types";
 import type { MessagePart } from "../message/message-types";
-import {
-  createSpokenPartTracker,
-  type SpokenPart,
-} from "./spoken-part-tracker";
+import { joinSpokenParts, type SpokenPart } from "./join-spoken-parts";
 
 function getSpokenText(part: MessagePart): string {
   return (part.vocalization ?? part.label).toLowerCase();
@@ -18,11 +15,11 @@ export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
       return;
     }
 
-    const tracker = createSpokenPartTracker(spokenRun);
+    const joined = joinSpokenParts(spokenRun);
     steps.push({
       kind: "speech",
-      text: tracker.text,
-      trackingKeyAt: tracker.partIdAt,
+      text: joined.text,
+      cueAt: joined.partIdAt,
     });
     spokenRun = [];
   }
@@ -33,7 +30,7 @@ export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
       steps.push({
         kind: "audio",
         src: part.soundSrc,
-        trackingKey: part.id,
+        cue: part.id,
       });
       continue;
     }

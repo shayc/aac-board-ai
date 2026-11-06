@@ -1,7 +1,7 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useLanguage } from "@shared/language/use-language";
 import { listBoardSummaries } from "../storage/list-board-summaries";
-import { findTranslations } from "../translation/board-translations";
+import { findPhraseTranslations } from "../translation/board-translations";
 
 interface BoardOption {
   id: string;
@@ -18,9 +18,10 @@ export function useBoardOptions(boardSetId: string | undefined): BoardOption[] {
   });
 
   return summaries
-    .map(({ id, name, translations }) => ({
+    .map(({ id, name, translationsByLocale }) => ({
       id,
-      name: findTranslations(translations, language)?.[name] ?? name,
+      name:
+        findPhraseTranslations(translationsByLocale, language)?.[name] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }

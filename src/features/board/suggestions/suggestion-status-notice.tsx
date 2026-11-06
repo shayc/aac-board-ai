@@ -22,7 +22,7 @@ export function SuggestionStatusNotice({
   }
 
   switch (status.kind) {
-    case "needs-setup":
+    case "not-enabled":
       return (
         <Chip
           icon={<AutoAwesomeIcon />}

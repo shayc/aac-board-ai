@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
-  "libraryDetails": "ข้อมูล",
+  "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",
   "libraryCancel": "ยกเลิก",
   "libraryClose": "ปิดคลัง",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "ใช้ประโยคสั้น ๆ และคำที่ใช้ในชีวิตประจำวัน",
   "suggestionsCustomInstructionsHelper": "ปรับคำแนะนำให้เป็นสำนวนของคุณเอง",
   "suggestionsUnsupported": "เบราว์เซอร์นี้ไม่รองรับคำแนะนำ",
-  "suggestionsSetupHelp": "วิธีเปิดใช้คำแนะนำ",
+  "suggestionsEnableHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "กำลังดาวน์โหลดโมเดล AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "ไปที่หน้าแรก",
   "errorBoardNotFound": "ไม่พบบอร์ด",
   "errorBoardSetNotFound": "ไม่พบชุดบอร์ด",
-  "errorBoardUrlImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ"
+  "errorBoardURLImportFailed": "นำเข้าไฟล์บอร์ดจากลิงก์ไม่สำเร็จ"
 }

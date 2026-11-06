@@ -56,7 +56,7 @@
     }
   ],
   "libraryDropToImport": "Drop board files to import",
-  "libraryDetails": "Info",
+  "libraryInfo": "Info",
   "libraryDelete": "Delete",
   "libraryCancel": "Cancel",
   "libraryClose": "Close library",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Use short sentences and everyday words",
   "suggestionsCustomInstructionsHelper": "Shape suggestions in your own words.",
   "suggestionsUnsupported": "Suggestions are unavailable in this browser.",
-  "suggestionsSetupHelp": "How to enable suggestions",
+  "suggestionsEnableHelp": "How to enable suggestions",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model... {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloading AI model...",
@@ -141,5 +141,5 @@
   "errorGoHome": "Go home",
   "errorBoardNotFound": "Board not found",
   "errorBoardSetNotFound": "Board set not found",
-  "errorBoardUrlImportFailed": "Couldn't import board file from link"
+  "errorBoardURLImportFailed": "Couldn't import board file from link"
 }

@@ -7,6 +7,10 @@ import {
 } from "./derive-suggestion-status";
 import { useSuggestionPreferences } from "./suggestion-preferences-store";
 import { selectSuggestionPhrases } from "./select-suggestion-phrases";
+import {
+  areSuggestionsSupported,
+  SUGGESTION_ENGINES,
+} from "./suggestion-support";
 import { useProofreadSuggestion } from "./use-proofread-suggestion";
 import { useRewriteSuggestion } from "./use-rewrite-suggestion";
 
@@ -20,8 +24,11 @@ interface UseMessageSuggestionsReturn {
 }
 
 export function useMessageSuggestions(
-  text: string,
+  messageText: string,
 ): UseMessageSuggestionsReturn {
+  const text = messageText.trim();
+  const hasText = text !== "";
+
   const { customInstructions } = useSuggestionPreferences();
   const debouncedCustomInstructions = useDebouncedValue(
     customInstructions,
@@ -30,29 +37,25 @@ export function useMessageSuggestions(
 
   const { language } = useLanguage();
 
-  const proofreading = useProofreadSuggestion(text, language);
-  const sameToneRewrite = useRewriteSuggestion({
+  const proofreadSource = useProofreadSuggestion({ text, language });
+  const rewriteSource = useRewriteSuggestion({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "as-is",
   });
-  const casualRewrite = useRewriteSuggestion({
+  const casualRewriteSource = useRewriteSuggestion({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "more-casual",
   });
 
-  const sources = [proofreading, sameToneRewrite, casualRewrite];
-  const hasText = text.trim().length > 0;
+  const sources = [proofreadSource, rewriteSource, casualRewriteSource];
 
   // Other hook instances can start these downloads; global progress keeps the
   // suggestion bar in sync with them.
-  const downloadProgress = useGlobalDownloadProgress([
-    "Proofreader",
-    "Rewriter",
-  ]);
+  const downloadProgress = useGlobalDownloadProgress(SUGGESTION_ENGINES);
 
   const phrases = selectSuggestionPhrases(
     text,
@@ -73,16 +76,12 @@ export function useMessageSuggestions(
 
   const enable = () => {
     for (const source of sources) {
-      source.prepare();
+      source.enable();
     }
   };
 
-  const isSupported = sources.some(
-    ({ engineStatus }) => engineStatus !== "unsupported",
-  );
-
   return {
-    isSupported,
+    isSupported: areSuggestionsSupported(),
     status,
     phrases,
     enable,

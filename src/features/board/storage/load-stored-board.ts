@@ -1,7 +1,7 @@
-import type { OBFBoard, OBFMedia } from "@shayc/open-board-format";
+import type { OBFBoard } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
 import type { Board } from "../board-types";
-import { getAssetUrl } from "./asset-urls";
+import { getAssetURL } from "./asset-urls";
 import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
 
 export async function loadStoredBoard(
@@ -13,11 +13,11 @@ export async function loadStoredBoard(
 
   signal?.throwIfAborted();
 
-  const obfWithUrls = await attachAssetUrls(boardSetId, obfBoard);
+  const assetURLByPath = await resolveAssetURLs(boardSetId, obfBoard);
 
   signal?.throwIfAborted();
 
-  return obfToBoard(obfWithUrls);
+  return obfToBoard(obfBoard, assetURLByPath);
 }
 
 async function readOBFBoard(
@@ -32,39 +32,34 @@ async function readOBFBoard(
   return record.obf;
 }
 
-async function attachAssetUrls(
+async function resolveAssetURLs(
   boardSetId: string,
   obfBoard: OBFBoard,
-): Promise<OBFBoard> {
-  const [images, sounds] = await Promise.all([
-    attachUrlsToMedia(boardSetId, obfBoard.images),
-    attachUrlsToMedia(boardSetId, obfBoard.sounds),
-  ]);
+): Promise<Map<string, string>> {
+  const entries = await Promise.all(
+    Array.from(listMediaPaths(obfBoard), async (path) => {
+      const url = await findAssetURL(boardSetId, path);
 
-  return { ...obfBoard, images, sounds };
-}
-
-async function attachUrlsToMedia(
-  boardSetId: string,
-  media: OBFMedia[] | undefined,
-): Promise<OBFMedia[] | undefined> {
-  if (!media?.length) {
-    return media;
-  }
-
-  return Promise.all(
-    media.map(async (item) => {
-      if (!item.path) {
-        return item;
-      }
-
-      try {
-        const url = await getAssetUrl(boardSetId, item.path);
-
-        return url ? { ...item, data: url } : item;
-      } catch {
-        return item;
-      }
+      return url ? [[path, url] as const] : [];
     }),
   );
+
+  return new Map(entries.flat());
+}
+
+function listMediaPaths(obfBoard: OBFBoard): Set<string> {
+  const media = [...(obfBoard.images ?? []), ...(obfBoard.sounds ?? [])];
+
+  return new Set(media.flatMap((item) => (item.path ? [item.path] : [])));
+}
+
+async function findAssetURL(
+  boardSetId: string,
+  path: string,
+): Promise<string | undefined> {
+  try {
+    return await getAssetURL(boardSetId, path);
+  } catch {
+    return undefined;
+  }
 }

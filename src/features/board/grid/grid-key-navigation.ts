@@ -56,7 +56,7 @@ function resolveArrowStep(
   key: string,
   direction: "ltr" | "rtl",
 ): GridStep | null {
-  const isRtl = direction === "rtl";
+  const isRTL = direction === "rtl";
 
   switch (key) {
     case "ArrowUp":
@@ -64,9 +64,9 @@ function resolveArrowStep(
     case "ArrowDown":
       return { row: 1, column: 0 };
     case "ArrowLeft":
-      return { row: 0, column: isRtl ? 1 : -1 };
+      return { row: 0, column: isRTL ? 1 : -1 };
     case "ArrowRight":
-      return { row: 0, column: isRtl ? -1 : 1 };
+      return { row: 0, column: isRTL ? -1 : 1 };
     default:
       return null;
   }

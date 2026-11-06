@@ -52,7 +52,7 @@ export function BoardSetLibrary({
       await deleteBoardSet(id);
     } catch {
       showSnackbar({
-        message: (translate) => translate(m.libraryDeleteFailed, { name }),
+        message: (t) => t(m.libraryDeleteFailed, { name }),
         severity: "error",
       });
     }

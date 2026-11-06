@@ -11,7 +11,7 @@ import { usePlayback } from "@shared/playback/use-playback";
 import {
   setSpeechPitch,
   setSpeechRate,
-  setVoiceURI,
+  setSpeechVoiceURI,
   setSpeechVolume,
   SPEECH_PITCH,
   SPEECH_RATE,
@@ -69,7 +69,7 @@ export function SpeechSettings() {
       value: rate,
       min: SPEECH_RATE.min,
       max: SPEECH_RATE.max,
-      normalValue: SPEECH_RATE.fallback,
+      normalValue: SPEECH_RATE.defaultValue,
       onChange: setSpeechRate,
       formatValue: (value: number) => `${multiplierFormat.format(value)}×`,
     },
@@ -79,7 +79,7 @@ export function SpeechSettings() {
       value: pitch,
       min: SPEECH_PITCH.min,
       max: SPEECH_PITCH.max,
-      normalValue: SPEECH_PITCH.fallback,
+      normalValue: SPEECH_PITCH.defaultValue,
       onChange: setSpeechPitch,
       formatValue: (value: number) => percentFormat.format(value),
     },
@@ -106,7 +106,7 @@ export function SpeechSettings() {
       <SettingsSelect
         label={t(m.speechVoice)}
         value={selectedVoiceURI}
-        onChange={(value) => setVoiceURI(value === "" ? null : value)}
+        onChange={(value) => setSpeechVoiceURI(value === "" ? null : value)}
         action={
           <Tooltip title={t(m.speechPreviewVoice)}>
             <IconButton

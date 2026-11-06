@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
-  "libraryDetails": "তথ্য",
+  "libraryInfo": "তথ্য",
   "libraryDelete": "মুছুন",
   "libraryCancel": "বাতিল করুন",
   "libraryClose": "লাইব্রেরি বন্ধ করুন",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "ছোট বাক্য ও দৈনন্দিন শব্দ ব্যবহার করুন",
   "suggestionsCustomInstructionsHelper": "নিজের ভাষায় পরামর্শগুলো গঠন করুন।",
   "suggestionsUnsupported": "এই ব্রাউজারে পরামর্শ উপলভ্য নয়।",
-  "suggestionsSetupHelp": "কীভাবে পরামর্শ চালু করবেন",
+  "suggestionsEnableHelp": "কীভাবে পরামর্শ চালু করবেন",
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI মডেল ডাউনলোড হচ্ছে…",
@@ -141,5 +141,5 @@
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
-  "errorBoardUrlImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি"
+  "errorBoardURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি"
 }

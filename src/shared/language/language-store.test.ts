@@ -2,9 +2,9 @@ import { beforeEach, describe, expect, test } from "vitest";
 import {
   DEFAULT_LANGUAGE,
   getPreferredLanguage,
-  getUiLocale,
+  getUILocale,
   parseStoredLanguage,
-  resolveUiLocale,
+  resolveUILocale,
   setStoredLanguage,
 } from "./language-store";
 
@@ -40,10 +40,10 @@ describe("language store", () => {
   });
 
   test("derives a translated UI locale from the communication language", () => {
-    expect(resolveUiLocale("he")).toBe("he");
-    expect(resolveUiLocale("ca")).toBe(DEFAULT_LANGUAGE);
+    expect(resolveUILocale("he")).toBe("he");
+    expect(resolveUILocale("ca")).toBe(DEFAULT_LANGUAGE);
 
     setStoredLanguage("bn");
-    expect(getUiLocale()).toBe("bn");
+    expect(getUILocale()).toBe("bn");
   });
 });

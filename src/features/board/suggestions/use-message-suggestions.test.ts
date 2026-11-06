@@ -196,7 +196,7 @@ describe("useMessageSuggestions", () => {
       const { result } = await renderMessageSuggestions("want eat");
 
       await vi.waitFor(() => {
-        expect(result.current.status).toEqual({ kind: "needs-setup" });
+        expect(result.current.status).toEqual({ kind: "not-enabled" });
       });
       expect(create).not.toHaveBeenCalled();
 
@@ -224,7 +224,7 @@ describe("useMessageSuggestions", () => {
     const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.status).toEqual({ kind: "needs-setup" });
+      expect(result.current.status).toEqual({ kind: "not-enabled" });
     });
 
     setStoredLanguage("he");

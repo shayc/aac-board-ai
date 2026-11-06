@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "가져오려면 보드 파일을 놓으세요",
-  "libraryDetails": "정보",
+  "libraryInfo": "정보",
   "libraryDelete": "삭제",
   "libraryCancel": "취소",
   "libraryClose": "라이브러리 닫기",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "짧은 문장과 일상적인 단어를 사용해 주세요",
   "suggestionsCustomInstructionsHelper": "자신만의 언어로 제안을 다듬어 보세요.",
   "suggestionsUnsupported": "이 브라우저에서는 제안 기능을 사용할 수 없습니다.",
-  "suggestionsSetupHelp": "제안 기능을 활성화하는 방법",
+  "suggestionsEnableHelp": "제안 기능을 활성화하는 방법",
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI 모델 다운로드 중…",
@@ -141,5 +141,5 @@
   "errorGoHome": "홈으로",
   "errorBoardNotFound": "보드를 찾을 수 없음",
   "errorBoardSetNotFound": "보드 세트를 찾을 수 없음",
-  "errorBoardUrlImportFailed": "링크에서 보드 파일을 가져올 수 없습니다"
+  "errorBoardURLImportFailed": "링크에서 보드 파일을 가져올 수 없습니다"
 }

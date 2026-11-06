@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
-  "libraryDetails": "Infos",
+  "libraryInfo": "Infos",
   "libraryDelete": "Supprimer",
   "libraryCancel": "Annuler",
   "libraryClose": "Fermer la bibliothèque",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Utilise des phrases courtes et des mots courants",
   "suggestionsCustomInstructionsHelper": "Façonnez les suggestions avec vos propres mots.",
   "suggestionsUnsupported": "Les suggestions ne sont pas disponibles dans ce navigateur.",
-  "suggestionsSetupHelp": "Comment activer les suggestions",
+  "suggestionsEnableHelp": "Comment activer les suggestions",
   "suggestionsEnable": "Activer les suggestions",
   "suggestionsDownloading": "Téléchargement du modèle d'IA… {progress} %",
   "suggestionsDownloadingIndeterminate": "Téléchargement du modèle d'IA…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "errorBoardUrlImportFailed": "Impossible d'importer le fichier de tableau depuis le lien"
+  "errorBoardURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien"
 }

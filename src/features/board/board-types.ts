@@ -4,7 +4,7 @@ export interface Board {
   locale?: string;
   grid: BoardGrid;
   buttons: BoardButton[];
-  translations: BoardTranslations;
+  translationsByLocale: TranslationsByLocale;
 }
 
 export interface BoardGrid {
@@ -35,5 +35,8 @@ export type BoardAction =
 
 export type PhraseTranslations = Partial<Record<string, string>>;
 
-/** Target locale → original board text → translated text. */
-export type BoardTranslations = Partial<Record<string, PhraseTranslations>>;
+/**
+ * BCP 47 locale → phrase translations. Imported boards may key by region
+ * (`es-ES`); translations cached on this device key by language code (`es`).
+ */
+export type TranslationsByLocale = Partial<Record<string, PhraseTranslations>>;

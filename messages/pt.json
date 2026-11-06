@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
-  "libraryDetails": "Informações",
+  "libraryInfo": "Informações",
   "libraryDelete": "Excluir",
   "libraryCancel": "Cancelar",
   "libraryClose": "Fechar biblioteca",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Use frases curtas e palavras do dia a dia",
   "suggestionsCustomInstructionsHelper": "Molde as sugestões com suas próprias palavras.",
   "suggestionsUnsupported": "As sugestões não estão disponíveis neste navegador.",
-  "suggestionsSetupHelp": "Como ativar as sugestões",
+  "suggestionsEnableHelp": "Como ativar as sugestões",
   "suggestionsEnable": "Ativar sugestões",
   "suggestionsDownloading": "Baixando modelo de IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Baixando modelo de IA…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
-  "errorBoardUrlImportFailed": "Não foi possível importar o arquivo de prancha do link"
+  "errorBoardURLImportFailed": "Não foi possível importar o arquivo de prancha do link"
 }

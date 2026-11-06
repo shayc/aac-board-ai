@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "இறக்குமதி செய்ய பலகை கோப்புகளை விடுங்கள்",
-  "libraryDetails": "தகவல்",
+  "libraryInfo": "தகவல்",
   "libraryDelete": "நீக்கு",
   "libraryCancel": "ரத்துசெய்",
   "libraryClose": "நூலகத்தை மூடு",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "குறுகிய வாக்கியங்களையும் அன்றாடச் சொற்களையும் பயன்படுத்தவும்",
   "suggestionsCustomInstructionsHelper": "உங்கள் சொந்த வார்த்தைகளில் பரிந்துரைகளை வடிவமைக்கவும்.",
   "suggestionsUnsupported": "இந்த உலாவியில் பரிந்துரைகள் கிடைக்கவில்லை.",
-  "suggestionsSetupHelp": "பரிந்துரைகளை இயக்குவது எப்படி",
+  "suggestionsEnableHelp": "பரிந்துரைகளை இயக்குவது எப்படி",
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI மாடல் பதிவிறக்கப்படுகிறது…",
@@ -141,5 +141,5 @@
   "errorGoHome": "முகப்புக்குச் செல்",
   "errorBoardNotFound": "பலகை கிடைக்கவில்லை",
   "errorBoardSetNotFound": "பலகைத் தொகுப்பு கிடைக்கவில்லை",
-  "errorBoardUrlImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை"
+  "errorBoardURLImportFailed": "இணைப்பிலிருந்து பலகைக் கோப்பை இறக்குமதி செய்ய முடியவில்லை"
 }

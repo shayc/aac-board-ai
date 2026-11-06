@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Rilascia i file delle tabelle per importare",
-  "libraryDetails": "Informazioni",
+  "libraryInfo": "Informazioni",
   "libraryDelete": "Elimina",
   "libraryCancel": "Annulla",
   "libraryClose": "Chiudi libreria",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Usa frasi brevi e parole di uso quotidiano",
   "suggestionsCustomInstructionsHelper": "Modella i suggerimenti con le tue parole.",
   "suggestionsUnsupported": "I suggerimenti non sono disponibili in questo browser.",
-  "suggestionsSetupHelp": "Come attivare i suggerimenti",
+  "suggestionsEnableHelp": "Come attivare i suggerimenti",
   "suggestionsEnable": "Attiva i suggerimenti",
   "suggestionsDownloading": "Download del modello IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Download del modello IA…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Vai alla home",
   "errorBoardNotFound": "Tabella non trovata",
   "errorBoardSetNotFound": "Set di tabelle non trovato",
-  "errorBoardUrlImportFailed": "Impossibile importare il file di tabella dal link"
+  "errorBoardURLImportFailed": "Impossibile importare il file di tabella dal link"
 }

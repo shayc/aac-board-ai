@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
-  "libraryDetails": "जानकारी",
+  "libraryInfo": "जानकारी",
   "libraryDelete": "हटाएँ",
   "libraryCancel": "रद्द करें",
   "libraryClose": "लाइब्रेरी बंद करें",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "छोटे वाक्य और रोज़मर्रा के शब्द इस्तेमाल करें",
   "suggestionsCustomInstructionsHelper": "सुझावों को अपने शब्दों में ढालें।",
   "suggestionsUnsupported": "इस ब्राउज़र में सुझाव उपलब्ध नहीं हैं।",
-  "suggestionsSetupHelp": "सुझाव कैसे चालू करें",
+  "suggestionsEnableHelp": "सुझाव कैसे चालू करें",
   "suggestionsEnable": "सुझाव चालू करें",
   "suggestionsDownloading": "AI मॉडल डाउनलोड हो रहा है… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI मॉडल डाउनलोड हो रहा है…",
@@ -141,5 +141,5 @@
   "errorGoHome": "होम पर जाएँ",
   "errorBoardNotFound": "बोर्ड नहीं मिला",
   "errorBoardSetNotFound": "बोर्ड सेट नहीं मिला",
-  "errorBoardUrlImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी"
+  "errorBoardURLImportFailed": "लिंक से बोर्ड फ़ाइल आयात नहीं की जा सकी"
 }

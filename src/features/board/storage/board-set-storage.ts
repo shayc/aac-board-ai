@@ -32,7 +32,7 @@ export interface BoardSetInput {
   readonly assets: readonly AssetInput[];
 }
 
-export async function getStoredBoardSet(
+export async function getBoardSetRecord(
   boardSetId: string,
 ): Promise<BoardSetRecord | undefined> {
   const db = await getBoardsDB();
@@ -40,7 +40,7 @@ export async function getStoredBoardSet(
   return db.get("boardSets", boardSetId);
 }
 
-export async function listStoredBoardSets(): Promise<BoardSetRecord[]> {
+export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   const db = await getBoardsDB();
   const boardSets = await db.getAllFromIndex("boardSets", "byUpdatedAt");
 
@@ -53,7 +53,7 @@ function boardSetRange(boardSetId: string): IDBKeyRange {
   return IDBKeyRange.bound([boardSetId], [boardSetId, []]);
 }
 
-export async function deleteStoredBoardSet(boardSetId: string): Promise<void> {
+export async function removeBoardSet(boardSetId: string): Promise<void> {
   validateId(boardSetId, "boardSetId");
   const db = await getBoardsDB();
   const tx = db.transaction(["boards", "assets", "boardSets"], "readwrite");
@@ -67,9 +67,7 @@ export async function deleteStoredBoardSet(boardSetId: string): Promise<void> {
   ]);
 }
 
-export async function createStoredBoardSet(
-  input: BoardSetInput,
-): Promise<void> {
+export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const { id, boards, assets } = input;
   const rootBoard = validateBoardSetInput(input);
   const record = buildBoardSetRecord(input, rootBoard);

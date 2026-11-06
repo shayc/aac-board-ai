@@ -21,11 +21,11 @@ const rtlCache = createCache({
 
 export function ThemeProvider({ children }: ThemeProviderProps) {
   const { direction } = useLanguage();
-  const isRtl = direction === "rtl";
+  const isRTL = direction === "rtl";
 
   return (
-    <CacheProvider value={isRtl ? rtlCache : ltrCache}>
-      <MUIThemeProvider theme={isRtl ? rtlTheme : ltrTheme} noSsr>
+    <CacheProvider value={isRTL ? rtlCache : ltrCache}>
+      <MUIThemeProvider theme={isRTL ? rtlTheme : ltrTheme} noSsr>
         <CssBaseline />
         <ThemeColorMeta />
         {children}

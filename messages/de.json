@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
-  "libraryDetails": "Info",
+  "libraryInfo": "Info",
   "libraryDelete": "Löschen",
   "libraryCancel": "Abbrechen",
   "libraryClose": "Bibliothek schließen",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Verwende kurze Sätze und alltägliche Wörter",
   "suggestionsCustomInstructionsHelper": "Gestalte die Vorschläge mit deinen eigenen Worten.",
   "suggestionsUnsupported": "Vorschläge sind in diesem Browser nicht verfügbar.",
-  "suggestionsSetupHelp": "So aktivieren Sie Vorschläge",
+  "suggestionsEnableHelp": "So aktivieren Sie Vorschläge",
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
   "suggestionsDownloadingIndeterminate": "KI-Modell wird heruntergeladen…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Zur Startseite",
   "errorBoardNotFound": "Tafel nicht gefunden",
   "errorBoardSetNotFound": "Tafelsatz nicht gefunden",
-  "errorBoardUrlImportFailed": "Tafeldatei konnte nicht über den Link importiert werden"
+  "errorBoardURLImportFailed": "Tafeldatei konnte nicht über den Link importiert werden"
 }

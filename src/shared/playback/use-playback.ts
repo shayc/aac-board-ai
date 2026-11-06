@@ -25,7 +25,7 @@ export function useIsPlaying(owner?: string): boolean {
   });
 }
 
-export function useActiveTrackingKey(owner?: string): string | null {
+export function useActiveCue(owner?: string): string | null {
   const playback = usePlayback();
 
   return useSyncExternalStore(playback.subscribe, () => {
@@ -38,6 +38,6 @@ export function useActiveTrackingKey(owner?: string): string | null {
       return null;
     }
 
-    return state.activeTrackingKey;
+    return state.activeCue;
   });
 }

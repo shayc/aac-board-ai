@@ -3,7 +3,7 @@ import { MemoryRouter, useLocation } from "react-router";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../navigation/board-paths";
-import { listStoredBoardSets } from "../storage/board-set-storage";
+import { listBoardSetRecords } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
 
@@ -123,7 +123,7 @@ describe("useBoardFileDrop", () => {
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile));
 
     await vi.waitFor(async () => {
-      const boardSets = await listStoredBoardSets();
+      const boardSets = await listBoardSetRecords();
       expect(boardSets).toHaveLength(1);
       expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
     });

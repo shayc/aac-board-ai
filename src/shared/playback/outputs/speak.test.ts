@@ -1,7 +1,7 @@
 import {
   setSpeechPitch,
   setSpeechRate,
-  setVoiceURI,
+  setSpeechVoiceURI,
   setSpeechVolume,
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
@@ -53,7 +53,7 @@ describe("speak", () => {
     test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
       stubUtteranceVoiceAccessor();
       const speech = stubSpeech();
-      setVoiceURI("voice-1");
+      setSpeechVoiceURI("voice-1");
       setSpeechRate(1.5);
       setSpeechPitch(0.5);
       setSpeechVolume(0.25);

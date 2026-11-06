@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
-  "libraryDetails": "معلومات",
+  "libraryInfo": "معلومات",
   "libraryDelete": "حذف",
   "libraryCancel": "إلغاء",
   "libraryClose": "إغلاق المكتبة",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "استخدم جملًا قصيرة وكلمات يومية",
   "suggestionsCustomInstructionsHelper": "صِغ الاقتراحات بأسلوبك الخاص.",
   "suggestionsUnsupported": "الاقتراحات غير متاحة في هذا المتصفح.",
-  "suggestionsSetupHelp": "كيفية تفعيل الاقتراحات",
+  "suggestionsEnableHelp": "كيفية تفعيل الاقتراحات",
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",
   "suggestionsDownloadingIndeterminate": "جارٍ تنزيل نموذج الذكاء الاصطناعي…",
@@ -141,5 +141,5 @@
   "errorGoHome": "الانتقال إلى الرئيسية",
   "errorBoardNotFound": "اللوحة غير موجودة",
   "errorBoardSetNotFound": "مجموعة اللوحات غير موجودة",
-  "errorBoardUrlImportFailed": "تعذّر استيراد ملف اللوحة من الرابط"
+  "errorBoardURLImportFailed": "تعذّر استيراد ملف اللوحة من الرابط"
 }

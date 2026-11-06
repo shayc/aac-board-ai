@@ -20,7 +20,8 @@ function renderSuggestionsSettings() {
 
 describe("SuggestionSettings", () => {
   test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
-    stubBuiltInAIUnsupported("Proofreader", "Rewriter", "Translator");
+    stubProofreader();
+    stubBuiltInAIUnsupported("Rewriter", "Translator");
 
     const screen = await renderSuggestionsSettings();
 

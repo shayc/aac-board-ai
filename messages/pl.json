@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",
-  "libraryDetails": "Informacje",
+  "libraryInfo": "Informacje",
   "libraryDelete": "Usuń",
   "libraryCancel": "Anuluj",
   "libraryClose": "Zamknij bibliotekę",
@@ -115,7 +115,7 @@
   "suggestionsCustomInstructionsPlaceholder": "Używaj krótkich zdań i codziennych słów",
   "suggestionsCustomInstructionsHelper": "Kształtuj sugestie własnymi słowami.",
   "suggestionsUnsupported": "Sugestie są niedostępne w tej przeglądarce.",
-  "suggestionsSetupHelp": "Jak włączyć sugestie",
+  "suggestionsEnableHelp": "Jak włączyć sugestie",
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Pobieranie modelu AI…",
@@ -141,5 +141,5 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardUrlImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
+  "errorBoardURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
 }
