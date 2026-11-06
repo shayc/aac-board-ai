@@ -15,7 +15,7 @@ export interface BoardPreferences {
 export const TILE_SATURATION: ClampedNumberOptions = {
   min: 0,
   max: 1,
-  defaultValue: 1,
+  normalValue: 1,
 };
 
 function isSymbolLabelPlacement(value: unknown): value is SymbolLabelPlacement {

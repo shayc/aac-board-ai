@@ -1,9 +1,9 @@
 import { describe, expect, test } from "vitest";
 import {
   applyTranslations,
-  collectTranslatablePhrases,
+  collectBoardStrings,
   findBoardInLanguage,
-  findPhraseTranslations,
+  findStringTranslations,
   getBoardLanguage,
 } from "./board-translations";
 import type { Board } from "../board-types";
@@ -49,21 +49,21 @@ describe("getBoardLanguage", () => {
   });
 });
 
-describe("findPhraseTranslations", () => {
+describe("findStringTranslations", () => {
   test("matches regional translations by base language", () => {
     expect(
-      findPhraseTranslations(mockBoard.translationsByLocale, "es"),
+      findStringTranslations(mockBoard.translationsByLocale, "es"),
     ).toEqual(mockTranslationsByLocale["es-ES"]);
     expect(
-      findPhraseTranslations(mockBoard.translationsByLocale, "fr"),
+      findStringTranslations(mockBoard.translationsByLocale, "fr"),
     ).toEqual(mockTranslationsByLocale["fr-CA"]);
   });
 
   test("returns nothing for an untranslated language", () => {
     expect(
-      findPhraseTranslations(mockBoard.translationsByLocale, "de"),
+      findStringTranslations(mockBoard.translationsByLocale, "de"),
     ).toBeUndefined();
-    expect(findPhraseTranslations({}, "es")).toBeUndefined();
+    expect(findStringTranslations({}, "es")).toBeUndefined();
   });
 });
 
@@ -122,14 +122,14 @@ describe("applyTranslations", () => {
   });
 });
 
-describe("collectTranslatablePhrases", () => {
+describe("collectBoardStrings", () => {
   test("collects each unique nonblank name, label, and vocalization", () => {
-    const phrases = collectTranslatablePhrases(mockBoard);
+    const strings = collectBoardStrings(mockBoard);
 
-    expect(phrases.size).toBe(3);
-    expect(phrases.has("My Board")).toBe(true);
-    expect(phrases.has("Hello")).toBe(true);
-    expect(phrases.has("Hello there")).toBe(true);
+    expect(strings.size).toBe(3);
+    expect(strings.has("My Board")).toBe(true);
+    expect(strings.has("Hello")).toBe(true);
+    expect(strings.has("Hello there")).toBe(true);
   });
 });
 
@@ -138,14 +138,14 @@ describe("findBoardInLanguage", () => {
     expect(findBoardInLanguage(mockBoard, "en")).toBe(mockBoard);
   });
 
-  test("returns a translated board from cached translations", () => {
+  test("returns a translated board from the board's own translations", () => {
     const translated = findBoardInLanguage(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0].label).toBe("Hola");
   });
 
-  test("returns nothing when the language has no cached translations", () => {
+  test("returns nothing when the board has no translations for the language", () => {
     expect(findBoardInLanguage(mockBoard, "de")).toBeUndefined();
   });
 });

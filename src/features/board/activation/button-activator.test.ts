@@ -33,7 +33,7 @@ function setup(parts: MessagePart[] = []) {
 }
 
 const SPEAK_THEN_CLEAR: BoardButton["actions"] = [
-  { kind: "speak" },
+  { kind: "play" },
   { kind: "clear" },
 ];
 
@@ -54,7 +54,7 @@ describe("createButtonActivator", () => {
     activateButton({
       id: "btn",
       label: "Folder",
-      actions: [{ kind: "clear" }, { kind: "speak" }],
+      actions: [{ kind: "clear" }, { kind: "play" }],
       linkedBoardId: "child-board",
     });
 
@@ -103,7 +103,7 @@ describe("createButtonActivator", () => {
     expect(navigation.goHome).toHaveBeenCalledOnce();
   });
 
-  test("folds a mutation-only sequence into one commit without playing", () => {
+  test("folds an edit-only sequence into one commit without playing", () => {
     const { activateButton, message, playback } = setup([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
@@ -133,13 +133,13 @@ describe("createButtonActivator", () => {
     expect(message.setParts).toHaveBeenCalledWith([]);
   });
 
-  test("speaks a message that includes a letter spelled earlier in the same tap", () => {
+  test("plays a message that includes a letter spelled earlier in the same tap", () => {
     const { activateButton, message, playback } = setup();
 
     activateButton({
       id: "btn",
       label: "",
-      actions: [{ kind: "spell", text: "s" }, { kind: "speak" }],
+      actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
 
     const [[partsToPlay]] = playback.playMessage.mock.calls;
@@ -147,19 +147,19 @@ describe("createButtonActivator", () => {
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
   });
 
-  test("speaks the current message without committing when speak is the only action", async () => {
+  test("plays the current message without committing when play is the only action", async () => {
     const parts: MessagePart[] = [{ id: "1", label: "hi" }];
     const { activateButton, message, playback } = setup(parts);
     const settlePlayback = holdMessagePlayback(playback);
 
-    activateButton({ id: "btn", label: "", actions: [{ kind: "speak" }] });
+    activateButton({ id: "btn", label: "", actions: [{ kind: "play" }] });
     await settlePlayback("completed");
 
     expect(playback.playMessage).toHaveBeenCalledWith(parts);
     expect(message.setParts).not.toHaveBeenCalled();
   });
 
-  test("holds mutations after speak until playback completes, then commits them", async () => {
+  test("holds edits after play until playback completes, then commits them", async () => {
     const { activateButton, message, playback } = setup([
       { id: "1", label: "hi" },
     ]);
@@ -173,7 +173,7 @@ describe("createButtonActivator", () => {
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith([]);
   });
 
-  test("drops mutations after speak when playback is interrupted", async () => {
+  test("drops edits after play when playback is interrupted", async () => {
     const { activateButton, message, playback } = setup([
       { id: "1", label: "hi" },
     ]);

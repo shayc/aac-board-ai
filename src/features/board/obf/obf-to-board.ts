@@ -105,9 +105,9 @@ export function obfToTranslationsByLocale(
   }
 
   return Object.fromEntries(
-    Object.entries(strings).map(([locale, phrases]) => [
+    Object.entries(strings).map(([locale, translations]) => [
       normalizeLocale(locale),
-      phrases,
+      translations,
     ]),
   );
 }

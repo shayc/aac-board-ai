@@ -30,13 +30,13 @@ export type BoardAction =
   | { kind: "backspace" }
   | { kind: "clear" }
   | { kind: "home" }
-  | { kind: "speak" }
+  | { kind: "play" }
   | { kind: "spell"; text: string };
 
-export type PhraseTranslations = Partial<Record<string, string>>;
+export type StringTranslations = Partial<Record<string, string>>;
 
 /**
- * BCP 47 locale → phrase translations. Imported boards may key by region
+ * BCP 47 locale → string translations. Imported boards may key by region
  * (`es-ES`); translations cached on this device key by language code (`es`).
  */
-export type TranslationsByLocale = Partial<Record<string, PhraseTranslations>>;
+export type TranslationsByLocale = Partial<Record<string, StringTranslations>>;

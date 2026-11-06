@@ -1,8 +1,8 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type {
   Board,
+  StringTranslations,
   TranslationsByLocale,
-  PhraseTranslations,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 
@@ -16,19 +16,22 @@ export function findBoardInLanguage(
     return board;
   }
 
-  const cached = findPhraseTranslations(board.translationsByLocale, language);
+  const translations = findStringTranslations(
+    board.translationsByLocale,
+    language,
+  );
 
-  return cached ? applyTranslations(board, cached) : undefined;
+  return translations ? applyTranslations(board, translations) : undefined;
 }
 
 export function getBoardLanguage(board: Board): string {
   return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
-export function findPhraseTranslations(
+export function findStringTranslations(
   translationsByLocale: TranslationsByLocale,
   language: string,
-): PhraseTranslations | undefined {
+): StringTranslations | undefined {
   const match = Object.entries(translationsByLocale).find(
     ([locale]) => getLanguageCode(locale) === language,
   );
@@ -38,41 +41,41 @@ export function findPhraseTranslations(
 
 export function applyTranslations(
   board: Board,
-  translations: PhraseTranslations,
+  translations: StringTranslations,
 ): Board {
-  function translatePhrase(phrase: string | undefined) {
-    const translated = phrase ? (translations[phrase] ?? phrase) : phrase;
+  function translateString(text: string | undefined) {
+    const translated = text ? (translations[text] ?? text) : text;
 
     return nonBlankText(translated);
   }
 
   return {
     ...board,
-    name: translatePhrase(board.name) ?? "",
+    name: translateString(board.name) ?? "",
     buttons: board.buttons.map((button) => ({
       ...button,
-      label: translatePhrase(button.label) ?? "",
-      vocalization: translatePhrase(button.vocalization),
+      label: translateString(button.label) ?? "",
+      vocalization: translateString(button.vocalization),
     })),
   };
 }
 
-export function collectTranslatablePhrases(board: Board): Set<string> {
-  const translatablePhrases = new Set<string>();
+export function collectBoardStrings(board: Board): Set<string> {
+  const strings = new Set<string>();
 
   if (board.name) {
-    translatablePhrases.add(board.name);
+    strings.add(board.name);
   }
 
   for (const button of board.buttons) {
     if (button.label) {
-      translatablePhrases.add(button.label);
+      strings.add(button.label);
     }
 
     if (button.vocalization) {
-      translatablePhrases.add(button.vocalization);
+      strings.add(button.vocalization);
     }
   }
 
-  return translatablePhrases;
+  return strings;
 }

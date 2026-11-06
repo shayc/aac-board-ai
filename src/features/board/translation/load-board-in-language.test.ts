@@ -49,7 +49,7 @@ describe("loadBoardInLanguage", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("applies cached translations without invoking the Translator", async () => {
+  test("applies the board's own translations without invoking the Translator", async () => {
     await storeBoard({
       strings: { "es-ES": { Food: "Comida", eat: "comer", drink: "beber" } },
     });
@@ -64,7 +64,7 @@ describe("loadBoardInLanguage", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("translates via the Translator API on a cache miss", async () => {
+  test("translates via the Translator API when the board has no translations for the language", async () => {
     await storeBoard();
     const { create, translate } = stubTranslator((input) => `[es] ${input}`);
 

@@ -78,7 +78,7 @@ export function createButtonActivator({
         case "home":
           navigation.goHome();
           break;
-        case "speak":
+        case "play":
           partsToPlay = editedParts;
           break;
 
