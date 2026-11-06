@@ -106,6 +106,7 @@ const themeOptions = {
     },
     dark: {
       palette: {
+        primary: { main: "#4c9bf5" },
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
         error: { main: "#f2b8b5" },
