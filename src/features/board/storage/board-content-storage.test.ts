@@ -5,7 +5,7 @@ import {
   getAssetBlob,
   getBoardRecord,
   listBoardRecords,
-  replaceBoardTranslations,
+  replacePhraseTranslations,
 } from "./board-content-storage";
 import { createBoardSetRecords } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
@@ -83,7 +83,7 @@ describe("getAssetBlob", () => {
   });
 });
 
-describe("replaceBoardTranslations", () => {
+describe("replacePhraseTranslations", () => {
   test("adds localized strings to a board", async () => {
     const obf = makeOBFBoard({ id: "b1", name: "B1" });
     await createBoardSetRecords(
@@ -92,7 +92,7 @@ describe("replaceBoardTranslations", () => {
       }),
     );
 
-    await replaceBoardTranslations("set-1", "b1", "es", {
+    await replacePhraseTranslations("set-1", "b1", "es", {
       hello: "hola",
       world: "mundo",
     });
@@ -116,7 +116,7 @@ describe("replaceBoardTranslations", () => {
       }),
     );
 
-    await replaceBoardTranslations("set-1", "b1", "es", { hello: "hola" });
+    await replacePhraseTranslations("set-1", "b1", "es", { hello: "hola" });
 
     const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
@@ -134,11 +134,11 @@ describe("replaceBoardTranslations", () => {
       }),
     );
 
-    await replaceBoardTranslations("set-1", "b1", "es", {
+    await replacePhraseTranslations("set-1", "b1", "es", {
       hello: "hola",
       bye: "adiós",
     });
-    await replaceBoardTranslations("set-1", "b1", "es", { hello: "ey" });
+    await replacePhraseTranslations("set-1", "b1", "es", { hello: "ey" });
 
     const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
@@ -149,7 +149,7 @@ describe("replaceBoardTranslations", () => {
     await createBoardSetRecords(makeBoardSetInput());
 
     await expect(
-      replaceBoardTranslations("set-1", "nonexistent", "es", {}),
+      replacePhraseTranslations("set-1", "nonexistent", "es", {}),
     ).rejects.toThrow("Board not found");
   });
 });

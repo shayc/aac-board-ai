@@ -3,8 +3,8 @@ import { assertNever } from "@shared/utils/assert-never";
 import {
   appendSpace,
   appendText,
+  applyBackspace,
   createPart,
-  deleteBackward,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
 import type { BoardButton } from "../board-types";
@@ -59,7 +59,7 @@ export function createButtonActivator({
     }
 
     let editedParts = startingParts;
-    let spokenParts: MessagePart[] | null = null;
+    let partsToPlay: MessagePart[] | null = null;
 
     for (const action of button.actions) {
       switch (action.kind) {
@@ -70,7 +70,7 @@ export function createButtonActivator({
           editedParts = appendSpace(editedParts);
           break;
         case "backspace":
-          editedParts = deleteBackward(editedParts);
+          editedParts = applyBackspace(editedParts);
           break;
         case "clear":
           editedParts = [];
@@ -79,7 +79,7 @@ export function createButtonActivator({
           navigation.goHome();
           break;
         case "speak":
-          spokenParts = editedParts;
+          partsToPlay = editedParts;
           break;
 
         default:
@@ -87,7 +87,7 @@ export function createButtonActivator({
       }
     }
 
-    if (spokenParts === null) {
+    if (partsToPlay === null) {
       if (editedParts !== startingParts) {
         message.setParts(editedParts);
       }
@@ -95,14 +95,14 @@ export function createButtonActivator({
       return;
     }
 
-    if (spokenParts !== startingParts) {
-      message.setParts(spokenParts);
+    if (partsToPlay !== startingParts) {
+      message.setParts(partsToPlay);
     }
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(spokenParts).then((outcome) => {
-      if (outcome === "completed" && editedParts !== spokenParts) {
+    void playback.playMessage(partsToPlay).then((outcome) => {
+      if (outcome === "completed" && editedParts !== partsToPlay) {
         message.setParts(editedParts);
       }
     });

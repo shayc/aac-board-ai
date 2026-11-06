@@ -1,6 +1,6 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
 import type { Board, PhraseTranslations } from "../board-types";
-import { replaceBoardTranslations } from "../storage/board-content-storage";
+import { replacePhraseTranslations } from "../storage/board-content-storage";
 import { loadStoredBoard } from "../storage/load-stored-board";
 import {
   applyTranslations,
@@ -88,7 +88,12 @@ async function cacheTranslations(
   translations: PhraseTranslations,
 ): Promise<void> {
   try {
-    await replaceBoardTranslations(boardSetId, boardId, language, translations);
+    await replacePhraseTranslations(
+      boardSetId,
+      boardId,
+      language,
+      translations,
+    );
   } catch {
     // Failure only costs a re-translation next load.
   }

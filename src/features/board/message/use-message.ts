@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { createPart, deleteBackward } from "./message-transforms";
+import { applyBackspace, createPart } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
@@ -37,7 +37,7 @@ export function useMessage(): UseMessageReturn {
   }
 
   function backspace() {
-    setParts(deleteBackward(getParts()));
+    setParts(applyBackspace(getParts()));
   }
 
   function clear() {
