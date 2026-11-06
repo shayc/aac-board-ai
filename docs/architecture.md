@@ -118,8 +118,10 @@ File selection, drag and drop, URL imports, and PWA file handling all use
 translation before rendering, keeping that work out of UI components:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadBoardInLanguage`,
-   which reads the stored OBF, attaches its asset URLs, and maps the result
-   through `obfToBoard`.
+   which reads the stored OBF, resolves object URLs for its stored assets, and
+   maps both through `obfToBoard`. The OBF itself is never modified; a media
+   path is used only once storage has an asset for it, otherwise its `data` or
+   `url` is.
 2. It then uses the source board or a cached translation when possible.
    Otherwise, it attempts translation and falls back to the source board on
    failure. Successful translations render without waiting for the cache write

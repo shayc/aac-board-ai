@@ -16,9 +16,12 @@ import { nonBlankText } from "../non-blank-text";
 import { sanitizeColor } from "./sanitize-color";
 import { parseAction } from "./parse-action";
 
-export function obfToBoard(obfBoard: OBFBoard): Board {
-  const imageSourceById = buildMediaSourceById(obfBoard.images);
-  const soundSourceById = buildMediaSourceById(obfBoard.sounds);
+export function obfToBoard(
+  obfBoard: OBFBoard,
+  assetURLByPath: ReadonlyMap<string, string> = new Map(),
+): Board {
+  const imageSourceById = buildMediaSourceById(obfBoard.images, assetURLByPath);
+  const soundSourceById = buildMediaSourceById(obfBoard.sounds, assetURLByPath);
 
   return {
     id: obfBoard.id,
@@ -34,6 +37,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
 
 function buildMediaSourceById(
   media: OBFMedia[] | undefined,
+  assetURLByPath: ReadonlyMap<string, string>,
 ): Map<string, string> {
   const mediaSourceById = new Map<string, string>();
 
@@ -42,7 +46,7 @@ function buildMediaSourceById(
   }
 
   for (const item of media) {
-    const source = resolveMediaSource(item);
+    const source = resolveMediaSource(item, assetURLByPath);
     if (source) {
       mediaSourceById.set(item.id, source);
     }
@@ -51,8 +55,13 @@ function buildMediaSourceById(
   return mediaSourceById;
 }
 
-function resolveMediaSource(media: OBFMedia): string | undefined {
-  return media.data ?? media.path ?? media.url;
+function resolveMediaSource(
+  media: OBFMedia,
+  assetURLByPath: ReadonlyMap<string, string>,
+): string | undefined {
+  const assetURL = media.path ? assetURLByPath.get(media.path) : undefined;
+
+  return assetURL ?? media.data ?? media.url;
 }
 
 function obfToBoardButton(
