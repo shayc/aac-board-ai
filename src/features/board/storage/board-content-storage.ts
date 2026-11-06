@@ -1,3 +1,4 @@
+import type { PhraseTranslations } from "../board-types";
 import {
   getBoardsDB,
   normalizeAssetPath,
@@ -46,7 +47,7 @@ export async function replaceBoardTranslations(
   boardSetId: string,
   boardId: string,
   language: string,
-  translations: Record<string, string>,
+  translations: PhraseTranslations,
 ): Promise<void> {
   validateId(boardSetId, "boardSetId");
   validateId(boardId, "boardId");

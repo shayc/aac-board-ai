@@ -10,7 +10,7 @@ import type {
   BoardAction,
   BoardButton,
   BoardGrid,
-  BoardTranslations,
+  TranslationsByLocale,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import { sanitizeColor } from "./sanitize-color";
@@ -28,7 +28,7 @@ export function obfToBoard(obfBoard: OBFBoard): Board {
       obfToBoardButton(obfButton, imageSourceById, soundSourceById),
     ),
     grid: obfToBoardGrid(obfBoard.grid),
-    translations: obfToBoardTranslations(obfBoard.strings),
+    translationsByLocale: obfToTranslationsByLocale(obfBoard.strings),
   };
 }
 
@@ -88,17 +88,17 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   });
 }
 
-export function obfToBoardTranslations(
+export function obfToTranslationsByLocale(
   strings: OBFBoard["strings"],
-): BoardTranslations {
+): TranslationsByLocale {
   if (!strings) {
     return {};
   }
 
   return Object.fromEntries(
-    Object.entries(strings).map(([locale, translations]) => [
+    Object.entries(strings).map(([locale, phrases]) => [
       normalizeLocale(locale),
-      translations,
+      phrases,
     ]),
   );
 }

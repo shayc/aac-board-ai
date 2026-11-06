@@ -4,7 +4,7 @@ import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT } from "./board-file-formats";
-import { importBoardSets, type ImportedBoardSet } from "./board-import";
+import { importBoardFiles, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
@@ -32,7 +32,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     });
 
     try {
-      const importedBoardSets = await importBoardSets(files);
+      const importedBoardSets = await importBoardFiles(files);
 
       showSnackbar({
         message: (translate) =>

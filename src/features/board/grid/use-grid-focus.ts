@@ -10,19 +10,19 @@ import {
 import { findGridKeyTarget } from "./grid-key-navigation";
 import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
 
-interface UseGridKeyboardOptions {
+interface UseGridFocusOptions {
   grid: readonly (readonly unknown[])[];
 }
 
-interface UseGridKeyboardReturn {
+interface UseGridFocusReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
   tabStopPosition: GridPosition;
 }
 
-export function useGridKeyboard({
+export function useGridFocus({
   grid,
-}: UseGridKeyboardOptions): UseGridKeyboardReturn {
+}: UseGridFocusOptions): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),

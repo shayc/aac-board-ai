@@ -2,13 +2,13 @@ import { describe, expect, test } from "vitest";
 import {
   applyTranslations,
   collectTranslatablePhrases,
-  findTranslations,
+  findPhraseTranslations,
   getBoardLanguage,
-  findBoardForLanguage,
+  findCachedTranslation,
 } from "./board-translations";
 import type { Board } from "../board-types";
 
-const mockTranslations = {
+const mockTranslationsByLocale = {
   "es-ES": {
     "My Board": "Mi Tablero",
     Hello: "Hola",
@@ -38,7 +38,7 @@ const mockBoard: Board = {
     },
   ],
   locale: "en-US",
-  translations: mockTranslations,
+  translationsByLocale: mockTranslationsByLocale,
 };
 
 describe("getBoardLanguage", () => {
@@ -49,19 +49,21 @@ describe("getBoardLanguage", () => {
   });
 });
 
-describe("findTranslations", () => {
+describe("findPhraseTranslations", () => {
   test("matches regional translations by base language", () => {
-    expect(findTranslations(mockBoard.translations, "es")).toEqual(
-      mockTranslations["es-ES"],
-    );
-    expect(findTranslations(mockBoard.translations, "fr")).toEqual(
-      mockTranslations["fr-CA"],
-    );
+    expect(
+      findPhraseTranslations(mockBoard.translationsByLocale, "es"),
+    ).toEqual(mockTranslationsByLocale["es-ES"]);
+    expect(
+      findPhraseTranslations(mockBoard.translationsByLocale, "fr"),
+    ).toEqual(mockTranslationsByLocale["fr-CA"]);
   });
 
   test("returns nothing for an untranslated language", () => {
-    expect(findTranslations(mockBoard.translations, "de")).toBeUndefined();
-    expect(findTranslations({}, "es")).toBeUndefined();
+    expect(
+      findPhraseTranslations(mockBoard.translationsByLocale, "de"),
+    ).toBeUndefined();
+    expect(findPhraseTranslations({}, "es")).toBeUndefined();
   });
 });
 
@@ -131,19 +133,19 @@ describe("collectTranslatablePhrases", () => {
   });
 });
 
-describe("findBoardForLanguage", () => {
+describe("findCachedTranslation", () => {
   test("returns the board itself when its language matches", () => {
-    expect(findBoardForLanguage(mockBoard, "en")).toBe(mockBoard);
+    expect(findCachedTranslation(mockBoard, "en")).toBe(mockBoard);
   });
 
   test("returns a translated board from cached translations", () => {
-    const translated = findBoardForLanguage(mockBoard, "es");
+    const translated = findCachedTranslation(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
     expect(translated?.buttons[0].label).toBe("Hola");
   });
 
   test("returns nothing when the language has no cached translations", () => {
-    expect(findBoardForLanguage(mockBoard, "de")).toBeUndefined();
+    expect(findCachedTranslation(mockBoard, "de")).toBeUndefined();
   });
 });

@@ -1,4 +1,4 @@
-import { importBoardSets, type ImportedBoardSet } from "./board-import";
+import { importBoardFiles, type ImportedBoardSet } from "./board-import";
 
 /**
  * Hard cap on a board download, enforced while the response streams so an
@@ -52,7 +52,7 @@ export async function importBoardSetFromURL(
   });
 
   // Once local importing starts, let its atomic write finish even if navigation changes.
-  const [boardSet] = await importBoardSets(file);
+  const [boardSet] = await importBoardFiles([file]);
 
   return boardSet;
 }

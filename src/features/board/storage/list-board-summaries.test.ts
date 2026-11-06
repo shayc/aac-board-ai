@@ -27,6 +27,10 @@ test("maps stored boards to summaries with normalized translation locales", asyn
   const summaries = await listBoardSummaries("set-1");
 
   expect(summaries).toEqual([
-    { id: "a", name: "Food", translations: { "es-MX": { Food: "Comida" } } },
+    {
+      id: "a",
+      name: "Food",
+      translationsByLocale: { "es-MX": { Food: "Comida" } },
+    },
   ]);
 });

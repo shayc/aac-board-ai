@@ -1,7 +1,6 @@
 import {
   BoardNotFoundError,
-  loadStoredBoard,
-  resolveBoardForLanguage,
+  loadBoardInLanguage,
   type Board,
 } from "@features/board";
 import { getStoredLanguage } from "@shared/language/language-store";
@@ -18,17 +17,10 @@ export async function boardLoader({
   }
 
   try {
-    const sourceBoard = await loadStoredBoard(
+    const board = await loadBoardInLanguage(
       boardSetId,
       boardId,
-      request.signal,
-    );
-
-    const language = getStoredLanguage();
-    const board = await resolveBoardForLanguage(
-      boardSetId,
-      sourceBoard,
-      language,
+      getStoredLanguage(),
       request.signal,
     );
 

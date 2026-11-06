@@ -8,7 +8,7 @@ import {
   gridRowSx,
 } from "./grid-layout";
 import { buildGrid, type GridOrder } from "./grid-model";
-import { useGridKeyboard } from "./use-grid-keyboard";
+import { useGridFocus } from "./use-grid-focus";
 
 export interface GridItemProps {
   tabIndex: number;
@@ -36,7 +36,7 @@ export function Grid<TItem extends { id: string }>({
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridKeyboard({ grid });
+  const { rootRef, rootProps, tabStopPosition } = useGridFocus({ grid });
 
   return (
     <Box ref={ref} sx={createGridViewportSx}>

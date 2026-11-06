@@ -1,15 +1,15 @@
 export interface ClampedNumberOptions {
   min: number;
   max: number;
-  fallback: number;
+  defaultValue: number;
 }
 
 export function parseClampedNumber(
   value: unknown,
-  { min, max, fallback }: ClampedNumberOptions,
+  { min, max, defaultValue }: ClampedNumberOptions,
 ): number {
   if (typeof value !== "number" || !Number.isFinite(value)) {
-    return fallback;
+    return defaultValue;
   }
 
   return Math.min(Math.max(value, min), max);

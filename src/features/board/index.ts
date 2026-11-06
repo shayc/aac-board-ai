@@ -15,9 +15,8 @@ export { BoardSelector } from "./navigation/board-selector";
 export { PlaybackSettings } from "./playback/playback-settings";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { getBoardSetRecord } from "./storage/board-set-storage";
-export { loadStoredBoard } from "./storage/load-stored-board";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";
-export { resolveBoardForLanguage } from "./translation/resolve-board-for-language";
+export { loadBoardInLanguage } from "./translation/load-board-in-language";
 
 export type { Board } from "./board-types";

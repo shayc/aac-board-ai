@@ -21,7 +21,7 @@ describe("obfToBoard", () => {
     expect(board.id).toBe("minimal-board");
     expect(board.name).toBe("");
     expect(board.locale).toBeUndefined();
-    expect(board.translations).toEqual({});
+    expect(board.translationsByLocale).toEqual({});
     expect(board.buttons).toHaveLength(1);
     expect(board.buttons[0]?.id).toBe("btn-1");
     expect(board.buttons[0]?.actions).toEqual([]);
@@ -74,7 +74,7 @@ describe("obfToBoard", () => {
         }),
       );
 
-      expect(board.translations).toEqual({
+      expect(board.translationsByLocale).toEqual({
         "es-ES": { Hello: "Hola" },
         "fr-CA": { Hello: "Bonjour" },
       });

@@ -24,8 +24,11 @@ interface UseMessageSuggestionsReturn {
 }
 
 export function useMessageSuggestions(
-  text: string,
+  messageText: string,
 ): UseMessageSuggestionsReturn {
+  const text = messageText.trim();
+  const hasText = text !== "";
+
   const { customInstructions } = useSuggestionPreferences();
   const debouncedCustomInstructions = useDebouncedValue(
     customInstructions,
@@ -34,22 +37,21 @@ export function useMessageSuggestions(
 
   const { language } = useLanguage();
 
-  const proofreading = useProofreadSuggestion(text, language);
-  const sameToneRewrite = useRewriteSuggestion({
+  const proofreadSource = useProofreadSuggestion({ text, language });
+  const rewriteSource = useRewriteSuggestion({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "as-is",
   });
-  const casualRewrite = useRewriteSuggestion({
+  const casualRewriteSource = useRewriteSuggestion({
     text,
     customInstructions: debouncedCustomInstructions,
     language,
     tone: "more-casual",
   });
 
-  const sources = [proofreading, sameToneRewrite, casualRewrite];
-  const hasText = text.trim().length > 0;
+  const sources = [proofreadSource, rewriteSource, casualRewriteSource];
 
   // Other hook instances can start these downloads; global progress keeps the
   // suggestion bar in sync with them.

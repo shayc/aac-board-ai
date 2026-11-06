@@ -110,20 +110,20 @@ opens the first stored board set or imports the bundled starter board if the
 library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
-`importBoardSets`. Each imported file creates a separate board set.
+`importBoardFiles`. Each imported file creates a separate board set.
 
 ### Open a board
 
 [`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
 translation before rendering, keeping that work out of UI components:
 
-1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadStoredBoard`, which
-   reads the stored OBF, attaches its asset URLs, and maps the result through
-   `obfToBoard`.
-2. `resolveBoardForLanguage` uses the source board or a cached translation when
-   possible. Otherwise, it attempts translation and falls back to the source
-   board on failure. Successful translations render without waiting for the cache
-   write and remain usable if it fails.
+1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadBoardInLanguage`,
+   which reads the stored OBF, attaches its asset URLs, and maps the result
+   through `obfToBoard`.
+2. It then uses the source board or a cached translation when possible.
+   Otherwise, it attempts translation and falls back to the source board on
+   failure. Successful translations render without waiting for the cache write
+   and remain usable if it fails.
 3. The route renders the `Board`.
 
 Stored assets are immutable, so
@@ -156,7 +156,7 @@ expected and do not surface as user errors.
 
 Controls have programmatic names and support pointer and keyboard input. The
 [board grid](../src/features/board/grid/grid.tsx) and its
-[keyboard behavior](../src/features/board/grid/use-grid-keyboard.ts) preserve
+[keyboard behavior](../src/features/board/grid/use-grid-focus.ts) preserve
 these rules:
 
 - A populated grid has one Tab stop, at the remembered tile or first occupied

@@ -3,7 +3,7 @@ import {
   appendPart,
   appendSpace,
   appendText,
-  applyBackspace,
+  deleteBackward,
 } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
@@ -91,7 +91,7 @@ describe("appendText", () => {
   });
 });
 
-describe("applyBackspace", () => {
+describe("deleteBackward", () => {
   const graphemes = [
     "😀",
     "e\u0301",
@@ -104,7 +104,7 @@ describe("applyBackspace", () => {
   ];
 
   test("removes a single character if the last part is text-only", () => {
-    const parts = applyBackspace([
+    const parts = deleteBackward([
       { id: "1", label: "hello" },
       { id: "2", label: "world" },
     ]);
@@ -121,7 +121,7 @@ describe("applyBackspace", () => {
       { id: "2", label: `a${grapheme}` },
     ];
 
-    const parts = applyBackspace(original);
+    const parts = deleteBackward(original);
 
     expect(parts).toEqual([
       { id: "1", label: "hello" },
@@ -133,7 +133,7 @@ describe("applyBackspace", () => {
   test.each(["w", "", ...graphemes])(
     "removes the entire text-only part containing at most one grapheme (%s)",
     (label) => {
-      const parts = applyBackspace([
+      const parts = deleteBackward([
         { id: "1", label: "hello" },
         { id: "2", label },
       ]);
@@ -143,7 +143,7 @@ describe("applyBackspace", () => {
   );
 
   test("removes the entire part if it is not text-only", () => {
-    const parts = applyBackspace([
+    const parts = deleteBackward([
       { id: "1", label: "hello" },
       { id: "2", label: "world", imageSrc: "img.png" },
     ]);
@@ -152,10 +152,10 @@ describe("applyBackspace", () => {
   });
 
   test("returns an empty array when there is only one part and it gets removed", () => {
-    expect(applyBackspace([{ id: "1", label: "h" }])).toEqual([]);
+    expect(deleteBackward([{ id: "1", label: "h" }])).toEqual([]);
   });
 
   test("returns an empty array when already empty", () => {
-    expect(applyBackspace([])).toEqual([]);
+    expect(deleteBackward([])).toEqual([]);
   });
 });

@@ -3,17 +3,21 @@ import { useProofreader } from "@shayc/react-built-in-ai";
 import { enableQuietly } from "./enable-quietly";
 import { isRequestFailure, type SuggestionSource } from "./suggestion-source";
 
-export function useProofreadSuggestion(
-  text: string,
-  language: string,
-): SuggestionSource {
+interface UseProofreadSuggestionOptions {
+  text: string;
+  language: string;
+}
+
+export function useProofreadSuggestion({
+  text,
+  language,
+}: UseProofreadSuggestionOptions): SuggestionSource {
   const proofreader = useProofreader({
     expectedInputLanguages: [language],
   });
-  const hasText = text.trim().length > 0;
 
   const request = useLatestAsync({
-    enabled: hasText && proofreader.status === "ready",
+    enabled: text !== "" && proofreader.status === "ready",
     deps: [text, language],
     run: (signal) =>
       proofreader

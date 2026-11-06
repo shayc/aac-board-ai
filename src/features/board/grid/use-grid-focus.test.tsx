@@ -55,7 +55,7 @@ async function press(
   await userEvent.keyboard(sequence);
 }
 
-describe("useGridKeyboard", () => {
+describe("useGridFocus", () => {
   describe("tab stops", () => {
     test("sets tabIndex so only the tab stop is tabbable", async () => {
       const items = makeItems(1, 2, 3);

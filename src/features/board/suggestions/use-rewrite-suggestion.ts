@@ -25,10 +25,9 @@ export function useRewriteSuggestion({
     expectedContextLanguages: [language],
     outputLanguage: language,
   });
-  const hasText = text.trim().length > 0;
 
   const request = useLatestAsync({
-    enabled: hasText && rewriter.status === "ready",
+    enabled: text !== "" && rewriter.status === "ready",
     deps: [text, customInstructions, language],
     run: (signal) => rewriter.rewrite(text, { signal }),
   });

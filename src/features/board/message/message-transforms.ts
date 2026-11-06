@@ -33,7 +33,7 @@ export function appendText(parts: MessagePart[], text: string): MessagePart[] {
   });
 }
 
-export function applyBackspace(parts: MessagePart[]): MessagePart[] {
+export function deleteBackward(parts: MessagePart[]): MessagePart[] {
   const lastPart = parts.at(-1);
   if (!lastPart) {
     return parts;
