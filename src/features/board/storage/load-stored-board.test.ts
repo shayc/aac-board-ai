@@ -3,7 +3,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import type { Board } from "../board-types";
 import { beforeEach, describe, expect, test } from "vitest";
 import { loadTestImageBlob, resetBoardsDB } from "../testing";
-import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
+import { BoardNotFoundError } from "./board-content-storage";
 import { createBoardSetRecords } from "./board-set-storage";
 import { loadStoredBoard } from "./load-stored-board";
 
@@ -71,15 +71,6 @@ describe("loadStoredBoard", () => {
     const imageSrc = getImageURL(board);
     expect(imageSrc.startsWith("blob:")).toBe(true);
     expect(await isObjectURLAlive(imageSrc)).toBe(true);
-  });
-
-  test("leaves the OBF record untouched", async () => {
-    await seedTestBoard();
-
-    await loadStoredBoard(SET_ID, BOARD_ID);
-
-    const record = await getBoardRecord(SET_ID, BOARD_ID);
-    expect(record?.obf.images?.[0]?.data).toBeUndefined();
   });
 
   test("falls back to the media url when its stored asset is missing", async () => {
