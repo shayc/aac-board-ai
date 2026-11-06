@@ -56,7 +56,7 @@
     }
   ],
   "libraryDropToImport": "Drop board files to import",
-  "libraryInfo": "Info",
+  "libraryDetails": "Details",
   "libraryDelete": "Delete",
   "libraryCancel": "Cancel",
   "libraryClose": "Close library",

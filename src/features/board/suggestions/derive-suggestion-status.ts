@@ -1,4 +1,4 @@
-import type { Status } from "@shayc/react-built-in-ai";
+import type { SuggestionSource } from "./suggestion-source";
 
 export type SuggestionStatus =
   | { kind: "not-enabled" }
@@ -7,32 +7,32 @@ export type SuggestionStatus =
   | { kind: "unavailable" }
   | null;
 
-interface EngineCondition {
-  status: Status;
-  hasRequestFailed: boolean;
-}
-
 export interface SuggestionStatusInput {
-  engines: readonly EngineCondition[];
+  sources: readonly Pick<
+    SuggestionSource,
+    "engineStatus" | "isRequestPending" | "hasRequestFailed"
+  >[];
   downloadProgress: number | null;
   hasText: boolean;
-  isPending: boolean;
   phraseCount: number;
 }
 
 export function deriveSuggestionStatus({
-  engines,
+  sources,
   downloadProgress,
   hasText,
-  isPending,
   phraseCount,
 }: SuggestionStatusInput): SuggestionStatus {
-  const supported = engines.filter(({ status }) => status !== "unsupported");
-  if (supported.length === 0) {
+  const supportedSources = sources.filter(
+    ({ engineStatus }) => engineStatus !== "unsupported",
+  );
+  if (supportedSources.length === 0) {
     return null;
   }
 
-  if (supported.some(({ status }) => status === "downloadable")) {
+  if (
+    supportedSources.some(({ engineStatus }) => engineStatus === "downloadable")
+  ) {
     return { kind: "not-enabled" };
   }
 
@@ -41,16 +41,18 @@ export function deriveSuggestionStatus({
     return { kind: "downloading", percent: percent === 0 ? null : percent };
   }
 
-  if (isPending) {
+  if (supportedSources.some(({ isRequestPending }) => isRequestPending)) {
     return { kind: "pending" };
   }
 
-  // A healthy engine that merely had nothing to suggest keeps the bar quiet.
-  const hasWorkingEngine = supported.some(
-    ({ status, hasRequestFailed }) =>
-      status !== "unavailable" && status !== "error" && !hasRequestFailed,
+  // A working source that merely had nothing to suggest keeps the bar quiet.
+  const hasWorkingSource = supportedSources.some(
+    ({ engineStatus, hasRequestFailed }) =>
+      engineStatus !== "unavailable" &&
+      engineStatus !== "error" &&
+      !hasRequestFailed,
   );
-  if (hasText && phraseCount === 0 && !hasWorkingEngine) {
+  if (hasText && phraseCount === 0 && !hasWorkingSource) {
     return { kind: "unavailable" };
   }
 

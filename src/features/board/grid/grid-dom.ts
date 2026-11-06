@@ -49,13 +49,6 @@ export function listGridFocusTargets(
   return targets;
 }
 
-export function isSameGridPosition(
-  first: GridPosition,
-  second: GridPosition,
-): boolean {
-  return first.row === second.row && first.column === second.column;
-}
-
 function readGridPosition(cell: Element | null): GridPosition | null {
   if (!cell) {
     return null;

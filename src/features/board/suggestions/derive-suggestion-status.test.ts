@@ -5,24 +5,31 @@ import {
   type SuggestionStatusInput,
 } from "./derive-suggestion-status";
 
-function makeInput(
-  overrides: Partial<SuggestionStatusInput> = {},
-): SuggestionStatusInput {
+type SourceInput = SuggestionStatusInput["sources"][number];
+
+function makeSource(overrides: Partial<SourceInput> = {}): SourceInput {
   return {
-    engines: [
-      { status: "ready", hasRequestFailed: false },
-      { status: "ready", hasRequestFailed: false },
-    ],
-    downloadProgress: null,
-    hasText: false,
-    isPending: false,
-    phraseCount: 0,
+    engineStatus: "ready",
+    isRequestPending: false,
+    hasRequestFailed: false,
     ...overrides,
   };
 }
 
-function engines(...statuses: Status[]) {
-  return statuses.map((status) => ({ status, hasRequestFailed: false }));
+function makeSources(...engineStatuses: Status[]): SourceInput[] {
+  return engineStatuses.map((engineStatus) => makeSource({ engineStatus }));
+}
+
+function makeInput(
+  overrides: Partial<SuggestionStatusInput> = {},
+): SuggestionStatusInput {
+  return {
+    sources: makeSources("ready", "ready"),
+    downloadProgress: null,
+    hasText: false,
+    phraseCount: 0,
+    ...overrides,
+  };
 }
 
 describe("deriveSuggestionStatus", () => {
@@ -32,7 +39,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("stays quiet when no engine is supported", () => {
     const input = makeInput({
-      engines: engines("unsupported", "unsupported"),
+      sources: makeSources("unsupported", "unsupported"),
       hasText: true,
     });
 
@@ -41,7 +48,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("asks for setup ahead of any download state", () => {
     const input = makeInput({
-      engines: engines("downloadable", "ready"),
+      sources: makeSources("downloadable", "ready"),
       downloadProgress: 0.5,
     });
 
@@ -73,11 +80,13 @@ describe("deriveSuggestionStatus", () => {
   });
 
   test("shows pending while any request is in flight, even with phrases showing", () => {
-    expect(deriveSuggestionStatus(makeInput({ isPending: true }))).toEqual({
+    const sources = [makeSource({ isRequestPending: true }), makeSource()];
+
+    expect(deriveSuggestionStatus(makeInput({ sources }))).toEqual({
       kind: "pending",
     });
     expect(
-      deriveSuggestionStatus(makeInput({ isPending: true, phraseCount: 1 })),
+      deriveSuggestionStatus(makeInput({ sources, phraseCount: 1 })),
     ).toEqual({
       kind: "pending",
     });
@@ -85,7 +94,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("announces unavailability only when every engine is out and nothing was suggested", () => {
     const input = makeInput({
-      engines: engines("unavailable", "error"),
+      sources: makeSources("unavailable", "error"),
       hasText: true,
     });
 
@@ -94,9 +103,9 @@ describe("deriveSuggestionStatus", () => {
 
   test("counts a failed request as a broken engine", () => {
     const input = makeInput({
-      engines: [
-        { status: "ready", hasRequestFailed: true },
-        { status: "unavailable", hasRequestFailed: false },
+      sources: [
+        makeSource({ hasRequestFailed: true }),
+        makeSource({ engineStatus: "unavailable" }),
       ],
       hasText: true,
     });
@@ -106,10 +115,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("partial failure stays silent while one engine still works", () => {
     const input = makeInput({
-      engines: [
-        { status: "ready", hasRequestFailed: true },
-        { status: "ready", hasRequestFailed: false },
-      ],
+      sources: [makeSource({ hasRequestFailed: true }), makeSource()],
       hasText: true,
     });
 
@@ -118,7 +124,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("an engine still probing availability is not a failure", () => {
     const input = makeInput({
-      engines: engines("checking", "unavailable"),
+      sources: makeSources("checking", "unavailable"),
       hasText: true,
     });
 

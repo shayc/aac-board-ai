@@ -113,7 +113,7 @@ describe("BoardSetList", () => {
       ).toBe(true);
       menuIds.push(menuId);
 
-      await screen.getByRole("menuitem", { name: "Info" }).click();
+      await screen.getByRole("menuitem", { name: "Details" }).click();
       expect(onShowDetails).toHaveBeenNthCalledWith(index + 1, boardSet);
     }
 

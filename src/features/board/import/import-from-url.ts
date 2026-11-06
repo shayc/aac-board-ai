@@ -39,7 +39,7 @@ function deriveFileName(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
 }
 
-export async function importBoardSetFromURL(
+export async function importBoardFileFromURL(
   url: string,
   signal?: AbortSignal,
 ): Promise<ImportedBoardSet> {
