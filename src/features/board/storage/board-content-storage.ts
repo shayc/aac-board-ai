@@ -42,7 +42,7 @@ export async function getAssetBlob(
   return asset?.blob;
 }
 
-export async function replacePhraseTranslations(
+export async function replaceStringTranslations(
   boardSetId: string,
   boardId: string,
   language: string,

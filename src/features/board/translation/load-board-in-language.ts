@@ -1,19 +1,14 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
 import type { Board } from "../board-types";
-import { replacePhraseTranslations } from "../storage/board-content-storage";
+import { replaceStringTranslations } from "../storage/board-content-storage";
 import { loadStoredBoard } from "../storage/load-stored-board";
 import {
   applyTranslations,
-  collectTranslatablePhrases,
+  collectBoardStrings,
   findBoardInLanguage,
   getBoardLanguage,
 } from "./board-translations";
 
-/**
- * Loads a stored board in the requested language, translating and caching it
- * on a cache miss, and falling back to the source board when translation is
- * unavailable or fails.
- */
 export async function loadBoardInLanguage(
   boardSetId: string,
   boardId: string,
@@ -27,7 +22,7 @@ export async function loadBoardInLanguage(
     return existing;
   }
 
-  const translations = await translateBoardPhrases(board, language, signal);
+  const translations = await translateBoardStrings(board, language, signal);
   if (!translations) {
     return board;
   }
@@ -37,13 +32,13 @@ export async function loadBoardInLanguage(
   return applyTranslations(board, translations);
 }
 
-async function translateBoardPhrases(
+async function translateBoardStrings(
   board: Board,
   language: string,
   signal?: AbortSignal,
 ): Promise<Record<string, string> | undefined> {
-  const phrases = collectTranslatablePhrases(board);
-  if (phrases.size === 0) {
+  const strings = collectBoardStrings(board);
+  if (strings.size === 0) {
     return undefined;
   }
 
@@ -55,7 +50,7 @@ async function translateBoardPhrases(
     });
 
     try {
-      return await translatePhrases(phrases, translator, signal);
+      return await translateStrings(strings, translator, signal);
     } finally {
       translator.destroy();
     }
@@ -65,16 +60,16 @@ async function translateBoardPhrases(
   }
 }
 
-async function translatePhrases(
-  phrases: Set<string>,
+async function translateStrings(
+  strings: Set<string>,
   translator: Translator,
   signal?: AbortSignal,
 ): Promise<Record<string, string>> {
   const entries = await Promise.all(
-    Array.from(phrases, async (phrase) => {
-      const translated = await translator.translate(phrase, { signal });
+    Array.from(strings, async (text) => {
+      const translated = await translator.translate(text, { signal });
 
-      return [phrase, translated] as const;
+      return [text, translated] as const;
     }),
   );
 
@@ -88,7 +83,7 @@ async function cacheTranslations(
   translations: Record<string, string>,
 ): Promise<void> {
   try {
-    await replacePhraseTranslations(
+    await replaceStringTranslations(
       boardSetId,
       boardId,
       language,

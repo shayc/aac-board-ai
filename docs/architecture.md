@@ -121,9 +121,9 @@ translation before rendering, keeping that work out of UI components:
    which reads the stored OBF, resolves object URLs for its stored assets, and
    maps both through `obfToBoard`. Loading leaves the OBF unchanged. Media paths
    resolve only to stored assets; otherwise the item's `data` or `url` is used.
-2. It then uses the source board or a cached translation when possible.
-   Otherwise, it attempts translation and falls back to the source board on
-   failure. Successful translations render without waiting for the cache write
+2. It then uses the source board, or the board's own translations for that
+   language: those in the board file or cached on this device. Otherwise, it
+   attempts translation and falls back to the source board on failure. Successful translations render without waiting for the cache write
    and remain usable if it fails.
 3. The route renders the `Board`.
 
@@ -140,10 +140,10 @@ coordinates message updates, navigation, and playback:
 
 1. A tile linking to another board navigates immediately. A tile without actions
    appends a message part and plays it. Other tiles apply their actions in order.
-2. A speak action captures the message at that point. Changes from later actions,
-   such as clearing the message, apply only if playback finishes uninterrupted.
-   The spoken message stays visible during playback and is preserved if playback
-   is interrupted.
+2. A play action (OBF `:speak`) captures the message at that point. Changes
+   from later actions, such as clearing the message, apply only if playback
+   finishes uninterrupted. The played message stays visible during playback and
+   is preserved if playback is interrupted.
 3. The board playback adapter calls `planPlayback` to turn message parts into
    speech and recorded-audio steps. The shared coordinator plays them in order
    and publishes progress for highlighting.
@@ -287,6 +287,8 @@ AI availability, provisioning, and session lifecycle to
 - **Button** — the data model behind a tile, named after the OBF button. Code uses
   `BoardButton` for the data and `Tile` for the view.
 - **Vocalization** — the text a tile speaks when it differs from its visible label.
+- **Board strings** — a board's translatable text: its name and each tile's label
+  and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
 - **Message part** — one item in the message, with its own label and any

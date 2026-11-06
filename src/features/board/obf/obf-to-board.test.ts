@@ -285,7 +285,7 @@ describe("obfToBoard", () => {
       });
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([{ kind: "speak" }]);
+      expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
     });
 
     test("parses spell actions and drops unknown ones", () => {
