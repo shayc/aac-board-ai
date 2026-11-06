@@ -244,6 +244,7 @@ Paths in this table are relative to `src/`.
 | Communication language | [shared/language/](../src/shared/language/), [shared/speech/](../src/shared/speech/)                                                               | Coordinate communication language and voice selection.    |
 | Theme and direction    | [shared/theme/](../src/shared/theme/)                                                                                                              | Apply theme and directional styling.                      |
 | Shared stores          | [shared/state/external-store.ts](../src/shared/state/external-store.ts), [shared/state/persisted-store.ts](../src/shared/state/persisted-store.ts) | Provide subscription and settings persistence primitives. |
+| Performance            | [perf/](../src/perf/)                                                                                                                              | Opt-in instrumentation ([details](performance.md)).       |
 
 At the repository root, [messages/](../messages/) holds UI catalogs and
 [project.inlang/](../project.inlang/) configures Paraglide, which compiles them into

@@ -16,6 +16,7 @@
 - Check formatting: `npm run format:check`
 - Test: `npm test`
 - Test with coverage: `npm run test:coverage`
+- Performance report: `npm run perf` (see [docs/performance.md](docs/performance.md))
 - PWA offline test: `npm run test:pwa`
 - Test one file: `npm test -- <file-or-pattern>`
 - Lint specific files: `npm run lint -- <files>`
@@ -31,6 +32,7 @@
 - `src/features/`: feature modules
 - `src/pages/`: routes/pages
 - `src/shared/`: shared code
+- `src/perf/`: opt-in performance instrumentation (`VITE_PERF=true` builds only)
 - See [docs/architecture.md](docs/architecture.md) for module boundaries, invariants, and the "why" behind the structure.
 
 ## Testing Instructions

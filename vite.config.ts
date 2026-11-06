@@ -11,6 +11,8 @@ import {
   SHELL_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
 
+const isPerfBuild = process.env.VITE_PERF === "true";
+
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
@@ -89,6 +91,7 @@ export default defineConfig({
   ],
   resolve: {
     tsconfigPaths: true,
+    alias: isPerfBuild ? { "react-dom/client": "react-dom/profiling" } : {},
   },
   optimizeDeps: {
     include: [
@@ -104,6 +107,7 @@ export default defineConfig({
     ],
   },
   build: {
+    sourcemap: isPerfBuild,
     rolldownOptions: {
       output: {
         codeSplitting: {

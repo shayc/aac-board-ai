@@ -5,6 +5,7 @@ import {
   type ParsedOBZ,
   type UnzipLimits,
 } from "@shayc/open-board-format";
+import { measure } from "@perf";
 import { lookup } from "mrmime";
 import { createBoardSet } from "../board-sets/board-sets-store";
 import { nonBlankText } from "../non-blank-text";
@@ -47,7 +48,9 @@ export async function importBoardFiles(
 }
 
 async function importBoardFile(file: File): Promise<ImportedBoardSet> {
-  const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+  const loaded = await measure("op:board:unzip", () =>
+    loadBoard(file, { limits: BOARD_IMPORT_LIMITS }),
+  );
   const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
@@ -57,9 +60,11 @@ async function importBoardFile(file: File): Promise<ImportedBoardSet> {
     );
 
     try {
-      return loaded.format === "obz"
-        ? await importOBZArchive(loaded.archive, boardSetId, file.name)
-        : await importOBFBoard(loaded.board, boardSetId, file.name);
+      return await measure("op:board:store", () =>
+        loaded.format === "obz"
+          ? importOBZArchive(loaded.archive, boardSetId, file.name)
+          : importOBFBoard(loaded.board, boardSetId, file.name),
+      );
     } catch (error) {
       if (!(error instanceof BoardSetAlreadyExistsError)) {
         throw error;

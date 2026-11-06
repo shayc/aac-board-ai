@@ -1,0 +1,13 @@
+{
+  "LCP": { "good": 2500, "poor": 4000 },
+  "routeLCP": { "good": 2500, "poor": 4000 },
+  "INP": { "good": 200, "poor": 500 },
+  "CLS": { "good": 0.1, "poor": 0.25 },
+  "totalJSGzipBytes": { "good": 389120, "poor": 460800 },
+  "spans": {
+    "default": { "good": 200, "poor": 500 },
+    "load:app:board": { "good": 2500, "poor": 4000 },
+    "route:board:open": { "good": 500, "poor": 1000 },
+    "flow:library:import": { "good": 1000, "poor": 2500 }
+  }
+}

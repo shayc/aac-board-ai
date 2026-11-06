@@ -3,6 +3,7 @@ import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
+import { PerfProfiler, usePerfSpan } from "@perf";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
@@ -38,6 +39,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     useBoardPreferences();
 
   const message = useMessage();
+  const addTileSpan = usePerfSpan("flow:message:add-tile", message.parts);
   const suggestions = useMessageSuggestions(message.text);
 
   const playback = useBoardPlayback();
@@ -71,24 +73,33 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
+  function activateTile(button: BoardButton) {
+    if (!button.linkedBoardId) {
+      addTileSpan.start();
+    }
+
+    activateButton(button);
+  }
+
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
     return (
-      <Tile
-        key={`${board.id}/${button.id}`}
-        ariaLabel={button.label ? undefined : button.vocalization}
-        backgroundColor={button.backgroundColor}
-        borderColor={button.borderColor}
-        variant={button.linkedBoardId ? "folder" : undefined}
-        isBorderVisible={areTileBordersVisible}
-        onActivate={() => activateButton(button)}
-        {...gridItemProps}
-      >
-        <AACSymbol
-          label={button.label}
-          imageSrc={button.imageSrc}
-          labelPlacement={tileLabelPlacement}
-        />
-      </Tile>
+      <PerfProfiler key={`${board.id}/${button.id}`} id="Tile">
+        <Tile
+          ariaLabel={button.label ? undefined : button.vocalization}
+          backgroundColor={button.backgroundColor}
+          borderColor={button.borderColor}
+          variant={button.linkedBoardId ? "folder" : undefined}
+          isBorderVisible={areTileBordersVisible}
+          onActivate={() => activateTile(button)}
+          {...gridItemProps}
+        >
+          <AACSymbol
+            label={button.label}
+            imageSrc={button.imageSrc}
+            labelPlacement={tileLabelPlacement}
+          />
+        </Tile>
+      </PerfProfiler>
     );
   };
 
@@ -103,7 +114,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         pr: { sm: safeAreaInset("right") },
       }}
     >
-      <PlaybackMessageBar parts={message.parts} playback={playback} />
+      <PerfProfiler id="MessageBar">
+        <PlaybackMessageBar parts={message.parts} playback={playback} />
+      </PerfProfiler>
 
       <Stack
         direction="row"
@@ -140,15 +153,17 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
-        <Grid<BoardButton>
-          ref={gridViewportRef}
-          ariaLabel={board.name || t(m.boardGridLabel)}
-          items={board.buttons}
-          rows={board.grid.rows}
-          columns={board.grid.columns}
-          order={board.grid.order}
-          renderItem={renderTile}
-        />
+        <PerfProfiler id="Grid">
+          <Grid<BoardButton>
+            ref={gridViewportRef}
+            ariaLabel={board.name || t(m.boardGridLabel)}
+            items={board.buttons}
+            rows={board.grid.rows}
+            columns={board.grid.columns}
+            order={board.grid.order}
+            renderItem={renderTile}
+          />
+        </PerfProfiler>
       </Box>
 
       {isSmallScreen && (

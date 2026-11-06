@@ -7,6 +7,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
+import { usePerfSpan } from "@perf";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { EmptyState } from "@shared/ui/empty-state";
@@ -34,6 +35,8 @@ export function BoardSetLibrary({
   const { boardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
+
+  usePerfSpan("flow:library:import", boardSets);
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [detailsTarget, setDetailsTarget] = useState<BoardSetRecord | null>(

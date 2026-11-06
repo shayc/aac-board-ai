@@ -1,4 +1,5 @@
 import { m } from "@paraglide/messages.js";
+import { usePerfSpan } from "@perf";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
@@ -16,6 +17,7 @@ interface UseImportBoardFilesReturn {
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
+  const importSpan = usePerfSpan("flow:library:import");
 
   async function importFiles(
     files: File[],
@@ -26,6 +28,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
     const count = files.length;
 
+    importSpan.start();
     showSnackbar({
       message: (t) => t(m.libraryImportingBoardFiles, { count }),
     });

@@ -1,3 +1,4 @@
+import { usePerfSpan } from "@perf";
 import { MessageBar } from "../message/message-bar";
 import type { MessagePart } from "../message/message-types";
 import { usePlaybackPreferences } from "./playback-preferences-store";
@@ -20,13 +21,19 @@ export function PlaybackMessageBar({
 }: PlaybackMessageBarProps) {
   const activePartId = useActiveMessagePartId();
   const { isHighlightingEnabled } = usePlaybackPreferences();
+  const playSpan = usePerfSpan("flow:message:play", playback.isMessagePlaying);
+
+  function play() {
+    playSpan.start();
+    void playback.playMessage(parts);
+  }
 
   return (
     <MessageBar
       parts={parts}
       activePartId={isHighlightingEnabled ? activePartId : null}
       isPlaying={playback.isMessagePlaying}
-      onPlay={() => void playback.playMessage(parts)}
+      onPlay={play}
       onStop={playback.stop}
     />
   );

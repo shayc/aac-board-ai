@@ -3,6 +3,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
+import { usePerfSpan } from "@perf";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
@@ -61,13 +62,22 @@ export function BoardSettings() {
   const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
+  const labelPlacementSpan = usePerfSpan(
+    "flow:settings:label-placement",
+    tileLabelPlacement,
+  );
+
+  function changeLabelPlacement(placement: SymbolLabelPlacement) {
+    labelPlacementSpan.start();
+    setTileLabelPlacement(placement);
+  }
 
   return (
     <Stack spacing={3}>
       <SettingsRadioGroup
         label={t(m.tileLabelPlacement)}
         value={tileLabelPlacement}
-        onChange={setTileLabelPlacement}
+        onChange={changeLabelPlacement}
         optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 0.5 }}
       >
         <LabelPlacementOption label={t(m.tileLabelTop)} placement="top" />

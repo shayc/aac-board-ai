@@ -9,6 +9,7 @@ import {
   useImportBoardFilesOnLaunch,
 } from "@features/board";
 import Box from "@mui/material/Box";
+import { PerfProfiler, usePerfSpan } from "@perf";
 import { useState } from "react";
 import { Outlet } from "react-router";
 import { AppHeader } from "./app-header";
@@ -18,33 +19,48 @@ export function AppShell() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const onboarding = useOnboarding();
   const fileDrop = useBoardFileDrop();
+  const libraryOpenSpan = usePerfSpan("flow:library:open", isLibraryOpen);
+  const settingsOpenSpan = usePerfSpan("flow:settings:open", isSettingsOpen);
 
   useImportBoardFilesOnLaunch();
   useRevalidateOnLanguageChange();
+
+  function openLibrary() {
+    libraryOpenSpan.start();
+    setIsLibraryOpen(true);
+  }
+
+  function openSettings() {
+    settingsOpenSpan.start();
+    setIsSettingsOpen(true);
+  }
 
   return (
     <Box
       {...fileDrop.rootProps}
       sx={{ display: "flex", flexDirection: "column", height: "100svh" }}
     >
-      <AppHeader
-        onOpenLibrary={() => setIsLibraryOpen(true)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-      />
+      <PerfProfiler id="AppHeader">
+        <AppHeader onOpenLibrary={openLibrary} onOpenSettings={openSettings} />
+      </PerfProfiler>
 
       <Box component="main" sx={{ flexGrow: 1, overflow: "auto" }}>
         <Outlet />
       </Box>
 
-      <LibraryDrawer
-        open={isLibraryOpen}
-        onClose={() => setIsLibraryOpen(false)}
-      />
+      <PerfProfiler id="LibraryDrawer">
+        <LibraryDrawer
+          open={isLibraryOpen}
+          onClose={() => setIsLibraryOpen(false)}
+        />
+      </PerfProfiler>
 
-      <SettingsDrawer
-        open={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-      />
+      <PerfProfiler id="SettingsDrawer">
+        <SettingsDrawer
+          open={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      </PerfProfiler>
 
       <OnboardingDialog
         open={onboarding.shouldShow}

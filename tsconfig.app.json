@@ -13,7 +13,8 @@
       "@features/*": ["./src/features/*"],
       "@shared/*": ["./src/shared/*"],
       "@pages/*": ["./src/pages/*"],
-      "@paraglide/*": ["./src/paraglide/*"]
+      "@paraglide/*": ["./src/paraglide/*"],
+      "@perf": ["./src/perf/index.ts"]
     },
 
     /* Bundler mode */

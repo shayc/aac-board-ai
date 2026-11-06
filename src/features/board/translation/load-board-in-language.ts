@@ -1,3 +1,4 @@
+import { measure } from "@perf";
 import { createTranslator } from "@shayc/react-built-in-ai";
 import type { Board } from "../board-types";
 import { replaceStringTranslations } from "../storage/board-content-storage";
@@ -15,7 +16,9 @@ export async function loadBoardInLanguage(
   language: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const board = await loadStoredBoard(boardSetId, boardId, signal);
+  const board = await measure("op:board:load", () =>
+    loadStoredBoard(boardSetId, boardId, signal),
+  );
 
   const existing = findBoardInLanguage(board, language);
   if (existing) {
