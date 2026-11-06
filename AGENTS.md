@@ -17,6 +17,7 @@
 - Test: `npm test`
 - Test with coverage: `npm run test:coverage`
 - PWA offline test: `npm run test:pwa`
+- Local performance lab: `npm run perf` (see [docs/performance.md](docs/performance.md))
 - Test one file: `npm test -- <file-or-pattern>`
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
