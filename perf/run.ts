@@ -20,6 +20,7 @@ import {
   type RunMeta,
   type RunResults,
 } from "./compare.ts";
+import { readHotFunctions } from "./cpu-profile.ts";
 import {
   PROFILES_DIR,
   RAW_RESULTS_DIR,
@@ -41,6 +42,8 @@ const BASELINE_FILE = path.join(RESULTS_DIR, "baseline.json");
 const NOISE_FLOOR_FILE = path.join(RESULTS_DIR, "noise-floor.json");
 const REPORT_FILE = path.join(RESULTS_DIR, "report.html");
 const PROFILE_MANIFEST = "profile.json";
+const TRACE_SUFFIX = ".trace.json";
+const HOT_FUNCTION_COUNT = 10;
 
 const { values: flags } = parseArgs({
   options: {
@@ -49,7 +52,7 @@ const { values: flags } = parseArgs({
   },
 });
 
-runOrExit("npm", ["run", "build"], {});
+runOrExit("npm", ["run", "build", "--", "--sourcemap", "hidden"], {});
 
 if (flags.profile === undefined) {
   await measure(flags["save-baseline"]);
@@ -122,12 +125,14 @@ async function profile(journey: string): Promise<void> {
   const journeyDir = path.join(PROFILES_DIR, journey);
   const meta = await describeRun();
   const files = (await readdir(journeyDir)).toSorted();
+  const hotFunctions = await readPhaseHotFunctions(journeyDir, files);
   await writeJSON(path.join(journeyDir, PROFILE_MANIFEST), {
     journey,
     commit: meta.commit,
     buildHash: meta.buildHash,
     date: meta.date,
     files,
+    hotFunctions,
   } satisfies ProfileListing);
 
   console.log(`Profile of ${journey}:`);
@@ -135,11 +140,36 @@ async function profile(journey: string): Promise<void> {
     console.log(`  ${path.join(journeyDir, file)}`);
   }
 
+  for (const { phase, functions } of hotFunctions) {
+    console.log(`\n${phase}: main-thread JavaScript by self time`);
+    for (const { function: name, selfMs } of functions.slice(0, 5)) {
+      console.log(`  ${formatValue(selfMs, "ms").padStart(9)}  ${name}`);
+    }
+  }
+
   const results = await readJSON<RunResults>(RESULTS_FILE);
   if (results) {
     await writeReport(results);
     console.log(`Linked from ${REPORT_FILE}`);
   }
+}
+
+async function readPhaseHotFunctions(
+  journeyDir: string,
+  files: string[],
+): Promise<ProfileListing["hotFunctions"]> {
+  const hotFunctions: ProfileListing["hotFunctions"] = [];
+  for (const file of files.filter((name) => name.endsWith(TRACE_SUFFIX))) {
+    hotFunctions.push({
+      phase: file.slice(0, -TRACE_SUFFIX.length),
+      functions: await readHotFunctions(
+        path.join(journeyDir, file),
+        HOT_FUNCTION_COUNT,
+      ),
+    });
+  }
+
+  return hotFunctions;
 }
 
 async function collectResults(): Promise<RunResults> {
@@ -199,7 +229,7 @@ async function hashBuild(): Promise<string> {
     withFileTypes: true,
   });
   const files = entries
-    .filter((entry) => entry.isFile())
+    .filter((entry) => entry.isFile() && !entry.name.endsWith(".map"))
     .map((entry) => path.join(entry.parentPath, entry.name))
     .toSorted();
 

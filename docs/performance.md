@@ -37,8 +37,10 @@ npm run perf -- --profile tile-interaction
 
 Runs one journey once, without timing samples, and writes a Chrome trace plus
 heap snapshots before and after each measured phase to
-`perf-results/profiles/<journey>/`. The report links to them. Journeys:
-`startup`, `tile-interaction`, `large-import`.
+`perf-results/profiles/<journey>/`. It prints the functions that took the most
+main-thread time in each phase, by source file and line, and the report lists
+them next to links to the files. Journeys: `startup`, `tile-interaction`,
+`large-import`.
 
 A typical loop:
 
@@ -118,11 +120,14 @@ and `style` are its JavaScript, layout and style-recalculation parts. They are
 measured under the CPU slowdown.
 
 **Long animation frames** count frames over 50 ms and sum their blocking
-duration. The script list attributes their script time to file · function ·
-invoker. Files are production chunks; the chunk names follow the
-code-splitting groups in [vite.config.ts](../vite.config.ts) (`react`, `mui`,
-`shayc` and `vendor` are dependencies, `index` is app code). Function names
-are minified.
+duration. The script list attributes their script time to source file:line ·
+function · invoker, such as
+`node_modules/react-dom/cjs/react-dom-client.production.js:17873 · dispatchDiscreteEvent · DIV#root.onclick`.
+Each entry is where the browser entered JavaScript (an event listener, a
+scheduler task, a promise continuation), so in a React app it is often React
+itself, not the component code that ran inside it. A built chunk name, such as
+`assets/index-*.js · (anonymous)`, means code outside any function (module
+evaluation) or a script without a source map.
 
 **Network** counts HTTP requests from the page and its service worker (board
 symbols load from `blob:` URLs and are not counted), failed requests, and
@@ -156,7 +161,8 @@ flagged as a regression or improvement only when all of these hold:
 
 A significant change that fails either size check is labeled “within noise”.
 
-"The same build" means the same hash of `dist/`. Vite fingerprints its output,
+"The same build" means the same hash of `dist/`, leaving out source maps, which
+change with comments even when the code does not. Vite fingerprints its output,
 so identical source produces an identical hash. Each same-build run can only
 raise the floor, because a single pair of runs often understates the noise.
 Delete `perf-results/noise-floor.json` and measure again after updating the
@@ -166,12 +172,17 @@ browser or moving to another machine.
 
 1. In the report, find the journey and phase that regressed, and check whether
    CPU script, layout or style time moved with it.
-2. Read the scripts in long animation frames to see which chunk and invoker
-   grew.
-3. Run `npm run perf -- --profile <journey>`. Load
-   `<phase>.trace.json` in Chrome DevTools → Performance. Each measured
-   interval appears in the Timings track under its metric name, so you can
-   check that it covers the operation you expect.
+2. Read the scripts in long animation frames to see which entry point and
+   invoker grew.
+3. Run `npm run perf -- --profile <journey>`. The terminal and the report's
+   “Main-thread JavaScript by self time” list name the functions that took the
+   most time in each phase, by source file and line, so open the top `src/`
+   file first. Self time is sampled time in the function itself; time in
+   browser APIs it calls, such as DOM methods or a forced layout, counts toward
+   it, while style, layout, paint and garbage collection outside JavaScript do
+   not. For the full picture, load `<phase>.trace.json` in Chrome DevTools →
+   Performance. Each measured interval appears in the Timings track under its
+   metric name, so you can check that it covers the operation you expect.
 4. For memory growth, load `navigationLoop.before.heapsnapshot` and
    `navigationLoop.after.heapsnapshot` in DevTools → Memory and use the
    Comparison view.
@@ -181,6 +192,11 @@ contribute timing samples.
 
 ## Method
 
+- The app is built with `vite build --sourcemap hidden`: the app's chunks are
+  byte-identical to `npm run build`, and the `.map` files sit next to them in
+  `dist/` without being referenced or precached. The harness reads them to
+  name source files; the service worker and Workbox runtime only gain a source
+  map comment. Chrome DevTools does not apply these maps to the traces.
 - The production build is served with `vite preview` on 127.0.0.1:4173,
   reusing the `webServer` from [playwright.config.ts](../playwright.config.ts).
   [perf/playwright.config.ts](../perf/playwright.config.ts) extends it, so
@@ -203,7 +219,9 @@ contribute timing samples.
 
 [perf/run.ts](../perf/run.ts) orchestrates a run,
 [perf/compare.ts](../perf/compare.ts) and [perf/stats.ts](../perf/stats.ts)
-compare runs, [perf/report.ts](../perf/report.ts) renders the static report and
+compare runs, [perf/report.ts](../perf/report.ts) renders the static report,
+[perf/source-map.ts](../perf/source-map.ts) maps built code to source,
+[perf/cpu-profile.ts](../perf/cpu-profile.ts) sums a trace's CPU samples and
 [perf/large-board-set.ts](../perf/large-board-set.ts) generates the import
 fixture.
 

@@ -9,6 +9,7 @@ import type {
 } from "@playwright/test";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { describeFunction } from "./source-map.ts";
 import { median } from "./stats.ts";
 
 export const RESULTS_DIR = path.resolve(import.meta.dirname, "../perf-results");
@@ -66,7 +67,10 @@ interface Memory {
 }
 
 interface FrameScript {
-  script: string;
+  sourceURL: string;
+  sourceFunctionName: string;
+  sourceCharPosition: number;
+  invoker: string;
   duration: number;
 }
 
@@ -148,22 +152,16 @@ function installPagePerf({
     for (const entry of list.getEntries()) {
       const frame = entry as PerformanceEntry & {
         blockingDuration: number;
-        scripts: {
-          sourceURL: string;
-          sourceFunctionName: string;
-          invoker: string;
-          duration: number;
-        }[];
+        scripts: FrameScript[];
       };
       perf.longFrames.push({
         start: frame.startTime,
         blockingDuration: frame.blockingDuration,
         scripts: frame.scripts.map((script) => ({
-          script: [
-            script.sourceURL.replace(location.origin + "/", "") || "(inline)",
-            script.sourceFunctionName || "(anonymous)",
-            script.invoker,
-          ].join(" · "),
+          sourceURL: script.sourceURL,
+          sourceFunctionName: script.sourceFunctionName,
+          sourceCharPosition: script.sourceCharPosition,
+          invoker: script.invoker,
           duration: script.duration,
         })),
       });
@@ -596,12 +594,23 @@ export class PageProbe {
       "frames",
     );
 
-    for (const { script, duration } of frames.flatMap(
-      (frame) => frame.scripts,
-    )) {
-      values.addScript(phase, script, duration);
+    for (const script of frames.flatMap((frame) => frame.scripts)) {
+      values.addScript(phase, describeScript(script), script.duration);
     }
   }
+}
+
+function describeScript({
+  sourceURL,
+  sourceFunctionName,
+  sourceCharPosition,
+  invoker,
+}: FrameScript): string {
+  const entryPoint = describeFunction(sourceURL, sourceFunctionName, {
+    offset: sourceCharPosition,
+  });
+
+  return `${entryPoint} · ${invoker}`;
 }
 
 export class JourneyRun {

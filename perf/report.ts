@@ -6,6 +6,7 @@ import type {
   RunMeta,
   RunResults,
 } from "./compare.ts";
+import type { HotFunction } from "./cpu-profile.ts";
 import type { MetricKind, MetricUnit, ScriptAttribution } from "./harness.ts";
 
 export interface ProfileListing {
@@ -14,6 +15,7 @@ export interface ProfileListing {
   buildHash: string;
   date: string;
   files: string[];
+  hotFunctions: { phase: string; functions: HotFunction[] }[];
 }
 
 export interface ReportInput {
@@ -267,7 +269,7 @@ function renderScripts(scripts: ScriptAttribution[]): string {
   });
 
   return `<h3>Scripts in long animation frames</h3>
-<p class="muted">Script time per sample, as file · function · invoker. Chunks follow the code-splitting groups in vite.config.ts: react, mui, shayc and vendor are dependencies; index is app code.</p>
+<p class="muted">Script time per sample, as source file:line · function · invoker. Each entry is where the browser entered the script, such as React's event dispatch or scheduler; the profile below names where the time went. A built chunk name means code outside any function or without a source map.</p>
 ${lists.join("\n")}`;
 }
 
@@ -292,7 +294,25 @@ function renderProfile(
   return `<h3>Profile</h3>
 <p class="muted">Commit ${escapeHTML(profile.commit)}, ${escapeHTML(profile.date)}. Load a <code>.trace.json</code> in Chrome DevTools → Performance; the harness's measured intervals are in the Timings track. Load both <code>.heapsnapshot</code> files in DevTools → Memory and use the Comparison view.</p>
 ${staleWarning}
-<ul>${links.join("")}</ul>`;
+<ul>${links.join("")}</ul>
+${renderHotFunctions(profile.hotFunctions)}`;
+}
+
+function renderHotFunctions(
+  hotFunctions: ProfileListing["hotFunctions"],
+): string {
+  const lists = hotFunctions.map(({ phase, functions }) => {
+    const items = functions.map(
+      ({ function: name, selfMs }) =>
+        `<li><code>${escapeHTML(name)}</code> ${formatValue(selfMs, "ms")}</li>`,
+    );
+
+    return `<h4>${escapeHTML(phase)}</h4><ol>${items.join("")}</ol>`;
+  });
+
+  return `<h3>Main-thread JavaScript by self time</h3>
+<p class="muted">Sampled time per function during the profile, under the CPU slowdown, as source file:line · function. Time in browser APIs such as DOM calls and forced layout counts toward the function that called them.</p>
+${lists.join("\n")}`;
 }
 
 export function formatValue(value: number, unit: MetricUnit): string {
