@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
-  "libraryDetails": "Informações",
+  "libraryInfo": "Informações",
   "libraryDelete": "Excluir",
   "libraryCancel": "Cancelar",
   "libraryClose": "Fechar biblioteca",

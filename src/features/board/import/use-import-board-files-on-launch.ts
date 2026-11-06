@@ -17,8 +17,8 @@ export function useImportBoardFilesOnLaunch(): void {
         await importAndOpen(files.filter(hasBoardFileExtension));
       } catch {
         showSnackbar({
-          message: (translate) =>
-            translate(m.libraryImportFailedBoardFiles, {
+          message: (t) =>
+            t(m.libraryImportFailedBoardFiles, {
               count: handles.length,
             }),
           severity: "error",

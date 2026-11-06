@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Suelta archivos de tableros para importar",
-  "libraryDetails": "Información",
+  "libraryInfo": "Información",
   "libraryDelete": "Eliminar",
   "libraryCancel": "Cancelar",
   "libraryClose": "Cerrar biblioteca",

@@ -2,7 +2,7 @@ import type { Translate } from "@shared/language/use-translate";
 import { createContext, type ReactNode } from "react";
 
 export type SnackbarSeverity = "success" | "error" | "info" | "warning";
-type SnackbarMessage = string | ((translate: Translate) => string);
+type SnackbarMessage = string | ((t: Translate) => string);
 
 export interface SnackbarOptions {
   message: SnackbarMessage;

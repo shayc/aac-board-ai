@@ -6,7 +6,7 @@ import {
 import { useEffect } from "react";
 import {
   getSpeechPreferences,
-  setVoiceURI,
+  setSpeechVoiceURI,
   useVoicesByLanguage,
 } from "./speech-store";
 
@@ -56,7 +56,7 @@ export function useVoiceLanguageSync(language: string): void {
     const fallbackVoice =
       candidates.find((voice) => voice.default) ?? candidates[0];
     if (fallbackVoice) {
-      setVoiceURI(fallbackVoice.voiceURI);
+      setSpeechVoiceURI(fallbackVoice.voiceURI);
     }
   }, [language, voicesByLanguage]);
 }

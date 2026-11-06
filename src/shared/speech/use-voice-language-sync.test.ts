@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { getSpeechPreferences, setVoiceURI } from "./speech-store";
+import { getSpeechPreferences, setSpeechVoiceURI } from "./speech-store";
 import { useVoiceLanguageSync } from "./use-voice-language-sync";
 
 function stubLanguages(languages: readonly string[]): void {
@@ -31,7 +31,7 @@ describe("useVoiceLanguageSync", () => {
       makeVoice("he-IL", "he-voice"),
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
-    setVoiceURI(null);
+    setSpeechVoiceURI(null);
   });
 
   afterEach(() => {
@@ -64,7 +64,7 @@ describe("useVoiceLanguageSync", () => {
       makeVoice("en-US", "en-voice"),
     ]);
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
-    setVoiceURI("en-voice");
+    setSpeechVoiceURI("en-voice");
 
     await renderHook(() => useVoiceLanguageSync("en"));
 

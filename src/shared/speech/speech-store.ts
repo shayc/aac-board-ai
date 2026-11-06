@@ -84,7 +84,7 @@ export function getSpeechPreferences(): SpeechPreferences {
   return speechPreferencesStore.getSnapshot();
 }
 
-export function setVoiceURI(voiceURI: string | null): void {
+export function setSpeechVoiceURI(voiceURI: string | null): void {
   updatePreferences({ voiceURI });
 }
 
