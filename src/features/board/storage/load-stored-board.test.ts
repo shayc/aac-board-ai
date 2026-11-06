@@ -73,6 +73,33 @@ describe("loadStoredBoard", () => {
     expect(await isObjectURLAlive(imageSrc)).toBe(true);
   });
 
+  test("falls back to the media url when its stored asset is missing", async () => {
+    await createBoardSetRecords({
+      id: SET_ID,
+      rootBoardId: BOARD_ID,
+      boards: [
+        {
+          format: "open-board-0.1",
+          id: BOARD_ID,
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+          buttons: [{ id: "btn-1", label: "test", image_id: "img-1" }],
+          images: [
+            {
+              id: "img-1",
+              path: "images/missing.png",
+              url: "https://example.com/test.png",
+            },
+          ],
+        },
+      ],
+      assets: [],
+    });
+
+    const board = await loadStoredBoard(SET_ID, BOARD_ID);
+
+    expect(getImageURL(board)).toBe("https://example.com/test.png");
+  });
+
   test("keeps asset URLs usable after another board loads", async () => {
     await seedTestBoard();
 

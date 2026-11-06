@@ -309,7 +309,7 @@ describe("obfToBoard", () => {
   });
 
   describe("media resolution", () => {
-    test("chooses imageSrc/soundSrc by data > path > url precedence", () => {
+    test("chooses imageSrc/soundSrc by data > url precedence without stored assets", () => {
       const obfBoard = makeOBFBoard({
         buttons: [
           {
@@ -344,7 +344,46 @@ describe("obfToBoard", () => {
       const board = obfToBoard(obfBoard);
 
       expect(board.buttons[0]?.imageSrc).toBe("data:image/png;base64,AAA");
-      expect(board.buttons[0]?.soundSrc).toBe("sounds/snd-1.mp3");
+      expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd-1.mp3");
+    });
+
+    test("prefers a stored asset URL for a media path over data and url", () => {
+      const obfBoard = makeOBFBoard({
+        buttons: [
+          { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
+        ],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        images: [
+          {
+            id: "img-1",
+            data: "data:image/png;base64,AAA",
+            path: "images/img-1.png",
+            url: "https://example.com/img-1.png",
+          },
+        ],
+        sounds: [{ id: "snd-1", path: "sounds/snd-1.mp3" }],
+      });
+      const assetURLByPath = new Map([
+        ["images/img-1.png", "blob:image"],
+        ["sounds/snd-1.mp3", "blob:sound"],
+      ]);
+
+      const board = obfToBoard(obfBoard, assetURLByPath);
+
+      expect(board.buttons[0]?.imageSrc).toBe("blob:image");
+      expect(board.buttons[0]?.soundSrc).toBe("blob:sound");
+    });
+
+    test("never uses an unresolved archive path as a media source", () => {
+      const obfBoard = makeOBFBoard({
+        buttons: [{ id: "btn-1", label: "Hello", image_id: "img-1" }],
+        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        images: [{ id: "img-1", path: "images/img-1.png" }],
+      });
+
+      const board = obfToBoard(obfBoard);
+
+      expect(board.buttons[0]?.imageSrc).toBeUndefined();
     });
 
     test("falls back to url when no data/path is available", () => {
