@@ -1,9 +1,8 @@
 import { readFileSync } from "node:fs";
 import { SourceMap, type SourceMapPayload } from "node:module";
 import path from "node:path";
+import { DIST_DIR, ROOT_DIR } from "./results.ts";
 
-const ROOT_DIR = path.resolve(import.meta.dirname, "..");
-const DIST_DIR = path.join(ROOT_DIR, "dist");
 const NAME_SEARCH_DISTANCE = 32;
 
 interface Chunk {

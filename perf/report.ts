@@ -2,21 +2,15 @@ import type {
   Comparison,
   MemoryGrowth,
   MetricComparison,
+} from "./comparison.ts";
+import type {
+  MetricKind,
+  MetricUnit,
   NoiseFloor,
+  ProfileListing,
   RunMeta,
   RunResults,
-} from "./compare.ts";
-import type { HotFunction } from "./cpu-profile.ts";
-import type { MetricKind, MetricUnit } from "./harness.ts";
-
-export interface ProfileListing {
-  journey: string;
-  commit: string;
-  buildHash: string;
-  date: string;
-  files: string[];
-  hotFunctions: { phase: string; functions: HotFunction[] }[];
-}
+} from "./results.ts";
 
 export interface ReportInput {
   results: RunResults;
@@ -179,17 +173,13 @@ function renderJourney(
   profile: ProfileListing | undefined,
   meta: RunMeta,
 ): string {
-  const kinds: MetricKind[] = ["timing", "cpu", "frames", "network", "memory"];
-  const sections = kinds
-    .map((kind) => ({
-      kind,
+  const sections = Object.entries(KIND_TITLES)
+    .map(([kind, title]) => ({
+      title,
       rows: metrics.filter((metric) => metric.kind === kind),
     }))
     .filter(({ rows }) => rows.length > 0)
-    .map(
-      ({ kind, rows }) =>
-        `<h3>${KIND_TITLES[kind]}</h3>\n${renderTable(rows, false)}`,
-    );
+    .map(({ title, rows }) => `<h3>${title}</h3>\n${renderTable(rows, false)}`);
 
   return `<section>
 <h2>${escapeHTML(journey)}</h2>

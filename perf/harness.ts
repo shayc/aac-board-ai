@@ -9,11 +9,18 @@ import type {
 } from "@playwright/test";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { installPagePerf } from "./page-perf.ts";
+import {
+  PROFILES_DIR,
+  RAW_RESULTS_DIR,
+  TRACE_SUFFIX,
+  writeJSON,
+  type JourneyResult,
+  type MetricKind,
+  type MetricSamples,
+  type MetricUnit,
+} from "./results.ts";
 import { median } from "./stats.ts";
-
-export const RESULTS_DIR = path.resolve(import.meta.dirname, "../perf-results");
-export const RAW_RESULTS_DIR = path.join(RESULTS_DIR, "raw");
-export const PROFILES_DIR = path.join(RESULTS_DIR, "profiles");
 
 const SAMPLE_COUNT = Number(process.env.PERF_SAMPLES ?? 10);
 const CPU_THROTTLE_RATE = 4;
@@ -22,25 +29,6 @@ const IS_PROFILING = process.env.PERF_PROFILE === "1";
 // Chromium never reports Event Timing entries shorter than this.
 const EVENT_TIMING_THRESHOLD_MS = 16;
 const MAX_FRAMES_TO_WAIT_FOR_EVENT_TIMING = 120;
-
-export type MetricKind = "timing" | "cpu" | "frames" | "network" | "memory";
-export type MetricUnit = "ms" | "count" | "bytes";
-
-export interface MetricSamples {
-  kind: MetricKind;
-  unit: MetricUnit;
-  values: number[];
-}
-
-export interface JourneyResult {
-  journey: string;
-  browserVersion: string;
-  cpuThrottleRate: number;
-  cpuBenchmarkMs: number;
-  viewport: { width: number; height: number } | null;
-  sampleCount: number;
-  metrics: Record<string, MetricSamples>;
-}
 
 export interface Tap {
   start: number;
@@ -58,170 +46,8 @@ interface Memory {
   listeners: number;
 }
 
-interface LongFrame {
-  start: number;
-  blockingDuration: number;
-}
-
-interface PagePerf {
-  interactionDurations: number[];
-  lastPointerDown: number;
-  longFrames: LongFrame[];
-  largestPaint: number;
-  visibleAt: Map<string, Promise<number>>;
-  watch: (name: string, selector: string) => void;
-}
-
-declare global {
-  interface Window {
-    __perf: PagePerf;
-  }
-}
-
-interface PagePerfOptions {
-  watches: Record<string, string>;
-  eventTimingThreshold: number;
-}
-
-/**
- * Runs in the page before any app script. Kept self-contained because
- * Playwright serializes it into the page.
- */
-function installPagePerf({
-  watches,
-  eventTimingThreshold,
-}: PagePerfOptions): void {
-  const durationsByInteraction = new Map<number, number>();
-
-  const perf: PagePerf = {
-    get interactionDurations() {
-      return [...durationsByInteraction.values()];
-    },
-    lastPointerDown: Number.NaN,
-    longFrames: [],
-    largestPaint: Number.NaN,
-    visibleAt: new Map(),
-    watch(name, selector) {
-      perf.visibleAt.set(name, firstVisibleFrame(selector));
-    },
-  };
-  window.__perf = perf;
-  performance.setResourceTimingBufferSize(10_000);
-
-  new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      const { interactionId } = entry as PerformanceEntry & {
-        interactionId: number;
-      };
-      if (!interactionId) {
-        continue;
-      }
-
-      durationsByInteraction.set(
-        interactionId,
-        Math.max(
-          durationsByInteraction.get(interactionId) ?? 0,
-          entry.duration,
-        ),
-      );
-    }
-  }).observe({
-    type: "event",
-    durationThreshold: eventTimingThreshold,
-    buffered: true,
-  } as PerformanceObserverInit & { durationThreshold: number });
-
-  new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      const { blockingDuration } = entry as PerformanceEntry & {
-        blockingDuration: number;
-      };
-      perf.longFrames.push({ start: entry.startTime, blockingDuration });
-    }
-  }).observe({ type: "long-animation-frame", buffered: true });
-
-  new PerformanceObserver((list) => {
-    perf.largestPaint = list.getEntries().at(-1)?.startTime ?? Number.NaN;
-  }).observe({ type: "largest-contentful-paint", buffered: true });
-
-  addEventListener(
-    "pointerdown",
-    (event) => {
-      perf.lastPointerDown = event.timeStamp;
-    },
-    { capture: true },
-  );
-
-  // Mirrors src/shared/testing/stub-speech.ts, which depends on Vitest.
-  speechSynthesis.speak = (utterance) => {
-    queueMicrotask(() => {
-      utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-    });
-  };
-  speechSynthesis.cancel = () => undefined;
-
-  for (const [name, selector] of Object.entries(watches)) {
-    perf.watch(name, selector);
-  }
-
-  // Resolves once the main thread has rendered the first frame in which the
-  // element is laid out and exposed to assistive technology. A user-blocking
-  // task posted from requestAnimationFrame runs right after that frame's
-  // style, layout and paint, ahead of the normal-priority tasks (image loads,
-  // React effects) already queued, whose order varies between runs.
-  function firstVisibleFrame(selector: string): Promise<number> {
-    return new Promise((resolve) => {
-      function isVisible(): boolean {
-        const element = document.querySelector(selector);
-
-        return (
-          element !== null &&
-          element.checkVisibility() &&
-          element.closest('[aria-hidden="true"], [inert]') === null
-        );
-      }
-
-      let isFrameScheduled = true;
-      const observer = new MutationObserver(scheduleCheck);
-
-      function scheduleCheck(): void {
-        if (isFrameScheduled) {
-          return;
-        }
-        isFrameScheduled = true;
-        requestAnimationFrame(check);
-      }
-
-      function check(): void {
-        isFrameScheduled = false;
-        if (!isVisible()) {
-          return;
-        }
-        observer.disconnect();
-
-        void scheduler.postTask(
-          () => {
-            resolve(performance.now());
-          },
-          { priority: "user-blocking" },
-        );
-      }
-
-      observer.observe(document, {
-        subtree: true,
-        childList: true,
-        attributes: true,
-      });
-      requestAnimationFrame(check);
-    });
-  }
-}
-
 class SampleValues {
-  readonly #values = new Map<
-    string,
-    { kind: MetricKind; unit: MetricUnit; values: number[] }
-  >();
+  readonly #values = new Map<string, MetricSamples>();
 
   add(name: string, value: number, unit: MetricUnit, kind: MetricKind): void {
     const metric = this.#values.get(name) ?? { kind, unit, values: [] };
@@ -270,12 +96,12 @@ function isNetworkRequest(request: Request): boolean {
 export class PageProbe {
   readonly page: Page;
   readonly #cdp: CDPSession;
-  readonly #run: JourneyRun;
+  readonly #sample: JourneySample;
 
-  constructor(page: Page, cdp: CDPSession, run: JourneyRun) {
+  constructor(page: Page, cdp: CDPSession, sample: JourneySample) {
     this.page = page;
     this.#cdp = cdp;
-    this.#run = run;
+    this.#sample = sample;
   }
 
   async tap(target: Locator, { until }: TapOptions = {}): Promise<Tap> {
@@ -337,17 +163,16 @@ export class PageProbe {
    * see, so the change listener goes on the chooser's own element.
    */
   async chooseFiles(chooser: FileChooser, file: string): Promise<number> {
-    const changedAt = chooser.element().evaluate(
-      (input) =>
-        new Promise<number>((resolve) => {
-          input.addEventListener("change", () => resolve(performance.now()), {
-            once: true,
-          });
-        }),
-    );
+    const change = await chooser.element().evaluateHandle((input) => ({
+      changedAt: new Promise<number>((resolve) => {
+        input.addEventListener("change", () => resolve(performance.now()), {
+          once: true,
+        });
+      }),
+    }));
     await chooser.setFiles(file);
 
-    return changedAt;
+    return change.evaluate(({ changedAt }) => changedAt);
   }
 
   async recordInterval(
@@ -358,7 +183,7 @@ export class PageProbe {
     if (Number.isNaN(end)) {
       return;
     }
-    this.#run.values.add(name, end - start, "ms", "timing");
+    this.#sample.values.add(name, end - start, "ms", "timing");
 
     if (IS_PROFILING) {
       await this.page.evaluate(
@@ -397,7 +222,7 @@ export class PageProbe {
   }
 
   recordMemoryGrowth(phase: string, start: Memory, end: Memory): void {
-    const { values } = this.#run;
+    const { values } = this.#sample;
     values.add(`${phase}.heapGrowth`, end.heap - start.heap, "bytes", "memory");
     values.add(
       `${phase}.nodeGrowth`,
@@ -417,13 +242,13 @@ export class PageProbe {
    * Wraps one measured stretch of a journey. Timing runs record CPU, long
    * animation frame and network deltas for it; profile runs trace it instead.
    */
-  async measure(phase: string, run: () => Promise<void>): Promise<void> {
+  async measure(phase: string, steps: () => Promise<void>): Promise<void> {
     if (IS_PROFILING) {
-      await this.#profile(phase, run);
+      await this.#profile(phase, steps);
       return;
     }
 
-    const counter = this.#run.requests;
+    const counter = this.#sample.requests;
     const before = {
       metrics: await this.#readMetrics(),
       requests: counter.requests,
@@ -431,7 +256,7 @@ export class PageProbe {
       page: await this.#readPageState(),
     };
 
-    await run();
+    await steps();
 
     const after = {
       metrics: await this.#readMetrics(),
@@ -444,7 +269,7 @@ export class PageProbe {
     this.#recordCPU(phase, before.metrics, after.metrics);
     await this.#recordLongFrames(phase, isSameDocument ? before.page.now : 0);
 
-    const { values } = this.#run;
+    const { values } = this.#sample;
     values.add(
       `${phase}.requests`,
       after.requests - before.requests,
@@ -465,20 +290,20 @@ export class PageProbe {
     );
   }
 
-  async #profile(phase: string, run: () => Promise<void>): Promise<void> {
+  async #profile(phase: string, steps: () => Promise<void>): Promise<void> {
     const browser = this.page.context().browser();
     if (!browser) {
       throw new Error("Profiling needs a launched browser.");
     }
 
-    const prefix = path.join(PROFILES_DIR, this.#run.journey, phase);
+    const prefix = path.join(PROFILES_DIR, this.#sample.journey, phase);
     await this.#writeHeapSnapshot(`${prefix}.before.heapsnapshot`);
     await browser.startTracing(this.page, {
-      path: `${prefix}.trace.json`,
+      path: `${prefix}${TRACE_SUFFIX}`,
       screenshots: true,
     });
 
-    await run();
+    await steps();
 
     await browser.stopTracing();
     await this.#writeHeapSnapshot(`${prefix}.after.heapsnapshot`);
@@ -538,7 +363,12 @@ export class PageProbe {
 
     for (const [name, metric] of Object.entries(cpuMetrics)) {
       const seconds = (after[metric] ?? 0) - (before[metric] ?? 0);
-      this.#run.values.add(`${phase}.cpu.${name}`, seconds * 1000, "ms", "cpu");
+      this.#sample.values.add(
+        `${phase}.cpu.${name}`,
+        seconds * 1000,
+        "ms",
+        "cpu",
+      );
     }
   }
 
@@ -546,7 +376,7 @@ export class PageProbe {
     const frames = (
       await this.page.evaluate(() => window.__perf.longFrames)
     ).filter((frame) => frame.start >= phaseStart);
-    const { values } = this.#run;
+    const { values } = this.#sample;
 
     values.add(`${phase}.longFrames`, frames.length, "count", "frames");
     values.add(
@@ -558,7 +388,7 @@ export class PageProbe {
   }
 }
 
-export class JourneyRun {
+export class JourneySample {
   readonly journey: string;
   readonly values = new SampleValues();
   readonly requests: RequestCounter;
@@ -598,7 +428,7 @@ export class JourneyRun {
 export async function measureJourney(
   browser: Browser,
   journey: string,
-  runJourney: (run: JourneyRun) => Promise<void>,
+  runJourney: (sample: JourneySample) => Promise<void>,
 ): Promise<void> {
   if (IS_PROFILING) {
     await rm(path.join(PROFILES_DIR, journey), {
@@ -612,26 +442,26 @@ export async function measureJourney(
 
   await runSample(browser, journey, runJourney);
 
-  const runs: JourneyRun[] = [];
+  const samples: JourneySample[] = [];
   for (let index = 0; index < SAMPLE_COUNT; index += 1) {
-    runs.push(await runSample(browser, journey, runJourney));
+    samples.push(await runSample(browser, journey, runJourney));
   }
 
-  await writeJourneyResult(browser, journey, runs);
+  await writeJourneyResult(browser, journey, samples);
 }
 
 async function runSample(
   browser: Browser,
   journey: string,
-  runJourney: (run: JourneyRun) => Promise<void>,
-): Promise<JourneyRun> {
+  runJourney: (sample: JourneySample) => Promise<void>,
+): Promise<JourneySample> {
   const context = await browser.newContext();
 
   try {
-    const run = new JourneyRun(journey, context);
-    run.cpuBenchmarkMs = await benchmarkCPU(context);
-    await runJourney(run);
-    return run;
+    const sample = new JourneySample(journey, context);
+    sample.cpuBenchmarkMs = await benchmarkCPU(context);
+    await runJourney(sample);
+    return sample;
   } finally {
     await context.close();
   }
@@ -664,30 +494,23 @@ async function benchmarkCPU(context: BrowserContext): Promise<number> {
 async function writeJourneyResult(
   browser: Browser,
   journey: string,
-  runs: JourneyRun[],
+  samples: JourneySample[],
 ): Promise<void> {
-  const samples = runs.map(({ values }) => values);
   const metrics: Record<string, MetricSamples> = {};
-  for (const sample of samples) {
-    for (const [name, { kind, unit, value }] of sample.medians()) {
+  for (const { values } of samples) {
+    for (const [name, { kind, unit, value }] of values.medians()) {
       metrics[name] ??= { kind, unit, values: [] };
       metrics[name].values.push(value);
     }
   }
 
-  const result: JourneyResult = {
+  await writeJSON(path.join(RAW_RESULTS_DIR, `${journey}.json`), {
     journey,
     browserVersion: browser.version(),
     cpuThrottleRate: CPU_THROTTLE_RATE,
-    cpuBenchmarkMs: median(runs.map(({ cpuBenchmarkMs }) => cpuBenchmarkMs)),
-    viewport: runs[0]?.viewport ?? null,
+    cpuBenchmarkMs: median(samples.map(({ cpuBenchmarkMs }) => cpuBenchmarkMs)),
+    viewport: samples[0]?.viewport ?? null,
     sampleCount: samples.length,
     metrics,
-  };
-
-  await mkdir(RAW_RESULTS_DIR, { recursive: true });
-  await writeFile(
-    path.join(RAW_RESULTS_DIR, `${journey}.json`),
-    JSON.stringify(result, null, 2),
-  );
+  } satisfies JourneyResult);
 }

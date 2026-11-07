@@ -2,9 +2,9 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { crc32, deflateSync } from "node:zlib";
 import { createOBZ, type OBFBoard } from "@shayc/open-board-format";
-import { RESULTS_DIR } from "./harness.ts";
+import { RESULTS_DIR } from "./results.ts";
 
-export const LARGE_BOARD_SET_FILE = path.join(
+const LARGE_BOARD_SET_FILE = path.join(
   RESULTS_DIR,
   "fixtures",
   "large-board-set.obz",

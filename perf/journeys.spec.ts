@@ -34,9 +34,7 @@ async function waitForServiceWorkerControl(page: Page): Promise<void> {
     .toBe(true);
 }
 
-async function openStarterBoard(probe: PageProbe): Promise<void> {
-  const { page } = probe;
-
+async function openStarterBoard(page: Page): Promise<void> {
   await page.goto("/");
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.getByRole("grid", { name: STARTER_BOARD })).toBeVisible();
@@ -71,8 +69,8 @@ async function goBack(probe: PageProbe, phase: string): Promise<void> {
 }
 
 test("startup", async ({ browser }) => {
-  await measureJourney(browser, "startup", async (run) => {
-    const firstLaunch = await run.openPage({
+  await measureJourney(browser, "startup", async (sample) => {
+    const firstLaunch = await sample.openPage({
       onboarding: '[role="dialog"]',
       grid: gridSelector(STARTER_BOARD),
     });
@@ -103,7 +101,7 @@ test("startup", async ({ browser }) => {
     await waitForServiceWorkerControl(page);
     await page.close();
 
-    const returnVisit = await run.openPage({
+    const returnVisit = await sample.openPage({
       grid: gridSelector(STARTER_BOARD),
     });
 
@@ -123,11 +121,11 @@ test("startup", async ({ browser }) => {
   });
 });
 
-test("tile-interaction", async ({ browser }) => {
-  await measureJourney(browser, "tile-interaction", async (run) => {
-    const probe = await run.openPage();
+test("tileInteraction", async ({ browser }) => {
+  await measureJourney(browser, "tileInteraction", async (sample) => {
+    const probe = await sample.openPage();
     const { page } = probe;
-    await openStarterBoard(probe);
+    await openStarterBoard(page);
 
     await probe.measure("taps", async () => {
       const message: string[] = [];
@@ -160,14 +158,14 @@ test("tile-interaction", async ({ browser }) => {
   });
 });
 
-test("large-import", async ({ browser }) => {
+test("largeImport", async ({ browser }) => {
   const boardSetFile = await writeLargeBoardSet();
   const boardSetLink = `a[href="/sets/large-board-set/boards/${LARGE_ROOT_BOARD.id}"]`;
 
-  await measureJourney(browser, "large-import", async (run) => {
-    const probe = await run.openPage();
+  await measureJourney(browser, "largeImport", async (sample) => {
+    const probe = await sample.openPage();
     const { page } = probe;
-    await openStarterBoard(probe);
+    await openStarterBoard(page);
     await page.getByRole("button", { name: "Open library" }).click();
 
     await probe.measure("import", async () => {

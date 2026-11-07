@@ -1,71 +1,80 @@
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import {
-  copyFile,
-  mkdir,
-  readdir,
-  readFile,
-  rm,
-  writeFile,
-} from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { copyFile, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
+import { build } from "vite";
 import {
   compareRuns,
-  isSameMachineSpeed,
   measureNoiseFloor,
   type Comparison,
-  type NoiseFloor,
-  type RunMeta,
-  type RunResults,
-} from "./compare.ts";
+  type Verdict,
+} from "./comparison.ts";
 import { readHotFunctions } from "./cpu-profile.ts";
+import { formatPercent, formatValue, renderReport } from "./report.ts";
 import {
+  BASELINE_FILE,
+  DIST_DIR,
+  NOISE_FLOOR_FILE,
+  PROFILE_MANIFEST,
   PROFILES_DIR,
   RAW_RESULTS_DIR,
-  RESULTS_DIR,
+  REPORT_FILE,
+  RESULTS_FILE,
+  ROOT_DIR,
+  TRACE_SUFFIX,
+  readJSON,
+  writeJSON,
   type JourneyResult,
-} from "./harness.ts";
-import { median } from "./stats.ts";
-import {
-  formatPercent,
-  formatValue,
-  renderReport,
+  type NoiseFloor,
   type ProfileListing,
-} from "./report.ts";
+  type RunMeta,
+  type RunResults,
+} from "./results.ts";
+import { median } from "./stats.ts";
 
-const ROOT_DIR = path.resolve(import.meta.dirname, "..");
-const DIST_DIR = path.join(ROOT_DIR, "dist");
-const RESULTS_FILE = path.join(RESULTS_DIR, "results.json");
-const BASELINE_FILE = path.join(RESULTS_DIR, "baseline.json");
-const NOISE_FLOOR_FILE = path.join(RESULTS_DIR, "noise-floor.json");
-const REPORT_FILE = path.join(RESULTS_DIR, "report.html");
-const PROFILE_MANIFEST = "profile.json";
-const TRACE_SUFFIX = ".trace.json";
+const PLAYWRIGHT_TEST = [
+  "playwright",
+  "test",
+  "--config",
+  "perf/playwright.config.ts",
+];
 const HOT_FUNCTION_COUNT = 10;
 
 const { values: flags } = parseArgs({
   options: {
     "save-baseline": { type: "boolean", default: false },
     profile: { type: "string" },
+    samples: { type: "string" },
   },
 });
 
-runOrExit("npm", ["run", "build", "--", "--sourcemap", "hidden"], {});
+if (flags.samples !== undefined && !isPositiveInteger(flags.samples)) {
+  console.error(
+    `--samples takes a whole number above 0, not ${flags.samples}.`,
+  );
+  process.exit(1);
+}
+
+await build({ root: ROOT_DIR, build: { sourcemap: "hidden" } });
 
 if (flags.profile === undefined) {
-  await measure(flags["save-baseline"]);
+  await measure(flags["save-baseline"], flags.samples);
 } else {
   await profile(flags.profile);
 }
 
-async function measure(shouldSaveBaseline: boolean): Promise<void> {
+async function measure(
+  shouldSaveBaseline: boolean,
+  samples: string | undefined,
+): Promise<void> {
   await rm(RAW_RESULTS_DIR, { recursive: true, force: true });
   runOrExit(
     "npx",
-    ["playwright", "test", "--config", "perf/playwright.config.ts"],
-    {},
+    PLAYWRIGHT_TEST,
+    samples === undefined ? {} : { PERF_SAMPLES: samples },
   );
 
   const results = await collectResults();
@@ -90,16 +99,20 @@ async function updateNoiseFloor(
   results: RunResults,
   baseline: RunResults,
 ): Promise<void> {
-  if (!isSameMachineSpeed(baseline.meta, results.meta)) {
+  const comparison = compareRuns(results, baseline, undefined);
+  const differingSettings = comparison.settingDifferences.map(
+    ({ setting }) => setting,
+  );
+  if (differingSettings.length > 0) {
     console.log(
-      "Same build as the baseline, but the machine ran at a different speed (CPU benchmark), so the noise floor was not updated. Save a new baseline while the machine is idle.",
+      `Same build as the baseline, but settings differ (${differingSettings.join(", ")}), so the noise floor was not updated. Rerun while the machine is idle, or save a new baseline if a setting changed on purpose.`,
     );
     return;
   }
 
   const noiseFloor = measureNoiseFloor(
     results,
-    compareRuns(results, baseline, undefined),
+    comparison,
     await readJSON<NoiseFloor>(NOISE_FLOOR_FILE),
   );
   await writeJSON(NOISE_FLOOR_FILE, noiseFloor);
@@ -109,21 +122,12 @@ async function updateNoiseFloor(
 }
 
 async function profile(journey: string): Promise<void> {
-  runOrExit(
-    "npx",
-    [
-      "playwright",
-      "test",
-      "--config",
-      "perf/playwright.config.ts",
-      "--grep",
-      ` ${journey}$`,
-    ],
-    { PERF_PROFILE: "1" },
-  );
+  runOrExit("npx", [...PLAYWRIGHT_TEST, "--grep", ` ${journey}$`], {
+    PERF_PROFILE: "1",
+  });
 
   const journeyDir = path.join(PROFILES_DIR, journey);
-  const meta = await describeRun();
+  const meta = await collectRunMeta();
   const files = (await readdir(journeyDir)).toSorted();
   const hotFunctions = await readPhaseHotFunctions(journeyDir, files);
   await writeJSON(path.join(journeyDir, PROFILE_MANIFEST), {
@@ -195,7 +199,7 @@ async function collectResults(): Promise<RunResults> {
 
   return {
     meta: {
-      ...(await describeRun()),
+      ...(await collectRunMeta()),
       browserVersion: first.browserVersion,
       cpuThrottleRate: first.cpuThrottleRate,
       cpuBenchmarkMs: median(
@@ -208,7 +212,7 @@ async function collectResults(): Promise<RunResults> {
   };
 }
 
-async function describeRun(): Promise<
+async function collectRunMeta(): Promise<
   Pick<RunMeta, "commit" | "isDirty" | "buildHash" | "date" | "os" | "cpu">
 > {
   return {
@@ -262,7 +266,11 @@ async function writeReport(results: RunResults): Promise<Comparison> {
 }
 
 async function listProfiles(): Promise<ProfileListing[]> {
-  const journeys = await readdir(PROFILES_DIR).catch(() => []);
+  if (!existsSync(PROFILES_DIR)) {
+    return [];
+  }
+
+  const journeys = await readdir(PROFILES_DIR);
   const listings = await Promise.all(
     journeys.map((journey) =>
       readJSON<ProfileListing>(
@@ -275,26 +283,21 @@ async function listProfiles(): Promise<ProfileListing[]> {
 }
 
 function printSummary(results: RunResults, comparison: Comparison): void {
-  const flagged = comparison.metrics.filter(
-    ({ kind, verdict }) =>
-      kind === "timing" ||
-      verdict === "regression" ||
-      verdict === "improvement",
+  const summaryMetrics = comparison.metrics.filter(
+    ({ kind, verdict }) => kind === "timing" || isFlagged(verdict),
   );
 
   for (const journey of results.journeys) {
     console.log(`\n${journey.journey}`);
 
-    for (const metric of flagged.filter(
+    for (const metric of summaryMetrics.filter(
       (candidate) => candidate.journey === journey.journey,
     )) {
       const change =
         metric.changePercent === undefined
           ? ""
           : ` (${formatPercent(metric.changePercent)}, p=${metric.p?.toPrecision(2)})`;
-      const isFlagged =
-        metric.verdict === "regression" || metric.verdict === "improvement";
-      const marker = isFlagged ? `  ← ${metric.verdict}` : "";
+      const marker = isFlagged(metric.verdict) ? `  ← ${metric.verdict}` : "";
       console.log(
         `  ${metric.metric.padEnd(36)} ${formatValue(metric.current.median, metric.unit).padStart(9)}${change}${marker}`,
       );
@@ -308,6 +311,10 @@ function printSummary(results: RunResults, comparison: Comparison): void {
   }
 
   console.log(`\nReport: ${REPORT_FILE}`);
+}
+
+function isFlagged(verdict: Verdict): boolean {
+  return verdict === "regression" || verdict === "improvement";
 }
 
 function openReport(): void {
@@ -326,7 +333,7 @@ function openReport(): void {
 function runOrExit(
   command: string,
   args: string[],
-  env: Record<string, string>,
+  env: Record<string, string> = {},
 ): void {
   const { status } = spawnSync(command, args, {
     cwd: ROOT_DIR,
@@ -347,15 +354,8 @@ function git(args: string[]): string {
   }).stdout.trim();
 }
 
-async function readJSON<T>(file: string): Promise<T | undefined> {
-  try {
-    return JSON.parse(await readFile(file, "utf8")) as T;
-  } catch {
-    return undefined;
-  }
-}
+function isPositiveInteger(text: string): boolean {
+  const value = Number(text);
 
-async function writeJSON(file: string, value: unknown): Promise<void> {
-  await mkdir(path.dirname(file), { recursive: true });
-  await writeFile(file, JSON.stringify(value, null, 2));
+  return Number.isInteger(value) && value > 0;
 }

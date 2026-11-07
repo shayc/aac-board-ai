@@ -1,10 +1,6 @@
 import { readFile } from "node:fs/promises";
+import type { HotFunction } from "./results.ts";
 import { describeFunction } from "./source-map.ts";
-
-export interface HotFunction {
-  function: string;
-  selfMs: number;
-}
 
 interface ProfileNode {
   id: number;

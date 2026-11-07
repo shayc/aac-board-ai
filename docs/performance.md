@@ -31,15 +31,23 @@ Does the same, then saves the run as the baseline that later runs compare
 against.
 
 ```bash
-npm run perf -- --profile tile-interaction
+npm run perf -- --profile tileInteraction
 ```
 
 Runs one journey once, without timing samples, and writes a Chrome trace plus
 heap snapshots before and after each measured phase to
 `perf-results/profiles/<journey>/`. It prints the functions that took the most
 main-thread time in each phase, by source file and line, and the report lists
-them next to links to the files. Journeys: `startup`, `tile-interaction`,
-`large-import`.
+them next to links to the files. Journeys: `startup`, `tileInteraction`,
+`largeImport`.
+
+```bash
+npm run perf -- --samples 3
+```
+
+Takes 3 samples per journey instead of 10, for a quick check that the journeys
+still run. The report warns that the sample count differs from the baseline,
+and the run never updates the noise floor.
 
 A typical loop:
 
@@ -61,16 +69,17 @@ Every journey uses the bundled Quick Core 24 board set (except large import)
 and asserts what the user would see, so a broken journey fails the run instead
 of reporting fast numbers.
 
-| Journey            | Phase            | What happens                                                                                                                                                                                           |
-| ------------------ | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `startup`          | `firstLaunch`    | Empty storage → onboarding → tap Continue → Quick Core 24 grid.                                                                                                                                        |
-|                    | `returnVisit`    | Same context once the service worker controls the page and IndexedDB holds the board set: open `/` in a new page → grid.                                                                               |
-| `tile-interaction` | `taps`           | Tap I, want, to (checking the message bar after each), open the linked “eat” board, tap drink, go back.                                                                                                |
-|                    | `navigationLoop` | Open “eat” and go back 10 times; JS heap, DOM nodes and listeners are read after forced garbage collection before and after the loop.                                                                  |
-| `large-import`     | `import`         | Import a generated board set (80 boards, 6,400 tiles, 400 small PNGs) through the file chooser, wait for it in the library, open it → its grid. The OBZ is rebuilt on every run with the same content. |
+| Journey           | Phase            | What happens                                                                                                                                                                                           |
+| ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `startup`         | `firstLaunch`    | Empty storage → onboarding → tap Continue → Quick Core 24 grid.                                                                                                                                        |
+|                   | `returnVisit`    | Same context once the service worker controls the page and IndexedDB holds the board set: open `/` in a new page → grid.                                                                               |
+| `tileInteraction` | `taps`           | Tap I, want, to (checking the message bar after each), open the linked “eat” board, tap drink, go back.                                                                                                |
+|                   | `navigationLoop` | Open “eat” and go back 10 times; JS heap, DOM nodes and listeners are read after forced garbage collection before and after the loop.                                                                  |
+| `largeImport`     | `import`         | Import a generated board set (80 boards, 6,400 tiles, 400 small PNGs) through the file chooser, wait for it in the library, open it → its grid. The OBZ is rebuilt on every run with the same content. |
 
 The journeys live in [perf/journeys.spec.ts](../perf/journeys.spec.ts). The
-harness that measures them is [perf/harness.ts](../perf/harness.ts).
+harness that measures them is [perf/harness.ts](../perf/harness.ts); the part
+that runs inside the page is [perf/page-perf.ts](../perf/page-perf.ts).
 
 ## Read the report
 
@@ -112,9 +121,10 @@ A significant change that fails either size check is labeled “within noise”.
 "The same build" means the same hash of `dist/`, leaving out source maps, which
 change with comments even when the code does not. Vite fingerprints its output,
 so identical source produces an identical hash. Each same-build run can only
-raise the floor, because a single pair of runs often understates the noise.
-Delete `perf-results/noise-floor.json` and measure again after updating the
-browser or moving to another machine.
+raise the floor, because a single pair of runs often understates the noise. A
+same-build run whose settings or machine speed differ from the baseline leaves
+the floor alone. After updating the browser or moving to another machine,
+delete `perf-results/noise-floor.json`, save a new baseline and measure again.
 
 ## Find out why
 
@@ -138,8 +148,9 @@ contribute timing samples.
 
 ## Method
 
-- The app is built with `vite build --sourcemap hidden`: the app's chunks are
-  byte-identical to `npm run build`, and the `.map` files sit next to them in
+- The app is built with Vite's `build()` and `sourcemap: "hidden"`, skipping
+  the typecheck in `npm run build`: the app's chunks are byte-identical to
+  `npm run build`, and the `.map` files sit next to them in
   `dist/` without being referenced or precached. The harness reads them to
   name source files; the service worker and Workbox runtime only gain a source
   map comment. Chrome DevTools does not apply these maps to the traces.
@@ -163,9 +174,11 @@ contribute timing samples.
 - The app code has no performance marks; everything is observed from outside
   through browser APIs and the Chrome DevTools Protocol.
 
-[perf/run.ts](../perf/run.ts) orchestrates a run,
-[perf/compare.ts](../perf/compare.ts) and [perf/stats.ts](../perf/stats.ts)
-compare runs, [perf/report.ts](../perf/report.ts) renders the static report,
+[perf/cli.ts](../perf/cli.ts) orchestrates a run,
+[perf/results.ts](../perf/results.ts) defines the files under `perf-results/`
+and their formats, [perf/comparison.ts](../perf/comparison.ts) and
+[perf/stats.ts](../perf/stats.ts) compare runs,
+[perf/report.ts](../perf/report.ts) renders the static report,
 [perf/source-map.ts](../perf/source-map.ts) maps built code to source,
 [perf/cpu-profile.ts](../perf/cpu-profile.ts) sums a trace's CPU samples and
 [perf/large-board-set.ts](../perf/large-board-set.ts) generates the import

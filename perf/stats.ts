@@ -109,7 +109,7 @@ export function growthSignP(growths: number[]): number {
     probability += binomial(changed, count) / 2 ** changed;
   }
 
-  return changed === 0 ? 1 : probability;
+  return probability;
 }
 
 function binomial(total: number, chosen: number): number {

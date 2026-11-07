@@ -1,4 +1,10 @@
-import type { JourneyResult, MetricKind, MetricUnit } from "./harness.ts";
+import type {
+  MetricKind,
+  MetricUnit,
+  NoiseFloor,
+  RunResults,
+  RunSettings,
+} from "./results.ts";
 import { growthSignP, mannWhitneyP, spreadOf, type Spread } from "./stats.ts";
 
 const SIGNIFICANCE_LEVEL = 0.05;
@@ -17,34 +23,6 @@ const MIN_MEANINGFUL_CHANGE: Record<MetricUnit, number> = {
   count: 1,
   bytes: 1024,
 };
-
-export interface RunSettings {
-  browserVersion: string;
-  cpuThrottleRate: number;
-  cpuBenchmarkMs: number;
-  sampleCount: number;
-  viewport: string;
-  os: string;
-  cpu: string;
-}
-
-export interface RunMeta extends RunSettings {
-  commit: string;
-  isDirty: boolean;
-  buildHash: string;
-  date: string;
-}
-
-export interface RunResults {
-  meta: RunMeta;
-  journeys: JourneyResult[];
-}
-
-export interface NoiseFloor {
-  comparisonCount: number;
-  latestDate: string;
-  percentByMetric: Record<string, number>;
-}
 
 export type Verdict =
   | "regression"
@@ -269,7 +247,7 @@ function differingSettings(
   return differences;
 }
 
-export function isSameMachineSpeed(
+function isSameMachineSpeed(
   baseline: RunSettings,
   current: RunSettings,
 ): boolean {
