@@ -8,6 +8,7 @@ import { parseArgs } from "node:util";
 import { build } from "vite";
 import {
   compareRuns,
+  MACHINE_SPEED_SETTING,
   measureNoiseFloor,
   type Comparison,
   type Verdict,
@@ -28,6 +29,7 @@ import {
   readJSON,
   writeJSON,
   type JourneyResult,
+  type JourneySettings,
   type NoiseFloor,
   type ProfileListing,
   type RunMeta,
@@ -85,14 +87,31 @@ async function measure(
     await updateNoiseFloor(results, baseline);
   }
 
-  printSummary(results, await writeReport(results));
+  const comparison = await writeReport(results);
+  printSummary(results, comparison);
 
   if (shouldSaveBaseline) {
-    await copyFile(RESULTS_FILE, BASELINE_FILE);
-    console.log(`Saved this run as the baseline for later runs.`);
+    await saveBaseline(comparison);
   }
 
   openReport();
+}
+
+async function saveBaseline(comparison: Comparison): Promise<void> {
+  await copyFile(RESULTS_FILE, BASELINE_FILE);
+  console.log("Saved this run as the baseline for later runs.");
+
+  const changedSettings = comparison.settingDifferences
+    .map(({ setting }) => setting)
+    .filter((setting) => setting !== MACHINE_SPEED_SETTING);
+  if (changedSettings.length === 0 || !existsSync(NOISE_FLOOR_FILE)) {
+    return;
+  }
+
+  await rm(NOISE_FLOOR_FILE);
+  console.log(
+    `Settings differ from the previous baseline (${changedSettings.join(", ")}), so the noise floor no longer applies and was cleared. Run the same build twice to measure it again.`,
+  );
 }
 
 async function updateNoiseFloor(
@@ -168,6 +187,7 @@ async function readPhaseHotFunctions(
       phase: file.slice(0, -TRACE_SUFFIX.length),
       functions: await readHotFunctions(
         path.join(journeyDir, file),
+        DIST_DIR,
         HOT_FUNCTION_COUNT,
       ),
     });
@@ -193,28 +213,19 @@ async function collectResults(): Promise<RunResults> {
     throw new Error("The journeys wrote no results.");
   }
 
-  const viewport = first.viewport
-    ? `${first.viewport.width}×${first.viewport.height}`
-    : "default viewport";
-
   return {
     meta: {
       ...(await collectRunMeta()),
-      browserVersion: first.browserVersion,
-      cpuThrottleRate: first.cpuThrottleRate,
+      ...first.settings,
       cpuBenchmarkMs: median(
-        journeys.map(({ cpuBenchmarkMs }) => cpuBenchmarkMs),
+        journeys.map(({ settings }) => settings.cpuBenchmarkMs),
       ),
-      sampleCount: first.sampleCount,
-      viewport,
     },
     journeys,
   };
 }
 
-async function collectRunMeta(): Promise<
-  Pick<RunMeta, "commit" | "isDirty" | "buildHash" | "date" | "os" | "cpu">
-> {
+async function collectRunMeta(): Promise<Omit<RunMeta, keyof JourneySettings>> {
   return {
     commit: git(["rev-parse", "--short", "HEAD"]),
     isDirty: git(["status", "--porcelain"]) !== "",
@@ -301,6 +312,13 @@ function printSummary(results: RunResults, comparison: Comparison): void {
       console.log(
         `  ${metric.metric.padEnd(36)} ${formatValue(metric.current.median, metric.unit).padStart(9)}${change}${marker}`,
       );
+    }
+  }
+
+  if (comparison.missingMetrics.length > 0) {
+    console.log("\nMeasured in the baseline but not in this run:");
+    for (const { journey, metric } of comparison.missingMetrics) {
+      console.log(`  ${journey} › ${metric}`);
     }
   }
 

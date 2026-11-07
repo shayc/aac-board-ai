@@ -1,10 +1,7 @@
 export interface Spread {
-  count: number;
   median: number;
   p25: number;
   p75: number;
-  min: number;
-  max: number;
 }
 
 export function median(values: number[]): number {
@@ -18,12 +15,9 @@ export function spreadOf(values: number[]): Spread {
   const sorted = values.toSorted((a, b) => a - b);
 
   return {
-    count: sorted.length,
     median: quantile(sorted, 0.5),
     p25: quantile(sorted, 0.25),
     p75: quantile(sorted, 0.75),
-    min: sorted[0] ?? Number.NaN,
-    max: sorted.at(-1) ?? Number.NaN,
   };
 }
 

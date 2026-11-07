@@ -1,5 +1,10 @@
 import { expect, test, type Locator, type Page } from "@playwright/test";
-import { measureJourney, type PageProbe } from "./harness.ts";
+import {
+  measureJourney,
+  type JourneySample,
+  type PageProbe,
+  type TimingMetric,
+} from "./harness.ts";
 import { LARGE_ROOT_BOARD, writeLargeBoardSet } from "./large-board-set.ts";
 
 const STARTER_BOARD = "Quick Core 24";
@@ -41,31 +46,44 @@ async function openStarterBoard(page: Page): Promise<void> {
   await waitForServiceWorkerControl(page);
 }
 
-async function openLinkedBoard(probe: PageProbe, phase: string): Promise<void> {
-  const open = await probe.tap(tile(probe.page, "eat"), {
-    until: gridSelector(LINKED_BOARD),
-  });
-  await expect(
-    probe.page.getByRole("grid", { name: LINKED_BOARD }),
-  ).toBeVisible();
+async function tapToGrid(
+  sample: JourneySample,
+  probe: PageProbe,
+  target: Locator,
+  boardName: string,
+  metric: TimingMetric,
+): Promise<void> {
+  const tap = await probe.tap(target, { until: gridSelector(boardName) });
+  await expect(probe.page.getByRole("grid", { name: boardName })).toBeVisible();
 
-  await probe.recordInterval(
-    `${phase}.openBoardToGrid`,
-    open.start,
-    open.visibleAt,
-  );
+  await sample.recordInterval({
+    ...metric,
+    start: tap.start,
+    end: tap.visibleAt,
+  });
 }
 
-async function goBack(probe: PageProbe, phase: string): Promise<void> {
-  const back = await probe.tap(
-    probe.page.getByRole("button", { name: "Go back" }),
-    { until: gridSelector(STARTER_BOARD) },
-  );
-  await expect(
-    probe.page.getByRole("grid", { name: STARTER_BOARD }),
-  ).toBeVisible();
+async function openLinkedBoard(
+  sample: JourneySample,
+  probe: PageProbe,
+  phase: string,
+): Promise<void> {
+  await tapToGrid(sample, probe, tile(probe.page, "eat"), LINKED_BOARD, {
+    name: `${phase}.openBoardToGrid`,
+    description: "Tap on a linking tile → linked board grid rendered.",
+  });
+}
 
-  await probe.recordInterval(`${phase}.backToGrid`, back.start, back.visibleAt);
+async function goBack(
+  sample: JourneySample,
+  probe: PageProbe,
+  phase: string,
+): Promise<void> {
+  const back = probe.page.getByRole("button", { name: "Go back" });
+  await tapToGrid(sample, probe, back, STARTER_BOARD, {
+    name: `${phase}.backToGrid`,
+    description: "Back tap → previous board grid rendered.",
+  });
 }
 
 test("startup", async ({ browser }) => {
@@ -76,7 +94,7 @@ test("startup", async ({ browser }) => {
     });
     const { page } = firstLaunch;
 
-    await firstLaunch.measure("firstLaunch", async () => {
+    await sample.measure(firstLaunch, "firstLaunch", async () => {
       await page.goto("/");
       const continueTap = await firstLaunch.tap(
         page.getByRole("button", { name: "Continue" }),
@@ -85,17 +103,20 @@ test("startup", async ({ browser }) => {
         page.getByRole("grid", { name: STARTER_BOARD }),
       ).toBeVisible();
 
-      await firstLaunch.recordInterval(
-        "firstLaunch.toOnboarding",
-        0,
-        await firstLaunch.visibleAt("onboarding"),
-      );
-      await firstLaunch.recordInterval(
-        "firstLaunch.continueToGrid",
-        continueTap.start,
-        await firstLaunch.visibleAt("grid"),
-      );
-      await firstLaunch.recordPaints("firstLaunch");
+      await sample.recordInterval({
+        name: "firstLaunch.toOnboarding",
+        description: "Navigation start → onboarding dialog rendered.",
+        start: 0,
+        end: await firstLaunch.visibleAt("onboarding"),
+      });
+      await sample.recordInterval({
+        name: "firstLaunch.continueToGrid",
+        description:
+          "Continue tap → starter board grid rendered and exposed to assistive technology.",
+        start: continueTap.start,
+        end: await firstLaunch.visibleAt("grid"),
+      });
+      await sample.recordPaints(firstLaunch, "firstLaunch");
     });
 
     await waitForServiceWorkerControl(page);
@@ -105,18 +126,20 @@ test("startup", async ({ browser }) => {
       grid: gridSelector(STARTER_BOARD),
     });
 
-    await returnVisit.measure("returnVisit", async () => {
+    await sample.measure(returnVisit, "returnVisit", async () => {
       await returnVisit.page.goto("/");
       await expect(
         returnVisit.page.getByRole("grid", { name: STARTER_BOARD }),
       ).toBeVisible();
 
-      await returnVisit.recordInterval(
-        "returnVisit.toGrid",
-        0,
-        await returnVisit.visibleAt("grid"),
-      );
-      await returnVisit.recordPaints("returnVisit");
+      await sample.recordInterval({
+        name: "returnVisit.toGrid",
+        description:
+          "Navigation start → grid rendered, from the service worker and stored boards.",
+        start: 0,
+        end: await returnVisit.visibleAt("grid"),
+      });
+      await sample.recordPaints(returnVisit, "returnVisit");
     });
   });
 });
@@ -127,12 +150,16 @@ test("tileInteraction", async ({ browser }) => {
     const { page } = probe;
     await openStarterBoard(page);
 
-    await probe.measure("taps", async () => {
+    await sample.measure(probe, "taps", async () => {
       const message: string[] = [];
 
       async function tapWord(word: string): Promise<void> {
-        await probe.recordTap(
-          "taps.wordTap",
+        await sample.recordTap(
+          {
+            name: "taps.wordTap",
+            description:
+              "Event Timing duration of a word tile tap: input delay + processing + next paint, in 8 ms steps, never below 16 ms.",
+          },
           await probe.tap(tile(page, word)),
         );
         message.push(word);
@@ -142,19 +169,23 @@ test("tileInteraction", async ({ browser }) => {
       await tapWord("I");
       await tapWord("want");
       await tapWord("to");
-      await openLinkedBoard(probe, "taps");
+      await openLinkedBoard(sample, probe, "taps");
       await tapWord("drink");
-      await goBack(probe, "taps");
+      await goBack(sample, probe, "taps");
     });
 
     const start = await probe.readMemory();
-    await probe.measure("navigationLoop", async () => {
+    await sample.measure(probe, "navigationLoop", async () => {
       for (let index = 0; index < NAVIGATION_LOOP_COUNT; index += 1) {
-        await openLinkedBoard(probe, "navigationLoop");
-        await goBack(probe, "navigationLoop");
+        await openLinkedBoard(sample, probe, "navigationLoop");
+        await goBack(sample, probe, "navigationLoop");
       }
     });
-    probe.recordMemoryGrowth("navigationLoop", start, await probe.readMemory());
+    sample.recordMemoryGrowth(
+      "navigationLoop",
+      start,
+      await probe.readMemory(),
+    );
   });
 });
 
@@ -168,7 +199,7 @@ test("largeImport", async ({ browser }) => {
     await openStarterBoard(page);
     await page.getByRole("button", { name: "Open library" }).click();
 
-    await probe.measure("import", async () => {
+    await sample.measure(probe, "import", async () => {
       await probe.watch("listed", boardSetLink);
       const fileChooser = page.waitForEvent("filechooser");
       await page.getByRole("button", { name: "Import board files" }).click();
@@ -181,23 +212,17 @@ test("largeImport", async ({ browser }) => {
         name: LARGE_ROOT_BOARD.name,
       });
       await expect(importedSet).toBeVisible({ timeout: 60_000 });
-      await probe.recordInterval(
-        "import.filesChosenToListed",
-        filesChosenAt,
-        await probe.visibleAt("listed"),
-      );
-
-      const open = await probe.tap(importedSet, {
-        until: gridSelector(LARGE_ROOT_BOARD.name),
+      await sample.recordInterval({
+        name: "import.filesChosenToListed",
+        description: "File chosen → imported board set listed in the library.",
+        start: filesChosenAt,
+        end: await probe.visibleAt("listed"),
       });
-      await expect(
-        page.getByRole("grid", { name: LARGE_ROOT_BOARD.name }),
-      ).toBeVisible();
-      await probe.recordInterval(
-        "import.openImportedToGrid",
-        open.start,
-        open.visibleAt,
-      );
+
+      await tapToGrid(sample, probe, importedSet, LARGE_ROOT_BOARD.name, {
+        name: "import.openImportedToGrid",
+        description: "Tap on the imported board set → its grid rendered.",
+      });
     });
   });
 });

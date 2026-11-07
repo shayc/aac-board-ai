@@ -1,7 +1,12 @@
-import type {
-  Comparison,
-  MemoryGrowth,
-  MetricComparison,
+import {
+  DEFAULT_NOISE_FLOOR_PERCENT,
+  MIN_MEANINGFUL_CHANGE,
+  MIN_NOISE_FLOOR_PERCENT,
+  SIGNIFICANCE_LEVEL,
+  type Comparison,
+  type MemoryGrowth,
+  type MetricComparison,
+  type MissingMetric,
 } from "./comparison.ts";
 import type {
   MetricKind,
@@ -26,38 +31,6 @@ const KIND_TITLES: Record<MetricKind, string> = {
   frames: "Long animation frames",
   network: "Network",
   memory: "Memory (JS heap after forced GC)",
-};
-
-const METRIC_HELP: Record<string, string> = {
-  toOnboarding: "Navigation start → onboarding dialog rendered.",
-  continueToGrid:
-    "Continue tap → starter board grid rendered and exposed to assistive technology.",
-  toGrid:
-    "Navigation start → grid rendered, from the service worker and stored boards.",
-  fcp: "First Contentful Paint.",
-  lcp: "Largest Contentful Paint, when the browser reports one before the first input.",
-  wordTap:
-    "Event Timing duration of a word tile tap: input delay + processing + next paint, in 8 ms steps, never below 16 ms.",
-  openBoardToGrid: "Tap on a linking tile → linked board grid rendered.",
-  backToGrid: "Back tap → previous board grid rendered.",
-  filesChosenToListed:
-    "File chosen → imported board set listed in the library.",
-  openImportedToGrid: "Tap on the imported board set → its grid rendered.",
-  "cpu.task": "All main-thread task time (CDP TaskDuration).",
-  "cpu.script": "JavaScript execution (CDP ScriptDuration).",
-  "cpu.layout": "Layout (CDP LayoutDuration).",
-  "cpu.style": "Style recalculation (CDP RecalcStyleDuration).",
-  longFrames: "Animation frames longer than 50 ms.",
-  blocking: "Summed blocking duration of those frames.",
-  requests: "HTTP requests from the page and its service worker.",
-  failedRequests:
-    "Failed requests, including blocked requests to hosts other than 127.0.0.1.",
-  bytes:
-    "Bytes the page downloaded (Resource Timing; excludes service worker precaching).",
-  heapGrowth:
-    "JS heap used at the end of the loop minus the start. Includes compiled code, which grows while the JIT warms up.",
-  nodeGrowth: "DOM nodes at the end of the loop minus the start.",
-  listenerGrowth: "JS event listeners at the end of the loop minus the start.",
 };
 
 export function renderReport({
@@ -134,16 +107,30 @@ function renderStatus(
   );
   const noiseFloorText = noiseFloor
     ? `Noise floor: the largest change per metric across ${noiseFloor.comparisonCount} same-build comparisons, latest ${noiseFloor.latestDate}.`
-    : "Noise floor not measured yet, so changes must exceed 10%. Run the same build twice to measure it.";
+    : `Noise floor not measured yet, so changes must exceed ${DEFAULT_NOISE_FLOOR_PERCENT}%. Run the same build twice to measure it.`;
   const settingWarnings = comparison.settingDifferences.map(
     ({ setting, baseline, current }) =>
       `<li>${escapeHTML(setting)}: baseline ${escapeHTML(baseline)}, now ${escapeHTML(current)}</li>`,
   );
 
-  return `<p>Compared with baseline commit ${escapeHTML(baselineMeta.commit)}, build ${escapeHTML(baselineMeta.buildHash)} (${escapeHTML(baselineMeta.date)}): <strong>${regressions.length} regressions, ${improvements.length} improvements.</strong> A change counts when it is significant (Mann–Whitney p &lt; 0.05), larger than the noise floor (and at least 5%), and at least one 8 ms Event Timing step.</p>
+  return `<p>Compared with baseline commit ${escapeHTML(baselineMeta.commit)}, build ${escapeHTML(baselineMeta.buildHash)} (${escapeHTML(baselineMeta.date)}): <strong>${regressions.length} regressions, ${improvements.length} improvements.</strong> A change counts when it is significant (Mann–Whitney p &lt; ${SIGNIFICANCE_LEVEL}), larger than the noise floor (and at least ${MIN_NOISE_FLOOR_PERCENT}%), and at least one ${MIN_MEANINGFUL_CHANGE.ms} ms Event Timing step.</p>
 <p class="muted">${escapeHTML(noiseFloorText)}</p>
 ${settingWarnings.length > 0 ? `<div class="warning"><strong>Settings differ from the baseline, so changes may not be the code:</strong><ul>${settingWarnings.join("")}</ul></div>` : ""}
+${renderMissingMetrics(comparison.missingMetrics)}
 ${regressions.length > 0 ? renderTable(regressions, true) : ""}`;
+}
+
+function renderMissingMetrics(missingMetrics: MissingMetric[]): string {
+  if (missingMetrics.length === 0) {
+    return "";
+  }
+
+  const items = missingMetrics.map(
+    ({ journey, metric }) =>
+      `<li>${escapeHTML(journey)} › ${escapeHTML(metric)}</li>`,
+  );
+
+  return `<div class="warning"><strong>Measured in the baseline but not in this run:</strong><ul>${items.join("")}</ul>If a metric was renamed or removed on purpose, save a new baseline. Otherwise the journey stopped measuring it.</div>`;
 }
 
 function renderMemoryGrowth(memory: MemoryGrowth[]): string {
@@ -193,13 +180,13 @@ function renderTable(rows: MetricComparison[], showJourney: boolean): string {
     const name = showJourney ? `${row.journey} › ${row.metric}` : row.metric;
 
     return `<tr class="${row.verdict.replace(" ", "-")}">
-<th scope="row"><span>${escapeHTML(name)}</span><small>${escapeHTML(helpFor(row.metric))}</small></th>
+<th scope="row"><span>${escapeHTML(name)}</span><small>${escapeHTML(row.description)}</small></th>
 <td>${row.baseline ? formatValue(row.baseline.median, row.unit) : "—"}</td>
 <td><strong>${formatValue(row.current.median, row.unit)}</strong><small>${formatValue(row.current.p25, row.unit)}–${formatValue(row.current.p75, row.unit)}</small></td>
 <td>${formatChange(row)}</td>
 <td>${row.p === undefined ? "—" : row.p.toPrecision(2)}</td>
 <td>${renderStrip(row)}</td>
-<td>${row.verdict}</td>
+<td>${row.verdict}${renderNoiseFloor(row)}</td>
 </tr>`;
   });
 
@@ -209,10 +196,18 @@ function renderTable(rows: MetricComparison[], showJourney: boolean): string {
 </table></div>`;
 }
 
-function helpFor(metric: string): string {
-  const name = metric.split(".").slice(1).join(".");
+function renderNoiseFloor({
+  baseline,
+  noiseFloorPercent,
+  isNoiseFloorMeasured,
+}: MetricComparison): string {
+  if (!baseline) {
+    return "";
+  }
 
-  return METRIC_HELP[name] ?? "";
+  const source = isNoiseFloorMeasured ? "" : ", default";
+
+  return `<small>floor ${noiseFloorPercent.toFixed(1)}%${source}</small>`;
 }
 
 // Baseline samples on the top row, this run's on the bottom row, both on one

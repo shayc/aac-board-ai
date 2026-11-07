@@ -83,23 +83,16 @@ that runs inside the page is [perf/page-perf.ts](../perf/page-perf.ts).
 
 ## Read the report
 
-- **Header**: commit, build hash, browser, CPU slowdown, sample count,
-  viewport, OS and CPU. A warning lists any setting that differs from the
-  baseline; when settings differ, a change may not be the code.
-- **Status**: how many metrics regressed or improved against the baseline, and
-  whether the noise floor has been measured.
-- **Memory grows with repeated use**: shown only when a memory metric grew in
-  significantly more samples than it shrank.
-- **One section per journey**: timings, CPU, long animation frames, network and
-  memory, then the latest profile. Rows whose samples are all zero in both
-  runs are hidden.
+The header warns when a setting differs from the baseline, since a change may
+then not be the code. The status also lists metrics the baseline has but this
+run did not measure: save a new baseline if one was renamed or removed on
+purpose. The memory warning appears only when a metric grew in significantly
+more samples than it shrank. Rows whose samples are all zero in both runs are
+hidden.
 
-Each row describes its metric under the name and shows the baseline median,
-this run's median with its 25th–75th percentile range, the change, the
-Mann–Whitney p-value and a strip of the individual samples (baseline on top,
-this run below). Each sample comes from a fresh browser context; a metric
-measured several times in one sample, such as word taps, contributes that
-sample's median.
+In each row's sample strip, the baseline is on top and this run below. Each
+sample comes from a fresh browser context; a metric measured several times in
+one sample, such as word taps, contributes that sample's median.
 
 ## How runs are compared
 
@@ -123,8 +116,9 @@ change with comments even when the code does not. Vite fingerprints its output,
 so identical source produces an identical hash. Each same-build run can only
 raise the floor, because a single pair of runs often understates the noise. A
 same-build run whose settings or machine speed differ from the baseline leaves
-the floor alone. After updating the browser or moving to another machine,
-delete `perf-results/noise-floor.json`, save a new baseline and measure again.
+the floor alone. Saving a baseline whose browser, CPU slowdown, sample count,
+viewport, OS or CPU differ from the previous baseline clears the floor, so
+measure it again after updating the browser or moving to another machine.
 
 ## Find out why
 
@@ -164,8 +158,13 @@ contribute timing samples.
 - One journey at a time, one worker, a fresh browser context per sample, one
   discarded warm-up sample, then 10 samples. The report shows medians and
   spread, never a single sample.
-- No sleeps: the harness waits for real conditions (elements, Event Timing
-  entries, service worker control).
+- No sleeps: the harness waits for real conditions (elements, service worker
+  control, and Event Timing and paint entries, which reach the page a few
+  frames after the paint they describe). A watched element that is not
+  visible within 15 seconds fails the journey with its selector, and an
+  interval with no start or end fails it with the metric name.
+- LCP is recorded only for phases without a tap, because the browser stops
+  reporting it at the first input, so first launch has FCP but no LCP.
 - `speechSynthesis` is stubbed in the page to end on a microtask, mirroring
   [stub-speech.ts](../src/shared/testing/stub-speech.ts), which depends on
   Vitest. Built-in AI is unavailable in this Chromium.
@@ -174,15 +173,8 @@ contribute timing samples.
 - The app code has no performance marks; everything is observed from outside
   through browser APIs and the Chrome DevTools Protocol.
 
-[perf/cli.ts](../perf/cli.ts) orchestrates a run,
-[perf/results.ts](../perf/results.ts) defines the files under `perf-results/`
-and their formats, [perf/comparison.ts](../perf/comparison.ts) and
-[perf/stats.ts](../perf/stats.ts) compare runs,
-[perf/report.ts](../perf/report.ts) renders the static report,
-[perf/source-map.ts](../perf/source-map.ts) maps built code to source,
-[perf/cpu-profile.ts](../perf/cpu-profile.ts) sums a trace's CPU samples and
-[perf/large-board-set.ts](../perf/large-board-set.ts) generates the import
-fixture.
+`npm run test:perf` runs the unit tests for the statistics and the verdicts
+with Node's built-in test runner.
 
 ## Limits
 

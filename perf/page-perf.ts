@@ -8,8 +8,8 @@ export interface PagePerf {
   lastPointerDown: number;
   longFrames: LongFrame[];
   largestPaint: number;
-  visibleAt: Map<string, Promise<number>>;
   watch: (name: string, selector: string) => void;
+  visibleAt: (name: string, timeoutMs: number) => Promise<number>;
 }
 
 declare global {
@@ -32,6 +32,10 @@ export function installPagePerf({
   eventTimingThreshold,
 }: PagePerfOptions): void {
   const durationsByInteraction = new Map<number, number>();
+  const watched = new Map<
+    string,
+    { selector: string; visibleAt: Promise<number> }
+  >();
 
   const perf: PagePerf = {
     get interactionDurations() {
@@ -40,9 +44,29 @@ export function installPagePerf({
     lastPointerDown: Number.NaN,
     longFrames: [],
     largestPaint: Number.NaN,
-    visibleAt: new Map(),
     watch(name, selector) {
-      perf.visibleAt.set(name, firstVisibleFrame(selector));
+      watched.set(name, { selector, visibleAt: firstVisibleFrame(selector) });
+    },
+    visibleAt(name, timeoutMs) {
+      const watch = watched.get(name);
+      if (!watch) {
+        return Promise.reject(new Error(`Nothing is watched as "${name}".`));
+      }
+
+      let timer = 0;
+      const timeout = new Promise<never>((_, reject) => {
+        timer = window.setTimeout(() => {
+          reject(
+            new Error(
+              `${watch.selector} did not become visible within ${timeoutMs} ms.`,
+            ),
+          );
+        }, timeoutMs);
+      });
+
+      return Promise.race([watch.visibleAt, timeout]).finally(() => {
+        clearTimeout(timer);
+      });
     },
   };
   window.__perf = perf;

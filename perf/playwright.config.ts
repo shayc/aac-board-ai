@@ -1,15 +1,18 @@
 import { defineConfig } from "@playwright/test";
 import baseConfig from "../playwright.config.ts";
 
+export const ACTION_TIMEOUT_MS = 15_000;
+
 export default defineConfig(baseConfig, {
   testDir: ".",
+  testMatch: "journeys.spec.ts",
   outputDir: "../perf-results/test-results",
   timeout: 15 * 60_000,
   retries: 0,
   reporter: "list",
   use: {
     channel: "chromium",
-    actionTimeout: 15_000,
+    actionTimeout: ACTION_TIMEOUT_MS,
     trace: "off",
     screenshot: "off",
     launchOptions: {

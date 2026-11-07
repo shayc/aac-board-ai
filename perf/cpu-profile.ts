@@ -35,13 +35,14 @@ interface ThreadProfile {
 
 export async function readHotFunctions(
   traceFile: string,
+  distDir: string,
   count: number,
 ): Promise<HotFunction[]> {
   const microsecondsByFunction = new Map<string, number>();
 
   for (const profile of await readMainThreadProfiles(traceFile)) {
     profile.samples.forEach((nodeId, index) => {
-      const caller = describePageCaller(profile.nodes, nodeId);
+      const caller = describePageCaller(profile.nodes, nodeId, distDir);
       if (!caller) {
         return;
       }
@@ -106,6 +107,7 @@ async function readMainThreadProfiles(
 function describePageCaller(
   nodes: Map<number, ProfileNode>,
   nodeId: number,
+  distDir: string,
 ): string | undefined {
   for (
     let node = nodes.get(nodeId);
@@ -119,7 +121,13 @@ function describePageCaller(
       columnNumber = -1,
     } = node.callFrame;
     if (url && /^https?:/.test(url)) {
-      return describeFunction(url, functionName, lineNumber, columnNumber);
+      return describeFunction(
+        distDir,
+        url,
+        functionName,
+        lineNumber,
+        columnNumber,
+      );
     }
   }
 

@@ -20,17 +20,8 @@ export type MetricUnit = "ms" | "count" | "bytes";
 export interface MetricSamples {
   kind: MetricKind;
   unit: MetricUnit;
+  description: string;
   values: number[];
-}
-
-export interface JourneyResult {
-  journey: string;
-  browserVersion: string;
-  cpuThrottleRate: number;
-  cpuBenchmarkMs: number;
-  viewport: { width: number; height: number } | null;
-  sampleCount: number;
-  metrics: Record<string, MetricSamples>;
 }
 
 export interface RunSettings {
@@ -41,6 +32,14 @@ export interface RunSettings {
   viewport: string;
   os: string;
   cpu: string;
+}
+
+export type JourneySettings = Omit<RunSettings, "os" | "cpu">;
+
+export interface JourneyResult {
+  journey: string;
+  settings: JourneySettings;
+  metrics: Record<string, MetricSamples>;
 }
 
 export interface RunMeta extends RunSettings {

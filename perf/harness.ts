@@ -1,15 +1,17 @@
-import type {
-  Browser,
-  BrowserContext,
-  CDPSession,
-  FileChooser,
-  Locator,
-  Page,
-  Request,
+import {
+  test,
+  type Browser,
+  type BrowserContext,
+  type CDPSession,
+  type FileChooser,
+  type Locator,
+  type Page,
+  type Request,
 } from "@playwright/test";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { installPagePerf } from "./page-perf.ts";
+import { installPagePerf, type LongFrame } from "./page-perf.ts";
+import { ACTION_TIMEOUT_MS } from "./playwright.config.ts";
 import {
   PROFILES_DIR,
   RAW_RESULTS_DIR,
@@ -28,7 +30,7 @@ const IS_PROFILING = process.env.PERF_PROFILE === "1";
 
 // Chromium never reports Event Timing entries shorter than this.
 const EVENT_TIMING_THRESHOLD_MS = 16;
-const MAX_FRAMES_TO_WAIT_FOR_EVENT_TIMING = 120;
+const MAX_FRAMES_TO_WAIT_FOR_ENTRIES = 120;
 
 export interface Tap {
   start: number;
@@ -40,33 +42,230 @@ interface TapOptions {
   until?: string;
 }
 
+export interface TimingMetric {
+  name: string;
+  description: string;
+}
+
+export interface Interval extends TimingMetric {
+  start: number;
+  end: number;
+}
+
+interface Paints {
+  fcp: number;
+  lcp: number | undefined;
+}
+
 interface Memory {
   heap: number;
   nodes: number;
   listeners: number;
 }
 
-class SampleValues {
-  readonly #values = new Map<string, MetricSamples>();
+interface Usage {
+  cdpMetrics: Record<string, number>;
+  timeOrigin: number;
+  now: number;
+  transferred: number;
+}
 
-  add(name: string, value: number, unit: MetricUnit, kind: MetricKind): void {
-    const metric = this.#values.get(name) ?? { kind, unit, values: [] };
-    metric.values.push(value);
-    this.#values.set(name, metric);
+/** Reads one page through its own APIs and the Chrome DevTools Protocol. */
+export class PageProbe {
+  readonly page: Page;
+  readonly #cdp: CDPSession;
+
+  constructor(page: Page, cdp: CDPSession) {
+    this.page = page;
+    this.#cdp = cdp;
   }
 
-  // A metric recorded several times in one sample (one per tap) contributes
-  // its median, so every sample weighs the same in the comparison.
-  medians(): Map<
-    string,
-    { kind: MetricKind; unit: MetricUnit; value: number }
-  > {
-    return new Map(
-      [...this.#values].map(([name, { kind, unit, values }]) => [
-        name,
-        { kind, unit, value: median(values) },
-      ]),
+  async tap(target: Locator, { until }: TapOptions = {}): Promise<Tap> {
+    if (until) {
+      await this.watch("tap-target", until);
+    }
+
+    const reportedCount = await this.page.evaluate(
+      () => window.__perf.interactionDurations.length,
     );
+    await target.click();
+
+    return this.page.evaluate(
+      async ({
+        reportedCount,
+        hasTarget,
+        maxFrames,
+        threshold,
+        visibilityTimeout,
+      }) => {
+        const perf = window.__perf;
+
+        for (let frame = 0; frame < maxFrames; frame += 1) {
+          if (perf.interactionDurations.length > reportedCount) {
+            break;
+          }
+          await new Promise(requestAnimationFrame);
+        }
+
+        const duration =
+          perf.interactionDurations.at(reportedCount) ?? threshold;
+        const visibleAt = hasTarget
+          ? await perf.visibleAt("tap-target", visibilityTimeout)
+          : Number.NaN;
+
+        return { start: perf.lastPointerDown, duration, visibleAt };
+      },
+      {
+        reportedCount,
+        hasTarget: until !== undefined,
+        maxFrames: MAX_FRAMES_TO_WAIT_FOR_ENTRIES,
+        threshold: EVENT_TIMING_THRESHOLD_MS,
+        visibilityTimeout: ACTION_TIMEOUT_MS,
+      },
+    );
+  }
+
+  async watch(name: string, selector: string): Promise<void> {
+    await this.page.evaluate(
+      ([watchName, watchSelector]) => {
+        window.__perf.watch(watchName, watchSelector);
+      },
+      [name, selector] as const,
+    );
+  }
+
+  visibleAt(name: string): Promise<number> {
+    return this.page.evaluate(
+      ([watchName, timeout]) => window.__perf.visibleAt(watchName, timeout),
+      [name, ACTION_TIMEOUT_MS] as const,
+    );
+  }
+
+  /**
+   * Board import uses a detached file input, which no document listener can
+   * see, so the change listener goes on the chooser's own element.
+   */
+  async chooseFiles(chooser: FileChooser, file: string): Promise<number> {
+    const change = await chooser.element().evaluateHandle((input) => ({
+      changedAt: new Promise<number>((resolve) => {
+        input.addEventListener("change", () => resolve(performance.now()), {
+          once: true,
+        });
+      }),
+    }));
+    await chooser.setFiles(file);
+
+    return change.evaluate(({ changedAt }) => changedAt);
+  }
+
+  /**
+   * Paint entries reach the page a few frames after the paint itself. The
+   * browser stops reporting LCP at the first input, so a page that was tapped
+   * has FCP only.
+   */
+  readPaints(): Promise<Paints> {
+    return this.page.evaluate(async (maxFrames) => {
+      const perf = window.__perf;
+      const hasLargestPaint = Number.isNaN(perf.lastPointerDown);
+      const firstPaint = () =>
+        performance.getEntriesByName("first-contentful-paint")[0]?.startTime ??
+        Number.NaN;
+      const isReported = () =>
+        !Number.isNaN(firstPaint()) &&
+        (!hasLargestPaint || !Number.isNaN(perf.largestPaint));
+
+      for (let frame = 0; frame < maxFrames && !isReported(); frame += 1) {
+        await new Promise(requestAnimationFrame);
+      }
+
+      return {
+        fcp: firstPaint(),
+        lcp: hasLargestPaint ? perf.largestPaint : undefined,
+      };
+    }, MAX_FRAMES_TO_WAIT_FOR_ENTRIES);
+  }
+
+  async readMemory(): Promise<Memory> {
+    await this.#cdp.send("HeapProfiler.collectGarbage");
+    const metrics = await this.#readCDPMetrics();
+
+    return {
+      heap: metrics.JSHeapUsedSize,
+      nodes: metrics.Nodes,
+      listeners: metrics.JSEventListeners,
+    };
+  }
+
+  // Service worker fetches have their own timeline, so `transferred` covers
+  // what the page itself downloaded.
+  async readUsage(): Promise<Usage> {
+    const cdpMetrics = await this.#readCDPMetrics();
+    const page = await this.page.evaluate(() => ({
+      timeOrigin: performance.timeOrigin,
+      now: performance.now(),
+      transferred: [
+        ...performance.getEntriesByType("navigation"),
+        ...performance.getEntriesByType("resource"),
+      ].reduce(
+        (total, entry) =>
+          total + (entry as PerformanceResourceTiming).transferSize,
+        0,
+      ),
+    }));
+
+    return { cdpMetrics, ...page };
+  }
+
+  async readLongFrames(since: number): Promise<LongFrame[]> {
+    const frames = await this.page.evaluate(() => window.__perf.longFrames);
+
+    return frames.filter((frame) => frame.start >= since);
+  }
+
+  async markInterval({ name, start, end }: Interval): Promise<void> {
+    await this.page.evaluate(
+      ([label, from, to]) =>
+        performance.measure(label, { start: from, end: to }),
+      [name, start, end] as const,
+    );
+  }
+
+  /** Traces `steps` and snapshots the heap before and after them. */
+  async trace(filePrefix: string, steps: () => Promise<void>): Promise<void> {
+    const browser = this.page.context().browser();
+    if (!browser) {
+      throw new Error("Profiling needs a launched browser.");
+    }
+
+    await this.#writeHeapSnapshot(`${filePrefix}.before.heapsnapshot`);
+    await browser.startTracing(this.page, {
+      path: `${filePrefix}${TRACE_SUFFIX}`,
+      screenshots: true,
+    });
+
+    await steps();
+
+    await browser.stopTracing();
+    await this.#writeHeapSnapshot(`${filePrefix}.after.heapsnapshot`);
+  }
+
+  async #writeHeapSnapshot(file: string): Promise<void> {
+    const chunks: string[] = [];
+    const collect = ({ chunk }: { chunk: string }) => {
+      chunks.push(chunk);
+    };
+
+    this.#cdp.on("HeapProfiler.addHeapSnapshotChunk", collect);
+    await this.#cdp.send("HeapProfiler.takeHeapSnapshot");
+    this.#cdp.off("HeapProfiler.addHeapSnapshotChunk", collect);
+
+    await writeFile(file, chunks.join(""));
+  }
+
+  async #readCDPMetrics(): Promise<Record<string, number>> {
+    const { metrics } = await this.#cdp.send("Performance.getMetrics");
+
+    return Object.fromEntries(metrics.map(({ name, value }) => [name, value]));
   }
 }
 
@@ -93,313 +292,84 @@ function isNetworkRequest(request: Request): boolean {
   return /^https?:/.test(request.url());
 }
 
-export class PageProbe {
-  readonly page: Page;
-  readonly #cdp: CDPSession;
-  readonly #sample: JourneySample;
-
-  constructor(page: Page, cdp: CDPSession, sample: JourneySample) {
-    this.page = page;
-    this.#cdp = cdp;
-    this.#sample = sample;
-  }
-
-  async tap(target: Locator, { until }: TapOptions = {}): Promise<Tap> {
-    if (until) {
-      await this.watch("tap-target", until);
-    }
-
-    const reportedCount = await this.page.evaluate(
-      () => window.__perf.interactionDurations.length,
-    );
-    await target.click();
-
-    return this.page.evaluate(
-      async ({ reportedCount, hasTarget, maxFrames, threshold }) => {
-        const perf = window.__perf;
-
-        for (let frame = 0; frame < maxFrames; frame += 1) {
-          if (perf.interactionDurations.length > reportedCount) {
-            break;
-          }
-          await new Promise(requestAnimationFrame);
-        }
-
-        const duration =
-          perf.interactionDurations.at(reportedCount) ?? threshold;
-        const visibleAt = hasTarget
-          ? ((await perf.visibleAt.get("tap-target")) ?? Number.NaN)
-          : Number.NaN;
-
-        return { start: perf.lastPointerDown, duration, visibleAt };
-      },
-      {
-        reportedCount,
-        hasTarget: until !== undefined,
-        maxFrames: MAX_FRAMES_TO_WAIT_FOR_EVENT_TIMING,
-        threshold: EVENT_TIMING_THRESHOLD_MS,
-      },
-    );
-  }
-
-  async watch(name: string, selector: string): Promise<void> {
-    await this.page.evaluate(
-      ([watchName, watchSelector]) => {
-        window.__perf.watch(watchName, watchSelector);
-      },
-      [name, selector] as const,
-    );
-  }
-
-  visibleAt(name: string): Promise<number> {
-    return this.page.evaluate(
-      (watchName) => window.__perf.visibleAt.get(watchName) ?? Number.NaN,
-      name,
-    );
-  }
-
-  /**
-   * Board import uses a detached file input, which no document listener can
-   * see, so the change listener goes on the chooser's own element.
-   */
-  async chooseFiles(chooser: FileChooser, file: string): Promise<number> {
-    const change = await chooser.element().evaluateHandle((input) => ({
-      changedAt: new Promise<number>((resolve) => {
-        input.addEventListener("change", () => resolve(performance.now()), {
-          once: true,
-        });
-      }),
-    }));
-    await chooser.setFiles(file);
-
-    return change.evaluate(({ changedAt }) => changedAt);
-  }
-
-  async recordInterval(
-    name: string,
-    start: number,
-    end: number,
-  ): Promise<void> {
-    if (Number.isNaN(end)) {
-      return;
-    }
-    this.#sample.values.add(name, end - start, "ms", "timing");
-
-    if (IS_PROFILING) {
-      await this.page.evaluate(
-        ([label, from, to]) =>
-          performance.measure(label, { start: from, end: to }),
-        [name, start, end] as const,
-      );
-    }
-  }
-
-  async recordTap(name: string, tap: Tap): Promise<void> {
-    await this.recordInterval(name, tap.start, tap.start + tap.duration);
-  }
-
-  async recordPaints(phase: string): Promise<void> {
-    const paints = await this.page.evaluate(() => ({
-      firstContentful:
-        performance.getEntriesByName("first-contentful-paint")[0]?.startTime ??
-        Number.NaN,
-      largestContentful: window.__perf.largestPaint,
-    }));
-
-    await this.recordInterval(`${phase}.fcp`, 0, paints.firstContentful);
-    await this.recordInterval(`${phase}.lcp`, 0, paints.largestContentful);
-  }
-
-  async readMemory(): Promise<Memory> {
-    await this.#cdp.send("HeapProfiler.collectGarbage");
-    const metrics = await this.#readMetrics();
-
-    return {
-      heap: metrics.JSHeapUsedSize,
-      nodes: metrics.Nodes,
-      listeners: metrics.JSEventListeners,
-    };
-  }
-
-  recordMemoryGrowth(phase: string, start: Memory, end: Memory): void {
-    const { values } = this.#sample;
-    values.add(`${phase}.heapGrowth`, end.heap - start.heap, "bytes", "memory");
-    values.add(
-      `${phase}.nodeGrowth`,
-      end.nodes - start.nodes,
-      "count",
-      "memory",
-    );
-    values.add(
-      `${phase}.listenerGrowth`,
-      end.listeners - start.listeners,
-      "count",
-      "memory",
-    );
-  }
-
-  /**
-   * Wraps one measured stretch of a journey. Timing runs record CPU, long
-   * animation frame and network deltas for it; profile runs trace it instead.
-   */
-  async measure(phase: string, steps: () => Promise<void>): Promise<void> {
-    if (IS_PROFILING) {
-      await this.#profile(phase, steps);
-      return;
-    }
-
-    const counter = this.#sample.requests;
-    const before = {
-      metrics: await this.#readMetrics(),
-      requests: counter.requests,
-      failed: counter.failed,
-      page: await this.#readPageState(),
-    };
-
-    await steps();
-
-    const after = {
-      metrics: await this.#readMetrics(),
-      requests: counter.requests,
-      failed: counter.failed,
-      page: await this.#readPageState(),
-    };
-    const isSameDocument = before.page.timeOrigin === after.page.timeOrigin;
-
-    this.#recordCPU(phase, before.metrics, after.metrics);
-    await this.#recordLongFrames(phase, isSameDocument ? before.page.now : 0);
-
-    const { values } = this.#sample;
-    values.add(
-      `${phase}.requests`,
-      after.requests - before.requests,
-      "count",
-      "network",
-    );
-    values.add(
-      `${phase}.failedRequests`,
-      after.failed - before.failed,
-      "count",
-      "network",
-    );
-    values.add(
-      `${phase}.bytes`,
-      after.page.transferred - (isSameDocument ? before.page.transferred : 0),
-      "bytes",
-      "network",
-    );
-  }
-
-  async #profile(phase: string, steps: () => Promise<void>): Promise<void> {
-    const browser = this.page.context().browser();
-    if (!browser) {
-      throw new Error("Profiling needs a launched browser.");
-    }
-
-    const prefix = path.join(PROFILES_DIR, this.#sample.journey, phase);
-    await this.#writeHeapSnapshot(`${prefix}.before.heapsnapshot`);
-    await browser.startTracing(this.page, {
-      path: `${prefix}${TRACE_SUFFIX}`,
-      screenshots: true,
-    });
-
-    await steps();
-
-    await browser.stopTracing();
-    await this.#writeHeapSnapshot(`${prefix}.after.heapsnapshot`);
-  }
-
-  async #writeHeapSnapshot(file: string): Promise<void> {
-    const chunks: string[] = [];
-    const collect = ({ chunk }: { chunk: string }) => {
-      chunks.push(chunk);
-    };
-
-    this.#cdp.on("HeapProfiler.addHeapSnapshotChunk", collect);
-    await this.#cdp.send("HeapProfiler.takeHeapSnapshot");
-    this.#cdp.off("HeapProfiler.addHeapSnapshotChunk", collect);
-
-    await writeFile(file, chunks.join(""));
-  }
-
-  async #readMetrics(): Promise<Record<string, number>> {
-    const { metrics } = await this.#cdp.send("Performance.getMetrics");
-
-    return Object.fromEntries(metrics.map(({ name, value }) => [name, value]));
-  }
-
-  // Service worker fetches have their own timeline, so this covers what the
-  // page itself downloaded.
-  #readPageState(): Promise<{
-    timeOrigin: number;
-    now: number;
-    transferred: number;
-  }> {
-    return this.page.evaluate(() => ({
-      timeOrigin: performance.timeOrigin,
-      now: performance.now(),
-      transferred: [
-        ...performance.getEntriesByType("navigation"),
-        ...performance.getEntriesByType("resource"),
-      ].reduce(
-        (total, entry) =>
-          total + (entry as PerformanceResourceTiming).transferSize,
-        0,
-      ),
-    }));
-  }
-
-  #recordCPU(
-    phase: string,
-    before: Record<string, number>,
-    after: Record<string, number>,
-  ): void {
-    const cpuMetrics = {
-      task: "TaskDuration",
-      script: "ScriptDuration",
-      layout: "LayoutDuration",
-      style: "RecalcStyleDuration",
-    };
-
-    for (const [name, metric] of Object.entries(cpuMetrics)) {
-      const seconds = (after[metric] ?? 0) - (before[metric] ?? 0);
-      this.#sample.values.add(
-        `${phase}.cpu.${name}`,
-        seconds * 1000,
-        "ms",
-        "cpu",
-      );
-    }
-  }
-
-  async #recordLongFrames(phase: string, phaseStart: number): Promise<void> {
-    const frames = (
-      await this.page.evaluate(() => window.__perf.longFrames)
-    ).filter((frame) => frame.start >= phaseStart);
-    const { values } = this.#sample;
-
-    values.add(`${phase}.longFrames`, frames.length, "count", "frames");
-    values.add(
-      `${phase}.blocking`,
-      frames.reduce((total, frame) => total + frame.blockingDuration, 0),
-      "ms",
-      "frames",
-    );
-  }
+interface MetricDefinition {
+  unit: MetricUnit;
+  description: string;
 }
 
+const CPU_METRICS = {
+  "cpu.task": {
+    unit: "ms",
+    description: "All main-thread task time (CDP TaskDuration).",
+  },
+  "cpu.script": {
+    unit: "ms",
+    description: "JavaScript execution (CDP ScriptDuration).",
+  },
+  "cpu.layout": { unit: "ms", description: "Layout (CDP LayoutDuration)." },
+  "cpu.style": {
+    unit: "ms",
+    description: "Style recalculation (CDP RecalcStyleDuration).",
+  },
+} satisfies Record<string, MetricDefinition>;
+
+const FRAME_METRICS = {
+  longFrames: {
+    unit: "count",
+    description: "Animation frames longer than 50 ms.",
+  },
+  blocking: {
+    unit: "ms",
+    description: "Summed blocking duration of those frames.",
+  },
+} satisfies Record<string, MetricDefinition>;
+
+const NETWORK_METRICS = {
+  requests: {
+    unit: "count",
+    description: "HTTP requests from the page and its service worker.",
+  },
+  failedRequests: {
+    unit: "count",
+    description:
+      "Failed requests, including blocked requests to hosts other than 127.0.0.1.",
+  },
+  bytes: {
+    unit: "bytes",
+    description:
+      "Bytes the page downloaded (Resource Timing; excludes service worker precaching).",
+  },
+} satisfies Record<string, MetricDefinition>;
+
+const MEMORY_METRICS = {
+  heapGrowth: {
+    unit: "bytes",
+    description:
+      "JS heap used at the end of the loop minus the start. Includes compiled code, which grows while the JIT warms up.",
+  },
+  nodeGrowth: {
+    unit: "count",
+    description: "DOM nodes at the end of the loop minus the start.",
+  },
+  listenerGrowth: {
+    unit: "count",
+    description: "JS event listeners at the end of the loop minus the start.",
+  },
+} satisfies Record<string, MetricDefinition>;
+
+/** One run of a journey in a fresh browser context, and what it recorded. */
 export class JourneySample {
   readonly journey: string;
-  readonly values = new SampleValues();
-  readonly requests: RequestCounter;
-  viewport: JourneyResult["viewport"] = null;
+  readonly metrics = new Map<string, MetricSamples>();
   cpuBenchmarkMs = Number.NaN;
   readonly #context: BrowserContext;
+  readonly #requests: RequestCounter;
+  #tracedProbe: PageProbe | undefined;
 
   constructor(journey: string, context: BrowserContext) {
     this.journey = journey;
     this.#context = context;
-    this.requests = new RequestCounter(context);
+    this.#requests = new RequestCounter(context);
   }
 
   async openPage(watches: Record<string, string> = {}): Promise<PageProbe> {
@@ -408,7 +378,6 @@ export class JourneySample {
       watches,
       eventTimingThreshold: EVENT_TIMING_THRESHOLD_MS,
     });
-    this.viewport = page.viewportSize();
 
     const cdp = await this.#context.newCDPSession(page);
     await cdp.send("Performance.enable");
@@ -416,7 +385,143 @@ export class JourneySample {
       rate: CPU_THROTTLE_RATE,
     });
 
-    return new PageProbe(page, cdp, this);
+    return new PageProbe(page, cdp);
+  }
+
+  /**
+   * Wraps one measured stretch of a journey. Timing runs record CPU, long
+   * animation frame and network deltas for it; profile runs trace it instead.
+   */
+  async measure(
+    probe: PageProbe,
+    phase: string,
+    steps: () => Promise<void>,
+  ): Promise<void> {
+    if (IS_PROFILING) {
+      await this.#trace(probe, phase, steps);
+      return;
+    }
+
+    const before = await this.#readUsage(probe);
+    await steps();
+    const after = await this.#readUsage(probe);
+
+    const isSameDocument = before.timeOrigin === after.timeOrigin;
+    const frames = await probe.readLongFrames(isSameDocument ? before.now : 0);
+    const cpuMs = (metric: string) =>
+      ((after.cdpMetrics[metric] ?? 0) - (before.cdpMetrics[metric] ?? 0)) *
+      1000;
+
+    this.#record(phase, "cpu", CPU_METRICS, {
+      "cpu.task": cpuMs("TaskDuration"),
+      "cpu.script": cpuMs("ScriptDuration"),
+      "cpu.layout": cpuMs("LayoutDuration"),
+      "cpu.style": cpuMs("RecalcStyleDuration"),
+    });
+    this.#record(phase, "frames", FRAME_METRICS, {
+      longFrames: frames.length,
+      blocking: frames.reduce(
+        (total, frame) => total + frame.blockingDuration,
+        0,
+      ),
+    });
+    this.#record(phase, "network", NETWORK_METRICS, {
+      requests: after.requests - before.requests,
+      failedRequests: after.failed - before.failed,
+      bytes: after.transferred - (isSameDocument ? before.transferred : 0),
+    });
+  }
+
+  async recordInterval(interval: Interval): Promise<void> {
+    const { name, description, start, end } = interval;
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+      throw new Error(`Could not measure ${name}: from ${start} to ${end}.`);
+    }
+
+    this.#push(name, { kind: "timing", unit: "ms", description }, end - start);
+    await this.#tracedProbe?.markInterval(interval);
+  }
+
+  async recordTap(metric: TimingMetric, tap: Tap): Promise<void> {
+    await this.recordInterval({
+      ...metric,
+      start: tap.start,
+      end: tap.start + tap.duration,
+    });
+  }
+
+  async recordPaints(probe: PageProbe, phase: string): Promise<void> {
+    const { fcp, lcp } = await probe.readPaints();
+
+    await this.recordInterval({
+      name: `${phase}.fcp`,
+      description: "First Contentful Paint.",
+      start: 0,
+      end: fcp,
+    });
+    if (lcp !== undefined) {
+      await this.recordInterval({
+        name: `${phase}.lcp`,
+        description:
+          "Largest Contentful Paint. Recorded only for phases without a tap, because the browser stops reporting it at the first input.",
+        start: 0,
+        end: lcp,
+      });
+    }
+  }
+
+  recordMemoryGrowth(phase: string, start: Memory, end: Memory): void {
+    this.#record(phase, "memory", MEMORY_METRICS, {
+      heapGrowth: end.heap - start.heap,
+      nodeGrowth: end.nodes - start.nodes,
+      listenerGrowth: end.listeners - start.listeners,
+    });
+  }
+
+  async #readUsage(probe: PageProbe) {
+    const { requests, failed } = this.#requests;
+
+    return { ...(await probe.readUsage()), requests, failed };
+  }
+
+  // Intervals recorded during the trace are marked in it, so they show up in
+  // the trace's Timings track.
+  async #trace(
+    probe: PageProbe,
+    phase: string,
+    steps: () => Promise<void>,
+  ): Promise<void> {
+    this.#tracedProbe = probe;
+    try {
+      await probe.trace(path.join(PROFILES_DIR, this.journey, phase), steps);
+    } finally {
+      this.#tracedProbe = undefined;
+    }
+  }
+
+  #record<Name extends string>(
+    phase: string,
+    kind: MetricKind,
+    definitions: Record<Name, MetricDefinition>,
+    measured: Record<NoInfer<Name>, number>,
+  ): void {
+    for (const name of Object.keys(definitions) as Name[]) {
+      this.#push(
+        `${phase}.${name}`,
+        { kind, ...definitions[name] },
+        measured[name],
+      );
+    }
+  }
+
+  #push(
+    name: string,
+    definition: Omit<MetricSamples, "values">,
+    value: number,
+  ): void {
+    const metric = this.metrics.get(name) ?? { ...definition, values: [] };
+    metric.values.push(value);
+    this.metrics.set(name, metric);
   }
 }
 
@@ -496,21 +601,26 @@ async function writeJourneyResult(
   journey: string,
   samples: JourneySample[],
 ): Promise<void> {
+  // A metric recorded several times in one sample (one per tap) contributes
+  // its median, so every sample weighs the same in the comparison.
   const metrics: Record<string, MetricSamples> = {};
-  for (const { values } of samples) {
-    for (const [name, { kind, unit, value }] of values.medians()) {
-      metrics[name] ??= { kind, unit, values: [] };
-      metrics[name].values.push(value);
+  for (const sample of samples) {
+    for (const [name, { values, ...definition }] of sample.metrics) {
+      metrics[name] ??= { ...definition, values: [] };
+      metrics[name].values.push(median(values));
     }
   }
 
+  const { viewport } = test.info().project.use;
   await writeJSON(path.join(RAW_RESULTS_DIR, `${journey}.json`), {
     journey,
-    browserVersion: browser.version(),
-    cpuThrottleRate: CPU_THROTTLE_RATE,
-    cpuBenchmarkMs: median(samples.map(({ cpuBenchmarkMs }) => cpuBenchmarkMs)),
-    viewport: samples[0]?.viewport ?? null,
-    sampleCount: samples.length,
+    settings: {
+      browserVersion: browser.version(),
+      cpuThrottleRate: CPU_THROTTLE_RATE,
+      cpuBenchmarkMs: median(samples.map((sample) => sample.cpuBenchmarkMs)),
+      sampleCount: samples.length,
+      viewport: viewport ? `${viewport.width}×${viewport.height}` : "none",
+    },
     metrics,
   } satisfies JourneyResult);
 }

@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { SourceMap, type SourceMapPayload } from "node:module";
 import path from "node:path";
-import { DIST_DIR, ROOT_DIR } from "./results.ts";
+import { ROOT_DIR } from "./results.ts";
 
 const NAME_SEARCH_DISTANCE = 32;
 
@@ -14,13 +14,14 @@ interface Chunk {
 const chunks = new Map<string, Chunk | undefined>();
 
 export function describeFunction(
+  distDir: string,
   url: string,
   functionName: string,
   line: number,
   column: number,
 ): string {
   const builtName = `${chunkName(url)} · ${functionName || "(anonymous)"}`;
-  const chunk = loadChunk(url);
+  const chunk = loadChunk(distDir, url);
   const origin = chunk?.sourceMap.findOrigin(line + 1, column + 1);
   if (!chunk || !origin || !("fileName" in origin)) {
     return builtName;
@@ -70,21 +71,21 @@ function originalName(
   return isPropertyName ? minifiedName : undefined;
 }
 
-function loadChunk(url: string): Chunk | undefined {
-  if (!chunks.has(url)) {
-    chunks.set(url, readChunk(url));
-  }
-
-  return chunks.get(url);
-}
-
-function readChunk(url: string): Chunk | undefined {
+function loadChunk(distDir: string, url: string): Chunk | undefined {
   const pathname = URL.parse(url)?.pathname;
   if (!pathname) {
     return undefined;
   }
 
-  const file = path.join(DIST_DIR, pathname);
+  const file = path.join(distDir, pathname);
+  if (!chunks.has(file)) {
+    chunks.set(file, readChunk(file));
+  }
+
+  return chunks.get(file);
+}
+
+function readChunk(file: string): Chunk | undefined {
   try {
     return {
       file,

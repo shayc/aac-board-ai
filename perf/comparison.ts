@@ -1,24 +1,32 @@
 import type {
   MetricKind,
+  MetricSamples,
   MetricUnit,
   NoiseFloor,
   RunResults,
   RunSettings,
 } from "./results.ts";
-import { growthSignP, mannWhitneyP, spreadOf, type Spread } from "./stats.ts";
+import {
+  growthSignP,
+  mannWhitneyP,
+  median,
+  spreadOf,
+  type Spread,
+} from "./stats.ts";
 
-const SIGNIFICANCE_LEVEL = 0.05;
-const DEFAULT_NOISE_FLOOR_PERCENT = 10;
+export const SIGNIFICANCE_LEVEL = 0.05;
+export const DEFAULT_NOISE_FLOOR_PERCENT = 10;
 
 // A few same-build runs can understate the noise: on a laptop, runs of one
 // build drifted by up to 6% with p < 0.001.
-const MIN_NOISE_FLOOR_PERCENT = 5;
+export const MIN_NOISE_FLOOR_PERCENT = 5;
 
 const MACHINE_SPEED_TOLERANCE_PERCENT = 5;
+export const MACHINE_SPEED_SETTING = "CPU benchmark (machine speed)";
 
 // Event Timing reports durations in 8 ms steps, so a smaller timing change
 // can be rounding alone.
-const MIN_MEANINGFUL_CHANGE: Record<MetricUnit, number> = {
+export const MIN_MEANINGFUL_CHANGE: Record<MetricUnit, number> = {
   ms: 8,
   count: 1,
   bytes: 1024,
@@ -36,6 +44,7 @@ export interface MetricComparison {
   metric: string;
   kind: MetricKind;
   unit: MetricUnit;
+  description: string;
   current: Spread;
   currentValues: number[];
   baseline?: Spread;
@@ -65,8 +74,14 @@ export interface SettingDifference {
   current: string;
 }
 
+export interface MissingMetric {
+  journey: string;
+  metric: string;
+}
+
 export interface Comparison {
   metrics: MetricComparison[];
+  missingMetrics: MissingMetric[];
   memory: MemoryGrowth[];
   settingDifferences: SettingDifference[];
 }
@@ -89,17 +104,14 @@ export function compareRuns(
     );
 
     for (const [metric, samples] of Object.entries(journey.metrics)) {
-      const key = metricKey(journey.journey, metric);
       metrics.push(
-        compareMetric({
-          journey: journey.journey,
+        compareMetric(
+          journey.journey,
           metric,
-          kind: samples.kind,
-          unit: samples.unit,
-          currentValues: samples.values,
-          baselineValues: baselineJourney?.metrics[metric]?.values,
-          noiseFloorPercent: noiseFloor?.percentByMetric[key],
-        }),
+          samples,
+          baselineJourney?.metrics[metric]?.values,
+          noiseFloor?.percentByMetric[metricKey(journey.journey, metric)],
+        ),
       );
 
       if (samples.kind === "memory") {
@@ -112,6 +124,7 @@ export function compareRuns(
 
   return {
     metrics,
+    missingMetrics: baseline ? missingMetricsOf(current, baseline) : [],
     memory,
     settingDifferences: baseline
       ? differingSettings(baseline.meta, current.meta)
@@ -119,31 +132,44 @@ export function compareRuns(
   };
 }
 
-interface MetricInput {
-  journey: string;
-  metric: string;
-  kind: MetricKind;
-  unit: MetricUnit;
-  currentValues: number[];
-  baselineValues: number[] | undefined;
-  noiseFloorPercent: number | undefined;
+function missingMetricsOf(
+  current: RunResults,
+  baseline: RunResults,
+): MissingMetric[] {
+  const measured = new Set(
+    current.journeys.flatMap(({ journey, metrics }) =>
+      Object.keys(metrics).map((metric) => metricKey(journey, metric)),
+    ),
+  );
+
+  return baseline.journeys.flatMap(({ journey, metrics }) =>
+    Object.keys(metrics)
+      .filter((metric) => !measured.has(metricKey(journey, metric)))
+      .map((metric) => ({ journey, metric })),
+  );
 }
 
-function compareMetric(input: MetricInput): MetricComparison {
-  const { currentValues, baselineValues, unit } = input;
+function compareMetric(
+  journey: string,
+  metric: string,
+  { kind, unit, description, values: currentValues }: MetricSamples,
+  baselineValues: number[] | undefined,
+  measuredNoiseFloorPercent: number | undefined,
+): MetricComparison {
   const noiseFloorPercent = Math.max(
-    input.noiseFloorPercent ?? DEFAULT_NOISE_FLOOR_PERCENT,
+    measuredNoiseFloorPercent ?? DEFAULT_NOISE_FLOOR_PERCENT,
     MIN_NOISE_FLOOR_PERCENT,
   );
   const comparison: MetricComparison = {
-    journey: input.journey,
-    metric: input.metric,
-    kind: input.kind,
+    journey,
+    metric,
+    kind,
     unit,
+    description,
     current: spreadOf(currentValues),
     currentValues,
     noiseFloorPercent,
-    isNoiseFloorMeasured: input.noiseFloorPercent !== undefined,
+    isNoiseFloorMeasured: measuredNoiseFloorPercent !== undefined,
     verdict: "no baseline",
   };
 
@@ -207,7 +233,7 @@ function memoryGrowthOf(
     journey,
     metric,
     unit,
-    medianGrowth: spreadOf(growths).median,
+    medianGrowth: median(growths),
     grewCount: growths.filter((growth) => growth > 0).length,
     sampleCount: growths.length,
     p,
@@ -238,7 +264,7 @@ function differingSettings(
 
   if (!isSameMachineSpeed(baseline, current)) {
     differences.push({
-      setting: "CPU benchmark (machine speed)",
+      setting: MACHINE_SPEED_SETTING,
       baseline: `${baseline.cpuBenchmarkMs.toFixed(1)} ms`,
       current: `${current.cpuBenchmarkMs.toFixed(1)} ms`,
     });
