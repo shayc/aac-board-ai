@@ -7,7 +7,7 @@ export const fitzgeraldColors = {
   social: "#f3c0d7",
   preposition: "#f3c0d7",
   question: "#c5b3e8",
-  negation: "#feaba0",
+  negation: "#f7908a",
   determiner: "#aeaeae",
   conjunction: "#f2f2f2",
   folder: "#dedede",
