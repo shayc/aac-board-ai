@@ -33,18 +33,14 @@ export function DownloadableBoardSetListItem({
   const t = useTranslate();
   const uiLocale = useUILocale();
   const statusId = useId();
-  const { phase, download, cancel } = useBoardSetDownload({ name, url });
+  const { phase, download, cancel } = useBoardSetDownload({
+    name,
+    url,
+    onDownloaded,
+  });
 
   const isDownloading = phase?.kind === "downloading";
   const status = phase && describeDownloadPhase(phase, t, uiLocale);
-
-  async function handleDownload() {
-    const importedBoardSet = await download();
-
-    if (importedBoardSet) {
-      onDownloaded(importedBoardSet.id);
-    }
-  }
 
   function handleClick() {
     if (isDownloading) {
@@ -52,7 +48,7 @@ export function DownloadableBoardSetListItem({
       return;
     }
 
-    void handleDownload();
+    void download();
   }
 
   return (

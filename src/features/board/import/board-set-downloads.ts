@@ -87,6 +87,12 @@ export function downloadBoardSet(
   return promise;
 }
 
+export function getPendingBoardSetDownload(
+  url: string,
+): Promise<ImportedBoardSet | undefined> | undefined {
+  return pendingDownloadsByURL.get(url)?.promise;
+}
+
 export function cancelBoardSetDownload(url: string) {
   if (downloadPhasesStore.getSnapshot().get(url)?.kind !== "downloading") {
     return;

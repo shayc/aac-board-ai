@@ -190,7 +190,7 @@ describe("BoardSetLibrary", () => {
       .toBeInTheDocument();
     await expect
       .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
+      .toHaveFocus();
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
@@ -204,6 +204,9 @@ describe("BoardSetLibrary", () => {
     const cancelButton = screen.getByRole("button", {
       name: "Cancel downloading First Words",
     });
+    await expect
+      .element(screen.getByText(`Downloading board set "First Words"...`))
+      .toBeInTheDocument();
     await expect
       .element(cancelButton)
       .toHaveAccessibleDescription("0.5 of 2 MB");
@@ -253,9 +256,44 @@ describe("BoardSetLibrary", () => {
     await expect.element(downloadButton).toHaveFocus();
     await expect.element(downloadButton).not.toHaveAccessibleDescription();
     await expect
+      .element(screen.getByText(`Canceled downloading board set "First Words"`))
+      .toBeInTheDocument();
+    await expect
       .element(screen.getByText(`Couldn't download board set "First Words"`))
       .not.toBeInTheDocument();
     expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("focuses a download's entry when it finishes after reopening the library", async () => {
+    const starterBoardBytes = await fetch("/first-words.obz").then((response) =>
+      response.bytes(),
+    );
+    const download = stubStreamingDownload({
+      "content-length": String(starterBoardBytes.byteLength),
+    });
+
+    const closedScreen = await renderBoardSetLibrary();
+    await closedScreen
+      .getByRole("button", { name: "Download First Words" })
+      .click();
+    await expect
+      .element(
+        closedScreen.getByRole("button", {
+          name: "Cancel downloading First Words",
+        }),
+      )
+      .toBeInTheDocument();
+    await closedScreen.unmount();
+
+    const screen = await renderBoardSetLibrary();
+    download.send(starterBoardBytes);
+    download.finish();
+
+    await expect
+      .element(screen.getByRole("link", { name: "First Words" }))
+      .toHaveFocus();
+    expect(globalThis.fetch).toHaveBeenCalledOnce();
+    expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
   test("keeps describing download progress after reopening the library", async () => {
