@@ -24,11 +24,11 @@ import type { CatalogBoardSet } from "./board-set-catalog";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
 type BoardSetEntry =
-  | { kind: "stored"; boardSet: BoardSetRecord }
-  | { kind: "downloadable"; boardSet: CatalogBoardSet };
+  | { kind: "open"; boardSet: BoardSetRecord }
+  | { kind: "download"; boardSet: CatalogBoardSet };
 
 interface BoardSetListProps {
-  storedBoardSets: readonly BoardSetRecord[];
+  boardSets: readonly BoardSetRecord[];
   downloadableBoardSets: readonly CatalogBoardSet[];
   onNavigate: () => void;
   onShowInfo: (boardSet: BoardSetRecord) => void;
@@ -37,7 +37,7 @@ interface BoardSetListProps {
 }
 
 export function BoardSetList({
-  storedBoardSets,
+  boardSets,
   downloadableBoardSets,
   onNavigate,
   onShowInfo,
@@ -54,11 +54,7 @@ export function BoardSetList({
   } | null>(null);
   const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
 
-  const entries = toSortedEntries(
-    storedBoardSets,
-    downloadableBoardSets,
-    uiLocale,
-  );
+  const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
 
   const isMenuOpen = Boolean(menuAnchor);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
@@ -90,7 +86,7 @@ export function BoardSetList({
   function renderEntry(entry: BoardSetEntry) {
     const { kind, boardSet } = entry;
 
-    if (kind === "downloadable") {
+    if (kind === "download") {
       return (
         <DownloadableBoardSetListItem
           key={boardSet.id}
@@ -158,18 +154,18 @@ export function BoardSetList({
 }
 
 function toSortedEntries(
-  storedBoardSets: readonly BoardSetRecord[],
+  boardSets: readonly BoardSetRecord[],
   downloadableBoardSets: readonly CatalogBoardSet[],
   locale: string,
 ): BoardSetEntry[] {
   const collator = new Intl.Collator(locale, { numeric: true });
   const entries: BoardSetEntry[] = [
-    ...storedBoardSets.map((boardSet) => ({
-      kind: "stored" as const,
+    ...boardSets.map((boardSet) => ({
+      kind: "open" as const,
       boardSet,
     })),
     ...downloadableBoardSets.map((boardSet) => ({
-      kind: "downloadable" as const,
+      kind: "download" as const,
       boardSet,
     })),
   ];

@@ -87,7 +87,7 @@ export function BoardSetLibrary({
       </List>
 
       <BoardSetList
-        storedBoardSets={boardSets}
+        boardSets={boardSets}
         downloadableBoardSets={downloadableBoardSets}
         activeBoardSetId={activeBoardSetId}
         onNavigate={onNavigate}
