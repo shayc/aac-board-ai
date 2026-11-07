@@ -14,6 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { Link } from "react-router";
@@ -22,8 +23,12 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 import type { CatalogBoardSet } from "./board-set-catalog";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
+type BoardSetEntry =
+  | { kind: "open"; boardSet: BoardSetRecord }
+  | { kind: "download"; boardSet: CatalogBoardSet };
+
 interface BoardSetListProps {
-  boardSets: BoardSetRecord[];
+  boardSets: readonly BoardSetRecord[];
   downloadableBoardSets: readonly CatalogBoardSet[];
   onNavigate: () => void;
   onShowInfo: (boardSet: BoardSetRecord) => void;
@@ -40,6 +45,7 @@ export function BoardSetList({
   activeBoardSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
+  const uiLocale = useUILocale();
   const menuId = useId();
   const subheaderId = useId();
   const [menuAnchor, setMenuAnchor] = useState<{
@@ -47,6 +53,8 @@ export function BoardSetList({
     boardSet: BoardSetRecord;
   } | null>(null);
   const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
+
+  const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
 
   const isMenuOpen = Boolean(menuAnchor);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
@@ -75,6 +83,35 @@ export function BoardSetList({
     handleMenuClose();
   }
 
+  function renderEntry(entry: BoardSetEntry) {
+    const { kind, boardSet } = entry;
+
+    if (kind === "download") {
+      return (
+        <DownloadableBoardSetListItem
+          key={boardSet.id}
+          name={boardSet.name}
+          url={boardSet.url}
+          onDownloaded={setBoardSetIdToFocus}
+        />
+      );
+    }
+
+    return (
+      <BoardSetListItem
+        key={boardSet.id}
+        menuId={menuId}
+        name={boardSet.name}
+        to={rootBoardPath(boardSet)}
+        isActive={boardSet.id === activeBoardSetId}
+        isFocusRequested={boardSet.id === boardSetIdToFocus}
+        isMenuOpen={boardSet.id === openMenuBoardSetId}
+        onNavigate={onNavigate}
+        onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
+      />
+    );
+  }
+
   return (
     <>
       <Box aria-labelledby={subheaderId} component="nav">
@@ -89,27 +126,7 @@ export function BoardSetList({
           }
           sx={{ px: 1 }}
         >
-          {boardSets.map((boardSet) => (
-            <BoardSetListItem
-              key={boardSet.id}
-              menuId={menuId}
-              name={boardSet.name}
-              to={rootBoardPath(boardSet)}
-              isActive={boardSet.id === activeBoardSetId}
-              isFocusRequested={boardSet.id === boardSetIdToFocus}
-              isMenuOpen={boardSet.id === openMenuBoardSetId}
-              onNavigate={onNavigate}
-              onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
-            />
-          ))}
-          {downloadableBoardSets.map((boardSet) => (
-            <DownloadableBoardSetListItem
-              key={boardSet.id}
-              name={boardSet.name}
-              url={boardSet.url}
-              onDownloaded={setBoardSetIdToFocus}
-            />
-          ))}
+          {entries.map(renderEntry)}
         </List>
       </Box>
 
@@ -133,6 +150,30 @@ export function BoardSetList({
         </MenuItem>
       </Menu>
     </>
+  );
+}
+
+function toSortedEntries(
+  boardSets: readonly BoardSetRecord[],
+  downloadableBoardSets: readonly CatalogBoardSet[],
+  locale: string,
+): BoardSetEntry[] {
+  const collator = new Intl.Collator(locale, { numeric: true });
+  const entries: BoardSetEntry[] = [
+    ...boardSets.map((boardSet) => ({
+      kind: "open" as const,
+      boardSet,
+    })),
+    ...downloadableBoardSets.map((boardSet) => ({
+      kind: "download" as const,
+      boardSet,
+    })),
+  ];
+
+  return entries.toSorted(
+    (a, b) =>
+      collator.compare(a.boardSet.name, b.boardSet.name) ||
+      collator.compare(a.boardSet.id, b.boardSet.id),
   );
 }
 

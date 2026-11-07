@@ -3,7 +3,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { MemoryRouter } from "react-router";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { render } from "vitest-browser-react";
+import { render, type RenderResult } from "vitest-browser-react";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
 import { BoardSetLibrary } from "./board-set-library";
@@ -17,6 +17,15 @@ function renderBoardSetLibrary() {
       </AppProviders>
     </MemoryRouter>,
   );
+}
+
+function listedBoardSetNames(screen: RenderResult) {
+  return screen
+    .getByRole("navigation", { name: "Board sets" })
+    .getByRole("listitem")
+    .elements()
+    .map((row) => row.textContent)
+    .filter((name) => name !== "Board sets");
 }
 
 describe("BoardSetLibrary", () => {
@@ -71,6 +80,46 @@ describe("BoardSetLibrary", () => {
     await expect
       .element(screen.getByRole("button", { name: "Download First Words" }))
       .not.toBeInTheDocument();
+  });
+
+  test("lists stored and downloadable board sets together in name order", async () => {
+    await seedBoardSets([
+      { id: "zoo", rootBoardId: "root", name: "Zoo" },
+      { id: "animals", rootBoardId: "root", name: "Animals" },
+    ]);
+
+    const screen = await renderBoardSetLibrary();
+
+    await expect
+      .element(screen.getByRole("link", { name: "Zoo" }))
+      .toBeInTheDocument();
+    expect(listedBoardSetNames(screen)).toEqual([
+      "Animals",
+      "First Words",
+      "Quick Core 24",
+      "Quick Core 60",
+      "Zoo",
+    ]);
+  });
+
+  test("keeps a downloaded board set in its place in the list", async () => {
+    await seedBoardSets([
+      { id: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "zoo", rootBoardId: "root", name: "Zoo" },
+    ]);
+
+    const screen = await renderBoardSetLibrary();
+    await expect
+      .element(screen.getByRole("link", { name: "Zoo" }))
+      .toBeInTheDocument();
+    const namesBeforeDownload = listedBoardSetNames(screen);
+
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+
+    await expect
+      .element(screen.getByRole("link", { name: "First Words" }))
+      .toHaveFocus();
+    expect(listedBoardSetNames(screen)).toEqual(namesBeforeDownload);
   });
 
   test("keeps the download action when a download fails", async () => {
