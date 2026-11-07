@@ -127,8 +127,31 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
-      .element(screen.getByRole("grid", { name: "Quick Core 24" }))
+      .element(screen.getByRole("grid", { name: "First Words" }))
       .toBeVisible();
+  });
+
+  test("starter board: a sentence continues into the food folder", async () => {
+    const { screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("button", { name: "you" }).click();
+    await screen.getByRole("button", { name: "eat" }).click();
+    await screen.getByRole("button", { name: "food" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Food" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "fish" }).click();
+    speech.speak.mockClear();
+
+    await screen.getByRole("button", { name: "Play message" }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.speak.mock.calls).toHaveLength(1);
+      expect(speech.speak.mock.calls[0][0].text).toBe("you eat fish");
+    });
   });
 
   test("?board= link that collides with an existing set keeps both", async () => {
@@ -154,9 +177,9 @@ describe("app flow", () => {
 
     await screen.getByRole("button", { name: "Continue" }).click();
     await expect
-      .element(screen.getByRole("grid", { name: "Quick Core 24" }))
+      .element(screen.getByRole("grid", { name: "First Words" }))
       .toBeVisible();
-    expect(document.title).toBe("Quick Core 24");
+    expect(document.title).toBe("First Words");
 
     await router.navigate("/nonexistent");
 
