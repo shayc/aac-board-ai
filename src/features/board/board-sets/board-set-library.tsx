@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
-import { BoardSetDetailsDialog } from "./board-set-details-dialog";
+import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { BoardSetList } from "./board-set-list";
 import { deleteBoardSet } from "./board-sets-store";
 import { useBoardSets } from "./use-board-sets";
@@ -36,9 +36,7 @@ export function BoardSetLibrary({
   const { showSnackbar } = useSnackbar();
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
-  const [detailsTarget, setDetailsTarget] = useState<BoardSetRecord | null>(
-    null,
-  );
+  const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
   async function handleDelete() {
     if (!deleteTarget) {
@@ -112,12 +110,12 @@ export function BoardSetLibrary({
         activeBoardSetId={activeBoardSetId}
         onNavigate={onNavigate}
         onRequestDelete={setDeleteTarget}
-        onShowDetails={setDetailsTarget}
+        onShowInfo={setInfoTarget}
       />
 
-      <BoardSetDetailsDialog
-        boardSet={detailsTarget}
-        onClose={() => setDetailsTarget(null)}
+      <BoardSetInfoDialog
+        boardSet={infoTarget}
+        onClose={() => setInfoTarget(null)}
       />
 
       <BoardSetDeleteDialog

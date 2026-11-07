@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
-  "libraryDetails": "Tiedot",
+  "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",
   "libraryCancel": "Peruuta",
   "libraryClose": "Sulje kirjasto",

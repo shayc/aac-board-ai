@@ -57,7 +57,7 @@
     }
   ],
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
-  "libraryDetails": "Détails",
+  "libraryInfo": "Infos",
   "libraryDelete": "Supprimer",
   "libraryCancel": "Annuler",
   "libraryClose": "Fermer la bibliothèque",
