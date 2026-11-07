@@ -7,7 +7,7 @@ test("a stored board opens and remains usable offline", async ({
   await page.goto("/");
   await page.getByRole("button", { name: "Continue" }).click();
 
-  await expect(page.getByRole("grid", { name: "Quick Core 24" })).toBeVisible();
+  await expect(page.getByRole("grid", { name: "First Words" })).toBeVisible();
 
   await page.evaluate(async () => {
     await navigator.serviceWorker.ready;
@@ -26,7 +26,7 @@ test("a stored board opens and remains usable offline", async ({
   await offlinePage.goto("/");
 
   await expect(
-    offlinePage.getByRole("grid", { name: "Quick Core 24" }),
+    offlinePage.getByRole("grid", { name: "First Words" }),
   ).toBeVisible();
 
   const playMessageButton = offlinePage.getByRole("button", {

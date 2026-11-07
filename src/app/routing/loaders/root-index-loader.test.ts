@@ -7,7 +7,7 @@ import { rootIndexLoader } from "./root-index-loader";
 
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
-const DEFAULT_BOARD_PATH = "/quick-core-24.obz";
+const DEFAULT_BOARD_PATH = "/first-words.obz";
 const localizedImportFailure = {
   data: { code: routeErrorCodes.boardURLImportFailed },
   init: { status: 400 },

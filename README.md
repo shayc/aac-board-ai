@@ -28,7 +28,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Core features
 
-- Quick Core 24 starter board set
+- First Words starter board, a gentle 3×3 board with a food folder for first-time AAC users
 - Touch and keyboard navigation
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages, including right-to-left layouts
@@ -95,5 +95,7 @@ Bug reports and feedback are welcome. The project has a single maintainer and li
 ## License
 
 [MIT](LICENSE) © Shay Cojocaru
+
+The bundled First Words board is by Shay Cojocaru and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Its symbols are from [Mulberry Symbols](https://mulberrysymbols.org) by Steve Lee and licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 The bundled Quick Core 24 board is by [OpenAAC](https://www.openaac.org) and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

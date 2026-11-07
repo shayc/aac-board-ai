@@ -6,7 +6,7 @@ import {
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
-const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}quick-core-24.obz`;
+const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}first-words.obz`;
 
 // The ?board= param is attacker-controlled: a crafted link must never
 // silently replace a user's vocabulary. Every import allocates a separate
