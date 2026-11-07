@@ -96,6 +96,6 @@ Bug reports and feedback are welcome. The project has a single maintainer and li
 
 [MIT](LICENSE) © Shay Cojocaru
 
-The bundled First Words board is by Shay Cojocaru and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Its symbols are from [Mulberry Symbols](https://mulberrysymbols.org) by Steve Lee and licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
+First Words symbols are from [Mulberry Symbols](https://mulberrysymbols.org) by Steve Lee, licensed under [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 The bundled Quick Core 24 board is by [OpenAAC](https://www.openaac.org) and licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
