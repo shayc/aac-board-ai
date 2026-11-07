@@ -15,13 +15,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { useId, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { Link } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import type { CatalogBoardSet } from "./board-set-catalog";
+import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
+  downloadableBoardSets: readonly CatalogBoardSet[];
   onNavigate: () => void;
   onShowInfo: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
@@ -30,6 +33,7 @@ interface BoardSetListProps {
 
 export function BoardSetList({
   boardSets,
+  downloadableBoardSets,
   onNavigate,
   onShowInfo,
   onRequestDelete,
@@ -42,6 +46,7 @@ export function BoardSetList({
     element: HTMLElement;
     boardSet: BoardSetRecord;
   } | null>(null);
+  const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
 
   const isMenuOpen = Boolean(menuAnchor);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
@@ -91,9 +96,18 @@ export function BoardSetList({
               name={boardSet.name}
               to={rootBoardPath(boardSet)}
               isActive={boardSet.id === activeBoardSetId}
+              isFocusRequested={boardSet.id === boardSetIdToFocus}
               isMenuOpen={boardSet.id === openMenuBoardSetId}
               onNavigate={onNavigate}
               onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
+            />
+          ))}
+          {downloadableBoardSets.map((boardSet) => (
+            <DownloadableBoardSetListItem
+              key={boardSet.id}
+              name={boardSet.name}
+              url={boardSet.url}
+              onDownloaded={setBoardSetIdToFocus}
             />
           ))}
         </List>
@@ -127,6 +141,7 @@ interface BoardSetListItemProps {
   name: string;
   to: string;
   isActive: boolean;
+  isFocusRequested: boolean;
   isMenuOpen: boolean;
   onNavigate: () => void;
   onMenuOpen: (element: HTMLElement) => void;
@@ -137,11 +152,19 @@ function BoardSetListItem({
   name,
   to,
   isActive,
+  isFocusRequested,
   isMenuOpen,
   onNavigate,
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    if (isFocusRequested) {
+      linkRef.current?.focus();
+    }
+  }, [isFocusRequested]);
 
   function handleLinkClick(event: MouseEvent<HTMLAnchorElement>) {
     if (
@@ -196,6 +219,7 @@ function BoardSetListItem({
       })}
     >
       <ListItemButton
+        ref={linkRef}
         aria-current={isActive ? "true" : undefined}
         component={Link}
         to={to}

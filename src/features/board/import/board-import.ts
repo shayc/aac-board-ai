@@ -152,7 +152,7 @@ export function buildAssetInputs(
     });
 }
 
-function deriveBoardSetId(fileName: string): string {
+export function deriveBoardSetId(fileName: string): string {
   const stem = stripBoardFileExtension(fileName).toLowerCase();
 
   return stem.slice(0, MAX_ID_LENGTH) || "imported-board";

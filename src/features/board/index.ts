@@ -1,4 +1,5 @@
 export { BoardSettings } from "./board-settings";
+export { starterBoardSet } from "./board-sets/board-set-catalog";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { listBoardSets } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";

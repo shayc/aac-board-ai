@@ -1,6 +1,5 @@
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -9,12 +8,12 @@ import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { EmptyState } from "@shared/ui/empty-state";
 import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { BoardSetList } from "./board-set-list";
@@ -37,6 +36,8 @@ export function BoardSetLibrary({
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
+
+  const downloadableBoardSets = listDownloadableBoardSets(boardSets);
 
   async function handleDelete() {
     if (!deleteTarget) {
@@ -72,26 +73,6 @@ export function BoardSetLibrary({
     );
   }
 
-  if (boardSets.length === 0) {
-    return (
-      <Box sx={{ height: "100%", px: 2 }}>
-        <EmptyState
-          title={t(m.libraryEmptyTitle)}
-          description={t(m.libraryEmptyDescription)}
-          action={
-            <Button
-              variant="contained"
-              startIcon={<LibraryAddOutlinedIcon />}
-              onClick={() => void pickAndImport()}
-            >
-              {t(m.libraryImportBoardFiles)}
-            </Button>
-          }
-        />
-      </Box>
-    );
-  }
-
   return (
     <>
       <List sx={{ mb: 2, px: 1 }}>
@@ -107,6 +88,7 @@ export function BoardSetLibrary({
 
       <BoardSetList
         boardSets={boardSets}
+        downloadableBoardSets={downloadableBoardSets}
         activeBoardSetId={activeBoardSetId}
         onNavigate={onNavigate}
         onRequestDelete={setDeleteTarget}

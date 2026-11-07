@@ -2,11 +2,10 @@ import {
   rootBoardPath,
   listBoardSets,
   importBoardFileFromURL,
+  starterBoardSet,
 } from "@features/board";
 import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
-
-const STARTER_BOARD_URL = `${import.meta.env.BASE_URL}first-words.obz`;
 
 // The ?board= param is attacker-controlled: a crafted link must never
 // silently replace a user's vocabulary. Every import allocates a separate
@@ -41,7 +40,7 @@ export async function rootIndexLoader({
   }
 
   const importedBoardSet = await importBoardFileFromURL(
-    STARTER_BOARD_URL,
+    starterBoardSet.url,
     request.signal,
   );
 
