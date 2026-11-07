@@ -14,13 +14,13 @@ describe("PlaybackSettings", () => {
       name: "Highlight while speaking",
     });
 
-    await expect.element(highlightSwitch).not.toBeChecked();
+    await expect.element(highlightSwitch).toBeChecked();
     await highlightSwitch.click();
 
-    await expect.element(highlightSwitch).toBeChecked();
+    await expect.element(highlightSwitch).not.toBeChecked();
     await vi.waitFor(() =>
       expect(localStorage.getItem("playback-preferences")).toBe(
-        JSON.stringify({ isHighlightingEnabled: true }),
+        JSON.stringify({ isHighlightingEnabled: false }),
       ),
     );
   });

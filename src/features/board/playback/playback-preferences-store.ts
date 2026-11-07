@@ -12,7 +12,7 @@ export function parsePlaybackPreferences(raw: unknown): PlaybackPreferences {
     isHighlightingEnabled:
       typeof stored.isHighlightingEnabled === "boolean"
         ? stored.isHighlightingEnabled
-        : false,
+        : true,
   };
 }
 
