@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "মিলে যায় এমন কোনো বোর্ড নেই",
   "libraryLoading": "বোর্ড সেট লোড হচ্ছে…",
   "libraryLoadFailed": "লাইব্রেরি লোড করা যায়নি",
-  "libraryEmptyTitle": "লাইব্রেরি খালি",
-  "libraryEmptyDescription": "শুরু করতে বোর্ড ফাইল আমদানি করুন।",
   "libraryImportBoardFiles": "বোর্ড ফাইল আমদানি করুন",
   "libraryBoardSets": "বোর্ড সেট",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "লাইব্রেরি বন্ধ করুন",
   "libraryMoreOptions": "আরও বিকল্প",
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
+  "libraryDownload": "ডাউনলোড",
+  "libraryDownloadBoardSet": "{name} ডাউনলোড করুন",
+  "libraryDownloadingBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হচ্ছে…",
+  "libraryDownloadedBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হয়েছে",
+  "libraryDownloadFailed": "বোর্ড সেট \"{name}\" ডাউনলোড করা যায়নি",
   "libraryByAuthor": "লিখেছেন {author}",
   "libraryGridDimensions": "{rows}×{columns} গ্রিড",
-  "libraryDeleteConfirmTitle": "বোর্ড সেট \"{name}\" মুছবেন?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "এই সেটের বোর্ডটি মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
-        "countPlural=*": "এই সেটের সব {count}টি বোর্ড মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "বোর্ড সেট মুছবেন?",
+  "libraryDeleteIrreversible": "\"{name}\" মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
   "libraryDeleteFailed": "বোর্ড সেট \"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",

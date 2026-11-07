@@ -1,4 +1,8 @@
-import { importBoardFiles, type ImportedBoardSet } from "./board-import";
+import {
+  deriveBoardSetId,
+  importBoardFiles,
+  type ImportedBoardSet,
+} from "./board-import";
 
 /**
  * Hard cap on a board download, enforced while the response streams so an
@@ -37,6 +41,10 @@ function parseBoardURL(url: string): URL {
 
 function deriveFileName(url: URL): string {
   return url.pathname.split("/").filter(Boolean).at(-1) ?? "board.obz";
+}
+
+export function deriveBoardSetIdFromURL(url: string): string {
+  return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
 }
 
 export async function importBoardFileFromURL(

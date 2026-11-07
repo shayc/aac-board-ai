@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "No hay tableros coincidentes",
   "libraryLoading": "Cargando conjuntos de tableros...",
   "libraryLoadFailed": "No se pudo cargar la biblioteca",
-  "libraryEmptyTitle": "La biblioteca está vacía",
-  "libraryEmptyDescription": "Importa archivos de tableros para empezar.",
   "libraryImportBoardFiles": "Importar archivos de tableros",
   "libraryBoardSets": "Conjuntos de tableros",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Cerrar biblioteca",
   "libraryMoreOptions": "Más opciones",
   "libraryMoreOptionsFor": "Más opciones para {name}",
+  "libraryDownload": "Descargar",
+  "libraryDownloadBoardSet": "Descargar {name}",
+  "libraryDownloadingBoardSet": "Descargando el conjunto de tableros \"{name}\"...",
+  "libraryDownloadedBoardSet": "Se descargó el conjunto de tableros \"{name}\"",
+  "libraryDownloadFailed": "No se pudo descargar el conjunto de tableros \"{name}\"",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Cuadrícula de {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "El tablero de este conjunto se eliminará. Esta acción no se puede deshacer.",
-        "countPlural=*": "Los {count} tableros de este conjunto se eliminarán. Esta acción no se puede deshacer."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros?",
+  "libraryDeleteIrreversible": "Se eliminará \"{name}\". Esta acción no se puede deshacer.",
   "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

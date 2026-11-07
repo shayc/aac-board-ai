@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "没有匹配的沟通板",
   "libraryLoading": "正在加载沟通板集……",
   "libraryLoadFailed": "无法加载板库",
-  "libraryEmptyTitle": "板库为空",
-  "libraryEmptyDescription": "导入沟通板文件即可开始。",
   "libraryImportBoardFiles": "导入沟通板文件",
   "libraryBoardSets": "沟通板集",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "关闭板库",
   "libraryMoreOptions": "更多选项",
   "libraryMoreOptionsFor": "{name} 的更多选项",
+  "libraryDownload": "下载",
+  "libraryDownloadBoardSet": "下载{name}",
+  "libraryDownloadingBoardSet": "正在下载沟通板集“{name}”……",
+  "libraryDownloadedBoardSet": "已下载沟通板集“{name}”",
+  "libraryDownloadFailed": "无法下载沟通板集“{name}”",
   "libraryByAuthor": "作者：{author}",
   "libraryGridDimensions": "{rows}×{columns} 网格",
-  "libraryDeleteConfirmTitle": "删除沟通板集“{name}”？",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "此板集中的沟通板将被删除。此操作无法撤消。",
-        "countPlural=*": "此板集中的全部 {count} 个沟通板将被删除。此操作无法撤消。"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "删除沟通板集？",
+  "libraryDeleteIrreversible": "“{name}”将被删除。此操作无法撤消。",
   "libraryDeleteFailed": "无法删除沟通板集“{name}”",
   "libraryTitle": "板库",
   "libraryOpen": "打开板库",

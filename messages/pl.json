@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Brak pasujących tablic",
   "libraryLoading": "Ładowanie zestawów tablic...",
   "libraryLoadFailed": "Nie udało się wczytać biblioteki",
-  "libraryEmptyTitle": "Biblioteka jest pusta",
-  "libraryEmptyDescription": "Zaimportuj pliki tablic, aby rozpocząć.",
   "libraryImportBoardFiles": "Importuj pliki tablic",
   "libraryBoardSets": "Zestawy tablic",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Zamknij bibliotekę",
   "libraryMoreOptions": "Więcej opcji",
   "libraryMoreOptionsFor": "Więcej opcji dla {name}",
+  "libraryDownload": "Pobierz",
+  "libraryDownloadBoardSet": "Pobierz {name}",
+  "libraryDownloadingBoardSet": "Pobieranie zestawu tablic „{name}”...",
+  "libraryDownloadedBoardSet": "Pobrano zestaw tablic „{name}”",
+  "libraryDownloadFailed": "Nie udało się pobrać zestawu tablic „{name}”",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Siatka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Usunąć zestaw tablic „{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tablica z tego zestawu zostanie usunięta. Tej operacji nie można cofnąć.",
-        "countPlural=*": "Wszystkie tablice z tego zestawu ({count}) zostaną usunięte. Tej operacji nie można cofnąć."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Usunąć zestaw tablic?",
+  "libraryDeleteIrreversible": "Zestaw tablic „{name}” zostanie usunięty. Tej operacji nie można cofnąć.",
   "libraryDeleteFailed": "Nie udało się usunąć zestawu tablic „{name}”",
   "libraryTitle": "Biblioteka",
   "libraryOpen": "Otwórz bibliotekę",

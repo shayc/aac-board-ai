@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Nema odgovarajućih ploča",
   "libraryLoading": "Učitavanje skupova ploča...",
   "libraryLoadFailed": "Nije moguće učitati knjižnicu",
-  "libraryEmptyTitle": "Knjižnica je prazna",
-  "libraryEmptyDescription": "Za početak uvezite datoteke ploča.",
   "libraryImportBoardFiles": "Uvezi datoteke ploča",
   "libraryBoardSets": "Skupovi ploča",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Zatvori knjižnicu",
   "libraryMoreOptions": "Više opcija",
   "libraryMoreOptionsFor": "Više opcija za {name}",
+  "libraryDownload": "Preuzmi",
+  "libraryDownloadBoardSet": "Preuzmi {name}",
+  "libraryDownloadingBoardSet": "Preuzimanje skupa ploča „{name}”...",
+  "libraryDownloadedBoardSet": "Skup ploča „{name}” je preuzet",
+  "libraryDownloadFailed": "Skup ploča „{name}” nije moguće preuzeti",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrisati skup ploča „{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ploča u ovom skupu bit će izbrisana. Ovu radnju nije moguće poništiti.",
-        "countPlural=*": "Svih {count} ploča u ovom skupu bit će izbrisano. Ovu radnju nije moguće poništiti."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Izbrisati skup ploča?",
+  "libraryDeleteIrreversible": "Skup ploča „{name}” bit će izbrisan. Ovu radnju nije moguće poništiti.",
   "libraryDeleteFailed": "Skup ploča „{name}” nije moguće izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",

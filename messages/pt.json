@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Nenhuma prancha correspondente",
   "libraryLoading": "Carregando conjuntos de pranchas...",
   "libraryLoadFailed": "Não foi possível carregar a biblioteca",
-  "libraryEmptyTitle": "A biblioteca está vazia",
-  "libraryEmptyDescription": "Importe arquivos de pranchas para começar.",
   "libraryImportBoardFiles": "Importar arquivos de pranchas",
   "libraryBoardSets": "Conjuntos de pranchas",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Fechar biblioteca",
   "libraryMoreOptions": "Mais opções",
   "libraryMoreOptionsFor": "Mais opções para {name}",
+  "libraryDownload": "Baixar",
+  "libraryDownloadBoardSet": "Baixar {name}",
+  "libraryDownloadingBoardSet": "Baixando o conjunto de pranchas \"{name}\"...",
+  "libraryDownloadedBoardSet": "Conjunto de pranchas \"{name}\" baixado",
+  "libraryDownloadFailed": "Não foi possível baixar o conjunto de pranchas \"{name}\"",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Grade {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "A prancha neste conjunto será excluída. Esta ação não pode ser desfeita.",
-        "countPlural=*": "Todas as {count} pranchas neste conjunto serão excluídas. Esta ação não pode ser desfeita."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas?",
+  "libraryDeleteIrreversible": "O conjunto de pranchas \"{name}\" será excluído. Esta ação não pode ser desfeita.",
   "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

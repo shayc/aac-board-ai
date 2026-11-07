@@ -26,6 +26,7 @@ describe("BoardSetList", () => {
           }),
           makeBoardSetRecord({ id: "b", name: "Animals" }),
         ]}
+        downloadableBoardSets={[]}
         activeBoardSetId="a"
         onNavigate={vi.fn()}
         onShowInfo={vi.fn()}
@@ -51,6 +52,7 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        downloadableBoardSets={[]}
         onNavigate={onNavigate}
         onShowInfo={vi.fn()}
         onRequestDelete={vi.fn()}
@@ -75,6 +77,7 @@ describe("BoardSetList", () => {
           <BoardSetList
             key={boardSet.id}
             boardSets={[boardSet]}
+            downloadableBoardSets={[]}
             onNavigate={vi.fn()}
             onShowInfo={onShowInfo}
             onRequestDelete={onRequestDelete}
@@ -128,6 +131,7 @@ describe("BoardSetList", () => {
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        downloadableBoardSets={[]}
         onNavigate={vi.fn()}
         onShowInfo={onShowInfo}
         onRequestDelete={onRequestDelete}

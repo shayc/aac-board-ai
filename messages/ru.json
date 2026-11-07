@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Нет подходящих досок",
   "libraryLoading": "Загрузка наборов досок...",
   "libraryLoadFailed": "Не удалось загрузить библиотеку",
-  "libraryEmptyTitle": "Библиотека пуста",
-  "libraryEmptyDescription": "Импортируйте файлы досок, чтобы начать.",
   "libraryImportBoardFiles": "Импортировать файлы досок",
   "libraryBoardSets": "Наборы досок",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Закрыть библиотеку",
   "libraryMoreOptions": "Дополнительно",
   "libraryMoreOptionsFor": "Дополнительные параметры для {name}",
+  "libraryDownload": "Скачать",
+  "libraryDownloadBoardSet": "Скачать {name}",
+  "libraryDownloadingBoardSet": "Скачивание набора досок «{name}»...",
+  "libraryDownloadedBoardSet": "Набор досок «{name}» скачан",
+  "libraryDownloadFailed": "Не удалось скачать набор досок «{name}»",
   "libraryByAuthor": "Автор: {author}",
   "libraryGridDimensions": "Сетка {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Удалить набор досок «{name}»?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Доска из этого набора будет удалена. Это действие нельзя отменить.",
-        "countPlural=*": "Все доски из этого набора ({count}) будут удалены. Это действие нельзя отменить."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Удалить набор досок?",
+  "libraryDeleteIrreversible": "Набор досок «{name}» будет удалён. Это действие нельзя отменить.",
   "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",

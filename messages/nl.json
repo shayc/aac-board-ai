@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Geen overeenkomende borden",
   "libraryLoading": "Bordsets laden...",
   "libraryLoadFailed": "Bibliotheek kan niet worden geladen",
-  "libraryEmptyTitle": "De bibliotheek is leeg",
-  "libraryEmptyDescription": "Importeer bordbestanden om te beginnen.",
   "libraryImportBoardFiles": "Bordbestanden importeren",
   "libraryBoardSets": "Bordsets",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Bibliotheek sluiten",
   "libraryMoreOptions": "Meer opties",
   "libraryMoreOptionsFor": "Meer opties voor {name}",
+  "libraryDownload": "Downloaden",
+  "libraryDownloadBoardSet": "{name} downloaden",
+  "libraryDownloadingBoardSet": "Bordset \"{name}\" downloaden...",
+  "libraryDownloadedBoardSet": "Bordset \"{name}\" gedownload",
+  "libraryDownloadFailed": "Kan bordset \"{name}\" niet downloaden",
   "libraryByAuthor": "Door {author}",
   "libraryGridDimensions": "Raster {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Bordset \"{name}\" verwijderen?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Het bord in deze set wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
-        "countPlural=*": "Alle {count} borden in deze set worden verwijderd. Deze actie kan niet ongedaan worden gemaakt."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Bordset verwijderen?",
+  "libraryDeleteIrreversible": "\"{name}\" wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
   "libraryDeleteFailed": "Kan bordset \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",

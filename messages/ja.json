@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "一致するボードがありません",
   "libraryLoading": "ボードセットを読み込んでいます…",
   "libraryLoadFailed": "ライブラリを読み込めませんでした",
-  "libraryEmptyTitle": "ライブラリは空です",
-  "libraryEmptyDescription": "ボードファイルをインポートして始めましょう。",
   "libraryImportBoardFiles": "ボードファイルをインポート",
   "libraryBoardSets": "ボードセット",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "ライブラリを閉じる",
   "libraryMoreOptions": "その他のオプション",
   "libraryMoreOptionsFor": "{name} のその他のオプション",
+  "libraryDownload": "ダウンロード",
+  "libraryDownloadBoardSet": "{name} をダウンロード",
+  "libraryDownloadingBoardSet": "ボードセット「{name}」をダウンロードしています…",
+  "libraryDownloadedBoardSet": "ボードセット「{name}」をダウンロードしました",
+  "libraryDownloadFailed": "ボードセット「{name}」をダウンロードできませんでした",
   "libraryByAuthor": "作成者：{author}",
   "libraryGridDimensions": "{rows}×{columns} グリッド",
-  "libraryDeleteConfirmTitle": "ボードセット「{name}」を削除しますか？",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "このセットのボードが削除されます。この操作は取り消せません。",
-        "countPlural=*": "このセットの{count}個のボードがすべて削除されます。この操作は取り消せません。"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "ボードセットを削除しますか？",
+  "libraryDeleteIrreversible": "「{name}」が削除されます。この操作は取り消せません。",
   "libraryDeleteFailed": "ボードセット「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",

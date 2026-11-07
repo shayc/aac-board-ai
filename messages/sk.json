@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Žiadne zodpovedajúce tabuľky",
   "libraryLoading": "Načítavajú sa súpravy tabuliek...",
   "libraryLoadFailed": "Knižnicu sa nepodarilo načítať",
-  "libraryEmptyTitle": "Knižnica je prázdna",
-  "libraryEmptyDescription": "Začnite importovaním súborov tabuliek.",
   "libraryImportBoardFiles": "Importovať súbory tabuliek",
   "libraryBoardSets": "Súpravy tabuliek",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Zavrieť knižnicu",
   "libraryMoreOptions": "Ďalšie možnosti",
   "libraryMoreOptionsFor": "Ďalšie možnosti pre {name}",
+  "libraryDownload": "Stiahnuť",
+  "libraryDownloadBoardSet": "Stiahnuť {name}",
+  "libraryDownloadingBoardSet": "Sťahuje sa súprava tabuliek „{name}“...",
+  "libraryDownloadedBoardSet": "Súprava tabuliek „{name}“ bola stiahnutá",
+  "libraryDownloadFailed": "Súpravu tabuliek „{name}“ sa nepodarilo stiahnuť",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mriežka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabuľka v tejto súprave bude odstránená. Túto akciu nie je možné vrátiť späť.",
-        "countPlural=*": "Všetkých {count} tabuliek v tejto súprave bude odstránených. Túto akciu nie je možné vrátiť späť."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek?",
+  "libraryDeleteIrreversible": "Súprava tabuliek „{name}“ bude odstránená. Túto akciu nie je možné vrátiť späť.",
   "libraryDeleteFailed": "Súpravu tabuliek „{name}“ sa nepodarilo odstrániť",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",

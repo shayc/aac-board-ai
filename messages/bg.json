@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Няма съответстващи дъски",
   "libraryLoading": "Зареждане на наборите от дъски...",
   "libraryLoadFailed": "Библиотеката не можа да се зареди",
-  "libraryEmptyTitle": "Библиотеката е празна",
-  "libraryEmptyDescription": "Импортирайте файлове с дъски, за да започнете.",
   "libraryImportBoardFiles": "Импортиране на файлове с дъски",
   "libraryBoardSets": "Набори от дъски",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Затваряне на библиотеката",
   "libraryMoreOptions": "Още опции",
   "libraryMoreOptionsFor": "Още опции за {name}",
+  "libraryDownload": "Изтегляне",
+  "libraryDownloadBoardSet": "Изтегляне на {name}",
+  "libraryDownloadingBoardSet": "Изтегляне на набора от дъски „{name}“...",
+  "libraryDownloadedBoardSet": "Наборът от дъски „{name}“ е изтеглен",
+  "libraryDownloadFailed": "Наборът от дъски „{name}“ не може да бъде изтеглен",
   "libraryByAuthor": "От {author}",
   "libraryGridDimensions": "Мрежа {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дъската в този набор ще бъде изтрита. Това не може да бъде отменено.",
-        "countPlural=*": "Всички {count} дъски в този набор ще бъдат изтрити. Това не може да бъде отменено."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски?",
+  "libraryDeleteIrreversible": "Наборът от дъски „{name}“ ще бъде изтрит. Това не може да бъде отменено.",
   "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",

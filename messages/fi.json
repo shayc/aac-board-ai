@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Ei vastaavia tauluja",
   "libraryLoading": "Ladataan taulusarjoja...",
   "libraryLoadFailed": "Kirjastoa ei voitu ladata",
-  "libraryEmptyTitle": "Kirjasto on tyhjä",
-  "libraryEmptyDescription": "Tuo taulutiedostoja päästäksesi alkuun.",
   "libraryImportBoardFiles": "Tuo taulutiedostoja",
   "libraryBoardSets": "Taulusarjat",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Sulje kirjasto",
   "libraryMoreOptions": "Lisää vaihtoehtoja",
   "libraryMoreOptionsFor": "Lisää vaihtoehtoja kohteelle {name}",
+  "libraryDownload": "Lataa",
+  "libraryDownloadBoardSet": "Lataa {name}",
+  "libraryDownloadingBoardSet": "Ladataan taulusarjaa ”{name}”...",
+  "libraryDownloadedBoardSet": "Taulusarja ”{name}” ladattu",
+  "libraryDownloadFailed": "Taulusarjan ”{name}” lataus epäonnistui",
   "libraryByAuthor": "Tekijä: {author}",
   "libraryGridDimensions": "Ruudukko {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Poistetaanko taulusarja ”{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tämän sarjan taulu poistetaan. Tätä toimintoa ei voi kumota.",
-        "countPlural=*": "Kaikki tämän sarjan {count} taulua poistetaan. Tätä toimintoa ei voi kumota."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Poistetaanko taulusarja?",
+  "libraryDeleteIrreversible": "”{name}” poistetaan. Tätä toimintoa ei voi kumota.",
   "libraryDeleteFailed": "Taulusarjan ”{name}” poisto epäonnistui",
   "libraryTitle": "Kirjasto",
   "libraryOpen": "Avaa kirjasto",

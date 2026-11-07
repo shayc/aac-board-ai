@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "ไม่พบบอร์ดที่ตรงกัน",
   "libraryLoading": "กำลังโหลดชุดบอร์ด...",
   "libraryLoadFailed": "ไม่สามารถโหลดคลังได้",
-  "libraryEmptyTitle": "คลังว่างเปล่า",
-  "libraryEmptyDescription": "นำเข้าไฟล์บอร์ดเพื่อเริ่มต้น",
   "libraryImportBoardFiles": "นำเข้าไฟล์บอร์ด",
   "libraryBoardSets": "ชุดบอร์ด",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "ปิดคลัง",
   "libraryMoreOptions": "ตัวเลือกเพิ่มเติม",
   "libraryMoreOptionsFor": "ตัวเลือกเพิ่มเติมสำหรับ {name}",
+  "libraryDownload": "ดาวน์โหลด",
+  "libraryDownloadBoardSet": "ดาวน์โหลด {name}",
+  "libraryDownloadingBoardSet": "กำลังดาวน์โหลดชุดบอร์ด \"{name}\"...",
+  "libraryDownloadedBoardSet": "ดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",
+  "libraryDownloadFailed": "ดาวน์โหลดชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryByAuthor": "โดย {author}",
   "libraryGridDimensions": "ตาราง {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "ลบชุดบอร์ด \"{name}\" ไหม",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "บอร์ดในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
-        "countPlural=*": "บอร์ดทั้ง {count} รายการในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "ลบชุดบอร์ดไหม",
+  "libraryDeleteIrreversible": "\"{name}\" จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
   "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",

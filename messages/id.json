@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Tidak ada papan yang cocok",
   "libraryLoading": "Memuat set papan...",
   "libraryLoadFailed": "Tidak dapat memuat pustaka",
-  "libraryEmptyTitle": "Pustaka kosong",
-  "libraryEmptyDescription": "Impor berkas papan untuk memulai.",
   "libraryImportBoardFiles": "Impor berkas papan",
   "libraryBoardSets": "Set papan",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Tutup pustaka",
   "libraryMoreOptions": "Opsi lainnya",
   "libraryMoreOptionsFor": "Opsi lainnya untuk {name}",
+  "libraryDownload": "Unduh",
+  "libraryDownloadBoardSet": "Unduh {name}",
+  "libraryDownloadingBoardSet": "Mengunduh set papan \"{name}\"...",
+  "libraryDownloadedBoardSet": "Set papan \"{name}\" telah diunduh",
+  "libraryDownloadFailed": "Tidak dapat mengunduh set papan \"{name}\"",
   "libraryByAuthor": "Oleh {author}",
   "libraryGridDimensions": "Kisi {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Hapus set papan \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Papan dalam set ini akan dihapus. Tindakan ini tidak dapat dibatalkan.",
-        "countPlural=*": "Semua {count} papan dalam set ini akan dihapus. Tindakan ini tidak dapat dibatalkan."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Hapus set papan?",
+  "libraryDeleteIrreversible": "\"{name}\" akan dihapus. Tindakan ini tidak dapat dibatalkan.",
   "libraryDeleteFailed": "Tidak dapat menghapus set papan \"{name}\"",
   "libraryTitle": "Pustaka",
   "libraryOpen": "Buka pustaka",

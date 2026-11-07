@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "பொருந்தும் பலகைகள் இல்லை",
   "libraryLoading": "பலகைத் தொகுப்புகள் ஏற்றப்படுகின்றன…",
   "libraryLoadFailed": "நூலகத்தை ஏற்ற முடியவில்லை",
-  "libraryEmptyTitle": "நூலகம் காலியாக உள்ளது",
-  "libraryEmptyDescription": "தொடங்க பலகைக் கோப்புகளை இறக்குமதி செய்யுங்கள்.",
   "libraryImportBoardFiles": "பலகைக் கோப்புகளை இறக்குமதி செய்",
   "libraryBoardSets": "பலகைத் தொகுப்புகள்",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "நூலகத்தை மூடு",
   "libraryMoreOptions": "மேலும் விருப்பங்கள்",
   "libraryMoreOptionsFor": "{name}க்கான மேலும் விருப்பங்கள்",
+  "libraryDownload": "பதிவிறக்கு",
+  "libraryDownloadBoardSet": "{name} ஐப் பதிவிறக்கு",
+  "libraryDownloadingBoardSet": "பலகைத் தொகுப்பு \"{name}\" பதிவிறக்கப்படுகிறது…",
+  "libraryDownloadedBoardSet": "பலகைத் தொகுப்பு \"{name}\" பதிவிறக்கப்பட்டது",
+  "libraryDownloadFailed": "பலகைத் தொகுப்பு \"{name}\" என்பதைப் பதிவிறக்க முடியவில்லை",
   "libraryByAuthor": "எழுதியவர்: {author}",
   "libraryGridDimensions": "{rows}×{columns} கட்டம்",
-  "libraryDeleteConfirmTitle": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்கவா?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "இந்தத் தொகுப்பில் உள்ள பலகை நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது.",
-        "countPlural=*": "இந்தத் தொகுப்பில் உள்ள அனைத்து {count} பலகைகளும் நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "பலகைத் தொகுப்பை நீக்கவா?",
+  "libraryDeleteIrreversible": "\"{name}\" நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது.",
   "libraryDeleteFailed": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்க முடியவில்லை",
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",

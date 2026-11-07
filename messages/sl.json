@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Ni ujemajočih se tabel",
   "libraryLoading": "Nalaganje kompletov tabel...",
   "libraryLoadFailed": "Knjižnice ni bilo mogoče naložiti",
-  "libraryEmptyTitle": "Knjižnica je prazna",
-  "libraryEmptyDescription": "Za začetek uvozite datoteke tabel.",
   "libraryImportBoardFiles": "Uvozi datoteke tabel",
   "libraryBoardSets": "Kompleti tabel",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Zapri knjižnico",
   "libraryMoreOptions": "Več možnosti",
   "libraryMoreOptionsFor": "Več možnosti za {name}",
+  "libraryDownload": "Prenesi",
+  "libraryDownloadBoardSet": "Prenesi {name}",
+  "libraryDownloadingBoardSet": "Prenašanje kompleta tabel »{name}«...",
+  "libraryDownloadedBoardSet": "Komplet tabel »{name}« je prenesen",
+  "libraryDownloadFailed": "Kompleta tabel »{name}« ni bilo mogoče prenesti",
   "libraryByAuthor": "Avtor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrišem komplet tabel »{name}«?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabla v tem kompletu bo izbrisana. Tega dejanja ni mogoče razveljaviti.",
-        "countPlural=*": "Vseh {count} tabel v tem kompletu bo izbrisanih. Tega dejanja ni mogoče razveljaviti."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Izbrišem komplet tabel?",
+  "libraryDeleteIrreversible": "Komplet tabel »{name}« bo izbrisan. Tega dejanja ni mogoče razveljaviti.",
   "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",

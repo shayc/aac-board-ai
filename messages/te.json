@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "సరిపోలే బోర్డులు లేవు",
   "libraryLoading": "బోర్డు సెట్లు లోడ్ అవుతున్నాయి…",
   "libraryLoadFailed": "లైబ్రరీని లోడ్ చేయడం సాధ్యపడలేదు",
-  "libraryEmptyTitle": "లైబ్రరీ ఖాళీగా ఉంది",
-  "libraryEmptyDescription": "ప్రారంభించడానికి బోర్డు ఫైళ్లను దిగుమతి చేయండి.",
   "libraryImportBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయి",
   "libraryBoardSets": "బోర్డు సెట్లు",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "లైబ్రరీని మూసివేయి",
   "libraryMoreOptions": "మరిన్ని ఎంపికలు",
   "libraryMoreOptionsFor": "{name} కోసం మరిన్ని ఎంపికలు",
+  "libraryDownload": "డౌన్‌లోడ్ చేయి",
+  "libraryDownloadBoardSet": "{name}ను డౌన్‌లోడ్ చేయి",
+  "libraryDownloadingBoardSet": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ అవుతోంది…",
+  "libraryDownloadedBoardSet": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ అయింది",
+  "libraryDownloadFailed": "బోర్డు సెట్ \"{name}\"ను డౌన్‌లోడ్ చేయలేకపోయాం",
   "libraryByAuthor": "రచయిత: {author}",
   "libraryGridDimensions": "{rows}×{columns} గ్రిడ్",
-  "libraryDeleteConfirmTitle": "బోర్డు సెట్ \"{name}\"ను తొలగించాలా?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ఈ సెట్‌లోని బోర్డు తొలగించబడుతుంది. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
-        "countPlural=*": "ఈ సెట్‌లోని మొత్తం {count} బోర్డులు తొలగించబడతాయి. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "బోర్డు సెట్‌ను తొలగించాలా?",
+  "libraryDeleteIrreversible": "\"{name}\" తొలగించబడుతుంది. ఈ చర్యను రద్దు చేయడం సాధ్యం కాదు.",
   "libraryDeleteFailed": "బోర్డు సెట్ \"{name}\"ను తొలగించలేకపోయాం",
   "libraryTitle": "లైబ్రరీ",
   "libraryOpen": "లైబ్రరీని తెరువు",

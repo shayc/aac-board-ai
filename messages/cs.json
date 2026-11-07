@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Žádné odpovídající tabulky",
   "libraryLoading": "Načítání sad tabulek...",
   "libraryLoadFailed": "Knihovnu se nepodařilo načíst",
-  "libraryEmptyTitle": "Knihovna je prázdná",
-  "libraryEmptyDescription": "Začněte importem souborů tabulek.",
   "libraryImportBoardFiles": "Importovat soubory tabulek",
   "libraryBoardSets": "Sady tabulek",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Zavřít knihovnu",
   "libraryMoreOptions": "Další možnosti",
   "libraryMoreOptionsFor": "Další možnosti pro {name}",
+  "libraryDownload": "Stáhnout",
+  "libraryDownloadBoardSet": "Stáhnout {name}",
+  "libraryDownloadingBoardSet": "Stahování sady tabulek „{name}“...",
+  "libraryDownloadedBoardSet": "Sada tabulek „{name}“ byla stažena",
+  "libraryDownloadFailed": "Sadu tabulek „{name}“ se nepodařilo stáhnout",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mřížka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Smazat sadu tabulek „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabulka v této sadě bude smazána. Tuto akci nelze vrátit zpět.",
-        "countPlural=*": "Všech {count} tabulek v této sadě bude smazáno. Tuto akci nelze vrátit zpět."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Smazat sadu tabulek?",
+  "libraryDeleteIrreversible": "Sada tabulek „{name}“ bude smazána. Tuto akci nelze vrátit zpět.",
   "libraryDeleteFailed": "Sadu tabulek „{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",

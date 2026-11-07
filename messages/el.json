@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Δεν βρέθηκαν αντίστοιχοι πίνακες",
   "libraryLoading": "Φόρτωση συνόλων πινάκων...",
   "libraryLoadFailed": "Δεν ήταν δυνατή η φόρτωση της βιβλιοθήκης",
-  "libraryEmptyTitle": "Η βιβλιοθήκη είναι κενή",
-  "libraryEmptyDescription": "Εισαγάγετε αρχεία πινάκων για να ξεκινήσετε.",
   "libraryImportBoardFiles": "Εισαγωγή αρχείων πινάκων",
   "libraryBoardSets": "Σύνολα πινάκων",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Κλείσιμο βιβλιοθήκης",
   "libraryMoreOptions": "Περισσότερες επιλογές",
   "libraryMoreOptionsFor": "Περισσότερες επιλογές για {name}",
+  "libraryDownload": "Λήψη",
+  "libraryDownloadBoardSet": "Λήψη {name}",
+  "libraryDownloadingBoardSet": "Λήψη του συνόλου πινάκων «{name}»...",
+  "libraryDownloadedBoardSet": "Έγινε λήψη του συνόλου πινάκων «{name}»",
+  "libraryDownloadFailed": "Δεν ήταν δυνατή η λήψη του συνόλου πινάκων «{name}»",
   "libraryByAuthor": "Από {author}",
   "libraryGridDimensions": "Πλέγμα {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων «{name}»;",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ο πίνακας σε αυτό το σύνολο θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-        "countPlural=*": "Και οι {count} πίνακες σε αυτό το σύνολο θα διαγραφούν. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων;",
+  "libraryDeleteIrreversible": "Το σύνολο πινάκων «{name}» θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",

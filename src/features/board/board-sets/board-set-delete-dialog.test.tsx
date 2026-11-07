@@ -11,45 +11,27 @@ function renderWithProviders(children: ReactNode) {
 }
 
 describe("BoardSetDeleteDialog", () => {
-  test("shows the single-board warning with no accessibility violations", async () => {
+  test("names the board set in the warning with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <BoardSetDeleteDialog
-        boardSet={makeBoardSetRecord({ name: "Core Words", boardCount: 1 })}
+        boardSet={makeBoardSetRecord({ name: "Core Words" })}
         onDelete={vi.fn()}
         onClose={vi.fn()}
       />,
     );
 
     const dialog = screen.getByRole("dialog", {
-      name: 'Delete board set "Core Words"?',
+      name: "Delete board set?",
     });
 
     await expect.element(dialog).toBeVisible();
     await expect
       .element(dialog)
       .toHaveAccessibleDescription(
-        "The board in this set will be deleted. This cannot be undone.",
+        '"Core Words" will be deleted. This cannot be undone.',
       );
 
     await expectNoA11yViolations(document.body);
-  });
-
-  test("shows the board count in the multiple-board warning", async () => {
-    const screen = await renderWithProviders(
-      <BoardSetDeleteDialog
-        boardSet={makeBoardSetRecord({ boardCount: 5 })}
-        onDelete={vi.fn()}
-        onClose={vi.fn()}
-      />,
-    );
-
-    await expect
-      .element(
-        screen.getByText(
-          "All 5 boards in this set will be deleted. This cannot be undone.",
-        ),
-      )
-      .toBeInTheDocument();
   });
 
   test("renders nothing when no board set is targeted", async () => {

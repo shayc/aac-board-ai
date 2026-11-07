@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "לא נמצאו לוחות תואמים",
   "libraryLoading": "טעינת ערכות לוחות...",
   "libraryLoadFailed": "לא ניתן לטעון את הספרייה",
-  "libraryEmptyTitle": "הספרייה ריקה",
-  "libraryEmptyDescription": "כדי להתחיל, ייבאו קובצי לוחות.",
   "libraryImportBoardFiles": "ייבוא קובצי לוחות",
   "libraryBoardSets": "ערכות לוחות",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "סגירת הספרייה",
   "libraryMoreOptions": "אפשרויות נוספות",
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
+  "libraryDownload": "הורדה",
+  "libraryDownloadBoardSet": "הורדת {name}",
+  "libraryDownloadingBoardSet": "מתבצעת הורדה של ערכת הלוחות \"{name}\"...",
+  "libraryDownloadedBoardSet": "ערכת הלוחות \"{name}\" הורדה בהצלחה",
+  "libraryDownloadFailed": "הורדת ערכת הלוחות \"{name}\" נכשלה",
   "libraryByAuthor": "מאת {author}",
   "libraryGridDimensions": "רשת {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "הלוח בערכה זו יימחק. לא ניתן לבטל זאת.",
-        "countPlural=*": "כל {count} הלוחות בערכה זו יימחקו. לא ניתן לבטל זאת."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות?",
+  "libraryDeleteIrreversible": "ערכת הלוחות \"{name}\" תימחק. לא ניתן לבטל זאת.",
   "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",

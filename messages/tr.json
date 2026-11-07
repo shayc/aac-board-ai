@@ -12,8 +12,6 @@
   "boardSelectorNoOptions": "Eşleşen pano yok",
   "libraryLoading": "Pano setleri yükleniyor...",
   "libraryLoadFailed": "Kitaplık yüklenemedi",
-  "libraryEmptyTitle": "Kitaplık boş",
-  "libraryEmptyDescription": "Başlamak için pano dosyalarını içe aktarın.",
   "libraryImportBoardFiles": "Pano dosyalarını içe aktar",
   "libraryBoardSets": "Pano setleri",
   "libraryImportingBoardFiles": [
@@ -63,19 +61,15 @@
   "libraryClose": "Kitaplığı kapat",
   "libraryMoreOptions": "Diğer seçenekler",
   "libraryMoreOptionsFor": "{name} için diğer seçenekler",
+  "libraryDownload": "İndir",
+  "libraryDownloadBoardSet": "İndir: {name}",
+  "libraryDownloadingBoardSet": "\"{name}\" pano seti indiriliyor...",
+  "libraryDownloadedBoardSet": "\"{name}\" pano seti indirildi",
+  "libraryDownloadFailed": "\"{name}\" pano seti indirilemedi",
   "libraryByAuthor": "{author} tarafından",
   "libraryGridDimensions": "{rows}×{columns} ızgara",
-  "libraryDeleteConfirmTitle": "\"{name}\" pano seti silinsin mi?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Bu setteki pano silinecek. Bu işlem geri alınamaz.",
-        "countPlural=*": "Bu setteki {count} panonun tümü silinecek. Bu işlem geri alınamaz."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Pano seti silinsin mi?",
+  "libraryDeleteIrreversible": "\"{name}\" silinecek. Bu işlem geri alınamaz.",
   "libraryDeleteFailed": "\"{name}\" pano seti silinemedi",
   "libraryTitle": "Kitaplık",
   "libraryOpen": "Kitaplığı aç",
