@@ -27,7 +27,7 @@ describe("importBoardFileFromURL", () => {
     const controller = new AbortController();
     const importing = importBoardFileFromURL(
       `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-      controller.signal,
+      { signal: controller.signal },
     );
 
     controller.abort();
@@ -46,10 +46,9 @@ describe("importBoardFileFromURL", () => {
     });
 
     await expect(
-      importBoardFileFromURL(
-        `${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`,
-        controller.signal,
-      ),
+      importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+        signal: controller.signal,
+      }),
     ).rejects.toBe(controller.signal.reason);
     expect(await listBoardSetRecords()).toEqual([]);
   });
@@ -115,5 +114,47 @@ describe("importBoardFileFromURL", () => {
     });
 
     expect(cancelled).toBe(true);
+  });
+
+  test("reports download progress against the content length", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(fixtureFile, {
+        headers: { "content-length": String(fixtureFile.size) },
+      }),
+    );
+    const onProgress = vi.fn();
+
+    await importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+      onProgress,
+    });
+
+    expect(onProgress).toHaveBeenNthCalledWith(1, {
+      loaded: 0,
+      total: fixtureFile.size,
+    });
+    expect(onProgress).toHaveBeenLastCalledWith({
+      loaded: fixtureFile.size,
+      total: fixtureFile.size,
+    });
+  });
+
+  test("leaves the progress total unknown for a compressed response", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(fixtureFile, {
+        headers: { "content-length": "100", "content-encoding": "gzip" },
+      }),
+    );
+    const onProgress = vi.fn();
+
+    await importBoardFileFromURL(`${SAMPLE_BOARDS_DIR}/${OBZ_FIXTURE}`, {
+      onProgress,
+    });
+
+    expect(onProgress).toHaveBeenLastCalledWith({
+      loaded: fixtureFile.size,
+      total: undefined,
+    });
   });
 });

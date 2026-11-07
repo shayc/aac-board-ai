@@ -19,6 +19,60 @@ function renderBoardSetLibrary() {
   );
 }
 
+function stubStreamingDownload(headers?: HeadersInit) {
+  let stream!: ReadableStreamDefaultController<Uint8Array>;
+  const body = new ReadableStream<Uint8Array>({
+    start(controller) {
+      stream = controller;
+    },
+  });
+
+  vi.spyOn(globalThis, "fetch").mockImplementation(async (_input, init) => {
+    const signal = init?.signal;
+    signal?.addEventListener("abort", () => stream.error(signal.reason));
+
+    return new Response(body, { headers });
+  });
+
+  return {
+    send: (bytes: number | Uint8Array) =>
+      stream.enqueue(typeof bytes === "number" ? new Uint8Array(bytes) : bytes),
+    finish: () => stream.close(),
+  };
+}
+
+function recordUnavailableButtons() {
+  const buttons: { name: string | null; description?: string }[] = [];
+
+  const observer = new MutationObserver(() => {
+    const button = document.querySelector('button[aria-disabled="true"]');
+    if (!button) {
+      return;
+    }
+
+    const descriptionId = button.getAttribute("aria-describedby");
+    buttons.push({
+      name: button.getAttribute("aria-label"),
+      description: descriptionId
+        ? document.getElementById(descriptionId)?.textContent
+        : undefined,
+    });
+  });
+  observer.observe(document.body, {
+    subtree: true,
+    childList: true,
+    attributes: true,
+    characterData: true,
+  });
+
+  return {
+    stop: () => {
+      observer.disconnect();
+      return buttons;
+    },
+  };
+}
+
 function listedBoardSetNames(screen: RenderResult) {
   return screen
     .getByRole("navigation", { name: "Board sets" })
@@ -136,51 +190,187 @@ describe("BoardSetLibrary", () => {
       .toBeInTheDocument();
     await expect
       .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
+      .toHaveFocus();
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
-  test("marks the download button unavailable while its download runs", async () => {
-    const { promise: response, resolve } = Promise.withResolvers<Response>();
-    vi.spyOn(globalThis, "fetch").mockReturnValue(response);
+  test("describes how much of a download has arrived", async () => {
+    const download = stubStreamingDownload({ "content-length": "2000000" });
 
     const screen = await renderBoardSetLibrary();
-    const button = screen.getByRole("button", { name: "Download First Words" });
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+    download.send(500_000);
 
-    await expect.element(button).toHaveAttribute("aria-disabled", "false");
-    await button.click();
-    await expect.element(button).toHaveAttribute("aria-disabled", "true");
+    const cancelButton = screen.getByRole("button", {
+      name: "Cancel downloading First Words",
+    });
+    await expect
+      .element(screen.getByText(`Downloading board set "First Words"...`))
+      .toBeInTheDocument();
+    await expect
+      .element(cancelButton)
+      .toHaveAccessibleDescription("0.5 of 2 MB");
+    await expect
+      .element(cancelButton)
+      .toHaveAttribute("aria-disabled", "false");
 
-    resolve(new Response(null, { status: 500 }));
-
-    await expect.element(button).toHaveAttribute("aria-disabled", "false");
-    await expect.element(button).toHaveFocus();
+    await cancelButton.click();
+    await expect
+      .element(screen.getByRole("button", { name: "Download First Words" }))
+      .toBeInTheDocument();
   });
 
-  test("stores one board set when a download is requested again after reopening the library", async () => {
-    const starterBoardFile = await fetch("/first-words.obz").then((response) =>
-      response.blob(),
+  test("describes a download of unknown size as in progress", async () => {
+    const download = stubStreamingDownload();
+
+    const screen = await renderBoardSetLibrary();
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+    download.send(500_000);
+
+    const cancelButton = screen.getByRole("button", {
+      name: "Cancel downloading First Words",
+    });
+    await expect
+      .element(cancelButton)
+      .toHaveAccessibleDescription("Downloading...");
+
+    await cancelButton.click();
+    await expect
+      .element(screen.getByRole("button", { name: "Download First Words" }))
+      .toBeInTheDocument();
+  });
+
+  test("cancels a download without storing the board set or reporting an error", async () => {
+    const download = stubStreamingDownload({ "content-length": "2000000" });
+
+    const screen = await renderBoardSetLibrary();
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+    download.send(500_000);
+    await screen
+      .getByRole("button", { name: "Cancel downloading First Words" })
+      .click();
+
+    const downloadButton = screen.getByRole("button", {
+      name: "Download First Words",
+    });
+    await expect.element(downloadButton).toHaveFocus();
+    await expect.element(downloadButton).not.toHaveAccessibleDescription();
+    await expect
+      .element(screen.getByText(`Canceled downloading board set "First Words"`))
+      .toBeInTheDocument();
+    await expect
+      .element(screen.getByText(`Couldn't download board set "First Words"`))
+      .not.toBeInTheDocument();
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("focuses a download's entry when it finishes after reopening the library", async () => {
+    const starterBoardBytes = await fetch("/first-words.obz").then((response) =>
+      response.bytes(),
     );
-    const { promise: response, resolve } = Promise.withResolvers<Response>();
-    const fetchSpy = vi.spyOn(globalThis, "fetch").mockReturnValue(response);
+    const download = stubStreamingDownload({
+      "content-length": String(starterBoardBytes.byteLength),
+    });
 
     const closedScreen = await renderBoardSetLibrary();
     await closedScreen
       .getByRole("button", { name: "Download First Words" })
       .click();
+    await expect
+      .element(
+        closedScreen.getByRole("button", {
+          name: "Cancel downloading First Words",
+        }),
+      )
+      .toBeInTheDocument();
     await closedScreen.unmount();
 
     const screen = await renderBoardSetLibrary();
-    const button = screen.getByRole("button", { name: "Download First Words" });
-    await expect.element(button).toHaveAttribute("aria-disabled", "true");
-    await button.click({ force: true });
-    resolve(new Response(starterBoardFile));
+    download.send(starterBoardBytes);
+    download.finish();
 
     await expect
       .element(screen.getByRole("link", { name: "First Words" }))
-      .toBeInTheDocument();
-    expect(fetchSpy).toHaveBeenCalledOnce();
+      .toHaveFocus();
+    expect(globalThis.fetch).toHaveBeenCalledOnce();
     expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("keeps describing download progress after reopening the library", async () => {
+    const download = stubStreamingDownload({ "content-length": "2000000" });
+
+    const closedScreen = await renderBoardSetLibrary();
+    await closedScreen
+      .getByRole("button", { name: "Download First Words" })
+      .click();
+    download.send(500_000);
+    await expect
+      .element(
+        closedScreen.getByRole("button", {
+          name: "Cancel downloading First Words",
+        }),
+      )
+      .toHaveAccessibleDescription("0.5 of 2 MB");
+    await closedScreen.unmount();
+
+    const screen = await renderBoardSetLibrary();
+    const cancelButton = screen.getByRole("button", {
+      name: "Cancel downloading First Words",
+    });
+    await expect
+      .element(cancelButton)
+      .toHaveAccessibleDescription("0.5 of 2 MB");
+
+    await cancelButton.click();
+    await expect
+      .element(screen.getByRole("button", { name: "Download First Words" }))
+      .toBeInTheDocument();
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("marks the button unavailable while a downloaded board set imports", async () => {
+    const starterBoardBytes = await fetch("/first-words.obz").then((response) =>
+      response.bytes(),
+    );
+    const download = stubStreamingDownload({
+      "content-length": String(starterBoardBytes.byteLength),
+    });
+    const unavailableButtons = recordUnavailableButtons();
+
+    const screen = await renderBoardSetLibrary();
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+    download.send(starterBoardBytes);
+    download.finish();
+
+    await expect
+      .element(screen.getByRole("link", { name: "First Words" }))
+      .toHaveFocus();
+    expect(unavailableButtons.stop()).toContainEqual({
+      name: "Download First Words",
+      description: "Importing...",
+    });
+  });
+
+  test("shows download progress with no accessibility violations", async () => {
+    const download = stubStreamingDownload({ "content-length": "2000000" });
+
+    const screen = await renderBoardSetLibrary();
+    await screen.getByRole("button", { name: "Download First Words" }).click();
+    download.send(500_000);
+    await expect
+      .element(
+        screen.getByRole("button", { name: "Cancel downloading First Words" }),
+      )
+      .toHaveAccessibleDescription("0.5 of 2 MB");
+
+    await expectNoA11yViolations(document.body);
+
+    await screen
+      .getByRole("button", { name: "Cancel downloading First Words" })
+      .click();
+    await expect
+      .element(screen.getByRole("button", { name: "Download First Words" }))
+      .toBeInTheDocument();
   });
 
   test("shows an error instead of the empty state when sets cannot be retrieved", async () => {
