@@ -1,6 +1,6 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
 import { BoardSetLibrary } from "@features/board";
-import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
+import CloseIcon from "@mui/icons-material/Close";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
@@ -9,7 +9,6 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
 import { useMatches } from "react-router";
 
@@ -52,16 +51,13 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
             edge="end"
             onClick={onClose}
           >
-            <ViewSidebarOutlinedIcon sx={flipForLTR} />
+            <CloseIcon />
           </IconButton>
         </Tooltip>
       </Toolbar>
 
       <Box sx={{ flexGrow: 1, minHeight: 0, overflow: "auto" }}>
-        <BoardSetLibrary
-          activeBoardSetId={activeBoardSetId}
-          onNavigate={onClose}
-        />
+        <BoardSetLibrary activeBoardSetId={activeBoardSetId} />
       </Box>
     </Drawer>
   );

@@ -16,7 +16,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
-import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -30,7 +30,6 @@ type BoardSetEntry =
 interface BoardSetListProps {
   boardSets: readonly BoardSetRecord[];
   downloadableBoardSets: readonly CatalogBoardSet[];
-  onNavigate: () => void;
   onShowInfo: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
   activeBoardSetId?: string;
@@ -39,7 +38,6 @@ interface BoardSetListProps {
 export function BoardSetList({
   boardSets,
   downloadableBoardSets,
-  onNavigate,
   onShowInfo,
   onRequestDelete,
   activeBoardSetId,
@@ -106,7 +104,6 @@ export function BoardSetList({
         isActive={boardSet.id === activeBoardSetId}
         isFocusRequested={boardSet.id === boardSetIdToFocus}
         isMenuOpen={boardSet.id === openMenuBoardSetId}
-        onNavigate={onNavigate}
         onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
       />
     );
@@ -184,7 +181,6 @@ interface BoardSetListItemProps {
   isActive: boolean;
   isFocusRequested: boolean;
   isMenuOpen: boolean;
-  onNavigate: () => void;
   onMenuOpen: (element: HTMLElement) => void;
 }
 
@@ -195,7 +191,6 @@ function BoardSetListItem({
   isActive,
   isFocusRequested,
   isMenuOpen,
-  onNavigate,
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
@@ -206,21 +201,6 @@ function BoardSetListItem({
       linkRef.current?.focus();
     }
   }, [isFocusRequested]);
-
-  function handleLinkClick(event: MouseEvent<HTMLAnchorElement>) {
-    if (
-      event.defaultPrevented ||
-      event.button !== 0 ||
-      event.metaKey ||
-      event.ctrlKey ||
-      event.shiftKey ||
-      event.altKey
-    ) {
-      return;
-    }
-
-    onNavigate();
-  }
 
   return (
     <ListItem
@@ -265,7 +245,6 @@ function BoardSetListItem({
         component={Link}
         to={to}
         selected={isActive}
-        onClick={handleLinkClick}
       >
         <ListItemText
           primary={name}

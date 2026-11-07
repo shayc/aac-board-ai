@@ -44,7 +44,7 @@ describe("LibraryDrawer", () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  test("navigates and closes the drawer when a board link is activated", async () => {
+  test("navigates and keeps the drawer open when a board link is activated", async () => {
     await seedBoardSets([
       { id: "animals", rootBoardId: "root", name: "Animals" },
     ]);
@@ -80,32 +80,6 @@ describe("LibraryDrawer", () => {
 
     await expect.element(screen.getByText("board page")).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/sets/animals/boards/root");
-    expect(onClose).toHaveBeenCalledOnce();
-  });
-
-  test("keeps the drawer and current route open on modified clicks", async () => {
-    await seedBoardSets([
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-    ]);
-
-    const onClose = vi.fn();
-    const router = createMemoryRouter([
-      {
-        path: "/",
-        element: <LibraryDrawer open onClose={onClose} />,
-      },
-    ]);
-    const screen = await render(
-      <AppProviders>
-        <RouterProvider router={router} />
-      </AppProviders>,
-    );
-    const link = screen.getByRole("link", { name: "Animals", exact: true });
-
-    await link.click({ modifiers: ["ControlOrMeta"] });
-
-    expect(router.state.location.pathname).toBe("/");
     expect(onClose).not.toHaveBeenCalled();
-    await expect.element(link).toBeVisible();
   });
 });
