@@ -57,10 +57,7 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
       </Toolbar>
 
       <Box sx={{ flexGrow: 1, minHeight: 0, overflow: "auto" }}>
-        <BoardSetLibrary
-          activeBoardSetId={activeBoardSetId}
-          onNavigate={onClose}
-        />
+        <BoardSetLibrary activeBoardSetId={activeBoardSetId} />
       </Box>
     </Drawer>
   );

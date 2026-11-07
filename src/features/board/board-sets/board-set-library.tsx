@@ -22,13 +22,9 @@ import { useBoardSets } from "./use-board-sets";
 
 interface BoardSetLibraryProps {
   activeBoardSetId?: string;
-  onNavigate: () => void;
 }
 
-export function BoardSetLibrary({
-  activeBoardSetId,
-  onNavigate,
-}: BoardSetLibraryProps) {
+export function BoardSetLibrary({ activeBoardSetId }: BoardSetLibraryProps) {
   const t = useTranslate();
   const { boardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
@@ -90,7 +86,6 @@ export function BoardSetLibrary({
         boardSets={boardSets}
         downloadableBoardSets={downloadableBoardSets}
         activeBoardSetId={activeBoardSetId}
-        onNavigate={onNavigate}
         onRequestDelete={setDeleteTarget}
         onShowInfo={setInfoTarget}
       />

@@ -13,7 +13,7 @@ function renderBoardSetLibrary() {
   return render(
     <MemoryRouter>
       <AppProviders>
-        <BoardSetLibrary onNavigate={vi.fn()} />
+        <BoardSetLibrary />
       </AppProviders>
     </MemoryRouter>,
   );

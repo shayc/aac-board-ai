@@ -28,7 +28,6 @@ describe("BoardSetList", () => {
         ]}
         downloadableBoardSets={[]}
         activeBoardSetId="a"
-        onNavigate={vi.fn()}
         onShowInfo={vi.fn()}
         onRequestDelete={vi.fn()}
       />,
@@ -47,23 +46,6 @@ describe("BoardSetList", () => {
     await expect.element(animalsLink).not.toHaveAttribute("aria-current");
   });
 
-  test("notifies the parent when a board link is followed", async () => {
-    const onNavigate = vi.fn();
-    const screen = await renderWithProviders(
-      <BoardSetList
-        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
-        downloadableBoardSets={[]}
-        onNavigate={onNavigate}
-        onShowInfo={vi.fn()}
-        onRequestDelete={vi.fn()}
-      />,
-    );
-
-    await screen.getByRole("link", { name: "Core Words", exact: true }).click();
-
-    expect(onNavigate).toHaveBeenCalledOnce();
-  });
-
   test("keeps labels, menus, and info actions associated with their list", async () => {
     const boardSets = [
       makeBoardSetRecord({ id: "core", name: "Core Words" }),
@@ -78,7 +60,6 @@ describe("BoardSetList", () => {
             key={boardSet.id}
             boardSets={[boardSet]}
             downloadableBoardSets={[]}
-            onNavigate={vi.fn()}
             onShowInfo={onShowInfo}
             onRequestDelete={onRequestDelete}
           />
@@ -132,7 +113,6 @@ describe("BoardSetList", () => {
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
-        onNavigate={vi.fn()}
         onShowInfo={onShowInfo}
         onRequestDelete={onRequestDelete}
       />,
