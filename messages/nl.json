@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Meer opties voor {name}",
   "libraryByAuthor": "Door {author}",
   "libraryGridDimensions": "Raster {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Bordset \"{name}\" verwijderen?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Het bord in deze set wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
-        "countPlural=*": "Alle {count} borden in deze set worden verwijderd. Deze actie kan niet ongedaan worden gemaakt."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Bordset verwijderen?",
+  "libraryDeleteIrreversible": "\"{name}\" wordt verwijderd. Deze actie kan niet ongedaan worden gemaakt.",
   "libraryDeleteFailed": "Kan bordset \"{name}\" niet verwijderen",
   "libraryTitle": "Bibliotheek",
   "libraryOpen": "Bibliotheek openen",

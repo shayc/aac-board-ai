@@ -29,16 +29,12 @@ export function BoardSetDeleteDialog({
       open={boardSet !== null}
       onClose={onClose}
     >
-      <DialogTitle>
-        {boardSet
-          ? t(m.libraryDeleteConfirmTitle, { name: boardSet.name })
-          : null}
-      </DialogTitle>
+      <DialogTitle>{t(m.libraryDeleteConfirmTitle)}</DialogTitle>
 
       <DialogContent>
         <DialogContentText id={descriptionId}>
           {boardSet
-            ? t(m.libraryDeleteIrreversible, { count: boardSet.boardCount })
+            ? t(m.libraryDeleteIrreversible, { name: boardSet.name })
             : null}
         </DialogContentText>
       </DialogContent>

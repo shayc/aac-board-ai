@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Más opciones para {name}",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Cuadrícula de {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "El tablero de este conjunto se eliminará. Esta acción no se puede deshacer.",
-        "countPlural=*": "Los {count} tableros de este conjunto se eliminarán. Esta acción no se puede deshacer."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "¿Eliminar el conjunto de tableros?",
+  "libraryDeleteIrreversible": "Se eliminará \"{name}\". Esta acción no se puede deshacer.",
   "libraryDeleteFailed": "No se pudo eliminar el conjunto de tableros \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

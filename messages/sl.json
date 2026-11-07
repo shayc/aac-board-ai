@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Več možnosti za {name}",
   "libraryByAuthor": "Avtor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrišem komplet tabel »{name}«?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabla v tem kompletu bo izbrisana. Tega dejanja ni mogoče razveljaviti.",
-        "countPlural=*": "Vseh {count} tabel v tem kompletu bo izbrisanih. Tega dejanja ni mogoče razveljaviti."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Izbrišem komplet tabel?",
+  "libraryDeleteIrreversible": "Komplet tabel »{name}« bo izbrisan. Tega dejanja ni mogoče razveljaviti.",
   "libraryDeleteFailed": "Kompleta tabel »{name}« ni bilo mogoče izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Odpri knjižnico",

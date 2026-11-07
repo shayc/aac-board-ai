@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Weitere Optionen für {name}",
   "libraryByAuthor": "Von {author}",
   "libraryGridDimensions": "Raster {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Tafelsatz „{name}“ löschen?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Die Tafel in diesem Satz wird gelöscht. Dies kann nicht rückgängig gemacht werden.",
-        "countPlural=*": "Alle {count} Tafeln in diesem Satz werden gelöscht. Dies kann nicht rückgängig gemacht werden."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Tafelsatz löschen?",
+  "libraryDeleteIrreversible": "„{name}“ wird gelöscht. Dies kann nicht rückgängig gemacht werden.",
   "libraryDeleteFailed": "Tafelsatz „{name}“ konnte nicht gelöscht werden",
   "libraryTitle": "Bibliothek",
   "libraryOpen": "Bibliothek öffnen",

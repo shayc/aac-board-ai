@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "További lehetőségek: {name}",
   "libraryByAuthor": "Szerző: {author}",
   "libraryGridDimensions": "{rows}×{columns} rács",
-  "libraryDeleteConfirmTitle": "Törlöd a(z) „{name}” táblakészletet?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "A készletben lévő tábla törlődik. Ez a művelet nem vonható vissza.",
-        "countPlural=*": "A készlet mind a(z) {count} táblája törlődik. Ez a művelet nem vonható vissza."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Törlöd a táblakészletet?",
+  "libraryDeleteIrreversible": "A(z) „{name}” törlődik. Ez a művelet nem vonható vissza.",
   "libraryDeleteFailed": "A(z) „{name}” táblakészlet törlése nem sikerült",
   "libraryTitle": "Könyvtár",
   "libraryOpen": "Könyvtár megnyitása",

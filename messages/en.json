@@ -64,17 +64,8 @@
   "libraryMoreOptionsFor": "More options for {name}",
   "libraryByAuthor": "By {author}",
   "libraryGridDimensions": "{rows}×{columns} grid",
-  "libraryDeleteConfirmTitle": "Delete board set \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "The board in this set will be deleted. This cannot be undone.",
-        "countPlural=*": "All {count} boards in this set will be deleted. This cannot be undone."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Delete board set?",
+  "libraryDeleteIrreversible": "\"{name}\" will be deleted. This cannot be undone.",
   "libraryDeleteFailed": "Couldn't delete board set \"{name}\"",
   "libraryTitle": "Library",
   "libraryOpen": "Open library",

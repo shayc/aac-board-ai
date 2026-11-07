@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "خيارات إضافية لـ {name}",
   "libraryByAuthor": "بقلم {author}",
   "libraryGridDimensions": "شبكة {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "حذف مجموعة اللوحات \"{name}\"؟",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "سيتم حذف اللوحة الموجودة في هذه المجموعة. لا يمكن التراجع عن ذلك.",
-        "countPlural=*": "سيتم حذف جميع اللوحات البالغ عددها {count} في هذه المجموعة. لا يمكن التراجع عن ذلك."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "حذف مجموعة اللوحات؟",
+  "libraryDeleteIrreversible": "سيتم حذف \"{name}\". لا يمكن التراجع عن ذلك.",
   "libraryDeleteFailed": "تعذّر حذف مجموعة اللوحات \"{name}\"",
   "libraryTitle": "المكتبة",
   "libraryOpen": "فتح المكتبة",

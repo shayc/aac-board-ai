@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "אפשרויות נוספות עבור {name}",
   "libraryByAuthor": "מאת {author}",
   "libraryGridDimensions": "רשת {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "הלוח בערכה זו יימחק. לא ניתן לבטל זאת.",
-        "countPlural=*": "כל {count} הלוחות בערכה זו יימחקו. לא ניתן לבטל זאת."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "למחוק את ערכת הלוחות?",
+  "libraryDeleteIrreversible": "ערכת הלוחות \"{name}\" תימחק. לא ניתן לבטל זאת.",
   "libraryDeleteFailed": "מחיקת ערכת הלוחות \"{name}\" נכשלה",
   "libraryTitle": "ספרייה",
   "libraryOpen": "פתיחת הספרייה",

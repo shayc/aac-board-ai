@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Ďalšie možnosti pre {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mriežka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabuľka v tejto súprave bude odstránená. Túto akciu nie je možné vrátiť späť.",
-        "countPlural=*": "Všetkých {count} tabuliek v tejto súprave bude odstránených. Túto akciu nie je možné vrátiť späť."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Odstrániť súpravu tabuliek?",
+  "libraryDeleteIrreversible": "Súprava tabuliek „{name}“ bude odstránená. Túto akciu nie je možné vrátiť späť.",
   "libraryDeleteFailed": "Súpravu tabuliek „{name}“ sa nepodarilo odstrániť",
   "libraryTitle": "Knižnica",
   "libraryOpen": "Otvoriť knižnicu",

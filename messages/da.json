@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Flere indstillinger for {name}",
   "libraryByAuthor": "Af {author}",
   "libraryGridDimensions": "Gitter {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Slet tavlesættet \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavlen i dette sæt vil blive slettet. Dette kan ikke fortrydes.",
-        "countPlural=*": "Alle {count} tavler i dette sæt vil blive slettet. Dette kan ikke fortrydes."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Slet tavlesættet?",
+  "libraryDeleteIrreversible": "\"{name}\" vil blive slettet. Dette kan ikke fortrydes.",
   "libraryDeleteFailed": "Tavlesættet \"{name}\" kunne ikke slettes",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Åbn biblioteket",

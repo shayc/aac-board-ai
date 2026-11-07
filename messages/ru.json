@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Дополнительные параметры для {name}",
   "libraryByAuthor": "Автор: {author}",
   "libraryGridDimensions": "Сетка {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Удалить набор досок «{name}»?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Доска из этого набора будет удалена. Это действие нельзя отменить.",
-        "countPlural=*": "Все доски из этого набора ({count}) будут удалены. Это действие нельзя отменить."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Удалить набор досок?",
+  "libraryDeleteIrreversible": "Набор досок «{name}» будет удалён. Это действие нельзя отменить.",
   "libraryDeleteFailed": "Не удалось удалить набор досок «{name}»",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Открыть библиотеку",

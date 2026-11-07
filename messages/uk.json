@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Більше параметрів для {name}",
   "libraryByAuthor": "Автор: {author}",
   "libraryGridDimensions": "Сітка {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Видалити набір дошок «{name}»?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дошку з цього набору буде видалено. Цю дію не можна скасувати.",
-        "countPlural=*": "Усі дошки з цього набору ({count}) буде видалено. Цю дію не можна скасувати."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Видалити набір дошок?",
+  "libraryDeleteIrreversible": "Набір дошок «{name}» буде видалено. Цю дію не можна скасувати.",
   "libraryDeleteFailed": "Не вдалося видалити набір дошок «{name}»",
   "libraryTitle": "Бібліотека",
   "libraryOpen": "Відкрити бібліотеку",

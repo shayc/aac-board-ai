@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
   "libraryByAuthor": "লিখেছেন {author}",
   "libraryGridDimensions": "{rows}×{columns} গ্রিড",
-  "libraryDeleteConfirmTitle": "বোর্ড সেট \"{name}\" মুছবেন?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "এই সেটের বোর্ডটি মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
-        "countPlural=*": "এই সেটের সব {count}টি বোর্ড মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "বোর্ড সেট মুছবেন?",
+  "libraryDeleteIrreversible": "\"{name}\" মুছে ফেলা হবে। এটি পূর্বাবস্থায় ফেরানো যাবে না।",
   "libraryDeleteFailed": "বোর্ড সেট \"{name}\" মোছা যায়নি",
   "libraryTitle": "লাইব্রেরি",
   "libraryOpen": "লাইব্রেরি খুলুন",

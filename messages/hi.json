@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "{name} के लिए अधिक विकल्प",
   "libraryByAuthor": "{author} द्वारा",
   "libraryGridDimensions": "{rows}×{columns} ग्रिड",
-  "libraryDeleteConfirmTitle": "बोर्ड सेट \"{name}\" को हटाएँ?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "इस सेट का बोर्ड हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
-        "countPlural=*": "इस सेट के सभी {count} बोर्ड हटा दिए जाएंगे। इसे पूर्ववत नहीं किया जा सकता।"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "बोर्ड सेट हटाएँ?",
+  "libraryDeleteIrreversible": "\"{name}\" हटा दिया जाएगा। इसे पूर्ववत नहीं किया जा सकता।",
   "libraryDeleteFailed": "बोर्ड सेट \"{name}\" को हटाया नहीं जा सका",
   "libraryTitle": "लाइब्रेरी",
   "libraryOpen": "लाइब्रेरी खोलें",

@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "{name} のその他のオプション",
   "libraryByAuthor": "作成者：{author}",
   "libraryGridDimensions": "{rows}×{columns} グリッド",
-  "libraryDeleteConfirmTitle": "ボードセット「{name}」を削除しますか？",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "このセットのボードが削除されます。この操作は取り消せません。",
-        "countPlural=*": "このセットの{count}個のボードがすべて削除されます。この操作は取り消せません。"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "ボードセットを削除しますか？",
+  "libraryDeleteIrreversible": "「{name}」が削除されます。この操作は取り消せません。",
   "libraryDeleteFailed": "ボードセット「{name}」を削除できませんでした",
   "libraryTitle": "ライブラリ",
   "libraryOpen": "ライブラリを開く",

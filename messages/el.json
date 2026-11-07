@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Περισσότερες επιλογές για {name}",
   "libraryByAuthor": "Από {author}",
   "libraryGridDimensions": "Πλέγμα {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων «{name}»;",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ο πίνακας σε αυτό το σύνολο θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
-        "countPlural=*": "Και οι {count} πίνακες σε αυτό το σύνολο θα διαγραφούν. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Διαγραφή συνόλου πινάκων;",
+  "libraryDeleteIrreversible": "Το σύνολο πινάκων «{name}» θα διαγραφεί. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
   "libraryDeleteFailed": "Δεν ήταν δυνατή η διαγραφή του συνόλου πινάκων «{name}»",
   "libraryTitle": "Βιβλιοθήκη",
   "libraryOpen": "Άνοιγμα βιβλιοθήκης",

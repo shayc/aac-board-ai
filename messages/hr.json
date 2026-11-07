@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Više opcija za {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mreža {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Izbrisati skup ploča „{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Ploča u ovom skupu bit će izbrisana. Ovu radnju nije moguće poništiti.",
-        "countPlural=*": "Svih {count} ploča u ovom skupu bit će izbrisano. Ovu radnju nije moguće poništiti."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Izbrisati skup ploča?",
+  "libraryDeleteIrreversible": "Skup ploča „{name}” bit će izbrisan. Ovu radnju nije moguće poništiti.",
   "libraryDeleteFailed": "Skup ploča „{name}” nije moguće izbrisati",
   "libraryTitle": "Knjižnica",
   "libraryOpen": "Otvori knjižnicu",

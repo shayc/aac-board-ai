@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Další možnosti pro {name}",
   "libraryByAuthor": "Autor: {author}",
   "libraryGridDimensions": "Mřížka {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Smazat sadu tabulek „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabulka v této sadě bude smazána. Tuto akci nelze vrátit zpět.",
-        "countPlural=*": "Všech {count} tabulek v této sadě bude smazáno. Tuto akci nelze vrátit zpět."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Smazat sadu tabulek?",
+  "libraryDeleteIrreversible": "Sada tabulek „{name}“ bude smazána. Tuto akci nelze vrátit zpět.",
   "libraryDeleteFailed": "Sadu tabulek „{name}“ se nepodařilo smazat",
   "libraryTitle": "Knihovna",
   "libraryOpen": "Otevřít knihovnu",

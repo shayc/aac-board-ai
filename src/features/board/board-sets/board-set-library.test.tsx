@@ -66,7 +66,7 @@ describe("BoardSetLibrary", () => {
     await screen.getByRole("menuitem", { name: "Delete" }).click();
 
     await expect
-      .element(screen.getByText('Delete board set "Animals"?'))
+      .element(screen.getByText("Delete board set?"))
       .toBeInTheDocument();
     await screen.getByRole("button", { name: "Delete" }).click();
 
@@ -90,7 +90,7 @@ describe("BoardSetLibrary", () => {
 
     await expect.element(screen.getByText("Animals")).toBeInTheDocument();
     await expect
-      .element(screen.getByText('Delete board set "Animals"?'))
+      .element(screen.getByText("Delete board set?"))
       .not.toBeInTheDocument();
   });
 

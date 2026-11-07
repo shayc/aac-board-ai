@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Mai multe opțiuni pentru {name}",
   "libraryByAuthor": "De {author}",
   "libraryGridDimensions": "Grilă {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Ștergi setul de table „{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tabla din acest set va fi ștearsă. Această acțiune nu poate fi anulată.",
-        "countPlural=*": "Toate cele {count} table din acest set vor fi șterse. Această acțiune nu poate fi anulată."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Ștergi setul de table?",
+  "libraryDeleteIrreversible": "Setul de table „{name}” va fi șters. Această acțiune nu poate fi anulată.",
   "libraryDeleteFailed": "Setul de table „{name}” nu a putut fi șters",
   "libraryTitle": "Bibliotecă",
   "libraryOpen": "Deschide biblioteca",

@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Fler alternativ för {name}",
   "libraryByAuthor": "Av {author}",
   "libraryGridDimensions": "Rutnät {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Ta bort taveluppsättningen ”{name}”?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavlan i den här uppsättningen kommer att tas bort. Den här åtgärden kan inte ångras.",
-        "countPlural=*": "Alla {count} tavlor i den här uppsättningen kommer att tas bort. Den här åtgärden kan inte ångras."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Ta bort taveluppsättningen?",
+  "libraryDeleteIrreversible": "”{name}” kommer att tas bort. Den här åtgärden kan inte ångras.",
   "libraryDeleteFailed": "Det gick inte att ta bort taveluppsättningen ”{name}”",
   "libraryTitle": "Bibliotek",
   "libraryOpen": "Öppna biblioteket",

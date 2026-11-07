@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "{name} ಗಾಗಿ ಹೆಚ್ಚಿನ ಆಯ್ಕೆಗಳು",
   "libraryByAuthor": "ಲೇಖಕ: {author}",
   "libraryGridDimensions": "{rows}×{columns} ಗ್ರಿಡ್",
-  "libraryDeleteConfirmTitle": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಅಳಿಸುವುದೇ?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ಈ ಸೆಟ್‌ನಲ್ಲಿರುವ ಬೋರ್ಡ್ ಅನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
-        "countPlural=*": "ಈ ಸೆಟ್‌ನಲ್ಲಿರುವ ಎಲ್ಲಾ {count} ಬೋರ್ಡ್‌ಗಳನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "ಬೋರ್ಡ್ ಸೆಟ್ ಅನ್ನು ಅಳಿಸುವುದೇ?",
+  "libraryDeleteIrreversible": "\"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗುತ್ತದೆ. ಈ ಕ್ರಿಯೆಯನ್ನು ರದ್ದುಗೊಳಿಸಲಾಗದು.",
   "libraryDeleteFailed": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಅಳಿಸಲಾಗಲಿಲ್ಲ",
   "libraryTitle": "ಗ್ರಂಥಾಲಯ",
   "libraryOpen": "ಗ್ರಂಥಾಲಯವನ್ನು ತೆರೆಯಿರಿ",

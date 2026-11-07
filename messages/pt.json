@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Mais opções para {name}",
   "libraryByAuthor": "Por {author}",
   "libraryGridDimensions": "Grade {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "A prancha neste conjunto será excluída. Esta ação não pode ser desfeita.",
-        "countPlural=*": "Todas as {count} pranchas neste conjunto serão excluídas. Esta ação não pode ser desfeita."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Excluir o conjunto de pranchas?",
+  "libraryDeleteIrreversible": "O conjunto de pranchas \"{name}\" será excluído. Esta ação não pode ser desfeita.",
   "libraryDeleteFailed": "Não foi possível excluir o conjunto de pranchas \"{name}\"",
   "libraryTitle": "Biblioteca",
   "libraryOpen": "Abrir biblioteca",

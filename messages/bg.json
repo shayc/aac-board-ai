@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Още опции за {name}",
   "libraryByAuthor": "От {author}",
   "libraryGridDimensions": "Мрежа {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски „{name}“?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Дъската в този набор ще бъде изтрита. Това не може да бъде отменено.",
-        "countPlural=*": "Всички {count} дъски в този набор ще бъдат изтрити. Това не може да бъде отменено."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Да се изтрие ли наборът от дъски?",
+  "libraryDeleteIrreversible": "Наборът от дъски „{name}“ ще бъде изтрит. Това не може да бъде отменено.",
   "libraryDeleteFailed": "Наборът от дъски „{name}“ не може да бъде изтрит",
   "libraryTitle": "Библиотека",
   "libraryOpen": "Отваряне на библиотеката",

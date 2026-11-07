@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "{name}க்கான மேலும் விருப்பங்கள்",
   "libraryByAuthor": "எழுதியவர்: {author}",
   "libraryGridDimensions": "{rows}×{columns} கட்டம்",
-  "libraryDeleteConfirmTitle": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்கவா?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "இந்தத் தொகுப்பில் உள்ள பலகை நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது.",
-        "countPlural=*": "இந்தத் தொகுப்பில் உள்ள அனைத்து {count} பலகைகளும் நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "பலகைத் தொகுப்பை நீக்கவா?",
+  "libraryDeleteIrreversible": "\"{name}\" நீக்கப்படும். இதைச் செயல்தவிர்க்க முடியாது.",
   "libraryDeleteFailed": "பலகைத் தொகுப்பு \"{name}\" என்பதை நீக்க முடியவில்லை",
   "libraryTitle": "நூலகம்",
   "libraryOpen": "நூலகத்தைத் திற",

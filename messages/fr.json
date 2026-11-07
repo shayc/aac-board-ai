@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Plus d'options pour {name}",
   "libraryByAuthor": "Par {author}",
   "libraryGridDimensions": "Grille {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux « {name} » ?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Le tableau de cet ensemble sera supprimé. Cette action est irréversible.",
-        "countPlural=*": "Les {count} tableaux de cet ensemble seront tous supprimés. Cette action est irréversible."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Supprimer l’ensemble de tableaux ?",
+  "libraryDeleteIrreversible": "L’ensemble de tableaux « {name} » sera supprimé. Cette action est irréversible.",
   "libraryDeleteFailed": "Impossible de supprimer l’ensemble de tableaux « {name} »",
   "libraryTitle": "Bibliothèque",
   "libraryOpen": "Ouvrir la bibliothèque",

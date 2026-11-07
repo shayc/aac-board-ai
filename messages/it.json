@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "Altre opzioni per {name}",
   "libraryByAuthor": "Di {author}",
   "libraryGridDimensions": "Griglia {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "Eliminare il set di tabelle \"{name}\"?",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "La tabella in questo set verrà eliminata. Questa azione non può essere annullata.",
-        "countPlural=*": "Tutte le {count} tabelle in questo set verranno eliminate. Questa azione non può essere annullata."
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "Eliminare il set di tabelle?",
+  "libraryDeleteIrreversible": "Il set di tabelle \"{name}\" verrà eliminato. Questa azione non può essere annullata.",
   "libraryDeleteFailed": "Impossibile eliminare il set di tabelle \"{name}\"",
   "libraryTitle": "Libreria",
   "libraryOpen": "Apri libreria",

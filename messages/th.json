@@ -65,17 +65,8 @@
   "libraryMoreOptionsFor": "ตัวเลือกเพิ่มเติมสำหรับ {name}",
   "libraryByAuthor": "โดย {author}",
   "libraryGridDimensions": "ตาราง {rows}×{columns}",
-  "libraryDeleteConfirmTitle": "ลบชุดบอร์ด \"{name}\" ไหม",
-  "libraryDeleteIrreversible": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "บอร์ดในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
-        "countPlural=*": "บอร์ดทั้ง {count} รายการในชุดนี้จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้"
-      }
-    }
-  ],
+  "libraryDeleteConfirmTitle": "ลบชุดบอร์ดไหม",
+  "libraryDeleteIrreversible": "\"{name}\" จะถูกลบ การดำเนินการนี้ไม่สามารถเลิกทำได้",
   "libraryDeleteFailed": "ลบชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryTitle": "คลัง",
   "libraryOpen": "เปิดคลัง",
