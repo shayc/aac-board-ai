@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Tooltip from "@mui/material/Tooltip";
-import visuallyHidden from "@mui/utils/visuallyHidden";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
@@ -83,7 +82,7 @@ export function DownloadableBoardSetListItem({
     >
       <ListItemText primary={name} slotProps={{ primary: { noWrap: true } }} />
       {status && (
-        <span id={statusId} style={visuallyHidden}>
+        <span id={statusId} hidden>
           {status}
         </span>
       )}
