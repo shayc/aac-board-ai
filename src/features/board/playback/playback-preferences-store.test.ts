@@ -2,9 +2,9 @@ import { describe, expect, test } from "vitest";
 import { parsePlaybackPreferences } from "./playback-preferences-store";
 
 describe("parsePlaybackPreferences", () => {
-  test("disables message-part highlighting when absent", () => {
+  test("enables message-part highlighting when absent", () => {
     expect(parsePlaybackPreferences(undefined).isHighlightingEnabled).toBe(
-      false,
+      true,
     );
   });
 
@@ -13,14 +13,14 @@ describe("parsePlaybackPreferences", () => {
       parsePlaybackPreferences({
         isHighlightingEnabled: "yes",
       }).isHighlightingEnabled,
-    ).toBe(false);
+    ).toBe(true);
   });
 
   test("keeps a stored boolean", () => {
     expect(
       parsePlaybackPreferences({
-        isHighlightingEnabled: true,
+        isHighlightingEnabled: false,
       }).isHighlightingEnabled,
-    ).toBe(true);
+    ).toBe(false);
   });
 });
