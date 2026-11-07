@@ -26,6 +26,11 @@ export const starterBoardSet = catalogBoardSet({
 const boardSetCatalog: readonly CatalogBoardSet[] = [
   starterBoardSet,
   catalogBoardSet({ name: "Quick Core 24", fileName: "quick-core-24.obz" }),
+  catalogBoardSet({ name: "Quick Core 60", fileName: "quick-core-60.obz" }),
+  catalogBoardSet({
+    name: "Project Core-36 Universal Universal Core© 2017 by the CLDS",
+    fileName: "project-core.obf",
+  }),
 ];
 
 export function listDownloadableBoardSets(
