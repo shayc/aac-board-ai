@@ -18,7 +18,7 @@ describe("BoardSetList", () => {
   test("renders board links and identifies the active set", async () => {
     const screen = await renderWithProviders(
       <BoardSetList
-        boardSets={[
+        storedBoardSets={[
           makeBoardSetRecord({
             id: "a",
             name: "Core Words",
@@ -51,7 +51,7 @@ describe("BoardSetList", () => {
     const onNavigate = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
-        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        storedBoardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
         onNavigate={onNavigate}
         onShowInfo={vi.fn()}
@@ -76,7 +76,7 @@ describe("BoardSetList", () => {
         {boardSets.map((boardSet) => (
           <BoardSetList
             key={boardSet.id}
-            boardSets={[boardSet]}
+            storedBoardSets={[boardSet]}
             downloadableBoardSets={[]}
             onNavigate={vi.fn()}
             onShowInfo={onShowInfo}
@@ -130,7 +130,7 @@ describe("BoardSetList", () => {
     const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
-        boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
+        storedBoardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         downloadableBoardSets={[]}
         onNavigate={vi.fn()}
         onShowInfo={onShowInfo}
