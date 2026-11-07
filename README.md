@@ -28,7 +28,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Core features
 
-- First Words starter board, a gentle 3×3 board with a food folder for first-time AAC users
+- First Words starter board, a gentle 12-tile board with a food folder for first-time AAC users
 - Touch and keyboard navigation
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages, including right-to-left layouts
