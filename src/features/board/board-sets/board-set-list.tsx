@@ -23,7 +23,7 @@ import type { BoardSetRecord } from "../storage/board-set-storage";
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
   onNavigate: () => void;
-  onShowDetails: (boardSet: BoardSetRecord) => void;
+  onShowInfo: (boardSet: BoardSetRecord) => void;
   onRequestDelete: (boardSet: BoardSetRecord) => void;
   activeBoardSetId?: string;
 }
@@ -31,7 +31,7 @@ interface BoardSetListProps {
 export function BoardSetList({
   boardSets,
   onNavigate,
-  onShowDetails,
+  onShowInfo,
   onRequestDelete,
   activeBoardSetId,
 }: BoardSetListProps) {
@@ -54,9 +54,9 @@ export function BoardSetList({
     setMenuAnchor(null);
   }
 
-  function handleShowDetails() {
+  function handleShowInfo() {
     if (menuAnchor) {
-      onShowDetails(menuAnchor.boardSet);
+      onShowInfo(menuAnchor.boardSet);
     }
 
     handleMenuClose();
@@ -105,11 +105,11 @@ export function BoardSetList({
         onClose={handleMenuClose}
         anchorEl={menuAnchor?.element}
       >
-        <MenuItem onClick={handleShowDetails}>
+        <MenuItem onClick={handleShowInfo}>
           <ListItemIcon>
             <InfoOutlinedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText>{t(m.libraryDetails)}</ListItemText>
+          <ListItemText>{t(m.libraryInfo)}</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleRequestDelete}>
           <ListItemIcon>

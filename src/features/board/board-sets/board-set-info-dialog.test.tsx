@@ -4,17 +4,17 @@ import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
-import { BoardSetDetailsDialog } from "./board-set-details-dialog";
+import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { makeBoardSetRecord } from "../testing";
 
 function renderWithProviders(children: ReactNode) {
   return render(<AppProviders>{children}</AppProviders>);
 }
 
-describe("BoardSetDetailsDialog", () => {
+describe("BoardSetInfoDialog", () => {
   test("shows the available metadata with no accessibility violations", async () => {
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
+      <BoardSetInfoDialog
         boardSet={makeBoardSetRecord({
           name: "Core Words",
           author: "Jane",
@@ -57,7 +57,7 @@ describe("BoardSetDetailsDialog", () => {
       try {
         await page.viewport(width, 800);
         const screen = await renderWithProviders(
-          <BoardSetDetailsDialog
+          <BoardSetInfoDialog
             boardSet={makeBoardSetRecord()}
             onClose={vi.fn()}
           />,
@@ -79,10 +79,7 @@ describe("BoardSetDetailsDialog", () => {
 
   test("omits the author line and chips when those fields are absent", async () => {
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
-        boardSet={makeBoardSetRecord()}
-        onClose={vi.fn()}
-      />,
+      <BoardSetInfoDialog boardSet={makeBoardSetRecord()} onClose={vi.fn()} />,
     );
 
     await expect.element(screen.getByText("My Board")).toBeInTheDocument();
@@ -95,7 +92,7 @@ describe("BoardSetDetailsDialog", () => {
 
   test("renders nothing when no board set is targeted", async () => {
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog boardSet={null} onClose={vi.fn()} />,
+      <BoardSetInfoDialog boardSet={null} onClose={vi.fn()} />,
     );
 
     await expect.element(screen.getByRole("dialog")).not.toBeInTheDocument();
@@ -104,10 +101,7 @@ describe("BoardSetDetailsDialog", () => {
   test("calls onClose when Close is clicked", async () => {
     const onClose = vi.fn();
     const screen = await renderWithProviders(
-      <BoardSetDetailsDialog
-        boardSet={makeBoardSetRecord()}
-        onClose={onClose}
-      />,
+      <BoardSetInfoDialog boardSet={makeBoardSetRecord()} onClose={onClose} />,
     );
 
     await screen.getByRole("button", { name: "Close" }).click();

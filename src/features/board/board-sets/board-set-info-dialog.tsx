@@ -11,15 +11,15 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 
-interface BoardSetDetailsDialogProps {
+interface BoardSetInfoDialogProps {
   boardSet: BoardSetRecord | null;
   onClose: () => void;
 }
 
-export function BoardSetDetailsDialog({
+export function BoardSetInfoDialog({
   boardSet,
   onClose,
-}: BoardSetDetailsDialogProps) {
+}: BoardSetInfoDialogProps) {
   const t = useTranslate();
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const chipLabels = boardSet ? buildChipLabels(t, boardSet) : [];

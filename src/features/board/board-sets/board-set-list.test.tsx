@@ -28,7 +28,7 @@ describe("BoardSetList", () => {
         ]}
         activeBoardSetId="a"
         onNavigate={vi.fn()}
-        onShowDetails={vi.fn()}
+        onShowInfo={vi.fn()}
         onRequestDelete={vi.fn()}
       />,
     );
@@ -52,7 +52,7 @@ describe("BoardSetList", () => {
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         onNavigate={onNavigate}
-        onShowDetails={vi.fn()}
+        onShowInfo={vi.fn()}
         onRequestDelete={vi.fn()}
       />,
     );
@@ -62,12 +62,12 @@ describe("BoardSetList", () => {
     expect(onNavigate).toHaveBeenCalledOnce();
   });
 
-  test("keeps labels, menus, and details actions associated with their list", async () => {
+  test("keeps labels, menus, and info actions associated with their list", async () => {
     const boardSets = [
       makeBoardSetRecord({ id: "core", name: "Core Words" }),
       makeBoardSetRecord({ id: "animals", name: "Animals" }),
     ];
-    const onShowDetails = vi.fn();
+    const onShowInfo = vi.fn();
     const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <>
@@ -76,7 +76,7 @@ describe("BoardSetList", () => {
             key={boardSet.id}
             boardSets={[boardSet]}
             onNavigate={vi.fn()}
-            onShowDetails={onShowDetails}
+            onShowInfo={onShowInfo}
             onRequestDelete={onRequestDelete}
           />
         ))}
@@ -113,23 +113,23 @@ describe("BoardSetList", () => {
       ).toBe(true);
       menuIds.push(menuId);
 
-      await screen.getByRole("menuitem", { name: "Details" }).click();
-      expect(onShowDetails).toHaveBeenNthCalledWith(index + 1, boardSet);
+      await screen.getByRole("menuitem", { name: "Info" }).click();
+      expect(onShowInfo).toHaveBeenNthCalledWith(index + 1, boardSet);
     }
 
     expect(new Set(menuIds).size).toBe(2);
-    expect(onShowDetails).toHaveBeenCalledTimes(2);
+    expect(onShowInfo).toHaveBeenCalledTimes(2);
     expect(onRequestDelete).not.toHaveBeenCalled();
   });
 
   test("routes the menu's Delete to onRequestDelete", async () => {
-    const onShowDetails = vi.fn();
+    const onShowInfo = vi.fn();
     const onRequestDelete = vi.fn();
     const screen = await renderWithProviders(
       <BoardSetList
         boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
         onNavigate={vi.fn()}
-        onShowDetails={onShowDetails}
+        onShowInfo={onShowInfo}
         onRequestDelete={onRequestDelete}
       />,
     );
@@ -143,6 +143,6 @@ describe("BoardSetList", () => {
     expect(onRequestDelete.mock.calls[0][0]).toMatchObject({
       name: "Core Words",
     });
-    expect(onShowDetails).not.toHaveBeenCalled();
+    expect(onShowInfo).not.toHaveBeenCalled();
   });
 });
