@@ -23,7 +23,10 @@ export const starterBoardSet = catalogBoardSet({
   fileName: "first-words.obz",
 });
 
-const boardSetCatalog: readonly CatalogBoardSet[] = [starterBoardSet];
+const boardSetCatalog: readonly CatalogBoardSet[] = [
+  starterBoardSet,
+  catalogBoardSet({ name: "Quick Core 24", fileName: "quick-core-24.obz" }),
+];
 
 export function listDownloadableBoardSets(
   storedBoardSets: readonly { id: string }[],
