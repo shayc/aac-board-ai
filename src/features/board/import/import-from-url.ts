@@ -47,13 +47,25 @@ export function deriveBoardSetIdFromURL(url: string): string {
   return deriveBoardSetId(deriveFileName(parseBoardURL(url)));
 }
 
+export interface DownloadProgress {
+  loaded: number;
+  total?: number;
+}
+
+interface ImportBoardFileFromURLOptions {
+  signal?: AbortSignal;
+  onProgress?: (progress: DownloadProgress) => void;
+  onImportStart?: () => void;
+}
+
 export async function importBoardFileFromURL(
   url: string,
-  signal?: AbortSignal,
+  { signal, onProgress, onImportStart }: ImportBoardFileFromURLOptions = {},
 ): Promise<ImportedBoardSet> {
   const boardURL = parseBoardURL(url);
-  const blob = await downloadBoard(boardURL, signal);
+  const blob = await downloadBoard(boardURL, { signal, onProgress });
   signal?.throwIfAborted();
+  onImportStart?.();
 
   const file = new File([blob], deriveFileName(boardURL), {
     type: blob.type || "application/octet-stream",
@@ -65,7 +77,24 @@ export async function importBoardFileFromURL(
   return boardSet;
 }
 
-async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
+function expectedDownloadBytes(headers: Headers): number | undefined {
+  const contentLength = headers.get("content-length");
+  if (contentLength === null || headers.has("content-encoding")) {
+    return undefined;
+  }
+
+  const total = Number(contentLength);
+
+  return Number.isSafeInteger(total) && total > 0 ? total : undefined;
+}
+
+async function downloadBoard(
+  url: URL,
+  {
+    signal,
+    onProgress,
+  }: Pick<ImportBoardFileFromURLOptions, "signal" | "onProgress">,
+): Promise<Blob> {
   const response = await fetch(url, { signal });
 
   if (!response.ok) {
@@ -78,8 +107,10 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     return response.blob();
   }
 
+  const total = expectedDownloadBytes(response.headers);
   const chunks: BlobPart[] = [];
   let receivedBytes = 0;
+  onProgress?.({ loaded: receivedBytes, total });
 
   for (;;) {
     const { done, value } = await reader.read();
@@ -97,6 +128,7 @@ async function downloadBoard(url: URL, signal?: AbortSignal): Promise<Blob> {
     }
 
     chunks.push(value);
+    onProgress?.({ loaded: receivedBytes, total });
   }
 
   return new Blob(chunks, {

@@ -3,14 +3,17 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useSyncExternalStore } from "react";
 import type { ImportedBoardSet } from "./board-import";
 import {
+  cancelBoardSetDownload,
   downloadBoardSet,
-  getDownloadingURLsSnapshot,
-  subscribeDownloadingURLs,
+  getDownloadPhasesSnapshot,
+  subscribeDownloadPhases,
+  type BoardSetDownloadPhase,
 } from "./board-set-downloads";
 
 interface UseBoardSetDownloadReturn {
-  isDownloading: boolean;
+  phase: BoardSetDownloadPhase | undefined;
   download: () => Promise<ImportedBoardSet | undefined>;
+  cancel: () => void;
 }
 
 export function useBoardSetDownload({
@@ -21,21 +24,20 @@ export function useBoardSetDownload({
   url: string;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
-  const isDownloading = useSyncExternalStore(subscribeDownloadingURLs, () =>
-    getDownloadingURLsSnapshot().has(url),
+  const phase = useSyncExternalStore(subscribeDownloadPhases, () =>
+    getDownloadPhasesSnapshot().get(url),
   );
 
   async function download() {
-    if (isDownloading) {
+    if (phase) {
       return undefined;
     }
 
-    showSnackbar({
-      message: (t) => t(m.libraryDownloadingBoardSet, { name }),
-    });
-
     try {
       const importedBoardSet = await downloadBoardSet(url);
+      if (!importedBoardSet) {
+        return undefined;
+      }
 
       showSnackbar({
         message: (t) => t(m.libraryDownloadedBoardSet, { name }),
@@ -53,5 +55,9 @@ export function useBoardSetDownload({
     }
   }
 
-  return { isDownloading, download };
+  function cancel() {
+    cancelBoardSetDownload(url);
+  }
+
+  return { phase, download, cancel };
 }

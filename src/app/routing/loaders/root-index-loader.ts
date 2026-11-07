@@ -16,7 +16,7 @@ async function importAndRedirect(
   signal: AbortSignal,
 ): Promise<Response> {
   try {
-    const importedBoardSet = await importBoardFileFromURL(boardURL, signal);
+    const importedBoardSet = await importBoardFileFromURL(boardURL, { signal });
 
     return redirect(rootBoardPath(importedBoardSet));
   } catch {
@@ -39,10 +39,9 @@ export async function rootIndexLoader({
     return redirect(rootBoardPath(boardSet));
   }
 
-  const importedBoardSet = await importBoardFileFromURL(
-    starterBoardSet.url,
-    request.signal,
-  );
+  const importedBoardSet = await importBoardFileFromURL(starterBoardSet.url, {
+    signal: request.signal,
+  });
 
   return redirect(rootBoardPath(importedBoardSet));
 }
