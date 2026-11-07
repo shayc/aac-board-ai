@@ -14,6 +14,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { Link } from "react-router";
@@ -21,6 +22,10 @@ import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import type { CatalogBoardSet } from "./board-set-catalog";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
+
+type BoardSetEntry =
+  | { kind: "stored"; boardSet: BoardSetRecord }
+  | { kind: "downloadable"; boardSet: CatalogBoardSet };
 
 interface BoardSetListProps {
   boardSets: BoardSetRecord[];
@@ -40,6 +45,7 @@ export function BoardSetList({
   activeBoardSetId,
 }: BoardSetListProps) {
   const t = useTranslate();
+  const uiLocale = useUILocale();
   const menuId = useId();
   const subheaderId = useId();
   const [menuAnchor, setMenuAnchor] = useState<{
@@ -47,6 +53,12 @@ export function BoardSetList({
     boardSet: BoardSetRecord;
   } | null>(null);
   const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
+
+  const entries = sortBoardSetEntriesByName(
+    boardSets,
+    downloadableBoardSets,
+    uiLocale,
+  );
 
   const isMenuOpen = Boolean(menuAnchor);
   const openMenuBoardSetId = menuAnchor?.boardSet.id;
@@ -89,24 +101,16 @@ export function BoardSetList({
           }
           sx={{ px: 1 }}
         >
-          {boardSets.map((boardSet) => (
-            <BoardSetListItem
-              key={boardSet.id}
+          {entries.map((entry) => (
+            <BoardSetEntryItem
+              key={entry.boardSet.id}
+              entry={entry}
               menuId={menuId}
-              name={boardSet.name}
-              to={rootBoardPath(boardSet)}
-              isActive={boardSet.id === activeBoardSetId}
-              isFocusRequested={boardSet.id === boardSetIdToFocus}
-              isMenuOpen={boardSet.id === openMenuBoardSetId}
+              activeBoardSetId={activeBoardSetId}
+              boardSetIdToFocus={boardSetIdToFocus}
+              openMenuBoardSetId={openMenuBoardSetId}
               onNavigate={onNavigate}
-              onMenuOpen={(element) => handleMenuOpen(element, boardSet)}
-            />
-          ))}
-          {downloadableBoardSets.map((boardSet) => (
-            <DownloadableBoardSetListItem
-              key={boardSet.id}
-              name={boardSet.name}
-              url={boardSet.url}
+              onMenuOpen={handleMenuOpen}
               onDownloaded={setBoardSetIdToFocus}
             />
           ))}
@@ -133,6 +137,74 @@ export function BoardSetList({
         </MenuItem>
       </Menu>
     </>
+  );
+}
+
+function sortBoardSetEntriesByName(
+  boardSets: readonly BoardSetRecord[],
+  downloadableBoardSets: readonly CatalogBoardSet[],
+  locale: string,
+): BoardSetEntry[] {
+  const collator = new Intl.Collator(locale, { numeric: true });
+  const entries: BoardSetEntry[] = [
+    ...boardSets.map((boardSet) => ({ kind: "stored" as const, boardSet })),
+    ...downloadableBoardSets.map((boardSet) => ({
+      kind: "downloadable" as const,
+      boardSet,
+    })),
+  ];
+
+  return entries.toSorted(
+    (a, b) =>
+      collator.compare(a.boardSet.name, b.boardSet.name) ||
+      collator.compare(a.boardSet.id, b.boardSet.id),
+  );
+}
+
+interface BoardSetEntryItemProps {
+  entry: BoardSetEntry;
+  menuId: string;
+  activeBoardSetId?: string;
+  boardSetIdToFocus?: string;
+  openMenuBoardSetId?: string;
+  onNavigate: () => void;
+  onMenuOpen: (element: HTMLElement, boardSet: BoardSetRecord) => void;
+  onDownloaded: (boardSetId: string) => void;
+}
+
+function BoardSetEntryItem({
+  entry,
+  menuId,
+  activeBoardSetId,
+  boardSetIdToFocus,
+  openMenuBoardSetId,
+  onNavigate,
+  onMenuOpen,
+  onDownloaded,
+}: BoardSetEntryItemProps) {
+  const { kind, boardSet } = entry;
+
+  if (kind === "downloadable") {
+    return (
+      <DownloadableBoardSetListItem
+        name={boardSet.name}
+        url={boardSet.url}
+        onDownloaded={onDownloaded}
+      />
+    );
+  }
+
+  return (
+    <BoardSetListItem
+      menuId={menuId}
+      name={boardSet.name}
+      to={rootBoardPath(boardSet)}
+      isActive={boardSet.id === activeBoardSetId}
+      isFocusRequested={boardSet.id === boardSetIdToFocus}
+      isMenuOpen={boardSet.id === openMenuBoardSetId}
+      onNavigate={onNavigate}
+      onMenuOpen={(element) => onMenuOpen(element, boardSet)}
+    />
   );
 }
 
