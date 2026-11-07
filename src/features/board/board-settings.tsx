@@ -14,13 +14,13 @@ import {
   setTileSaturation,
   TILE_SATURATION,
   useBoardPreferences,
+  type TileLabelPlacement,
 } from "./board-preferences-store";
-import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 import { LabelPlacementPreview } from "./tile/label-placement-preview";
 
 interface LabelPlacementOptionProps {
   label: string;
-  placement: SymbolLabelPlacement;
+  placement: TileLabelPlacement;
 }
 
 function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {

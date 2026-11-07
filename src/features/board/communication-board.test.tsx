@@ -6,6 +6,7 @@ import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { setTileLabelPlacement } from "./board-preferences-store";
+import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
@@ -336,6 +337,16 @@ describe("CommunicationBoard", () => {
 
     await expect.element(helloTile).toBeVisible();
     expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+  });
+
+  test("shows message parts as labels only when message images are hidden", async () => {
+    setMessageImagesVisible(false);
+
+    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    await expect.poll(() => screen.getByText("hello").all()).toHaveLength(2);
+    expect(screen.container.querySelectorAll("img")).toHaveLength(2);
   });
 
   test.each([

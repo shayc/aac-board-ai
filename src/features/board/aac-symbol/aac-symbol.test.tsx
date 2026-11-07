@@ -1,17 +1,16 @@
 import { assertDefined } from "@shared/testing/assert-defined";
+import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
-import { AACSymbol, type SymbolLabelPlacement } from "./aac-symbol";
+import { AACSymbol } from "./aac-symbol";
 
-async function renderSymbol(labelPlacement?: SymbolLabelPlacement) {
+async function renderSymbol(
+  props: Partial<ComponentProps<typeof AACSymbol>> = {},
+) {
   const screen = await render(
     <div style={{ width: 120, height: 120 }}>
-      <AACSymbol
-        imageSrc={TEST_IMAGE_SRC}
-        label="Action"
-        labelPlacement={labelPlacement}
-      />
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Action" {...props} />
     </div>,
   );
   const image = screen.container.querySelector("img");
@@ -50,17 +49,42 @@ describe("AACSymbol", () => {
 
   test("places the label below the image by default and above it when placed on top", async () => {
     const byDefault = await renderSymbol();
-    const top = await renderSymbol("top");
+    const top = await renderSymbol({ labelPlacement: "top" });
 
     expect(byDefault.label.top).toBeGreaterThanOrEqual(byDefault.image.bottom);
     expect(top.label.bottom).toBeLessThanOrEqual(top.image.top);
   });
 
   test("keeps a hidden label in the DOM without taking space from the image", async () => {
-    const visible = await renderSymbol("bottom");
-    const hidden = await renderSymbol("hidden");
+    const visible = await renderSymbol();
+    const hidden = await renderSymbol({ isLabelHidden: true });
 
     expect(hidden.label.width).toBeLessThanOrEqual(1);
     expect(hidden.image.height).toBeGreaterThan(visible.image.height);
+  });
+
+  test("keeps a hidden label visible when there is no image to show instead", async () => {
+    const screen = await render(<AACSymbol label="Hello" isLabelHidden />);
+
+    expect(
+      screen.getByText("Hello").element().getBoundingClientRect().width,
+    ).toBeGreaterThan(1);
+  });
+
+  test("shows only the label when the image is hidden", async () => {
+    const screen = await render(
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" isImageHidden />,
+    );
+
+    await expect.element(screen.getByText("Hello")).toBeVisible();
+    expect(screen.container.querySelector("img")).toBeNull();
+  });
+
+  test("keeps a hidden image when the symbol has no label to show instead", async () => {
+    const screen = await render(
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label=" " isImageHidden />,
+    );
+
+    expect(screen.container.querySelector("img")).not.toBeNull();
   });
 });

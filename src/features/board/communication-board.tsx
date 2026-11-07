@@ -36,6 +36,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
+  const symbolLabelPlacement = tileLabelPlacement === "top" ? "top" : "bottom";
+  const isTileLabelHidden = tileLabelPlacement === "hidden";
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -86,7 +88,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <AACSymbol
           label={button.label}
           imageSrc={button.imageSrc}
-          labelPlacement={tileLabelPlacement}
+          labelPlacement={symbolLabelPlacement}
+          isLabelHidden={isTileLabelHidden}
         />
       </Tile>
     );

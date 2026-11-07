@@ -7,13 +7,13 @@ export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardFileFromURL } from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
+export { MessageSettings } from "./message/message-settings";
 export {
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
-export { PlaybackSettings } from "./playback/playback-settings";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { getBoardSetRecord } from "./storage/board-set-storage";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";

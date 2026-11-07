@@ -207,7 +207,7 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [board settings](../src/features/board/board-settings.tsx),
-[playback settings](../src/features/board/playback/playback-settings.tsx), and
+[message settings](../src/features/board/message/message-settings.tsx), and
 [suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
