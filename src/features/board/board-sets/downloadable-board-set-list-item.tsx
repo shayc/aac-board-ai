@@ -1,5 +1,4 @@
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
-import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import IconButton from "@mui/material/IconButton";
 import ListItem from "@mui/material/ListItem";
@@ -34,9 +33,10 @@ export function DownloadableBoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(m.libraryDownload)}>
+        <Tooltip title={t(m.libraryDownload)} placement="right">
           <IconButton
             aria-label={t(m.libraryDownloadBoardSet, { name })}
+            aria-disabled={isDownloading}
             edge="end"
             onClick={() => void handleDownload()}
             sx={{ border: "none" }}
@@ -50,19 +50,7 @@ export function DownloadableBoardSetListItem({
         </Tooltip>
       }
     >
-      <ListItemText
-        primary={
-          <Box
-            sx={{
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {name}
-          </Box>
-        }
-      />
+      <ListItemText primary={name} slotProps={{ primary: { noWrap: true } }} />
     </ListItem>
   );
 }

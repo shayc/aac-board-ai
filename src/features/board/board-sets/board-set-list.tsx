@@ -184,7 +184,7 @@ function BoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(m.libraryMoreOptions)}>
+        <Tooltip title={t(m.libraryMoreOptions)} placement="right">
           <IconButton
             aria-label={t(m.libraryMoreOptionsFor, { name })}
             aria-controls={isMenuOpen ? menuId : undefined}
@@ -227,17 +227,8 @@ function BoardSetListItem({
         onClick={handleLinkClick}
       >
         <ListItemText
-          primary={
-            <Box
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {name}
-            </Box>
-          }
+          primary={name}
+          slotProps={{ primary: { noWrap: true } }}
         />
       </ListItemButton>
     </ListItem>

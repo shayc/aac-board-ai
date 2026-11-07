@@ -91,6 +91,23 @@ describe("BoardSetLibrary", () => {
     expect(await listBoardSetRecords()).toEqual([]);
   });
 
+  test("marks the download button unavailable while its download runs", async () => {
+    const { promise: response, resolve } = Promise.withResolvers<Response>();
+    vi.spyOn(globalThis, "fetch").mockReturnValue(response);
+
+    const screen = await renderBoardSetLibrary();
+    const button = screen.getByRole("button", { name: "Download First Words" });
+
+    await expect.element(button).toHaveAttribute("aria-disabled", "false");
+    await button.click();
+    await expect.element(button).toHaveAttribute("aria-disabled", "true");
+
+    resolve(new Response(null, { status: 500 }));
+
+    await expect.element(button).toHaveAttribute("aria-disabled", "false");
+    await expect.element(button).toHaveFocus();
+  });
+
   test("stores one board set when a download is requested again after reopening the library", async () => {
     const starterBoardFile = await fetch("/first-words.obz").then((response) =>
       response.blob(),
@@ -105,7 +122,9 @@ describe("BoardSetLibrary", () => {
     await closedScreen.unmount();
 
     const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
+    const button = screen.getByRole("button", { name: "Download First Words" });
+    await expect.element(button).toHaveAttribute("aria-disabled", "true");
+    await button.click({ force: true });
     resolve(new Response(starterBoardFile));
 
     await expect
