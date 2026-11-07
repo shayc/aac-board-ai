@@ -343,10 +343,16 @@ describe("CommunicationBoard", () => {
     setMessageImagesVisible(false);
 
     const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-    await screen.getByRole("button", { name: "hello" }).click();
+    const helloTile = screen.getByRole("button", { name: "hello" });
+    await expect.element(helloTile).toBeVisible();
+    const tileImageCount = screen.container.querySelectorAll("img").length;
+
+    await helloTile.click();
 
     await expect.poll(() => screen.getByText("hello").all()).toHaveLength(2);
-    expect(screen.container.querySelectorAll("img")).toHaveLength(2);
+    expect(screen.container.querySelectorAll("img")).toHaveLength(
+      tileImageCount,
+    );
   });
 
   test.each([

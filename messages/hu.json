@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Hang meghallgatása",
   "speechPreviewSample": "Szia, ez az én hangom!",
   "messageImages": "Képek megjelenítése",
-  "playbackHighlight": "Kiemelés beszéd közben",
+  "messageHighlight": "Kiemelés beszéd közben",
   "tileSaturation": "Színintenzitás",
   "tileBorders": "Szegélyek megjelenítése",
   "tileLabelPlacement": "Feliratok",

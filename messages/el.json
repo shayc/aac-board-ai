@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Ακρόαση φωνής",
   "speechPreviewSample": "Γεια, αυτή είναι η φωνή μου!",
   "messageImages": "Εμφάνιση εικόνων",
-  "playbackHighlight": "Επισήμανση κατά την ομιλία",
+  "messageHighlight": "Επισήμανση κατά την ομιλία",
   "tileSaturation": "Ένταση χρώματος",
   "tileBorders": "Εμφάνιση περιγράμματος",
   "tileLabelPlacement": "Ετικέτες",

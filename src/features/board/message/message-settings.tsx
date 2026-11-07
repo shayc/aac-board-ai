@@ -19,7 +19,7 @@ export function MessageSettings() {
         onChange={setMessageImagesVisible}
       />
       <SettingsSwitch
-        label={t(m.playbackHighlight)}
+        label={t(m.messageHighlight)}
         checked={isHighlightingEnabled}
         onChange={setMessageHighlightingEnabled}
       />

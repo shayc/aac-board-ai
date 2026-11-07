@@ -104,7 +104,7 @@
   "speechPreviewVoice": "ฟังเสียงตัวอย่าง",
   "speechPreviewSample": "สวัสดี นี่คือเสียงของฉัน!",
   "messageImages": "แสดงรูปภาพ",
-  "playbackHighlight": "ไฮไลต์ขณะพูด",
+  "messageHighlight": "ไฮไลต์ขณะพูด",
   "tileSaturation": "ความเข้มของสี",
   "tileBorders": "แสดงขอบ",
   "tileLabelPlacement": "ป้ายกำกับ",

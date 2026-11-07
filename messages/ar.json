@@ -104,7 +104,7 @@
   "speechPreviewVoice": "استماع إلى الصوت",
   "speechPreviewSample": "مرحبًا، هذا هو صوتي!",
   "messageImages": "إظهار الصور",
-  "playbackHighlight": "التمييز أثناء النطق",
+  "messageHighlight": "التمييز أثناء النطق",
   "tileSaturation": "شدة الألوان",
   "tileBorders": "إظهار الحدود",
   "tileLabelPlacement": "التسميات",

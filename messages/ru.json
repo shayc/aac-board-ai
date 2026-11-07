@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Прослушать голос",
   "speechPreviewSample": "Привет, это мой голос!",
   "messageImages": "Показывать изображения",
-  "playbackHighlight": "Подсвечивать во время речи",
+  "messageHighlight": "Подсвечивать во время речи",
   "tileSaturation": "Насыщенность цвета",
   "tileBorders": "Показывать границы",
   "tileLabelPlacement": "Подписи",

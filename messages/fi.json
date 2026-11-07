@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Kuuntele ääntä",
   "speechPreviewSample": "Hei, tämä on minun ääneni!",
   "messageImages": "Näytä kuvat",
-  "playbackHighlight": "Korosta puhuttaessa",
+  "messageHighlight": "Korosta puhuttaessa",
   "tileSaturation": "Värien voimakkuus",
   "tileBorders": "Näytä reunat",
   "tileLabelPlacement": "Tekstit",

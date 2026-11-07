@@ -7,7 +7,7 @@ import { PlayButton } from "./play-button";
 export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
-  areImagesVisible?: boolean;
+  areImagesVisible: boolean;
   isPlaying: boolean;
   onPlay: () => void;
   onStop: () => void;
@@ -16,7 +16,7 @@ export interface MessageBarProps {
 export function MessageBar({
   parts,
   activePartId,
-  areImagesVisible = true,
+  areImagesVisible,
   isPlaying,
   onPlay,
   onStop,

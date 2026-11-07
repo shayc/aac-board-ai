@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Écouter la voix",
   "speechPreviewSample": "Bonjour, voici ma voix !",
   "messageImages": "Afficher les images",
-  "playbackHighlight": "Surligner pendant la lecture vocale",
+  "messageHighlight": "Surligner pendant la lecture vocale",
   "tileSaturation": "Intensité des couleurs",
   "tileBorders": "Afficher les bordures",
   "tileLabelPlacement": "Libellés",

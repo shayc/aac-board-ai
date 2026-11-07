@@ -104,7 +104,7 @@
   "speechPreviewVoice": "Preview voice",
   "speechPreviewSample": "Hi, this is my voice!",
   "messageImages": "Show images",
-  "playbackHighlight": "Highlight while speaking",
+  "messageHighlight": "Highlight while speaking",
   "tileSaturation": "Color intensity",
   "tileBorders": "Show borders",
   "tileLabelPlacement": "Labels",
