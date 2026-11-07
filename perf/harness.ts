@@ -9,7 +9,6 @@ import type {
 } from "@playwright/test";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { describeFunction } from "./source-map.ts";
 import { median } from "./stats.ts";
 
 export const RESULTS_DIR = path.resolve(import.meta.dirname, "../perf-results");
@@ -33,12 +32,6 @@ export interface MetricSamples {
   values: number[];
 }
 
-export interface ScriptAttribution {
-  phase: string;
-  script: string;
-  msPerSample: number;
-}
-
 export interface JourneyResult {
   journey: string;
   browserVersion: string;
@@ -47,7 +40,6 @@ export interface JourneyResult {
   viewport: { width: number; height: number } | null;
   sampleCount: number;
   metrics: Record<string, MetricSamples>;
-  scripts: ScriptAttribution[];
 }
 
 export interface Tap {
@@ -66,18 +58,9 @@ interface Memory {
   listeners: number;
 }
 
-interface FrameScript {
-  sourceURL: string;
-  sourceFunctionName: string;
-  sourceCharPosition: number;
-  invoker: string;
-  duration: number;
-}
-
 interface LongFrame {
   start: number;
   blockingDuration: number;
-  scripts: FrameScript[];
 }
 
 interface PagePerf {
@@ -150,21 +133,10 @@ function installPagePerf({
 
   new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
-      const frame = entry as PerformanceEntry & {
+      const { blockingDuration } = entry as PerformanceEntry & {
         blockingDuration: number;
-        scripts: FrameScript[];
       };
-      perf.longFrames.push({
-        start: frame.startTime,
-        blockingDuration: frame.blockingDuration,
-        scripts: frame.scripts.map((script) => ({
-          sourceURL: script.sourceURL,
-          sourceFunctionName: script.sourceFunctionName,
-          sourceCharPosition: script.sourceCharPosition,
-          invoker: script.invoker,
-          duration: script.duration,
-        })),
-      });
+      perf.longFrames.push({ start: entry.startTime, blockingDuration });
     }
   }).observe({ type: "long-animation-frame", buffered: true });
 
@@ -250,17 +222,11 @@ class SampleValues {
     string,
     { kind: MetricKind; unit: MetricUnit; values: number[] }
   >();
-  readonly #scripts = new Map<string, number>();
 
   add(name: string, value: number, unit: MetricUnit, kind: MetricKind): void {
     const metric = this.#values.get(name) ?? { kind, unit, values: [] };
     metric.values.push(value);
     this.#values.set(name, metric);
-  }
-
-  addScript(phase: string, script: string, duration: number): void {
-    const key = `${phase}\n${script}`;
-    this.#scripts.set(key, (this.#scripts.get(key) ?? 0) + duration);
   }
 
   // A metric recorded several times in one sample (one per tap) contributes
@@ -275,10 +241,6 @@ class SampleValues {
         { kind, unit, value: median(values) },
       ]),
     );
-  }
-
-  scripts(): Map<string, number> {
-    return this.#scripts;
   }
 }
 
@@ -593,24 +555,7 @@ export class PageProbe {
       "ms",
       "frames",
     );
-
-    for (const script of frames.flatMap((frame) => frame.scripts)) {
-      values.addScript(phase, describeScript(script), script.duration);
-    }
   }
-}
-
-function describeScript({
-  sourceURL,
-  sourceFunctionName,
-  sourceCharPosition,
-  invoker,
-}: FrameScript): string {
-  const entryPoint = describeFunction(sourceURL, sourceFunctionName, {
-    offset: sourceCharPosition,
-  });
-
-  return `${entryPoint} · ${invoker}`;
 }
 
 export class JourneyRun {
@@ -738,7 +683,6 @@ async function writeJourneyResult(
     viewport: runs[0]?.viewport ?? null,
     sampleCount: samples.length,
     metrics,
-    scripts: summarizeScripts(samples),
   };
 
   await mkdir(RAW_RESULTS_DIR, { recursive: true });
@@ -746,20 +690,4 @@ async function writeJourneyResult(
     path.join(RAW_RESULTS_DIR, `${journey}.json`),
     JSON.stringify(result, null, 2),
   );
-}
-
-function summarizeScripts(samples: SampleValues[]): ScriptAttribution[] {
-  const totals = new Map<string, number>();
-  for (const sample of samples) {
-    for (const [key, duration] of sample.scripts()) {
-      totals.set(key, (totals.get(key) ?? 0) + duration);
-    }
-  }
-
-  return [...totals]
-    .map(([key, total]) => {
-      const [phase = "", script = ""] = key.split("\n");
-      return { phase, script, msPerSample: total / samples.length };
-    })
-    .toSorted((a, b) => b.msPerSample - a.msPerSample);
 }

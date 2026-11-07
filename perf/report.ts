@@ -7,7 +7,7 @@ import type {
   RunResults,
 } from "./compare.ts";
 import type { HotFunction } from "./cpu-profile.ts";
-import type { MetricKind, MetricUnit, ScriptAttribution } from "./harness.ts";
+import type { MetricKind, MetricUnit } from "./harness.ts";
 
 export interface ProfileListing {
   journey: string;
@@ -43,11 +43,8 @@ const METRIC_HELP: Record<string, string> = {
   fcp: "First Contentful Paint.",
   lcp: "Largest Contentful Paint, when the browser reports one before the first input.",
   wordTap:
-    "Event Timing duration of a word tile tap: input delay + processing + next paint, in 8 ms steps.",
-  openBoardTap:
-    "Event Timing duration of the tap on a tile that links to another board.",
+    "Event Timing duration of a word tile tap: input delay + processing + next paint, in 8 ms steps, never below 16 ms.",
   openBoardToGrid: "Tap on a linking tile → linked board grid rendered.",
-  backTap: "Event Timing duration of the Back tap.",
   backToGrid: "Back tap → previous board grid rendered.",
   filesChosenToListed:
     "File chosen → imported board set listed in the library.",
@@ -63,7 +60,8 @@ const METRIC_HELP: Record<string, string> = {
     "Failed requests, including blocked requests to hosts other than 127.0.0.1.",
   bytes:
     "Bytes the page downloaded (Resource Timing; excludes service worker precaching).",
-  heapGrowth: "JS heap used at the end of the loop minus the start.",
+  heapGrowth:
+    "JS heap used at the end of the loop minus the start. Includes compiled code, which grows while the JIT warms up.",
   nodeGrowth: "DOM nodes at the end of the loop minus the start.",
   listenerGrowth: "JS event listeners at the end of the loop minus the start.",
 };
@@ -91,19 +89,13 @@ export function renderReport({
 <p class="muted">${escapeHTML(describeRun(meta))}</p>
 ${renderStatus(comparison, baselineMeta, noiseFloor)}
 ${renderMemoryGrowth(comparison.memory)}
-<h2>Timings, slowest first</h2>
-${renderTable(
-  comparison.metrics
-    .filter(({ kind }) => kind === "timing")
-    .toSorted((a, b) => b.current.median - a.current.median),
-  true,
-)}
 ${results.journeys
   .map(({ journey }) =>
     renderJourney(
       journey,
-      comparison.metrics.filter((metric) => metric.journey === journey),
-      comparison.scripts.get(journey) ?? [],
+      comparison.metrics.filter(
+        (metric) => metric.journey === journey && !isAlwaysZero(metric),
+      ),
       profiles.find((profile) => profile.journey === journey),
       meta,
     ),
@@ -174,10 +166,16 @@ function renderMemoryGrowth(memory: MemoryGrowth[]): string {
   return `<div class="warning"><strong>Memory grows with repeated use</strong><ul>${items.join("")}</ul>Profile the journey and compare the before and after heap snapshots.</div>`;
 }
 
+function isAlwaysZero({
+  currentValues,
+  baselineValues = [],
+}: MetricComparison): boolean {
+  return [...currentValues, ...baselineValues].every((value) => value === 0);
+}
+
 function renderJourney(
   journey: string,
   metrics: MetricComparison[],
-  scripts: ScriptAttribution[],
   profile: ProfileListing | undefined,
   meta: RunMeta,
 ): string {
@@ -196,7 +194,6 @@ function renderJourney(
   return `<section>
 <h2>${escapeHTML(journey)}</h2>
 ${sections.join("\n")}
-${renderScripts(scripts)}
 ${renderProfile(journey, profile, meta)}
 </section>`;
 }
@@ -248,29 +245,6 @@ function renderStrip({
       .join("");
 
   return `<svg class="strip" viewBox="0 0 120 20" width="120" height="20" aria-hidden="true">${dots(baselineValues, 6, "baseline")}${dots(currentValues, 14, "current")}</svg>`;
-}
-
-function renderScripts(scripts: ScriptAttribution[]): string {
-  const phases = [...new Set(scripts.map(({ phase }) => phase))];
-  if (phases.length === 0) {
-    return "";
-  }
-
-  const lists = phases.map((phase) => {
-    const items = scripts
-      .filter((script) => script.phase === phase)
-      .slice(0, 5)
-      .map(
-        ({ script, msPerSample }) =>
-          `<li><code>${escapeHTML(script)}</code> ${formatValue(msPerSample, "ms")}</li>`,
-      );
-
-    return `<h4>${escapeHTML(phase)}</h4><ol>${items.join("")}</ol>`;
-  });
-
-  return `<h3>Scripts in long animation frames</h3>
-<p class="muted">Script time per sample, as source file:line · function · invoker. Each entry is where the browser entered the script, such as React's event dispatch or scheduler; the profile below names where the time went. A built chunk name means code outside any function or without a source map.</p>
-${lists.join("\n")}`;
 }
 
 function renderProfile(

@@ -51,7 +51,6 @@ async function openLinkedBoard(probe: PageProbe, phase: string): Promise<void> {
     probe.page.getByRole("grid", { name: LINKED_BOARD }),
   ).toBeVisible();
 
-  await probe.recordTap(`${phase}.openBoardTap`, open);
   await probe.recordInterval(
     `${phase}.openBoardToGrid`,
     open.start,
@@ -68,7 +67,6 @@ async function goBack(probe: PageProbe, phase: string): Promise<void> {
     probe.page.getByRole("grid", { name: STARTER_BOARD }),
   ).toBeVisible();
 
-  await probe.recordTap(`${phase}.backTap`, back);
   await probe.recordInterval(`${phase}.backToGrid`, back.start, back.visibleAt);
 }
 

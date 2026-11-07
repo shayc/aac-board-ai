@@ -1,9 +1,4 @@
-import type {
-  JourneyResult,
-  MetricKind,
-  MetricUnit,
-  ScriptAttribution,
-} from "./harness.ts";
+import type { JourneyResult, MetricKind, MetricUnit } from "./harness.ts";
 import { growthSignP, mannWhitneyP, spreadOf, type Spread } from "./stats.ts";
 
 const SIGNIFICANCE_LEVEL = 0.05;
@@ -96,7 +91,6 @@ export interface Comparison {
   metrics: MetricComparison[];
   memory: MemoryGrowth[];
   settingDifferences: SettingDifference[];
-  scripts: Map<string, ScriptAttribution[]>;
 }
 
 export function metricKey(journey: string, metric: string): string {
@@ -110,7 +104,6 @@ export function compareRuns(
 ): Comparison {
   const metrics: MetricComparison[] = [];
   const memory: MemoryGrowth[] = [];
-  const scripts = new Map<string, ScriptAttribution[]>();
 
   for (const journey of current.journeys) {
     const baselineJourney = baseline?.journeys.find(
@@ -137,8 +130,6 @@ export function compareRuns(
         );
       }
     }
-
-    scripts.set(journey.journey, journey.scripts);
   }
 
   return {
@@ -147,7 +138,6 @@ export function compareRuns(
     settingDifferences: baseline
       ? differingSettings(baseline.meta, current.meta)
       : [],
-    scripts,
   };
 }
 

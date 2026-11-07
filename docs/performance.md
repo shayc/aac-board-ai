@@ -7,7 +7,6 @@ machine only: no telemetry, uploads, accounts or hosted dashboards.
 - [Run it](#run-it)
 - [Journeys](#journeys)
 - [Read the report](#read-the-report)
-- [What each number means](#what-each-number-means)
 - [How runs are compared](#how-runs-are-compared)
 - [Find out why](#find-out-why)
 - [Method](#method)
@@ -68,7 +67,7 @@ of reporting fast numbers.
 |                    | `returnVisit`    | Same context once the service worker controls the page and IndexedDB holds the board set: open `/` in a new page → grid.                                                                               |
 | `tile-interaction` | `taps`           | Tap I, want, to (checking the message bar after each), open the linked “eat” board, tap drink, go back.                                                                                                |
 |                    | `navigationLoop` | Open “eat” and go back 10 times; JS heap, DOM nodes and listeners are read after forced garbage collection before and after the loop.                                                                  |
-| `large-import`     | `import`         | Import a generated board set (80 boards, 6,400 tiles, 400 small PNGs) through the file chooser, wait for it in the library, open it → its grid. The OBZ is generated on each run with identical bytes. |
+| `large-import`     | `import`         | Import a generated board set (80 boards, 6,400 tiles, 400 small PNGs) through the file chooser, wait for it in the library, open it → its grid. The OBZ is rebuilt on every run with the same content. |
 
 The journeys live in [perf/journeys.spec.ts](../perf/journeys.spec.ts). The
 harness that measures them is [perf/harness.ts](../perf/harness.ts).
@@ -82,67 +81,16 @@ harness that measures them is [perf/harness.ts](../perf/harness.ts).
   whether the noise floor has been measured.
 - **Memory grows with repeated use**: shown only when a memory metric grew in
   significantly more samples than it shrank.
-- **Timings, slowest first**: every timing across journeys, which answers
-  which flow is slow.
 - **One section per journey**: timings, CPU, long animation frames, network and
-  memory, then the scripts that ran in long frames and the latest profile.
+  memory, then the latest profile. Rows whose samples are all zero in both
+  runs are hidden.
 
-Every row shows the baseline median, this run's median with its 25th–75th
-percentile range, the change, the Mann–Whitney p-value and a strip of the
-individual samples (baseline on top, this run below). Each sample comes from a
-fresh browser context; a metric measured several times in one sample, such as
-word taps, contributes that sample's median.
-
-## What each number means
-
-**Taps** (`wordTap`, `openBoardTap`, `backTap`) come from the Event Timing API:
-the time from the hardware input timestamp to the next frame being presented,
-covering input delay, event processing and rendering. Chromium rounds them to
-8 ms and reports nothing under 16 ms, so a tap under 16 ms is recorded as 16 ms.
-These are per-tap latencies, not INP; INP is one high-percentile value over a
-whole page visit.
-
-**“→ grid” and “→ onboarding” timings** start at the tap's input timestamp, or
-at navigation start for page loads. They end right after the main thread has
-painted the first frame in which the element is laid out and not hidden from
-assistive technology (`aria-hidden` or `inert`). The harness checks for the
-element in `requestAnimationFrame` and timestamps a user-blocking task posted
-from there, which runs after that frame's paint and ahead of other queued
-work. While the onboarding dialog is open, the grid behind it is hidden from
-assistive technology, so `continueToGrid` includes the dialog closing.
-
-**FCP and LCP** are the browser's paint timings for the page load. On first
-launch Chromium reports no LCP before the Continue tap, so that row is absent.
-
-**CPU** rows are deltas of Chrome DevTools Protocol `Performance.getMetrics`
-over the phase: `task` is all main-thread task time, and `script`, `layout`
-and `style` are its JavaScript, layout and style-recalculation parts. They are
-measured under the CPU slowdown.
-
-**Long animation frames** count frames over 50 ms and sum their blocking
-duration. The script list attributes their script time to source file:line ·
-function · invoker, such as
-`node_modules/react-dom/cjs/react-dom-client.production.js:17873 · dispatchDiscreteEvent · DIV#root.onclick`.
-Each entry is where the browser entered JavaScript (an event listener, a
-scheduler task, a promise continuation), so in a React app it is often React
-itself, not the component code that ran inside it. A built chunk name, such as
-`assets/index-*.js · (anonymous)`, means code outside any function (module
-evaluation) or a script without a source map.
-
-**Network** counts HTTP requests from the page and its service worker (board
-symbols load from `blob:` URLs and are not counted), failed requests, and
-bytes the page downloaded according to Resource Timing. Bytes exclude the
-service worker's precaching, and responses served by the service worker count
-as zero. Request timings are not reported: on localhost they are close to zero
-and mean nothing.
-
-**Memory** rows are growth over the navigation loop, read after forced garbage
-collection: `heapGrowth` is the JS heap used (not total process memory),
-`nodeGrowth` is DOM nodes and `listenerGrowth` is JS event listeners. The
-report flags growth when it appears in significantly more samples than not
-(one-sided sign test, p < 0.05). The JS heap includes compiled code, which
-grows while the JIT warms up, so DOM node and listener counts are the sharper
-leak signal.
+Each row describes its metric under the name and shows the baseline median,
+this run's median with its 25th–75th percentile range, the change, the
+Mann–Whitney p-value and a strip of the individual samples (baseline on top,
+this run below). Each sample comes from a fresh browser context; a metric
+measured several times in one sample, such as word taps, contributes that
+sample's median.
 
 ## How runs are compared
 
@@ -172,9 +120,7 @@ browser or moving to another machine.
 
 1. In the report, find the journey and phase that regressed, and check whether
    CPU script, layout or style time moved with it.
-2. Read the scripts in long animation frames to see which entry point and
-   invoker grew.
-3. Run `npm run perf -- --profile <journey>`. The terminal and the report's
+2. Run `npm run perf -- --profile <journey>`. The terminal and the report's
    “Main-thread JavaScript by self time” list name the functions that took the
    most time in each phase, by source file and line, so open the top `src/`
    file first. Self time is sampled time in the function itself; time in
@@ -183,7 +129,7 @@ browser or moving to another machine.
    not. For the full picture, load `<phase>.trace.json` in Chrome DevTools →
    Performance. Each measured interval appears in the Timings track under its
    metric name, so you can check that it covers the operation you expect.
-4. For memory growth, load `navigationLoop.before.heapsnapshot` and
+3. For memory growth, load `navigationLoop.before.heapsnapshot` and
    `navigationLoop.after.heapsnapshot` in DevTools → Memory and use the
    Comparison view.
 

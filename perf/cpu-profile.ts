@@ -12,8 +12,8 @@ interface ProfileNode {
   callFrame: {
     url?: string;
     functionName: string;
-    lineNumber: number;
-    columnNumber: number;
+    lineNumber?: number;
+    columnNumber?: number;
   };
 }
 
@@ -116,12 +116,14 @@ function describePageCaller(
     node;
     node = node.parent === undefined ? undefined : nodes.get(node.parent)
   ) {
-    const { url, functionName, lineNumber, columnNumber } = node.callFrame;
+    const {
+      url,
+      functionName,
+      lineNumber = -1,
+      columnNumber = -1,
+    } = node.callFrame;
     if (url && /^https?:/.test(url)) {
-      return describeFunction(url, functionName, {
-        line: lineNumber,
-        column: columnNumber,
-      });
+      return describeFunction(url, functionName, lineNumber, columnNumber);
     }
   }
 
