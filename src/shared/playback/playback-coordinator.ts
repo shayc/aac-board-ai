@@ -11,8 +11,9 @@ import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
 
 interface PlaybackSession {
-  abortController: AbortController;
   request: PlaybackRequest;
+  signal: AbortSignal;
+  abort: () => void;
 }
 
 export function createPlaybackCoordinator(): PlaybackCoordinator {
@@ -34,15 +35,17 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
   function interruptCurrentSession() {
     const session = currentSession;
     currentSession = null;
-    session?.abortController.abort();
+    session?.abort();
   }
 
   function startSession(request: PlaybackRequest): PlaybackSession {
     interruptCurrentSession();
 
+    const abortController = new AbortController();
     const session: PlaybackSession = {
-      abortController: new AbortController(),
       request,
+      signal: abortController.signal,
+      abort: () => abortController.abort(),
     };
     currentSession = session;
     setActiveCue(session, null);
@@ -50,17 +53,8 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     return session;
   }
 
-  function endSession(session: PlaybackSession) {
-    if (currentSession !== session) {
-      return;
-    }
-
-    currentSession = null;
-    store.setState({ status: "idle" });
-  }
-
   async function playStep(session: PlaybackSession, step: PlaybackStep) {
-    const { signal } = session.abortController;
+    const { signal } = session;
 
     switch (step.kind) {
       case "audio":
@@ -85,20 +79,28 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     }
   }
 
+  function endSession(session: PlaybackSession) {
+    if (currentSession !== session) {
+      return;
+    }
+
+    currentSession = null;
+    store.setState({ status: "idle" });
+  }
+
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
     const session = startSession(request);
-    const { signal } = session.abortController;
 
     try {
       for (const step of request.steps) {
-        if (signal.aborted) {
+        if (session.signal.aborted) {
           return "interrupted";
         }
 
         await playStep(session, step);
       }
 
-      return signal.aborted ? "interrupted" : "completed";
+      return session.signal.aborted ? "interrupted" : "completed";
     } finally {
       endSession(session);
     }
