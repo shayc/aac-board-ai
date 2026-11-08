@@ -180,7 +180,7 @@ describe("Tile", () => {
     },
   );
 
-  test("moves the background toward the label color on hover, lightening dark tiles and darkening light and uncolored ones", async () => {
+  test("moves the background toward the text color on hover, lightening dark tiles and darkening light and uncolored ones", async () => {
     const screen = await renderInTheme(
       <>
         <Tile backgroundColor="#000000" onActivate={vi.fn()}>
@@ -189,27 +189,27 @@ describe("Tile", () => {
         <Tile backgroundColor="#ffffff" onActivate={vi.fn()}>
           Light
         </Tile>
-        <Tile onActivate={vi.fn()}>Plain</Tile>
+        <Tile onActivate={vi.fn()}>Uncolored</Tile>
       </>,
     );
     const darkTile = screen.getByRole("button", { name: "Dark" });
     const lightTile = screen.getByRole("button", { name: "Light" });
-    const plainTile = screen.getByRole("button", { name: "Plain" });
-    const restingDarkLuminance = backgroundLuminance(darkTile);
-    const restingLightLuminance = backgroundLuminance(lightTile);
-    const restingPlainLuminance = backgroundLuminance(plainTile);
+    const uncoloredTile = screen.getByRole("button", { name: "Uncolored" });
+    const darkRestingLuminance = backgroundLuminance(darkTile);
+    const lightRestingLuminance = backgroundLuminance(lightTile);
+    const uncoloredRestingLuminance = backgroundLuminance(uncoloredTile);
 
     await darkTile.hover();
     const darkHoverLuminance = backgroundLuminance(darkTile);
     await lightTile.hover();
     const lightHoverLuminance = backgroundLuminance(lightTile);
-    await plainTile.hover();
-    const plainHoverLuminance = backgroundLuminance(plainTile);
-    await plainTile.unhover();
+    await uncoloredTile.hover();
+    const uncoloredHoverLuminance = backgroundLuminance(uncoloredTile);
+    await uncoloredTile.unhover();
 
-    expect(darkHoverLuminance).toBeGreaterThan(restingDarkLuminance);
-    expect(lightHoverLuminance).toBeLessThan(restingLightLuminance);
-    expect(plainHoverLuminance).toBeLessThan(restingPlainLuminance);
+    expect(darkHoverLuminance).toBeGreaterThan(darkRestingLuminance);
+    expect(lightHoverLuminance).toBeLessThan(lightRestingLuminance);
+    expect(uncoloredHoverLuminance).toBeLessThan(uncoloredRestingLuminance);
   });
 
   test.each([
