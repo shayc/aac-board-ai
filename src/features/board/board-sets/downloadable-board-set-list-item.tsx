@@ -102,7 +102,6 @@ function DownloadButtonIcon({
         color="inherit"
         size={PROGRESS_RING_SIZE}
         variant="determinate"
-        value={0}
         enableTrackSlot
       />
     );
