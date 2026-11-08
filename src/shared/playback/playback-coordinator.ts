@@ -11,9 +11,8 @@ import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
 
 interface PlaybackSession {
+  abortController: AbortController;
   request: PlaybackRequest;
-  signal: AbortSignal;
-  abort: () => void;
 }
 
 export function createPlaybackCoordinator(): PlaybackCoordinator {
@@ -35,26 +34,11 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
   function interruptCurrentSession() {
     const session = currentSession;
     currentSession = null;
-    session?.abort();
-  }
-
-  function startSession(request: PlaybackRequest): PlaybackSession {
-    interruptCurrentSession();
-
-    const abortController = new AbortController();
-    const session: PlaybackSession = {
-      request,
-      signal: abortController.signal,
-      abort: () => abortController.abort(),
-    };
-    currentSession = session;
-    setActiveCue(session, null);
-
-    return session;
+    session?.abortController.abort();
   }
 
   async function playStep(session: PlaybackSession, step: PlaybackStep) {
-    const { signal } = session;
+    const { signal } = session.abortController;
 
     switch (step.kind) {
       case "audio":
@@ -79,30 +63,33 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     }
   }
 
-  function endSession(session: PlaybackSession) {
-    if (currentSession !== session) {
-      return;
-    }
-
-    currentSession = null;
-    store.setState({ status: "idle" });
-  }
-
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
-    const session = startSession(request);
+    interruptCurrentSession();
+
+    const session: PlaybackSession = {
+      abortController: new AbortController(),
+      request,
+    };
+    currentSession = session;
+    setActiveCue(session, null);
+
+    const { signal } = session.abortController;
 
     try {
       for (const step of request.steps) {
-        if (session.signal.aborted) {
+        if (signal.aborted) {
           return "interrupted";
         }
 
         await playStep(session, step);
       }
 
-      return session.signal.aborted ? "interrupted" : "completed";
+      return signal.aborted ? "interrupted" : "completed";
     } finally {
-      endSession(session);
+      if (currentSession === session) {
+        currentSession = null;
+        store.setState({ status: "idle" });
+      }
     }
   }
 
