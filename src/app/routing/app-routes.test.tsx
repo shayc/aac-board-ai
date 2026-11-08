@@ -135,22 +135,22 @@ describe("app flow", () => {
     const { screen } = await renderApp();
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    await screen.getByRole("button", { name: "you" }).click();
-    await screen.getByRole("button", { name: "eat" }).click();
+    await screen.getByRole("button", { name: "I", exact: true }).click();
+    await screen.getByRole("button", { name: "want" }).click();
     await screen.getByRole("button", { name: "food" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Food" }))
       .toBeVisible();
 
-    await screen.getByRole("button", { name: "fish" }).click();
+    await screen.getByRole("button", { name: "water" }).click();
     speech.speak.mockClear();
 
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("you eat fish");
+      expect(speech.speak.mock.calls[0][0].text).toBe("i want water");
     });
   });
 
