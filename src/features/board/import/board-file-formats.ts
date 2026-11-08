@@ -1,9 +1,15 @@
-const BOARD_FILE_EXTENSIONS = [".obz", ".obf", ".zip", ".json"] as const;
+export const BOARD_FILE_EXTENSIONS_BY_MIME_TYPE: Record<string, string[]> = {
+  "application/zip": [".obz", ".zip"],
+  "application/json": [".obf", ".json"],
+};
+
+const BOARD_FILE_EXTENSIONS = Object.values(
+  BOARD_FILE_EXTENSIONS_BY_MIME_TYPE,
+).flat();
 
 export const BOARD_FILE_ACCEPT = [
   ...BOARD_FILE_EXTENSIONS,
-  "application/zip",
-  "application/json",
+  ...Object.keys(BOARD_FILE_EXTENSIONS_BY_MIME_TYPE),
   "application/octet-stream",
 ].join(",");
 

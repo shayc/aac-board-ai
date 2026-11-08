@@ -4,6 +4,7 @@ import { playwright } from "@vitest/browser-playwright";
 import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults } from "vitest/config";
+import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/board/import/board-file-formats.ts";
 import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
@@ -52,13 +53,7 @@ export default defineConfig({
         start_url: "/",
         display: "standalone",
         file_handlers: [
-          {
-            action: "/",
-            accept: {
-              "application/zip": [".obz", ".zip"],
-              "application/json": [".obf", ".json"],
-            },
-          },
+          { action: "/", accept: BOARD_FILE_EXTENSIONS_BY_MIME_TYPE },
         ],
         theme_color: BACKGROUND_DARK,
         background_color: BACKGROUND_DARK,
