@@ -85,10 +85,10 @@ function VoiceSelect() {
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
   const savedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
   const selectedVoiceURI = savedVoice?.voiceURI ?? "";
-  const defaultVoice = resolveVoice(voicesByLanguage, language, null);
-  const defaultLabel = defaultVoice
-    ? t(m.speechVoiceDefaultNamed, { voice: defaultVoice.name })
-    : t(m.speechVoiceDefault);
+  const automaticVoice = resolveVoice(voicesByLanguage, language, null);
+  const automaticLabel = automaticVoice
+    ? t(m.speechVoiceAutomaticNamed, { voice: automaticVoice.name })
+    : t(m.speechVoiceAutomatic);
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );
@@ -136,7 +136,7 @@ function VoiceSelect() {
         </Tooltip>
       }
     >
-      <MenuItem value="">{defaultLabel}</MenuItem>
+      <MenuItem value="">{automaticLabel}</MenuItem>
       {locales.map(renderLocaleOptions)}
     </SettingsSelect>
   );
