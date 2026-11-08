@@ -25,11 +25,11 @@ export function useProofreaderSource({
         .then((result) => result.correctedInput),
   });
 
-  const enable = () => {
+  function enable() {
     if (proofreader.status === "downloadable") {
       enableQuietly(proofreader);
     }
-  };
+  }
 
   return {
     engineStatus: proofreader.status,

@@ -31,10 +31,11 @@ export function useGridFocus({
     () => findFirstOccupiedPosition(grid),
   );
   const rememberedPositionRef = useRef(rememberedPosition);
-  const rememberPosition = (next: GridPosition) => {
+
+  function rememberPosition(next: GridPosition) {
     rememberedPositionRef.current = next;
     setRememberedPosition(next);
-  };
+  }
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -66,12 +67,12 @@ export function useGridFocus({
     },
   });
 
-  const handleFocus = (event: FocusEvent<HTMLElement>) => {
+  function handleFocus(event: FocusEvent<HTMLElement>) {
     const position = findGridPosition(event.target);
     if (position) {
       rememberPosition(position);
     }
-  };
+  }
 
   const previousGridRef = useRef(grid);
   useEffect(() => {

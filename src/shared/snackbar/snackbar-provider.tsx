@@ -45,7 +45,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const nextKeyRef = useRef(0);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  const showSnackbar = (options: SnackbarOptions | string) => {
+  function showSnackbar(options: SnackbarOptions | string) {
     const snackbarOptions: SnackbarOptions =
       typeof options === "string" ? { message: options } : options;
 
@@ -55,22 +55,22 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     };
 
     dispatch({ type: "show", snackbar });
-  };
+  }
 
-  const handleClose = (
+  function handleClose(
     _event?: SyntheticEvent | Event | null,
     reason?: SnackbarCloseReason,
-  ) => {
+  ) {
     if (reason === "clickaway") {
       return;
     }
 
     dispatch({ type: "close" });
-  };
+  }
 
-  const handleExited = () => {
+  function handleExited() {
     dispatch({ type: "exited" });
-  };
+  }
 
   const contextValue: SnackbarContextValue = {
     showSnackbar,
