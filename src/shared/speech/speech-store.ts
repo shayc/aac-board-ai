@@ -17,7 +17,7 @@ interface SpeechPreferences {
   volume: number;
 }
 
-type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
+export type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
 export const SPEECH_RATE: ClampedNumberOptions = {
   min: 0.1,

@@ -84,7 +84,7 @@ function VoiceSelect() {
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
   const selectedVoiceURI =
-    selectVoice(voices, language, voiceURI)?.voiceURI ?? "";
+    selectVoice(voicesByLanguage, language, voiceURI)?.voiceURI ?? "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );

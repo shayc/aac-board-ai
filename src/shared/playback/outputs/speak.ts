@@ -13,12 +13,12 @@ interface SpeakOptions {
 
 function buildUtterance(text: string): SpeechSynthesisUtterance {
   const language = getStoredLanguage();
-  const voices = getVoicesByLanguage()[language] ?? [];
   const { voiceURI, rate, pitch, volume } = getSpeechPreferences();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = language;
-  utterance.voice = selectVoice(voices, language, voiceURI) ?? null;
+  utterance.voice =
+    selectVoice(getVoicesByLanguage(), language, voiceURI) ?? null;
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;

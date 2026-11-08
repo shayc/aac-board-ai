@@ -3,6 +3,7 @@ import {
   getLikelyRegionCode,
   getRegionCode,
 } from "@shared/language/locale";
+import type { VoicesByLanguage } from "./speech-store";
 
 function findPreferredRegionCode(
   language: string,
@@ -37,11 +38,12 @@ function selectFallbackVoice(
 }
 
 export function selectVoice(
-  voices: SpeechSynthesisVoice[],
+  voicesByLanguage: VoicesByLanguage,
   language: string,
   savedVoiceURI: string | null,
   preferredLocales: readonly string[] = globalThis.navigator?.languages ?? [],
 ): SpeechSynthesisVoice | undefined {
+  const voices = voicesByLanguage[language] ?? [];
   const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
 
   return savedVoice ?? selectFallbackVoice(voices, language, preferredLocales);

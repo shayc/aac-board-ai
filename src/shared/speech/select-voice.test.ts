@@ -17,7 +17,7 @@ function makeVoice(
 
 describe("selectVoice", () => {
   test("returns nothing when the language has no voices", () => {
-    expect(selectVoice([], "he", "en-voice", [])).toBeUndefined();
+    expect(selectVoice({}, "he", "en-voice", [])).toBeUndefined();
   });
 
   test("keeps the saved voice even when another voice is the default", () => {
@@ -26,15 +26,18 @@ describe("selectVoice", () => {
       makeVoice("en-US", "en-voice"),
     ];
 
-    expect(selectVoice(voices, "en", "en-voice", ["en-US"])?.voiceURI).toBe(
-      "en-voice",
-    );
+    expect(
+      selectVoice({ en: voices }, "en", "en-voice", ["en-US"])?.voiceURI,
+    ).toBe("en-voice");
   });
 
   test("falls back when the saved voice belongs to another language", () => {
-    const voices = [makeVoice("he-IL", "he-voice")];
+    const voicesByLanguage = {
+      en: [makeVoice("en-US", "en-voice")],
+      he: [makeVoice("he-IL", "he-voice")],
+    };
 
-    expect(selectVoice(voices, "he", "en-voice", [])?.voiceURI).toBe(
+    expect(selectVoice(voicesByLanguage, "he", "en-voice", [])?.voiceURI).toBe(
       "he-voice",
     );
   });
@@ -45,7 +48,9 @@ describe("selectVoice", () => {
       makeVoice("en-US", "en-default", true),
     ];
 
-    expect(selectVoice(voices, "en", null, [])?.voiceURI).toBe("en-default");
+    expect(selectVoice({ en: voices }, "en", null, [])?.voiceURI).toBe(
+      "en-default",
+    );
   });
 
   test("prefers the language's likely region over the browser default flag", () => {
@@ -54,7 +59,7 @@ describe("selectVoice", () => {
       makeVoice("fr-FR", "fr-fr-voice"),
     ];
 
-    expect(selectVoice(voices, "fr", null, ["en-US"])?.voiceURI).toBe(
+    expect(selectVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
       "fr-fr-voice",
     );
   });
@@ -65,7 +70,7 @@ describe("selectVoice", () => {
       makeVoice("fr-CA", "fr-ca-voice"),
     ];
 
-    expect(selectVoice(voices, "fr", null, ["fr-CA"])?.voiceURI).toBe(
+    expect(selectVoice({ fr: voices }, "fr", null, ["fr-CA"])?.voiceURI).toBe(
       "fr-ca-voice",
     );
   });
@@ -76,9 +81,9 @@ describe("selectVoice", () => {
       makeVoice("fr-CA", "fr-ca-voice"),
     ];
 
-    expect(selectVoice(voices, "fr", null, ["fr", "fr-CA"])?.voiceURI).toBe(
-      "fr-ca-voice",
-    );
+    expect(
+      selectVoice({ fr: voices }, "fr", null, ["fr", "fr-CA"])?.voiceURI,
+    ).toBe("fr-ca-voice");
   });
 
   test("falls back to the default voice when no voice matches the likely region", () => {
@@ -87,7 +92,7 @@ describe("selectVoice", () => {
       makeVoice("fr-BE", "fr-be-default", true),
     ];
 
-    expect(selectVoice(voices, "fr", null, ["en-US"])?.voiceURI).toBe(
+    expect(selectVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
       "fr-be-default",
     );
   });
