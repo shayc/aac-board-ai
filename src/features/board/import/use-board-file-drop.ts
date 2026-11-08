@@ -66,13 +66,18 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
   }
 
   function onDrop(event: DragEvent<HTMLElement>) {
+    if (!containsFiles(event)) {
+      return;
+    }
+
     event.preventDefault();
     clearDrag();
 
-    const droppedFiles = Array.from(event.dataTransfer.files);
-    const boardFiles = droppedFiles.filter(hasBoardFileExtension);
+    const boardFiles = Array.from(event.dataTransfer.files).filter(
+      hasBoardFileExtension,
+    );
 
-    if (droppedFiles.length > 0 && boardFiles.length === 0) {
+    if (boardFiles.length === 0) {
       showSnackbar({
         message: (t) => t(m.libraryImportOnlyBoardFiles),
         severity: "error",
