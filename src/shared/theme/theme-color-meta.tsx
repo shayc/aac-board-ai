@@ -1,5 +1,5 @@
 import { useColorScheme } from "@mui/material/styles";
-import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
+import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
 export function ThemeColorMeta() {
   const { mode, systemMode } = useColorScheme();
@@ -8,7 +8,7 @@ export function ThemeColorMeta() {
   return (
     <meta
       name="theme-color"
-      content={resolvedMode === "dark" ? SHELL_DARK : SHELL_LIGHT}
+      content={resolvedMode === "dark" ? BACKGROUND_DARK : BACKGROUND_LIGHT}
     />
   );
 }

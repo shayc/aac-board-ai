@@ -11,13 +11,11 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { useId } from "react";
 import type { DownloadProgress } from "../import/import-from-url";
-import {
-  BYTES_PER_MEGABYTE,
-  type BoardSetDownloadPhase,
-} from "./board-set-downloads";
+import type { BoardSetDownloadPhase } from "./board-set-downloads";
 import { useBoardSetDownload } from "./use-board-set-download";
 
 const PROGRESS_RING_SIZE = 24;
+const BYTES_PER_MEGABYTE = 1_000_000;
 
 interface DownloadableBoardSetListItemProps {
   name: string;

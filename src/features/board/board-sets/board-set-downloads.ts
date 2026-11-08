@@ -12,8 +12,6 @@ export type BoardSetDownloadPhase =
   | ({ kind: "downloading" } & DownloadProgress)
   | { kind: "importing" };
 
-export const BYTES_PER_MEGABYTE = 1_000_000;
-
 interface PendingDownload {
   promise: Promise<ImportedBoardSet | undefined>;
   controller: AbortController;
@@ -39,9 +37,12 @@ function setDownloadPhase(url: string, phase?: BoardSetDownloadPhase) {
   downloadPhasesStore.setState(phases);
 }
 
-function visibleProgressStep({ loaded, total }: DownloadProgress): number {
+function visibleProgressStep({
+  loaded,
+  total,
+}: DownloadProgress): number | undefined {
   if (total === undefined) {
-    return Math.floor(loaded / BYTES_PER_MEGABYTE);
+    return undefined;
   }
 
   return Math.floor((loaded / total) * 100);

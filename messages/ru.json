@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Автоматический перевод доски недоступен на этом устройстве.",
   "loading": "Загрузка...",
   "close": "Закрыть",

@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { SHELL_DARK } from "@shared/theme/theme-colors";
+import { BACKGROUND_DARK } from "@shared/theme/theme-colors";
 
 const TILE_ROWS = [
   ["#C9B8F0", "#FBE89A", "#BFE3C6"],
@@ -29,7 +29,7 @@ export function BoardMark() {
         boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
       }}
     >
-      <rect width="100%" height="100%" fill={SHELL_DARK} />
+      <rect width="100%" height="100%" fill={BACKGROUND_DARK} />
 
       {TILE_ROWS.flatMap((row, rowIndex) =>
         row.map((fill, columnIndex) => (

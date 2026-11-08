@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Otomatik pano çevirisi bu cihazda kullanılamıyor.",
   "loading": "Yükleniyor...",
   "close": "Kapat",

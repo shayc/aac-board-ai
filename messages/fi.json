@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Automaattinen taulun käännös ei ole käytettävissä tällä laitteella.",
   "loading": "Ladataan...",
   "close": "Sulje",

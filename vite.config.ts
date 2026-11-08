@@ -5,10 +5,8 @@ import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import { coverageConfigDefaults } from "vitest/config";
 import {
-  CONTENT_DARK,
-  CONTENT_LIGHT,
-  SHELL_DARK,
-  SHELL_LIGHT,
+  BACKGROUND_DARK,
+  BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
@@ -16,10 +14,8 @@ const themeColorHtmlPlugin: Plugin = {
   name: "theme-color-html",
   transformIndexHtml: (html) =>
     html
-      .replaceAll("__SHELL_LIGHT__", SHELL_LIGHT)
-      .replaceAll("__SHELL_DARK__", SHELL_DARK)
-      .replaceAll("__CONTENT_LIGHT__", CONTENT_LIGHT)
-      .replaceAll("__CONTENT_DARK__", CONTENT_DARK),
+      .replaceAll("__BACKGROUND_LIGHT__", BACKGROUND_LIGHT)
+      .replaceAll("__BACKGROUND_DARK__", BACKGROUND_DARK),
 };
 
 export default defineConfig({
@@ -64,8 +60,8 @@ export default defineConfig({
             },
           },
         ],
-        theme_color: SHELL_DARK,
-        background_color: CONTENT_DARK,
+        theme_color: BACKGROUND_DARK,
+        background_color: BACKGROUND_DARK,
         icons: [
           {
             src: "pwa-192x192.png",

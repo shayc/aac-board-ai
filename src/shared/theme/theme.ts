@@ -8,7 +8,7 @@ import {
   type ThemeOptions,
 } from "@mui/material/styles";
 import { safeAreaInset } from "./safe-area";
-import { SHELL_DARK, SHELL_LIGHT } from "./theme-colors";
+import { BACKGROUND_DARK, BACKGROUND_LIGHT } from "./theme-colors";
 
 declare module "@mui/material/styles" {
   interface CssThemeVariables {
@@ -108,7 +108,7 @@ const themeOptions = {
       palette: {
         primary: { main: "#0b7468" },
         grey,
-        background: { default: SHELL_LIGHT, paper: "#ffffff" },
+        background: { default: BACKGROUND_LIGHT, paper: "#ffffff" },
         Button: {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
@@ -123,7 +123,7 @@ const themeOptions = {
       palette: {
         primary: { main: "#3fd0bd" },
         grey,
-        background: { default: SHELL_DARK, paper: "#1a1d23" },
+        background: { default: BACKGROUND_DARK, paper: "#1a1d23" },
         error: { main: "#f2b8b5" },
         outline: outline.dark,
         Chip: { defaultBorder: outline.dark },

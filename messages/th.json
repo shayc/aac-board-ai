@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "อุปกรณ์นี้ไม่รองรับการแปลบอร์ดอัตโนมัติ",
   "loading": "กำลังโหลด...",
   "close": "ปิด",

@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Die automatische Tafelübersetzung ist auf diesem Gerät nicht verfügbar.",
   "loading": "Wird geladen...",
   "close": "Schließen",
