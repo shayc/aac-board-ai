@@ -73,6 +73,23 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
+  const navigationButtons = isInBoardSet && (
+    <NavigationButtons
+      canGoBack={navigation.canGoBack}
+      canGoHome={navigation.canGoHome}
+      onBack={navigation.goBack}
+      onHome={handleHome}
+    />
+  );
+
+  const backspaceButton = (
+    <BackspaceButton
+      disabled={!hasMessage}
+      onPress={message.backspace}
+      onLongPress={message.clear}
+    />
+  );
+
   const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
     return (
       <Tile
@@ -80,7 +97,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         ariaLabel={button.label ? undefined : button.vocalization}
         backgroundColor={button.backgroundColor}
         borderColor={button.borderColor}
-        variant={button.linkedBoardId ? "folder" : undefined}
+        isFolder={Boolean(button.linkedBoardId)}
         isBorderVisible={areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}
@@ -114,14 +131,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
       >
         <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-          {!isSmallScreen && isInBoardSet && (
-            <NavigationButtons
-              canGoBack={navigation.canGoBack}
-              canGoHome={navigation.canGoHome}
-              onBack={navigation.goBack}
-              onHome={handleHome}
-            />
-          )}
+          {!isSmallScreen && navigationButtons}
 
           {suggestions.isSupported && (
             <SuggestionBar
@@ -133,13 +143,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
           )}
         </Stack>
 
-        {!isSmallScreen && (
-          <BackspaceButton
-            disabled={!hasMessage}
-            onPress={message.backspace}
-            onLongPress={message.clear}
-          />
-        )}
+        {!isSmallScreen && backspaceButton}
       </Stack>
 
       <Box sx={{ flex: 1, minHeight: 0 }}>
@@ -163,20 +167,8 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
             pb: safeAreaInset("bottom"),
           }}
         >
-          {isInBoardSet && (
-            <NavigationButtons
-              canGoBack={navigation.canGoBack}
-              canGoHome={navigation.canGoHome}
-              onBack={navigation.goBack}
-              onHome={handleHome}
-            />
-          )}
-
-          <BackspaceButton
-            disabled={!hasMessage}
-            onPress={message.backspace}
-            onLongPress={message.clear}
-          />
+          {navigationButtons}
+          {backspaceButton}
         </Toolbar>
       )}
     </Stack>

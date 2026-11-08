@@ -12,20 +12,17 @@ import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
 import { useImportBoardFiles } from "../import/use-import-board-files";
+import { useBoardNavigation } from "../navigation/use-board-navigation";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { BoardSetList } from "./board-set-list";
-import { deleteBoardSet } from "./board-sets-store";
-import { useBoardSets } from "./use-board-sets";
+import { deleteBoardSet, useBoardSets } from "./board-sets-store";
 
-interface BoardSetLibraryProps {
-  activeBoardSetId?: string;
-}
-
-export function BoardSetLibrary({ activeBoardSetId }: BoardSetLibraryProps) {
+export function BoardSetLibrary() {
   const t = useTranslate();
+  const { boardSetId: activeBoardSetId } = useBoardNavigation();
   const { boardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();

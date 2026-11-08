@@ -1,11 +1,10 @@
-import { createExternalStore } from "@shared/state/external-store";
 import { getLanguageCode } from "@shared/language/locale";
+import { createExternalStore, useStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import { useSyncExternalStore } from "react";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
 interface SpeechPreferences {
@@ -74,10 +73,10 @@ const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
 );
 
 function updatePreferences(patch: Partial<SpeechPreferences>): void {
-  speechPreferencesStore.setState({
-    ...speechPreferencesStore.getSnapshot(),
+  speechPreferencesStore.setState((preferences) => ({
+    ...preferences,
     ...patch,
-  });
+  }));
 }
 
 export function getSpeechPreferences(): SpeechPreferences {
@@ -105,15 +104,9 @@ export function getVoices(): SpeechSynthesisVoice[] {
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {
-  return useSyncExternalStore(
-    voiceCatalogStore.subscribe,
-    () => voiceCatalogStore.getSnapshot().voicesByLanguage,
-  );
+  return useStore(voiceCatalogStore, (catalog) => catalog.voicesByLanguage);
 }
 
 export function useSpeechPreferences(): SpeechPreferences {
-  return useSyncExternalStore(
-    speechPreferencesStore.subscribe,
-    speechPreferencesStore.getSnapshot,
-  );
+  return useStore(speechPreferencesStore);
 }

@@ -1,7 +1,11 @@
+import { useSyncExternalStore } from "react";
+
+type StateUpdate<T> = T | ((current: T) => T);
+
 export interface ExternalStore<T> {
   subscribe: (listener: () => void) => () => void;
   getSnapshot: () => T;
-  setState: (next: T) => void;
+  setState: (next: StateUpdate<T>) => void;
 }
 
 export function createExternalStore<T>(initialState: T): ExternalStore<T> {
@@ -26,10 +30,29 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
     return state;
   }
 
-  function setState(next: T) {
-    state = next;
+  function setState(next: StateUpdate<T>) {
+    state =
+      typeof next === "function" ? (next as (current: T) => T)(state) : next;
     emit();
   }
 
   return { subscribe, getSnapshot, setState };
+}
+
+type SubscribableStore<T> = Pick<ExternalStore<T>, "subscribe" | "getSnapshot">;
+
+export function useStore<T>(store: SubscribableStore<T>): T;
+export function useStore<T, Selected>(
+  store: SubscribableStore<T>,
+  select: (state: T) => Selected,
+): Selected;
+export function useStore<T, Selected>(
+  store: SubscribableStore<T>,
+  select?: (state: T) => Selected,
+): T | Selected {
+  return useSyncExternalStore(store.subscribe, () => {
+    const state = store.getSnapshot();
+
+    return select ? select(state) : state;
+  });
 }

@@ -1,5 +1,5 @@
 import { useLocation, useMatch, useNavigate } from "react-router";
-import { useBoardSets } from "../board-sets/use-board-sets";
+import { useBoardSets } from "../board-sets/board-sets-store";
 import { BOARD_ROUTE_PATTERN, boardPath } from "./board-paths";
 
 export interface UseBoardNavigationReturn {

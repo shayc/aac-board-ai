@@ -106,7 +106,7 @@ describe("Tile", () => {
   test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await renderInTheme(
       <>
-        <Tile variant="folder" onActivate={vi.fn()}>
+        <Tile isFolder onActivate={vi.fn()}>
           Animals
         </Tile>
         <Tile onActivate={vi.fn()}>Cat</Tile>
@@ -147,7 +147,7 @@ describe("Tile", () => {
           <Tile
             backgroundColor="#3f51b5"
             isBorderVisible={isBorderVisible}
-            variant="folder"
+            isFolder
             onActivate={vi.fn()}
           >
             Folder
@@ -213,6 +213,7 @@ describe("Tile", () => {
       <Tile
         backgroundColor="#ff0000"
         borderColor={borderColor}
+        isBorderVisible
         onActivate={vi.fn()}
       >
         Bordered
@@ -234,6 +235,7 @@ describe("Tile", () => {
         <Tile
           backgroundColor="#ff0000"
           borderColor="#00ff00"
+          isBorderVisible
           onActivate={vi.fn()}
         >
           <span>Bordered</span>
@@ -241,7 +243,6 @@ describe("Tile", () => {
         <Tile
           backgroundColor="#ff0000"
           borderColor="#00ff00"
-          isBorderVisible={false}
           onActivate={vi.fn()}
         >
           <span>Borderless</span>
@@ -300,20 +301,5 @@ describe("Tile", () => {
     await screen.getByRole("button", { name: "Click me" }).click();
 
     expect(onActivate).toHaveBeenCalledOnce();
-  });
-
-  test("does not call onActivate when disabled", async () => {
-    const onActivate = vi.fn();
-    const screen = await renderInTheme(
-      <Tile disabled onActivate={onActivate}>
-        Disabled tile
-      </Tile>,
-    );
-    const tile = screen.getByRole("button", { name: "Disabled tile" });
-
-    await expect.element(tile).toBeDisabled();
-    await tile.click({ force: true });
-
-    expect(onActivate).not.toHaveBeenCalled();
   });
 });

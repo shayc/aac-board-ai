@@ -34,7 +34,7 @@ function makeInput(
 
 describe("deriveSuggestionStatus", () => {
   test("stays quiet when everything is healthy and idle", () => {
-    expect(deriveSuggestionStatus(makeInput())).toBeNull();
+    expect(deriveSuggestionStatus(makeInput())).toEqual({ kind: "idle" });
   });
 
   test("stays quiet when no engine is supported", () => {
@@ -43,7 +43,7 @@ describe("deriveSuggestionStatus", () => {
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(input)).toBeNull();
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 
   test("asks for setup ahead of any download state", () => {
@@ -119,7 +119,7 @@ describe("deriveSuggestionStatus", () => {
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(input)).toBeNull();
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 
   test("an engine still probing availability is not a failure", () => {
@@ -128,6 +128,6 @@ describe("deriveSuggestionStatus", () => {
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(input)).toBeNull();
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 });

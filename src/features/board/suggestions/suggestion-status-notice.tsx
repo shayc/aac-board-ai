@@ -17,11 +17,10 @@ export function SuggestionStatusNotice({
 }: SuggestionStatusNoticeProps) {
   const t = useTranslate();
 
-  if (status === null || status.kind === "pending") {
-    return null;
-  }
-
   switch (status.kind) {
+    case "idle":
+    case "pending":
+      return null;
     case "not-enabled":
       return (
         <Chip

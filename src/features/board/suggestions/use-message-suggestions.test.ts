@@ -124,7 +124,7 @@ describe("useMessageSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["I would like to eat."]);
-      expect(result.current.status).toBeNull();
+      expect(result.current.status).toEqual({ kind: "idle" });
     });
   });
 
@@ -156,7 +156,7 @@ describe("useMessageSuggestions", () => {
     rejecters.forEach((reject) => reject(new Error("rewrite down")));
 
     await vi.waitFor(() => {
-      expect(result.current.status).toBeNull();
+      expect(result.current.status).toEqual({ kind: "idle" });
     });
     expect(result.current.phrases).toEqual([]);
   });
@@ -179,7 +179,7 @@ describe("useMessageSuggestions", () => {
     );
 
     await vi.waitFor(() => {
-      expect(result.current.status).toBeNull();
+      expect(result.current.status).toEqual({ kind: "idle" });
     });
   });
 
@@ -204,7 +204,7 @@ describe("useMessageSuggestions", () => {
 
       await vi.waitFor(() => {
         expect(create).toHaveBeenCalledTimes(sessions);
-        expect(result.current.status).toBeNull();
+        expect(result.current.status).toEqual({ kind: "idle" });
       });
       for (const [options] of create.mock.calls) {
         expect(options).toHaveProperty("monitor", expect.any(Function));
@@ -230,7 +230,7 @@ describe("useMessageSuggestions", () => {
     setStoredLanguage("he");
 
     await vi.waitFor(() => {
-      expect(result.current.status).toBeNull();
+      expect(result.current.status).toEqual({ kind: "idle" });
     });
   });
 
@@ -322,7 +322,7 @@ describe("useMessageSuggestions", () => {
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["direct hi", "friendly hi"]);
-      expect(result.current.status).toBeNull();
+      expect(result.current.status).toEqual({ kind: "idle" });
     });
   });
 

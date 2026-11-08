@@ -18,10 +18,10 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
-import { subscribeCompletedDownloads } from "../import/board-set-downloads";
 import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import type { CatalogBoardSet } from "./board-set-catalog";
+import { subscribeCompletedDownloads } from "./board-set-downloads";
 import { DownloadableBoardSetListItem } from "./downloadable-board-set-list-item";
 
 type BoardSetEntry =
