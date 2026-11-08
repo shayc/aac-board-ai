@@ -3,7 +3,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
 import { m } from "@paraglide/messages.js";
-import { useLanguage } from "@shared/language/use-language";
+import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
@@ -57,8 +57,8 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
 
 export function TileSettings() {
   const t = useTranslate();
-  const { language } = useLanguage();
-  const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
+  const uiLocale = useUILocale();
+  const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
   const { saturation, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
