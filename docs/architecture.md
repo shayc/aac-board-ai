@@ -218,8 +218,10 @@ The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
-reusable field controls live in `shared/ui/` so features do not depend on the app
-layer.
+language settings render the feature's
+[board translation notice](../src/features/board/translation/board-translation-notice.tsx)
+instead of checking Translator support themselves. Reusable field controls live in
+`shared/ui/` so features do not depend on the app layer.
 
 Closing or unmounting settings does not delete preferences. Removing a feature
 requires an explicit decision about retaining or deleting its persisted
