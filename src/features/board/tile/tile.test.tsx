@@ -23,7 +23,7 @@ const WCAG_NON_TEXT_CONTRAST = 3;
 const cssVariableTheme = createTheme({
   cssVariables: { colorSchemeSelector: "class" },
   colorSchemes: { light: true, dark: true },
-  transitions: { duration: { shortest: 0 } },
+  transitions: { duration: { short: 0 } },
 });
 
 function renderInTheme(ui: ReactNode) {
