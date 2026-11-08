@@ -279,7 +279,7 @@ describe("useMessageSuggestions", () => {
     setStoredLanguage("he");
     const { create } = stubRewriter();
 
-    await renderMessageSuggestions("שלום");
+    const { result } = await renderMessageSuggestions("שלום");
 
     await vi.waitFor(() => {
       expect(create).toHaveBeenCalledTimes(2);
@@ -292,6 +292,7 @@ describe("useMessageSuggestions", () => {
         outputLanguage: "he",
       });
     }
+    expect(result.current.language).toBe("he");
   });
 
   test("reports a pending status while a suggestion is in flight and clears it once resolved", async () => {

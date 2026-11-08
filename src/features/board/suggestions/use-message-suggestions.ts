@@ -20,6 +20,7 @@ interface UseMessageSuggestionsReturn {
   isSupported: boolean;
   status: SuggestionStatus;
   phrases: string[];
+  language: string;
   enable: () => void;
 }
 
@@ -78,6 +79,7 @@ export function useMessageSuggestions(
     isSupported: areSuggestionsSupported(),
     status,
     phrases,
+    language,
     enable,
   };
 }

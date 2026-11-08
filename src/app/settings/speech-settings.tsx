@@ -77,9 +77,9 @@ export function SpeechSettings() {
 function VoiceSelect() {
   const t = useTranslate();
   const playback = usePlayback();
-  const voicesByLanguage = useVoicesByLanguage();
-  const speechVoice = useSpeechVoice();
   const { language } = useLanguage();
+  const voicesByLanguage = useVoicesByLanguage();
+  const speechVoice = useSpeechVoice(language);
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
@@ -111,7 +111,7 @@ function VoiceSelect() {
   function handlePreviewVoice() {
     void playback.play({
       owner: "speech-preview",
-      steps: [{ kind: "speech", text: t(m.speechPreviewSample) }],
+      steps: [{ kind: "speech", text: t(m.speechPreviewSample), language }],
     });
   }
 

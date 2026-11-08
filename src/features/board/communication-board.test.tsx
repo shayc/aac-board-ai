@@ -1,3 +1,4 @@
+import { setStoredLanguage } from "@shared/language/language-store";
 import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
@@ -98,6 +99,20 @@ describe("CommunicationBoard", () => {
       expect(speech.speak.mock.calls).toHaveLength(1);
       expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
     });
+  });
+
+  test("speaks a board shown untranslated in the board's language", async () => {
+    setStoredLanguage("es");
+    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+    await screen.getByRole("button", { name: "hello" }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.speak).toHaveBeenCalledOnce();
+    });
+    const [utterance] = speech.speak.mock.calls[0];
+    expect(utterance.text).toBe("hello");
+    expect(utterance.lang).toBe("en");
   });
 
   test("keeps the message play action visible while a tile speaks", async () => {

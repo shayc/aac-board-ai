@@ -1,7 +1,3 @@
-import {
-  getStoredLanguage,
-  useStoredLanguage,
-} from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import {
   createExternalStore,
@@ -111,17 +107,16 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeechVoice(): SpeechSynthesisVoice | null {
+export function getSpeechVoice(language: string): SpeechSynthesisVoice | null {
   return resolveVoice(
     getVoicesByLanguage(),
-    getStoredLanguage(),
+    language,
     getSpeechPreferences().voiceURI,
   );
 }
 
-export function useSpeechVoice(): SpeechSynthesisVoice | null {
+export function useSpeechVoice(language: string): SpeechSynthesisVoice | null {
   const voicesByLanguage = useVoicesByLanguage();
-  const language = useStoredLanguage();
   const { voiceURI } = useSpeechPreferences();
 
   return resolveVoice(voicesByLanguage, language, voiceURI);

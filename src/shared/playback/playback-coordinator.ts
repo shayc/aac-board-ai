@@ -49,7 +49,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
       case "speech": {
         const { cueAt } = step;
         setActiveCue(session, cueAt?.(0) ?? null);
-        await speak(step.text, {
+        await speak(step.text, step.language, {
           signal,
           onBoundary: cueAt
             ? (charIndex) => setActiveCue(session, cueAt(charIndex))

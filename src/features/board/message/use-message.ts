@@ -6,7 +6,7 @@ export interface UseMessageReturn {
   parts: MessagePart[];
   text: string;
   getParts: () => MessagePart[];
-  replaceWithText: (input: string) => void;
+  replaceWithText: (input: string, language: string) => void;
   backspace: () => void;
   setParts: (parts: MessagePart[]) => void;
   clear: () => void;
@@ -26,13 +26,13 @@ export function useMessage(): UseMessageReturn {
     setPartsState(next);
   }
 
-  function replaceWithText(input: string) {
+  function replaceWithText(input: string, language: string) {
     setParts(
       input
         .trim()
         .split(/\s+/)
         .filter(Boolean)
-        .map((word) => createPart({ label: word })),
+        .map((word) => createPart({ label: word, language })),
     );
   }
 

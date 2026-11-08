@@ -28,6 +28,7 @@ function createProps(
 const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   id: String(index),
   label: `Part ${index + 1}`,
+  language: "en",
   imageSrc: TEST_IMAGE_SRC,
 }));
 
@@ -57,9 +58,9 @@ function waitForAnimationFrame(): Promise<void> {
 describe("MessageBar", () => {
   test("renders a label for each message part", async () => {
     const parts: MessagePart[] = [
-      { id: "a", label: "I" },
-      { id: "b", label: "want" },
-      { id: "c", label: "water" },
+      { id: "a", label: "I", language: "en" },
+      { id: "b", label: "want", language: "en" },
+      { id: "c", label: "water", language: "en" },
     ];
 
     const screen = await renderWithProviders(
@@ -72,7 +73,7 @@ describe("MessageBar", () => {
   });
 
   test("re-enables text selection so the composed message can be copied", async () => {
-    const parts: MessagePart[] = [{ id: "a", label: "I" }];
+    const parts: MessagePart[] = [{ id: "a", label: "I", language: "en" }];
 
     const screen = await renderWithProviders(
       <MessageBar {...createProps({ parts })} />,
@@ -86,8 +87,8 @@ describe("MessageBar", () => {
 
   test("shows labels without images when images are hidden", async () => {
     const parts: MessagePart[] = [
-      { id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
-      { id: "b", label: "", imageSrc: TEST_IMAGE_SRC },
+      { id: "a", label: "I", language: "en", imageSrc: TEST_IMAGE_SRC },
+      { id: "b", label: "", language: "en", imageSrc: TEST_IMAGE_SRC },
     ];
 
     const screen = await renderWithProviders(
@@ -185,7 +186,7 @@ describe("MessageBar", () => {
       const screen = await renderWithProviders(
         <MessageBar
           {...createProps({
-            parts: [{ id: "a", label: "Hello" }],
+            parts: [{ id: "a", label: "Hello", language: "en" }],
             isPlaying: false,
             onPlay,
           })}

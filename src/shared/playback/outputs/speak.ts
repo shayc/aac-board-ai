@@ -1,4 +1,3 @@
-import { getStoredLanguage } from "@shared/language/language-store";
 import {
   getSpeechPreferences,
   getSpeechVoice,
@@ -10,12 +9,15 @@ interface SpeakOptions {
   onBoundary?: (charIndex: number) => void;
 }
 
-function buildUtterance(text: string): SpeechSynthesisUtterance {
+function buildUtterance(
+  text: string,
+  language: string,
+): SpeechSynthesisUtterance {
   const { rate, pitch, volume } = getSpeechPreferences();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = getStoredLanguage();
-  utterance.voice = getSpeechVoice();
+  utterance.lang = language;
+  utterance.voice = getSpeechVoice(language);
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;
@@ -25,6 +27,7 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 
 export function speak(
   text: string,
+  language: string,
   { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
   const synthesis = getSpeechSynthesis();
@@ -33,7 +36,7 @@ export function speak(
   }
 
   const { promise, resolve } = Promise.withResolvers<void>();
-  const utterance = buildUtterance(text);
+  const utterance = buildUtterance(text, language);
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
 

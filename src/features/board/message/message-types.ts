@@ -1,6 +1,7 @@
 export interface MessagePartInput {
   label?: string;
   vocalization?: string;
+  language: string;
   imageSrc?: string;
   soundSrc?: string;
 }

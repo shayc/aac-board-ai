@@ -68,6 +68,7 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("[es] Food");
+    expect(board.locale).toBe("es");
     expect(board.buttons[0].label).toBe("[es] eat");
     expect(board.buttons[0].vocalization).toBe("[es] eat");
     expect(board.buttons[1].label).toBe("[es] drink");
@@ -105,6 +106,7 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("Food");
+    expect(board.locale).toBe("en-US");
   });
 
   test("falls back to the source board when the platform fails mid-translation", async () => {

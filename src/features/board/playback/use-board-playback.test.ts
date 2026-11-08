@@ -27,9 +27,9 @@ describe("useBoardPlayback", () => {
 
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
-      { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "after" },
+      { id: "1", label: "before", language: "en" },
+      { id: "2", label: "ding", language: "en", soundSrc: "ding.mp3" },
+      { id: "3", label: "after", language: "en" },
     ];
 
     const callOrder: string[] = [];
@@ -60,7 +60,11 @@ describe("useBoardPlayback", () => {
     speech.speak.mockImplementationOnce(() => undefined);
     const { result, rerender } = await renderPlayback();
 
-    const playPromise = result.current.playPart({ id: "1", label: "hi" });
+    const playPromise = result.current.playPart({
+      id: "1",
+      label: "hi",
+      language: "en",
+    });
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);
@@ -81,7 +85,7 @@ describe("useBoardPlayback", () => {
       };
     });
 
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const parts: MessagePart[] = [{ id: "1", label: "hi", language: "en" }];
 
     const { result, rerender } = await renderPlayback();
 
@@ -113,7 +117,7 @@ describe("useBoardPlayback", () => {
       });
     });
 
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const parts: MessagePart[] = [{ id: "1", label: "hi", language: "en" }];
 
     const { result, rerender } = await renderPlayback();
 
@@ -139,8 +143,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { id: "1", label: "I", language: "en" },
+      { id: "2", label: "want", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -174,9 +178,9 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "before" },
-      { id: "2", label: "ding", soundSrc: "ding.mp3" },
-      { id: "3", label: "after" },
+      { id: "1", label: "before", language: "en" },
+      { id: "2", label: "ding", language: "en", soundSrc: "ding.mp3" },
+      { id: "3", label: "after", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -210,8 +214,8 @@ describe("useBoardPlayback", () => {
     });
 
     const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
+      { id: "1", label: "I", language: "en" },
+      { id: "2", label: "want", language: "en" },
     ];
 
     const { result, rerender } = await renderPlayback();
@@ -243,9 +247,11 @@ describe("useBoardPlayback", () => {
 
     const { result } = await renderPlayback();
 
-    const firstPlay = result.current.playMessage([{ id: "1", label: "first" }]);
+    const firstPlay = result.current.playMessage([
+      { id: "1", label: "first", language: "en" },
+    ]);
     const secondPlay = result.current.playMessage([
-      { id: "2", label: "second" },
+      { id: "2", label: "second", language: "en" },
     ]);
 
     resolveFirstSpeak?.();

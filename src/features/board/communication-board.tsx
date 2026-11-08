@@ -19,6 +19,7 @@ import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
+import { getBoardLanguage } from "./translation/board-translations";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -38,6 +39,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const activateButton = createButtonActivator({
+    language: getBoardLanguage(board),
     getParts: message.getParts,
     setParts: message.setParts,
     playMessage: playback.playMessage,
@@ -112,7 +114,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
               status={suggestions.status}
               phrases={suggestions.phrases}
               onEnable={suggestions.enable}
-              onPhraseSelect={message.replaceWithText}
+              onPhraseSelect={(phrase) =>
+                message.replaceWithText(phrase, suggestions.language)
+              }
             />
           )}
         </Stack>

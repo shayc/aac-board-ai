@@ -16,6 +16,7 @@ function PlaybackControls() {
         {
           kind: "speech",
           text: "hello world",
+          language: "en",
           cueAt: (charIndex) => (charIndex < 6 ? "1" : "2"),
         },
       ],
@@ -55,7 +56,7 @@ describe("PlaybackProvider", () => {
 
     const speechResult = result.current.play({
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     });
     const audioResult = result.current.play({
       owner: "tile",
@@ -80,7 +81,7 @@ describe("PlaybackProvider", () => {
     });
     const speechResult = result.current.play({
       owner: "message",
-      steps: [{ kind: "speech", text: "hello" }],
+      steps: [{ kind: "speech", text: "hello", language: "en" }],
     });
 
     await expect(audioResult).resolves.toBe("interrupted");

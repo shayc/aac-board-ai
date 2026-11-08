@@ -26,6 +26,7 @@ function setup(initialParts: MessagePart[] = []) {
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
   return {
     activateButton: createButtonActivator({
+      language: "en",
       ...message,
       ...playback,
       ...navigation,
@@ -70,7 +71,7 @@ describe("createButtonActivator", () => {
 
   test("appends a button without actions to the message and plays that part", () => {
     const { activateButton, message, playback } = setup([
-      { id: "1", label: "I" },
+      { id: "1", label: "I", language: "en" },
     ]);
 
     activateButton({
@@ -90,6 +91,7 @@ describe("createButtonActivator", () => {
     expect(appended).toMatchObject({
       label: "bell",
       vocalization: "ring the bell",
+      language: "en",
       imageSrc: "bell.png",
       soundSrc: "bell.mp3",
     });
@@ -109,8 +111,8 @@ describe("createButtonActivator", () => {
 
   test("folds an edit-only sequence into one commit without playing", () => {
     const { activateButton, message, playback } = setup([
-      { id: "1", label: "hello" },
-      { id: "2", label: "world" },
+      { id: "1", label: "hello", language: "en" },
+      { id: "2", label: "world", language: "en" },
     ]);
 
     activateButton({
@@ -130,7 +132,9 @@ describe("createButtonActivator", () => {
   });
 
   test("clear empties the message", () => {
-    const { activateButton, message } = setup([{ id: "1", label: "hello" }]);
+    const { activateButton, message } = setup([
+      { id: "1", label: "hello", language: "en" },
+    ]);
 
     activateButton({ id: "btn", label: "", actions: [{ kind: "clear" }] });
 
@@ -152,7 +156,7 @@ describe("createButtonActivator", () => {
   });
 
   test("plays the current message without committing when play is the only action", async () => {
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+    const parts: MessagePart[] = [{ id: "1", label: "hi", language: "en" }];
     const { activateButton, message, playback } = setup(parts);
     const settlePlayback = holdMessagePlayback(playback);
 
@@ -165,7 +169,7 @@ describe("createButtonActivator", () => {
 
   test("holds edits after play until playback completes, then commits them", async () => {
     const { activateButton, message, playback } = setup([
-      { id: "1", label: "hi" },
+      { id: "1", label: "hi", language: "en" },
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
@@ -179,7 +183,7 @@ describe("createButtonActivator", () => {
 
   test("applies edits after play to the message as it is when playback completes", async () => {
     const { activateButton, message, playback } = setup([
-      { id: "1", label: "hi" },
+      { id: "1", label: "hi", language: "en" },
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
@@ -189,8 +193,8 @@ describe("createButtonActivator", () => {
       actions: [{ kind: "play" }, { kind: "space" }],
     });
     message.setParts([
-      { id: "1", label: "hi" },
-      { id: "2", label: "there" },
+      { id: "1", label: "hi", language: "en" },
+      { id: "2", label: "there", language: "en" },
     ]);
     await settlePlayback("completed");
 
@@ -201,7 +205,7 @@ describe("createButtonActivator", () => {
 
   test("drops edits after play when playback is interrupted", async () => {
     const { activateButton, message, playback } = setup([
-      { id: "1", label: "hi" },
+      { id: "1", label: "hi", language: "en" },
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 

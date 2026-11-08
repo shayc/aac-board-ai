@@ -10,6 +10,7 @@ import type { MessagePart } from "../message/message-types";
 import type { BoardAction, BoardButton } from "../board-types";
 
 interface ButtonActivatorOptions {
+  language: string;
   getParts: () => MessagePart[];
   setParts: (parts: MessagePart[]) => void;
   playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
@@ -21,6 +22,7 @@ interface ButtonActivatorOptions {
 type ButtonActivator = (button: BoardButton) => void;
 
 export function createButtonActivator({
+  language,
   getParts,
   setParts,
   playMessage,
@@ -46,6 +48,7 @@ export function createButtonActivator({
     const part = createPart({
       label: button.label,
       vocalization: button.vocalization,
+      language,
       imageSrc: button.imageSrc,
       soundSrc: button.soundSrc,
     });
@@ -83,7 +86,10 @@ export function createButtonActivator({
       return parts;
     }
 
-    const editedParts = edits.reduce(applyEdit, parts);
+    const editedParts = edits.reduce(
+      (edited, edit) => applyEdit(edited, edit, language),
+      parts,
+    );
     setParts(editedParts);
 
     return editedParts;
@@ -98,12 +104,16 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
   return action.kind !== "home" && action.kind !== "play";
 }
 
-function applyEdit(parts: MessagePart[], edit: MessageEdit): MessagePart[] {
+function applyEdit(
+  parts: MessagePart[],
+  edit: MessageEdit,
+  language: string,
+): MessagePart[] {
   switch (edit.kind) {
     case "spell":
-      return appendText(parts, edit.text);
+      return appendText(parts, edit.text, language);
     case "space":
-      return appendSpace(parts);
+      return appendSpace(parts, language);
     case "backspace":
       return applyBackspace(parts);
     case "clear":

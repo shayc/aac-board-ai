@@ -29,7 +29,7 @@ export async function loadBoardInLanguage(
 
   void cacheTranslations(boardSetId, boardId, language, translations);
 
-  return applyTranslations(board, translations);
+  return applyTranslations(board, language, translations);
 }
 
 async function translateBoardStrings(

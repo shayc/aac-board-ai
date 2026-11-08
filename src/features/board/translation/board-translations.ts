@@ -21,7 +21,9 @@ export function findBoardInLanguage(
     language,
   );
 
-  return translations ? applyTranslations(board, translations) : undefined;
+  return translations
+    ? applyTranslations(board, language, translations)
+    : undefined;
 }
 
 export function getBoardLanguage(board: Board): string {
@@ -41,6 +43,7 @@ export function findStringTranslations(
 
 export function applyTranslations(
   board: Board,
+  language: string,
   translations: StringTranslations,
 ): Board {
   function translateString(text: string | undefined) {
@@ -51,6 +54,7 @@ export function applyTranslations(
 
   return {
     ...board,
+    locale: language,
     name: translateString(board.name) ?? "",
     buttons: board.buttons.map((button) => ({
       ...button,

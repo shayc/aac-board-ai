@@ -42,7 +42,7 @@ describe("speak", () => {
     });
 
     test("resolves silently instead of throwing", async () => {
-      await expect(speak("hello")).resolves.toBeUndefined();
+      await expect(speak("hello", "en")).resolves.toBeUndefined();
     });
   });
 
@@ -54,13 +54,12 @@ describe("speak", () => {
     test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
       stubUtteranceVoiceAccessor();
       const speech = stubSpeech();
-      setStoredLanguage("en");
       setSpeechVoiceURI("voice-1");
       setSpeechRate(1.5);
       setSpeechPitch(0.5);
       setSpeechVolume(0.25);
 
-      await speak("hi");
+      await speak("hi", "en");
 
       const utterance = speech.speak.mock.calls[0][0];
       expect(utterance.rate).toBe(1.5);
@@ -69,34 +68,45 @@ describe("speak", () => {
       expect(utterance.voice?.voiceURI).toBe("voice-1");
     });
 
+    test("speaks in the text's language rather than the selected one", async () => {
+      stubUtteranceVoiceAccessor();
+      stubVoices([
+        { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
+        { voiceURI: "es-voice", name: "Mónica", lang: "es-ES" },
+      ]);
+      const speech = stubSpeech();
+      setStoredLanguage("es");
+
+      await speak("hello", "en");
+
+      const utterance = speech.speak.mock.calls[0][0];
+      expect(utterance.lang).toBe("en");
+      expect(utterance.voice?.voiceURI).toBe("voice-1");
+    });
+
     test("leaves the voice to the browser when the language has no voices", async () => {
       stubUtteranceVoiceAccessor();
       const speech = stubSpeech();
-      setStoredLanguage("en");
       setSpeechVoiceURI("voice-1");
-      setStoredLanguage("he");
 
-      await speak("שלום");
+      await speak("שלום", "he");
 
       const utterance = speech.speak.mock.calls[0][0];
       expect(utterance.voice).toBeNull();
       expect(utterance.lang).toBe("he");
     });
 
-    test("speaks a new language with its own voice and keeps the saved voice", async () => {
+    test("speaks another language with its own voice and keeps the saved voice", async () => {
       stubUtteranceVoiceAccessor();
       stubVoices([
         { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
         { voiceURI: "he-voice", name: "Carmit", lang: "he-IL" },
       ]);
       const speech = stubSpeech();
-      setStoredLanguage("en");
       setSpeechVoiceURI("voice-1");
-      setStoredLanguage("he");
 
-      await speak("שלום");
-      setStoredLanguage("en");
-      await speak("hello");
+      await speak("שלום", "he");
+      await speak("hello", "en");
 
       const [hebrew, english] = speech.speak.mock.calls.map(([call]) => call);
       expect(hebrew.voice?.voiceURI).toBe("he-voice");
@@ -108,7 +118,7 @@ describe("speak", () => {
       localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));
       reloadPersistedStores();
 
-      await speak("hi");
+      await speak("hi", "en");
 
       const utterance = speech.speak.mock.calls[0][0];
       expect(utterance.rate).toBe(SPEECH_RATE.max);
@@ -120,7 +130,7 @@ describe("speak", () => {
       const speech = stubSpeech();
 
       await expect(
-        speak("hello", { signal: AbortSignal.abort() }),
+        speak("hello", "en", { signal: AbortSignal.abort() }),
       ).resolves.toBeUndefined();
 
       expect(speech.speak).not.toHaveBeenCalled();
@@ -131,7 +141,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce(() => undefined);
       const controller = new AbortController();
 
-      const playback = speak("hello", { signal: controller.signal });
+      const playback = speak("hello", "en", { signal: controller.signal });
       const cancelsBeforeAbort = speech.cancel.mock.calls.length;
       controller.abort();
 
@@ -147,7 +157,7 @@ describe("speak", () => {
       speech.speak.mockImplementationOnce((spoken) => {
         utterance = spoken;
       });
-      const playback = speak("hello");
+      const playback = speak("hello", "en");
 
       utterance?.dispatchEvent(
         new SpeechSynthesisErrorEvent("error", {

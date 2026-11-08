@@ -9,6 +9,7 @@ export type PlaybackStep =
   | {
       kind: "speech";
       text: string;
+      language: string;
       cueAt?: (charIndex: number) => string | null;
     };
 

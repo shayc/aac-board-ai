@@ -182,9 +182,15 @@ The communication language setting coordinates UI locale, board translation,
 text direction, and text-to-speech (TTS) voice selection. Language choices combine
 UI locales and available voice languages. UI text, board translation, and speech
 fall back independently, so selecting a language does not guarantee a matching
-voice or translation model. Speech uses the saved voice only when it speaks
-the communication language; otherwise it picks one of that language's voices,
-or leaves the choice to the browser, without changing the saved voice.
+voice or translation model.
+
+Speech follows the language of the text rather than the setting. A loaded
+board's `locale` names the language it is shown in, which stays the source
+language when translation is unavailable. Message parts keep the language of
+the board or suggestion they came from, and each speech step speaks one
+language. Speech uses the saved voice only when it speaks that language;
+otherwise it picks one of that language's voices, or leaves the choice to the
+browser, without changing the saved voice.
 
 Paraglide message catalogs provide UI text. Direction-specific Emotion caches,
 right-to-left (RTL) styling, and logical CSS support both text directions.
@@ -298,8 +304,8 @@ AI availability, provisioning, and session lifecycle to
   and vocalization. OBF keeps their translations in `strings`, one map per locale.
 - **Message bar** — the area showing selected symbols that form the message to
   speak.
-- **Message part** — one item in the message, with its own label and any
-  vocalization, image, or sound.
+- **Message part** — one item in the message, with its own label, the language
+  of its text, and any vocalization, image, or sound.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.

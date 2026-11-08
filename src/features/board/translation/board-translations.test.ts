@@ -73,7 +73,7 @@ describe("applyTranslations", () => {
       "My Board": "Mi Tablero",
       Hello: "Hola",
     };
-    const translated = applyTranslations(mockBoard, translations);
+    const translated = applyTranslations(mockBoard, "es", translations);
 
     expect(translated.name).toBe("Mi Tablero");
     expect(translated.buttons[0].label).toBe("Hola");
@@ -81,10 +81,14 @@ describe("applyTranslations", () => {
     expect(translated.buttons[1].label).toBe("");
   });
 
+  test("reports the translation's language as the board's locale", () => {
+    expect(applyTranslations(mockBoard, "es", {}).locale).toBe("es");
+  });
+
   test.each(["", " \t\n\u00a0 "])(
     "clears text whose translation is blank (%j)",
     (text) => {
-      const translated = applyTranslations(mockBoard, {
+      const translated = applyTranslations(mockBoard, "es", {
         "My Board": text,
         Hello: text,
         "Hello there": text,
@@ -110,7 +114,7 @@ describe("applyTranslations", () => {
       ],
     };
 
-    const translated = applyTranslations(board, {
+    const translated = applyTranslations(board, "es", {
       " My Board ": " Mi Tablero ",
       " Hello ": " Hola ",
       "\tHello there\n": "\tHola a todos\n",

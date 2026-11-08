@@ -16,15 +16,22 @@ export function appendPart(
   return [...parts, createPart(content)];
 }
 
-export function appendSpace(parts: MessagePart[]): MessagePart[] {
-  return appendPart(parts, { label: "" });
+export function appendSpace(
+  parts: MessagePart[],
+  language: string,
+): MessagePart[] {
+  return appendPart(parts, { label: "", language });
 }
 
-export function appendText(parts: MessagePart[], text: string): MessagePart[] {
+export function appendText(
+  parts: MessagePart[],
+  text: string,
+  language: string,
+): MessagePart[] {
   const lastPart = parts.at(-1);
 
-  if (!lastPart || !isTextOnlyPart(lastPart)) {
-    return appendPart(parts, { label: text });
+  if (!lastPart || !canContinueText(lastPart, language)) {
+    return appendPart(parts, { label: text, language });
   }
 
   return parts.with(-1, {
@@ -55,6 +62,10 @@ export function applyBackspace(parts: MessagePart[]): MessagePart[] {
     ...lastPart,
     label: lastPart.label.slice(0, lastGrapheme.index),
   });
+}
+
+function canContinueText(part: MessagePart, language: string): boolean {
+  return isTextOnlyPart(part) && part.language === language;
 }
 
 function isTextOnlyPart(part: MessagePart): boolean {
