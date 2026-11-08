@@ -50,8 +50,8 @@ function fireDrag(
   type: "dragenter" | "dragover" | "dragleave" | "drop",
   dataTransfer: DataTransfer,
   relatedTarget: EventTarget | null = null,
-) {
-  target.dispatchEvent(
+): boolean {
+  return target.dispatchEvent(
     new DragEvent(type, {
       bubbles: true,
       cancelable: true,
@@ -114,6 +114,27 @@ describe("useBoardFileDrop", () => {
 
     fireDrag(zone, "dragleave", dataTransfer, leftWindow);
     await expect.element(zone).toHaveTextContent("idle");
+  });
+
+  test("leaves drops that carry no files to the browser", async () => {
+    const { zone } = await renderDropZone();
+    const dataTransfer = new DataTransfer();
+    dataTransfer.setData("text/plain", "hello");
+
+    const isDefaultAllowed = fireDrag(zone, "drop", dataTransfer);
+
+    expect(isDefaultAllowed).toBe(true);
+  });
+
+  test("reports an error when no dropped file is a board file", async () => {
+    const { zone, screen } = await renderDropZone();
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+
+    fireDrag(zone, "drop", dataTransferWithFiles(pdf));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Only board files can be imported");
   });
 
   test("imports a dropped board file and opens it", async () => {
