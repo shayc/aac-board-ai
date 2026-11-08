@@ -18,6 +18,7 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
+import { subscribeCompletedDownloads } from "../import/board-set-downloads";
 import { rootBoardPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
 import type { CatalogBoardSet } from "./board-set-catalog";
@@ -51,6 +52,8 @@ export function BoardSetList({
     boardSet: BoardSetRecord;
   } | null>(null);
   const [boardSetIdToFocus, setBoardSetIdToFocus] = useState<string>();
+
+  useEffect(() => subscribeCompletedDownloads(setBoardSetIdToFocus), []);
 
   const entries = toSortedEntries(boardSets, downloadableBoardSets, uiLocale);
 
@@ -90,7 +93,6 @@ export function BoardSetList({
           key={boardSet.id}
           name={boardSet.name}
           url={boardSet.url}
-          onDownloaded={setBoardSetIdToFocus}
         />
       );
     }

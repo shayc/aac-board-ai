@@ -22,22 +22,16 @@ const PROGRESS_RING_SIZE = 24;
 interface DownloadableBoardSetListItemProps {
   name: string;
   url: string;
-  onDownloaded: (boardSetId: string) => void;
 }
 
 export function DownloadableBoardSetListItem({
   name,
   url,
-  onDownloaded,
 }: DownloadableBoardSetListItemProps) {
   const t = useTranslate();
   const uiLocale = useUILocale();
   const statusId = useId();
-  const { phase, download, cancel } = useBoardSetDownload({
-    name,
-    url,
-    onDownloaded,
-  });
+  const { phase, download, cancel } = useBoardSetDownload({ name, url });
 
   const isDownloading = phase?.kind === "downloading";
   const status = phase && describeDownloadPhase(phase, t, uiLocale);

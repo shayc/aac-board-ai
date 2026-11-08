@@ -16,7 +16,10 @@ interface PendingDownload {
   controller: AbortController;
 }
 
+type CompletedDownloadListener = (boardSetId: string) => void;
+
 const pendingDownloadsByURL = new Map<string, PendingDownload>();
+const completedDownloadListeners = new Set<CompletedDownloadListener>();
 const downloadPhasesStore = createExternalStore<
   ReadonlyMap<string, BoardSetDownloadPhase>
 >(new Map());
@@ -55,6 +58,16 @@ function publishProgress(url: string, progress: DownloadProgress) {
   setDownloadPhase(url, { kind: "downloading", ...progress });
 }
 
+function announceCompletedDownload(
+  importedBoardSet: ImportedBoardSet,
+): ImportedBoardSet {
+  for (const listener of completedDownloadListeners) {
+    listener(importedBoardSet.id);
+  }
+
+  return importedBoardSet;
+}
+
 export function downloadBoardSet(
   url: string,
 ): Promise<ImportedBoardSet | undefined> {
@@ -69,6 +82,7 @@ export function downloadBoardSet(
     onProgress: (progress) => publishProgress(url, progress),
     onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
   })
+    .then(announceCompletedDownload)
     .catch((error: unknown) => {
       if (controller.signal.aborted) {
         return undefined;
@@ -87,10 +101,14 @@ export function downloadBoardSet(
   return promise;
 }
 
-export function getPendingBoardSetDownload(
-  url: string,
-): Promise<ImportedBoardSet | undefined> | undefined {
-  return pendingDownloadsByURL.get(url)?.promise;
+export function subscribeCompletedDownloads(
+  listener: CompletedDownloadListener,
+): () => void {
+  completedDownloadListeners.add(listener);
+
+  return () => {
+    completedDownloadListeners.delete(listener);
+  };
 }
 
 export function cancelBoardSetDownload(url: string) {
