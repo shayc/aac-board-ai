@@ -7,7 +7,13 @@ import {
 } from "@shared/utils/parse-clamped-number";
 import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
 
-export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
+const TILE_LABEL_PLACEMENTS = [
+  "top",
+  "bottom",
+  "hidden",
+] as const satisfies readonly (SymbolLabelPlacement | "hidden")[];
+
+export type TileLabelPlacement = (typeof TILE_LABEL_PLACEMENTS)[number];
 
 interface TilePreferences {
   saturation: number;
@@ -22,7 +28,7 @@ export const TILE_SATURATION: ClampedNumberOptions = {
 };
 
 function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
-  return value === "top" || value === "bottom" || value === "hidden";
+  return TILE_LABEL_PLACEMENTS.some((placement) => placement === value);
 }
 
 export function parseTilePreferences(raw: unknown): TilePreferences {
