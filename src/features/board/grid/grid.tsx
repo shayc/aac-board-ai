@@ -16,7 +16,7 @@ export interface GridItemProps {
 
 interface GridProps<TItem extends { id: string }> {
   ariaLabel?: string;
-  boardId: string;
+  contentId: string;
   items: readonly TItem[];
   rows: number;
   columns: number;
@@ -28,7 +28,7 @@ interface GridProps<TItem extends { id: string }> {
 
 export function Grid<TItem extends { id: string }>({
   ariaLabel,
-  boardId,
+  contentId,
   items,
   rows,
   columns,
@@ -38,7 +38,7 @@ export function Grid<TItem extends { id: string }>({
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid, boardId);
+  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid, contentId);
 
   return (
     <Box ref={ref} sx={createGridViewportSx}>

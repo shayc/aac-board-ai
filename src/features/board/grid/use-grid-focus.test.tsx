@@ -62,7 +62,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -89,7 +89,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -116,7 +116,7 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
-            boardId="board"
+            contentId="board"
             rows={2}
             columns={2}
             items={oldItems}
@@ -132,7 +132,7 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
-            boardId="board"
+            contentId="board"
             rows={2}
             columns={2}
             items={newItems}
@@ -150,7 +150,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <Grid
           ariaLabel="Board"
-          boardId="board-a"
+          contentId="board-a"
           rows={2}
           columns={2}
           items={makeItems(1, 2, 3, 4)}
@@ -165,7 +165,7 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <Grid
           ariaLabel="Renamed board"
-          boardId="board-a"
+          contentId="board-a"
           rows={2}
           columns={2}
           items={makeItems(1, 2, 3, 4)}
@@ -179,10 +179,10 @@ describe("useGridFocus", () => {
       expect(document.activeElement).toBe(document.body);
     });
 
-    test("moves focus lost to the body into the remembered position when the board changes", async () => {
+    test("moves focus lost to the body into the remembered position when the content ID changes", async () => {
       const screen = await render(
         <Grid
-          boardId="board-a"
+          contentId="board-a"
           rows={2}
           columns={2}
           items={makeItems(1, 2, 3, 4)}
@@ -196,7 +196,7 @@ describe("useGridFocus", () => {
 
       await screen.rerender(
         <Grid
-          boardId="board-b"
+          contentId="board-b"
           rows={2}
           columns={2}
           items={makeItems(5, 6, 7, 8)}
@@ -216,7 +216,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -242,7 +242,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -269,7 +269,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={3}
           items={items}
@@ -291,7 +291,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={1}
           columns={2}
           items={items}
@@ -315,7 +315,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -339,7 +339,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -366,7 +366,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -393,7 +393,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -415,7 +415,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -444,7 +444,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          boardId="board"
+          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -467,7 +467,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={1}
             columns={2}
             items={items}
@@ -490,7 +490,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={1}
             columns={2}
             items={items}
@@ -518,7 +518,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={2}
             columns={2}
             items={items}
@@ -542,7 +542,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={1}
             columns={3}
             items={items}
@@ -565,7 +565,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={1}
             columns={3}
             items={items}
@@ -588,7 +588,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={2}
             columns={2}
             items={items}
@@ -611,7 +611,7 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            boardId="board"
+            contentId="board"
             rows={2}
             columns={2}
             items={items}
