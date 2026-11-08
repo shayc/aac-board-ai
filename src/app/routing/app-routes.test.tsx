@@ -16,7 +16,7 @@ import { appRoutes } from "./app-routes";
 const OBZ_FIXTURE_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 
-async function renderAppPastOnboarding(initialEntry = "/") {
+async function renderApp(initialEntry = "/") {
   const router = createMemoryRouter(appRoutes, {
     initialEntries: [initialEntry],
   });
@@ -82,7 +82,7 @@ describe("app flow", () => {
   test("first run: imported board set opens, composes across boards, and speaks", async () => {
     await importBoardFileFromURL(OBZ_FIXTURE_URL);
 
-    const { screen } = await renderAppPastOnboarding();
+    const { screen } = await renderApp();
 
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
@@ -110,7 +110,7 @@ describe("app flow", () => {
   test("recorded audio stays playable after leaving its board", async () => {
     await seedRecordedAudioSet();
 
-    const { screen } = await renderAppPastOnboarding();
+    const { screen } = await renderApp();
 
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "more" }).click();
@@ -133,7 +133,7 @@ describe("app flow", () => {
   });
 
   test("empty database: imports and opens the bundled starter board", async () => {
-    const { screen } = await renderAppPastOnboarding();
+    const { screen } = await renderApp();
 
     await expect
       .element(screen.getByRole("grid", { name: "First Words" }))
@@ -141,7 +141,7 @@ describe("app flow", () => {
   });
 
   test("starter board: a sentence continues into the food folder", async () => {
-    const { screen } = await renderAppPastOnboarding();
+    const { screen } = await renderApp();
 
     await screen.getByRole("button", { name: "I", exact: true }).click();
     await screen.getByRole("button", { name: "want" }).click();
@@ -165,7 +165,7 @@ describe("app flow", () => {
   test("?board= link that collides with an existing set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 
-    const { screen } = await renderAppPastOnboarding(
+    const { screen } = await renderApp(
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
 
@@ -194,9 +194,7 @@ describe("app flow", () => {
       },
     ]);
 
-    const { router, screen } = await renderAppPastOnboarding(
-      "/sets/animals/boards/home",
-    );
+    const { router, screen } = await renderApp("/sets/animals/boards/home");
 
     await expect
       .element(screen.getByRole("grid", { name: "Animals Home" }))
@@ -222,7 +220,7 @@ describe("app flow", () => {
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {
-    const { router, screen } = await renderAppPastOnboarding();
+    const { router, screen } = await renderApp();
 
     await expect
       .element(screen.getByRole("grid", { name: "First Words" }))
