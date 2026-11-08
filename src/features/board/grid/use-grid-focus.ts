@@ -21,7 +21,6 @@ interface UseGridFocusReturn {
 
 export function useGridFocus(
   grid: readonly (readonly unknown[])[],
-  contentId: string,
 ): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
@@ -71,13 +70,13 @@ export function useGridFocus(
     }
   }
 
-  const previousContentIdRef = useRef(contentId);
+  const previousGridRef = useRef(grid);
   useEffect(() => {
-    if (previousContentIdRef.current === contentId) {
+    if (previousGridRef.current === grid) {
       return;
     }
 
-    previousContentIdRef.current = contentId;
+    previousGridRef.current = grid;
 
     if (document.activeElement !== document.body) {
       return;
@@ -92,7 +91,7 @@ export function useGridFocus(
       findGridFocusableAt(root, rememberedPositionRef.current) ??
       findFirstGridFocusable(root);
     target?.focus();
-  }, [contentId]);
+  }, [grid]);
 
   const tabStopPosition = grid[rememberedPosition.row]?.[
     rememberedPosition.column

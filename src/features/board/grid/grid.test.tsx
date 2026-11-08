@@ -56,7 +56,6 @@ async function measureTracks(
         }
       >
         <Grid
-          contentId="board"
           items={items}
           rows={isColumns ? 1 : tracks}
           columns={isColumns ? tracks : 1}
@@ -118,7 +117,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -145,7 +143,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -172,7 +169,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -191,7 +187,6 @@ describe("Grid", () => {
     test("renders no items when items is empty", async () => {
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={[]}
@@ -222,7 +217,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -255,7 +249,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -287,7 +280,6 @@ describe("Grid", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -308,7 +300,6 @@ describe("Grid", () => {
       const screen = await render(
         <Grid
           ariaLabel="Core words"
-          contentId="board"
           items={items}
           rows={1}
           columns={1}

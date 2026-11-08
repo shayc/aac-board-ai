@@ -61,13 +61,7 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid
-          contentId="board"
-          rows={1}
-          columns={3}
-          items={items}
-          renderItem={renderButton}
-        />,
+        <Grid rows={1} columns={3} items={items} renderItem={renderButton} />,
       );
 
       const item1Button = screen.getByRole("button", { name: "Item 1" });
@@ -89,7 +83,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -116,7 +109,6 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
-            contentId="board"
             rows={2}
             columns={2}
             items={oldItems}
@@ -132,7 +124,6 @@ describe("useGridFocus", () => {
         <div>
           <button>Outside</button>
           <Grid
-            contentId="board"
             rows={2}
             columns={2}
             items={newItems}
@@ -146,14 +137,15 @@ describe("useGridFocus", () => {
       await expect.element(item5).toHaveAttribute("tabindex", "0");
     });
 
-    test("leaves focus outside the grid when it re-renders with equal items", async () => {
+    test("leaves focus outside the grid when it re-renders with the same items", async () => {
+      const items = makeItems(1, 2, 3, 4);
+
       const screen = await render(
         <Grid
           ariaLabel="Board"
-          contentId="board-a"
           rows={2}
           columns={2}
-          items={makeItems(1, 2, 3, 4)}
+          items={items}
           renderItem={renderButton}
         />,
       );
@@ -165,10 +157,9 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <Grid
           ariaLabel="Renamed board"
-          contentId="board-a"
           rows={2}
           columns={2}
-          items={makeItems(1, 2, 3, 4)}
+          items={items}
           renderItem={renderButton}
         />,
       );
@@ -178,36 +169,6 @@ describe("useGridFocus", () => {
         .toBeInTheDocument();
       expect(document.activeElement).toBe(document.body);
     });
-
-    test("moves focus lost to the body into the remembered position when the content ID changes", async () => {
-      const screen = await render(
-        <Grid
-          contentId="board-a"
-          rows={2}
-          columns={2}
-          items={makeItems(1, 2, 3, 4)}
-          renderItem={renderButton}
-        />,
-      );
-
-      const item4 = screen.getByRole("button", { name: "Item 4" });
-      item4.element().focus();
-      item4.element().blur();
-
-      await screen.rerender(
-        <Grid
-          contentId="board-b"
-          rows={2}
-          columns={2}
-          items={makeItems(5, 6, 7, 8)}
-          renderItem={renderButton}
-        />,
-      );
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 8" }))
-        .toHaveFocus();
-    });
   });
 
   describe("arrow navigation", () => {
@@ -215,13 +176,7 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3, 4);
 
       const screen = await render(
-        <Grid
-          contentId="board"
-          rows={2}
-          columns={2}
-          items={items}
-          renderItem={renderButton}
-        />,
+        <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -242,7 +197,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -269,7 +223,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={3}
           items={items}
@@ -290,13 +243,7 @@ describe("useGridFocus", () => {
       const items = makeItems(1);
 
       const screen = await render(
-        <Grid
-          contentId="board"
-          rows={1}
-          columns={2}
-          items={items}
-          renderItem={renderButton}
-        />,
+        <Grid rows={1} columns={2} items={items} renderItem={renderButton} />,
       );
 
       const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
@@ -315,7 +262,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -339,7 +285,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={1}
           columns={3}
           items={items}
@@ -366,7 +311,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -393,7 +337,6 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <Grid
-          contentId="board"
           rows={2}
           columns={2}
           items={items}
@@ -414,13 +357,7 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3, 4);
 
       const screen = await render(
-        <Grid
-          contentId="board"
-          rows={2}
-          columns={2}
-          items={items}
-          renderItem={renderButton}
-        />,
+        <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
       );
 
       const item1 = screen.getByRole("button", {
@@ -443,13 +380,7 @@ describe("useGridFocus", () => {
       const items = makeItems(1, 2, 3);
 
       const screen = await render(
-        <Grid
-          contentId="board"
-          rows={1}
-          columns={3}
-          items={items}
-          renderItem={renderButton}
-        />,
+        <Grid rows={1} columns={3} items={items} renderItem={renderButton} />,
       );
 
       const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
@@ -466,13 +397,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={1}
-            columns={2}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
         </div>,
       );
 
@@ -489,13 +414,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={1}
-            columns={2}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={1} columns={2} items={items} renderItem={renderButton} />
         </div>,
       );
 
@@ -518,7 +437,6 @@ describe("useGridFocus", () => {
       const screen = await render(
         <div dir="rtl">
           <Grid
-            contentId="board"
             rows={2}
             columns={2}
             items={items}
@@ -541,13 +459,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={1}
-            columns={3}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
         </div>,
       );
 
@@ -564,13 +476,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={1}
-            columns={3}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
         </div>,
       );
 
@@ -587,13 +493,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={2}
-            columns={2}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
         </div>,
       );
 
@@ -610,13 +510,7 @@ describe("useGridFocus", () => {
 
       const screen = await render(
         <div dir="rtl">
-          <Grid
-            contentId="board"
-            rows={2}
-            columns={2}
-            items={items}
-            renderItem={renderButton}
-          />
+          <Grid rows={2} columns={2} items={items} renderItem={renderButton} />
         </div>,
       );
 
