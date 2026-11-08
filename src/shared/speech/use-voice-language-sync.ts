@@ -10,10 +10,6 @@ import {
   useVoicesByLanguage,
 } from "./speech-store";
 
-/**
- * The user's preferred regional variant for a language, drawn from OS/browser
- * preferences (`fr-CA` → `CA`).
- */
 function getPreferredRegionCode(language: string): string | undefined {
   for (const tag of navigator.languages) {
     if (getLanguageCode(tag) !== language) {

@@ -4,12 +4,7 @@ import {
   type ImportedBoardSet,
 } from "./board-import";
 
-/**
- * Hard cap on a board download, enforced while the response streams so an
- * oversized transfer is cancelled mid-flight instead of buffered whole.
- * Generous versus real boards (observed up to ~70MB) but bounded — the
- * network-side counterpart of `BOARD_IMPORT_LIMITS`.
- */
+// Generous relative to observed boards (~70 MB) while bounding downloads.
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
 type BoardURLErrorCode = "unsupported-scheme" | "download-too-large";

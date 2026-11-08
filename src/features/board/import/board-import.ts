@@ -20,14 +20,7 @@ export interface ImportedBoardSet {
   rootBoardId: string;
 }
 
-/**
- * Decompression caps used by every OBZ import path. Limits are checked against
- * each entry's declared metadata before that entry is inflated; entries
- * accepted earlier may already be allocated. The values are generous relative
- * to observed boards (~70 MB) while bounding decompression allocation.
- * Exceeding a cap makes `loadBoard` throw an `OBFError` with code
- * `"archive-too-large"`.
- */
+// Generous relative to observed boards (~70 MB) while bounding decompression.
 export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxTotalOriginalSize: 500 * 1024 * 1024,
   maxEntrySize: 100 * 1024 * 1024,
