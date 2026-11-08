@@ -122,4 +122,18 @@ describe("loadBoardInLanguage", () => {
     expect(board.name).toBe("Food");
     expect(board.buttons[0].label).toBe("eat");
   });
+
+  test("rejects instead of falling back when the load is aborted mid-translation", async () => {
+    await storeBoard();
+    const controller = new AbortController();
+    stubTranslator(() => {
+      controller.abort();
+
+      return Promise.reject(controller.signal.reason);
+    });
+
+    await expect(
+      loadBoardInLanguage("set-1", "board-1", "es", controller.signal),
+    ).rejects.toMatchObject({ name: "AbortError" });
+  });
 });

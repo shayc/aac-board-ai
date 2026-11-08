@@ -55,6 +55,8 @@ async function translateBoardStrings(
       translator.destroy();
     }
   } catch {
+    signal?.throwIfAborted();
+
     // Translation is optional; failures must leave the source board usable.
     return undefined;
   }
