@@ -1,7 +1,7 @@
 import { getStoredLanguage } from "@shared/language/language-store";
 import {
-  getSpeechVoice,
   getSpeechPreferences,
+  getSpeechVoice,
 } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
 
