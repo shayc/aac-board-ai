@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "इस डिवाइस पर बोर्ड का स्वचालित अनुवाद उपलब्ध नहीं है।",
   "loading": "लोड हो रहा है…",
   "close": "बंद करें",

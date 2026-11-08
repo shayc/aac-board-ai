@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "A tradução automática de pranchas não está disponível neste dispositivo.",
   "loading": "Carregando...",
   "close": "Fechar",

@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "이 기기에서는 보드 자동 번역을 사용할 수 없습니다.",
   "loading": "불러오는 중…",
   "close": "닫기",

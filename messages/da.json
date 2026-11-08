@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Automatisk oversættelse af tavler er ikke tilgængelig på denne enhed.",
   "loading": "Indlæser...",
   "close": "Luk",

@@ -17,16 +17,12 @@ export async function boardLoader({
   }
 
   try {
-    const board = await loadBoardInLanguage(
+    return await loadBoardInLanguage(
       boardSetId,
       boardId,
       getStoredLanguage(),
       request.signal,
     );
-
-    request.signal.throwIfAborted();
-
-    return board;
   } catch (error) {
     if (error instanceof BoardNotFoundError) {
       throw routeErrorResponse(routeErrorCodes.boardNotFound);

@@ -48,7 +48,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const shortcuts = useBoardShortcuts({ message, playback });
 
   const hasMessage = message.parts.length > 0;
-  const isInBoardSet = Boolean(navigation.boardSetId);
 
   function handleHome() {
     if (navigation.isHome) {
@@ -62,7 +61,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     gridViewportRef.current?.scrollTo({ left: 0, top: 0 });
   }
 
-  const navigationButtons = isInBoardSet && (
+  const navigationButtons = (
     <NavigationButtons
       canGoBack={navigation.canGoBack}
       canGoHome={navigation.canGoHome}
@@ -137,7 +136,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Toolbar
           sx={{
             alignItems: "flex-end",
-            justifyContent: isInBoardSet ? "space-between" : "flex-end",
+            justifyContent: "space-between",
             gap: 2,
             pb: safeAreaInset("bottom"),
           }}

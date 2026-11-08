@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Az automatikus táblafordítás nem érhető el ezen az eszközön.",
   "loading": "Betöltés...",
   "close": "Bezárás",

@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "Automatický preklad tabuľky nie je na tomto zariadení dostupný.",
   "loading": "Načítava sa...",
   "close": "Zavrieť",

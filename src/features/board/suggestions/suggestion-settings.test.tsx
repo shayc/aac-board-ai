@@ -1,7 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import {
-  stubBuiltInAIUnsupported,
   stubProofreader,
   stubRewriter,
   stubTranslator,
@@ -21,7 +20,6 @@ function renderSuggestionsSettings() {
 describe("SuggestionSettings", () => {
   test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
     stubProofreader();
-    stubBuiltInAIUnsupported("Rewriter", "Translator");
 
     const screen = await renderSuggestionsSettings();
 

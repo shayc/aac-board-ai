@@ -1,6 +1,5 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "appName": "AAC Board AI",
   "languageTranslationUnavailable": "الترجمة التلقائية للوحة غير متاحة على هذا الجهاز.",
   "loading": "جارٍ التحميل...",
   "close": "إغلاق",

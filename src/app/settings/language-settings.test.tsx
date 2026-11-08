@@ -1,9 +1,6 @@
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import {
-  stubBuiltInAIUnsupported,
-  stubTranslator,
-} from "@shared/testing/stub-built-in-ai";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
@@ -19,8 +16,6 @@ function renderLanguageSettings() {
 
 describe("LanguageSettings", () => {
   test("keeps language selection available without the Translator", async () => {
-    stubBuiltInAIUnsupported("Translator");
-
     const screen = await renderLanguageSettings();
     const select = screen.getByRole("combobox", { name: "Language" });
 
