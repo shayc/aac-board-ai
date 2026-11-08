@@ -34,37 +34,27 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       onClose={onClose}
       anchor="right"
     >
-      <Box sx={{ px: 3, pb: 3 }}>
+      <Stack divider={<Divider />} spacing={3} sx={{ px: 3, pb: 3 }}>
         <SettingsSection title={t(m.settingsSectionAppearance)}>
           <ThemeSettings />
         </SettingsSection>
-
-        <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionLanguageVoice)}>
           <LanguageSettings />
           <SpeechSettings />
         </SettingsSection>
 
-        <Divider sx={{ my: 3 }} />
-
         <SettingsSection title={t(m.settingsSectionBoard)}>
           <TileSettings />
         </SettingsSection>
-
-        <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionMessage)}>
           <MessageSettings />
         </SettingsSection>
 
-        <Divider sx={{ my: 3 }} />
-
         <SettingsSection title={t(m.settingsSectionSuggestions)}>
           <SuggestionSettings />
         </SettingsSection>
-
-        <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionAbout)}>
           <Stack spacing={1}>
@@ -85,7 +75,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
             </Typography>
           </Stack>
         </SettingsSection>
-      </Box>
+      </Stack>
     </AppDrawer>
   );
 }
