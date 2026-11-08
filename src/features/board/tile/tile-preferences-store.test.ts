@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { parseBoardPreferences } from "./board-preferences-store";
+import { parseTilePreferences } from "./tile-preferences-store";
 
 const DEFAULTS = {
   tileSaturation: 1,
@@ -7,9 +7,9 @@ const DEFAULTS = {
   tileLabelPlacement: "top",
 };
 
-describe("parseBoardPreferences", () => {
+describe("parseTilePreferences", () => {
   test("uses defaults when nothing is stored", () => {
-    expect(parseBoardPreferences(undefined)).toEqual(DEFAULTS);
+    expect(parseTilePreferences(undefined)).toEqual(DEFAULTS);
   });
 
   test("keeps valid stored values", () => {
@@ -19,7 +19,7 @@ describe("parseBoardPreferences", () => {
       tileLabelPlacement: "hidden",
     };
 
-    expect(parseBoardPreferences(stored)).toEqual(stored);
+    expect(parseTilePreferences(stored)).toEqual(stored);
   });
 
   test.each([
@@ -29,7 +29,7 @@ describe("parseBoardPreferences", () => {
     { areTileBordersVisible: 0 },
     { tileLabelPlacement: "center" },
   ])("falls back to the default for an invalid stored value %j", (stored) => {
-    expect(parseBoardPreferences(stored)).toEqual(DEFAULTS);
+    expect(parseTilePreferences(stored)).toEqual(DEFAULTS);
   });
 
   test.each([
@@ -38,7 +38,7 @@ describe("parseBoardPreferences", () => {
   ])(
     "clamps tileSaturation $tileSaturation into range",
     ({ tileSaturation, expected }) => {
-      expect(parseBoardPreferences({ tileSaturation }).tileSaturation).toBe(
+      expect(parseTilePreferences({ tileSaturation }).tileSaturation).toBe(
         expected,
       );
     },

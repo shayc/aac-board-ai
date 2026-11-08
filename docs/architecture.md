@@ -208,7 +208,7 @@ relative imports; they are not separate feature boundaries.
 ### Settings composition
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
-[board settings](../src/features/board/board-settings.tsx),
+[tile settings](../src/features/board/tile/tile-settings.tsx),
 [message settings](../src/features/board/message/message-settings.tsx), and
 [suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and

@@ -1,4 +1,3 @@
-export { BoardSettings } from "./board-settings";
 export { starterBoardSet } from "./board-sets/board-set-catalog";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { listBoardSets } from "./board-sets/board-sets-store";
@@ -18,6 +17,7 @@ export { BoardNotFoundError } from "./storage/board-content-storage";
 export { getBoardSetRecord } from "./storage/board-set-storage";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";
+export { TileSettings } from "./tile/tile-settings";
 export { loadBoardInLanguage } from "./translation/load-board-in-language";
 
 export type { Board } from "./board-types";

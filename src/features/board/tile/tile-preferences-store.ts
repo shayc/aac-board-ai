@@ -5,11 +5,11 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
+import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
 
 export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
 
-export interface BoardPreferences {
+export interface TilePreferences {
   tileSaturation: number;
   areTileBordersVisible: boolean;
   tileLabelPlacement: TileLabelPlacement;
@@ -25,7 +25,7 @@ function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
-export function parseBoardPreferences(raw: unknown): BoardPreferences {
+export function parseTilePreferences(raw: unknown): TilePreferences {
   const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
@@ -37,13 +37,13 @@ export function parseBoardPreferences(raw: unknown): BoardPreferences {
   };
 }
 
-const boardPreferencesStore = createPersistedStore<BoardPreferences>(
-  "board-preferences",
-  parseBoardPreferences,
+const tilePreferencesStore = createPersistedStore<TilePreferences>(
+  "tile-preferences",
+  parseTilePreferences,
 );
 
-function updatePreferences(patch: Partial<BoardPreferences>): void {
-  boardPreferencesStore.setState((preferences) => ({
+function updatePreferences(patch: Partial<TilePreferences>): void {
+  tilePreferencesStore.setState((preferences) => ({
     ...preferences,
     ...patch,
   }));
@@ -63,6 +63,6 @@ export function setTileLabelPlacement(
   updatePreferences({ tileLabelPlacement });
 }
 
-export function useBoardPreferences(): BoardPreferences {
-  return useExternalStore(boardPreferencesStore);
+export function useTilePreferences(): TilePreferences {
+  return useExternalStore(tilePreferencesStore);
 }

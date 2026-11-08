@@ -3,13 +3,13 @@ import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
-import { BoardSettings } from "./board-settings";
+import { TileSettings } from "./tile-settings";
 
-describe("BoardSettings", () => {
-  test("renders the board controls with no accessibility violations", async () => {
+describe("TileSettings", () => {
+  test("renders the tile controls with no accessibility violations", async () => {
     const screen = await render(
       <AppProviders>
-        <BoardSettings />
+        <TileSettings />
       </AppProviders>,
     );
 
@@ -44,7 +44,7 @@ describe("BoardSettings", () => {
   test("shows one focus outline around each label option while keeping its preview visible", async () => {
     const screen = await render(
       <AppProviders>
-        <BoardSettings />
+        <TileSettings />
       </AppProviders>,
     );
 
@@ -74,7 +74,7 @@ describe("BoardSettings", () => {
   test("persists tile border visibility when toggled", async () => {
     const screen = await render(
       <AppProviders>
-        <BoardSettings />
+        <TileSettings />
       </AppProviders>,
     );
 
@@ -87,7 +87,7 @@ describe("BoardSettings", () => {
     await expect.element(bordersSwitch).toBeChecked();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-preferences");
+      const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         areTileBordersVisible: boolean;
@@ -99,7 +99,7 @@ describe("BoardSettings", () => {
   test("persists tile saturation when color intensity is lowered", async () => {
     const screen = await render(
       <AppProviders>
-        <BoardSettings />
+        <TileSettings />
       </AppProviders>,
     );
 
@@ -117,7 +117,7 @@ describe("BoardSettings", () => {
     await expect.element(screen.getByText("90%")).toBeVisible();
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-preferences");
+      const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileSaturation: number;
@@ -129,8 +129,8 @@ describe("BoardSettings", () => {
   test("keeps repeated label position controls synchronized and persists the choice", async () => {
     const screen = await render(
       <AppProviders>
-        <BoardSettings />
-        <BoardSettings />
+        <TileSettings />
+        <TileSettings />
       </AppProviders>,
     );
 
@@ -153,7 +153,7 @@ describe("BoardSettings", () => {
     }
 
     await vi.waitFor(() => {
-      const stored = localStorage.getItem("board-preferences");
+      const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
         tileLabelPlacement: string;

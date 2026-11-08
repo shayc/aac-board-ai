@@ -1,6 +1,6 @@
 import { AppDrawer } from "@app/shell/app-drawer";
 import {
-  BoardSettings,
+  TileSettings,
   MessageSettings,
   SuggestionSettings,
 } from "@features/board";
@@ -49,7 +49,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionBoard)}>
-          <BoardSettings />
+          <TileSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />
