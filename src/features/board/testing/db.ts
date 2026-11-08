@@ -6,8 +6,6 @@ import {
 import { getBoardsDB } from "../storage/boards-db";
 import { makeOBFBoard } from "./fixtures";
 
-const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
-
 interface SeedBoardSet extends Partial<BoardSetInput> {
   id: string;
   rootBoardId: string;
@@ -15,8 +13,9 @@ interface SeedBoardSet extends Partial<BoardSetInput> {
 
 async function clearBoardsDB(): Promise<void> {
   const db = await getBoardsDB();
-  const tx = db.transaction(STORE_NAMES, "readwrite");
-  for (const name of STORE_NAMES) {
+  const storeNames = Array.from(db.objectStoreNames);
+  const tx = db.transaction(storeNames, "readwrite");
+  for (const name of storeNames) {
     await tx.objectStore(name).clear();
   }
 
