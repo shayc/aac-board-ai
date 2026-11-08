@@ -176,6 +176,9 @@ function toSortedEntries(
   );
 }
 
+const secondaryAction = `.${listItemSecondaryActionClasses.root}`;
+const engagedListItem = `&:is(:hover, :focus-within, :has([aria-expanded="true"]))`;
+
 interface BoardSetListItemProps {
   menuId: string;
   name: string;
@@ -225,7 +228,7 @@ function BoardSetListItem({
       sx={(theme) => ({
         "@media (hover: hover)": {
           [theme.breakpoints.up("md")]: {
-            [`& .${listItemSecondaryActionClasses.root}`]: {
+            [`& ${secondaryAction}`]: {
               opacity: 0,
               pointerEvents: "none",
               transition: theme.transitions.create("opacity", {
@@ -235,8 +238,10 @@ function BoardSetListItem({
                 transition: "none",
               },
             },
-            [`&:is(:hover, :focus-within, :has([aria-expanded="true"])) .${listItemSecondaryActionClasses.root}`]:
-              { opacity: 1, pointerEvents: "auto" },
+            [`${engagedListItem} ${secondaryAction}`]: {
+              opacity: 1,
+              pointerEvents: "auto",
+            },
           },
         },
       })}
