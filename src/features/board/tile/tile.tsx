@@ -1,4 +1,4 @@
-import Button, { buttonClasses } from "@mui/material/Button";
+import ButtonBase, { buttonBaseClasses } from "@mui/material/ButtonBase";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
@@ -70,11 +70,19 @@ function tileSx(theme: Theme) {
     height: "100%",
     p: 1,
     overflow: "hidden",
+    ...theme.typography.button,
     color: `contrast-color(${background})`,
     backgroundColor: background,
     border: "4px solid var(--tile-border-color, transparent)",
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
+    transition: theme.transitions.create(
+      ["background-color", "box-shadow", "border-color", "color"],
+      {
+        duration: theme.transitions.duration.shortest,
+        easing: theme.transitions.easing.easeOut,
+      },
+    ),
     "&::before": {
       display: "none",
     },
@@ -87,10 +95,14 @@ function tileSx(theme: Theme) {
     "&:active": {
       backgroundColor: mixWithTextColor(background, "16%"),
       boxShadow: theme.vars.shadows[8],
+      transitionDuration: "0ms",
     },
-    [`&.${buttonClasses.focusVisible}`]: {
+    [`&.${buttonBaseClasses.focusVisible}`]: {
       outlineWidth: 3,
       boxShadow: theme.vars.shadows[6],
+    },
+    "@media (prefers-reduced-motion: reduce)": {
+      transition: "none",
     },
   } as const;
 }
@@ -127,7 +139,7 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const isLabelHidden = labelPlacement === "hidden";
 
   return (
-    <Button
+    <ButtonBase
       aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
@@ -141,6 +153,6 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
         labelPlacement={symbolLabelPlacement}
         isLabelHidden={isLabelHidden}
       />
-    </Button>
+    </ButtonBase>
   );
 }
