@@ -83,8 +83,10 @@ function VoiceSelect() {
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const savedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
-  const selectedVoiceURI = savedVoice?.voiceURI ?? "";
+  const isSavedVoiceAvailable = voices.some(
+    (voice) => voice.voiceURI === voiceURI,
+  );
+  const selectedVoiceURI = isSavedVoiceAvailable && voiceURI ? voiceURI : "";
   const automaticVoice = resolveVoice(voicesByLanguage, language, null);
   const automaticLabel = automaticVoice
     ? t(m.speechVoiceAutomaticNamed, { voice: automaticVoice.name })

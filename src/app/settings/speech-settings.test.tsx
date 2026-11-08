@@ -137,6 +137,16 @@ describe("SpeechSettings", () => {
     await expectNoA11yViolations(screen.getByRole("listbox").element());
   });
 
+  test("shows Automatic when the language has no voices", async () => {
+    stubVoices([]);
+
+    const screen = await renderSpeechSettings();
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Voice" }))
+      .toHaveTextContent("Automatic");
+  });
+
   test("saves the automatic voice when it is picked by name", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },

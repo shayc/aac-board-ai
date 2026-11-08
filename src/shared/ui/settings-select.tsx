@@ -27,10 +27,10 @@ export function SettingsSelect({
         <Select
           labelId={labelId}
           value={value}
-          onChange={(event) => onChange(event.target.value)}
           displayEmpty
           size="small"
           fullWidth
+          onChange={(event) => onChange(event.target.value)}
           sx={{ minWidth: 0 }}
         >
           {children}
