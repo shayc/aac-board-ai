@@ -48,10 +48,7 @@ export function DownloadableBoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip
-          title={t(isDownloading ? m.libraryCancelDownload : m.libraryDownload)}
-          placement="right"
-        >
+        <Tooltip title={t(tooltipMessage(phase))} placement="right">
           <IconButton
             aria-label={t(
               isDownloading
@@ -89,11 +86,8 @@ function DownloadButtonIcon({
     return <DownloadOutlinedIcon />;
   }
 
-  if (phase.kind === "importing") {
-    return null;
-  }
-
-  const percent = downloadPercent(phase);
+  const isImporting = phase.kind === "importing";
+  const percent = isImporting ? 100 : downloadPercent(phase);
 
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -105,11 +99,25 @@ function DownloadButtonIcon({
         value={percent}
         enableTrackSlot
       />
-      <StopRoundedIcon
-        sx={{ position: "absolute", inset: 0, margin: "auto", fontSize: 14 }}
-      />
+      {!isImporting && (
+        <StopRoundedIcon
+          sx={{ position: "absolute", inset: 0, margin: "auto", fontSize: 14 }}
+        />
+      )}
     </Box>
   );
+}
+
+function tooltipMessage(phase: BoardSetDownloadPhase | undefined) {
+  if (phase?.kind === "downloading") {
+    return m.libraryCancelDownload;
+  }
+
+  if (phase?.kind === "importing") {
+    return m.libraryImportingStatus;
+  }
+
+  return m.libraryDownload;
 }
 
 function downloadPercent({
