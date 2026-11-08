@@ -184,8 +184,10 @@ describe("useGridFocus", () => {
         />,
       );
 
-      const item2 = screen.getByRole("button", { name: "Item 2" }).element();
-      item2.focus();
+      const focusedButton = screen
+        .getByRole("button", { name: "Item 2" })
+        .element();
+      focusedButton.focus();
 
       await screen.rerender(
         <Grid
@@ -196,7 +198,7 @@ describe("useGridFocus", () => {
         />,
       );
 
-      expect(item2.isConnected).toBe(false);
+      expect(focusedButton.isConnected).toBe(false);
       await expect
         .element(screen.getByRole("button", { name: "Item 6" }))
         .toHaveFocus();
