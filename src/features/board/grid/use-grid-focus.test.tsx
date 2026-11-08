@@ -169,6 +169,38 @@ describe("useGridFocus", () => {
         .toBeInTheDocument();
       expect(document.activeElement).toBe(document.body);
     });
+
+    test("returns lost focus to the remembered cell when the grid changes", async () => {
+      const renderKeyedButton = (item: TestItem, props: GridItemProps) => (
+        <button key={item.id} {...props}>
+          {item.label}
+        </button>
+      );
+
+      const screen = await render(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderKeyedButton}
+        />,
+      );
+
+      screen.getByRole("button", { name: "Item 4" }).element().focus();
+
+      await screen.rerender(
+        <Grid
+          rows={2}
+          columns={2}
+          items={makeItems(5, 6, 7, 8)}
+          renderItem={renderKeyedButton}
+        />,
+      );
+
+      await expect
+        .element(screen.getByRole("button", { name: "Item 8" }))
+        .toHaveFocus();
+    });
   });
 
   describe("arrow navigation", () => {
