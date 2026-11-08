@@ -78,6 +78,34 @@ function backgroundLuminance(tile: Locator): number {
   return relativeLuminance(paint(styleOf(tile).backgroundColor));
 }
 
+function Unhoverable({ children }: { children: ReactNode }) {
+  return <div style={{ pointerEvents: "none" }}>{children}</div>;
+}
+
+async function measureLuminanceOnHover(backgroundColor?: string) {
+  const screen = await renderInTheme(
+    <>
+      <Unhoverable>
+        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+          Resting
+        </Tile>
+      </Unhoverable>
+      <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+        Hovered
+      </Tile>
+    </>,
+  );
+  const restingTile = screen.getByRole("button", { name: "Resting" });
+  const hoveredTile = screen.getByRole("button", { name: "Hovered" });
+
+  await hoveredTile.hover();
+
+  return {
+    resting: backgroundLuminance(restingTile),
+    hovered: backgroundLuminance(hoveredTile),
+  };
+}
+
 describe("Tile", () => {
   test("is named by its symbol label and keeps the symbol image decorative", async () => {
     const screen = await renderInTheme(
@@ -131,9 +159,11 @@ describe("Tile", () => {
     "rgba(0, 0, 0, 0.1)",
   ])("keeps the label readable on a %s background", async (backgroundColor) => {
     const screen = await renderInTheme(
-      <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
-        Word
-      </Tile>,
+      <Unhoverable>
+        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+          Word
+        </Tile>
+      </Unhoverable>,
     );
     const { color, backgroundColor: background } = styleOf(
       screen.getByRole("button", { name: "Word" }),
@@ -180,37 +210,24 @@ describe("Tile", () => {
     },
   );
 
-  test("moves the background toward the text color on hover, lightening dark tiles and darkening light and uncolored ones", async () => {
-    const screen = await renderInTheme(
-      <>
-        <Tile backgroundColor="#000000" onActivate={vi.fn()}>
-          Dark
-        </Tile>
-        <Tile backgroundColor="#ffffff" onActivate={vi.fn()}>
-          Light
-        </Tile>
-        <Tile onActivate={vi.fn()}>Uncolored</Tile>
-      </>,
-    );
-    const darkTile = screen.getByRole("button", { name: "Dark" });
-    const lightTile = screen.getByRole("button", { name: "Light" });
-    const uncoloredTile = screen.getByRole("button", { name: "Uncolored" });
-    const darkRestingLuminance = backgroundLuminance(darkTile);
-    const lightRestingLuminance = backgroundLuminance(lightTile);
-    const uncoloredRestingLuminance = backgroundLuminance(uncoloredTile);
+  test("lightens a dark tile's background on hover", async () => {
+    const { resting, hovered } = await measureLuminanceOnHover("#000000");
 
-    await darkTile.hover();
-    const darkHoverLuminance = backgroundLuminance(darkTile);
-    await lightTile.hover();
-    const lightHoverLuminance = backgroundLuminance(lightTile);
-    await uncoloredTile.hover();
-    const uncoloredHoverLuminance = backgroundLuminance(uncoloredTile);
-    await uncoloredTile.unhover();
-
-    expect(darkHoverLuminance).toBeGreaterThan(darkRestingLuminance);
-    expect(lightHoverLuminance).toBeLessThan(lightRestingLuminance);
-    expect(uncoloredHoverLuminance).toBeLessThan(uncoloredRestingLuminance);
+    expect(hovered).toBeGreaterThan(resting);
   });
+
+  test.each([
+    { description: "light", backgroundColor: "#ffffff" },
+    { description: "uncolored", backgroundColor: undefined },
+  ])(
+    "darkens a $description tile's background on hover",
+    async ({ backgroundColor }) => {
+      const { resting, hovered } =
+        await measureLuminanceOnHover(backgroundColor);
+
+      expect(hovered).toBeLessThan(resting);
+    },
+  );
 
   test.each([
     { description: "its own border color", borderColor: "#00ff00" },
