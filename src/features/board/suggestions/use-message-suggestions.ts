@@ -68,11 +68,11 @@ export function useMessageSuggestions(
     phraseCount: phrases.length,
   });
 
-  const enable = () => {
+  function enable() {
     for (const source of sources) {
       source.enable();
     }
-  };
+  }
 
   return {
     isSupported: areSuggestionsSupported(),

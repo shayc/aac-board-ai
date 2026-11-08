@@ -24,13 +24,13 @@ export function createPersistedStore<T>(
 
   const store = createExternalStore<T>(load());
 
-  const persist = () => {
+  function persist() {
     try {
       localStorage.setItem(storageKey, JSON.stringify(store.getSnapshot()));
     } catch {
       // Storage failures (quota, private mode) shouldn't break the in-memory store.
     }
-  };
+  }
 
   store.subscribe(persist);
   reloaders.add(() => store.setState(load()));

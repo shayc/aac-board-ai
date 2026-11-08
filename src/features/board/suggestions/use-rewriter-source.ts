@@ -32,11 +32,11 @@ export function useRewriterSource({
     run: (signal) => rewriter.rewrite(text, { signal }),
   });
 
-  const enable = () => {
+  function enable() {
     if (rewriter.status === "downloadable") {
       enableQuietly(rewriter);
     }
-  };
+  }
 
   return {
     engineStatus: rewriter.status,
