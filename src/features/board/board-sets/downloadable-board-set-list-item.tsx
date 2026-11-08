@@ -101,7 +101,9 @@ function DownloadButtonIcon({
         aria-hidden
         color="inherit"
         size={PROGRESS_RING_SIZE}
-        disableShrink
+        variant="determinate"
+        value={0}
+        enableTrackSlot
       />
     );
   }
