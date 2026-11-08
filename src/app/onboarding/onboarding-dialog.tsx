@@ -19,6 +19,8 @@ import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
 import type { ReactNode } from "react";
 
+import { BoardMark } from "./board-mark";
+
 interface OnboardingDialogProps {
   open: boolean;
   onClose: () => void;
@@ -76,20 +78,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
       maxWidth="xs"
     >
       <Box sx={{ my: "auto", pt: 6 }}>
-        <Box
-          component="img"
-          alt=""
-          src={`${import.meta.env.BASE_URL}board.svg`}
-          sx={{
-            display: "block",
-            width: 96,
-            height: 96,
-            mx: "auto",
-            mb: 2,
-            borderRadius: "22%",
-            boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
-          }}
-        />
+        <BoardMark />
 
         <DialogTitle
           variant="h4"

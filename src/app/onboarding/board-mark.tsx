@@ -1,0 +1,47 @@
+import Box from "@mui/material/Box";
+import { SHELL_DARK } from "@shared/theme/theme-colors";
+
+const TILE_ROWS = [
+  ["#C9B8F0", "#FBE89A", "#BFE3C6"],
+  ["#FBE89A", "#F5B3B0", "#BFE3C6"],
+  ["#F9C99A", "#BFE3C6", "#ECEEF2"],
+];
+
+const TILE_SIZE = 104;
+const TILE_STRIDE = 124;
+const GRID_OFFSET = 80;
+
+export function BoardMark() {
+  return (
+    <Box
+      component="svg"
+      aria-hidden
+      viewBox="-24 -24 560 560"
+      sx={{
+        display: "block",
+        width: 96,
+        height: 96,
+        mx: "auto",
+        mb: 2,
+        borderRadius: "22%",
+        boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
+      }}
+    >
+      <rect x={-24} y={-24} width={560} height={560} fill={SHELL_DARK} />
+
+      {TILE_ROWS.flatMap((row, rowIndex) =>
+        row.map((fill, columnIndex) => (
+          <rect
+            key={`${rowIndex}-${columnIndex}`}
+            x={GRID_OFFSET + columnIndex * TILE_STRIDE}
+            y={GRID_OFFSET + rowIndex * TILE_STRIDE}
+            width={TILE_SIZE}
+            height={TILE_SIZE}
+            rx={20}
+            fill={fill}
+          />
+        )),
+      )}
+    </Box>
+  );
+}
