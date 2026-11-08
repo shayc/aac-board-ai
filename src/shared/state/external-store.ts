@@ -41,12 +41,12 @@ export function createExternalStore<T>(initialState: T): ExternalStore<T> {
 
 type SubscribableStore<T> = Pick<ExternalStore<T>, "subscribe" | "getSnapshot">;
 
-export function useStore<T>(store: SubscribableStore<T>): T;
-export function useStore<T, Selected>(
+export function useExternalStore<T>(store: SubscribableStore<T>): T;
+export function useExternalStore<T, Selected>(
   store: SubscribableStore<T>,
   select: (state: T) => Selected,
 ): Selected;
-export function useStore<T, Selected>(
+export function useExternalStore<T, Selected>(
   store: SubscribableStore<T>,
   select?: (state: T) => Selected,
 ): T | Selected {

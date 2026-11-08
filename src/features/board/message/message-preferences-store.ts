@@ -1,4 +1,4 @@
-import { useStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 
@@ -39,5 +39,5 @@ export function setMessageHighlightingEnabled(
 }
 
 export function useMessagePreferences(): MessagePreferences {
-  return useStore(messagePreferencesStore);
+  return useExternalStore(messagePreferencesStore);
 }

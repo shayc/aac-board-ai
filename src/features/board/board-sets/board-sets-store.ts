@@ -1,4 +1,7 @@
-import { createExternalStore, useStore } from "@shared/state/external-store";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
   insertBoardSet,
@@ -73,7 +76,7 @@ function subscribeBoardSets(listener: () => void): () => void {
 }
 
 export function useBoardSets(): BoardSetsSnapshot {
-  return useStore({
+  return useExternalStore({
     subscribe: subscribeBoardSets,
     getSnapshot: boardSetsStore.getSnapshot,
   });

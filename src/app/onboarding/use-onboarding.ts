@@ -1,4 +1,4 @@
-import { useStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 
@@ -13,7 +13,7 @@ interface UseOnboardingReturn {
 }
 
 export function useOnboarding(): UseOnboardingReturn {
-  const hasSeen = useStore(onboardingStore);
+  const hasSeen = useExternalStore(onboardingStore);
 
   return {
     shouldShow: !hasSeen,

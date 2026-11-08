@@ -3,7 +3,7 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import {
   cancelBoardSetDownload,
   downloadBoardSet,
-  useDownloadPhase,
+  useBoardSetDownloadPhase,
   type BoardSetDownloadPhase,
 } from "./board-set-downloads";
 
@@ -21,7 +21,7 @@ export function useBoardSetDownload({
   url: string;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
-  const phase = useDownloadPhase(url);
+  const phase = useBoardSetDownloadPhase(url);
 
   async function download() {
     if (phase) {

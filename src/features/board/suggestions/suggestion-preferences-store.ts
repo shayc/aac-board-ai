@@ -1,4 +1,4 @@
-import { useStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 
 interface SuggestionPreferences {
@@ -33,5 +33,5 @@ export function setSuggestionCustomInstructions(
 }
 
 export function useSuggestionPreferences(): SuggestionPreferences {
-  return useStore(suggestionPreferencesStore);
+  return useExternalStore(suggestionPreferencesStore);
 }

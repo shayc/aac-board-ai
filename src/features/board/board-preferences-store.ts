@@ -1,4 +1,4 @@
-import { useStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 import {
@@ -64,5 +64,5 @@ export function setTileLabelPlacement(
 }
 
 export function useBoardPreferences(): BoardPreferences {
-  return useStore(boardPreferencesStore);
+  return useExternalStore(boardPreferencesStore);
 }

@@ -93,7 +93,8 @@ without rewriting stored records. Storage schema changes require a versioned
 migration in [`boards-db.ts`](../src/features/board/storage/boards-db.ts).
 
 React Context provides language, theme, playback controls, and snackbar access.
-Components subscribe to external stores through `useSyncExternalStore`.
+Components subscribe to external stores through `useExternalStore`, a
+`useSyncExternalStore` wrapper that takes an optional selector.
 
 Playback uses slice subscriptions: each component tracks only the progress fields
 it needs. Word-boundary updates rerender only components whose selected fields

@@ -1,5 +1,8 @@
 import { getLanguageCode } from "@shared/language/locale";
-import { createExternalStore, useStore } from "@shared/state/external-store";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import {
   parseClampedNumber,
@@ -104,9 +107,12 @@ export function getVoices(): SpeechSynthesisVoice[] {
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {
-  return useStore(voiceCatalogStore, (catalog) => catalog.voicesByLanguage);
+  return useExternalStore(
+    voiceCatalogStore,
+    (catalog) => catalog.voicesByLanguage,
+  );
 }
 
 export function useSpeechPreferences(): SpeechPreferences {
-  return useStore(speechPreferencesStore);
+  return useExternalStore(speechPreferencesStore);
 }

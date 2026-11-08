@@ -5,7 +5,7 @@ import {
   overwriteSetLocale,
   type Locale,
 } from "@paraglide/runtime";
-import { useStore } from "@shared/state/external-store";
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
 import { getLanguageCode } from "./locale";
 
@@ -47,7 +47,7 @@ export function setStoredLanguage(language: string): void {
 }
 
 export function useStoredLanguage(): string {
-  return useStore(languageStore);
+  return useExternalStore(languageStore);
 }
 
 export function getUILocale(): Locale {

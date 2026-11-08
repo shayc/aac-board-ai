@@ -1,4 +1,7 @@
-import { createExternalStore, useStore } from "@shared/state/external-store";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
 import type { ImportedBoardSet } from "../import/board-import";
 import {
   importBoardFileFromURL,
@@ -119,8 +122,8 @@ export function cancelBoardSetDownload(url: string) {
   pendingDownloadsByURL.get(url)?.controller.abort();
 }
 
-export function useDownloadPhase(
+export function useBoardSetDownloadPhase(
   url: string,
 ): BoardSetDownloadPhase | undefined {
-  return useStore(downloadPhasesStore, (phases) => phases.get(url));
+  return useExternalStore(downloadPhasesStore, (phases) => phases.get(url));
 }
