@@ -1,7 +1,7 @@
 import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
 import {
   BoardSettings,
-  PlaybackSettings,
+  MessageSettings,
   SuggestionSettings,
 } from "@features/board";
 import CloseIcon from "@mui/icons-material/Close";
@@ -104,7 +104,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
         <Divider sx={{ my: 3 }} />
 
         <SettingsSection title={t(m.settingsSectionMessage)}>
-          <PlaybackSettings />
+          <MessageSettings />
         </SettingsSection>
 
         <Divider sx={{ my: 3 }} />

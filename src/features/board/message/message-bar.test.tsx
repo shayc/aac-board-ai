@@ -17,6 +17,7 @@ function createProps(
   return {
     parts: [],
     activePartId: null,
+    areImagesVisible: true,
     isPlaying: false,
     onPlay: vi.fn(),
     onStop: vi.fn(),
@@ -81,6 +82,20 @@ describe("MessageBar", () => {
     const styles = getComputedStyle(label);
 
     expect(styles.userSelect).toBe("text");
+  });
+
+  test("shows labels without images when images are hidden", async () => {
+    const parts: MessagePart[] = [
+      { id: "a", label: "I", imageSrc: TEST_IMAGE_SRC },
+      { id: "b", label: "", imageSrc: TEST_IMAGE_SRC },
+    ];
+
+    const screen = await renderWithProviders(
+      <MessageBar {...createProps({ parts, areImagesVisible: false })} />,
+    );
+
+    await expect.element(screen.getByText("I")).toBeVisible();
+    expect(screen.container.querySelectorAll("img")).toHaveLength(1);
   });
 
   describe("scroll-into-view", () => {

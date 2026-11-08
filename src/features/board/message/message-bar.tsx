@@ -7,6 +7,7 @@ import { PlayButton } from "./play-button";
 export interface MessageBarProps {
   parts: MessagePart[];
   activePartId: string | null;
+  areImagesVisible: boolean;
   isPlaying: boolean;
   onPlay: () => void;
   onStop: () => void;
@@ -15,6 +16,7 @@ export interface MessageBarProps {
 export function MessageBar({
   parts,
   activePartId,
+  areImagesVisible,
   isPlaying,
   onPlay,
   onStop,
@@ -92,7 +94,11 @@ export function MessageBar({
                   outlineOffset: -2,
                 })}
               >
-                <AACSymbol label={part.label} imageSrc={part.imageSrc} />
+                <AACSymbol
+                  label={part.label}
+                  imageSrc={part.imageSrc}
+                  isImageHidden={!areImagesVisible}
+                />
               </Stack>
             );
           })}

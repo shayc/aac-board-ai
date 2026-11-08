@@ -6,10 +6,12 @@ import {
 import { useSyncExternalStore } from "react";
 import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 
+export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
+
 export interface BoardPreferences {
   tileSaturation: number;
   areTileBordersVisible: boolean;
-  tileLabelPlacement: SymbolLabelPlacement;
+  tileLabelPlacement: TileLabelPlacement;
 }
 
 export const TILE_SATURATION: ClampedNumberOptions = {
@@ -18,7 +20,7 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-function isSymbolLabelPlacement(value: unknown): value is SymbolLabelPlacement {
+function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
@@ -31,7 +33,7 @@ export function parseBoardPreferences(raw: unknown): BoardPreferences {
       typeof stored.areTileBordersVisible === "boolean"
         ? stored.areTileBordersVisible
         : false,
-    tileLabelPlacement: isSymbolLabelPlacement(stored.tileLabelPlacement)
+    tileLabelPlacement: isTileLabelPlacement(stored.tileLabelPlacement)
       ? stored.tileLabelPlacement
       : "top",
   };
@@ -58,7 +60,7 @@ export function setTileBordersVisible(areTileBordersVisible: boolean): void {
 }
 
 export function setTileLabelPlacement(
-  tileLabelPlacement: SymbolLabelPlacement,
+  tileLabelPlacement: TileLabelPlacement,
 ): void {
   updatePreferences({ tileLabelPlacement });
 }

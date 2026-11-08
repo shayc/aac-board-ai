@@ -76,15 +76,15 @@ support from User-Agent strings.
 
 State has distinct owners and lifetimes:
 
-| State                 | Owner                                 | Contents                                                                     |
-| --------------------- | ------------------------------------- | ---------------------------------------------------------------------------- |
-| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                      |
-| Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                  |
-| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close |
-| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                   |
-| Reactive shared state | `createExternalStore`                 | Board-set library, voice catalog, and playback progress                      |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board display, suggestion instructions, and onboarding     |
-| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                          |
+| State                 | Owner                                 | Contents                                                                         |
+| --------------------- | ------------------------------------- | -------------------------------------------------------------------------------- |
+| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                          |
+| Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                      |
+| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close     |
+| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                       |
+| Reactive shared state | `createExternalStore`                 | Board-set library, voice catalog, and playback progress                          |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board and message display, suggestion instructions, onboarding |
+| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                              |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding resolved board links and cached translations.
@@ -207,7 +207,7 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [board settings](../src/features/board/board-settings.tsx),
-[playback settings](../src/features/board/playback/playback-settings.tsx), and
+[message settings](../src/features/board/message/message-settings.tsx), and
 [suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
