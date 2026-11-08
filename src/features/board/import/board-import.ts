@@ -135,7 +135,7 @@ export function resolveBoardLinks(
 }
 
 export function buildAssetInputs(
-  resources: Map<string, Uint8Array>,
+  resources: Map<string, Uint8Array<ArrayBuffer>>,
 ): AssetInput[] {
   return Array.from(resources.entries())
     .filter(([path]) => {
@@ -147,7 +147,7 @@ export function buildAssetInputs(
 
       return {
         path,
-        blob: new Blob([buffer as Uint8Array<ArrayBuffer>], { type: mimeType }),
+        blob: new Blob([buffer], { type: mimeType }),
       };
     });
 }

@@ -58,7 +58,7 @@ describe("useImportBoardFiles", () => {
     // uncompressed size, so the limit trips before inflation.
     const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
     const zipped = await zip(new Map([["big.bin", oversized]]));
-    const file = new File([zipped as Uint8Array<ArrayBuffer>], "zip-bomb.obz", {
+    const file = new File([zipped], "zip-bomb.obz", {
       type: "application/octet-stream",
     });
 
