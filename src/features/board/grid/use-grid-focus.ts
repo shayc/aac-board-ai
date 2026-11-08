@@ -1,5 +1,5 @@
 import type { DOMAttributes, FocusEvent, RefObject } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { useKeyboard } from "react-aria";
 import {
   findFirstGridFocusable,
@@ -26,12 +26,6 @@ export function useGridFocus(
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
   );
-  const rememberedPositionRef = useRef(rememberedPosition);
-
-  function rememberPosition(next: GridPosition) {
-    rememberedPositionRef.current = next;
-    setRememberedPosition(next);
-  }
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -58,7 +52,7 @@ export function useGridFocus(
       }
 
       event.preventDefault();
-      rememberPosition(next.position);
+      setRememberedPosition(next.position);
       next.element.focus();
     },
   });
@@ -66,18 +60,11 @@ export function useGridFocus(
   function handleFocus(event: FocusEvent<HTMLElement>) {
     const position = findGridPosition(event.target);
     if (position) {
-      rememberPosition(position);
+      setRememberedPosition(position);
     }
   }
 
-  const previousGridRef = useRef(grid);
-  useEffect(() => {
-    if (previousGridRef.current === grid) {
-      return;
-    }
-
-    previousGridRef.current = grid;
-
+  const restoreLostFocus = useEffectEvent(() => {
     if (document.activeElement !== document.body) {
       return;
     }
@@ -88,9 +75,19 @@ export function useGridFocus(
     }
 
     const target =
-      findGridFocusableAt(root, rememberedPositionRef.current) ??
+      findGridFocusableAt(root, rememberedPosition) ??
       findFirstGridFocusable(root);
     target?.focus();
+  });
+
+  const previousGridRef = useRef(grid);
+  useEffect(() => {
+    if (previousGridRef.current === grid) {
+      return;
+    }
+
+    previousGridRef.current = grid;
+    restoreLostFocus();
   }, [grid]);
 
   const tabStopPosition = grid[rememberedPosition.row]?.[
