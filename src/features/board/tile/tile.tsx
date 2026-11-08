@@ -36,6 +36,21 @@ function tileColor(color: string): string {
   return desaturate(flattenOntoWhite(color));
 }
 
+function tileColorStyle(
+  backgroundColor: string | undefined,
+  borderColor: string | undefined,
+  isBorderVisible: boolean,
+): TileColorStyle {
+  const visibleBorderColor = isBorderVisible
+    ? (borderColor ?? backgroundColor)
+    : undefined;
+
+  return {
+    "--tile-background-color": backgroundColor && tileColor(backgroundColor),
+    "--tile-border-color": visibleBorderColor && tileColor(visibleBorderColor),
+  };
+}
+
 function mixWithTextColor(color: string, amount: string): string {
   return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }
@@ -90,21 +105,6 @@ const folderTileSx = {
     borderBottom: "32px solid transparent",
   },
 } as const;
-
-function tileColorStyle(
-  backgroundColor: string | undefined,
-  borderColor: string | undefined,
-  isBorderVisible: boolean,
-): TileColorStyle {
-  const visibleBorderColor = isBorderVisible
-    ? (borderColor ?? backgroundColor)
-    : undefined;
-
-  return {
-    "--tile-background-color": backgroundColor && tileColor(backgroundColor),
-    "--tile-border-color": visibleBorderColor && tileColor(visibleBorderColor),
-  };
-}
 
 export function Tile({
   ariaLabel,
