@@ -20,15 +20,20 @@ type TileColorStyle = CSSProperties & {
   "--tile-border-color"?: string;
 };
 
-function flattenOntoWhite(color: string): string {
-  const channelOnWhite = (channel: string) =>
-    `calc(${channel} * alpha + 255 * (1 - alpha))`;
+function channelOnWhite(channel: string): string {
+  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
+}
 
+function flattenOntoWhite(color: string): string {
   return `rgb(from ${color} ${channelOnWhite("r")} ${channelOnWhite("g")} ${channelOnWhite("b")} / 1)`;
 }
 
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
+}
+
+function tileColor(color: string): string {
+  return desaturate(flattenOntoWhite(color));
 }
 
 function mixWithTextColor(color: string, amount: string): string {
@@ -85,10 +90,6 @@ const folderTileSx = {
     borderBottom: "32px solid transparent",
   },
 } as const;
-
-function tileColor(color: string): string {
-  return desaturate(flattenOntoWhite(color));
-}
 
 function tileColorStyle(
   backgroundColor: string | undefined,
