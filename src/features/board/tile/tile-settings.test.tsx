@@ -1,3 +1,4 @@
+import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
@@ -39,6 +40,20 @@ describe("TileSettings", () => {
       .not.toBeChecked();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("formats color intensity in the UI locale when the language has no UI translation", async () => {
+    setStoredLanguage("fa");
+
+    const screen = await render(
+      <AppProviders>
+        <TileSettings />
+      </AppProviders>,
+    );
+
+    await expect
+      .element(screen.getByRole("slider", { name: "Color intensity" }))
+      .toHaveAttribute("aria-valuetext", "100%");
   });
 
   test("shows one focus outline around each label option while keeping its preview visible", async () => {

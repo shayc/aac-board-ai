@@ -1,3 +1,4 @@
+import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
@@ -81,6 +82,20 @@ describe("SpeechSettings", () => {
       .toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("formats slider values in the UI locale when the language has only a voice", async () => {
+    stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
+    setStoredLanguage("fa");
+
+    const screen = await renderSpeechSettings();
+
+    await expect
+      .element(screen.getByRole("slider", { name: "Speed" }))
+      .toHaveAttribute("aria-valuetext", "1.0×");
+    await expect
+      .element(screen.getByRole("slider", { name: "Pitch" }))
+      .toHaveAttribute("aria-valuetext", "100%");
   });
 
   test("selects and persists a voice", async () => {

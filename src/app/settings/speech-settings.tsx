@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
+import { useUILocale } from "@shared/language/language-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
@@ -28,6 +29,7 @@ export function SpeechSettings() {
   const voicesByLanguage = useVoicesByLanguage();
   const { voiceURI, rate, pitch, volume } = useSpeechPreferences();
   const { language } = useLanguage();
+  const uiLocale = useUILocale();
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
@@ -41,11 +43,11 @@ export function SpeechSettings() {
   const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });
-  const multiplierFormat = new Intl.NumberFormat(language, {
+  const multiplierFormat = new Intl.NumberFormat(uiLocale, {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   });
-  const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
+  const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
 
   function renderLocaleOptions(voiceLocale: string) {
     const header = hasMultipleLocales && (
