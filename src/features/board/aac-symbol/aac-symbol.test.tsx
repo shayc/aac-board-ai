@@ -57,16 +57,14 @@ describe("AACSymbol", () => {
 
   test("keeps a hidden label in the DOM without taking space from the image", async () => {
     const visible = await renderSymbol();
-    const hidden = await renderSymbol({ labelPlacement: "hidden" });
+    const hidden = await renderSymbol({ isLabelHidden: true });
 
     expect(hidden.label.width).toBeLessThanOrEqual(1);
     expect(hidden.image.height).toBeGreaterThan(visible.image.height);
   });
 
   test("keeps a hidden label visible when there is no image to show instead", async () => {
-    const screen = await render(
-      <AACSymbol label="Hello" labelPlacement="hidden" />,
-    );
+    const screen = await render(<AACSymbol label="Hello" isLabelHidden />);
 
     expect(
       screen.getByText("Hello").element().getBoundingClientRect().width,

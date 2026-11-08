@@ -5,12 +5,14 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import type { LabelPlacement } from "../aac-symbol/aac-symbol";
+import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
+
+export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
 
 interface TilePreferences {
   saturation: number;
   areBordersVisible: boolean;
-  labelPlacement: LabelPlacement;
+  labelPlacement: TileLabelPlacement;
 }
 
 export const TILE_SATURATION: ClampedNumberOptions = {
@@ -19,7 +21,7 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-function isLabelPlacement(value: unknown): value is LabelPlacement {
+function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
@@ -29,7 +31,7 @@ export function parseTilePreferences(raw: unknown): TilePreferences {
   return {
     saturation: parseClampedNumber(stored.saturation, TILE_SATURATION),
     areBordersVisible: parseBoolean(stored.areBordersVisible, false),
-    labelPlacement: isLabelPlacement(stored.labelPlacement)
+    labelPlacement: isTileLabelPlacement(stored.labelPlacement)
       ? stored.labelPlacement
       : "top",
   };
@@ -55,7 +57,9 @@ export function setTileBordersVisible(areBordersVisible: boolean): void {
   updatePreferences({ areBordersVisible });
 }
 
-export function setTileLabelPlacement(labelPlacement: LabelPlacement): void {
+export function setTileLabelPlacement(
+  labelPlacement: TileLabelPlacement,
+): void {
   updatePreferences({ labelPlacement });
 }
 

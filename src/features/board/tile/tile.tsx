@@ -114,6 +114,7 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const { saturation, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
+  const ariaLabel = button.label ? undefined : button.vocalization;
   const isFolder = Boolean(button.linkedBoardId);
   const colorStyle = tileColorStyle({
     backgroundColor: button.backgroundColor,
@@ -122,9 +123,12 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
     saturation,
   });
 
+  const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
+  const isLabelHidden = labelPlacement === "hidden";
+
   return (
     <Button
-      aria-label={button.label ? undefined : button.vocalization}
+      aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
       onClick={() => onActivate(button)}
@@ -134,7 +138,8 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
       <AACSymbol
         label={button.label}
         imageSrc={button.imageSrc}
-        labelPlacement={labelPlacement}
+        labelPlacement={symbolLabelPlacement}
+        isLabelHidden={isLabelHidden}
       />
     </Button>
   );

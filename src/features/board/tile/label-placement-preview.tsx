@@ -1,9 +1,9 @@
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import Box from "@mui/material/Box";
-import type { LabelPlacement } from "../aac-symbol/aac-symbol";
+import type { TileLabelPlacement } from "./tile-preferences-store";
 
 interface LabelPlacementPreviewProps {
-  placement: LabelPlacement;
+  placement: TileLabelPlacement;
   isSelected?: boolean;
 }
 

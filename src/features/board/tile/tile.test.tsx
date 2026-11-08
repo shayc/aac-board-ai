@@ -36,7 +36,7 @@ function makeButton(overrides: Partial<BoardButton>): BoardButton {
   return { id: "button", label: "Word", actions: [], ...overrides };
 }
 
-function renderTile(overrides: Partial<BoardButton>) {
+function tileElement(overrides: Partial<BoardButton>) {
   return (
     <Tile button={makeButton(overrides)} tabIndex={0} onActivate={vi.fn()} />
   );
@@ -100,9 +100,9 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
   const screen = await renderInTheme(
     <>
       <Unhoverable>
-        {renderTile({ label: "Resting", backgroundColor })}
+        {tileElement({ label: "Resting", backgroundColor })}
       </Unhoverable>
-      {renderTile({ label: "Hovered", backgroundColor })}
+      {tileElement({ label: "Hovered", backgroundColor })}
     </>,
   );
   const restingTile = screen.getByRole("button", { name: "Resting" });
@@ -119,7 +119,7 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
 describe("Tile", () => {
   test("is named by its symbol label and keeps the symbol image decorative", async () => {
     const screen = await renderInTheme(
-      renderTile({ label: "Cat", imageSrc: TEST_IMAGE_SRC }),
+      tileElement({ label: "Cat", imageSrc: TEST_IMAGE_SRC }),
     );
 
     const tile = screen.getByRole("button", { name: "Cat" });
@@ -129,7 +129,7 @@ describe("Tile", () => {
 
   test("is named by its vocalization when it has no label", async () => {
     const screen = await renderInTheme(
-      renderTile({
+      tileElement({
         label: "",
         vocalization: "Speak Hello",
         imageSrc: TEST_IMAGE_SRC,
@@ -144,8 +144,8 @@ describe("Tile", () => {
   test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await renderInTheme(
       <>
-        {renderTile({ label: "Animals", linkedBoardId: "animals" })}
-        {renderTile({ label: "Cat" })}
+        {tileElement({ label: "Animals", linkedBoardId: "animals" })}
+        {tileElement({ label: "Cat" })}
       </>,
     );
 
@@ -167,7 +167,7 @@ describe("Tile", () => {
     "rgba(0, 0, 0, 0.1)",
   ])("keeps the label readable on a %s background", async (backgroundColor) => {
     const screen = await renderInTheme(
-      <Unhoverable>{renderTile({ backgroundColor })}</Unhoverable>,
+      <Unhoverable>{tileElement({ backgroundColor })}</Unhoverable>,
     );
     const { color, backgroundColor: background } = styleOf(
       screen.getByRole("button", { name: "Word" }),
@@ -184,12 +184,12 @@ describe("Tile", () => {
       setTileBordersVisible(areBordersVisible);
       const screen = await renderInTheme(
         <>
-          {renderTile({
+          {tileElement({
             label: "Folder",
             backgroundColor: "#3f51b5",
             linkedBoardId: "folder",
           })}
-          {renderTile({ label: "Word", backgroundColor: "#3f51b5" })}
+          {tileElement({ label: "Word", backgroundColor: "#3f51b5" })}
         </>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });
@@ -246,7 +246,7 @@ describe("Tile", () => {
       setTileBordersVisible(true);
       const screen = await renderInTheme(
         <Unhoverable>
-          {renderTile({ label: "Bordered", backgroundColor, borderColor })}
+          {tileElement({ label: "Bordered", backgroundColor, borderColor })}
         </Unhoverable>,
       );
       const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
@@ -263,7 +263,7 @@ describe("Tile", () => {
   test("keeps the border the background's color on hover when the tile has no border color", async () => {
     setTileBordersVisible(true);
     const screen = await renderInTheme(
-      renderTile({ label: "Bordered", backgroundColor: "#bbedc4" }),
+      tileElement({ label: "Bordered", backgroundColor: "#bbedc4" }),
     );
     const tile = screen.getByRole("button", { name: "Bordered" });
 
@@ -294,14 +294,14 @@ describe("Tile", () => {
 
     setTileBordersVisible(true);
     const withBorders = await renderInTheme(
-      renderTile({ label: "Bordered", ...bordered }),
+      tileElement({ label: "Bordered", ...bordered }),
     );
     const borderedOffset = contentOffset(withBorders, "Bordered");
     await withBorders.unmount();
 
     setTileBordersVisible(false);
     const withoutBorders = await renderInTheme(
-      renderTile({ label: "Bordered", ...bordered }),
+      tileElement({ label: "Bordered", ...bordered }),
     );
     const borderless = styleOf(
       withoutBorders.getByRole("button", { name: "Bordered" }),
@@ -319,7 +319,7 @@ describe("Tile", () => {
   test("renders the background as gray at zero tile saturation", async () => {
     setTileSaturation(0);
     const screen = await renderInTheme(
-      renderTile({ label: "Muted", backgroundColor: "#ff0000" }),
+      tileElement({ label: "Muted", backgroundColor: "#ff0000" }),
     );
     const channels = paint(
       styleOf(screen.getByRole("button", { name: "Muted" })).backgroundColor,

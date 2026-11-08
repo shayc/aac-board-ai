@@ -8,19 +8,19 @@ import { useTranslate } from "@shared/language/use-translate";
 import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
-import type { LabelPlacement } from "../aac-symbol/aac-symbol";
 import {
   setTileBordersVisible,
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
   useTilePreferences,
+  type TileLabelPlacement,
 } from "./tile-preferences-store";
 import { LabelPlacementPreview } from "./label-placement-preview";
 
 interface LabelPlacementOptionProps {
   label: string;
-  placement: LabelPlacement;
+  placement: TileLabelPlacement;
 }
 
 function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
