@@ -230,25 +230,57 @@ describe("Tile", () => {
   );
 
   test.each([
-    { description: "its own border color", borderColor: "#00ff00" },
-    { description: "the background color", borderColor: undefined },
-  ])("draws the border in $description", async ({ borderColor }) => {
+    {
+      description: "in its own color",
+      backgroundColor: "#ff0000",
+      borderColor: "#00ff00",
+    },
+    {
+      description: "see-through over the tile's color",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      borderColor: "rgba(255, 0, 0, 0.2)",
+    },
+  ])(
+    "draws the border $description",
+    async ({ backgroundColor, borderColor }) => {
+      const screen = await renderInTheme(
+        <Unhoverable>
+          <Tile
+            backgroundColor={backgroundColor}
+            borderColor={borderColor}
+            isBorderVisible
+            onActivate={vi.fn()}
+          >
+            Bordered
+          </Tile>
+        </Unhoverable>,
+      );
+      const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
+
+      expect(
+        channelDistance(
+          paint(styles.backgroundColor, styles.borderTopColor),
+          paint("#ffffff", backgroundColor, borderColor),
+        ),
+      ).toBeLessThanOrEqual(1);
+    },
+  );
+
+  test("keeps the border the background's color on hover when the tile has no border color", async () => {
     const screen = await renderInTheme(
-      <Tile
-        backgroundColor="#ff0000"
-        borderColor={borderColor}
-        isBorderVisible
-        onActivate={vi.fn()}
-      >
+      <Tile backgroundColor="#bbedc4" isBorderVisible onActivate={vi.fn()}>
         Bordered
       </Tile>,
     );
-    const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
+    const tile = screen.getByRole("button", { name: "Bordered" });
+
+    await tile.hover();
+    const styles = styleOf(tile);
 
     expect(
       channelDistance(
-        paint(styles.borderTopColor),
-        paint(borderColor ?? "#ff0000"),
+        paint(styles.backgroundColor, styles.borderTopColor),
+        paint(styles.backgroundColor),
       ),
     ).toBeLessThanOrEqual(1);
   });

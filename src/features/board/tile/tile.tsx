@@ -32,22 +32,17 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function tileColor(color: string): string {
-  return desaturate(flattenOntoWhite(color));
-}
-
 function tileColorStyle(
   backgroundColor: string | undefined,
   borderColor: string | undefined,
   isBorderVisible: boolean,
 ): TileColorStyle {
-  const visibleBorderColor = isBorderVisible
-    ? (borderColor ?? backgroundColor)
-    : undefined;
+  const visibleBorderColor = isBorderVisible ? borderColor : undefined;
 
   return {
-    "--tile-background-color": backgroundColor && tileColor(backgroundColor),
-    "--tile-border-color": visibleBorderColor && tileColor(visibleBorderColor),
+    "--tile-background-color":
+      backgroundColor && desaturate(flattenOntoWhite(backgroundColor)),
+    "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
   };
 }
 
