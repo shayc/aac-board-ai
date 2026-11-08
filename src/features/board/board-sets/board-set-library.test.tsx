@@ -205,9 +205,6 @@ describe("BoardSetLibrary", () => {
       name: "Cancel downloading First Words",
     });
     await expect
-      .element(screen.getByText(`Downloading board set "First Words"...`))
-      .toBeInTheDocument();
-    await expect
       .element(cancelButton)
       .toHaveAccessibleDescription("0.5 of 2 MB");
     await expect

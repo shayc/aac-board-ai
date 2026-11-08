@@ -62,7 +62,6 @@
   "libraryMoreOptionsFor": "More options for {name}",
   "libraryDownload": "Download",
   "libraryDownloadBoardSet": "Download {name}",
-  "libraryDownloadingBoardSet": "Downloading board set \"{name}\"...",
   "libraryDownloadedBoardSet": "Downloaded board set \"{name}\"",
   "libraryDownloadFailed": "Couldn't download board set \"{name}\"",
   "libraryDownloadCanceled": "Canceled downloading board set \"{name}\"",

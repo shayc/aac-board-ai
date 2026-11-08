@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Weitere Optionen für {name}",
   "libraryDownload": "Herunterladen",
   "libraryDownloadBoardSet": "{name} herunterladen",
-  "libraryDownloadingBoardSet": "Tafelsatz „{name}“ wird heruntergeladen...",
   "libraryDownloadedBoardSet": "Tafelsatz „{name}“ heruntergeladen",
   "libraryDownloadFailed": "Tafelsatz „{name}“ konnte nicht heruntergeladen werden",
   "libraryDownloadCanceled": "Download des Tafelsatzes „{name}“ abgebrochen",

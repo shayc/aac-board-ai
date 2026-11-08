@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "További lehetőségek: {name}",
   "libraryDownload": "Letöltés",
   "libraryDownloadBoardSet": "Letöltés: {name}",
-  "libraryDownloadingBoardSet": "A(z) „{name}” táblakészlet letöltése...",
   "libraryDownloadedBoardSet": "A(z) „{name}” táblakészlet letöltve",
   "libraryDownloadFailed": "A(z) „{name}” táblakészlet letöltése nem sikerült",
   "libraryDownloadCanceled": "A(z) „{name}” táblakészlet letöltése megszakítva",

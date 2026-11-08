@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "{name} కోసం మరిన్ని ఎంపికలు",
   "libraryDownload": "డౌన్‌లోడ్ చేయి",
   "libraryDownloadBoardSet": "{name}ను డౌన్‌లోడ్ చేయి",
-  "libraryDownloadingBoardSet": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ అవుతోంది…",
   "libraryDownloadedBoardSet": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ అయింది",
   "libraryDownloadFailed": "బోర్డు సెట్ \"{name}\"ను డౌన్‌లోడ్ చేయలేకపోయాం",
   "libraryDownloadCanceled": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ రద్దు చేయబడింది",

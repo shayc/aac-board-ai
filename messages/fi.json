@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Lisää vaihtoehtoja kohteelle {name}",
   "libraryDownload": "Lataa",
   "libraryDownloadBoardSet": "Lataa {name}",
-  "libraryDownloadingBoardSet": "Ladataan taulusarjaa ”{name}”...",
   "libraryDownloadedBoardSet": "Taulusarja ”{name}” ladattu",
   "libraryDownloadFailed": "Taulusarjan ”{name}” lataus epäonnistui",
   "libraryDownloadCanceled": "Taulusarjan ”{name}” lataus peruttu",

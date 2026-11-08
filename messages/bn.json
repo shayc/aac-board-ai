@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "{name}-এর জন্য আরও বিকল্প",
   "libraryDownload": "ডাউনলোড",
   "libraryDownloadBoardSet": "{name} ডাউনলোড করুন",
-  "libraryDownloadingBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হচ্ছে…",
   "libraryDownloadedBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হয়েছে",
   "libraryDownloadFailed": "বোর্ড সেট \"{name}\" ডাউনলোড করা যায়নি",
   "libraryDownloadCanceled": "বোর্ড সেট \"{name}\" ডাউনলোড বাতিল হয়েছে",

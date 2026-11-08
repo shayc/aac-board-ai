@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Więcej opcji dla {name}",
   "libraryDownload": "Pobierz",
   "libraryDownloadBoardSet": "Pobierz {name}",
-  "libraryDownloadingBoardSet": "Pobieranie zestawu tablic „{name}”...",
   "libraryDownloadedBoardSet": "Pobrano zestaw tablic „{name}”",
   "libraryDownloadFailed": "Nie udało się pobrać zestawu tablic „{name}”",
   "libraryDownloadCanceled": "Anulowano pobieranie zestawu tablic „{name}”",

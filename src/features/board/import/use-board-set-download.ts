@@ -32,10 +32,6 @@ export function useBoardSetDownload({
       return;
     }
 
-    showSnackbar({
-      message: (t) => t(m.libraryDownloadingBoardSet, { name }),
-    });
-
     try {
       const importedBoardSet = await downloadBoardSet(url);
       if (!importedBoardSet) {

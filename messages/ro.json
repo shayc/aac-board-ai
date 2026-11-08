@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Mai multe opțiuni pentru {name}",
   "libraryDownload": "Descarcă",
   "libraryDownloadBoardSet": "Descarcă {name}",
-  "libraryDownloadingBoardSet": "Se descarcă setul de table „{name}”...",
   "libraryDownloadedBoardSet": "Setul de table „{name}” a fost descărcat",
   "libraryDownloadFailed": "Setul de table „{name}” nu a putut fi descărcat",
   "libraryDownloadCanceled": "Descărcarea setului de table „{name}” a fost anulată",

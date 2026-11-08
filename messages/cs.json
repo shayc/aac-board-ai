@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Další možnosti pro {name}",
   "libraryDownload": "Stáhnout",
   "libraryDownloadBoardSet": "Stáhnout {name}",
-  "libraryDownloadingBoardSet": "Stahování sady tabulek „{name}“...",
   "libraryDownloadedBoardSet": "Sada tabulek „{name}“ byla stažena",
   "libraryDownloadFailed": "Sadu tabulek „{name}“ se nepodařilo stáhnout",
   "libraryDownloadCanceled": "Stahování sady tabulek „{name}“ bylo zrušeno",

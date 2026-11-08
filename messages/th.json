@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "ตัวเลือกเพิ่มเติมสำหรับ {name}",
   "libraryDownload": "ดาวน์โหลด",
   "libraryDownloadBoardSet": "ดาวน์โหลด {name}",
-  "libraryDownloadingBoardSet": "กำลังดาวน์โหลดชุดบอร์ด \"{name}\"...",
   "libraryDownloadedBoardSet": "ดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",
   "libraryDownloadFailed": "ดาวน์โหลดชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryDownloadCanceled": "ยกเลิกการดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",

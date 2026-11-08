@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Дополнительные параметры для {name}",
   "libraryDownload": "Скачать",
   "libraryDownloadBoardSet": "Скачать {name}",
-  "libraryDownloadingBoardSet": "Скачивание набора досок «{name}»...",
   "libraryDownloadedBoardSet": "Набор досок «{name}» скачан",
   "libraryDownloadFailed": "Не удалось скачать набор досок «{name}»",
   "libraryDownloadCanceled": "Скачивание набора досок «{name}» отменено",

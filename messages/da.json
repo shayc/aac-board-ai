@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Flere indstillinger for {name}",
   "libraryDownload": "Download",
   "libraryDownloadBoardSet": "Download {name}",
-  "libraryDownloadingBoardSet": "Downloader tavlesættet \"{name}\"...",
   "libraryDownloadedBoardSet": "Tavlesættet \"{name}\" er downloadet",
   "libraryDownloadFailed": "Tavlesættet \"{name}\" kunne ikke downloades",
   "libraryDownloadCanceled": "Download af tavlesættet \"{name}\" er annulleret",

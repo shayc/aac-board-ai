@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Fler alternativ för {name}",
   "libraryDownload": "Ladda ned",
   "libraryDownloadBoardSet": "Ladda ned {name}",
-  "libraryDownloadingBoardSet": "Laddar ned taveluppsättningen ”{name}”...",
   "libraryDownloadedBoardSet": "Taveluppsättningen ”{name}” har laddats ned",
   "libraryDownloadFailed": "Det gick inte att ladda ned taveluppsättningen ”{name}”",
   "libraryDownloadCanceled": "Nedladdningen av taveluppsättningen ”{name}” avbröts",

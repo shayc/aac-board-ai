@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Більше параметрів для {name}",
   "libraryDownload": "Завантажити",
   "libraryDownloadBoardSet": "Завантажити {name}",
-  "libraryDownloadingBoardSet": "Завантаження набору дошок «{name}»...",
   "libraryDownloadedBoardSet": "Набір дошок «{name}» завантажено",
   "libraryDownloadFailed": "Не вдалося завантажити набір дошок «{name}»",
   "libraryDownloadCanceled": "Завантаження набору дошок «{name}» скасовано",

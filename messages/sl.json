@@ -63,7 +63,6 @@
   "libraryMoreOptionsFor": "Več možnosti za {name}",
   "libraryDownload": "Prenesi",
   "libraryDownloadBoardSet": "Prenesi {name}",
-  "libraryDownloadingBoardSet": "Prenašanje kompleta tabel »{name}«...",
   "libraryDownloadedBoardSet": "Komplet tabel »{name}« je prenesen",
   "libraryDownloadFailed": "Kompleta tabel »{name}« ni bilo mogoče prenesti",
   "libraryDownloadCanceled": "Prenos kompleta tabel »{name}« je preklican",
