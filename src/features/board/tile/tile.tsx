@@ -2,60 +2,15 @@ import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import type { CSSProperties } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
 import type { BoardButton } from "../board-types";
+import { mixWithTextColor, tileColorStyle } from "./tile-colors";
 import { useTilePreferences } from "./tile-preferences-store";
 
 interface TileProps {
   button: BoardButton;
   tabIndex: number;
   onActivate: (button: BoardButton) => void;
-}
-
-type TileColorStyle = CSSProperties & {
-  "--tile-background-color"?: string;
-  "--tile-border-color"?: string;
-};
-
-function channelOntoWhite(channel: "r" | "g" | "b"): string {
-  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
-}
-
-function flattenOntoWhite(color: string): string {
-  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
-}
-
-function desaturate(color: string, saturation: number): string {
-  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
-}
-
-interface TileColorOptions {
-  backgroundColor: string | undefined;
-  borderColor: string | undefined;
-  isBorderVisible: boolean;
-  saturation: number;
-}
-
-function tileColorStyle({
-  backgroundColor,
-  borderColor,
-  isBorderVisible,
-  saturation,
-}: TileColorOptions): TileColorStyle {
-  const visibleBorderColor = isBorderVisible ? borderColor : undefined;
-
-  return {
-    "--tile-background-color":
-      backgroundColor &&
-      desaturate(flattenOntoWhite(backgroundColor), saturation),
-    "--tile-border-color":
-      visibleBorderColor && desaturate(visibleBorderColor, saturation),
-  };
-}
-
-function mixWithTextColor(color: string, amount: string): string {
-  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }
 
 function tileSx(theme: Theme) {
