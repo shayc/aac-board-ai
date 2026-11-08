@@ -1,16 +1,13 @@
-import { getTextDirection } from "@paraglide/runtime";
 import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { useLayoutEffect, type ReactNode } from "react";
-import { LanguageContext } from "./language-context";
-import { setStoredLanguage, useStoredLanguage } from "./language-store";
+import { useLanguage } from "./use-language";
 
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
 export function LanguageProvider({ children }: LanguageProviderProps) {
-  const language = useStoredLanguage();
-  const direction = getTextDirection(language);
+  const { language, direction } = useLanguage();
 
   useLayoutEffect(() => {
     document.documentElement.dir = direction;
@@ -19,11 +16,5 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 
   useVoiceLanguageSync(language);
 
-  const contextValue = {
-    language,
-    setLanguage: setStoredLanguage,
-    direction,
-  };
-
-  return <LanguageContext value={contextValue}>{children}</LanguageContext>;
+  return children;
 }

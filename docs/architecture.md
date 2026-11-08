@@ -92,7 +92,7 @@ imported fields while adding resolved board links and cached translations.
 without rewriting stored records. Storage schema changes require a versioned
 migration in [`boards-db.ts`](../src/features/board/storage/boards-db.ts).
 
-React Context provides language, theme, playback controls, and snackbar access.
+React Context provides theme, playback controls, and snackbar access.
 Components subscribe to external stores through `useExternalStore`, a
 `useSyncExternalStore` wrapper that takes an optional selector.
 
