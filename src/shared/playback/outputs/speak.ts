@@ -1,8 +1,7 @@
 import { getStoredLanguage } from "@shared/language/language-store";
-import { selectVoice } from "@shared/speech/select-voice";
 import {
+  getSpeakingVoice,
   getSpeechPreferences,
-  getVoicesByLanguage,
 } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
 
@@ -12,12 +11,11 @@ interface SpeakOptions {
 }
 
 function buildUtterance(text: string): SpeechSynthesisUtterance {
-  const language = getStoredLanguage();
-  const { voiceURI, rate, pitch, volume } = getSpeechPreferences();
+  const { rate, pitch, volume } = getSpeechPreferences();
 
   const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = language;
-  utterance.voice = selectVoice(getVoicesByLanguage(), language, voiceURI);
+  utterance.lang = getStoredLanguage();
+  utterance.voice = getSpeakingVoice();
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;

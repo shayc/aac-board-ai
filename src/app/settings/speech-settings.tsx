@@ -9,7 +9,6 @@ import { useUILocale } from "@shared/language/language-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
-import { selectVoice } from "@shared/speech/select-voice";
 import {
   setSpeechPitch,
   setSpeechRate,
@@ -18,6 +17,7 @@ import {
   SPEECH_PITCH,
   SPEECH_RATE,
   SPEECH_VOLUME,
+  useSpeakingVoice,
   useSpeechPreferences,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
@@ -78,13 +78,12 @@ function VoiceSelect() {
   const t = useTranslate();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
-  const { voiceURI } = useSpeechPreferences();
+  const speakingVoice = useSpeakingVoice();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI =
-    selectVoice(voicesByLanguage, language, voiceURI)?.voiceURI ?? "";
+  const selectedVoiceURI = speakingVoice?.voiceURI ?? "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );

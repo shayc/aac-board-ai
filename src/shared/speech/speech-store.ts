@@ -1,3 +1,7 @@
+import {
+  getStoredLanguage,
+  useStoredLanguage,
+} from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import {
   createExternalStore,
@@ -8,6 +12,7 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
+import { selectVoice } from "./select-voice";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
 interface SpeechPreferences {
@@ -104,4 +109,20 @@ export function useVoicesByLanguage(): VoicesByLanguage {
 
 export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
+}
+
+export function getSpeakingVoice(): SpeechSynthesisVoice | null {
+  return selectVoice(
+    getVoicesByLanguage(),
+    getStoredLanguage(),
+    getSpeechPreferences().voiceURI,
+  );
+}
+
+export function useSpeakingVoice(): SpeechSynthesisVoice | null {
+  const voicesByLanguage = useVoicesByLanguage();
+  const language = useStoredLanguage();
+  const { voiceURI } = useSpeechPreferences();
+
+  return selectVoice(voicesByLanguage, language, voiceURI);
 }
