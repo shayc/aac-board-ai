@@ -18,6 +18,7 @@ export { getBoardSetRecord } from "./storage/board-set-storage";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";
 export { TileSettings } from "./tile/tile-settings";
+export { BoardTranslationNotice } from "./translation/board-translation-notice";
 export { loadBoardInLanguage } from "./translation/load-board-in-language";
 
 export type { Board } from "./board-types";
