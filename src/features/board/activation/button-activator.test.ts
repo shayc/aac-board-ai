@@ -8,10 +8,13 @@ import { createButtonActivator } from "./button-activator";
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
 type ActivationPlayback = ActivationOptions["playback"];
 
-function setup(parts: MessagePart[] = []) {
+function setup(initialParts: MessagePart[] = []) {
+  let currentParts = initialParts;
   const message = {
-    getParts: () => parts,
-    setParts: vi.fn<(parts: MessagePart[]) => void>(),
+    getParts: () => currentParts,
+    setParts: vi.fn<(parts: MessagePart[]) => void>((parts) => {
+      currentParts = parts;
+    }),
   };
   const playback = {
     playMessage: vi.fn<ActivationPlayback["playMessage"]>(() =>
@@ -171,6 +174,28 @@ describe("createButtonActivator", () => {
     await settlePlayback("completed");
 
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith([]);
+  });
+
+  test("applies edits after play to the message as it is when playback completes", async () => {
+    const { activateButton, message, playback } = setup([
+      { id: "1", label: "hi" },
+    ]);
+    const settlePlayback = holdMessagePlayback(playback);
+
+    activateButton({
+      id: "btn",
+      label: "",
+      actions: [{ kind: "play" }, { kind: "space" }],
+    });
+    message.setParts([
+      { id: "1", label: "hi" },
+      { id: "2", label: "there" },
+    ]);
+    await settlePlayback("completed");
+
+    const committed = message.setParts.mock.lastCall?.[0];
+    assertDefined(committed);
+    expect(committed.map((part) => part.label)).toEqual(["hi", "there", ""]);
   });
 
   test("drops edits after play when playback is interrupted", async () => {

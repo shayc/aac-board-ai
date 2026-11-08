@@ -84,7 +84,7 @@ export function createButtonActivator({
     // without interruption, keeping the message visible while it plays.
     void playback.playMessage(partsToPlay).then((outcome) => {
       if (outcome === "completed") {
-        commitEdits(partsToPlay, actionsAfterPlay);
+        commitEdits(message.getParts(), actionsAfterPlay);
       }
     });
   }
