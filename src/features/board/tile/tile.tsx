@@ -20,17 +20,39 @@ type TileColorStyle = CSSProperties & {
   "--tile-border-color"?: string;
 };
 
-const TILE_BACKGROUND_COLOR = "var(--tile-background-color)";
+function channelOntoWhite(channel: "r" | "g" | "b"): string {
+  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
+}
+
+function flattenOntoWhite(color: string): string {
+  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
+}
 
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, amount: string): string {
-  return `color-mix(in srgb, ${color}, black ${amount})`;
+function tileColorStyle(
+  backgroundColor: string | undefined,
+  borderColor: string | undefined,
+  isBorderVisible: boolean,
+): TileColorStyle {
+  const visibleBorderColor = isBorderVisible ? borderColor : undefined;
+
+  return {
+    "--tile-background-color":
+      backgroundColor && desaturate(flattenOntoWhite(backgroundColor)),
+    "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
+  };
+}
+
+function mixWithTextColor(color: string, amount: string): string {
+  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }
 
 function tileSx(theme: Theme) {
+  const background = `var(--tile-background-color, ${theme.vars.palette.background.paper})`;
+
   return {
     position: "relative",
     display: "grid",
@@ -40,7 +62,8 @@ function tileSx(theme: Theme) {
     height: "100%",
     p: 1,
     overflow: "hidden",
-    color: "inherit",
+    color: `contrast-color(${background})`,
+    backgroundColor: background,
     border: "4px solid var(--tile-border-color, transparent)",
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
@@ -48,35 +71,18 @@ function tileSx(theme: Theme) {
       display: "none",
     },
     "&:hover": {
-      boxShadow: theme.vars.shadows[4],
-      "@media (hover: none)": {
-        boxShadow: theme.vars.shadows[2],
+      "@media (hover: hover)": {
+        backgroundColor: mixWithTextColor(background, "8%"),
+        boxShadow: theme.vars.shadows[4],
       },
     },
     "&:active": {
+      backgroundColor: mixWithTextColor(background, "16%"),
       boxShadow: theme.vars.shadows[8],
     },
     [`&.${buttonClasses.focusVisible}`]: {
       outlineWidth: 3,
       boxShadow: theme.vars.shadows[6],
-    },
-  } as const;
-}
-
-function coloredTileSx(theme: Theme) {
-  return {
-    color: `contrast-color(${TILE_BACKGROUND_COLOR})`,
-    backgroundColor: TILE_BACKGROUND_COLOR,
-    "&:hover": {
-      "@media (hover: hover)": {
-        backgroundColor: darken(
-          TILE_BACKGROUND_COLOR,
-          `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
-        ),
-      },
-    },
-    "&:active": {
-      backgroundColor: darken(TILE_BACKGROUND_COLOR, "25%"),
     },
   } as const;
 }
@@ -94,21 +100,6 @@ const folderTileSx = {
     borderBottom: "32px solid transparent",
   },
 } as const;
-
-function tileColorStyle(
-  backgroundColor: string | undefined,
-  borderColor: string | undefined,
-  isBorderVisible: boolean,
-): TileColorStyle {
-  const visibleBorderColor = isBorderVisible
-    ? (borderColor ?? backgroundColor)
-    : undefined;
-
-  return {
-    "--tile-background-color": backgroundColor && desaturate(backgroundColor),
-    "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
-  };
-}
 
 export function Tile({
   ariaLabel,
@@ -129,11 +120,7 @@ export function Tile({
       tabIndex={tabIndex}
       onClick={onActivate}
       style={tileColorStyle(backgroundColor, borderColor, isBorderVisible)}
-      sx={[
-        tileSx,
-        Boolean(backgroundColor) && coloredTileSx,
-        isFolder && folderTileSx,
-      ]}
+      sx={[tileSx, isFolder && folderTileSx]}
     >
       {children}
     </Button>

@@ -78,6 +78,34 @@ function backgroundLuminance(tile: Locator): number {
   return relativeLuminance(paint(styleOf(tile).backgroundColor));
 }
 
+function Unhoverable({ children }: { children: ReactNode }) {
+  return <div style={{ pointerEvents: "none" }}>{children}</div>;
+}
+
+async function measureLuminanceOnHover(backgroundColor?: string) {
+  const screen = await renderInTheme(
+    <>
+      <Unhoverable>
+        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+          Resting
+        </Tile>
+      </Unhoverable>
+      <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+        Hovered
+      </Tile>
+    </>,
+  );
+  const restingTile = screen.getByRole("button", { name: "Resting" });
+  const hoveredTile = screen.getByRole("button", { name: "Hovered" });
+
+  await hoveredTile.hover();
+
+  return {
+    resting: backgroundLuminance(restingTile),
+    hovered: backgroundLuminance(hoveredTile),
+  };
+}
+
 describe("Tile", () => {
   test("is named by its symbol label and keeps the symbol image decorative", async () => {
     const screen = await renderInTheme(
@@ -121,23 +149,30 @@ describe("Tile", () => {
       .not.toHaveAccessibleDescription();
   });
 
-  test.each(["#000000", "#ffffff", "#808080", "#ff0000", "#ffeb3b", "#3f51b5"])(
-    "keeps the label readable on a %s background",
-    async (backgroundColor) => {
-      const screen = await renderInTheme(
+  test.each([
+    "#000000",
+    "#ffffff",
+    "#808080",
+    "#ff0000",
+    "#ffeb3b",
+    "#3f51b5",
+    "rgba(0, 0, 0, 0.1)",
+  ])("keeps the label readable on a %s background", async (backgroundColor) => {
+    const screen = await renderInTheme(
+      <Unhoverable>
         <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
           Word
-        </Tile>,
-      );
-      const { color, backgroundColor: background } = styleOf(
-        screen.getByRole("button", { name: "Word" }),
-      );
+        </Tile>
+      </Unhoverable>,
+    );
+    const { color, backgroundColor: background } = styleOf(
+      screen.getByRole("button", { name: "Word" }),
+    );
 
-      expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
-        WCAG_TEXT_CONTRAST,
-      );
-    },
-  );
+    expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
+      WCAG_TEXT_CONTRAST,
+    );
+  });
 
   test.each([true, false])(
     "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
@@ -175,56 +210,77 @@ describe("Tile", () => {
     },
   );
 
-  test("darkens the background on hover, and darkens it further in dark mode", async () => {
-    const screen = await renderInTheme(
-      <>
-        <div className="light">
-          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-            Light
-          </Tile>
-        </div>
-        <div className="dark">
-          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-            Dark
-          </Tile>
-        </div>
-      </>,
-    );
-    const lightTile = screen.getByRole("button", { name: "Light" });
-    const darkTile = screen.getByRole("button", { name: "Dark" });
+  test("lightens a dark tile's background on hover", async () => {
+    const { resting, hovered } = await measureLuminanceOnHover("#000000");
 
-    await darkTile.hover();
-    const restingLuminance = backgroundLuminance(lightTile);
-    await lightTile.hover();
-    const lightHoverLuminance = backgroundLuminance(lightTile);
-    await darkTile.hover();
-    const darkHoverLuminance = backgroundLuminance(darkTile);
-    await darkTile.unhover();
-
-    expect(lightHoverLuminance).toBeLessThan(restingLuminance);
-    expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
+    expect(hovered).toBeGreaterThan(resting);
   });
 
   test.each([
-    { description: "its own border color", borderColor: "#00ff00" },
-    { description: "the background color", borderColor: undefined },
-  ])("draws the border in $description", async ({ borderColor }) => {
+    { description: "light", backgroundColor: "#ffffff" },
+    { description: "uncolored", backgroundColor: undefined },
+  ])(
+    "darkens a $description tile's background on hover",
+    async ({ backgroundColor }) => {
+      const { resting, hovered } =
+        await measureLuminanceOnHover(backgroundColor);
+
+      expect(hovered).toBeLessThan(resting);
+    },
+  );
+
+  test.each([
+    {
+      description: "in its own color",
+      backgroundColor: "#ff0000",
+      borderColor: "#00ff00",
+    },
+    {
+      description: "see-through over the tile's color",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      borderColor: "rgba(255, 0, 0, 0.2)",
+    },
+  ])(
+    "draws the border $description",
+    async ({ backgroundColor, borderColor }) => {
+      const screen = await renderInTheme(
+        <Unhoverable>
+          <Tile
+            backgroundColor={backgroundColor}
+            borderColor={borderColor}
+            isBorderVisible
+            onActivate={vi.fn()}
+          >
+            Bordered
+          </Tile>
+        </Unhoverable>,
+      );
+      const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
+
+      expect(
+        channelDistance(
+          paint(styles.backgroundColor, styles.borderTopColor),
+          paint("#ffffff", backgroundColor, borderColor),
+        ),
+      ).toBeLessThanOrEqual(1);
+    },
+  );
+
+  test("keeps the border the background's color on hover when the tile has no border color", async () => {
     const screen = await renderInTheme(
-      <Tile
-        backgroundColor="#ff0000"
-        borderColor={borderColor}
-        isBorderVisible
-        onActivate={vi.fn()}
-      >
+      <Tile backgroundColor="#bbedc4" isBorderVisible onActivate={vi.fn()}>
         Bordered
       </Tile>,
     );
-    const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
+    const tile = screen.getByRole("button", { name: "Bordered" });
+
+    await tile.hover();
+    const styles = styleOf(tile);
 
     expect(
       channelDistance(
-        paint(styles.borderTopColor),
-        paint(borderColor ?? "#ff0000"),
+        paint(styles.backgroundColor, styles.borderTopColor),
+        paint(styles.backgroundColor),
       ),
     ).toBeLessThanOrEqual(1);
   });
