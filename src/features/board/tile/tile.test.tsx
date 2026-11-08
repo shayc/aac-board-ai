@@ -175,34 +175,30 @@ describe("Tile", () => {
     },
   );
 
-  test("darkens the background on hover, and darkens it further in dark mode", async () => {
+  test("moves the background toward the label color on hover, lightening dark tiles and darkening light ones", async () => {
     const screen = await renderInTheme(
       <>
-        <div className="light">
-          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-            Light
-          </Tile>
-        </div>
-        <div className="dark">
-          <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-            Dark
-          </Tile>
-        </div>
+        <Tile backgroundColor="#000000" onActivate={vi.fn()}>
+          Dark
+        </Tile>
+        <Tile backgroundColor="#ffffff" onActivate={vi.fn()}>
+          Light
+        </Tile>
       </>,
     );
-    const lightTile = screen.getByRole("button", { name: "Light" });
     const darkTile = screen.getByRole("button", { name: "Dark" });
+    const lightTile = screen.getByRole("button", { name: "Light" });
+    const restingDarkLuminance = backgroundLuminance(darkTile);
+    const restingLightLuminance = backgroundLuminance(lightTile);
 
-    await darkTile.hover();
-    const restingLuminance = backgroundLuminance(lightTile);
-    await lightTile.hover();
-    const lightHoverLuminance = backgroundLuminance(lightTile);
     await darkTile.hover();
     const darkHoverLuminance = backgroundLuminance(darkTile);
-    await darkTile.unhover();
+    await lightTile.hover();
+    const lightHoverLuminance = backgroundLuminance(lightTile);
+    await lightTile.unhover();
 
-    expect(lightHoverLuminance).toBeLessThan(restingLuminance);
-    expect(darkHoverLuminance).toBeLessThan(lightHoverLuminance);
+    expect(darkHoverLuminance).toBeGreaterThan(restingDarkLuminance);
+    expect(lightHoverLuminance).toBeLessThan(restingLightLuminance);
   });
 
   test.each([

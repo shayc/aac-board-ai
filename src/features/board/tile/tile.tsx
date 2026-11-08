@@ -26,8 +26,8 @@ function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
 }
 
-function darken(color: string, amount: string): string {
-  return `color-mix(in srgb, ${color}, black ${amount})`;
+function mixWithTextColor(color: string, amount: string): string {
+  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }
 
 function tileSx(theme: Theme) {
@@ -63,23 +63,18 @@ function tileSx(theme: Theme) {
   } as const;
 }
 
-function coloredTileSx(theme: Theme) {
-  return {
-    color: `contrast-color(${TILE_BACKGROUND_COLOR})`,
-    backgroundColor: TILE_BACKGROUND_COLOR,
-    "&:hover": {
-      "@media (hover: hover)": {
-        backgroundColor: darken(
-          TILE_BACKGROUND_COLOR,
-          `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
-        ),
-      },
+const coloredTileSx = {
+  color: `contrast-color(${TILE_BACKGROUND_COLOR})`,
+  backgroundColor: TILE_BACKGROUND_COLOR,
+  "&:hover": {
+    "@media (hover: hover)": {
+      backgroundColor: mixWithTextColor(TILE_BACKGROUND_COLOR, "8%"),
     },
-    "&:active": {
-      backgroundColor: darken(TILE_BACKGROUND_COLOR, "25%"),
-    },
-  } as const;
-}
+  },
+  "&:active": {
+    backgroundColor: mixWithTextColor(TILE_BACKGROUND_COLOR, "16%"),
+  },
+} as const;
 
 const folderTileSx = {
   "&::after": {
