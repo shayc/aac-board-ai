@@ -9,37 +9,28 @@ import {
 import type { MessagePart } from "../message/message-types";
 import type { BoardAction, BoardButton } from "../board-types";
 
-interface ActivationMessage {
+interface ButtonActivatorOptions {
   getParts: () => MessagePart[];
   setParts: (parts: MessagePart[]) => void;
-}
-
-interface ActivationPlayback {
   playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
   playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
-}
-
-interface ActivationNavigation {
   goToBoard: (targetBoardId: string) => void;
   goHome: () => void;
-}
-
-interface ButtonActivatorOptions {
-  message: ActivationMessage;
-  playback: ActivationPlayback;
-  navigation: ActivationNavigation;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
 
 export function createButtonActivator({
-  message,
-  playback,
-  navigation,
+  getParts,
+  setParts,
+  playMessage,
+  playPart,
+  goToBoard,
+  goHome,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
-      navigation.goToBoard(button.linkedBoardId);
+      goToBoard(button.linkedBoardId);
       return;
     }
 
@@ -59,32 +50,29 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    message.setParts([...message.getParts(), part]);
-    void playback.playPart(part);
+    setParts([...getParts(), part]);
+    void playPart(part);
   }
 
   function runActions(actions: BoardAction[]) {
     if (actions.some((action) => action.kind === "home")) {
-      navigation.goHome();
+      goHome();
     }
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(message.getParts(), actions);
+      commitEdits(getParts(), actions);
       return;
     }
 
-    const partsToPlay = commitEdits(
-      message.getParts(),
-      actions.slice(0, playIndex),
-    );
+    const partsToPlay = commitEdits(getParts(), actions.slice(0, playIndex));
     const actionsAfterPlay = actions.slice(playIndex + 1);
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playback.playMessage(partsToPlay).then((outcome) => {
+    void playMessage(partsToPlay).then((outcome) => {
       if (outcome === "completed") {
-        commitEdits(message.getParts(), actionsAfterPlay);
+        commitEdits(getParts(), actionsAfterPlay);
       }
     });
   }
@@ -96,7 +84,7 @@ export function createButtonActivator({
     }
 
     const editedParts = edits.reduce(applyEdit, parts);
-    message.setParts(editedParts);
+    setParts(editedParts);
 
     return editedParts;
   }
