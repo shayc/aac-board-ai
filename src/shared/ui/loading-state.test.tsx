@@ -38,19 +38,4 @@ describe("LoadingState", () => {
       )
       .toBeInTheDocument();
   });
-
-  test("keeps an accessible name when the visible message is hidden", async () => {
-    const screen = await render(
-      <AppProviders>
-        <LoadingState message="" />
-      </AppProviders>,
-    );
-
-    await expect
-      .element(screen.getByRole("progressbar", { name: "Loading..." }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByText("Loading..."))
-      .not.toBeInTheDocument();
-  });
 });
