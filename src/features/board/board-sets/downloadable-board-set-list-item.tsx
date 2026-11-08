@@ -96,15 +96,7 @@ function DownloadButtonIcon({
   }
 
   if (phase.kind === "importing") {
-    return (
-      <CircularProgress
-        aria-hidden
-        color="inherit"
-        size={PROGRESS_RING_SIZE}
-        variant="determinate"
-        enableTrackSlot
-      />
-    );
+    return null;
   }
 
   const percent = downloadPercent(phase);
