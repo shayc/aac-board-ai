@@ -1,6 +1,9 @@
 import { getStoredLanguage } from "@shared/language/language-store";
-import { getLanguageCode } from "@shared/language/locale";
-import { getSpeechPreferences, getVoices } from "@shared/speech/speech-store";
+import { selectVoice } from "@shared/speech/select-voice";
+import {
+  getSpeechPreferences,
+  getVoicesByLanguage,
+} from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
 
 interface SpeakOptions {
@@ -8,25 +11,14 @@ interface SpeakOptions {
   onBoundary?: (charIndex: number) => void;
 }
 
-function findVoiceForLanguage(
-  voiceURI: string | null,
-  language: string,
-): SpeechSynthesisVoice | null {
-  const voice = getVoices().find((voice) => voice.voiceURI === voiceURI);
-  if (!voice || getLanguageCode(voice.lang) !== getLanguageCode(language)) {
-    return null;
-  }
-
-  return voice;
-}
-
 function buildUtterance(text: string): SpeechSynthesisUtterance {
   const language = getStoredLanguage();
+  const voices = getVoicesByLanguage()[language] ?? [];
   const { voiceURI, rate, pitch, volume } = getSpeechPreferences();
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = language;
-  utterance.voice = findVoiceForLanguage(voiceURI, language);
+  utterance.voice = selectVoice(voices, language, voiceURI) ?? null;
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;

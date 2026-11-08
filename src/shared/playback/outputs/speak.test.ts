@@ -83,6 +83,26 @@ describe("speak", () => {
       expect(utterance.lang).toBe("he");
     });
 
+    test("speaks a new language with its own voice and keeps the saved voice", async () => {
+      stubUtteranceVoiceAccessor();
+      stubVoices([
+        { voiceURI: "voice-1", name: "Voice One", lang: "en-US" },
+        { voiceURI: "he-voice", name: "Carmit", lang: "he-IL" },
+      ]);
+      const speech = stubSpeech();
+      setStoredLanguage("en");
+      setSpeechVoiceURI("voice-1");
+      setStoredLanguage("he");
+
+      await speak("שלום");
+      setStoredLanguage("en");
+      await speak("hello");
+
+      const [hebrew, english] = speech.speak.mock.calls.map(([call]) => call);
+      expect(hebrew.voice?.voiceURI).toBe("he-voice");
+      expect(english.voice?.voiceURI).toBe("voice-1");
+    });
+
     test("clamps an out-of-range stored rate to the configured max", async () => {
       const speech = stubSpeech();
       localStorage.setItem("speech-preferences", JSON.stringify({ rate: 99 }));

@@ -180,7 +180,9 @@ The communication language setting coordinates UI locale, board translation,
 text direction, and text-to-speech (TTS) voice selection. Language choices combine
 UI locales and available voice languages. UI text, board translation, and speech
 fall back independently, so selecting a language does not guarantee a matching
-voice or translation model.
+voice or translation model. Speech uses the saved voice only when it speaks
+the communication language; otherwise it picks one of that language's voices,
+or leaves the choice to the browser, without changing the saved voice.
 
 Paraglide message catalogs provide UI text. Direction-specific Emotion caches,
 right-to-left (RTL) styling, and logical CSS support both text directions.
