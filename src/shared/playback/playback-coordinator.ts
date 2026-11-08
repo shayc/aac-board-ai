@@ -5,6 +5,7 @@ import type {
   PlaybackOutcome,
   PlaybackRequest,
   PlaybackState,
+  PlaybackStep,
 } from "./playback-types";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
@@ -36,7 +37,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     session?.abortController.abort();
   }
 
-  async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
+  function startSession(request: PlaybackRequest): PlaybackSession {
     interruptCurrentSession();
 
     const session: PlaybackSession = {
@@ -46,6 +47,46 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     currentSession = session;
     setActiveCue(session, null);
 
+    return session;
+  }
+
+  function endSession(session: PlaybackSession) {
+    if (currentSession !== session) {
+      return;
+    }
+
+    currentSession = null;
+    store.setState({ status: "idle" });
+  }
+
+  async function playStep(session: PlaybackSession, step: PlaybackStep) {
+    const { signal } = session.abortController;
+
+    switch (step.kind) {
+      case "audio":
+        setActiveCue(session, step.cue ?? null);
+        await playAudio(step.src, { signal });
+        break;
+
+      case "speech": {
+        const { cueAt } = step;
+        setActiveCue(session, cueAt?.(0) ?? null);
+        await speak(step.text, {
+          signal,
+          onBoundary: cueAt
+            ? (charIndex) => setActiveCue(session, cueAt(charIndex))
+            : undefined,
+        });
+        break;
+      }
+
+      default:
+        assertNever(step);
+    }
+  }
+
+  async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
+    const session = startSession(request);
     const { signal } = session.abortController;
 
     try {
@@ -54,34 +95,12 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
-        switch (step.kind) {
-          case "audio":
-            setActiveCue(session, step.cue ?? null);
-            await playAudio(step.src, { signal });
-            break;
-
-          case "speech":
-            setActiveCue(session, step.cueAt?.(0) ?? null);
-            await speak(step.text, {
-              signal,
-              onBoundary: step.cueAt
-                ? (charIndex) =>
-                    setActiveCue(session, step.cueAt?.(charIndex) ?? null)
-                : undefined,
-            });
-            break;
-
-          default:
-            assertNever(step);
-        }
+        await playStep(session, step);
       }
 
       return signal.aborted ? "interrupted" : "completed";
     } finally {
-      if (currentSession === session) {
-        currentSession = null;
-        store.setState({ status: "idle" });
-      }
+      endSession(session);
     }
   }
 
