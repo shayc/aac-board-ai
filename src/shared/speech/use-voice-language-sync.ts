@@ -46,10 +46,10 @@ export function useVoiceLanguageSync(language: string): void {
       return;
     }
 
-    const preferredRegion =
+    const preferredRegionCode =
       getPreferredRegionCode(language) ?? getLikelyRegionCode(language);
     const regionVoices = voices.filter(
-      (voice) => getRegionCode(voice.lang) === preferredRegion,
+      (voice) => getRegionCode(voice.lang) === preferredRegionCode,
     );
     const candidates = regionVoices.length > 0 ? regionVoices : voices;
 

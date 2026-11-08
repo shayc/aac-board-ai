@@ -29,9 +29,14 @@ export function useBoardSetDownload({
   const phase = useSyncExternalStore(subscribeDownloadPhases, () =>
     getDownloadPhasesSnapshot().get(url),
   );
+  const isPending = phase !== undefined;
   const notifyDownloaded = useEffectEvent(onDownloaded);
 
   useEffect(() => {
+    if (!isPending) {
+      return;
+    }
+
     void getPendingBoardSetDownload(url)?.then(
       (importedBoardSet) => {
         if (importedBoardSet) {
@@ -40,10 +45,10 @@ export function useBoardSetDownload({
       },
       () => undefined,
     );
-  }, [url]);
+  }, [url, isPending]);
 
   async function download() {
-    if (phase) {
+    if (isPending) {
       return;
     }
 
@@ -64,7 +69,6 @@ export function useBoardSetDownload({
         message: (t) => t(m.libraryDownloadedBoardSet, { name }),
         severity: "success",
       });
-      onDownloaded(importedBoardSet.id);
     } catch {
       showSnackbar({
         message: (t) => t(m.libraryDownloadFailed, { name }),
