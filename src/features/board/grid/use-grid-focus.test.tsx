@@ -136,6 +136,39 @@ describe("useGridFocus", () => {
 
       await expect.element(item5).toHaveAttribute("tabindex", "0");
     });
+
+    test("leaves focus outside the grid when it re-renders with the same items", async () => {
+      const items = makeItems(1, 2, 3, 4);
+
+      const screen = await render(
+        <Grid
+          ariaLabel="Board"
+          rows={2}
+          columns={2}
+          items={items}
+          renderItem={renderButton}
+        />,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1" });
+      item1.element().focus();
+      item1.element().blur();
+
+      await screen.rerender(
+        <Grid
+          ariaLabel="Renamed board"
+          rows={2}
+          columns={2}
+          items={items}
+          renderItem={renderButton}
+        />,
+      );
+
+      await expect
+        .element(screen.getByRole("grid", { name: "Renamed board" }))
+        .toBeInTheDocument();
+      expect(document.activeElement).toBe(document.body);
+    });
   });
 
   describe("arrow navigation", () => {

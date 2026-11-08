@@ -36,7 +36,7 @@ export function Grid<TItem extends { id: string }>({
   ref,
 }: GridProps<TItem>) {
   const grid = buildGrid(items, rows, columns, order);
-  const { rootRef, rootProps, tabStopPosition } = useGridFocus({ grid });
+  const { rootRef, rootProps, tabStopPosition } = useGridFocus(grid);
 
   return (
     <Box ref={ref} sx={createGridViewportSx}>

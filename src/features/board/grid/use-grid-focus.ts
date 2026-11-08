@@ -13,19 +13,15 @@ import {
   type GridPosition,
 } from "./grid-model";
 
-interface UseGridFocusOptions {
-  grid: readonly (readonly unknown[])[];
-}
-
 interface UseGridFocusReturn {
   rootRef: RefObject<HTMLDivElement | null>;
   rootProps: DOMAttributes<HTMLElement>;
   tabStopPosition: GridPosition;
 }
 
-export function useGridFocus({
-  grid,
-}: UseGridFocusOptions): UseGridFocusReturn {
+export function useGridFocus(
+  grid: readonly (readonly unknown[])[],
+): UseGridFocusReturn {
   const rootRef = useRef<HTMLDivElement>(null);
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
