@@ -25,44 +25,14 @@ import { SettingsSlider } from "@shared/ui/settings-slider";
 
 export function SpeechSettings() {
   const t = useTranslate();
-  const playback = usePlayback();
-  const voicesByLanguage = useVoicesByLanguage();
-  const { voiceURI, rate, pitch, volume } = useSpeechPreferences();
-  const { language } = useLanguage();
+  const { rate, pitch, volume } = useSpeechPreferences();
   const uiLocale = useUILocale();
 
-  const voices = voicesByLanguage[language] ?? [];
-  const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI =
-    voices.find((voice) => voice.voiceURI === voiceURI)?.voiceURI ?? "";
-  const locales = Object.keys(voicesByLocale).sort((a, b) =>
-    a.localeCompare(b),
-  );
-
-  const hasMultipleLocales = locales.length > 1;
-  const languageNames = new Intl.DisplayNames([language], {
-    type: "language",
-  });
   const multiplierFormat = new Intl.NumberFormat(uiLocale, {
     minimumFractionDigits: 1,
     maximumFractionDigits: 1,
   });
   const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
-
-  function renderLocaleOptions(voiceLocale: string) {
-    const header = hasMultipleLocales && (
-      <ListSubheader key={`header-${voiceLocale}`}>
-        {languageNames.of(voiceLocale) ?? voiceLocale}
-      </ListSubheader>
-    );
-    const items = (voicesByLocale[voiceLocale] ?? []).map((voice) => (
-      <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
-        {voice.name}
-      </MenuItem>
-    ));
-
-    return [header, ...items];
-  }
 
   const speechSliders = [
     {
@@ -96,6 +66,52 @@ export function SpeechSettings() {
     },
   ];
 
+  return (
+    <Stack spacing={3}>
+      <VoiceSelect />
+
+      {speechSliders.map(({ id, ...slider }) => (
+        <SettingsSlider key={id} {...slider} step={0.1} />
+      ))}
+    </Stack>
+  );
+}
+
+function VoiceSelect() {
+  const t = useTranslate();
+  const playback = usePlayback();
+  const voicesByLanguage = useVoicesByLanguage();
+  const { voiceURI } = useSpeechPreferences();
+  const { language } = useLanguage();
+
+  const voices = voicesByLanguage[language] ?? [];
+  const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
+  const selectedVoiceURI =
+    voices.find((voice) => voice.voiceURI === voiceURI)?.voiceURI ?? "";
+  const locales = Object.keys(voicesByLocale).sort((a, b) =>
+    a.localeCompare(b),
+  );
+
+  const hasMultipleLocales = locales.length > 1;
+  const languageNames = new Intl.DisplayNames([language], {
+    type: "language",
+  });
+
+  function renderLocaleOptions(voiceLocale: string) {
+    const header = hasMultipleLocales && (
+      <ListSubheader key={`header-${voiceLocale}`}>
+        {languageNames.of(voiceLocale) ?? voiceLocale}
+      </ListSubheader>
+    );
+    const items = (voicesByLocale[voiceLocale] ?? []).map((voice) => (
+      <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
+        {voice.name}
+      </MenuItem>
+    ));
+
+    return [header, ...items];
+  }
+
   function handlePreviewSpeech() {
     void playback.play({
       owner: "speech-preview",
@@ -104,28 +120,22 @@ export function SpeechSettings() {
   }
 
   return (
-    <Stack spacing={3}>
-      <SettingsSelect
-        label={t(m.speechVoice)}
-        value={selectedVoiceURI}
-        onChange={(value) => setSpeechVoiceURI(value === "" ? null : value)}
-        action={
-          <Tooltip title={t(m.speechPreviewVoice)}>
-            <IconButton
-              aria-label={t(m.speechPreviewVoice)}
-              onClick={handlePreviewSpeech}
-            >
-              <PlayArrowIcon />
-            </IconButton>
-          </Tooltip>
-        }
-      >
-        {locales.map(renderLocaleOptions)}
-      </SettingsSelect>
-
-      {speechSliders.map(({ id, ...slider }) => (
-        <SettingsSlider key={id} {...slider} step={0.1} />
-      ))}
-    </Stack>
+    <SettingsSelect
+      label={t(m.speechVoice)}
+      value={selectedVoiceURI}
+      onChange={(value) => setSpeechVoiceURI(value === "" ? null : value)}
+      action={
+        <Tooltip title={t(m.speechPreviewVoice)}>
+          <IconButton
+            aria-label={t(m.speechPreviewVoice)}
+            onClick={handlePreviewSpeech}
+          >
+            <PlayArrowIcon />
+          </IconButton>
+        </Tooltip>
+      }
+    >
+      {locales.map(renderLocaleOptions)}
+    </SettingsSelect>
   );
 }
