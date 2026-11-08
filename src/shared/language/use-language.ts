@@ -1,12 +1,12 @@
-import { use } from "react";
-import { LanguageContext } from "./language-context";
+import { getTextDirection } from "@paraglide/runtime";
+import { setStoredLanguage, useStoredLanguage } from "./language-store";
 
 export function useLanguage() {
-  const context = use(LanguageContext);
+  const language = useStoredLanguage();
 
-  if (!context) {
-    throw new Error("useLanguage must be used within LanguageProvider");
-  }
-
-  return context;
+  return {
+    language,
+    direction: getTextDirection(language),
+    setLanguage: setStoredLanguage,
+  };
 }
