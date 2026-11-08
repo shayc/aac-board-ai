@@ -172,6 +172,48 @@ describe("app flow", () => {
     );
   });
 
+  test("deleting the active board set opens the remaining one", async () => {
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        name: "Animals",
+        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
+      },
+      {
+        id: "zoo",
+        rootBoardId: "home",
+        name: "Zoo",
+        boards: [makeOBFBoard({ id: "home", name: "Zoo Home" })],
+      },
+    ]);
+
+    const { router, screen } = await renderApp("/sets/animals/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Animals Home" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "Open library" }).click();
+    await screen
+      .getByRole("button", { name: "More options for Animals" })
+      .click();
+    await screen.getByRole("menuitem", { name: "Delete" }).click();
+    await screen.getByRole("button", { name: "Delete" }).click();
+
+    await vi.waitFor(() => {
+      expect(router.state.location.pathname).toBe("/sets/zoo/boards/home");
+    });
+    await screen.getByRole("button", { name: "Close library" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Zoo Home" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("grid", { name: "Animals Home" }))
+      .not.toBeInTheDocument();
+  });
+
   test("client navigation from a board sets the localized not-found title", async () => {
     const { router, screen } = await renderApp();
 

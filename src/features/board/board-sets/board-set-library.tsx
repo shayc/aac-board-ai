@@ -11,7 +11,7 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
 import { LoadingState } from "@shared/ui/loading-state";
 import { useState } from "react";
-import { useMatch } from "react-router";
+import { useMatch, useNavigate } from "react-router";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BOARD_SET_SEGMENT } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
@@ -30,6 +30,7 @@ export function BoardSetLibrary() {
   const { boardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
@@ -51,6 +52,11 @@ export function BoardSetLibrary() {
         message: (t) => t(m.libraryDeleteFailed, { name }),
         severity: "error",
       });
+      return;
+    }
+
+    if (id === activeBoardSetId) {
+      void navigate("/", { replace: true });
     }
   }
 
