@@ -17,8 +17,7 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = language;
-  utterance.voice =
-    selectVoice(getVoicesByLanguage(), language, voiceURI) ?? null;
+  utterance.voice = selectVoice(getVoicesByLanguage(), language, voiceURI);
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;

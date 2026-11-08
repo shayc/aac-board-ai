@@ -69,7 +69,7 @@ describe("speak", () => {
       expect(utterance.voice?.voiceURI).toBe("voice-1");
     });
 
-    test("leaves the voice to the browser when the saved voice belongs to another language", async () => {
+    test("leaves the voice to the browser when the language has no voices", async () => {
       stubUtteranceVoiceAccessor();
       const speech = stubSpeech();
       setStoredLanguage("en");

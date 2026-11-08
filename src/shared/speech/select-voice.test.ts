@@ -17,7 +17,7 @@ function makeVoice(
 
 describe("selectVoice", () => {
   test("returns nothing when the language has no voices", () => {
-    expect(selectVoice({}, "he", "en-voice", [])).toBeUndefined();
+    expect(selectVoice({}, "he", "en-voice", [])).toBeNull();
   });
 
   test("keeps the saved voice even when another voice is the default", () => {

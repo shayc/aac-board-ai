@@ -27,14 +27,14 @@ function selectFallbackVoice(
   voices: SpeechSynthesisVoice[],
   language: string,
   preferredLocales: readonly string[],
-): SpeechSynthesisVoice | undefined {
+): SpeechSynthesisVoice | null {
   const regionCode = findPreferredRegionCode(language, preferredLocales);
   const regionVoices = voices.filter(
     (voice) => getRegionCode(voice.lang) === regionCode,
   );
   const candidates = regionVoices.length > 0 ? regionVoices : voices;
 
-  return candidates.find((voice) => voice.default) ?? candidates[0];
+  return candidates.find((voice) => voice.default) ?? candidates[0] ?? null;
 }
 
 export function selectVoice(
@@ -42,7 +42,7 @@ export function selectVoice(
   language: string,
   savedVoiceURI: string | null,
   preferredLocales: readonly string[] = globalThis.navigator?.languages ?? [],
-): SpeechSynthesisVoice | undefined {
+): SpeechSynthesisVoice | null {
   const voices = voicesByLanguage[language] ?? [];
   const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
 
