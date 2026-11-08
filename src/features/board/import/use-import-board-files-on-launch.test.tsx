@@ -96,6 +96,18 @@ describe("useImportBoardFilesOnLaunch", () => {
     );
   });
 
+  test("reports an error when no launched file is a board file", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler();
+
+    launchQueue.launch(fileHandle(new File([""], "notes.txt")));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Only board files can be imported");
+    expect(await listBoardSetRecords()).toHaveLength(0);
+  });
+
   test("reports a file that can no longer be opened", async () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();

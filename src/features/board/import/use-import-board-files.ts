@@ -3,7 +3,7 @@ import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
-import { BOARD_FILE_ACCEPT } from "./board-file-formats";
+import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import { importBoardFiles, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";
 
@@ -24,14 +24,24 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
       return [];
     }
 
-    const count = files.length;
+    const boardFiles = files.filter(hasBoardFileExtension);
+
+    if (boardFiles.length === 0) {
+      showSnackbar({
+        message: (t) => t(m.libraryImportOnlyBoardFiles),
+        severity: "error",
+      });
+      return undefined;
+    }
+
+    const count = boardFiles.length;
 
     showSnackbar({
       message: (t) => t(m.libraryImportingBoardFiles, { count }),
     });
 
     try {
-      const importedBoardSets = await importBoardFiles(files);
+      const importedBoardSets = await importBoardFiles(boardFiles);
 
       showSnackbar({
         message: (t) => t(m.libraryImportedBoardSets, { count }),

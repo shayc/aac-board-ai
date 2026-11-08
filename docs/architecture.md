@@ -111,7 +111,9 @@ opens the first stored board set or imports the bundled starter board set if the
 library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
-`importBoardFiles`. Each imported file creates a separate board set.
+`importBoardFiles`. Each imported file creates a separate board set. The three
+local-file entry points go through `useImportBoardFiles().importFiles`, which
+skips files without a board file extension and reports when none remain.
 
 ### Open a board
 

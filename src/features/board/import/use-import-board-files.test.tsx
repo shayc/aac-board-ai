@@ -53,6 +53,29 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Board sets imported");
   });
 
+  test("imports only the board files when other files are included", async () => {
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const screen = await renderImport([pdf, boardFile]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("Board set imported");
+  });
+
+  test("reports an error when no file is a board file", async () => {
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+    const screen = await renderImport([pdf]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Only board files can be imported");
+  });
+
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {
     // Zeros compress to a tiny archive that still declares an oversized
     // uncompressed size, so the limit trips before inflation.
