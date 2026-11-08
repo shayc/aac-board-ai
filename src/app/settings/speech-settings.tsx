@@ -34,45 +34,41 @@ export function SpeechSettings() {
   });
   const percentFormat = new Intl.NumberFormat(uiLocale, { style: "percent" });
 
-  const speechSliders = [
-    {
-      id: "rate",
-      label: t(m.speechRate),
-      value: rate,
-      min: SPEECH_RATE.min,
-      max: SPEECH_RATE.max,
-      normalValue: SPEECH_RATE.defaultValue,
-      onChange: setSpeechRate,
-      formatValue: (value: number) => `${multiplierFormat.format(value)}×`,
-    },
-    {
-      id: "pitch",
-      label: t(m.speechPitch),
-      value: pitch,
-      min: SPEECH_PITCH.min,
-      max: SPEECH_PITCH.max,
-      normalValue: SPEECH_PITCH.defaultValue,
-      onChange: setSpeechPitch,
-      formatValue: (value: number) => percentFormat.format(value),
-    },
-    {
-      id: "volume",
-      label: t(m.speechVolume),
-      value: volume,
-      min: SPEECH_VOLUME.min,
-      max: SPEECH_VOLUME.max,
-      onChange: setSpeechVolume,
-      formatValue: (value: number) => percentFormat.format(value),
-    },
-  ];
-
   return (
     <Stack spacing={3}>
       <VoiceSelect />
 
-      {speechSliders.map(({ id, ...slider }) => (
-        <SettingsSlider key={id} {...slider} step={0.1} />
-      ))}
+      <SettingsSlider
+        label={t(m.speechRate)}
+        value={rate}
+        onChange={setSpeechRate}
+        min={SPEECH_RATE.min}
+        max={SPEECH_RATE.max}
+        step={0.1}
+        normalValue={SPEECH_RATE.defaultValue}
+        formatValue={(value) => `${multiplierFormat.format(value)}×`}
+      />
+
+      <SettingsSlider
+        label={t(m.speechPitch)}
+        value={pitch}
+        onChange={setSpeechPitch}
+        min={SPEECH_PITCH.min}
+        max={SPEECH_PITCH.max}
+        step={0.1}
+        normalValue={SPEECH_PITCH.defaultValue}
+        formatValue={(value) => percentFormat.format(value)}
+      />
+
+      <SettingsSlider
+        label={t(m.speechVolume)}
+        value={volume}
+        onChange={setSpeechVolume}
+        min={SPEECH_VOLUME.min}
+        max={SPEECH_VOLUME.max}
+        step={0.1}
+        formatValue={(value) => percentFormat.format(value)}
+      />
     </Stack>
   );
 }
