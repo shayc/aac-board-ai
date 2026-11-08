@@ -32,7 +32,7 @@ function setup(parts: MessagePart[] = []) {
   };
 }
 
-const SPEAK_THEN_CLEAR: BoardButton["actions"] = [
+const PLAY_THEN_CLEAR: BoardButton["actions"] = [
   { kind: "play" },
   { kind: "clear" },
 ];
@@ -165,7 +165,7 @@ describe("createButtonActivator", () => {
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
-    activateButton({ id: "btn", label: "", actions: SPEAK_THEN_CLEAR });
+    activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
     expect(message.setParts).not.toHaveBeenCalled();
 
     await settlePlayback("completed");
@@ -179,7 +179,7 @@ describe("createButtonActivator", () => {
     ]);
     const settlePlayback = holdMessagePlayback(playback);
 
-    activateButton({ id: "btn", label: "", actions: SPEAK_THEN_CLEAR });
+    activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
     await settlePlayback("interrupted");
 
     expect(message.setParts).not.toHaveBeenCalled();

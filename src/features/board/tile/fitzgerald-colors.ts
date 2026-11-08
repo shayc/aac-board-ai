@@ -11,4 +11,4 @@ export const fitzgeraldColors = {
   determiner: "#aeaeae",
   conjunction: "#f2f2f2",
   folder: "#dedede",
-};
+} as const;

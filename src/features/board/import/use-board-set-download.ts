@@ -1,11 +1,10 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { useEffect, useEffectEvent, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import {
   cancelBoardSetDownload,
   downloadBoardSet,
   getDownloadPhasesSnapshot,
-  getPendingBoardSetDownload,
   subscribeDownloadPhases,
   type BoardSetDownloadPhase,
 } from "./board-set-downloads";
@@ -19,28 +18,14 @@ interface UseBoardSetDownloadReturn {
 export function useBoardSetDownload({
   name,
   url,
-  onDownloaded,
 }: {
   name: string;
   url: string;
-  onDownloaded: (boardSetId: string) => void;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
   const phase = useSyncExternalStore(subscribeDownloadPhases, () =>
     getDownloadPhasesSnapshot().get(url),
   );
-  const notifyDownloaded = useEffectEvent(onDownloaded);
-
-  useEffect(() => {
-    void getPendingBoardSetDownload(url)?.then(
-      (importedBoardSet) => {
-        if (importedBoardSet) {
-          notifyDownloaded(importedBoardSet.id);
-        }
-      },
-      () => undefined,
-    );
-  }, [url]);
 
   async function download() {
     if (phase) {
@@ -64,7 +49,6 @@ export function useBoardSetDownload({
         message: (t) => t(m.libraryDownloadedBoardSet, { name }),
         severity: "success",
       });
-      onDownloaded(importedBoardSet.id);
     } catch {
       showSnackbar({
         message: (t) => t(m.libraryDownloadFailed, { name }),

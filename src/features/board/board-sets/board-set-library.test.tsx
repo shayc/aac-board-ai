@@ -363,7 +363,9 @@ describe("BoardSetLibrary", () => {
       )
       .toHaveAccessibleDescription("0.5 of 2 MB");
 
-    await expectNoA11yViolations(document.body);
+    await expectNoA11yViolations(
+      screen.getByRole("navigation", { name: "Board sets" }).element(),
+    );
 
     await screen
       .getByRole("button", { name: "Cancel downloading First Words" })

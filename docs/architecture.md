@@ -82,7 +82,7 @@ State has distinct owners and lifetimes:
 | Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                      |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close     |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                       |
-| Reactive shared state | `createExternalStore`                 | Board-set library, voice catalog, and playback progress                          |
+| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, voice catalog, and playback progress     |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, board and message display, suggestion instructions, onboarding |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                              |
 
@@ -106,7 +106,7 @@ persists and synchronizes theme mode separately.
 ## Core flows
 
 At `/`, a board URL supplied through `?board=` takes precedence. Otherwise, the app
-opens the first stored board set or imports the bundled starter board if the
+opens the first stored board set or imports the bundled starter board set if the
 library is empty.
 
 File selection, drag and drop, URL imports, and PWA file handling all use
@@ -123,8 +123,9 @@ translation before rendering, keeping that work out of UI components:
    resolve only to stored assets; otherwise the item's `data` or `url` is used.
 2. It then uses the source board, or the board's own translations for that
    language: those in the board file or cached on this device. Otherwise, it
-   attempts translation and falls back to the source board on failure. Successful translations render without waiting for the cache write
-   and remain usable if it fails.
+   attempts translation and falls back to the source board on failure.
+   Successful translations render without waiting for the cache write and
+   remain usable if it fails.
 3. The route renders the `Board`.
 
 Stored assets are immutable, so
@@ -279,7 +280,8 @@ AI availability, provisioning, and session lifecycle to
 - **Board** — a grid of communication tiles.
 - **Board set** — a collection of linked boards with a root board, imported as a
   unit.
-- **Library** — the board sets stored on this device.
+- **Library** — the board sets stored on this device, listed alongside bundled
+  board sets that can be downloaded.
 - **Symbol** — an AAC representation displayed on a tile or in the message bar:
   an image, a written label, or both.
 - **Tile** — an interactive board button containing a communication symbol. It
