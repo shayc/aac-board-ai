@@ -27,8 +27,6 @@ export function AppDrawer({
   children,
   onClose,
 }: AppDrawerProps) {
-  const [isContentScrolled, setIsContentScrolled] = useState(false);
-
   return (
     <Drawer
       open={open}
@@ -45,6 +43,30 @@ export function AppDrawer({
         },
       }}
     >
+      <AppDrawerContent title={title} closeLabel={closeLabel} onClose={onClose}>
+        {children}
+      </AppDrawerContent>
+    </Drawer>
+  );
+}
+
+interface AppDrawerContentProps {
+  title: string;
+  closeLabel: string;
+  children: ReactNode;
+  onClose: () => void;
+}
+
+function AppDrawerContent({
+  title,
+  closeLabel,
+  children,
+  onClose,
+}: AppDrawerContentProps) {
+  const [isContentScrolled, setIsContentScrolled] = useState(false);
+
+  return (
+    <>
       <Toolbar
         component="header"
         sx={{
@@ -76,6 +98,6 @@ export function AppDrawer({
       >
         {children}
       </Box>
-    </Drawer>
+    </>
   );
 }

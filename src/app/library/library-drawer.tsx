@@ -16,8 +16,8 @@ export function LibraryDrawer({ open, onClose }: LibraryDrawerProps) {
       title={t(m.libraryTitle)}
       closeLabel={t(m.libraryClose)}
       open={open}
-      anchor="left"
       onClose={onClose}
+      anchor="left"
     >
       <BoardSetLibrary />
     </AppDrawer>

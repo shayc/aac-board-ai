@@ -19,7 +19,7 @@ export function SuggestionBar({
   onPhraseSelect,
 }: SuggestionBarProps) {
   const isPending = status.kind === "pending";
-  const isNoticeHidden = status.kind === "idle" || isPending;
+  const isPendingDotShown = status.kind === "idle" || isPending;
 
   return (
     <Stack
@@ -32,7 +32,7 @@ export function SuggestionBar({
         overflow: "hidden",
       }}
     >
-      {isNoticeHidden && <PendingDot isVisible={isPending} />}
+      {isPendingDotShown && <PendingDot isVisible={isPending} />}
 
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
 

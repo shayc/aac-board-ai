@@ -31,8 +31,8 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
       title={t(m.settingsTitle)}
       closeLabel={t(m.settingsClose)}
       open={open}
-      anchor="right"
       onClose={onClose}
+      anchor="right"
     >
       <Box sx={{ px: 3, pb: 3 }}>
         <SettingsSection title={t(m.settingsSectionAppearance)}>
