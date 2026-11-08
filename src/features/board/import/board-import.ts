@@ -48,18 +48,23 @@ export async function importBoardFiles(
 
 async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-  const baseBoardSetId = deriveBoardSetId(file.name);
 
+  return insertWithFreeBoardSetId(deriveBoardSetId(file.name), (boardSetId) =>
+    loaded.format === "obz"
+      ? importOBZArchive(loaded.archive, boardSetId, file.name)
+      : importOBFBoard(loaded.board, boardSetId, file.name),
+  );
+}
+
+async function insertWithFreeBoardSetId(
+  baseBoardSetId: string,
+  insert: (boardSetId: string) => Promise<ImportedBoardSet>,
+): Promise<ImportedBoardSet> {
   for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const boardSetId = buildBoardSetIdCandidate(
-      baseBoardSetId,
-      candidateNumber,
-    );
-
     try {
-      return loaded.format === "obz"
-        ? await importOBZArchive(loaded.archive, boardSetId, file.name)
-        : await importOBFBoard(loaded.board, boardSetId, file.name);
+      return await insert(
+        buildBoardSetIdCandidate(baseBoardSetId, candidateNumber),
+      );
     } catch (error) {
       if (!(error instanceof BoardSetAlreadyExistsError)) {
         throw error;
