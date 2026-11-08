@@ -20,7 +20,12 @@ type TileColorStyle = CSSProperties & {
   "--tile-border-color"?: string;
 };
 
-const TILE_BACKGROUND_COLOR = "var(--tile-background-color)";
+function flattenOntoWhite(color: string): string {
+  const channelOnWhite = (channel: string) =>
+    `calc(${channel} * alpha + 255 * (1 - alpha))`;
+
+  return `rgb(from ${color} ${channelOnWhite("r")} ${channelOnWhite("g")} ${channelOnWhite("b")} / 1)`;
+}
 
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
@@ -31,6 +36,8 @@ function mixWithTextColor(color: string, amount: string): string {
 }
 
 function tileSx(theme: Theme) {
+  const backgroundColor = `var(--tile-background-color, ${theme.vars.palette.background.paper})`;
+
   return {
     position: "relative",
     display: "grid",
@@ -40,7 +47,8 @@ function tileSx(theme: Theme) {
     height: "100%",
     p: 1,
     overflow: "hidden",
-    color: "inherit",
+    color: `contrast-color(${backgroundColor})`,
+    backgroundColor,
     border: "4px solid var(--tile-border-color, transparent)",
     borderRadius: theme.vars.shape.borderRadius,
     boxShadow: theme.vars.shadows[2],
@@ -48,12 +56,13 @@ function tileSx(theme: Theme) {
       display: "none",
     },
     "&:hover": {
-      boxShadow: theme.vars.shadows[4],
-      "@media (hover: none)": {
-        boxShadow: theme.vars.shadows[2],
+      "@media (hover: hover)": {
+        backgroundColor: mixWithTextColor(backgroundColor, "8%"),
+        boxShadow: theme.vars.shadows[4],
       },
     },
     "&:active": {
+      backgroundColor: mixWithTextColor(backgroundColor, "16%"),
       boxShadow: theme.vars.shadows[8],
     },
     [`&.${buttonClasses.focusVisible}`]: {
@@ -62,19 +71,6 @@ function tileSx(theme: Theme) {
     },
   } as const;
 }
-
-const coloredTileSx = {
-  color: `contrast-color(${TILE_BACKGROUND_COLOR})`,
-  backgroundColor: TILE_BACKGROUND_COLOR,
-  "&:hover": {
-    "@media (hover: hover)": {
-      backgroundColor: mixWithTextColor(TILE_BACKGROUND_COLOR, "8%"),
-    },
-  },
-  "&:active": {
-    backgroundColor: mixWithTextColor(TILE_BACKGROUND_COLOR, "16%"),
-  },
-} as const;
 
 const folderTileSx = {
   "&::after": {
@@ -90,6 +86,10 @@ const folderTileSx = {
   },
 } as const;
 
+function tileColor(color: string): string {
+  return desaturate(flattenOntoWhite(color));
+}
+
 function tileColorStyle(
   backgroundColor: string | undefined,
   borderColor: string | undefined,
@@ -100,8 +100,8 @@ function tileColorStyle(
     : undefined;
 
   return {
-    "--tile-background-color": backgroundColor && desaturate(backgroundColor),
-    "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
+    "--tile-background-color": backgroundColor && tileColor(backgroundColor),
+    "--tile-border-color": visibleBorderColor && tileColor(visibleBorderColor),
   };
 }
 
@@ -124,11 +124,7 @@ export function Tile({
       tabIndex={tabIndex}
       onClick={onActivate}
       style={tileColorStyle(backgroundColor, borderColor, isBorderVisible)}
-      sx={[
-        tileSx,
-        Boolean(backgroundColor) && coloredTileSx,
-        isFolder && folderTileSx,
-      ]}
+      sx={[tileSx, isFolder && folderTileSx]}
     >
       {children}
     </Button>

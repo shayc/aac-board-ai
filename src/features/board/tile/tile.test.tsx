@@ -121,23 +121,28 @@ describe("Tile", () => {
       .not.toHaveAccessibleDescription();
   });
 
-  test.each(["#000000", "#ffffff", "#808080", "#ff0000", "#ffeb3b", "#3f51b5"])(
-    "keeps the label readable on a %s background",
-    async (backgroundColor) => {
-      const screen = await renderInTheme(
-        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
-          Word
-        </Tile>,
-      );
-      const { color, backgroundColor: background } = styleOf(
-        screen.getByRole("button", { name: "Word" }),
-      );
+  test.each([
+    "#000000",
+    "#ffffff",
+    "#808080",
+    "#ff0000",
+    "#ffeb3b",
+    "#3f51b5",
+    "rgba(0, 0, 0, 0.1)",
+  ])("keeps the label readable on a %s background", async (backgroundColor) => {
+    const screen = await renderInTheme(
+      <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
+        Word
+      </Tile>,
+    );
+    const { color, backgroundColor: background } = styleOf(
+      screen.getByRole("button", { name: "Word" }),
+    );
 
-      expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
-        WCAG_TEXT_CONTRAST,
-      );
-    },
-  );
+    expect(contrastRatio(paint(color), paint(background))).toBeGreaterThan(
+      WCAG_TEXT_CONTRAST,
+    );
+  });
 
   test.each([true, false])(
     "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
@@ -175,7 +180,7 @@ describe("Tile", () => {
     },
   );
 
-  test("moves the background toward the label color on hover, lightening dark tiles and darkening light ones", async () => {
+  test("moves the background toward the label color on hover, lightening dark tiles and darkening light and uncolored ones", async () => {
     const screen = await renderInTheme(
       <>
         <Tile backgroundColor="#000000" onActivate={vi.fn()}>
@@ -184,21 +189,27 @@ describe("Tile", () => {
         <Tile backgroundColor="#ffffff" onActivate={vi.fn()}>
           Light
         </Tile>
+        <Tile onActivate={vi.fn()}>Plain</Tile>
       </>,
     );
     const darkTile = screen.getByRole("button", { name: "Dark" });
     const lightTile = screen.getByRole("button", { name: "Light" });
+    const plainTile = screen.getByRole("button", { name: "Plain" });
     const restingDarkLuminance = backgroundLuminance(darkTile);
     const restingLightLuminance = backgroundLuminance(lightTile);
+    const restingPlainLuminance = backgroundLuminance(plainTile);
 
     await darkTile.hover();
     const darkHoverLuminance = backgroundLuminance(darkTile);
     await lightTile.hover();
     const lightHoverLuminance = backgroundLuminance(lightTile);
-    await lightTile.unhover();
+    await plainTile.hover();
+    const plainHoverLuminance = backgroundLuminance(plainTile);
+    await plainTile.unhover();
 
     expect(darkHoverLuminance).toBeGreaterThan(restingDarkLuminance);
     expect(lightHoverLuminance).toBeLessThan(restingLightLuminance);
+    expect(plainHoverLuminance).toBeLessThan(restingPlainLuminance);
   });
 
   test.each([
