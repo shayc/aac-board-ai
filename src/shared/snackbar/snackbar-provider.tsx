@@ -109,7 +109,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
             width: "100%",
             color: theme.vars.palette.SnackbarContent.color,
             backgroundColor: theme.vars.palette.SnackbarContent.bg,
-            boxShadow: theme.shadows[6],
+            boxShadow: theme.vars.shadows[6],
             [`& .${alertClasses.icon}`]: {
               color: theme.colorSchemes.dark?.palette[severity].main,
               ...theme.applyStyles("dark", {
