@@ -1,0 +1,50 @@
+import {
+  getLanguageCode,
+  getLikelyRegionCode,
+  getRegionCode,
+} from "@shared/language/locale";
+import type { VoicesByLanguage } from "./speech-store";
+
+function findPreferredRegionCode(
+  language: string,
+  preferredLocales: readonly string[],
+): string | undefined {
+  for (const locale of preferredLocales) {
+    if (getLanguageCode(locale) !== language) {
+      continue;
+    }
+
+    const region = getRegionCode(locale);
+    if (region) {
+      return region;
+    }
+  }
+
+  return getLikelyRegionCode(language);
+}
+
+function findFallbackVoice(
+  voices: SpeechSynthesisVoice[],
+  language: string,
+  preferredLocales: readonly string[],
+): SpeechSynthesisVoice | null {
+  const regionCode = findPreferredRegionCode(language, preferredLocales);
+  const regionVoices = voices.filter(
+    (voice) => getRegionCode(voice.lang) === regionCode,
+  );
+  const candidates = regionVoices.length > 0 ? regionVoices : voices;
+
+  return candidates.find((voice) => voice.default) ?? candidates[0] ?? null;
+}
+
+export function resolveVoice(
+  voicesByLanguage: VoicesByLanguage,
+  language: string,
+  savedVoiceURI: string | null,
+  preferredLocales: readonly string[] = globalThis.navigator?.languages ?? [],
+): SpeechSynthesisVoice | null {
+  const voices = voicesByLanguage[language] ?? [];
+  const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
+
+  return savedVoice ?? findFallbackVoice(voices, language, preferredLocales);
+}

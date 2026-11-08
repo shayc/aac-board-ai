@@ -18,6 +18,7 @@ import {
   SPEECH_RATE,
   SPEECH_VOLUME,
   useSpeechPreferences,
+  useSpeechVoice,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
 import { SettingsSelect } from "@shared/ui/settings-select";
@@ -77,13 +78,12 @@ function VoiceSelect() {
   const t = useTranslate();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
-  const { voiceURI } = useSpeechPreferences();
+  const speechVoice = useSpeechVoice();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI =
-    voices.find((voice) => voice.voiceURI === voiceURI)?.voiceURI ?? "";
+  const selectedVoiceURI = speechVoice?.voiceURI ?? "";
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );

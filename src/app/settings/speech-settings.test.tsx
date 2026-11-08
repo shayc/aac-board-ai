@@ -1,6 +1,7 @@
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
+import { setSpeechVoiceURI } from "@shared/speech/speech-store";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -115,6 +116,21 @@ describe("SpeechSettings", () => {
       expect(stored).not.toBeNull();
       expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-2" });
     });
+  });
+
+  test("shows the voice that will speak when the saved voice belongs to another language", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "he-1", name: "Carmit", lang: "he-IL" },
+    ]);
+    setSpeechVoiceURI("us-1");
+    setStoredLanguage("he");
+
+    const screen = await renderSpeechSettings();
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "קול" }))
+      .toHaveTextContent("Carmit");
   });
 
   test("adjusts and persists rate, pitch, and volume", async () => {

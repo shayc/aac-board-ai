@@ -1,3 +1,7 @@
+import {
+  getStoredLanguage,
+  useStoredLanguage,
+} from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import {
   createExternalStore,
@@ -8,6 +12,7 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
+import { resolveVoice } from "./resolve-voice";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
 interface SpeechPreferences {
@@ -17,12 +22,7 @@ interface SpeechPreferences {
   volume: number;
 }
 
-type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
-
-interface VoiceCatalogState {
-  voices: SpeechSynthesisVoice[];
-  voicesByLanguage: VoicesByLanguage;
-}
+export type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
 
 export const SPEECH_RATE: ClampedNumberOptions = {
   min: 0.1,
@@ -51,23 +51,20 @@ export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
   };
 }
 
-function buildVoiceCatalog(voices: SpeechSynthesisVoice[]): VoiceCatalogState {
-  return {
-    voices,
-    voicesByLanguage: Object.groupBy(voices, (voice) =>
-      getLanguageCode(voice.lang),
-    ),
-  };
+function groupVoicesByLanguage(
+  voices: SpeechSynthesisVoice[],
+): VoicesByLanguage {
+  return Object.groupBy(voices, (voice) => getLanguageCode(voice.lang));
 }
 
 const synthesis = getSpeechSynthesis();
 
-const voiceCatalogStore = createExternalStore<VoiceCatalogState>(
-  buildVoiceCatalog(synthesis?.getVoices() ?? []),
+const voicesByLanguageStore = createExternalStore<VoicesByLanguage>(
+  groupVoicesByLanguage(synthesis?.getVoices() ?? []),
 );
 
 synthesis?.addEventListener("voiceschanged", () => {
-  voiceCatalogStore.setState(buildVoiceCatalog(synthesis.getVoices()));
+  voicesByLanguageStore.setState(groupVoicesByLanguage(synthesis.getVoices()));
 });
 
 const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
@@ -102,17 +99,30 @@ export function setSpeechVolume(volume: number): void {
   updatePreferences({ volume });
 }
 
-export function getVoices(): SpeechSynthesisVoice[] {
-  return voiceCatalogStore.getSnapshot().voices;
+export function getVoicesByLanguage(): VoicesByLanguage {
+  return voicesByLanguageStore.getSnapshot();
 }
 
 export function useVoicesByLanguage(): VoicesByLanguage {
-  return useExternalStore(
-    voiceCatalogStore,
-    (catalog) => catalog.voicesByLanguage,
-  );
+  return useExternalStore(voicesByLanguageStore);
 }
 
 export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
+}
+
+export function getSpeechVoice(): SpeechSynthesisVoice | null {
+  return resolveVoice(
+    getVoicesByLanguage(),
+    getStoredLanguage(),
+    getSpeechPreferences().voiceURI,
+  );
+}
+
+export function useSpeechVoice(): SpeechSynthesisVoice | null {
+  const voicesByLanguage = useVoicesByLanguage();
+  const language = useStoredLanguage();
+  const { voiceURI } = useSpeechPreferences();
+
+  return resolveVoice(voicesByLanguage, language, voiceURI);
 }

@@ -1,4 +1,3 @@
-import { useVoiceLanguageSync } from "@shared/speech/use-voice-language-sync";
 import { useLayoutEffect, type ReactNode } from "react";
 import { useLanguage } from "./use-language";
 
@@ -13,8 +12,6 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.dir = direction;
     document.documentElement.lang = language;
   }, [direction, language]);
-
-  useVoiceLanguageSync(language);
 
   return children;
 }
