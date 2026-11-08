@@ -5,6 +5,7 @@ import type {
   PlaybackOutcome,
   PlaybackRequest,
   PlaybackState,
+  PlaybackStep,
 } from "./playback-types";
 import { playAudio } from "./outputs/play-audio";
 import { speak } from "./outputs/speak";
@@ -36,6 +37,32 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     session?.abortController.abort();
   }
 
+  async function playStep(session: PlaybackSession, step: PlaybackStep) {
+    const { signal } = session.abortController;
+
+    switch (step.kind) {
+      case "audio":
+        setActiveCue(session, step.cue ?? null);
+        await playAudio(step.src, { signal });
+        break;
+
+      case "speech": {
+        const { cueAt } = step;
+        setActiveCue(session, cueAt?.(0) ?? null);
+        await speak(step.text, {
+          signal,
+          onBoundary: cueAt
+            ? (charIndex) => setActiveCue(session, cueAt(charIndex))
+            : undefined,
+        });
+        break;
+      }
+
+      default:
+        assertNever(step);
+    }
+  }
+
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
     interruptCurrentSession();
 
@@ -54,26 +81,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
-        switch (step.kind) {
-          case "audio":
-            setActiveCue(session, step.cue ?? null);
-            await playAudio(step.src, { signal });
-            break;
-
-          case "speech":
-            setActiveCue(session, step.cueAt?.(0) ?? null);
-            await speak(step.text, {
-              signal,
-              onBoundary: step.cueAt
-                ? (charIndex) =>
-                    setActiveCue(session, step.cueAt?.(charIndex) ?? null)
-                : undefined,
-            });
-            break;
-
-          default:
-            assertNever(step);
-        }
+        await playStep(session, step);
       }
 
       return signal.aborted ? "interrupted" : "completed";
