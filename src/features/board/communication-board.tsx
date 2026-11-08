@@ -6,7 +6,6 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
-import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
 import { useBoardPreferences } from "./board-preferences-store";
 import type { Board, BoardButton } from "./board-types";
@@ -20,7 +19,7 @@ import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
-import { Tile } from "./tile/tile";
+import { BoardTile } from "./tile/board-tile";
 
 interface CommunicationBoardProps {
   board: Board;
@@ -36,8 +35,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
     useBoardPreferences();
-  const symbolLabelPlacement = tileLabelPlacement === "top" ? "top" : "bottom";
-  const isTileLabelHidden = tileLabelPlacement === "hidden";
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -90,27 +87,18 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     />
   );
 
-  const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
+  function renderTile(button: BoardButton, gridItemProps: GridItemProps) {
     return (
-      <Tile
+      <BoardTile
         key={`${board.id}/${button.id}`}
-        ariaLabel={button.label ? undefined : button.vocalization}
-        backgroundColor={button.backgroundColor}
-        borderColor={button.borderColor}
-        isFolder={Boolean(button.linkedBoardId)}
+        button={button}
+        labelPlacement={tileLabelPlacement}
         isBorderVisible={areTileBordersVisible}
         onActivate={() => activateButton(button)}
         {...gridItemProps}
-      >
-        <AACSymbol
-          label={button.label}
-          imageSrc={button.imageSrc}
-          labelPlacement={symbolLabelPlacement}
-          isLabelHidden={isTileLabelHidden}
-        />
-      </Tile>
+      />
     );
-  };
+  }
 
   return (
     <Stack
