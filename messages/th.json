@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "ดาวน์โหลด {name}",
   "libraryDownloadedBoardSet": "ดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",
   "libraryDownloadFailed": "ดาวน์โหลดชุดบอร์ด \"{name}\" ไม่สำเร็จ",
-  "libraryDownloadCanceled": "ยกเลิกการดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",
   "libraryDownloadProgress": "{loaded} จาก {total}",
   "libraryDownloadingStatus": "กำลังดาวน์โหลด...",
   "libraryImportingStatus": "กำลังนำเข้า...",

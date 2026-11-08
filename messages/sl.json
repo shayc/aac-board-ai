@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Prenesi {name}",
   "libraryDownloadedBoardSet": "Komplet tabel »{name}« je prenesen",
   "libraryDownloadFailed": "Kompleta tabel »{name}« ni bilo mogoče prenesti",
-  "libraryDownloadCanceled": "Prenos kompleta tabel »{name}« je preklican",
   "libraryDownloadProgress": "{loaded} od {total}",
   "libraryDownloadingStatus": "Prenašanje...",
   "libraryImportingStatus": "Uvažanje...",

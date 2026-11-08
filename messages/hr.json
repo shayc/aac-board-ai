@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Preuzmi {name}",
   "libraryDownloadedBoardSet": "Skup ploča „{name}” je preuzet",
   "libraryDownloadFailed": "Skup ploča „{name}” nije moguće preuzeti",
-  "libraryDownloadCanceled": "Preuzimanje skupa ploča „{name}” je prekinuto",
   "libraryDownloadProgress": "{loaded} od {total}",
   "libraryDownloadingStatus": "Preuzimanje...",
   "libraryImportingStatus": "Uvoz...",

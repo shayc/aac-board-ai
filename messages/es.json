@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Descargar {name}",
   "libraryDownloadedBoardSet": "Se descargó el conjunto de tableros \"{name}\"",
   "libraryDownloadFailed": "No se pudo descargar el conjunto de tableros \"{name}\"",
-  "libraryDownloadCanceled": "Se canceló la descarga del conjunto de tableros \"{name}\"",
   "libraryDownloadProgress": "{loaded} de {total}",
   "libraryDownloadingStatus": "Descargando...",
   "libraryImportingStatus": "Importando...",

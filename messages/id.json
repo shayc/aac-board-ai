@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Unduh {name}",
   "libraryDownloadedBoardSet": "Set papan \"{name}\" telah diunduh",
   "libraryDownloadFailed": "Tidak dapat mengunduh set papan \"{name}\"",
-  "libraryDownloadCanceled": "Unduhan set papan \"{name}\" dibatalkan",
   "libraryDownloadProgress": "{loaded} dari {total}",
   "libraryDownloadingStatus": "Mengunduh...",
   "libraryImportingStatus": "Mengimpor...",

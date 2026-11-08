@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} ডাউনলোড করুন",
   "libraryDownloadedBoardSet": "বোর্ড সেট \"{name}\" ডাউনলোড হয়েছে",
   "libraryDownloadFailed": "বোর্ড সেট \"{name}\" ডাউনলোড করা যায়নি",
-  "libraryDownloadCanceled": "বোর্ড সেট \"{name}\" ডাউনলোড বাতিল হয়েছে",
   "libraryDownloadProgress": "{total}-এর মধ্যে {loaded}",
   "libraryDownloadingStatus": "ডাউনলোড হচ্ছে…",
   "libraryImportingStatus": "আমদানি করা হচ্ছে…",

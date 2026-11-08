@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} 다운로드",
   "libraryDownloadedBoardSet": "보드 세트 \"{name}\"을(를) 다운로드했습니다",
   "libraryDownloadFailed": "보드 세트 \"{name}\"을(를) 다운로드할 수 없습니다",
-  "libraryDownloadCanceled": "보드 세트 \"{name}\" 다운로드를 취소했습니다",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "다운로드 중…",
   "libraryImportingStatus": "가져오는 중…",

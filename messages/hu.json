@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Letöltés: {name}",
   "libraryDownloadedBoardSet": "A(z) „{name}” táblakészlet letöltve",
   "libraryDownloadFailed": "A(z) „{name}” táblakészlet letöltése nem sikerült",
-  "libraryDownloadCanceled": "A(z) „{name}” táblakészlet letöltése megszakítva",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "Letöltés...",
   "libraryImportingStatus": "Importálás...",

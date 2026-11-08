@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name}ను డౌన్‌లోడ్ చేయి",
   "libraryDownloadedBoardSet": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ అయింది",
   "libraryDownloadFailed": "బోర్డు సెట్ \"{name}\"ను డౌన్‌లోడ్ చేయలేకపోయాం",
-  "libraryDownloadCanceled": "బోర్డు సెట్ \"{name}\" డౌన్‌లోడ్ రద్దు చేయబడింది",
   "libraryDownloadProgress": "{total}లో {loaded}",
   "libraryDownloadingStatus": "డౌన్‌లోడ్ అవుతోంది…",
   "libraryImportingStatus": "దిగుమతి అవుతోంది…",

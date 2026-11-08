@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "İndir: {name}",
   "libraryDownloadedBoardSet": "\"{name}\" pano seti indirildi",
   "libraryDownloadFailed": "\"{name}\" pano seti indirilemedi",
-  "libraryDownloadCanceled": "\"{name}\" pano seti indirmesi iptal edildi",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "İndiriliyor...",
   "libraryImportingStatus": "İçe aktarılıyor...",

@@ -253,9 +253,6 @@ describe("BoardSetLibrary", () => {
     await expect.element(downloadButton).toHaveFocus();
     await expect.element(downloadButton).not.toHaveAccessibleDescription();
     await expect
-      .element(screen.getByText(`Canceled downloading board set "First Words"`))
-      .toBeInTheDocument();
-    await expect
       .element(screen.getByText(`Couldn't download board set "First Words"`))
       .not.toBeInTheDocument();
     expect(await listBoardSetRecords()).toEqual([]);

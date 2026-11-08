@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Скачать {name}",
   "libraryDownloadedBoardSet": "Набор досок «{name}» скачан",
   "libraryDownloadFailed": "Не удалось скачать набор досок «{name}»",
-  "libraryDownloadCanceled": "Скачивание набора досок «{name}» отменено",
   "libraryDownloadProgress": "{loaded} из {total}",
   "libraryDownloadingStatus": "Скачивание...",
   "libraryImportingStatus": "Импорт...",

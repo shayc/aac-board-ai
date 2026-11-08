@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Lataa {name}",
   "libraryDownloadedBoardSet": "Taulusarja ”{name}” ladattu",
   "libraryDownloadFailed": "Taulusarjan ”{name}” lataus epäonnistui",
-  "libraryDownloadCanceled": "Taulusarjan ”{name}” lataus peruttu",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "Ladataan...",
   "libraryImportingStatus": "Tuodaan...",

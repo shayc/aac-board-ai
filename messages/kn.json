@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
   "libraryDownloadedBoardSet": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಡೌನ್‌ಲೋಡ್ ಆಗಿದೆ",
   "libraryDownloadFailed": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಅನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಲಾಗಲಿಲ್ಲ",
-  "libraryDownloadCanceled": "ಬೋರ್ಡ್ ಸೆಟ್ \"{name}\" ಡೌನ್‌ಲೋಡ್ ರದ್ದುಗೊಂಡಿದೆ",
   "libraryDownloadProgress": "{total} ರಲ್ಲಿ {loaded}",
   "libraryDownloadingStatus": "ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "libraryImportingStatus": "ಆಮದು ಆಗುತ್ತಿದೆ…",

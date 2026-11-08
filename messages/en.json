@@ -64,7 +64,6 @@
   "libraryDownloadBoardSet": "Download {name}",
   "libraryDownloadedBoardSet": "Downloaded board set \"{name}\"",
   "libraryDownloadFailed": "Couldn't download board set \"{name}\"",
-  "libraryDownloadCanceled": "Canceled downloading board set \"{name}\"",
   "libraryDownloadProgress": "{loaded} of {total}",
   "libraryDownloadingStatus": "Downloading...",
   "libraryImportingStatus": "Importing...",

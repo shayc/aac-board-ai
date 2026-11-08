@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "تنزيل {name}",
   "libraryDownloadedBoardSet": "تم تنزيل مجموعة اللوحات \"{name}\"",
   "libraryDownloadFailed": "تعذّر تنزيل مجموعة اللوحات \"{name}\"",
-  "libraryDownloadCanceled": "تم إلغاء تنزيل مجموعة اللوحات \"{name}\"",
   "libraryDownloadProgress": "{loaded} من {total}",
   "libraryDownloadingStatus": "جارٍ التنزيل...",
   "libraryImportingStatus": "جارٍ الاستيراد...",

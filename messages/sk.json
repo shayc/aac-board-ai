@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Stiahnuť {name}",
   "libraryDownloadedBoardSet": "Súprava tabuliek „{name}“ bola stiahnutá",
   "libraryDownloadFailed": "Súpravu tabuliek „{name}“ sa nepodarilo stiahnuť",
-  "libraryDownloadCanceled": "Sťahovanie súpravy tabuliek „{name}“ bolo zrušené",
   "libraryDownloadProgress": "{loaded} z {total}",
   "libraryDownloadingStatus": "Sťahuje sa...",
   "libraryImportingStatus": "Importuje sa...",

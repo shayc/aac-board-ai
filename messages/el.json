@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Λήψη {name}",
   "libraryDownloadedBoardSet": "Έγινε λήψη του συνόλου πινάκων «{name}»",
   "libraryDownloadFailed": "Δεν ήταν δυνατή η λήψη του συνόλου πινάκων «{name}»",
-  "libraryDownloadCanceled": "Ακυρώθηκε η λήψη του συνόλου πινάκων «{name}»",
   "libraryDownloadProgress": "{loaded} από {total}",
   "libraryDownloadingStatus": "Λήψη...",
   "libraryImportingStatus": "Εισαγωγή...",

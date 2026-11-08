@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} herunterladen",
   "libraryDownloadedBoardSet": "Tafelsatz „{name}“ heruntergeladen",
   "libraryDownloadFailed": "Tafelsatz „{name}“ konnte nicht heruntergeladen werden",
-  "libraryDownloadCanceled": "Download des Tafelsatzes „{name}“ abgebrochen",
   "libraryDownloadProgress": "{loaded} von {total}",
   "libraryDownloadingStatus": "Wird heruntergeladen...",
   "libraryImportingStatus": "Wird importiert...",

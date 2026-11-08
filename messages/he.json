@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "הורדת {name}",
   "libraryDownloadedBoardSet": "ערכת הלוחות \"{name}\" הורדה בהצלחה",
   "libraryDownloadFailed": "הורדת ערכת הלוחות \"{name}\" נכשלה",
-  "libraryDownloadCanceled": "ההורדה של ערכת הלוחות \"{name}\" בוטלה",
   "libraryDownloadProgress": "{loaded} מתוך {total}",
   "libraryDownloadingStatus": "מתבצעת הורדה...",
   "libraryImportingStatus": "מתבצע ייבוא...",

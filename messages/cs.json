@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Stáhnout {name}",
   "libraryDownloadedBoardSet": "Sada tabulek „{name}“ byla stažena",
   "libraryDownloadFailed": "Sadu tabulek „{name}“ se nepodařilo stáhnout",
-  "libraryDownloadCanceled": "Stahování sady tabulek „{name}“ bylo zrušeno",
   "libraryDownloadProgress": "{loaded} z {total}",
   "libraryDownloadingStatus": "Stahování...",
   "libraryImportingStatus": "Importování...",

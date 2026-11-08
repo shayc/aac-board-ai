@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} をダウンロード",
   "libraryDownloadedBoardSet": "ボードセット「{name}」をダウンロードしました",
   "libraryDownloadFailed": "ボードセット「{name}」をダウンロードできませんでした",
-  "libraryDownloadCanceled": "ボードセット「{name}」のダウンロードをキャンセルしました",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "ダウンロードしています…",
   "libraryImportingStatus": "インポートしています…",

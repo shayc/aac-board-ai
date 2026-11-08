@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Scarica {name}",
   "libraryDownloadedBoardSet": "Set di tabelle \"{name}\" scaricato",
   "libraryDownloadFailed": "Impossibile scaricare il set di tabelle \"{name}\"",
-  "libraryDownloadCanceled": "Download del set di tabelle \"{name}\" annullato",
   "libraryDownloadProgress": "{loaded} di {total}",
   "libraryDownloadingStatus": "Download in corso...",
   "libraryImportingStatus": "Importazione in corso...",

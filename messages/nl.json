@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} downloaden",
   "libraryDownloadedBoardSet": "Bordset \"{name}\" gedownload",
   "libraryDownloadFailed": "Kan bordset \"{name}\" niet downloaden",
-  "libraryDownloadCanceled": "Downloaden van bordset \"{name}\" geannuleerd",
   "libraryDownloadProgress": "{loaded} van {total}",
   "libraryDownloadingStatus": "Downloaden...",
   "libraryImportingStatus": "Importeren...",

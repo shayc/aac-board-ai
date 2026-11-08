@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Baixar {name}",
   "libraryDownloadedBoardSet": "Conjunto de pranchas \"{name}\" baixado",
   "libraryDownloadFailed": "Não foi possível baixar o conjunto de pranchas \"{name}\"",
-  "libraryDownloadCanceled": "Download do conjunto de pranchas \"{name}\" cancelado",
   "libraryDownloadProgress": "{loaded} de {total}",
   "libraryDownloadingStatus": "Baixando...",
   "libraryImportingStatus": "Importando...",

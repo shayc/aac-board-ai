@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} ஐப் பதிவிறக்கு",
   "libraryDownloadedBoardSet": "பலகைத் தொகுப்பு \"{name}\" பதிவிறக்கப்பட்டது",
   "libraryDownloadFailed": "பலகைத் தொகுப்பு \"{name}\" என்பதைப் பதிவிறக்க முடியவில்லை",
-  "libraryDownloadCanceled": "பலகைத் தொகுப்பு \"{name}\" பதிவிறக்கம் ரத்துசெய்யப்பட்டது",
   "libraryDownloadProgress": "{total} இல் {loaded}",
   "libraryDownloadingStatus": "பதிவிறக்கப்படுகிறது…",
   "libraryImportingStatus": "இறக்குமதி செய்யப்படுகிறது…",

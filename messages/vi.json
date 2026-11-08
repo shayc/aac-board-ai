@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Tải xuống {name}",
   "libraryDownloadedBoardSet": "Đã tải xuống bộ bảng \"{name}\"",
   "libraryDownloadFailed": "Không thể tải xuống bộ bảng \"{name}\"",
-  "libraryDownloadCanceled": "Đã hủy tải xuống bộ bảng \"{name}\"",
   "libraryDownloadProgress": "{loaded} / {total}",
   "libraryDownloadingStatus": "Đang tải xuống...",
   "libraryImportingStatus": "Đang nhập...",

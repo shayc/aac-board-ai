@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "{name} डाउनलोड करें",
   "libraryDownloadedBoardSet": "बोर्ड सेट \"{name}\" डाउनलोड हो गया",
   "libraryDownloadFailed": "बोर्ड सेट \"{name}\" डाउनलोड नहीं किया जा सका",
-  "libraryDownloadCanceled": "बोर्ड सेट \"{name}\" का डाउनलोड रद्द हो गया",
   "libraryDownloadProgress": "{total} में से {loaded}",
   "libraryDownloadingStatus": "डाउनलोड हो रहा है…",
   "libraryImportingStatus": "आयात हो रहा है…",

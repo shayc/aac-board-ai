@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Изтегляне на {name}",
   "libraryDownloadedBoardSet": "Наборът от дъски „{name}“ е изтеглен",
   "libraryDownloadFailed": "Наборът от дъски „{name}“ не може да бъде изтеглен",
-  "libraryDownloadCanceled": "Изтеглянето на набора от дъски „{name}“ е отказано",
   "libraryDownloadProgress": "{loaded} от {total}",
   "libraryDownloadingStatus": "Изтегляне...",
   "libraryImportingStatus": "Импортиране...",

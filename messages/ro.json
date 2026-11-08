@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Descarcă {name}",
   "libraryDownloadedBoardSet": "Setul de table „{name}” a fost descărcat",
   "libraryDownloadFailed": "Setul de table „{name}” nu a putut fi descărcat",
-  "libraryDownloadCanceled": "Descărcarea setului de table „{name}” a fost anulată",
   "libraryDownloadProgress": "{loaded} din {total}",
   "libraryDownloadingStatus": "Se descarcă...",
   "libraryImportingStatus": "Se importă...",

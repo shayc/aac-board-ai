@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Pobierz {name}",
   "libraryDownloadedBoardSet": "Pobrano zestaw tablic „{name}”",
   "libraryDownloadFailed": "Nie udało się pobrać zestawu tablic „{name}”",
-  "libraryDownloadCanceled": "Anulowano pobieranie zestawu tablic „{name}”",
   "libraryDownloadProgress": "{loaded} z {total}",
   "libraryDownloadingStatus": "Pobieranie...",
   "libraryImportingStatus": "Importowanie...",

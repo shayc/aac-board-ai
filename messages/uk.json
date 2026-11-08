@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Завантажити {name}",
   "libraryDownloadedBoardSet": "Набір дошок «{name}» завантажено",
   "libraryDownloadFailed": "Не вдалося завантажити набір дошок «{name}»",
-  "libraryDownloadCanceled": "Завантаження набору дошок «{name}» скасовано",
   "libraryDownloadProgress": "{loaded} з {total}",
   "libraryDownloadingStatus": "Завантаження...",
   "libraryImportingStatus": "Імпортування...",

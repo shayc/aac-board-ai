@@ -35,9 +35,6 @@ export function useBoardSetDownload({
     try {
       const importedBoardSet = await downloadBoardSet(url);
       if (!importedBoardSet) {
-        showSnackbar({
-          message: (t) => t(m.libraryDownloadCanceled, { name }),
-        });
         return;
       }
 

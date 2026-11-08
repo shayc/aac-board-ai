@@ -65,7 +65,6 @@
   "libraryDownloadBoardSet": "Télécharger {name}",
   "libraryDownloadedBoardSet": "Ensemble de tableaux « {name} » téléchargé",
   "libraryDownloadFailed": "Impossible de télécharger l’ensemble de tableaux « {name} »",
-  "libraryDownloadCanceled": "Téléchargement de l’ensemble de tableaux « {name} » annulé",
   "libraryDownloadProgress": "{loaded} sur {total}",
   "libraryDownloadingStatus": "Téléchargement...",
   "libraryImportingStatus": "Importation...",
