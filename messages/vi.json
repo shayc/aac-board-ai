@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "Chỉ có thể nhập tệp bảng",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

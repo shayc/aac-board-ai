@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

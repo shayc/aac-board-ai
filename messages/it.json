@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "Si possono importare solo file di tabelle",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

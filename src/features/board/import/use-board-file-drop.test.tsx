@@ -116,6 +116,17 @@ describe("useBoardFileDrop", () => {
     await expect.element(zone).toHaveTextContent("idle");
   });
 
+  test("reports an error when no dropped file is a board file", async () => {
+    const { zone, screen } = await renderDropZone();
+    const pdf = new File(["%PDF"], "manual.pdf", { type: "application/pdf" });
+
+    fireDrag(zone, "drop", dataTransferWithFiles(pdf));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Only board files can be imported");
+  });
+
   test("imports a dropped board file and opens it", async () => {
     const { zone, screen } = await renderDropZone();
     const boardFile = await loadFixtureFile(OBF_FIXTURE);

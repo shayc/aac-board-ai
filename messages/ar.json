@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "يمكن استيراد ملفات اللوحات فقط",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

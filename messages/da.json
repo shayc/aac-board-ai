@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "Kun tavlefiler kan importeres",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

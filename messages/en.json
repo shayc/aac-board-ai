@@ -42,6 +42,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "Only board files can be imported",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],

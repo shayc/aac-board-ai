@@ -43,6 +43,7 @@
       }
     }
   ],
+  "libraryImportOnlyBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಮಾತ್ರ ಆಮದು ಮಾಡಬಹುದು",
   "libraryImportTooLargeBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
