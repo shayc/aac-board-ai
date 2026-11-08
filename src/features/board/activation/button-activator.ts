@@ -7,7 +7,7 @@ import {
   createPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
-import type { BoardButton } from "../board-types";
+import type { BoardAction, BoardButton } from "../board-types";
 
 interface ActivationMessage {
   getParts: () => MessagePart[];
@@ -43,70 +43,84 @@ export function createButtonActivator({
       return;
     }
 
-    const startingParts = message.getParts();
-
     if (button.actions.length === 0) {
-      const part = createPart({
-        label: button.label,
-        vocalization: button.vocalization,
-        imageSrc: button.imageSrc,
-        soundSrc: button.soundSrc,
-      });
-
-      message.setParts([...startingParts, part]);
-      void playback.playPart(part);
+      composeAndPlayButton(button);
       return;
     }
 
-    let editedParts = startingParts;
-    let partsToPlay: MessagePart[] | null = null;
+    runActions(button.actions);
+  }
 
-    for (const action of button.actions) {
-      switch (action.kind) {
-        case "spell":
-          editedParts = appendText(editedParts, action.text);
-          break;
-        case "space":
-          editedParts = appendSpace(editedParts);
-          break;
-        case "backspace":
-          editedParts = applyBackspace(editedParts);
-          break;
-        case "clear":
-          editedParts = [];
-          break;
-        case "home":
-          navigation.goHome();
-          break;
-        case "play":
-          partsToPlay = editedParts;
-          break;
+  function composeAndPlayButton(button: BoardButton) {
+    const part = createPart({
+      label: button.label,
+      vocalization: button.vocalization,
+      imageSrc: button.imageSrc,
+      soundSrc: button.soundSrc,
+    });
 
-        default:
-          assertNever(action);
-      }
+    message.setParts([...message.getParts(), part]);
+    void playback.playPart(part);
+  }
+
+  function runActions(actions: BoardAction[]) {
+    if (actions.some((action) => action.kind === "home")) {
+      navigation.goHome();
     }
 
-    if (partsToPlay === null) {
-      if (editedParts !== startingParts) {
-        message.setParts(editedParts);
-      }
-
+    const playIndex = actions.findLastIndex((action) => action.kind === "play");
+    if (playIndex === -1) {
+      commitEdits(message.getParts(), actions);
       return;
     }
 
-    if (partsToPlay !== startingParts) {
-      message.setParts(partsToPlay);
-    }
+    const partsToPlay = commitEdits(
+      message.getParts(),
+      actions.slice(0, playIndex),
+    );
+    const actionsAfterPlay = actions.slice(playIndex + 1);
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
     void playback.playMessage(partsToPlay).then((outcome) => {
-      if (outcome === "completed" && editedParts !== partsToPlay) {
-        message.setParts(editedParts);
+      if (outcome === "completed") {
+        commitEdits(partsToPlay, actionsAfterPlay);
       }
     });
   }
 
+  function commitEdits(parts: MessagePart[], actions: BoardAction[]) {
+    const edits = actions.filter(isMessageEdit);
+    if (edits.length === 0) {
+      return parts;
+    }
+
+    const editedParts = edits.reduce(applyEdit, parts);
+    message.setParts(editedParts);
+
+    return editedParts;
+  }
+
   return activateButton;
+}
+
+type MessageEdit = Exclude<BoardAction, { kind: "home" | "play" }>;
+
+function isMessageEdit(action: BoardAction): action is MessageEdit {
+  return action.kind !== "home" && action.kind !== "play";
+}
+
+function applyEdit(parts: MessagePart[], edit: MessageEdit): MessagePart[] {
+  switch (edit.kind) {
+    case "spell":
+      return appendText(parts, edit.text);
+    case "space":
+      return appendSpace(parts);
+    case "backspace":
+      return applyBackspace(parts);
+    case "clear":
+      return [];
+    default:
+      return assertNever(edit);
+  }
 }
