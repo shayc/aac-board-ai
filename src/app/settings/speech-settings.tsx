@@ -108,7 +108,7 @@ function VoiceSelect() {
     return [header, ...items];
   }
 
-  function handlePreviewSpeech() {
+  function handlePreviewVoice() {
     void playback.play({
       owner: "speech-preview",
       steps: [{ kind: "speech", text: t(m.speechPreviewSample) }],
@@ -124,7 +124,7 @@ function VoiceSelect() {
         <Tooltip title={t(m.speechPreviewVoice)}>
           <IconButton
             aria-label={t(m.speechPreviewVoice)}
-            onClick={handlePreviewSpeech}
+            onClick={handlePreviewVoice}
           >
             <PlayArrowIcon />
           </IconButton>
