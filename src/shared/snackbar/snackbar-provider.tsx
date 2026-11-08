@@ -1,4 +1,4 @@
-import Alert from "@mui/material/Alert";
+import Alert, { alertClasses } from "@mui/material/Alert";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
@@ -76,6 +76,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
     showSnackbar,
   };
 
+  const severity = state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY;
   const message =
     typeof state.current?.message === "function"
       ? state.current.message(t)
@@ -99,17 +100,33 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         slotProps={{ transition: { onExited: handleExited } }}
       >
         <Alert
+          role={isUrgent(severity) ? "alert" : "status"}
           closeText={t(m.close)}
           action={state.current?.action}
-          severity={state.current?.severity ?? DEFAULT_SNACKBAR_SEVERITY}
+          severity={severity}
           onClose={handleClose}
-          sx={{ width: "100%" }}
+          sx={(theme) => ({
+            width: "100%",
+            color: theme.vars.palette.SnackbarContent.color,
+            backgroundColor: theme.vars.palette.SnackbarContent.bg,
+            boxShadow: theme.shadows[6],
+            [`& .${alertClasses.icon}`]: {
+              color: theme.colorSchemes.dark?.palette[severity].main,
+              ...theme.applyStyles("dark", {
+                color: theme.colorSchemes.light?.palette[severity].main,
+              }),
+            },
+          })}
         >
           {message}
         </Alert>
       </Snackbar>
     </SnackbarContext>
   );
+}
+
+function isUrgent(severity: SnackbarSeverity) {
+  return severity === "error" || severity === "warning";
 }
 
 function snackbarReducer(
