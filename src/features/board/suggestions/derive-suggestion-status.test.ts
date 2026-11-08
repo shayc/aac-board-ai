@@ -33,11 +33,11 @@ function makeInput(
 }
 
 describe("deriveSuggestionStatus", () => {
-  test("stays quiet when everything is healthy and idle", () => {
+  test("returns idle when every engine is ready", () => {
     expect(deriveSuggestionStatus(makeInput())).toEqual({ kind: "idle" });
   });
 
-  test("stays quiet when no engine is supported", () => {
+  test("returns idle when no engine is supported", () => {
     const input = makeInput({
       sources: makeSources("unsupported", "unsupported"),
       hasText: true,
@@ -46,7 +46,7 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 
-  test("asks for setup ahead of any download state", () => {
+  test("returns not-enabled while any engine is downloadable, even mid-download", () => {
     const input = makeInput({
       sources: makeSources("downloadable", "ready"),
       downloadProgress: 0.5,
@@ -57,7 +57,7 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("reports download progress while a model downloads", () => {
+  test("returns downloading with the percent while a model downloads", () => {
     const input = makeInput({ downloadProgress: 0.43 });
 
     expect(deriveSuggestionStatus(input)).toEqual({
@@ -66,7 +66,7 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("treats a download without measurable progress as indeterminate", () => {
+  test("returns downloading without a percent when progress rounds to zero", () => {
     expect(deriveSuggestionStatus(makeInput({ downloadProgress: 0 }))).toEqual({
       kind: "downloading",
       percent: null,
@@ -79,7 +79,7 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("shows pending while any request is in flight, even with phrases showing", () => {
+  test("returns pending while any request is in flight, even with phrases showing", () => {
     const sources = [makeSource({ isRequestPending: true }), makeSource()];
 
     expect(deriveSuggestionStatus(makeInput({ sources }))).toEqual({
@@ -92,16 +92,24 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("announces unavailability only when every engine is out and nothing was suggested", () => {
-    const input = makeInput({
+  test("returns unavailable only when there is text, every engine is down, and nothing was suggested", () => {
+    const allEnginesDown = makeInput({
       sources: makeSources("unavailable", "error"),
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(input)).toEqual({ kind: "unavailable" });
+    expect(deriveSuggestionStatus(allEnginesDown)).toEqual({
+      kind: "unavailable",
+    });
+    expect(
+      deriveSuggestionStatus({ ...allEnginesDown, hasText: false }),
+    ).toEqual({ kind: "idle" });
+    expect(
+      deriveSuggestionStatus({ ...allEnginesDown, phraseCount: 1 }),
+    ).toEqual({ kind: "idle" });
   });
 
-  test("counts a failed request as a broken engine", () => {
+  test("returns unavailable when a failed request leaves no working engine", () => {
     const input = makeInput({
       sources: [
         makeSource({ hasRequestFailed: true }),
@@ -113,7 +121,7 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toEqual({ kind: "unavailable" });
   });
 
-  test("partial failure stays silent while one engine still works", () => {
+  test("returns idle after a failed request while another engine still works", () => {
     const input = makeInput({
       sources: [makeSource({ hasRequestFailed: true }), makeSource()],
       hasText: true,
@@ -122,7 +130,7 @@ describe("deriveSuggestionStatus", () => {
     expect(deriveSuggestionStatus(input)).toEqual({ kind: "idle" });
   });
 
-  test("an engine still probing availability is not a failure", () => {
+  test("returns idle while an engine is still checking availability", () => {
     const input = makeInput({
       sources: makeSources("checking", "unavailable"),
       hasText: true,

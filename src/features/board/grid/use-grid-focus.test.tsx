@@ -206,19 +206,30 @@ describe("useGridFocus", () => {
   });
 
   describe("arrow navigation", () => {
-    test("moves focus with arrow keys to the next focusable cell", async () => {
-      const items = makeItems(1, 2, 3, 4);
-
+    test.each([
+      { key: "ArrowUp", target: "Item 2" },
+      { key: "ArrowDown", target: "Item 8" },
+      { key: "ArrowLeft", target: "Item 4" },
+      { key: "ArrowRight", target: "Item 6" },
+    ])("moves focus to the adjacent cell on $key", async ({ key, target }) => {
       const screen = await render(
-        <Grid rows={2} columns={2} items={items} renderItem={renderButton} />,
+        <Grid
+          rows={3}
+          columns={3}
+          items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9)}
+          renderItem={renderButton}
+        />,
       );
+      const center = screen.getByRole("button", {
+        name: "Item 5",
+        exact: true,
+      });
 
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
+      await press(center, key);
 
-      await press(item1, "ArrowRight");
-
-      await expect.element(item2).toHaveFocus();
+      await expect
+        .element(screen.getByRole("button", { name: target, exact: true }))
+        .toHaveFocus();
     });
 
     test("falls back to the nearest diagonal cell when the arrow's line is empty", async () => {
@@ -484,8 +495,10 @@ describe("useGridFocus", () => {
       const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
 
       await press(item1, "ArrowDown");
-
       await expect.element(item2).toHaveFocus();
+
+      await press(item2, "ArrowUp");
+      await expect.element(item1).toHaveFocus();
     });
 
     test("Home moves to the first cell in document order", async () => {

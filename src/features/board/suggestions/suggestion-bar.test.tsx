@@ -72,7 +72,7 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("announces unavailability after a failed request", async () => {
+  test("shows that suggestions are unavailable with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );

@@ -100,7 +100,7 @@ describe("useVoiceLanguageSync", () => {
     });
   });
 
-  test("prefers the user's OS region over the language's likely region", async () => {
+  test("prefers the region in the browser's preferred languages over the language's likely region", async () => {
     stubLanguages(["fr-CA"]);
     vi.spyOn(speechSynthesis, "getVoices").mockReturnValue([
       makeVoice("fr-FR", "fr-fr-voice"),
