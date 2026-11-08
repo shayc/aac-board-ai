@@ -15,6 +15,14 @@ declare module "@mui/material/styles" {
     enabled: true;
   }
 
+  interface Palette {
+    outline: string;
+  }
+
+  interface PaletteOptions {
+    outline?: string;
+  }
+
   interface Shape {
     borderRadiusSm: string;
     borderRadiusLg: string;
@@ -43,6 +51,11 @@ const grey = {
   A200: "#eceef3",
   A400: "#babdc3",
   A700: "#5e6167",
+};
+
+const outline = {
+  light: "rgba(0, 0, 0, 0.5)",
+  dark: "rgba(255, 255, 255, 0.42)",
 };
 
 const shadows = [
@@ -100,7 +113,8 @@ const themeOptions = {
           inheritContainedBg: "#ffffff",
           inheritContainedHoverBg: grey[100],
         },
-        Chip: { defaultBorder: "rgba(0, 0, 0, 0.5)" },
+        outline: outline.light,
+        Chip: { defaultBorder: outline.light },
         SnackbarContent: { bg: grey[900], color: grey[50] },
         action: { active: "rgba(0, 0, 0, 0.6)" },
       },
@@ -111,7 +125,8 @@ const themeOptions = {
         grey,
         background: { default: SHELL_DARK, paper: "#1a1d23" },
         error: { main: "#f2b8b5" },
-        Chip: { defaultBorder: "rgba(255, 255, 255, 0.42)" },
+        outline: outline.dark,
+        Chip: { defaultBorder: outline.dark },
         SnackbarContent: { bg: grey[100], color: grey[900] },
         action: { active: "rgba(255, 255, 255, 0.7)" },
       },
@@ -288,7 +303,7 @@ const themeOptions = {
           borderRadius: theme.vars.shape.borderRadiusFull,
           "@media (hover: none)": {
             [idleTouchHoverOutline]: {
-              borderColor: theme.vars.palette.Chip.defaultBorder,
+              borderColor: theme.vars.palette.outline,
             },
           },
           variants: [
@@ -299,7 +314,7 @@ const themeOptions = {
           ],
         }),
         notchedOutline: ({ theme }) => ({
-          borderColor: theme.vars.palette.Chip.defaultBorder,
+          borderColor: theme.vars.palette.outline,
         }),
       },
     },
