@@ -13,7 +13,11 @@ function makeItems(...ids: number[]): TestItem[] {
 }
 
 function renderButton(item: TestItem, props: GridItemProps) {
-  return <button {...props}>{item.label}</button>;
+  return (
+    <button key={item.id} {...props}>
+      {item.label}
+    </button>
+  );
 }
 
 function getCellPosition(item: Locator): { row: number; column: number } {
@@ -171,34 +175,30 @@ describe("useGridFocus", () => {
     });
 
     test("returns lost focus to the remembered cell when the grid changes", async () => {
-      const renderKeyedButton = (item: TestItem, props: GridItemProps) => (
-        <button key={item.id} {...props}>
-          {item.label}
-        </button>
-      );
-
       const screen = await render(
         <Grid
           rows={2}
           columns={2}
           items={makeItems(1, 2, 3, 4)}
-          renderItem={renderKeyedButton}
+          renderItem={renderButton}
         />,
       );
 
-      screen.getByRole("button", { name: "Item 4" }).element().focus();
+      const item2 = screen.getByRole("button", { name: "Item 2" }).element();
+      item2.focus();
 
       await screen.rerender(
         <Grid
           rows={2}
           columns={2}
           items={makeItems(5, 6, 7, 8)}
-          renderItem={renderKeyedButton}
+          renderItem={renderButton}
         />,
       );
 
+      expect(item2.isConnected).toBe(false);
       await expect
-        .element(screen.getByRole("button", { name: "Item 8" }))
+        .element(screen.getByRole("button", { name: "Item 6" }))
         .toHaveFocus();
     });
   });
