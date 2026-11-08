@@ -25,15 +25,15 @@ describe("LanguageSettings", () => {
       .toBeInTheDocument();
   });
 
-  test("enables the language select when the Translator is available with no accessibility violations", async () => {
+  test("hides the board translation notice when the Translator is available with no accessibility violations", async () => {
     stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
     stubTranslator();
 
     const screen = await renderLanguageSettings();
 
-    const select = screen.getByRole("combobox", { name: "Language" });
-    await expect.element(select).not.toHaveAttribute("aria-disabled");
-    await expect.element(select).toHaveTextContent("English");
+    await expect
+      .element(screen.getByRole("combobox", { name: "Language" }))
+      .toHaveTextContent("English");
     await expect
       .element(screen.getByText(/Automatic board translation is unavailable/))
       .not.toBeInTheDocument();

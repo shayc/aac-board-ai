@@ -136,7 +136,7 @@ describe("useMessageSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("stays silent when the healthy engine has nothing to suggest and the other is broken", async () => {
+  test("reports idle when the healthy engine has nothing to suggest and the other is broken", async () => {
     const rejecters: ((error: Error) => void)[] = [];
     stubProofreader((input) => makeProofreadResult(input));
     stubRewriter(
@@ -157,7 +157,7 @@ describe("useMessageSuggestions", () => {
     expect(result.current.phrases).toEqual([]);
   });
 
-  test("stays quiet when a rejection is an abort by name", async () => {
+  test("reports idle when a request is rejected with an AbortError", async () => {
     const rejecters: ((error: Error) => void)[] = [];
     stubRewriter(
       () => new Promise<string>((_, reject) => rejecters.push(reject)),

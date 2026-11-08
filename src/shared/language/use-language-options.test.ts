@@ -17,7 +17,7 @@ describe("useLanguageOptions", () => {
     );
   });
 
-  test("includes voice languages regardless of Translator support", async () => {
+  test("includes languages that only have a voice", async () => {
     stubVoices([
       { voiceURI: "catalan", name: "Catalan", lang: "ca-ES" },
       { voiceURI: "malay", name: "Malay", lang: "ms-MY" },
