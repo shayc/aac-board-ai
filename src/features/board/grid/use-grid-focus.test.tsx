@@ -39,16 +39,13 @@ describe("useGridFocus", () => {
         columns: 3,
         items: makeGridItems(1, 2, 3),
       });
+      const item1 = getGridItem(screen, 1);
+      const item2 = getGridItem(screen, 2);
+      const item3 = getGridItem(screen, 3);
 
-      await expect
-        .element(getGridItem(screen, 1))
-        .toHaveAttribute("tabindex", "0");
-      await expect
-        .element(getGridItem(screen, 2))
-        .toHaveAttribute("tabindex", "-1");
-      await expect
-        .element(getGridItem(screen, 3))
-        .toHaveAttribute("tabindex", "-1");
+      await expect.element(item1).toHaveAttribute("tabindex", "0");
+      await expect.element(item2).toHaveAttribute("tabindex", "-1");
+      await expect.element(item3).toHaveAttribute("tabindex", "-1");
     });
 
     test("makes first non-empty cell tabbable when (0,0) is empty", async () => {

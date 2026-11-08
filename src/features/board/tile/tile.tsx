@@ -25,6 +25,20 @@ type TileColorStyle = CSSProperties & {
   "--tile-border-color"?: string;
 };
 
+const folderTileSx = {
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    top: -2,
+    insetInlineEnd: -2,
+    width: 0,
+    height: 0,
+    borderInlineEnd:
+      "32px solid color-mix(in srgb, currentColor 75%, transparent)",
+    borderBottom: "32px solid transparent",
+  },
+} as const;
+
 export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const t = useTranslate();
   const { saturation, areBordersVisible, labelPlacement } =
@@ -130,17 +144,3 @@ function tileSx(theme: Theme) {
 function mixWithTextColor(color: string, amount: string): string {
   return `color-mix(in oklab, ${color}, currentColor ${amount})`;
 }
-
-const folderTileSx = {
-  "&::after": {
-    content: '""',
-    position: "absolute",
-    top: -2,
-    insetInlineEnd: -2,
-    width: 0,
-    height: 0,
-    borderInlineEnd:
-      "32px solid color-mix(in srgb, currentColor 75%, transparent)",
-    borderBottom: "32px solid transparent",
-  },
-} as const;
