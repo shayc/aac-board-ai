@@ -1,7 +1,7 @@
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { createMemoryRouter } from "react-router";
+import { createMemoryRouter, Outlet } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -81,5 +81,46 @@ describe("LibraryDrawer", () => {
     await expect.element(screen.getByText("board page")).toBeInTheDocument();
     expect(router.state.location.pathname).toBe("/sets/animals/boards/root");
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  test("marks the board set of the current route as active", async () => {
+    await seedBoardSets([
+      { id: "animals", rootBoardId: "root", name: "Animals" },
+      { id: "food", rootBoardId: "root", name: "Food" },
+    ]);
+
+    const router = createMemoryRouter(
+      [
+        {
+          path: "/",
+          element: (
+            <>
+              <LibraryDrawer open onClose={vi.fn()} />
+              <Outlet />
+            </>
+          ),
+          children: [
+            {
+              path: "sets/:boardSetId/boards/:boardId",
+              element: <p>board page</p>,
+            },
+          ],
+        },
+      ],
+      { initialEntries: ["/sets/food/boards/root"] },
+    );
+
+    const screen = await render(
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>,
+    );
+
+    await expect
+      .element(screen.getByRole("link", { name: "Food", exact: true }))
+      .toHaveAttribute("aria-current", "true");
+    await expect
+      .element(screen.getByRole("link", { name: "Animals", exact: true }))
+      .not.toHaveAttribute("aria-current");
   });
 });

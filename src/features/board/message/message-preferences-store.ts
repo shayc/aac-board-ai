@@ -1,5 +1,6 @@
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
-import { useSyncExternalStore } from "react";
+import { parseBoolean } from "@shared/utils/parse-boolean";
 
 interface MessagePreferences {
   areImagesVisible: boolean;
@@ -15,20 +16,16 @@ export function parseMessagePreferences(raw: unknown): MessagePreferences {
   };
 }
 
-function parseBoolean(value: unknown, defaultValue: boolean): boolean {
-  return typeof value === "boolean" ? value : defaultValue;
-}
-
 const messagePreferencesStore = createPersistedStore<MessagePreferences>(
   "message-preferences",
   parseMessagePreferences,
 );
 
 function updatePreferences(patch: Partial<MessagePreferences>): void {
-  messagePreferencesStore.setState({
-    ...messagePreferencesStore.getSnapshot(),
+  messagePreferencesStore.setState((preferences) => ({
+    ...preferences,
     ...patch,
-  });
+  }));
 }
 
 export function setMessageImagesVisible(areImagesVisible: boolean): void {
@@ -42,8 +39,5 @@ export function setMessageHighlightingEnabled(
 }
 
 export function useMessagePreferences(): MessagePreferences {
-  return useSyncExternalStore(
-    messagePreferencesStore.subscribe,
-    messagePreferencesStore.getSnapshot,
-  );
+  return useExternalStore(messagePreferencesStore);
 }

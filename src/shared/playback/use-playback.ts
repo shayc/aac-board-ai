@@ -1,4 +1,5 @@
-import { use, useSyncExternalStore } from "react";
+import { useExternalStore } from "@shared/state/external-store";
+import { use } from "react";
 import { PlaybackContext } from "./playback-context";
 import type { PlaybackController } from "./playback-types";
 
@@ -15,22 +16,18 @@ export function usePlayback(): PlaybackController {
 export function useIsPlaying(owner?: string): boolean {
   const playback = usePlayback();
 
-  return useSyncExternalStore(playback.subscribe, () => {
-    const state = playback.getSnapshot();
-
-    return (
+  return useExternalStore(
+    playback,
+    (state) =>
       state.status === "playing" &&
-      (owner === undefined || state.owner === owner)
-    );
-  });
+      (owner === undefined || state.owner === owner),
+  );
 }
 
 export function useActiveCue(owner?: string): string | null {
   const playback = usePlayback();
 
-  return useSyncExternalStore(playback.subscribe, () => {
-    const state = playback.getSnapshot();
-
+  return useExternalStore(playback, (state) => {
     if (
       state.status !== "playing" ||
       (owner !== undefined && state.owner !== owner)

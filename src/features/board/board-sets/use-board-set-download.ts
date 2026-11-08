@@ -1,11 +1,9 @@
 import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { useSyncExternalStore } from "react";
 import {
   cancelBoardSetDownload,
   downloadBoardSet,
-  getDownloadPhasesSnapshot,
-  subscribeDownloadPhases,
+  useBoardSetDownloadPhase,
   type BoardSetDownloadPhase,
 } from "./board-set-downloads";
 
@@ -23,9 +21,7 @@ export function useBoardSetDownload({
   url: string;
 }): UseBoardSetDownloadReturn {
   const { showSnackbar } = useSnackbar();
-  const phase = useSyncExternalStore(subscribeDownloadPhases, () =>
-    getDownloadPhasesSnapshot().get(url),
-  );
+  const phase = useBoardSetDownloadPhase(url);
 
   async function download() {
     if (phase) {

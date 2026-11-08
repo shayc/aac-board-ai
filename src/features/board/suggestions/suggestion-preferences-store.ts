@@ -1,5 +1,5 @@
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
-import { useSyncExternalStore } from "react";
 
 interface SuggestionPreferences {
   customInstructions: string;
@@ -26,15 +26,12 @@ const suggestionPreferencesStore = createPersistedStore<SuggestionPreferences>(
 export function setSuggestionCustomInstructions(
   customInstructions: string,
 ): void {
-  suggestionPreferencesStore.setState({
-    ...suggestionPreferencesStore.getSnapshot(),
+  suggestionPreferencesStore.setState((preferences) => ({
+    ...preferences,
     customInstructions,
-  });
+  }));
 }
 
 export function useSuggestionPreferences(): SuggestionPreferences {
-  return useSyncExternalStore(
-    suggestionPreferencesStore.subscribe,
-    suggestionPreferencesStore.getSnapshot,
-  );
+  return useExternalStore(suggestionPreferencesStore);
 }

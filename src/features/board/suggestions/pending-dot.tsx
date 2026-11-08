@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import { orange } from "@mui/material/colors";
 import Fade from "@mui/material/Fade";
 
 interface PendingDotProps {
@@ -18,7 +17,7 @@ export function PendingDot({ isVisible }: PendingDotProps) {
           width: 8,
           aspectRatio: "1",
           borderRadius: "50%",
-          backgroundColor: orange[500],
+          bgcolor: "warning.main",
         }}
       />
     </Fade>

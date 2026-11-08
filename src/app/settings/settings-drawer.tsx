@@ -1,28 +1,22 @@
-import { DRAWER_BASE_WIDTH } from "@app/shell/drawer-width";
+import { AppDrawer } from "@app/shell/app-drawer";
 import {
   BoardSettings,
   MessageSettings,
   SuggestionSettings,
 } from "@features/board";
-import CloseIcon from "@mui/icons-material/Close";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
-import Toolbar from "@mui/material/Toolbar";
-import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
-import { ExternalLink } from "@shared/ui/external-link";
 import { useTranslate } from "@shared/language/use-translate";
-import { safeAreaGutter } from "@shared/theme/safe-area";
-import { useId, useState, type ReactNode } from "react";
+import { ExternalLink } from "@shared/ui/external-link";
+import { useId, type ReactNode } from "react";
 import { version } from "../../../package.json";
-import { ThemeSettings } from "./theme-settings";
 import { LanguageSettings } from "./language-settings";
 import { SpeechSettings } from "./speech-settings";
+import { ThemeSettings } from "./theme-settings";
 
 interface SettingsDrawerProps {
   open: boolean;
@@ -31,59 +25,16 @@ interface SettingsDrawerProps {
 
 export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
   const t = useTranslate();
-  const [isContentScrolled, setIsContentScrolled] = useState(false);
 
   return (
-    <Drawer
+    <AppDrawer
+      title={t(m.settingsTitle)}
+      closeLabel={t(m.settingsClose)}
       open={open}
       onClose={onClose}
       anchor="right"
-      slotProps={{
-        paper: {
-          "aria-label": t(m.settingsTitle),
-          sx: {
-            display: "flex",
-            flexDirection: "column",
-            width: safeAreaGutter(DRAWER_BASE_WIDTH, "right"),
-          },
-        },
-      }}
     >
-      <Toolbar
-        component="header"
-        sx={{
-          borderBottom: 1,
-          borderColor: isContentScrolled ? "divider" : "transparent",
-        }}
-      >
-        <Typography component="h2" variant="h6" sx={{ flexGrow: 1 }}>
-          {t(m.settingsTitle)}
-        </Typography>
-
-        <Tooltip title={t(m.settingsClose)}>
-          <IconButton
-            aria-label={t(m.settingsClose)}
-            size="large"
-            edge="end"
-            onClick={onClose}
-          >
-            <CloseIcon />
-          </IconButton>
-        </Tooltip>
-      </Toolbar>
-
-      <Box
-        onScroll={(event) =>
-          setIsContentScrolled(event.currentTarget.scrollTop > 0)
-        }
-        sx={{
-          flexGrow: 1,
-          minHeight: 0,
-          px: 3,
-          pb: 3,
-          overflow: "auto",
-        }}
-      >
+      <Box sx={{ px: 3, pb: 3 }}>
         <SettingsSection title={t(m.settingsSectionAppearance)}>
           <ThemeSettings />
         </SettingsSection>
@@ -135,7 +86,7 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
           </Stack>
         </SettingsSection>
       </Box>
-    </Drawer>
+    </AppDrawer>
   );
 }
 

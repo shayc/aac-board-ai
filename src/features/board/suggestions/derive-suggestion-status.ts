@@ -1,11 +1,11 @@
 import type { SuggestionSource } from "./suggestion-source";
 
 export type SuggestionStatus =
+  | { kind: "idle" }
   | { kind: "not-enabled" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
-  | { kind: "unavailable" }
-  | null;
+  | { kind: "unavailable" };
 
 export interface SuggestionStatusInput {
   sources: readonly Pick<
@@ -27,7 +27,7 @@ export function deriveSuggestionStatus({
     ({ engineStatus }) => engineStatus !== "unsupported",
   );
   if (supportedSources.length === 0) {
-    return null;
+    return { kind: "idle" };
   }
 
   if (
@@ -56,5 +56,5 @@ export function deriveSuggestionStatus({
     return { kind: "unavailable" };
   }
 
-  return null;
+  return { kind: "idle" };
 }

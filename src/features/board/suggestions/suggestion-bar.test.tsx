@@ -13,7 +13,7 @@ function makeProps(
   overrides: Partial<SuggestionBarProps> = {},
 ): SuggestionBarProps {
   return {
-    status: null,
+    status: { kind: "idle" },
     phrases: [],
     onEnable: vi.fn(),
     onPhraseSelect: vi.fn(),

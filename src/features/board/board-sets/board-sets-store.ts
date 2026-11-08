@@ -1,4 +1,7 @@
-import { createExternalStore } from "@shared/state/external-store";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
   insertBoardSet,
@@ -65,15 +68,18 @@ async function syncBoardSets(): Promise<void> {
   boardSetsSyncChannel.postMessage(undefined);
 }
 
-export function subscribeBoardSets(listener: () => void): () => void {
+function subscribeBoardSets(listener: () => void): () => void {
   const unsubscribe = boardSetsStore.subscribe(listener);
   void ensureLoaded();
 
   return unsubscribe;
 }
 
-export function getBoardSetsSnapshot(): BoardSetsSnapshot {
-  return boardSetsStore.getSnapshot();
+export function useBoardSets(): BoardSetsSnapshot {
+  return useExternalStore({
+    subscribe: subscribeBoardSets,
+    getSnapshot: boardSetsStore.getSnapshot,
+  });
 }
 
 export async function listBoardSets(): Promise<BoardSetRecord[]> {

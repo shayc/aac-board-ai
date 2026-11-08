@@ -6,12 +6,11 @@ import type { ReactNode } from "react";
 interface TileProps {
   ariaLabel?: string;
   tabIndex?: number;
-  children: ReactNode;
-  disabled?: boolean;
-  variant?: "folder";
+  isFolder?: boolean;
   backgroundColor?: string;
   borderColor?: string;
   isBorderVisible?: boolean;
+  children: ReactNode;
   onActivate: () => void;
 }
 
@@ -26,12 +25,11 @@ function darken(color: string, amount: string): string {
 export function Tile({
   ariaLabel,
   tabIndex,
-  children,
-  disabled,
-  variant,
+  isFolder = false,
   backgroundColor,
   borderColor,
-  isBorderVisible = true,
+  isBorderVisible = false,
+  children,
   onActivate,
 }: TileProps) {
   const t = useTranslate();
@@ -44,9 +42,8 @@ export function Tile({
   return (
     <Button
       aria-label={ariaLabel}
-      aria-description={variant === "folder" ? t(m.tileOpensBoard) : undefined}
+      aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
-      disabled={disabled}
       onClick={onActivate}
       sx={(theme) => ({
         position: "relative",
@@ -95,10 +92,7 @@ export function Tile({
           outlineWidth: 3,
           boxShadow: theme.vars.shadows[6],
         },
-        [`&.${buttonClasses.disabled}`]: {
-          boxShadow: theme.vars.shadows[0],
-        },
-        ...(variant === "folder" && {
+        ...(isFolder && {
           "&::after": {
             content: '""',
             position: "absolute",

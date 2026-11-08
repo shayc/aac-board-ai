@@ -10,12 +10,12 @@ import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { useId } from "react";
+import type { DownloadProgress } from "../import/import-from-url";
 import {
   BYTES_PER_MEGABYTE,
   type BoardSetDownloadPhase,
-} from "../import/board-set-downloads";
-import type { DownloadProgress } from "../import/import-from-url";
-import { useBoardSetDownload } from "../import/use-board-set-download";
+} from "./board-set-downloads";
+import { useBoardSetDownload } from "./use-board-set-download";
 
 const PROGRESS_RING_SIZE = 24;
 

@@ -1,9 +1,12 @@
-import { createExternalStore } from "@shared/state/external-store";
-import type { ImportedBoardSet } from "./board-import";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
+import type { ImportedBoardSet } from "../import/board-import";
 import {
   importBoardFileFromURL,
   type DownloadProgress,
-} from "./import-from-url";
+} from "../import/import-from-url";
 
 export type BoardSetDownloadPhase =
   | ({ kind: "downloading" } & DownloadProgress)
@@ -119,5 +122,8 @@ export function cancelBoardSetDownload(url: string) {
   pendingDownloadsByURL.get(url)?.controller.abort();
 }
 
-export const subscribeDownloadPhases = downloadPhasesStore.subscribe;
-export const getDownloadPhasesSnapshot = downloadPhasesStore.getSnapshot;
+export function useBoardSetDownloadPhase(
+  url: string,
+): BoardSetDownloadPhase | undefined {
+  return useExternalStore(downloadPhasesStore, (phases) => phases.get(url));
+}

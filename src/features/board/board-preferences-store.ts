@@ -1,9 +1,10 @@
+import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
+import { parseBoolean } from "@shared/utils/parse-boolean";
 import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import { useSyncExternalStore } from "react";
 import type { SymbolLabelPlacement } from "./aac-symbol/aac-symbol";
 
 export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
@@ -29,10 +30,7 @@ export function parseBoardPreferences(raw: unknown): BoardPreferences {
 
   return {
     tileSaturation: parseClampedNumber(stored.tileSaturation, TILE_SATURATION),
-    areTileBordersVisible:
-      typeof stored.areTileBordersVisible === "boolean"
-        ? stored.areTileBordersVisible
-        : false,
+    areTileBordersVisible: parseBoolean(stored.areTileBordersVisible, false),
     tileLabelPlacement: isTileLabelPlacement(stored.tileLabelPlacement)
       ? stored.tileLabelPlacement
       : "top",
@@ -45,10 +43,10 @@ const boardPreferencesStore = createPersistedStore<BoardPreferences>(
 );
 
 function updatePreferences(patch: Partial<BoardPreferences>): void {
-  boardPreferencesStore.setState({
-    ...boardPreferencesStore.getSnapshot(),
+  boardPreferencesStore.setState((preferences) => ({
+    ...preferences,
     ...patch,
-  });
+  }));
 }
 
 export function setTileSaturation(tileSaturation: number): void {
@@ -66,8 +64,5 @@ export function setTileLabelPlacement(
 }
 
 export function useBoardPreferences(): BoardPreferences {
-  return useSyncExternalStore(
-    boardPreferencesStore.subscribe,
-    boardPreferencesStore.getSnapshot,
-  );
+  return useExternalStore(boardPreferencesStore);
 }
