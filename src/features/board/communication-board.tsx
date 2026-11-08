@@ -5,10 +5,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { safeAreaInset } from "@shared/theme/safe-area";
-import { useRef, type CSSProperties } from "react";
-import { AACSymbol } from "./aac-symbol/aac-symbol";
+import { useRef } from "react";
 import { createButtonActivator } from "./activation/button-activator";
-import { useTilePreferences } from "./tile/tile-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -26,18 +24,10 @@ interface CommunicationBoardProps {
   board: Board;
 }
 
-type BoardRootStyle = CSSProperties & {
-  "--tile-saturation": string;
-};
-
 export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const t = useTranslate();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useTilePreferences();
-  const symbolLabelPlacement = tileLabelPlacement === "top" ? "top" : "bottom";
-  const isTileLabelHidden = tileLabelPlacement === "hidden";
 
   const message = useMessage();
   const suggestions = useMessageSuggestions(message.text);
@@ -59,10 +49,6 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const hasMessage = message.parts.length > 0;
   const isInBoardSet = Boolean(navigation.boardSetId);
-
-  const boardRootStyle: BoardRootStyle = {
-    "--tile-saturation": String(tileSaturation),
-  };
 
   function handleHome() {
     if (navigation.isHome) {
@@ -93,33 +79,19 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
     />
   );
 
-  const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => {
-    return (
-      <Tile
-        key={`${board.id}/${button.id}`}
-        ariaLabel={button.label ? undefined : button.vocalization}
-        backgroundColor={button.backgroundColor}
-        borderColor={button.borderColor}
-        isFolder={Boolean(button.linkedBoardId)}
-        isBorderVisible={areTileBordersVisible}
-        onActivate={() => activateButton(button)}
-        {...gridItemProps}
-      >
-        <AACSymbol
-          label={button.label}
-          imageSrc={button.imageSrc}
-          labelPlacement={symbolLabelPlacement}
-          isLabelHidden={isTileLabelHidden}
-        />
-      </Tile>
-    );
-  };
+  const renderTile = (button: BoardButton, gridItemProps: GridItemProps) => (
+    <Tile
+      key={`${board.id}/${button.id}`}
+      button={button}
+      onActivate={activateButton}
+      {...gridItemProps}
+    />
+  );
 
   return (
     <Stack
       {...shortcuts.rootProps}
       direction="column"
-      style={boardRootStyle}
       sx={{
         height: "100%",
         pl: { sm: safeAreaInset("left") },

@@ -90,9 +90,9 @@ describe("TileSettings", () => {
       const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
-        areTileBordersVisible: boolean;
+        areBordersVisible: boolean;
       };
-      expect(preferences.areTileBordersVisible).toBe(true);
+      expect(preferences.areBordersVisible).toBe(true);
     });
   });
 
@@ -120,9 +120,9 @@ describe("TileSettings", () => {
       const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
-        tileSaturation: number;
+        saturation: number;
       };
-      expect(preferences.tileSaturation).toBe(valueNow);
+      expect(preferences.saturation).toBe(valueNow);
     });
   });
 
@@ -156,9 +156,9 @@ describe("TileSettings", () => {
       const stored = localStorage.getItem("tile-preferences");
       expect(stored).not.toBeNull();
       const preferences = JSON.parse(stored ?? "{}") as {
-        tileLabelPlacement: string;
+        labelPlacement: string;
       };
-      expect(preferences.tileLabelPlacement).toBe("bottom");
+      expect(preferences.labelPlacement).toBe("bottom");
     });
   });
 });

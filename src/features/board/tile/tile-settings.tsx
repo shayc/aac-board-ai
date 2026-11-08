@@ -59,14 +59,14 @@ export function TileSettings() {
   const t = useTranslate();
   const { language } = useLanguage();
   const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
-  const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
+  const { saturation, areBordersVisible, labelPlacement } =
     useTilePreferences();
 
   return (
     <Stack spacing={3}>
       <SettingsRadioGroup
         label={t(m.tileLabelPlacement)}
-        value={tileLabelPlacement}
+        value={labelPlacement}
         onChange={setTileLabelPlacement}
         optionsSx={{ flexWrap: "nowrap", gap: 1, mt: 0.5 }}
       >
@@ -77,13 +77,13 @@ export function TileSettings() {
 
       <SettingsSwitch
         label={t(m.tileBorders)}
-        checked={areTileBordersVisible}
+        checked={areBordersVisible}
         onChange={setTileBordersVisible}
       />
 
       <SettingsSlider
         label={t(m.tileSaturation)}
-        value={tileSaturation}
+        value={saturation}
         onChange={setTileSaturation}
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}

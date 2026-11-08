@@ -47,6 +47,16 @@ describe("AACSymbol", () => {
     expect(image?.getAttribute("alt")).toBe("");
   });
 
+  test("renders only phrasing elements so it can sit inside a button", async () => {
+    const screen = await render(
+      <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" />,
+    );
+
+    const symbol = screen.container.firstElementChild;
+    expect(symbol?.tagName).toBe("SPAN");
+    expect(symbol?.querySelector("div")).toBeNull();
+  });
+
   test("places the label below the image by default and above it when placed on top", async () => {
     const byDefault = await renderSymbol();
     const top = await renderSymbol({ labelPlacement: "top" });

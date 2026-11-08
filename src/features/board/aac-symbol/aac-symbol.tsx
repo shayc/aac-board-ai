@@ -39,6 +39,7 @@ export function AACSymbol({
     >
       {isImageShown && (
         <Box
+          component="span"
           sx={{
             position: "relative",
             flexGrow: 1,

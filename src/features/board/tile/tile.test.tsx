@@ -3,13 +3,17 @@ import {
   ThemeProvider as MUIThemeProvider,
 } from "@mui/material/styles";
 import { assertDefined } from "@shared/testing/assert-defined";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
 import type { Locator } from "vitest/browser";
-import { render } from "vitest-browser-react";
-import { AACSymbol } from "../aac-symbol/aac-symbol";
+import { render, type RenderResult } from "vitest-browser-react";
+import type { BoardButton } from "../board-types";
 import { TEST_IMAGE_SRC } from "../testing";
 import { Tile } from "./tile";
+import {
+  setTileBordersVisible,
+  setTileSaturation,
+} from "./tile-preferences-store";
 
 type Rgb = readonly [red: number, green: number, blue: number];
 
@@ -25,6 +29,16 @@ const cssVariableTheme = createTheme({
 function renderInTheme(ui: ReactNode) {
   return render(
     <MUIThemeProvider theme={cssVariableTheme}>{ui}</MUIThemeProvider>,
+  );
+}
+
+function makeButton(overrides: Partial<BoardButton>): BoardButton {
+  return { id: "button", label: "Word", actions: [], ...overrides };
+}
+
+function tileElement(overrides: Partial<BoardButton>) {
+  return (
+    <Tile button={makeButton(overrides)} tabIndex={0} onActivate={vi.fn()} />
   );
 }
 
@@ -86,13 +100,9 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
   const screen = await renderInTheme(
     <>
       <Unhoverable>
-        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
-          Resting
-        </Tile>
+        {tileElement({ label: "Resting", backgroundColor })}
       </Unhoverable>
-      <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
-        Hovered
-      </Tile>
+      {tileElement({ label: "Hovered", backgroundColor })}
     </>,
   );
   const restingTile = screen.getByRole("button", { name: "Resting" });
@@ -109,9 +119,7 @@ async function measureLuminanceOnHover(backgroundColor?: string) {
 describe("Tile", () => {
   test("is named by its symbol label and keeps the symbol image decorative", async () => {
     const screen = await renderInTheme(
-      <Tile onActivate={vi.fn()}>
-        <AACSymbol label="Cat" imageSrc={TEST_IMAGE_SRC} />
-      </Tile>,
+      tileElement({ label: "Cat", imageSrc: TEST_IMAGE_SRC }),
     );
 
     const tile = screen.getByRole("button", { name: "Cat" });
@@ -119,11 +127,13 @@ describe("Tile", () => {
     expect(tile.element().querySelector("img")?.getAttribute("alt")).toBe("");
   });
 
-  test("uses ariaLabel to name custom content", async () => {
+  test("is named by its vocalization when it has no label", async () => {
     const screen = await renderInTheme(
-      <Tile ariaLabel="Speak Hello" onActivate={vi.fn()}>
-        <span aria-hidden="true">Hello</span>
-      </Tile>,
+      tileElement({
+        label: "",
+        vocalization: "Speak Hello",
+        imageSrc: TEST_IMAGE_SRC,
+      }),
     );
 
     await expect
@@ -134,10 +144,8 @@ describe("Tile", () => {
   test("describes folder tiles as opening a board and gives word tiles no description", async () => {
     const screen = await renderInTheme(
       <>
-        <Tile isFolder onActivate={vi.fn()}>
-          Animals
-        </Tile>
-        <Tile onActivate={vi.fn()}>Cat</Tile>
+        {tileElement({ label: "Animals", linkedBoardId: "animals" })}
+        {tileElement({ label: "Cat" })}
       </>,
     );
 
@@ -159,11 +167,7 @@ describe("Tile", () => {
     "rgba(0, 0, 0, 0.1)",
   ])("keeps the label readable on a %s background", async (backgroundColor) => {
     const screen = await renderInTheme(
-      <Unhoverable>
-        <Tile backgroundColor={backgroundColor} onActivate={vi.fn()}>
-          Word
-        </Tile>
-      </Unhoverable>,
+      <Unhoverable>{tileElement({ backgroundColor })}</Unhoverable>,
     );
     const { color, backgroundColor: background } = styleOf(
       screen.getByRole("button", { name: "Word" }),
@@ -176,20 +180,16 @@ describe("Tile", () => {
 
   test.each([true, false])(
     "marks folder tiles with a corner that stands out from the tile (borders visible: %s)",
-    async (isBorderVisible) => {
+    async (areBordersVisible) => {
+      setTileBordersVisible(areBordersVisible);
       const screen = await renderInTheme(
         <>
-          <Tile
-            backgroundColor="#3f51b5"
-            isBorderVisible={isBorderVisible}
-            isFolder
-            onActivate={vi.fn()}
-          >
-            Folder
-          </Tile>
-          <Tile backgroundColor="#3f51b5" onActivate={vi.fn()}>
-            Word
-          </Tile>
+          {tileElement({
+            label: "Folder",
+            backgroundColor: "#3f51b5",
+            linkedBoardId: "folder",
+          })}
+          {tileElement({ label: "Word", backgroundColor: "#3f51b5" })}
         </>,
       );
       const folder = screen.getByRole("button", { name: "Folder" });
@@ -243,16 +243,10 @@ describe("Tile", () => {
   ])(
     "draws the border $description",
     async ({ backgroundColor, borderColor }) => {
+      setTileBordersVisible(true);
       const screen = await renderInTheme(
         <Unhoverable>
-          <Tile
-            backgroundColor={backgroundColor}
-            borderColor={borderColor}
-            isBorderVisible
-            onActivate={vi.fn()}
-          >
-            Bordered
-          </Tile>
+          {tileElement({ label: "Bordered", backgroundColor, borderColor })}
         </Unhoverable>,
       );
       const styles = styleOf(screen.getByRole("button", { name: "Bordered" }));
@@ -267,10 +261,9 @@ describe("Tile", () => {
   );
 
   test("keeps the border the background's color on hover when the tile has no border color", async () => {
+    setTileBordersVisible(true);
     const screen = await renderInTheme(
-      <Tile backgroundColor="#bbedc4" isBorderVisible onActivate={vi.fn()}>
-        Bordered
-      </Tile>,
+      tileElement({ label: "Bordered", backgroundColor: "#bbedc4" }),
     );
     const tile = screen.getByRole("button", { name: "Bordered" });
 
@@ -286,26 +279,8 @@ describe("Tile", () => {
   });
 
   test("hides the border without shifting the tile's content", async () => {
-    const screen = await renderInTheme(
-      <>
-        <Tile
-          backgroundColor="#ff0000"
-          borderColor="#00ff00"
-          isBorderVisible
-          onActivate={vi.fn()}
-        >
-          <span>Bordered</span>
-        </Tile>
-        <Tile
-          backgroundColor="#ff0000"
-          borderColor="#00ff00"
-          onActivate={vi.fn()}
-        >
-          <span>Borderless</span>
-        </Tile>
-      </>,
-    );
-    const contentOffset = (name: string) => {
+    const bordered = { backgroundColor: "#ff0000", borderColor: "#00ff00" };
+    const contentOffset = (screen: RenderResult, name: string) => {
       const tile = screen.getByRole("button", { name }).element();
       const content = screen.getByText(name, { exact: true }).element();
       const tileBounds = tile.getBoundingClientRect();
@@ -316,8 +291,20 @@ describe("Tile", () => {
         left: contentBounds.left - tileBounds.left,
       };
     };
+
+    setTileBordersVisible(true);
+    const withBorders = await renderInTheme(
+      tileElement({ label: "Bordered", ...bordered }),
+    );
+    const borderedOffset = contentOffset(withBorders, "Bordered");
+    await withBorders.unmount();
+
+    setTileBordersVisible(false);
+    const withoutBorders = await renderInTheme(
+      tileElement({ label: "Bordered", ...bordered }),
+    );
     const borderless = styleOf(
-      screen.getByRole("button", { name: "Borderless" }),
+      withoutBorders.getByRole("button", { name: "Bordered" }),
     );
 
     expect(
@@ -326,16 +313,13 @@ describe("Tile", () => {
         paint(borderless.backgroundColor),
       ),
     ).toBe(0);
-    expect(contentOffset("Borderless")).toEqual(contentOffset("Bordered"));
+    expect(contentOffset(withoutBorders, "Bordered")).toEqual(borderedOffset);
   });
 
   test("renders the background as gray at zero tile saturation", async () => {
+    setTileSaturation(0);
     const screen = await renderInTheme(
-      <div style={{ "--tile-saturation": 0 } as CSSProperties}>
-        <Tile backgroundColor="#ff0000" onActivate={vi.fn()}>
-          Muted
-        </Tile>
-      </div>,
+      tileElement({ label: "Muted", backgroundColor: "#ff0000" }),
     );
     const channels = paint(
       styleOf(screen.getByRole("button", { name: "Muted" })).backgroundColor,
@@ -346,16 +330,15 @@ describe("Tile", () => {
     );
   });
 
-  test("calls onActivate when clicked", async () => {
+  test("activates with its button when clicked", async () => {
     const onActivate = vi.fn();
+    const button = makeButton({ label: "Click me" });
     const screen = await renderInTheme(
-      <Tile onActivate={onActivate}>
-        <span>Click me</span>
-      </Tile>,
+      <Tile button={button} tabIndex={0} onActivate={onActivate} />,
     );
 
     await screen.getByRole("button", { name: "Click me" }).click();
 
-    expect(onActivate).toHaveBeenCalledOnce();
+    expect(onActivate).toHaveBeenCalledExactlyOnceWith(button);
   });
 });

@@ -2,9 +2,9 @@ import { describe, expect, test } from "vitest";
 import { parseTilePreferences } from "./tile-preferences-store";
 
 const DEFAULTS = {
-  tileSaturation: 1,
-  areTileBordersVisible: false,
-  tileLabelPlacement: "top",
+  saturation: 1,
+  areBordersVisible: false,
+  labelPlacement: "top",
 };
 
 describe("parseTilePreferences", () => {
@@ -14,33 +14,28 @@ describe("parseTilePreferences", () => {
 
   test("keeps valid stored values", () => {
     const stored = {
-      tileSaturation: 0.4,
-      areTileBordersVisible: true,
-      tileLabelPlacement: "hidden",
+      saturation: 0.4,
+      areBordersVisible: true,
+      labelPlacement: "hidden",
     };
 
     expect(parseTilePreferences(stored)).toEqual(stored);
   });
 
   test.each([
-    { tileSaturation: "high" },
-    { tileSaturation: NaN },
-    { areTileBordersVisible: "no" },
-    { areTileBordersVisible: 0 },
-    { tileLabelPlacement: "center" },
+    { saturation: "high" },
+    { saturation: NaN },
+    { areBordersVisible: "no" },
+    { areBordersVisible: 0 },
+    { labelPlacement: "center" },
   ])("falls back to the default for an invalid stored value %j", (stored) => {
     expect(parseTilePreferences(stored)).toEqual(DEFAULTS);
   });
 
   test.each([
-    { tileSaturation: -0.5, expected: 0 },
-    { tileSaturation: 5, expected: 1 },
-  ])(
-    "clamps tileSaturation $tileSaturation into range",
-    ({ tileSaturation, expected }) => {
-      expect(parseTilePreferences({ tileSaturation }).tileSaturation).toBe(
-        expected,
-      );
-    },
-  );
+    { saturation: -0.5, expected: 0 },
+    { saturation: 5, expected: 1 },
+  ])("clamps saturation $saturation into range", ({ saturation, expected }) => {
+    expect(parseTilePreferences({ saturation }).saturation).toBe(expected);
+  });
 });
