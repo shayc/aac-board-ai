@@ -16,11 +16,11 @@ interface TileProps {
 }
 
 type TileColorStyle = CSSProperties & {
-  "--tile-background"?: string;
+  "--tile-background-color"?: string;
   "--tile-border-color"?: string;
 };
 
-const TILE_BACKGROUND = "var(--tile-background)";
+const TILE_BACKGROUND_COLOR = "var(--tile-background-color)";
 
 function desaturate(color: string): string {
   return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
@@ -65,18 +65,18 @@ function tileSx(theme: Theme) {
 
 function coloredTileSx(theme: Theme) {
   return {
-    color: `contrast-color(${TILE_BACKGROUND})`,
-    backgroundColor: TILE_BACKGROUND,
+    color: `contrast-color(${TILE_BACKGROUND_COLOR})`,
+    backgroundColor: TILE_BACKGROUND_COLOR,
     "&:hover": {
       "@media (hover: hover)": {
         backgroundColor: darken(
-          TILE_BACKGROUND,
+          TILE_BACKGROUND_COLOR,
           `calc(${theme.vars.palette.action.hoverOpacity} * 200%)`,
         ),
       },
     },
     "&:active": {
-      backgroundColor: darken(TILE_BACKGROUND, "25%"),
+      backgroundColor: darken(TILE_BACKGROUND_COLOR, "25%"),
     },
   } as const;
 }
@@ -105,7 +105,7 @@ function tileColorStyle(
     : undefined;
 
   return {
-    "--tile-background": backgroundColor && desaturate(backgroundColor),
+    "--tile-background-color": backgroundColor && desaturate(backgroundColor),
     "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
   };
 }
