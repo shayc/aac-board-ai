@@ -96,6 +96,8 @@
   "languageDownloading": "மொழிபெயர்ப்பு மாதிரி பதிவிறக்கப்படுகிறது...",
   "languageDownloadProgress": "{progress}% முடிந்தது",
   "speechVoice": "குரல்",
+  "speechVoiceDefault": "இயல்புநிலை",
+  "speechVoiceDefaultNamed": "இயல்புநிலை ({voice})",
   "speechRate": "வேகம்",
   "speechPitch": "சுருதி",
   "speechVolume": "ஒலியளவு",

@@ -96,6 +96,8 @@
   "languageDownloading": "অনুবাদ মডেল ডাউনলোড হচ্ছে...",
   "languageDownloadProgress": "{progress}% সম্পন্ন",
   "speechVoice": "কণ্ঠস্বর",
+  "speechVoiceDefault": "ডিফল্ট",
+  "speechVoiceDefaultNamed": "ডিফল্ট ({voice})",
   "speechRate": "গতি",
   "speechPitch": "পিচ",
   "speechVolume": "ভলিউম",

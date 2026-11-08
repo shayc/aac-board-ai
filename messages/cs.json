@@ -96,6 +96,8 @@
   "languageDownloading": "Stahování překladového modelu...",
   "languageDownloadProgress": "{progress} % dokončeno",
   "speechVoice": "Hlas",
+  "speechVoiceDefault": "Výchozí",
+  "speechVoiceDefaultNamed": "Výchozí ({voice})",
   "speechRate": "Rychlost",
   "speechPitch": "Výška",
   "speechVolume": "Hlasitost",

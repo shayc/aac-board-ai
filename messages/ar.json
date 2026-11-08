@@ -96,6 +96,8 @@
   "languageDownloading": "جارٍ تنزيل نموذج الترجمة...",
   "languageDownloadProgress": "اكتمل {progress}%",
   "speechVoice": "الصوت",
+  "speechVoiceDefault": "افتراضي",
+  "speechVoiceDefaultNamed": "افتراضي ({voice})",
   "speechRate": "السرعة",
   "speechPitch": "حدّة الصوت",
   "speechVolume": "مستوى الصوت",

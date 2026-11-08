@@ -96,6 +96,8 @@
   "languageDownloading": "Übersetzungsmodell wird heruntergeladen...",
   "languageDownloadProgress": "{progress}% abgeschlossen",
   "speechVoice": "Stimme",
+  "speechVoiceDefault": "Standard",
+  "speechVoiceDefaultNamed": "Standard ({voice})",
   "speechRate": "Geschwindigkeit",
   "speechPitch": "Tonhöhe",
   "speechVolume": "Lautstärke",

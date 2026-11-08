@@ -96,6 +96,8 @@
   "languageDownloading": "అనువాద నమూనా డౌన్‌లోడ్ అవుతోంది...",
   "languageDownloadProgress": "{progress}% పూర్తయింది",
   "speechVoice": "వాయిస్",
+  "speechVoiceDefault": "డిఫాల్ట్",
+  "speechVoiceDefaultNamed": "డిఫాల్ట్ ({voice})",
   "speechRate": "వేగం",
   "speechPitch": "పిచ్",
   "speechVolume": "వాల్యూమ్",

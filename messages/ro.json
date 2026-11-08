@@ -96,6 +96,8 @@
   "languageDownloading": "Se descarcă modelul de traducere...",
   "languageDownloadProgress": "{progress}% finalizat",
   "speechVoice": "Voce",
+  "speechVoiceDefault": "Implicită",
+  "speechVoiceDefaultNamed": "Implicită ({voice})",
   "speechRate": "Viteză",
   "speechPitch": "Înălțime",
   "speechVolume": "Volum",

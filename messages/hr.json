@@ -96,6 +96,8 @@
   "languageDownloading": "Preuzimanje modela za prijevod...",
   "languageDownloadProgress": "{progress} % dovršeno",
   "speechVoice": "Glas",
+  "speechVoiceDefault": "Zadano",
+  "speechVoiceDefaultNamed": "Zadano ({voice})",
   "speechRate": "Brzina",
   "speechPitch": "Visina",
   "speechVolume": "Glasnoća",

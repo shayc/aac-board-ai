@@ -96,6 +96,8 @@
   "languageDownloading": "Laddar ner översättningsmodell...",
   "languageDownloadProgress": "{progress}% klart",
   "speechVoice": "Röst",
+  "speechVoiceDefault": "Standard",
+  "speechVoiceDefaultNamed": "Standard ({voice})",
   "speechRate": "Hastighet",
   "speechPitch": "Tonhöjd",
   "speechVolume": "Volym",

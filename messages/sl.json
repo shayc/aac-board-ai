@@ -96,6 +96,8 @@
   "languageDownloading": "Prenašanje prevajalskega modela...",
   "languageDownloadProgress": "{progress} % dokončano",
   "speechVoice": "Glas",
+  "speechVoiceDefault": "Privzeto",
+  "speechVoiceDefaultNamed": "Privzeto ({voice})",
   "speechRate": "Hitrost",
   "speechPitch": "Višina",
   "speechVolume": "Glasnost",

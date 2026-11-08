@@ -96,6 +96,8 @@
   "languageDownloading": "번역 모델 다운로드 중...",
   "languageDownloadProgress": "{progress}% 완료",
   "speechVoice": "음성",
+  "speechVoiceDefault": "기본값",
+  "speechVoiceDefaultNamed": "기본값({voice})",
   "speechRate": "속도",
   "speechPitch": "음높이",
   "speechVolume": "볼륨",

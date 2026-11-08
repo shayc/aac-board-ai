@@ -96,6 +96,8 @@
   "languageDownloading": "अनुवाद मॉडल डाउनलोड हो रहा है...",
   "languageDownloadProgress": "{progress}% पूर्ण",
   "speechVoice": "आवाज़",
+  "speechVoiceDefault": "डिफ़ॉल्ट",
+  "speechVoiceDefaultNamed": "डिफ़ॉल्ट ({voice})",
   "speechRate": "गति",
   "speechPitch": "पिच",
   "speechVolume": "वॉल्यूम",

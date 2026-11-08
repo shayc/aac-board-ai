@@ -96,6 +96,8 @@
   "languageDownloading": "正在下载翻译模型...",
   "languageDownloadProgress": "已完成 {progress}%",
   "speechVoice": "语音",
+  "speechVoiceDefault": "默认",
+  "speechVoiceDefaultNamed": "默认（{voice}）",
   "speechRate": "语速",
   "speechPitch": "音调",
   "speechVolume": "音量",

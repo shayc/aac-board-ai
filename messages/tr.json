@@ -96,6 +96,8 @@
   "languageDownloading": "Çeviri modeli indiriliyor...",
   "languageDownloadProgress": "%{progress} tamamlandı",
   "speechVoice": "Ses",
+  "speechVoiceDefault": "Varsayılan",
+  "speechVoiceDefaultNamed": "Varsayılan ({voice})",
   "speechRate": "Hız",
   "speechPitch": "Perde",
   "speechVolume": "Ses düzeyi",

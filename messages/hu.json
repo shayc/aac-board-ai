@@ -96,6 +96,8 @@
   "languageDownloading": "Fordítási modell letöltése...",
   "languageDownloadProgress": "{progress}% kész",
   "speechVoice": "Hang",
+  "speechVoiceDefault": "Alapértelmezett",
+  "speechVoiceDefaultNamed": "Alapértelmezett ({voice})",
   "speechRate": "Sebesség",
   "speechPitch": "Hangmagasság",
   "speechVolume": "Hangerő",

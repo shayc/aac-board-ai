@@ -9,6 +9,7 @@ import { useUILocale } from "@shared/language/language-store";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { usePlayback } from "@shared/playback/use-playback";
+import { resolveVoice } from "@shared/speech/resolve-voice";
 import {
   setSpeechPitch,
   setSpeechRate,
@@ -18,7 +19,6 @@ import {
   SPEECH_RATE,
   SPEECH_VOLUME,
   useSpeechPreferences,
-  useSpeechVoice,
   useVoicesByLanguage,
 } from "@shared/speech/speech-store";
 import { SettingsSelect } from "@shared/ui/settings-select";
@@ -78,12 +78,17 @@ function VoiceSelect() {
   const t = useTranslate();
   const playback = usePlayback();
   const voicesByLanguage = useVoicesByLanguage();
-  const speechVoice = useSpeechVoice();
+  const { voiceURI } = useSpeechPreferences();
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
   const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
-  const selectedVoiceURI = speechVoice?.voiceURI ?? "";
+  const savedVoice = voices.find((voice) => voice.voiceURI === voiceURI);
+  const selectedVoiceURI = savedVoice?.voiceURI ?? "";
+  const defaultVoice = resolveVoice(voicesByLanguage, language, null);
+  const defaultLabel = defaultVoice
+    ? t(m.speechVoiceDefaultNamed, { voice: defaultVoice.name })
+    : t(m.speechVoiceDefault);
   const locales = Object.keys(voicesByLocale).sort((a, b) =>
     a.localeCompare(b),
   );
@@ -131,6 +136,7 @@ function VoiceSelect() {
         </Tooltip>
       }
     >
+      <MenuItem value="">{defaultLabel}</MenuItem>
       {locales.map(renderLocaleOptions)}
     </SettingsSelect>
   );

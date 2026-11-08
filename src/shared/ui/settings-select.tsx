@@ -28,6 +28,7 @@ export function SettingsSelect({
           labelId={labelId}
           value={value}
           onChange={(event) => onChange(event.target.value)}
+          displayEmpty
           size="small"
           fullWidth
           sx={{ minWidth: 0 }}

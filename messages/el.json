@@ -96,6 +96,8 @@
   "languageDownloading": "Λήψη μοντέλου μετάφρασης...",
   "languageDownloadProgress": "Ολοκληρώθηκε {progress}%",
   "speechVoice": "Φωνή",
+  "speechVoiceDefault": "Προεπιλογή",
+  "speechVoiceDefaultNamed": "Προεπιλογή ({voice})",
   "speechRate": "Ταχύτητα",
   "speechPitch": "Τόνος",
   "speechVolume": "Ένταση",

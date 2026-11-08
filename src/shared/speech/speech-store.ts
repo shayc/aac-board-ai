@@ -1,7 +1,4 @@
-import {
-  getStoredLanguage,
-  useStoredLanguage,
-} from "@shared/language/language-store";
+import { getStoredLanguage } from "@shared/language/language-store";
 import { getLanguageCode } from "@shared/language/locale";
 import {
   createExternalStore,
@@ -117,12 +114,4 @@ export function getSpeechVoice(): SpeechSynthesisVoice | null {
     getStoredLanguage(),
     getSpeechPreferences().voiceURI,
   );
-}
-
-export function useSpeechVoice(): SpeechSynthesisVoice | null {
-  const voicesByLanguage = useVoicesByLanguage();
-  const language = useStoredLanguage();
-  const { voiceURI } = useSpeechPreferences();
-
-  return resolveVoice(voicesByLanguage, language, voiceURI);
 }

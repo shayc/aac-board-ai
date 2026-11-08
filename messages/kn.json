@@ -96,6 +96,8 @@
   "languageDownloading": "ಅನುವಾದ ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
   "languageDownloadProgress": "{progress}% ಪೂರ್ಣಗೊಂಡಿದೆ",
   "speechVoice": "ಧ್ವನಿ",
+  "speechVoiceDefault": "ಡೀಫಾಲ್ಟ್",
+  "speechVoiceDefaultNamed": "ಡೀಫಾಲ್ಟ್ ({voice})",
   "speechRate": "ವೇಗ",
   "speechPitch": "ಪಿಚ್",
   "speechVolume": "ಧ್ವನಿ ಪ್ರಮಾಣ",

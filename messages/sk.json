@@ -96,6 +96,8 @@
   "languageDownloading": "Sťahovanie prekladového modelu...",
   "languageDownloadProgress": "{progress} % dokončené",
   "speechVoice": "Hlas",
+  "speechVoiceDefault": "Predvolený",
+  "speechVoiceDefaultNamed": "Predvolený ({voice})",
   "speechRate": "Rýchlosť",
   "speechPitch": "Výška",
   "speechVolume": "Hlasitosť",

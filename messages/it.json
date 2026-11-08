@@ -96,6 +96,8 @@
   "languageDownloading": "Download del modello di traduzione...",
   "languageDownloadProgress": "{progress}% completato",
   "speechVoice": "Voce",
+  "speechVoiceDefault": "Predefinita",
+  "speechVoiceDefaultNamed": "Predefinita ({voice})",
   "speechRate": "Velocità",
   "speechPitch": "Tono",
   "speechVolume": "Volume",

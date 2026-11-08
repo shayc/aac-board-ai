@@ -118,6 +118,67 @@ describe("SpeechSettings", () => {
     });
   });
 
+  test("shows the default voice when no voice is saved", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "us-2", name: "Alex", lang: "en-US" },
+    ]);
+
+    const screen = await renderSpeechSettings();
+    const voiceSelect = screen.getByRole("combobox", { name: "Voice" });
+
+    await expect.element(voiceSelect).toHaveTextContent("Default (Samantha)");
+
+    await voiceSelect.click();
+
+    await expect
+      .element(screen.getByRole("option", { name: "Default (Samantha)" }))
+      .toHaveAttribute("aria-selected", "true");
+    await expectNoA11yViolations(screen.getByRole("listbox").element());
+  });
+
+  test("saves the default voice when it is picked by name", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "us-2", name: "Alex", lang: "en-US" },
+    ]);
+    const screen = await renderSpeechSettings();
+    const voiceSelect = screen.getByRole("combobox", { name: "Voice" });
+
+    await voiceSelect.click();
+    await screen.getByRole("option", { name: "Samantha", exact: true }).click();
+
+    await expect.element(voiceSelect).toHaveTextContent("Samantha");
+    await expect.element(voiceSelect).not.toHaveTextContent("Default");
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("speech-preferences");
+      expect(stored).not.toBeNull();
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: "us-1" });
+    });
+  });
+
+  test("clears the saved voice when Default is picked", async () => {
+    stubVoices([
+      { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
+      { voiceURI: "us-2", name: "Alex", lang: "en-US" },
+    ]);
+    setSpeechVoiceURI("us-2");
+    const screen = await renderSpeechSettings();
+    const voiceSelect = screen.getByRole("combobox", { name: "Voice" });
+
+    await expect.element(voiceSelect).toHaveTextContent("Alex");
+    await expect.element(voiceSelect).not.toHaveTextContent("Default");
+
+    await voiceSelect.click();
+    await screen.getByRole("option", { name: "Default (Samantha)" }).click();
+
+    await expect.element(voiceSelect).toHaveTextContent("Default (Samantha)");
+    await vi.waitFor(() => {
+      const stored = localStorage.getItem("speech-preferences");
+      expect(JSON.parse(stored ?? "{}")).toMatchObject({ voiceURI: null });
+    });
+  });
+
   test("shows the voice that will speak when the saved voice belongs to another language", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
@@ -130,7 +191,7 @@ describe("SpeechSettings", () => {
 
     await expect
       .element(screen.getByRole("combobox", { name: "קול" }))
-      .toHaveTextContent("Carmit");
+      .toHaveTextContent("ברירת מחדל (Carmit)");
   });
 
   test("adjusts and persists rate, pitch, and volume", async () => {
