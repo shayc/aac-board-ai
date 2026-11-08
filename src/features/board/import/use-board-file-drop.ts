@@ -1,7 +1,4 @@
-import { m } from "@paraglide/messages.js";
-import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useRef, useState, type DragEvent } from "react";
-import { hasBoardFileExtension } from "./board-file-formats";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 interface BoardFileDropHandlers {
@@ -22,7 +19,6 @@ function containsFiles(event: DragEvent<HTMLElement>): boolean {
 
 export function useBoardFileDrop(): UseBoardFileDropReturn {
   const { importAndOpen } = useImportBoardFiles();
-  const { showSnackbar } = useSnackbar();
   const [isDraggingFiles, setIsDraggingFiles] = useState(false);
   const dragDepthRef = useRef(0);
 
@@ -73,19 +69,7 @@ export function useBoardFileDrop(): UseBoardFileDropReturn {
     event.preventDefault();
     clearDrag();
 
-    const boardFiles = Array.from(event.dataTransfer.files).filter(
-      hasBoardFileExtension,
-    );
-
-    if (boardFiles.length === 0) {
-      showSnackbar({
-        message: (t) => t(m.libraryImportOnlyBoardFiles),
-        severity: "error",
-      });
-      return;
-    }
-
-    void importAndOpen(boardFiles);
+    void importAndOpen(Array.from(event.dataTransfer.files));
   }
 
   return {
