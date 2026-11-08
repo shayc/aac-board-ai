@@ -1,3 +1,4 @@
+import { setStoredLanguage } from "@shared/language/language-store";
 import {
   setSpeechPitch,
   setSpeechRate,
@@ -53,6 +54,7 @@ describe("speak", () => {
     test("maps the configured rate, pitch, volume, and voice onto the utterance", async () => {
       stubUtteranceVoiceAccessor();
       const speech = stubSpeech();
+      setStoredLanguage("en");
       setSpeechVoiceURI("voice-1");
       setSpeechRate(1.5);
       setSpeechPitch(0.5);
@@ -65,6 +67,20 @@ describe("speak", () => {
       expect(utterance.pitch).toBe(0.5);
       expect(utterance.volume).toBe(0.25);
       expect(utterance.voice?.voiceURI).toBe("voice-1");
+    });
+
+    test("leaves the voice to the browser when the saved voice belongs to another language", async () => {
+      stubUtteranceVoiceAccessor();
+      const speech = stubSpeech();
+      setStoredLanguage("en");
+      setSpeechVoiceURI("voice-1");
+      setStoredLanguage("he");
+
+      await speak("שלום");
+
+      const utterance = speech.speak.mock.calls[0][0];
+      expect(utterance.voice).toBeNull();
+      expect(utterance.lang).toBe("he");
     });
 
     test("clamps an out-of-range stored rate to the configured max", async () => {
