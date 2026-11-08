@@ -5,7 +5,6 @@ import {
 } from "@shared/language/language-store";
 import {
   makeProofreadResult,
-  stubBuiltInAIUnsupported,
   stubProofreader,
   stubRewriter,
 } from "@shared/testing/stub-built-in-ai";
@@ -63,8 +62,6 @@ describe("useMessageSuggestions", () => {
   });
 
   test("reports unsupported and stays empty when no Built-in AI is available", async () => {
-    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
-
     const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
@@ -75,7 +72,6 @@ describe("useMessageSuggestions", () => {
 
   test("stays supported when only the proofreader is available", async () => {
     stubProofreader();
-    stubBuiltInAIUnsupported("Rewriter");
 
     const { result } = await renderMessageSuggestions("want eat");
 
@@ -166,7 +162,6 @@ describe("useMessageSuggestions", () => {
     stubRewriter(
       () => new Promise<string>((_, reject) => rejecters.push(reject)),
     );
-    stubBuiltInAIUnsupported("Proofreader");
 
     const { result } = await renderMessageSuggestions("want eat");
 
@@ -184,14 +179,13 @@ describe("useMessageSuggestions", () => {
   });
 
   test.each([
-    { engine: "Proofreader", unsupported: "Rewriter", sessions: 1 },
-    { engine: "Rewriter", unsupported: "Proofreader", sessions: 2 },
+    { engine: "Proofreader", sessions: 1 },
+    { engine: "Rewriter", sessions: 2 },
   ] as const)(
     "enabling from a user gesture downloads every $engine model",
-    async ({ engine, unsupported, sessions }) => {
+    async ({ engine, sessions }) => {
       const { availability, create } = ENGINE_STUBS[engine]();
       availability.mockResolvedValue("downloadable");
-      stubBuiltInAIUnsupported(unsupported);
 
       const { result } = await renderMessageSuggestions("want eat");
 
@@ -219,7 +213,6 @@ describe("useMessageSuggestions", () => {
         ? Promise.resolve("downloadable")
         : new Promise<Availability>(() => undefined),
     );
-    stubBuiltInAIUnsupported("Rewriter");
 
     const { result } = await renderMessageSuggestions("want eat");
 
@@ -237,7 +230,6 @@ describe("useMessageSuggestions", () => {
   test("passes custom instructions to every fixed-tone rewriter", async () => {
     setSuggestionCustomInstructions("Talk like a pirate");
     const { create } = stubRewriter();
-    stubBuiltInAIUnsupported("Proofreader");
 
     await renderMessageSuggestions("ahoy");
 
@@ -286,7 +278,6 @@ describe("useMessageSuggestions", () => {
   test("uses the selected language rather than English", async () => {
     setStoredLanguage("he");
     const { create } = stubRewriter();
-    stubBuiltInAIUnsupported("Proofreader");
 
     await renderMessageSuggestions("שלום");
 
@@ -308,7 +299,6 @@ describe("useMessageSuggestions", () => {
     stubRewriter(
       () => new Promise<string>((resolve) => resolvers.push(resolve)),
     );
-    stubBuiltInAIUnsupported("Proofreader");
 
     const { result } = await renderMessageSuggestions("hi");
 
@@ -334,7 +324,6 @@ describe("useMessageSuggestions", () => {
           resolvers.set(input, resolve);
         }),
     );
-    stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
@@ -367,7 +356,6 @@ describe("useMessageSuggestions", () => {
           resolvers.set(input, resolve);
         }),
     );
-    stubBuiltInAIUnsupported("Rewriter");
 
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>

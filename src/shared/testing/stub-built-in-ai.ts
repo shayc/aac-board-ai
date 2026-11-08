@@ -76,9 +76,3 @@ export function stubTranslator(
 
   return { translate: action, ...spies };
 }
-
-export function stubBuiltInAIUnsupported(...names: AINamespace[]): void {
-  for (const name of names) {
-    vi.stubGlobal(name, undefined);
-  }
-}

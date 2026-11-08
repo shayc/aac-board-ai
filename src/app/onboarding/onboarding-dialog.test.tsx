@@ -1,10 +1,7 @@
 import { locales } from "@paraglide/runtime";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import {
-  stubBuiltInAIUnsupported,
-  stubRewriter,
-} from "@shared/testing/stub-built-in-ai";
+import { stubRewriter } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { OnboardingDialog } from "./onboarding-dialog";
@@ -19,7 +16,6 @@ function renderDialog(onClose: () => void) {
 
 describe("OnboardingDialog", () => {
   test("renders the onboarding content with no accessibility violations", async () => {
-    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
     const screen = await renderDialog(vi.fn());
 
     await expect
@@ -39,7 +35,6 @@ describe("OnboardingDialog", () => {
   });
 
   test("promises the interface languages when suggestions are unsupported", async () => {
-    stubBuiltInAIUnsupported("Proofreader", "Rewriter");
     const screen = await renderDialog(vi.fn());
 
     await expect

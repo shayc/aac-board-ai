@@ -1,8 +1,5 @@
 import type { OBFBoard } from "@shayc/open-board-format";
-import {
-  stubBuiltInAIUnsupported,
-  stubTranslator,
-} from "@shared/testing/stub-built-in-ai";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
 import { insertBoardSet } from "../storage/board-set-storage";
@@ -104,7 +101,6 @@ describe("loadBoardInLanguage", () => {
 
   test("falls back to the source board when the Translator is unavailable", async () => {
     await storeBoard();
-    stubBuiltInAIUnsupported("Translator");
 
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
