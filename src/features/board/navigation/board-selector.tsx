@@ -2,19 +2,32 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
+import { useRouteLoaderData } from "react-router";
+import type { Board } from "../board-types";
+import { BOARD_ROUTE_ID } from "./board-paths";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardOptions } from "./use-board-options";
+import { type BoardOption, useBoardOptions } from "./use-board-options";
 
 export function BoardSelector() {
-  const t = useTranslate();
-  const { boardSetId, boardId, goToBoard } = useBoardNavigation();
-  const boards = useBoardOptions(boardSetId);
+  const board = useRouteLoaderData<Board>(BOARD_ROUTE_ID);
 
-  const selectedBoard = boards.find((board) => board.id === boardId);
-
-  if (!selectedBoard) {
+  if (!board) {
     return null;
   }
+
+  return (
+    <LoadedBoardSelector currentBoard={{ id: board.id, name: board.name }} />
+  );
+}
+
+interface LoadedBoardSelectorProps {
+  currentBoard: BoardOption;
+}
+
+function LoadedBoardSelector({ currentBoard }: LoadedBoardSelectorProps) {
+  const t = useTranslate();
+  const { boardSetId, goToBoard } = useBoardNavigation();
+  const boards = useBoardOptions(boardSetId, currentBoard);
 
   return (
     <Autocomplete
@@ -22,7 +35,7 @@ export function BoardSelector() {
       closeText={t(m.boardSelectorClose)}
       noOptionsText={t(m.boardSelectorNoOptions)}
       options={boards}
-      value={selectedBoard}
+      value={currentBoard}
       onChange={(_event, board) => goToBoard(board.id)}
       disableClearable
       autoHighlight

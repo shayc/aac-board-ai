@@ -1,5 +1,9 @@
 import { AppShell } from "@app/shell/app-shell";
-import { BOARD_SEGMENT, BOARD_SET_SEGMENT } from "@features/board";
+import {
+  BOARD_ROUTE_ID,
+  BOARD_SEGMENT,
+  BOARD_SET_SEGMENT,
+} from "@features/board";
 import { BoardPage } from "@pages/board-page";
 import { LoadingState } from "@shared/ui/loading-state";
 import type { RouteObject } from "react-router";
@@ -28,6 +32,7 @@ export const appRoutes: RouteObject[] = [
             children: [
               { index: true, loader: boardSetIndexLoader },
               {
+                id: BOARD_ROUTE_ID,
                 path: BOARD_SEGMENT,
                 loader: boardLoader,
                 Component: BoardPage,

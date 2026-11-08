@@ -1,7 +1,3 @@
-import {
-  DEFAULT_LANGUAGE,
-  setStoredLanguage,
-} from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { createMemoryRouter } from "react-router";
@@ -9,16 +5,35 @@ import { RouterProvider } from "react-router/dom";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
+import {
+  DEFAULT_LANGUAGE,
+  getStoredLanguage,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { insertBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
+import { loadBoardInLanguage } from "../translation/load-board-in-language";
+import { BOARD_ROUTE_ID } from "./board-paths";
 import { BoardSelector } from "./board-selector";
+
+function TestHydrateFallback() {
+  return null;
+}
 
 async function renderSelector(initialPath: string) {
   const router = createMemoryRouter(
     [
       {
+        id: BOARD_ROUTE_ID,
         path: "/sets/:boardSetId/boards/:boardId",
+        loader: ({ params }) =>
+          loadBoardInLanguage(
+            params.boardSetId ?? "",
+            params.boardId ?? "",
+            getStoredLanguage(),
+          ),
         element: <BoardSelector />,
+        HydrateFallback: TestHydrateFallback,
       },
     ],
     { initialEntries: [initialPath] },

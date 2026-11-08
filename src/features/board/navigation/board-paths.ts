@@ -2,6 +2,7 @@ import { generatePath } from "react-router";
 
 export const BOARD_SET_SEGMENT = "sets/:boardSetId";
 export const BOARD_SEGMENT = "boards/:boardId";
+export const BOARD_ROUTE_ID = "board";
 export const BOARD_ROUTE_PATTERN = `/${BOARD_SET_SEGMENT}/${BOARD_SEGMENT}`;
 
 export function boardPath({

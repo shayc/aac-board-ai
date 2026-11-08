@@ -4,8 +4,10 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
+import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -170,6 +172,26 @@ describe("app flow", () => {
     expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
+  });
+
+  test("switching language shows the translated board name in the board selector", async () => {
+    await seedBoardSets([
+      {
+        id: "es-set",
+        rootBoardId: "home",
+        boards: [makeOBFBoard({ id: "home", name: "Home" })],
+      },
+    ]);
+    stubTranslator((input) => (input === "Home" ? "Inicio" : input));
+
+    const { screen } = await renderApp("/sets/es-set/boards/home");
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect.element(screen.getByRole("combobox")).toHaveValue("Home");
+
+    setStoredLanguage("es");
+
+    await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
+    expect(document.title).toBe("Inicio");
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {
