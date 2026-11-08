@@ -13,10 +13,10 @@ import {
   setTileLabelPlacement,
   setTileSaturation,
   TILE_SATURATION,
-  useBoardPreferences,
+  useTilePreferences,
   type TileLabelPlacement,
-} from "./board-preferences-store";
-import { LabelPlacementPreview } from "./tile/label-placement-preview";
+} from "./tile-preferences-store";
+import { LabelPlacementPreview } from "./label-placement-preview";
 
 interface LabelPlacementOptionProps {
   label: string;
@@ -55,12 +55,12 @@ function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
   );
 }
 
-export function BoardSettings() {
+export function TileSettings() {
   const t = useTranslate();
   const { language } = useLanguage();
   const percentFormat = new Intl.NumberFormat(language, { style: "percent" });
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardPreferences();
+    useTilePreferences();
 
   return (
     <Stack spacing={3}>

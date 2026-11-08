@@ -8,7 +8,7 @@ import { safeAreaInset } from "@shared/theme/safe-area";
 import { useRef, type CSSProperties } from "react";
 import { AACSymbol } from "./aac-symbol/aac-symbol";
 import { createButtonActivator } from "./activation/button-activator";
-import { useBoardPreferences } from "./board-preferences-store";
+import { useTilePreferences } from "./tile/tile-preferences-store";
 import type { Board, BoardButton } from "./board-types";
 import { Grid, type GridItemProps } from "./grid/grid";
 import { useBoardShortcuts } from "./shortcuts/use-board-shortcuts";
@@ -35,7 +35,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
   const { tileSaturation, areTileBordersVisible, tileLabelPlacement } =
-    useBoardPreferences();
+    useTilePreferences();
   const symbolLabelPlacement = tileLabelPlacement === "top" ? "top" : "bottom";
   const isTileLabelHidden = tileLabelPlacement === "hidden";
 

@@ -5,7 +5,7 @@ import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
-import { setTileLabelPlacement } from "./board-preferences-store";
+import { setTileLabelPlacement } from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
 import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
 import {
