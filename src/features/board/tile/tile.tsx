@@ -131,8 +131,8 @@ export function Tile({ button, tabIndex, onActivate }: TileProps) {
       aria-label={ariaLabel}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
-      onClick={() => onActivate(button)}
       style={colorStyle}
+      onClick={() => onActivate(button)}
       sx={[tileSx, isFolder && folderTileSx]}
     >
       <AACSymbol
