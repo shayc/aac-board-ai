@@ -13,28 +13,52 @@ interface TileProps {
   onActivate: (button: BoardButton) => void;
 }
 
-type TileColorStyle = CSSProperties & {
-  "--tile-background-color"?: string;
-  "--tile-border-color"?: string;
-};
-
-function channelOntoWhite(channel: "r" | "g" | "b"): string {
-  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
-}
-
-function flattenOntoWhite(color: string): string {
-  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
-}
-
-function desaturate(color: string, saturation: number): string {
-  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
-}
-
 interface TileColorOptions {
   backgroundColor: string | undefined;
   borderColor: string | undefined;
   isBorderVisible: boolean;
   saturation: number;
+}
+
+type TileColorStyle = CSSProperties & {
+  "--tile-background-color"?: string;
+  "--tile-border-color"?: string;
+};
+
+export function Tile({ button, tabIndex, onActivate }: TileProps) {
+  const t = useTranslate();
+  const { saturation, areBordersVisible, labelPlacement } =
+    useTilePreferences();
+
+  const ariaLabel = button.label ? undefined : button.vocalization;
+  const isFolder = Boolean(button.linkedBoardId);
+  const colorStyle = tileColorStyle({
+    backgroundColor: button.backgroundColor,
+    borderColor: button.borderColor,
+    isBorderVisible: areBordersVisible,
+    saturation,
+  });
+
+  const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
+  const isLabelHidden = labelPlacement === "hidden";
+
+  return (
+    <Button
+      aria-label={ariaLabel}
+      aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
+      tabIndex={tabIndex}
+      style={colorStyle}
+      onClick={() => onActivate(button)}
+      sx={[tileSx, isFolder && folderTileSx]}
+    >
+      <AACSymbol
+        label={button.label}
+        imageSrc={button.imageSrc}
+        labelPlacement={symbolLabelPlacement}
+        isLabelHidden={isLabelHidden}
+      />
+    </Button>
+  );
 }
 
 function tileColorStyle({
@@ -54,8 +78,16 @@ function tileColorStyle({
   };
 }
 
-function mixWithTextColor(color: string, amount: string): string {
-  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
+function flattenOntoWhite(color: string): string {
+  return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
+}
+
+function channelOntoWhite(channel: "r" | "g" | "b"): string {
+  return `calc(${channel} * alpha + 255 * (1 - alpha))`;
+}
+
+function desaturate(color: string, saturation: number): string {
+  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
 }
 
 function tileSx(theme: Theme) {
@@ -95,6 +127,10 @@ function tileSx(theme: Theme) {
   } as const;
 }
 
+function mixWithTextColor(color: string, amount: string): string {
+  return `color-mix(in oklab, ${color}, currentColor ${amount})`;
+}
+
 const folderTileSx = {
   "&::after": {
     content: '""',
@@ -108,39 +144,3 @@ const folderTileSx = {
     borderBottom: "32px solid transparent",
   },
 } as const;
-
-export function Tile({ button, tabIndex, onActivate }: TileProps) {
-  const t = useTranslate();
-  const { saturation, areBordersVisible, labelPlacement } =
-    useTilePreferences();
-
-  const ariaLabel = button.label ? undefined : button.vocalization;
-  const isFolder = Boolean(button.linkedBoardId);
-  const colorStyle = tileColorStyle({
-    backgroundColor: button.backgroundColor,
-    borderColor: button.borderColor,
-    isBorderVisible: areBordersVisible,
-    saturation,
-  });
-
-  const symbolLabelPlacement = labelPlacement === "top" ? "top" : "bottom";
-  const isLabelHidden = labelPlacement === "hidden";
-
-  return (
-    <Button
-      aria-label={ariaLabel}
-      aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
-      tabIndex={tabIndex}
-      style={colorStyle}
-      onClick={() => onActivate(button)}
-      sx={[tileSx, isFolder && folderTileSx]}
-    >
-      <AACSymbol
-        label={button.label}
-        imageSrc={button.imageSrc}
-        labelPlacement={symbolLabelPlacement}
-        isLabelHidden={isLabelHidden}
-      />
-    </Button>
-  );
-}

@@ -51,22 +51,6 @@ export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
   };
 }
 
-function groupVoicesByLanguage(
-  voices: SpeechSynthesisVoice[],
-): VoicesByLanguage {
-  return Object.groupBy(voices, (voice) => getLanguageCode(voice.lang));
-}
-
-const synthesis = getSpeechSynthesis();
-
-const voicesByLanguageStore = createExternalStore<VoicesByLanguage>(
-  groupVoicesByLanguage(synthesis?.getVoices() ?? []),
-);
-
-synthesis?.addEventListener("voiceschanged", () => {
-  voicesByLanguageStore.setState(groupVoicesByLanguage(synthesis.getVoices()));
-});
-
 const speechPreferencesStore = createPersistedStore<SpeechPreferences>(
   "speech-preferences",
   parseSpeechPreferences,
@@ -81,6 +65,10 @@ function updatePreferences(patch: Partial<SpeechPreferences>): void {
 
 export function getSpeechPreferences(): SpeechPreferences {
   return speechPreferencesStore.getSnapshot();
+}
+
+export function useSpeechPreferences(): SpeechPreferences {
+  return useExternalStore(speechPreferencesStore);
 }
 
 export function setSpeechVoiceURI(voiceURI: string | null): void {
@@ -99,21 +87,29 @@ export function setSpeechVolume(volume: number): void {
   updatePreferences({ volume });
 }
 
-export function getVoicesByLanguage(): VoicesByLanguage {
-  return voicesByLanguageStore.getSnapshot();
+function groupVoicesByLanguage(
+  voices: SpeechSynthesisVoice[],
+): VoicesByLanguage {
+  return Object.groupBy(voices, (voice) => getLanguageCode(voice.lang));
 }
+
+const synthesis = getSpeechSynthesis();
+
+const voicesByLanguageStore = createExternalStore<VoicesByLanguage>(
+  groupVoicesByLanguage(synthesis?.getVoices() ?? []),
+);
+
+synthesis?.addEventListener("voiceschanged", () => {
+  voicesByLanguageStore.setState(groupVoicesByLanguage(synthesis.getVoices()));
+});
 
 export function useVoicesByLanguage(): VoicesByLanguage {
   return useExternalStore(voicesByLanguageStore);
 }
 
-export function useSpeechPreferences(): SpeechPreferences {
-  return useExternalStore(speechPreferencesStore);
-}
-
 export function getSpeechVoice(): SpeechSynthesisVoice | null {
   return resolveVoice(
-    getVoicesByLanguage(),
+    voicesByLanguageStore.getSnapshot(),
     getStoredLanguage(),
     getSpeechPreferences().voiceURI,
   );

@@ -6,7 +6,13 @@ import {
 import { assertDefined } from "@shared/testing/assert-defined";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
-import type { Locator } from "vitest/browser";
+import {
+  getCellPosition,
+  getGridItem,
+  makeGridItems,
+  renderGrid,
+  renderGridButton,
+} from "../testing/render-grid";
 import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
@@ -34,16 +40,16 @@ const AXES = {
 
 type Axis = keyof typeof AXES;
 
+function itemIds(count: number): number[] {
+  return Array.from({ length: count }, (_, index) => index + 1);
+}
+
 async function measureTracks(
   axis: Axis,
   containerSize: number,
   tracks: number,
 ) {
   const isColumns = axis === "columns";
-  const items = Array.from({ length: tracks }, (_, index) => ({
-    id: String(index + 1),
-    label: `Item ${index + 1}`,
-  }));
 
   const screen = await render(
     <MUIThemeProvider theme={cssVariableTheme}>
@@ -56,10 +62,10 @@ async function measureTracks(
         }
       >
         <Grid
-          items={items}
+          items={makeGridItems(...itemIds(tracks))}
           rows={isColumns ? 1 : tracks}
           columns={isColumns ? tracks : 1}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
+          renderItem={renderGridButton}
         />
       </div>
     </MUIThemeProvider>,
@@ -88,46 +94,19 @@ async function measureTracks(
   };
 }
 
-function getCellPosition(item: Locator): { row: number; column: number } {
-  const cell = item.element().closest("[role='gridcell']");
-
-  if (!cell) {
-    throw new Error("Item is not inside a grid cell");
-  }
-
-  const row = parseInt(cell.getAttribute("aria-rowindex") ?? "", 10) - 1;
-  const column = parseInt(cell.getAttribute("aria-colindex") ?? "", 10) - 1;
-
-  if (isNaN(row) || isNaN(column)) {
-    throw new Error("Grid cell missing valid aria-rowindex or aria-colindex");
-  }
-
-  return { row, column };
-}
-
 describe("Grid", () => {
   describe("default grid construction (order not provided)", () => {
     test("renders items in row-major order when order is not provided", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-        { id: "3", label: "Item 3" },
-        { id: "4", label: "Item 4" },
-      ];
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(1, 2, 3, 4),
+      });
 
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
-      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-      const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+      const item1 = getGridItem(screen, 1);
+      const item2 = getGridItem(screen, 2);
+      const item3 = getGridItem(screen, 3);
+      const item4 = getGridItem(screen, 4);
 
       expect(getCellPosition(item1)).toEqual({ row: 0, column: 0 });
       expect(getCellPosition(item2)).toEqual({ row: 0, column: 1 });
@@ -136,65 +115,34 @@ describe("Grid", () => {
     });
 
     test("renders only provided items when fewer than grid capacity", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-      ];
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(1, 2),
+      });
 
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 1" }))
-        .toBeVisible();
-      await expect
-        .element(screen.getByRole("button", { name: "Item 2" }))
-        .toBeVisible();
+      await expect.element(getGridItem(screen, 1)).toBeVisible();
+      await expect.element(getGridItem(screen, 2)).toBeVisible();
 
       const allButtons = screen.getByRole("button").all();
       expect(allButtons).toHaveLength(2);
     });
 
     test("limits rendered items to grid capacity", async () => {
-      const items = Array.from({ length: 10 }, (_, i) => ({
-        id: String(i + 1),
-        label: `Item ${i + 1}`,
-      }));
-
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(...itemIds(10)),
+      });
 
       const buttons = screen.getByRole("button").all();
       expect(buttons).toHaveLength(4);
 
-      expect(
-        screen.getByRole("button", { name: "Item 5", exact: true }).query(),
-      ).toBeNull();
+      expect(getGridItem(screen, 5).query()).toBeNull();
     });
 
     test("renders no items when items is empty", async () => {
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={[]}
-          renderItem={(item: { id: string; label: string }, props) => (
-            <button {...props}>{item.label}</button>
-          )}
-        />,
-      );
+      const screen = await renderGrid({ rows: 2, columns: 2, items: [] });
 
       const buttons = screen.getByRole("button").query();
       expect(buttons).toBeNull();
@@ -203,32 +151,20 @@ describe("Grid", () => {
 
   describe("ordered grid construction (order provided)", () => {
     test("renders items according to order matrix", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-        { id: "3", label: "Item 3" },
-        { id: "4", label: "Item 4" },
-      ];
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(1, 2, 3, 4),
+        order: [
+          ["4", "3"],
+          ["2", "1"],
+        ],
+      });
 
-      const order = [
-        ["4", "3"],
-        ["2", "1"],
-      ];
-
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          order={order}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
-      const item3 = screen.getByRole("button", { name: "Item 3", exact: true });
-      const item4 = screen.getByRole("button", { name: "Item 4", exact: true });
+      const item1 = getGridItem(screen, 1);
+      const item2 = getGridItem(screen, 2);
+      const item3 = getGridItem(screen, 3);
+      const item4 = getGridItem(screen, 4);
 
       expect(getCellPosition(item4)).toEqual({ row: 0, column: 0 });
       expect(getCellPosition(item3)).toEqual({ row: 0, column: 1 });
@@ -237,28 +173,18 @@ describe("Grid", () => {
     });
 
     test("treats nulls in order matrix as empty cells", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-      ];
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(1, 2),
+        order: [
+          ["1", null],
+          [null, "2"],
+        ],
+      });
 
-      const order = [
-        ["1", null],
-        [null, "2"],
-      ];
-
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          order={order}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
-
-      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
-      const item2 = screen.getByRole("button", { name: "Item 2", exact: true });
+      const item1 = getGridItem(screen, 1);
+      const item2 = getGridItem(screen, 2);
 
       expect(getCellPosition(item1)).toEqual({ row: 0, column: 0 });
       expect(getCellPosition(item2)).toEqual({ row: 1, column: 1 });
@@ -268,25 +194,15 @@ describe("Grid", () => {
     });
 
     test("ignores unknown ids in order matrix", async () => {
-      const items = [
-        { id: "1", label: "Item 1" },
-        { id: "2", label: "Item 2" },
-      ];
-
-      const order = [
-        ["1", "999"],
-        ["2", null],
-      ];
-
-      const screen = await render(
-        <Grid
-          rows={2}
-          columns={2}
-          items={items}
-          order={order}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
+      const screen = await renderGrid({
+        rows: 2,
+        columns: 2,
+        items: makeGridItems(1, 2),
+        order: [
+          ["1", "999"],
+          ["2", null],
+        ],
+      });
 
       const buttons = screen.getByRole("button").all();
       expect(buttons).toHaveLength(2);
@@ -295,17 +211,12 @@ describe("Grid", () => {
 
   describe("accessibility", () => {
     test("exposes ariaLabel as the grid's accessible name", async () => {
-      const items = [{ id: "1", label: "Item 1" }];
-
-      const screen = await render(
-        <Grid
-          ariaLabel="Core words"
-          items={items}
-          rows={1}
-          columns={1}
-          renderItem={(item, props) => <button {...props}>{item.label}</button>}
-        />,
-      );
+      const screen = await renderGrid({
+        ariaLabel: "Core words",
+        rows: 1,
+        columns: 1,
+        items: makeGridItems(1),
+      });
 
       await expect
         .element(screen.getByRole("grid", { name: "Core words" }))

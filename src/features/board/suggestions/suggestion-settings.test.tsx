@@ -9,7 +9,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { SuggestionSettings } from "./suggestion-settings";
 
-function renderSuggestionsSettings() {
+function renderSuggestionSettings() {
   return render(
     <AppProviders>
       <SuggestionSettings />
@@ -21,7 +21,7 @@ describe("SuggestionSettings", () => {
   test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
     stubProofreader();
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderSuggestionSettings();
 
     await expect
       .element(
@@ -54,7 +54,7 @@ describe("SuggestionSettings", () => {
     stubRewriter();
     stubTranslator();
 
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderSuggestionSettings();
 
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
@@ -65,7 +65,7 @@ describe("SuggestionSettings", () => {
 
   test("edits and persists custom instructions", async () => {
     stubRewriter();
-    const screen = await renderSuggestionsSettings();
+    const screen = await renderSuggestionSettings();
     const instructions = screen.getByRole("textbox", {
       name: "Custom instructions",
     });

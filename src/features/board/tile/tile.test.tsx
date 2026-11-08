@@ -15,7 +15,7 @@ import {
   setTileSaturation,
 } from "./tile-preferences-store";
 
-type Rgb = readonly [red: number, green: number, blue: number];
+type RGB = readonly [red: number, green: number, blue: number];
 
 const WCAG_TEXT_CONTRAST = 4.5;
 const WCAG_NON_TEXT_CONTRAST = 3;
@@ -42,7 +42,7 @@ function tileElement(overrides: Partial<BoardButton>) {
   );
 }
 
-function paint(...cssColors: string[]): Rgb {
+function paint(...cssColors: string[]): RGB {
   const context = new OffscreenCanvas(1, 1).getContext("2d");
   assertDefined(context);
 
@@ -57,7 +57,7 @@ function paint(...cssColors: string[]): Rgb {
   return [red, green, blue];
 }
 
-function relativeLuminance(rgb: Rgb): number {
+function relativeLuminance(rgb: RGB): number {
   const [red, green, blue] = rgb.map((channel) => {
     const value = channel / 255;
 
@@ -67,7 +67,7 @@ function relativeLuminance(rgb: Rgb): number {
   return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
 }
 
-function contrastRatio(first: Rgb, second: Rgb): number {
+function contrastRatio(first: RGB, second: RGB): number {
   const [lighter, darker] = [
     relativeLuminance(first),
     relativeLuminance(second),
@@ -78,7 +78,7 @@ function contrastRatio(first: Rgb, second: Rgb): number {
   return lighter / darker;
 }
 
-function channelDistance(first: Rgb, second: Rgb): number {
+function channelDistance(first: RGB, second: RGB): number {
   return Math.max(
     ...first.map((channel, index) => Math.abs(channel - second[index])),
   );

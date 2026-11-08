@@ -2,13 +2,13 @@ import { describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import { useDebouncedValue } from "./use-debounced-value";
 
-const DELAY = 50;
+const DELAY_MS = 50;
 
 describe("useDebouncedValue", () => {
   test("holds the previous value until the delay elapses, then updates", async () => {
     const { result, rerender } = await renderHook(
       ({ value }: { value: string } = { value: "a" }) =>
-        useDebouncedValue(value, DELAY),
+        useDebouncedValue(value, DELAY_MS),
       { initialProps: { value: "a" } },
     );
 
@@ -21,7 +21,7 @@ describe("useDebouncedValue", () => {
   test("collapses a burst of changes into the final value", async () => {
     const { result, rerender } = await renderHook(
       ({ value }: { value: string } = { value: "a" }) =>
-        useDebouncedValue(value, DELAY),
+        useDebouncedValue(value, DELAY_MS),
       { initialProps: { value: "a" } },
     );
 

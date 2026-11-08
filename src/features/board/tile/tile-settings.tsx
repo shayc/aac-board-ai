@@ -8,6 +8,7 @@ import { useTranslate } from "@shared/language/use-translate";
 import { SettingsRadioGroup } from "@shared/ui/settings-radio-group";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 import { SettingsSwitch } from "@shared/ui/settings-switch";
+import { LabelPlacementPreview } from "./label-placement-preview";
 import {
   setTileBordersVisible,
   setTileLabelPlacement,
@@ -16,44 +17,6 @@ import {
   useTilePreferences,
   type TileLabelPlacement,
 } from "./tile-preferences-store";
-import { LabelPlacementPreview } from "./label-placement-preview";
-
-interface LabelPlacementOptionProps {
-  label: string;
-  placement: TileLabelPlacement;
-}
-
-function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
-  return (
-    <FormControlLabel
-      value={placement}
-      control={
-        <Radio
-          checkedIcon={
-            <LabelPlacementPreview placement={placement} isSelected />
-          }
-          icon={<LabelPlacementPreview placement={placement} />}
-          sx={(theme) => ({
-            p: 0.5,
-            borderRadius: theme.vars.shape.borderRadius,
-            [`&.${buttonBaseClasses.focusVisible}`]: {
-              ...theme.focusVisible,
-              // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
-              "& svg:first-of-type": {
-                borderRadius: 0,
-                outline: "none",
-                boxShadow: "none",
-              },
-            },
-          })}
-        />
-      }
-      label={label}
-      labelPlacement="bottom"
-      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
-    />
-  );
-}
 
 export function TileSettings() {
   const t = useTranslate();
@@ -91,5 +54,42 @@ export function TileSettings() {
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>
+  );
+}
+
+interface LabelPlacementOptionProps {
+  label: string;
+  placement: TileLabelPlacement;
+}
+
+function LabelPlacementOption({ label, placement }: LabelPlacementOptionProps) {
+  return (
+    <FormControlLabel
+      value={placement}
+      control={
+        <Radio
+          checkedIcon={
+            <LabelPlacementPreview placement={placement} isSelected />
+          }
+          icon={<LabelPlacementPreview placement={placement} />}
+          sx={(theme) => ({
+            p: 0.5,
+            borderRadius: theme.vars.shape.borderRadius,
+            [`&.${buttonBaseClasses.focusVisible}`]: {
+              ...theme.focusVisible,
+              // MUI's radio ring targets nested SVGs; the preview uses this outer ring.
+              "& svg:first-of-type": {
+                borderRadius: 0,
+                outline: "none",
+                boxShadow: "none",
+              },
+            },
+          })}
+        />
+      }
+      label={label}
+      labelPlacement="bottom"
+      sx={{ flex: 1, gap: 0.25, m: 0, textAlign: "center" }}
+    />
   );
 }

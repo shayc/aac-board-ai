@@ -1,4 +1,4 @@
-import { listBoardSets, importBoardFileFromURL } from "@features/board";
+import { importBoardFileFromURL, listBoardSets } from "@features/board";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -16,7 +16,7 @@ import { appRoutes } from "./app-routes";
 const OBZ_FIXTURE_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 
-async function renderApp(initialEntry = "/") {
+async function renderAppPastOnboarding(initialEntry = "/") {
   const router = createMemoryRouter(appRoutes, {
     initialEntries: [initialEntry],
   });
@@ -26,6 +26,7 @@ async function renderApp(initialEntry = "/") {
       <RouterProvider router={router} />
     </AppProviders>,
   );
+  await screen.getByRole("button", { name: "Continue" }).click();
 
   return { router, screen };
 }
@@ -57,6 +58,17 @@ function seedRecordedAudioSet() {
   ]);
 }
 
+// A set whose boardSetId collides with what the OBZ fixture URL derives.
+function seedExistingLotsOfStuffSet() {
+  return seedBoardSets([
+    {
+      id: "lots-of-stuff",
+      rootBoardId: "root-1",
+      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
+    },
+  ]);
+}
+
 describe("app flow", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
@@ -70,9 +82,8 @@ describe("app flow", () => {
   test("first run: imported board set opens, composes across boards, and speaks", async () => {
     await importBoardFileFromURL(OBZ_FIXTURE_URL);
 
-    const { screen } = await renderApp();
+    const { screen } = await renderAppPastOnboarding();
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
@@ -99,9 +110,8 @@ describe("app flow", () => {
   test("recorded audio stays playable after leaving its board", async () => {
     await seedRecordedAudioSet();
 
-    const { screen } = await renderApp();
+    const { screen } = await renderAppPastOnboarding();
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await screen.getByRole("button", { name: "hello" }).click();
     await screen.getByRole("button", { name: "more" }).click();
 
@@ -123,18 +133,16 @@ describe("app flow", () => {
   });
 
   test("empty database: imports and opens the bundled starter board", async () => {
-    const { screen } = await renderApp();
+    const { screen } = await renderAppPastOnboarding();
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "First Words" }))
       .toBeVisible();
   });
 
   test("starter board: a sentence continues into the food folder", async () => {
-    const { screen } = await renderApp();
+    const { screen } = await renderAppPastOnboarding();
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await screen.getByRole("button", { name: "I", exact: true }).click();
     await screen.getByRole("button", { name: "want" }).click();
     await screen.getByRole("button", { name: "food" }).click();
@@ -157,11 +165,9 @@ describe("app flow", () => {
   test("?board= link that collides with an existing set keeps both", async () => {
     await seedExistingLotsOfStuffSet();
 
-    const { screen } = await renderApp(
+    const { screen } = await renderAppPastOnboarding(
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
-
-    await screen.getByRole("button", { name: "Continue" }).click();
 
     await expect
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
@@ -188,9 +194,10 @@ describe("app flow", () => {
       },
     ]);
 
-    const { router, screen } = await renderApp("/sets/animals/boards/home");
+    const { router, screen } = await renderAppPastOnboarding(
+      "/sets/animals/boards/home",
+    );
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "Animals Home" }))
       .toBeVisible();
@@ -215,9 +222,8 @@ describe("app flow", () => {
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {
-    const { router, screen } = await renderApp();
+    const { router, screen } = await renderAppPastOnboarding();
 
-    await screen.getByRole("button", { name: "Continue" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "First Words" }))
       .toBeVisible();
@@ -232,14 +238,3 @@ describe("app flow", () => {
       .toHaveAttribute("href", "/");
   });
 });
-
-// A set whose boardSetId collides with what the OBZ fixture URL derives.
-function seedExistingLotsOfStuffSet() {
-  return seedBoardSets([
-    {
-      id: "lots-of-stuff",
-      rootBoardId: "root-1",
-      boards: [makeOBFBoard({ id: "root-1", name: "Old Board" })],
-    },
-  ]);
-}

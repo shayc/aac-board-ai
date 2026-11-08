@@ -3,7 +3,7 @@ import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { AppDrawer } from "./app-drawer";
 
-function renderDrawer(open: boolean) {
+function drawerElement(open: boolean) {
   return (
     <AppProviders>
       <AppDrawer
@@ -31,7 +31,7 @@ function headerBorderColor(): string {
 
 describe("AppDrawer", () => {
   test("clears the scrolled divider when the drawer reopens", async () => {
-    const screen = await render(renderDrawer(true));
+    const screen = await render(drawerElement(true));
     const content = screen.getByText("Tall content").element().parentElement;
 
     if (!content) {
@@ -46,12 +46,12 @@ describe("AppDrawer", () => {
       expect(headerBorderColor()).not.toBe(unscrolledColor);
     });
 
-    await screen.rerender(renderDrawer(false));
+    await screen.rerender(drawerElement(false));
     await expect
       .element(screen.getByText("Tall content"))
       .not.toBeInTheDocument();
 
-    await screen.rerender(renderDrawer(true));
+    await screen.rerender(drawerElement(true));
     await expect.element(screen.getByText("Tall content")).toBeInTheDocument();
 
     expect(headerBorderColor()).toBe(unscrolledColor);

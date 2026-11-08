@@ -3,12 +3,11 @@ import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
 import { insertBoardSet } from "../storage/board-set-storage";
-import { resetBoardsDB } from "../testing";
+import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { loadBoardInLanguage } from "./load-board-in-language";
 
-function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
-  return {
-    format: "open-board-0.1",
+function makeFoodBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
+  return makeOBFBoard({
     id: "board-1",
     name: "Food",
     locale: "en-US",
@@ -18,14 +17,14 @@ function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
     ],
     grid: { rows: 1, columns: 2, order: [["btn-eat", "btn-drink"]] },
     ...overrides,
-  };
+  });
 }
 
 async function storeBoard(overrides: Partial<OBFBoard> = {}): Promise<void> {
   await insertBoardSet({
     id: "set-1",
     rootBoardId: "board-1",
-    boards: [makeOBFBoard(overrides)],
+    boards: [makeFoodBoard(overrides)],
     assets: [],
   });
 }

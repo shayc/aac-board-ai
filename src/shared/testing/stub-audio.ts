@@ -20,3 +20,13 @@ export function stubAudio(): {
 
   return { play, pause };
 }
+
+export function preventAudioEnd(
+  play: MockInstance<HTMLAudioElement["play"]>,
+): void {
+  play.mockImplementation(function (this: HTMLAudioElement) {
+    queueMicrotask(() => this.dispatchEvent(new Event("play")));
+
+    return Promise.resolve();
+  });
+}

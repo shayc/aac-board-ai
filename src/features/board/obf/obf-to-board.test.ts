@@ -1,7 +1,18 @@
-import type { OBFBoard } from "@shayc/open-board-format";
+import type { OBFBoard, OBFButton } from "@shayc/open-board-format";
 import { describe, expect, test } from "vitest";
 import { makeOBFBoard } from "../testing";
 import { obfToBoard } from "./obf-to-board";
+
+function makeSingleButtonBoard(
+  button: OBFButton,
+  overrides: Partial<OBFBoard> = {},
+): OBFBoard {
+  return makeOBFBoard({
+    buttons: [button],
+    grid: { rows: 1, columns: 1, order: [[button.id]] },
+    ...overrides,
+  });
+}
 
 describe("obfToBoard", () => {
   test("maps a minimal board and defaults omitted optional fields", () => {
@@ -23,8 +34,8 @@ describe("obfToBoard", () => {
     expect(board.locale).toBeUndefined();
     expect(board.translationsByLocale).toEqual({});
     expect(board.buttons).toHaveLength(1);
-    expect(board.buttons[0]?.id).toBe("btn-1");
-    expect(board.buttons[0]?.actions).toEqual([]);
+    expect(board.buttons[0].id).toBe("btn-1");
+    expect(board.buttons[0].actions).toEqual([]);
     expect(board.grid.rows).toBe(1);
     expect(board.grid.columns).toBe(1);
     expect(board.grid.order).toEqual([["btn-1"]]);
@@ -34,7 +45,7 @@ describe("obfToBoard", () => {
     test.each([
       { description: "missing", name: undefined },
       { description: "empty", name: "" },
-      { description: "whitespace-only", name: " \t\n\u00a0 " },
+      { description: "whitespace-only", name: " \t\n  " },
     ])("normalizes $description board names to empty strings", ({ name }) => {
       const board = obfToBoard(makeOBFBoard({ name }));
 
@@ -115,13 +126,14 @@ describe("obfToBoard", () => {
     test.each([
       { description: "missing", text: undefined },
       { description: "empty", text: "" },
-      { description: "whitespace-only", text: " \t\n\u00a0 " },
+      { description: "whitespace-only", text: " \t\n  " },
     ])(
       "normalizes $description button labels to empty strings and vocalizations to undefined",
       ({ text }) => {
-        const obfBoard = makeOBFBoard({
-          buttons: [{ id: "btn-1", label: text, vocalization: text }],
-          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        const obfBoard = makeSingleButtonBoard({
+          id: "btn-1",
+          label: text,
+          vocalization: text,
         });
 
         const board = obfToBoard(obfBoard);
@@ -132,11 +144,10 @@ describe("obfToBoard", () => {
     );
 
     test("preserves nonblank button text verbatim", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: " Hi ", vocalization: "\tHello there\n" },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: " Hi ",
+        vocalization: "\tHello there\n",
       });
 
       const board = obfToBoard(obfBoard);
@@ -146,21 +157,12 @@ describe("obfToBoard", () => {
     });
 
     test("maps button visual fields + vocalization", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Hi",
-            vocalization: "Hello there",
-            background_color: "rgb(1, 2, 3)",
-            border_color: "rgba(4, 5, 6, 0.5)",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Hi",
+        vocalization: "Hello there",
+        background_color: "rgb(1, 2, 3)",
+        border_color: "rgba(4, 5, 6, 0.5)",
       });
 
       const board = obfToBoard(obfBoard);
@@ -175,133 +177,101 @@ describe("obfToBoard", () => {
     });
 
     test("drops a CSS-unsafe button color", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "hi",
-            background_color:
-              "x); } a { background-image: url(https://evil.example) }",
-            border_color: "rgb(0, 0, 0)",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "hi",
+        background_color:
+          "x); } a { background-image: url(https://evil.example) }",
+        border_color: "rgb(0, 0, 0)",
       });
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.backgroundColor).toBeUndefined();
-      expect(board.buttons[0]?.borderColor).toBe("rgb(0, 0, 0)");
+      expect(board.buttons[0].backgroundColor).toBeUndefined();
+      expect(board.buttons[0].borderColor).toBe("rgb(0, 0, 0)");
     });
 
     test("maps a load_board id to the runtime navigation target", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Go",
-            load_board: {
-              id: "child-1",
-              name: "Child",
-              url: "https://example.com/child.obf",
-              data_url: "https://example.com/child.obf?download=1",
-              path: "boards/child.obf",
-            },
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Go",
+        load_board: {
+          id: "child-1",
+          name: "Child",
+          url: "https://example.com/child.obf",
+          data_url: "https://example.com/child.obf?download=1",
+          path: "boards/child.obf",
         },
       });
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.linkedBoardId).toBe("child-1");
+      expect(board.buttons[0].linkedBoardId).toBe("child-1");
     });
 
     test("ignores a load_board without a resolved id", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Go",
-            load_board: { path: "boards/child.obf" },
-          },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Go",
+        load_board: { path: "boards/child.obf" },
       });
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.linkedBoardId).toBeUndefined();
+      expect(board.buttons[0].linkedBoardId).toBeUndefined();
     });
 
     test("uses actions and ignores the action fallback when both are present", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Speak",
-            action: ":speak",
-            actions: [":space", ":clear"],
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
-        },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
+        actions: [":space", ":clear"],
       });
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([
+
+      expect(board.buttons[0].actions).toEqual([
         { kind: "space" },
         { kind: "clear" },
       ]);
     });
 
     test("treats an explicit empty actions array as no actions, ignoring action", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: "Speak", action: ":speak", actions: [] },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
+        actions: [],
       });
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([]);
+
+      expect(board.buttons[0].actions).toEqual([]);
     });
 
     test("falls back to the single action when actions is absent", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", label: "Speak", action: ":speak" }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Speak",
+        action: ":speak",
       });
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([{ kind: "play" }]);
+
+      expect(board.buttons[0].actions).toEqual([{ kind: "play" }]);
     });
 
     test("parses spell actions and drops unknown ones", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Spell",
-            actions: ["+ing", ":unknown", ":home"],
-          },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+      const obfBoard = makeSingleButtonBoard({
+        id: "btn-1",
+        label: "Spell",
+        actions: ["+ing", ":unknown", ":home"],
       });
 
       const board = obfToBoard(obfBoard);
-      expect(board.buttons[0]?.actions).toEqual([
+
+      expect(board.buttons[0].actions).toEqual([
         { kind: "spell", text: "ing" },
         { kind: "home" },
       ]);
@@ -310,59 +280,48 @@ describe("obfToBoard", () => {
 
   describe("media resolution", () => {
     test("chooses imageSrc/soundSrc by data > url precedence without stored assets", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Hello",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = makeSingleButtonBoard(
+        { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
+        {
+          images: [
+            {
+              id: "img-1",
+              data: "data:image/png;base64,AAA",
+              path: "images/img-1.png",
+              url: "https://example.com/img-1.png",
+            },
+          ],
+          sounds: [
+            {
+              id: "snd-1",
+              path: "sounds/snd-1.mp3",
+              url: "https://example.com/snd-1.mp3",
+            },
+          ],
         },
-        images: [
-          {
-            id: "img-1",
-            data: "data:image/png;base64,AAA",
-            path: "images/img-1.png",
-            url: "https://example.com/img-1.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            path: "sounds/snd-1.mp3",
-            url: "https://example.com/snd-1.mp3",
-          },
-        ],
-      });
+      );
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBe("data:image/png;base64,AAA");
-      expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd-1.mp3");
+      expect(board.buttons[0].imageSrc).toBe("data:image/png;base64,AAA");
+      expect(board.buttons[0].soundSrc).toBe("https://example.com/snd-1.mp3");
     });
 
     test("prefers a stored asset URL for a media path over data and url", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
-        ],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-        images: [
-          {
-            id: "img-1",
-            data: "data:image/png;base64,AAA",
-            path: "images/img-1.png",
-            url: "https://example.com/img-1.png",
-          },
-        ],
-        sounds: [{ id: "snd-1", path: "sounds/snd-1.mp3" }],
-      });
+      const obfBoard = makeSingleButtonBoard(
+        { id: "btn-1", label: "Hello", image_id: "img-1", sound_id: "snd-1" },
+        {
+          images: [
+            {
+              id: "img-1",
+              data: "data:image/png;base64,AAA",
+              path: "images/img-1.png",
+              url: "https://example.com/img-1.png",
+            },
+          ],
+          sounds: [{ id: "snd-1", path: "sounds/snd-1.mp3" }],
+        },
+      );
       const assetURLByPath = new Map([
         ["images/img-1.png", "blob:image"],
         ["sounds/snd-1.mp3", "blob:sound"],
@@ -370,80 +329,54 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard, assetURLByPath);
 
-      expect(board.buttons[0]?.imageSrc).toBe("blob:image");
-      expect(board.buttons[0]?.soundSrc).toBe("blob:sound");
+      expect(board.buttons[0].imageSrc).toBe("blob:image");
+      expect(board.buttons[0].soundSrc).toBe("blob:sound");
     });
 
     test("never uses an unresolved archive path as a media source", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [{ id: "btn-1", label: "Hello", image_id: "img-1" }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-        images: [{ id: "img-1", path: "images/img-1.png" }],
-      });
+      const obfBoard = makeSingleButtonBoard(
+        { id: "btn-1", label: "Hello", image_id: "img-1" },
+        { images: [{ id: "img-1", path: "images/img-1.png" }] },
+      );
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
+      expect(board.buttons[0].imageSrc).toBeUndefined();
     });
 
     test("falls back to url when no data/path is available", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Media",
-            image_id: "img-1",
-            sound_id: "snd-1",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = makeSingleButtonBoard(
+        { id: "btn-1", label: "Media", image_id: "img-1", sound_id: "snd-1" },
+        {
+          images: [{ id: "img-1", url: "https://example.com/img.png" }],
+          sounds: [{ id: "snd-1", url: "https://example.com/snd.mp3" }],
         },
-        images: [
-          {
-            id: "img-1",
-            url: "https://example.com/img.png",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-1",
-            url: "https://example.com/snd.mp3",
-          },
-        ],
-      });
+      );
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBe("https://example.com/img.png");
-      expect(board.buttons[0]?.soundSrc).toBe("https://example.com/snd.mp3");
+      expect(board.buttons[0].imageSrc).toBe("https://example.com/img.png");
+      expect(board.buttons[0].soundSrc).toBe("https://example.com/snd.mp3");
     });
 
     test("returns undefined imageSrc/soundSrc for unknown ids", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Missing",
-            image_id: "img-does-not-exist",
-            sound_id: "snd-does-not-exist",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = makeSingleButtonBoard(
+        {
+          id: "btn-1",
+          label: "Missing",
+          image_id: "img-does-not-exist",
+          sound_id: "snd-does-not-exist",
         },
-        images: [{ id: "img-1", data: "data:image/png;base64,AAA" }],
-        sounds: [{ id: "snd-1", data: "data:audio/mp3;base64,BBB" }],
-      });
+        {
+          images: [{ id: "img-1", data: "data:image/png;base64,AAA" }],
+          sounds: [{ id: "snd-1", data: "data:audio/mp3;base64,BBB" }],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0].imageSrc).toBeUndefined();
+      expect(board.buttons[0].soundSrc).toBeUndefined();
     });
 
     test("leaves a button's referenced image and sound unset when the board has no media lists", () => {
@@ -467,41 +400,28 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0].imageSrc).toBeUndefined();
+      expect(board.buttons[0].soundSrc).toBeUndefined();
     });
 
     test("ignores media entries without any source (no data, path, or url)", () => {
-      const obfBoard = makeOBFBoard({
-        buttons: [
-          {
-            id: "btn-1",
-            label: "Button",
-            image_id: "img-empty",
-            sound_id: "snd-empty",
-          },
-        ],
-        grid: {
-          rows: 1,
-          columns: 1,
-          order: [["btn-1"]],
+      const obfBoard = makeSingleButtonBoard(
+        {
+          id: "btn-1",
+          label: "Button",
+          image_id: "img-empty",
+          sound_id: "snd-empty",
         },
-        images: [
-          {
-            id: "img-empty",
-          },
-        ],
-        sounds: [
-          {
-            id: "snd-empty",
-          },
-        ],
-      });
+        {
+          images: [{ id: "img-empty" }],
+          sounds: [{ id: "snd-empty" }],
+        },
+      );
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0]?.imageSrc).toBeUndefined();
-      expect(board.buttons[0]?.soundSrc).toBeUndefined();
+      expect(board.buttons[0].imageSrc).toBeUndefined();
+      expect(board.buttons[0].soundSrc).toBeUndefined();
     });
   });
 });

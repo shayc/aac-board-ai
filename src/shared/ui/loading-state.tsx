@@ -24,7 +24,9 @@ export function LoadingState({ message }: LoadingStateProps) {
         }}
       >
         <CircularProgress aria-label={resolvedMessage} />
-        <Typography color="text.secondary">{resolvedMessage}</Typography>
+        <Typography sx={{ color: "text.secondary" }}>
+          {resolvedMessage}
+        </Typography>
       </Stack>
     </Fade>
   );
