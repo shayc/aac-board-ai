@@ -5,14 +5,12 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import type { SymbolLabelPlacement } from "../aac-symbol/aac-symbol";
+import type { LabelPlacement } from "../aac-symbol/aac-symbol";
 
-export type TileLabelPlacement = SymbolLabelPlacement | "hidden";
-
-export interface TilePreferences {
-  tileSaturation: number;
-  areTileBordersVisible: boolean;
-  tileLabelPlacement: TileLabelPlacement;
+interface TilePreferences {
+  saturation: number;
+  areBordersVisible: boolean;
+  labelPlacement: LabelPlacement;
 }
 
 export const TILE_SATURATION: ClampedNumberOptions = {
@@ -21,7 +19,7 @@ export const TILE_SATURATION: ClampedNumberOptions = {
   defaultValue: 1,
 };
 
-function isTileLabelPlacement(value: unknown): value is TileLabelPlacement {
+function isLabelPlacement(value: unknown): value is LabelPlacement {
   return value === "top" || value === "bottom" || value === "hidden";
 }
 
@@ -29,10 +27,10 @@ export function parseTilePreferences(raw: unknown): TilePreferences {
   const stored = (raw ?? {}) as Record<string, unknown>;
 
   return {
-    tileSaturation: parseClampedNumber(stored.tileSaturation, TILE_SATURATION),
-    areTileBordersVisible: parseBoolean(stored.areTileBordersVisible, false),
-    tileLabelPlacement: isTileLabelPlacement(stored.tileLabelPlacement)
-      ? stored.tileLabelPlacement
+    saturation: parseClampedNumber(stored.saturation, TILE_SATURATION),
+    areBordersVisible: parseBoolean(stored.areBordersVisible, false),
+    labelPlacement: isLabelPlacement(stored.labelPlacement)
+      ? stored.labelPlacement
       : "top",
   };
 }
@@ -49,18 +47,16 @@ function updatePreferences(patch: Partial<TilePreferences>): void {
   }));
 }
 
-export function setTileSaturation(tileSaturation: number): void {
-  updatePreferences({ tileSaturation });
+export function setTileSaturation(saturation: number): void {
+  updatePreferences({ saturation });
 }
 
-export function setTileBordersVisible(areTileBordersVisible: boolean): void {
-  updatePreferences({ areTileBordersVisible });
+export function setTileBordersVisible(areBordersVisible: boolean): void {
+  updatePreferences({ areBordersVisible });
 }
 
-export function setTileLabelPlacement(
-  tileLabelPlacement: TileLabelPlacement,
-): void {
-  updatePreferences({ tileLabelPlacement });
+export function setTileLabelPlacement(labelPlacement: LabelPlacement): void {
+  updatePreferences({ labelPlacement });
 }
 
 export function useTilePreferences(): TilePreferences {

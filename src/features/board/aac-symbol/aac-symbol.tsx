@@ -2,13 +2,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import visuallyHidden from "@mui/utils/visuallyHidden";
 
-export type SymbolLabelPlacement = "top" | "bottom";
+export type LabelPlacement = "top" | "bottom" | "hidden";
 
 interface AACSymbolProps {
   imageSrc?: string;
   label: string;
-  labelPlacement?: SymbolLabelPlacement;
-  isLabelHidden?: boolean;
+  labelPlacement?: LabelPlacement;
   isImageHidden?: boolean;
 }
 
@@ -16,12 +15,11 @@ export function AACSymbol({
   imageSrc,
   label,
   labelPlacement = "bottom",
-  isLabelHidden = false,
   isImageHidden = false,
 }: AACSymbolProps) {
   const hasLabel = label.trim() !== "";
   const isImageShown = Boolean(imageSrc) && !(isImageHidden && hasLabel);
-  const isLabelShown = !(isLabelHidden && isImageShown);
+  const isLabelShown = !(labelPlacement === "hidden" && isImageShown);
 
   return (
     <Box

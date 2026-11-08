@@ -2,17 +2,15 @@ import Button, { buttonClasses } from "@mui/material/Button";
 import type { Theme } from "@mui/material/styles";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
+import { AACSymbol } from "../aac-symbol/aac-symbol";
+import type { BoardButton } from "../board-types";
+import { useTilePreferences } from "./tile-preferences-store";
 
 interface TileProps {
-  ariaLabel?: string;
-  tabIndex?: number;
-  isFolder?: boolean;
-  backgroundColor?: string;
-  borderColor?: string;
-  isBorderVisible?: boolean;
-  children: ReactNode;
-  onActivate: () => void;
+  button: BoardButton;
+  tabIndex: number;
+  onActivate: (button: BoardButton) => void;
 }
 
 type TileColorStyle = CSSProperties & {
@@ -28,21 +26,31 @@ function flattenOntoWhite(color: string): string {
   return `rgb(from ${color} ${channelOntoWhite("r")} ${channelOntoWhite("g")} ${channelOntoWhite("b")} / 1)`;
 }
 
-function desaturate(color: string): string {
-  return `oklch(from ${color} l calc(c * var(--tile-saturation, 1)) h)`;
+function desaturate(color: string, saturation: number): string {
+  return `oklch(from ${color} l calc(c * ${saturation}) h)`;
 }
 
-function tileColorStyle(
-  backgroundColor: string | undefined,
-  borderColor: string | undefined,
-  isBorderVisible: boolean,
-): TileColorStyle {
+interface TileColorOptions {
+  backgroundColor: string | undefined;
+  borderColor: string | undefined;
+  isBorderVisible: boolean;
+  saturation: number;
+}
+
+function tileColorStyle({
+  backgroundColor,
+  borderColor,
+  isBorderVisible,
+  saturation,
+}: TileColorOptions): TileColorStyle {
   const visibleBorderColor = isBorderVisible ? borderColor : undefined;
 
   return {
     "--tile-background-color":
-      backgroundColor && desaturate(flattenOntoWhite(backgroundColor)),
-    "--tile-border-color": visibleBorderColor && desaturate(visibleBorderColor),
+      backgroundColor &&
+      desaturate(flattenOntoWhite(backgroundColor), saturation),
+    "--tile-border-color":
+      visibleBorderColor && desaturate(visibleBorderColor, saturation),
   };
 }
 
@@ -101,28 +109,33 @@ const folderTileSx = {
   },
 } as const;
 
-export function Tile({
-  ariaLabel,
-  tabIndex,
-  isFolder = false,
-  backgroundColor,
-  borderColor,
-  isBorderVisible = false,
-  children,
-  onActivate,
-}: TileProps) {
+export function Tile({ button, tabIndex, onActivate }: TileProps) {
   const t = useTranslate();
+  const { saturation, areBordersVisible, labelPlacement } =
+    useTilePreferences();
+
+  const isFolder = Boolean(button.linkedBoardId);
+  const colorStyle = tileColorStyle({
+    backgroundColor: button.backgroundColor,
+    borderColor: button.borderColor,
+    isBorderVisible: areBordersVisible,
+    saturation,
+  });
 
   return (
     <Button
-      aria-label={ariaLabel}
+      aria-label={button.label ? undefined : button.vocalization}
       aria-description={isFolder ? t(m.tileOpensBoard) : undefined}
       tabIndex={tabIndex}
-      onClick={onActivate}
-      style={tileColorStyle(backgroundColor, borderColor, isBorderVisible)}
+      onClick={() => onActivate(button)}
+      style={colorStyle}
       sx={[tileSx, isFolder && folderTileSx]}
     >
-      {children}
+      <AACSymbol
+        label={button.label}
+        imageSrc={button.imageSrc}
+        labelPlacement={labelPlacement}
+      />
     </Button>
   );
 }
