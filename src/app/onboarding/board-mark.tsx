@@ -7,16 +7,18 @@ const TILE_ROWS = [
   ["#F9C99A", "#BFE3C6", "#ECEEF2"],
 ];
 
+const MARK_SIZE = 560;
+const GRID_OFFSET = 104;
 const TILE_SIZE = 104;
 const TILE_STRIDE = 124;
-const GRID_OFFSET = 80;
+const TILE_RADIUS = 20;
 
 export function BoardMark() {
   return (
     <Box
       component="svg"
       aria-hidden
-      viewBox="-24 -24 560 560"
+      viewBox={`0 0 ${MARK_SIZE} ${MARK_SIZE}`}
       sx={{
         display: "block",
         width: 96,
@@ -27,7 +29,7 @@ export function BoardMark() {
         boxShadow: (theme) => `0 0 0 1px ${theme.vars.palette.divider}`,
       }}
     >
-      <rect x={-24} y={-24} width={560} height={560} fill={SHELL_DARK} />
+      <rect width="100%" height="100%" fill={SHELL_DARK} />
 
       {TILE_ROWS.flatMap((row, rowIndex) =>
         row.map((fill, columnIndex) => (
@@ -37,7 +39,7 @@ export function BoardMark() {
             y={GRID_OFFSET + rowIndex * TILE_STRIDE}
             width={TILE_SIZE}
             height={TILE_SIZE}
-            rx={20}
+            rx={TILE_RADIUS}
             fill={fill}
           />
         )),
