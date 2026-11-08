@@ -125,6 +125,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
         <Grid<BoardButton>
           ref={gridViewportRef}
           ariaLabel={board.name || t(m.boardGridLabel)}
+          contentKey={board.id}
           items={board.buttons}
           rows={board.grid.rows}
           columns={board.grid.columns}

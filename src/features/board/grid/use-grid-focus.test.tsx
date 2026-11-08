@@ -137,15 +137,14 @@ describe("useGridFocus", () => {
       await expect.element(item5).toHaveAttribute("tabindex", "0");
     });
 
-    test("leaves focus outside the grid when it re-renders with the same items", async () => {
-      const items = makeItems(1, 2, 3, 4);
-
+    test("leaves focus outside the grid when it re-renders with equal items", async () => {
       const screen = await render(
         <Grid
           ariaLabel="Board"
+          contentKey="board-a"
           rows={2}
           columns={2}
-          items={items}
+          items={makeItems(1, 2, 3, 4)}
           renderItem={renderButton}
         />,
       );
@@ -157,9 +156,10 @@ describe("useGridFocus", () => {
       await screen.rerender(
         <Grid
           ariaLabel="Renamed board"
+          contentKey="board-a"
           rows={2}
           columns={2}
-          items={items}
+          items={makeItems(1, 2, 3, 4)}
           renderItem={renderButton}
         />,
       );
@@ -168,6 +168,36 @@ describe("useGridFocus", () => {
         .element(screen.getByRole("grid", { name: "Renamed board" }))
         .toBeInTheDocument();
       expect(document.activeElement).toBe(document.body);
+    });
+
+    test("moves focus lost to the body into the remembered position when the content key changes", async () => {
+      const screen = await render(
+        <Grid
+          contentKey="board-a"
+          rows={2}
+          columns={2}
+          items={makeItems(1, 2, 3, 4)}
+          renderItem={renderButton}
+        />,
+      );
+
+      const item4 = screen.getByRole("button", { name: "Item 4" });
+      item4.element().focus();
+      item4.element().blur();
+
+      await screen.rerender(
+        <Grid
+          contentKey="board-b"
+          rows={2}
+          columns={2}
+          items={makeItems(5, 6, 7, 8)}
+          renderItem={renderButton}
+        />,
+      );
+
+      await expect
+        .element(screen.getByRole("button", { name: "Item 8" }))
+        .toHaveFocus();
     });
   });
 
