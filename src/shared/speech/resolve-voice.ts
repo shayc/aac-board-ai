@@ -23,7 +23,7 @@ function findPreferredRegionCode(
   return getLikelyRegionCode(language);
 }
 
-function selectFallbackVoice(
+function findFallbackVoice(
   voices: SpeechSynthesisVoice[],
   language: string,
   preferredLocales: readonly string[],
@@ -37,7 +37,7 @@ function selectFallbackVoice(
   return candidates.find((voice) => voice.default) ?? candidates[0] ?? null;
 }
 
-export function selectVoice(
+export function resolveVoice(
   voicesByLanguage: VoicesByLanguage,
   language: string,
   savedVoiceURI: string | null,
@@ -46,5 +46,5 @@ export function selectVoice(
   const voices = voicesByLanguage[language] ?? [];
   const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
 
-  return savedVoice ?? selectFallbackVoice(voices, language, preferredLocales);
+  return savedVoice ?? findFallbackVoice(voices, language, preferredLocales);
 }

@@ -1,6 +1,6 @@
 import { getStoredLanguage } from "@shared/language/language-store";
 import {
-  getSpeakingVoice,
+  getSpeechVoice,
   getSpeechPreferences,
 } from "@shared/speech/speech-store";
 import { getSpeechSynthesis } from "@shared/speech/speech-synthesis";
@@ -15,7 +15,7 @@ function buildUtterance(text: string): SpeechSynthesisUtterance {
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = getStoredLanguage();
-  utterance.voice = getSpeakingVoice();
+  utterance.voice = getSpeechVoice();
   utterance.rate = rate;
   utterance.pitch = pitch;
   utterance.volume = volume;

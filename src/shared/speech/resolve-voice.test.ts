@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { selectVoice } from "./select-voice";
+import { resolveVoice } from "./resolve-voice";
 
 function makeVoice(
   lang: string,
@@ -15,9 +15,9 @@ function makeVoice(
   };
 }
 
-describe("selectVoice", () => {
+describe("resolveVoice", () => {
   test("returns nothing when the language has no voices", () => {
-    expect(selectVoice({}, "he", "en-voice", [])).toBeNull();
+    expect(resolveVoice({}, "he", "en-voice", [])).toBeNull();
   });
 
   test("keeps the saved voice even when another voice is the default", () => {
@@ -27,7 +27,7 @@ describe("selectVoice", () => {
     ];
 
     expect(
-      selectVoice({ en: voices }, "en", "en-voice", ["en-US"])?.voiceURI,
+      resolveVoice({ en: voices }, "en", "en-voice", ["en-US"])?.voiceURI,
     ).toBe("en-voice");
   });
 
@@ -37,7 +37,7 @@ describe("selectVoice", () => {
       he: [makeVoice("he-IL", "he-voice")],
     };
 
-    expect(selectVoice(voicesByLanguage, "he", "en-voice", [])?.voiceURI).toBe(
+    expect(resolveVoice(voicesByLanguage, "he", "en-voice", [])?.voiceURI).toBe(
       "he-voice",
     );
   });
@@ -48,7 +48,7 @@ describe("selectVoice", () => {
       makeVoice("en-US", "en-default", true),
     ];
 
-    expect(selectVoice({ en: voices }, "en", null, [])?.voiceURI).toBe(
+    expect(resolveVoice({ en: voices }, "en", null, [])?.voiceURI).toBe(
       "en-default",
     );
   });
@@ -59,7 +59,7 @@ describe("selectVoice", () => {
       makeVoice("fr-FR", "fr-fr-voice"),
     ];
 
-    expect(selectVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
+    expect(resolveVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
       "fr-fr-voice",
     );
   });
@@ -70,7 +70,7 @@ describe("selectVoice", () => {
       makeVoice("fr-CA", "fr-ca-voice"),
     ];
 
-    expect(selectVoice({ fr: voices }, "fr", null, ["fr-CA"])?.voiceURI).toBe(
+    expect(resolveVoice({ fr: voices }, "fr", null, ["fr-CA"])?.voiceURI).toBe(
       "fr-ca-voice",
     );
   });
@@ -82,7 +82,7 @@ describe("selectVoice", () => {
     ];
 
     expect(
-      selectVoice({ fr: voices }, "fr", null, ["fr", "fr-CA"])?.voiceURI,
+      resolveVoice({ fr: voices }, "fr", null, ["fr", "fr-CA"])?.voiceURI,
     ).toBe("fr-ca-voice");
   });
 
@@ -92,7 +92,7 @@ describe("selectVoice", () => {
       makeVoice("fr-BE", "fr-be-default", true),
     ];
 
-    expect(selectVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
+    expect(resolveVoice({ fr: voices }, "fr", null, ["en-US"])?.voiceURI).toBe(
       "fr-be-default",
     );
   });

@@ -12,7 +12,7 @@ import {
   parseClampedNumber,
   type ClampedNumberOptions,
 } from "@shared/utils/parse-clamped-number";
-import { selectVoice } from "./select-voice";
+import { resolveVoice } from "./resolve-voice";
 import { getSpeechSynthesis } from "./speech-synthesis";
 
 interface SpeechPreferences {
@@ -111,18 +111,18 @@ export function useSpeechPreferences(): SpeechPreferences {
   return useExternalStore(speechPreferencesStore);
 }
 
-export function getSpeakingVoice(): SpeechSynthesisVoice | null {
-  return selectVoice(
+export function getSpeechVoice(): SpeechSynthesisVoice | null {
+  return resolveVoice(
     getVoicesByLanguage(),
     getStoredLanguage(),
     getSpeechPreferences().voiceURI,
   );
 }
 
-export function useSpeakingVoice(): SpeechSynthesisVoice | null {
+export function useSpeechVoice(): SpeechSynthesisVoice | null {
   const voicesByLanguage = useVoicesByLanguage();
   const language = useStoredLanguage();
   const { voiceURI } = useSpeechPreferences();
 
-  return selectVoice(voicesByLanguage, language, voiceURI);
+  return resolveVoice(voicesByLanguage, language, voiceURI);
 }
