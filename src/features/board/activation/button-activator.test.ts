@@ -6,7 +6,6 @@ import type { MessagePart } from "../message/message-types";
 import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
-type ActivationPlayback = ActivationOptions["playback"];
 
 function setup(initialParts: MessagePart[] = []) {
   let currentParts = initialParts;
@@ -17,18 +16,20 @@ function setup(initialParts: MessagePart[] = []) {
     }),
   };
   const playback = {
-    playMessage: vi.fn<ActivationPlayback["playMessage"]>(() =>
+    playMessage: vi.fn<ActivationOptions["playMessage"]>(() =>
       Promise.resolve("completed"),
     ),
-    playPart: vi.fn<ActivationPlayback["playPart"]>(() =>
+    playPart: vi.fn<ActivationOptions["playPart"]>(() =>
       Promise.resolve("completed"),
     ),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
-  const options: ActivationOptions = { message, playback, navigation };
-
   return {
-    activateButton: createButtonActivator(options),
+    activateButton: createButtonActivator({
+      ...message,
+      ...playback,
+      ...navigation,
+    }),
     message,
     playback,
     navigation,
