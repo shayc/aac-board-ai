@@ -9,6 +9,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
+import { useEndSide } from "@shared/theme/rtl";
 import { useId } from "react";
 import type { DownloadProgress } from "../import/import-from-url";
 import type { BoardSetDownloadPhase } from "./board-set-downloads";
@@ -27,6 +28,7 @@ export function DownloadableBoardSetListItem({
   url,
 }: DownloadableBoardSetListItemProps) {
   const t = useTranslate();
+  const endSide = useEndSide();
   const uiLocale = useUILocale();
   const statusId = useId();
   const { phase, download, cancel } = useBoardSetDownload({ name, url });
@@ -46,7 +48,7 @@ export function DownloadableBoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(tooltipMessage(phase))} placement="right">
+        <Tooltip title={t(tooltipMessage(phase))} placement={endSide}>
           <IconButton
             aria-label={t(
               isDownloading

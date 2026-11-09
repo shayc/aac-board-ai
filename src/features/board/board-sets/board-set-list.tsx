@@ -15,6 +15,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
+import { useEndSide } from "@shared/theme/rtl";
 import { useEffect, useId, useRef, useState } from "react";
 import { Link } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
@@ -195,6 +196,7 @@ function BoardSetListItem({
   onMenuOpen,
 }: BoardSetListItemProps) {
   const t = useTranslate();
+  const endSide = useEndSide();
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
@@ -206,7 +208,7 @@ function BoardSetListItem({
   return (
     <ListItem
       secondaryAction={
-        <Tooltip title={t(m.libraryMoreOptions)} placement="right">
+        <Tooltip title={t(m.libraryMoreOptions)} placement={endSide}>
           <IconButton
             aria-label={t(m.libraryMoreOptionsFor, { name })}
             aria-controls={isMenuOpen ? menuId : undefined}
