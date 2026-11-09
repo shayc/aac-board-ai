@@ -116,6 +116,15 @@ describe("useBoardFileDrop", () => {
     await expect.element(zone).toHaveTextContent("idle");
   });
 
+  test("accepts dragged files so the browser allows dropping them", async () => {
+    const { zone } = await renderDropZone();
+    const dataTransfer = dataTransferWithFiles(new File([""], "notes.txt"));
+
+    const isDefaultAllowed = fireDrag(zone, "dragover", dataTransfer);
+
+    expect(isDefaultAllowed).toBe(false);
+  });
+
   test("leaves drops that carry no files to the browser", async () => {
     const { zone } = await renderDropZone();
     const dataTransfer = new DataTransfer();
