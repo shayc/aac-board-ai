@@ -161,4 +161,35 @@ describe("useLatestAsync", () => {
 
     await vi.waitFor(() => expect(result.current.value).toBe("value-b"));
   });
+
+  test("ignores a stale in-flight rejection that settles after deps moved on", async () => {
+    const requests = new Map<string, PromiseWithResolvers<string>>();
+    const { result, rerender } = await renderHook(
+      ({ id }: { id: string } = { id: "a" }) =>
+        useLatestAsync({
+          enabled: true,
+          deps: [id],
+          run: () => {
+            const request = Promise.withResolvers<string>();
+            requests.set(id, request);
+
+            return request.promise;
+          },
+        }),
+      { initialProps: { id: "a" } },
+    );
+
+    await vi.waitFor(() => expect(requests.has("a")).toBe(true));
+    await rerender({ id: "b" });
+    await vi.waitFor(() => expect(requests.has("b")).toBe(true));
+
+    requests.get("b")?.resolve("value-b");
+    requests.get("a")?.reject(new Error("stale failure"));
+
+    await vi.waitFor(() => {
+      expect(result.current.value).toBe("value-b");
+      expect(result.current.error).toBeUndefined();
+      expect(result.current.isPending).toBe(false);
+    });
+  });
 });
