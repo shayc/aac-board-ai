@@ -34,7 +34,7 @@
     }
   ],
   "libraryImportFailedBoardFile": "বোর্ড ফাইল \"{fileName}\" আমদানি করা যায়নি",
-  "libraryImportFailedBoardFiles": "বোর্ড ফাইল আমদানি করা যায়নি",
+  "libraryImportFailedBoardFiles": "বোর্ড ফাইলগুলি আমদানি করা যায়নি",
   "libraryImportOnlyBoardFiles": "শুধু বোর্ড ফাইল আমদানি করা যায়",
   "libraryImportTooLargeBoardFile": "বোর্ড ফাইল \"{fileName}\" আমদানি করার জন্য খুব বড়",
   "libraryImportTooLargeBoardFiles": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়",

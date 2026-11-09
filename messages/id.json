@@ -38,7 +38,7 @@
   "libraryImportOnlyBoardFiles": "Hanya berkas papan yang dapat diimpor",
   "libraryImportTooLargeBoardFile": "Berkas papan \"{fileName}\" terlalu besar untuk diimpor",
   "libraryImportTooLargeBoardFiles": "Berkas papan terlalu besar untuk diimpor",
-  "libraryImportPartiallyFailedBoardFiles": "Tidak dapat mengimpor sebagian berkas papan ({failed} dari {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Tidak dapat mengimpor beberapa berkas papan ({failed} dari {total})",
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",
