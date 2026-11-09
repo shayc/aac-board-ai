@@ -139,10 +139,10 @@ export default defineConfig({
       // Regression floor ~2 points under the measured baseline; ratchet up
       // alongside meaningful coverage gains, never down.
       thresholds: {
-        statements: 89,
-        branches: 78,
-        functions: 92,
-        lines: 93,
+        statements: 95,
+        branches: 88,
+        functions: 94,
+        lines: 94,
       },
     },
   },
