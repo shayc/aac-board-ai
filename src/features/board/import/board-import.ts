@@ -66,7 +66,7 @@ export async function importEachBoardFile(
 
 export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loadedBoard = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-  const content = boardSetContent(loadedBoard, file.name);
+  const content = buildBoardSetContent(loadedBoard, file.name);
   const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
@@ -84,7 +84,7 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   }
 }
 
-function boardSetContent(
+function buildBoardSetContent(
   loadedBoard: LoadedBoard,
   fileName: string,
 ): BoardSetContent {
