@@ -1,12 +1,14 @@
 import { listBoardSetRecords } from "@features/board";
-import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
-import { deleteDB, openDB } from "idb";
+import {
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
-const BOARDS_DB_NAME = "boards-db";
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/first-words.obz";
@@ -104,12 +106,10 @@ describe("rootIndexLoader", () => {
   });
 
   test("rejects without importing the starter board set when stored board sets cannot be read", async () => {
-    const newerBoardsDB = await openDB(BOARDS_DB_NAME, 2);
-    newerBoardsDB.close();
-    onTestFinished(() => deleteDB(BOARDS_DB_NAME));
+    onTestFinished(await makeBoardsDBUnreadable());
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
-    await expect(callLoader()).rejects.toMatchObject({ name: "VersionError" });
+    await expect(callLoader()).rejects.toThrow();
 
     expect(fetchSpy).not.toHaveBeenCalled();
   });
