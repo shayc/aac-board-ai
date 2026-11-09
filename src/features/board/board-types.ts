@@ -31,12 +31,12 @@ export interface BoardButton {
 }
 
 export type BoardAction =
-  | { kind: "space" }
-  | { kind: "backspace" }
-  | { kind: "clear" }
-  | { kind: "home" }
-  | { kind: "play" }
-  | { kind: "spell"; text: string };
+  | { readonly kind: "space" }
+  | { readonly kind: "backspace" }
+  | { readonly kind: "clear" }
+  | { readonly kind: "home" }
+  | { readonly kind: "play" }
+  | { readonly kind: "spell"; readonly text: string };
 
 export type StringTranslations = ReadonlyMap<string, string>;
 
