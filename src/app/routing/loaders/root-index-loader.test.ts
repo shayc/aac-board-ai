@@ -1,7 +1,11 @@
-import { listBoardSets } from "@features/board";
-import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
+import { listBoardSetRecords } from "@features/board";
+import {
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/board/testing";
 import type { LoaderFunctionArgs } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
@@ -39,7 +43,7 @@ describe("rootIndexLoader", () => {
     const location = response.headers.get("Location");
     expect(location).toMatch(/^\/sets\/[^/]+\/boards\/[^/]+$/);
 
-    const sets = await listBoardSets();
+    const sets = await listBoardSetRecords();
     expect(sets).toHaveLength(1);
   });
 
@@ -82,7 +86,7 @@ describe("rootIndexLoader", () => {
       await expect(callLoader(searchParams, controller.signal)).rejects.toBe(
         controller.signal.reason,
       );
-      expect(await listBoardSets()).toEqual([]);
+      expect(await listBoardSetRecords()).toEqual([]);
     },
   );
 
@@ -101,6 +105,15 @@ describe("rootIndexLoader", () => {
     expect(response.headers.get("Location")).toBe("/sets/set-2/boards/root-2");
   });
 
+  test("rejects without importing the starter board set when stored board sets cannot be read", async () => {
+    onTestFinished(await makeBoardsDBUnreadable());
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    await expect(callLoader()).rejects.toThrow();
+
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
   test("imports the default board when no param is given and IDB is empty", async () => {
     const probe = await fetch(DEFAULT_BOARD_PATH);
     if (!probe.ok) {
@@ -114,7 +127,7 @@ describe("rootIndexLoader", () => {
       /^\/sets\/[^/]+\/boards\/[^/]+$/,
     );
 
-    const sets = await listBoardSets();
+    const sets = await listBoardSetRecords();
     expect(sets).toHaveLength(1);
   });
 });

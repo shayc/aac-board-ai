@@ -1,9 +1,10 @@
+import { deleteDB, openDB } from "idb";
 import { refreshBoardSets } from "../board-sets/board-sets-store";
 import {
   insertBoardSet,
   type BoardSetInput,
 } from "../storage/board-set-storage";
-import { getBoardsDB } from "../storage/boards-db";
+import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
 import { makeOBFBoard } from "./fixtures";
 
 const STORE_NAMES = ["boardSets", "boards", "assets"] as const;
@@ -26,6 +27,14 @@ async function clearBoardsDB(): Promise<void> {
 export async function resetBoardsDB(): Promise<void> {
   await clearBoardsDB();
   await refreshBoardSets();
+}
+
+export async function makeBoardsDBUnreadable(): Promise<() => Promise<void>> {
+  const { name, version } = await getBoardsDB();
+  await closeBoardsDB();
+  (await openDB(name, version + 1)).close();
+
+  return () => deleteDB(name);
 }
 
 export async function countStoredBoardContent(boardSetId: string): Promise<{

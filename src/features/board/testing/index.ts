@@ -1,4 +1,9 @@
-export { countStoredBoardContent, resetBoardsDB, seedBoardSets } from "./db";
+export {
+  countStoredBoardContent,
+  makeBoardsDBUnreadable,
+  resetBoardsDB,
+  seedBoardSets,
+} from "./db";
 export {
   loadFixtureFile,
   loadTestImageBlob,

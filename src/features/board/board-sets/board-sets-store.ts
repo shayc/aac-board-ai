@@ -82,12 +82,6 @@ export function useBoardSets(): BoardSetsSnapshot {
   });
 }
 
-export async function listBoardSets(): Promise<BoardSetRecord[]> {
-  await ensureLoaded();
-
-  return boardSetsStore.getSnapshot().boardSets;
-}
-
 export async function createBoardSet(input: BoardSetInput): Promise<void> {
   await insertBoardSet(input);
   await syncBoardSets();
