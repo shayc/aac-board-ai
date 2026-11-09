@@ -72,9 +72,9 @@ export function useGridFocus(
     restoreLostFocus();
   }, [grid]);
 
-  const tabStopPosition = grid[rememberedPosition.row]?.[
-    rememberedPosition.column
-  ]
+  const { row, column } = rememberedPosition;
+  const isRememberedCellOccupied = Boolean(grid[row]?.[column]);
+  const tabStopPosition = isRememberedCellOccupied
     ? rememberedPosition
     : findFirstOccupiedPosition(grid);
 
