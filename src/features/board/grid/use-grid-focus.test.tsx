@@ -261,12 +261,12 @@ describe("useGridFocus", () => {
       await expect.element(item2).toHaveFocus();
     });
 
-    test("prefers an in-line cell over a diagonal one", async () => {
+    test("prefers a farther in-line cell over a nearer diagonal one", async () => {
       const items = makeItems(1, 2, 3);
 
       const order = [
-        ["1", "2", null],
-        [null, null, "3"],
+        ["1", null, "2"],
+        [null, "3", null],
       ];
 
       const screen = await render(
