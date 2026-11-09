@@ -4,14 +4,21 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
+import {
+  DEFAULT_LANGUAGE,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
+import { BOARD_SET_ROUTE_ID } from "./loaders/board-set-loader";
 
 const OBZ_FIXTURE_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
@@ -57,11 +64,33 @@ function seedRecordedAudioSet() {
   ]);
 }
 
+function seedTwoBoardSet() {
+  return seedBoardSets([
+    {
+      id: "food",
+      name: "Food",
+      rootBoardId: "home",
+      boards: [
+        makeOBFBoard({
+          id: "home",
+          name: "Home",
+          buttons: [
+            { id: "fruit", label: "fruit", load_board: { id: "fruit" } },
+          ],
+          grid: { rows: 1, columns: 1, order: [["fruit"]] },
+        }),
+        makeOBFBoard({ id: "fruit", name: "Fruit" }),
+      ],
+    },
+  ]);
+}
+
 describe("app flow", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
   beforeEach(async () => {
+    setStoredLanguage(DEFAULT_LANGUAGE);
     speech = stubSpeech();
     audio = stubAudio();
     await resetBoardsDB();
@@ -212,6 +241,82 @@ describe("app flow", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Animals Home" }))
       .not.toBeInTheDocument();
+  });
+
+  test("moving between boards of a set keeps the loaded board list", async () => {
+    await seedTwoBoardSet();
+
+    const { router, screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    const boardSummaries: unknown = router.state.loaderData[BOARD_SET_ROUTE_ID];
+    await screen.getByRole("button", { name: "fruit" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Fruit" }))
+      .toBeVisible();
+
+    expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSummaries);
+  });
+
+  test("changing the language translates the board, board list, and library in place", async () => {
+    await seedTwoBoardSet();
+    stubTranslator((input) => `[es] ${input}`);
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Home" }))
+      .toBeVisible();
+
+    setStoredLanguage("es");
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Home" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox", { name: "Tablero" }))
+      .toHaveValue("[es] Home");
+
+    await screen.getByRole("combobox", { name: "Tablero" }).click();
+    await expect
+      .element(screen.getByRole("option", { name: "[es] Fruit" }))
+      .toBeInTheDocument();
+    await userEvent.keyboard("{Escape}");
+
+    await screen.getByRole("button", { name: "Abrir biblioteca" }).click();
+    await expect
+      .element(screen.getByRole("link", { name: "[es] Food" }))
+      .toBeVisible();
+  });
+
+  test("board links stay usable while a translation model downloads", async () => {
+    await seedTwoBoardSet();
+    const translator = stubTranslator((input) => `[es] ${input}`);
+    const download = Promise.withResolvers<void>();
+    const createInstance = translator.create.getMockImplementation();
+    translator.create.mockImplementation(async (options) => {
+      await download.promise;
+
+      return createInstance?.(options);
+    });
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("es");
+    await expect.poll(() => translator.create.mock.calls.length).toBe(1);
+
+    await screen.getByRole("button", { name: "fruit" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Fruit" }))
+      .toBeVisible();
+
+    download.resolve();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Fruit" }))
+      .toBeVisible();
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {

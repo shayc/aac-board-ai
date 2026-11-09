@@ -1,11 +1,13 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { normalizeLocale } from "@shared/language/locale";
+import type { StringTranslations } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
 import { htmlToText } from "./html-to-text";
 import {
   getBoardsDB,
   normalizeAssetPath,
   validateId,
+  type BoardRecord,
   type BoardSetRecord,
 } from "./boards-db";
 
@@ -65,6 +67,55 @@ export async function removeBoardSet(boardSetId: string): Promise<void> {
     tx.objectStore("boardSets").delete(boardSetId),
     tx.done,
   ]);
+}
+
+export interface BoardSetTranslations {
+  readonly name: string;
+  readonly stringsByBoardId: ReadonlyMap<string, StringTranslations>;
+}
+
+export async function saveBoardSetTranslations(
+  boardSetId: string,
+  language: string,
+  { name, stringsByBoardId }: BoardSetTranslations,
+): Promise<void> {
+  const db = await getBoardsDB();
+  const tx = db.transaction(["boardSets", "boards"], "readwrite");
+  const boardSetStore = tx.objectStore("boardSets");
+  const boardStore = tx.objectStore("boards");
+
+  const boardSet = await boardSetStore.get(boardSetId);
+  // A set deleted while it was being translated must not regain its boards.
+  if (!boardSet) {
+    await tx.done;
+    return;
+  }
+
+  for (const [boardId, strings] of stringsByBoardId) {
+    const board = await boardStore.get([boardSetId, boardId]);
+    if (board) {
+      await boardStore.put(withStrings(board, language, strings));
+    }
+  }
+
+  await boardSetStore.put({
+    ...boardSet,
+    translatedNames: { ...boardSet.translatedNames, [language]: name },
+  });
+  await tx.done;
+}
+
+function withStrings(
+  board: BoardRecord,
+  language: string,
+  strings: StringTranslations,
+): BoardRecord {
+  const obf = {
+    ...board.obf,
+    strings: { ...board.obf.strings, [language]: Object.fromEntries(strings) },
+  };
+
+  return { ...board, obf };
 }
 
 export async function insertBoardSet(input: BoardSetInput): Promise<void> {

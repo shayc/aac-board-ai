@@ -1,10 +1,5 @@
-import type { BoardKey, StringTranslations } from "../board-types";
-import {
-  getBoardsDB,
-  normalizeAssetPath,
-  validateId,
-  type BoardRecord,
-} from "./boards-db";
+import type { BoardKey } from "../board-types";
+import { getBoardsDB, normalizeAssetPath, type BoardRecord } from "./boards-db";
 
 export type { BoardRecord } from "./boards-db";
 
@@ -41,32 +36,4 @@ export async function getAssetBlob(
   const asset = await db.get("assets", [boardSetId, normalizedPath]);
 
   return asset?.blob;
-}
-
-export async function replaceStringTranslations(
-  key: BoardKey,
-  language: string,
-  translations: StringTranslations,
-): Promise<void> {
-  const { boardSetId, boardId } = key;
-  validateId(boardSetId, "boardSetId");
-  validateId(boardId, "boardId");
-  const db = await getBoardsDB();
-  const tx = db.transaction("boards", "readwrite");
-  const record = await tx.store.get([boardSetId, boardId]);
-
-  if (!record) {
-    throw new BoardNotFoundError(key);
-  }
-
-  const updatedOBF = {
-    ...record.obf,
-    strings: {
-      ...record.obf.strings,
-      [language]: Object.fromEntries(translations),
-    },
-  };
-
-  await tx.store.put({ ...record, obf: updatedOBF });
-  await tx.done;
 }

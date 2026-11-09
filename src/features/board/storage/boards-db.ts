@@ -12,6 +12,8 @@ export interface BoardSetRecord {
   readonly description?: string;
   readonly license?: string;
   readonly locale?: string;
+  /** Language code → set name, translated on this device. */
+  readonly translatedNames?: Readonly<Record<string, string>>;
   readonly gridRows?: number;
   readonly gridColumns?: number;
 }

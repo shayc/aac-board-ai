@@ -6,6 +6,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
@@ -15,6 +16,7 @@ import { useMatch, useNavigate } from "react-router";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BOARD_SET_SEGMENT } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import { localizeBoardSetName } from "../translation/board-translations";
 import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
@@ -27,7 +29,11 @@ export function BoardSetLibrary() {
     path: `/${BOARD_SET_SEGMENT}`,
     end: false,
   })?.params.boardSetId;
-  const { boardSets, isLoading, error } = useBoardSets();
+  const { language } = useLanguage();
+  const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
+  const boardSets = storedBoardSets.map((boardSet) =>
+    localizeBoardSetName(boardSet, language),
+  );
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();

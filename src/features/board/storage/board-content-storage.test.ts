@@ -5,12 +5,9 @@ import {
   getAssetBlob,
   getBoardRecord,
   listBoardRecords,
-  replaceStringTranslations,
 } from "./board-content-storage";
 import { insertBoardSet } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
-
-const BOARD_KEY = { boardSetId: "set-1", boardId: "b1" };
 
 beforeEach(async () => {
   await resetBoardsDB();
@@ -85,96 +82,5 @@ describe("getAssetBlob", () => {
     expect(await getAssetBlob("set-1", "double/slash.png")).toBeInstanceOf(
       Blob,
     );
-  });
-});
-
-describe("replaceStringTranslations", () => {
-  test("adds localized strings to a board", async () => {
-    const obf = makeOBFBoard({ id: "b1", name: "B1" });
-    await insertBoardSet(
-      makeBoardSetInput({
-        boards: [obf],
-      }),
-    );
-
-    await replaceStringTranslations(
-      BOARD_KEY,
-      "es",
-      new Map([
-        ["hello", "hola"],
-        ["world", "mundo"],
-      ]),
-    );
-
-    const board = await getBoardRecord(BOARD_KEY);
-    assertDefined(board);
-    expect(board.obf.strings).toEqual({
-      es: { hello: "hola", world: "mundo" },
-    });
-  });
-
-  test("preserves existing locale strings when adding a new locale", async () => {
-    const obf = makeOBFBoard({
-      id: "b1",
-      name: "B1",
-      strings: { fr: { hello: "bonjour" } },
-    });
-    await insertBoardSet(
-      makeBoardSetInput({
-        boards: [obf],
-      }),
-    );
-
-    await replaceStringTranslations(
-      BOARD_KEY,
-      "es",
-      new Map([["hello", "hola"]]),
-    );
-
-    const board = await getBoardRecord(BOARD_KEY);
-    assertDefined(board);
-    expect(board.obf.strings).toEqual({
-      fr: { hello: "bonjour" },
-      es: { hello: "hola" },
-    });
-  });
-
-  test("replaces all strings when updating an existing locale", async () => {
-    const obf = makeOBFBoard({ id: "b1", name: "B1" });
-    await insertBoardSet(
-      makeBoardSetInput({
-        boards: [obf],
-      }),
-    );
-
-    await replaceStringTranslations(
-      BOARD_KEY,
-      "es",
-      new Map([
-        ["hello", "hola"],
-        ["bye", "adiós"],
-      ]),
-    );
-    await replaceStringTranslations(
-      BOARD_KEY,
-      "es",
-      new Map([["hello", "ey"]]),
-    );
-
-    const board = await getBoardRecord(BOARD_KEY);
-    assertDefined(board);
-    expect(board.obf.strings).toEqual({ es: { hello: "ey" } });
-  });
-
-  test("throws when board does not exist", async () => {
-    await insertBoardSet(makeBoardSetInput());
-
-    await expect(
-      replaceStringTranslations(
-        { boardSetId: "set-1", boardId: "nonexistent" },
-        "es",
-        new Map(),
-      ),
-    ).rejects.toThrow("Board not found");
   });
 });

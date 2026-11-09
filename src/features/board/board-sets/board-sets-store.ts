@@ -60,7 +60,7 @@ export async function refreshBoardSets(): Promise<void> {
   await pendingLoad;
 }
 
-async function syncBoardSets(): Promise<void> {
+export async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);
 }

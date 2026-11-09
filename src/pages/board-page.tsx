@@ -1,9 +1,9 @@
 import type { boardLoader } from "@app/routing/loaders/board-loader";
-import { CommunicationBoard } from "@features/board";
+import { CommunicationBoard, useBoardInLanguage } from "@features/board";
 import { useLoaderData } from "react-router";
 
 export function BoardPage() {
-  const board = useLoaderData<typeof boardLoader>();
+  const board = useBoardInLanguage(useLoaderData<typeof boardLoader>());
 
   return (
     <>

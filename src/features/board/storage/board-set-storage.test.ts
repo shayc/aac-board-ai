@@ -1,13 +1,20 @@
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
-import { makeBoardSetInput, makeOBFBoard, resetBoardsDB } from "../testing";
+import {
+  countStoredBoardContent,
+  makeBoardSetInput,
+  makeOBFBoard,
+  resetBoardsDB,
+} from "../testing";
 import { getAssetBlob, getBoardRecord } from "./board-content-storage";
 import {
   BoardSetAlreadyExistsError,
+  getBoardSetRecord,
   insertBoardSet,
   listBoardSetRecords,
   removeBoardSet,
+  saveBoardSetTranslations,
 } from "./board-set-storage";
 import { closeBoardsDB, InvalidIdError } from "./boards-db";
 
@@ -317,5 +324,54 @@ describe("removeBoardSet", () => {
 
   test("rejects empty boardSetId", async () => {
     await expect(removeBoardSet("")).rejects.toThrow("Invalid boardSetId");
+  });
+});
+
+describe("saveBoardSetTranslations", () => {
+  test("adds the language to the set name and each board, keeping other languages", async () => {
+    await insertBoardSet(
+      makeBoardSetInput({
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Home",
+            strings: { fr: { Home: "Accueil" } },
+          }),
+        ],
+      }),
+    );
+
+    await saveBoardSetTranslations("set-1", "es", {
+      name: "Conjunto",
+      stringsByBoardId: new Map([["home", new Map([["Home", "Inicio"]])]]),
+    });
+
+    const board = await getBoardRecord({
+      boardSetId: "set-1",
+      boardId: "home",
+    });
+    expect(board?.obf.strings).toEqual({
+      fr: { Home: "Accueil" },
+      es: { Home: "Inicio" },
+    });
+    expect((await getBoardSetRecord("set-1"))?.translatedNames).toEqual({
+      es: "Conjunto",
+    });
+  });
+
+  test("writes nothing for a set deleted before the save", async () => {
+    await insertBoardSet(makeBoardSetInput());
+    await removeBoardSet("set-1");
+
+    await saveBoardSetTranslations("set-1", "es", {
+      name: "Conjunto",
+      stringsByBoardId: new Map([["root-1", new Map([["Test Board", "x"]])]]),
+    });
+
+    expect(await getBoardSetRecord("set-1")).toBeUndefined();
+    expect(await countStoredBoardContent("set-1")).toEqual({
+      boardCount: 0,
+      assetCount: 0,
+    });
   });
 });

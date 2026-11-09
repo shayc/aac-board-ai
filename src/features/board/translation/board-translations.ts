@@ -5,6 +5,7 @@ import type {
   TranslationsByLocale,
 } from "../board-types";
 import { nonBlankText } from "../non-blank-text";
+import type { BoardSetRecord } from "../storage/board-set-storage";
 
 const DEFAULT_BOARD_LANGUAGE = "en";
 
@@ -24,8 +25,17 @@ export function findBoardInLanguage(
   return translations ? applyTranslations(board, translations) : undefined;
 }
 
-export function getBoardLanguage(board: Board): string {
-  return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
+export function getBoardLanguage({ locale }: { locale?: string }): string {
+  return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
+}
+
+export function localizeBoardSetName(
+  boardSet: BoardSetRecord,
+  language: string,
+): BoardSetRecord {
+  const name = boardSet.translatedNames?.[language];
+
+  return name ? { ...boardSet, name } : boardSet;
 }
 
 export function findStringTranslations(
