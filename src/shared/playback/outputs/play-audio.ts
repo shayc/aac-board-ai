@@ -10,21 +10,30 @@ export function playAudio(
     return Promise.resolve();
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
+  const { promise, resolve, reject } = Promise.withResolvers<void>();
   const audio = new Audio(src);
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
 
-  function finish() {
+  function settle() {
     settled.abort();
     audio.pause();
+  }
+
+  function finish() {
+    settle();
     resolve();
   }
 
+  function fail(cause: unknown) {
+    settle();
+    reject(new Error("Audio failed to play", { cause }));
+  }
+
   audio.addEventListener("ended", finish, listenerOptions);
-  audio.addEventListener("error", finish, listenerOptions);
+  audio.addEventListener("error", () => fail(audio.error), listenerOptions);
   signal?.addEventListener("abort", finish, listenerOptions);
-  audio.play().catch(finish);
+  audio.play().catch(fail);
 
   return promise;
 }

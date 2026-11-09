@@ -74,6 +74,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     setActiveCue(session, null);
 
     const { signal } = session.abortController;
+    let hasFailedStep = false;
 
     try {
       for (const step of request.steps) {
@@ -81,10 +82,18 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
-        await playStep(session, step);
+        try {
+          await playStep(session, step);
+        } catch {
+          hasFailedStep = true;
+        }
       }
 
-      return signal.aborted ? "interrupted" : "completed";
+      if (signal.aborted) {
+        return "interrupted";
+      }
+
+      return hasFailedStep ? "failed" : "completed";
     } finally {
       if (currentSession === session) {
         currentSession = null;
