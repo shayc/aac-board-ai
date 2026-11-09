@@ -91,353 +91,377 @@ describe("BoardSetLibrary", () => {
     await closeBoardsDB();
   });
 
-  test("offers the import action and catalog downloads when no sets are stored", async () => {
-    const screen = await renderBoardSetLibrary();
+  describe("listing", () => {
+    test("offers the import action and catalog downloads when no sets are stored", async () => {
+      const screen = await renderBoardSetLibrary();
 
-    await expect
-      .element(screen.getByRole("button", { name: "Import board files" }))
-      .toBeInTheDocument();
-    await expect
-      .element(
-        screen
-          .getByRole("navigation", { name: "Board sets" })
-          .getByRole("button", { name: "Download First Words" }),
-      )
-      .toBeInTheDocument();
-  });
-
-  test("hides catalog downloads for board sets that are already stored", async () => {
-    await seedBoardSets([
-      { id: "first-words", rootBoardId: "root", name: "First Words" },
-    ]);
-
-    const screen = await renderBoardSetLibrary();
-
-    await expect
-      .element(screen.getByRole("link", { name: "First Words" }))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .not.toBeInTheDocument();
-  });
-
-  test("downloads a catalog board set and focuses its new library entry", async () => {
-    const screen = await renderBoardSetLibrary();
-
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-
-    const link = screen.getByRole("link", { name: "First Words" });
-    await expect.element(link).toHaveFocus();
-    await expect
-      .element(screen.getByText('Board set "First Words" downloaded'))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .not.toBeInTheDocument();
-  });
-
-  test("lists stored and downloadable board sets together in name order", async () => {
-    await seedBoardSets([
-      { id: "zoo", rootBoardId: "root", name: "Zoo" },
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-    ]);
-
-    const screen = await renderBoardSetLibrary();
-
-    await expect
-      .element(screen.getByRole("link", { name: "Zoo" }))
-      .toBeInTheDocument();
-    expect(listedBoardSetNames(screen)).toEqual([
-      "Animals",
-      "First Words",
-      "Quick Core 24",
-      "Quick Core 60",
-      "Zoo",
-    ]);
-  });
-
-  test("keeps a downloaded board set in its place in the list", async () => {
-    await seedBoardSets([
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-      { id: "zoo", rootBoardId: "root", name: "Zoo" },
-    ]);
-
-    const screen = await renderBoardSetLibrary();
-    await expect
-      .element(screen.getByRole("link", { name: "Zoo" }))
-      .toBeInTheDocument();
-    const namesBeforeDownload = listedBoardSetNames(screen);
-
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-
-    await expect
-      .element(screen.getByRole("link", { name: "First Words" }))
-      .toHaveFocus();
-    expect(listedBoardSetNames(screen)).toEqual(namesBeforeDownload);
-  });
-
-  test("keeps the download action when a download fails", async () => {
-    vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(null, { status: 500 }),
-    );
-
-    const screen = await renderBoardSetLibrary();
-
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-
-    await expect
-      .element(screen.getByText(`Couldn't download board set "First Words"`))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toHaveFocus();
-    expect(await listBoardSetRecords()).toEqual([]);
-  });
-
-  test("describes how much of a download has arrived", async () => {
-    const download = stubStreamingDownload({ "content-length": "2000000" });
-
-    const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-    download.send(500_000);
-
-    const cancelButton = screen.getByRole("button", {
-      name: "Cancel downloading First Words",
-    });
-    await expect
-      .element(cancelButton)
-      .toHaveAccessibleDescription("0.5 of 2 MB");
-    await expect
-      .element(cancelButton)
-      .toHaveAttribute("aria-disabled", "false");
-
-    await cancelButton.click();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
-  });
-
-  test("describes a download of unknown size as in progress", async () => {
-    const download = stubStreamingDownload();
-
-    const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-    download.send(500_000);
-
-    const cancelButton = screen.getByRole("button", {
-      name: "Cancel downloading First Words",
-    });
-    await expect
-      .element(cancelButton)
-      .toHaveAccessibleDescription("Downloading…");
-
-    await cancelButton.click();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
-  });
-
-  test("cancels a download without storing the board set or reporting an error", async () => {
-    const download = stubStreamingDownload({ "content-length": "2000000" });
-
-    const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-    download.send(500_000);
-    await screen
-      .getByRole("button", { name: "Cancel downloading First Words" })
-      .click();
-
-    const downloadButton = screen.getByRole("button", {
-      name: "Download First Words",
-    });
-    await expect.element(downloadButton).toHaveFocus();
-    await expect.element(downloadButton).not.toHaveAccessibleDescription();
-    await expect
-      .element(screen.getByText(`Couldn't download board set "First Words"`))
-      .not.toBeInTheDocument();
-    expect(await listBoardSetRecords()).toEqual([]);
-  });
-
-  test("focuses a download's entry when it finishes after reopening the library", async () => {
-    const starterBoardBytes = await fetch("/first-words.obz").then((response) =>
-      response.bytes(),
-    );
-    const download = stubStreamingDownload({
-      "content-length": String(starterBoardBytes.byteLength),
+      await expect
+        .element(screen.getByRole("button", { name: "Import board files" }))
+        .toBeInTheDocument();
+      await expect
+        .element(
+          screen
+            .getByRole("navigation", { name: "Board sets" })
+            .getByRole("button", { name: "Download First Words" }),
+        )
+        .toBeInTheDocument();
     });
 
-    const closedScreen = await renderBoardSetLibrary();
-    await closedScreen
-      .getByRole("button", { name: "Download First Words" })
-      .click();
-    await expect
-      .element(
-        closedScreen.getByRole("button", {
-          name: "Cancel downloading First Words",
-        }),
-      )
-      .toBeInTheDocument();
-    await closedScreen.unmount();
+    test("shows an error instead of the empty state when sets cannot be retrieved", async () => {
+      const db = await getBoardsDB();
+      db.close();
+      await refreshBoardSets();
 
-    const screen = await renderBoardSetLibrary();
-    download.send(starterBoardBytes);
-    download.finish();
+      const screen = await renderBoardSetLibrary();
 
-    await expect
-      .element(screen.getByRole("link", { name: "First Words" }))
-      .toHaveFocus();
-    expect(globalThis.fetch).toHaveBeenCalledOnce();
-    expect(await listBoardSetRecords()).toHaveLength(1);
-  });
-
-  test("keeps describing download progress after reopening the library", async () => {
-    const download = stubStreamingDownload({ "content-length": "2000000" });
-
-    const closedScreen = await renderBoardSetLibrary();
-    await closedScreen
-      .getByRole("button", { name: "Download First Words" })
-      .click();
-    download.send(500_000);
-    await expect
-      .element(
-        closedScreen.getByRole("button", {
-          name: "Cancel downloading First Words",
-        }),
-      )
-      .toHaveAccessibleDescription("0.5 of 2 MB");
-    await closedScreen.unmount();
-
-    const screen = await renderBoardSetLibrary();
-    const cancelButton = screen.getByRole("button", {
-      name: "Cancel downloading First Words",
+      await expect
+        .element(screen.getByText("Couldn't load library"))
+        .toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .not.toBeInTheDocument();
     });
-    await expect
-      .element(cancelButton)
-      .toHaveAccessibleDescription("0.5 of 2 MB");
 
-    await cancelButton.click();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
-    expect(await listBoardSetRecords()).toEqual([]);
-  });
+    test("hides catalog downloads for board sets that are already stored", async () => {
+      await seedBoardSets([
+        { id: "first-words", rootBoardId: "root", name: "First Words" },
+      ]);
 
-  test("marks the button unavailable while a downloaded board set imports", async () => {
-    const starterBoardBytes = await fetch("/first-words.obz").then((response) =>
-      response.bytes(),
-    );
-    const download = stubStreamingDownload({
-      "content-length": String(starterBoardBytes.byteLength),
+      const screen = await renderBoardSetLibrary();
+
+      await expect
+        .element(screen.getByRole("link", { name: "First Words" }))
+        .toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .not.toBeInTheDocument();
     });
-    const unavailableButtons = recordUnavailableButtons();
 
-    const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-    download.send(starterBoardBytes);
-    download.finish();
+    test("lists stored and downloadable board sets together in name order", async () => {
+      await seedBoardSets([
+        { id: "zoo", rootBoardId: "root", name: "Zoo" },
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
 
-    await expect
-      .element(screen.getByRole("link", { name: "First Words" }))
-      .toHaveFocus();
-    expect(unavailableButtons.stop()).toContainEqual({
-      name: "Download First Words",
-      description: "Importing…",
+      const screen = await renderBoardSetLibrary();
+
+      await expect
+        .element(screen.getByRole("link", { name: "Zoo" }))
+        .toBeInTheDocument();
+      expect(listedBoardSetNames(screen)).toEqual([
+        "Animals",
+        "First Words",
+        "Quick Core 24",
+        "Quick Core 60",
+        "Zoo",
+      ]);
+    });
+
+    test("lists stored and downloadable board sets with no accessibility violations", async () => {
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+        { id: "core-words", rootBoardId: "root", name: "Core Words" },
+      ]);
+
+      const screen = await renderBoardSetLibrary();
+
+      await expect.element(screen.getByText("Board sets")).toBeInTheDocument();
+      await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+      await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
+      await expect.element(screen.getByText("First Words")).toBeInTheDocument();
+
+      await expectNoA11yViolations(document.body);
     });
   });
 
-  test("shows download progress with no accessibility violations", async () => {
-    const download = stubStreamingDownload({ "content-length": "2000000" });
+  describe("downloading", () => {
+    test("downloads a catalog board set and focuses its new library entry", async () => {
+      const screen = await renderBoardSetLibrary();
 
-    const screen = await renderBoardSetLibrary();
-    await screen.getByRole("button", { name: "Download First Words" }).click();
-    download.send(500_000);
-    await expect
-      .element(
-        screen.getByRole("button", { name: "Cancel downloading First Words" }),
-      )
-      .toHaveAccessibleDescription("0.5 of 2 MB");
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
 
-    await expectNoA11yViolations(
-      screen.getByRole("navigation", { name: "Board sets" }).element(),
-    );
+      const link = screen.getByRole("link", { name: "First Words" });
+      await expect.element(link).toHaveFocus();
+      await expect
+        .element(screen.getByText('Board set "First Words" downloaded'))
+        .toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .not.toBeInTheDocument();
+    });
 
-    await screen
-      .getByRole("button", { name: "Cancel downloading First Words" })
-      .click();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .toBeInTheDocument();
+    test("keeps a downloaded board set in its place in the list", async () => {
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+        { id: "zoo", rootBoardId: "root", name: "Zoo" },
+      ]);
+
+      const screen = await renderBoardSetLibrary();
+      await expect
+        .element(screen.getByRole("link", { name: "Zoo" }))
+        .toBeInTheDocument();
+      const namesBeforeDownload = listedBoardSetNames(screen);
+
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      await expect
+        .element(screen.getByRole("link", { name: "First Words" }))
+        .toHaveFocus();
+      expect(listedBoardSetNames(screen)).toEqual(namesBeforeDownload);
+    });
+
+    test("describes how much of a download has arrived", async () => {
+      const download = stubStreamingDownload({ "content-length": "2000000" });
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(500_000);
+
+      const cancelButton = screen.getByRole("button", {
+        name: "Cancel downloading First Words",
+      });
+      await expect
+        .element(cancelButton)
+        .toHaveAccessibleDescription("0.5 of 2 MB");
+      await expect
+        .element(cancelButton)
+        .toHaveAttribute("aria-disabled", "false");
+
+      await cancelButton.click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+    });
+
+    test("describes a download of unknown size as in progress", async () => {
+      const download = stubStreamingDownload();
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(500_000);
+
+      const cancelButton = screen.getByRole("button", {
+        name: "Cancel downloading First Words",
+      });
+      await expect
+        .element(cancelButton)
+        .toHaveAccessibleDescription("Downloading…");
+
+      await cancelButton.click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+    });
+
+    test("shows download progress with no accessibility violations", async () => {
+      const download = stubStreamingDownload({ "content-length": "2000000" });
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(500_000);
+      await expect
+        .element(
+          screen.getByRole("button", {
+            name: "Cancel downloading First Words",
+          }),
+        )
+        .toHaveAccessibleDescription("0.5 of 2 MB");
+
+      await expectNoA11yViolations(
+        screen.getByRole("navigation", { name: "Board sets" }).element(),
+      );
+
+      await screen
+        .getByRole("button", { name: "Cancel downloading First Words" })
+        .click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+    });
+
+    test("cancels a download without storing the board set or reporting an error", async () => {
+      const download = stubStreamingDownload({ "content-length": "2000000" });
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(500_000);
+      await screen
+        .getByRole("button", { name: "Cancel downloading First Words" })
+        .click();
+
+      const downloadButton = screen.getByRole("button", {
+        name: "Download First Words",
+      });
+      await expect.element(downloadButton).toHaveFocus();
+      await expect.element(downloadButton).not.toHaveAccessibleDescription();
+      await expect
+        .element(screen.getByText(`Couldn't download board set "First Words"`))
+        .not.toBeInTheDocument();
+      expect(await listBoardSetRecords()).toEqual([]);
+    });
+
+    test("keeps the download action when a download fails", async () => {
+      vi.spyOn(globalThis, "fetch").mockResolvedValue(
+        new Response(null, { status: 500 }),
+      );
+
+      const screen = await renderBoardSetLibrary();
+
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      await expect
+        .element(screen.getByText(`Couldn't download board set "First Words"`))
+        .toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toHaveFocus();
+      expect(await listBoardSetRecords()).toEqual([]);
+    });
+
+    test("marks the button unavailable while a downloaded board set imports", async () => {
+      const starterBoardBytes = await fetch("/first-words.obz").then(
+        (response) => response.bytes(),
+      );
+      const download = stubStreamingDownload({
+        "content-length": String(starterBoardBytes.byteLength),
+      });
+      const unavailableButtons = recordUnavailableButtons();
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(starterBoardBytes);
+      download.finish();
+
+      await expect
+        .element(screen.getByRole("link", { name: "First Words" }))
+        .toHaveFocus();
+      expect(unavailableButtons.stop()).toContainEqual({
+        name: "Download First Words",
+        description: "Importing…",
+      });
+    });
+
+    test("focuses a download's entry when it finishes after reopening the library", async () => {
+      const starterBoardBytes = await fetch("/first-words.obz").then(
+        (response) => response.bytes(),
+      );
+      const download = stubStreamingDownload({
+        "content-length": String(starterBoardBytes.byteLength),
+      });
+
+      const closedScreen = await renderBoardSetLibrary();
+      await closedScreen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      await expect
+        .element(
+          closedScreen.getByRole("button", {
+            name: "Cancel downloading First Words",
+          }),
+        )
+        .toBeInTheDocument();
+      await closedScreen.unmount();
+
+      const screen = await renderBoardSetLibrary();
+      download.send(starterBoardBytes);
+      download.finish();
+
+      await expect
+        .element(screen.getByRole("link", { name: "First Words" }))
+        .toHaveFocus();
+      expect(globalThis.fetch).toHaveBeenCalledOnce();
+      expect(await listBoardSetRecords()).toHaveLength(1);
+    });
+
+    test("keeps describing download progress after reopening the library", async () => {
+      const download = stubStreamingDownload({ "content-length": "2000000" });
+
+      const closedScreen = await renderBoardSetLibrary();
+      await closedScreen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+      download.send(500_000);
+      await expect
+        .element(
+          closedScreen.getByRole("button", {
+            name: "Cancel downloading First Words",
+          }),
+        )
+        .toHaveAccessibleDescription("0.5 of 2 MB");
+      await closedScreen.unmount();
+
+      const screen = await renderBoardSetLibrary();
+      const cancelButton = screen.getByRole("button", {
+        name: "Cancel downloading First Words",
+      });
+      await expect
+        .element(cancelButton)
+        .toHaveAccessibleDescription("0.5 of 2 MB");
+
+      await cancelButton.click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+      expect(await listBoardSetRecords()).toEqual([]);
+    });
   });
 
-  test("shows an error instead of the empty state when sets cannot be retrieved", async () => {
-    const db = await getBoardsDB();
-    db.close();
-    await refreshBoardSets();
+  describe("deleting", () => {
+    test("deletes a set after confirmation", async () => {
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
 
-    const screen = await renderBoardSetLibrary();
+      const screen = await renderBoardSetLibrary();
 
-    await expect
-      .element(screen.getByText("Couldn't load library"))
-      .toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("button", { name: "Download First Words" }))
-      .not.toBeInTheDocument();
-  });
+      await screen
+        .getByRole("button", { name: "More options for Animals" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Delete" }).click();
 
-  test("deletes a set after confirmation", async () => {
-    await seedBoardSets([
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-    ]);
+      await expect
+        .element(screen.getByText("Delete board set?"))
+        .toBeInTheDocument();
+      await screen.getByRole("button", { name: "Delete" }).click();
 
-    const screen = await renderBoardSetLibrary();
+      await expect
+        .element(screen.getByRole("link", { name: "Animals" }))
+        .not.toBeInTheDocument();
+    });
 
-    await screen
-      .getByRole("button", { name: "More options for Animals" })
-      .click();
-    await screen.getByRole("menuitem", { name: "Delete" }).click();
+    test("keeps the set when the delete dialog is cancelled", async () => {
+      await seedBoardSets([
+        { id: "animals", rootBoardId: "root", name: "Animals" },
+      ]);
 
-    await expect
-      .element(screen.getByText("Delete board set?"))
-      .toBeInTheDocument();
-    await screen.getByRole("button", { name: "Delete" }).click();
+      const screen = await renderBoardSetLibrary();
 
-    await expect
-      .element(screen.getByRole("link", { name: "Animals" }))
-      .not.toBeInTheDocument();
-  });
+      await screen
+        .getByRole("button", { name: "More options for Animals" })
+        .click();
+      await screen.getByRole("menuitem", { name: "Delete" }).click();
+      await screen.getByRole("button", { name: "Cancel" }).click();
 
-  test("keeps the set when the delete dialog is cancelled", async () => {
-    await seedBoardSets([
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-    ]);
-
-    const screen = await renderBoardSetLibrary();
-
-    await screen
-      .getByRole("button", { name: "More options for Animals" })
-      .click();
-    await screen.getByRole("menuitem", { name: "Delete" }).click();
-    await screen.getByRole("button", { name: "Cancel" }).click();
-
-    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
-    await expect
-      .element(screen.getByText("Delete board set?"))
-      .not.toBeInTheDocument();
-  });
-
-  test("lists stored and downloadable board sets with no accessibility violations", async () => {
-    await seedBoardSets([
-      { id: "animals", rootBoardId: "root", name: "Animals" },
-      { id: "core-words", rootBoardId: "root", name: "Core Words" },
-    ]);
-
-    const screen = await renderBoardSetLibrary();
-
-    await expect.element(screen.getByText("Board sets")).toBeInTheDocument();
-    await expect.element(screen.getByText("Animals")).toBeInTheDocument();
-    await expect.element(screen.getByText("Core Words")).toBeInTheDocument();
-    await expect.element(screen.getByText("First Words")).toBeInTheDocument();
-
-    await expectNoA11yViolations(document.body);
+      await expect.element(screen.getByText("Animals")).toBeInTheDocument();
+      await expect
+        .element(screen.getByText("Delete board set?"))
+        .not.toBeInTheDocument();
+    });
   });
 });

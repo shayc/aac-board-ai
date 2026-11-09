@@ -67,7 +67,38 @@ describe("app flow", () => {
     await resetBoardsDB();
   });
 
-  test("first run: imported board set opens, composes across boards, and speaks", async () => {
+  test("empty database: imports and opens the bundled starter board", async () => {
+    const { screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "First Words" }))
+      .toBeVisible();
+  });
+
+  test("starter board: a sentence continues into the food folder", async () => {
+    const { screen } = await renderApp();
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await screen.getByRole("button", { name: "I", exact: true }).click();
+    await screen.getByRole("button", { name: "want" }).click();
+    await screen.getByRole("button", { name: "food" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Food" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "water" }).click();
+    speech.speak.mockClear();
+
+    await screen.getByRole("button", { name: "Play message" }).click();
+
+    await vi.waitFor(() => {
+      expect(speech.spokenTexts()).toEqual(["i want water"]);
+    });
+  });
+
+  test("an imported board set opens, composes across boards, and speaks", async () => {
     await importBoardFileFromURL(OBZ_FIXTURE_URL);
 
     const { screen } = await renderApp();
@@ -121,37 +152,6 @@ describe("app flow", () => {
     const response = await fetch(element.src);
 
     expect(await response.text()).toBe("recording");
-  });
-
-  test("empty database: imports and opens the bundled starter board", async () => {
-    const { screen } = await renderApp();
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    await expect
-      .element(screen.getByRole("grid", { name: "First Words" }))
-      .toBeVisible();
-  });
-
-  test("starter board: a sentence continues into the food folder", async () => {
-    const { screen } = await renderApp();
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    await screen.getByRole("button", { name: "I", exact: true }).click();
-    await screen.getByRole("button", { name: "want" }).click();
-    await screen.getByRole("button", { name: "food" }).click();
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Food" }))
-      .toBeVisible();
-
-    await screen.getByRole("button", { name: "water" }).click();
-    speech.speak.mockClear();
-
-    await screen.getByRole("button", { name: "Play message" }).click();
-
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["i want water"]);
-    });
   });
 
   test("?board= link that collides with an existing set keeps both", async () => {
