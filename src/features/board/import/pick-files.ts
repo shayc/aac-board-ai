@@ -18,19 +18,10 @@ export function pickFiles({
 
     input.addEventListener(
       "change",
-      () => {
-        resolve(Array.from(input.files ?? []));
-      },
+      () => resolve(Array.from(input.files ?? [])),
       { once: true },
     );
-
-    input.addEventListener(
-      "cancel",
-      () => {
-        resolve([]);
-      },
-      { once: true },
-    );
+    input.addEventListener("cancel", () => resolve([]), { once: true });
 
     input.showPicker();
   });
