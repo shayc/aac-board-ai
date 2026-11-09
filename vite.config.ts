@@ -29,7 +29,7 @@ export default defineConfig({
     }),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["board.svg"],
+      includeAssets: ["board.svg", "first-words.obz"],
       workbox: {
         runtimeCaching: [
           {
