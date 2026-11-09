@@ -91,8 +91,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("no way feline");
+      expect(speech.spokenTexts()).toEqual(["no way feline"]);
     });
   });
 
@@ -151,8 +150,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("i want water");
+      expect(speech.spokenTexts()).toEqual(["i want water"]);
     });
   });
 

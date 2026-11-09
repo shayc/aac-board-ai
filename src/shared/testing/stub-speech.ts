@@ -3,6 +3,7 @@ import { type MockInstance, vi } from "vitest";
 export function stubSpeech(): {
   speak: MockInstance<SpeechSynthesis["speak"]>;
   cancel: MockInstance<SpeechSynthesis["cancel"]>;
+  spokenTexts: () => string[];
 } {
   const speak = vi
     .spyOn(speechSynthesis, "speak")
@@ -13,7 +14,11 @@ export function stubSpeech(): {
     });
   const cancel = vi.spyOn(speechSynthesis, "cancel").mockReturnValue(undefined);
 
-  return { speak, cancel };
+  function spokenTexts(): string[] {
+    return speak.mock.calls.map(([utterance]) => utterance.text);
+  }
+
+  return { speak, cancel, spokenTexts };
 }
 
 export function preventSpeechEnd(

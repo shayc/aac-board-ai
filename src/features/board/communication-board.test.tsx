@@ -95,8 +95,7 @@ describe("CommunicationBoard", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello world");
+      expect(speech.spokenTexts()).toEqual(["hello world"]);
     });
   });
 
@@ -152,8 +151,7 @@ describe("CommunicationBoard", () => {
         await play.click();
 
         await vi.waitFor(() => {
-          expect(speech.speak).toHaveBeenCalledTimes(1);
-          expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
+          expect(speech.spokenTexts()).toEqual(["hello"]);
         });
 
         await backspace.click();
@@ -172,8 +170,7 @@ describe("CommunicationBoard", () => {
     await screen.getByRole("button", { name: "S", exact: true }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("s");
+      expect(speech.spokenTexts()).toEqual(["s"]);
     });
   });
 
@@ -218,8 +215,7 @@ describe("CommunicationBoard", () => {
     await screen.getByRole("button", { name: "Say then clear" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hi");
+      expect(speech.spokenTexts()).toEqual(["hi"]);
     });
     expect(audio.play).not.toHaveBeenCalled();
   });
@@ -281,8 +277,7 @@ describe("CommunicationBoard", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hi");
+      expect(speech.spokenTexts()).toEqual(["hi"]);
     });
   });
 
@@ -434,8 +429,7 @@ describe("CommunicationBoard", () => {
       await tile.click();
 
       await vi.waitFor(() => {
-        expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0]?.[0].text).toBe("i need help");
+        expect(speech.spokenTexts()).toEqual(["i need help"]);
       });
     },
   );
@@ -453,8 +447,7 @@ describe("CommunicationBoard", () => {
       await screen.getByRole("button", { name: "hello", exact: true }).click();
 
       await vi.waitFor(() => {
-        expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
+        expect(speech.spokenTexts()).toEqual(["hello"]);
       });
     },
   );
@@ -478,8 +471,7 @@ describe("CommunicationBoard", () => {
       await tile.click();
 
       await vi.waitFor(() => {
-        expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0]?.[0].text).toBe("i need help");
+        expect(speech.spokenTexts()).toEqual(["i need help"]);
       });
     },
   );
@@ -492,8 +484,7 @@ describe("CommunicationBoard", () => {
     await userEvent.keyboard("{Space}");
 
     await vi.waitFor(() => {
-      expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
+      expect(speech.spokenTexts()).toEqual(["hello"]);
     });
   });
 

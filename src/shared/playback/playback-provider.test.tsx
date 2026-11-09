@@ -134,8 +134,7 @@ describe("PlaybackProvider", () => {
     });
 
     await expect(outcome).resolves.toBe("failed");
-    expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
+    expect(speech.spokenTexts()).toEqual(["hello"]);
   });
 
   test("rerenders each subscriber only for the playback state it reads", async () => {
