@@ -1,7 +1,8 @@
 import { useLanguage } from "@shared/language/use-language";
 import { useEffect, useEffectEvent } from "react";
-import { useRevalidator } from "react-router";
+import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
+import { boardSetIdFromPath } from "../navigation/board-paths";
 import { translateBoardSets } from "./translate-board-sets";
 
 /**
@@ -12,16 +13,29 @@ export function useBoardSetTranslation(): void {
   const { language } = useLanguage();
   const { boardSets, isLoading } = useBoardSets();
   const { revalidate } = useRevalidator();
+  const { pathname } = useLocation();
+  const pendingPathname = useNavigation().location?.pathname;
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
+
+  const refreshTranslatedBoardSet = useEffectEvent((boardSetId: string) => {
+    const routedBoardSetIds = [pathname, pendingPathname].map(
+      (path) => path && boardSetIdFromPath(path),
+    );
+
+    // Only routes showing or loading this set hold its data. Revalidating
+    // for any other set would re-run a `?board=` link import still in flight.
+    if (routedBoardSetIds.includes(boardSetId)) {
+      void revalidate();
+    }
+
+    void syncBoardSets();
+  });
 
   const translate = useEffectEvent((signal: AbortSignal) =>
     translateBoardSets(boardSets, language, {
       signal,
-      onTranslated: () => {
-        void revalidate();
-        void syncBoardSets();
-      },
+      onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
     }),
   );
 
