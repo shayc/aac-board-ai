@@ -39,12 +39,11 @@ async function loadBoardSets(): Promise<void> {
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
     hasLoaded = true;
   } catch (error) {
-    const { boardSets } = boardSetsStore.getSnapshot();
-    boardSetsStore.setState({
-      boardSets,
+    boardSetsStore.setState((snapshot) => ({
+      ...snapshot,
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
-    });
+    }));
   } finally {
     pendingLoad = null;
   }
