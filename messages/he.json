@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "תרגום אוטומטי של לוחות אינו זמין במכשיר הזה.",
-  "loading": "טעינה...",
+  "loading": "טעינה…",
   "close": "סגירה",
   "opensInNewTab": "(נפתח בכרטיסייה חדשה)",
   "boardGridLabel": "לוח תקשורת",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "פתיחת רשימת הלוחות",
   "boardSelectorClose": "סגירת רשימת הלוחות",
   "boardSelectorNoOptions": "לא נמצאו לוחות תואמים",
-  "libraryLoading": "טעינת ערכות לוחות...",
+  "libraryLoading": "טעינת ערכות לוחות…",
   "libraryLoadFailed": "לא ניתן לטעון את הספרייה",
   "libraryImportBoardFiles": "ייבוא קובצי לוחות",
   "libraryBoardSets": "ערכות לוחות",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "ייבוא קובץ לוח...",
-        "countPlural=*": "ייבוא קובצי לוחות..."
+        "countPlural=one": "ייבוא קובץ לוח…",
+        "countPlural=*": "ייבוא קובצי לוחות…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "ערכת הלוחות \"{name}\" הורדה בהצלחה",
   "libraryDownloadFailed": "הורדת ערכת הלוחות \"{name}\" נכשלה",
   "libraryDownloadProgress": "{loaded} מתוך {total}",
-  "libraryDownloadingStatus": "מתבצעת הורדה...",
-  "libraryImportingStatus": "מתבצע ייבוא...",
+  "libraryDownloadingStatus": "מתבצעת הורדה…",
+  "libraryImportingStatus": "מתבצע ייבוא…",
   "libraryCancelDownload": "ביטול ההורדה",
   "libraryCancelDownloadBoardSet": "ביטול ההורדה של {name}",
   "libraryByAuthor": "מאת {author}",
@@ -78,7 +78,7 @@
   "themeLight": "בהיר",
   "themeDark": "כהה",
   "languageLabel": "שפה",
-  "languageDownloading": "הורדת מודל תרגום...",
+  "languageDownloading": "הורדת מודל תרגום…",
   "languageDownloadProgress": "הושלמו {progress}%",
   "speechVoice": "קול",
   "speechRate": "קצב",

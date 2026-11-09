@@ -56,7 +56,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByText("Downloading AI model... 43%"))
+      .element(screen.getByText("Downloading AI model… 43%"))
       .toBeVisible();
   });
 
@@ -68,7 +68,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByText("Downloading AI model...", { exact: true }))
+      .element(screen.getByText("Downloading AI model…", { exact: true }))
       .toBeVisible();
   });
 

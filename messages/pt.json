@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "A tradução automática de pranchas não está disponível neste dispositivo.",
-  "loading": "Carregando...",
+  "loading": "Carregando…",
   "close": "Fechar",
   "opensInNewTab": "(abre em uma nova aba)",
   "boardGridLabel": "Prancha de comunicação",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Abrir lista de pranchas",
   "boardSelectorClose": "Fechar lista de pranchas",
   "boardSelectorNoOptions": "Nenhuma prancha correspondente",
-  "libraryLoading": "Carregando conjuntos de pranchas...",
+  "libraryLoading": "Carregando conjuntos de pranchas…",
   "libraryLoadFailed": "Não foi possível carregar a biblioteca",
   "libraryImportBoardFiles": "Importar arquivos de pranchas",
   "libraryBoardSets": "Conjuntos de pranchas",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importando arquivo de prancha...",
-        "countPlural=*": "Importando arquivos de pranchas..."
+        "countPlural=one": "Importando arquivo de prancha…",
+        "countPlural=*": "Importando arquivos de pranchas…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Conjunto de pranchas \"{name}\" baixado",
   "libraryDownloadFailed": "Não foi possível baixar o conjunto de pranchas \"{name}\"",
   "libraryDownloadProgress": "{loaded} de {total}",
-  "libraryDownloadingStatus": "Baixando...",
-  "libraryImportingStatus": "Importando...",
+  "libraryDownloadingStatus": "Baixando…",
+  "libraryImportingStatus": "Importando…",
   "libraryCancelDownload": "Cancelar download",
   "libraryCancelDownloadBoardSet": "Cancelar o download de {name}",
   "libraryByAuthor": "Por {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Claro",
   "themeDark": "Escuro",
   "languageLabel": "Idioma",
-  "languageDownloading": "Baixando modelo de tradução...",
+  "languageDownloading": "Baixando modelo de tradução…",
   "languageDownloadProgress": "{progress}% concluído",
   "speechVoice": "Voz",
   "speechRate": "Velocidade",

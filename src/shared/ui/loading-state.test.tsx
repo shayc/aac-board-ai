@@ -13,12 +13,12 @@ describe("LoadingState", () => {
     );
 
     await expect
-      .element(screen.getByRole("progressbar", { name: "Loading..." }))
+      .element(screen.getByRole("progressbar", { name: "Loading…" }))
       .toBeInTheDocument();
 
     // Wait for the fade so axe checks the final text contrast.
     await vi.waitFor(() => {
-      const content = screen.getByText("Loading...").element().parentElement;
+      const content = screen.getByText("Loading…").element().parentElement;
       expect(content && getComputedStyle(content).opacity).toBe("1");
     });
 
@@ -28,14 +28,12 @@ describe("LoadingState", () => {
   test("names the progress indicator with a custom loading message", async () => {
     const screen = await render(
       <AppProviders>
-        <LoadingState message="Loading board sets..." />
+        <LoadingState message="Loading board sets…" />
       </AppProviders>,
     );
 
     await expect
-      .element(
-        screen.getByRole("progressbar", { name: "Loading board sets..." }),
-      )
+      .element(screen.getByRole("progressbar", { name: "Loading board sets…" }))
       .toBeInTheDocument();
   });
 });

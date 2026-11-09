@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatisk översättning av tavlor är inte tillgänglig på den här enheten.",
-  "loading": "Laddar...",
+  "loading": "Laddar…",
   "close": "Stäng",
   "opensInNewTab": "(öppnas i en ny flik)",
   "boardGridLabel": "Kommunikationstavla",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Öppna listan med tavlor",
   "boardSelectorClose": "Stäng listan med tavlor",
   "boardSelectorNoOptions": "Inga matchande tavlor",
-  "libraryLoading": "Laddar taveluppsättningar...",
+  "libraryLoading": "Laddar taveluppsättningar…",
   "libraryLoadFailed": "Det gick inte att läsa in biblioteket",
   "libraryImportBoardFiles": "Importera tavelfiler",
   "libraryBoardSets": "Taveluppsättningar",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importerar tavelfil...",
-        "countPlural=*": "Importerar tavelfiler..."
+        "countPlural=one": "Importerar tavelfil…",
+        "countPlural=*": "Importerar tavelfiler…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Taveluppsättningen ”{name}” har laddats ned",
   "libraryDownloadFailed": "Det gick inte att ladda ned taveluppsättningen ”{name}”",
   "libraryDownloadProgress": "{loaded} av {total}",
-  "libraryDownloadingStatus": "Laddar ned...",
-  "libraryImportingStatus": "Importerar...",
+  "libraryDownloadingStatus": "Laddar ned…",
+  "libraryImportingStatus": "Importerar…",
   "libraryCancelDownload": "Avbryt nedladdning",
   "libraryCancelDownloadBoardSet": "Avbryt nedladdningen av {name}",
   "libraryByAuthor": "Av {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Ljust",
   "themeDark": "Mörkt",
   "languageLabel": "Språk",
-  "languageDownloading": "Laddar ner översättningsmodell...",
+  "languageDownloading": "Laddar ner översättningsmodell…",
   "languageDownloadProgress": "{progress}% klart",
   "speechVoice": "Röst",
   "speechRate": "Hastighet",

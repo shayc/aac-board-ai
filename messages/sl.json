@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Samodejno prevajanje table v tej napravi ni na voljo.",
-  "loading": "Nalaganje...",
+  "loading": "Nalaganje…",
   "close": "Zapri",
   "opensInNewTab": "(odpre se v novem zavihku)",
   "boardGridLabel": "Komunikacijska tabla",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Odpri seznam tabel",
   "boardSelectorClose": "Zapri seznam tabel",
   "boardSelectorNoOptions": "Ni ujemajočih se tabel",
-  "libraryLoading": "Nalaganje kompletov tabel...",
+  "libraryLoading": "Nalaganje kompletov tabel…",
   "libraryLoadFailed": "Knjižnice ni bilo mogoče naložiti",
   "libraryImportBoardFiles": "Uvozi datoteke tabel",
   "libraryBoardSets": "Kompleti tabel",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Uvažanje datoteke table...",
-        "countPlural=*": "Uvažanje datotek tabel..."
+        "countPlural=one": "Uvažanje datoteke table…",
+        "countPlural=*": "Uvažanje datotek tabel…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Komplet tabel »{name}« je prenesen",
   "libraryDownloadFailed": "Kompleta tabel »{name}« ni bilo mogoče prenesti",
   "libraryDownloadProgress": "{loaded} od {total}",
-  "libraryDownloadingStatus": "Prenašanje...",
-  "libraryImportingStatus": "Uvažanje...",
+  "libraryDownloadingStatus": "Prenašanje…",
+  "libraryImportingStatus": "Uvažanje…",
   "libraryCancelDownload": "Prekliči prenos",
   "libraryCancelDownloadBoardSet": "Prekliči prenos {name}",
   "libraryByAuthor": "Avtor: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Svetla",
   "themeDark": "Temna",
   "languageLabel": "Jezik",
-  "languageDownloading": "Prenašanje prevajalskega modela...",
+  "languageDownloading": "Prenašanje prevajalskega modela…",
   "languageDownloadProgress": "{progress} % dokončano",
   "speechVoice": "Glas",
   "speechRate": "Hitrost",

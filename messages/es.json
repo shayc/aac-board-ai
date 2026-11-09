@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "La traducción automática de tableros no está disponible en este dispositivo.",
-  "loading": "Cargando...",
+  "loading": "Cargando…",
   "close": "Cerrar",
   "opensInNewTab": "(se abre en una pestaña nueva)",
   "boardGridLabel": "Tablero de comunicación",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Abrir lista de tableros",
   "boardSelectorClose": "Cerrar lista de tableros",
   "boardSelectorNoOptions": "No hay tableros coincidentes",
-  "libraryLoading": "Cargando conjuntos de tableros...",
+  "libraryLoading": "Cargando conjuntos de tableros…",
   "libraryLoadFailed": "No se pudo cargar la biblioteca",
   "libraryImportBoardFiles": "Importar archivos de tableros",
   "libraryBoardSets": "Conjuntos de tableros",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importando archivo de tablero...",
-        "countPlural=*": "Importando archivos de tableros..."
+        "countPlural=one": "Importando archivo de tablero…",
+        "countPlural=*": "Importando archivos de tableros…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Conjunto de tableros \"{name}\" descargado",
   "libraryDownloadFailed": "No se pudo descargar el conjunto de tableros \"{name}\"",
   "libraryDownloadProgress": "{loaded} de {total}",
-  "libraryDownloadingStatus": "Descargando...",
-  "libraryImportingStatus": "Importando...",
+  "libraryDownloadingStatus": "Descargando…",
+  "libraryImportingStatus": "Importando…",
   "libraryCancelDownload": "Cancelar descarga",
   "libraryCancelDownloadBoardSet": "Cancelar la descarga de {name}",
   "libraryByAuthor": "Por {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Claro",
   "themeDark": "Oscuro",
   "languageLabel": "Idioma",
-  "languageDownloading": "Descargando modelo de traducción...",
+  "languageDownloading": "Descargando modelo de traducción…",
   "languageDownloadProgress": "{progress}% completado",
   "speechVoice": "Voz",
   "speechRate": "Velocidad",

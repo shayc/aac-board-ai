@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "الترجمة التلقائية للوحة غير متاحة على هذا الجهاز.",
-  "loading": "جارٍ التحميل...",
+  "loading": "جارٍ التحميل…",
   "close": "إغلاق",
   "opensInNewTab": "(يفتح في علامة تبويب جديدة)",
   "boardGridLabel": "لوحة تواصل",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "فتح قائمة اللوحات",
   "boardSelectorClose": "إغلاق قائمة اللوحات",
   "boardSelectorNoOptions": "لا توجد لوحات مطابقة",
-  "libraryLoading": "جارٍ تحميل مجموعات اللوحات...",
+  "libraryLoading": "جارٍ تحميل مجموعات اللوحات…",
   "libraryLoadFailed": "تعذر تحميل المكتبة",
   "libraryImportBoardFiles": "استيراد ملفات اللوحات",
   "libraryBoardSets": "مجموعات اللوحات",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "جارٍ استيراد ملف لوحة...",
-        "countPlural=*": "جارٍ استيراد ملفات لوحات..."
+        "countPlural=one": "جارٍ استيراد ملف لوحة…",
+        "countPlural=*": "جارٍ استيراد ملفات لوحات…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "تم تنزيل مجموعة اللوحات \"{name}\"",
   "libraryDownloadFailed": "تعذّر تنزيل مجموعة اللوحات \"{name}\"",
   "libraryDownloadProgress": "{loaded} من {total}",
-  "libraryDownloadingStatus": "جارٍ التنزيل...",
-  "libraryImportingStatus": "جارٍ الاستيراد...",
+  "libraryDownloadingStatus": "جارٍ التنزيل…",
+  "libraryImportingStatus": "جارٍ الاستيراد…",
   "libraryCancelDownload": "إلغاء التنزيل",
   "libraryCancelDownloadBoardSet": "إلغاء تنزيل {name}",
   "libraryByAuthor": "بقلم {author}",
@@ -78,7 +78,7 @@
   "themeLight": "فاتح",
   "themeDark": "داكن",
   "languageLabel": "اللغة",
-  "languageDownloading": "جارٍ تنزيل نموذج الترجمة...",
+  "languageDownloading": "جارٍ تنزيل نموذج الترجمة…",
   "languageDownloadProgress": "اكتمل {progress}%",
   "speechVoice": "الصوت",
   "speechRate": "السرعة",

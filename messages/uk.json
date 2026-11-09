@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Автоматичний переклад дошки недоступний на цьому пристрої.",
-  "loading": "Завантаження...",
+  "loading": "Завантаження…",
   "close": "Закрити",
   "opensInNewTab": "(відкривається в новій вкладці)",
   "boardGridLabel": "Комунікаційна дошка",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Відкрити список дощок",
   "boardSelectorClose": "Закрити список дощок",
   "boardSelectorNoOptions": "Немає відповідних дощок",
-  "libraryLoading": "Завантаження наборів дошок...",
+  "libraryLoading": "Завантаження наборів дошок…",
   "libraryLoadFailed": "Не вдалося завантажити бібліотеку",
   "libraryImportBoardFiles": "Імпортувати файли дошок",
   "libraryBoardSets": "Набори дошок",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Імпортування файла дошки...",
-        "countPlural=*": "Імпортування файлів дошок..."
+        "countPlural=one": "Імпортування файла дошки…",
+        "countPlural=*": "Імпортування файлів дошок…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Набір дошок «{name}» завантажено",
   "libraryDownloadFailed": "Не вдалося завантажити набір дошок «{name}»",
   "libraryDownloadProgress": "{loaded} з {total}",
-  "libraryDownloadingStatus": "Завантаження...",
-  "libraryImportingStatus": "Імпортування...",
+  "libraryDownloadingStatus": "Завантаження…",
+  "libraryImportingStatus": "Імпортування…",
   "libraryCancelDownload": "Скасувати завантаження",
   "libraryCancelDownloadBoardSet": "Скасувати завантаження {name}",
   "libraryByAuthor": "Автор: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Світла",
   "themeDark": "Темна",
   "languageLabel": "Мова",
-  "languageDownloading": "Завантаження моделі перекладу...",
+  "languageDownloading": "Завантаження моделі перекладу…",
   "languageDownloadProgress": "{progress}% завершено",
   "speechVoice": "Голос",
   "speechRate": "Швидкість",

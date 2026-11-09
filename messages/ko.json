@@ -78,7 +78,7 @@
   "themeLight": "밝게",
   "themeDark": "어둡게",
   "languageLabel": "언어",
-  "languageDownloading": "번역 모델 다운로드 중...",
+  "languageDownloading": "번역 모델 다운로드 중…",
   "languageDownloadProgress": "{progress}% 완료",
   "speechVoice": "음성",
   "speechRate": "속도",

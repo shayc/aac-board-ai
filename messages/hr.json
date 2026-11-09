@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatski prijevod ploče nije dostupan na ovom uređaju.",
-  "loading": "Učitavanje...",
+  "loading": "Učitavanje…",
   "close": "Zatvori",
   "opensInNewTab": "(otvara se u novoj kartici)",
   "boardGridLabel": "Komunikacijska ploča",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Otvori popis ploča",
   "boardSelectorClose": "Zatvori popis ploča",
   "boardSelectorNoOptions": "Nema odgovarajućih ploča",
-  "libraryLoading": "Učitavanje skupova ploča...",
+  "libraryLoading": "Učitavanje skupova ploča…",
   "libraryLoadFailed": "Nije moguće učitati knjižnicu",
   "libraryImportBoardFiles": "Uvezi datoteke ploča",
   "libraryBoardSets": "Skupovi ploča",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Uvoz datoteke ploče...",
-        "countPlural=*": "Uvoz datoteka ploča..."
+        "countPlural=one": "Uvoz datoteke ploče…",
+        "countPlural=*": "Uvoz datoteka ploča…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Skup ploča „{name}” je preuzet",
   "libraryDownloadFailed": "Skup ploča „{name}” nije moguće preuzeti",
   "libraryDownloadProgress": "{loaded} od {total}",
-  "libraryDownloadingStatus": "Preuzimanje...",
-  "libraryImportingStatus": "Uvoz...",
+  "libraryDownloadingStatus": "Preuzimanje…",
+  "libraryImportingStatus": "Uvoz…",
   "libraryCancelDownload": "Prekini preuzimanje",
   "libraryCancelDownloadBoardSet": "Prekini preuzimanje: {name}",
   "libraryByAuthor": "Autor: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Svijetla",
   "themeDark": "Tamna",
   "languageLabel": "Jezik",
-  "languageDownloading": "Preuzimanje modela za prijevod...",
+  "languageDownloading": "Preuzimanje modela za prijevod…",
   "languageDownloadProgress": "{progress} % dovršeno",
   "speechVoice": "Glas",
   "speechRate": "Brzina",

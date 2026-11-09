@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Die automatische Tafelübersetzung ist auf diesem Gerät nicht verfügbar.",
-  "loading": "Wird geladen...",
+  "loading": "Wird geladen…",
   "close": "Schließen",
   "opensInNewTab": "(öffnet in neuem Tab)",
   "boardGridLabel": "Kommunikationstafel",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Tafelliste öffnen",
   "boardSelectorClose": "Tafelliste schließen",
   "boardSelectorNoOptions": "Keine passenden Tafeln",
-  "libraryLoading": "Tafelsätze werden geladen...",
+  "libraryLoading": "Tafelsätze werden geladen…",
   "libraryLoadFailed": "Bibliothek konnte nicht geladen werden",
   "libraryImportBoardFiles": "Tafeldateien importieren",
   "libraryBoardSets": "Tafelsätze",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tafeldatei wird importiert...",
-        "countPlural=*": "Tafeldateien werden importiert..."
+        "countPlural=one": "Tafeldatei wird importiert…",
+        "countPlural=*": "Tafeldateien werden importiert…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Tafelsatz „{name}“ heruntergeladen",
   "libraryDownloadFailed": "Tafelsatz „{name}“ konnte nicht heruntergeladen werden",
   "libraryDownloadProgress": "{loaded} von {total}",
-  "libraryDownloadingStatus": "Wird heruntergeladen...",
-  "libraryImportingStatus": "Wird importiert...",
+  "libraryDownloadingStatus": "Wird heruntergeladen…",
+  "libraryImportingStatus": "Wird importiert…",
   "libraryCancelDownload": "Download abbrechen",
   "libraryCancelDownloadBoardSet": "Download von {name} abbrechen",
   "libraryByAuthor": "Von {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Hell",
   "themeDark": "Dunkel",
   "languageLabel": "Sprache",
-  "languageDownloading": "Übersetzungsmodell wird heruntergeladen...",
+  "languageDownloading": "Übersetzungsmodell wird heruntergeladen…",
   "languageDownloadProgress": "{progress}% abgeschlossen",
   "speechVoice": "Stimme",
   "speechRate": "Geschwindigkeit",
