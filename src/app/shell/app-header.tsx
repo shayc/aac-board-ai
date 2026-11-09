@@ -32,37 +32,33 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
           pr: safeAreaGutter(theme.spacing(3), "right"),
         })}
       >
-        <Box
-          sx={{ display: "flex", alignItems: "center", justifySelf: "start" }}
-        >
-          <Tooltip title={t(m.libraryOpen)}>
-            <IconButton
-              aria-label={t(m.libraryOpen)}
-              size="large"
-              edge="start"
-              onClick={onOpenLibrary}
-            >
-              <ViewSidebarOutlinedIcon sx={flipForLTR} />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Tooltip title={t(m.libraryOpen)}>
+          <IconButton
+            aria-label={t(m.libraryOpen)}
+            size="large"
+            edge="start"
+            onClick={onOpenLibrary}
+            sx={{ justifySelf: "start" }}
+          >
+            <ViewSidebarOutlinedIcon sx={flipForLTR} />
+          </IconButton>
+        </Tooltip>
 
         <Box sx={{ minWidth: 0 }}>
           <BoardSelector />
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>
-          <Tooltip title={t(m.settingsOpen)}>
-            <IconButton
-              aria-label={t(m.settingsOpen)}
-              size="large"
-              edge="end"
-              onClick={onOpenSettings}
-            >
-              <SettingsOutlinedIcon />
-            </IconButton>
-          </Tooltip>
-        </Box>
+        <Tooltip title={t(m.settingsOpen)}>
+          <IconButton
+            aria-label={t(m.settingsOpen)}
+            size="large"
+            edge="end"
+            onClick={onOpenSettings}
+            sx={{ justifySelf: "end" }}
+          >
+            <SettingsOutlinedIcon />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
     </AppBar>
   );
