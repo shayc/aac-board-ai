@@ -89,6 +89,27 @@ describe("PlaybackProvider", () => {
     expect(speech.speak).toHaveBeenCalledTimes(1);
   });
 
+  test("reports a failed step after playing the remaining steps", async () => {
+    audio.play.mockImplementationOnce(() =>
+      Promise.reject(new DOMException("Blocked", "NotAllowedError")),
+    );
+    const { result } = await renderHook(() => usePlayback(), {
+      wrapper: PlaybackProvider,
+    });
+
+    const outcome = result.current.play({
+      owner: "message",
+      steps: [
+        { kind: "audio", src: "recording.mp3" },
+        { kind: "speech", text: "hello" },
+      ],
+    });
+
+    await expect(outcome).resolves.toBe("failed");
+    expect(speech.speak).toHaveBeenCalledTimes(1);
+    expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+  });
+
   test("rerenders each subscriber only for the playback state it reads", async () => {
     let utterance: SpeechSynthesisUtterance | undefined;
     speech.speak.mockImplementationOnce((spoken) => {

@@ -1,3 +1,4 @@
+import type { StringTranslations } from "../board-types";
 import {
   getBoardsDB,
   normalizeAssetPath,
@@ -46,7 +47,7 @@ export async function replaceStringTranslations(
   boardSetId: string,
   boardId: string,
   language: string,
-  translations: Record<string, string>,
+  translations: StringTranslations,
 ): Promise<void> {
   validateId(boardSetId, "boardSetId");
   validateId(boardId, "boardId");
@@ -60,7 +61,10 @@ export async function replaceStringTranslations(
 
   const updatedOBF = {
     ...record.obf,
-    strings: { ...record.obf.strings, [language]: translations },
+    strings: {
+      ...record.obf.strings,
+      [language]: Object.fromEntries(translations),
+    },
   };
 
   await tx.store.put({ ...record, obf: updatedOBF });

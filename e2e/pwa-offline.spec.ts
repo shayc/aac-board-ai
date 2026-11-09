@@ -1,9 +1,6 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 
-test("a stored board opens and remains usable offline", async ({
-  context,
-  page,
-}) => {
+async function openStarterBoardSetUnderServiceWorker(page: Page) {
   await page.goto("/");
   await page.getByRole("button", { name: "Continue" }).click();
 
@@ -18,6 +15,13 @@ test("a stored board opens and remains usable offline", async ({
       { timeout: 15_000 },
     )
     .toBe(true);
+}
+
+test("a stored board opens and remains usable offline", async ({
+  context,
+  page,
+}) => {
+  await openStarterBoardSetUnderServiceWorker(page);
 
   await page.close();
   await context.setOffline(true);
@@ -36,4 +40,26 @@ test("a stored board opens and remains usable offline", async ({
 
   await offlinePage.getByRole("button", { name: "want" }).click();
   await expect(playMessageButton).toBeEnabled();
+});
+
+test("deleting the last board set offline restores the starter board set", async ({
+  context,
+  page,
+}) => {
+  await openStarterBoardSetUnderServiceWorker(page);
+  await context.setOffline(true);
+
+  await page.getByRole("button", { name: "Open library" }).click();
+  await page.getByRole("link", { name: "First Words" }).hover();
+  await page
+    .getByRole("button", { name: "More options for First Words" })
+    .click();
+  await page.getByRole("menuitem", { name: "Delete" }).click();
+  await page.getByRole("button", { name: "Delete" }).click();
+
+  await expect(page.getByRole("link", { name: "First Words" })).toBeVisible();
+
+  await page.getByRole("button", { name: "Close library" }).click();
+
+  await expect(page.getByRole("grid", { name: "First Words" })).toBeVisible();
 });

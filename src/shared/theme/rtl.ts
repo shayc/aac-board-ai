@@ -1,3 +1,5 @@
+import { useLanguage } from "@shared/language/use-language";
+
 /** Mirrors directional icons such as Back and Backspace on the X axis in RTL. */
 export const flipForRTL = {
   "&:dir(rtl)": { transform: "scaleX(-1)" },
@@ -10,3 +12,9 @@ export const flipForRTL = {
 export const flipForLTR = {
   "&:dir(ltr)": { transform: "scaleX(-1)" },
 } as const;
+
+export function useEndSide() {
+  const { direction } = useLanguage();
+
+  return direction === "rtl" ? "left" : "right";
+}

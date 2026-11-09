@@ -60,6 +60,21 @@ describe("loadBoardInLanguage", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
+  test("keeps text that matches an inherited object property but is missing from the board's translations", async () => {
+    await storeBoard({
+      name: "constructor",
+      buttons: [{ id: "btn-eat", label: "toString", vocalization: "valueOf" }],
+      grid: { rows: 1, columns: 1, order: [["btn-eat"]] },
+      strings: { "es-ES": { Food: "Comida" } },
+    });
+
+    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+
+    expect(board.name).toBe("constructor");
+    expect(board.buttons[0].label).toBe("toString");
+    expect(board.buttons[0].vocalization).toBe("valueOf");
+  });
+
   test("returns the source board without translating when it has no translations for the language", async () => {
     await storeBoard();
     const { create } = stubTranslator((input) => `[es] ${input}`);
@@ -69,18 +84,5 @@ describe("loadBoardInLanguage", () => {
     expect(board.name).toBe("Food");
     expect(board.buttons[0].label).toBe("eat");
     expect(create).not.toHaveBeenCalled();
-  });
-
-  test("leaves text that matches an Object property untranslated instead of failing", async () => {
-    await storeBoard({
-      buttons: [{ id: "btn-to-string", label: "toString" }],
-      grid: { rows: 1, columns: 1, order: [["btn-to-string"]] },
-      strings: { es: { Food: "Comida" } },
-    });
-
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
-
-    expect(board.name).toBe("Comida");
-    expect(board.buttons[0].label).toBe("toString");
   });
 });

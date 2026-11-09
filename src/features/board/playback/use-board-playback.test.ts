@@ -117,7 +117,7 @@ describe("useBoardPlayback", () => {
 
     const { result, rerender } = await renderPlayback();
 
-    await expect(result.current.playMessage(parts)).resolves.toBe("completed");
+    await expect(result.current.playMessage(parts)).resolves.toBe("failed");
     await rerender();
 
     expect(result.current.isMessagePlaying).toBe(false);

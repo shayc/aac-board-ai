@@ -38,10 +38,10 @@ export type BoardAction =
   | { kind: "play" }
   | { kind: "spell"; text: string };
 
-export type StringTranslations = Partial<Record<string, string>>;
+export type StringTranslations = ReadonlyMap<string, string>;
 
 /**
  * BCP 47 locale → string translations. Imported boards may key by region
  * (`es-ES`); translations cached on this device key by language code (`es`).
  */
-export type TranslationsByLocale = Partial<Record<string, StringTranslations>>;
+export type TranslationsByLocale = ReadonlyMap<string, StringTranslations>;

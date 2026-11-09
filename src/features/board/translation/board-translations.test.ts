@@ -8,16 +8,12 @@ import {
 } from "./board-translations";
 import type { Board } from "../board-types";
 
-const mockTranslationsByLocale = {
-  "es-ES": {
-    "My Board": "Mi Tablero",
-    Hello: "Hola",
-    "Hello there": "Hola a todos",
-  },
-  "fr-CA": {
-    Hello: "Bonjour",
-  },
-};
+const spanishTranslations = new Map([
+  ["My Board", "Mi Tablero"],
+  ["Hello", "Hola"],
+  ["Hello there", "Hola a todos"],
+]);
+const frenchTranslations = new Map([["Hello", "Bonjour"]]);
 
 const mockBoard: Board = {
   id: "board-1",
@@ -38,7 +34,10 @@ const mockBoard: Board = {
     },
   ],
   locale: "en-US",
-  translationsByLocale: mockTranslationsByLocale,
+  translationsByLocale: new Map([
+    ["es-ES", spanishTranslations],
+    ["fr-CA", frenchTranslations],
+  ]),
 };
 
 describe("getBoardLanguage", () => {
@@ -51,28 +50,28 @@ describe("getBoardLanguage", () => {
 
 describe("findStringTranslations", () => {
   test("matches regional translations by base language", () => {
-    expect(
-      findStringTranslations(mockBoard.translationsByLocale, "es"),
-    ).toEqual(mockTranslationsByLocale["es-ES"]);
-    expect(
-      findStringTranslations(mockBoard.translationsByLocale, "fr"),
-    ).toEqual(mockTranslationsByLocale["fr-CA"]);
+    expect(findStringTranslations(mockBoard.translationsByLocale, "es")).toBe(
+      spanishTranslations,
+    );
+    expect(findStringTranslations(mockBoard.translationsByLocale, "fr")).toBe(
+      frenchTranslations,
+    );
   });
 
   test("returns nothing for an untranslated language", () => {
     expect(
       findStringTranslations(mockBoard.translationsByLocale, "de"),
     ).toBeUndefined();
-    expect(findStringTranslations({}, "es")).toBeUndefined();
+    expect(findStringTranslations(new Map(), "es")).toBeUndefined();
   });
 });
 
 describe("applyTranslations", () => {
   test("translates the board name and labels, leaving untranslated text unchanged", () => {
-    const translations = {
-      "My Board": "Mi Tablero",
-      Hello: "Hola",
-    };
+    const translations = new Map([
+      ["My Board", "Mi Tablero"],
+      ["Hello", "Hola"],
+    ]);
     const translated = applyTranslations(mockBoard, translations);
 
     expect(translated.name).toBe("Mi Tablero");
@@ -84,11 +83,14 @@ describe("applyTranslations", () => {
   test.each(["", " \t\n\u00a0 "])(
     "clears text whose translation is blank (%j)",
     (text) => {
-      const translated = applyTranslations(mockBoard, {
-        "My Board": text,
-        Hello: text,
-        "Hello there": text,
-      });
+      const translated = applyTranslations(
+        mockBoard,
+        new Map([
+          ["My Board", text],
+          ["Hello", text],
+          ["Hello there", text],
+        ]),
+      );
 
       expect(translated.name).toBe("");
       expect(translated.buttons[0].label).toBe("");
@@ -110,11 +112,14 @@ describe("applyTranslations", () => {
       ],
     };
 
-    const translated = applyTranslations(board, {
-      " My Board ": " Mi Tablero ",
-      " Hello ": " Hola ",
-      "\tHello there\n": "\tHola a todos\n",
-    });
+    const translated = applyTranslations(
+      board,
+      new Map([
+        [" My Board ", " Mi Tablero "],
+        [" Hello ", " Hola "],
+        ["\tHello there\n", "\tHola a todos\n"],
+      ]),
+    );
 
     expect(translated.name).toBe(" Mi Tablero ");
     expect(translated.buttons[0].label).toBe(" Hola ");

@@ -32,3 +32,22 @@ test("names each board in the language, falling back to its stored name", async 
     ]),
   );
 });
+
+test("keeps a board name that matches an inherited object property but is missing from its translations", async () => {
+  await insertBoardSet({
+    id: "set-2",
+    rootBoardId: "root",
+    boards: [
+      makeOBFBoard({
+        id: "root",
+        name: "constructor",
+        strings: { es: { Home: "Inicio" } },
+      }),
+    ],
+    assets: [],
+  });
+
+  await expect(listBoardNamesInLanguage("set-2", "es")).resolves.toEqual([
+    { id: "root", name: "constructor" },
+  ]);
+});
