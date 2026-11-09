@@ -13,11 +13,11 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import type SvgIcon from "@mui/material/SvgIcon";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { locales } from "@paraglide/runtime";
 import { useTranslate } from "@shared/language/use-translate";
-import type { ReactNode } from "react";
 
 import { BoardMark } from "./board-mark";
 
@@ -28,7 +28,7 @@ interface OnboardingDialogProps {
 
 interface Highlight {
   id: string;
-  icon: ReactNode;
+  Icon: typeof SvgIcon;
   title: string;
   description: string;
 }
@@ -40,13 +40,13 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const suggestionsOrLanguageHighlight: Highlight = areSuggestionsSupported()
     ? {
         id: "suggestions",
-        icon: <AutoAwesomeOutlinedIcon color="primary" fontSize="inherit" />,
+        Icon: AutoAwesomeOutlinedIcon,
         title: t(m.onboardingSuggestionsTitle),
         description: t(m.onboardingSuggestionsDescription),
       }
     : {
         id: "language",
-        icon: <TranslateOutlinedIcon color="primary" fontSize="inherit" />,
+        Icon: TranslateOutlinedIcon,
         title: t(m.onboardingLanguageTitle),
         description: t(m.onboardingLanguageDescription, {
           count: locales.length,
@@ -56,14 +56,14 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
   const highlights: Highlight[] = [
     {
       id: "tap-to-speak",
-      icon: <RecordVoiceOverOutlinedIcon color="primary" fontSize="inherit" />,
+      Icon: RecordVoiceOverOutlinedIcon,
       title: t(m.onboardingTapToSpeakTitle),
       description: t(m.onboardingTapToSpeakDescription),
     },
     suggestionsOrLanguageHighlight,
     {
       id: "free-private",
-      icon: <LockOutlinedIcon color="primary" fontSize="inherit" />,
+      Icon: LockOutlinedIcon,
       title: t(m.onboardingFreePrivateTitle),
       description: t(m.onboardingFreePrivateDescription),
     },
@@ -121,7 +121,7 @@ export function OnboardingDialog({ open, onClose }: OnboardingDialogProps) {
                     fontSize: "36px",
                   }}
                 >
-                  {highlight.icon}
+                  <highlight.Icon color="primary" fontSize="inherit" />
                 </ListItemIcon>
                 <ListItemText
                   primary={highlight.title}
