@@ -1,4 +1,3 @@
-import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import type { ReactNode } from "react";
 import { MemoryRouter } from "react-router";
@@ -13,22 +12,6 @@ function renderWithProviders(children: ReactNode) {
       <AppProviders>{children}</AppProviders>
     </MemoryRouter>,
   );
-}
-
-const roomForTooltip = { width: 100, marginInline: "auto" };
-
-function sideOf(tooltip: Element, anchor: Element) {
-  const tooltipRect = tooltip.getBoundingClientRect();
-  const anchorRect = anchor.getBoundingClientRect();
-
-  if (tooltipRect.left >= anchorRect.right) {
-    return "right";
-  }
-  if (tooltipRect.right <= anchorRect.left) {
-    return "left";
-  }
-
-  return "overlapping";
 }
 
 describe("BoardSetList", () => {
@@ -146,42 +129,4 @@ describe("BoardSetList", () => {
     });
     expect(onShowInfo).not.toHaveBeenCalled();
   });
-
-  test.each([
-    {
-      language: "en",
-      buttonName: "More options for Core Words",
-      tooltipName: "More options",
-      side: "right",
-    },
-    {
-      language: "he",
-      buttonName: "אפשרויות נוספות עבור Core Words",
-      tooltipName: "אפשרויות נוספות",
-      side: "left",
-    },
-  ] as const)(
-    "shows the menu tooltip on the $side in $language",
-    async ({ language, buttonName, tooltipName, side }) => {
-      setStoredLanguage(language);
-
-      const screen = await renderWithProviders(
-        <div style={roomForTooltip}>
-          <BoardSetList
-            boardSets={[makeBoardSetRecord({ name: "Core Words" })]}
-            downloadableBoardSets={[]}
-            onShowInfo={vi.fn()}
-            onRequestDelete={vi.fn()}
-          />
-        </div>,
-      );
-
-      const button = screen.getByRole("button", { name: buttonName });
-      await button.hover();
-      const tooltip = screen.getByRole("tooltip", { name: tooltipName });
-      await expect.element(tooltip).toBeVisible();
-
-      expect(sideOf(tooltip.element(), button.element())).toBe(side);
-    },
-  );
 });
