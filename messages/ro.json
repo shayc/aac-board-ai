@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Se importă fișierul tablei…",
-        "countPlural=*": "Se importă fișierele tablelor…"
+        "countPlural=one": "Se importă fișierul de tablă…",
+        "countPlural=*": "Se importă fișierele de table…"
       }
     }
   ],
