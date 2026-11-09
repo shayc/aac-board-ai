@@ -70,11 +70,11 @@ function announceCompletedDownload(boardSetId: string) {
 
 async function runDownload(
   url: string,
-  controller: AbortController,
+  signal: AbortSignal,
 ): Promise<ImportedBoardSet | undefined> {
   try {
     const importedBoardSet = await importBoardFileFromURL(url, {
-      signal: controller.signal,
+      signal,
       onProgress: (progress) => publishProgress(url, progress),
       onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
     });
@@ -82,7 +82,7 @@ async function runDownload(
 
     return importedBoardSet;
   } catch (error) {
-    if (controller.signal.aborted) {
+    if (signal.aborted) {
       return undefined;
     }
 
@@ -102,7 +102,7 @@ export function downloadBoardSet(
   }
 
   const controller = new AbortController();
-  const promise = runDownload(url, controller);
+  const promise = runDownload(url, controller.signal);
   pendingDownloadsByURL.set(url, { promise, controller });
   setDownloadPhase(url, { kind: "downloading", loaded: 0 });
 
