@@ -1,10 +1,12 @@
 import { listBoardSetRecords } from "@features/board";
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
+import { deleteDB, openDB } from "idb";
 import type { LoaderFunctionArgs } from "react-router";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
 
+const BOARDS_DB_NAME = "boards-db";
 const FIXTURE_BOARD_URL =
   "/src/features/board/testing/sample-boards/lots-of-stuff.obz";
 const DEFAULT_BOARD_PATH = "/first-words.obz";
@@ -99,6 +101,17 @@ describe("rootIndexLoader", () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get("Location")).toBe("/sets/set-2/boards/root-2");
+  });
+
+  test("rejects without importing the starter board set when stored board sets cannot be read", async () => {
+    const newerBoardsDB = await openDB(BOARDS_DB_NAME, 2);
+    newerBoardsDB.close();
+    onTestFinished(() => deleteDB(BOARDS_DB_NAME));
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    await expect(callLoader()).rejects.toMatchObject({ name: "VersionError" });
+
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   test("imports the default board when no param is given and IDB is empty", async () => {
