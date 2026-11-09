@@ -1,10 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useRewriter } from "@shayc/react-built-in-ai";
-import {
-  enableQuietly,
-  isRequestFailure,
-  type SuggestionSource,
-} from "./suggestion-source";
+import { toSuggestionSource, type SuggestionSource } from "./suggestion-source";
 
 interface UseRewriterSourceOptions {
   text: string;
@@ -37,17 +33,5 @@ export function useRewriterSource({
       : undefined,
   });
 
-  function enable() {
-    if (rewriter.status === "downloadable") {
-      enableQuietly(rewriter);
-    }
-  }
-
-  return {
-    engineStatus: rewriter.status,
-    candidate: request.value,
-    isRequestPending: request.isPending,
-    hasRequestFailed: isRequestFailure(request.error),
-    enable,
-  };
+  return toSuggestionSource(rewriter, request);
 }

@@ -1,10 +1,6 @@
 import { useLatestAsync } from "@shared/hooks/use-latest-async";
 import { useProofreader } from "@shayc/react-built-in-ai";
-import {
-  enableQuietly,
-  isRequestFailure,
-  type SuggestionSource,
-} from "./suggestion-source";
+import { toSuggestionSource, type SuggestionSource } from "./suggestion-source";
 
 interface UseProofreaderSourceOptions {
   text: string;
@@ -30,17 +26,5 @@ export function useProofreaderSource({
       : undefined,
   });
 
-  function enable() {
-    if (proofreader.status === "downloadable") {
-      enableQuietly(proofreader);
-    }
-  }
-
-  return {
-    engineStatus: proofreader.status,
-    candidate: request.value,
-    isRequestPending: request.isPending,
-    hasRequestFailed: isRequestFailure(request.error),
-    enable,
-  };
+  return toSuggestionSource(proofreader, request);
 }
