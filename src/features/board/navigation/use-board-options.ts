@@ -21,7 +21,8 @@ export function useBoardOptions(boardSetId: string | undefined): BoardOption[] {
     .map(({ id, name, translationsByLocale }) => ({
       id,
       name:
-        findStringTranslations(translationsByLocale, language)?.[name] ?? name,
+        findStringTranslations(translationsByLocale, language)?.get(name) ??
+        name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }

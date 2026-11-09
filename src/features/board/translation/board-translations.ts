@@ -32,11 +32,13 @@ export function findStringTranslations(
   translationsByLocale: TranslationsByLocale,
   language: string,
 ): StringTranslations | undefined {
-  const match = Object.entries(translationsByLocale).find(
-    ([locale]) => getLanguageCode(locale) === language,
-  );
+  for (const [locale, translations] of translationsByLocale) {
+    if (getLanguageCode(locale) === language) {
+      return translations;
+    }
+  }
 
-  return match?.[1];
+  return undefined;
 }
 
 export function applyTranslations(
@@ -44,7 +46,7 @@ export function applyTranslations(
   translations: StringTranslations,
 ): Board {
   function translateString(text: string | undefined) {
-    const translated = text ? (translations[text] ?? text) : text;
+    const translated = text ? (translations.get(text) ?? text) : text;
 
     return nonBlankText(translated);
   }
