@@ -62,14 +62,35 @@ function publishProgress(url: string, progress: DownloadProgress) {
   setDownloadPhase(url, { kind: "downloading", ...progress });
 }
 
-function announceCompletedDownload(
-  importedBoardSet: ImportedBoardSet,
-): ImportedBoardSet {
+function announceCompletedDownload(boardSetId: string) {
   for (const listener of completedDownloadListeners) {
-    listener(importedBoardSet.id);
+    listener(boardSetId);
   }
+}
 
-  return importedBoardSet;
+async function runDownload(
+  url: string,
+  controller: AbortController,
+): Promise<ImportedBoardSet | undefined> {
+  try {
+    const importedBoardSet = await importBoardFileFromURL(url, {
+      signal: controller.signal,
+      onProgress: (progress) => publishProgress(url, progress),
+      onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
+    });
+    announceCompletedDownload(importedBoardSet.id);
+
+    return importedBoardSet;
+  } catch (error) {
+    if (controller.signal.aborted) {
+      return undefined;
+    }
+
+    throw error;
+  } finally {
+    pendingDownloadsByURL.delete(url);
+    setDownloadPhase(url);
+  }
 }
 
 export function downloadBoardSet(
@@ -81,24 +102,7 @@ export function downloadBoardSet(
   }
 
   const controller = new AbortController();
-  const promise = importBoardFileFromURL(url, {
-    signal: controller.signal,
-    onProgress: (progress) => publishProgress(url, progress),
-    onImportStart: () => setDownloadPhase(url, { kind: "importing" }),
-  })
-    .then(announceCompletedDownload)
-    .catch((error: unknown) => {
-      if (controller.signal.aborted) {
-        return undefined;
-      }
-
-      throw error;
-    })
-    .finally(() => {
-      pendingDownloadsByURL.delete(url);
-      setDownloadPhase(url);
-    });
-
+  const promise = runDownload(url, controller);
   pendingDownloadsByURL.set(url, { promise, controller });
   setDownloadPhase(url, { kind: "downloading", loaded: 0 });
 
