@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Nie udało się zaimportować pliku „{fileName}”",
+  "libraryImportFailedBoardFile": "Nie udało się zaimportować pliku tablicy „{fileName}”",
   "libraryImportFailedBoardFiles": "Nie udało się zaimportować plików tablic",
   "libraryImportOnlyBoardFiles": "Można importować tylko pliki tablic",
-  "libraryImportTooLargeBoardFile": "Plik „{fileName}” jest zbyt duży, aby go zaimportować",
+  "libraryImportTooLargeBoardFile": "Plik tablicy „{fileName}” jest zbyt duży, aby go zaimportować",
   "libraryImportTooLargeBoardFiles": "Pliki tablic są zbyt duże, aby je zaimportować",
-  "libraryImportPartiallyFailed": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
   "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",
   "libraryInfo": "Informacje",
   "libraryDelete": "Usuń",

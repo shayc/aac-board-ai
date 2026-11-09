@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "„{fileName}“ konnte nicht importiert werden",
+  "libraryImportFailedBoardFile": "Tafeldatei „{fileName}“ konnte nicht importiert werden",
   "libraryImportFailedBoardFiles": "Tafeldateien konnten nicht importiert werden",
   "libraryImportOnlyBoardFiles": "Nur Tafeldateien können importiert werden",
-  "libraryImportTooLargeBoardFile": "„{fileName}“ ist zu groß zum Importieren",
+  "libraryImportTooLargeBoardFile": "Tafeldatei „{fileName}“ ist zu groß zum Importieren",
   "libraryImportTooLargeBoardFiles": "Die Tafeldateien sind zu groß zum Importieren",
-  "libraryImportPartiallyFailed": "Einige Tafeldateien konnten nicht importiert werden ({failed} von {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Einige Tafeldateien konnten nicht importiert werden ({failed} von {total})",
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
   "libraryInfo": "Info",
   "libraryDelete": "Löschen",

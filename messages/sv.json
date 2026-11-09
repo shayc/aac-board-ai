@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Det gick inte att importera ”{fileName}”",
+  "libraryImportFailedBoardFile": "Det gick inte att importera tavelfilen ”{fileName}”",
   "libraryImportFailedBoardFiles": "Det gick inte att importera tavelfilerna",
   "libraryImportOnlyBoardFiles": "Endast tavelfiler kan importeras",
-  "libraryImportTooLargeBoardFile": "Filen ”{fileName}” är för stor för att importeras",
+  "libraryImportTooLargeBoardFile": "Tavelfilen ”{fileName}” är för stor för att importeras",
   "libraryImportTooLargeBoardFiles": "Tavelfilerna är för stora för att importeras",
-  "libraryImportPartiallyFailed": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
   "libraryDropToImport": "Släpp tavelfiler för att importera",
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",

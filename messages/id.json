@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tidak dapat mengimpor \"{fileName}\"",
+  "libraryImportFailedBoardFile": "Tidak dapat mengimpor berkas papan \"{fileName}\"",
   "libraryImportFailedBoardFiles": "Tidak dapat mengimpor berkas papan",
   "libraryImportOnlyBoardFiles": "Hanya berkas papan yang dapat diimpor",
-  "libraryImportTooLargeBoardFile": "Berkas \"{fileName}\" terlalu besar untuk diimpor",
+  "libraryImportTooLargeBoardFile": "Berkas papan \"{fileName}\" terlalu besar untuk diimpor",
   "libraryImportTooLargeBoardFiles": "Berkas papan terlalu besar untuk diimpor",
-  "libraryImportPartiallyFailed": "Tidak dapat mengimpor sebagian berkas papan ({failed} dari {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Tidak dapat mengimpor sebagian berkas papan ({failed} dari {total})",
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",

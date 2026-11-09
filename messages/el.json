@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Δεν ήταν δυνατή η εισαγωγή του αρχείου «{fileName}»",
+  "libraryImportFailedBoardFile": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα «{fileName}»",
   "libraryImportFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων",
   "libraryImportOnlyBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
-  "libraryImportTooLargeBoardFile": "Το αρχείο «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
+  "libraryImportTooLargeBoardFile": "Το αρχείο πίνακα «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
   "libraryImportTooLargeBoardFiles": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή",
-  "libraryImportPartiallyFailed": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
   "libraryDelete": "Διαγραφή",

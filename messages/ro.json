@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Fișierul „{fileName}” nu a putut fi importat",
+  "libraryImportFailedBoardFile": "Fișierul tablei „{fileName}” nu a putut fi importat",
   "libraryImportFailedBoardFiles": "Fișierele tablelor nu au putut fi importate",
   "libraryImportOnlyBoardFiles": "Se pot importa doar fișiere de table",
-  "libraryImportTooLargeBoardFile": "Fișierul „{fileName}” este prea mare pentru a fi importat",
+  "libraryImportTooLargeBoardFile": "Fișierul tablei „{fileName}” este prea mare pentru a fi importat",
   "libraryImportTooLargeBoardFiles": "Fișierele tablelor sunt prea mari pentru a fi importate",
-  "libraryImportPartiallyFailed": "Unele fișiere ale tablelor nu au putut fi importate ({failed} din {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Unele fișiere ale tablelor nu au putut fi importate ({failed} din {total})",
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",

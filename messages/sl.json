@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteke »{fileName}« ni bilo mogoče uvoziti",
+  "libraryImportFailedBoardFile": "Datoteke table »{fileName}« ni bilo mogoče uvoziti",
   "libraryImportFailedBoardFiles": "Datotek tabel ni bilo mogoče uvoziti",
   "libraryImportOnlyBoardFiles": "Uvoziti je mogoče samo datoteke tabel",
-  "libraryImportTooLargeBoardFile": "Datoteka »{fileName}« je prevelika za uvoz",
+  "libraryImportTooLargeBoardFile": "Datoteka table »{fileName}« je prevelika za uvoz",
   "libraryImportTooLargeBoardFiles": "Datoteke tabel so prevelike za uvoz",
-  "libraryImportPartiallyFailed": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

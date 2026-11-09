@@ -97,7 +97,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
+      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
   });
 
   test("names the failed file while keeping the board sets that imported", async () => {
@@ -109,7 +109,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
+      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
     expect(await listBoardSetRecords()).toHaveLength(1);
   });
 
@@ -150,7 +150,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('"zip-bomb.obz" is too large to import');
+      .toHaveTextContent('Board file "zip-bomb.obz" is too large to import');
   });
 
   test("shows the too-large message when every file exceeds the decompression limit", async () => {

@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "تعذّر استيراد \"{fileName}\"",
+  "libraryImportFailedBoardFile": "تعذّر استيراد ملف اللوحة \"{fileName}\"",
   "libraryImportFailedBoardFiles": "تعذّر استيراد ملفات اللوحات",
   "libraryImportOnlyBoardFiles": "يمكن استيراد ملفات اللوحات فقط",
-  "libraryImportTooLargeBoardFile": "الملف \"{fileName}\" كبير جدًا بحيث يتعذّر استيراده",
+  "libraryImportTooLargeBoardFile": "ملف اللوحة \"{fileName}\" كبير جدًا بحيث يتعذّر استيراده",
   "libraryImportTooLargeBoardFiles": "ملفات اللوحات كبيرة جدًا بحيث يتعذّر استيرادها",
-  "libraryImportPartiallyFailed": "تعذّر استيراد بعض ملفات اللوحات ({failed} من {total})",
+  "libraryImportPartiallyFailedBoardFiles": "تعذّر استيراد بعض ملفات اللوحات ({failed} من {total})",
   "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
   "libraryInfo": "معلومات",
   "libraryDelete": "حذف",

@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "\"{fileName}\" என்பதை இறக்குமதி செய்ய முடியவில்லை",
+  "libraryImportFailedBoardFile": "பலகைக் கோப்பு \"{fileName}\" என்பதை இறக்குமதி செய்ய முடியவில்லை",
   "libraryImportFailedBoardFiles": "பலகைக் கோப்புகளை இறக்குமதி செய்ய முடியவில்லை",
   "libraryImportOnlyBoardFiles": "பலகைக் கோப்புகளை மட்டுமே இறக்குமதி செய்ய முடியும்",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" இறக்குமதி செய்ய மிகப் பெரியது",
+  "libraryImportTooLargeBoardFile": "பலகைக் கோப்பு \"{fileName}\" இறக்குமதி செய்ய மிகப் பெரியது",
   "libraryImportTooLargeBoardFiles": "பலகைக் கோப்புகள் இறக்குமதி செய்ய மிகப் பெரியவை",
-  "libraryImportPartiallyFailed": "சில பலகைக் கோப்புகளை இறக்குமதி செய்ய முடியவில்லை ({total} இல் {failed})",
+  "libraryImportPartiallyFailedBoardFiles": "சில பலகைக் கோப்புகளை இறக்குமதி செய்ய முடியவில்லை ({total} இல் {failed})",
   "libraryDropToImport": "இறக்குமதி செய்ய பலகை கோப்புகளை விடுங்கள்",
   "libraryInfo": "தகவல்",
   "libraryDelete": "நீக்கு",

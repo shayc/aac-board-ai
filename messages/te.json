@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "\"{fileName}\"ను దిగుమతి చేయలేకపోయాం",
+  "libraryImportFailedBoardFile": "బోర్డు ఫైల్ \"{fileName}\"ను దిగుమతి చేయలేకపోయాం",
   "libraryImportFailedBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం",
   "libraryImportOnlyBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" దిగుమతి చేయడానికి చాలా పెద్దది",
+  "libraryImportTooLargeBoardFile": "బోర్డు ఫైల్ \"{fileName}\" దిగుమతి చేయడానికి చాలా పెద్దది",
   "libraryImportTooLargeBoardFiles": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి",
-  "libraryImportPartiallyFailed": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
+  "libraryImportPartiallyFailedBoardFiles": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
   "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
   "libraryInfo": "సమాచారం",
   "libraryDelete": "తొలగించు",

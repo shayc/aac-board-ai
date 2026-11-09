@@ -32,12 +32,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Couldn't import \"{fileName}\"",
+  "libraryImportFailedBoardFile": "Couldn't import board file \"{fileName}\"",
   "libraryImportFailedBoardFiles": "Couldn't import board files",
   "libraryImportOnlyBoardFiles": "Only board files can be imported",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" is too large to import",
+  "libraryImportTooLargeBoardFile": "Board file \"{fileName}\" is too large to import",
   "libraryImportTooLargeBoardFiles": "Board files are too large to import",
-  "libraryImportPartiallyFailed": "Some board files couldn't be imported ({failed} of {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Some board files couldn't be imported ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
   "libraryDelete": "Delete",

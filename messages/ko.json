@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "\"{fileName}\"을(를) 가져올 수 없습니다",
+  "libraryImportFailedBoardFile": "보드 파일 \"{fileName}\"을(를) 가져올 수 없습니다",
   "libraryImportFailedBoardFiles": "보드 파일을 가져올 수 없습니다",
   "libraryImportOnlyBoardFiles": "보드 파일만 가져올 수 있습니다",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" 파일이 너무 커서 가져올 수 없습니다",
+  "libraryImportTooLargeBoardFile": "보드 파일 \"{fileName}\"이(가) 너무 커서 가져올 수 없습니다",
   "libraryImportTooLargeBoardFiles": "보드 파일이 너무 커서 가져올 수 없습니다",
-  "libraryImportPartiallyFailed": "일부 보드 파일을 가져올 수 없습니다({failed} / {total})",
+  "libraryImportPartiallyFailedBoardFiles": "일부 보드 파일을 가져올 수 없습니다({failed} / {total})",
   "libraryDropToImport": "가져오려면 보드 파일을 놓으세요",
   "libraryInfo": "정보",
   "libraryDelete": "삭제",

@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Tiedoston ”{fileName}” tuonti epäonnistui",
+  "libraryImportFailedBoardFile": "Taulutiedoston ”{fileName}” tuonti epäonnistui",
   "libraryImportFailedBoardFiles": "Taulutiedostojen tuonti epäonnistui",
   "libraryImportOnlyBoardFiles": "Vain taulutiedostoja voi tuoda",
-  "libraryImportTooLargeBoardFile": "Tiedosto ”{fileName}” on liian suuri tuotavaksi",
+  "libraryImportTooLargeBoardFile": "Taulutiedosto ”{fileName}” on liian suuri tuotavaksi",
   "libraryImportTooLargeBoardFiles": "Taulutiedostot ovat liian suuria tuotaviksi",
-  "libraryImportPartiallyFailed": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",

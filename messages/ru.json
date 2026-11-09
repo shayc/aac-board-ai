@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Не удалось импортировать «{fileName}»",
+  "libraryImportFailedBoardFile": "Не удалось импортировать файл доски «{fileName}»",
   "libraryImportFailedBoardFiles": "Не удалось импортировать файлы досок",
   "libraryImportOnlyBoardFiles": "Импортировать можно только файлы досок",
-  "libraryImportTooLargeBoardFile": "Файл «{fileName}» слишком большой для импорта",
+  "libraryImportTooLargeBoardFile": "Файл доски «{fileName}» слишком большой для импорта",
   "libraryImportTooLargeBoardFiles": "Файлы досок слишком большие для импорта",
-  "libraryImportPartiallyFailed": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Информация",
   "libraryDelete": "Удалить",

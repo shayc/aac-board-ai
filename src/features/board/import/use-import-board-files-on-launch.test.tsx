@@ -37,9 +37,9 @@ function fileHandle(file: File): FileSystemFileHandle {
   return { getFile: () => Promise.resolve(file) } as FileSystemFileHandle;
 }
 
-function inaccessibleFileHandle(): FileSystemFileHandle {
+function inaccessibleFileHandle(name: string): FileSystemFileHandle {
   return {
-    name: "board.obz",
+    name,
     getFile: () => Promise.reject(new DOMException("Access denied")),
   } as FileSystemFileHandle;
 }
@@ -113,10 +113,24 @@ describe("useImportBoardFilesOnLaunch", () => {
     const launchQueue = stubLaunchQueue();
     const screen = await renderLaunchHandler();
 
-    launchQueue.launch(inaccessibleFileHandle());
+    launchQueue.launch(inaccessibleFileHandle("board.obz"));
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import "board.obz"');
+      .toHaveTextContent('Couldn\'t import board file "board.obz"');
+  });
+
+  test("reports several files that can no longer be opened", async () => {
+    const launchQueue = stubLaunchQueue();
+    const screen = await renderLaunchHandler();
+
+    launchQueue.launch(
+      inaccessibleFileHandle("first.obz"),
+      inaccessibleFileHandle("second.obz"),
+    );
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Couldn't import board files");
   });
 });

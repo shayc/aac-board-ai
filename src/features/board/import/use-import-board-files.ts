@@ -75,7 +75,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   };
 }
 
-function importOutcomeSnackbar(
+export function importOutcomeSnackbar(
   importedCount: number,
   failures: BoardFileImportFailure[],
 ): SnackbarOptions {
@@ -103,7 +103,10 @@ function importOutcomeSnackbar(
 
     return {
       message: (t) =>
-        t(m.libraryImportPartiallyFailed, { failed: failures.length, total }),
+        t(m.libraryImportPartiallyFailedBoardFiles, {
+          failed: failures.length,
+          total,
+        }),
       severity: "error",
     };
   }

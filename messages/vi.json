@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Không thể nhập \"{fileName}\"",
+  "libraryImportFailedBoardFile": "Không thể nhập tệp bảng \"{fileName}\"",
   "libraryImportFailedBoardFiles": "Không thể nhập các tệp bảng",
   "libraryImportOnlyBoardFiles": "Chỉ có thể nhập tệp bảng",
-  "libraryImportTooLargeBoardFile": "Tệp \"{fileName}\" quá lớn để nhập",
+  "libraryImportTooLargeBoardFile": "Tệp bảng \"{fileName}\" quá lớn để nhập",
   "libraryImportTooLargeBoardFiles": "Các tệp bảng quá lớn để nhập",
-  "libraryImportPartiallyFailed": "Không thể nhập một số tệp bảng ({failed} / {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Không thể nhập một số tệp bảng ({failed} / {total})",
   "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",

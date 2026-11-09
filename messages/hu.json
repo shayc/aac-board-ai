@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "A(z) „{fileName}” fájl importálása nem sikerült",
+  "libraryImportFailedBoardFile": "A(z) „{fileName}” táblafájl importálása nem sikerült",
   "libraryImportFailedBoardFiles": "A táblafájlok importálása nem sikerült",
   "libraryImportOnlyBoardFiles": "Csak táblafájlok importálhatók",
-  "libraryImportTooLargeBoardFile": "A(z) „{fileName}” fájl túl nagy az importáláshoz",
+  "libraryImportTooLargeBoardFile": "A(z) „{fileName}” táblafájl túl nagy az importáláshoz",
   "libraryImportTooLargeBoardFiles": "A táblafájlok túl nagyok az importáláshoz",
-  "libraryImportPartiallyFailed": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",
   "libraryDelete": "Törlés",

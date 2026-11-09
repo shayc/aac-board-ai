@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Datoteku „{fileName}” nije moguće uvesti",
+  "libraryImportFailedBoardFile": "Datoteku ploče „{fileName}” nije moguće uvesti",
   "libraryImportFailedBoardFiles": "Datoteke ploča nije moguće uvesti",
   "libraryImportOnlyBoardFiles": "Mogu se uvesti samo datoteke ploča",
-  "libraryImportTooLargeBoardFile": "Datoteka „{fileName}” je prevelika za uvoz",
+  "libraryImportTooLargeBoardFile": "Datoteka ploče „{fileName}” je prevelika za uvoz",
   "libraryImportTooLargeBoardFiles": "Datoteke ploča su prevelike za uvoz",
-  "libraryImportPartiallyFailed": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

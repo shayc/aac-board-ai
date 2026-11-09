@@ -168,7 +168,7 @@ describe("useBoardFileDrop", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
+      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
         id: IMPORTED_SET_ID,

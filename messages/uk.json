@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Не вдалося імпортувати «{fileName}»",
+  "libraryImportFailedBoardFile": "Не вдалося імпортувати файл дошки «{fileName}»",
   "libraryImportFailedBoardFiles": "Не вдалося імпортувати файли дошок",
   "libraryImportOnlyBoardFiles": "Імпортувати можна лише файли дошок",
-  "libraryImportTooLargeBoardFile": "Файл «{fileName}» занадто великий для імпортування",
+  "libraryImportTooLargeBoardFile": "Файл дошки «{fileName}» занадто великий для імпортування",
   "libraryImportTooLargeBoardFiles": "Файли дошок занадто великі для імпортування",
-  "libraryImportPartiallyFailed": "Не вдалося імпортувати деякі файли дошок ({failed} з {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Не вдалося імпортувати деякі файли дошок ({failed} з {total})",
   "libraryDropToImport": "Перетягніть файли дошок для імпорту",
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",

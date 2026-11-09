@@ -1,8 +1,9 @@
-import { m } from "@paraglide/messages.js";
-import type { Translate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect, useEffectEvent } from "react";
-import { useImportBoardFiles } from "./use-import-board-files";
+import {
+  importOutcomeSnackbar,
+  useImportBoardFiles,
+} from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
   const { importAndOpen } = useImportBoardFiles();
@@ -15,11 +16,9 @@ export function useImportBoardFilesOnLaunch(): void {
           handles.map((handle) => handle.getFile()),
         );
         await importAndOpen(files);
-      } catch {
-        showSnackbar({
-          message: openFailureMessage(handles),
-          severity: "error",
-        });
+      } catch (error) {
+        const failures = handles.map(({ name }) => ({ fileName: name, error }));
+        showSnackbar(importOutcomeSnackbar(0, failures));
       }
     },
   );
@@ -34,16 +33,4 @@ export function useImportBoardFilesOnLaunch(): void {
       void importLaunchedFiles(files);
     });
   }, []);
-}
-
-function openFailureMessage(
-  handles: readonly FileSystemFileHandle[],
-): (t: Translate) => string {
-  if (handles.length === 1) {
-    const [{ name }] = handles;
-
-    return (t) => t(m.libraryImportFailedBoardFile, { fileName: name });
-  }
-
-  return (t) => t(m.libraryImportFailedBoardFiles);
 }

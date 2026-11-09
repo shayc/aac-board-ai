@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "「{fileName}」をインポートできませんでした",
+  "libraryImportFailedBoardFile": "ボードファイル「{fileName}」をインポートできませんでした",
   "libraryImportFailedBoardFiles": "ボードファイルをインポートできませんでした",
   "libraryImportOnlyBoardFiles": "インポートできるのはボードファイルのみです",
-  "libraryImportTooLargeBoardFile": "「{fileName}」は大きすぎてインポートできません",
+  "libraryImportTooLargeBoardFile": "ボードファイル「{fileName}」が大きすぎてインポートできません",
   "libraryImportTooLargeBoardFiles": "ボードファイルが大きすぎてインポートできません",
-  "libraryImportPartiallyFailed": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
+  "libraryImportPartiallyFailedBoardFiles": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
   "libraryInfo": "情報",
   "libraryDelete": "削除",

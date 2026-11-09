@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "นำเข้า \"{fileName}\" ไม่สำเร็จ",
+  "libraryImportFailedBoardFile": "นำเข้าไฟล์บอร์ด \"{fileName}\" ไม่สำเร็จ",
   "libraryImportFailedBoardFiles": "นำเข้าไฟล์บอร์ดไม่สำเร็จ",
   "libraryImportOnlyBoardFiles": "นำเข้าได้เฉพาะไฟล์บอร์ดเท่านั้น",
-  "libraryImportTooLargeBoardFile": "\"{fileName}\" มีขนาดใหญ่เกินไปที่จะนำเข้า",
+  "libraryImportTooLargeBoardFile": "ไฟล์บอร์ด \"{fileName}\" มีขนาดใหญ่เกินไปที่จะนำเข้า",
   "libraryImportTooLargeBoardFiles": "ไฟล์บอร์ดมีขนาดใหญ่เกินไปที่จะนำเข้า",
-  "libraryImportPartiallyFailed": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
+  "libraryImportPartiallyFailedBoardFiles": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",

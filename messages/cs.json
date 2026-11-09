@@ -33,12 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFile": "Soubor „{fileName}“ se nepodařilo importovat",
+  "libraryImportFailedBoardFile": "Soubor tabulky „{fileName}“ se nepodařilo importovat",
   "libraryImportFailedBoardFiles": "Soubory tabulek se nepodařilo importovat",
   "libraryImportOnlyBoardFiles": "Importovat lze pouze soubory tabulek",
-  "libraryImportTooLargeBoardFile": "Soubor „{fileName}“ je příliš velký na import",
+  "libraryImportTooLargeBoardFile": "Soubor tabulky „{fileName}“ je příliš velký na import",
   "libraryImportTooLargeBoardFiles": "Soubory tabulek jsou příliš velké na import",
-  "libraryImportPartiallyFailed": "Některé soubory tabulek se nepodařilo importovat ({failed} z {total})",
+  "libraryImportPartiallyFailedBoardFiles": "Některé soubory tabulek se nepodařilo importovat ({failed} z {total})",
   "libraryDropToImport": "Přetáhněte sem soubory tabulek pro import",
   "libraryInfo": "Informace",
   "libraryDelete": "Smazat",
