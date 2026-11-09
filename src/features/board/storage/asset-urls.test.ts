@@ -62,13 +62,16 @@ describe("asset URLs", () => {
     await expect(getAssetURL(SET_ID, "missing.txt")).resolves.toBeUndefined();
   });
 
-  test("revokes URLs when their board set is deleted", async () => {
-    await seedAsset("hello");
-    const url = await requireAssetURL(SET_ID);
+  test("revokes only the deleted board set's URLs", async () => {
+    await seedAsset("deleted");
+    await seedAsset("kept", "kept-set");
+    const deletedURL = await requireAssetURL(SET_ID);
+    const keptURL = await requireAssetURL("kept-set");
 
     await deleteBoardSet(SET_ID);
 
-    await expect(fetch(url)).rejects.toThrow();
+    await expect(fetch(deletedURL)).rejects.toThrow();
+    expect(await readAssetURL(keptURL)).toBe("kept");
   });
 
   test("serves new content when a deleted board set ID is reused", async () => {
