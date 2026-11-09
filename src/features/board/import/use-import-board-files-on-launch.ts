@@ -1,9 +1,7 @@
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect, useEffectEvent } from "react";
-import {
-  importOutcomeSnackbar,
-  useImportBoardFiles,
-} from "./use-import-board-files";
+import { summarizeImport } from "./summarize-import";
+import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
   const { importAndOpen } = useImportBoardFiles();
@@ -18,9 +16,7 @@ export function useImportBoardFilesOnLaunch(): void {
         await importAndOpen(files);
       } catch (error) {
         const failures = handles.map(({ name }) => ({ fileName: name, error }));
-        showSnackbar(
-          importOutcomeSnackbar({ importedBoardSets: [], failures }),
-        );
+        showSnackbar(summarizeImport({ importedBoardSets: [], failures }));
       }
     },
   );

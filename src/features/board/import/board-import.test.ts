@@ -20,7 +20,7 @@ import {
 import {
   buildAssetInputs,
   importBoardFile,
-  importBoardFiles,
+  importEachBoardFile,
   resolveBoardLinks,
 } from "./board-import";
 
@@ -247,7 +247,7 @@ describe("importBoardFile", () => {
   });
 });
 
-describe("importBoardFiles", () => {
+describe("importEachBoardFile", () => {
   beforeEach(async () => {
     await resetBoardsDB();
   });
@@ -256,7 +256,7 @@ describe("importBoardFiles", () => {
     const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const goodFile = await loadFixtureFile(OBF_FIXTURE);
 
-    const { importedBoardSets, failures } = await importBoardFiles([
+    const { importedBoardSets, failures } = await importEachBoardFile([
       corruptFile,
       goodFile,
     ]);

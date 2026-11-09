@@ -47,7 +47,7 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxEntries: 5000,
 };
 
-export async function importBoardFiles(
+export async function importEachBoardFile(
   files: File[],
 ): Promise<BoardFilesImportOutcome> {
   const importedBoardSets: ImportedBoardSet[] = [];
@@ -65,8 +65,8 @@ export async function importBoardFiles(
 }
 
 export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
-  const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
-  const content = boardSetContent(loaded, file.name);
+  const loadedBoard = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+  const content = boardSetContent(loadedBoard, file.name);
   const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
@@ -85,11 +85,11 @@ export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
 }
 
 function boardSetContent(
-  loaded: LoadedBoard,
+  loadedBoard: LoadedBoard,
   fileName: string,
 ): BoardSetContent {
-  if (loaded.format === "obf") {
-    const { board } = loaded;
+  if (loadedBoard.format === "obf") {
+    const { board } = loadedBoard;
 
     return {
       rootBoardId: board.id,
@@ -99,7 +99,7 @@ function boardSetContent(
     };
   }
 
-  const { manifest, boards, rootBoard, resources } = loaded.archive;
+  const { manifest, boards, rootBoard, resources } = loadedBoard.archive;
   const boardIdByPath = buildBoardIdByPath(manifest);
 
   return {

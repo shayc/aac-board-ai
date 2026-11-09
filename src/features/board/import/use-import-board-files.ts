@@ -1,16 +1,11 @@
 import { m } from "@paraglide/messages.js";
-import type { SnackbarOptions } from "@shared/snackbar/snackbar-context";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
-import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
-import {
-  importBoardFiles,
-  type BoardFilesImportOutcome,
-  type ImportedBoardSet,
-} from "./board-import";
+import { importEachBoardFile, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";
+import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   pickAndImport: () => Promise<void>;
@@ -42,8 +37,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
     });
 
-    const outcome = await importBoardFiles(boardFiles);
-    showSnackbar(importOutcomeSnackbar(outcome));
+    const outcome = await importEachBoardFile(boardFiles);
+    showSnackbar(summarizeImport(outcome));
 
     return outcome.importedBoardSets;
   }
@@ -73,56 +68,4 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     importFiles,
     importAndOpen,
   };
-}
-
-export function importOutcomeSnackbar({
-  importedBoardSets,
-  failures,
-}: BoardFilesImportOutcome): SnackbarOptions {
-  const importedCount = importedBoardSets.length;
-
-  if (failures.length === 0) {
-    return {
-      message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),
-      severity: "success",
-    };
-  }
-
-  if (failures.length === 1) {
-    const [{ fileName, error }] = failures;
-    const failureMessage = isArchiveTooLarge(error)
-      ? m.libraryImportTooLargeBoardFile
-      : m.libraryImportFailedBoardFile;
-
-    return {
-      message: (t) => t(failureMessage, { fileName }),
-      severity: "error",
-    };
-  }
-
-  if (importedCount > 0) {
-    const total = importedCount + failures.length;
-
-    return {
-      message: (t) =>
-        t(m.libraryImportPartiallyFailedBoardFiles, {
-          failed: failures.length,
-          total,
-        }),
-      severity: "error",
-    };
-  }
-
-  const failureMessage = failures.every(({ error }) => isArchiveTooLarge(error))
-    ? m.libraryImportTooLargeBoardFiles
-    : m.libraryImportFailedBoardFiles;
-
-  return {
-    message: (t) => t(failureMessage),
-    severity: "error",
-  };
-}
-
-function isArchiveTooLarge(error: unknown): boolean {
-  return error instanceof OBFError && error.info.code === "archive-too-large";
 }
