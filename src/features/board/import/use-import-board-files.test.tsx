@@ -3,11 +3,16 @@ import { zip } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
+import { listBoardSetRecords } from "../storage/board-set-storage";
 import { loadFixtureFile, resetBoardsDB } from "../testing";
 import { BOARD_IMPORT_LIMITS } from "./board-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
+
+function createCorruptBoardFile(name: string) {
+  return new File(["not valid json"], name, { type: "application/json" });
+}
 
 function ImportTrigger({ files }: { files: File[] }) {
   const { importFiles } = useImportBoardFiles();
@@ -74,6 +79,32 @@ describe("useImportBoardFiles", () => {
     await expect
       .element(screen.getByRole("alert"))
       .toHaveTextContent("Only board files can be imported");
+  });
+
+  test("reports how many files failed while keeping the board sets that imported", async () => {
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const corruptFile = createCorruptBoardFile("corrupt.obf");
+    const screen = await renderImport([goodFile, corruptFile]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Some board files couldn't be imported (1 of 2)");
+    expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("shows the failed message when every file fails", async () => {
+    const screen = await renderImport([
+      createCorruptBoardFile("first.obf"),
+      createCorruptBoardFile("second.obf"),
+    ]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Couldn't import board files");
   });
 
   test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {

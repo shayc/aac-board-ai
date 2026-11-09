@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

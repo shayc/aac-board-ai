@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "சில பலகைக் கோப்புகளை இறக்குமதி செய்ய முடியவில்லை ({total} இல் {failed})",
   "libraryDropToImport": "இறக்குமதி செய்ய பலகை கோப்புகளை விடுங்கள்",
   "libraryInfo": "தகவல்",
   "libraryDelete": "நீக்கு",

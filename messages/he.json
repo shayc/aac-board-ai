@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "ייבוא חלק מקובצי הלוחות נכשל ({failed} מתוך {total})",
   "libraryDropToImport": "גררו לכאן קובצי לוחות כדי לייבא אותם",
   "libraryInfo": "מידע",
   "libraryDelete": "מחיקה",

@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Không thể nhập một số tệp bảng ({failed} / {total})",
   "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",

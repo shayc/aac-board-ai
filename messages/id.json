@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Tidak dapat mengimpor sebagian berkas papan ({failed} dari {total})",
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",
   "libraryDelete": "Hapus",

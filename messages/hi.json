@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "कुछ बोर्ड फ़ाइलें आयात नहीं की जा सकीं ({total} में से {failed})",
   "libraryDropToImport": "आयात करने के लिए बोर्ड फ़ाइलें छोड़ें",
   "libraryInfo": "जानकारी",
   "libraryDelete": "हटाएँ",

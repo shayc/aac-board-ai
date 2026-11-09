@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "تعذّر استيراد بعض ملفات اللوحات ({failed} من {total})",
   "libraryDropToImport": "أفلت ملفات اللوحات لاستيرادها",
   "libraryInfo": "معلومات",
   "libraryDelete": "حذف",

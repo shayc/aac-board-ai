@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
   "libraryDropToImport": "Släpp tavelfiler för att importera",
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",

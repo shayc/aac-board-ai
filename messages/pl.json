@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Nie udało się zaimportować niektórych plików tablic ({failed} z {total})",
   "libraryDropToImport": "Upuść pliki tablic, aby zaimportować",
   "libraryInfo": "Informacje",
   "libraryDelete": "Usuń",

@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",
   "libraryDelete": "Törlés",

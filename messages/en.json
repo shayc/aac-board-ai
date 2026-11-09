@@ -53,6 +53,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Some board files couldn't be imported ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
   "libraryDelete": "Delete",

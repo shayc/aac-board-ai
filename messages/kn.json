@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "ಕೆಲವು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ ({total} ರಲ್ಲಿ {failed})",
   "libraryDropToImport": "ಆಮದು ಮಾಡಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಬಿಡಿ",
   "libraryInfo": "ಮಾಹಿತಿ",
   "libraryDelete": "ಅಳಿಸಿ",

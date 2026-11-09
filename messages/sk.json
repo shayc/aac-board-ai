@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Niektoré súbory tabuliek sa nepodarilo importovať ({failed} z {total})",
   "libraryDropToImport": "Pustite súbory tabuliek na import",
   "libraryInfo": "Informácie",
   "libraryDelete": "Odstrániť",

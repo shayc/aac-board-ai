@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Kan sommige bordbestanden niet importeren ({failed} van {total})",
   "libraryDropToImport": "Zet bordbestanden neer om te importeren",
   "libraryInfo": "Info",
   "libraryDelete": "Verwijderen",

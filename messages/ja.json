@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
   "libraryInfo": "情報",
   "libraryDelete": "削除",

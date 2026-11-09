@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",
   "libraryDelete": "Διαγραφή",

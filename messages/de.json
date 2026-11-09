@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Einige Tafeldateien konnten nicht importiert werden ({failed} von {total})",
   "libraryDropToImport": "Tafeldateien zum Importieren ablegen",
   "libraryInfo": "Info",
   "libraryDelete": "Löschen",

@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "部分沟通板文件无法导入（{failed} / {total}）",
   "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",
   "libraryDelete": "删除",

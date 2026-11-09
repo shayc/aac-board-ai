@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Информация",
   "libraryDelete": "Удалить",

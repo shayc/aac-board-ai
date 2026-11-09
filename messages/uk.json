@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Не вдалося імпортувати деякі файли дошок ({failed} з {total})",
   "libraryDropToImport": "Перетягніть файли дошок для імпорту",
   "libraryInfo": "Інформація",
   "libraryDelete": "Видалити",

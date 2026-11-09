@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Não foi possível importar alguns arquivos de pranchas ({failed} de {total})",
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
   "libraryInfo": "Informações",
   "libraryDelete": "Excluir",

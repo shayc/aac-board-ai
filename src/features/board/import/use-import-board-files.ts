@@ -4,12 +4,12 @@ import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
-import { importBoardFiles, type ImportedBoardSet } from "./board-import";
+import { importBoardFile, type ImportedBoardSet } from "./board-import";
 import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
   pickAndImport: () => Promise<void>;
-  importFiles: (files: File[]) => Promise<ImportedBoardSet[] | undefined>;
+  importFiles: (files: File[]) => Promise<ImportedBoardSet[]>;
   importAndOpen: (files: File[]) => Promise<void>;
 }
 
@@ -17,9 +17,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importFiles(
-    files: File[],
-  ): Promise<ImportedBoardSet[] | undefined> {
+  async function importFiles(files: File[]): Promise<ImportedBoardSet[]> {
     if (files.length === 0) {
       return [];
     }
@@ -31,44 +29,65 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         message: (t) => t(m.libraryImportOnlyBoardFiles),
         severity: "error",
       });
-      return undefined;
+      return [];
     }
-
-    const count = boardFiles.length;
 
     showSnackbar({
-      message: (t) => t(m.libraryImportingBoardFiles, { count }),
+      message: (t) =>
+        t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
     });
 
-    try {
-      const importedBoardSets = await importBoardFiles(boardFiles);
+    const importedBoardSets: ImportedBoardSet[] = [];
+    const errors: unknown[] = [];
 
+    for (const file of boardFiles) {
+      try {
+        importedBoardSets.push(await importBoardFile(file));
+      } catch (error) {
+        errors.push(error);
+      }
+    }
+
+    showImportOutcome(importedBoardSets.length, errors);
+
+    return importedBoardSets;
+  }
+
+  function showImportOutcome(importedCount: number, errors: unknown[]) {
+    if (errors.length === 0) {
       showSnackbar({
-        message: (t) => t(m.libraryImportedBoardSets, { count }),
+        message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),
         severity: "success",
       });
+      return;
+    }
 
-      return importedBoardSets;
-    } catch (error) {
-      const isTooLarge =
-        error instanceof OBFError && error.info.code === "archive-too-large";
-      const errorMessage = isTooLarge
-        ? m.libraryImportTooLargeBoardFiles
-        : m.libraryImportFailedBoardFiles;
-
+    if (importedCount > 0) {
       showSnackbar({
-        message: (t) => t(errorMessage, { count }),
+        message: (t) =>
+          t(m.libraryImportPartiallyFailed, {
+            failed: errors.length,
+            total: importedCount + errors.length,
+          }),
         severity: "error",
       });
-
-      return undefined;
+      return;
     }
+
+    const failureMessage = errors.every(isArchiveTooLarge)
+      ? m.libraryImportTooLargeBoardFiles
+      : m.libraryImportFailedBoardFiles;
+
+    showSnackbar({
+      message: (t) => t(failureMessage, { count: errors.length }),
+      severity: "error",
+    });
   }
 
   async function importAndOpen(files: File[]) {
     const importedBoardSets = await importFiles(files);
 
-    if (importedBoardSets?.length !== 1) {
+    if (importedBoardSets.length !== 1) {
       return;
     }
 
@@ -90,4 +109,8 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     importFiles,
     importAndOpen,
   };
+}
+
+function isArchiveTooLarge(error: unknown): boolean {
+  return error instanceof OBFError && error.info.code === "archive-too-large";
 }

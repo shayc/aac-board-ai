@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Unele fișiere ale tablelor nu au putut fi importate ({failed} din {total})",
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",

@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "কিছু বোর্ড ফাইল আমদানি করা যায়নি ({total}-এর মধ্যে {failed})",
   "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
   "libraryInfo": "তথ্য",
   "libraryDelete": "মুছুন",

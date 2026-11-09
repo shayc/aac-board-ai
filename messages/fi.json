@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",

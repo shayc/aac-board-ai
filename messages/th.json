@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "นำเข้าไฟล์บอร์ดบางไฟล์ไม่สำเร็จ ({failed} จาก {total})",
   "libraryDropToImport": "วางไฟล์บอร์ดเพื่อนำเข้า",
   "libraryInfo": "ข้อมูล",
   "libraryDelete": "ลบ",

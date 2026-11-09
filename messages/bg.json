@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Някои файлове с дъски не могат да бъдат импортирани ({failed} от {total})",
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
   "libraryInfo": "Информация",
   "libraryDelete": "Изтриване",

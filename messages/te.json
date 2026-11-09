@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
   "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
   "libraryInfo": "సమాచారం",
   "libraryDelete": "తొలగించు",

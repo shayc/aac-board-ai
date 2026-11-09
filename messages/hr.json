@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

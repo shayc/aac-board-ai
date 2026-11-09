@@ -54,6 +54,7 @@
       }
     }
   ],
+  "libraryImportPartiallyFailed": "Impossible d'importer certains fichiers de tableaux ({failed} sur {total})",
   "libraryDropToImport": "Déposez des fichiers de tableaux pour les importer",
   "libraryInfo": "Infos",
   "libraryDelete": "Supprimer",
