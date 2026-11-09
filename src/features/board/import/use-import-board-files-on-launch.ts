@@ -18,7 +18,9 @@ export function useImportBoardFilesOnLaunch(): void {
         await importAndOpen(files);
       } catch (error) {
         const failures = handles.map(({ name }) => ({ fileName: name, error }));
-        showSnackbar(importOutcomeSnackbar(0, failures));
+        showSnackbar(
+          importOutcomeSnackbar({ importedBoardSets: [], failures }),
+        );
       }
     },
   );

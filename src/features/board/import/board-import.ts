@@ -26,10 +26,12 @@ export interface BoardFileImportFailure {
   error: unknown;
 }
 
-export interface BoardFilesImport {
+export interface BoardFilesImportOutcome {
   importedBoardSets: ImportedBoardSet[];
   failures: BoardFileImportFailure[];
 }
+
+type BoardSetContent = Omit<BoardSetInput, "id">;
 
 /**
  * Decompression caps used by every OBZ import path. Limits are checked against
@@ -45,11 +47,9 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxEntries: 5000,
 };
 
-type BoardSetContent = Omit<BoardSetInput, "id">;
-
 export async function importBoardFiles(
   files: File[],
-): Promise<BoardFilesImport> {
+): Promise<BoardFilesImportOutcome> {
   const importedBoardSets: ImportedBoardSet[] = [];
   const failures: BoardFileImportFailure[] = [];
 

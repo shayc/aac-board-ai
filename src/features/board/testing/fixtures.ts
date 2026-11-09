@@ -1,4 +1,5 @@
-import type { OBFBoard } from "@shayc/open-board-format";
+import { zip, type OBFBoard } from "@shayc/open-board-format";
+import { BOARD_IMPORT_LIMITS } from "../import/board-import";
 import type {
   BoardSetInput,
   BoardSetRecord,
@@ -70,4 +71,17 @@ export async function loadFixtureFile(name: string): Promise<File> {
   return new File([blob], name, {
     type: blob.type || "application/octet-stream",
   });
+}
+
+export function makeCorruptBoardFile(name: string): File {
+  return new File(["not valid json"], name, { type: "application/json" });
+}
+
+// Zeros compress to a tiny archive that still declares an oversized
+// uncompressed size, so the limit trips before inflation.
+export async function makeOversizedOBZ(name: string): Promise<File> {
+  const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
+  const zipped = await zip(new Map([["big.bin", oversized]]));
+
+  return new File([zipped], name, { type: "application/octet-stream" });
 }

@@ -7,7 +7,7 @@ import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
 import {
   importBoardFiles,
-  type BoardFileImportFailure,
+  type BoardFilesImportOutcome,
   type ImportedBoardSet,
 } from "./board-import";
 import { pickFiles } from "./pick-files";
@@ -42,10 +42,10 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
     });
 
-    const { importedBoardSets, failures } = await importBoardFiles(boardFiles);
-    showSnackbar(importOutcomeSnackbar(importedBoardSets.length, failures));
+    const outcome = await importBoardFiles(boardFiles);
+    showSnackbar(importOutcomeSnackbar(outcome));
 
-    return importedBoardSets;
+    return outcome.importedBoardSets;
   }
 
   async function importAndOpen(files: File[]) {
@@ -75,10 +75,12 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   };
 }
 
-export function importOutcomeSnackbar(
-  importedCount: number,
-  failures: BoardFileImportFailure[],
-): SnackbarOptions {
+export function importOutcomeSnackbar({
+  importedBoardSets,
+  failures,
+}: BoardFilesImportOutcome): SnackbarOptions {
+  const importedCount = importedBoardSets.length;
+
   if (failures.length === 0) {
     return {
       message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),

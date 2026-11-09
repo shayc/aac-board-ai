@@ -1,27 +1,17 @@
 import { AppProviders } from "@shared/providers/app-providers";
-import { zip } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { MemoryRouter } from "react-router";
 import { listBoardSetRecords } from "../storage/board-set-storage";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
-import { BOARD_IMPORT_LIMITS } from "./board-import";
+import {
+  loadFixtureFile,
+  makeCorruptBoardFile,
+  makeOversizedOBZ,
+  resetBoardsDB,
+} from "../testing";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
-
-function createCorruptBoardFile(name: string) {
-  return new File(["not valid json"], name, { type: "application/json" });
-}
-
-// Zeros compress to a tiny archive that still declares an oversized
-// uncompressed size, so the limit trips before inflation.
-async function createOversizedOBZ(name: string) {
-  const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
-  const zipped = await zip(new Map([["big.bin", oversized]]));
-
-  return new File([zipped], name, { type: "application/octet-stream" });
-}
 
 function ImportTrigger({ files }: { files: File[] }) {
   const { importFiles } = useImportBoardFiles();
@@ -91,7 +81,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("names the file when a single import fails", async () => {
-    const screen = await renderImport([createCorruptBoardFile("corrupt.obf")]);
+    const screen = await renderImport([makeCorruptBoardFile("corrupt.obf")]);
 
     await screen.getByRole("button", { name: "import" }).click();
 
@@ -102,7 +92,7 @@ describe("useImportBoardFiles", () => {
 
   test("names the failed file while keeping the board sets that imported", async () => {
     const goodFile = await loadFixtureFile(OBF_FIXTURE);
-    const corruptFile = createCorruptBoardFile("corrupt.obf");
+    const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([goodFile, corruptFile]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -117,8 +107,8 @@ describe("useImportBoardFiles", () => {
     const goodFile = await loadFixtureFile(OBF_FIXTURE);
     const screen = await renderImport([
       goodFile,
-      createCorruptBoardFile("first.obf"),
-      createCorruptBoardFile("second.obf"),
+      makeCorruptBoardFile("first.obf"),
+      makeCorruptBoardFile("second.obf"),
     ]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -130,8 +120,8 @@ describe("useImportBoardFiles", () => {
 
   test("shows the failed message when every file fails", async () => {
     const screen = await renderImport([
-      createCorruptBoardFile("first.obf"),
-      createCorruptBoardFile("second.obf"),
+      makeCorruptBoardFile("first.obf"),
+      makeCorruptBoardFile("second.obf"),
     ]);
 
     await screen.getByRole("button", { name: "import" }).click();
@@ -142,9 +132,7 @@ describe("useImportBoardFiles", () => {
   });
 
   test("names the file when it exceeds the decompression limit", async () => {
-    const screen = await renderImport([
-      await createOversizedOBZ("zip-bomb.obz"),
-    ]);
+    const screen = await renderImport([await makeOversizedOBZ("zip-bomb.obz")]);
 
     await screen.getByRole("button", { name: "import" }).click();
 
@@ -155,8 +143,8 @@ describe("useImportBoardFiles", () => {
 
   test("shows the too-large message when every file exceeds the decompression limit", async () => {
     const screen = await renderImport([
-      await createOversizedOBZ("first.obz"),
-      await createOversizedOBZ("second.obz"),
+      await makeOversizedOBZ("first.obz"),
+      await makeOversizedOBZ("second.obz"),
     ]);
 
     await screen.getByRole("button", { name: "import" }).click();

@@ -3,7 +3,6 @@ import {
   loadOBF,
   loadOBZ,
   OBFError,
-  zip,
   type OBFBoard,
 } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
@@ -13,11 +12,12 @@ import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
   countStoredBoardContent,
   loadFixtureFile,
+  makeCorruptBoardFile,
   makeOBFBoard,
+  makeOversizedOBZ,
   resetBoardsDB,
 } from "../testing";
 import {
-  BOARD_IMPORT_LIMITS,
   buildAssetInputs,
   importBoardFile,
   importBoardFiles,
@@ -234,14 +234,7 @@ describe("importBoardFile", () => {
   });
 
   test("rejects an OBZ whose declared uncompressed size exceeds the per-entry limit", async () => {
-    // A buffer of zeros compresses to a tiny archive, but its central-directory
-    // metadata declares the full uncompressed size — so the limit trips on the
-    // declared size before any inflation happens (zip-bomb defense).
-    const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
-    const zipped = await zip(new Map([["big.bin", oversized]]));
-    const file = new File([zipped], "zip-bomb.obz", {
-      type: "application/octet-stream",
-    });
+    const file = await makeOversizedOBZ("zip-bomb.obz");
 
     const error = await importBoardFile(file).catch((e: unknown) => e);
     expect(error).toBeInstanceOf(OBFError);
@@ -260,9 +253,7 @@ describe("importBoardFiles", () => {
   });
 
   test("keeps importing after a file fails and reports the failure", async () => {
-    const corruptFile = new File(["not valid json"], "corrupt.obf", {
-      type: "application/json",
-    });
+    const corruptFile = makeCorruptBoardFile("corrupt.obf");
     const goodFile = await loadFixtureFile(OBF_FIXTURE);
 
     const { importedBoardSets, failures } = await importBoardFiles([

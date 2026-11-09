@@ -4,7 +4,11 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../navigation/board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+import {
+  loadFixtureFile,
+  makeCorruptBoardFile,
+  resetBoardsDB,
+} from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
@@ -160,9 +164,7 @@ describe("useBoardFileDrop", () => {
   test("opens the board set that imported when another dropped file fails", async () => {
     const { zone, screen } = await renderDropZone();
     const boardFile = await loadFixtureFile(OBF_FIXTURE);
-    const corruptFile = new File(["not valid json"], "corrupt.obf", {
-      type: "application/json",
-    });
+    const corruptFile = makeCorruptBoardFile("corrupt.obf");
 
     fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
 

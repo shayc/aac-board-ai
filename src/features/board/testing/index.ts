@@ -4,6 +4,8 @@ export {
   loadTestImageBlob,
   makeBoardSetInput,
   makeBoardSetRecord,
+  makeCorruptBoardFile,
   makeOBFBoard,
+  makeOversizedOBZ,
   TEST_IMAGE_SRC,
 } from "./fixtures";
