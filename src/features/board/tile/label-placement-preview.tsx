@@ -12,6 +12,7 @@ export function LabelPlacementPreview({
   isSelected = false,
 }: LabelPlacementPreviewProps) {
   const isLabelVisible = placement !== "hidden";
+  const iconSize = isLabelVisible ? 34 : 42;
 
   return (
     <Box
@@ -45,8 +46,8 @@ export function LabelPlacementPreview({
           sx={{
             alignSelf: "center",
             flexShrink: 0,
-            width: isLabelVisible ? 34 : 42,
-            height: isLabelVisible ? 34 : 42,
+            width: iconSize,
+            height: iconSize,
           }}
         />
         {isLabelVisible && (
