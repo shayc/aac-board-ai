@@ -78,30 +78,15 @@ export function MessageBar({
             overflow: "auto",
           }}
         >
-          {parts.map((part) => {
-            const isActive = part.id === activePartId;
-
-            return (
-              <Stack
-                key={part.id}
-                direction="row"
-                sx={(theme) => ({
-                  p: 1,
-                  borderRadius: theme.vars.shape.borderRadius,
-                  outline: isActive
-                    ? `2px solid ${theme.vars.palette.primary.main}`
-                    : "none",
-                  outlineOffset: -2,
-                })}
-              >
-                <AACSymbol
-                  label={part.label}
-                  imageSrc={part.imageSrc}
-                  isImageHidden={!areImagesVisible}
-                />
-              </Stack>
-            );
-          })}
+          {parts.map((part) => (
+            <MessagePartItem
+              key={part.id}
+              label={part.label}
+              imageSrc={part.imageSrc}
+              isActive={part.id === activePartId}
+              isImageHidden={!areImagesVisible}
+            />
+          ))}
         </Stack>
 
         <PlayButton
@@ -111,6 +96,40 @@ export function MessageBar({
           onStop={onStop}
         />
       </Stack>
+    </Stack>
+  );
+}
+
+interface MessagePartItemProps {
+  label: string;
+  imageSrc?: string;
+  isActive: boolean;
+  isImageHidden: boolean;
+}
+
+function MessagePartItem({
+  label,
+  imageSrc,
+  isActive,
+  isImageHidden,
+}: MessagePartItemProps) {
+  return (
+    <Stack
+      direction="row"
+      sx={(theme) => ({
+        p: 1,
+        borderRadius: theme.vars.shape.borderRadius,
+        outline: isActive
+          ? `2px solid ${theme.vars.palette.primary.main}`
+          : "none",
+        outlineOffset: -2,
+      })}
+    >
+      <AACSymbol
+        label={label}
+        imageSrc={imageSrc}
+        isImageHidden={isImageHidden}
+      />
     </Stack>
   );
 }
