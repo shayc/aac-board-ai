@@ -145,12 +145,13 @@ Translation runs in the background, a whole board set at a time:
 
 1. While a board set is open, [`translateBoardSet`](../src/features/board/translation/translate-board-set.ts)
    translates each of its boards that has no translations for the
-   communication language. Boards that ship translations for that language
-   keep them as they are. Each board is saved as it finishes, so an
-   interrupted run continues where it stopped, and language settings show
-   the progress.
-2. When it finishes, the route loaders run again, so the board and the board
-   selector switch language together.
+   communication language, starting with the board on screen. Boards that
+   ship translations for that language keep them as they are. Each board is
+   saved as it finishes, so an interrupted run continues where it stopped,
+   and language settings show the progress.
+2. After each saved board, the route loaders run again, so the board on
+   screen switches language first and the board selector follows as the
+   rest finish.
 3. [`translateBoardSetNames`](../src/features/board/translation/translate-board-set-names.ts)
    translates each stored board set's name, which comes from its root board,
    and saves it with the board set, so the library shows names without
@@ -158,8 +159,9 @@ Translation runs in the background, a whole board set at a time:
    not yet downloaded use the app's own message catalogs.
 
 A language change re-runs the loaders at once, so board sets already
-translated into that language switch without waiting. Failed translations
-leave text in the source language and are retried on the next run.
+translated into that language switch without waiting. A board or language
+pair that fails leaves its text in the source language without holding up the
+rest, and is retried on the next run.
 
 ### Activate a tile
 

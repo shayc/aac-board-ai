@@ -1,13 +1,13 @@
-import { BOARD_SET_SEGMENT, translateBoardSet } from "@features/board";
+import { BOARD_ROUTE_PATTERN, translateBoardSet } from "@features/board";
 import { useLanguage } from "@shared/language/use-language";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { useMatch, useRevalidator } from "react-router";
 
 export function useTranslateActiveBoardSet(): void {
   const { language } = useLanguage();
   const { revalidate } = useRevalidator();
-  const boardSetId = useMatch({ path: `/${BOARD_SET_SEGMENT}`, end: false })
-    ?.params.boardSetId;
+  const { boardSetId, boardId } = useMatch(BOARD_ROUTE_PATTERN)?.params ?? {};
+  const readBoardIdOnScreen = useEffectEvent(() => boardId);
 
   useEffect(() => {
     if (!boardSetId) {
@@ -15,13 +15,11 @@ export function useTranslateActiveBoardSet(): void {
     }
 
     const controller = new AbortController();
-    translateBoardSet(boardSetId, language, controller.signal)
-      .then((didTranslate) => {
-        if (didTranslate) {
-          void revalidate();
-        }
-      })
-      .catch(() => undefined);
+    translateBoardSet(boardSetId, language, {
+      firstBoardId: readBoardIdOnScreen(),
+      signal: controller.signal,
+      onBoardTranslated: () => void revalidate(),
+    }).catch(() => undefined);
 
     return () => controller.abort();
   }, [boardSetId, language, revalidate]);

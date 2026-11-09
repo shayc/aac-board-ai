@@ -12,8 +12,12 @@ async function readNameTranslations() {
   );
 }
 
-function translateNamesToFrench() {
-  return translateBoardSetNames("fr", new AbortController().signal);
+async function translateNamesToFrench() {
+  await translateBoardSetNames(
+    await listBoardSets(),
+    "fr",
+    new AbortController().signal,
+  );
 }
 
 describe("translateBoardSetNames", () => {

@@ -67,11 +67,10 @@ describe("LanguageSettings", () => {
     });
 
     const screen = await renderLanguageSettings();
-    const translation = translateBoardSet(
-      "animals",
-      "es",
-      new AbortController().signal,
-    );
+    const translation = translateBoardSet("animals", "es", {
+      signal: new AbortController().signal,
+      onBoardTranslated: () => undefined,
+    });
 
     await expect
       .element(screen.getByText("Translating boards..."))

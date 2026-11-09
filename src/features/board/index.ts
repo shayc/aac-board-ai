@@ -8,6 +8,7 @@ export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
 export { MessageSettings } from "./message/message-settings";
 export {
+  BOARD_ROUTE_PATTERN,
   BOARD_SEGMENT,
   BOARD_SET_SEGMENT,
   rootBoardPath,

@@ -2,6 +2,7 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
+import { createTranslator } from "@shayc/react-built-in-ai";
 import type { Board } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import {
@@ -13,11 +14,17 @@ import {
   findStringTranslations,
   getBoardLanguage,
 } from "./board-translations";
-import { translateStrings, withTranslator } from "./translator";
+import { translateStrings } from "./translator";
 
 export interface BoardSetTranslationProgress {
   completed: number;
   total: number;
+}
+
+interface TranslateBoardSetOptions {
+  firstBoardId?: string;
+  signal: AbortSignal;
+  onBoardTranslated: () => void;
 }
 
 const progressStore = createExternalStore<BoardSetTranslationProgress | null>(
@@ -31,64 +38,83 @@ export function useBoardSetTranslationProgress(): BoardSetTranslationProgress | 
 export async function translateBoardSet(
   boardSetId: string,
   language: string,
-  signal: AbortSignal,
-): Promise<boolean> {
-  const records = await listBoardRecords(boardSetId);
-  const boards = records
-    .map(({ obf }) => obfToBoard(obf))
-    .filter((board) => needsTranslation(board, language));
-
+  { firstBoardId, signal, onBoardTranslated }: TranslateBoardSetOptions,
+): Promise<void> {
+  const boards = await listBoardsToTranslate(
+    boardSetId,
+    language,
+    firstBoardId,
+  );
   if (boards.length === 0) {
-    return false;
+    return;
   }
 
-  const progress = { completed: 0, total: boards.length };
+  const total = boards.length;
+  let completed = 0;
 
-  function reportProgress(next: BoardSetTranslationProgress | null) {
+  function reportProgress(progress: BoardSetTranslationProgress | null) {
     if (!signal.aborted) {
-      progressStore.setState(next);
+      progressStore.setState(progress);
     }
+  }
+
+  async function translateBoard(board: Board, translator: Translator) {
+    try {
+      const translations = await translateStrings(
+        collectBoardStrings(board),
+        translator,
+        signal,
+      );
+      await replaceStringTranslations(
+        boardSetId,
+        board.id,
+        language,
+        translations,
+      );
+      onBoardTranslated();
+    } catch {
+      signal.throwIfAborted();
+    }
+
+    completed += 1;
+    reportProgress({ completed, total });
   }
 
   signal.addEventListener("abort", () => progressStore.setState(null), {
     once: true,
   });
-  reportProgress({ ...progress });
+  reportProgress({ completed, total });
 
-  try {
-    for (const [sourceLanguage, group] of Map.groupBy(
-      boards,
-      getBoardLanguage,
-    )) {
-      await withTranslator(
-        { sourceLanguage, targetLanguage: language, signal },
-        async (translator) => {
-          for (const board of group) {
-            const translations = await translateStrings(
-              collectBoardStrings(board),
-              translator,
-              signal,
-            );
-            await replaceStringTranslations(
-              boardSetId,
-              board.id,
-              language,
-              translations,
-            );
+  for (const [sourceLanguage, group] of Map.groupBy(boards, getBoardLanguage)) {
+    try {
+      await using translator = await createTranslator({
+        sourceLanguage,
+        targetLanguage: language,
+        signal,
+      });
 
-            progress.completed += 1;
-            reportProgress({ ...progress });
-          }
-        },
-      );
+      for (const board of group) {
+        await translateBoard(board, translator);
+      }
+    } catch {
+      signal.throwIfAborted();
     }
-  } catch {
-    signal.throwIfAborted();
-  } finally {
-    reportProgress(null);
   }
 
-  return progress.completed > 0;
+  reportProgress(null);
+}
+
+async function listBoardsToTranslate(
+  boardSetId: string,
+  language: string,
+  firstBoardId: string | undefined,
+): Promise<Board[]> {
+  const records = await listBoardRecords(boardSetId);
+  const boards = records
+    .map(({ obf }) => obfToBoard(obf))
+    .filter((board) => needsTranslation(board, language));
+
+  return withBoardFirst(boards, firstBoardId);
 }
 
 function needsTranslation(board: Board, language: string): boolean {
@@ -97,4 +123,10 @@ function needsTranslation(board: Board, language: string): boolean {
     !findStringTranslations(board.translationsByLocale, language) &&
     collectBoardStrings(board).size > 0
   );
+}
+
+function withBoardFirst(boards: Board[], boardId: string | undefined): Board[] {
+  const first = boards.find((board) => board.id === boardId);
+
+  return first ? [first, ...boards.filter((board) => board !== first)] : boards;
 }

@@ -1,6 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
-import { beforeEach, describe, expect, test } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
 import { insertBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
@@ -28,8 +28,20 @@ async function readStrings(boardId: string) {
   return (await getBoardRecord("set-1", boardId))?.obf.strings;
 }
 
-function translateToSpanish(signal = new AbortController().signal) {
-  return translateBoardSet("set-1", "es", signal);
+function translateToSpanish({
+  firstBoardId,
+  signal = new AbortController().signal,
+  onBoardTranslated = vi.fn(),
+}: {
+  firstBoardId?: string;
+  signal?: AbortSignal;
+  onBoardTranslated?: () => void;
+} = {}) {
+  return translateBoardSet("set-1", "es", {
+    firstBoardId,
+    signal,
+    onBoardTranslated,
+  });
 }
 
 describe("translateBoardSet", () => {
@@ -43,9 +55,11 @@ describe("translateBoardSet", () => {
       makeBoard("food", "Food", "drink"),
     ]);
     const { translate } = stubTranslator((input) => `[es] ${input}`);
+    const onBoardTranslated = vi.fn();
 
-    await expect(translateToSpanish()).resolves.toBe(true);
+    await translateToSpanish({ onBoardTranslated });
 
+    expect(onBoardTranslated).toHaveBeenCalledTimes(2);
     expect(await readStrings("home")).toEqual({
       es: { Home: "[es] Home", eat: "[es] eat" },
     });
@@ -61,37 +75,76 @@ describe("translateBoardSet", () => {
       { ...makeBoard("food", "Comida", "beber"), locale: "es-ES" },
     ]);
     const { create } = stubTranslator();
+    const onBoardTranslated = vi.fn();
 
-    await expect(translateToSpanish()).resolves.toBe(false);
+    await translateToSpanish({ onBoardTranslated });
 
     expect(create).not.toHaveBeenCalled();
+    expect(onBoardTranslated).not.toHaveBeenCalled();
     expect(await readStrings("home")).toEqual({ "es-MX": {} });
     expect(await readStrings("food")).toBeUndefined();
   });
 
-  test("keeps the boards translated before the Translator fails", async () => {
+  test("translates the first board before the rest", async () => {
     await storeBoards([
-      makeBoard("home", "Home", "eat"),
       makeBoard("food", "Food", "drink"),
+      makeBoard("home", "Home", "eat"),
+    ]);
+    const { translate } = stubTranslator();
+
+    await translateToSpanish({ firstBoardId: "home" });
+
+    expect(translate.mock.calls.map(([input]) => input)).toEqual([
+      "Home",
+      "eat",
+      "Food",
+      "drink",
+    ]);
+  });
+
+  test("translates the other boards when one fails", async () => {
+    await storeBoards([
+      makeBoard("food", "Food", "drink"),
+      makeBoard("home", "Home", "eat"),
     ]);
     stubTranslator((input) =>
-      input === "Home"
+      input === "Food"
         ? Promise.reject(new DOMException("model failure", "UnknownError"))
         : `[es] ${input}`,
     );
 
-    await expect(translateToSpanish()).resolves.toBe(true);
+    await translateToSpanish();
 
-    expect(await readStrings("food")).toEqual({
-      es: { Food: "[es] Food", drink: "[es] drink" },
+    expect(await readStrings("food")).toBeUndefined();
+    expect(await readStrings("home")).toEqual({
+      es: { Home: "[es] Home", eat: "[es] eat" },
     });
-    expect(await readStrings("home")).toBeUndefined();
+  });
+
+  test("translates boards in other languages when one language pair is unavailable", async () => {
+    await storeBoards([
+      { ...makeBoard("essen", "Essen", "trinken"), locale: "de" },
+      makeBoard("home", "Home", "eat"),
+    ]);
+    const { availability } = stubTranslator((input) => `[es] ${input}`);
+    availability.mockImplementation((options) =>
+      Promise.resolve(
+        options?.sourceLanguage === "de" ? "unavailable" : "available",
+      ),
+    );
+
+    await translateToSpanish();
+
+    expect(await readStrings("essen")).toBeUndefined();
+    expect(await readStrings("home")).toEqual({
+      es: { Home: "[es] Home", eat: "[es] eat" },
+    });
   });
 
   test("translates nothing when the Translator is unavailable", async () => {
     await storeBoards([makeBoard("home", "Home", "eat")]);
 
-    await expect(translateToSpanish()).resolves.toBe(false);
+    await translateToSpanish();
 
     expect(await readStrings("home")).toBeUndefined();
   });
@@ -105,7 +158,9 @@ describe("translateBoardSet", () => {
       return Promise.reject(controller.signal.reason);
     });
 
-    await expect(translateToSpanish(controller.signal)).rejects.toMatchObject({
+    await expect(
+      translateToSpanish({ signal: controller.signal }),
+    ).rejects.toMatchObject({
       name: "AbortError",
     });
   });
