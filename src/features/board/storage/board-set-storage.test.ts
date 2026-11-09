@@ -57,7 +57,10 @@ describe("insertBoardSet", () => {
         gridColumns: 3,
       }),
     ]);
-    expect((await getBoardRecord("vocabulary", "root"))?.obf).toEqual(source);
+    expect(
+      (await getBoardRecord({ boardSetId: "vocabulary", boardId: "root" }))
+        ?.obf,
+    ).toEqual(source);
     expect(rootBoard).toEqual(source);
   });
 
@@ -67,7 +70,9 @@ describe("insertBoardSet", () => {
     ).rejects.toThrow("Root board not found");
 
     expect(await listBoardSetRecords()).toEqual([]);
-    expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
+    ).toBeUndefined();
   });
 
   test("rejects duplicate board IDs without overwriting a board", async () => {
@@ -83,7 +88,9 @@ describe("insertBoardSet", () => {
     ).rejects.toThrow("Duplicate board ID");
 
     expect(await listBoardSetRecords()).toEqual([]);
-    expect(await getBoardRecord("set-1", "root-1")).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
+    ).toBeUndefined();
   });
 
   test("rejects a conflicting ID without changing the existing set", async () => {
@@ -109,8 +116,12 @@ describe("insertBoardSet", () => {
       ),
     ).rejects.toBeInstanceOf(BoardSetAlreadyExistsError);
 
-    expect(await getBoardRecord("set-1", "a")).toBeDefined();
-    expect(await getBoardRecord("set-1", "b")).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "a" }),
+    ).toBeDefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "b" }),
+    ).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeInstanceOf(Blob);
     expect((await listBoardSetRecords())[0]?.name).toBe("Original");
   });
@@ -129,7 +140,9 @@ describe("insertBoardSet", () => {
         makeBoardSetInput({ name: undefined, boards: [obf] }),
       );
 
-      expect(await getBoardRecord("set-1", "root-1")).toEqual({
+      expect(
+        await getBoardRecord({ boardSetId: "set-1", boardId: "root-1" }),
+      ).toEqual({
         boardSetId: "set-1",
         id: "root-1",
         name: expectedName,
@@ -156,7 +169,9 @@ describe("insertBoardSet", () => {
     ).rejects.toThrow();
 
     expect(await listBoardSetRecords()).toEqual([]);
-    expect(await getBoardRecord("set-1", "b")).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "b" }),
+    ).toBeUndefined();
     expect(await getAssetBlob("set-1", "x.png")).toBeUndefined();
   });
 
@@ -281,12 +296,18 @@ describe("removeBoardSet", () => {
 
     const sets = await listBoardSetRecords();
     expect(sets.map((set) => set.id)).toEqual(["set-1-2"]);
-    expect(await getBoardRecord("set-1", "b1")).toBeUndefined();
-    expect(await getBoardRecord("set-1", "b2")).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "b1" }),
+    ).toBeUndefined();
+    expect(
+      await getBoardRecord({ boardSetId: "set-1", boardId: "b2" }),
+    ).toBeUndefined();
     expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
 
-    expect(await getBoardRecord("set-1-2", "b1")).toMatchObject({
+    expect(
+      await getBoardRecord({ boardSetId: "set-1-2", boardId: "b1" }),
+    ).toMatchObject({
       name: "Survivor",
     });
     const asset = await getAssetBlob("set-1-2", "img1.png");

@@ -18,8 +18,7 @@ export async function boardLoader({
 
   try {
     return await loadBoardInLanguage(
-      boardSetId,
-      boardId,
+      { boardSetId, boardId },
       getStoredLanguage(),
       request.signal,
     );

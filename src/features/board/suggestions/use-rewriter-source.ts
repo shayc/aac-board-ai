@@ -29,10 +29,12 @@ export function useRewriterSource({
     outputLanguage: language,
   });
 
+  const canRewrite = text !== "" && rewriter.status === "ready";
   const request = useLatestAsync({
-    enabled: text !== "" && rewriter.status === "ready",
     deps: [text, customInstructions, language],
-    run: (signal) => rewriter.rewrite(text, { signal }),
+    run: canRewrite
+      ? (signal) => rewriter.rewrite(text, { signal })
+      : undefined,
   });
 
   function enable() {

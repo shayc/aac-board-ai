@@ -1,9 +1,8 @@
 import { useEffect, useEffectEvent, useState } from "react";
 
 interface UseLatestAsyncOptions<T> {
-  enabled: boolean;
-  deps: readonly (string | number | boolean)[];
-  run: (signal: AbortSignal) => Promise<T>;
+  deps: readonly (string | number | boolean | undefined)[];
+  run: ((signal: AbortSignal) => Promise<T>) | undefined;
 }
 
 interface UseLatestAsyncReturn<T> {
@@ -17,24 +16,24 @@ type SettledResult<T> =
   | { dependencyKey: string; status: "rejected"; error: Error };
 
 export function useLatestAsync<T>({
-  enabled,
   deps,
   run,
 }: UseLatestAsyncOptions<T>): UseLatestAsyncReturn<T> {
+  const isEnabled = run !== undefined;
   const dependencyKey = JSON.stringify(deps);
-  const runLatest = useEffectEvent(run);
+  const runLatest = useEffectEvent((signal: AbortSignal) => run?.(signal));
 
   const [result, setResult] = useState<SettledResult<T>>();
 
   useEffect(() => {
-    if (!enabled) {
+    const controller = new AbortController();
+    const { signal } = controller;
+    const request = runLatest(signal);
+    if (!request) {
       return;
     }
 
-    const controller = new AbortController();
-    const { signal } = controller;
-
-    runLatest(signal)
+    request
       .then((value) => {
         if (!signal.aborted) {
           setResult({ dependencyKey, status: "resolved", value });
@@ -53,16 +52,16 @@ export function useLatestAsync<T>({
       });
 
     return () => controller.abort();
-  }, [enabled, dependencyKey]);
+  }, [isEnabled, dependencyKey]);
 
   const currentResult =
-    enabled && result?.dependencyKey === dependencyKey ? result : undefined;
+    isEnabled && result?.dependencyKey === dependencyKey ? result : undefined;
 
   return {
     value:
       currentResult?.status === "resolved" ? currentResult.value : undefined,
     error:
       currentResult?.status === "rejected" ? currentResult.error : undefined,
-    isPending: enabled && result?.dependencyKey !== dependencyKey,
+    isPending: isEnabled && result?.dependencyKey !== dependencyKey,
   };
 }

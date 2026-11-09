@@ -11,10 +11,11 @@ interface BoardOption {
 export function useBoardOptions(boardSetId: string | undefined): BoardOption[] {
   const { language } = useLanguage();
   const { value: summaries = [] } = useLatestAsync({
-    enabled: boardSetId !== undefined,
-    deps: [boardSetId ?? ""],
-    run: async () =>
-      boardSetId === undefined ? [] : listBoardSummaries(boardSetId),
+    deps: [boardSetId],
+    run:
+      boardSetId === undefined
+        ? undefined
+        : () => listBoardSummaries(boardSetId),
   });
 
   return summaries

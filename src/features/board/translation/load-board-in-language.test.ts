@@ -6,6 +6,8 @@ import { insertBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import { loadBoardInLanguage } from "./load-board-in-language";
 
+const BOARD_KEY = { boardSetId: "set-1", boardId: "board-1" };
+
 function makeOBFBoard(overrides: Partial<OBFBoard> = {}): OBFBoard {
   return {
     format: "open-board-0.1",
@@ -39,7 +41,7 @@ describe("loadBoardInLanguage", () => {
     await storeBoard();
     const { create } = stubTranslator();
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "en");
+    const board = await loadBoardInLanguage(BOARD_KEY, "en");
 
     expect(board.name).toBe("Food");
     expect(board.buttons[0]?.label).toBe("eat");
@@ -52,7 +54,7 @@ describe("loadBoardInLanguage", () => {
     });
     const { create } = stubTranslator();
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+    const board = await loadBoardInLanguage(BOARD_KEY, "es");
 
     expect(board.name).toBe("Comida");
     expect(board.buttons[0]?.label).toBe("comer");
@@ -69,7 +71,7 @@ describe("loadBoardInLanguage", () => {
       strings: { "es-ES": { Food: "Comida" } },
     });
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+    const board = await loadBoardInLanguage(BOARD_KEY, "es");
 
     expect(board.name).toBe("constructor");
     expect(board.buttons[0]?.label).toBe("toString");
@@ -80,7 +82,7 @@ describe("loadBoardInLanguage", () => {
     await storeBoard();
     const { create, translate } = stubTranslator((input) => `[es] ${input}`);
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+    const board = await loadBoardInLanguage(BOARD_KEY, "es");
 
     expect(board.name).toBe("[es] Food");
     expect(board.buttons[0]?.label).toBe("[es] eat");
@@ -103,21 +105,21 @@ describe("loadBoardInLanguage", () => {
     await storeBoard();
     stubTranslator((input) => `[es] ${input}`);
 
-    await loadBoardInLanguage("set-1", "board-1", "es");
+    await loadBoardInLanguage(BOARD_KEY, "es");
 
     const cachedStrings = {
       es: { Food: "[es] Food", eat: "[es] eat", drink: "[es] drink" },
     };
 
     await expect
-      .poll(async () => (await getBoardRecord("set-1", "board-1"))?.obf.strings)
+      .poll(async () => (await getBoardRecord(BOARD_KEY))?.obf.strings)
       .toEqual(cachedStrings);
   });
 
   test("falls back to the source board when the Translator is unavailable", async () => {
     await storeBoard();
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+    const board = await loadBoardInLanguage(BOARD_KEY, "es");
 
     expect(board.name).toBe("Food");
   });
@@ -128,7 +130,7 @@ describe("loadBoardInLanguage", () => {
       Promise.reject(new DOMException("model failure", "UnknownError")),
     );
 
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+    const board = await loadBoardInLanguage(BOARD_KEY, "es");
 
     expect(board.name).toBe("Food");
     expect(board.buttons[0]?.label).toBe("eat");
@@ -144,7 +146,7 @@ describe("loadBoardInLanguage", () => {
     });
 
     await expect(
-      loadBoardInLanguage("set-1", "board-1", "es", controller.signal),
+      loadBoardInLanguage(BOARD_KEY, "es", controller.signal),
     ).rejects.toMatchObject({ name: "AbortError" });
   });
 });

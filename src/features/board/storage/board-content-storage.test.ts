@@ -10,6 +10,8 @@ import {
 import { insertBoardSet } from "./board-set-storage";
 import { closeBoardsDB } from "./boards-db";
 
+const BOARD_KEY = { boardSetId: "set-1", boardId: "b1" };
+
 beforeEach(async () => {
   await resetBoardsDB();
 });
@@ -20,7 +22,10 @@ describe("getBoardRecord", () => {
   test("returns undefined for nonexistent board", async () => {
     await insertBoardSet(makeBoardSetInput());
 
-    const board = await getBoardRecord("set-1", "nonexistent");
+    const board = await getBoardRecord({
+      boardSetId: "set-1",
+      boardId: "nonexistent",
+    });
     expect(board).toBeUndefined();
   });
 });
@@ -93,8 +98,7 @@ describe("replaceStringTranslations", () => {
     );
 
     await replaceStringTranslations(
-      "set-1",
-      "b1",
+      BOARD_KEY,
       "es",
       new Map([
         ["hello", "hola"],
@@ -102,7 +106,7 @@ describe("replaceStringTranslations", () => {
       ]),
     );
 
-    const board = await getBoardRecord("set-1", "b1");
+    const board = await getBoardRecord(BOARD_KEY);
     assertDefined(board);
     expect(board.obf.strings).toEqual({
       es: { hello: "hola", world: "mundo" },
@@ -122,13 +126,12 @@ describe("replaceStringTranslations", () => {
     );
 
     await replaceStringTranslations(
-      "set-1",
-      "b1",
+      BOARD_KEY,
       "es",
       new Map([["hello", "hola"]]),
     );
 
-    const board = await getBoardRecord("set-1", "b1");
+    const board = await getBoardRecord(BOARD_KEY);
     assertDefined(board);
     expect(board.obf.strings).toEqual({
       fr: { hello: "bonjour" },
@@ -145,8 +148,7 @@ describe("replaceStringTranslations", () => {
     );
 
     await replaceStringTranslations(
-      "set-1",
-      "b1",
+      BOARD_KEY,
       "es",
       new Map([
         ["hello", "hola"],
@@ -154,13 +156,12 @@ describe("replaceStringTranslations", () => {
       ]),
     );
     await replaceStringTranslations(
-      "set-1",
-      "b1",
+      BOARD_KEY,
       "es",
       new Map([["hello", "ey"]]),
     );
 
-    const board = await getBoardRecord("set-1", "b1");
+    const board = await getBoardRecord(BOARD_KEY);
     assertDefined(board);
     expect(board.obf.strings).toEqual({ es: { hello: "ey" } });
   });
@@ -169,7 +170,11 @@ describe("replaceStringTranslations", () => {
     await insertBoardSet(makeBoardSetInput());
 
     await expect(
-      replaceStringTranslations("set-1", "nonexistent", "es", new Map()),
+      replaceStringTranslations(
+        { boardSetId: "set-1", boardId: "nonexistent" },
+        "es",
+        new Map(),
+      ),
     ).rejects.toThrow("Board not found");
   });
 });

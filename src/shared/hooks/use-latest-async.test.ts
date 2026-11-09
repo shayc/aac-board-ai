@@ -3,23 +3,29 @@ import { renderHook } from "vitest-browser-react";
 import { useLatestAsync } from "./use-latest-async";
 
 describe("useLatestAsync", () => {
-  test("stands down without running when not enabled", async () => {
+  test("stands down while run is undefined and starts once it is provided", async () => {
     const run = vi.fn(() => Promise.resolve("value"));
-
-    const { result } = await renderHook(() =>
-      useLatestAsync({ enabled: false, deps: ["a"], run }),
+    const { result, rerender } = await renderHook(
+      ({ isReady }: { isReady: boolean } = { isReady: false }) =>
+        useLatestAsync({ deps: ["a"], run: isReady ? run : undefined }),
+      { initialProps: { isReady: false } },
     );
 
     expect(result.current.value).toBeUndefined();
     expect(result.current.isPending).toBe(false);
     expect(run).not.toHaveBeenCalled();
+
+    await rerender({ isReady: true });
+
+    await vi.waitFor(() => expect(result.current.value).toBe("value"));
+    expect(run).toHaveBeenCalledTimes(1);
   });
 
-  test("runs when enabled even with an empty deps list", async () => {
+  test("runs with an empty deps list", async () => {
     const run = vi.fn(() => Promise.resolve("once"));
 
     const { result } = await renderHook(() =>
-      useLatestAsync({ enabled: true, deps: [], run }),
+      useLatestAsync({ deps: [], run }),
     );
 
     await vi.waitFor(() => expect(result.current.value).toBe("once"));
@@ -30,7 +36,6 @@ describe("useLatestAsync", () => {
     const resolvers: ((value: string) => void)[] = [];
     const { result } = await renderHook(() =>
       useLatestAsync({
-        enabled: true,
         deps: ["a"],
         run: () => new Promise<string>((resolve) => resolvers.push(resolve)),
       }),
@@ -53,7 +58,6 @@ describe("useLatestAsync", () => {
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
-          enabled: true,
           deps: [id],
           run: () => new Promise<string>((resolve) => resolvers.push(resolve)),
         }),
@@ -94,7 +98,6 @@ describe("useLatestAsync", () => {
     const { result, rerender } = await renderHook(
       ({ deps, label }: TestProps = firstProps) =>
         useLatestAsync({
-          enabled: true,
           deps,
           run: () => run(label),
         }),
@@ -113,7 +116,6 @@ describe("useLatestAsync", () => {
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
-          enabled: true,
           deps: [id],
           run: () =>
             id === "a"
@@ -144,7 +146,6 @@ describe("useLatestAsync", () => {
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
-          enabled: true,
           deps: [id],
           run: () =>
             new Promise<string>((resolve) => resolvers.set(id, resolve)),
@@ -167,7 +168,6 @@ describe("useLatestAsync", () => {
     const { result, rerender } = await renderHook(
       ({ id }: { id: string } = { id: "a" }) =>
         useLatestAsync({
-          enabled: true,
           deps: [id],
           run: () => {
             const request = Promise.withResolvers<string>();

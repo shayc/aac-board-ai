@@ -1,3 +1,8 @@
+export interface BoardKey {
+  readonly boardSetId: string;
+  readonly boardId: string;
+}
+
 export interface Board {
   readonly id: string;
   readonly name: string;

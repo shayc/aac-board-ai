@@ -1,32 +1,28 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { obfToBoard } from "../obf/obf-to-board";
-import type { Board } from "../board-types";
+import type { Board, BoardKey } from "../board-types";
 import { getAssetURL } from "./asset-urls";
 import { BoardNotFoundError, getBoardRecord } from "./board-content-storage";
 
 export async function loadStoredBoard(
-  boardSetId: string,
-  boardId: string,
+  key: BoardKey,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const obfBoard = await readOBFBoard(boardSetId, boardId);
+  const obfBoard = await readOBFBoard(key);
 
   signal?.throwIfAborted();
 
-  const assetURLByPath = await resolveAssetURLs(boardSetId, obfBoard);
+  const assetURLByPath = await resolveAssetURLs(key.boardSetId, obfBoard);
 
   signal?.throwIfAborted();
 
   return obfToBoard(obfBoard, assetURLByPath);
 }
 
-async function readOBFBoard(
-  boardSetId: string,
-  boardId: string,
-): Promise<OBFBoard> {
-  const record = await getBoardRecord(boardSetId, boardId);
+async function readOBFBoard(key: BoardKey): Promise<OBFBoard> {
+  const record = await getBoardRecord(key);
   if (!record) {
-    throw new BoardNotFoundError(boardSetId, boardId);
+    throw new BoardNotFoundError(key);
   }
 
   return record.obf;
