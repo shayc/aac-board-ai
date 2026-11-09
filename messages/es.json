@@ -48,7 +48,7 @@
   "libraryMoreOptionsFor": "Más opciones para {name}",
   "libraryDownload": "Descargar",
   "libraryDownloadBoardSet": "Descargar {name}",
-  "libraryDownloadedBoardSet": "Se descargó el conjunto de tableros \"{name}\"",
+  "libraryDownloadedBoardSet": "Conjunto de tableros \"{name}\" descargado",
   "libraryDownloadFailed": "No se pudo descargar el conjunto de tableros \"{name}\"",
   "libraryDownloadProgress": "{loaded} de {total}",
   "libraryDownloadingStatus": "Descargando...",

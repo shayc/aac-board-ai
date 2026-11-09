@@ -38,7 +38,7 @@
   "libraryImportOnlyBoardFiles": "只能导入沟通板文件",
   "libraryImportTooLargeBoardFile": "沟通板文件“{fileName}”过大，无法导入",
   "libraryImportTooLargeBoardFiles": "沟通板文件过大，无法导入",
-  "libraryImportPartiallyFailedBoardFiles": "部分沟通板文件无法导入（{failed} / {total}）",
+  "libraryImportPartiallyFailedBoardFiles": "无法导入部分沟通板文件（{failed} / {total}）",
   "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",
   "libraryDelete": "删除",

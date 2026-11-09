@@ -115,7 +115,7 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Some board files couldn't be imported (2 of 3)");
+      .toHaveTextContent("Couldn't import some board files (2 of 3)");
   });
 
   test("shows the failed message when every file fails", async () => {
