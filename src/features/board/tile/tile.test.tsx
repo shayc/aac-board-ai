@@ -52,35 +52,46 @@ function paint(...cssColors: string[]): Rgb {
   }
 
   const [red, green, blue, alpha] = context.getImageData(0, 0, 1, 1).data;
+  assertDefined(red);
+  assertDefined(green);
+  assertDefined(blue);
   expect(alpha, `painting ${cssColors.join(", ")} must end opaque`).toBe(255);
 
   return [red, green, blue];
 }
 
-function relativeLuminance(rgb: Rgb): number {
-  const [red, green, blue] = rgb.map((channel) => {
-    const value = channel / 255;
+function linearizeChannel(channel: number): number {
+  const value = channel / 255;
 
-    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
-  });
+  return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+}
 
-  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+function relativeLuminance([red, green, blue]: Rgb): number {
+  return (
+    0.2126 * linearizeChannel(red) +
+    0.7152 * linearizeChannel(green) +
+    0.0722 * linearizeChannel(blue)
+  );
 }
 
 function contrastRatio(first: Rgb, second: Rgb): number {
-  const [lighter, darker] = [
-    relativeLuminance(first),
-    relativeLuminance(second),
-  ]
-    .sort((a, b) => b - a)
-    .map((luminance) => luminance + 0.05);
+  const firstLuminance = relativeLuminance(first) + 0.05;
+  const secondLuminance = relativeLuminance(second) + 0.05;
 
-  return lighter / darker;
+  return (
+    Math.max(firstLuminance, secondLuminance) /
+    Math.min(firstLuminance, secondLuminance)
+  );
 }
 
-function channelDistance(first: Rgb, second: Rgb): number {
+function channelDistance(
+  [red, green, blue]: Rgb,
+  [otherRed, otherGreen, otherBlue]: Rgb,
+): number {
   return Math.max(
-    ...first.map((channel, index) => Math.abs(channel - second[index])),
+    Math.abs(red - otherRed),
+    Math.abs(green - otherGreen),
+    Math.abs(blue - otherBlue),
   );
 }
 

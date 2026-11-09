@@ -1,5 +1,6 @@
 import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
+import { isRecord } from "@shared/utils/is-record";
 import { parseBoolean } from "@shared/utils/parse-boolean";
 
 interface MessagePreferences {
@@ -8,7 +9,7 @@ interface MessagePreferences {
 }
 
 export function parseMessagePreferences(raw: unknown): MessagePreferences {
-  const stored = (raw ?? {}) as Record<string, unknown>;
+  const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
 
   return {
     areImagesVisible: parseBoolean(stored.areImagesVisible, true),

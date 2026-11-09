@@ -8,6 +8,7 @@ import {
   useExternalStore,
 } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
+import { isRecord } from "@shared/utils/is-record";
 import {
   parseClampedNumber,
   type ClampedNumberOptions,
@@ -22,7 +23,9 @@ interface SpeechPreferences {
   volume: number;
 }
 
-export type VoicesByLanguage = Partial<Record<string, SpeechSynthesisVoice[]>>;
+export type VoicesByLanguage = Partial<
+  Record<string, readonly SpeechSynthesisVoice[]>
+>;
 
 export const SPEECH_RATE: ClampedNumberOptions = {
   min: 0.1,
@@ -41,7 +44,7 @@ export const SPEECH_VOLUME: ClampedNumberOptions = {
 };
 
 export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
-  const stored = (raw ?? {}) as Record<string, unknown>;
+  const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
 
   return {
     voiceURI: typeof stored.voiceURI === "string" ? stored.voiceURI : null,
@@ -52,7 +55,7 @@ export function parseSpeechPreferences(raw: unknown): SpeechPreferences {
 }
 
 function groupVoicesByLanguage(
-  voices: SpeechSynthesisVoice[],
+  voices: readonly SpeechSynthesisVoice[],
 ): VoicesByLanguage {
   return Object.groupBy(voices, (voice) => getLanguageCode(voice.lang));
 }

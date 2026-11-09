@@ -36,7 +36,7 @@ export function obfToBoard(
 }
 
 function buildMediaSourceById(
-  media: OBFMedia[] | undefined,
+  media: readonly OBFMedia[] | undefined,
   assetURLByPath: ReadonlyMap<string, string>,
 ): Map<string, string> {
   const mediaSourceById = new Map<string, string>();

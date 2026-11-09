@@ -6,7 +6,7 @@ function getSpokenText(part: MessagePart): string {
   return (part.vocalization ?? part.label).toLowerCase();
 }
 
-export function planPlayback(parts: MessagePart[]): PlaybackStep[] {
+export function planPlayback(parts: readonly MessagePart[]): PlaybackStep[] {
   const steps: PlaybackStep[] = [];
   let spokenRun: SpokenPart[] = [];
 

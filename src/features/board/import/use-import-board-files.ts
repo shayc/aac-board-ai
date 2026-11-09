@@ -9,15 +9,17 @@ import { summarizeImport } from "./summarize-import";
 
 interface UseImportBoardFilesReturn {
   pickAndImport: () => Promise<void>;
-  importFiles: (files: File[]) => Promise<ImportedBoardSet[]>;
-  importAndOpen: (files: File[]) => Promise<void>;
+  importFiles: (files: readonly File[]) => Promise<ImportedBoardSet[]>;
+  importAndOpen: (files: readonly File[]) => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
-  async function importFiles(files: File[]): Promise<ImportedBoardSet[]> {
+  async function importFiles(
+    files: readonly File[],
+  ): Promise<ImportedBoardSet[]> {
     if (files.length === 0) {
       return [];
     }
@@ -43,15 +45,16 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     return outcome.importedBoardSets;
   }
 
-  async function importAndOpen(files: File[]) {
+  async function importAndOpen(files: readonly File[]) {
     const importedBoardSets = await importFiles(files);
+    const onlyBoardSet =
+      importedBoardSets.length === 1 ? importedBoardSets[0] : undefined;
 
-    if (importedBoardSets.length !== 1) {
+    if (!onlyBoardSet) {
       return;
     }
 
-    const [boardSet] = importedBoardSets;
-    void navigate(rootBoardPath(boardSet));
+    void navigate(rootBoardPath(onlyBoardSet));
   }
 
   async function pickAndImport() {

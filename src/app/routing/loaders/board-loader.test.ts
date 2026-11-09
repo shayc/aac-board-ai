@@ -4,7 +4,7 @@ import {
   seedBoardSets,
 } from "@features/board/testing";
 import type { Board } from "@features/board";
-import type { LoaderFunctionArgs } from "react-router";
+import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardLoader } from "./board-loader";
 
@@ -12,12 +12,9 @@ function callLoader(
   boardSetId: string | undefined,
   boardId: string | undefined,
 ): Promise<Board> {
-  const args = {
-    request: new Request("http://localhost/"),
-    params: { boardSetId, boardId },
-  } as unknown as LoaderFunctionArgs;
-
-  return boardLoader(args);
+  return boardLoader(
+    loaderArgs("http://localhost/", { params: { boardSetId, boardId } }),
+  );
 }
 
 describe("boardLoader", () => {

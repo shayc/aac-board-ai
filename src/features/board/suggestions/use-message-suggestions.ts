@@ -19,7 +19,7 @@ const CUSTOM_INSTRUCTIONS_DEBOUNCE_MS = 400;
 interface UseMessageSuggestionsReturn {
   isSupported: boolean;
   status: SuggestionStatus;
-  phrases: string[];
+  phrases: readonly string[];
   enable: () => void;
 }
 

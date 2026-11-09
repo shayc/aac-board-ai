@@ -8,8 +8,14 @@ export interface GridFocusTarget {
   position: GridPosition;
 }
 
-export function findGridPosition(target: Element | null): GridPosition | null {
-  return readGridPosition(target?.closest(GRID_CELL_SELECTOR) ?? null);
+export function findGridPosition(
+  target: EventTarget | null,
+): GridPosition | null {
+  if (!(target instanceof Element)) {
+    return null;
+  }
+
+  return readGridPosition(target.closest(GRID_CELL_SELECTOR));
 }
 
 export function findGridFocusableAt(

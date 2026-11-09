@@ -307,8 +307,8 @@ describe("useMessageSuggestions", () => {
     });
 
     await vi.waitFor(() => expect(resolvers).toHaveLength(2));
-    resolvers[0]("direct hi");
-    resolvers[1]("friendly hi");
+    resolvers[0]?.("direct hi");
+    resolvers[1]?.("friendly hi");
 
     await vi.waitFor(() => {
       expect(result.current.phrases).toEqual(["direct hi", "friendly hi"]);

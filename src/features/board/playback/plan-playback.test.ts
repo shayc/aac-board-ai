@@ -19,7 +19,7 @@ describe("planPlayback", () => {
     expect(steps).toHaveLength(1);
     const step = steps[0];
 
-    if (step.kind !== "speech") {
+    if (step?.kind !== "speech") {
       throw new Error("Expected a speech step");
     }
 
@@ -55,7 +55,7 @@ describe("planPlayback", () => {
       { id: "1", label: "🙂", vocalization: "Happy" },
     ]);
 
-    expect(steps[0].kind === "speech" && steps[0].text).toBe("happy");
+    expect(steps[0]?.kind === "speech" && steps[0].text).toBe("happy");
   });
 
   test("skips parts with no spoken text, such as inserted spaces", () => {
@@ -65,6 +65,6 @@ describe("planPlayback", () => {
     ]);
 
     expect(steps).toHaveLength(1);
-    expect(steps[0].kind === "speech" && steps[0].text).toBe("hi");
+    expect(steps[0]?.kind === "speech" && steps[0].text).toBe("hi");
   });
 });

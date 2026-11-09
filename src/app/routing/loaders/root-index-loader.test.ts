@@ -4,7 +4,7 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
-import type { LoaderFunctionArgs } from "react-router";
+import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { routeErrorCodes } from "../route-error";
 import { rootIndexLoader } from "./root-index-loader";
@@ -21,12 +21,9 @@ function callLoader(
   searchParams = "",
   signal?: AbortSignal,
 ): Promise<Response> {
-  const args = {
-    request: new Request(`http://localhost/${searchParams}`, { signal }),
-    params: {},
-  } as unknown as LoaderFunctionArgs;
-
-  return rootIndexLoader(args);
+  return rootIndexLoader(
+    loaderArgs(`http://localhost/${searchParams}`, { signal }),
+  );
 }
 
 describe("rootIndexLoader", () => {

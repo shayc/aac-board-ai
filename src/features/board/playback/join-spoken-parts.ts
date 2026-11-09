@@ -14,7 +14,9 @@ interface PartSpan {
   end: number;
 }
 
-export function joinSpokenParts(parts: SpokenPart[]): JoinedSpokenParts {
+export function joinSpokenParts(
+  parts: readonly SpokenPart[],
+): JoinedSpokenParts {
   const chunks: string[] = [];
   const spans: PartSpan[] = [];
 

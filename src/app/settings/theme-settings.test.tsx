@@ -30,7 +30,7 @@ describe("ThemeSettings", () => {
         .not.toBeChecked();
     }
 
-    await groups[0].getByRole("radio", { name: "Dark" }).click();
+    await groups[0]?.getByRole("radio", { name: "Dark" }).click();
 
     for (const group of groups) {
       await expect

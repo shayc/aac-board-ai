@@ -1,13 +1,13 @@
 export interface MessagePartInput {
-  label?: string;
-  vocalization?: string;
-  imageSrc?: string;
-  soundSrc?: string;
+  readonly label?: string;
+  readonly vocalization?: string;
+  readonly imageSrc?: string;
+  readonly soundSrc?: string;
 }
 
 // Identity is ours, minted at creation — a button's id can't serve, since it isn't
 // unique across occurrences (same button added twice, or ids colliding across boards).
 export interface MessagePart extends MessagePartInput {
-  id: string;
-  label: string;
+  readonly id: string;
+  readonly label: string;
 }

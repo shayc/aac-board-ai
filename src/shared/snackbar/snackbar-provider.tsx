@@ -19,7 +19,7 @@ interface QueuedSnackbar extends SnackbarOptions {
 }
 
 interface SnackbarState {
-  queue: QueuedSnackbar[];
+  queue: readonly QueuedSnackbar[];
   current: QueuedSnackbar | undefined;
   open: boolean;
 }

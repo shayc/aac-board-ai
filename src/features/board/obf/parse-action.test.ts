@@ -25,9 +25,9 @@ describe("parseAction", () => {
   });
 
   test.each([":unknown", "", "hello"])(
-    "returns null for invalid action %j",
+    "returns undefined for invalid action %j",
     (raw) => {
-      expect(parseAction(raw)).toBeNull();
+      expect(parseAction(raw)).toBeUndefined();
     },
   );
 });

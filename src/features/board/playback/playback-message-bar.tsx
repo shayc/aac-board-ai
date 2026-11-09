@@ -7,7 +7,7 @@ import {
 } from "./use-board-playback";
 
 interface PlaybackMessageBarProps {
-  parts: MessagePart[];
+  parts: readonly MessagePart[];
   playback: Pick<
     UseBoardPlaybackReturn,
     "isMessagePlaying" | "playMessage" | "stop"

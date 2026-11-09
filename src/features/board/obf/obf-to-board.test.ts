@@ -128,8 +128,8 @@ describe("obfToBoard", () => {
 
         const board = obfToBoard(obfBoard);
 
-        expect(board.buttons[0].label).toBe("");
-        expect(board.buttons[0].vocalization).toBeUndefined();
+        expect(board.buttons[0]?.label).toBe("");
+        expect(board.buttons[0]?.vocalization).toBeUndefined();
       },
     );
 
@@ -143,8 +143,8 @@ describe("obfToBoard", () => {
 
       const board = obfToBoard(obfBoard);
 
-      expect(board.buttons[0].label).toBe(" Hi ");
-      expect(board.buttons[0].vocalization).toBe("\tHello there\n");
+      expect(board.buttons[0]?.label).toBe(" Hi ");
+      expect(board.buttons[0]?.vocalization).toBe("\tHello there\n");
     });
 
     test("maps button visual fields + vocalization", () => {

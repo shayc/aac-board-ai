@@ -15,7 +15,9 @@ export function normalizeLocale(locale: string): string {
 }
 
 export function getLanguageCode(locale: string): string {
-  return locale.split(/[_-]/)[0].toLowerCase();
+  const [language = ""] = locale.split(/[_-]/, 1);
+
+  return language.toLowerCase();
 }
 
 /**

@@ -1,4 +1,4 @@
-import type { StringTranslations } from "../board-types";
+import type { BoardKey, StringTranslations } from "../board-types";
 import {
   getBoardsDB,
   normalizeAssetPath,
@@ -9,16 +9,16 @@ import {
 export type { BoardRecord } from "./boards-db";
 
 export class BoardNotFoundError extends Error {
-  constructor(boardSetId: string, boardId: string) {
+  constructor({ boardSetId, boardId }: BoardKey) {
     super(`Board not found: ${boardSetId}/${boardId}`);
     this.name = "BoardNotFoundError";
   }
 }
 
-export async function getBoardRecord(
-  boardSetId: string,
-  boardId: string,
-): Promise<BoardRecord | undefined> {
+export async function getBoardRecord({
+  boardSetId,
+  boardId,
+}: BoardKey): Promise<BoardRecord | undefined> {
   const db = await getBoardsDB();
 
   return db.get("boards", [boardSetId, boardId]);
@@ -44,11 +44,11 @@ export async function getAssetBlob(
 }
 
 export async function replaceStringTranslations(
-  boardSetId: string,
-  boardId: string,
+  key: BoardKey,
   language: string,
   translations: StringTranslations,
 ): Promise<void> {
+  const { boardSetId, boardId } = key;
   validateId(boardSetId, "boardSetId");
   validateId(boardId, "boardId");
   const db = await getBoardsDB();
@@ -56,7 +56,7 @@ export async function replaceStringTranslations(
   const record = await tx.store.get([boardSetId, boardId]);
 
   if (!record) {
-    throw new BoardNotFoundError(boardSetId, boardId);
+    throw new BoardNotFoundError(key);
   }
 
   const updatedOBF = {

@@ -75,9 +75,9 @@ describe("applyTranslations", () => {
     const translated = applyTranslations(mockBoard, translations);
 
     expect(translated.name).toBe("Mi Tablero");
-    expect(translated.buttons[0].label).toBe("Hola");
-    expect(translated.buttons[0].vocalization).toBe("Hello there");
-    expect(translated.buttons[1].label).toBe("");
+    expect(translated.buttons[0]?.label).toBe("Hola");
+    expect(translated.buttons[0]?.vocalization).toBe("Hello there");
+    expect(translated.buttons[1]?.label).toBe("");
   });
 
   test.each(["", " \t\n\u00a0 "])(
@@ -93,8 +93,8 @@ describe("applyTranslations", () => {
       );
 
       expect(translated.name).toBe("");
-      expect(translated.buttons[0].label).toBe("");
-      expect(translated.buttons[0].vocalization).toBeUndefined();
+      expect(translated.buttons[0]?.label).toBe("");
+      expect(translated.buttons[0]?.vocalization).toBeUndefined();
     },
   );
 
@@ -122,8 +122,8 @@ describe("applyTranslations", () => {
     );
 
     expect(translated.name).toBe(" Mi Tablero ");
-    expect(translated.buttons[0].label).toBe(" Hola ");
-    expect(translated.buttons[0].vocalization).toBe("\tHola a todos\n");
+    expect(translated.buttons[0]?.label).toBe(" Hola ");
+    expect(translated.buttons[0]?.vocalization).toBe("\tHola a todos\n");
   });
 });
 
@@ -147,7 +147,7 @@ describe("findBoardInLanguage", () => {
     const translated = findBoardInLanguage(mockBoard, "es");
     expect(translated).toBeDefined();
     expect(translated?.name).toBe("Mi Tablero");
-    expect(translated?.buttons[0].label).toBe("Hola");
+    expect(translated?.buttons[0]?.label).toBe("Hola");
   });
 
   test("returns nothing when the board has no translations for the language", () => {

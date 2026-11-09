@@ -1,5 +1,5 @@
 import { createTranslator } from "@shayc/react-built-in-ai";
-import type { Board, StringTranslations } from "../board-types";
+import type { Board, BoardKey, StringTranslations } from "../board-types";
 import { replaceStringTranslations } from "../storage/board-content-storage";
 import { loadStoredBoard } from "../storage/load-stored-board";
 import {
@@ -10,12 +10,11 @@ import {
 } from "./board-translations";
 
 export async function loadBoardInLanguage(
-  boardSetId: string,
-  boardId: string,
+  key: BoardKey,
   language: string,
   signal?: AbortSignal,
 ): Promise<Board> {
-  const board = await loadStoredBoard(boardSetId, boardId, signal);
+  const board = await loadStoredBoard(key, signal);
 
   const existing = findBoardInLanguage(board, language);
   if (existing) {
@@ -27,7 +26,7 @@ export async function loadBoardInLanguage(
     return board;
   }
 
-  void cacheTranslations(boardSetId, boardId, language, translations);
+  void cacheTranslations(key, language, translations);
 
   return applyTranslations(board, translations);
 }
@@ -79,18 +78,12 @@ async function translateStrings(
 }
 
 async function cacheTranslations(
-  boardSetId: string,
-  boardId: string,
+  key: BoardKey,
   language: string,
   translations: StringTranslations,
 ): Promise<void> {
   try {
-    await replaceStringTranslations(
-      boardSetId,
-      boardId,
-      language,
-      translations,
-    );
+    await replaceStringTranslations(key, language, translations);
   } catch {
     // Failure only costs a re-translation next load.
   }

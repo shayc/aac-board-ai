@@ -80,7 +80,7 @@ async function measureTracks(
   );
 
   return {
-    cellSize: cells[0][size],
+    cellSize: cells[0]?.[size],
     lastVisibleCellEnd: visibleCells.at(-1)?.[end],
     viewportContentEnd: viewport[end] - PADDING_PX,
     visibleCellCount: visibleCells.length,

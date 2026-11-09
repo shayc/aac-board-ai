@@ -5,7 +5,7 @@ import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
 export interface MessageBarProps {
-  parts: MessagePart[];
+  parts: readonly MessagePart[];
   activePartId: string | null;
   areImagesVisible: boolean;
   isPlaying: boolean;
@@ -24,14 +24,17 @@ export function MessageBar({
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    return scheduleScrollIntoView(
-      scrollContainerRef.current?.lastElementChild ?? undefined,
-      "end",
-    );
+    const container = scrollContainerRef.current;
+    if (!container) {
+      return;
+    }
+
+    return scheduleScrollIntoView(container.lastElementChild, "end");
   }, [parts]);
 
   useEffect(() => {
-    if (activePartId === null) {
+    const container = scrollContainerRef.current;
+    if (!container || activePartId === null) {
       return;
     }
 
@@ -40,10 +43,7 @@ export function MessageBar({
       return;
     }
 
-    return scheduleScrollIntoView(
-      scrollContainerRef.current?.children[index],
-      "nearest",
-    );
+    return scheduleScrollIntoView(container.children.item(index), "nearest");
   }, [activePartId, parts]);
 
   return (
@@ -116,7 +116,7 @@ export function MessageBar({
 }
 
 function scheduleScrollIntoView(
-  element: Element | undefined,
+  element: Element | null,
   inline: ScrollLogicalPosition,
 ): () => void {
   if (!element) {

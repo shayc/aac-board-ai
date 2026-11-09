@@ -19,13 +19,15 @@ export function useProofreaderSource({
     expectedInputLanguages: [language],
   });
 
+  const canProofread = text !== "" && proofreader.status === "ready";
   const request = useLatestAsync({
-    enabled: text !== "" && proofreader.status === "ready",
     deps: [text, language],
-    run: (signal) =>
-      proofreader
-        .proofread(text, { signal })
-        .then((result) => result.correctedInput),
+    run: canProofread
+      ? (signal) =>
+          proofreader
+            .proofread(text, { signal })
+            .then((result) => result.correctedInput)
+      : undefined,
   });
 
   function enable() {

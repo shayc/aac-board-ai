@@ -58,7 +58,10 @@ describe("importBoardFile", () => {
       gridColumns: board.grid.columns,
     });
 
-    const storedBoard = await getBoardRecord(IMPORTED_SET_ID, board.id);
+    const storedBoard = await getBoardRecord({
+      boardSetId: IMPORTED_SET_ID,
+      boardId: board.id,
+    });
     assertDefined(storedBoard);
 
     expect(storedBoard.name).toBe(board.name ?? board.id);
@@ -103,7 +106,10 @@ describe("importBoardFile", () => {
     expect(counts.boardCount).toBe(archive.boards.size);
     expect(counts.assetCount).toBe(assetEntries.length);
 
-    const storedRootBoard = await getBoardRecord(IMPORTED_SET_ID, rootBoardId);
+    const storedRootBoard = await getBoardRecord({
+      boardSetId: IMPORTED_SET_ID,
+      boardId: rootBoardId,
+    });
     assertDefined(storedRootBoard);
 
     const boardLinks = storedRootBoard.obf.buttons.flatMap((button) =>
@@ -127,10 +133,10 @@ describe("importBoardFile", () => {
 
       expect(link.id).toBe(expectedChildBoardId);
 
-      const storedChildBoard = await getBoardRecord(
-        IMPORTED_SET_ID,
-        expectedChildBoardId,
-      );
+      const storedChildBoard = await getBoardRecord({
+        boardSetId: IMPORTED_SET_ID,
+        boardId: expectedChildBoardId,
+      });
       expect(storedChildBoard).toBeDefined();
     }
 
@@ -223,7 +229,12 @@ describe("importBoardFile", () => {
     const result = await importBoardFile(collidingFile);
 
     expect(result.id).toBe("board-2");
-    expect(await getBoardRecord("board", archive.rootBoard.id)).toBeDefined();
+    expect(
+      await getBoardRecord({
+        boardSetId: "board",
+        boardId: archive.rootBoard.id,
+      }),
+    ).toBeDefined();
     expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
     expect(await listBoardSetRecords()).toHaveLength(2);
   });

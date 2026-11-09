@@ -16,8 +16,9 @@ export function summarizeImport({
     };
   }
 
-  if (failures.length === 1) {
-    const [{ fileName, error }] = failures;
+  const onlyFailure = failures.length === 1 ? failures[0] : undefined;
+  if (onlyFailure) {
+    const { fileName, error } = onlyFailure;
     const fileFailureMessage = isArchiveTooLarge(error)
       ? m.libraryImportTooLargeBoardFile
       : m.libraryImportFailedBoardFile;

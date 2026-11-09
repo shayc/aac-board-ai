@@ -1,3 +1,4 @@
+import { isRecord } from "@shared/utils/is-record";
 import { useLocation, useMatch, useNavigate } from "react-router";
 import { useBoardSets } from "../board-sets/board-sets-store";
 import { BOARD_ROUTE_PATTERN, boardPath } from "./board-paths";
@@ -14,11 +15,7 @@ export interface UseBoardNavigationReturn {
 }
 
 function readCanGoBack(state: unknown): boolean {
-  if (state === null || typeof state !== "object") {
-    return false;
-  }
-
-  return "canGoBack" in state && state.canGoBack === true;
+  return isRecord(state) && state.canGoBack === true;
 }
 
 export function useBoardNavigation(): UseBoardNavigationReturn {
