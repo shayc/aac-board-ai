@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "బోర్డు ఫైల్‌ను దిగుమతి చేయలేకపోయాం",
-        "countPlural=*": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "బోర్డు ఫైల్ \"{fileName}\"ను దిగుమతి చేయలేకపోయాం",
+  "libraryImportFailedBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం",
   "libraryImportOnlyBoardFiles": "బోర్డు ఫైళ్లను మాత్రమే దిగుమతి చేయవచ్చు",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "బోర్డు ఫైల్ దిగుమతి చేయడానికి చాలా పెద్దది",
-        "countPlural=*": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "బోర్డు ఫైల్ \"{fileName}\" దిగుమతి చేయడానికి చాలా పెద్దది",
+  "libraryImportTooLargeBoardFiles": "బోర్డు ఫైళ్లు దిగుమతి చేయడానికి చాలా పెద్దవి",
+  "libraryImportPartiallyFailedBoardFiles": "కొన్ని బోర్డు ఫైళ్లను దిగుమతి చేయలేకపోయాం ({total}లో {failed})",
   "libraryDropToImport": "దిగుమతి చేయడానికి బోర్డు ఫైళ్లను వదలండి",
   "libraryInfo": "సమాచారం",
   "libraryDelete": "తొలగించు",

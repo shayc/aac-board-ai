@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
-        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "ಬೋರ್ಡ್ ಫೈಲ್ \"{fileName}\" ಅನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
+  "libraryImportFailedBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ",
   "libraryImportOnlyBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಮಾತ್ರ ಆಮದು ಮಾಡಬಹುದು",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ಬೋರ್ಡ್ ಫೈಲ್ ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
-        "countPlural=*": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "ಬೋರ್ಡ್ ಫೈಲ್ \"{fileName}\" ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿದೆ",
+  "libraryImportTooLargeBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳು ಆಮದು ಮಾಡಲು ತುಂಬಾ ದೊಡ್ಡದಾಗಿವೆ",
+  "libraryImportPartiallyFailedBoardFiles": "ಕೆಲವು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಲಾಗಲಿಲ್ಲ ({total} ರಲ್ಲಿ {failed})",
   "libraryDropToImport": "ಆಮದು ಮಾಡಲು ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಬಿಡಿ",
   "libraryInfo": "ಮಾಹಿತಿ",
   "libraryDelete": "ಅಳಿಸಿ",

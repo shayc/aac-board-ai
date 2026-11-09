@@ -4,7 +4,11 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { rootBoardPath } from "../navigation/board-paths";
 import { listBoardSetRecords } from "../storage/board-set-storage";
-import { loadFixtureFile, resetBoardsDB } from "../testing";
+import {
+  loadFixtureFile,
+  makeCorruptBoardFile,
+  resetBoardsDB,
+} from "../testing";
 import { useBoardFileDrop } from "./use-board-file-drop";
 
 const OBF_FIXTURE = "lots-of-stuff.obf";
@@ -158,6 +162,24 @@ describe("useBoardFileDrop", () => {
       expect(boardSets[0]?.id).toBe(IMPORTED_SET_ID);
     });
 
+    await expect.element(screen.getByTestId("path")).toHaveTextContent(
+      rootBoardPath({
+        id: IMPORTED_SET_ID,
+        rootBoardId: "lots_of_stuff",
+      }),
+    );
+  });
+
+  test("opens the board set that imported when another dropped file fails", async () => {
+    const { zone, screen } = await renderDropZone();
+    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const corruptFile = makeCorruptBoardFile("corrupt.obf");
+
+    fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('Couldn\'t import board file "corrupt.obf"');
     await expect.element(screen.getByTestId("path")).toHaveTextContent(
       rootBoardPath({
         id: IMPORTED_SET_ID,

@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Không thể nhập tệp bảng",
-        "countPlural=*": "Không thể nhập các tệp bảng"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Không thể nhập tệp bảng \"{fileName}\"",
+  "libraryImportFailedBoardFiles": "Không thể nhập các tệp bảng",
   "libraryImportOnlyBoardFiles": "Chỉ có thể nhập tệp bảng",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tệp bảng quá lớn để nhập",
-        "countPlural=*": "Các tệp bảng quá lớn để nhập"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Tệp bảng \"{fileName}\" quá lớn để nhập",
+  "libraryImportTooLargeBoardFiles": "Các tệp bảng quá lớn để nhập",
+  "libraryImportPartiallyFailedBoardFiles": "Không thể nhập một số tệp bảng ({failed} / {total})",
   "libraryDropToImport": "Thả tệp bảng để nhập",
   "libraryInfo": "Thông tin",
   "libraryDelete": "Xóa",

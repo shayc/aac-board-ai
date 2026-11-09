@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavlefilen kunne ikke importeres",
-        "countPlural=*": "Tavlefilerne kunne ikke importeres"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Tavlefilen \"{fileName}\" kunne ikke importeres",
+  "libraryImportFailedBoardFiles": "Tavlefilerne kunne ikke importeres",
   "libraryImportOnlyBoardFiles": "Kun tavlefiler kan importeres",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavlefilen er for stor til at blive importeret",
-        "countPlural=*": "Tavlefilerne er for store til at blive importeret"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Tavlefilen \"{fileName}\" er for stor til at blive importeret",
+  "libraryImportTooLargeBoardFiles": "Tavlefilerne er for store til at blive importeret",
+  "libraryImportPartiallyFailedBoardFiles": "Nogle tavlefiler kunne ikke importeres ({failed} af {total})",
   "libraryDropToImport": "Slip tavlefiler for at importere",
   "libraryInfo": "Info",
   "libraryDelete": "Slet",

@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Det gick inte att importera tavelfilen",
-        "countPlural=*": "Det gick inte att importera tavelfilerna"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Det gick inte att importera tavelfilen ”{fileName}”",
+  "libraryImportFailedBoardFiles": "Det gick inte att importera tavelfilerna",
   "libraryImportOnlyBoardFiles": "Endast tavelfiler kan importeras",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tavelfilen är för stor för att importeras",
-        "countPlural=*": "Tavelfilerna är för stora för att importeras"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Tavelfilen ”{fileName}” är för stor för att importeras",
+  "libraryImportTooLargeBoardFiles": "Tavelfilerna är för stora för att importeras",
+  "libraryImportPartiallyFailedBoardFiles": "Det gick inte att importera vissa tavelfiler ({failed} av {total})",
   "libraryDropToImport": "Släpp tavelfiler för att importera",
   "libraryInfo": "Info",
   "libraryDelete": "Ta bort",

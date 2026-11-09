@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ייבוא קובץ הלוח נכשל",
-        "countPlural=*": "ייבוא קובצי הלוחות נכשל"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "ייבוא קובץ הלוח \"{fileName}\" נכשל",
+  "libraryImportFailedBoardFiles": "ייבוא קובצי הלוחות נכשל",
   "libraryImportOnlyBoardFiles": "אפשר לייבא רק קובצי לוחות",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "קובץ הלוח גדול מדי לייבוא",
-        "countPlural=*": "קובצי הלוחות גדולים מדי לייבוא"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "קובץ הלוח \"{fileName}\" גדול מדי לייבוא",
+  "libraryImportTooLargeBoardFiles": "קובצי הלוחות גדולים מדי לייבוא",
+  "libraryImportPartiallyFailedBoardFiles": "ייבוא חלק מקובצי הלוחות נכשל ({failed} מתוך {total})",
   "libraryDropToImport": "גררו לכאן קובצי לוחות כדי לייבא אותם",
   "libraryInfo": "מידע",
   "libraryDelete": "מחיקה",
