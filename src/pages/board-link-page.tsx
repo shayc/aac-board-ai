@@ -8,31 +8,30 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { LoadingState } from "@shared/ui/loading-state";
-import { useId } from "react";
-import {
-  useLoaderData,
-  useNavigate,
-  useNavigation,
-  useSubmit,
-} from "react-router";
+import { useId, useState } from "react";
+import { useLoaderData, useNavigate, useSubmit } from "react-router";
 
 export function BoardLinkPage() {
   const { boardHost } = useLoaderData<typeof rootIndexLoader>();
-  const navigation = useNavigation();
   const submit = useSubmit();
   const navigate = useNavigate();
   const t = useTranslate();
   const descriptionId = useId();
+  // Router navigation state lags the first tap, so without this a double tap
+  // lands on the still-open dialog and submits a second, duplicate import.
+  const [hasAnswered, setHasAnswered] = useState(false);
 
-  if (navigation.state !== "idle") {
+  if (hasAnswered) {
     return <LoadingState />;
   }
 
   function cancel() {
+    setHasAnswered(true);
     void navigate("/", { replace: true });
   }
 
   function confirmImport() {
+    setHasAnswered(true);
     void submit(null, { method: "post" });
   }
 
@@ -43,7 +42,10 @@ export function BoardLinkPage() {
         <DialogTitle>{t(m.boardLinkImportTitle)}</DialogTitle>
 
         <DialogContent>
-          <DialogContentText id={descriptionId}>
+          <DialogContentText
+            id={descriptionId}
+            sx={{ overflowWrap: "anywhere" }}
+          >
             {t(m.boardLinkImportDescription, { host: boardHost })}
           </DialogContentText>
         </DialogContent>

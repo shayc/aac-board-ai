@@ -14,7 +14,16 @@ import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { assert, beforeEach, describe, expect, test, vi } from "vitest";
+import {
+  assert,
+  beforeEach,
+  describe,
+  expect,
+  onTestFinished,
+  test,
+  vi,
+} from "vitest";
+import { page } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
@@ -241,6 +250,46 @@ describe("app flow", () => {
         "This link imports a board file from boards.example. Import it only if you trust whoever sent the link.",
       );
     expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("double-tapping Import on a ?board= link imports the board set once", async () => {
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    await screen.getByRole("button", { name: "Import" }).dblClick();
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .toBeVisible();
+    expect((await listBoardSetRecords()).map((set) => set.id)).toEqual([
+      "lots-of-stuff",
+    ]);
+    expect(
+      fetchSpy.mock.calls.filter(
+        ([url]) => url instanceof URL && url.pathname === OBZ_FIXTURE_URL,
+      ),
+    ).toHaveLength(1);
+  });
+
+  test("a long ?board= link host wraps inside the dialog on a narrow screen", async () => {
+    const { innerWidth, innerHeight } = window;
+    onTestFinished(() => page.viewport(innerWidth, innerHeight));
+    await page.viewport(320, 640);
+
+    const host = "boards.examplecorporationwithaverylongname.example";
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent(`https://${host}/core.obz`)}`,
+    );
+
+    const description = screen.getByText(host, { exact: false });
+    await expect.element(description).toBeVisible();
+
+    const element = description.element();
+    expect(element.scrollWidth).toBeLessThanOrEqual(element.clientWidth);
   });
 
   test("cancelling a ?board= link opens the existing board set without importing", async () => {
