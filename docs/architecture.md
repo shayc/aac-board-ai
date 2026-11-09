@@ -144,8 +144,10 @@ transaction. A saved set name therefore marks the whole set as translated, so
 later runs skip it without reading its boards. A set deleted mid-translation is
 not written back.
 
-After each saved set, it revalidates the routes (board and board list) and
-syncs the library, so everything on screen updates without a reload. A set that
+After each saved set, it syncs the library and, when that set is on screen or
+being navigated to, revalidates the routes (board and board list), so
+everything on screen updates without a reload. Other sets are not revalidated:
+that would re-run a `?board=` link import still in flight. A set that
 fails, for example because a model download needs a user gesture, stays in its
 source language until the next run.
 

@@ -84,25 +84,41 @@ export async function saveBoardSetTranslations(
   const boardSetStore = tx.objectStore("boardSets");
   const boardStore = tx.objectStore("boards");
 
-  const boardSet = await boardSetStore.get(boardSetId);
-  // A set deleted while it was being translated must not regain its boards.
-  if (!boardSet) {
-    await tx.done;
-    return;
-  }
-
-  for (const [boardId, strings] of stringsByBoardId) {
-    const board = await boardStore.get([boardSetId, boardId]);
-    if (board) {
-      await boardStore.put(withStrings(board, language, strings));
+  async function writeTranslations() {
+    const boardSet = await boardSetStore.get(boardSetId);
+    // A set deleted while it was being translated must not regain its boards.
+    if (!boardSet) {
+      return;
     }
+
+    for (const [boardId, strings] of stringsByBoardId) {
+      const board = await boardStore.get([boardSetId, boardId]);
+      if (board) {
+        await boardStore.put(withStrings(board, language, strings));
+      }
+    }
+
+    await boardSetStore.put({
+      ...boardSet,
+      translatedNames: { ...boardSet.translatedNames, [language]: name },
+    });
   }
 
-  await boardSetStore.put({
-    ...boardSet,
-    translatedNames: { ...boardSet.translatedNames, [language]: name },
-  });
-  await tx.done;
+  // A put() that throws synchronously leaves the transaction open to commit
+  // the boards already written, and tx.done must be awaited either way or its
+  // rejection goes unhandled — see insertBoardSet.
+  try {
+    await Promise.all([writeTranslations(), tx.done]);
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {
+      // Already finished — the transaction aborted itself.
+    }
+
+    await tx.done.catch(() => undefined);
+    throw error;
+  }
 }
 
 function withStrings(

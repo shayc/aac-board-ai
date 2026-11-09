@@ -14,8 +14,10 @@ import {
 
 interface TranslateBoardSetsOptions {
   signal: AbortSignal;
-  onTranslated: () => void;
+  onTranslated: (boardSetId: string) => void;
 }
+
+type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
 /**
  * Translates every board set not yet in `language` and saves the result.
@@ -42,7 +44,7 @@ export async function translateBoardSets(
 
     try {
       await translateBoardSet(boardSet, language, signal);
-      onTranslated();
+      onTranslated(boardSet.id);
     } catch {
       // Translation is optional; the next language change or app start retries.
     }
@@ -66,32 +68,53 @@ async function translateBoardSet(
   language: string,
   signal: AbortSignal,
 ): Promise<void> {
-  const boards = await listBoardsMissingLanguage(boardSet.id, language);
-  const stringsBySourceLanguage = collectStringsBySourceLanguage(
-    boardSet,
-    boards,
-  );
-  const translationsBySourceLanguage = await translateBySourceLanguage(
-    stringsBySourceLanguage,
-    language,
-    signal,
-  );
+  const translators = new Map<string, OpenTranslator>();
 
-  signal.throwIfAborted();
+  async function openTranslator(sourceLanguage: string) {
+    const translator = await createTranslator({
+      sourceLanguage,
+      targetLanguage: language,
+      signal,
+    });
 
-  function translationsFor(source: { locale?: string }) {
-    return translationsBySourceLanguage.get(getBoardLanguage(source));
+    translators.set(sourceLanguage, translator);
   }
 
-  await saveBoardSetTranslations(boardSet.id, language, {
-    name: translationsFor(boardSet)?.get(boardSet.name) ?? boardSet.name,
-    stringsByBoardId: new Map(
-      boards.map((board) => [
-        board.id,
-        pickBoardTranslations(board, translationsFor(board)),
-      ]),
-    ),
-  });
+  try {
+    // Opened before any board is read: a refused translator (model not
+    // downloaded, unsupported language) repeats on every run until it works.
+    await openTranslator(getBoardLanguage(boardSet));
+
+    const boards = await listBoardsMissingLanguage(boardSet.id, language);
+    const stringsBySourceLanguage = collectStringsBySourceLanguage(
+      boardSet,
+      boards,
+    );
+
+    for (const sourceLanguage of stringsBySourceLanguage.keys()) {
+      if (!translators.has(sourceLanguage)) {
+        await openTranslator(sourceLanguage);
+      }
+    }
+
+    const translationsBySourceLanguage = await translateBySourceLanguage(
+      stringsBySourceLanguage,
+      translators,
+      signal,
+    );
+
+    signal.throwIfAborted();
+
+    await saveBoardSetTranslations(
+      boardSet.id,
+      language,
+      pickBoardSetTranslations(boardSet, boards, translationsBySourceLanguage),
+    );
+  } finally {
+    for (const translator of translators.values()) {
+      translator.destroy();
+    }
+  }
 }
 
 async function listBoardsMissingLanguage(
@@ -137,16 +160,13 @@ function collectStringsBySourceLanguage(
 
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
-  targetLanguage: string,
+  translators: ReadonlyMap<string, OpenTranslator>,
   signal: AbortSignal,
 ): Promise<Map<string, StringTranslations>> {
   const entries = await Promise.all(
-    Array.from(stringsBySourceLanguage, async ([sourceLanguage, strings]) => {
-      const translations = await translateStrings(strings, {
-        sourceLanguage,
-        targetLanguage,
-        signal,
-      });
+    Array.from(translators, async ([sourceLanguage, translator]) => {
+      const strings = stringsBySourceLanguage.get(sourceLanguage) ?? [];
+      const translations = await translateStrings(strings, translator, signal);
 
       return [sourceLanguage, translations] as const;
     }),
@@ -156,29 +176,39 @@ async function translateBySourceLanguage(
 }
 
 async function translateStrings(
-  strings: Set<string>,
-  options: {
-    sourceLanguage: string;
-    targetLanguage: string;
-    signal: AbortSignal;
-  },
+  strings: Iterable<string>,
+  translator: OpenTranslator,
+  signal: AbortSignal,
 ): Promise<StringTranslations> {
-  const { signal } = options;
-  const translator = await createTranslator(options);
+  const entries = await Promise.all(
+    Array.from(strings, async (text) => {
+      const translated = await translator.translate(text, { signal });
 
-  try {
-    const entries = await Promise.all(
-      Array.from(strings, async (text) => {
-        const translated = await translator.translate(text, { signal });
+      return [text, translated] as const;
+    }),
+  );
 
-        return [text, translated] as const;
-      }),
-    );
+  return new Map(entries);
+}
 
-    return new Map(entries);
-  } finally {
-    translator.destroy();
+function pickBoardSetTranslations(
+  boardSet: BoardSetRecord,
+  boards: readonly Board[],
+  translationsBySourceLanguage: ReadonlyMap<string, StringTranslations>,
+) {
+  function translationsFor(source: { locale?: string }) {
+    return translationsBySourceLanguage.get(getBoardLanguage(source));
   }
+
+  return {
+    name: translationsFor(boardSet)?.get(boardSet.name) ?? boardSet.name,
+    stringsByBoardId: new Map(
+      boards.map((board) => [
+        board.id,
+        pickBoardTranslations(board, translationsFor(board)),
+      ]),
+    ),
+  };
 }
 
 function pickBoardTranslations(

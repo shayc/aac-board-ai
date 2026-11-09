@@ -34,7 +34,7 @@ async function runTranslation(
   language: string,
   signal = new AbortController().signal,
 ) {
-  const onTranslated = vi.fn<() => void>();
+  const onTranslated = vi.fn<(boardSetId: string) => void>();
   await translateBoardSets(await listBoardSetRecords(), language, {
     signal,
     onTranslated,
@@ -67,7 +67,7 @@ describe("translateBoardSets", () => {
     expect((await getBoardSetRecord("food"))?.translatedNames).toEqual({
       es: "[es] Food",
     });
-    expect(onTranslated).toHaveBeenCalledOnce();
+    expect(onTranslated.mock.calls).toEqual([["food"]]);
     expect(create).toHaveBeenCalledOnce();
     expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
       sourceLanguage: "en",
@@ -177,6 +177,18 @@ describe("translateBoardSets", () => {
 
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(await readStrings("food", "home")).toBeUndefined();
+    expect(onTranslated).not.toHaveBeenCalled();
+  });
+
+  test("leaves a set untranslated when its language has no translation model", async () => {
+    await seedFoodSet();
+    const { availability, translate } = stubTranslator();
+    availability.mockResolvedValue("unavailable");
+
+    const { onTranslated } = await runTranslation("es");
+
+    expect(translate).not.toHaveBeenCalled();
+    expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 

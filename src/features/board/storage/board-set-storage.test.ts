@@ -359,6 +359,29 @@ describe("saveBoardSetTranslations", () => {
     });
   });
 
+  test("saves nothing when one board's translations fail to store", async () => {
+    await insertBoardSet(
+      makeBoardSetInput({
+        boards: [makeOBFBoard({ id: "a" }), makeOBFBoard({ id: "b" })],
+      }),
+    );
+    const uncloneable = (() => "noop") as unknown as string;
+
+    await expect(
+      saveBoardSetTranslations("set-1", "es", {
+        name: "Conjunto",
+        stringsByBoardId: new Map([
+          ["a", new Map([["Test Board", "Tablero"]])],
+          ["b", new Map([["Test Board", uncloneable]])],
+        ]),
+      }),
+    ).rejects.toThrow();
+
+    const board = await getBoardRecord({ boardSetId: "set-1", boardId: "a" });
+    expect(board?.obf.strings).toBeUndefined();
+    expect((await getBoardSetRecord("set-1"))?.translatedNames).toBeUndefined();
+  });
+
   test("writes nothing for a set deleted before the save", async () => {
     await insertBoardSet(makeBoardSetInput());
     await removeBoardSet("set-1");

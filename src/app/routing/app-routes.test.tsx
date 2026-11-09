@@ -201,6 +201,29 @@ describe("app flow", () => {
     );
   });
 
+  test("?board= link imports once while another set finishes translating", async () => {
+    await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
+    setStoredLanguage("es");
+    stubTranslator((input) => `[es] ${input}`);
+
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
+    );
+
+    await screen.getByRole("button", { name: "Continuar" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Lots of Stuff Board" }))
+      .toBeVisible();
+
+    await screen.getByRole("button", { name: "Abrir biblioteca" }).click();
+    await expect
+      .element(screen.getByRole("link", { name: "[es] Zoo" }))
+      .toBeVisible();
+    expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
+      new Set(["zoo", "lots-of-stuff"]),
+    );
+  });
+
   test("deleting the active board set opens the remaining one", async () => {
     await seedBoardSets([
       {
