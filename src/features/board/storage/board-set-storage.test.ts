@@ -270,7 +270,7 @@ describe("removeBoardSet", () => {
     await insertBoardSet(
       makeBoardSetInput({
         id: "set-1-2",
-        name: "Set 1 (2)",
+        name: "Set 2",
         rootBoardId: "b1",
         boards: [makeOBFBoard({ id: "b1", name: "Survivor" })],
         assets: [{ path: "img1.png", blob: new Blob(["survivor"]) }],
