@@ -7,7 +7,6 @@ import {
   type OBFBoard,
 } from "@shayc/open-board-format";
 import { beforeEach, describe, expect, test } from "vitest";
-import { listBoardSets } from "../board-sets/board-sets-store";
 import { getAssetBlob, getBoardRecord } from "../storage/board-content-storage";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import {
@@ -36,7 +35,7 @@ describe("importBoardFiles", () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
-    expect(await listBoardSets()).toHaveLength(0);
+    expect(await listBoardSetRecords()).toHaveLength(0);
 
     const importResults = await importBoardFiles([fixtureFile]);
 
@@ -47,7 +46,7 @@ describe("importBoardFiles", () => {
       },
     ]);
 
-    expect(await listBoardSets()).toEqual([
+    expect(await listBoardSetRecords()).toEqual([
       expect.objectContaining({ id: IMPORTED_SET_ID }),
     ]);
 

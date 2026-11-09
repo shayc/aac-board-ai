@@ -1,6 +1,5 @@
 export { starterBoardSet } from "./board-sets/board-set-catalog";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
-export { listBoardSets } from "./board-sets/board-sets-store";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
 export { importBoardFileFromURL } from "./import/import-from-url";
@@ -14,7 +13,10 @@ export {
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
 export { BoardNotFoundError } from "./storage/board-content-storage";
-export { getBoardSetRecord } from "./storage/board-set-storage";
+export {
+  getBoardSetRecord,
+  listBoardSetRecords,
+} from "./storage/board-set-storage";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";
 export { TileSettings } from "./tile/tile-settings";

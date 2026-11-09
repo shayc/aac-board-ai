@@ -1,4 +1,4 @@
-import { listBoardSets, importBoardFileFromURL } from "@features/board";
+import { listBoardSetRecords, importBoardFileFromURL } from "@features/board";
 import {
   makeOBFBoard,
   resetBoardsDB,
@@ -167,7 +167,7 @@ describe("app flow", () => {
       .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
       .toBeVisible();
 
-    expect(new Set((await listBoardSets()).map((set) => set.id))).toEqual(
+    expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
       new Set(["lots-of-stuff", "lots-of-stuff-2"]),
     );
   });

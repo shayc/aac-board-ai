@@ -1,6 +1,6 @@
 import {
   rootBoardPath,
-  listBoardSets,
+  listBoardSetRecords,
   importBoardFileFromURL,
   starterBoardSet,
 } from "@features/board";
@@ -34,7 +34,7 @@ export async function rootIndexLoader({
     return importAndRedirect(boardURL, request.signal);
   }
 
-  const [boardSet] = await listBoardSets();
+  const [boardSet] = await listBoardSetRecords();
   if (boardSet) {
     return redirect(rootBoardPath(boardSet));
   }
