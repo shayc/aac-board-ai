@@ -229,7 +229,7 @@ describe("BoardSetLibrary", () => {
     });
     await expect
       .element(cancelButton)
-      .toHaveAccessibleDescription("Downloading...");
+      .toHaveAccessibleDescription("Downloading…");
 
     await cancelButton.click();
     await expect
@@ -341,7 +341,7 @@ describe("BoardSetLibrary", () => {
       .toHaveFocus();
     expect(unavailableButtons.stop()).toContainEqual({
       name: "Download First Words",
-      description: "Importing...",
+      description: "Importing…",
     });
   });
 

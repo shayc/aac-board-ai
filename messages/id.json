@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Terjemahan papan otomatis tidak tersedia di perangkat ini.",
-  "loading": "Memuat...",
+  "loading": "Memuat…",
   "close": "Tutup",
   "opensInNewTab": "(dibuka di tab baru)",
   "boardGridLabel": "Papan komunikasi",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Buka daftar papan",
   "boardSelectorClose": "Tutup daftar papan",
   "boardSelectorNoOptions": "Tidak ada papan yang cocok",
-  "libraryLoading": "Memuat set papan...",
+  "libraryLoading": "Memuat set papan…",
   "libraryLoadFailed": "Tidak dapat memuat pustaka",
   "libraryImportBoardFiles": "Impor berkas papan",
   "libraryBoardSets": "Set papan",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Mengimpor berkas papan...",
-        "countPlural=*": "Mengimpor berkas papan..."
+        "countPlural=one": "Mengimpor berkas papan…",
+        "countPlural=*": "Mengimpor berkas papan…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Set papan \"{name}\" telah diunduh",
   "libraryDownloadFailed": "Tidak dapat mengunduh set papan \"{name}\"",
   "libraryDownloadProgress": "{loaded} dari {total}",
-  "libraryDownloadingStatus": "Mengunduh...",
-  "libraryImportingStatus": "Mengimpor...",
+  "libraryDownloadingStatus": "Mengunduh…",
+  "libraryImportingStatus": "Mengimpor…",
   "libraryCancelDownload": "Batalkan unduhan",
   "libraryCancelDownloadBoardSet": "Batalkan unduhan {name}",
   "libraryByAuthor": "Oleh {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Terang",
   "themeDark": "Gelap",
   "languageLabel": "Bahasa",
-  "languageDownloading": "Mengunduh model terjemahan...",
+  "languageDownloading": "Mengunduh model terjemahan…",
   "languageDownloadProgress": "{progress}% selesai",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan",

@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatische bordvertaling is niet beschikbaar op dit apparaat.",
-  "loading": "Laden...",
+  "loading": "Laden…",
   "close": "Sluiten",
   "opensInNewTab": "(opent in nieuw tabblad)",
   "boardGridLabel": "Communicatiebord",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Bordenlijst openen",
   "boardSelectorClose": "Bordenlijst sluiten",
   "boardSelectorNoOptions": "Geen overeenkomende borden",
-  "libraryLoading": "Bordsets laden...",
+  "libraryLoading": "Bordsets laden…",
   "libraryLoadFailed": "Bibliotheek kan niet worden geladen",
   "libraryImportBoardFiles": "Bordbestanden importeren",
   "libraryBoardSets": "Bordsets",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Bordbestand importeren...",
-        "countPlural=*": "Bordbestanden importeren..."
+        "countPlural=one": "Bordbestand importeren…",
+        "countPlural=*": "Bordbestanden importeren…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Bordset \"{name}\" gedownload",
   "libraryDownloadFailed": "Kan bordset \"{name}\" niet downloaden",
   "libraryDownloadProgress": "{loaded} van {total}",
-  "libraryDownloadingStatus": "Downloaden...",
-  "libraryImportingStatus": "Importeren...",
+  "libraryDownloadingStatus": "Downloaden…",
+  "libraryImportingStatus": "Importeren…",
   "libraryCancelDownload": "Download annuleren",
   "libraryCancelDownloadBoardSet": "Download van {name} annuleren",
   "libraryByAuthor": "Door {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Licht",
   "themeDark": "Donker",
   "languageLabel": "Taal",
-  "languageDownloading": "Vertaalmodel downloaden...",
+  "languageDownloading": "Vertaalmodel downloaden…",
   "languageDownloadProgress": "{progress}% voltooid",
   "speechVoice": "Stem",
   "speechRate": "Snelheid",

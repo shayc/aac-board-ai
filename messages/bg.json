@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Автоматичният превод на дъската не е наличен на това устройство.",
-  "loading": "Зареждане...",
+  "loading": "Зареждане…",
   "close": "Затваряне",
   "opensInNewTab": "(отваря се в нов раздел)",
   "boardGridLabel": "Комуникационна дъска",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Отваряне на списъка с дъски",
   "boardSelectorClose": "Затваряне на списъка с дъски",
   "boardSelectorNoOptions": "Няма съответстващи дъски",
-  "libraryLoading": "Зареждане на наборите от дъски...",
+  "libraryLoading": "Зареждане на наборите от дъски…",
   "libraryLoadFailed": "Библиотеката не можа да се зареди",
   "libraryImportBoardFiles": "Импортиране на файлове с дъски",
   "libraryBoardSets": "Набори от дъски",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Импортиране на файл с дъска...",
-        "countPlural=*": "Импортиране на файлове с дъски..."
+        "countPlural=one": "Импортиране на файл с дъска…",
+        "countPlural=*": "Импортиране на файлове с дъски…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Наборът от дъски „{name}“ е изтеглен",
   "libraryDownloadFailed": "Наборът от дъски „{name}“ не може да бъде изтеглен",
   "libraryDownloadProgress": "{loaded} от {total}",
-  "libraryDownloadingStatus": "Изтегляне...",
-  "libraryImportingStatus": "Импортиране...",
+  "libraryDownloadingStatus": "Изтегляне…",
+  "libraryImportingStatus": "Импортиране…",
   "libraryCancelDownload": "Отказ от изтеглянето",
   "libraryCancelDownloadBoardSet": "Отказ от изтеглянето на {name}",
   "libraryByAuthor": "От {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Светла",
   "themeDark": "Тъмна",
   "languageLabel": "Език",
-  "languageDownloading": "Изтегляне на модел за превод...",
+  "languageDownloading": "Изтегляне на модел за превод…",
   "languageDownloadProgress": "{progress}% завършено",
   "speechVoice": "Глас",
   "speechRate": "Скорост",

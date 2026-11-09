@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatický preklad tabuľky nie je na tomto zariadení dostupný.",
-  "loading": "Načítava sa...",
+  "loading": "Načítava sa…",
   "close": "Zavrieť",
   "opensInNewTab": "(otvorí sa na novej karte)",
   "boardGridLabel": "Komunikačná tabuľka",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Otvoriť zoznam tabuliek",
   "boardSelectorClose": "Zavrieť zoznam tabuliek",
   "boardSelectorNoOptions": "Žiadne zodpovedajúce tabuľky",
-  "libraryLoading": "Načítavajú sa súpravy tabuliek...",
+  "libraryLoading": "Načítavajú sa súpravy tabuliek…",
   "libraryLoadFailed": "Knižnicu sa nepodarilo načítať",
   "libraryImportBoardFiles": "Importovať súbory tabuliek",
   "libraryBoardSets": "Súpravy tabuliek",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importovanie súboru tabuľky...",
-        "countPlural=*": "Importovanie súborov tabuliek..."
+        "countPlural=one": "Importovanie súboru tabuľky…",
+        "countPlural=*": "Importovanie súborov tabuliek…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Súprava tabuliek „{name}“ bola stiahnutá",
   "libraryDownloadFailed": "Súpravu tabuliek „{name}“ sa nepodarilo stiahnuť",
   "libraryDownloadProgress": "{loaded} z {total}",
-  "libraryDownloadingStatus": "Sťahuje sa...",
-  "libraryImportingStatus": "Importuje sa...",
+  "libraryDownloadingStatus": "Sťahuje sa…",
+  "libraryImportingStatus": "Importuje sa…",
   "libraryCancelDownload": "Zrušiť sťahovanie",
   "libraryCancelDownloadBoardSet": "Zrušiť sťahovanie {name}",
   "libraryByAuthor": "Autor: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Svetlý",
   "themeDark": "Tmavý",
   "languageLabel": "Jazyk",
-  "languageDownloading": "Sťahovanie prekladového modelu...",
+  "languageDownloading": "Sťahovanie prekladového modelu…",
   "languageDownloadProgress": "{progress} % dokončené",
   "speechVoice": "Hlas",
   "speechRate": "Rýchlosť",

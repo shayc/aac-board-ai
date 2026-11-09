@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "La traduzione automatica delle tabelle non è disponibile su questo dispositivo.",
-  "loading": "Caricamento...",
+  "loading": "Caricamento…",
   "close": "Chiudi",
   "opensInNewTab": "(si apre in una nuova scheda)",
   "boardGridLabel": "Tabella di comunicazione",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Apri l'elenco delle tabelle",
   "boardSelectorClose": "Chiudi l'elenco delle tabelle",
   "boardSelectorNoOptions": "Nessuna tabella corrispondente",
-  "libraryLoading": "Caricamento set di tabelle...",
+  "libraryLoading": "Caricamento set di tabelle…",
   "libraryLoadFailed": "Impossibile caricare la libreria",
   "libraryImportBoardFiles": "Importa file di tabelle",
   "libraryBoardSets": "Set di tabelle",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importazione file di tabella...",
-        "countPlural=*": "Importazione file di tabelle..."
+        "countPlural=one": "Importazione file di tabella…",
+        "countPlural=*": "Importazione file di tabelle…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Set di tabelle \"{name}\" scaricato",
   "libraryDownloadFailed": "Impossibile scaricare il set di tabelle \"{name}\"",
   "libraryDownloadProgress": "{loaded} di {total}",
-  "libraryDownloadingStatus": "Download in corso...",
-  "libraryImportingStatus": "Importazione in corso...",
+  "libraryDownloadingStatus": "Download in corso…",
+  "libraryImportingStatus": "Importazione in corso…",
   "libraryCancelDownload": "Annulla download",
   "libraryCancelDownloadBoardSet": "Annulla il download di {name}",
   "libraryByAuthor": "Di {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Chiaro",
   "themeDark": "Scuro",
   "languageLabel": "Lingua",
-  "languageDownloading": "Download del modello di traduzione...",
+  "languageDownloading": "Download del modello di traduzione…",
   "languageDownloadProgress": "{progress}% completato",
   "speechVoice": "Voce",
   "speechRate": "Velocità",

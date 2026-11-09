@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automaattinen taulun käännös ei ole käytettävissä tällä laitteella.",
-  "loading": "Ladataan...",
+  "loading": "Ladataan…",
   "close": "Sulje",
   "opensInNewTab": "(avautuu uuteen välilehteen)",
   "boardGridLabel": "Kommunikointitaulu",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Avaa taululuettelo",
   "boardSelectorClose": "Sulje taululuettelo",
   "boardSelectorNoOptions": "Ei vastaavia tauluja",
-  "libraryLoading": "Ladataan taulusarjoja...",
+  "libraryLoading": "Ladataan taulusarjoja…",
   "libraryLoadFailed": "Kirjastoa ei voitu ladata",
   "libraryImportBoardFiles": "Tuo taulutiedostoja",
   "libraryBoardSets": "Taulusarjat",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Tuodaan taulutiedostoa...",
-        "countPlural=*": "Tuodaan taulutiedostoja..."
+        "countPlural=one": "Tuodaan taulutiedostoa…",
+        "countPlural=*": "Tuodaan taulutiedostoja…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Taulusarja ”{name}” ladattu",
   "libraryDownloadFailed": "Taulusarjan ”{name}” lataus epäonnistui",
   "libraryDownloadProgress": "{loaded} / {total}",
-  "libraryDownloadingStatus": "Ladataan...",
-  "libraryImportingStatus": "Tuodaan...",
+  "libraryDownloadingStatus": "Ladataan…",
+  "libraryImportingStatus": "Tuodaan…",
   "libraryCancelDownload": "Peruuta lataus",
   "libraryCancelDownloadBoardSet": "Peruuta kohteen {name} lataus",
   "libraryByAuthor": "Tekijä: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Vaalea",
   "themeDark": "Tumma",
   "languageLabel": "Kieli",
-  "languageDownloading": "Ladataan käännösmallia...",
+  "languageDownloading": "Ladataan käännösmallia…",
   "languageDownloadProgress": "{progress} % valmis",
   "speechVoice": "Ääni",
   "speechRate": "Nopeus",

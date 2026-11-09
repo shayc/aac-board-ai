@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatyczne tłumaczenie tablicy jest niedostępne na tym urządzeniu.",
-  "loading": "Ładowanie...",
+  "loading": "Ładowanie…",
   "close": "Zamknij",
   "opensInNewTab": "(otwiera się w nowej karcie)",
   "boardGridLabel": "Tablica komunikacyjna",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Otwórz listę tablic",
   "boardSelectorClose": "Zamknij listę tablic",
   "boardSelectorNoOptions": "Brak pasujących tablic",
-  "libraryLoading": "Ładowanie zestawów tablic...",
+  "libraryLoading": "Ładowanie zestawów tablic…",
   "libraryLoadFailed": "Nie udało się wczytać biblioteki",
   "libraryImportBoardFiles": "Importuj pliki tablic",
   "libraryBoardSets": "Zestawy tablic",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importowanie pliku tablicy...",
-        "countPlural=*": "Importowanie plików tablic..."
+        "countPlural=one": "Importowanie pliku tablicy…",
+        "countPlural=*": "Importowanie plików tablic…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Pobrano zestaw tablic „{name}”",
   "libraryDownloadFailed": "Nie udało się pobrać zestawu tablic „{name}”",
   "libraryDownloadProgress": "{loaded} z {total}",
-  "libraryDownloadingStatus": "Pobieranie...",
-  "libraryImportingStatus": "Importowanie...",
+  "libraryDownloadingStatus": "Pobieranie…",
+  "libraryImportingStatus": "Importowanie…",
   "libraryCancelDownload": "Anuluj pobieranie",
   "libraryCancelDownloadBoardSet": "Anuluj pobieranie {name}",
   "libraryByAuthor": "Autor: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Jasny",
   "themeDark": "Ciemny",
   "languageLabel": "Język",
-  "languageDownloading": "Pobieranie modelu tłumaczenia...",
+  "languageDownloading": "Pobieranie modelu tłumaczenia…",
   "languageDownloadProgress": "Ukończono {progress}%",
   "speechVoice": "Głos",
   "speechRate": "Tempo",

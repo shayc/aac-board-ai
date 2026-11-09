@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Tính năng tự động dịch bảng không khả dụng trên thiết bị này.",
-  "loading": "Đang tải...",
+  "loading": "Đang tải…",
   "close": "Đóng",
   "opensInNewTab": "(mở trong tab mới)",
   "boardGridLabel": "Bảng giao tiếp",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Mở danh sách bảng",
   "boardSelectorClose": "Đóng danh sách bảng",
   "boardSelectorNoOptions": "Không có bảng phù hợp",
-  "libraryLoading": "Đang tải các bộ bảng...",
+  "libraryLoading": "Đang tải các bộ bảng…",
   "libraryLoadFailed": "Không thể tải thư viện",
   "libraryImportBoardFiles": "Nhập tệp bảng",
   "libraryBoardSets": "Bộ bảng",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Đang nhập tệp bảng...",
-        "countPlural=*": "Đang nhập các tệp bảng..."
+        "countPlural=one": "Đang nhập tệp bảng…",
+        "countPlural=*": "Đang nhập các tệp bảng…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Đã tải xuống bộ bảng \"{name}\"",
   "libraryDownloadFailed": "Không thể tải xuống bộ bảng \"{name}\"",
   "libraryDownloadProgress": "{loaded} / {total}",
-  "libraryDownloadingStatus": "Đang tải xuống...",
-  "libraryImportingStatus": "Đang nhập...",
+  "libraryDownloadingStatus": "Đang tải xuống…",
+  "libraryImportingStatus": "Đang nhập…",
   "libraryCancelDownload": "Hủy tải xuống",
   "libraryCancelDownloadBoardSet": "Hủy tải xuống {name}",
   "libraryByAuthor": "Bởi {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Sáng",
   "themeDark": "Tối",
   "languageLabel": "Ngôn ngữ",
-  "languageDownloading": "Đang tải xuống mô hình dịch...",
+  "languageDownloading": "Đang tải xuống mô hình dịch…",
   "languageDownloadProgress": "Hoàn thành {progress}%",
   "speechVoice": "Giọng nói",
   "speechRate": "Tốc độ",

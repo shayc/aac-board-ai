@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "La traduction automatique des tableaux n’est pas disponible sur cet appareil.",
-  "loading": "Chargement...",
+  "loading": "Chargement…",
   "close": "Fermer",
   "opensInNewTab": "(s'ouvre dans un nouvel onglet)",
   "boardGridLabel": "Tableau de communication",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Ouvrir la liste des tableaux",
   "boardSelectorClose": "Fermer la liste des tableaux",
   "boardSelectorNoOptions": "Aucun tableau correspondant",
-  "libraryLoading": "Chargement des ensembles de tableaux...",
+  "libraryLoading": "Chargement des ensembles de tableaux…",
   "libraryLoadFailed": "Impossible de charger la bibliothèque",
   "libraryImportBoardFiles": "Importer des fichiers de tableaux",
   "libraryBoardSets": "Ensembles de tableaux",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importation du fichier de tableau...",
-        "countPlural=*": "Importation des fichiers de tableaux..."
+        "countPlural=one": "Importation du fichier de tableau…",
+        "countPlural=*": "Importation des fichiers de tableaux…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Ensemble de tableaux « {name} » téléchargé",
   "libraryDownloadFailed": "Impossible de télécharger l’ensemble de tableaux « {name} »",
   "libraryDownloadProgress": "{loaded} sur {total}",
-  "libraryDownloadingStatus": "Téléchargement...",
-  "libraryImportingStatus": "Importation...",
+  "libraryDownloadingStatus": "Téléchargement…",
+  "libraryImportingStatus": "Importation…",
   "libraryCancelDownload": "Annuler le téléchargement",
   "libraryCancelDownloadBoardSet": "Annuler le téléchargement de {name}",
   "libraryByAuthor": "Par {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Clair",
   "themeDark": "Sombre",
   "languageLabel": "Langue",
-  "languageDownloading": "Téléchargement du modèle de traduction...",
+  "languageDownloading": "Téléchargement du modèle de traduction…",
   "languageDownloadProgress": "{progress} % terminé",
   "speechVoice": "Voix",
   "speechRate": "Vitesse",

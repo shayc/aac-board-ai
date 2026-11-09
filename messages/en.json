@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "loading": "Loading...",
+  "loading": "Loading…",
   "close": "Close",
   "opensInNewTab": "(opens in new tab)",
   "boardGridLabel": "Communication board",
@@ -8,7 +8,7 @@
   "boardSelectorOpen": "Open board list",
   "boardSelectorClose": "Close board list",
   "boardSelectorNoOptions": "No matching boards",
-  "libraryLoading": "Loading board sets...",
+  "libraryLoading": "Loading board sets…",
   "libraryLoadFailed": "Couldn't load library",
   "libraryImportBoardFiles": "Import board files",
   "libraryBoardSets": "Board sets",
@@ -17,8 +17,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importing board file...",
-        "countPlural=*": "Importing board files..."
+        "countPlural=one": "Importing board file…",
+        "countPlural=*": "Importing board files…"
       }
     }
   ],
@@ -50,8 +50,8 @@
   "libraryDownloadedBoardSet": "Board set \"{name}\" downloaded",
   "libraryDownloadFailed": "Couldn't download board set \"{name}\"",
   "libraryDownloadProgress": "{loaded} of {total}",
-  "libraryDownloadingStatus": "Downloading...",
-  "libraryImportingStatus": "Importing...",
+  "libraryDownloadingStatus": "Downloading…",
+  "libraryImportingStatus": "Importing…",
   "libraryCancelDownload": "Cancel download",
   "libraryCancelDownloadBoardSet": "Cancel downloading {name}",
   "libraryByAuthor": "By {author}",
@@ -78,7 +78,7 @@
   "themeDark": "Dark",
   "languageLabel": "Language",
   "languageTranslationUnavailable": "Automatic board translation is unavailable on this device.",
-  "languageDownloading": "Downloading translation model...",
+  "languageDownloading": "Downloading translation model…",
   "languageDownloadProgress": "{progress}% complete",
   "speechVoice": "Voice",
   "speechRate": "Speed",
@@ -101,8 +101,8 @@
   "suggestionsUnsupported": "Suggestions are unavailable in this browser.",
   "suggestionsEnableHelp": "How to enable suggestions",
   "suggestionsEnable": "Enable suggestions",
-  "suggestionsDownloading": "Downloading AI model... {progress}%",
-  "suggestionsDownloadingIndeterminate": "Downloading AI model...",
+  "suggestionsDownloading": "Downloading AI model… {progress}%",
+  "suggestionsDownloadingIndeterminate": "Downloading AI model…",
   "suggestionsUnavailable": "Suggestions unavailable",
   "navBack": "Go back",
   "navHome": "Go home",

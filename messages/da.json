@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Automatisk oversættelse af tavler er ikke tilgængelig på denne enhed.",
-  "loading": "Indlæser...",
+  "loading": "Indlæser…",
   "close": "Luk",
   "opensInNewTab": "(åbner i nyt faneblad)",
   "boardGridLabel": "Kommunikationstavle",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Åbn listen over tavler",
   "boardSelectorClose": "Luk listen over tavler",
   "boardSelectorNoOptions": "Ingen matchende tavler",
-  "libraryLoading": "Indlæser tavlesæt...",
+  "libraryLoading": "Indlæser tavlesæt…",
   "libraryLoadFailed": "Biblioteket kunne ikke indlæses",
   "libraryImportBoardFiles": "Importér tavlefiler",
   "libraryBoardSets": "Tavlesæt",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Importerer tavlefil...",
-        "countPlural=*": "Importerer tavlefiler..."
+        "countPlural=one": "Importerer tavlefil…",
+        "countPlural=*": "Importerer tavlefiler…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Tavlesættet \"{name}\" er downloadet",
   "libraryDownloadFailed": "Tavlesættet \"{name}\" kunne ikke downloades",
   "libraryDownloadProgress": "{loaded} af {total}",
-  "libraryDownloadingStatus": "Downloader...",
-  "libraryImportingStatus": "Importerer...",
+  "libraryDownloadingStatus": "Downloader…",
+  "libraryImportingStatus": "Importerer…",
   "libraryCancelDownload": "Annullér download",
   "libraryCancelDownloadBoardSet": "Annullér download af {name}",
   "libraryByAuthor": "Af {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Lyst",
   "themeDark": "Mørkt",
   "languageLabel": "Sprog",
-  "languageDownloading": "Downloader oversættelsesmodel...",
+  "languageDownloading": "Downloader oversættelsesmodel…",
   "languageDownloadProgress": "{progress}% færdig",
   "speechVoice": "Stemme",
   "speechRate": "Hastighed",

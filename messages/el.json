@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Η αυτόματη μετάφραση πινάκων δεν είναι διαθέσιμη σε αυτήν τη συσκευή.",
-  "loading": "Φόρτωση...",
+  "loading": "Φόρτωση…",
   "close": "Κλείσιμο",
   "opensInNewTab": "(ανοίγει σε νέα καρτέλα)",
   "boardGridLabel": "Πίνακας επικοινωνίας",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Άνοιγμα λίστας πινάκων",
   "boardSelectorClose": "Κλείσιμο λίστας πινάκων",
   "boardSelectorNoOptions": "Δεν βρέθηκαν αντίστοιχοι πίνακες",
-  "libraryLoading": "Φόρτωση συνόλων πινάκων...",
+  "libraryLoading": "Φόρτωση συνόλων πινάκων…",
   "libraryLoadFailed": "Δεν ήταν δυνατή η φόρτωση της βιβλιοθήκης",
   "libraryImportBoardFiles": "Εισαγωγή αρχείων πινάκων",
   "libraryBoardSets": "Σύνολα πινάκων",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Εισαγωγή αρχείου πίνακα...",
-        "countPlural=*": "Εισαγωγή αρχείων πινάκων..."
+        "countPlural=one": "Εισαγωγή αρχείου πίνακα…",
+        "countPlural=*": "Εισαγωγή αρχείων πινάκων…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Έγινε λήψη του συνόλου πινάκων «{name}»",
   "libraryDownloadFailed": "Δεν ήταν δυνατή η λήψη του συνόλου πινάκων «{name}»",
   "libraryDownloadProgress": "{loaded} από {total}",
-  "libraryDownloadingStatus": "Λήψη...",
-  "libraryImportingStatus": "Εισαγωγή...",
+  "libraryDownloadingStatus": "Λήψη…",
+  "libraryImportingStatus": "Εισαγωγή…",
   "libraryCancelDownload": "Ακύρωση λήψης",
   "libraryCancelDownloadBoardSet": "Ακύρωση λήψης {name}",
   "libraryByAuthor": "Από {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Φωτεινό",
   "themeDark": "Σκοτεινό",
   "languageLabel": "Γλώσσα",
-  "languageDownloading": "Λήψη μοντέλου μετάφρασης...",
+  "languageDownloading": "Λήψη μοντέλου μετάφρασης…",
   "languageDownloadProgress": "Ολοκληρώθηκε {progress}%",
   "speechVoice": "Φωνή",
   "speechRate": "Ταχύτητα",

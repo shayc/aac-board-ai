@@ -78,7 +78,7 @@
   "themeLight": "ライト",
   "themeDark": "ダーク",
   "languageLabel": "言語",
-  "languageDownloading": "翻訳モデルをダウンロードしています...",
+  "languageDownloading": "翻訳モデルをダウンロードしています…",
   "languageDownloadProgress": "{progress}% 完了",
   "speechVoice": "音声",
   "speechRate": "速度",

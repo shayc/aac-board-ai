@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Otomatik pano çevirisi bu cihazda kullanılamıyor.",
-  "loading": "Yükleniyor...",
+  "loading": "Yükleniyor…",
   "close": "Kapat",
   "opensInNewTab": "(yeni sekmede açılır)",
   "boardGridLabel": "İletişim panosu",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Pano listesini aç",
   "boardSelectorClose": "Pano listesini kapat",
   "boardSelectorNoOptions": "Eşleşen pano yok",
-  "libraryLoading": "Pano setleri yükleniyor...",
+  "libraryLoading": "Pano setleri yükleniyor…",
   "libraryLoadFailed": "Kitaplık yüklenemedi",
   "libraryImportBoardFiles": "Pano dosyalarını içe aktar",
   "libraryBoardSets": "Pano setleri",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Pano dosyası içe aktarılıyor...",
-        "countPlural=*": "Pano dosyaları içe aktarılıyor..."
+        "countPlural=one": "Pano dosyası içe aktarılıyor…",
+        "countPlural=*": "Pano dosyaları içe aktarılıyor…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "\"{name}\" pano seti indirildi",
   "libraryDownloadFailed": "\"{name}\" pano seti indirilemedi",
   "libraryDownloadProgress": "{loaded} / {total}",
-  "libraryDownloadingStatus": "İndiriliyor...",
-  "libraryImportingStatus": "İçe aktarılıyor...",
+  "libraryDownloadingStatus": "İndiriliyor…",
+  "libraryImportingStatus": "İçe aktarılıyor…",
   "libraryCancelDownload": "İndirmeyi iptal et",
   "libraryCancelDownloadBoardSet": "İndirmeyi iptal et: {name}",
   "libraryByAuthor": "{author} tarafından",
@@ -78,7 +78,7 @@
   "themeLight": "Açık",
   "themeDark": "Koyu",
   "languageLabel": "Dil",
-  "languageDownloading": "Çeviri modeli indiriliyor...",
+  "languageDownloading": "Çeviri modeli indiriliyor…",
   "languageDownloadProgress": "%{progress} tamamlandı",
   "speechVoice": "Ses",
   "speechRate": "Hız",

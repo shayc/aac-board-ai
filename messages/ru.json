@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Автоматический перевод доски недоступен на этом устройстве.",
-  "loading": "Загрузка...",
+  "loading": "Загрузка…",
   "close": "Закрыть",
   "opensInNewTab": "(открывается в новой вкладке)",
   "boardGridLabel": "Коммуникационная доска",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Открыть список досок",
   "boardSelectorClose": "Закрыть список досок",
   "boardSelectorNoOptions": "Нет подходящих досок",
-  "libraryLoading": "Загрузка наборов досок...",
+  "libraryLoading": "Загрузка наборов досок…",
   "libraryLoadFailed": "Не удалось загрузить библиотеку",
   "libraryImportBoardFiles": "Импортировать файлы досок",
   "libraryBoardSets": "Наборы досок",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Импорт файла доски...",
-        "countPlural=*": "Импорт файлов досок..."
+        "countPlural=one": "Импорт файла доски…",
+        "countPlural=*": "Импорт файлов досок…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "Набор досок «{name}» скачан",
   "libraryDownloadFailed": "Не удалось скачать набор досок «{name}»",
   "libraryDownloadProgress": "{loaded} из {total}",
-  "libraryDownloadingStatus": "Скачивание...",
-  "libraryImportingStatus": "Импорт...",
+  "libraryDownloadingStatus": "Скачивание…",
+  "libraryImportingStatus": "Импорт…",
   "libraryCancelDownload": "Отменить скачивание",
   "libraryCancelDownloadBoardSet": "Отменить скачивание {name}",
   "libraryByAuthor": "Автор: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Светлая",
   "themeDark": "Тёмная",
   "languageLabel": "Язык",
-  "languageDownloading": "Загрузка модели перевода...",
+  "languageDownloading": "Загрузка модели перевода…",
   "languageDownloadProgress": "{progress}% завершено",
   "speechVoice": "Голос",
   "speechRate": "Скорость",

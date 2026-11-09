@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "อุปกรณ์นี้ไม่รองรับการแปลบอร์ดอัตโนมัติ",
-  "loading": "กำลังโหลด...",
+  "loading": "กำลังโหลด…",
   "close": "ปิด",
   "opensInNewTab": "(เปิดในแท็บใหม่)",
   "boardGridLabel": "บอร์ดสื่อสาร",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "เปิดรายการบอร์ด",
   "boardSelectorClose": "ปิดรายการบอร์ด",
   "boardSelectorNoOptions": "ไม่พบบอร์ดที่ตรงกัน",
-  "libraryLoading": "กำลังโหลดชุดบอร์ด...",
+  "libraryLoading": "กำลังโหลดชุดบอร์ด…",
   "libraryLoadFailed": "ไม่สามารถโหลดคลังได้",
   "libraryImportBoardFiles": "นำเข้าไฟล์บอร์ด",
   "libraryBoardSets": "ชุดบอร์ด",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "กำลังนำเข้าไฟล์บอร์ด...",
-        "countPlural=*": "กำลังนำเข้าไฟล์บอร์ด..."
+        "countPlural=one": "กำลังนำเข้าไฟล์บอร์ด…",
+        "countPlural=*": "กำลังนำเข้าไฟล์บอร์ด…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "ดาวน์โหลดชุดบอร์ด \"{name}\" แล้ว",
   "libraryDownloadFailed": "ดาวน์โหลดชุดบอร์ด \"{name}\" ไม่สำเร็จ",
   "libraryDownloadProgress": "{loaded} จาก {total}",
-  "libraryDownloadingStatus": "กำลังดาวน์โหลด...",
-  "libraryImportingStatus": "กำลังนำเข้า...",
+  "libraryDownloadingStatus": "กำลังดาวน์โหลด…",
+  "libraryImportingStatus": "กำลังนำเข้า…",
   "libraryCancelDownload": "ยกเลิกการดาวน์โหลด",
   "libraryCancelDownloadBoardSet": "ยกเลิกการดาวน์โหลด {name}",
   "libraryByAuthor": "โดย {author}",
@@ -78,7 +78,7 @@
   "themeLight": "สว่าง",
   "themeDark": "มืด",
   "languageLabel": "ภาษา",
-  "languageDownloading": "กำลังดาวน์โหลดโมเดลแปลภาษา...",
+  "languageDownloading": "กำลังดาวน์โหลดโมเดลแปลภาษา…",
   "languageDownloadProgress": "เสร็จสิ้น {progress}%",
   "speechVoice": "เสียง",
   "speechRate": "ความเร็ว",

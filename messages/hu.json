@@ -1,7 +1,7 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
   "languageTranslationUnavailable": "Az automatikus táblafordítás nem érhető el ezen az eszközön.",
-  "loading": "Betöltés...",
+  "loading": "Betöltés…",
   "close": "Bezárás",
   "opensInNewTab": "(új lapon nyílik meg)",
   "boardGridLabel": "Kommunikációs tábla",
@@ -9,7 +9,7 @@
   "boardSelectorOpen": "Táblák listájának megnyitása",
   "boardSelectorClose": "Táblák listájának bezárása",
   "boardSelectorNoOptions": "Nincs megfelelő tábla",
-  "libraryLoading": "Táblakészletek betöltése...",
+  "libraryLoading": "Táblakészletek betöltése…",
   "libraryLoadFailed": "Nem sikerült betölteni a könyvtárat",
   "libraryImportBoardFiles": "Táblafájlok importálása",
   "libraryBoardSets": "Táblakészletek",
@@ -18,8 +18,8 @@
       "declarations": ["input count", "local countPlural = count: plural"],
       "selectors": ["countPlural"],
       "match": {
-        "countPlural=one": "Táblafájl importálása...",
-        "countPlural=*": "Táblafájlok importálása..."
+        "countPlural=one": "Táblafájl importálása…",
+        "countPlural=*": "Táblafájlok importálása…"
       }
     }
   ],
@@ -51,8 +51,8 @@
   "libraryDownloadedBoardSet": "A(z) „{name}” táblakészlet letöltve",
   "libraryDownloadFailed": "A(z) „{name}” táblakészlet letöltése nem sikerült",
   "libraryDownloadProgress": "{loaded} / {total}",
-  "libraryDownloadingStatus": "Letöltés...",
-  "libraryImportingStatus": "Importálás...",
+  "libraryDownloadingStatus": "Letöltés…",
+  "libraryImportingStatus": "Importálás…",
   "libraryCancelDownload": "Letöltés megszakítása",
   "libraryCancelDownloadBoardSet": "Letöltés megszakítása: {name}",
   "libraryByAuthor": "Szerző: {author}",
@@ -78,7 +78,7 @@
   "themeLight": "Világos",
   "themeDark": "Sötét",
   "languageLabel": "Nyelv",
-  "languageDownloading": "Fordítási modell letöltése...",
+  "languageDownloading": "Fordítási modell letöltése…",
   "languageDownloadProgress": "{progress}% kész",
   "speechVoice": "Hang",
   "speechRate": "Sebesség",

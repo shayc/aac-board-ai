@@ -78,7 +78,7 @@
   "themeLight": "浅色",
   "themeDark": "深色",
   "languageLabel": "语言",
-  "languageDownloading": "正在下载翻译模型...",
+  "languageDownloading": "正在下载翻译模型……",
   "languageDownloadProgress": "已完成 {progress}%",
   "speechVoice": "语音",
   "speechRate": "语速",
