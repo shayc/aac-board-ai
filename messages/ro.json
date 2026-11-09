@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Biblioteca nu a putut fi încărcată",
   "libraryImportBoardFiles": "Importă fișiere de table",
   "libraryBoardSets": "Seturi de table",
+  "boardSetCatalogFirstWords": "Primele cuvinte",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Limbă",
   "languageDownloading": "Se descarcă modelul de traducere...",
   "languageDownloadProgress": "{progress}% finalizat",
+  "languageTranslatingBoards": "Se traduc tablele...",
   "speechVoice": "Voce",
   "speechRate": "Viteză",
   "speechPitch": "Înălțime",

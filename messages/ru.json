@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Не удалось загрузить библиотеку",
   "libraryImportBoardFiles": "Импортировать файлы досок",
   "libraryBoardSets": "Наборы досок",
+  "boardSetCatalogFirstWords": "Первые слова",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Язык",
   "languageDownloading": "Загрузка модели перевода...",
   "languageDownloadProgress": "{progress}% завершено",
+  "languageTranslatingBoards": "Перевод досок...",
   "speechVoice": "Голос",
   "speechRate": "Скорость",
   "speechPitch": "Высота тона",

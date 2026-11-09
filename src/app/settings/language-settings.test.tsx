@@ -1,3 +1,9 @@
+import { translateBoardSet } from "@features/board";
+import {
+  makeOBFBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "@features/board/testing";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
@@ -39,5 +45,44 @@ describe("LanguageSettings", () => {
       .not.toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("shows board translation progress until the board set is translated", async () => {
+    await resetBoardsDB();
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({ id: "home", name: "Home" }),
+          makeOBFBoard({ id: "pets", name: "Pets" }),
+        ],
+      },
+    ]);
+    const translationGate = Promise.withResolvers<void>();
+    stubTranslator(async (input) => {
+      await translationGate.promise;
+
+      return input;
+    });
+
+    const screen = await renderLanguageSettings();
+    const translation = translateBoardSet(
+      "animals",
+      "es",
+      new AbortController().signal,
+    );
+
+    await expect
+      .element(screen.getByText("Translating boards..."))
+      .toBeVisible();
+    await expect.element(screen.getByText("0% complete")).toBeVisible();
+
+    translationGate.resolve();
+    await translation;
+
+    await expect
+      .element(screen.getByText("Translating boards..."))
+      .not.toBeInTheDocument();
   });
 });

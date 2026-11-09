@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Knihovnu se nepodařilo načíst",
   "libraryImportBoardFiles": "Importovat soubory tabulek",
   "libraryBoardSets": "Sady tabulek",
+  "boardSetCatalogFirstWords": "První slova",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Jazyk",
   "languageDownloading": "Stahování překladového modelu...",
   "languageDownloadProgress": "{progress} % dokončeno",
+  "languageTranslatingBoards": "Překládání tabulek...",
   "speechVoice": "Hlas",
   "speechRate": "Rychlost",
   "speechPitch": "Výška",

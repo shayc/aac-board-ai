@@ -1,16 +1,25 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
+import type { BoardName } from "../translation/list-board-names-in-language";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardOptions } from "./use-board-options";
 
-export function BoardSelector() {
+interface BoardSelectorProps {
+  boards: readonly BoardName[];
+}
+
+export function BoardSelector({ boards }: BoardSelectorProps) {
   const t = useTranslate();
-  const { boardSetId, boardId, goToBoard } = useBoardNavigation();
-  const boards = useBoardOptions(boardSetId);
+  const { language } = useLanguage();
+  const { boardId, goToBoard } = useBoardNavigation();
 
-  const selectedBoard = boards.find((board) => board.id === boardId);
+  const sortedBoards = boards.toSorted((a, b) =>
+    a.name.localeCompare(b.name, language),
+  );
+
+  const selectedBoard = sortedBoards.find((board) => board.id === boardId);
 
   if (!selectedBoard) {
     return null;
@@ -21,7 +30,7 @@ export function BoardSelector() {
       openText={t(m.boardSelectorOpen)}
       closeText={t(m.boardSelectorClose)}
       noOptionsText={t(m.boardSelectorNoOptions)}
-      options={boards}
+      options={sortedBoards}
       value={selectedBoard}
       onChange={(_event, board) => goToBoard(board.id)}
       disableClearable

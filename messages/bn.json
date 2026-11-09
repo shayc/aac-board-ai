@@ -13,6 +13,9 @@
   "libraryLoadFailed": "লাইব্রেরি লোড করা যায়নি",
   "libraryImportBoardFiles": "বোর্ড ফাইল আমদানি করুন",
   "libraryBoardSets": "বোর্ড সেট",
+  "boardSetCatalogFirstWords": "প্রথম শব্দ",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "ভাষা",
   "languageDownloading": "অনুবাদ মডেল ডাউনলোড হচ্ছে...",
   "languageDownloadProgress": "{progress}% সম্পন্ন",
+  "languageTranslatingBoards": "বোর্ড অনুবাদ করা হচ্ছে...",
   "speechVoice": "কণ্ঠস্বর",
   "speechRate": "গতি",
   "speechPitch": "পিচ",

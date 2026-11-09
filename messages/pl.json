@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Nie udało się wczytać biblioteki",
   "libraryImportBoardFiles": "Importuj pliki tablic",
   "libraryBoardSets": "Zestawy tablic",
+  "boardSetCatalogFirstWords": "Pierwsze słowa",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Język",
   "languageDownloading": "Pobieranie modelu tłumaczenia...",
   "languageDownloadProgress": "Ukończono {progress}%",
+  "languageTranslatingBoards": "Tłumaczenie tablic...",
   "speechVoice": "Głos",
   "speechRate": "Tempo",
   "speechPitch": "Wysokość",

@@ -13,6 +13,9 @@
   "libraryLoadFailed": "No se pudo cargar la biblioteca",
   "libraryImportBoardFiles": "Importar archivos de tableros",
   "libraryBoardSets": "Conjuntos de tableros",
+  "boardSetCatalogFirstWords": "Primeras palabras",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Idioma",
   "languageDownloading": "Descargando modelo de traducción...",
   "languageDownloadProgress": "{progress}% completado",
+  "languageTranslatingBoards": "Traduciendo tableros...",
   "speechVoice": "Voz",
   "speechRate": "Velocidad",
   "speechPitch": "Tono",

@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Nije moguće učitati knjižnicu",
   "libraryImportBoardFiles": "Uvezi datoteke ploča",
   "libraryBoardSets": "Skupovi ploča",
+  "boardSetCatalogFirstWords": "Prve riječi",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Jezik",
   "languageDownloading": "Preuzimanje modela za prijevod...",
   "languageDownloadProgress": "{progress} % dovršeno",
+  "languageTranslatingBoards": "Prevođenje ploča...",
   "speechVoice": "Glas",
   "speechRate": "Brzina",
   "speechPitch": "Visina",

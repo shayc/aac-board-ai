@@ -12,6 +12,9 @@
   "libraryLoadFailed": "Couldn't load library",
   "libraryImportBoardFiles": "Import board files",
   "libraryBoardSets": "Board sets",
+  "boardSetCatalogFirstWords": "First Words",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageTranslationUnavailable": "Automatic board translation is unavailable on this device.",
   "languageDownloading": "Downloading translation model...",
   "languageDownloadProgress": "{progress}% complete",
+  "languageTranslatingBoards": "Translating boards...",
   "speechVoice": "Voice",
   "speechRate": "Speed",
   "speechPitch": "Pitch",

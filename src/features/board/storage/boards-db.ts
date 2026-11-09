@@ -14,6 +14,7 @@ export interface BoardSetRecord {
   readonly locale?: string;
   readonly gridRows?: number;
   readonly gridColumns?: number;
+  readonly nameTranslations?: Readonly<Partial<Record<string, string>>>;
 }
 
 export interface BoardRecord {

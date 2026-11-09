@@ -13,12 +13,18 @@ import { insertBoardSet } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSelector } from "./board-selector";
 
+const BOARD_NAMES = [
+  { id: "root", name: "Home" },
+  { id: "animals", name: "Animals" },
+  { id: "food", name: "Food" },
+];
+
 async function renderSelector(initialPath: string) {
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:boardSetId/boards/:boardId",
-        element: <BoardSelector />,
+        element: <BoardSelector boards={BOARD_NAMES} />,
       },
     ],
     { initialEntries: [initialPath] },
@@ -147,33 +153,5 @@ describe("BoardSelector", () => {
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Home");
     expect(router.state.location.pathname).toBe("/sets/set-1/boards/root");
-  });
-
-  test("shows the cached translated name for the active language, falling back to the raw name otherwise", async () => {
-    await insertBoardSet({
-      id: "set-2",
-      name: "Set",
-      rootBoardId: "root",
-      boards: [
-        makeOBFBoard({
-          id: "root",
-          name: "Home",
-          strings: { es: { Home: "Inicio" } },
-        }),
-        makeOBFBoard({ id: "animals", name: "Animals" }),
-      ],
-      assets: [],
-    });
-
-    setStoredLanguage("es");
-
-    const { screen } = await renderSelector("/sets/set-2/boards/root");
-
-    await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
-
-    await screen.getByRole("combobox").click();
-    await expect
-      .element(screen.getByRole("option", { name: "Animals" }))
-      .toBeInTheDocument();
   });
 });

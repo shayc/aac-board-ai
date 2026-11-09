@@ -2,11 +2,13 @@ import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
 import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
+import { useTranslateActiveBoardSet } from "@app/routing/use-translate-active-board-set";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
   useImportBoardFilesOnLaunch,
+  useTranslateBoardSetNames,
 } from "@features/board";
 import Box from "@mui/material/Box";
 import { useState } from "react";
@@ -21,6 +23,8 @@ export function AppShell() {
 
   useImportBoardFilesOnLaunch();
   useRevalidateOnLanguageChange();
+  useTranslateActiveBoardSet();
+  useTranslateBoardSetNames();
 
   return (
     <Box

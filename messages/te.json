@@ -13,6 +13,9 @@
   "libraryLoadFailed": "లైబ్రరీని లోడ్ చేయడం సాధ్యపడలేదు",
   "libraryImportBoardFiles": "బోర్డు ఫైళ్లను దిగుమతి చేయి",
   "libraryBoardSets": "బోర్డు సెట్లు",
+  "boardSetCatalogFirstWords": "మొదటి పదాలు",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "భాష",
   "languageDownloading": "అనువాద నమూనా డౌన్‌లోడ్ అవుతోంది...",
   "languageDownloadProgress": "{progress}% పూర్తయింది",
+  "languageTranslatingBoards": "బోర్డులు అనువదించబడుతున్నాయి...",
   "speechVoice": "వాయిస్",
   "speechRate": "వేగం",
   "speechPitch": "పిచ్",

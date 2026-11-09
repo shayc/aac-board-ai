@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Kitaplık yüklenemedi",
   "libraryImportBoardFiles": "Pano dosyalarını içe aktar",
   "libraryBoardSets": "Pano setleri",
+  "boardSetCatalogFirstWords": "İlk Kelimeler",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Dil",
   "languageDownloading": "Çeviri modeli indiriliyor...",
   "languageDownloadProgress": "%{progress} tamamlandı",
+  "languageTranslatingBoards": "Panolar çevriliyor...",
   "speechVoice": "Ses",
   "speechRate": "Hız",
   "speechPitch": "Perde",

@@ -20,5 +20,9 @@ export { areSuggestionsSupported } from "./suggestions/suggestion-support";
 export { TileSettings } from "./tile/tile-settings";
 export { BoardTranslationNotice } from "./translation/board-translation-notice";
 export { loadBoardInLanguage } from "./translation/load-board-in-language";
+export { listBoardNamesInLanguage } from "./translation/list-board-names-in-language";
+export { translateBoardSet } from "./translation/translate-board-set";
+export { useTranslateBoardSetNames } from "./translation/use-translate-board-set-names";
 
 export type { Board } from "./board-types";
+export type { BoardName } from "./translation/list-board-names-in-language";

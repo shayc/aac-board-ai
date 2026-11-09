@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Knižnicu sa nepodarilo načítať",
   "libraryImportBoardFiles": "Importovať súbory tabuliek",
   "libraryBoardSets": "Súpravy tabuliek",
+  "boardSetCatalogFirstWords": "Prvé slová",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Jazyk",
   "languageDownloading": "Sťahovanie prekladového modelu...",
   "languageDownloadProgress": "{progress} % dokončené",
+  "languageTranslatingBoards": "Prekladanie tabuliek...",
   "speechVoice": "Hlas",
   "speechRate": "Rýchlosť",
   "speechPitch": "Výška",

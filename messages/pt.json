@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Não foi possível carregar a biblioteca",
   "libraryImportBoardFiles": "Importar arquivos de pranchas",
   "libraryBoardSets": "Conjuntos de pranchas",
+  "boardSetCatalogFirstWords": "Primeiras palavras",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Idioma",
   "languageDownloading": "Baixando modelo de tradução...",
   "languageDownloadProgress": "{progress}% concluído",
+  "languageTranslatingBoards": "Traduzindo pranchas...",
   "speechVoice": "Voz",
   "speechRate": "Velocidade",
   "speechPitch": "Tom",

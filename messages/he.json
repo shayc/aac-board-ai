@@ -13,6 +13,9 @@
   "libraryLoadFailed": "לא ניתן לטעון את הספרייה",
   "libraryImportBoardFiles": "ייבוא קובצי לוחות",
   "libraryBoardSets": "ערכות לוחות",
+  "boardSetCatalogFirstWords": "מילים ראשונות",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "שפה",
   "languageDownloading": "הורדת מודל תרגום...",
   "languageDownloadProgress": "הושלמו {progress}%",
+  "languageTranslatingBoards": "תרגום לוחות...",
   "speechVoice": "קול",
   "speechRate": "קצב",
   "speechPitch": "גובה הקול",

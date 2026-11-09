@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Nem sikerült betölteni a könyvtárat",
   "libraryImportBoardFiles": "Táblafájlok importálása",
   "libraryBoardSets": "Táblakészletek",
+  "boardSetCatalogFirstWords": "Első szavak",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Nyelv",
   "languageDownloading": "Fordítási modell letöltése...",
   "languageDownloadProgress": "{progress}% kész",
+  "languageTranslatingBoards": "Táblák fordítása...",
   "speechVoice": "Hang",
   "speechRate": "Sebesség",
   "speechPitch": "Hangmagasság",

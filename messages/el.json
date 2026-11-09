@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Δεν ήταν δυνατή η φόρτωση της βιβλιοθήκης",
   "libraryImportBoardFiles": "Εισαγωγή αρχείων πινάκων",
   "libraryBoardSets": "Σύνολα πινάκων",
+  "boardSetCatalogFirstWords": "Πρώτες λέξεις",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Γλώσσα",
   "languageDownloading": "Λήψη μοντέλου μετάφρασης...",
   "languageDownloadProgress": "Ολοκληρώθηκε {progress}%",
+  "languageTranslatingBoards": "Μετάφραση πινάκων...",
   "speechVoice": "Φωνή",
   "speechRate": "Ταχύτητα",
   "speechPitch": "Τόνος",

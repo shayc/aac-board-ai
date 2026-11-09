@@ -79,15 +79,16 @@ State has distinct owners and lifetimes:
 | State                 | Owner                                 | Contents                                                                        |
 | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------- |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                         |
-| Active board          | React Router loaders                  | Loaded, optionally translated `Board` for the current route                     |
+| Active board          | React Router loaders                  | Loaded, optionally translated `Board` and its set's board names for the route   |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close    |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                      |
-| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, voice catalog, and playback progress    |
+| Reactive shared state | `createExternalStore`                 | Board-set library, downloads, translation progress, voices, playback progress   |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                             |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
-imported fields while adding resolved board links and cached translations.
+imported fields while adding resolved board links, board translations, and
+translated board set names.
 `obfToBoard` derives the runtime `Board` on each read, so runtime types can evolve
 without rewriting stored records. Storage schema changes require a versioned
 migration in [`boards-db.ts`](../src/features/board/storage/boards-db.ts).
@@ -117,25 +118,48 @@ skips files without a board file extension and reports when none remain.
 
 ### Open a board
 
-[`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading and
-translation before rendering, keeping that work out of UI components:
+[`boardLoader`](../src/app/routing/loaders/board-loader.ts) handles loading
+before rendering, keeping that work out of UI components:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` calls `loadBoardInLanguage`,
    which reads the stored OBF, resolves object URLs for its stored assets, and
    maps both through `obfToBoard`. Loading leaves the OBF unchanged. Media paths
    resolve only to stored assets; otherwise the item's `data` or `url` is used.
-2. It then uses the source board, or the board's own translations for that
-   language: those in the board file or cached on this device. Otherwise, it
-   attempts translation and falls back to the source board on failure.
-   Successful translations render without waiting for the cache write and
-   remain usable if it fails.
+2. It applies the board's translations for the communication language, from
+   the board file or translated on this device, or keeps the source board.
 3. The route renders the `Board`.
+
+The board set route's loader lists the set's board names in the same language
+for the board selector. Neither loader calls the Translator, so opening a
+board never waits on it.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for
 as long as its board set exists. Message parts keep their media after leaving
 the board they came from. A library refresh revokes the URLs of deleted board
 sets.
+
+### Translate a board set
+
+Translation runs in the background, a whole board set at a time:
+
+1. While a board set is open, [`translateBoardSet`](../src/features/board/translation/translate-board-set.ts)
+   translates each of its boards that has no translations for the
+   communication language. Boards that ship translations for that language
+   keep them as they are. Each board is saved as it finishes, so an
+   interrupted run continues where it stopped, and language settings show
+   the progress.
+2. When it finishes, the route loaders run again, so the board and the board
+   selector switch language together.
+3. [`translateBoardSetNames`](../src/features/board/translation/translate-board-set-names.ts)
+   translates each stored board set's name, which comes from its root board,
+   and saves it with the board set, so the library shows names without
+   waiting. Names taken from a file name stay as they are. Starter board sets
+   not yet downloaded use the app's own message catalogs.
+
+A language change re-runs the loaders at once, so board sets already
+translated into that language switch without waiting. Failed translations
+leave text in the source language and are retried on the next run.
 
 ### Activate a tile
 

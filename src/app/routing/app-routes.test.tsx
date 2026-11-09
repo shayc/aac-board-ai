@@ -4,13 +4,19 @@ import {
   resetBoardsDB,
   seedBoardSets,
 } from "@features/board/testing";
+import {
+  DEFAULT_LANGUAGE,
+  setStoredLanguage,
+} from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { stubAudio } from "@shared/testing/stub-audio";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import { userEvent } from "vitest/browser";
 import { appRoutes } from "./app-routes";
 
 const OBZ_FIXTURE_URL =
@@ -212,6 +218,57 @@ describe("app flow", () => {
     await expect
       .element(screen.getByRole("grid", { name: "Animals Home" }))
       .not.toBeInTheDocument();
+  });
+
+  test("switching language translates the board, every board name, and the library", async () => {
+    stubTranslator((input) => `[fr] ${input}`);
+    onTestFinished(() => setStoredLanguage(DEFAULT_LANGUAGE));
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        name: "Animals",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Animals",
+            buttons: [{ id: "cat", label: "cat" }],
+            grid: { rows: 1, columns: 1, order: [["cat"]] },
+          }),
+          makeOBFBoard({ id: "pets", name: "Pets" }),
+        ],
+      },
+    ]);
+
+    const { screen } = await renderApp("/sets/animals/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    await expect
+      .element(screen.getByRole("button", { name: "cat" }))
+      .toBeVisible();
+
+    setStoredLanguage("fr");
+
+    await expect
+      .element(screen.getByRole("button", { name: "[fr] cat" }))
+      .toBeVisible();
+    await expect
+      .element(screen.getByRole("combobox"))
+      .toHaveValue("[fr] Animals");
+
+    await screen.getByRole("combobox").click();
+    await expect
+      .element(screen.getByRole("option", { name: "[fr] Pets" }))
+      .toBeVisible();
+    await userEvent.keyboard("{Escape}");
+
+    await screen
+      .getByRole("button", { name: "Ouvrir la bibliothèque" })
+      .click();
+    await expect
+      .element(screen.getByRole("link", { name: "[fr] Animals" }))
+      .toBeVisible();
+    await expect.element(screen.getByText("Premiers mots")).toBeVisible();
   });
 
   test("client navigation from a board sets the localized not-found title", async () => {

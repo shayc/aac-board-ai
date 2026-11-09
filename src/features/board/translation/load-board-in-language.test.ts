@@ -1,7 +1,6 @@
 import type { OBFBoard } from "@shayc/open-board-format";
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test } from "vitest";
-import { getBoardRecord } from "../storage/board-content-storage";
 import { insertBoardSet } from "../storage/board-set-storage";
 import { resetBoardsDB } from "../testing";
 import { loadBoardInLanguage } from "./load-board-in-language";
@@ -61,75 +60,27 @@ describe("loadBoardInLanguage", () => {
     expect(create).not.toHaveBeenCalled();
   });
 
-  test("translates via the Translator API when the board has no translations for the language", async () => {
+  test("returns the source board without translating when it has no translations for the language", async () => {
     await storeBoard();
-    const { create, translate } = stubTranslator((input) => `[es] ${input}`);
-
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
-
-    expect(board.name).toBe("[es] Food");
-    expect(board.buttons[0].label).toBe("[es] eat");
-    expect(board.buttons[0].vocalization).toBe("[es] eat");
-    expect(board.buttons[1].label).toBe("[es] drink");
-
-    expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
-      sourceLanguage: "en",
-      targetLanguage: "es",
-    });
-
-    const inputs = translate.mock.calls.map((call) => call.at(0));
-    expect(inputs).toHaveLength(3);
-    expect(inputs).toContain("Food");
-    expect(inputs).toContain("eat");
-    expect(inputs).toContain("drink");
-  });
-
-  test("caches a fresh translation", async () => {
-    await storeBoard();
-    stubTranslator((input) => `[es] ${input}`);
-
-    await loadBoardInLanguage("set-1", "board-1", "es");
-
-    const cachedStrings = {
-      es: { Food: "[es] Food", eat: "[es] eat", drink: "[es] drink" },
-    };
-
-    await expect
-      .poll(async () => (await getBoardRecord("set-1", "board-1"))?.obf.strings)
-      .toEqual(cachedStrings);
-  });
-
-  test("falls back to the source board when the Translator is unavailable", async () => {
-    await storeBoard();
-
-    const board = await loadBoardInLanguage("set-1", "board-1", "es");
-
-    expect(board.name).toBe("Food");
-  });
-
-  test("falls back to the source board when the platform fails mid-translation", async () => {
-    await storeBoard();
-    stubTranslator(() =>
-      Promise.reject(new DOMException("model failure", "UnknownError")),
-    );
+    const { create } = stubTranslator((input) => `[es] ${input}`);
 
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("Food");
     expect(board.buttons[0].label).toBe("eat");
+    expect(create).not.toHaveBeenCalled();
   });
 
-  test("rejects instead of falling back when the load is aborted mid-translation", async () => {
-    await storeBoard();
-    const controller = new AbortController();
-    stubTranslator(() => {
-      controller.abort();
-
-      return Promise.reject(controller.signal.reason);
+  test("leaves text that matches an Object property untranslated instead of failing", async () => {
+    await storeBoard({
+      buttons: [{ id: "btn-to-string", label: "toString" }],
+      grid: { rows: 1, columns: 1, order: [["btn-to-string"]] },
+      strings: { es: { Food: "Comida" } },
     });
 
-    await expect(
-      loadBoardInLanguage("set-1", "board-1", "es", controller.signal),
-    ).rejects.toMatchObject({ name: "AbortError" });
+    const board = await loadBoardInLanguage("set-1", "board-1", "es");
+
+    expect(board.name).toBe("Comida");
+    expect(board.buttons[0].label).toBe("toString");
   });
 });

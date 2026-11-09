@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Не вдалося завантажити бібліотеку",
   "libraryImportBoardFiles": "Імпортувати файли дошок",
   "libraryBoardSets": "Набори дошок",
+  "boardSetCatalogFirstWords": "Перші слова",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Мова",
   "languageDownloading": "Завантаження моделі перекладу...",
   "languageDownloadProgress": "{progress}% завершено",
+  "languageTranslatingBoards": "Переклад дощок...",
   "speechVoice": "Голос",
   "speechRate": "Швидкість",
   "speechPitch": "Висота тону",

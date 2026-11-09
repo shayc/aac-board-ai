@@ -13,6 +13,9 @@
   "libraryLoadFailed": "ಲೈಬ್ರರಿಯನ್ನು ಲೋಡ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ",
   "libraryImportBoardFiles": "ಬೋರ್ಡ್ ಫೈಲ್‌ಗಳನ್ನು ಆಮದು ಮಾಡಿ",
   "libraryBoardSets": "ಬೋರ್ಡ್ ಸೆಟ್‌ಗಳು",
+  "boardSetCatalogFirstWords": "ಮೊದಲ ಪದಗಳು",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "ಭಾಷೆ",
   "languageDownloading": "ಅನುವಾದ ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ...",
   "languageDownloadProgress": "{progress}% ಪೂರ್ಣಗೊಂಡಿದೆ",
+  "languageTranslatingBoards": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ...",
   "speechVoice": "ಧ್ವನಿ",
   "speechRate": "ವೇಗ",
   "speechPitch": "ಪಿಚ್",

@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Библиотеката не можа да се зареди",
   "libraryImportBoardFiles": "Импортиране на файлове с дъски",
   "libraryBoardSets": "Набори от дъски",
+  "boardSetCatalogFirstWords": "Първи думи",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Език",
   "languageDownloading": "Изтегляне на модел за превод...",
   "languageDownloadProgress": "{progress}% завършено",
+  "languageTranslatingBoards": "Превеждане на дъските...",
   "speechVoice": "Глас",
   "speechRate": "Скорост",
   "speechPitch": "Височина",

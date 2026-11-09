@@ -13,6 +13,9 @@
   "libraryLoadFailed": "ไม่สามารถโหลดคลังได้",
   "libraryImportBoardFiles": "นำเข้าไฟล์บอร์ด",
   "libraryBoardSets": "ชุดบอร์ด",
+  "boardSetCatalogFirstWords": "คำแรก",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "ภาษา",
   "languageDownloading": "กำลังดาวน์โหลดโมเดลแปลภาษา...",
   "languageDownloadProgress": "เสร็จสิ้น {progress}%",
+  "languageTranslatingBoards": "กำลังแปลบอร์ด...",
   "speechVoice": "เสียง",
   "speechRate": "ความเร็ว",
   "speechPitch": "ระดับเสียงสูงต่ำ",

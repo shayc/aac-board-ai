@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Biblioteket kunne ikke indlæses",
   "libraryImportBoardFiles": "Importér tavlefiler",
   "libraryBoardSets": "Tavlesæt",
+  "boardSetCatalogFirstWords": "Første ord",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Sprog",
   "languageDownloading": "Downloader oversættelsesmodel...",
   "languageDownloadProgress": "{progress}% færdig",
+  "languageTranslatingBoards": "Oversætter tavler...",
   "speechVoice": "Stemme",
   "speechRate": "Hastighed",
   "speechPitch": "Tonehøjde",

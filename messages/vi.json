@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Không thể tải thư viện",
   "libraryImportBoardFiles": "Nhập tệp bảng",
   "libraryBoardSets": "Bộ bảng",
+  "boardSetCatalogFirstWords": "Những từ đầu tiên",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Ngôn ngữ",
   "languageDownloading": "Đang tải xuống mô hình dịch...",
   "languageDownloadProgress": "Hoàn thành {progress}%",
+  "languageTranslatingBoards": "Đang dịch bảng...",
   "speechVoice": "Giọng nói",
   "speechRate": "Tốc độ",
   "speechPitch": "Cao độ",

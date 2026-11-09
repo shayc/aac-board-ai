@@ -1,3 +1,7 @@
+import {
+  BOARD_SET_ROUTE_ID,
+  type boardSetLoader,
+} from "@app/routing/loaders/board-set-loader";
 import { BoardSelector } from "@features/board";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import ViewSidebarOutlinedIcon from "@mui/icons-material/ViewSidebarOutlined";
@@ -10,6 +14,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForLTR } from "@shared/theme/rtl";
 import { safeAreaGutter } from "@shared/theme/safe-area";
+import { useRouteLoaderData } from "react-router";
 
 interface AppHeaderProps {
   onOpenLibrary: () => void;
@@ -18,6 +23,8 @@ interface AppHeaderProps {
 
 export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
+  const boardNames =
+    useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID) ?? [];
 
   return (
     <AppBar position="static">
@@ -48,7 +55,7 @@ export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
         </Box>
 
         <Box sx={{ minWidth: 0 }}>
-          <BoardSelector />
+          <BoardSelector boards={boardNames} />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", justifySelf: "end" }}>

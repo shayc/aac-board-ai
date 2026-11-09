@@ -13,6 +13,9 @@
   "libraryLoadFailed": "تعذر تحميل المكتبة",
   "libraryImportBoardFiles": "استيراد ملفات اللوحات",
   "libraryBoardSets": "مجموعات اللوحات",
+  "boardSetCatalogFirstWords": "الكلمات الأولى",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "اللغة",
   "languageDownloading": "جارٍ تنزيل نموذج الترجمة...",
   "languageDownloadProgress": "اكتمل {progress}%",
+  "languageTranslatingBoards": "جارٍ ترجمة اللوحات...",
   "speechVoice": "الصوت",
   "speechRate": "السرعة",
   "speechPitch": "حدّة الصوت",

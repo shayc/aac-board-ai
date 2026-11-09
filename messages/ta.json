@@ -13,6 +13,9 @@
   "libraryLoadFailed": "நூலகத்தை ஏற்ற முடியவில்லை",
   "libraryImportBoardFiles": "பலகைக் கோப்புகளை இறக்குமதி செய்",
   "libraryBoardSets": "பலகைத் தொகுப்புகள்",
+  "boardSetCatalogFirstWords": "முதல் சொற்கள்",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "மொழி",
   "languageDownloading": "மொழிபெயர்ப்பு மாதிரி பதிவிறக்கப்படுகிறது...",
   "languageDownloadProgress": "{progress}% முடிந்தது",
+  "languageTranslatingBoards": "பலகைகள் மொழிபெயர்க்கப்படுகின்றன...",
   "speechVoice": "குரல்",
   "speechRate": "வேகம்",
   "speechPitch": "சுருதி",

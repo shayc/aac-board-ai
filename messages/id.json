@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Tidak dapat memuat pustaka",
   "libraryImportBoardFiles": "Impor berkas papan",
   "libraryBoardSets": "Set papan",
+  "boardSetCatalogFirstWords": "Kata Pertama",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Bahasa",
   "languageDownloading": "Mengunduh model terjemahan...",
   "languageDownloadProgress": "{progress}% selesai",
+  "languageTranslatingBoards": "Menerjemahkan papan...",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan",
   "speechPitch": "Nada",

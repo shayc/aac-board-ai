@@ -47,6 +47,33 @@ export async function listBoardSetRecords(): Promise<BoardSetRecord[]> {
   return boardSets.reverse();
 }
 
+export async function addBoardSetNameTranslations(
+  language: string,
+  namesByBoardSetId: ReadonlyMap<string, string>,
+): Promise<void> {
+  const db = await getBoardsDB();
+  const tx = db.transaction("boardSets", "readwrite");
+
+  async function addNameTranslation(boardSetId: string, name: string) {
+    const record = await tx.store.get(boardSetId);
+    if (!record) {
+      return;
+    }
+
+    await tx.store.put({
+      ...record,
+      nameTranslations: { ...record.nameTranslations, [language]: name },
+    });
+  }
+
+  await Promise.all([
+    ...Array.from(namesByBoardSetId, ([boardSetId, name]) =>
+      addNameTranslation(boardSetId, name),
+    ),
+    tx.done,
+  ]);
+}
+
 // Arrays sort after strings in IDB, so [boardSetId, []] is an upper bound
 // for this set's board IDs and asset paths.
 function boardSetRange(boardSetId: string): IDBKeyRange {

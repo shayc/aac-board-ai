@@ -4,6 +4,7 @@ import {
 } from "@shared/state/external-store";
 import { revokeAssetURLsExcept } from "../storage/asset-urls";
 import {
+  addBoardSetNameTranslations,
   insertBoardSet,
   listBoardSetRecords,
   removeBoardSet,
@@ -96,4 +97,19 @@ export async function createBoardSet(input: BoardSetInput): Promise<void> {
 export async function deleteBoardSet(boardSetId: string): Promise<void> {
   await removeBoardSet(boardSetId);
   await syncBoardSets();
+}
+
+export async function saveBoardSetNameTranslations(
+  language: string,
+  namesByBoardSetId: ReadonlyMap<string, string>,
+): Promise<void> {
+  await addBoardSetNameTranslations(language, namesByBoardSetId);
+  await syncBoardSets();
+}
+
+export function boardSetNameInLanguage(
+  boardSet: BoardSetRecord,
+  language: string,
+): string {
+  return boardSet.nameTranslations?.[language] ?? boardSet.name;
 }

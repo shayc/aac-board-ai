@@ -24,8 +24,8 @@ export function findBoardInLanguage(
   return translations ? applyTranslations(board, translations) : undefined;
 }
 
-export function getBoardLanguage(board: Board): string {
-  return board.locale ? getLanguageCode(board.locale) : DEFAULT_BOARD_LANGUAGE;
+export function getBoardLanguage({ locale }: { locale?: string }): string {
+  return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
 export function findStringTranslations(
@@ -39,12 +39,21 @@ export function findStringTranslations(
   return match?.[1];
 }
 
+export function findTranslation(
+  translations: StringTranslations,
+  text: string,
+): string | undefined {
+  return Object.hasOwn(translations, text) ? translations[text] : undefined;
+}
+
 export function applyTranslations(
   board: Board,
   translations: StringTranslations,
 ): Board {
   function translateString(text: string | undefined) {
-    const translated = text ? (translations[text] ?? text) : text;
+    const translated = text
+      ? (findTranslation(translations, text) ?? text)
+      : text;
 
     return nonBlankText(translated);
   }

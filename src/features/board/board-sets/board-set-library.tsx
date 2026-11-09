@@ -6,6 +6,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { ErrorState } from "@shared/ui/error-state";
@@ -19,15 +20,20 @@ import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
 import { BoardSetList } from "./board-set-list";
-import { deleteBoardSet, useBoardSets } from "./board-sets-store";
+import {
+  boardSetNameInLanguage,
+  deleteBoardSet,
+  useBoardSets,
+} from "./board-sets-store";
 
 export function BoardSetLibrary() {
   const t = useTranslate();
+  const { language } = useLanguage();
   const activeBoardSetId = useMatch({
     path: `/${BOARD_SET_SEGMENT}`,
     end: false,
   })?.params.boardSetId;
-  const { boardSets, isLoading, error } = useBoardSets();
+  const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -35,7 +41,11 @@ export function BoardSetLibrary() {
   const [deleteTarget, setDeleteTarget] = useState<BoardSetRecord | null>(null);
   const [infoTarget, setInfoTarget] = useState<BoardSetRecord | null>(null);
 
-  const downloadableBoardSets = listDownloadableBoardSets(boardSets);
+  const boardSets = storedBoardSets.map((boardSet) => ({
+    ...boardSet,
+    name: boardSetNameInLanguage(boardSet, language),
+  }));
+  const downloadableBoardSets = listDownloadableBoardSets(storedBoardSets, t);
 
   async function handleDelete() {
     if (!deleteTarget) {

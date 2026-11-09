@@ -13,6 +13,9 @@
   "libraryLoadFailed": "लाइब्रेरी लोड नहीं हो सकी",
   "libraryImportBoardFiles": "बोर्ड फ़ाइलें आयात करें",
   "libraryBoardSets": "बोर्ड सेट",
+  "boardSetCatalogFirstWords": "पहले शब्द",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "भाषा",
   "languageDownloading": "अनुवाद मॉडल डाउनलोड हो रहा है...",
   "languageDownloadProgress": "{progress}% पूर्ण",
+  "languageTranslatingBoards": "बोर्ड का अनुवाद हो रहा है...",
   "speechVoice": "आवाज़",
   "speechRate": "गति",
   "speechPitch": "पिच",

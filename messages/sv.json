@@ -13,6 +13,9 @@
   "libraryLoadFailed": "Det gick inte att läsa in biblioteket",
   "libraryImportBoardFiles": "Importera tavelfiler",
   "libraryBoardSets": "Taveluppsättningar",
+  "boardSetCatalogFirstWords": "Första orden",
+  "boardSetCatalogQuickCore24": "Quick Core 24",
+  "boardSetCatalogQuickCore60": "Quick Core 60",
   "libraryImportingBoardFiles": [
     {
       "declarations": ["input count", "local countPlural = count: plural"],
@@ -95,6 +98,7 @@
   "languageLabel": "Språk",
   "languageDownloading": "Laddar ner översättningsmodell...",
   "languageDownloadProgress": "{progress}% klart",
+  "languageTranslatingBoards": "Översätter tavlor...",
   "speechVoice": "Röst",
   "speechRate": "Hastighet",
   "speechPitch": "Tonhöjd",
