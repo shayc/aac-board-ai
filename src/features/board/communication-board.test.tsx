@@ -84,422 +84,438 @@ describe("CommunicationBoard", () => {
     await resetBoardsDB();
   });
 
-  test("speaks the composed message when play is pressed", async () => {
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+  describe("rendering", () => {
+    test("has no accessibility violations", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
 
-    await screen.getByRole("button", { name: "hello" }).click();
-    await screen.getByRole("button", { name: "world" }).click();
-    // Activating a tile speaks per-tile feedback; we only assert the play call.
-    speech.speak.mockClear();
-
-    await screen.getByRole("button", { name: "Play message" }).click();
-
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["hello world"]);
+      await expectNoA11yViolations(screen.container);
     });
-  });
 
-  test("keeps the message play action visible while a tile speaks", async () => {
-    speech.speak.mockImplementationOnce(() => undefined);
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+    test("names the tile grid with the board's name", async () => {
+      const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
 
-    await screen.getByRole("button", { name: "hello" }).click();
-
-    await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
-      .toBeVisible();
-  });
-
-  test("enables message playback only after content is composed", async () => {
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-    const play = screen.getByRole("button", { name: "Play message" });
-
-    await expect.element(play).toBeDisabled();
-
-    await screen.getByRole("button", { name: "hello" }).click();
-
-    await expect.element(play).toBeEnabled();
-  });
-
-  test.each([390, 1024])(
-    "edits the message with Backspace alongside board navigation at a viewport width of %i",
-    async (width) => {
-      const originalWidth = window.innerWidth;
-      const originalHeight = window.innerHeight;
-      await seedBoardSets([{ id: "set-1", rootBoardId: SYMBOL_BOARD.id }]);
-
-      try {
-        await page.viewport(width, 800);
-        const screen = await renderCommunicationBoard(SYMBOL_BOARD, [
-          `/sets/set-1/boards/${SYMBOL_BOARD.id}`,
-        ]);
-        const backspace = screen.getByRole("button", { name: "Backspace" });
-        const play = screen.getByRole("button", { name: "Play message" });
-
-        await expect.element(backspace).toBeDisabled();
-        await expect
-          .element(screen.getByRole("button", { name: "Go back" }))
-          .toBeVisible();
-        await expect
-          .element(screen.getByRole("button", { name: "Go home" }))
-          .toBeVisible();
-
-        await screen.getByRole("button", { name: "hello" }).click();
-        await screen.getByRole("button", { name: "world" }).click();
-        await backspace.click();
-        speech.speak.mockClear();
-        await play.click();
-
-        await vi.waitFor(() => {
-          expect(speech.spokenTexts()).toEqual(["hello"]);
-        });
-
-        await backspace.click();
-
-        await expect.element(backspace).toBeDisabled();
-        await expect.element(play).toBeDisabled();
-      } finally {
-        await page.viewport(originalWidth, originalHeight);
-      }
-    },
-  );
-
-  test("speaks a letter spelled earlier in the same tap", async () => {
-    const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
-
-    await screen.getByRole("button", { name: "S", exact: true }).click();
-
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["s"]);
-    });
-  });
-
-  test("navigates from a linked tile without running its actions or playing its content", async () => {
-    await seedBoardSets([{ id: "set-1", rootBoardId: "test-board" }]);
-    const board: OBFBoard = {
-      ...TWO_BUTTON_BOARD,
-      buttons: [
-        { id: "btn-1", label: "hello" },
-        {
-          id: "btn-2",
-          label: "Folder",
-          load_board: { id: "child-board" },
-          actions: [":clear", ":speak", ":home"],
-          sound_id: "recording",
-        },
-      ],
-      sounds: [{ id: "recording", url: "/folder.mp3" }],
-    };
-    const screen = await renderCommunicationBoard(board, [
-      "/sets/set-1/boards/test-board",
-    ]);
-    const back = screen.getByRole("button", { name: "Go back" });
-
-    await expect.element(back).toBeDisabled();
-    await screen.getByRole("button", { name: "hello" }).click();
-    speech.speak.mockClear();
-
-    await screen.getByRole("button", { name: "Folder" }).click();
-
-    await expect.element(back).toBeEnabled();
-    await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
-      .toBeEnabled();
-    expect(speech.speak).not.toHaveBeenCalled();
-    expect(audio.play).not.toHaveBeenCalled();
-  });
-
-  test("speaks a tile's actions instead of its vocalization or sound", async () => {
-    const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-    await screen.getByRole("button", { name: "Say then clear" }).click();
-
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["hi"]);
-    });
-    expect(audio.play).not.toHaveBeenCalled();
-  });
-
-  test("clears the message once a speak-then-clear tile finishes speaking", async () => {
-    preventSpeechEnd(speech.speak);
-    const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-    const message = screen.getByText("hi", { exact: true });
-
-    await screen.getByRole("button", { name: "Say then clear" }).click();
-    await expect
-      .element(screen.getByRole("button", { name: "Stop message" }))
-      .toBeVisible();
-    await expect.element(message).toBeVisible();
-
-    const utterance = speech.speak.mock.calls[0]?.[0];
-
-    assertDefined(utterance);
-    utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-
-    await expect.element(message).not.toBeInTheDocument();
-    await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
-      .toBeDisabled();
-  });
-
-  test("keeps the message when a speak-then-clear tile fails to speak", async () => {
-    preventSpeechEnd(speech.speak);
-    const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-    await screen.getByRole("button", { name: "Say then clear" }).click();
-    await expect
-      .element(screen.getByRole("button", { name: "Stop message" }))
-      .toBeVisible();
-
-    const utterance = speech.speak.mock.calls[0]?.[0];
-
-    assertDefined(utterance);
-    utterance.dispatchEvent(
-      new SpeechSynthesisErrorEvent("error", {
-        utterance,
-        error: "synthesis-failed",
-      }),
-    );
-
-    await expect
-      .element(screen.getByRole("button", { name: "Play message" }))
-      .toBeEnabled();
-    await expect.element(screen.getByText("hi", { exact: true })).toBeVisible();
-  });
-
-  test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
-    preventSpeechEnd(speech.speak);
-    const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
-
-    await screen.getByRole("button", { name: "Say then clear" }).click();
-    await screen.getByRole("button", { name: "Stop message" }).click();
-    speech.speak.mockClear();
-    await screen.getByRole("button", { name: "Play message" }).click();
-
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["hi"]);
-    });
-  });
-
-  test("names the tile grid with the board's name", async () => {
-    const namedBoard: OBFBoard = { ...TWO_BUTTON_BOARD, name: "Core words" };
-
-    const screen = await renderCommunicationBoard(namedBoard);
-
-    await expect
-      .element(screen.getByRole("grid", { name: "Core words" }))
-      .toBeVisible();
-  });
-
-  test.each([undefined, "", " \t\n\u00a0 "])(
-    "gives the tile grid a default accessible name when the board name is %j",
-    async (name) => {
-      const screen = await renderCommunicationBoard({
-        ...TWO_BUTTON_BOARD,
-        name,
-      });
+      const screen = await renderCommunicationBoard(namedBoard);
 
       await expect
-        .element(screen.getByRole("grid", { name: "Communication board" }))
+        .element(screen.getByRole("grid", { name: "Core words" }))
         .toBeVisible();
-    },
-  );
-
-  test("does not scroll the grid when Home navigates to the home board", async () => {
-    await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
-
-    const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
-      "/sets/set-1/boards/other-board",
-    ]);
-    const grid = screen.getByRole("grid").element();
-    const scrollContainer = grid.parentElement;
-    assertDefined(scrollContainer);
-
-    scrollContainer.scrollTo({
-      left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
-      top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
     });
 
-    await vi.waitFor(() => {
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-    });
+    test.each([undefined, "", " \t\n\u00a0 "])(
+      "gives the tile grid a default accessible name when the board name is %j",
+      async (name) => {
+        const screen = await renderCommunicationBoard({
+          ...TWO_BUTTON_BOARD,
+          name,
+        });
 
-    await screen.getByRole("button", { name: "Go home" }).click();
-
-    expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-    expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-  });
-
-  test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
-    await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
-
-    const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
-      {
-        pathname: "/sets/set-1/boards/root-board",
-        state: { canGoBack: true },
+        await expect
+          .element(screen.getByRole("grid", { name: "Communication board" }))
+          .toBeVisible();
       },
-    ]);
-    const back = screen.getByRole("button", { name: "Go back" });
-    const grid = screen.getByRole("grid").element();
-    const scrollContainer = grid.parentElement;
-    assertDefined(scrollContainer);
-
-    await expect.element(back).toBeEnabled();
-
-    scrollContainer.scrollTo({
-      left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
-      top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
-    });
-
-    await vi.waitFor(() => {
-      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
-      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
-    });
-
-    await screen.getByRole("button", { name: "Go home" }).click();
-
-    await vi.waitFor(() => {
-      expect(scrollContainer.scrollLeft).toBe(0);
-      expect(scrollContainer.scrollTop).toBe(0);
-    });
-
-    await expect.element(back).toBeDisabled();
-  });
-
-  test("hides tile labels visually without removing accessible names", async () => {
-    setTileLabelPlacement("hidden");
-
-    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-    const helloTile = screen.getByRole("button", { name: "hello" });
-    const helloLabel = screen.getByText("hello").element();
-
-    await expect.element(helloTile).toBeVisible();
-    expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
-  });
-
-  test("shows message parts as labels only when message images are hidden", async () => {
-    setMessageImagesVisible(false);
-
-    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
-    const helloTile = screen.getByRole("button", { name: "hello" });
-    await expect.element(helloTile).toBeVisible();
-    const tileImageCount = screen.container.querySelectorAll("img").length;
-
-    await helloTile.click();
-
-    await expect.poll(() => screen.getByText("hello").all()).toHaveLength(2);
-    expect(screen.container.querySelectorAll("img")).toHaveLength(
-      tileImageCount,
     );
   });
 
-  test.each([
-    { description: "missing", label: undefined },
-    { description: "empty", label: "" },
-    { description: "whitespace-only", label: " \t " },
-  ])(
-    "names a tile by its vocalization when its label is $description",
-    async ({ label }) => {
-      const board: OBFBoard = {
-        format: "open-board-0.1",
-        id: "vocalization-board",
-        locale: "en",
-        buttons: [
-          {
-            id: "help",
-            label,
-            vocalization: "I need help",
-            image_id: "help-image",
-          },
-        ],
-        grid: { rows: 1, columns: 1, order: [["help"]] },
-        images: [{ id: "help-image", data: TEST_IMAGE_SRC }],
-      };
-      const screen = await renderCommunicationBoard(board);
-      const tile = screen.getByRole("button", {
-        name: "I need help",
-        exact: true,
-      });
+  describe("tile activation", () => {
+    test("activates a focused tile with the Space key", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const hello = screen.getByRole("button", { name: "hello" });
 
-      await expect.element(tile).toBeVisible();
-      expect(tile.element().textContent).toBe("");
-      await expectNoA11yViolations(screen.container);
-
-      await tile.click();
-
-      await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["i need help"]);
-      });
-    },
-  );
-
-  test.each(["", " \t\n "])(
-    "speaks the label when the vocalization is blank (%j)",
-    async (vocalization) => {
-      const board: OBFBoard = {
-        ...TWO_BUTTON_BOARD,
-        buttons: [{ id: "btn-1", label: "hello", vocalization }],
-        grid: { rows: 1, columns: 1, order: [["btn-1"]] },
-      };
-      const screen = await renderCommunicationBoard(board);
-
-      await screen.getByRole("button", { name: "hello", exact: true }).click();
+      hello.element().focus();
+      await userEvent.keyboard("{Space}");
 
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["hello"]);
       });
-    },
-  );
+    });
 
-  test.each(["top", "hidden"] as const)(
-    "keeps a %s label as the accessible name when vocalization differs",
-    async (placement) => {
-      setTileLabelPlacement(placement);
-      const board: OBFBoard = {
-        ...SYMBOL_BOARD,
-        buttons: SYMBOL_BOARD.buttons.map((button) => ({
-          ...button,
-          vocalization: "I need help",
-        })),
-      };
-      const screen = await renderCommunicationBoard(board);
-      const tile = screen.getByRole("button", { name: "hello", exact: true });
+    test("speaks a letter spelled earlier in the same tap", async () => {
+      const screen = await renderCommunicationBoard(SPELL_THEN_SPEAK_BOARD);
 
-      await expect.element(tile).toHaveAccessibleName("hello");
-
-      await tile.click();
+      await screen.getByRole("button", { name: "S", exact: true }).click();
 
       await vi.waitFor(() => {
-        expect(speech.spokenTexts()).toEqual(["i need help"]);
+        expect(speech.spokenTexts()).toEqual(["s"]);
       });
-    },
-  );
+    });
 
-  test("activates a focused tile with the Space key", async () => {
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
-    const hello = screen.getByRole("button", { name: "hello" });
+    test("speaks a tile's actions instead of its vocalization or sound", async () => {
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
 
-    hello.element().focus();
-    await userEvent.keyboard("{Space}");
+      await screen.getByRole("button", { name: "Say then clear" }).click();
 
-    await vi.waitFor(() => {
-      expect(speech.spokenTexts()).toEqual(["hello"]);
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi"]);
+      });
+      expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test.each(["", " \t\n "])(
+      "speaks the label when the vocalization is blank (%j)",
+      async (vocalization) => {
+        const board: OBFBoard = {
+          ...TWO_BUTTON_BOARD,
+          buttons: [{ id: "btn-1", label: "hello", vocalization }],
+          grid: { rows: 1, columns: 1, order: [["btn-1"]] },
+        };
+        const screen = await renderCommunicationBoard(board);
+
+        await screen
+          .getByRole("button", { name: "hello", exact: true })
+          .click();
+
+        await vi.waitFor(() => {
+          expect(speech.spokenTexts()).toEqual(["hello"]);
+        });
+      },
+    );
+  });
+
+  describe("speak-then-clear tiles", () => {
+    test("clears the message once a speak-then-clear tile finishes speaking", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+      const message = screen.getByText("hi", { exact: true });
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+      await expect.element(message).toBeVisible();
+
+      const utterance = speech.speak.mock.calls[0]?.[0];
+
+      assertDefined(utterance);
+      utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+
+      await expect.element(message).not.toBeInTheDocument();
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeDisabled();
+    });
+
+    test("keeps the message when a speak-then-clear tile fails to speak", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await expect
+        .element(screen.getByRole("button", { name: "Stop message" }))
+        .toBeVisible();
+
+      const utterance = speech.speak.mock.calls[0]?.[0];
+
+      assertDefined(utterance);
+      utterance.dispatchEvent(
+        new SpeechSynthesisErrorEvent("error", {
+          utterance,
+          error: "synthesis-failed",
+        }),
+      );
+
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
+      await expect
+        .element(screen.getByText("hi", { exact: true }))
+        .toBeVisible();
+    });
+
+    test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
+      preventSpeechEnd(speech.speak);
+      const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+      await screen.getByRole("button", { name: "Say then clear" }).click();
+      await screen.getByRole("button", { name: "Stop message" }).click();
+      speech.speak.mockClear();
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hi"]);
+      });
     });
   });
 
-  test("has no accessibility violations", async () => {
-    const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+  describe("message", () => {
+    test("enables message playback only after content is composed", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+      const play = screen.getByRole("button", { name: "Play message" });
 
-    await expectNoA11yViolations(screen.container);
+      await expect.element(play).toBeDisabled();
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect.element(play).toBeEnabled();
+    });
+
+    test("speaks the composed message when play is pressed", async () => {
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+      // Activating a tile speaks per-tile feedback; we only assert the play call.
+      speech.speak.mockClear();
+
+      await screen.getByRole("button", { name: "Play message" }).click();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["hello world"]);
+      });
+    });
+
+    test("keeps the message play action visible while a tile speaks", async () => {
+      speech.speak.mockImplementationOnce(() => undefined);
+      const screen = await renderCommunicationBoard(TWO_BUTTON_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeVisible();
+    });
+
+    test.each([390, 1024])(
+      "edits the message with Backspace alongside board navigation at a viewport width of %i",
+      async (width) => {
+        const originalWidth = window.innerWidth;
+        const originalHeight = window.innerHeight;
+        await seedBoardSets([{ id: "set-1", rootBoardId: SYMBOL_BOARD.id }]);
+
+        try {
+          await page.viewport(width, 800);
+          const screen = await renderCommunicationBoard(SYMBOL_BOARD, [
+            `/sets/set-1/boards/${SYMBOL_BOARD.id}`,
+          ]);
+          const backspace = screen.getByRole("button", { name: "Backspace" });
+          const play = screen.getByRole("button", { name: "Play message" });
+
+          await expect.element(backspace).toBeDisabled();
+          await expect
+            .element(screen.getByRole("button", { name: "Go back" }))
+            .toBeVisible();
+          await expect
+            .element(screen.getByRole("button", { name: "Go home" }))
+            .toBeVisible();
+
+          await screen.getByRole("button", { name: "hello" }).click();
+          await screen.getByRole("button", { name: "world" }).click();
+          await backspace.click();
+          speech.speak.mockClear();
+          await play.click();
+
+          await vi.waitFor(() => {
+            expect(speech.spokenTexts()).toEqual(["hello"]);
+          });
+
+          await backspace.click();
+
+          await expect.element(backspace).toBeDisabled();
+          await expect.element(play).toBeDisabled();
+        } finally {
+          await page.viewport(originalWidth, originalHeight);
+        }
+      },
+    );
+
+    test("has no accessibility violations with a composed message", async () => {
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+
+      await screen.getByRole("button", { name: "hello" }).click();
+      await screen.getByRole("button", { name: "world" }).click();
+
+      await expectNoA11yViolations(screen.container);
+    });
   });
 
-  test("has no accessibility violations with a composed message", async () => {
-    const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+  describe("navigation", () => {
+    test("navigates from a linked tile without running its actions or playing its content", async () => {
+      await seedBoardSets([{ id: "set-1", rootBoardId: "test-board" }]);
+      const board: OBFBoard = {
+        ...TWO_BUTTON_BOARD,
+        buttons: [
+          { id: "btn-1", label: "hello" },
+          {
+            id: "btn-2",
+            label: "Folder",
+            load_board: { id: "child-board" },
+            actions: [":clear", ":speak", ":home"],
+            sound_id: "recording",
+          },
+        ],
+        sounds: [{ id: "recording", url: "/folder.mp3" }],
+      };
+      const screen = await renderCommunicationBoard(board, [
+        "/sets/set-1/boards/test-board",
+      ]);
+      const back = screen.getByRole("button", { name: "Go back" });
 
-    await screen.getByRole("button", { name: "hello" }).click();
-    await screen.getByRole("button", { name: "world" }).click();
+      await expect.element(back).toBeDisabled();
+      await screen.getByRole("button", { name: "hello" }).click();
+      speech.speak.mockClear();
 
-    await expectNoA11yViolations(screen.container);
+      await screen.getByRole("button", { name: "Folder" }).click();
+
+      await expect.element(back).toBeEnabled();
+      await expect
+        .element(screen.getByRole("button", { name: "Play message" }))
+        .toBeEnabled();
+      expect(speech.speak).not.toHaveBeenCalled();
+      expect(audio.play).not.toHaveBeenCalled();
+    });
+
+    test("does not scroll the grid when Home navigates to the home board", async () => {
+      await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
+
+      const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
+        "/sets/set-1/boards/other-board",
+      ]);
+      const grid = screen.getByRole("grid").element();
+      const scrollContainer = grid.parentElement;
+      assertDefined(scrollContainer);
+
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+        top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+      });
+
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+        expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+      });
+
+      await screen.getByRole("button", { name: "Go home" }).click();
+
+      expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+      expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+    });
+
+    test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
+      await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
+
+      const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
+        {
+          pathname: "/sets/set-1/boards/root-board",
+          state: { canGoBack: true },
+        },
+      ]);
+      const back = screen.getByRole("button", { name: "Go back" });
+      const grid = screen.getByRole("grid").element();
+      const scrollContainer = grid.parentElement;
+      assertDefined(scrollContainer);
+
+      await expect.element(back).toBeEnabled();
+
+      scrollContainer.scrollTo({
+        left: scrollContainer.scrollWidth - scrollContainer.clientWidth,
+        top: scrollContainer.scrollHeight - scrollContainer.clientHeight,
+      });
+
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBeGreaterThan(0);
+        expect(scrollContainer.scrollTop).toBeGreaterThan(0);
+      });
+
+      await screen.getByRole("button", { name: "Go home" }).click();
+
+      await vi.waitFor(() => {
+        expect(scrollContainer.scrollLeft).toBe(0);
+        expect(scrollContainer.scrollTop).toBe(0);
+      });
+
+      await expect.element(back).toBeDisabled();
+    });
+  });
+
+  describe("label and image preferences", () => {
+    test("hides tile labels visually without removing accessible names", async () => {
+      setTileLabelPlacement("hidden");
+
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      const helloLabel = screen.getByText("hello").element();
+
+      await expect.element(helloTile).toBeVisible();
+      expect(helloLabel.getBoundingClientRect().width).toBeLessThanOrEqual(1);
+    });
+
+    test("shows message parts as labels only when message images are hidden", async () => {
+      setMessageImagesVisible(false);
+
+      const screen = await renderCommunicationBoard(SYMBOL_BOARD);
+      const helloTile = screen.getByRole("button", { name: "hello" });
+      await expect.element(helloTile).toBeVisible();
+      const tileImageCount = screen.container.querySelectorAll("img").length;
+
+      await helloTile.click();
+
+      await expect.poll(() => screen.getByText("hello").all()).toHaveLength(2);
+      expect(screen.container.querySelectorAll("img")).toHaveLength(
+        tileImageCount,
+      );
+    });
+
+    test.each([
+      { description: "missing", label: undefined },
+      { description: "empty", label: "" },
+      { description: "whitespace-only", label: " \t " },
+    ])(
+      "names a tile by its vocalization when its label is $description",
+      async ({ label }) => {
+        const board: OBFBoard = {
+          format: "open-board-0.1",
+          id: "vocalization-board",
+          locale: "en",
+          buttons: [
+            {
+              id: "help",
+              label,
+              vocalization: "I need help",
+              image_id: "help-image",
+            },
+          ],
+          grid: { rows: 1, columns: 1, order: [["help"]] },
+          images: [{ id: "help-image", data: TEST_IMAGE_SRC }],
+        };
+        const screen = await renderCommunicationBoard(board);
+        const tile = screen.getByRole("button", {
+          name: "I need help",
+          exact: true,
+        });
+
+        await expect.element(tile).toBeVisible();
+        expect(tile.element().textContent).toBe("");
+        await expectNoA11yViolations(screen.container);
+
+        await tile.click();
+
+        await vi.waitFor(() => {
+          expect(speech.spokenTexts()).toEqual(["i need help"]);
+        });
+      },
+    );
+
+    test.each(["top", "hidden"] as const)(
+      "keeps a %s label as the accessible name when vocalization differs",
+      async (placement) => {
+        setTileLabelPlacement(placement);
+        const board: OBFBoard = {
+          ...SYMBOL_BOARD,
+          buttons: SYMBOL_BOARD.buttons.map((button) => ({
+            ...button,
+            vocalization: "I need help",
+          })),
+        };
+        const screen = await renderCommunicationBoard(board);
+        const tile = screen.getByRole("button", { name: "hello", exact: true });
+
+        await expect.element(tile).toHaveAccessibleName("hello");
+
+        await tile.click();
+
+        await vi.waitFor(() => {
+          expect(speech.spokenTexts()).toEqual(["i need help"]);
+        });
+      },
+    );
   });
 });

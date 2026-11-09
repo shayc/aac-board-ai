@@ -17,6 +17,34 @@ function renderSpeechSettings() {
 }
 
 describe("SpeechSettings", () => {
+  test("renders the speech sliders and preview action with no accessibility violations", async () => {
+    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
+
+    const screen = await renderSpeechSettings();
+
+    const expectedValues = [
+      { name: "Speed", text: "1.0×" },
+      { name: "Pitch", text: "100%" },
+      { name: "Volume", text: "100%" },
+    ];
+    for (const { name, text } of expectedValues) {
+      await expect
+        .element(screen.getByRole("slider", { name }))
+        .toHaveAttribute("aria-valuetext", text);
+    }
+    await expect.element(screen.getByText("1.0×")).toBeVisible();
+    const percentValues = screen.getByText("100%").all();
+    expect(percentValues).toHaveLength(2);
+    for (const value of percentValues) {
+      await expect.element(value).toBeVisible();
+    }
+    await expect
+      .element(screen.getByRole("button", { name: "Preview voice" }))
+      .toBeInTheDocument();
+
+    await expectNoA11yViolations(screen.container);
+  });
+
   test("groups voices under locale subheaders when multiple locales exist", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
@@ -57,48 +85,6 @@ describe("SpeechSettings", () => {
       .not.toBeInTheDocument();
   });
 
-  test("renders the speech sliders and preview action with no accessibility violations", async () => {
-    stubVoices([{ voiceURI: "us-1", name: "Samantha", lang: "en-US" }]);
-
-    const screen = await renderSpeechSettings();
-
-    const expectedValues = [
-      { name: "Speed", text: "1.0×" },
-      { name: "Pitch", text: "100%" },
-      { name: "Volume", text: "100%" },
-    ];
-    for (const { name, text } of expectedValues) {
-      await expect
-        .element(screen.getByRole("slider", { name }))
-        .toHaveAttribute("aria-valuetext", text);
-    }
-    await expect.element(screen.getByText("1.0×")).toBeVisible();
-    const percentValues = screen.getByText("100%").all();
-    expect(percentValues).toHaveLength(2);
-    for (const value of percentValues) {
-      await expect.element(value).toBeVisible();
-    }
-    await expect
-      .element(screen.getByRole("button", { name: "Preview voice" }))
-      .toBeInTheDocument();
-
-    await expectNoA11yViolations(screen.container);
-  });
-
-  test("formats slider values in the UI locale when the language has only a voice", async () => {
-    stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
-    setStoredLanguage("fa");
-
-    const screen = await renderSpeechSettings();
-
-    await expect
-      .element(screen.getByRole("slider", { name: "Speed" }))
-      .toHaveAttribute("aria-valuetext", "1.0×");
-    await expect
-      .element(screen.getByRole("slider", { name: "Pitch" }))
-      .toHaveAttribute("aria-valuetext", "100%");
-  });
-
   test("selects and persists a voice", async () => {
     stubVoices([
       { voiceURI: "us-1", name: "Samantha", lang: "en-US" },
@@ -131,6 +117,20 @@ describe("SpeechSettings", () => {
     await expect
       .element(screen.getByRole("combobox", { name: "קול" }))
       .toHaveTextContent("Carmit");
+  });
+
+  test("formats slider values in the UI locale when the language has only a voice", async () => {
+    stubVoices([{ voiceURI: "fa-1", name: "Dilara", lang: "fa-IR" }]);
+    setStoredLanguage("fa");
+
+    const screen = await renderSpeechSettings();
+
+    await expect
+      .element(screen.getByRole("slider", { name: "Speed" }))
+      .toHaveAttribute("aria-valuetext", "1.0×");
+    await expect
+      .element(screen.getByRole("slider", { name: "Pitch" }))
+      .toHaveAttribute("aria-valuetext", "100%");
   });
 
   test("adjusts and persists rate, pitch, and volume", async () => {

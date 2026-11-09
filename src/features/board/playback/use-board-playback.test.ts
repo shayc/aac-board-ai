@@ -25,6 +25,48 @@ describe("useBoardPlayback", () => {
     audio = stubAudio();
   });
 
+  test("tracks playing state and active parts through speech boundaries and completion", async () => {
+    let fireBoundary: ((charIndex: number) => void) | undefined;
+    let endSpeak: (() => void) | undefined;
+    speech.speak.mockImplementationOnce((utterance) => {
+      fireBoundary = (charIndex) => {
+        utterance.dispatchEvent(
+          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
+        );
+      };
+
+      endSpeak = () => {
+        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
+      };
+    });
+
+    const parts: MessagePart[] = [
+      { id: "1", label: "I" },
+      { id: "2", label: "want" },
+    ];
+
+    const { result, rerender } = await renderPlayback();
+
+    expect(result.current.isMessagePlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
+
+    const playPromise = result.current.playMessage(parts);
+    await rerender();
+    expect(result.current.isMessagePlaying).toBe(true);
+    expect(result.current.activePartId).toBe("1");
+
+    fireBoundary?.(2); // "want" begins at offset 2 in "i want"
+    await rerender();
+    expect(result.current.isMessagePlaying).toBe(true);
+    expect(result.current.activePartId).toBe("2");
+
+    endSpeak?.();
+    await playPromise;
+    await rerender();
+    expect(result.current.isMessagePlaying).toBe(false);
+    expect(result.current.activePartId).toBeNull();
+  });
+
   test("interleaves speech and audio in order when a sound breaks a text run", async () => {
     const parts: MessagePart[] = [
       { id: "1", label: "before" },
@@ -99,70 +141,6 @@ describe("useBoardPlayback", () => {
 
     resolveSpeak?.();
     await playPromise;
-  });
-
-  test("resets isMessagePlaying to false after a speech error", async () => {
-    speech.speak.mockImplementationOnce((utterance) => {
-      queueMicrotask(() => {
-        utterance.dispatchEvent(
-          new SpeechSynthesisErrorEvent("error", {
-            utterance,
-            error: "synthesis-failed",
-          }),
-        );
-      });
-    });
-
-    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
-
-    const { result, rerender } = await renderPlayback();
-
-    await expect(result.current.playMessage(parts)).resolves.toBe("failed");
-    await rerender();
-
-    expect(result.current.isMessagePlaying).toBe(false);
-  });
-
-  test("tracks playing state and active parts through speech boundaries and completion", async () => {
-    let fireBoundary: ((charIndex: number) => void) | undefined;
-    let endSpeak: (() => void) | undefined;
-    speech.speak.mockImplementationOnce((utterance) => {
-      fireBoundary = (charIndex) => {
-        utterance.dispatchEvent(
-          new SpeechSynthesisEvent("boundary", { utterance, charIndex }),
-        );
-      };
-
-      endSpeak = () => {
-        utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
-      };
-    });
-
-    const parts: MessagePart[] = [
-      { id: "1", label: "I" },
-      { id: "2", label: "want" },
-    ];
-
-    const { result, rerender } = await renderPlayback();
-
-    expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
-
-    const playPromise = result.current.playMessage(parts);
-    await rerender();
-    expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("1");
-
-    fireBoundary?.(2); // "want" begins at offset 2 in "i want"
-    await rerender();
-    expect(result.current.isMessagePlaying).toBe(true);
-    expect(result.current.activePartId).toBe("2");
-
-    endSpeak?.();
-    await playPromise;
-    await rerender();
-    expect(result.current.isMessagePlaying).toBe(false);
-    expect(result.current.activePartId).toBeNull();
   });
 
   test("does not advance to later segments after stop", async () => {
@@ -253,5 +231,27 @@ describe("useBoardPlayback", () => {
     await expect(firstPlay).resolves.toBe("interrupted");
     await expect(secondPlay).resolves.toBe("completed");
     expect(speech.spokenTexts()).toEqual(["first", "second"]);
+  });
+
+  test("resets isMessagePlaying to false after a speech error", async () => {
+    speech.speak.mockImplementationOnce((utterance) => {
+      queueMicrotask(() => {
+        utterance.dispatchEvent(
+          new SpeechSynthesisErrorEvent("error", {
+            utterance,
+            error: "synthesis-failed",
+          }),
+        );
+      });
+    });
+
+    const parts: MessagePart[] = [{ id: "1", label: "hi" }];
+
+    const { result, rerender } = await renderPlayback();
+
+    await expect(result.current.playMessage(parts)).resolves.toBe("failed");
+    await rerender();
+
+    expect(result.current.isMessagePlaying).toBe(false);
   });
 });
