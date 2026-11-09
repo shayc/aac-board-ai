@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent, type Locator } from "vitest/browser";
 import { Grid, type GridItemProps } from "./grid";
@@ -436,6 +436,24 @@ describe("useGridFocus", () => {
       await press(item3, "Home", { shiftKey: true });
 
       await expect.element(item3).toHaveFocus();
+    });
+
+    test("Home on the first cell leaves the key to outer handlers", async () => {
+      const items = makeItems(1, 2, 3);
+      const handleOuterKeyDown = vi.fn();
+
+      const screen = await render(
+        <div role="presentation" onKeyDown={handleOuterKeyDown}>
+          <Grid rows={1} columns={3} items={items} renderItem={renderButton} />
+        </div>,
+      );
+
+      const item1 = screen.getByRole("button", { name: "Item 1", exact: true });
+
+      await press(item1, "Home");
+
+      await expect.element(item1).toHaveFocus();
+      expect(handleOuterKeyDown).toHaveBeenCalledOnce();
     });
   });
 

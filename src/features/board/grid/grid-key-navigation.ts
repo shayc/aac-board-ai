@@ -1,8 +1,13 @@
-import { listGridFocusTargets, type GridFocusTarget } from "./grid-dom";
-import type { GridPosition } from "./grid-model";
+import {
+  findGridPosition,
+  listGridFocusTargets,
+  type GridFocusTarget,
+} from "./grid-dom";
+import { isSameGridPosition, type GridPosition } from "./grid-model";
 
 interface GridKeyEvent {
   key: string;
+  target: EventTarget | null;
   ctrlKey: boolean;
   metaKey: boolean;
   shiftKey: boolean;
@@ -17,9 +22,12 @@ interface GridStep {
 export function findGridKeyTarget(
   event: GridKeyEvent,
   root: HTMLElement,
-  from: GridPosition,
-  direction: "ltr" | "rtl",
 ): GridFocusTarget | null {
+  const from = findGridPosition(event.target);
+  if (!from) {
+    return null;
+  }
+
   if (event.key === "Home" || event.key === "End") {
     return findEdgeTarget(event, root, from);
   }
@@ -28,6 +36,7 @@ export function findGridKeyTarget(
     return null;
   }
 
+  const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
   const step = resolveArrowStep(event.key, direction);
 
   return step ? findArrowTarget(root, from, step) : null;
@@ -48,8 +57,12 @@ function findEdgeTarget(
     spansWholeGrid ? undefined : from.row,
   );
   const goesToFirst = event.key === "Home";
+  const target = goesToFirst ? candidates[0] : candidates.at(-1);
+  if (!target || isSameGridPosition(target.position, from)) {
+    return null;
+  }
 
-  return (goesToFirst ? candidates[0] : candidates.at(-1)) ?? null;
+  return target;
 }
 
 function resolveArrowStep(

@@ -7,11 +7,7 @@ import {
   findGridPosition,
 } from "./grid-dom";
 import { findGridKeyTarget } from "./grid-key-navigation";
-import {
-  findFirstOccupiedPosition,
-  isSameGridPosition,
-  type GridPosition,
-} from "./grid-model";
+import { findFirstOccupiedPosition, type GridPosition } from "./grid-model";
 
 interface UseGridFocusReturn {
   rootRef: RefObject<HTMLDivElement | null>;
@@ -30,22 +26,8 @@ export function useGridFocus(
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
       const root = rootRef.current;
-      if (!root) {
-        event.continuePropagation();
-
-        return;
-      }
-
-      const from = findGridPosition(event.target);
-      if (!from) {
-        event.continuePropagation();
-
-        return;
-      }
-
-      const direction = root.matches(":dir(rtl)") ? "rtl" : "ltr";
-      const next = findGridKeyTarget(event, root, from, direction);
-      if (!next || isSameGridPosition(next.position, from)) {
+      const next = root ? findGridKeyTarget(event, root) : null;
+      if (!next) {
         event.continuePropagation();
 
         return;
