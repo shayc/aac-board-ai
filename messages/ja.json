@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ボードファイルをインポートできませんでした",
-        "countPlural=*": "ボードファイルをインポートできませんでした"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "「{fileName}」をインポートできませんでした",
+  "libraryImportFailedBoardFiles": "ボードファイルをインポートできませんでした",
   "libraryImportOnlyBoardFiles": "インポートできるのはボードファイルのみです",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "ボードファイルが大きすぎてインポートできません",
-        "countPlural=*": "ボードファイルが大きすぎてインポートできません"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "「{fileName}」は大きすぎてインポートできません",
+  "libraryImportTooLargeBoardFiles": "ボードファイルが大きすぎてインポートできません",
   "libraryImportPartiallyFailed": "一部のボードファイルをインポートできませんでした（{failed} / {total}）",
   "libraryDropToImport": "ボードファイルをドロップしてインポート",
   "libraryInfo": "情報",

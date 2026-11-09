@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Kan bordbestand niet importeren",
-        "countPlural=*": "Kan bordbestanden niet importeren"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Kan \"{fileName}\" niet importeren",
+  "libraryImportFailedBoardFiles": "Kan bordbestanden niet importeren",
   "libraryImportOnlyBoardFiles": "Alleen bordbestanden kunnen worden geïmporteerd",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Het bordbestand is te groot om te importeren",
-        "countPlural=*": "De bordbestanden zijn te groot om te importeren"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "\"{fileName}\" is te groot om te importeren",
+  "libraryImportTooLargeBoardFiles": "De bordbestanden zijn te groot om te importeren",
   "libraryImportPartiallyFailed": "Kan sommige bordbestanden niet importeren ({failed} van {total})",
   "libraryDropToImport": "Zet bordbestanden neer om te importeren",
   "libraryInfo": "Info",

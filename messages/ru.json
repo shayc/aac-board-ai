@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Не удалось импортировать файл доски",
-        "countPlural=*": "Не удалось импортировать файлы досок"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Не удалось импортировать «{fileName}»",
+  "libraryImportFailedBoardFiles": "Не удалось импортировать файлы досок",
   "libraryImportOnlyBoardFiles": "Импортировать можно только файлы досок",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Файл доски слишком большой для импорта",
-        "countPlural=*": "Файлы досок слишком большие для импорта"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Файл «{fileName}» слишком большой для импорта",
+  "libraryImportTooLargeBoardFiles": "Файлы досок слишком большие для импорта",
   "libraryImportPartiallyFailed": "Не удалось импортировать некоторые файлы досок ({failed} из {total})",
   "libraryDropToImport": "Перетащите файлы досок для импорта",
   "libraryInfo": "Информация",

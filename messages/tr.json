@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Pano dosyası içe aktarılamadı",
-        "countPlural=*": "Pano dosyaları içe aktarılamadı"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "\"{fileName}\" içe aktarılamadı",
+  "libraryImportFailedBoardFiles": "Pano dosyaları içe aktarılamadı",
   "libraryImportOnlyBoardFiles": "Yalnızca pano dosyaları içe aktarılabilir",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Pano dosyası içe aktarılamayacak kadar büyük",
-        "countPlural=*": "Pano dosyaları içe aktarılamayacak kadar büyük"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "\"{fileName}\" içe aktarılamayacak kadar büyük",
+  "libraryImportTooLargeBoardFiles": "Pano dosyaları içe aktarılamayacak kadar büyük",
   "libraryImportPartiallyFailed": "Bazı pano dosyaları içe aktarılamadı ({failed} / {total})",
   "libraryDropToImport": "İçe aktarmak için pano dosyalarını bırakın",
   "libraryInfo": "Bilgi",

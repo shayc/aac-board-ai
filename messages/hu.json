@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "A táblafájl importálása nem sikerült",
-        "countPlural=*": "A táblafájlok importálása nem sikerült"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "A(z) „{fileName}” fájl importálása nem sikerült",
+  "libraryImportFailedBoardFiles": "A táblafájlok importálása nem sikerült",
   "libraryImportOnlyBoardFiles": "Csak táblafájlok importálhatók",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "A táblafájl túl nagy az importáláshoz",
-        "countPlural=*": "A táblafájlok túl nagyok az importáláshoz"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "A(z) „{fileName}” fájl túl nagy az importáláshoz",
+  "libraryImportTooLargeBoardFiles": "A táblafájlok túl nagyok az importáláshoz",
   "libraryImportPartiallyFailed": "Néhány táblafájl importálása nem sikerült ({failed} / {total})",
   "libraryDropToImport": "Ejtsd ide a táblafájlokat az importáláshoz",
   "libraryInfo": "Információ",

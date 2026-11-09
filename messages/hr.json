@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Datoteku ploče nije moguće uvesti",
-        "countPlural=*": "Datoteke ploča nije moguće uvesti"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Datoteku „{fileName}” nije moguće uvesti",
+  "libraryImportFailedBoardFiles": "Datoteke ploča nije moguće uvesti",
   "libraryImportOnlyBoardFiles": "Mogu se uvesti samo datoteke ploča",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Datoteka ploče je prevelika za uvoz",
-        "countPlural=*": "Datoteke ploča su prevelike za uvoz"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Datoteka „{fileName}” je prevelika za uvoz",
+  "libraryImportTooLargeBoardFiles": "Datoteke ploča su prevelike za uvoz",
   "libraryImportPartiallyFailed": "Neke datoteke ploča nije moguće uvesti ({failed} od {total})",
   "libraryDropToImport": "Ispustite datoteke ploča za uvoz",
   "libraryInfo": "Informacije",

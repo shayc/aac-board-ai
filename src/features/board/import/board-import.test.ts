@@ -20,6 +20,7 @@ import {
   BOARD_IMPORT_LIMITS,
   buildAssetInputs,
   importBoardFile,
+  importBoardFiles,
   resolveBoardLinks,
 } from "./board-import";
 
@@ -250,6 +251,32 @@ describe("importBoardFile", () => {
 
     const boardSets = await listBoardSetRecords();
     expect(boardSets).toHaveLength(0);
+  });
+});
+
+describe("importBoardFiles", () => {
+  beforeEach(async () => {
+    await resetBoardsDB();
+  });
+
+  test("keeps importing after a file fails and reports the failure", async () => {
+    const corruptFile = new File(["not valid json"], "corrupt.obf", {
+      type: "application/json",
+    });
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+
+    const { importedBoardSets, failures } = await importBoardFiles([
+      corruptFile,
+      goodFile,
+    ]);
+
+    expect(importedBoardSets.map((boardSet) => boardSet.id)).toEqual([
+      IMPORTED_SET_ID,
+    ]);
+    expect(failures.map((failure) => failure.fileName)).toEqual([
+      "corrupt.obf",
+    ]);
+    expect(await listBoardSetRecords()).toHaveLength(1);
   });
 });
 

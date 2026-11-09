@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Δεν ήταν δυνατή η εισαγωγή του αρχείου πίνακα",
-        "countPlural=*": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Δεν ήταν δυνατή η εισαγωγή του αρχείου «{fileName}»",
+  "libraryImportFailedBoardFiles": "Δεν ήταν δυνατή η εισαγωγή των αρχείων πινάκων",
   "libraryImportOnlyBoardFiles": "Μπορούν να εισαχθούν μόνο αρχεία πινάκων",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Το αρχείο πίνακα είναι πολύ μεγάλο για εισαγωγή",
-        "countPlural=*": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Το αρχείο «{fileName}» είναι πολύ μεγάλο για εισαγωγή",
+  "libraryImportTooLargeBoardFiles": "Τα αρχεία πινάκων είναι πολύ μεγάλα για εισαγωγή",
   "libraryImportPartiallyFailed": "Δεν ήταν δυνατή η εισαγωγή ορισμένων αρχείων πινάκων ({failed} από {total})",
   "libraryDropToImport": "Αφήστε αρχεία πινάκων για εισαγωγή",
   "libraryInfo": "Πληροφορίες",

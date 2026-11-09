@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Tidak dapat mengimpor berkas papan",
-        "countPlural=*": "Tidak dapat mengimpor berkas papan"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Tidak dapat mengimpor \"{fileName}\"",
+  "libraryImportFailedBoardFiles": "Tidak dapat mengimpor berkas papan",
   "libraryImportOnlyBoardFiles": "Hanya berkas papan yang dapat diimpor",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Berkas papan terlalu besar untuk diimpor",
-        "countPlural=*": "Berkas papan terlalu besar untuk diimpor"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Berkas \"{fileName}\" terlalu besar untuk diimpor",
+  "libraryImportTooLargeBoardFiles": "Berkas papan terlalu besar untuk diimpor",
   "libraryImportPartiallyFailed": "Tidak dapat mengimpor sebagian berkas papan ({failed} dari {total})",
   "libraryDropToImport": "Lepaskan berkas papan untuk mengimpor",
   "libraryInfo": "Info",

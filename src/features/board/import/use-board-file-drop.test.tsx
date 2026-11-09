@@ -156,4 +156,24 @@ describe("useBoardFileDrop", () => {
       }),
     );
   });
+
+  test("opens the board set that imported when another dropped file fails", async () => {
+    const { zone, screen } = await renderDropZone();
+    const boardFile = await loadFixtureFile(OBF_FIXTURE);
+    const corruptFile = new File(["not valid json"], "corrupt.obf", {
+      type: "application/json",
+    });
+
+    fireDrag(zone, "drop", dataTransferWithFiles(boardFile, corruptFile));
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
+    await expect.element(screen.getByTestId("path")).toHaveTextContent(
+      rootBoardPath({
+        id: IMPORTED_SET_ID,
+        rootBoardId: "lots_of_stuff",
+      }),
+    );
+  });
 });

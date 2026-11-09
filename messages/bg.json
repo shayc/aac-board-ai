@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Файлът с дъска не може да бъде импортиран",
-        "countPlural=*": "Файловете с дъски не могат да бъдат импортирани"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Файлът „{fileName}“ не може да бъде импортиран",
+  "libraryImportFailedBoardFiles": "Файловете с дъски не могат да бъдат импортирани",
   "libraryImportOnlyBoardFiles": "Могат да се импортират само файлове с дъски",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Файлът с дъска е твърде голям за импортиране",
-        "countPlural=*": "Файловете с дъски са твърде големи за импортиране"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Файлът „{fileName}“ е твърде голям за импортиране",
+  "libraryImportTooLargeBoardFiles": "Файловете с дъски са твърде големи за импортиране",
   "libraryImportPartiallyFailed": "Някои файлове с дъски не могат да бъдат импортирани ({failed} от {total})",
   "libraryDropToImport": "Пуснете файловете с дъски за импортиране",
   "libraryInfo": "Информация",

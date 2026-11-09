@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "无法导入沟通板文件",
-        "countPlural=*": "无法导入沟通板文件"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "无法导入“{fileName}”",
+  "libraryImportFailedBoardFiles": "无法导入沟通板文件",
   "libraryImportOnlyBoardFiles": "只能导入沟通板文件",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "沟通板文件过大，无法导入",
-        "countPlural=*": "沟通板文件过大，无法导入"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "“{fileName}”过大，无法导入",
+  "libraryImportTooLargeBoardFiles": "沟通板文件过大，无法导入",
   "libraryImportPartiallyFailed": "部分沟通板文件无法导入（{failed} / {total}）",
   "libraryDropToImport": "拖放沟通板文件以导入",
   "libraryInfo": "信息",

@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Não foi possível importar o arquivo de prancha",
-        "countPlural=*": "Não foi possível importar os arquivos de pranchas"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Não foi possível importar \"{fileName}\"",
+  "libraryImportFailedBoardFiles": "Não foi possível importar os arquivos de pranchas",
   "libraryImportOnlyBoardFiles": "Só é possível importar arquivos de pranchas",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "O arquivo de prancha é grande demais para importar",
-        "countPlural=*": "Os arquivos de pranchas são grandes demais para importar"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "O arquivo \"{fileName}\" é grande demais para importar",
+  "libraryImportTooLargeBoardFiles": "Os arquivos de pranchas são grandes demais para importar",
   "libraryImportPartiallyFailed": "Não foi possível importar alguns arquivos de pranchas ({failed} de {total})",
   "libraryDropToImport": "Solte arquivos de pranchas para importar",
   "libraryInfo": "Informações",

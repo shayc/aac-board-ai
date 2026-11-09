@@ -33,27 +33,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "বোর্ড ফাইল আমদানি করা যায়নি",
-        "countPlural=*": "বোর্ড ফাইল আমদানি করা যায়নি"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "\"{fileName}\" আমদানি করা যায়নি",
+  "libraryImportFailedBoardFiles": "বোর্ড ফাইল আমদানি করা যায়নি",
   "libraryImportOnlyBoardFiles": "শুধু বোর্ড ফাইল আমদানি করা যায়",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "বোর্ড ফাইলটি আমদানি করার জন্য খুব বড়",
-        "countPlural=*": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "\"{fileName}\" আমদানি করার জন্য খুব বড়",
+  "libraryImportTooLargeBoardFiles": "বোর্ড ফাইলগুলি আমদানি করার জন্য খুব বড়",
   "libraryImportPartiallyFailed": "কিছু বোর্ড ফাইল আমদানি করা যায়নি ({total}-এর মধ্যে {failed})",
   "libraryDropToImport": "আমদানি করতে বোর্ড ফাইল ছাড়ুন",
   "libraryInfo": "তথ্য",

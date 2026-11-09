@@ -32,27 +32,11 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Couldn't import board file",
-        "countPlural=*": "Couldn't import board files"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Couldn't import \"{fileName}\"",
+  "libraryImportFailedBoardFiles": "Couldn't import board files",
   "libraryImportOnlyBoardFiles": "Only board files can be imported",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Board file is too large to import",
-        "countPlural=*": "Board files are too large to import"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "\"{fileName}\" is too large to import",
+  "libraryImportTooLargeBoardFiles": "Board files are too large to import",
   "libraryImportPartiallyFailed": "Some board files couldn't be imported ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",

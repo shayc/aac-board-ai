@@ -14,6 +14,15 @@ function createCorruptBoardFile(name: string) {
   return new File(["not valid json"], name, { type: "application/json" });
 }
 
+// Zeros compress to a tiny archive that still declares an oversized
+// uncompressed size, so the limit trips before inflation.
+async function createOversizedOBZ(name: string) {
+  const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
+  const zipped = await zip(new Map([["big.bin", oversized]]));
+
+  return new File([zipped], name, { type: "application/octet-stream" });
+}
+
 function ImportTrigger({ files }: { files: File[] }) {
   const { importFiles } = useImportBoardFiles();
 
@@ -81,7 +90,17 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Only board files can be imported");
   });
 
-  test("reports how many files failed while keeping the board sets that imported", async () => {
+  test("names the file when a single import fails", async () => {
+    const screen = await renderImport([createCorruptBoardFile("corrupt.obf")]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
+  });
+
+  test("names the failed file while keeping the board sets that imported", async () => {
     const goodFile = await loadFixtureFile(OBF_FIXTURE);
     const corruptFile = createCorruptBoardFile("corrupt.obf");
     const screen = await renderImport([goodFile, corruptFile]);
@@ -90,8 +109,23 @@ describe("useImportBoardFiles", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Some board files couldn't be imported (1 of 2)");
+      .toHaveTextContent('Couldn\'t import "corrupt.obf"');
     expect(await listBoardSetRecords()).toHaveLength(1);
+  });
+
+  test("reports how many files failed when several fail alongside imports", async () => {
+    const goodFile = await loadFixtureFile(OBF_FIXTURE);
+    const screen = await renderImport([
+      goodFile,
+      createCorruptBoardFile("first.obf"),
+      createCorruptBoardFile("second.obf"),
+    ]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Some board files couldn't be imported (2 of 3)");
   });
 
   test("shows the failed message when every file fails", async () => {
@@ -107,20 +141,28 @@ describe("useImportBoardFiles", () => {
       .toHaveTextContent("Couldn't import board files");
   });
 
-  test("shows the too-large message when an OBZ exceeds the decompression limit", async () => {
-    // Zeros compress to a tiny archive that still declares an oversized
-    // uncompressed size, so the limit trips before inflation.
-    const oversized = new Uint8Array(BOARD_IMPORT_LIMITS.maxEntrySize! + 1);
-    const zipped = await zip(new Map([["big.bin", oversized]]));
-    const file = new File([zipped], "zip-bomb.obz", {
-      type: "application/octet-stream",
-    });
+  test("names the file when it exceeds the decompression limit", async () => {
+    const screen = await renderImport([
+      await createOversizedOBZ("zip-bomb.obz"),
+    ]);
 
-    const screen = await renderImport([file]);
     await screen.getByRole("button", { name: "import" }).click();
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Board file is too large to import");
+      .toHaveTextContent('"zip-bomb.obz" is too large to import');
+  });
+
+  test("shows the too-large message when every file exceeds the decompression limit", async () => {
+    const screen = await renderImport([
+      await createOversizedOBZ("first.obz"),
+      await createOversizedOBZ("second.obz"),
+    ]);
+
+    await screen.getByRole("button", { name: "import" }).click();
+
+    await expect
+      .element(screen.getByRole("alert"))
+      .toHaveTextContent("Board files are too large to import");
   });
 });

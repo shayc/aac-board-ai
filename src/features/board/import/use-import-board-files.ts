@@ -1,10 +1,15 @@
 import { m } from "@paraglide/messages.js";
+import type { SnackbarOptions } from "@shared/snackbar/snackbar-context";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { OBFError } from "@shayc/open-board-format";
 import { useNavigate } from "react-router";
 import { rootBoardPath } from "../navigation/board-paths";
 import { BOARD_FILE_ACCEPT, hasBoardFileExtension } from "./board-file-formats";
-import { importBoardFile, type ImportedBoardSet } from "./board-import";
+import {
+  importBoardFiles,
+  type BoardFileImportFailure,
+  type ImportedBoardSet,
+} from "./board-import";
 import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
@@ -37,51 +42,10 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
         t(m.libraryImportingBoardFiles, { count: boardFiles.length }),
     });
 
-    const importedBoardSets: ImportedBoardSet[] = [];
-    const errors: unknown[] = [];
-
-    for (const file of boardFiles) {
-      try {
-        importedBoardSets.push(await importBoardFile(file));
-      } catch (error) {
-        errors.push(error);
-      }
-    }
-
-    showImportOutcome(importedBoardSets.length, errors);
+    const { importedBoardSets, failures } = await importBoardFiles(boardFiles);
+    showSnackbar(importOutcomeSnackbar(importedBoardSets.length, failures));
 
     return importedBoardSets;
-  }
-
-  function showImportOutcome(importedCount: number, errors: unknown[]) {
-    if (errors.length === 0) {
-      showSnackbar({
-        message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),
-        severity: "success",
-      });
-      return;
-    }
-
-    if (importedCount > 0) {
-      showSnackbar({
-        message: (t) =>
-          t(m.libraryImportPartiallyFailed, {
-            failed: errors.length,
-            total: importedCount + errors.length,
-          }),
-        severity: "error",
-      });
-      return;
-    }
-
-    const failureMessage = errors.every(isArchiveTooLarge)
-      ? m.libraryImportTooLargeBoardFiles
-      : m.libraryImportFailedBoardFiles;
-
-    showSnackbar({
-      message: (t) => t(failureMessage, { count: errors.length }),
-      severity: "error",
-    });
   }
 
   async function importAndOpen(files: File[]) {
@@ -108,6 +72,49 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     pickAndImport,
     importFiles,
     importAndOpen,
+  };
+}
+
+function importOutcomeSnackbar(
+  importedCount: number,
+  failures: BoardFileImportFailure[],
+): SnackbarOptions {
+  if (failures.length === 0) {
+    return {
+      message: (t) => t(m.libraryImportedBoardSets, { count: importedCount }),
+      severity: "success",
+    };
+  }
+
+  if (failures.length === 1) {
+    const [{ fileName, error }] = failures;
+    const failureMessage = isArchiveTooLarge(error)
+      ? m.libraryImportTooLargeBoardFile
+      : m.libraryImportFailedBoardFile;
+
+    return {
+      message: (t) => t(failureMessage, { fileName }),
+      severity: "error",
+    };
+  }
+
+  if (importedCount > 0) {
+    const total = importedCount + failures.length;
+
+    return {
+      message: (t) =>
+        t(m.libraryImportPartiallyFailed, { failed: failures.length, total }),
+      severity: "error",
+    };
+  }
+
+  const failureMessage = failures.every(({ error }) => isArchiveTooLarge(error))
+    ? m.libraryImportTooLargeBoardFiles
+    : m.libraryImportFailedBoardFiles;
+
+  return {
+    message: (t) => t(failureMessage),
+    severity: "error",
   };
 }
 

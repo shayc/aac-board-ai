@@ -39,6 +39,7 @@ function fileHandle(file: File): FileSystemFileHandle {
 
 function inaccessibleFileHandle(): FileSystemFileHandle {
   return {
+    name: "board.obz",
     getFile: () => Promise.reject(new DOMException("Access denied")),
   } as FileSystemFileHandle;
 }
@@ -116,6 +117,6 @@ describe("useImportBoardFilesOnLaunch", () => {
 
     await expect
       .element(screen.getByRole("alert"))
-      .toHaveTextContent("Couldn't import board file");
+      .toHaveTextContent('Couldn\'t import "board.obz"');
   });
 });
