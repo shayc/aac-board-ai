@@ -144,7 +144,7 @@ export function resolveBoardLinks(
 export function buildAssetInputs(
   resources: Map<string, Uint8Array<ArrayBuffer>>,
 ): AssetInput[] {
-  return Array.from(resources.entries())
+  return Array.from(resources)
     .filter(([path]) => {
       const lowerPath = path.toLowerCase();
       return !lowerPath.endsWith(".obf") && lowerPath !== "manifest.json";
