@@ -15,18 +15,18 @@ export function playAudio(
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
 
-  function settle() {
+  function release() {
     settled.abort();
     audio.pause();
   }
 
   function finish() {
-    settle();
+    release();
     resolve();
   }
 
   function fail(cause: unknown) {
-    settle();
+    release();
     reject(new Error("Audio failed to play", { cause }));
   }
 
