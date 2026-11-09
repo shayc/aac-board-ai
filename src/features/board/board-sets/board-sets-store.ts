@@ -50,12 +50,10 @@ async function loadBoardSets(): Promise<void> {
   }
 }
 
-function ensureLoaded(): Promise<void> {
+function ensureLoaded(): void {
   if (!hasLoaded && !pendingLoad) {
     pendingLoad = loadBoardSets();
   }
-
-  return pendingLoad ?? Promise.resolve();
 }
 
 export async function refreshBoardSets(): Promise<void> {
@@ -70,7 +68,7 @@ async function syncBoardSets(): Promise<void> {
 
 function subscribeBoardSets(listener: () => void): () => void {
   const unsubscribe = boardSetsStore.subscribe(listener);
-  void ensureLoaded();
+  ensureLoaded();
 
   return unsubscribe;
 }
