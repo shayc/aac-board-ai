@@ -27,13 +27,8 @@ export function useMessage(): UseMessageReturn {
   }
 
   function replaceWithText(input: string) {
-    setParts(
-      input
-        .trim()
-        .split(/\s+/)
-        .filter(Boolean)
-        .map((word) => createPart({ label: word })),
-    );
+    const words = input.match(/\S+/g) ?? [];
+    setParts(words.map((word) => createPart({ label: word })));
   }
 
   function backspace() {
