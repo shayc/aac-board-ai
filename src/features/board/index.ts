@@ -2,7 +2,10 @@ export { starterBoardSet } from "./board-sets/board-set-catalog";
 export { BoardSetLibrary } from "./board-sets/board-set-library";
 export { CommunicationBoard } from "./communication-board";
 export { BoardFileDropOverlay } from "./import/board-file-drop-overlay";
-export { importBoardFileFromURL } from "./import/import-from-url";
+export {
+  importBoardFileFromURL,
+  parseBoardURL,
+} from "./import/import-from-url";
 export { useBoardFileDrop } from "./import/use-board-file-drop";
 export { useImportBoardFilesOnLaunch } from "./import/use-import-board-files-on-launch";
 export { MessageSettings } from "./message/message-settings";

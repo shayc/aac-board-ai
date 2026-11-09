@@ -125,5 +125,9 @@
   "errorGoHome": "Pojdi domov",
   "errorBoardNotFound": "Table ni mogoče najti",
   "errorBoardSetNotFound": "Kompleta tabel ni mogoče najti",
-  "errorBoardURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave"
+  "errorBoardURLImportFailed": "Datoteke table ni bilo mogoče uvoziti s povezave",
+  "boardLinkImportTitle": "Želite uvoziti datoteko table s povezave?",
+  "boardLinkImportDescription": "Ta povezava uvozi datoteko table z {host}. Uvozite jo le, če zaupate pošiljatelju povezave.",
+  "boardLinkImport": "Uvozi",
+  "boardLinkCancel": "Prekliči"
 }

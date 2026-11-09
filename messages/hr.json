@@ -125,5 +125,9 @@
   "errorGoHome": "Idi na početnu",
   "errorBoardNotFound": "Ploča nije pronađena",
   "errorBoardSetNotFound": "Skup ploča nije pronađen",
-  "errorBoardURLImportFailed": "Datoteku ploče nije moguće uvesti s poveznice"
+  "errorBoardURLImportFailed": "Datoteku ploče nije moguće uvesti s poveznice",
+  "boardLinkImportTitle": "Uvesti datoteku ploče s poveznice?",
+  "boardLinkImportDescription": "Ova poveznica uvozi datoteku ploče s {host}. Uvezite je samo ako vjerujete osobi koja je poslala poveznicu.",
+  "boardLinkImport": "Uvezi",
+  "boardLinkCancel": "Odustani"
 }

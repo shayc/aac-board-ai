@@ -125,5 +125,9 @@
   "errorGoHome": "ホームに戻る",
   "errorBoardNotFound": "ボードが見つかりません",
   "errorBoardSetNotFound": "ボードセットが見つかりません",
-  "errorBoardURLImportFailed": "リンクからボードファイルをインポートできませんでした"
+  "errorBoardURLImportFailed": "リンクからボードファイルをインポートできませんでした",
+  "boardLinkImportTitle": "リンクからボードファイルをインポートしますか？",
+  "boardLinkImportDescription": "このリンクは {host} からボードファイルをインポートします。リンクの送信者を信頼できる場合にのみインポートしてください。",
+  "boardLinkImport": "インポート",
+  "boardLinkCancel": "キャンセル"
 }

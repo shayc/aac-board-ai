@@ -125,5 +125,9 @@
   "errorGoHome": "Aller à l'accueil",
   "errorBoardNotFound": "Tableau introuvable",
   "errorBoardSetNotFound": "Ensemble de tableaux introuvable",
-  "errorBoardURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien"
+  "errorBoardURLImportFailed": "Impossible d'importer le fichier de tableau depuis le lien",
+  "boardLinkImportTitle": "Importer le fichier de tableau depuis le lien ?",
+  "boardLinkImportDescription": "Ce lien importe un fichier de tableau depuis {host}. Ne l’importez que si vous faites confiance à la personne qui vous a envoyé le lien.",
+  "boardLinkImport": "Importer",
+  "boardLinkCancel": "Annuler"
 }

@@ -125,5 +125,9 @@
   "errorGoHome": "Към началото",
   "errorBoardNotFound": "Дъската не е намерена",
   "errorBoardSetNotFound": "Наборът от дъски не е намерен",
-  "errorBoardURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката"
+  "errorBoardURLImportFailed": "Файлът с дъска не може да бъде импортиран от връзката",
+  "boardLinkImportTitle": "Импортиране на файла с дъска от връзката?",
+  "boardLinkImportDescription": "Тази връзка импортира файл с дъска от {host}. Импортирайте го само ако имате доверие на човека, изпратил връзката.",
+  "boardLinkImport": "Импортиране",
+  "boardLinkCancel": "Отказ"
 }

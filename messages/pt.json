@@ -125,5 +125,9 @@
   "errorGoHome": "Ir para o início",
   "errorBoardNotFound": "Prancha não encontrada",
   "errorBoardSetNotFound": "Conjunto de pranchas não encontrado",
-  "errorBoardURLImportFailed": "Não foi possível importar o arquivo de prancha do link"
+  "errorBoardURLImportFailed": "Não foi possível importar o arquivo de prancha do link",
+  "boardLinkImportTitle": "Importar o arquivo de prancha do link?",
+  "boardLinkImportDescription": "Este link importa um arquivo de prancha de {host}. Importe-o somente se você confiar em quem enviou o link.",
+  "boardLinkImport": "Importar",
+  "boardLinkCancel": "Cancelar"
 }

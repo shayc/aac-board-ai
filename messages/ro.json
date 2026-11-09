@@ -125,5 +125,9 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link"
+  "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link",
+  "boardLinkImportTitle": "Importați fișierul de tablă din link?",
+  "boardLinkImportDescription": "Acest link importă un fișier de tablă de la {host}. Importați-l doar dacă aveți încredere în persoana care a trimis linkul.",
+  "boardLinkImport": "Importă",
+  "boardLinkCancel": "Anulează"
 }

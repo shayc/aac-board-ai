@@ -2,36 +2,39 @@ import {
   rootBoardPath,
   listBoardSetRecords,
   importBoardFileFromURL,
+  parseBoardURL,
   starterBoardSet,
 } from "@features/board";
-import { redirect, type LoaderFunctionArgs } from "react-router";
+import {
+  redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+} from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
-// The ?board= param is attacker-controlled: a crafted link must never
-// silently replace a user's vocabulary. Every import allocates a separate
-// board set ID, while rejected URLs and failed imports surface as localized
-// errors.
-async function importAndRedirect(
-  boardURL: string,
-  signal: AbortSignal,
-): Promise<Response> {
-  try {
-    const importedBoardSet = await importBoardFileFromURL(boardURL, { signal });
+// The ?board= param is attacker-controlled, and `/` opens the newest board
+// set, so a link alone must never import. The loader only validates the URL
+// for the confirmation dialog; the import runs in the action once the user
+// confirms.
+function boardURLFromRequest(request: Request): string | null {
+  return new URL(request.url).searchParams.get("board");
+}
 
-    return redirect(rootBoardPath(importedBoardSet));
+function boardLinkHost(boardURL: string): string {
+  try {
+    return parseBoardURL(boardURL).host;
   } catch {
-    signal.throwIfAborted();
     throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
   }
 }
 
 export async function rootIndexLoader({
   request,
-}: LoaderFunctionArgs): Promise<Response> {
-  const boardURL = new URL(request.url).searchParams.get("board");
+}: LoaderFunctionArgs): Promise<Response | { boardHost: string }> {
+  const boardURL = boardURLFromRequest(request);
 
   if (boardURL) {
-    return importAndRedirect(boardURL, request.signal);
+    return { boardHost: boardLinkHost(boardURL) };
   }
 
   const [boardSet] = await listBoardSetRecords();
@@ -44,4 +47,25 @@ export async function rootIndexLoader({
   });
 
   return redirect(rootBoardPath(importedBoardSet));
+}
+
+export async function rootIndexAction({
+  request,
+}: ActionFunctionArgs): Promise<Response> {
+  const boardURL = boardURLFromRequest(request);
+
+  if (!boardURL) {
+    return redirect("/");
+  }
+
+  try {
+    const importedBoardSet = await importBoardFileFromURL(boardURL, {
+      signal: request.signal,
+    });
+
+    return redirect(rootBoardPath(importedBoardSet));
+  } catch {
+    request.signal.throwIfAborted();
+    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
+  }
 }

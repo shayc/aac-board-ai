@@ -190,6 +190,7 @@ describe("app flow", () => {
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
 
+    await screen.getByRole("button", { name: "Import" }).click();
     await screen.getByRole("button", { name: "Continue" }).click();
 
     await expect
@@ -210,6 +211,7 @@ describe("app flow", () => {
       `/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`,
     );
 
+    await screen.getByRole("button", { name: "Importar" }).click();
     await screen.getByRole("button", { name: "Continuar" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "[es] Lots of Stuff Board" }))
@@ -222,6 +224,49 @@ describe("app flow", () => {
     expect(new Set((await listBoardSetRecords()).map((set) => set.id))).toEqual(
       new Set(["zoo", "lots-of-stuff"]),
     );
+  });
+
+  test("?board= link asks before importing and names the link's host", async () => {
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent("https://boards.example/core.obz")}`,
+    );
+
+    const dialog = screen.getByRole("dialog", {
+      name: "Import board file from link?",
+    });
+    await expect.element(dialog).toBeVisible();
+    await expect
+      .element(dialog)
+      .toHaveAccessibleDescription(
+        "This link imports a board file from boards.example. Import it only if you trust whoever sent the link.",
+      );
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("cancelling a ?board= link opens the existing board set without importing", async () => {
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        name: "Animals",
+        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
+      },
+    ]);
+
+    const { router, screen } = await renderApp(
+      `/?board=${encodeURIComponent("https://boards.example/core.obz")}`,
+    );
+
+    await screen.getByRole("button", { name: "Cancel" }).click();
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Animals Home" }))
+      .toBeVisible();
+    expect(router.state.location.pathname).toBe("/sets/animals/boards/home");
+    expect((await listBoardSetRecords()).map((set) => set.id)).toEqual([
+      "animals",
+    ]);
   });
 
   test("deleting the active board set opens the remaining one", async () => {

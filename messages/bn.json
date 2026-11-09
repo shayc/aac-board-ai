@@ -125,5 +125,9 @@
   "errorGoHome": "হোমে যান",
   "errorBoardNotFound": "বোর্ড পাওয়া যায়নি",
   "errorBoardSetNotFound": "বোর্ড সেট পাওয়া যায়নি",
-  "errorBoardURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি"
+  "errorBoardURLImportFailed": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করা যায়নি",
+  "boardLinkImportTitle": "লিঙ্ক থেকে বোর্ড ফাইল আমদানি করবেন?",
+  "boardLinkImportDescription": "এই লিঙ্কটি {host} থেকে একটি বোর্ড ফাইল আমদানি করে। লিঙ্কটি যিনি পাঠিয়েছেন তাঁকে বিশ্বাস করলে তবেই আমদানি করুন।",
+  "boardLinkImport": "আমদানি করুন",
+  "boardLinkCancel": "বাতিল করুন"
 }
