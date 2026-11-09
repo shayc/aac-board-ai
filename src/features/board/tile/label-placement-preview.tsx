@@ -16,7 +16,7 @@ export function LabelPlacementPreview({
 
   return (
     <Box
-      aria-hidden="true"
+      aria-hidden
       component="span"
       sx={{
         display: "block",
