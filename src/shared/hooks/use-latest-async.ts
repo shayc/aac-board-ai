@@ -62,6 +62,6 @@ export function useLatestAsync<T>({
       currentResult?.status === "resolved" ? currentResult.value : undefined,
     error:
       currentResult?.status === "rejected" ? currentResult.error : undefined,
-    isPending: isEnabled && result?.dependencyKey !== dependencyKey,
+    isPending: isEnabled && !currentResult,
   };
 }
