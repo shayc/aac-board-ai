@@ -350,4 +350,20 @@ describe("buildAssetInputs", () => {
 
     expect(assets.map((asset) => asset.path)).toEqual(["images/cat.png"]);
   });
+
+  test("types each asset by its extension so SVG symbols can render", () => {
+    const resources = new Map([
+      ["images/cat.svg", new Uint8Array([1])],
+      ["sounds/meow.mp3", new Uint8Array([2])],
+      ["data/notes.unknown", new Uint8Array([3])],
+    ]);
+
+    const assets = buildAssetInputs(resources);
+
+    expect(assets.map((asset) => asset.blob.type)).toEqual([
+      "image/svg+xml",
+      "audio/mpeg",
+      "application/octet-stream",
+    ]);
+  });
 });

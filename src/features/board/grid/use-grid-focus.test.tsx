@@ -105,7 +105,7 @@ describe("useGridFocus", () => {
       await expect.element(item1).toHaveAttribute("tabindex", "-1");
     });
 
-    test("keeps a tab stop when the grid changes and the tab stop becomes empty while focus is outside the grid", async () => {
+    test("keeps a tab stop and leaves outside focus alone when the grid changes and the tab stop becomes empty", async () => {
       const oldItems = makeItems(1, 2, 3, 4);
       const newItems = makeItems(5);
 
@@ -139,6 +139,9 @@ describe("useGridFocus", () => {
       const item5 = screen.getByRole("button", { name: "Item 5" });
 
       await expect.element(item5).toHaveAttribute("tabindex", "0");
+      await expect
+        .element(screen.getByRole("button", { name: "Outside" }))
+        .toHaveFocus();
     });
 
     test("leaves focus outside the grid when it re-renders with the same items", async () => {
@@ -258,12 +261,12 @@ describe("useGridFocus", () => {
       await expect.element(item2).toHaveFocus();
     });
 
-    test("prefers an in-line cell over a diagonal one", async () => {
+    test("prefers a farther in-line cell over a nearer diagonal one", async () => {
       const items = makeItems(1, 2, 3);
 
       const order = [
-        ["1", "2", null],
-        [null, null, "3"],
+        ["1", null, "2"],
+        [null, "3", null],
       ];
 
       const screen = await render(

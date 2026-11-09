@@ -27,14 +27,18 @@ describe("joinSpokenParts", () => {
     expect(joined.partIdAt(5)).toBe("1"); // "morning" lands inside the same part
   });
 
-  test("maps a boundary offset to the part that owns it", () => {
+  test("maps each word's boundary offset to the part that owns it", () => {
     const joined = joinSpokenParts([
       { id: "1", text: "I" },
       { id: "2", text: "want" },
+      { id: "3", text: "a" },
+      { id: "4", text: "cookie" },
     ]);
 
     expect(joined.partIdAt(0)).toBe("1"); // "I"
     expect(joined.partIdAt(2)).toBe("2"); // "want"
+    expect(joined.partIdAt(7)).toBe("3"); // "a"
+    expect(joined.partIdAt(9)).toBe("4"); // "cookie"
   });
 
   test("keeps a multi-word part active across its inner word boundaries", () => {

@@ -1,5 +1,5 @@
 import { stubAudio } from "@shared/testing/stub-audio";
-import { stubSpeech } from "@shared/testing/stub-speech";
+import { preventSpeechEnd, stubSpeech } from "@shared/testing/stub-speech";
 import { Profiler, type ProfilerOnRenderCallback } from "react";
 import { beforeEach, describe, expect, test } from "vitest";
 import { render, renderHook } from "vitest-browser-react";
@@ -87,6 +87,34 @@ describe("PlaybackProvider", () => {
     await expect(speechResult).resolves.toBe("completed");
     expect(audio.pause).toHaveBeenCalled();
     expect(speech.speak).toHaveBeenCalledTimes(1);
+  });
+
+  test("keeps a playback that interrupts another active until it is stopped", async () => {
+    preventSpeechEnd(speech.speak);
+    const { result, rerender } = await renderHook(
+      () => ({ playback: usePlayback(), isTilePlaying: useIsPlaying("tile") }),
+      { wrapper: PlaybackProvider },
+    );
+    const { playback } = result.current;
+
+    const interrupted = playback.play({
+      owner: "message",
+      steps: [{ kind: "speech", text: "hello" }],
+    });
+    const interrupting = playback.play({
+      owner: "tile",
+      steps: [{ kind: "speech", text: "world" }],
+    });
+
+    await expect(interrupted).resolves.toBe("interrupted");
+    await rerender();
+    expect(result.current.isTilePlaying).toBe(true);
+
+    playback.stop();
+
+    await expect(interrupting).resolves.toBe("interrupted");
+    await rerender();
+    expect(result.current.isTilePlaying).toBe(false);
   });
 
   test("reports a failed step after playing the remaining steps", async () => {

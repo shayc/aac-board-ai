@@ -253,7 +253,7 @@ describe("listBoardSetRecords", () => {
 });
 
 describe("removeBoardSet", () => {
-  test("deletes the set and all its content while preserving another set", async () => {
+  test("deletes the set and all its content while preserving a set whose ID it prefixes", async () => {
     await insertBoardSet(
       makeBoardSetInput({
         boards: [
@@ -269,7 +269,7 @@ describe("removeBoardSet", () => {
 
     await insertBoardSet(
       makeBoardSetInput({
-        id: "set-2",
+        id: "set-1-2",
         name: "Set 2",
         rootBoardId: "b1",
         boards: [makeOBFBoard({ id: "b1", name: "Survivor" })],
@@ -280,16 +280,16 @@ describe("removeBoardSet", () => {
     await removeBoardSet("set-1");
 
     const sets = await listBoardSetRecords();
-    expect(sets.map((set) => set.id)).toEqual(["set-2"]);
+    expect(sets.map((set) => set.id)).toEqual(["set-1-2"]);
     expect(await getBoardRecord("set-1", "b1")).toBeUndefined();
     expect(await getBoardRecord("set-1", "b2")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img1.png")).toBeUndefined();
     expect(await getAssetBlob("set-1", "img2.png")).toBeUndefined();
 
-    expect(await getBoardRecord("set-2", "b1")).toMatchObject({
+    expect(await getBoardRecord("set-1-2", "b1")).toMatchObject({
       name: "Survivor",
     });
-    const asset = await getAssetBlob("set-2", "img1.png");
+    const asset = await getAssetBlob("set-1-2", "img1.png");
     assertDefined(asset);
     expect(await asset.text()).toBe("survivor");
   });
