@@ -1,7 +1,9 @@
 import { useExternalStore } from "@shared/state/external-store";
 import { use } from "react";
 import { PlaybackContext } from "./playback-context";
-import type { PlaybackController } from "./playback-types";
+import type { PlaybackController, PlaybackState } from "./playback-types";
+
+type PlayingState = Extract<PlaybackState, { status: "playing" }>;
 
 export function usePlayback(): PlaybackController {
   const context = use(PlaybackContext);
@@ -16,25 +18,22 @@ export function usePlayback(): PlaybackController {
 export function useIsPlaying(owner?: string): boolean {
   const playback = usePlayback();
 
-  return useExternalStore(
-    playback,
-    (state) =>
-      state.status === "playing" &&
-      (owner === undefined || state.owner === owner),
-  );
+  return useExternalStore(playback, (state) => isPlayingFor(state, owner));
 }
 
 export function useActiveCue(owner?: string): string | null {
   const playback = usePlayback();
 
-  return useExternalStore(playback, (state) => {
-    if (
-      state.status !== "playing" ||
-      (owner !== undefined && state.owner !== owner)
-    ) {
-      return null;
-    }
+  return useExternalStore(playback, (state) =>
+    isPlayingFor(state, owner) ? state.activeCue : null,
+  );
+}
 
-    return state.activeCue;
-  });
+function isPlayingFor(
+  state: PlaybackState,
+  owner: string | undefined,
+): state is PlayingState {
+  return (
+    state.status === "playing" && (owner === undefined || state.owner === owner)
+  );
 }
