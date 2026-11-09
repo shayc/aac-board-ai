@@ -30,7 +30,7 @@ test("maps stored boards to summaries with normalized translation locales", asyn
     {
       id: "a",
       name: "Food",
-      translationsByLocale: { "es-MX": { Food: "Comida" } },
+      translationsByLocale: new Map([["es-MX", new Map([["Food", "Comida"]])]]),
     },
   ]);
 });

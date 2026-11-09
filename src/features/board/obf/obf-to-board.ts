@@ -101,13 +101,13 @@ export function obfToTranslationsByLocale(
   strings: OBFBoard["strings"],
 ): TranslationsByLocale {
   if (!strings) {
-    return {};
+    return new Map();
   }
 
-  return Object.fromEntries(
+  return new Map(
     Object.entries(strings).map(([locale, translations]) => [
       normalizeLocale(locale),
-      translations,
+      new Map(Object.entries(translations)),
     ]),
   );
 }

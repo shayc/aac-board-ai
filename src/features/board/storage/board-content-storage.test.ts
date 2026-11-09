@@ -92,10 +92,15 @@ describe("replaceStringTranslations", () => {
       }),
     );
 
-    await replaceStringTranslations("set-1", "b1", "es", {
-      hello: "hola",
-      world: "mundo",
-    });
+    await replaceStringTranslations(
+      "set-1",
+      "b1",
+      "es",
+      new Map([
+        ["hello", "hola"],
+        ["world", "mundo"],
+      ]),
+    );
 
     const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
@@ -116,7 +121,12 @@ describe("replaceStringTranslations", () => {
       }),
     );
 
-    await replaceStringTranslations("set-1", "b1", "es", { hello: "hola" });
+    await replaceStringTranslations(
+      "set-1",
+      "b1",
+      "es",
+      new Map([["hello", "hola"]]),
+    );
 
     const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
@@ -134,11 +144,21 @@ describe("replaceStringTranslations", () => {
       }),
     );
 
-    await replaceStringTranslations("set-1", "b1", "es", {
-      hello: "hola",
-      bye: "adiós",
-    });
-    await replaceStringTranslations("set-1", "b1", "es", { hello: "ey" });
+    await replaceStringTranslations(
+      "set-1",
+      "b1",
+      "es",
+      new Map([
+        ["hello", "hola"],
+        ["bye", "adiós"],
+      ]),
+    );
+    await replaceStringTranslations(
+      "set-1",
+      "b1",
+      "es",
+      new Map([["hello", "ey"]]),
+    );
 
     const board = await getBoardRecord("set-1", "b1");
     assertDefined(board);
@@ -149,7 +169,7 @@ describe("replaceStringTranslations", () => {
     await insertBoardSet(makeBoardSetInput());
 
     await expect(
-      replaceStringTranslations("set-1", "nonexistent", "es", {}),
+      replaceStringTranslations("set-1", "nonexistent", "es", new Map()),
     ).rejects.toThrow("Board not found");
   });
 });

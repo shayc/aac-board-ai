@@ -176,4 +176,28 @@ describe("BoardSelector", () => {
       .element(screen.getByRole("option", { name: "Animals" }))
       .toBeInTheDocument();
   });
+
+  test("shows the name of a board named after an inherited object property that its translations leave out", async () => {
+    await insertBoardSet({
+      id: "set-2",
+      name: "Set",
+      rootBoardId: "root",
+      boards: [
+        makeOBFBoard({
+          id: "root",
+          name: "constructor",
+          strings: { es: { Home: "Inicio" } },
+        }),
+      ],
+      assets: [],
+    });
+
+    setStoredLanguage("es");
+
+    const { screen } = await renderSelector("/sets/set-2/boards/root");
+
+    await expect
+      .element(screen.getByRole("combobox"))
+      .toHaveValue("constructor");
+  });
 });
