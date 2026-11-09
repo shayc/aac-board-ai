@@ -90,11 +90,7 @@ function collectActions(obfButton: OBFButton): BoardAction[] {
   const rawActions =
     obfButton.actions ?? (obfButton.action ? [obfButton.action] : []);
 
-  return rawActions.flatMap((raw) => {
-    const action = parseAction(raw);
-
-    return action ? [action] : [];
-  });
+  return rawActions.map(parseAction).filter((action) => action !== undefined);
 }
 
 export function obfToTranslationsByLocale(
