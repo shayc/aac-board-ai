@@ -125,5 +125,9 @@
   "errorGoHome": "Przejdź do strony głównej",
   "errorBoardNotFound": "Nie znaleziono tablicy",
   "errorBoardSetNotFound": "Nie znaleziono zestawu tablic",
-  "errorBoardURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku"
+  "errorBoardURLImportFailed": "Nie udało się zaimportować pliku tablicy z linku",
+  "boardLinkImportTitle": "Zaimportować plik tablicy z linku?",
+  "boardLinkImportDescription": "Ten link importuje plik tablicy z {host}. Importuj go tylko wtedy, gdy ufasz osobie, która wysłała link.",
+  "boardLinkImport": "Importuj",
+  "boardLinkCancel": "Anuluj"
 }

@@ -125,5 +125,9 @@
   "errorGoHome": "חזרה לעמוד הבית",
   "errorBoardNotFound": "הלוח לא נמצא",
   "errorBoardSetNotFound": "ערכת הלוחות לא נמצאה",
-  "errorBoardURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל"
+  "errorBoardURLImportFailed": "ייבוא קובץ הלוח מהקישור נכשל",
+  "boardLinkImportTitle": "לייבא את קובץ הלוח מהקישור?",
+  "boardLinkImportDescription": "הקישור הזה מייבא קובץ לוח מ־{host}. יש לייבא אותו רק אם סומכים על מי ששלח את הקישור.",
+  "boardLinkImport": "ייבוא",
+  "boardLinkCancel": "ביטול"
 }

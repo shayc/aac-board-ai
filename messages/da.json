@@ -125,5 +125,9 @@
   "errorGoHome": "Gå til start",
   "errorBoardNotFound": "Tavlen blev ikke fundet",
   "errorBoardSetNotFound": "Tavlesættet blev ikke fundet",
-  "errorBoardURLImportFailed": "Tavlefilen kunne ikke importeres fra linket"
+  "errorBoardURLImportFailed": "Tavlefilen kunne ikke importeres fra linket",
+  "boardLinkImportTitle": "Importér tavlefil fra linket?",
+  "boardLinkImportDescription": "Dette link importerer en tavlefil fra {host}. Importér den kun, hvis du har tillid til den, der sendte linket.",
+  "boardLinkImport": "Importér",
+  "boardLinkCancel": "Annullér"
 }

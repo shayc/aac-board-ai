@@ -125,5 +125,9 @@
   "errorGoHome": "На главную",
   "errorBoardNotFound": "Доска не найдена",
   "errorBoardSetNotFound": "Набор досок не найден",
-  "errorBoardURLImportFailed": "Не удалось импортировать файл доски по ссылке"
+  "errorBoardURLImportFailed": "Не удалось импортировать файл доски по ссылке",
+  "boardLinkImportTitle": "Импортировать файл доски по ссылке?",
+  "boardLinkImportDescription": "Эта ссылка импортирует файл доски с {host}. Импортируйте его, только если доверяете тому, кто прислал ссылку.",
+  "boardLinkImport": "Импортировать",
+  "boardLinkCancel": "Отмена"
 }

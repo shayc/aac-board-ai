@@ -125,5 +125,9 @@
   "errorGoHome": "Về trang chủ",
   "errorBoardNotFound": "Không tìm thấy bảng",
   "errorBoardSetNotFound": "Không tìm thấy bộ bảng",
-  "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết"
+  "errorBoardURLImportFailed": "Không thể nhập tệp bảng từ liên kết",
+  "boardLinkImportTitle": "Nhập tệp bảng từ liên kết?",
+  "boardLinkImportDescription": "Liên kết này nhập một tệp bảng từ {host}. Chỉ nhập nếu bạn tin tưởng người đã gửi liên kết.",
+  "boardLinkImport": "Nhập",
+  "boardLinkCancel": "Hủy"
 }
