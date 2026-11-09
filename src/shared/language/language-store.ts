@@ -15,14 +15,7 @@ export const DEFAULT_LANGUAGE = baseLocale;
 export function getPreferredLanguage(
   languages: readonly string[] = navigator.languages,
 ): string {
-  for (const locale of languages) {
-    const language = getLanguageCode(locale);
-    if (isLocale(language)) {
-      return language;
-    }
-  }
-
-  return DEFAULT_LANGUAGE;
+  return languages.map(getLanguageCode).find(isLocale) ?? DEFAULT_LANGUAGE;
 }
 
 export function parseStoredLanguage(raw: unknown): string {
