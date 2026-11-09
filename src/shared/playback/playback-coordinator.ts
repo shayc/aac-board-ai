@@ -63,19 +63,6 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     }
   }
 
-  async function tryPlayStep(
-    session: PlaybackSession,
-    step: PlaybackStep,
-  ): Promise<boolean> {
-    try {
-      await playStep(session, step);
-
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
     interruptCurrentSession();
 
@@ -95,8 +82,11 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
-        const isPlayed = await tryPlayStep(session, step);
-        hasFailedStep ||= !isPlayed;
+        try {
+          await playStep(session, step);
+        } catch {
+          hasFailedStep = true;
+        }
       }
 
       if (signal.aborted) {
