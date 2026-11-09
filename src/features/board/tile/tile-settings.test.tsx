@@ -1,5 +1,6 @@
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
@@ -157,7 +158,11 @@ describe("TileSettings", () => {
       ).size,
     ).toBe(2);
 
-    const bottomRadio = groups[0].getByRole("radio", { name: "Bottom" });
+    const [firstGroup] = groups;
+
+    assertDefined(firstGroup);
+
+    const bottomRadio = firstGroup.getByRole("radio", { name: "Bottom" });
 
     await expect.element(bottomRadio).not.toBeChecked();
     await bottomRadio.click();

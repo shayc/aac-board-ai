@@ -83,7 +83,8 @@ describe("createButtonActivator", () => {
     });
 
     expect(message.setParts).toHaveBeenCalledOnce();
-    const [[committed]] = message.setParts.mock.calls;
+    const committed = message.setParts.mock.calls[0]?.[0];
+    assertDefined(committed);
     const appended = committed.at(-1);
     assertDefined(appended);
     expect(committed).toHaveLength(2);
@@ -124,7 +125,8 @@ describe("createButtonActivator", () => {
     });
 
     expect(message.setParts).toHaveBeenCalledOnce();
-    const [[committed]] = message.setParts.mock.calls;
+    const committed = message.setParts.mock.calls[0]?.[0];
+    assertDefined(committed);
     expect(committed.map((part) => part.label)).toEqual(["hello", "world", ""]);
     expect(playback.playMessage).not.toHaveBeenCalled();
   });
@@ -146,7 +148,9 @@ describe("createButtonActivator", () => {
       actions: [{ kind: "spell", text: "s" }, { kind: "play" }],
     });
 
-    const [[partsToPlay]] = playback.playMessage.mock.calls;
+    const partsToPlay = playback.playMessage.mock.calls[0]?.[0];
+
+    assertDefined(partsToPlay);
     expect(partsToPlay.map((part) => part.label)).toEqual(["s"]);
     expect(message.setParts).toHaveBeenCalledExactlyOnceWith(partsToPlay);
   });

@@ -50,6 +50,7 @@ export default defineConfig({
     "react/unsupported-syntax": "error",
     "typescript/no-explicit-any": "error",
     "typescript/no-misused-promises": "error",
+    "typescript/no-unnecessary-condition": "error",
     "typescript/no-unsafe-argument": "error",
     "typescript/no-unsafe-assignment": "error",
     "typescript/no-unsafe-call": "error",

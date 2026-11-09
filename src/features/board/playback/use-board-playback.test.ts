@@ -253,6 +253,6 @@ describe("useBoardPlayback", () => {
     await expect(firstPlay).resolves.toBe("interrupted");
     await expect(secondPlay).resolves.toBe("completed");
     expect(speech.speak).toHaveBeenCalledTimes(2);
-    expect(speech.speak.mock.calls[1][0].text).toBe("second");
+    expect(speech.speak.mock.calls[1]?.[0].text).toBe("second");
   });
 });

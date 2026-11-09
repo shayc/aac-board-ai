@@ -13,7 +13,7 @@ const LANGUAGE_STORAGE_KEY = "language";
 export const DEFAULT_LANGUAGE = baseLocale;
 
 export function getPreferredLanguage(
-  languages: readonly string[] = globalThis.navigator?.languages ?? [],
+  languages: readonly string[] = navigator.languages,
 ): string {
   for (const locale of languages) {
     const language = getLanguageCode(locale);

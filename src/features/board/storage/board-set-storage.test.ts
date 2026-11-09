@@ -136,7 +136,7 @@ describe("insertBoardSet", () => {
         obf,
       });
       expect(obf.name).toBe(name);
-      expect((await listBoardSetRecords())[0].name).toBe(expectedSetName);
+      expect((await listBoardSetRecords())[0]?.name).toBe(expectedSetName);
     },
   );
 
@@ -247,8 +247,8 @@ describe("listBoardSetRecords", () => {
 
     const sets = await listBoardSetRecords();
     expect(sets).toHaveLength(2);
-    expect(sets[0].id).toBe("new");
-    expect(sets[1].id).toBe("old");
+    expect(sets[0]?.id).toBe("new");
+    expect(sets[1]?.id).toBe("old");
   });
 });
 

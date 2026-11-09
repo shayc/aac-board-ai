@@ -46,7 +46,7 @@ export async function importBoardFiles(
   return importedBoardSets;
 }
 
-async function importBoardFile(file: File): Promise<ImportedBoardSet> {
+export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
   const baseBoardSetId = deriveBoardSetId(file.name);
 

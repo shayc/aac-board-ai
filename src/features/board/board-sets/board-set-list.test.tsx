@@ -124,7 +124,7 @@ describe("BoardSetList", () => {
     await screen.getByRole("menuitem", { name: "Delete" }).click();
 
     expect(onRequestDelete).toHaveBeenCalledOnce();
-    expect(onRequestDelete.mock.calls[0][0]).toMatchObject({
+    expect(onRequestDelete.mock.calls[0]?.[0]).toMatchObject({
       name: "Core Words",
     });
     expect(onShowInfo).not.toHaveBeenCalled();

@@ -12,15 +12,15 @@ describe("appendPart", () => {
     const parts = appendPart([], { label: "hi" });
 
     expect(parts).toHaveLength(1);
-    expect(parts[0].label).toBe("hi");
-    expect(parts[0].id).toBeTruthy();
+    expect(parts[0]?.label).toBe("hi");
+    expect(parts[0]?.id).toBeTruthy();
   });
 
   test("mints a distinct id for each part even with identical content", () => {
     const first = appendPart([], { label: "cat" });
     const second = appendPart(first, { label: "cat" });
 
-    expect(second[0].id).not.toBe(second[1].id);
+    expect(second[0]?.id).not.toBe(second[1]?.id);
   });
 
   test("leaves the input array untouched", () => {
@@ -38,7 +38,7 @@ describe("appendSpace", () => {
     const parts = appendSpace([{ id: "1", label: "hi" }]);
 
     expect(parts).toHaveLength(2);
-    expect(parts[1].label).toBe("");
+    expect(parts[1]?.label).toBe("");
   });
 });
 
@@ -47,8 +47,8 @@ describe("appendText", () => {
     const parts = appendText([], "h");
 
     expect(parts).toHaveLength(1);
-    expect(parts[0].label).toBe("h");
-    expect(parts[0].id).toBeTruthy();
+    expect(parts[0]?.label).toBe("h");
+    expect(parts[0]?.id).toBeTruthy();
   });
 
   test("appends text to a purely text-only last part", () => {
@@ -57,8 +57,8 @@ describe("appendText", () => {
     const parts = appendText(original, "t");
 
     expect(parts).toHaveLength(1);
-    expect(parts[0].id).toBe("1");
-    expect(parts[0].label).toBe("cat");
+    expect(parts[0]?.id).toBe("1");
+    expect(parts[0]?.label).toBe("cat");
   });
 
   test("starts a new part if the last part has media", () => {
@@ -69,8 +69,8 @@ describe("appendText", () => {
     const parts = appendText(original, "t");
 
     expect(parts).toHaveLength(2);
-    expect(parts[1].label).toBe("t");
-    expect(parts[0].imageSrc).toBe("img.png");
+    expect(parts[1]?.label).toBe("t");
+    expect(parts[0]?.imageSrc).toBe("img.png");
   });
 
   test("accumulates rapid appends into a single part", () => {
@@ -78,8 +78,8 @@ describe("appendText", () => {
     const afterSecond = appendText(afterFirst, "i");
 
     expect(afterSecond).toHaveLength(1);
-    expect(afterSecond[0].id).toBe("1");
-    expect(afterSecond[0].label).toBe("hi");
+    expect(afterSecond[0]?.id).toBe("1");
+    expect(afterSecond[0]?.label).toBe("hi");
   });
 
   test("leaves the input array untouched", () => {
@@ -87,7 +87,7 @@ describe("appendText", () => {
 
     appendText(original, "t");
 
-    expect(original[0].label).toBe("ca");
+    expect(original[0]?.label).toBe("ca");
   });
 });
 
@@ -127,7 +127,7 @@ describe("applyBackspace", () => {
       { id: "1", label: "hello" },
       { id: "2", label: "a" },
     ]);
-    expect(original[1].label).toBe(`a${grapheme}`);
+    expect(original[1]?.label).toBe(`a${grapheme}`);
   });
 
   test.each(["w", "", ...graphemes])(

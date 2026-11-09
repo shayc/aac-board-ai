@@ -180,6 +180,6 @@ describe("SpeechSettings", () => {
     await screen.getByRole("button", { name: "Preview voice" }).click();
 
     expect(speech.speak).toHaveBeenCalledTimes(1);
-    expect(speech.speak.mock.calls[0][0].text).toBe("Hi, this is my voice!");
+    expect(speech.speak.mock.calls[0]?.[0].text).toBe("Hi, this is my voice!");
   });
 });

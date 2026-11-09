@@ -6,6 +6,7 @@ import {
   setSpeechVolume,
   SPEECH_RATE,
 } from "@shared/speech/speech-store";
+import { assertDefined } from "@shared/testing/assert-defined";
 import { stubSpeech, stubVoices } from "@shared/testing/stub-speech";
 import { reloadPersistedStores } from "@shared/state/persisted-store";
 import { beforeEach, describe, expect, test, vi } from "vitest";
@@ -64,7 +65,9 @@ describe("speak", () => {
 
       await speak("hi");
 
-      const utterance = speech.speak.mock.calls[0][0];
+      const utterance = speech.speak.mock.calls[0]?.[0];
+
+      assertDefined(utterance);
       expect(utterance.rate).toBe(1.5);
       expect(utterance.pitch).toBe(0.5);
       expect(utterance.volume).toBe(0.25);
@@ -80,7 +83,9 @@ describe("speak", () => {
 
       await speak("שלום");
 
-      const utterance = speech.speak.mock.calls[0][0];
+      const utterance = speech.speak.mock.calls[0]?.[0];
+
+      assertDefined(utterance);
       expect(utterance.voice).toBeNull();
       expect(utterance.lang).toBe("he");
     });
@@ -101,8 +106,8 @@ describe("speak", () => {
       await speak("hello");
 
       const [hebrew, english] = speech.speak.mock.calls.map(([call]) => call);
-      expect(hebrew.voice?.voiceURI).toBe("he-voice");
-      expect(english.voice?.voiceURI).toBe("voice-1");
+      expect(hebrew?.voice?.voiceURI).toBe("he-voice");
+      expect(english?.voice?.voiceURI).toBe("voice-1");
     });
 
     test("clamps an out-of-range stored rate to the configured max", async () => {
@@ -112,7 +117,9 @@ describe("speak", () => {
 
       await speak("hi");
 
-      const utterance = speech.speak.mock.calls[0][0];
+      const utterance = speech.speak.mock.calls[0]?.[0];
+
+      assertDefined(utterance);
       expect(utterance.rate).toBe(SPEECH_RATE.max);
     });
   });

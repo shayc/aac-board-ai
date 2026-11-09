@@ -52,7 +52,7 @@ function isObjectURLAlive(url: string): Promise<boolean> {
 }
 
 function getImageURL(board: Board): string {
-  const imageURL = board.buttons[0].imageSrc;
+  const imageURL = board.buttons[0]?.imageSrc;
   assertDefined(imageURL);
 
   return imageURL;

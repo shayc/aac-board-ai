@@ -30,6 +30,8 @@ const SCROLL_PARTS: MessagePart[] = Array.from({ length: 10 }, (_, index) => ({
   label: `Part ${index + 1}`,
   imageSrc: TEST_IMAGE_SRC,
 }));
+const ACTIVE_SCROLL_PART_INDEX = 3;
+const ACTIVE_SCROLL_PART_ID = String(ACTIVE_SCROLL_PART_INDEX);
 
 function ScrollableMessageBar(props: MessageBarProps) {
   return (
@@ -127,7 +129,9 @@ describe("MessageBar", () => {
       const scroller = getScrollContainer(screen.container);
       await waitForAnimationFrame();
 
-      const activePart = scroller.children[3];
+      const activePart = scroller.children[ACTIVE_SCROLL_PART_INDEX];
+
+      assertDefined(activePart);
       const initialScrollLeft = scroller.scrollLeft;
       expect(activePart.getBoundingClientRect().right).toBeLessThan(
         scroller.getBoundingClientRect().left,
@@ -138,7 +142,7 @@ describe("MessageBar", () => {
         <ScrollableMessageBar
           {...props}
           isPlaying
-          activePartId={SCROLL_PARTS[3].id}
+          activePartId={ACTIVE_SCROLL_PART_ID}
         />,
       );
       await waitForAnimationFrame();
@@ -156,7 +160,7 @@ describe("MessageBar", () => {
     test("preserves the scroll position when playback becomes idle", async () => {
       const props = createProps({
         parts: SCROLL_PARTS,
-        activePartId: SCROLL_PARTS[3].id,
+        activePartId: ACTIVE_SCROLL_PART_ID,
         isPlaying: true,
       });
       const screen = await render(<ScrollableMessageBar {...props} />);

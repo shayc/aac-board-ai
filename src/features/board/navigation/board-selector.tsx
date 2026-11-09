@@ -39,7 +39,7 @@ export function BoardSelector() {
           slotProps={{
             ...params.slotProps,
             htmlInput: {
-              ...params.slotProps?.htmlInput,
+              ...params.slotProps.htmlInput,
               "aria-label": t(m.boardSelectorLabel),
             },
           }}

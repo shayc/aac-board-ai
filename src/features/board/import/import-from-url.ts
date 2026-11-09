@@ -1,6 +1,6 @@
 import {
   deriveBoardSetId,
-  importBoardFiles,
+  importBoardFile,
   type ImportedBoardSet,
 } from "./board-import";
 
@@ -72,9 +72,7 @@ export async function importBoardFileFromURL(
   });
 
   // Once local importing starts, let its atomic write finish even if navigation changes.
-  const [boardSet] = await importBoardFiles([file]);
-
-  return boardSet;
+  return importBoardFile(file);
 }
 
 function expectedDownloadBytes(headers: Headers): number | undefined {

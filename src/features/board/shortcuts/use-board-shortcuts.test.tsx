@@ -30,7 +30,7 @@ describe("board keyboard shortcuts", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello worl");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello worl");
     });
   });
 
@@ -46,7 +46,7 @@ describe("board keyboard shortcuts", () => {
     await screen.getByRole("button", { name: "Play message" }).click();
 
     await vi.waitFor(() => {
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello worl");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello worl");
     });
   });
 
@@ -61,7 +61,7 @@ describe("board keyboard shortcuts", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello world");
     });
   });
 

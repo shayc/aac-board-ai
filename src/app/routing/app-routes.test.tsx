@@ -9,7 +9,7 @@ import { stubAudio } from "@shared/testing/stub-audio";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { assert, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import { appRoutes } from "./app-routes";
 
@@ -92,7 +92,7 @@ describe("app flow", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("no way feline");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("no way feline");
     });
   });
 
@@ -116,7 +116,9 @@ describe("app flow", () => {
       expect(audio.play).toHaveBeenCalledTimes(1);
     });
 
-    const [element] = audio.play.mock.contexts as HTMLAudioElement[];
+    const element = audio.play.mock.contexts[0];
+
+    assert(element instanceof HTMLAudioElement);
     const response = await fetch(element.src);
 
     expect(await response.text()).toBe("recording");
@@ -150,7 +152,7 @@ describe("app flow", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("i want water");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("i want water");
     });
   });
 

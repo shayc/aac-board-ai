@@ -40,7 +40,7 @@ describe("useLatestAsync", () => {
     expect(result.current.value).toBeUndefined();
 
     await vi.waitFor(() => expect(resolvers).toHaveLength(1));
-    resolvers[0]("value-a");
+    resolvers[0]?.("value-a");
 
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-a");
@@ -61,7 +61,7 @@ describe("useLatestAsync", () => {
     );
 
     await vi.waitFor(() => expect(resolvers).toHaveLength(1));
-    resolvers[0]("value-a");
+    resolvers[0]?.("value-a");
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-a");
       expect(result.current.isPending).toBe(false);
@@ -72,7 +72,7 @@ describe("useLatestAsync", () => {
     expect(result.current.value).toBeUndefined();
 
     await vi.waitFor(() => expect(resolvers).toHaveLength(2));
-    resolvers[1]("value-b");
+    resolvers[1]?.("value-b");
 
     await vi.waitFor(() => {
       expect(result.current.value).toBe("value-b");

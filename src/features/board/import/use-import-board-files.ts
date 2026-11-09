@@ -67,13 +67,14 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
 
   async function importAndOpen(files: File[]) {
     const importedBoardSets = await importFiles(files);
+    const onlyBoardSet =
+      importedBoardSets?.length === 1 ? importedBoardSets[0] : undefined;
 
-    if (importedBoardSets?.length !== 1) {
+    if (!onlyBoardSet) {
       return;
     }
 
-    const [boardSet] = importedBoardSets;
-    void navigate(rootBoardPath(boardSet));
+    void navigate(rootBoardPath(onlyBoardSet));
   }
 
   async function pickAndImport() {

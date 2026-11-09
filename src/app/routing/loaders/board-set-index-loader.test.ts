@@ -1,15 +1,12 @@
 import { resetBoardsDB, seedBoardSets } from "@features/board/testing";
-import type { LoaderFunctionArgs } from "react-router";
+import { loaderArgs } from "@shared/testing/loader-args";
 import { beforeEach, describe, expect, test } from "vitest";
 import { boardSetIndexLoader } from "./board-set-index-loader";
 
 function callLoader(boardSetId: string): Promise<Response> {
-  const args = {
-    request: new Request("http://localhost/"),
-    params: { boardSetId },
-  } as unknown as LoaderFunctionArgs;
-
-  return boardSetIndexLoader(args);
+  return boardSetIndexLoader(
+    loaderArgs("http://localhost/", { params: { boardSetId } }),
+  );
 }
 
 describe("boardSetIndexLoader", () => {

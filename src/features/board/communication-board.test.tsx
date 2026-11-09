@@ -96,7 +96,7 @@ describe("CommunicationBoard", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello world");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello world");
     });
   });
 
@@ -153,7 +153,7 @@ describe("CommunicationBoard", () => {
 
         await vi.waitFor(() => {
           expect(speech.speak).toHaveBeenCalledTimes(1);
-          expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+          expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
         });
 
         await backspace.click();
@@ -173,7 +173,7 @@ describe("CommunicationBoard", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak.mock.calls).toHaveLength(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("s");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("s");
     });
   });
 
@@ -219,7 +219,7 @@ describe("CommunicationBoard", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hi");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hi");
     });
     expect(audio.play).not.toHaveBeenCalled();
   });
@@ -235,7 +235,9 @@ describe("CommunicationBoard", () => {
       .toBeVisible();
     await expect.element(message).toBeVisible();
 
-    const [utterance] = speech.speak.mock.calls[0];
+    const utterance = speech.speak.mock.calls[0]?.[0];
+
+    assertDefined(utterance);
     utterance.dispatchEvent(new SpeechSynthesisEvent("end", { utterance }));
 
     await expect.element(message).not.toBeInTheDocument();
@@ -253,7 +255,9 @@ describe("CommunicationBoard", () => {
       .element(screen.getByRole("button", { name: "Stop message" }))
       .toBeVisible();
 
-    const [utterance] = speech.speak.mock.calls[0];
+    const utterance = speech.speak.mock.calls[0]?.[0];
+
+    assertDefined(utterance);
     utterance.dispatchEvent(
       new SpeechSynthesisErrorEvent("error", {
         utterance,
@@ -278,7 +282,7 @@ describe("CommunicationBoard", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hi");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hi");
     });
   });
 
@@ -431,7 +435,7 @@ describe("CommunicationBoard", () => {
 
       await vi.waitFor(() => {
         expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0][0].text).toBe("i need help");
+        expect(speech.speak.mock.calls[0]?.[0].text).toBe("i need help");
       });
     },
   );
@@ -450,7 +454,7 @@ describe("CommunicationBoard", () => {
 
       await vi.waitFor(() => {
         expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+        expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
       });
     },
   );
@@ -475,7 +479,7 @@ describe("CommunicationBoard", () => {
 
       await vi.waitFor(() => {
         expect(speech.speak).toHaveBeenCalledTimes(1);
-        expect(speech.speak.mock.calls[0][0].text).toBe("i need help");
+        expect(speech.speak.mock.calls[0]?.[0].text).toBe("i need help");
       });
     },
   );
@@ -489,7 +493,7 @@ describe("CommunicationBoard", () => {
 
     await vi.waitFor(() => {
       expect(speech.speak).toHaveBeenCalledTimes(1);
-      expect(speech.speak.mock.calls[0][0].text).toBe("hello");
+      expect(speech.speak.mock.calls[0]?.[0].text).toBe("hello");
     });
   });
 

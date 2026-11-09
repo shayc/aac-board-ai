@@ -42,7 +42,7 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "en");
 
     expect(board.name).toBe("Food");
-    expect(board.buttons[0].label).toBe("eat");
+    expect(board.buttons[0]?.label).toBe("eat");
     expect(create).not.toHaveBeenCalled();
   });
 
@@ -55,9 +55,9 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("Comida");
-    expect(board.buttons[0].label).toBe("comer");
-    expect(board.buttons[0].vocalization).toBe("comer");
-    expect(board.buttons[1].label).toBe("beber");
+    expect(board.buttons[0]?.label).toBe("comer");
+    expect(board.buttons[0]?.vocalization).toBe("comer");
+    expect(board.buttons[1]?.label).toBe("beber");
     expect(create).not.toHaveBeenCalled();
   });
 
@@ -72,8 +72,8 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("constructor");
-    expect(board.buttons[0].label).toBe("toString");
-    expect(board.buttons[0].vocalization).toBe("valueOf");
+    expect(board.buttons[0]?.label).toBe("toString");
+    expect(board.buttons[0]?.vocalization).toBe("valueOf");
   });
 
   test("translates via the Translator API when the board has no translations for the language", async () => {
@@ -83,9 +83,9 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("[es] Food");
-    expect(board.buttons[0].label).toBe("[es] eat");
-    expect(board.buttons[0].vocalization).toBe("[es] eat");
-    expect(board.buttons[1].label).toBe("[es] drink");
+    expect(board.buttons[0]?.label).toBe("[es] eat");
+    expect(board.buttons[0]?.vocalization).toBe("[es] eat");
+    expect(board.buttons[1]?.label).toBe("[es] drink");
 
     expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
       sourceLanguage: "en",
@@ -131,7 +131,7 @@ describe("loadBoardInLanguage", () => {
     const board = await loadBoardInLanguage("set-1", "board-1", "es");
 
     expect(board.name).toBe("Food");
-    expect(board.buttons[0].label).toBe("eat");
+    expect(board.buttons[0]?.label).toBe("eat");
   });
 
   test("rejects instead of falling back when the load is aborted mid-translation", async () => {

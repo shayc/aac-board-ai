@@ -153,7 +153,7 @@ describe("importBoardFiles", () => {
     const importResults = await importBoardFiles([zipNamedFile]);
 
     expect(importResults).toHaveLength(1);
-    expect(importResults[0].id).toBe(IMPORTED_SET_ID);
+    expect(importResults[0]?.id).toBe(IMPORTED_SET_ID);
 
     const boardSets = await listBoardSetRecords();
     expect(archive.boards.size).toBeGreaterThan(1);
@@ -171,7 +171,7 @@ describe("importBoardFiles", () => {
 
     const importResults = await importBoardFiles([extensionOnlyFile]);
 
-    expect(importResults[0].id).toBe("imported-board");
+    expect(importResults[0]?.id).toBe("imported-board");
   });
 
   test("names the board set after its file when the root board name is blank", async () => {
@@ -193,17 +193,17 @@ describe("importBoardFiles", () => {
 
     const importResults = await importBoardFiles([longNamedFile]);
 
-    expect(importResults[0].id).toBe("x".repeat(255));
+    expect(importResults[0]?.id).toBe("x".repeat(255));
   });
 
   test("re-importing the same filename keeps both board sets", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
 
     const first = await importBoardFiles([fixtureFile]);
-    expect(first[0].id).toBe(IMPORTED_SET_ID);
+    expect(first[0]?.id).toBe(IMPORTED_SET_ID);
 
     const second = await importBoardFiles([fixtureFile]);
-    expect(second[0].id).toBe(`${IMPORTED_SET_ID}-2`);
+    expect(second[0]?.id).toBe(`${IMPORTED_SET_ID}-2`);
 
     const boardSets = await listBoardSetRecords();
     expect(new Set(boardSets.map((set) => set.id))).toEqual(
@@ -226,7 +226,7 @@ describe("importBoardFiles", () => {
     const collidingFile = new File([obfFile], "BOARD.json");
     const [result] = await importBoardFiles([collidingFile]);
 
-    expect(result.id).toBe("board-2");
+    expect(result?.id).toBe("board-2");
     expect(await getBoardRecord("board", archive.rootBoard.id)).toBeDefined();
     expect(await getAssetBlob("board", resourcePath)).toBeInstanceOf(Blob);
     expect(await listBoardSetRecords()).toHaveLength(2);

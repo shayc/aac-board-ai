@@ -41,7 +41,7 @@ export function resolveVoice(
   voicesByLanguage: VoicesByLanguage,
   language: string,
   savedVoiceURI: string | null,
-  preferredLocales: readonly string[] = globalThis.navigator?.languages ?? [],
+  preferredLocales: readonly string[] = navigator.languages,
 ): SpeechSynthesisVoice | null {
   const voices = voicesByLanguage[language] ?? [];
   const savedVoice = voices.find((voice) => voice.voiceURI === savedVoiceURI);
