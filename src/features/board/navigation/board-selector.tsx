@@ -3,7 +3,7 @@ import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
-import type { BoardName } from "../translation/list-board-names-in-language";
+import type { BoardName } from "../board-types";
 import { useBoardNavigation } from "./use-board-navigation";
 
 interface BoardSelectorProps {

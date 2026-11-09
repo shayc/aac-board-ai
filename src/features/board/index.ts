@@ -25,5 +25,4 @@ export { listBoardNamesInLanguage } from "./translation/list-board-names-in-lang
 export { translateBoardSet } from "./translation/translate-board-set";
 export { useTranslateBoardSetNames } from "./translation/use-translate-board-set-names";
 
-export type { Board } from "./board-types";
-export type { BoardName } from "./translation/list-board-names-in-language";
+export type { Board, BoardName } from "./board-types";

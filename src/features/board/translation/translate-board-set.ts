@@ -11,10 +11,10 @@ import {
 } from "../storage/board-content-storage";
 import {
   collectBoardStrings,
-  findStringTranslations,
+  findBoardInLanguage,
   getBoardLanguage,
 } from "./board-translations";
-import { translateStrings } from "./translator";
+import { translateStrings } from "./translate-strings";
 
 export interface BoardSetTranslationProgress {
   completed: number;
@@ -49,14 +49,7 @@ export async function translateBoardSet(
     return;
   }
 
-  const total = boards.length;
-  let completed = 0;
-
-  function reportProgress(progress: BoardSetTranslationProgress | null) {
-    if (!signal.aborted) {
-      progressStore.setState(progress);
-    }
-  }
+  const progress = startProgress(boards.length, signal);
 
   async function translateBoard(board: Board, translator: Translator) {
     try {
@@ -75,15 +68,7 @@ export async function translateBoardSet(
     } catch {
       signal.throwIfAborted();
     }
-
-    completed += 1;
-    reportProgress({ completed, total });
   }
-
-  signal.addEventListener("abort", () => progressStore.setState(null), {
-    once: true,
-  });
-  reportProgress({ completed, total });
 
   for (const [sourceLanguage, group] of Map.groupBy(boards, getBoardLanguage)) {
     try {
@@ -95,13 +80,40 @@ export async function translateBoardSet(
 
       for (const board of group) {
         await translateBoard(board, translator);
+        progress.advance();
       }
     } catch {
       signal.throwIfAborted();
     }
   }
 
-  reportProgress(null);
+  progress.end();
+}
+
+function startProgress(total: number, signal: AbortSignal) {
+  let completed = 0;
+
+  function report(progress: BoardSetTranslationProgress | null) {
+    if (!signal.aborted) {
+      progressStore.setState(progress);
+    }
+  }
+
+  function advance() {
+    completed += 1;
+    report({ completed, total });
+  }
+
+  function end() {
+    report(null);
+  }
+
+  signal.addEventListener("abort", () => progressStore.setState(null), {
+    once: true,
+  });
+  report({ completed, total });
+
+  return { advance, end };
 }
 
 async function listBoardsToTranslate(
@@ -119,9 +131,7 @@ async function listBoardsToTranslate(
 
 function needsTranslation(board: Board, language: string): boolean {
   return (
-    getBoardLanguage(board) !== language &&
-    !findStringTranslations(board.translationsByLocale, language) &&
-    collectBoardStrings(board).size > 0
+    !findBoardInLanguage(board, language) && collectBoardStrings(board).size > 0
   );
 }
 

@@ -39,7 +39,17 @@ export function findStringTranslations(
   return match?.[1];
 }
 
-export function findTranslation(
+export function findTextInLanguage(
+  translationsByLocale: TranslationsByLocale,
+  language: string,
+  text: string,
+): string | undefined {
+  const translations = findStringTranslations(translationsByLocale, language);
+
+  return translations && findTranslation(translations, text);
+}
+
+function findTranslation(
   translations: StringTranslations,
   text: string,
 ): string | undefined {

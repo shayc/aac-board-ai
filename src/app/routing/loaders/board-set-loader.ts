@@ -12,9 +12,5 @@ export async function boardSetLoader({
     return [];
   }
 
-  try {
-    return await listBoardNamesInLanguage(boardSetId, getStoredLanguage());
-  } catch {
-    return [];
-  }
+  return listBoardNamesInLanguage(boardSetId, getStoredLanguage());
 }

@@ -271,6 +271,52 @@ describe("app flow", () => {
     await expect.element(screen.getByText("Premiers mots")).toBeVisible();
   });
 
+  test("switching language translates the board on screen before the rest of its board set", async () => {
+    const otherBoardGate = Promise.withResolvers<void>();
+    stubTranslator(async (input) => {
+      if (input === "Food") {
+        await otherBoardGate.promise;
+      }
+
+      return `[fr] ${input}`;
+    });
+    onTestFinished(() => {
+      otherBoardGate.resolve();
+      setStoredLanguage(DEFAULT_LANGUAGE);
+    });
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({ id: "food", name: "Food" }),
+          makeOBFBoard({
+            id: "home",
+            name: "Animals",
+            buttons: [{ id: "cat", label: "cat" }],
+            grid: { rows: 1, columns: 1, order: [["cat"]] },
+          }),
+        ],
+      },
+    ]);
+
+    const { screen } = await renderApp("/sets/animals/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("fr");
+
+    await expect
+      .element(screen.getByRole("button", { name: "[fr] cat" }))
+      .toBeVisible();
+
+    otherBoardGate.resolve();
+    await screen.getByRole("combobox").click();
+
+    await expect
+      .element(screen.getByRole("option", { name: "[fr] Food" }))
+      .toBeVisible();
+  });
+
   test("client navigation from a board sets the localized not-found title", async () => {
     const { router, screen } = await renderApp();
 

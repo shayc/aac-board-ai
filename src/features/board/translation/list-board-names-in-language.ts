@@ -1,11 +1,7 @@
+import type { BoardName } from "../board-types";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
-import { findStringTranslations, findTranslation } from "./board-translations";
-
-export interface BoardName {
-  id: string;
-  name: string;
-}
+import { findTextInLanguage } from "./board-translations";
 
 export async function listBoardNamesInLanguage(
   boardSetId: string,
@@ -13,15 +9,13 @@ export async function listBoardNamesInLanguage(
 ): Promise<BoardName[]> {
   const records = await listBoardRecords(boardSetId);
 
-  return records.map(({ id, name, obf }) => {
-    const translations = findStringTranslations(
-      obfToTranslationsByLocale(obf.strings),
-      language,
-    );
-
-    return {
-      id,
-      name: (translations && findTranslation(translations, name)) ?? name,
-    };
-  });
+  return records.map(({ id, name, obf }) => ({
+    id,
+    name:
+      findTextInLanguage(
+        obfToTranslationsByLocale(obf.strings),
+        language,
+        name,
+      ) ?? name,
+  }));
 }

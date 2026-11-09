@@ -3,12 +3,7 @@ import { saveBoardSetNameTranslations } from "../board-sets/board-sets-store";
 import { obfToBoard } from "../obf/obf-to-board";
 import { getBoardRecord } from "../storage/board-content-storage";
 import type { BoardSetRecord } from "../storage/board-set-storage";
-import {
-  findStringTranslations,
-  findTranslation,
-  getBoardLanguage,
-} from "./board-translations";
-import { translateStrings } from "./translator";
+import { findTextInLanguage, getBoardLanguage } from "./board-translations";
 
 export async function translateBoardSetNames(
   boardSets: readonly BoardSetRecord[],
@@ -23,12 +18,12 @@ export async function translateBoardSetNames(
       continue;
     }
 
-    const knownName = await findKnownName(boardSet, language);
+    const nameInLanguage = await findNameWithoutTranslator(boardSet, language);
 
-    if (knownName === undefined) {
+    if (nameInLanguage === undefined) {
       untranslated.push(boardSet);
     } else {
-      names.set(boardSet.id, knownName);
+      names.set(boardSet.id, nameInLanguage);
     }
   }
 
@@ -42,14 +37,9 @@ export async function translateBoardSetNames(
         targetLanguage: language,
         signal,
       });
-      const translations = await translateStrings(
-        group.map(({ name }) => name),
-        translator,
-        signal,
-      );
 
       for (const { id, name } of group) {
-        names.set(id, translations[name]);
+        names.set(id, await translator.translate(name, { signal }));
       }
     } catch {
       signal.throwIfAborted();
@@ -71,7 +61,7 @@ function needsNameTranslation(
   );
 }
 
-async function findKnownName(
+async function findNameWithoutTranslator(
   boardSet: BoardSetRecord,
   language: string,
 ): Promise<string | undefined> {
@@ -82,10 +72,9 @@ async function findKnownName(
     return boardSet.name;
   }
 
-  const translations = findStringTranslations(
+  return findTextInLanguage(
     rootBoard.translationsByLocale,
     language,
+    boardSet.name,
   );
-
-  return translations && findTranslation(translations, boardSet.name);
 }

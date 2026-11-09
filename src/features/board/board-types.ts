@@ -7,6 +7,11 @@ export interface Board {
   translationsByLocale: TranslationsByLocale;
 }
 
+export interface BoardName {
+  id: string;
+  name: string;
+}
+
 export interface BoardGrid {
   rows: number;
   columns: number;
