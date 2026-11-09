@@ -5,7 +5,7 @@ interface UseLatestAsyncOptions<T> {
   run: ((signal: AbortSignal) => Promise<T>) | undefined;
 }
 
-interface UseLatestAsyncReturn<T> {
+export interface UseLatestAsyncReturn<T> {
   value: T | undefined;
   error: Error | undefined;
   isPending: boolean;
