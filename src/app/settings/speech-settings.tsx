@@ -24,6 +24,8 @@ import {
 import { SettingsSelect } from "@shared/ui/settings-select";
 import { SettingsSlider } from "@shared/ui/settings-slider";
 
+type VoiceGroup = [locale: string, voices: SpeechSynthesisVoice[]];
+
 export function SpeechSettings() {
   const t = useTranslate();
   const { rate, pitch, volume } = useSpeechPreferences();
@@ -82,24 +84,23 @@ function VoiceSelect() {
   const { language } = useLanguage();
 
   const voices = voicesByLanguage[language] ?? [];
-  const voicesByLocale = Object.groupBy(voices, (voice) => voice.lang);
   const selectedVoiceURI = speechVoice?.voiceURI ?? "";
-  const locales = Object.keys(voicesByLocale).sort((a, b) =>
-    a.localeCompare(b),
+  const voiceGroups = [...Map.groupBy(voices, (voice) => voice.lang)].sort(
+    ([a], [b]) => a.localeCompare(b),
   );
 
-  const hasMultipleLocales = locales.length > 1;
+  const hasMultipleLocales = voiceGroups.length > 1;
   const languageNames = new Intl.DisplayNames([language], {
     type: "language",
   });
 
-  function renderLocaleOptions(voiceLocale: string) {
+  function renderLocaleOptions([voiceLocale, localeVoices]: VoiceGroup) {
     const header = hasMultipleLocales && (
       <ListSubheader key={`header-${voiceLocale}`}>
         {languageNames.of(voiceLocale) ?? voiceLocale}
       </ListSubheader>
     );
-    const items = (voicesByLocale[voiceLocale] ?? []).map((voice) => (
+    const items = localeVoices.map((voice) => (
       <MenuItem key={voice.voiceURI} value={voice.voiceURI}>
         {voice.name}
       </MenuItem>
@@ -131,7 +132,7 @@ function VoiceSelect() {
         </Tooltip>
       }
     >
-      {locales.map(renderLocaleOptions)}
+      {voiceGroups.map(renderLocaleOptions)}
     </SettingsSelect>
   );
 }
