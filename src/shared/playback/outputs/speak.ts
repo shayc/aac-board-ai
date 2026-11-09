@@ -27,12 +27,16 @@ export function speak(
   text: string,
   { signal, onBoundary }: SpeakOptions = {},
 ): Promise<void> {
-  const synthesis = getSpeechSynthesis();
-  if (!synthesis || signal?.aborted) {
+  if (signal?.aborted) {
     return Promise.resolve();
   }
 
-  const { promise, resolve } = Promise.withResolvers<void>();
+  const synthesis = getSpeechSynthesis();
+  if (!synthesis) {
+    return Promise.reject(new Error("Speech synthesis is unavailable"));
+  }
+
+  const { promise, resolve, reject } = Promise.withResolvers<void>();
   const utterance = buildUtterance(text);
   const settled = new AbortController();
   const listenerOptions = { signal: settled.signal };
@@ -40,6 +44,11 @@ export function speak(
   function finish() {
     settled.abort();
     resolve();
+  }
+
+  function fail(event: SpeechSynthesisErrorEvent) {
+    settled.abort();
+    reject(new Error(`Speech failed: ${event.error}`, { cause: event }));
   }
 
   if (onBoundary) {
@@ -51,7 +60,7 @@ export function speak(
   }
 
   utterance.addEventListener("end", finish, listenerOptions);
-  utterance.addEventListener("error", finish, listenerOptions);
+  utterance.addEventListener("error", fail, listenerOptions);
   signal?.addEventListener(
     "abort",
     () => {

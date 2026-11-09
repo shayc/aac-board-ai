@@ -41,8 +41,10 @@ describe("speak", () => {
       vi.stubGlobal("speechSynthesis", undefined);
     });
 
-    test("resolves silently instead of throwing", async () => {
-      await expect(speak("hello")).resolves.toBeUndefined();
+    test("rejects because nothing can be spoken", async () => {
+      await expect(speak("hello")).rejects.toThrow(
+        "Speech synthesis is unavailable",
+      );
     });
   });
 
@@ -141,7 +143,7 @@ describe("speak", () => {
       await expect(playback).resolves.toBeUndefined();
     });
 
-    test("resolves when speech synthesis fails", async () => {
+    test("rejects when speech synthesis fails", async () => {
       const speech = stubSpeech();
       let utterance: SpeechSynthesisUtterance | undefined;
       speech.speak.mockImplementationOnce((spoken) => {
@@ -156,7 +158,7 @@ describe("speak", () => {
         }),
       );
 
-      await expect(playback).resolves.toBeUndefined();
+      await expect(playback).rejects.toThrow("Speech failed: synthesis-failed");
     });
   });
 });

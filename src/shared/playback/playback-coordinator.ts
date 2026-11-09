@@ -63,6 +63,19 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     }
   }
 
+  async function tryPlayStep(
+    session: PlaybackSession,
+    step: PlaybackStep,
+  ): Promise<boolean> {
+    try {
+      await playStep(session, step);
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async function play(request: PlaybackRequest): Promise<PlaybackOutcome> {
     interruptCurrentSession();
 
@@ -74,6 +87,7 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
     setActiveCue(session, null);
 
     const { signal } = session.abortController;
+    let hasFailedStep = false;
 
     try {
       for (const step of request.steps) {
@@ -81,10 +95,15 @@ export function createPlaybackCoordinator(): PlaybackCoordinator {
           return "interrupted";
         }
 
-        await playStep(session, step);
+        const isPlayed = await tryPlayStep(session, step);
+        hasFailedStep ||= !isPlayed;
       }
 
-      return signal.aborted ? "interrupted" : "completed";
+      if (signal.aborted) {
+        return "interrupted";
+      }
+
+      return hasFailedStep ? "failed" : "completed";
     } finally {
       if (currentSession === session) {
         currentSession = null;

@@ -210,4 +210,16 @@ describe("createButtonActivator", () => {
 
     expect(message.setParts).not.toHaveBeenCalled();
   });
+
+  test("drops edits after play when playback fails", async () => {
+    const { activateButton, message, playback } = setup([
+      { id: "1", label: "hi" },
+    ]);
+    const settlePlayback = holdMessagePlayback(playback);
+
+    activateButton({ id: "btn", label: "", actions: PLAY_THEN_CLEAR });
+    await settlePlayback("failed");
+
+    expect(message.setParts).not.toHaveBeenCalled();
+  });
 });

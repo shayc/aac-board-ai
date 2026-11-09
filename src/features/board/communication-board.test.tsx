@@ -244,6 +244,29 @@ describe("CommunicationBoard", () => {
       .toBeDisabled();
   });
 
+  test("keeps the message when a speak-then-clear tile fails to speak", async () => {
+    preventSpeechEnd(speech.speak);
+    const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
+
+    await screen.getByRole("button", { name: "Say then clear" }).click();
+    await expect
+      .element(screen.getByRole("button", { name: "Stop message" }))
+      .toBeVisible();
+
+    const [utterance] = speech.speak.mock.calls[0];
+    utterance.dispatchEvent(
+      new SpeechSynthesisErrorEvent("error", {
+        utterance,
+        error: "synthesis-failed",
+      }),
+    );
+
+    await expect
+      .element(screen.getByRole("button", { name: "Play message" }))
+      .toBeEnabled();
+    await expect.element(screen.getByText("hi", { exact: true })).toBeVisible();
+  });
+
   test("keeps the message when a speak-then-clear tile is stopped mid-speech", async () => {
     preventSpeechEnd(speech.speak);
     const screen = await renderCommunicationBoard(SPEAK_THEN_CLEAR_BOARD);
