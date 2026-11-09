@@ -23,11 +23,7 @@ export function useBoardShortcuts({
 }: UseBoardShortcutsOptions): UseBoardShortcutsReturn {
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
-      const action = resolveBoardShortcut(
-        { key: event.key, metaKey: event.metaKey, ctrlKey: event.ctrlKey },
-        playback.isMessagePlaying,
-      );
-
+      const action = resolveBoardShortcut(event, playback.isMessagePlaying);
       if (!action) {
         event.continuePropagation();
 
