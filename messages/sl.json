@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Datoteke table ni bilo mogoče uvoziti",
-        "countPlural=*": "Datotek tabel ni bilo mogoče uvoziti"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Datoteke table »{fileName}« ni bilo mogoče uvoziti",
+  "libraryImportFailedBoardFiles": "Datotek tabel ni bilo mogoče uvoziti",
   "libraryImportOnlyBoardFiles": "Uvoziti je mogoče samo datoteke tabel",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Datoteka table je prevelika za uvoz",
-        "countPlural=*": "Datoteke tabel so prevelike za uvoz"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Datoteka table »{fileName}« je prevelika za uvoz",
+  "libraryImportTooLargeBoardFiles": "Datoteke tabel so prevelike za uvoz",
+  "libraryImportPartiallyFailedBoardFiles": "Nekaterih datotek tabel ni bilo mogoče uvoziti ({failed} od {total})",
   "libraryDropToImport": "Spustite datoteke tabel za uvoz",
   "libraryInfo": "Informacije",
   "libraryDelete": "Izbriši",

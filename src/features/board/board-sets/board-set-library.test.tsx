@@ -129,7 +129,7 @@ describe("BoardSetLibrary", () => {
     const link = screen.getByRole("link", { name: "First Words" });
     await expect.element(link).toHaveFocus();
     await expect
-      .element(screen.getByText('Downloaded board set "First Words"'))
+      .element(screen.getByText('Board set "First Words" downloaded'))
       .toBeInTheDocument();
     await expect
       .element(screen.getByRole("button", { name: "Download First Words" }))

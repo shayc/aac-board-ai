@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Fișierul tablei nu a putut fi importat",
-        "countPlural=*": "Fișierele tablelor nu au putut fi importate"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Fișierul de tablă „{fileName}” nu a putut fi importat",
+  "libraryImportFailedBoardFiles": "Fișierele de table nu au putut fi importate",
   "libraryImportOnlyBoardFiles": "Se pot importa doar fișiere de table",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Fișierul tablei este prea mare pentru a fi importat",
-        "countPlural=*": "Fișierele tablelor sunt prea mari pentru a fi importate"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Fișierul de tablă „{fileName}” este prea mare pentru a fi importat",
+  "libraryImportTooLargeBoardFiles": "Fișierele de table sunt prea mari pentru a fi importate",
+  "libraryImportPartiallyFailedBoardFiles": "Unele fișiere de table nu au putut fi importate ({failed} din {total})",
   "libraryDropToImport": "Plasează fișierele de table pentru a le importa",
   "libraryInfo": "Informații",
   "libraryDelete": "Șterge",
@@ -140,5 +125,5 @@
   "errorGoHome": "Mergi la pagina principală",
   "errorBoardNotFound": "Tabla nu a fost găsită",
   "errorBoardSetNotFound": "Setul de table nu a fost găsit",
-  "errorBoardURLImportFailed": "Fișierul tablei nu a putut fi importat din link"
+  "errorBoardURLImportFailed": "Fișierul de tablă nu a putut fi importat din link"
 }

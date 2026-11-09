@@ -33,27 +33,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Taulutiedoston tuonti epäonnistui",
-        "countPlural=*": "Taulutiedostojen tuonti epäonnistui"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Taulutiedoston ”{fileName}” tuonti epäonnistui",
+  "libraryImportFailedBoardFiles": "Taulutiedostojen tuonti epäonnistui",
   "libraryImportOnlyBoardFiles": "Vain taulutiedostoja voi tuoda",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Taulutiedosto on liian suuri tuotavaksi",
-        "countPlural=*": "Taulutiedostot ovat liian suuria tuotaviksi"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Taulutiedosto ”{fileName}” on liian suuri tuotavaksi",
+  "libraryImportTooLargeBoardFiles": "Taulutiedostot ovat liian suuria tuotaviksi",
+  "libraryImportPartiallyFailedBoardFiles": "Joidenkin taulutiedostojen tuonti epäonnistui ({failed} / {total})",
   "libraryDropToImport": "Pudota taulutiedostot tuodaksesi",
   "libraryInfo": "Tiedot",
   "libraryDelete": "Poista",

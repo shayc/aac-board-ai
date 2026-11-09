@@ -1,6 +1,6 @@
-import { m } from "@paraglide/messages.js";
 import { useSnackbar } from "@shared/snackbar/use-snackbar";
 import { useEffect, useEffectEvent } from "react";
+import { summarizeImport } from "./summarize-import";
 import { useImportBoardFiles } from "./use-import-board-files";
 
 export function useImportBoardFilesOnLaunch(): void {
@@ -14,14 +14,9 @@ export function useImportBoardFilesOnLaunch(): void {
           handles.map((handle) => handle.getFile()),
         );
         await importAndOpen(files);
-      } catch {
-        showSnackbar({
-          message: (t) =>
-            t(m.libraryImportFailedBoardFiles, {
-              count: handles.length,
-            }),
-          severity: "error",
-        });
+      } catch (error) {
+        const failures = handles.map(({ name }) => ({ fileName: name, error }));
+        showSnackbar(summarizeImport({ importedBoardSets: [], failures }));
       }
     },
   );

@@ -32,27 +32,12 @@
       }
     }
   ],
-  "libraryImportFailedBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Couldn't import board file",
-        "countPlural=*": "Couldn't import board files"
-      }
-    }
-  ],
+  "libraryImportFailedBoardFile": "Couldn't import board file \"{fileName}\"",
+  "libraryImportFailedBoardFiles": "Couldn't import board files",
   "libraryImportOnlyBoardFiles": "Only board files can be imported",
-  "libraryImportTooLargeBoardFiles": [
-    {
-      "declarations": ["input count", "local countPlural = count: plural"],
-      "selectors": ["countPlural"],
-      "match": {
-        "countPlural=one": "Board file is too large to import",
-        "countPlural=*": "Board files are too large to import"
-      }
-    }
-  ],
+  "libraryImportTooLargeBoardFile": "Board file \"{fileName}\" is too large to import",
+  "libraryImportTooLargeBoardFiles": "Board files are too large to import",
+  "libraryImportPartiallyFailedBoardFiles": "Couldn't import some board files ({failed} of {total})",
   "libraryDropToImport": "Drop board files to import",
   "libraryInfo": "Info",
   "libraryDelete": "Delete",
@@ -62,7 +47,7 @@
   "libraryMoreOptionsFor": "More options for {name}",
   "libraryDownload": "Download",
   "libraryDownloadBoardSet": "Download {name}",
-  "libraryDownloadedBoardSet": "Downloaded board set \"{name}\"",
+  "libraryDownloadedBoardSet": "Board set \"{name}\" downloaded",
   "libraryDownloadFailed": "Couldn't download board set \"{name}\"",
   "libraryDownloadProgress": "{loaded} of {total}",
   "libraryDownloadingStatus": "Downloading...",

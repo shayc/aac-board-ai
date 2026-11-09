@@ -1,8 +1,8 @@
 import {
   loadBoard,
+  type LoadedBoard,
   type OBFBoard,
   type OBFManifest,
-  type ParsedOBZ,
   type UnzipLimits,
 } from "@shayc/open-board-format";
 import { lookup } from "mrmime";
@@ -12,6 +12,7 @@ import {
   BoardSetAlreadyExistsError,
   MAX_ID_LENGTH,
   type AssetInput,
+  type BoardSetInput,
 } from "../storage/board-set-storage";
 import { stripBoardFileExtension } from "./board-file-formats";
 
@@ -19,6 +20,18 @@ export interface ImportedBoardSet {
   id: string;
   rootBoardId: string;
 }
+
+export interface BoardFileImportFailure {
+  fileName: string;
+  error: unknown;
+}
+
+export interface BoardFilesImportOutcome {
+  importedBoardSets: ImportedBoardSet[];
+  failures: BoardFileImportFailure[];
+}
+
+type BoardSetContent = Omit<BoardSetInput, "id">;
 
 /**
  * Decompression caps used by every OBZ import path. Limits are checked against
@@ -34,32 +47,35 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
   maxEntries: 5000,
 };
 
-export async function importBoardFiles(
+export async function importEachBoardFile(
   files: File[],
-): Promise<ImportedBoardSet[]> {
+): Promise<BoardFilesImportOutcome> {
   const importedBoardSets: ImportedBoardSet[] = [];
+  const failures: BoardFileImportFailure[] = [];
 
   for (const file of files) {
-    importedBoardSets.push(await importBoardFile(file));
+    try {
+      importedBoardSets.push(await importBoardFile(file));
+    } catch (error) {
+      failures.push({ fileName: file.name, error });
+    }
   }
 
-  return importedBoardSets;
+  return { importedBoardSets, failures };
 }
 
-async function importBoardFile(file: File): Promise<ImportedBoardSet> {
-  const loaded = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+export async function importBoardFile(file: File): Promise<ImportedBoardSet> {
+  const loadedBoard = await loadBoard(file, { limits: BOARD_IMPORT_LIMITS });
+  const content = buildBoardSetContent(loadedBoard, file.name);
   const baseBoardSetId = deriveBoardSetId(file.name);
 
   for (let candidateNumber = 1; ; candidateNumber += 1) {
-    const boardSetId = buildBoardSetIdCandidate(
-      baseBoardSetId,
-      candidateNumber,
-    );
+    const id = buildBoardSetIdCandidate(baseBoardSetId, candidateNumber);
 
     try {
-      return loaded.format === "obz"
-        ? await importOBZArchive(loaded.archive, boardSetId, file.name)
-        : await importOBFBoard(loaded.board, boardSetId, file.name);
+      await createBoardSet({ ...content, id });
+
+      return { id, rootBoardId: content.rootBoardId };
     } catch (error) {
       if (!(error instanceof BoardSetAlreadyExistsError)) {
         throw error;
@@ -68,41 +84,32 @@ async function importBoardFile(file: File): Promise<ImportedBoardSet> {
   }
 }
 
-async function importOBZArchive(
-  archive: ParsedOBZ,
-  boardSetId: string,
+function buildBoardSetContent(
+  loadedBoard: LoadedBoard,
   fileName: string,
-): Promise<ImportedBoardSet> {
-  const { manifest, boards, rootBoard, resources } = archive;
+): BoardSetContent {
+  if (loadedBoard.format === "obf") {
+    const { board } = loadedBoard;
+
+    return {
+      rootBoardId: board.id,
+      name: nonBlankText(board.name) ?? fileName,
+      boards: [board],
+      assets: [],
+    };
+  }
+
+  const { manifest, boards, rootBoard, resources } = loadedBoard.archive;
   const boardIdByPath = buildBoardIdByPath(manifest);
 
-  await createBoardSet({
-    id: boardSetId,
+  return {
     rootBoardId: rootBoard.id,
     name: nonBlankText(rootBoard.name) ?? fileName,
     boards: Array.from(boards.values(), (board) =>
       resolveBoardLinks(board, boardIdByPath),
     ),
     assets: buildAssetInputs(resources),
-  });
-
-  return { id: boardSetId, rootBoardId: rootBoard.id };
-}
-
-async function importOBFBoard(
-  board: OBFBoard,
-  boardSetId: string,
-  fileName: string,
-): Promise<ImportedBoardSet> {
-  await createBoardSet({
-    id: boardSetId,
-    rootBoardId: board.id,
-    name: nonBlankText(board.name) ?? fileName,
-    boards: [board],
-    assets: [],
-  });
-
-  return { id: boardSetId, rootBoardId: board.id };
+  };
 }
 
 function buildBoardIdByPath(manifest: OBFManifest): Map<string, string> {
