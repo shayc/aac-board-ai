@@ -318,6 +318,31 @@ describe("app flow", () => {
     ]);
   });
 
+  test("going back after importing a ?board= link skips the import dialog", async () => {
+    await seedBoardSets([
+      {
+        id: "animals",
+        rootBoardId: "home",
+        name: "Animals",
+        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
+      },
+    ]);
+    const { router, screen } = await renderApp("/sets/animals/boards/home");
+    await screen.getByRole("button", { name: "Continue" }).click();
+
+    await router.navigate(`/?board=${encodeURIComponent(OBZ_FIXTURE_URL)}`);
+    await screen.getByRole("button", { name: "Import" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "Lots of Stuff Board" }))
+      .toBeVisible();
+
+    await router.navigate(-1);
+
+    await expect
+      .element(screen.getByRole("grid", { name: "Animals Home" }))
+      .toBeVisible();
+  });
+
   test("deleting the active board set opens the remaining one", async () => {
     await seedBoardSets([
       {

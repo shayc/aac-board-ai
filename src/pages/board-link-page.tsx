@@ -32,7 +32,8 @@ export function BoardLinkPage() {
 
   function confirmImport() {
     setHasAnswered(true);
-    void submit(null, { method: "post" });
+    // Replace the link's history entry so Back doesn't offer the import again.
+    void submit(null, { method: "post", replace: true });
   }
 
   return (
