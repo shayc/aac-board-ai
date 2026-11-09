@@ -9,8 +9,10 @@ import { pickFiles } from "./pick-files";
 
 interface UseImportBoardFilesReturn {
   pickAndImport: () => Promise<void>;
-  importFiles: (files: File[]) => Promise<ImportedBoardSet[] | undefined>;
-  importAndOpen: (files: File[]) => Promise<void>;
+  importFiles: (
+    files: readonly File[],
+  ) => Promise<ImportedBoardSet[] | undefined>;
+  importAndOpen: (files: readonly File[]) => Promise<void>;
 }
 
 export function useImportBoardFiles(): UseImportBoardFilesReturn {
@@ -18,7 +20,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
   const navigate = useNavigate();
 
   async function importFiles(
-    files: File[],
+    files: readonly File[],
   ): Promise<ImportedBoardSet[] | undefined> {
     if (files.length === 0) {
       return [];
@@ -65,7 +67,7 @@ export function useImportBoardFiles(): UseImportBoardFilesReturn {
     }
   }
 
-  async function importAndOpen(files: File[]) {
+  async function importAndOpen(files: readonly File[]) {
     const importedBoardSets = await importFiles(files);
     const onlyBoardSet =
       importedBoardSets?.length === 1 ? importedBoardSets[0] : undefined;

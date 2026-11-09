@@ -10,9 +10,9 @@ import type { MessagePart } from "../message/message-types";
 import type { BoardAction, BoardButton } from "../board-types";
 
 interface ButtonActivatorOptions {
-  getParts: () => MessagePart[];
-  setParts: (parts: MessagePart[]) => void;
-  playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
+  getParts: () => readonly MessagePart[];
+  setParts: (parts: readonly MessagePart[]) => void;
+  playMessage: (parts: readonly MessagePart[]) => Promise<PlaybackOutcome>;
   playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
   goToBoard: (targetBoardId: string) => void;
   goHome: () => void;
@@ -54,7 +54,7 @@ export function createButtonActivator({
     void playPart(part);
   }
 
-  function runActions(actions: BoardAction[]) {
+  function runActions(actions: readonly BoardAction[]) {
     if (actions.some((action) => action.kind === "home")) {
       goHome();
     }
@@ -77,7 +77,10 @@ export function createButtonActivator({
     });
   }
 
-  function commitEdits(parts: MessagePart[], actions: BoardAction[]) {
+  function commitEdits(
+    parts: readonly MessagePart[],
+    actions: readonly BoardAction[],
+  ) {
     const edits = actions.filter(isMessageEdit);
     if (edits.length === 0) {
       return parts;
@@ -98,7 +101,10 @@ function isMessageEdit(action: BoardAction): action is MessageEdit {
   return action.kind !== "home" && action.kind !== "play";
 }
 
-function applyEdit(parts: MessagePart[], edit: MessageEdit): MessagePart[] {
+function applyEdit(
+  parts: readonly MessagePart[],
+  edit: MessageEdit,
+): readonly MessagePart[] {
   switch (edit.kind) {
     case "spell":
       return appendText(parts, edit.text);

@@ -7,11 +7,11 @@ import { createButtonActivator } from "./button-activator";
 
 type ActivationOptions = Parameters<typeof createButtonActivator>[0];
 
-function setup(initialParts: MessagePart[] = []) {
+function setup(initialParts: readonly MessagePart[] = []) {
   let currentParts = initialParts;
   const message = {
     getParts: () => currentParts,
-    setParts: vi.fn<(parts: MessagePart[]) => void>((parts) => {
+    setParts: vi.fn<ActivationOptions["setParts"]>((parts) => {
       currentParts = parts;
     }),
   };

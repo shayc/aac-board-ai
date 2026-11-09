@@ -36,7 +36,7 @@ export function useGridFocus(
         return;
       }
 
-      const from = findGridPosition(event.target as Element | null);
+      const from = findGridPosition(event.target);
       if (!from) {
         event.continuePropagation();
 

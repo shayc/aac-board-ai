@@ -12,7 +12,7 @@ import {
 } from "../storage/board-set-storage";
 
 export interface BoardSetsSnapshot {
-  boardSets: BoardSetRecord[];
+  boardSets: readonly BoardSetRecord[];
   isLoading: boolean;
   error: Error | undefined;
 }

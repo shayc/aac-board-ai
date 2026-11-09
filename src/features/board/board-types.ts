@@ -1,28 +1,28 @@
 export interface Board {
-  id: string;
-  name: string;
-  locale?: string;
-  grid: BoardGrid;
-  buttons: BoardButton[];
-  translationsByLocale: TranslationsByLocale;
+  readonly id: string;
+  readonly name: string;
+  readonly locale?: string;
+  readonly grid: BoardGrid;
+  readonly buttons: readonly BoardButton[];
+  readonly translationsByLocale: TranslationsByLocale;
 }
 
 export interface BoardGrid {
-  rows: number;
-  columns: number;
-  order?: (string | null)[][];
+  readonly rows: number;
+  readonly columns: number;
+  readonly order?: readonly (readonly (string | null)[])[];
 }
 
 export interface BoardButton {
-  id: string;
-  label: string;
-  vocalization?: string;
-  imageSrc?: string;
-  soundSrc?: string;
-  backgroundColor?: string;
-  borderColor?: string;
-  actions: BoardAction[];
-  linkedBoardId?: string;
+  readonly id: string;
+  readonly label: string;
+  readonly vocalization?: string;
+  readonly imageSrc?: string;
+  readonly soundSrc?: string;
+  readonly backgroundColor?: string;
+  readonly borderColor?: string;
+  readonly actions: readonly BoardAction[];
+  readonly linkedBoardId?: string;
 }
 
 export type BoardAction =

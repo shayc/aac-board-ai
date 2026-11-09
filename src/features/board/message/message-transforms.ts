@@ -10,17 +10,22 @@ export function createPart(content: MessagePartInput): MessagePart {
 }
 
 export function appendPart(
-  parts: MessagePart[],
+  parts: readonly MessagePart[],
   content: MessagePartInput,
-): MessagePart[] {
+): readonly MessagePart[] {
   return [...parts, createPart(content)];
 }
 
-export function appendSpace(parts: MessagePart[]): MessagePart[] {
+export function appendSpace(
+  parts: readonly MessagePart[],
+): readonly MessagePart[] {
   return appendPart(parts, { label: "" });
 }
 
-export function appendText(parts: MessagePart[], text: string): MessagePart[] {
+export function appendText(
+  parts: readonly MessagePart[],
+  text: string,
+): readonly MessagePart[] {
   const lastPart = parts.at(-1);
 
   if (!lastPart || !isTextOnlyPart(lastPart)) {
@@ -33,7 +38,9 @@ export function appendText(parts: MessagePart[], text: string): MessagePart[] {
   });
 }
 
-export function applyBackspace(parts: MessagePart[]): MessagePart[] {
+export function applyBackspace(
+  parts: readonly MessagePart[],
+): readonly MessagePart[] {
   const lastPart = parts.at(-1);
   if (!lastPart) {
     return parts;

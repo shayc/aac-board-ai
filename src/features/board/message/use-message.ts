@@ -3,17 +3,17 @@ import { applyBackspace, createPart } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
 export interface UseMessageReturn {
-  parts: MessagePart[];
+  parts: readonly MessagePart[];
   text: string;
-  getParts: () => MessagePart[];
+  getParts: () => readonly MessagePart[];
   replaceWithText: (input: string) => void;
   backspace: () => void;
-  setParts: (parts: MessagePart[]) => void;
+  setParts: (parts: readonly MessagePart[]) => void;
   clear: () => void;
 }
 
 export function useMessage(): UseMessageReturn {
-  const [parts, setPartsState] = useState<MessagePart[]>([]);
+  const [parts, setPartsState] = useState<readonly MessagePart[]>([]);
   const partsRef = useRef(parts);
   const text = parts.map((part) => part.label).join(" ");
 
@@ -21,7 +21,7 @@ export function useMessage(): UseMessageReturn {
     return partsRef.current;
   }
 
-  function setParts(next: MessagePart[]) {
+  function setParts(next: readonly MessagePart[]) {
     partsRef.current = next;
     setPartsState(next);
   }

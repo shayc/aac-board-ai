@@ -5,21 +5,23 @@ export function selectSuggestionPhrases(
   candidates: readonly (string | undefined)[],
 ): string[] {
   const seen = new Set<string>([normalize(text)]);
+  const phrases: string[] = [];
 
-  return candidates.filter((candidate): candidate is string => {
+  for (const candidate of candidates) {
     if (!candidate || hasSuggestionArtifacts(candidate)) {
-      return false;
+      continue;
     }
 
     const key = normalize(candidate);
     if (seen.has(key)) {
-      return false;
+      continue;
     }
 
     seen.add(key);
+    phrases.push(candidate);
+  }
 
-    return true;
-  });
+  return phrases;
 }
 
 function hasSuggestionArtifacts(phrase: string): boolean {

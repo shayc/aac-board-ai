@@ -1,3 +1,4 @@
+import { isRecord } from "@shared/utils/is-record";
 import { data } from "react-router";
 
 export const routeErrorCodes = {
@@ -28,9 +29,9 @@ export function routeErrorResponse(code: RouteErrorCode) {
 export function isRouteErrorPayload(
   value: unknown,
 ): value is RouteErrorPayload {
-  if (!value || typeof value !== "object" || !("code" in value)) {
-    return false;
-  }
+  return isRecord(value) && isRouteErrorCode(value.code);
+}
 
-  return Object.values(routeErrorCodes).includes(value.code as RouteErrorCode);
+function isRouteErrorCode(value: unknown): value is RouteErrorCode {
+  return Object.values(routeErrorCodes).some((code) => code === value);
 }

@@ -12,6 +12,13 @@ describe("parseTilePreferences", () => {
     expect(parseTilePreferences(undefined)).toEqual(DEFAULTS);
   });
 
+  test.each([null, 0.4, "hidden", [true]])(
+    "uses defaults when the stored value %j is not an object",
+    (stored) => {
+      expect(parseTilePreferences(stored)).toEqual(DEFAULTS);
+    },
+  );
+
   test("keeps valid stored values", () => {
     const stored = {
       saturation: 0.4,

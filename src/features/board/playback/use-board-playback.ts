@@ -12,7 +12,7 @@ const TILE_OWNER = "board-tile";
 
 export interface UseBoardPlaybackReturn {
   isMessagePlaying: boolean;
-  playMessage: (parts: MessagePart[]) => Promise<PlaybackOutcome>;
+  playMessage: (parts: readonly MessagePart[]) => Promise<PlaybackOutcome>;
   playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
   stop: () => void;
 }
@@ -21,7 +21,7 @@ export function useBoardPlayback(): UseBoardPlaybackReturn {
   const playback = usePlayback();
   const isMessagePlaying = useIsPlaying(MESSAGE_OWNER);
 
-  function playMessage(parts: MessagePart[]) {
+  function playMessage(parts: readonly MessagePart[]) {
     return playback.play({
       owner: MESSAGE_OWNER,
       steps: planPlayback(parts),

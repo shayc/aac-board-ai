@@ -35,7 +35,7 @@ export const BOARD_IMPORT_LIMITS: UnzipLimits = {
 };
 
 export async function importBoardFiles(
-  files: File[],
+  files: readonly File[],
 ): Promise<ImportedBoardSet[]> {
   const importedBoardSets: ImportedBoardSet[] = [];
 

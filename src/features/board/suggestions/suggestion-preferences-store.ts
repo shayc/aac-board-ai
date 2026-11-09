@@ -1,5 +1,6 @@
 import { useExternalStore } from "@shared/state/external-store";
 import { createPersistedStore } from "@shared/state/persisted-store";
+import { isRecord } from "@shared/utils/is-record";
 
 interface SuggestionPreferences {
   customInstructions: string;
@@ -8,7 +9,7 @@ interface SuggestionPreferences {
 export function parseSuggestionPreferences(
   raw: unknown,
 ): SuggestionPreferences {
-  const stored = (raw ?? {}) as Record<string, unknown>;
+  const stored: Record<string, unknown> = isRecord(raw) ? raw : {};
 
   return {
     customInstructions:

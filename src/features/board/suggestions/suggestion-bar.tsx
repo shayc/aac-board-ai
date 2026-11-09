@@ -7,7 +7,7 @@ import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
 export interface SuggestionBarProps {
   status: SuggestionStatus;
-  phrases: string[];
+  phrases: readonly string[];
   onEnable: () => void;
   onPhraseSelect: (phrase: string) => void;
 }

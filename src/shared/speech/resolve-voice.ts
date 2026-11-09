@@ -24,7 +24,7 @@ function findPreferredRegionCode(
 }
 
 function findFallbackVoice(
-  voices: SpeechSynthesisVoice[],
+  voices: readonly SpeechSynthesisVoice[],
   language: string,
   preferredLocales: readonly string[],
 ): SpeechSynthesisVoice | null {
