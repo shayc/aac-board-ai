@@ -4,6 +4,7 @@ import { BoardPage } from "@pages/board-page";
 import { LoadingState } from "@shared/ui/loading-state";
 import type { RouteObject } from "react-router";
 import { boardLoader } from "./loaders/board-loader";
+import { BOARD_SET_ROUTE_ID, boardSetLoader } from "./loaders/board-set-loader";
 import { boardSetIndexLoader } from "./loaders/board-set-index-loader";
 import { rootIndexLoader } from "./loaders/root-index-loader";
 import { NotFound } from "./not-found";
@@ -24,7 +25,9 @@ export const appRoutes: RouteObject[] = [
             loader: rootIndexLoader,
           },
           {
+            id: BOARD_SET_ROUTE_ID,
             path: BOARD_SET_SEGMENT,
+            loader: boardSetLoader,
             children: [
               { index: true, loader: boardSetIndexLoader },
               {

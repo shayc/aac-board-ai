@@ -10,18 +10,20 @@ import { beforeEach, describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { userEvent } from "vitest/browser";
 import { insertBoardSet } from "../storage/board-set-storage";
+import { listBoardSummaries } from "../storage/list-board-summaries";
 import { makeOBFBoard, resetBoardsDB } from "../testing";
 import { BoardSelector } from "./board-selector";
 
-async function renderSelector(initialPath: string) {
+async function renderSelector(boardSetId: string, boardId: string) {
+  const summaries = await listBoardSummaries(boardSetId);
   const router = createMemoryRouter(
     [
       {
         path: "/sets/:boardSetId/boards/:boardId",
-        element: <BoardSelector />,
+        element: <BoardSelector summaries={summaries} />,
       },
     ],
-    { initialEntries: [initialPath] },
+    { initialEntries: [`/sets/${boardSetId}/boards/${boardId}`] },
   );
 
   const screen = await render(
@@ -51,7 +53,7 @@ beforeEach(async () => {
 
 describe("BoardSelector", () => {
   test("opens the popup with boards listed alphabetically and the current board selected", async () => {
-    const { screen } = await renderSelector("/sets/set-1/boards/root");
+    const { screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
 
@@ -72,7 +74,7 @@ describe("BoardSelector", () => {
   });
 
   test("navigates and closes the popup when a board is clicked", async () => {
-    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
     await screen.getByRole("option", { name: "Animals" }).click();
@@ -85,7 +87,7 @@ describe("BoardSelector", () => {
   });
 
   test("navigates with arrow keys and Enter", async () => {
-    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").click();
     await userEvent.keyboard("{ArrowDown}{Enter}");
@@ -94,7 +96,7 @@ describe("BoardSelector", () => {
   });
 
   test("filters while typing and selects the first match with Enter", async () => {
-    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").fill("ani");
 
@@ -111,7 +113,7 @@ describe("BoardSelector", () => {
   });
 
   test("updates popup labels and empty results when the locale changes", async () => {
-    const { screen } = await renderSelector("/sets/set-1/boards/root");
+    const { screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("button", { name: "Open board list" }).click();
     await screen.getByRole("combobox", { name: "Board" }).fill("no-match");
@@ -134,7 +136,7 @@ describe("BoardSelector", () => {
   });
 
   test("closes the popup on Escape and restores the current board name on blur", async () => {
-    const { router, screen } = await renderSelector("/sets/set-1/boards/root");
+    const { router, screen } = await renderSelector("set-1", "root");
 
     await screen.getByRole("combobox").fill("ani");
     await userEvent.keyboard("{Escape}");
@@ -167,7 +169,7 @@ describe("BoardSelector", () => {
 
     setStoredLanguage("es");
 
-    const { screen } = await renderSelector("/sets/set-2/boards/root");
+    const { screen } = await renderSelector("set-2", "root");
 
     await expect.element(screen.getByRole("combobox")).toHaveValue("Inicio");
 
@@ -194,7 +196,7 @@ describe("BoardSelector", () => {
 
     setStoredLanguage("es");
 
-    const { screen } = await renderSelector("/sets/set-2/boards/root");
+    const { screen } = await renderSelector("set-2", "root");
 
     await expect
       .element(screen.getByRole("combobox"))

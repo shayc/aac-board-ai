@@ -1,9 +1,8 @@
 import {
   BoardNotFoundError,
-  loadBoardInLanguage,
+  loadStoredBoard,
   type Board,
 } from "@features/board";
-import { getStoredLanguage } from "@shared/language/language-store";
 import type { LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
 
@@ -17,11 +16,7 @@ export async function boardLoader({
   }
 
   try {
-    return await loadBoardInLanguage(
-      { boardSetId, boardId },
-      getStoredLanguage(),
-      request.signal,
-    );
+    return await loadStoredBoard({ boardSetId, boardId }, request.signal);
   } catch (error) {
     if (error instanceof BoardNotFoundError) {
       throw routeErrorResponse(routeErrorCodes.boardNotFound);

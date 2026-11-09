@@ -1,14 +1,26 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { m } from "@paraglide/messages.js";
+import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
+import type { BoardSummary } from "../storage/list-board-summaries";
+import { findStringTranslations } from "../translation/board-translations";
 import { useBoardNavigation } from "./use-board-navigation";
-import { useBoardOptions } from "./use-board-options";
 
-export function BoardSelector() {
+interface BoardOption {
+  id: string;
+  name: string;
+}
+
+interface BoardSelectorProps {
+  summaries: readonly BoardSummary[];
+}
+
+export function BoardSelector({ summaries }: BoardSelectorProps) {
   const t = useTranslate();
-  const { boardSetId, boardId, goToBoard } = useBoardNavigation();
-  const boards = useBoardOptions(boardSetId);
+  const { language } = useLanguage();
+  const { boardId, goToBoard } = useBoardNavigation();
+  const boards = toBoardOptions(summaries, language);
 
   const selectedBoard = boards.find((board) => board.id === boardId);
 
@@ -48,4 +60,18 @@ export function BoardSelector() {
       sx={{ width: 320, maxWidth: "100%" }}
     />
   );
+}
+
+function toBoardOptions(
+  summaries: readonly BoardSummary[],
+  language: string,
+): BoardOption[] {
+  return summaries
+    .map(({ id, name, translationsByLocale }) => ({
+      id,
+      name:
+        findStringTranslations(translationsByLocale, language)?.get(name) ??
+        name,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name, language));
 }

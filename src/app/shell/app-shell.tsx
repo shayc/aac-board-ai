@@ -1,11 +1,11 @@
 import { LibraryDrawer } from "@app/library/library-drawer";
 import { OnboardingDialog } from "@app/onboarding/onboarding-dialog";
 import { useOnboarding } from "@app/onboarding/use-onboarding";
-import { useRevalidateOnLanguageChange } from "@app/routing/use-revalidate-on-language-change";
 import { SettingsDrawer } from "@app/settings/settings-drawer";
 import {
   BoardFileDropOverlay,
   useBoardFileDrop,
+  useBoardSetTranslation,
   useImportBoardFilesOnLaunch,
 } from "@features/board";
 import Box from "@mui/material/Box";
@@ -20,7 +20,7 @@ export function AppShell() {
   const fileDrop = useBoardFileDrop();
 
   useImportBoardFilesOnLaunch();
-  useRevalidateOnLanguageChange();
+  useBoardSetTranslation();
 
   return (
     <Box
