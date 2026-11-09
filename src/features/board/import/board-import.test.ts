@@ -31,7 +31,7 @@ describe("importBoardFiles", () => {
     await resetBoardsDB();
   });
 
-  test("imports an OBF file into IndexedDB and refreshes the board-set library", async () => {
+  test("stores an imported OBF file in IndexedDB", async () => {
     const fixtureFile = await loadFixtureFile(OBF_FIXTURE);
     const board = await loadOBF(fixtureFile);
 
@@ -44,10 +44,6 @@ describe("importBoardFiles", () => {
         id: IMPORTED_SET_ID,
         rootBoardId: board.id,
       },
-    ]);
-
-    expect(await listBoardSetRecords()).toEqual([
-      expect.objectContaining({ id: IMPORTED_SET_ID }),
     ]);
 
     const boardSets = await listBoardSetRecords();
