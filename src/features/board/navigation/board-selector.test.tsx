@@ -177,7 +177,7 @@ describe("BoardSelector", () => {
       .toBeInTheDocument();
   });
 
-  test("lists a board named after an inherited object property that its translations leave out", async () => {
+  test("shows the name of a board named after an inherited object property that its translations leave out", async () => {
     await insertBoardSet({
       id: "set-2",
       name: "Set",
