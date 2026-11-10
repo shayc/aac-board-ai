@@ -377,6 +377,46 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
+  test("a set added while a translation model downloads leaves the download running", async () => {
+    await seedTwoBoardSet();
+    const translator = stubTranslator((input) => `[es] ${input}`);
+    const download = Promise.withResolvers<void>();
+    const createInstance = translator.create.getMockImplementation();
+    let isModelDownloaded = false;
+    translator.create.mockImplementation(async (options) => {
+      // Only the language change carries the user gesture a download needs.
+      if (translator.create.mock.calls.length > 1 && !isModelDownloaded) {
+        throw new DOMException("Needs a user gesture", "NotAllowedError");
+      }
+
+      await download.promise;
+      isModelDownloaded = true;
+
+      return createInstance?.(options);
+    });
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("es");
+    await expect.poll(() => translator.create.mock.calls.length).toBe(1);
+
+    await seedBoardSets([{ id: "zoo", name: "Zoo", rootBoardId: "home" }]);
+    await screen.getByRole("button", { name: "Abrir biblioteca" }).click();
+    await expect
+      .element(screen.getByRole("link", { name: "Zoo" }))
+      .toBeVisible();
+    download.resolve();
+
+    await expect
+      .element(screen.getByRole("link", { name: "[es] Zoo" }))
+      .toBeVisible();
+    await screen.getByRole("button", { name: "Cerrar biblioteca" }).click();
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Home" }))
+      .toBeVisible();
+  });
+
   test("client navigation from a board sets the localized not-found title", async () => {
     const { router, screen } = await renderApp();
 
