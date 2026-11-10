@@ -588,7 +588,7 @@ describe("app flow", () => {
     await screen.getByRole("button", { name: "Continue" }).click();
     setStoredLanguage("es");
     await screen.getByRole("button", { name: "Abrir ajustes" }).click();
-    const notice = screen.getByRole("alert");
+    const notice = screen.getByRole("status");
 
     await expect
       .element(notice)
@@ -598,6 +598,26 @@ describe("app flow", () => {
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
 
     translation.resolve();
+    await expect.element(notice).not.toBeInTheDocument();
+  });
+
+  test("changing language mid-translation clears the board translation status", async () => {
+    await seedTwoBoardSet();
+    stubTranslator(() => new Promise(() => {}));
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("es");
+    await screen.getByRole("button", { name: "Abrir ajustes" }).click();
+    const notice = screen.getByRole("status");
+    await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
+
+    setStoredLanguage("en");
+
+    await expect
+      .element(screen.getByRole("combobox", { name: "Language" }))
+      .toBeVisible();
     await expect.element(notice).not.toBeInTheDocument();
   });
 
