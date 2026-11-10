@@ -16,7 +16,7 @@ const GROUPS: ScanGroup<string>[] = [
 const NO_PAUSE = Infinity;
 
 function atGroup(group: string, completedPasses = 0): ScanPosition<string> {
-  return { group, item: null, completedPasses };
+  return { level: "groups", group, completedPasses };
 }
 
 function atItem(
@@ -24,17 +24,21 @@ function atItem(
   item: string,
   completedPasses = 0,
 ): ScanPosition<string> {
-  return { group, item, completedPasses };
+  return { level: "items", group, item, completedPasses };
+}
+
+function atExit(group: string, completedPasses = 0): ScanPosition<string> {
+  return { level: "exit", group, completedPasses };
 }
 
 function advanceTimes(
   position: ScanPosition<string> | null,
   times: number,
-  maxGroupPasses = NO_PAUSE,
+  maxPasses = NO_PAUSE,
 ): ScanPosition<string> | null {
   let current = position;
   for (let step = 0; step < times; step++) {
-    current = advanceScan(GROUPS, current, maxGroupPasses);
+    current = advanceScan(GROUPS, current, maxPasses);
   }
 
   return current;
@@ -65,14 +69,14 @@ describe("advanceScan", () => {
   });
 
   test("pauses once the groups were passed the maximum number of times", () => {
-    const maxGroupPasses = 2;
+    const maxPasses = 2;
     const stepsPerPass = GROUPS.length;
 
     expect(
-      advanceTimes(atGroup("row 1"), 2 * stepsPerPass - 1, maxGroupPasses),
+      advanceTimes(atGroup("row 1"), 2 * stepsPerPass - 1, maxPasses),
     ).toEqual(atGroup("row 2", 1));
     expect(
-      advanceTimes(atGroup("row 1"), 2 * stepsPerPass, maxGroupPasses),
+      advanceTimes(atGroup("row 1"), 2 * stepsPerPass, maxPasses),
     ).toBeNull();
   });
 
@@ -85,15 +89,24 @@ describe("advanceScan", () => {
     );
   });
 
-  test("gives the items a second pass", () => {
-    expect(advanceTimes(atItem("row 2", "help"), 1)).toEqual(
+  test("offers an exit step after the last item", () => {
+    expect(advanceTimes(atItem("row 2", "help"), 1)).toEqual(atExit("row 2"));
+  });
+
+  test("returns to the first item after the exit step, counting the pass", () => {
+    expect(advanceTimes(atExit("row 2"), 1)).toEqual(
       atItem("row 2", "more", 1),
     );
   });
 
-  test("returns to the groups after two passes over the items", () => {
-    expect(advanceTimes(atItem("row 2", "help", 1), 1)).toEqual(
-      atGroup("row 2"),
+  test("moves on to the next group once the items were passed the maximum number of times", () => {
+    const maxPasses = 2;
+
+    expect(advanceTimes(atExit("row 1"), 1, maxPasses)).toEqual(
+      atItem("row 1", "yes", 1),
+    );
+    expect(advanceTimes(atExit("row 1", 1), 1, maxPasses)).toEqual(
+      atGroup("play"),
     );
   });
 
@@ -104,6 +117,7 @@ describe("advanceScan", () => {
     expect(advanceTimes(atItem("removed row", "yes"), 1)).toEqual(
       atGroup("row 1"),
     );
+    expect(advanceTimes(atExit("removed row"), 1)).toEqual(atGroup("row 1"));
   });
 
   test("continues at the first item when the current item is gone", () => {
@@ -144,6 +158,13 @@ describe("selectScan", () => {
     expect(selectScan(GROUPS, atItem("row 2", "stop"))).toEqual({
       kind: "activated",
       target: "stop",
+    });
+  });
+
+  test("returns to the groups when the exit step is selected", () => {
+    expect(selectScan(GROUPS, atExit("row 2", 1))).toEqual({
+      kind: "moved",
+      position: atGroup("row 2"),
     });
   });
 

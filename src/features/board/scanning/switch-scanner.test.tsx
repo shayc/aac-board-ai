@@ -221,7 +221,7 @@ describe("switch scanning", () => {
       });
     });
 
-    test("returns to the rows after two passes over a row's tiles", async () => {
+    test("highlights the row again after its last tile, as a step that leaves it", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
@@ -232,6 +232,18 @@ describe("switch scanning", () => {
       await expect.poll(highlightedNames).toEqual(["no"]);
 
       await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await pressSwitch();
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+    });
+
+    test("moves on to the next row after two passes over a row's tiles", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes"]);
 
       await waitScanInterval();
@@ -239,6 +251,18 @@ describe("switch scanning", () => {
 
       await waitScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
     test("restarts at the play button once the message has content", async () => {
@@ -419,6 +443,44 @@ describe("switch scanning", () => {
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["stop"]);
       });
+    });
+
+    test("leaves a row through the exit step after its last tile", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await pressSwitch("Enter");
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["no"]);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await pressSwitch("Enter");
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+      expect(speech.spokenTexts()).toEqual([]);
+    });
+
+    test("keeps cycling through a row's tiles until the exit step is selected", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await pressSwitch("Enter");
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      for (let pass = 0; pass < 3; pass++) {
+        await pressSwitch("Space");
+        await expect.poll(highlightedNames).toEqual(["no"]);
+
+        await pressSwitch("Space");
+        await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+        await pressSwitch("Space");
+        await expect.poll(highlightedNames).toEqual(["yes"]);
+      }
     });
 
     test("highlights a button that becomes enabled in the highlighted group", async () => {

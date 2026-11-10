@@ -3,6 +3,10 @@
  * through its items; selecting an item activates it. A group with one item
  * activates that item directly.
  *
+ * After a group's last item the whole group is highlighted once more as an
+ * exit step: selecting it returns to the groups, which is how a wrongly
+ * selected group is left.
+ *
  * Positions hold targets rather than indexes, so the groups may change between
  * steps: a position whose target is gone restarts the scan.
  */
@@ -12,21 +16,20 @@ export interface ScanGroup<Target> {
   items: readonly [Target, ...Target[]];
 }
 
-export interface ScanPosition<Target> {
+interface LevelPosition<Target> {
   group: Target;
-  /** `null` while the scan is moving through groups. */
-  item: Target | null;
   /** Passes over the current level that ended without a selection. */
   completedPasses: number;
 }
 
+export type ScanPosition<Target> =
+  | (LevelPosition<Target> & { level: "groups" })
+  | (LevelPosition<Target> & { level: "items"; item: Target })
+  | (LevelPosition<Target> & { level: "exit" });
+
 export type ScanSelection<Target> =
   | { kind: "moved"; position: ScanPosition<Target> | null }
   | { kind: "activated"; target: Target };
-
-// A second pass gives a missed item another chance before the scan returns
-// to the groups, which is how a wrongly selected group is left.
-const ITEM_PASSES = 2;
 
 export function startScan<Target>(
   groups: readonly ScanGroup<Target>[],
@@ -37,13 +40,14 @@ export function startScan<Target>(
 }
 
 /**
- * Moves to the next group or item. Returns `null`, a paused scan, once the
- * groups have been passed `maxGroupPasses` times without a selection.
+ * Moves to the next group, item, or exit step. `maxPasses` passes over a level
+ * without a selection end it: the groups return `null`, a paused scan, and a
+ * group's items move on to the next group.
  */
 export function advanceScan<Target>(
   groups: readonly ScanGroup<Target>[],
   position: ScanPosition<Target> | null,
-  maxGroupPasses: number,
+  maxPasses: number,
 ): ScanPosition<Target> | null {
   const groupIndex = findGroupIndex(groups, position);
   const group = groups[groupIndex];
@@ -51,11 +55,26 @@ export function advanceScan<Target>(
     return startScan(groups);
   }
 
-  if (position.item === null) {
-    return advanceGroup(groups, groupIndex, position, maxGroupPasses);
+  if (position.level === "groups") {
+    return advanceGroup(
+      groups,
+      groupIndex,
+      position.completedPasses,
+      maxPasses,
+    );
   }
 
-  return advanceItem(group, position.item, position.completedPasses);
+  if (position.level === "items") {
+    return advanceItem(group, position.item, position.completedPasses);
+  }
+
+  const completedPasses = position.completedPasses + 1;
+  if (completedPasses < maxPasses) {
+    return itemPosition(group, group.items[0], completedPasses);
+  }
+
+  // The exit step has just shown the whole group, so the scan moves on from it.
+  return advanceGroup(groups, groupIndex, 0, maxPasses);
 }
 
 export function selectScan<Target>(
@@ -67,29 +86,34 @@ export function selectScan<Target>(
     return { kind: "moved", position: startScan(groups) };
   }
 
-  if (position.item === null && group.items.length === 1) {
-    return { kind: "activated", target: group.items[0] };
+  if (position.level === "exit") {
+    return { kind: "moved", position: groupPosition(group, 0) };
   }
 
-  if (position.item !== null && group.items.includes(position.item)) {
+  const firstItem = group.items[0];
+  if (position.level === "groups" && group.items.length === 1) {
+    return { kind: "activated", target: firstItem };
+  }
+
+  if (position.level === "items" && group.items.includes(position.item)) {
     return { kind: "activated", target: position.item };
   }
 
-  return { kind: "moved", position: itemPosition(group, group.items[0], 0) };
+  return { kind: "moved", position: itemPosition(group, firstItem, 0) };
 }
 
 function advanceGroup<Target>(
   groups: readonly ScanGroup<Target>[],
   groupIndex: number,
-  position: ScanPosition<Target>,
-  maxGroupPasses: number,
+  previousPasses: number,
+  maxPasses: number,
 ): ScanPosition<Target> | null {
   const nextIndex = (groupIndex + 1) % groups.length;
   const hasCompletedPass = nextIndex === 0;
-  const completedPasses = position.completedPasses + (hasCompletedPass ? 1 : 0);
+  const completedPasses = previousPasses + (hasCompletedPass ? 1 : 0);
 
   const nextGroup = groups[nextIndex];
-  if (!nextGroup || completedPasses >= maxGroupPasses) {
+  if (!nextGroup || completedPasses >= maxPasses) {
     return null;
   }
 
@@ -103,15 +127,11 @@ function advanceItem<Target>(
 ): ScanPosition<Target> {
   // An item that is gone has index -1, so the scan continues at the first item.
   const nextItem = group.items[group.items.indexOf(item) + 1];
-  if (nextItem !== undefined) {
-    return itemPosition(group, nextItem, completedPasses);
+  if (nextItem === undefined) {
+    return { level: "exit", group: group.container, completedPasses };
   }
 
-  if (completedPasses + 1 >= ITEM_PASSES) {
-    return groupPosition(group, 0);
-  }
-
-  return itemPosition(group, group.items[0], completedPasses + 1);
+  return itemPosition(group, nextItem, completedPasses);
 }
 
 function findGroupIndex<Target>(
@@ -127,7 +147,7 @@ function groupPosition<Target>(
   group: ScanGroup<Target>,
   completedPasses: number,
 ): ScanPosition<Target> {
-  return { group: group.container, item: null, completedPasses };
+  return { level: "groups", group: group.container, completedPasses };
 }
 
 function itemPosition<Target>(
@@ -135,5 +155,5 @@ function itemPosition<Target>(
   item: Target,
   completedPasses: number,
 ): ScanPosition<Target> {
-  return { group: group.container, item, completedPasses };
+  return { level: "items", group: group.container, item, completedPasses };
 }

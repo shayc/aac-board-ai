@@ -236,12 +236,14 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the
   pure state machine: the scan moves through groups, selecting a group moves
   through its items, and selecting an item activates it. A group with one item
-  activates it directly. Two passes over a group's items without a selection
-  return to the groups. Positions hold targets rather than indexes, so the
-  board may change between steps.
+  activates it directly. After a group's last item the whole group is
+  highlighted once more as an exit step; selecting it returns to the groups.
+  Positions hold targets rather than indexes, so the board may change between
+  steps.
 - Automatic scanning moves on a timer and either switch selects. It starts on
-  the first press and pauses after two passes over the groups. Two-switch step
-  scanning moves with Space and selects with Enter.
+  the first press, pauses after two passes over the groups, and moves on to the
+  next group after two passes over a group's items. Two-switch step scanning moves
+  with Space, selects with Enter, and keeps going around until a selection.
 - Switch keys count wherever focus is, including on a header button, and are
   kept from the focused control. Keys typed into a text field are left alone,
   and so are keys pressed while a dialog, drawer, or menu covers the board.

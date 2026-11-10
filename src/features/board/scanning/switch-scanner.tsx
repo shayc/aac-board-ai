@@ -27,9 +27,10 @@ const SWITCH_KEYS: Record<ScanMethod, ReadonlyMap<string, ScanAction>> = {
   ]),
 };
 
-// An automatic scan pauses so the highlight doesn't keep moving while nobody
-// is selecting; the next switch press starts it again.
-const MAX_GROUP_PASSES: Record<ScanMethod, number> = {
+// An automatic scan stops moving while nobody is selecting: it pauses after
+// this many passes over the groups, and moves on from a group after as many
+// over its items. A step scan only moves on a press, so it keeps going around.
+const MAX_PASSES: Record<ScanMethod, number> = {
   auto: 2,
   step: Infinity,
 };
@@ -69,7 +70,7 @@ export function SwitchScanner({
 
     const groups = readScanGroups(scope);
     if (action === "step") {
-      setPosition(advanceScan(groups, position, MAX_GROUP_PASSES[method]));
+      setPosition(advanceScan(groups, position, MAX_PASSES[method]));
 
       return;
     }
@@ -107,7 +108,7 @@ export function SwitchScanner({
       return;
     }
 
-    const target = position.item ?? position.group;
+    const target = position.level === "items" ? position.item : position.group;
     const removeHighlight = highlightScanTarget(target);
 
     // The board can remove the highlighted control or group at any time, such
