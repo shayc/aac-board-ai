@@ -80,6 +80,7 @@
   "languageLabel": "भाषा",
   "languageDownloading": "अनुवाद मॉडल डाउनलोड हो रहा है…",
   "languageDownloadProgress": "{progress}% पूर्ण",
+  "languageTranslating": "बोर्ड का अनुवाद हो रहा है…",
   "speechVoice": "आवाज़",
   "speechRate": "गति",
   "speechPitch": "पिच",

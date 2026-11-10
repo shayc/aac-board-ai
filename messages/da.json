@@ -80,6 +80,7 @@
   "languageLabel": "Sprog",
   "languageDownloading": "Downloader oversættelsesmodel…",
   "languageDownloadProgress": "{progress}% færdig",
+  "languageTranslating": "Oversætter tavler…",
   "speechVoice": "Stemme",
   "speechRate": "Hastighed",
   "speechPitch": "Tonehøjde",

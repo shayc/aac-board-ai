@@ -80,6 +80,7 @@
   "languageLabel": "Мова",
   "languageDownloading": "Завантаження моделі перекладу…",
   "languageDownloadProgress": "{progress}% завершено",
+  "languageTranslating": "Переклад дошок…",
   "speechVoice": "Голос",
   "speechRate": "Швидкість",
   "speechPitch": "Висота тону",

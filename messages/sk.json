@@ -80,6 +80,7 @@
   "languageLabel": "Jazyk",
   "languageDownloading": "Sťahovanie prekladového modelu…",
   "languageDownloadProgress": "{progress} % dokončené",
+  "languageTranslating": "Prekladanie tabuliek…",
   "speechVoice": "Hlas",
   "speechRate": "Rýchlosť",
   "speechPitch": "Výška",

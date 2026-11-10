@@ -80,6 +80,7 @@
   "languageLabel": "ภาษา",
   "languageDownloading": "กำลังดาวน์โหลดโมเดลแปลภาษา…",
   "languageDownloadProgress": "เสร็จสิ้น {progress}%",
+  "languageTranslating": "กำลังแปลบอร์ด…",
   "speechVoice": "เสียง",
   "speechRate": "ความเร็ว",
   "speechPitch": "ระดับเสียงสูงต่ำ",

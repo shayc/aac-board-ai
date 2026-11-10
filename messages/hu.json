@@ -80,6 +80,7 @@
   "languageLabel": "Nyelv",
   "languageDownloading": "Fordítási modell letöltése…",
   "languageDownloadProgress": "{progress}% kész",
+  "languageTranslating": "Táblák fordítása…",
   "speechVoice": "Hang",
   "speechRate": "Sebesség",
   "speechPitch": "Hangmagasság",

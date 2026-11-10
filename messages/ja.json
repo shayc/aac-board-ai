@@ -80,6 +80,7 @@
   "languageLabel": "言語",
   "languageDownloading": "翻訳モデルをダウンロードしています…",
   "languageDownloadProgress": "{progress}% 完了",
+  "languageTranslating": "ボードを翻訳しています…",
   "speechVoice": "音声",
   "speechRate": "速度",
   "speechPitch": "ピッチ",

@@ -80,6 +80,7 @@
   "languageLabel": "Dil",
   "languageDownloading": "Çeviri modeli indiriliyor…",
   "languageDownloadProgress": "%{progress} tamamlandı",
+  "languageTranslating": "Panolar çevriliyor…",
   "speechVoice": "Ses",
   "speechRate": "Hız",
   "speechPitch": "Perde",

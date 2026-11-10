@@ -80,6 +80,7 @@
   "languageLabel": "Bahasa",
   "languageDownloading": "Mengunduh model terjemahan…",
   "languageDownloadProgress": "{progress}% selesai",
+  "languageTranslating": "Menerjemahkan papan…",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan",
   "speechPitch": "Nada",

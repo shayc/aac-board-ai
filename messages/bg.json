@@ -80,6 +80,7 @@
   "languageLabel": "Език",
   "languageDownloading": "Изтегляне на модел за превод…",
   "languageDownloadProgress": "{progress}% завършено",
+  "languageTranslating": "Превеждане на дъските…",
   "speechVoice": "Глас",
   "speechRate": "Скорост",
   "speechPitch": "Височина",

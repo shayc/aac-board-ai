@@ -4,6 +4,7 @@ import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
 import { boardSetIdFromPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
+import { setIsTranslatingBoards } from "./board-translation-status";
 import { translateBoardSets } from "./translate-board-sets";
 
 interface TranslationRun {
@@ -45,6 +46,7 @@ export function useBoardSetTranslation(): void {
       language,
       {
         signal,
+        onTranslating: () => setIsTranslatingBoards(true),
         onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
       },
     ),
@@ -57,7 +59,10 @@ export function useBoardSetTranslation(): void {
     const controller = new AbortController();
     runRef.current = { signal: controller.signal, queue: Promise.resolve() };
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      setIsTranslatingBoards(false);
+    };
   }, [language]);
 
   useEffect(() => {
@@ -66,7 +71,15 @@ export function useBoardSetTranslation(): void {
       return;
     }
 
-    run.queue = run.queue.then(() => translate(run.signal));
+    run.queue = run.queue.then(async () => {
+      await translate(run.signal);
+
+      // An aborted run already cleared the status, and the next run may have
+      // set it again.
+      if (!run.signal.aborted) {
+        setIsTranslatingBoards(false);
+      }
+    });
   }, [language, boardSetIdsKey, isLoading]);
 }
 

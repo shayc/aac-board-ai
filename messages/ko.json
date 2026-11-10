@@ -80,6 +80,7 @@
   "languageLabel": "언어",
   "languageDownloading": "번역 모델 다운로드 중…",
   "languageDownloadProgress": "{progress}% 완료",
+  "languageTranslating": "보드 번역 중…",
   "speechVoice": "음성",
   "speechRate": "속도",
   "speechPitch": "음높이",

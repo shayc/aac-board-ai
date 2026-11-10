@@ -80,6 +80,7 @@
   "languageLabel": "Jezik",
   "languageDownloading": "Prenašanje prevajalskega modela…",
   "languageDownloadProgress": "{progress} % dokončano",
+  "languageTranslating": "Prevajanje tabel…",
   "speechVoice": "Glas",
   "speechRate": "Hitrost",
   "speechPitch": "Višina",

@@ -80,6 +80,7 @@
   "languageLabel": "Sprache",
   "languageDownloading": "Übersetzungsmodell wird heruntergeladen…",
   "languageDownloadProgress": "{progress}% abgeschlossen",
+  "languageTranslating": "Tafeln werden übersetzt…",
   "speechVoice": "Stimme",
   "speechRate": "Geschwindigkeit",
   "speechPitch": "Tonhöhe",

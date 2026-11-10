@@ -80,6 +80,7 @@
   "languageLabel": "Ngôn ngữ",
   "languageDownloading": "Đang tải xuống mô hình dịch…",
   "languageDownloadProgress": "Hoàn thành {progress}%",
+  "languageTranslating": "Đang dịch bảng…",
   "speechVoice": "Giọng nói",
   "speechRate": "Tốc độ",
   "speechPitch": "Cao độ",

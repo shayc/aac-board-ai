@@ -80,6 +80,7 @@
   "languageLabel": "Γλώσσα",
   "languageDownloading": "Λήψη μοντέλου μετάφρασης…",
   "languageDownloadProgress": "Ολοκληρώθηκε {progress}%",
+  "languageTranslating": "Μετάφραση πινάκων…",
   "speechVoice": "Φωνή",
   "speechRate": "Ταχύτητα",
   "speechPitch": "Τόνος",

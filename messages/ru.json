@@ -80,6 +80,7 @@
   "languageLabel": "Язык",
   "languageDownloading": "Загрузка модели перевода…",
   "languageDownloadProgress": "{progress}% завершено",
+  "languageTranslating": "Перевод досок…",
   "speechVoice": "Голос",
   "speechRate": "Скорость",
   "speechPitch": "Высота тона",

@@ -80,6 +80,7 @@
   "languageLabel": "语言",
   "languageDownloading": "正在下载翻译模型……",
   "languageDownloadProgress": "已完成 {progress}%",
+  "languageTranslating": "正在翻译沟通板……",
   "speechVoice": "语音",
   "speechRate": "语速",
   "speechPitch": "音调",

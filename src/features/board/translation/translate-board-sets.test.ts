@@ -34,13 +34,15 @@ async function runTranslation(
   language: string,
   signal = new AbortController().signal,
 ) {
+  const onTranslating = vi.fn<(boardSetId: string) => void>();
   const onTranslated = vi.fn<(boardSetId: string) => void>();
   await translateBoardSets(await listBoardSetRecords(), language, {
     signal,
+    onTranslating,
     onTranslated,
   });
 
-  return { onTranslated };
+  return { onTranslating, onTranslated };
 }
 
 async function readStrings(boardSetId: string, boardId: string) {
@@ -56,7 +58,7 @@ describe("translateBoardSets", () => {
     await seedFoodSet();
     const { create } = stubTranslator((input) => `[es] ${input}`);
 
-    const { onTranslated } = await runTranslation("es");
+    const { onTranslating, onTranslated } = await runTranslation("es");
 
     expect(await readStrings("food", "home")).toEqual({
       es: { Home: "[es] Home", eat: "[es] eat", "eat now": "[es] eat now" },
@@ -67,6 +69,7 @@ describe("translateBoardSets", () => {
     expect((await getBoardSetRecord("food"))?.translatedNames).toEqual({
       es: "[es] Food",
     });
+    expect(onTranslating.mock.calls).toEqual([["food"]]);
     expect(onTranslated.mock.calls).toEqual([["food"]]);
     expect(create).toHaveBeenCalledOnce();
     expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
@@ -167,9 +170,10 @@ describe("translateBoardSets", () => {
     await runTranslation("es");
     const { create } = stubTranslator();
 
-    const { onTranslated } = await runTranslation("es");
+    const { onTranslating, onTranslated } = await runTranslation("es");
 
     expect(create).not.toHaveBeenCalled();
+    expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
