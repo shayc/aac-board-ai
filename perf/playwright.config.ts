@@ -18,6 +18,9 @@ export default defineConfig(baseConfig, {
   use: {
     channel: "chromium",
     actionTimeout: ACTION_TIMEOUT_MS,
+    // Navigations have no timeout by default, so a stalled page load would
+    // otherwise wait out the whole test's timeout.
+    navigationTimeout: ACTION_TIMEOUT_MS,
     trace: "off",
     screenshot: "off",
     launchOptions: {
