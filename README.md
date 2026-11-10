@@ -29,7 +29,7 @@ Suggestions are optional and replace the original message only when accepted.
 ## Core features
 
 - First Words starter board set for first-time AAC users
-- Touch and keyboard navigation
+- Touch, keyboard navigation, and switch scanning with one or two switches
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages, including right-to-left layouts
 - Installable PWA with offline communication

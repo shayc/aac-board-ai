@@ -83,7 +83,7 @@ State has distinct owners and lifetimes:
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding                        |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
@@ -202,7 +202,7 @@ expected and do not surface as user errors.
 
 ### Accessibility
 
-Controls have programmatic names and support pointer and keyboard input. The
+Controls have programmatic names and support pointer, keyboard, and switch input. The
 [board grid](../src/features/board/grid/grid.tsx) and its
 [keyboard behavior](../src/features/board/grid/use-grid-focus.ts) preserve
 these rules:
@@ -218,6 +218,48 @@ these rules:
 
 Behavior tests and axe-core accessibility checks run in real Chromium and
 WebKit through Playwright-backed Vitest.
+
+### Switch scanning
+
+People who cannot tap or use a keyboard select with one or two switches, which
+arrive as the Space and Enter keys. Scanning is off until turned on in settings.
+[`scanning/`](../src/features/board/scanning/) holds all of it:
+
+- A scan group is any element spread with `scanGroupProps`; its items are the
+  enabled buttons inside it. The board marks the message bar, the board
+  controls, and each grid row. The
+  [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
+  from the DOM at every step, in document order, highlights the current group
+  or item with an attribute, and clicks the selected one. Scanned controls therefore
+  need no scanning code, and disabled controls and empty groups drop out by
+  themselves.
+- [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the
+  pure state machine: the scan moves through groups, selecting a group moves
+  through its items, and selecting an item activates it. A group with one item
+  activates it directly. After a group's last item the whole group is
+  highlighted once more as an exit step; selecting it returns to the groups.
+  Positions hold targets rather than indexes, so the board may change between
+  steps.
+- Automatic scanning moves on a timer and either switch selects. It starts on
+  the first press, pauses after two passes over the groups, and moves on to the
+  next group after two passes over a group's items. Two-switch step scanning moves
+  with Space, selects with Enter, and keeps going around until a selection.
+- Switch keys count wherever focus is, including on a header button, and are
+  kept from the focused control. Keys typed into a text field are left alone,
+  and so are keys pressed while a dialog, drawer, or menu covers the board.
+  While scanning is on, Space and Enter therefore do not activate focused
+  controls outside dialogs.
+- A highlighted group outlines the enabled buttons it has now, so the outline
+  follows buttons that are enabled, added, or replaced, such as when a folder
+  tile opens another board into the same rows. When the highlighted group or
+  item leaves the page, the scan restarts at the first group. The scan pauses
+  while a dialog, drawer, or menu covers the board.
+- Buttons that are disabled or not visible are not scanned. While a scan
+  highlight shows, other controls hide their keyboard focus ring so only one
+  control looks selected.
+
+The app header, drawers, and dialogs are not scanned; they are for the person
+setting up the device.
 
 ### Language and direction
 
@@ -256,8 +298,9 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [tile settings](../src/features/board/tile/tile-settings.tsx),
-[message settings](../src/features/board/message/message-settings.tsx), and
-[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
+[message settings](../src/features/board/message/message-settings.tsx),
+[suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx), and
+[scanning settings](../src/features/board/scanning/scanning-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
@@ -282,6 +325,7 @@ are relative to `src/features/board/`.
 | Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
 | Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
 | Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
+| Switch scanning        | [scanning/](../src/features/board/scanning/)                                                           | Scan the board's controls with one or two switches; own scanning preferences.   |
 | Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text. |
 
 ### App and shared code
