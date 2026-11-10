@@ -9,7 +9,7 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
-import { WEBKIT_PROFILE_DIR } from "./vitest.webkit-profile.ts";
+import { WEBKIT_PROFILE_DIR } from "./vitest.global-setup.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
@@ -139,7 +139,7 @@ export default defineConfig({
           provider: playwright({
             persistentContext: WEBKIT_PROFILE_DIR,
           }),
-          globalSetup: "./vitest.webkit-profile.ts",
+          globalSetup: "./vitest.global-setup.ts",
           fileParallelism: false,
         },
       ],
