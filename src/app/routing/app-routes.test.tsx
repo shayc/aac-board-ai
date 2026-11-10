@@ -646,28 +646,6 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
-  test("the language settings explain boards whose language pair cannot be translated", async () => {
-    await seedTwoBoardSet();
-    const translator = stubTranslator();
-    translator.availability.mockResolvedValue("unavailable");
-
-    const { screen } = await renderApp("/sets/food/boards/home");
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
-    await screen.getByRole("button", { name: "Abrir ajustes" }).click();
-
-    await expect
-      .element(
-        screen.getByText(
-          "Algunos tableros no se pueden traducir a este idioma en este dispositivo.",
-        ),
-      )
-      .toBeVisible();
-    await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
-    expect(translator.create).not.toHaveBeenCalled();
-  });
-
   test("changing language mid-translation clears the board translation status", async () => {
     await seedTwoBoardSet();
     const translator = stubTranslator(() => new Promise(() => {}));

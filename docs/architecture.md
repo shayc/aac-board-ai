@@ -166,23 +166,20 @@ the next set.
 The hook hands each pass to the
 [board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status: idle, downloading (with the download's fraction), translating, needs
-download, or unavailable. A pass reports a set's model download as it
-progresses and its translation once the set's translation models are open. It
-also reports the two failures the user can be told about: a model download
-refused for lack of a user gesture, and a language pair the device can't
-translate. When the pass ends, the status becomes the failure it reported, with
-a needed download taking precedence because the user can act on it, or idle. A
-language change clears the status, and a pass it aborted never touches the
-status again.
+status: idle, downloading (with the download's fraction), translating, or needs
+download. A pass reports a set's model download as it progresses and its
+translation once the set's translation models are open. It also reports a model
+download refused for lack of a user gesture, the one failure the user can act
+on. When the pass ends, the status becomes needs download if it reported one,
+or idle. A language change clears the status, and a pass it aborted never
+touches the status again.
 
 The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
 renders from that status alone. A needed download shows a Download button whose
 click queues the last pass again, so the download starts from that click's user
 gesture. The button, the download, and the translation share one polite status
-alert, so a screen reader hears each change. An unavailable language pair shows
-a note.
+alert, so a screen reader hears each change.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for

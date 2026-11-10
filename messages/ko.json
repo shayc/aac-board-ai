@@ -83,7 +83,6 @@
   "languageTranslating": "보드 번역 중…",
   "languageDownloadNeeded": "보드를 번역하려면 모델을 다운로드해야 합니다.",
   "languageDownloadModel": "번역 모델 다운로드",
-  "languageTranslationUnavailableForBoards": "이 기기에서는 일부 보드를 이 언어로 번역할 수 없습니다.",
   "speechVoice": "음성",
   "speechRate": "속도",
   "speechPitch": "음높이",

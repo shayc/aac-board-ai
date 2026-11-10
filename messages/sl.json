@@ -83,7 +83,6 @@
   "languageTranslating": "Prevajanje tabel…",
   "languageDownloadNeeded": "Za prevajanje tabel je treba prenesti model.",
   "languageDownloadModel": "Prenesi prevajalski model",
-  "languageTranslationUnavailableForBoards": "Nekaterih tabel v tej napravi ni mogoče prevesti v ta jezik.",
   "speechVoice": "Glas",
   "speechRate": "Hitrost",
   "speechPitch": "Višina",

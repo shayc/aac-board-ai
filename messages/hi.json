@@ -83,7 +83,6 @@
   "languageTranslating": "बोर्ड का अनुवाद हो रहा है…",
   "languageDownloadNeeded": "बोर्ड के अनुवाद के लिए मॉडल डाउनलोड करना ज़रूरी है।",
   "languageDownloadModel": "अनुवाद मॉडल डाउनलोड करें",
-  "languageTranslationUnavailableForBoards": "इस डिवाइस पर कुछ बोर्ड का इस भाषा में अनुवाद नहीं किया जा सकता।",
   "speechVoice": "आवाज़",
   "speechRate": "गति",
   "speechPitch": "पिच",

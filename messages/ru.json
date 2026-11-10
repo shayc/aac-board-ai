@@ -83,7 +83,6 @@
   "languageTranslating": "Перевод досок…",
   "languageDownloadNeeded": "Для перевода досок нужно загрузить модель.",
   "languageDownloadModel": "Загрузить модель перевода",
-  "languageTranslationUnavailableForBoards": "Некоторые доски нельзя перевести на этот язык на этом устройстве.",
   "speechVoice": "Голос",
   "speechRate": "Скорость",
   "speechPitch": "Высота тона",

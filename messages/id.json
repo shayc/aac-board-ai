@@ -83,7 +83,6 @@
   "languageTranslating": "Menerjemahkan papan…",
   "languageDownloadNeeded": "Penerjemahan papan memerlukan unduhan model.",
   "languageDownloadModel": "Unduh model terjemahan",
-  "languageTranslationUnavailableForBoards": "Beberapa papan tidak dapat diterjemahkan ke bahasa ini di perangkat ini.",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan",
   "speechPitch": "Nada",

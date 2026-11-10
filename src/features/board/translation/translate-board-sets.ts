@@ -1,7 +1,6 @@
 import {
   createTranslator,
   MissingUserActivationError,
-  UnavailableError,
 } from "@shayc/react-built-in-ai";
 import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
@@ -16,34 +15,31 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
-/** Why a set could not be translated, when the user can be told something. */
-export type TranslationBlocker = "needs-download" | "unavailable";
-
 export interface TranslationOptions {
   signal: AbortSignal;
   onDownloadProgress: (progress: number) => void;
   onTranslating: () => void;
-  onBlocked: (blocker: TranslationBlocker) => void;
+  onDownloadNeeded: () => void;
 }
 
 interface TranslateBoardSetsOptions extends TranslationOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
-type TranslatorProgressOptions = Omit<TranslationOptions, "onBlocked">;
+type TranslatorProgressOptions = Omit<TranslationOptions, "onDownloadNeeded">;
 
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
 /**
  * Translates every board set not yet in `language` and saves the result.
  * Never rejects: a set that fails stays in its source language until the next
- * run, and an abort stops between sets. A set stopped by a missing model
- * download or an unsupported language pair is reported through `onBlocked`.
+ * run, and an abort stops between sets. A set whose model download was
+ * refused for lack of a user gesture is reported through `onDownloadNeeded`.
  */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { onTranslated, onBlocked, ...options }: TranslateBoardSetsOptions,
+  { onTranslated, onDownloadNeeded, ...options }: TranslateBoardSetsOptions,
 ): Promise<void> {
   const { signal } = options;
 
@@ -61,26 +57,11 @@ export async function translateBoardSets(
       onTranslated(boardSet.id);
     } catch (error) {
       // Translation is optional; the next language change or app start retries.
-      const blocker = findTranslationBlocker(error);
-      if (blocker) {
-        onBlocked(blocker);
+      if (error instanceof MissingUserActivationError) {
+        onDownloadNeeded();
       }
     }
   }
-}
-
-function findTranslationBlocker(
-  error: unknown,
-): TranslationBlocker | undefined {
-  if (error instanceof MissingUserActivationError) {
-    return "needs-download";
-  }
-
-  if (error instanceof UnavailableError) {
-    return "unavailable";
-  }
-
-  return undefined;
 }
 
 // The set name is saved in the same transaction as its boards' translations,

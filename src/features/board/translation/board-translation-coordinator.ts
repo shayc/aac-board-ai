@@ -2,10 +2,7 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
-import type {
-  TranslationBlocker,
-  TranslationOptions,
-} from "./translate-board-sets";
+import type { TranslationOptions } from "./translate-board-sets";
 
 type TranslationPass = (options: TranslationOptions) => Promise<void>;
 
@@ -13,7 +10,7 @@ export type BoardTranslationStatus =
   | { kind: "idle" }
   | { kind: "downloading"; progress: number }
   | { kind: "translating" }
-  | { kind: TranslationBlocker };
+  | { kind: "needs-download" };
 
 interface TranslationRun {
   readonly language: string;
@@ -23,6 +20,9 @@ interface TranslationRun {
 }
 
 const IDLE_STATUS: BoardTranslationStatus = { kind: "idle" };
+const NEEDS_DOWNLOAD_STATUS: BoardTranslationStatus = {
+  kind: "needs-download",
+};
 
 const statusStore = createExternalStore<BoardTranslationStatus>(IDLE_STATUS);
 let currentRun: TranslationRun | undefined;
@@ -42,7 +42,7 @@ export function queueBoardTranslationPass(
   run.lastPass = pass;
 
   run.queue = run.queue.then(async () => {
-    let blocker: TranslationBlocker | undefined;
+    let endStatus = IDLE_STATUS;
 
     try {
       await pass({
@@ -50,12 +50,12 @@ export function queueBoardTranslationPass(
         onDownloadProgress: (progress) =>
           setStatus(run, { kind: "downloading", progress }),
         onTranslating: () => setStatus(run, { kind: "translating" }),
-        onBlocked: (reported) => {
-          blocker = pickBlockerToShow(blocker, reported);
+        onDownloadNeeded: () => {
+          endStatus = NEEDS_DOWNLOAD_STATUS;
         },
       });
     } finally {
-      setStatus(run, blocker ? { kind: blocker } : IDLE_STATUS);
+      setStatus(run, endStatus);
     }
   });
 }
@@ -91,15 +91,6 @@ function startRun(language: string): TranslationRun {
   };
 
   return currentRun;
-}
-
-// A missing download is the one the user can act on, and the pass its
-// download unblocks reports again whatever is still unavailable.
-function pickBlockerToShow(
-  current: TranslationBlocker | undefined,
-  reported: TranslationBlocker,
-): TranslationBlocker {
-  return current === "needs-download" ? current : reported;
 }
 
 // A run replaced by a language change keeps settling in the background, and

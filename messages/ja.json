@@ -83,7 +83,6 @@
   "languageTranslating": "ボードを翻訳しています…",
   "languageDownloadNeeded": "ボードの翻訳にはモデルのダウンロードが必要です。",
   "languageDownloadModel": "翻訳モデルをダウンロード",
-  "languageTranslationUnavailableForBoards": "この端末では、一部のボードをこの言語に翻訳できません。",
   "speechVoice": "音声",
   "speechRate": "速度",
   "speechPitch": "ピッチ",

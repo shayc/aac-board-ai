@@ -83,7 +83,6 @@
   "languageTranslating": "กำลังแปลบอร์ด…",
   "languageDownloadNeeded": "การแปลบอร์ดต้องดาวน์โหลดโมเดลก่อน",
   "languageDownloadModel": "ดาวน์โหลดโมเดลแปลภาษา",
-  "languageTranslationUnavailableForBoards": "อุปกรณ์นี้ไม่สามารถแปลบางบอร์ดเป็นภาษานี้ได้",
   "speechVoice": "เสียง",
   "speechRate": "ความเร็ว",
   "speechPitch": "ระดับเสียงสูงต่ำ",

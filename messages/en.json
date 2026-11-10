@@ -83,7 +83,6 @@
   "languageTranslating": "Translating boards…",
   "languageDownloadNeeded": "Board translation needs a model download.",
   "languageDownloadModel": "Download translation model",
-  "languageTranslationUnavailableForBoards": "Some boards can't be translated into this language on this device.",
   "speechVoice": "Voice",
   "speechRate": "Speed",
   "speechPitch": "Pitch",

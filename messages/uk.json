@@ -83,7 +83,6 @@
   "languageTranslating": "Переклад дошок…",
   "languageDownloadNeeded": "Для перекладу дошок потрібно завантажити модель.",
   "languageDownloadModel": "Завантажити модель перекладу",
-  "languageTranslationUnavailableForBoards": "Деякі дошки неможливо перекласти цією мовою на цьому пристрої.",
   "speechVoice": "Голос",
   "speechRate": "Швидкість",
   "speechPitch": "Висота тону",

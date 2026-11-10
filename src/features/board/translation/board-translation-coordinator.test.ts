@@ -75,7 +75,7 @@ describe("board translation coordinator", () => {
     queueBoardTranslationPass("es", (options) => {
       passes.push(options);
       if (passes.length === 1) {
-        options.onBlocked("needs-download");
+        options.onDownloadNeeded();
       }
 
       return Promise.resolve();
@@ -90,24 +90,14 @@ describe("board translation coordinator", () => {
     expect(passes.at(1)?.signal.aborted).toBe(false);
   });
 
-  test("ends a pass with an unavailable language pair as unavailable", async () => {
+  test("keeps reporting the translation until a pass that needs a download ends", async () => {
     const { result } = await renderHook(() => useBoardTranslationStatus());
     const first = await startPass("es");
 
     first.options().onTranslating();
-    first.options().onBlocked("unavailable");
+    first.options().onDownloadNeeded();
     await expect.poll(() => result.current).toEqual(TRANSLATING);
 
-    first.finish();
-    await expect.poll(() => result.current).toEqual({ kind: "unavailable" });
-  });
-
-  test("prefers the download the user can start over an unavailable language pair", async () => {
-    const { result } = await renderHook(() => useBoardTranslationStatus());
-    const first = await startPass("es");
-
-    first.options().onBlocked("needs-download");
-    first.options().onBlocked("unavailable");
     first.finish();
 
     await expect.poll(() => result.current).toEqual({ kind: "needs-download" });
@@ -171,7 +161,7 @@ describe("board translation coordinator", () => {
     const current = await startPass("fr");
 
     replaced.options().onTranslating();
-    replaced.options().onBlocked("needs-download");
+    replaced.options().onDownloadNeeded();
     expect(result.current).toEqual(IDLE);
 
     current.options().onTranslating();

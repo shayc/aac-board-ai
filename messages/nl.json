@@ -83,7 +83,6 @@
   "languageTranslating": "Borden vertalen…",
   "languageDownloadNeeded": "Voor bordvertaling moet een model worden gedownload.",
   "languageDownloadModel": "Vertaalmodel downloaden",
-  "languageTranslationUnavailableForBoards": "Sommige borden kunnen op dit apparaat niet naar deze taal worden vertaald.",
   "speechVoice": "Stem",
   "speechRate": "Snelheid",
   "speechPitch": "Toonhoogte",

@@ -83,7 +83,6 @@
   "languageTranslating": "Traduciendo tableros…",
   "languageDownloadNeeded": "La traducción de tableros requiere descargar un modelo.",
   "languageDownloadModel": "Descargar modelo de traducción",
-  "languageTranslationUnavailableForBoards": "Algunos tableros no se pueden traducir a este idioma en este dispositivo.",
   "speechVoice": "Voz",
   "speechRate": "Velocidad",
   "speechPitch": "Tono",

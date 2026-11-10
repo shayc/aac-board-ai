@@ -83,7 +83,6 @@
   "languageTranslating": "Panolar çevriliyor…",
   "languageDownloadNeeded": "Pano çevirisi için bir model indirilmesi gerekiyor.",
   "languageDownloadModel": "Çeviri modelini indir",
-  "languageTranslationUnavailableForBoards": "Bazı panolar bu cihazda bu dile çevrilemiyor.",
   "speechVoice": "Ses",
   "speechRate": "Hız",
   "speechPitch": "Perde",

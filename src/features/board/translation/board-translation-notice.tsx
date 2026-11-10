@@ -21,7 +21,9 @@ export function BoardTranslationNotice() {
 
   if (!isSupported("Translator")) {
     return (
-      <TranslationNote>{t(m.languageTranslationUnavailable)}</TranslationNote>
+      <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        {t(m.languageTranslationUnavailable)}
+      </Typography>
     );
   }
 
@@ -66,23 +68,9 @@ export function BoardTranslationNotice() {
           title={t(m.languageTranslating)}
         />
       );
-    case "unavailable":
-      return (
-        <TranslationNote>
-          {t(m.languageTranslationUnavailableForBoards)}
-        </TranslationNote>
-      );
     default:
       return assertNever(status);
   }
-}
-
-function TranslationNote({ children }: { children: ReactNode }) {
-  return (
-    <Typography variant="body2" sx={{ color: "text.secondary" }}>
-      {children}
-    </Typography>
-  );
 }
 
 interface TranslationStatusAlertProps {

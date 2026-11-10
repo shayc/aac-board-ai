@@ -83,7 +83,6 @@
   "languageTranslating": "Käännetään tauluja…",
   "languageDownloadNeeded": "Taulujen kääntäminen edellyttää mallin lataamista.",
   "languageDownloadModel": "Lataa käännösmalli",
-  "languageTranslationUnavailableForBoards": "Joitakin tauluja ei voi kääntää tälle kielelle tällä laitteella.",
   "speechVoice": "Ääni",
   "speechRate": "Nopeus",
   "speechPitch": "Korkeus",
