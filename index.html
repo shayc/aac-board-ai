@@ -33,16 +33,7 @@
     </style>
 
     <!-- Set the theme class before first paint so MUI adopts it without a flash. -->
-    <script>
-      {
-        const mode = localStorage.getItem("mui-mode") ?? "system";
-        const isDark =
-          mode === "system"
-            ? matchMedia("(prefers-color-scheme: dark)").matches
-            : mode === "dark";
-        document.documentElement.classList.add(isDark ? "dark" : "light");
-      }
-    </script>
+    <script src="/theme-init.js"></script>
 
     <link rel="icon" type="image/svg+xml" href="/board.svg" />
     <link rel="apple-touch-icon" href="/pwa-192x192.png" />

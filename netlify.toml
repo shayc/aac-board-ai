@@ -6,11 +6,16 @@ from = "/*"
 to = "/index.html"
 status = 200
 
-# CSP intentionally absent for now: index.html's inline theme script would need
-# hash upkeep on every edit. X-Frame-Options covers framing until a CSP ships.
+# Scripts are same-origin files only, which also binds the blob: documents made
+# from imported board assets. Images, media, and fetches stay open to any https
+# host because boards reference remote symbols and sounds, ?board= links import
+# from any host, and the service worker fetches remote images to cache them.
+# Styles allow inline because Emotion injects <style> tags at runtime and a
+# static host cannot issue nonces.
 [[headers]]
 for = "/*"
 [headers.values]
+Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "no-referrer"
