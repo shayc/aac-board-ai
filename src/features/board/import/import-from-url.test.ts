@@ -44,7 +44,8 @@ describe("importBoardFileFromURL", () => {
 
     controller.abort();
 
-    await expect(importing).rejects.toBe(controller.signal.reason);
+    // WebKit's fetch rejects with its own AbortError, not signal.reason.
+    await expect(importing).rejects.toMatchObject({ name: "AbortError" });
     expect(await listBoardSetRecords()).toEqual([]);
   });
 

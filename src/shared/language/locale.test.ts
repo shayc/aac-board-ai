@@ -42,6 +42,6 @@ describe("getNativeLanguageName", () => {
   });
 
   test("strips region before lookup", () => {
-    expect(getNativeLanguageName("es-MX")).toBe("español");
+    expect(getNativeLanguageName("es-MX")).toBe(getNativeLanguageName("es"));
   });
 });

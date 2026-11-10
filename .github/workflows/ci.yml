@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: Install Playwright
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium webkit
 
       - name: Check formatting
         run: npm run format:check
@@ -43,8 +43,12 @@ jobs:
       - name: Test performance lab
         run: npm run test:perf
 
-      - name: Run tests with coverage
+      # V8 coverage is Chromium-only, so WebKit runs the suite without it.
+      - name: Run tests with coverage in Chromium
         run: npm run test:coverage
+
+      - name: Run tests in WebKit
+        run: npm test -- --project webkit
 
       - name: Build project
         run: npm run build
