@@ -213,8 +213,9 @@ these rules:
   direction.
 - Home and End move to the first or last focusable cell in the row; with Ctrl
   or Cmd, in the grid.
-- When grid content changes, focus returns to the remembered cell or first
-  focusable tile only if no other control holds focus.
+- When grid content changes, keyboard focus returns to the remembered cell or
+  first focusable tile only if no other control holds focus. After a tap, focus
+  stays put, since moving it makes Safari re-snap the grid to the focused tile.
 
 Behavior tests and axe-core accessibility checks run in real Chromium and
 WebKit through Playwright-backed Vitest.
