@@ -17,66 +17,42 @@ export interface BoardSetsSnapshot {
   error: Error | undefined;
 }
 
-const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
-boardSetsSyncChannel.addEventListener("message", () => {
-  void refreshBoardSets();
-});
-
 const boardSetsStore = createExternalStore<BoardSetsSnapshot>({
   boardSets: [],
   isLoading: true,
   error: undefined,
 });
 
-let hasLoaded = false;
-let pendingLoad: Promise<void> | null = null;
-
-async function loadBoardSets(): Promise<void> {
+export async function refreshBoardSets(): Promise<void> {
   try {
     const boardSets = await listBoardSetRecords();
     // URLs are per tab, and every tab refreshes after a delete.
     revokeAssetURLsExcept(new Set(boardSets.map((boardSet) => boardSet.id)));
     boardSetsStore.setState({ boardSets, isLoading: false, error: undefined });
-    hasLoaded = true;
   } catch (error) {
     boardSetsStore.setState((snapshot) => ({
       ...snapshot,
       isLoading: false,
       error: error instanceof Error ? error : new Error(String(error)),
     }));
-  } finally {
-    pendingLoad = null;
   }
 }
 
-function ensureLoaded(): void {
-  if (!hasLoaded && !pendingLoad) {
-    pendingLoad = loadBoardSets();
-  }
-}
-
-export async function refreshBoardSets(): Promise<void> {
-  pendingLoad = loadBoardSets();
-  await pendingLoad;
-}
-
+/** Refreshes this tab's library, then tells the other tabs to refresh theirs. */
 export async function syncBoardSets(): Promise<void> {
   await refreshBoardSets();
   boardSetsSyncChannel.postMessage(undefined);
 }
 
-function subscribeBoardSets(listener: () => void): () => void {
-  const unsubscribe = boardSetsStore.subscribe(listener);
-  ensureLoaded();
+const boardSetsSyncChannel = new BroadcastChannel("board-sets-sync");
+boardSetsSyncChannel.addEventListener("message", () => {
+  void refreshBoardSets();
+});
 
-  return unsubscribe;
-}
+void refreshBoardSets();
 
 export function useBoardSets(): BoardSetsSnapshot {
-  return useExternalStore({
-    subscribe: subscribeBoardSets,
-    getSnapshot: boardSetsStore.getSnapshot,
-  });
+  return useExternalStore(boardSetsStore);
 }
 
 export async function createBoardSet(input: BoardSetInput): Promise<void> {
