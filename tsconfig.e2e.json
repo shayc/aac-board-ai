@@ -5,5 +5,5 @@
     "lib": ["ES2025", "DOM"],
     "types": ["node", "@playwright/test"]
   },
-  "include": ["e2e", "playwright.config.ts"]
+  "include": ["e2e", "perf", "playwright.config.ts"]
 }

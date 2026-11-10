@@ -17,11 +17,13 @@
 - Test: `npm test`
 - Test with coverage: `npm run test:coverage`
 - PWA offline test: `npm run test:pwa`
+- Local performance lab: `npm run perf` (see [docs/performance.md](docs/performance.md))
+- Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`
 - Test one file: `npm test -- <file-or-pattern>`
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → format check → lint → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
+- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
 - Pre-commit: `lint-staged` runs Oxlint `--fix` + Oxfmt on staged files.
 
 ## Project Structure
