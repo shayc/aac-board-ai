@@ -10,7 +10,7 @@ import {
   useGlobalDownloadProgress,
 } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
-import { useIsTranslatingBoards } from "./board-translation-status";
+import { useIsTranslatingBoards } from "./board-translation-coordinator";
 
 export function BoardTranslationNotice() {
   const t = useTranslate();

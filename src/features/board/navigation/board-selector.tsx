@@ -4,8 +4,7 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import type { BoardSummary } from "../storage/list-board-summaries";
-import { findStringTranslations } from "../translation/board-translations";
-import { useBoardNavigation } from "./use-board-navigation";
+import { useBoardRoute } from "./use-board-navigation";
 
 interface BoardOption {
   id: string;
@@ -19,7 +18,7 @@ interface BoardSelectorProps {
 export function BoardSelector({ summaries }: BoardSelectorProps) {
   const t = useTranslate();
   const { language } = useLanguage();
-  const { boardId, goToBoard } = useBoardNavigation();
+  const { boardId, goToBoard } = useBoardRoute();
   const boards = toBoardOptions(summaries, language);
 
   const selectedBoard = boards.find((board) => board.id === boardId);
@@ -67,11 +66,9 @@ function toBoardOptions(
   language: string,
 ): BoardOption[] {
   return summaries
-    .map(({ id, name, translationsByLocale }) => ({
+    .map(({ id, name, namesByLanguage }) => ({
       id,
-      name:
-        findStringTranslations(translationsByLocale, language)?.get(name) ??
-        name,
+      name: namesByLanguage[language] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }

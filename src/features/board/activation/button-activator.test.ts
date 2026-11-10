@@ -11,25 +11,21 @@ function setup(initialParts: readonly MessagePart[] = []) {
   let currentParts = initialParts;
   const message = {
     getParts: () => currentParts,
-    setParts: vi.fn<ActivationOptions["setParts"]>((parts) => {
+    setParts: vi.fn<ActivationOptions["message"]["setParts"]>((parts) => {
       currentParts = parts;
     }),
   };
   const playback = {
-    playMessage: vi.fn<ActivationOptions["playMessage"]>(() =>
+    playMessage: vi.fn<ActivationOptions["playback"]["playMessage"]>(() =>
       Promise.resolve("completed"),
     ),
-    playPart: vi.fn<ActivationOptions["playPart"]>(() =>
+    playPart: vi.fn<ActivationOptions["playback"]["playPart"]>(() =>
       Promise.resolve("completed"),
     ),
   };
   const navigation = { goToBoard: vi.fn(), goHome: vi.fn() };
   return {
-    activateButton: createButtonActivator({
-      ...message,
-      ...playback,
-      ...navigation,
-    }),
+    activateButton: createButtonActivator({ message, playback, navigation }),
     message,
     playback,
     navigation,

@@ -1,4 +1,3 @@
-import { LanguageProvider } from "@shared/language/language-provider";
 import {
   DEFAULT_LANGUAGE,
   setStoredLanguage,
@@ -15,9 +14,7 @@ import { setSuggestionCustomInstructions } from "./suggestion-preferences-store"
 import { useMessageSuggestions } from "./use-message-suggestions";
 
 function renderMessageSuggestions(text: string) {
-  return renderHook(() => useMessageSuggestions(text), {
-    wrapper: LanguageProvider,
-  });
+  return renderHook(() => useMessageSuggestions(text));
 }
 
 function stubRewritesByTone(
@@ -328,7 +325,7 @@ describe("useMessageSuggestions", () => {
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
         useMessageSuggestions(text),
-      { initialProps: { text: "old" }, wrapper: LanguageProvider },
+      { initialProps: { text: "old" } },
     );
 
     await vi.waitFor(() => {
@@ -360,7 +357,7 @@ describe("useMessageSuggestions", () => {
     const { result, rerender } = await renderHook(
       ({ text }: { text: string } = { text: "old" }) =>
         useMessageSuggestions(text),
-      { initialProps: { text: "old" }, wrapper: LanguageProvider },
+      { initialProps: { text: "old" } },
     );
 
     await vi.waitFor(() => {

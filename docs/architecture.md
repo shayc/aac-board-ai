@@ -79,7 +79,7 @@ State has distinct owners and lifetimes:
 | State                 | Owner                                 | Contents                                                                                               |
 | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                                                |
-| Active board          | React Router loaders                  | Stored `Board` and its set's board list for the current route                                          |
+| Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                         |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
@@ -127,7 +127,8 @@ Route loaders only read; they never translate or wait on a model:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` runs
    [`boardSetLoader`](../src/app/routing/loaders/board-set-loader.ts) for the
-   header's board list (once per set, not per board) and
+   header's board list and the set's root board, which Home navigates to
+   (once per set, not per board), and
    [`boardLoader`](../src/app/routing/loaders/board-loader.ts), which calls
    `loadStoredBoard`. It reads the stored OBF, resolves object URLs for its
    stored assets, and maps both through `obfToBoard`. Loading leaves the OBF
@@ -162,9 +163,10 @@ that would re-run a `?board=` link import still in flight. A set that
 fails, for example because a model download needs a user gesture, stays in its
 source language until the next run.
 
-While a pass is translating a set, the hook publishes a
-[board translation status](../src/features/board/translation/board-translation-status.ts).
-The status is set when a set's model download starts or, with no download, once
+The hook hands each pass to the
+[board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),
+which owns the queue, the abort on a language change, and the board translation
+status published while a pass is translating a set. The status is set when a set's model download starts or, with no download, once
 its translation models are open, and cleared when the pass ends or the language
 changes. A pass aborted by a language change never touches the status again. The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)

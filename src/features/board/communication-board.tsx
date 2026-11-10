@@ -22,9 +22,13 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
+  rootBoardId: string | undefined;
 }
 
-export function CommunicationBoard({ board }: CommunicationBoardProps) {
+export function CommunicationBoard({
+  board,
+  rootBoardId,
+}: CommunicationBoardProps) {
   const t = useTranslate();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -34,16 +38,13 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const playback = useBoardPlayback();
 
-  const navigation = useBoardNavigation();
+  const navigation = useBoardNavigation(rootBoardId);
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const activateButton = createButtonActivator({
-    getParts: message.getParts,
-    setParts: message.setParts,
-    playMessage: playback.playMessage,
-    playPart: playback.playPart,
-    goToBoard: navigation.goToBoard,
-    goHome: navigation.goHome,
+    message,
+    playback,
+    navigation,
   });
   const shortcuts = useBoardShortcuts({ message, playback });
 

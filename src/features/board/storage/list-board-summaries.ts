@@ -1,11 +1,14 @@
+import { getLanguageCode } from "@shared/language/locale";
 import type { TranslationsByLocale } from "../board-types";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
+import { findStringTranslations } from "../translation/board-translations";
 import { listBoardRecords } from "./board-content-storage";
 
 export interface BoardSummary {
   id: string;
   name: string;
-  translationsByLocale: TranslationsByLocale;
+  /** Language code → the board's name, for each language its strings cover. */
+  namesByLanguage: Readonly<Record<string, string>>;
 }
 
 export async function listBoardSummaries(
@@ -16,6 +19,30 @@ export async function listBoardSummaries(
   return records.map(({ id, name, obf }) => ({
     id,
     name,
-    translationsByLocale: obfToTranslationsByLocale(obf.strings),
+    namesByLanguage: findNamesByLanguage(
+      name,
+      obfToTranslationsByLocale(obf.strings),
+    ),
   }));
+}
+
+function findNamesByLanguage(
+  name: string,
+  translationsByLocale: TranslationsByLocale,
+): Record<string, string> {
+  const namesByLanguage: Record<string, string> = {};
+
+  for (const locale of translationsByLocale.keys()) {
+    const language = getLanguageCode(locale);
+    const translatedName = findStringTranslations(
+      translationsByLocale,
+      language,
+    )?.get(name);
+
+    if (translatedName !== undefined) {
+      namesByLanguage[language] = translatedName;
+    }
+  }
+
+  return namesByLanguage;
 }

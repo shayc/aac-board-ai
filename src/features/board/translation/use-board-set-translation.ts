@@ -1,16 +1,17 @@
 import { useLanguage } from "@shared/language/use-language";
-import { useEffect, useEffectEvent, useRef } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
 import { boardSetIdFromPath } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
-import { setIsTranslatingBoards } from "./board-translation-status";
-import { translateBoardSets } from "./translate-board-sets";
-
-interface TranslationRun {
-  readonly signal: AbortSignal;
-  queue: Promise<void>;
-}
+import {
+  queueBoardTranslationPass,
+  stopBoardTranslation,
+} from "./board-translation-coordinator";
+import {
+  translateBoardSets,
+  type TranslationOptions,
+} from "./translate-board-sets";
 
 /**
  * Keeps every stored board set translated into the communication language,
@@ -24,7 +25,6 @@ export function useBoardSetTranslation(): void {
   const pendingPathname = useNavigation().location?.pathname;
 
   const boardSetIdsKey = JSON.stringify(boardSets.map(({ id }) => id));
-  const runRef = useRef<TranslationRun | undefined>(undefined);
 
   const refreshTranslatedBoardSet = useEffectEvent((boardSetId: string) => {
     const routedBoardSetIds = [pathname, pendingPathname].map(
@@ -40,54 +40,26 @@ export function useBoardSetTranslation(): void {
     void syncBoardSets();
   });
 
-  const translate = useEffectEvent((signal: AbortSignal) =>
+  const translate = useEffectEvent((options: TranslationOptions) =>
     translateBoardSets(
       visibleFirst(boardSets, boardSetIdFromPath(pathname)),
       language,
       {
-        signal,
-        onTranslating: () => {
-          // A language change already cleared the status of an aborted run.
-          if (!signal.aborted) {
-            setIsTranslatingBoards(true);
-          }
-        },
+        ...options,
         onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
       },
     ),
   );
 
-  // Only a language change aborts. A set added or removed queues another pass
-  // behind the one in progress: aborting it could cancel a model download
-  // that, without the language change's user gesture, can't start again.
   useEffect(() => {
-    const controller = new AbortController();
-    runRef.current = { signal: controller.signal, queue: Promise.resolve() };
-
-    return () => {
-      controller.abort();
-      setIsTranslatingBoards(false);
-    };
-  }, [language]);
-
-  useEffect(() => {
-    const run = runRef.current;
-    if (isLoading || !run) {
+    if (isLoading) {
       return;
     }
 
-    run.queue = run.queue.then(async () => {
-      try {
-        await translate(run.signal);
-      } finally {
-        // An aborted run already cleared the status, and the next run may
-        // have set it again.
-        if (!run.signal.aborted) {
-          setIsTranslatingBoards(false);
-        }
-      }
-    });
+    queueBoardTranslationPass(language, (options) => translate(options));
   }, [language, boardSetIdsKey, isLoading]);
+
+  useEffect(() => stopBoardTranslation, []);
 }
 
 // The set on screen is translated first, so it doesn't wait behind sets the

@@ -5,6 +5,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { assertNever } from "@shared/utils/assert-never";
 import type { SuggestionStatus } from "./derive-suggestion-status";
+import { PendingDot } from "./pending-dot";
 
 interface SuggestionStatusNoticeProps {
   status: SuggestionStatus;
@@ -20,7 +21,8 @@ export function SuggestionStatusNotice({
   switch (status.kind) {
     case "idle":
     case "pending":
-      return null;
+      // Stays mounted while idle so the dot fades instead of popping in.
+      return <PendingDot isVisible={status.kind === "pending"} />;
     case "not-enabled":
       return (
         <Chip

@@ -10,7 +10,7 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-test("maps stored boards to summaries with normalized translation locales", async () => {
+test("maps stored boards to summaries with their names by language", async () => {
   await insertBoardSet(
     makeBoardSetInput({
       rootBoardId: "a",
@@ -30,7 +30,30 @@ test("maps stored boards to summaries with normalized translation locales", asyn
     {
       id: "a",
       name: "Food",
-      translationsByLocale: new Map([["es-MX", new Map([["Food", "Comida"]])]]),
+      namesByLanguage: { es: "Comida" },
     },
   ]);
+});
+
+test("takes a name from the first locale of a language, as the board itself does", async () => {
+  await insertBoardSet(
+    makeBoardSetInput({
+      rootBoardId: "a",
+      boards: [
+        makeOBFBoard({
+          id: "a",
+          name: "Food",
+          strings: {
+            "es-ES": { eat: "comer" },
+            "es-MX": { Food: "Comida" },
+            "fr-FR": { Food: "Nourriture" },
+          },
+        }),
+      ],
+    }),
+  );
+
+  const [summary] = await listBoardSummaries("set-1");
+
+  expect(summary?.namesByLanguage).toEqual({ fr: "Nourriture" });
 });
