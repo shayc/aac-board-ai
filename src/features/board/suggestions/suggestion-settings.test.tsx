@@ -7,6 +7,7 @@ import {
 } from "@shared/testing/stub-built-in-ai";
 import { describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
+import readme from "/README.md?raw";
 import { SuggestionSettings } from "./suggestion-settings";
 
 function renderSuggestionsSettings() {
@@ -38,8 +39,10 @@ describe("SuggestionSettings", () => {
       .element(helpLink)
       .toHaveAttribute(
         "href",
-        "https://github.com/shayc/aac-board-ai#enable-suggestions",
+        "https://github.com/shayc/aac-board-ai#enable-ai-features",
       );
+    expect(readme).toMatch(/^## Enable AI features$/m);
+
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))
       .not.toBeInTheDocument();
