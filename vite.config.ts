@@ -9,6 +9,7 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
+import { WEBKIT_PROFILE_DIR } from "./vitest.global-setup.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
@@ -119,7 +120,7 @@ export default defineConfig({
   },
   test: {
     dir: "src",
-    setupFiles: ["./src/shared/testing/global-setup.ts"],
+    setupFiles: ["./src/shared/testing/setup.ts"],
     restoreMocks: true,
     unstubGlobals: true,
     unstubEnvs: true,
@@ -136,8 +137,9 @@ export default defineConfig({
           // matches a normal Safari profile but cannot be shared across
           // parallel files.
           provider: playwright({
-            persistentContext: "node_modules/.cache/vitest-webkit-profile",
+            persistentContext: WEBKIT_PROFILE_DIR,
           }),
+          globalSetup: "./vitest.global-setup.ts",
           fileParallelism: false,
         },
       ],
