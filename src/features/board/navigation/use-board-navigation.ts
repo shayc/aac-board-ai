@@ -2,9 +2,13 @@ import { isRecord } from "@shared/utils/is-record";
 import { useLocation, useMatch, useNavigate } from "react-router";
 import { BOARD_ROUTE_PATTERN, boardPath } from "./board-paths";
 
-export interface UseBoardNavigationReturn {
+interface UseBoardRouteReturn {
   boardSetId: string | undefined;
   boardId: string | undefined;
+  goToBoard: (targetBoardId: string) => void;
+}
+
+export interface UseBoardNavigationReturn {
   canGoBack: boolean;
   canGoHome: boolean;
   isHome: boolean;
@@ -17,18 +21,10 @@ function readCanGoBack(state: unknown): boolean {
   return isRecord(state) && state.canGoBack === true;
 }
 
-export function useBoardNavigation(
-  rootBoardId?: string,
-): UseBoardNavigationReturn {
+export function useBoardRoute(): UseBoardRouteReturn {
   const navigate = useNavigate();
-  const location = useLocation();
-
   const match = useMatch(BOARD_ROUTE_PATTERN);
   const { boardSetId, boardId } = match?.params ?? {};
-
-  const canGoBack = readCanGoBack(location.state);
-  const canGoHome = Boolean(rootBoardId);
-  const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
   function goToBoard(targetBoardId: string) {
     if (!boardSetId || !targetBoardId || targetBoardId === boardId) {
@@ -39,6 +35,21 @@ export function useBoardNavigation(
       state: { canGoBack: true },
     });
   }
+
+  return { boardSetId, boardId, goToBoard };
+}
+
+/** `rootBoardId` is undefined while the set's root board is unknown. */
+export function useBoardNavigation(
+  rootBoardId: string | undefined,
+): UseBoardNavigationReturn {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { boardSetId, boardId, goToBoard } = useBoardRoute();
+
+  const canGoBack = readCanGoBack(location.state);
+  const canGoHome = Boolean(rootBoardId);
+  const isHome = rootBoardId !== undefined && boardId === rootBoardId;
 
   function goBack() {
     if (!boardSetId || !canGoBack) {
@@ -59,14 +70,5 @@ export function useBoardNavigation(
     });
   }
 
-  return {
-    boardSetId,
-    boardId,
-    canGoBack,
-    canGoHome,
-    isHome,
-    goToBoard,
-    goBack,
-    goHome,
-  };
+  return { canGoBack, canGoHome, isHome, goToBoard, goBack, goHome };
 }

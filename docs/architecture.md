@@ -79,7 +79,7 @@ State has distinct owners and lifetimes:
 | State                 | Owner                                 | Contents                                                                                               |
 | --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                                                |
-| Active board          | React Router loaders                  | Stored `Board` and its set's board list for the current route                                          |
+| Active board          | React Router loaders                  | Stored `Board`, and its set's board list and root board, for the current route                         |
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |

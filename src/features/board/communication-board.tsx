@@ -22,7 +22,7 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
-  rootBoardId?: string;
+  rootBoardId: string | undefined;
 }
 
 export function CommunicationBoard({
