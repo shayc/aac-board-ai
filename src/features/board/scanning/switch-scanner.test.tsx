@@ -343,6 +343,25 @@ describe("switch scanning", () => {
       expect(highlightedNames()).toEqual([]);
     });
 
+    test("pauses when a dialog covers the board", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await screen.rerender(
+        <>
+          {communicationBoardTree(TWO_ROW_BOARD)}
+          <Dialog open>
+            <button>Close</button>
+          </Dialog>
+        </>,
+      );
+      await waitScanInterval();
+
+      await expect.poll(highlightedNames).toEqual([]);
+    });
+
     test("removes the highlight when scanning is turned off", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
@@ -394,6 +413,23 @@ describe("switch scanning", () => {
 
       await pressSwitch("Space");
       await expect.poll(highlightedNames).toEqual(["play", "sleep"]);
+    });
+
+    test("hides the keyboard focus ring of another tile while a tile is highlighted", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      const yes = screen.getByRole("button", { name: "yes" }).element();
+
+      await userEvent.keyboard("{Tab}");
+      await expect
+        .element(screen.getByRole("button", { name: "yes" }))
+        .toHaveFocus();
+      expect(getComputedStyle(yes).outlineStyle).toBe("solid");
+
+      await pressSwitch("Space");
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      expect(getComputedStyle(yes).outlineStyle).toBe("none");
     });
 
     test("keeps cycling through the rows without pausing", async () => {

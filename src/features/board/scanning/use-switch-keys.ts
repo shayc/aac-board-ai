@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent, type RefObject } from "react";
+import { isScanScopeCovered } from "./scan-targets";
 
 /**
  * Reports presses of the switch keys in `keyActions`. A switch key counts
@@ -16,9 +17,13 @@ export function useSwitchKeys<Action>(
 
   useEffect(() => {
     function findAction(event: KeyboardEvent): Action | undefined {
-      const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
       const scope = scopeRef.current;
-      if (hasModifier || !scope || isCovered(scope) || isTextEntry(event)) {
+      if (!scope || isScanScopeCovered(scope)) {
+        return undefined;
+      }
+
+      const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
+      if (hasModifier || isTextEntry(event)) {
         return undefined;
       }
 
@@ -55,11 +60,6 @@ export function useSwitchKeys<Action>(
       document.removeEventListener("keyup", handleKeyUp, options);
     };
   }, [scopeRef, keyActions]);
-}
-
-// Modal surfaces hide everything behind them from assistive technology.
-function isCovered(scope: HTMLElement): boolean {
-  return scope.closest("[aria-hidden='true'], [inert]") !== null;
 }
 
 function isTextEntry(event: KeyboardEvent): boolean {

@@ -1,4 +1,5 @@
 import Box from "@mui/material/Box";
+import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import type { Theme } from "@mui/material/styles";
 import { useRef, type ReactNode } from "react";
 import { SCAN_HIGHLIGHT_SELECTOR } from "./scan-targets";
@@ -8,10 +9,16 @@ import { SwitchScanner } from "./switch-scanner";
 function scopeSx(theme: Theme) {
   return {
     display: "contents",
-    [`& ${SCAN_HIGHLIGHT_SELECTOR}`]: {
+    // Doubled so the highlight also wins on a control that has keyboard focus.
+    [`&& ${SCAN_HIGHLIGHT_SELECTOR}`]: {
       outline: `4px solid ${theme.vars.palette.primary.main}`,
       outlineOffset: 2,
     },
+    // Two outlined controls would leave it unclear which one a switch selects.
+    [`&:has(${SCAN_HIGHLIGHT_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHT_SELECTOR})`]:
+      {
+        outline: "none",
+      },
   };
 }
 
@@ -19,7 +26,6 @@ interface ScanningScopeProps {
   children: ReactNode;
 }
 
-/** Makes the scan groups among its children reachable by switch scanning. */
 export function ScanningScope({ children }: ScanningScopeProps) {
   const scopeRef = useRef<HTMLDivElement>(null);
   const { isEnabled, method, intervalMs } = useScanningPreferences();

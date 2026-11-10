@@ -248,7 +248,11 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   While scanning is on, Space and Enter therefore do not activate focused
   controls outside dialogs.
 - When highlighted controls leave the page, such as when a folder tile opens
-  another board, the scan restarts at the first group.
+  another board, the scan restarts at the first group. The scan pauses while
+  a dialog, drawer, or menu covers the board.
+- Buttons that are disabled or not visible are not scanned. While a scan
+  highlight shows, other controls hide their keyboard focus ring so only one
+  control looks selected.
 
 The app header, drawers, and dialogs are not scanned; they are for the person
 setting up the device.

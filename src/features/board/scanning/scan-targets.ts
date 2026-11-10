@@ -10,7 +10,6 @@ export const scanGroupProps = { [GROUP_ATTRIBUTE]: "" } as const;
 
 export const SCAN_HIGHLIGHT_SELECTOR = `[${HIGHLIGHT_ATTRIBUTE}]`;
 
-/** Lists the scan groups under `root` in document order, skipping empty ones. */
 export function readScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   const groups: ScanGroup<HTMLElement>[] = [];
 
@@ -27,10 +26,17 @@ export function readScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
 }
 
 export function listScanItems(container: HTMLElement): HTMLElement[] {
-  return Array.from(container.querySelectorAll<HTMLElement>(ITEM_SELECTOR));
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(ITEM_SELECTOR),
+  ).filter((item) => item.checkVisibility({ visibilityProperty: true }));
 }
 
-/** Highlights the targets and returns a function that removes the highlight. */
+// Dialogs, drawers, and menus hide everything behind them from assistive
+// technology, which is how the scope learns that it is covered.
+export function isScanScopeCovered(scope: HTMLElement): boolean {
+  return scope.closest("[aria-hidden='true'], [inert]") !== null;
+}
+
 export function highlightScanTargets(
   targets: readonly HTMLElement[],
 ): () => void {

@@ -22,7 +22,7 @@ describe("ScanningSettings", () => {
     const screen = await renderScanningSettings();
 
     await expect
-      .element(screen.getByRole("switch", { name: "Switch scanning" }))
+      .element(screen.getByRole("switch", { name: "Enable switch scanning" }))
       .not.toBeChecked();
     await expect
       .element(screen.getByRole("radiogroup", { name: "Scan method" }))
@@ -35,7 +35,9 @@ describe("ScanningSettings", () => {
   test("turns scanning on with the automatic method and its switch keys explained", async () => {
     const screen = await renderScanningSettings();
 
-    await screen.getByRole("switch", { name: "Switch scanning" }).click();
+    await screen
+      .getByRole("switch", { name: "Enable switch scanning" })
+      .click();
 
     await expect
       .element(screen.getByRole("radio", { name: "Automatic" }))
@@ -55,7 +57,9 @@ describe("ScanningSettings", () => {
   test("switches to the two-switch step method, which has no scan interval", async () => {
     const screen = await renderScanningSettings();
 
-    await screen.getByRole("switch", { name: "Switch scanning" }).click();
+    await screen
+      .getByRole("switch", { name: "Enable switch scanning" })
+      .click();
     await screen.getByRole("radio", { name: "Two-switch step" }).click();
 
     await expect
@@ -74,7 +78,9 @@ describe("ScanningSettings", () => {
   test("changes the scan interval in steps of a tenth of a second", async () => {
     const screen = await renderScanningSettings();
 
-    await screen.getByRole("switch", { name: "Switch scanning" }).click();
+    await screen
+      .getByRole("switch", { name: "Enable switch scanning" })
+      .click();
     const intervalSlider = screen.getByRole("slider", {
       name: "Scan interval",
     });

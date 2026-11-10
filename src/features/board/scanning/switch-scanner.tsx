@@ -8,6 +8,7 @@ import {
 } from "./scan-sequence";
 import {
   highlightScanTargets,
+  isScanScopeCovered,
   listScanItems,
   readScanGroups,
 } from "./scan-targets";
@@ -57,6 +58,13 @@ export function SwitchScanner({
   function performAction(action: ScanAction) {
     const scope = scopeRef.current;
     if (!scope) {
+      return;
+    }
+
+    // Nobody can follow a scan under a dialog or drawer, so it pauses there.
+    if (isScanScopeCovered(scope)) {
+      setPosition(null);
+
       return;
     }
 

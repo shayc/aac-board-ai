@@ -97,7 +97,7 @@
   "tileLabelBottom": "Bottom",
   "tileLabelHidden": "Hidden",
   "tileOpensBoard": "Opens board",
-  "scanningEnabled": "Switch scanning",
+  "scanningEnabled": "Enable switch scanning",
   "scanningMethod": "Scan method",
   "scanningMethodAuto": "Automatic",
   "scanningMethodStep": "Two-switch step",
