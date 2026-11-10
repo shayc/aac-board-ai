@@ -1,4 +1,4 @@
-import { defineConfig } from "@playwright/test";
+import { defineConfig, devices } from "@playwright/test";
 import baseConfig from "../playwright.config.ts";
 import { DIST_DIRS } from "./paths.ts";
 import { ACTION_TIMEOUT_MS, BASE_BUILD_URL, ROUND_COUNT } from "./settings.ts";
@@ -8,7 +8,15 @@ import { ACTION_TIMEOUT_MS, BASE_BUILD_URL, ROUND_COUNT } from "./settings.ts";
 const SAMPLE_TIMEOUT_MS = 90_000;
 const BUILD_COUNT = 2;
 
-export default defineConfig(baseConfig, {
+// defineConfig merges projects by name, so the inherited list is replaced
+// here: the journeys need Chromium's DevTools protocol and would otherwise
+// also run in every other browser the PWA test covers.
+const chromiumOnlyBaseConfig = {
+  ...baseConfig,
+  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+};
+
+export default defineConfig(chromiumOnlyBaseConfig, {
   testDir: ".",
   testMatch: "journeys.spec.ts",
   outputDir: "../perf-results/test-results",
