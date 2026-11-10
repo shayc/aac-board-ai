@@ -3,6 +3,7 @@ import { useEffect, useEffectEvent } from "react";
 import { useLocation, useNavigation, useRevalidator } from "react-router";
 import { syncBoardSets, useBoardSets } from "../board-sets/board-sets-store";
 import { boardSetIdFromPath } from "../navigation/board-paths";
+import type { BoardSetRecord } from "../storage/board-set-storage";
 import { translateBoardSets } from "./translate-board-sets";
 
 /**
@@ -33,10 +34,14 @@ export function useBoardSetTranslation(): void {
   });
 
   const translate = useEffectEvent((signal: AbortSignal) =>
-    translateBoardSets(boardSets, language, {
-      signal,
-      onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
-    }),
+    translateBoardSets(
+      visibleFirst(boardSets, boardSetIdFromPath(pathname)),
+      language,
+      {
+        signal,
+        onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
+      },
+    ),
   );
 
   useEffect(() => {
@@ -49,4 +54,16 @@ export function useBoardSetTranslation(): void {
 
     return () => controller.abort();
   }, [language, boardSetIdsKey, isLoading]);
+}
+
+// The set on screen is translated first, so it doesn't wait behind sets the
+// user isn't looking at.
+function visibleFirst(
+  boardSets: readonly BoardSetRecord[],
+  visibleBoardSetId: string | undefined,
+): BoardSetRecord[] {
+  const visible = boardSets.filter(({ id }) => id === visibleBoardSetId);
+  const others = boardSets.filter(({ id }) => id !== visibleBoardSetId);
+
+  return [...visible, ...others];
 }
