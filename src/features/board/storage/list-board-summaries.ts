@@ -1,13 +1,14 @@
 import { getLanguageCode } from "@shared/language/locale";
 import type { TranslationsByLocale } from "../board-types";
 import { obfToTranslationsByLocale } from "../obf/obf-to-board";
+import { findStringTranslations } from "../translation/board-translations";
 import { listBoardRecords } from "./board-content-storage";
 
 export interface BoardSummary {
   id: string;
   name: string;
-  /** Language code → board name, like a board set's `translatedNames`. */
-  translatedNames: Readonly<Record<string, string>>;
+  /** Language code → the board's name, for each language its strings cover. */
+  namesByLanguage: Readonly<Record<string, string>>;
 }
 
 export async function listBoardSummaries(
@@ -18,36 +19,30 @@ export async function listBoardSummaries(
   return records.map(({ id, name, obf }) => ({
     id,
     name,
-    translatedNames: namesByLanguage(
+    namesByLanguage: findNamesByLanguage(
       name,
       obfToTranslationsByLocale(obf.strings),
     ),
   }));
 }
 
-function namesByLanguage(
+function findNamesByLanguage(
   name: string,
   translationsByLocale: TranslationsByLocale,
 ): Record<string, string> {
-  const names: Record<string, string> = {};
-  const seenLanguages = new Set<string>();
+  const namesByLanguage: Record<string, string> = {};
 
-  for (const [locale, translations] of translationsByLocale) {
+  for (const locale of translationsByLocale.keys()) {
     const language = getLanguageCode(locale);
+    const translatedName = findStringTranslations(
+      translationsByLocale,
+      language,
+    )?.get(name);
 
-    // A board is shown in the first locale of a language, so its name comes
-    // from that locale too, even when a later one could supply it.
-    if (seenLanguages.has(language)) {
-      continue;
-    }
-
-    seenLanguages.add(language);
-
-    const translatedName = translations.get(name);
     if (translatedName !== undefined) {
-      names[language] = translatedName;
+      namesByLanguage[language] = translatedName;
     }
   }
 
-  return names;
+  return namesByLanguage;
 }

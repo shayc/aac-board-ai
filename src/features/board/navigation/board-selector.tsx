@@ -4,7 +4,6 @@ import { m } from "@paraglide/messages.js";
 import { useLanguage } from "@shared/language/use-language";
 import { useTranslate } from "@shared/language/use-translate";
 import type { BoardSummary } from "../storage/list-board-summaries";
-import { nameInLanguage } from "../translation/board-translations";
 import { useBoardRoute } from "./use-board-navigation";
 
 interface BoardOption {
@@ -67,9 +66,9 @@ function toBoardOptions(
   language: string,
 ): BoardOption[] {
   return summaries
-    .map((summary) => ({
-      id: summary.id,
-      name: nameInLanguage(summary, language),
+    .map(({ id, name, namesByLanguage }) => ({
+      id,
+      name: namesByLanguage[language] ?? name,
     }))
     .sort((a, b) => a.name.localeCompare(b.name, language));
 }
