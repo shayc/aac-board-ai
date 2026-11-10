@@ -48,15 +48,14 @@ export async function translateBoardSets(
 }
 
 // The set name is saved in the same transaction as its boards' translations,
-// so it marks the whole set as translated without reading any board.
+// so it marks the whole set as translated without reading any board. A set's
+// own language doesn't: it is only its root board's, and other boards may
+// differ.
 function isBoardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
 ): boolean {
-  return (
-    getBoardLanguage(boardSet) === language ||
-    boardSet.translatedNames?.[language] !== undefined
-  );
+  return boardSet.translatedNames?.[language] !== undefined;
 }
 
 async function translateBoardSet(
@@ -65,7 +64,7 @@ async function translateBoardSet(
   signal: AbortSignal,
 ): Promise<void> {
   const boards = await listBoards(boardSet.id);
-  const shippedName = findShippedName(boardSet, boards, language);
+  const nameInLanguage = findNameInLanguage(boardSet, boards, language);
   const boardsMissingLanguage = boards.filter(
     (board) => !isBoardInLanguage(board, language),
   );
@@ -73,7 +72,7 @@ async function translateBoardSet(
   const stringsBySourceLanguage = collectStringsBySourceLanguage(
     boardsMissingLanguage,
   );
-  if (shippedName === undefined) {
+  if (nameInLanguage === undefined) {
     addStrings(stringsBySourceLanguage, getBoardLanguage(boardSet), [
       boardSet.name,
     ]);
@@ -94,7 +93,7 @@ async function translateBoardSet(
     language,
     pickBoardSetTranslations({
       boardSet,
-      shippedName,
+      nameInLanguage,
       boards: boardsMissingLanguage,
       translationsBySourceLanguage,
     }),
@@ -109,11 +108,15 @@ async function listBoards(boardSetId: string): Promise<Board[]> {
 
 // The set name usually comes from its root board's name, so a board file that
 // ships translations already has the name in the language.
-function findShippedName(
+function findNameInLanguage(
   boardSet: BoardSetRecord,
   boards: readonly Board[],
   language: string,
 ): string | undefined {
+  if (getBoardLanguage(boardSet) === language) {
+    return boardSet.name;
+  }
+
   const rootBoard = boards.find((board) => board.id === boardSet.rootBoardId);
   if (!rootBoard) {
     return undefined;
@@ -217,14 +220,14 @@ async function translateStrings(
 
 interface PickBoardSetTranslationsInput {
   boardSet: BoardSetRecord;
-  shippedName: string | undefined;
+  nameInLanguage: string | undefined;
   boards: readonly Board[];
   translationsBySourceLanguage: ReadonlyMap<string, StringTranslations>;
 }
 
 function pickBoardSetTranslations({
   boardSet,
-  shippedName,
+  nameInLanguage,
   boards,
   translationsBySourceLanguage,
 }: PickBoardSetTranslationsInput) {
@@ -235,7 +238,7 @@ function pickBoardSetTranslations({
   const translatedName = translationsFor(boardSet)?.get(boardSet.name);
 
   return {
-    name: shippedName ?? translatedName ?? boardSet.name,
+    name: nameInLanguage ?? translatedName ?? boardSet.name,
     stringsByBoardId: new Map(
       boards.map((board) => [
         board.id,

@@ -99,6 +99,34 @@ describe("translateBoardSets", () => {
     });
   });
 
+  test("translates a board whose language differs from its set's", async () => {
+    await seedBoardSets([
+      {
+        id: "mixed",
+        name: "Home",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({ id: "home", name: "Home" }),
+          makeOBFBoard({ id: "maison", name: "Maison", locale: "fr-FR" }),
+        ],
+      },
+    ]);
+    const { create } = stubTranslator((input) => `[en] ${input}`);
+
+    await runTranslation("en");
+
+    expect(create.mock.calls.map((call) => call.at(0))).toEqual([
+      expect.objectContaining({ sourceLanguage: "fr", targetLanguage: "en" }),
+    ]);
+    expect(await readStrings("mixed", "maison")).toEqual({
+      en: { Maison: "[en] Maison" },
+    });
+    expect(await readStrings("mixed", "home")).toBeUndefined();
+    expect((await getBoardSetRecord("mixed"))?.translatedNames).toEqual({
+      en: "Home",
+    });
+  });
+
   test("keeps a board's own translations and translates only the boards missing the language", async () => {
     await seedBoardSets([
       {
