@@ -141,8 +141,8 @@ export function BoardSetList({
           </ListItemIcon>
           <ListItemText>{t(m.libraryInfo)}</ListItemText>
         </MenuItem>
-        <MenuItem onClick={handleRequestDelete}>
-          <ListItemIcon>
+        <MenuItem onClick={handleRequestDelete} sx={{ color: "error.main" }}>
+          <ListItemIcon sx={{ color: "inherit" }}>
             <DeleteOutlinedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>{t(m.libraryDelete)}</ListItemText>
