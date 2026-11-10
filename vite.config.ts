@@ -99,6 +99,7 @@ export default defineConfig({
       output: {
         codeSplitting: {
           groups: [
+            { name: "messages", test: /src\/paraglide\//, priority: 40 },
             {
               name: "react",
               test: /node_modules\/(react|react-dom|scheduler)\//,
