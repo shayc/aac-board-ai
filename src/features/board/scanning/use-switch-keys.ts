@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, type RefObject } from "react";
-import { isScanScopeCovered } from "./scan-targets";
+import { isScanningScopeCovered } from "./scan-targets";
 
 /**
  * Reports presses of the switch keys in `keyActions`. A switch key counts
@@ -18,7 +18,7 @@ export function useSwitchKeys<Action>(
   useEffect(() => {
     function findAction(event: KeyboardEvent): Action | undefined {
       const scope = scopeRef.current;
-      if (!scope || isScanScopeCovered(scope)) {
+      if (!scope || isScanningScopeCovered(scope)) {
         return undefined;
       }
 

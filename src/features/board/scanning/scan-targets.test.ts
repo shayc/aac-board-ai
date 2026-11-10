@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, test } from "vitest";
-import { readScanGroups } from "./scan-targets";
+import { listScanGroups } from "./scan-targets";
 
 function mountScope(html: string): HTMLElement {
   const scope = document.createElement("div");
@@ -10,12 +10,12 @@ function mountScope(html: string): HTMLElement {
 }
 
 function readItemNames(scope: HTMLElement): string[][] {
-  return readScanGroups(scope).map((group) =>
+  return listScanGroups(scope).map((group) =>
     group.items.map((item) => item.textContent),
   );
 }
 
-describe("readScanGroups", () => {
+describe("listScanGroups", () => {
   let scope: HTMLElement;
 
   afterEach(() => {

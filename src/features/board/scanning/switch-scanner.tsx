@@ -2,27 +2,30 @@ import { useEffect, useEffectEvent, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import {
   advanceScan,
-  selectScan,
+  selectScanTarget,
   startScan,
   type ScanPosition,
 } from "./scan-sequence";
 import {
   highlightScanTarget,
-  isScanScopeCovered,
-  readScanGroups,
+  isScanningScopeCovered,
+  listScanGroups,
 } from "./scan-targets";
 import type { ScanMethod } from "./scanning-preferences-store";
 import { useSwitchKeys } from "./use-switch-keys";
 
-type ScanAction = "step" | "select";
+type ScanAction = "advance" | "select";
 
-const SWITCH_KEYS: Record<ScanMethod, ReadonlyMap<string, ScanAction>> = {
+const SWITCH_KEY_ACTIONS: Record<
+  ScanMethod,
+  ReadonlyMap<string, ScanAction>
+> = {
   auto: new Map([
     [" ", "select"],
     ["Enter", "select"],
   ]),
   step: new Map([
-    [" ", "step"],
+    [" ", "advance"],
     ["Enter", "select"],
   ]),
 };
@@ -62,20 +65,20 @@ export function SwitchScanner({
     }
 
     // Nobody can follow a scan under a dialog or drawer, so it pauses there.
-    if (isScanScopeCovered(scope)) {
+    if (isScanningScopeCovered(scope)) {
       setPosition(null);
 
       return;
     }
 
-    const groups = readScanGroups(scope);
-    if (action === "step") {
+    const groups = listScanGroups(scope);
+    if (action === "advance") {
       setPosition(advanceScan(groups, position, MAX_PASSES[method]));
 
       return;
     }
 
-    const selection = selectScan(groups, position);
+    const selection = selectScanTarget(groups, position);
     if (selection.kind === "moved") {
       setPosition(selection.position);
 
@@ -85,12 +88,12 @@ export function SwitchScanner({
     // Flushed so the restart reads the groups the activation leaves behind,
     // such as a play button the first message part has just enabled.
     flushSync(() => selection.target.click());
-    setPosition(startScan(readScanGroups(scope)));
+    setPosition(startScan(listScanGroups(scope)));
   }
 
-  useSwitchKeys(scopeRef, SWITCH_KEYS[method], performAction);
+  useSwitchKeys(scopeRef, SWITCH_KEY_ACTIONS[method], performAction);
 
-  const handleInterval = useEffectEvent(() => performAction("step"));
+  const handleInterval = useEffectEvent(() => performAction("advance"));
 
   useEffect(() => {
     if (method !== "auto" || !position) {
@@ -108,7 +111,8 @@ export function SwitchScanner({
       return;
     }
 
-    const target = position.level === "items" ? position.item : position.group;
+    const target =
+      position.level === "items" ? position.item : position.container;
     const removeHighlight = highlightScanTarget(target);
 
     // The board can remove the highlighted control or group at any time, such
@@ -116,7 +120,7 @@ export function SwitchScanner({
     // from the first group, with a full interval.
     const observer = new MutationObserver(() => {
       if (!target.isConnected) {
-        setPosition(startScan(readScanGroups(scope)));
+        setPosition(startScan(listScanGroups(scope)));
       }
     });
     observer.observe(scope, { childList: true, subtree: true });

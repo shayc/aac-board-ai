@@ -39,8 +39,8 @@ export function ScanningSettings() {
           label={t(m.scanningMethod)}
           helperText={
             method === "auto"
-              ? t(m.scanningMethodAutoHint)
-              : t(m.scanningMethodStepHint)
+              ? t(m.scanningMethodAutoHelper)
+              : t(m.scanningMethodStepHelper)
           }
           value={method}
           onChange={setScanMethod}

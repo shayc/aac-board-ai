@@ -17,7 +17,7 @@ export interface ScanGroup<Target> {
 }
 
 interface LevelPosition<Target> {
-  group: Target;
+  container: Target;
   /** Passes over the current level that ended without a selection. */
   completedPasses: number;
 }
@@ -56,7 +56,7 @@ export function advanceScan<Target>(
   }
 
   if (position.level === "groups") {
-    return advanceGroup(
+    return nextGroupPosition(
       groups,
       groupIndex,
       position.completedPasses,
@@ -65,7 +65,7 @@ export function advanceScan<Target>(
   }
 
   if (position.level === "items") {
-    return advanceItem(group, position.item, position.completedPasses);
+    return nextItemPosition(group, position.item, position.completedPasses);
   }
 
   const completedPasses = position.completedPasses + 1;
@@ -74,10 +74,10 @@ export function advanceScan<Target>(
   }
 
   // The exit step has just shown the whole group, so the scan moves on from it.
-  return advanceGroup(groups, groupIndex, 0, maxPasses);
+  return nextGroupPosition(groups, groupIndex, 0, maxPasses);
 }
 
-export function selectScan<Target>(
+export function selectScanTarget<Target>(
   groups: readonly ScanGroup<Target>[],
   position: ScanPosition<Target> | null,
 ): ScanSelection<Target> {
@@ -102,7 +102,7 @@ export function selectScan<Target>(
   return { kind: "moved", position: itemPosition(group, firstItem, 0) };
 }
 
-function advanceGroup<Target>(
+function nextGroupPosition<Target>(
   groups: readonly ScanGroup<Target>[],
   groupIndex: number,
   previousPasses: number,
@@ -120,7 +120,7 @@ function advanceGroup<Target>(
   return groupPosition(nextGroup, completedPasses);
 }
 
-function advanceItem<Target>(
+function nextItemPosition<Target>(
   group: ScanGroup<Target>,
   item: Target,
   completedPasses: number,
@@ -128,7 +128,7 @@ function advanceItem<Target>(
   // An item that is gone has index -1, so the scan continues at the first item.
   const nextItem = group.items[group.items.indexOf(item) + 1];
   if (nextItem === undefined) {
-    return { level: "exit", group: group.container, completedPasses };
+    return { level: "exit", container: group.container, completedPasses };
   }
 
   return itemPosition(group, nextItem, completedPasses);
@@ -139,7 +139,7 @@ function findGroupIndex<Target>(
   position: ScanPosition<Target> | null,
 ): number {
   return position
-    ? groups.findIndex((group) => group.container === position.group)
+    ? groups.findIndex((group) => group.container === position.container)
     : -1;
 }
 
@@ -147,7 +147,7 @@ function groupPosition<Target>(
   group: ScanGroup<Target>,
   completedPasses: number,
 ): ScanPosition<Target> {
-  return { level: "groups", group: group.container, completedPasses };
+  return { level: "groups", container: group.container, completedPasses };
 }
 
 function itemPosition<Target>(
@@ -155,5 +155,5 @@ function itemPosition<Target>(
   item: Target,
   completedPasses: number,
 ): ScanPosition<Target> {
-  return { level: "items", group: group.container, item, completedPasses };
+  return { level: "items", container: group.container, item, completedPasses };
 }

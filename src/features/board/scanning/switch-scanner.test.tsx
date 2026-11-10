@@ -18,7 +18,7 @@ import {
 } from "./scanning-preferences-store";
 import { ScanningScope } from "./scanning-scope";
 
-const SCAN_INTERVAL_MS = 1000;
+const TEST_SCAN_INTERVAL_MS = 1000;
 
 const TWO_ROW_BOARD: OBFBoard = {
   format: "open-board-0.1",
@@ -101,8 +101,8 @@ async function pressSwitch(key: "Space" | "Enter" = "Space") {
 
 // One interval at a time: the next interval starts only once React has
 // committed the move, so assert each move before advancing again.
-async function waitScanInterval() {
-  await vi.advanceTimersByTimeAsync(SCAN_INTERVAL_MS);
+async function advanceScanInterval() {
+  await vi.advanceTimersByTimeAsync(TEST_SCAN_INTERVAL_MS);
 }
 
 describe("switch scanning", () => {
@@ -110,7 +110,7 @@ describe("switch scanning", () => {
 
   beforeEach(() => {
     speech = stubSpeech();
-    setScanIntervalMs(SCAN_INTERVAL_MS);
+    setScanIntervalMs(TEST_SCAN_INTERVAL_MS);
   });
 
   afterEach(() => {
@@ -146,7 +146,7 @@ describe("switch scanning", () => {
     test("waits for a switch press, then highlights the first row", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
-      await vi.advanceTimersByTimeAsync(3 * SCAN_INTERVAL_MS);
+      await vi.advanceTimersByTimeAsync(3 * TEST_SCAN_INTERVAL_MS);
       expect(highlightedNames()).toEqual([]);
 
       await pressSwitch();
@@ -172,10 +172,10 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
     });
 
@@ -185,16 +185,16 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual([]);
 
       await pressSwitch("Enter");
@@ -205,13 +205,13 @@ describe("switch scanning", () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch();
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["more"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["stop"]);
 
       await pressSwitch();
@@ -228,14 +228,14 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
       await pressSwitch();
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
@@ -246,22 +246,22 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["yes"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
@@ -301,13 +301,13 @@ describe("switch scanning", () => {
       await pressSwitch();
       await expect.poll(highlightedNames).toEqual(["Play message"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["yes", "no"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["Backspace"]);
 
       await pressSwitch();
@@ -328,7 +328,7 @@ describe("switch scanning", () => {
         new KeyboardEvent("keydown", { key: " ", repeat: true, bubbles: true }),
       );
 
-      await waitScanInterval();
+      await advanceScanInterval();
       await expect.poll(highlightedNames).toEqual(["more", "stop"]);
     });
 
@@ -400,7 +400,7 @@ describe("switch scanning", () => {
           </Dialog>
         </>,
       );
-      await waitScanInterval();
+      await advanceScanInterval();
 
       await expect.poll(highlightedNames).toEqual([]);
     });

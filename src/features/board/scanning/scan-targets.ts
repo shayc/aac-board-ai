@@ -13,7 +13,7 @@ export const scanGroupProps = { [GROUP_ATTRIBUTE]: "" } as const;
 // now, as they are enabled, disabled, added, or replaced.
 export const SCAN_HIGHLIGHTED_ITEM_SELECTOR = `${ITEM_SELECTOR}:is([${HIGHLIGHT_ATTRIBUTE}], [${HIGHLIGHT_ATTRIBUTE}] *)`;
 
-export function readScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
+export function listScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   const groups: ScanGroup<HTMLElement>[] = [];
 
   for (const container of root.querySelectorAll<HTMLElement>(
@@ -36,7 +36,7 @@ function listScanItems(container: HTMLElement): HTMLElement[] {
 
 // Dialogs, drawers, and menus hide everything behind them from assistive
 // technology, which is how the scope learns that it is covered.
-export function isScanScopeCovered(scope: HTMLElement): boolean {
+export function isScanningScopeCovered(scope: HTMLElement): boolean {
   return scope.closest("[aria-hidden='true'], [inert]") !== null;
 }
 
