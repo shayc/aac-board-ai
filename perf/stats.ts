@@ -1,41 +1,15 @@
-export interface Spread {
-  median: number;
-  p25: number;
-  p75: number;
-}
-
 export interface Interval {
   low: number;
   high: number;
 }
 
 export function median(values: number[]): number {
-  return quantile(
-    values.toSorted((a, b) => a - b),
-    0.5,
-  );
-}
-
-export function spreadOf(values: number[]): Spread {
   const sorted = values.toSorted((a, b) => a - b);
+  const middle = (sorted.length - 1) / 2;
+  const lower = sorted[Math.floor(middle)] ?? Number.NaN;
+  const upper = sorted[Math.ceil(middle)] ?? Number.NaN;
 
-  return {
-    median: quantile(sorted, 0.5),
-    p25: quantile(sorted, 0.25),
-    p75: quantile(sorted, 0.75),
-  };
-}
-
-function quantile(sorted: number[], fraction: number): number {
-  if (sorted.length === 0) {
-    return Number.NaN;
-  }
-
-  const position = (sorted.length - 1) * fraction;
-  const lower = sorted[Math.floor(position)] ?? Number.NaN;
-  const upper = sorted[Math.ceil(position)] ?? Number.NaN;
-
-  return lower + (upper - lower) * (position - Math.floor(position));
+  return (lower + upper) / 2;
 }
 
 /**
@@ -126,31 +100,6 @@ export function holmAdjust(pValues: number[]): number[] {
 /** The smallest p the signed-rank test can report for this many samples. */
 export function smallestSignedRankP(sampleCount: number): number {
   return 2 / 2 ** sampleCount;
-}
-
-/**
- * One-sided sign test: how likely at least this many samples grow if growth
- * and shrinkage were equally likely. Samples with no change are left out.
- */
-export function growthSignP(growths: number[]): number {
-  const grew = growths.filter((growth) => growth > 0).length;
-  const changed = growths.filter((growth) => growth !== 0).length;
-
-  let probability = 0;
-  for (let count = grew; count <= changed; count += 1) {
-    probability += binomial(changed, count) / 2 ** changed;
-  }
-
-  return probability;
-}
-
-function binomial(total: number, chosen: number): number {
-  let result = 1;
-  for (let step = 1; step <= chosen; step += 1) {
-    result = (result * (total - chosen + step)) / step;
-  }
-
-  return result;
 }
 
 function rank(values: number[]): number[] {

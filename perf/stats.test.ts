@@ -2,12 +2,10 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
   differenceInterval,
-  growthSignP,
   holmAdjust,
   median,
   signedRankP,
   smallestSignedRankP,
-  spreadOf,
   typicalDifference,
 } from "./stats.ts";
 
@@ -18,10 +16,6 @@ await test("median takes the middle value, interpolating between two", () => {
 
 await test("median is NaN without values", () => {
   assert.ok(Number.isNaN(median([])));
-});
-
-await test("spreadOf reports the 25th and 75th percentiles", () => {
-  assert.deepEqual(spreadOf([5, 4, 3, 2, 1]), { median: 3, p25: 2, p75: 4 });
 });
 
 await test("signedRankP is the smallest possible when every round moved the same way", () => {
@@ -68,16 +62,4 @@ await test("differenceInterval is undefined with too few samples", () => {
 await test("holmAdjust multiplies by the number of tests still in play", () => {
   assert.deepEqual(holmAdjust([0.01, 0.04, 0.03]), [0.03, 0.06, 0.06]);
   assert.deepEqual(holmAdjust([0.5, 0.9]), [1, 1]);
-});
-
-await test("growthSignP is small when every sample grew", () => {
-  assert.equal(growthSignP(Array.from({ length: 10 }, () => 1)), 1 / 1024);
-});
-
-await test("growthSignP is large when growth and shrinkage balance", () => {
-  assert.equal(growthSignP([1, 1, 1, 1, 1, -1, -1, -1, -1, -1]), 638 / 1024);
-});
-
-await test("growthSignP leaves out samples that did not change", () => {
-  assert.equal(growthSignP([1, 1, 0, 0]), 1 / 4);
 });

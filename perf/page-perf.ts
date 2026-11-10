@@ -1,12 +1,5 @@
-export interface LongFrame {
-  start: number;
-  blockingDuration: number;
-}
-
 export interface PagePerf {
   lastPointerDown: number;
-  longFrames: LongFrame[];
-  largestPaint: number;
   watch: (name: string, selector: string) => void;
   visibleAt: (name: string, timeoutMs: number) => Promise<number>;
 }
@@ -17,15 +10,11 @@ declare global {
   }
 }
 
-export interface PagePerfOptions {
-  watches: Record<string, string>;
-}
-
 /**
  * Runs in the page before any app script. Kept self-contained because
  * Playwright serializes it into the page.
  */
-export function installPagePerf({ watches }: PagePerfOptions): void {
+export function installPagePerf(watches: Record<string, string>): void {
   const watched = new Map<
     string,
     { selector: string; visibleAt: Promise<number> }
@@ -33,8 +22,6 @@ export function installPagePerf({ watches }: PagePerfOptions): void {
 
   const perf: PagePerf = {
     lastPointerDown: Number.NaN,
-    longFrames: [],
-    largestPaint: Number.NaN,
     watch(name, selector) {
       watched.set(name, { selector, visibleAt: firstVisibleFrame(selector) });
     },
@@ -61,20 +48,6 @@ export function installPagePerf({ watches }: PagePerfOptions): void {
     },
   };
   window.__perf = perf;
-  performance.setResourceTimingBufferSize(10_000);
-
-  new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      const { blockingDuration } = entry as PerformanceEntry & {
-        blockingDuration: number;
-      };
-      perf.longFrames.push({ start: entry.startTime, blockingDuration });
-    }
-  }).observe({ type: "long-animation-frame", buffered: true });
-
-  new PerformanceObserver((list) => {
-    perf.largestPaint = list.getEntries().at(-1)?.startTime ?? Number.NaN;
-  }).observe({ type: "largest-contentful-paint", buffered: true });
 
   addEventListener(
     "pointerdown",

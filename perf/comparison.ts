@@ -1,139 +1,90 @@
-import type {
-  BuildName,
-  MetricKind,
-  MetricSamples,
-  MetricUnit,
-  RunResults,
-} from "./results.ts";
+import type { BuildName, RunResults, TimingSamples } from "./results.ts";
 import {
   differenceInterval,
-  growthSignP,
   holmAdjust,
   median,
   signedRankP,
   smallestSignedRankP,
-  spreadOf,
   typicalDifference,
   type Interval,
-  type Spread,
 } from "./stats.ts";
 
 export const SIGNIFICANCE_LEVEL = 0.05;
 export const CONFIDENCE_LEVEL = 0.95;
 
-// Timings are what a user waits for, so they are the metrics that get a
-// verdict. The other kinds explain a timing that moved.
-const TESTED_KIND: MetricKind = "timing";
-
 export type Verdict = "regression" | "improvement" | "unchanged";
 
-export interface MetricComparison {
+export interface TimingComparison {
   journey: string;
-  metric: string;
-  kind: MetricKind;
-  unit: MetricUnit;
-  description: string;
-  samples: Record<BuildName, number[]>;
-  spreads: Record<BuildName, Spread>;
+  timing: string;
+  medians: Record<BuildName, number>;
   difference: number;
   differencePercent: number;
   differenceInterval: Interval | undefined;
-  test?: { p: number; verdict: Verdict };
-}
-
-export interface MemoryGrowth {
-  journey: string;
-  metric: string;
-  unit: MetricUnit;
-  medianGrowth: number;
-  grewCount: number;
-  sampleCount: number;
   p: number;
-  isGrowing: boolean;
+  verdict: Verdict;
 }
 
 export interface Comparison {
-  metrics: MetricComparison[];
-  memory: MemoryGrowth[];
+  timings: TimingComparison[];
   canFlagChanges: boolean;
 }
 
+/**
+ * Tests each timing's per-round differences and corrects the p-values for the
+ * number of timings, so two builds that perform alike get any flag at all in
+ * fewer than SIGNIFICANCE_LEVEL of runs.
+ */
 export function compareBuilds(results: RunResults): Comparison {
-  const measured = results.journeys.flatMap(({ journey, metrics }) =>
-    Object.entries(metrics).map(([metric, samples]) => ({
+  const measured = results.journeys.flatMap(({ journey, timings }) =>
+    Object.entries(timings).map(([timing, samples]) => ({
       journey,
-      metric,
+      timing,
       samples,
+      differences: roundDifferences(journey, timing, samples),
     })),
   );
-
-  const metrics = measured.map(({ journey, metric, samples }) =>
-    compareMetric(journey, metric, samples),
-  );
-  const tested = metrics.filter(({ kind }) => kind === TESTED_KIND);
   const adjustedPs = holmAdjust(
-    tested.map(({ samples }) => signedRankP(roundDifferences(samples))),
+    measured.map(({ differences }) => signedRankP(differences)),
   );
-  tested.forEach((metric, index) => {
-    const p = adjustedPs[index] ?? 1;
-    metric.test = { p, verdict: verdictOf(p, metric.difference) };
-  });
 
   return {
-    metrics,
-    memory: measured
-      .filter(({ samples }) => samples.kind === "memory")
-      .map(({ journey, metric, samples }) =>
-        memoryGrowthOf(journey, metric, samples.unit, samples.current),
-      ),
+    timings: measured.map(
+      ({ journey, timing, samples, differences }, index) => {
+        const difference = typicalDifference(differences);
+        const baseMedian = median(samples.base);
+        const p = adjustedPs[index] ?? 1;
+
+        return {
+          journey,
+          timing,
+          medians: { base: baseMedian, current: median(samples.current) },
+          difference,
+          differencePercent: (difference / baseMedian) * 100,
+          differenceInterval: differenceInterval(differences, CONFIDENCE_LEVEL),
+          p,
+          verdict: verdictOf(p, difference),
+        };
+      },
+    ),
     canFlagChanges:
-      smallestSignedRankP(results.meta.sampleCount) * tested.length <=
+      smallestSignedRankP(results.settings.sampleCount) * measured.length <=
       SIGNIFICANCE_LEVEL,
   };
 }
 
-function compareMetric(
+function roundDifferences(
   journey: string,
-  metric: string,
-  { kind, unit, description, base, current }: MetricSamples,
-): MetricComparison {
+  timing: string,
+  { base, current }: TimingSamples,
+): number[] {
   if (base.length !== current.length) {
     throw new Error(
-      `${journey} › ${metric} has ${base.length} base and ${current.length} current samples, so its rounds cannot be paired.`,
+      `${journey} › ${timing} has ${base.length} base and ${current.length} current samples, so its rounds cannot be paired.`,
     );
   }
 
-  const differences = roundDifferences({ base, current });
-  const difference = typicalDifference(differences);
-  const spreads = { base: spreadOf(base), current: spreadOf(current) };
-
-  return {
-    journey,
-    metric,
-    kind,
-    unit,
-    description,
-    samples: { base, current },
-    spreads,
-    difference,
-    differencePercent: percentOf(difference, spreads.base.median),
-    differenceInterval: differenceInterval(differences, CONFIDENCE_LEVEL),
-  };
-}
-
-function roundDifferences({
-  base,
-  current,
-}: Record<BuildName, number[]>): number[] {
   return current.map((value, round) => value - (base[round] ?? Number.NaN));
-}
-
-function percentOf(difference: number, from: number): number {
-  if (from !== 0) {
-    return (difference / from) * 100;
-  }
-
-  return difference === 0 ? 0 : Number.POSITIVE_INFINITY;
 }
 
 function verdictOf(p: number, difference: number): Verdict {
@@ -142,24 +93,4 @@ function verdictOf(p: number, difference: number): Verdict {
   }
 
   return difference > 0 ? "regression" : "improvement";
-}
-
-function memoryGrowthOf(
-  journey: string,
-  metric: string,
-  unit: MetricUnit,
-  growths: number[],
-): MemoryGrowth {
-  const p = growthSignP(growths);
-
-  return {
-    journey,
-    metric,
-    unit,
-    medianGrowth: median(growths),
-    grewCount: growths.filter((growth) => growth > 0).length,
-    sampleCount: growths.length,
-    p,
-    isGrowing: p < SIGNIFICANCE_LEVEL,
-  };
 }

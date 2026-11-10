@@ -1,64 +1,43 @@
-import { spawn, spawnSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync } from "node:fs";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { compareBuilds, type Comparison } from "./comparison.ts";
-import { readHotFunctions } from "./cpu-profile.ts";
-import { formatDifference, formatValue, renderReport } from "./report.ts";
+import {
+  compareBuilds,
+  type Comparison,
+  type TimingComparison,
+} from "./comparison.ts";
 import {
   BASE_BUILD_FILE,
   DIST_DIRS,
-  PROFILE_MANIFEST,
-  PROFILES_DIR,
   RAW_RESULTS_DIR,
-  REPORT_FILE,
   RESULTS_FILE,
   ROOT_DIR,
-  TRACE_SUFFIX,
-  readJSON,
-  writeJSON,
   type BuildInfo,
   type BuildName,
   type JourneyResult,
-  type ProfileListing,
   type RunResults,
 } from "./results.ts";
-
-const PLAYWRIGHT_TEST = [
-  "playwright",
-  "test",
-  "--config",
-  "perf/playwright.config.ts",
-];
-const HOT_FUNCTION_COUNT = 10;
 
 const { values: flags } = parseArgs({
   options: {
     base: { type: "string", default: "main" },
-    profile: { type: "string" },
-    samples: { type: "string" },
+    samples: { type: "string", default: "10" },
   },
 });
 
 try {
-  if (flags.profile === undefined) {
-    await compare(flags.base, flags.samples);
-  } else {
-    await profile(flags.profile);
-  }
+  await compare(flags.base, flags.samples);
 } catch (error) {
   console.error(`\n${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 }
 
-async function compare(
-  baseRef: string,
-  samples: string | undefined,
-): Promise<void> {
-  if (samples !== undefined && !isPositiveInteger(samples)) {
+async function compare(baseRef: string, samples: string): Promise<void> {
+  if (!/^[1-9]\d*$/.test(samples)) {
     throw new Error(`--samples takes a whole number above 0, not ${samples}.`);
   }
 
@@ -69,70 +48,21 @@ async function compare(
   await rm(RAW_RESULTS_DIR, { recursive: true, force: true });
   run(
     "npx",
-    PLAYWRIGHT_TEST,
+    ["playwright", "test", "--config", "perf/playwright.config.ts"],
     ROOT_DIR,
-    samples === undefined ? {} : { PERF_SAMPLES: samples },
+    { PERF_SAMPLES: samples },
   );
 
   const results = await collectResults(baseRef, baseCommit);
-  await writeJSON(RESULTS_FILE, results);
-
-  const comparison = await writeReport(results);
-  printSummary(results, comparison);
-  openReport();
-}
-
-async function profile(journey: string): Promise<void> {
-  buildApp(ROOT_DIR, DIST_DIRS.current);
-  run("npx", [...PLAYWRIGHT_TEST, "--grep", ` ${journey}$`], ROOT_DIR, {
-    PERF_PROFILE: "1",
-  });
-
-  const journeyDir = path.join(PROFILES_DIR, journey);
-  const { commit, buildHash } = await describeCurrentBuild();
-  const files = (await readdir(journeyDir)).toSorted();
-  const hotFunctions = await readPhaseHotFunctions(journeyDir, files);
-  await writeJSON(path.join(journeyDir, PROFILE_MANIFEST), {
-    journey,
-    commit,
-    buildHash,
-    date: currentDate(),
-    files,
-    hotFunctions,
-  } satisfies ProfileListing);
-
-  console.log(`Profile of ${journey}:`);
-  for (const file of files) {
-    console.log(`  ${path.join(journeyDir, file)}`);
-  }
-
-  for (const { phase, functions } of hotFunctions) {
-    console.log(`\n${phase}: main-thread JavaScript by self time`);
-    for (const { function: name, selfMs } of functions.slice(0, 5)) {
-      console.log(`  ${formatValue(selfMs, "ms").padStart(9)}  ${name}`);
-    }
-  }
-
-  const results = await readJSON<RunResults>(RESULTS_FILE);
-  if (results) {
-    await writeReport(results);
-    console.log(`Linked from ${REPORT_FILE}`);
-  }
+  await writeFile(RESULTS_FILE, JSON.stringify(results, null, 2));
+  printReport(results, compareBuilds(results));
 }
 
 // Both builds come from the same command, so they differ only by their source.
 function buildApp(sourceDir: string, distDir: string): void {
   run(
     "npx",
-    [
-      "vite",
-      "build",
-      "--sourcemap",
-      "hidden",
-      "--outDir",
-      distDir,
-      "--emptyOutDir",
-    ],
+    ["vite", "build", "--outDir", distDir, "--emptyOutDir"],
     sourceDir,
   );
 }
@@ -142,10 +72,13 @@ function buildApp(sourceDir: string, distDir: string): void {
  * dependencies and builds it. The build is kept until the base commit changes.
  */
 async function buildBase(commit: string): Promise<void> {
-  const built = await readJSON<{ commit: string }>(BASE_BUILD_FILE);
-  if (built?.commit === commit) {
-    console.log(`Reusing the build of ${shortCommit(commit)}.`);
-    return;
+  if (existsSync(BASE_BUILD_FILE)) {
+    const built = JSON.parse(await readFile(BASE_BUILD_FILE, "utf8")) as {
+      commit: string;
+    };
+    if (built.commit === commit) {
+      return;
+    }
   }
 
   await rm(BASE_BUILD_FILE, { force: true });
@@ -159,35 +92,14 @@ async function buildBase(commit: string): Promise<void> {
     run("git", ["worktree", "remove", "--force", sourceDir], ROOT_DIR);
   }
 
-  await writeJSON(BASE_BUILD_FILE, { commit });
-}
-
-async function readPhaseHotFunctions(
-  journeyDir: string,
-  files: string[],
-): Promise<ProfileListing["hotFunctions"]> {
-  const hotFunctions: ProfileListing["hotFunctions"] = [];
-  for (const file of files.filter((name) => name.endsWith(TRACE_SUFFIX))) {
-    hotFunctions.push({
-      phase: file.slice(0, -TRACE_SUFFIX.length),
-      functions: await readHotFunctions(
-        path.join(journeyDir, file),
-        DIST_DIRS.current,
-        HOT_FUNCTION_COUNT,
-      ),
-    });
-  }
-
-  return hotFunctions;
+  await writeFile(BASE_BUILD_FILE, JSON.stringify({ commit }));
 }
 
 async function collectResults(
   baseRef: string,
   baseCommit: string,
 ): Promise<RunResults> {
-  const files = (await readdir(RAW_RESULTS_DIR)).filter((file) =>
-    file.endsWith(".json"),
-  );
+  const files = (await readdir(RAW_RESULTS_DIR)).toSorted();
   const journeys = await Promise.all(
     files.map(
       async (file) =>
@@ -201,46 +113,43 @@ async function collectResults(
     throw new Error("The journeys wrote no results.");
   }
 
+  const isDirty = git(["status", "--porcelain"]) !== "";
+
   return {
-    meta: {
-      ...first.settings,
-      builds: {
-        base: {
-          source: baseRef,
-          commit: shortCommit(baseCommit),
-          buildHash: await hashBuild("base"),
-        },
-        current: await describeCurrentBuild(),
-      },
-      date: currentDate(),
-      os: `${os.type()} ${os.release()} ${os.arch()}`,
-      cpu: os.cpus()[0]?.model ?? "unknown CPU",
+    date: new Date().toISOString(),
+    settings: first.settings,
+    builds: {
+      base: await describeBuild("base", baseRef, baseCommit),
+      current: await describeBuild(
+        "current",
+        isDirty ? "working tree with uncommitted changes" : "working tree",
+        "HEAD",
+      ),
     },
     journeys,
   };
 }
 
-async function describeCurrentBuild(): Promise<BuildInfo> {
-  const isDirty = git(["status", "--porcelain"]) !== "";
-
+async function describeBuild(
+  build: BuildName,
+  source: string,
+  commit: string,
+): Promise<BuildInfo> {
   return {
-    source: isDirty ? "working tree with uncommitted changes" : "working tree",
-    commit: shortCommit("HEAD"),
-    buildHash: await hashBuild("current"),
+    source,
+    commit: git(["rev-parse", "--short", commit]),
+    buildHash: await hashBuild(DIST_DIRS[build]),
   };
 }
 
 // Vite fingerprints its output, so identical source gives an identical hash.
-// Source maps are left out: they change with comments even when the code does
-// not.
-async function hashBuild(build: BuildName): Promise<string> {
-  const distDir = DIST_DIRS[build];
+async function hashBuild(distDir: string): Promise<string> {
   const entries = await readdir(distDir, {
     recursive: true,
     withFileTypes: true,
   });
   const files = entries
-    .filter((entry) => entry.isFile() && !entry.name.endsWith(".map"))
+    .filter((entry) => entry.isFile())
     .map((entry) => path.join(entry.parentPath, entry.name))
     .toSorted();
 
@@ -253,77 +162,65 @@ async function hashBuild(build: BuildName): Promise<string> {
   return hash.digest("hex").slice(0, 12);
 }
 
-async function writeReport(results: RunResults): Promise<Comparison> {
-  const comparison = compareBuilds(results);
+function printReport(results: RunResults, comparison: Comparison): void {
+  const { builds, settings } = results;
+  const describe = ({ source, commit, buildHash }: BuildInfo) =>
+    `${source} (commit ${commit}, build ${buildHash})`;
 
-  await writeFile(
-    REPORT_FILE,
-    renderReport({ results, comparison, profiles: await listProfiles() }),
+  console.log(`\nBase:    ${describe(builds.base)}`);
+  console.log(`Current: ${describe(builds.current)}`);
+  console.log(
+    `Chromium ${settings.browserVersion}, CPU ${settings.cpuSlowdown}× slowdown, ${settings.sampleCount} rounds`,
   );
-
-  return comparison;
-}
-
-async function listProfiles(): Promise<ProfileListing[]> {
-  if (!existsSync(PROFILES_DIR)) {
-    return [];
-  }
-
-  const journeys = await readdir(PROFILES_DIR);
-  const listings = await Promise.all(
-    journeys.map((journey) =>
-      readJSON<ProfileListing>(
-        path.join(PROFILES_DIR, journey, PROFILE_MANIFEST),
-      ),
-    ),
-  );
-
-  return listings.filter((listing) => listing !== undefined);
-}
-
-function printSummary(results: RunResults, comparison: Comparison): void {
-  const timings = comparison.metrics.filter(({ test }) => test !== undefined);
 
   for (const { journey } of results.journeys) {
     console.log(`\n${journey}`);
-
-    for (const metric of timings.filter(
-      (candidate) => candidate.journey === journey,
-    )) {
-      const verdict = metric.test?.verdict;
-      const marker = verdict === "unchanged" ? "" : `  ← ${verdict}`;
-      console.log(
-        `  ${metric.metric.padEnd(36)} ${formatValue(metric.spreads.current.median, metric.unit).padStart(9)}  ${formatDifference(metric)}${marker}`,
-      );
+    for (const timing of comparison.timings) {
+      if (timing.journey === journey) {
+        console.log(`  ${formatTiming(timing)}`);
+      }
     }
   }
 
+  if (builds.base.buildHash === builds.current.buildHash) {
+    console.log(
+      "\nBoth builds are identical, so any flag is a false positive.",
+    );
+  }
   if (!comparison.canFlagChanges) {
     console.log(
-      `\n${results.meta.sampleCount} samples are too few to flag a change in ${timings.length} timings; this run only shows that the journeys work.`,
+      `\n${settings.sampleCount} rounds are too few to flag a change in ${comparison.timings.length} timings; this run only shows that the journeys work.`,
     );
   }
 
-  for (const growth of comparison.memory.filter(({ isGrowing }) => isGrowing)) {
-    console.log(
-      `\nMemory: ${growth.journey} ${growth.metric} median +${formatValue(growth.medianGrowth, growth.unit)}, grew in ${growth.grewCount} of ${growth.sampleCount} samples.`,
-    );
-  }
-
-  console.log(`\nReport: ${REPORT_FILE}`);
+  console.log(`\nSamples: ${RESULTS_FILE}`);
 }
 
-function openReport(): void {
-  const openers: Partial<Record<NodeJS.Platform, string>> = {
-    darwin: "open",
-    linux: "xdg-open",
-  };
-  const opener = openers[process.platform];
-  if (!opener || !process.stdout.isTTY) {
-    return;
-  }
+function formatTiming(timing: TimingComparison): string {
+  const { medians, difference, differenceInterval: interval } = timing;
+  const range = interval
+    ? `${formatSigned(interval.low)} to ${formatSigned(interval.high)}`
+    : "no interval";
+  const columns = [
+    timing.timing.padEnd(28),
+    `${formatMs(medians.base)} → ${formatMs(medians.current)} ms`.padEnd(20),
+    `${formatSigned(difference)} ms (${formatSigned(timing.differencePercent)}%)`.padEnd(
+      22,
+    ),
+    `[${range}]`.padEnd(20),
+    `p=${timing.p.toPrecision(2)}`,
+  ];
+  const flag = timing.verdict === "unchanged" ? "" : `  ← ${timing.verdict}`;
 
-  spawn(opener, [REPORT_FILE], { detached: true, stdio: "ignore" }).unref();
+  return `${columns.join("  ")}${flag}`;
+}
+
+function formatMs(value: number): string {
+  return Math.abs(value) >= 100 ? value.toFixed(0) : value.toFixed(1);
+}
+
+function formatSigned(value: number): string {
+  return `${value > 0 ? "+" : ""}${formatMs(value)}`;
 }
 
 function run(
@@ -339,7 +236,7 @@ function run(
   });
 
   if (status !== 0) {
-    throw new Error(`${command} ${args.join(" ")} failed; no report written.`);
+    throw new Error(`${command} ${args.join(" ")} failed.`);
   }
 }
 
@@ -352,23 +249,9 @@ function resolveCommit(ref: string): string {
   return commit;
 }
 
-function shortCommit(ref: string): string {
-  return git(["rev-parse", "--short", ref]);
-}
-
 function git(args: string[]): string {
   return spawnSync("git", args, {
     cwd: ROOT_DIR,
     encoding: "utf8",
   }).stdout.trim();
-}
-
-function currentDate(): string {
-  return `${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC`;
-}
-
-function isPositiveInteger(text: string): boolean {
-  const value = Number(text);
-
-  return Number.isInteger(value) && value > 0;
 }
