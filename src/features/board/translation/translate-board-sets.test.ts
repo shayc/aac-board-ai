@@ -192,12 +192,95 @@ describe("translateBoardSets", () => {
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
-  test("does nothing when the Translator API is unavailable", async () => {
-    await seedFoodSet();
+  test("names a set from its root board's own translations instead of translating the name", async () => {
+    await seedBoardSets([
+      {
+        id: "home-set",
+        name: "Home",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({ id: "home", name: "Home" }),
+          makeOBFBoard({
+            id: "fruit",
+            name: "Fruit",
+            strings: { es: { Fruit: "Fruta" } },
+          }),
+        ],
+      },
+    ]);
+    await seedBoardSets([
+      {
+        id: "shipped",
+        name: "Home",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+        ],
+      },
+    ]);
+    const { translate } = stubTranslator((input) => `[es] ${input}`);
+
+    await runTranslation("es");
+
+    expect((await getBoardSetRecord("shipped"))?.translatedNames).toEqual({
+      es: "Inicio",
+    });
+    expect((await getBoardSetRecord("home-set"))?.translatedNames).toEqual({
+      es: "[es] Home",
+    });
+    expect(translate.mock.calls.map((call) => call.at(0))).toEqual(["Home"]);
+  });
+
+  test("names a set its board file fully translates when the Translator API is unavailable", async () => {
+    await seedBoardSets([
+      {
+        id: "shipped",
+        name: "Home",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+        ],
+      },
+    ]);
 
     const { onTranslated } = await runTranslation("es");
 
-    expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
+    expect((await getBoardSetRecord("shipped"))?.translatedNames).toEqual({
+      es: "Inicio",
+    });
+    expect(onTranslated.mock.calls).toEqual([["shipped"]]);
+  });
+
+  test("leaves a set with boards to translate untouched when the Translator API is unavailable", async () => {
+    await seedBoardSets([
+      {
+        id: "partial",
+        name: "Home",
+        rootBoardId: "home",
+        boards: [
+          makeOBFBoard({
+            id: "home",
+            name: "Home",
+            strings: { es: { Home: "Inicio" } },
+          }),
+          makeOBFBoard({ id: "fruit", name: "Fruit" }),
+        ],
+      },
+    ]);
+
+    const { onTranslated } = await runTranslation("es");
+
+    expect(
+      (await getBoardSetRecord("partial"))?.translatedNames,
+    ).toBeUndefined();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 });
