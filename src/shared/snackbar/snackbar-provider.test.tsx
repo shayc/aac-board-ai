@@ -139,6 +139,30 @@ describe("SnackbarProvider", () => {
     await expect.element(screen.getByRole("status")).toHaveTextContent("done");
   });
 
+  test("keeps a waiting message on screen until it is closed, then shows the next", async () => {
+    const screen = await renderSnackbars({
+      "show-three": [
+        { message: "first", durationMs: LONG_DURATION_MS },
+        { message: "second", durationMs: LONG_DURATION_MS },
+        { message: "third", durationMs: LONG_DURATION_MS },
+      ],
+    });
+
+    await screen.getByRole("button", { name: "show-three" }).click();
+
+    // A message closed as it opens fades out before it ever settles, so a
+    // settled second message is one that is staying.
+    await vi.waitFor(() => {
+      const status = screen.getByRole("status").element();
+      expect(status.textContent).toContain("second");
+      expect(getComputedStyle(status).opacity).toBe("1");
+    });
+
+    await screen.getByRole("button", { name: "Close" }).click();
+
+    await expect.element(screen.getByRole("status")).toHaveTextContent("third");
+  });
+
   describe("default duration", () => {
     const PAST_DEFAULT_DURATION_MS = 10_000;
 

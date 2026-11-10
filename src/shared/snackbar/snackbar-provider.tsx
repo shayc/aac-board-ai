@@ -28,6 +28,8 @@ interface SnackbarState {
   queue: readonly QueuedSnackbar[];
   current: QueuedSnackbar | undefined;
   open: boolean;
+  /** A message arrived while the current one was showing, to take its place. */
+  isCurrentSuperseded: boolean;
 }
 
 type SnackbarAction =
@@ -39,6 +41,7 @@ const initialState: SnackbarState = {
   queue: [],
   current: undefined,
   open: false,
+  isCurrentSuperseded: false,
 };
 
 interface SnackbarProviderProps {
@@ -51,14 +54,13 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const nextKeyRef = useRef(0);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
 
-  // A waiting message closes the current one only once it has rendered open.
-  // Closed before it mounts, a snackbar never exits, and the queue stalls.
-  const hasQueuedSnackbar = state.queue.length > 0;
+  // A superseded message closes only once it has rendered open. Closed before
+  // it mounts, a snackbar never exits, and the queue stalls.
   useEffect(() => {
-    if (hasQueuedSnackbar && state.open) {
+    if (state.isCurrentSuperseded && state.open) {
       dispatch({ type: "close" });
     }
-  }, [hasQueuedSnackbar, state.open]);
+  }, [state.isCurrentSuperseded, state.open]);
 
   function showSnackbar(options: SnackbarOptions | string) {
     const snackbarOptions: SnackbarOptions =
@@ -155,7 +157,11 @@ function snackbarReducer(
   switch (action.type) {
     case "show": {
       if (state.current) {
-        return { ...state, queue: [...state.queue, action.snackbar] };
+        return {
+          ...state,
+          queue: [...state.queue, action.snackbar],
+          isCurrentSuperseded: true,
+        };
       }
 
       return { ...state, current: action.snackbar, open: true };
@@ -166,10 +172,13 @@ function snackbarReducer(
 
     case "exited": {
       if (state.queue.length > 0) {
+        // Only the message that was showing is superseded. The next one keeps
+        // its turn, even with others still waiting behind it.
         return {
           current: state.queue[0],
           queue: state.queue.slice(1),
           open: true,
+          isCurrentSuperseded: false,
         };
       }
 
