@@ -38,12 +38,9 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const activateButton = createButtonActivator({
-    getParts: message.getParts,
-    setParts: message.setParts,
-    playMessage: playback.playMessage,
-    playPart: playback.playPart,
-    goToBoard: navigation.goToBoard,
-    goHome: navigation.goHome,
+    message,
+    playback,
+    navigation,
   });
   const shortcuts = useBoardShortcuts({ message, playback });
 

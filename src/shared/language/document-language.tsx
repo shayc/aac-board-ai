@@ -1,11 +1,7 @@
-import { useLayoutEffect, type ReactNode } from "react";
+import { useLayoutEffect } from "react";
 import { useLanguage } from "./use-language";
 
-interface LanguageProviderProps {
-  children: ReactNode;
-}
-
-export function LanguageProvider({ children }: LanguageProviderProps) {
+export function DocumentLanguage() {
   const { language, direction } = useLanguage();
 
   useLayoutEffect(() => {
@@ -13,5 +9,5 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
     document.documentElement.lang = language;
   }, [direction, language]);
 
-  return children;
+  return null;
 }

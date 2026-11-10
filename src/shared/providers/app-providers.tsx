@@ -1,4 +1,4 @@
-import { LanguageProvider } from "@shared/language/language-provider";
+import { DocumentLanguage } from "@shared/language/document-language";
 import { PlaybackProvider } from "@shared/playback/playback-provider";
 import { SnackbarProvider } from "@shared/snackbar/snackbar-provider";
 import { ThemeProvider } from "@shared/theme/theme-provider";
@@ -10,12 +10,11 @@ interface AppProvidersProps {
 
 export function AppProviders({ children }: AppProvidersProps) {
   return (
-    <LanguageProvider>
-      <PlaybackProvider>
-        <ThemeProvider>
-          <SnackbarProvider>{children}</SnackbarProvider>
-        </ThemeProvider>
-      </PlaybackProvider>
-    </LanguageProvider>
+    <PlaybackProvider>
+      <ThemeProvider>
+        <DocumentLanguage />
+        <SnackbarProvider>{children}</SnackbarProvider>
+      </ThemeProvider>
+    </PlaybackProvider>
   );
 }

@@ -1,4 +1,8 @@
-import { useRef, useState } from "react";
+import {
+  createExternalStore,
+  useExternalStore,
+} from "@shared/state/external-store";
+import { useState } from "react";
 import { applyBackspace, createPart } from "./message-transforms";
 import type { MessagePart } from "./message-types";
 
@@ -13,17 +17,18 @@ export interface UseMessageReturn {
 }
 
 export function useMessage(): UseMessageReturn {
-  const [parts, setPartsState] = useState<readonly MessagePart[]>([]);
-  const partsRef = useRef(parts);
+  // A store rather than state: activation reads the parts again after
+  // playback ends, when a render's own copy may be out of date.
+  const [partsStore] = useState(() =>
+    createExternalStore<readonly MessagePart[]>([]),
+  );
+  const parts = useExternalStore(partsStore);
   const text = parts.map((part) => part.label).join(" ");
 
-  function getParts() {
-    return partsRef.current;
-  }
+  const getParts = partsStore.getSnapshot;
 
   function setParts(next: readonly MessagePart[]) {
-    partsRef.current = next;
-    setPartsState(next);
+    partsStore.setState(next);
   }
 
   function replaceWithText(input: string) {

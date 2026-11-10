@@ -1,4 +1,3 @@
-import type { PlaybackOutcome } from "@shared/playback/playback-types";
 import { assertNever } from "@shared/utils/assert-never";
 import {
   appendSpace,
@@ -7,30 +6,27 @@ import {
   createPart,
 } from "../message/message-transforms";
 import type { MessagePart } from "../message/message-types";
+import type { UseMessageReturn } from "../message/use-message";
+import type { UseBoardNavigationReturn } from "../navigation/use-board-navigation";
+import type { UseBoardPlaybackReturn } from "../playback/use-board-playback";
 import type { BoardAction, BoardButton } from "../board-types";
 
 interface ButtonActivatorOptions {
-  getParts: () => readonly MessagePart[];
-  setParts: (parts: readonly MessagePart[]) => void;
-  playMessage: (parts: readonly MessagePart[]) => Promise<PlaybackOutcome>;
-  playPart: (part: MessagePart) => Promise<PlaybackOutcome>;
-  goToBoard: (targetBoardId: string) => void;
-  goHome: () => void;
+  message: Pick<UseMessageReturn, "getParts" | "setParts">;
+  playback: Pick<UseBoardPlaybackReturn, "playMessage" | "playPart">;
+  navigation: Pick<UseBoardNavigationReturn, "goToBoard" | "goHome">;
 }
 
 type ButtonActivator = (button: BoardButton) => void;
 
 export function createButtonActivator({
-  getParts,
-  setParts,
-  playMessage,
-  playPart,
-  goToBoard,
-  goHome,
+  message,
+  playback,
+  navigation,
 }: ButtonActivatorOptions): ButtonActivator {
   function activateButton(button: BoardButton) {
     if (button.linkedBoardId) {
-      goToBoard(button.linkedBoardId);
+      navigation.goToBoard(button.linkedBoardId);
       return;
     }
 
@@ -50,29 +46,32 @@ export function createButtonActivator({
       soundSrc: button.soundSrc,
     });
 
-    setParts([...getParts(), part]);
-    void playPart(part);
+    message.setParts([...message.getParts(), part]);
+    void playback.playPart(part);
   }
 
   function runActions(actions: readonly BoardAction[]) {
     if (actions.some((action) => action.kind === "home")) {
-      goHome();
+      navigation.goHome();
     }
 
     const playIndex = actions.findLastIndex((action) => action.kind === "play");
     if (playIndex === -1) {
-      commitEdits(getParts(), actions);
+      commitEdits(message.getParts(), actions);
       return;
     }
 
-    const partsToPlay = commitEdits(getParts(), actions.slice(0, playIndex));
+    const partsToPlay = commitEdits(
+      message.getParts(),
+      actions.slice(0, playIndex),
+    );
     const actionsAfterPlay = actions.slice(playIndex + 1);
 
     // Edits after ":speak" (such as ":clear") wait for playback to complete
     // without interruption, keeping the message visible while it plays.
-    void playMessage(partsToPlay).then((outcome) => {
+    void playback.playMessage(partsToPlay).then((outcome) => {
       if (outcome === "completed") {
-        commitEdits(getParts(), actionsAfterPlay);
+        commitEdits(message.getParts(), actionsAfterPlay);
       }
     });
   }
@@ -87,7 +86,7 @@ export function createButtonActivator({
     }
 
     const editedParts = edits.reduce(applyEdit, parts);
-    setParts(editedParts);
+    message.setParts(editedParts);
 
     return editedParts;
   }
