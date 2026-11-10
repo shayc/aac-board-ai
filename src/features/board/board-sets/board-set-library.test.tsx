@@ -261,6 +261,32 @@ describe("BoardSetLibrary", () => {
         .toBeInTheDocument();
     });
 
+    test("shows an empty progress ring while the download has not responded yet", async () => {
+      vi.spyOn(globalThis, "fetch").mockImplementation(
+        (_input, init) =>
+          new Promise((_resolve, reject) => {
+            const signal = init?.signal;
+            signal?.addEventListener("abort", () => reject(signal.reason));
+          }),
+      );
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      await expect
+        .element(screen.getByRole("progressbar", { includeHidden: true }))
+        .toHaveAttribute("aria-valuenow", "0");
+
+      await screen
+        .getByRole("button", { name: "Cancel downloading First Words" })
+        .click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+    });
+
     test("shows download progress with no accessibility violations", async () => {
       const download = stubStreamingDownload({ "content-length": "2000000" });
 

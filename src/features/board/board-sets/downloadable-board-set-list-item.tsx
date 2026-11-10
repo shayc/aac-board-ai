@@ -124,6 +124,12 @@ function downloadPercent({
   loaded,
   total,
 }: DownloadProgress): number | undefined {
+  // The size is unknown until the response headers arrive, so an empty ring
+  // that then fills avoids a spinner flashing before every download.
+  if (loaded === 0) {
+    return 0;
+  }
+
   if (total === undefined) {
     return undefined;
   }
