@@ -313,6 +313,41 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
+  test("the board set on screen translates without waiting for the others", async () => {
+    const now = vi.spyOn(Date, "now").mockReturnValue(1);
+    await seedBoardSets([
+      {
+        id: "animals",
+        name: "Animals",
+        rootBoardId: "home",
+        boards: [makeOBFBoard({ id: "home", name: "Animals Home" })],
+      },
+    ]);
+    // Newer, so the library lists it before the set on screen.
+    now.mockReturnValue(2);
+    await seedBoardSets([
+      {
+        id: "zoo",
+        name: "Zoo",
+        rootBoardId: "home",
+        boards: [makeOBFBoard({ id: "home", name: "Zoo Home" })],
+      },
+    ]);
+    now.mockRestore();
+    stubTranslator((input) =>
+      input.startsWith("Zoo") ? new Promise(() => {}) : `[es] ${input}`,
+    );
+
+    const { screen } = await renderApp("/sets/animals/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("es");
+
+    await expect
+      .element(screen.getByRole("grid", { name: "[es] Animals Home" }))
+      .toBeVisible();
+  });
+
   test("board links stay usable while a translation model downloads", async () => {
     await seedTwoBoardSet();
     const translator = stubTranslator((input) => `[es] ${input}`);
