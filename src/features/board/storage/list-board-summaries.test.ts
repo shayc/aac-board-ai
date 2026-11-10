@@ -34,3 +34,26 @@ test("maps stored boards to summaries with their names by language", async () =>
     },
   ]);
 });
+
+test("takes a name from the first locale of a language, as the board itself does", async () => {
+  await insertBoardSet(
+    makeBoardSetInput({
+      rootBoardId: "a",
+      boards: [
+        makeOBFBoard({
+          id: "a",
+          name: "Food",
+          strings: {
+            "es-ES": { eat: "comer" },
+            "es-MX": { Food: "Comida" },
+            "fr-FR": { Food: "Nourriture" },
+          },
+        }),
+      ],
+    }),
+  );
+
+  const [summary] = await listBoardSummaries("set-1");
+
+  expect(summary?.translatedNames).toEqual({ fr: "Nourriture" });
+});

@@ -18,28 +18,36 @@ export async function listBoardSummaries(
   return records.map(({ id, name, obf }) => ({
     id,
     name,
-    translatedNames: translateName(
+    translatedNames: namesByLanguage(
       name,
       obfToTranslationsByLocale(obf.strings),
     ),
   }));
 }
 
-function translateName(
+function namesByLanguage(
   name: string,
   translationsByLocale: TranslationsByLocale,
 ): Record<string, string> {
-  const translatedNames: Record<string, string> = {};
+  const names: Record<string, string> = {};
+  const seenLanguages = new Set<string>();
 
   for (const [locale, translations] of translationsByLocale) {
     const language = getLanguageCode(locale);
-    const translatedName = translations.get(name);
 
-    // The first locale of a language wins, as when a board is shown in it.
-    if (translatedName !== undefined && !(language in translatedNames)) {
-      translatedNames[language] = translatedName;
+    // A board is shown in the first locale of a language, so its name comes
+    // from that locale too, even when a later one could supply it.
+    if (seenLanguages.has(language)) {
+      continue;
+    }
+
+    seenLanguages.add(language);
+
+    const translatedName = translations.get(name);
+    if (translatedName !== undefined) {
+      names[language] = translatedName;
     }
   }
 
-  return translatedNames;
+  return names;
 }
