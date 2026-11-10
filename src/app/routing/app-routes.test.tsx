@@ -420,13 +420,13 @@ describe("app flow", () => {
     const { router, screen } = await renderApp("/sets/food/boards/home");
 
     await screen.getByRole("button", { name: "Continue" }).click();
-    const boardSummaries: unknown = router.state.loaderData[BOARD_SET_ROUTE_ID];
+    const boardSetData: unknown = router.state.loaderData[BOARD_SET_ROUTE_ID];
     await screen.getByRole("button", { name: "fruit" }).click();
     await expect
       .element(screen.getByRole("grid", { name: "Fruit" }))
       .toBeVisible();
 
-    expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSummaries);
+    expect(router.state.loaderData[BOARD_SET_ROUTE_ID]).toBe(boardSetData);
   });
 
   test("changing the language translates the board, board list, and library in place", async () => {

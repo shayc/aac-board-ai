@@ -19,12 +19,16 @@ export const TWO_BUTTON_BOARD: OBFBoard = {
 export function renderCommunicationBoard(
   obfBoard: OBFBoard,
   initialEntries: InitialEntry[] = ["/"],
+  rootBoardId?: string,
 ) {
   return render(
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
         <div style={{ height: "100vh" }}>
-          <CommunicationBoard board={obfToBoard(obfBoard)} />
+          <CommunicationBoard
+            board={obfToBoard(obfBoard)}
+            rootBoardId={rootBoardId}
+          />
         </div>
       </AppProviders>
     </MemoryRouter>,

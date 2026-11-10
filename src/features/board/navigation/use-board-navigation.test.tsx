@@ -8,9 +8,8 @@ import {
   type Location,
   type NavigateFunction,
 } from "react-router";
-import { beforeEach, describe, expect, test } from "vitest";
+import { describe, expect, test } from "vitest";
 import { renderHook, type RenderHookResult } from "vitest-browser-react";
-import { resetBoardsDB, seedBoardSets } from "../testing";
 import {
   useBoardNavigation,
   type UseBoardNavigationReturn,
@@ -27,10 +26,11 @@ interface NavTestHook {
 function setup(
   pathname = DEFAULT_PATH,
   state?: unknown,
+  hasRootBoard = true,
 ): Promise<RenderHookResult<NavTestHook, unknown>> {
   return renderHook(
     (): NavTestHook => ({
-      nav: useBoardNavigation(),
+      nav: useBoardNavigation(hasRootBoard ? "root-1" : undefined),
       location: useLocation(),
       navigate: useNavigate(),
     }),
@@ -50,11 +50,6 @@ function setup(
 }
 
 describe("useBoardNavigation", () => {
-  beforeEach(async () => {
-    await resetBoardsDB();
-    await seedBoardSets([{ id: "set-1", rootBoardId: "root-1" }]);
-  });
-
   describe("canGoBack", () => {
     test("is false when the route has no board history", async () => {
       const { result } = await setup();
@@ -84,16 +79,14 @@ describe("useBoardNavigation", () => {
   });
 
   describe("canGoHome", () => {
-    test("is true when the board set has a root board", async () => {
+    test("is true when the root board is known", async () => {
       const { result } = await setup();
 
       expect(result.current.nav.canGoHome).toBe(true);
     });
 
-    test("is false when the board set is missing", async () => {
-      await resetBoardsDB();
-
-      const { result } = await setup();
+    test("is false when the root board is unknown", async () => {
+      const { result } = await setup(DEFAULT_PATH, undefined, false);
 
       expect(result.current.nav.canGoHome).toBe(false);
     });
@@ -211,10 +204,8 @@ describe("useBoardNavigation", () => {
       );
     });
 
-    test("does nothing when the board set has no root board", async () => {
-      await resetBoardsDB();
-
-      const { result, act } = await setup();
+    test("does nothing when the root board is unknown", async () => {
+      const { result, act } = await setup(DEFAULT_PATH, undefined, false);
 
       await act(() => result.current.nav.goHome());
 

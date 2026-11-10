@@ -24,7 +24,7 @@ interface AppHeaderProps {
 export function AppHeader({ onOpenLibrary, onOpenSettings }: AppHeaderProps) {
   const t = useTranslate();
   const boardSummaries =
-    useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID);
+    useRouteLoaderData<typeof boardSetLoader>(BOARD_SET_ROUTE_ID)?.summaries;
 
   return (
     <AppBar position="static">

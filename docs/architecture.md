@@ -127,7 +127,8 @@ Route loaders only read; they never translate or wait on a model:
 
 1. Navigation to `/sets/:boardSetId/boards/:boardId` runs
    [`boardSetLoader`](../src/app/routing/loaders/board-set-loader.ts) for the
-   header's board list (once per set, not per board) and
+   header's board list and the set's root board, which Home navigates to
+   (once per set, not per board), and
    [`boardLoader`](../src/app/routing/loaders/board-loader.ts), which calls
    `loadStoredBoard`. It reads the stored OBF, resolves object URLs for its
    stored assets, and maps both through `obfToBoard`. Loading leaves the OBF

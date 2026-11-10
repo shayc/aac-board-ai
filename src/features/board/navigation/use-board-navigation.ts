@@ -1,6 +1,5 @@
 import { isRecord } from "@shared/utils/is-record";
 import { useLocation, useMatch, useNavigate } from "react-router";
-import { useBoardSets } from "../board-sets/board-sets-store";
 import { BOARD_ROUTE_PATTERN, boardPath } from "./board-paths";
 
 export interface UseBoardNavigationReturn {
@@ -18,16 +17,14 @@ function readCanGoBack(state: unknown): boolean {
   return isRecord(state) && state.canGoBack === true;
 }
 
-export function useBoardNavigation(): UseBoardNavigationReturn {
+export function useBoardNavigation(
+  rootBoardId?: string,
+): UseBoardNavigationReturn {
   const navigate = useNavigate();
   const location = useLocation();
 
   const match = useMatch(BOARD_ROUTE_PATTERN);
   const { boardSetId, boardId } = match?.params ?? {};
-  const { boardSets } = useBoardSets();
-  const rootBoardId = boardSets.find(
-    (boardSet) => boardSet.id === boardSetId,
-  )?.rootBoardId;
 
   const canGoBack = readCanGoBack(location.state);
   const canGoHome = Boolean(rootBoardId);

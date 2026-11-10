@@ -7,7 +7,7 @@ import { beforeEach, describe, expect, test, vi } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { setTileLabelPlacement } from "./tile/tile-preferences-store";
 import { setMessageImagesVisible } from "./message/message-preferences-store";
-import { resetBoardsDB, seedBoardSets, TEST_IMAGE_SRC } from "./testing";
+import { TEST_IMAGE_SRC } from "./testing";
 import {
   renderCommunicationBoard,
   TWO_BUTTON_BOARD,
@@ -78,10 +78,9 @@ describe("CommunicationBoard", () => {
   let speech: ReturnType<typeof stubSpeech>;
   let audio: ReturnType<typeof stubAudio>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     speech = stubSpeech();
     audio = stubAudio();
-    await resetBoardsDB();
   });
 
   describe("rendering", () => {
@@ -279,13 +278,13 @@ describe("CommunicationBoard", () => {
       async (width) => {
         const originalWidth = window.innerWidth;
         const originalHeight = window.innerHeight;
-        await seedBoardSets([{ id: "set-1", rootBoardId: SYMBOL_BOARD.id }]);
-
         try {
           await page.viewport(width, 800);
-          const screen = await renderCommunicationBoard(SYMBOL_BOARD, [
-            `/sets/set-1/boards/${SYMBOL_BOARD.id}`,
-          ]);
+          const screen = await renderCommunicationBoard(
+            SYMBOL_BOARD,
+            [`/sets/set-1/boards/${SYMBOL_BOARD.id}`],
+            SYMBOL_BOARD.id,
+          );
           const backspace = screen.getByRole("button", { name: "Backspace" });
           const play = screen.getByRole("button", { name: "Play message" });
 
@@ -329,7 +328,6 @@ describe("CommunicationBoard", () => {
 
   describe("navigation", () => {
     test("navigates from a linked tile without running its actions or playing its content", async () => {
-      await seedBoardSets([{ id: "set-1", rootBoardId: "test-board" }]);
       const board: OBFBoard = {
         ...TWO_BUTTON_BOARD,
         buttons: [
@@ -344,9 +342,11 @@ describe("CommunicationBoard", () => {
         ],
         sounds: [{ id: "recording", url: "/folder.mp3" }],
       };
-      const screen = await renderCommunicationBoard(board, [
-        "/sets/set-1/boards/test-board",
-      ]);
+      const screen = await renderCommunicationBoard(
+        board,
+        ["/sets/set-1/boards/test-board"],
+        "test-board",
+      );
       const back = screen.getByRole("button", { name: "Go back" });
 
       await expect.element(back).toBeDisabled();
@@ -364,11 +364,11 @@ describe("CommunicationBoard", () => {
     });
 
     test("does not scroll the grid when Home navigates to the home board", async () => {
-      await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
-
-      const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
-        "/sets/set-1/boards/other-board",
-      ]);
+      const screen = await renderCommunicationBoard(
+        LARGE_GRID_BOARD,
+        ["/sets/set-1/boards/other-board"],
+        "root-board",
+      );
       const grid = screen.getByRole("grid").element();
       const scrollContainer = grid.parentElement;
       assertDefined(scrollContainer);
@@ -390,14 +390,16 @@ describe("CommunicationBoard", () => {
     });
 
     test("scrolls the grid to both origins and resets navigation history when Home is clicked from Home", async () => {
-      await seedBoardSets([{ id: "set-1", rootBoardId: "root-board" }]);
-
-      const screen = await renderCommunicationBoard(LARGE_GRID_BOARD, [
-        {
-          pathname: "/sets/set-1/boards/root-board",
-          state: { canGoBack: true },
-        },
-      ]);
+      const screen = await renderCommunicationBoard(
+        LARGE_GRID_BOARD,
+        [
+          {
+            pathname: "/sets/set-1/boards/root-board",
+            state: { canGoBack: true },
+          },
+        ],
+        "root-board",
+      );
       const back = screen.getByRole("button", { name: "Go back" });
       const grid = screen.getByRole("grid").element();
       const scrollContainer = grid.parentElement;

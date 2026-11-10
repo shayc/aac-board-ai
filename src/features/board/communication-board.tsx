@@ -22,9 +22,13 @@ import { Tile } from "./tile/tile";
 
 interface CommunicationBoardProps {
   board: Board;
+  rootBoardId?: string;
 }
 
-export function CommunicationBoard({ board }: CommunicationBoardProps) {
+export function CommunicationBoard({
+  board,
+  rootBoardId,
+}: CommunicationBoardProps) {
   const t = useTranslate();
 
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
@@ -34,7 +38,7 @@ export function CommunicationBoard({ board }: CommunicationBoardProps) {
 
   const playback = useBoardPlayback();
 
-  const navigation = useBoardNavigation();
+  const navigation = useBoardNavigation(rootBoardId);
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
   const activateButton = createButtonActivator({
