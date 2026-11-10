@@ -92,15 +92,34 @@ async function translateBoardSet(
 
   signal.throwIfAborted();
 
-  await saveBoardSetTranslations(
-    boardSet.id,
-    language,
-    pickBoardSetTranslations({
-      boardSet,
-      nameInLanguage,
-      boards: boardsMissingLanguage,
-      translationsBySourceLanguage,
-    }),
+  function translate(source: { locale?: string }, text: string): string {
+    const translations = translationsBySourceLanguage.get(
+      getBoardLanguage(source),
+    );
+
+    return translations?.get(text) ?? text;
+  }
+
+  await saveBoardSetTranslations(boardSet.id, language, {
+    name: nameInLanguage ?? translate(boardSet, boardSet.name),
+    stringsByBoardId: new Map(
+      boardsMissingLanguage.map((board) => [
+        board.id,
+        translateBoardStrings(board, translate),
+      ]),
+    ),
+  });
+}
+
+function translateBoardStrings(
+  board: Board,
+  translate: (board: Board, text: string) => string,
+): StringTranslations {
+  return new Map(
+    Array.from(collectBoardStrings(board), (text) => [
+      text,
+      translate(board, text),
+    ]),
   );
 }
 
@@ -229,46 +248,4 @@ async function translateStrings(
   );
 
   return new Map(entries);
-}
-
-interface PickBoardSetTranslationsInput {
-  boardSet: BoardSetRecord;
-  nameInLanguage: string | undefined;
-  boards: readonly Board[];
-  translationsBySourceLanguage: ReadonlyMap<string, StringTranslations>;
-}
-
-function pickBoardSetTranslations({
-  boardSet,
-  nameInLanguage,
-  boards,
-  translationsBySourceLanguage,
-}: PickBoardSetTranslationsInput) {
-  function translationsFor(source: { locale?: string }) {
-    return translationsBySourceLanguage.get(getBoardLanguage(source));
-  }
-
-  const translatedName = translationsFor(boardSet)?.get(boardSet.name);
-
-  return {
-    name: nameInLanguage ?? translatedName ?? boardSet.name,
-    stringsByBoardId: new Map(
-      boards.map((board) => [
-        board.id,
-        pickBoardTranslations(board, translationsFor(board)),
-      ]),
-    ),
-  };
-}
-
-function pickBoardTranslations(
-  board: Board,
-  translations: StringTranslations | undefined,
-): StringTranslations {
-  return new Map(
-    Array.from(collectBoardStrings(board), (text) => [
-      text,
-      translations?.get(text) ?? text,
-    ]),
-  );
 }
