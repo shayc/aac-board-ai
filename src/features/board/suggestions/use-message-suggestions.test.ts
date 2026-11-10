@@ -203,6 +203,28 @@ describe("useMessageSuggestions", () => {
     },
   );
 
+  test("offers enabling again after an engine fails, and recovers from that gesture", async () => {
+    const { create } = stubProofreader(() =>
+      makeProofreadResult("I want to eat."),
+    );
+    create.mockRejectedValueOnce(new Error("model crashed"));
+
+    const { result } = await renderMessageSuggestions("want eat");
+
+    await vi.waitFor(() => {
+      expect(create).toHaveBeenCalledOnce();
+      expect(result.current.status).toEqual({ kind: "not-enabled" });
+    });
+    expect(result.current.phrases).toEqual([]);
+
+    await clickToRun(() => result.current.enable());
+
+    await vi.waitFor(() => {
+      expect(result.current.phrases).toEqual(["I want to eat."]);
+      expect(result.current.status).toEqual({ kind: "idle" });
+    });
+  });
+
   test("forgets the previous language's availability while the new probe is in flight", async () => {
     const proofreader = stubProofreader();
     proofreader.availability.mockImplementation((options) =>
