@@ -187,10 +187,11 @@ describe("useGridFocus", () => {
         />,
       );
 
+      await press(screen.getByRole("button", { name: "Item 1" }), "ArrowRight");
       const focusedButton = screen
         .getByRole("button", { name: "Item 2" })
         .element();
-      focusedButton.focus();
+      expect(document.activeElement).toBe(focusedButton);
 
       await screen.rerender(
         <Grid
@@ -206,6 +207,41 @@ describe("useGridFocus", () => {
         .element(screen.getByRole("button", { name: "Item 6" }))
         .toHaveFocus();
     });
+
+    test("returns lost focus when a key press follows a pointer press", async () => {
+      const screen = await render(
+        <div style={{ width: 400, height: 400 }}>
+          <Grid
+            rows={2}
+            columns={2}
+            items={makeItems(1, 2, 3, 4)}
+            renderItem={renderButton}
+          />
+        </div>,
+      );
+
+      await userEvent.click(screen.getByRole("button", { name: "Item 1" }));
+      await userEvent.keyboard("{ArrowRight}");
+      await expect
+        .element(screen.getByRole("button", { name: "Item 2" }))
+        .toHaveFocus();
+
+      await screen.rerender(
+        <div style={{ width: 400, height: 400 }}>
+          <Grid
+            rows={2}
+            columns={2}
+            items={makeItems(5, 6, 7, 8)}
+            renderItem={renderButton}
+          />
+        </div>,
+      );
+
+      await expect
+        .element(screen.getByRole("button", { name: "Item 6" }))
+        .toHaveFocus();
+    });
+
     test("leaves focus alone after a pointer press when the grid changes", async () => {
       const screen = await render(
         <div style={{ width: 400, height: 400 }}>
