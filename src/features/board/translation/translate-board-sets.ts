@@ -12,7 +12,7 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
-interface TranslationOptions {
+export interface TranslationOptions {
   signal: AbortSignal;
   onTranslating: () => void;
 }

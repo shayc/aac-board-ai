@@ -162,9 +162,10 @@ that would re-run a `?board=` link import still in flight. A set that
 fails, for example because a model download needs a user gesture, stays in its
 source language until the next run.
 
-While a pass is translating a set, the hook publishes a
-[board translation status](../src/features/board/translation/board-translation-status.ts).
-The status is set when a set's model download starts or, with no download, once
+The hook hands each pass to the
+[board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),
+which owns the queue, the abort on a language change, and the board translation
+status published while a pass is translating a set. The status is set when a set's model download starts or, with no download, once
 its translation models are open, and cleared when the pass ends or the language
 changes. A pass aborted by a language change never touches the status again. The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
