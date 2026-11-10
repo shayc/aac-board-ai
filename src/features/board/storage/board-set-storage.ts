@@ -6,6 +6,7 @@ import { htmlToText } from "./html-to-text";
 import {
   getBoardsDB,
   normalizeAssetPath,
+  runTransaction,
   validateId,
   type BoardRecord,
   type BoardSetRecord,
@@ -84,7 +85,7 @@ export async function saveBoardSetTranslations(
   const boardSetStore = tx.objectStore("boardSets");
   const boardStore = tx.objectStore("boards");
 
-  async function writeTranslations() {
+  await runTransaction(tx, async () => {
     const boardSet = await boardSetStore.get(boardSetId);
     // A set deleted while it was being translated must not regain its boards.
     if (!boardSet) {
@@ -102,23 +103,7 @@ export async function saveBoardSetTranslations(
       ...boardSet,
       translatedNames: { ...boardSet.translatedNames, [language]: name },
     });
-  }
-
-  // A put() that throws synchronously leaves the transaction open to commit
-  // the boards already written, and tx.done must be awaited either way or its
-  // rejection goes unhandled — see insertBoardSet.
-  try {
-    await Promise.all([writeTranslations(), tx.done]);
-  } catch (error) {
-    try {
-      tx.abort();
-    } catch {
-      // Already finished — the transaction aborted itself.
-    }
-
-    await tx.done.catch(() => undefined);
-    throw error;
-  }
+  });
 }
 
 function withStrings(
@@ -145,53 +130,31 @@ export async function insertBoardSet(input: BoardSetInput): Promise<void> {
   const boardStore = tx.objectStore("boards");
   const assetStore = tx.objectStore("assets");
 
-  const existing = await boardSetStore.get(id);
-  if (existing) {
-    await tx.done;
-    throw new BoardSetAlreadyExistsError(id);
-  }
+  await runTransaction(tx, async () => {
+    const existing = await boardSetStore.get(id);
+    if (existing) {
+      throw new BoardSetAlreadyExistsError(id);
+    }
 
-  // idb creates tx.done eagerly when the transaction is opened, and requests
-  // already issued before a synchronous put() failure (e.g. a non-cloneable
-  // value) keep running — both must be drained after abort, or they reject
-  // as unhandled rejections once the transaction tears down.
-  const requests: Promise<unknown>[] = [tx.done];
-
-  try {
     for (const obf of boards) {
-      requests.push(
-        boardStore.put({
-          boardSetId: id,
-          id: obf.id,
-          name: nonBlankText(obf.name) ?? obf.id,
-          obf,
-        }),
-      );
+      await boardStore.put({
+        boardSetId: id,
+        id: obf.id,
+        name: nonBlankText(obf.name) ?? obf.id,
+        obf,
+      });
     }
 
     for (const asset of assets) {
-      requests.push(
-        assetStore.put({
-          boardSetId: id,
-          path: normalizeAssetPath(asset.path),
-          blob: asset.blob,
-        }),
-      );
+      await assetStore.put({
+        boardSetId: id,
+        path: normalizeAssetPath(asset.path),
+        blob: asset.blob,
+      });
     }
 
-    requests.push(boardSetStore.add(record));
-
-    await Promise.all(requests);
-  } catch (error) {
-    try {
-      tx.abort();
-    } catch {
-      // Already finished — the transaction aborted itself.
-    }
-
-    await Promise.allSettled(requests);
-    throw error;
-  }
+    await boardSetStore.add(record);
+  });
 }
 
 function validateBoardSetInput({

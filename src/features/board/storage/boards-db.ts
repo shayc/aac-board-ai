@@ -104,6 +104,33 @@ export async function closeBoardsDB(): Promise<void> {
   }
 }
 
+/**
+ * Runs `write` and resolves once `tx` commits. When `write` fails, the
+ * transaction is aborted so nothing it already wrote is kept. A put() that
+ * throws synchronously (e.g. a non-cloneable value) would otherwise leave the
+ * transaction open to commit the earlier writes. idb creates tx.done eagerly,
+ * so it is awaited either way, or its rejection goes unhandled.
+ */
+export async function runTransaction(
+  tx: { readonly done: Promise<void>; abort: () => void },
+  write: () => Promise<void>,
+): Promise<void> {
+  const writing = write();
+
+  try {
+    await Promise.all([writing, tx.done]);
+  } catch (error) {
+    try {
+      tx.abort();
+    } catch {
+      // Already finished — the transaction aborted itself.
+    }
+
+    await Promise.allSettled([writing, tx.done]);
+    throw error;
+  }
+}
+
 function openConnection(): Promise<BoardsDB> {
   return openDB<BoardsDBSchema>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
