@@ -2,6 +2,7 @@ import { AppProviders } from "@shared/providers/app-providers";
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { ReactNode } from "react";
 import { describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { TEST_IMAGE_SRC } from "../testing";
 import { MessageBar, type MessageBarProps } from "./message-bar";
@@ -80,10 +81,9 @@ describe("MessageBar", () => {
       <MessageBar {...createProps({ parts })} />,
     );
 
-    const label = screen.getByText("I").element();
-    const styles = getComputedStyle(label);
+    await userEvent.tripleClick(screen.getByText("I"));
 
-    expect(styles.userSelect).toBe("text");
+    expect(getSelection()?.toString()).toContain("I");
   });
 
   test("shows labels without images when images are hidden", async () => {

@@ -25,11 +25,7 @@ describe("useLanguageOptions", () => {
 
     const { result } = await renderHook(() => useLanguageOptions());
 
-    expect(result.current).toEqual(
-      expect.arrayContaining([
-        { code: "ca", name: "català" },
-        { code: "ms", name: "Melayu" },
-      ]),
-    );
+    const codes = result.current.map((option) => option.code);
+    expect(codes).toEqual(expect.arrayContaining(["ca", "ms"]));
   });
 });

@@ -215,8 +215,8 @@ these rules:
 - When grid content changes, focus returns to the remembered cell or first
   focusable tile only if no other control holds focus.
 
-Behavior tests and axe-core accessibility checks run in real Chromium through
-Playwright-backed Vitest.
+Behavior tests and axe-core accessibility checks run in real Chromium and
+WebKit through Playwright-backed Vitest.
 
 ### Language and direction
 

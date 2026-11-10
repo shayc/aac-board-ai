@@ -127,7 +127,20 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [{ browser: "chromium" }],
+      instances: [
+        { browser: "chromium" },
+        {
+          browser: "webkit",
+          // Playwright's default WebKit context is ephemeral, like private
+          // browsing, and rejects Blobs in IndexedDB. A persistent context
+          // matches a normal Safari profile but cannot be shared across
+          // parallel files.
+          provider: playwright({
+            persistentContext: "node_modules/.cache/vitest-webkit-profile",
+          }),
+          fileParallelism: false,
+        },
+      ],
     },
     coverage: {
       include: ["src/**/*.{ts,tsx}"],
