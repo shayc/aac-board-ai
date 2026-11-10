@@ -161,11 +161,12 @@ source language until the next run.
 
 While a pass is translating a set, the hook publishes a
 [board translation status](../src/features/board/translation/board-translation-status.ts).
-The status is set once a set's translation models are open, so a model download
-shows as a download, and cleared when the pass ends or the language changes. A
-pass aborted by a language change never touches the status again. The
+The status is set when a set's model download starts or, with no download, once
+its translation models are open, and cleared when the pass ends or the language
+changes. A pass aborted by a language change never touches the status again. The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
-shows a model download first and the translation after it, in one alert.
+shows a model download first and the translation after it. The status is already
+set when the download ends, so one alert carries both states.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for

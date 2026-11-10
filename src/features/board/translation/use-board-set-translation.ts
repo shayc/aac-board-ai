@@ -46,7 +46,12 @@ export function useBoardSetTranslation(): void {
       language,
       {
         signal,
-        onTranslating: () => setIsTranslatingBoards(true),
+        onTranslating: () => {
+          // A language change already cleared the status of an aborted run.
+          if (!signal.aborted) {
+            setIsTranslatingBoards(true);
+          }
+        },
         onTranslated: (boardSetId) => refreshTranslatedBoardSet(boardSetId),
       },
     ),

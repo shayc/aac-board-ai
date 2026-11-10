@@ -185,14 +185,13 @@ async function translateBySourceLanguage(
         sourceLanguage,
         targetLanguage,
         signal,
+        // Also reported while a model downloads: the notice shows the
+        // download first, and the status is already set when it ends.
+        onDownloadProgress: onTranslating,
       });
       translators.set(sourceLanguage, translator);
     }
 
-    // Reported only now, so a model download shows as downloading rather
-    // than as translating. An aborted run must not report: its status has
-    // already been cleared.
-    signal.throwIfAborted();
     onTranslating();
 
     const entries = await Promise.all(
