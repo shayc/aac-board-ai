@@ -94,7 +94,7 @@
   "scanningMethod": "Método de barrido",
   "scanningMethodAuto": "Barrido automático",
   "scanningMethodStep": "Barrido por pasos",
-  "scanningMethodAutoHint": "El resaltado se mueve solo. Pulsa Espacio o Intro para seleccionar.",
+  "scanningMethodAutoHint": "Pulsa Espacio o Intro para iniciar el barrido y para seleccionar. El resaltado se mueve solo.",
   "scanningMethodStepHint": "Pulsa Espacio para mover el resaltado e Intro para seleccionar.",
   "scanningPattern": "Patrón de barrido",
   "scanningPatternRowColumn": "Fila-columna",

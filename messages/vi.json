@@ -94,7 +94,7 @@
   "scanningMethod": "Phương pháp quét",
   "scanningMethodAuto": "Quét tự động",
   "scanningMethodStep": "Quét từng bước",
-  "scanningMethodAutoHint": "Vùng tô sáng tự di chuyển. Nhấn Space hoặc Enter để chọn.",
+  "scanningMethodAutoHint": "Nhấn Space hoặc Enter để bắt đầu quét và để chọn. Vùng tô sáng tự di chuyển.",
   "scanningMethodStepHint": "Nhấn Space để di chuyển vùng tô sáng và Enter để chọn.",
   "scanningPattern": "Kiểu quét",
   "scanningPatternRowColumn": "Hàng-cột",

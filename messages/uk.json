@@ -94,7 +94,7 @@
   "scanningMethod": "Метод сканування",
   "scanningMethodAuto": "Автоматичне сканування",
   "scanningMethodStep": "Покрокове сканування",
-  "scanningMethodAutoHint": "Виділення рухається саме. Натисніть пробіл або Enter, щоб вибрати.",
+  "scanningMethodAutoHint": "Натисніть пробіл або Enter, щоб почати сканування і щоб вибрати. Виділення рухається саме.",
   "scanningMethodStepHint": "Натисніть пробіл, щоб перемістити виділення, і Enter, щоб вибрати.",
   "scanningPattern": "Схема сканування",
   "scanningPatternRowColumn": "Рядок — стовпець",

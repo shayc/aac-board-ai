@@ -1,7 +1,6 @@
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useUILocale } from "@shared/language/language-store";
 import { useTranslate } from "@shared/language/use-translate";
@@ -53,29 +52,27 @@ export function ScanningSettings() {
 
       {isEnabled && (
         <>
-          <Stack spacing={0.5}>
-            <SettingsRadioGroup
-              label={t(m.scanningMethod)}
-              value={method}
-              onChange={setScanMethod}
-            >
-              <FormControlLabel
-                value="auto"
-                control={<Radio />}
-                label={t(m.scanningMethodAuto)}
-              />
-              <FormControlLabel
-                value="step"
-                control={<Radio />}
-                label={t(m.scanningMethodStep)}
-              />
-            </SettingsRadioGroup>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {isAutoScan
+          <SettingsRadioGroup
+            label={t(m.scanningMethod)}
+            helperText={
+              isAutoScan
                 ? t(m.scanningMethodAutoHint)
-                : t(m.scanningMethodStepHint)}
-            </Typography>
-          </Stack>
+                : t(m.scanningMethodStepHint)
+            }
+            value={method}
+            onChange={setScanMethod}
+          >
+            <FormControlLabel
+              value="auto"
+              control={<Radio />}
+              label={t(m.scanningMethodAuto)}
+            />
+            <FormControlLabel
+              value="step"
+              control={<Radio />}
+              label={t(m.scanningMethodStep)}
+            />
+          </SettingsRadioGroup>
 
           <SettingsRadioGroup
             label={t(m.scanningPattern)}

@@ -94,7 +94,7 @@
   "scanningMethod": "扫描方式",
   "scanningMethodAuto": "自动扫描",
   "scanningMethodStep": "步进扫描",
-  "scanningMethodAutoHint": "高亮会自动移动。按空格键或回车键进行选择。",
+  "scanningMethodAutoHint": "按空格键或回车键开始扫描并进行选择。高亮会自动移动。",
   "scanningMethodStepHint": "按空格键移动高亮，按回车键选择。",
   "scanningPattern": "扫描模式",
   "scanningPatternRowColumn": "行列",

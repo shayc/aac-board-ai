@@ -94,7 +94,7 @@
   "scanningMethod": "طريقة المسح",
   "scanningMethodAuto": "مسح تلقائي",
   "scanningMethodStep": "مسح خطوة بخطوة",
-  "scanningMethodAutoHint": "يتحرك التمييز تلقائيًا. اضغط على مفتاح المسافة أو Enter للاختيار.",
+  "scanningMethodAutoHint": "اضغط على مفتاح المسافة أو Enter لبدء المسح وللاختيار. يتحرك التمييز تلقائيًا.",
   "scanningMethodStepHint": "اضغط على مفتاح المسافة لتحريك التمييز وعلى Enter للاختيار.",
   "scanningPattern": "نمط المسح",
   "scanningPatternRowColumn": "صف ثم عمود",

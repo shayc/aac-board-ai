@@ -94,7 +94,7 @@
   "scanningMethod": "Skannaustapa",
   "scanningMethodAuto": "Automaattinen skannaus",
   "scanningMethodStep": "Askelskannaus",
-  "scanningMethodAutoHint": "Korostus liikkuu itsestään. Valitse painamalla välilyöntiä tai Enteriä.",
+  "scanningMethodAutoHint": "Aloita skannaus ja valitse painamalla välilyöntiä tai Enteriä. Korostus liikkuu itsestään.",
   "scanningMethodStepHint": "Siirrä korostusta välilyönnillä ja valitse Enterillä.",
   "scanningPattern": "Skannauskuvio",
   "scanningPatternRowColumn": "Rivi–sarake",

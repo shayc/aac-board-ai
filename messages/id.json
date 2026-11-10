@@ -94,7 +94,7 @@
   "scanningMethod": "Metode pemindaian",
   "scanningMethodAuto": "Pindai otomatis",
   "scanningMethodStep": "Pindai bertahap",
-  "scanningMethodAutoHint": "Sorotan bergerak sendiri. Tekan Spasi atau Enter untuk memilih.",
+  "scanningMethodAutoHint": "Tekan Spasi atau Enter untuk memulai pemindaian dan untuk memilih. Sorotan bergerak sendiri.",
   "scanningMethodStepHint": "Tekan Spasi untuk memindahkan sorotan dan Enter untuk memilih.",
   "scanningPattern": "Pola pemindaian",
   "scanningPatternRowColumn": "Baris-kolom",

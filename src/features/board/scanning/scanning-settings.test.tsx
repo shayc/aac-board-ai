@@ -57,7 +57,11 @@ describe("ScanningSettings", () => {
     await expect
       .element(screen.getByRole("slider", { name: "Ignore repeated presses" }))
       .toHaveAttribute("aria-valuetext", "Off");
-    await expect.element(screen.getByText(/moves on its own/)).toBeVisible();
+    await expect
+      .element(screen.getByRole("radiogroup", { name: "Scan method" }))
+      .toHaveAccessibleDescription(
+        "Press Space or Enter to start scanning and to select. The highlight moves on its own.",
+      );
   });
 
   test("hides the auto scan timing and names the keys in step scan", async () => {
@@ -67,8 +71,10 @@ describe("ScanningSettings", () => {
     await screen.getByRole("radio", { name: "Step scan" }).click();
 
     await expect
-      .element(screen.getByText(/Space to move the highlight/))
-      .toBeVisible();
+      .element(screen.getByRole("radiogroup", { name: "Scan method" }))
+      .toHaveAccessibleDescription(
+        "Press Space to move the highlight and Enter to select.",
+      );
     expect(
       screen.getByRole("slider", { name: "Scan time" }).query(),
     ).toBeNull();

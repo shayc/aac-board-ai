@@ -94,7 +94,7 @@
   "scanningMethod": "Método de varredura",
   "scanningMethodAuto": "Varredura automática",
   "scanningMethodStep": "Varredura por passos",
-  "scanningMethodAutoHint": "O destaque se move sozinho. Pressione Espaço ou Enter para selecionar.",
+  "scanningMethodAutoHint": "Pressione Espaço ou Enter para iniciar a varredura e para selecionar. O destaque se move sozinho.",
   "scanningMethodStepHint": "Pressione Espaço para mover o destaque e Enter para selecionar.",
   "scanningPattern": "Padrão de varredura",
   "scanningPatternRowColumn": "Linha-coluna",

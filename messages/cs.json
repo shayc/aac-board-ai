@@ -94,7 +94,7 @@
   "scanningMethod": "Metoda skenování",
   "scanningMethodAuto": "Automatické skenování",
   "scanningMethodStep": "Krokové skenování",
-  "scanningMethodAutoHint": "Zvýraznění se posouvá samo. Výběr potvrdíte mezerníkem nebo klávesou Enter.",
+  "scanningMethodAutoHint": "Mezerníkem nebo klávesou Enter spustíte skenování a vyberete položku. Zvýraznění se posouvá samo.",
   "scanningMethodStepHint": "Mezerníkem posunete zvýraznění a klávesou Enter vyberete.",
   "scanningPattern": "Vzor skenování",
   "scanningPatternRowColumn": "Řádek–sloupec",

@@ -94,7 +94,7 @@
   "scanningMethod": "ஸ்கேன் முறை",
   "scanningMethodAuto": "தானியங்கு ஸ்கேன்",
   "scanningMethodStep": "படிநிலை ஸ்கேன்",
-  "scanningMethodAutoHint": "ஹைலைட் தானாகவே நகரும். தேர்ந்தெடுக்க Space அல்லது Enter அழுத்தவும்.",
+  "scanningMethodAutoHint": "ஸ்கேனிங்கைத் தொடங்கவும் தேர்ந்தெடுக்கவும் Space அல்லது Enter அழுத்தவும். ஹைலைட் தானாகவே நகரும்.",
   "scanningMethodStepHint": "ஹைலைட்டை நகர்த்த Space, தேர்ந்தெடுக்க Enter அழுத்தவும்.",
   "scanningPattern": "ஸ்கேன் வடிவம்",
   "scanningPatternRowColumn": "வரிசை-நெடுவரிசை",

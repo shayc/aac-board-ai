@@ -1,3 +1,4 @@
+import Dialog from "@mui/material/Dialog";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -11,7 +12,11 @@ import {
   vi,
 } from "vitest";
 import { page, userEvent, type Locator } from "vitest/browser";
-import { renderCommunicationBoard } from "../testing/render-communication-board";
+import { render } from "vitest-browser-react";
+import {
+  communicationBoardTree,
+  renderCommunicationBoard,
+} from "../testing/render-communication-board";
 import {
   setFirstItemDelay,
   setRepeatPressDelay,
@@ -42,7 +47,31 @@ const TWO_ROW_BOARD: OBFBoard = {
   },
 };
 
+const OTHER_TWO_ROW_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "other-two-row-board",
+  locale: "en",
+  buttons: [
+    { id: "btn-1", label: "eat" },
+    { id: "btn-2", label: "drink" },
+    { id: "btn-3", label: "play" },
+    { id: "btn-4", label: "sleep" },
+  ],
+  grid: TWO_ROW_BOARD.grid,
+};
+
 const HIGHLIGHT = "data-scan-highlight";
+
+function boardBehindDialog(onClose?: () => void) {
+  return (
+    <>
+      {communicationBoardTree(TWO_ROW_BOARD)}
+      <Dialog open>
+        <button onClick={onClose}>Close</button>
+      </Dialog>
+    </>
+  );
+}
 
 async function renderBoard() {
   const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
@@ -219,17 +248,56 @@ describe("switch scanning", () => {
       expect(outside.onClick).not.toHaveBeenCalled();
     });
 
-    test("leaves the keys alone while an overlay hides the board", async () => {
-      const { screen, tile } = await renderBoard();
-      const hello = tile("hello").element();
-      // What MUI does to the app root while a dialog, drawer, or menu is open.
-      screen.container.setAttribute("aria-hidden", "true");
+    test("leaves the keys to a dialog that covers the board", async () => {
+      const onClose = vi.fn();
+      const screen = await render(boardBehindDialog(onClose));
 
-      hello.focus();
+      screen.getByRole("button", { name: "Close" }).element().focus();
       await userEvent.keyboard("{Space}");
 
-      await vi.waitFor(() => expect(speech.spokenTexts()).toEqual(["hello"]));
+      expect(onClose).toHaveBeenCalledTimes(1);
       expect(findHighlighted(screen.container)).toBeNull();
+    });
+
+    test("counts a held switch as one press", async () => {
+      const { row } = await renderBoard();
+      await userEvent.keyboard("{Space}");
+      await expectHighlighted(row(0));
+
+      document.body.dispatchEvent(
+        new KeyboardEvent("keydown", { key: " ", repeat: true, bubbles: true }),
+      );
+
+      await expectHighlighted(row(0));
+      await expect.element(row(1)).not.toHaveAttribute(HIGHLIGHT);
+    });
+
+    test("leaves keys typed into a text field alone", async () => {
+      const { screen } = await renderBoard();
+      const textField = document.createElement("input");
+      document.body.append(textField);
+      onTestFinished(() => textField.remove());
+
+      textField.focus();
+      await userEvent.keyboard("a{Space}b");
+
+      expect(textField.value).toBe("a b");
+      expect(findHighlighted(screen.container)).toBeNull();
+    });
+
+    test("restarts at the first row when another board replaces the tiles", async () => {
+      const { screen, tile, row } = await renderBoard();
+      await userEvent.keyboard("{Space}{Space}");
+      await expectHighlighted(row(1));
+
+      await screen.rerender(communicationBoardTree(OTHER_TWO_ROW_BOARD));
+
+      await expectHighlighted(row(0));
+      await expect.element(row(1)).not.toHaveAttribute(HIGHLIGHT);
+
+      await userEvent.keyboard("{Enter}");
+
+      await expectHighlighted(tile("eat"));
     });
 
     test("clears the highlight when scanning is turned off", async () => {
@@ -296,12 +364,12 @@ describe("switch scanning", () => {
       await expectHighlighted(row(0));
     });
 
-    test("pauses when an overlay hides the board", async () => {
+    test("pauses when a dialog covers the board", async () => {
       const { screen, row } = await renderBoard();
       await userEvent.keyboard("{Space}");
       await expectHighlighted(row(0));
 
-      screen.container.setAttribute("aria-hidden", "true");
+      await screen.rerender(boardBehindDialog());
       vi.advanceTimersByTime(1500);
 
       expect(findHighlighted(screen.container)).toBeNull();

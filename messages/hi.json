@@ -94,7 +94,7 @@
   "scanningMethod": "स्कैन विधि",
   "scanningMethodAuto": "ऑटो स्कैन",
   "scanningMethodStep": "स्टेप स्कैन",
-  "scanningMethodAutoHint": "हाइलाइट अपने आप आगे बढ़ता है। चुनने के लिए Space या Enter दबाएँ।",
+  "scanningMethodAutoHint": "स्कैनिंग शुरू करने और चुनने के लिए Space या Enter दबाएँ। हाइलाइट अपने आप आगे बढ़ता है।",
   "scanningMethodStepHint": "हाइलाइट आगे बढ़ाने के लिए Space और चुनने के लिए Enter दबाएँ।",
   "scanningPattern": "स्कैन पैटर्न",
   "scanningPatternRowColumn": "पंक्ति-कॉलम",

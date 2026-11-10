@@ -94,7 +94,7 @@
   "scanningMethod": "Metoda skanowania",
   "scanningMethodAuto": "Skanowanie automatyczne",
   "scanningMethodStep": "Skanowanie krokowe",
-  "scanningMethodAutoHint": "Podświetlenie przesuwa się samo. Naciśnij spację lub Enter, aby wybrać.",
+  "scanningMethodAutoHint": "Naciśnij spację lub Enter, aby rozpocząć skanowanie i aby wybrać. Podświetlenie przesuwa się samo.",
   "scanningMethodStepHint": "Naciśnij spację, aby przesunąć podświetlenie, i Enter, aby wybrać.",
   "scanningPattern": "Wzorzec skanowania",
   "scanningPatternRowColumn": "Wiersz–kolumna",

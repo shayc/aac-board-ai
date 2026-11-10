@@ -94,7 +94,7 @@
   "scanningMethod": "Tarama yöntemi",
   "scanningMethodAuto": "Otomatik tarama",
   "scanningMethodStep": "Adım adım tarama",
-  "scanningMethodAutoHint": "Vurgu kendiliğinden ilerler. Seçmek için Boşluk veya Enter tuşuna basın.",
+  "scanningMethodAutoHint": "Taramayı başlatmak ve seçmek için Boşluk veya Enter tuşuna basın. Vurgu kendiliğinden ilerler.",
   "scanningMethodStepHint": "Vurguyu ilerletmek için Boşluk, seçmek için Enter tuşuna basın.",
   "scanningPattern": "Tarama düzeni",
   "scanningPatternRowColumn": "Satır-sütun",

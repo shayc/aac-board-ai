@@ -94,7 +94,7 @@
   "scanningMethod": "Način skeniranja",
   "scanningMethodAuto": "Samodejno skeniranje",
   "scanningMethodStep": "Skeniranje po korakih",
-  "scanningMethodAutoHint": "Označitev se premika sama. Za izbiro pritisnite preslednico ali Enter.",
+  "scanningMethodAutoHint": "Pritisnite preslednico ali Enter, da začnete skeniranje in da izberete. Označitev se premika sama.",
   "scanningMethodStepHint": "S preslednico premaknete označitev, z Enter izberete.",
   "scanningPattern": "Vzorec skeniranja",
   "scanningPatternRowColumn": "Vrstica–stolpec",

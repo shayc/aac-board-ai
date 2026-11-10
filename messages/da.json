@@ -94,7 +94,7 @@
   "scanningMethod": "Scanningsmetode",
   "scanningMethodAuto": "Automatisk scanning",
   "scanningMethodStep": "Trinvis scanning",
-  "scanningMethodAutoHint": "Markeringen flytter sig selv. Tryk på mellemrum eller Enter for at vælge.",
+  "scanningMethodAutoHint": "Tryk på mellemrum eller Enter for at starte scanningen og for at vælge. Markeringen flytter sig selv.",
   "scanningMethodStepHint": "Tryk på mellemrum for at flytte markeringen og Enter for at vælge.",
   "scanningPattern": "Scanningsmønster",
   "scanningPatternRowColumn": "Række-kolonne",

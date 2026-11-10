@@ -94,7 +94,7 @@
   "scanningMethod": "วิธีสแกน",
   "scanningMethodAuto": "สแกนอัตโนมัติ",
   "scanningMethodStep": "สแกนทีละขั้น",
-  "scanningMethodAutoHint": "ไฮไลต์จะเลื่อนเอง กด Space หรือ Enter เพื่อเลือก",
+  "scanningMethodAutoHint": "กด Space หรือ Enter เพื่อเริ่มการสแกนและเพื่อเลือก ไฮไลต์จะเลื่อนเอง",
   "scanningMethodStepHint": "กด Space เพื่อเลื่อนไฮไลต์ และกด Enter เพื่อเลือก",
   "scanningPattern": "รูปแบบการสแกน",
   "scanningPatternRowColumn": "แถว-คอลัมน์",

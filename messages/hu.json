@@ -94,7 +94,7 @@
   "scanningMethod": "Pásztázási mód",
   "scanningMethodAuto": "Automatikus pásztázás",
   "scanningMethodStep": "Léptetéses pásztázás",
-  "scanningMethodAutoHint": "A kiemelés magától halad. A kiválasztáshoz nyomja meg a szóközt vagy az Entert.",
+  "scanningMethodAutoHint": "A pásztázás indításához és a kiválasztáshoz nyomja meg a szóközt vagy az Entert. A kiemelés magától halad.",
   "scanningMethodStepHint": "A szóközzel léptetheti a kiemelést, az Enterrel választhat.",
   "scanningPattern": "Pásztázási minta",
   "scanningPatternRowColumn": "Sor–oszlop",

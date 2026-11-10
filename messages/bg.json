@@ -94,7 +94,7 @@
   "scanningMethod": "Метод на сканиране",
   "scanningMethodAuto": "Автоматично сканиране",
   "scanningMethodStep": "Сканиране стъпка по стъпка",
-  "scanningMethodAutoHint": "Маркировката се движи сама. Натиснете интервал или Enter, за да изберете.",
+  "scanningMethodAutoHint": "Натиснете интервал или Enter, за да започнете сканирането и да изберете. Маркировката се движи сама.",
   "scanningMethodStepHint": "Натиснете интервал, за да преместите маркировката, и Enter, за да изберете.",
   "scanningPattern": "Модел на сканиране",
   "scanningPatternRowColumn": "Ред и колона",

@@ -94,7 +94,7 @@
   "scanningMethod": "Méthode de défilement",
   "scanningMethodAuto": "Défilement automatique",
   "scanningMethodStep": "Défilement pas à pas",
-  "scanningMethodAutoHint": "La surbrillance avance toute seule. Appuyez sur Espace ou Entrée pour sélectionner.",
+  "scanningMethodAutoHint": "Appuyez sur Espace ou Entrée pour lancer le défilement et pour sélectionner. La surbrillance avance toute seule.",
   "scanningMethodStepHint": "Appuyez sur Espace pour déplacer la surbrillance et sur Entrée pour sélectionner.",
   "scanningPattern": "Mode de défilement",
   "scanningPatternRowColumn": "Ligne-colonne",

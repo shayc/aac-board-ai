@@ -94,7 +94,7 @@
   "scanningMethod": "Μέθοδος σάρωσης",
   "scanningMethodAuto": "Αυτόματη σάρωση",
   "scanningMethodStep": "Σάρωση βήμα προς βήμα",
-  "scanningMethodAutoHint": "Η επισήμανση μετακινείται μόνη της. Πατήστε το πλήκτρο διαστήματος ή το Enter για επιλογή.",
+  "scanningMethodAutoHint": "Πατήστε το πλήκτρο διαστήματος ή το Enter για να ξεκινήσει η σάρωση και για επιλογή. Η επισήμανση μετακινείται μόνη της.",
   "scanningMethodStepHint": "Πατήστε το πλήκτρο διαστήματος για να μετακινήσετε την επισήμανση και το Enter για επιλογή.",
   "scanningPattern": "Μοτίβο σάρωσης",
   "scanningPatternRowColumn": "Γραμμή-στήλη",

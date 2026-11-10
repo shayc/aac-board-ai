@@ -175,9 +175,10 @@ function isEditable(target: EventTarget | null): boolean {
 /**
  * MUI hides the app root from assistive technology while a dialog, drawer,
  * menu, or select popup is open. Those own the keyboard, so scanning yields.
+ * `inert` is the platform's way to say the same.
  */
 function isBehindOverlay(root: HTMLElement): boolean {
-  return root.closest('[aria-hidden="true"]') !== null;
+  return root.closest('[aria-hidden="true"], [inert]') !== null;
 }
 
 // React handlers run whether or not the default was prevented, so the event

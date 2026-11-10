@@ -94,7 +94,7 @@
   "scanningMethod": "ಸ್ಕ್ಯಾನ್ ವಿಧಾನ",
   "scanningMethodAuto": "ಸ್ವಯಂ ಸ್ಕ್ಯಾನ್",
   "scanningMethodStep": "ಹಂತ ಹಂತದ ಸ್ಕ್ಯಾನ್",
-  "scanningMethodAutoHint": "ಹೈಲೈಟ್ ತಾನಾಗಿಯೇ ಚಲಿಸುತ್ತದೆ. ಆಯ್ಕೆ ಮಾಡಲು Space ಅಥವಾ Enter ಒತ್ತಿ.",
+  "scanningMethodAutoHint": "ಸ್ಕ್ಯಾನಿಂಗ್ ಪ್ರಾರಂಭಿಸಲು ಮತ್ತು ಆಯ್ಕೆ ಮಾಡಲು Space ಅಥವಾ Enter ಒತ್ತಿ. ಹೈಲೈಟ್ ತಾನಾಗಿಯೇ ಚಲಿಸುತ್ತದೆ.",
   "scanningMethodStepHint": "ಹೈಲೈಟ್ ಸರಿಸಲು Space ಮತ್ತು ಆಯ್ಕೆ ಮಾಡಲು Enter ಒತ್ತಿ.",
   "scanningPattern": "ಸ್ಕ್ಯಾನ್ ಮಾದರಿ",
   "scanningPatternRowColumn": "ಸಾಲು-ಕಾಲಮ್",

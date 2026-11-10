@@ -94,7 +94,7 @@
   "scanningMethod": "Scanmethode",
   "scanningMethodAuto": "Automatisch scannen",
   "scanningMethodStep": "Stapsgewijs scannen",
-  "scanningMethodAutoHint": "De markering beweegt vanzelf. Druk op de spatiebalk of Enter om te selecteren.",
+  "scanningMethodAutoHint": "Druk op de spatiebalk of Enter om het scannen te starten en om te selecteren. De markering beweegt vanzelf.",
   "scanningMethodStepHint": "Druk op de spatiebalk om de markering te verplaatsen en op Enter om te selecteren.",
   "scanningPattern": "Scanpatroon",
   "scanningPatternRowColumn": "Rij-kolom",

@@ -94,7 +94,7 @@
   "scanningMethod": "שיטת סריקה",
   "scanningMethodAuto": "סריקה אוטומטית",
   "scanningMethodStep": "סריקה בצעדים",
-  "scanningMethodAutoHint": "ההדגשה זזה מעצמה. לוחצים על רווח או Enter כדי לבחור.",
+  "scanningMethodAutoHint": "לוחצים על רווח או Enter כדי להתחיל את הסריקה וכדי לבחור. ההדגשה זזה מעצמה.",
   "scanningMethodStepHint": "לוחצים על רווח כדי להזיז את ההדגשה ועל Enter כדי לבחור.",
   "scanningPattern": "תבנית סריקה",
   "scanningPatternRowColumn": "שורה-עמודה",

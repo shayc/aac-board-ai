@@ -94,7 +94,7 @@
   "scanningMethod": "స్కాన్ పద్ధతి",
   "scanningMethodAuto": "ఆటో స్కాన్",
   "scanningMethodStep": "స్టెప్ స్కాన్",
-  "scanningMethodAutoHint": "హైలైట్ దానంతట అదే కదులుతుంది. ఎంచుకోవడానికి Space లేదా Enter నొక్కండి.",
+  "scanningMethodAutoHint": "స్కానింగ్‌ను ప్రారంభించడానికి మరియు ఎంచుకోవడానికి Space లేదా Enter నొక్కండి. హైలైట్ దానంతట అదే కదులుతుంది.",
   "scanningMethodStepHint": "హైలైట్‌ను కదిలించడానికి Space, ఎంచుకోవడానికి Enter నొక్కండి.",
   "scanningPattern": "స్కాన్ నమూనా",
   "scanningPatternRowColumn": "వరుస-నిలువు వరుస",

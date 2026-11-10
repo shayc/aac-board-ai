@@ -94,7 +94,7 @@
   "scanningMethod": "Skanningsmetod",
   "scanningMethodAuto": "Automatisk skanning",
   "scanningMethodStep": "Stegskanning",
-  "scanningMethodAutoHint": "Markeringen flyttar sig själv. Tryck på mellanslag eller Enter för att välja.",
+  "scanningMethodAutoHint": "Tryck på mellanslag eller Enter för att starta skanningen och för att välja. Markeringen flyttar sig själv.",
   "scanningMethodStepHint": "Tryck på mellanslag för att flytta markeringen och Enter för att välja.",
   "scanningPattern": "Skanningsmönster",
   "scanningPatternRowColumn": "Rad-kolumn",

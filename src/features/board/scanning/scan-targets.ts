@@ -5,8 +5,8 @@ import type { ScanPattern } from "./scanning-preferences-store";
 export const SCAN_GROUP_ATTRIBUTE = "data-scan-group";
 
 /**
- * Marks an element as a scan group. Its enabled buttons are the group's
- * targets, in DOM order.
+ * Marks an element as a scan group. Its enabled, visible buttons are the
+ * group's targets, in DOM order.
  */
 export const scanGroupProps = { [SCAN_GROUP_ATTRIBUTE]: "" } as const;
 
@@ -17,8 +17,8 @@ export interface ScanGroup {
 }
 
 /**
- * Reads the scan groups under `root` in DOM order. Groups without an enabled
- * button are left out, so every returned group has at least one target.
+ * Reads the scan groups under `root` in DOM order. Groups without a target
+ * are left out, so every returned group has at least one.
  */
 export function findScanGroups(
   root: HTMLElement,
@@ -41,8 +41,14 @@ export function findScanGroups(
 function findScanTargets(group: HTMLElement): HTMLElement[] {
   const selector = "button:not(:disabled)";
   const descendants = Array.from(group.querySelectorAll<HTMLElement>(selector));
+  const buttons = group.matches(selector)
+    ? [group, ...descendants]
+    : descendants;
 
-  return group.matches(selector) ? [group, ...descendants] : descendants;
+  // A button nobody can see must not be selectable.
+  return buttons.filter((button) =>
+    button.checkVisibility({ visibilityProperty: true }),
+  );
 }
 
 export function findHighlightedElement(

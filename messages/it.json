@@ -94,7 +94,7 @@
   "scanningMethod": "Metodo di scansione",
   "scanningMethodAuto": "Scansione automatica",
   "scanningMethodStep": "Scansione a passi",
-  "scanningMethodAutoHint": "L'evidenziazione si sposta da sola. Premi Spazio o Invio per selezionare.",
+  "scanningMethodAutoHint": "Premi Spazio o Invio per avviare la scansione e per selezionare. L'evidenziazione si sposta da sola.",
   "scanningMethodStepHint": "Premi Spazio per spostare l'evidenziazione e Invio per selezionare.",
   "scanningPattern": "Schema di scansione",
   "scanningPatternRowColumn": "Riga-colonna",

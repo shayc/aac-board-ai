@@ -94,7 +94,7 @@
   "scanningMethod": "Metodă de scanare",
   "scanningMethodAuto": "Scanare automată",
   "scanningMethodStep": "Scanare pas cu pas",
-  "scanningMethodAutoHint": "Evidențierea se mișcă singură. Apasă Spațiu sau Enter pentru a selecta.",
+  "scanningMethodAutoHint": "Apasă Spațiu sau Enter pentru a porni scanarea și pentru a selecta. Evidențierea se mișcă singură.",
   "scanningMethodStepHint": "Apasă Spațiu pentru a muta evidențierea și Enter pentru a selecta.",
   "scanningPattern": "Model de scanare",
   "scanningPatternRowColumn": "Rând-coloană",

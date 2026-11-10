@@ -94,7 +94,7 @@
   "scanningMethod": "Način skeniranja",
   "scanningMethodAuto": "Automatsko skeniranje",
   "scanningMethodStep": "Skeniranje korak po korak",
-  "scanningMethodAutoHint": "Isticanje se pomiče samo. Pritisnite razmaknicu ili Enter za odabir.",
+  "scanningMethodAutoHint": "Pritisnite razmaknicu ili Enter za pokretanje skeniranja i za odabir. Isticanje se pomiče samo.",
   "scanningMethodStepHint": "Pritisnite razmaknicu za pomicanje isticanja, a Enter za odabir.",
   "scanningPattern": "Uzorak skeniranja",
   "scanningPatternRowColumn": "Redak-stupac",

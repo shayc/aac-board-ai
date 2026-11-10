@@ -94,7 +94,7 @@
   "scanningMethod": "Метод сканирования",
   "scanningMethodAuto": "Автоматическое сканирование",
   "scanningMethodStep": "Пошаговое сканирование",
-  "scanningMethodAutoHint": "Выделение перемещается само. Нажмите пробел или Enter, чтобы выбрать.",
+  "scanningMethodAutoHint": "Нажмите пробел или Enter, чтобы начать сканирование и чтобы выбрать. Выделение перемещается само.",
   "scanningMethodStepHint": "Нажмите пробел, чтобы переместить выделение, и Enter, чтобы выбрать.",
   "scanningPattern": "Схема сканирования",
   "scanningPatternRowColumn": "Строка — столбец",

@@ -94,7 +94,7 @@
   "scanningMethod": "스캔 방식",
   "scanningMethodAuto": "자동 스캔",
   "scanningMethodStep": "단계 스캔",
-  "scanningMethodAutoHint": "강조 표시가 자동으로 이동합니다. 선택하려면 스페이스 또는 Enter를 누르세요.",
+  "scanningMethodAutoHint": "스페이스 또는 Enter를 눌러 스캔을 시작하고 선택하세요. 강조 표시가 자동으로 이동합니다.",
   "scanningMethodStepHint": "스페이스를 눌러 강조 표시를 이동하고 Enter를 눌러 선택하세요.",
   "scanningPattern": "스캔 패턴",
   "scanningPatternRowColumn": "행-열",

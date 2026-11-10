@@ -296,8 +296,8 @@ composed by the app's settings drawer, like `TileSettings`.
 ### Key decisions
 
 1. **Targets come from the DOM, not a registry.** Groups are elements marked
-   `data-scan-group` inside the board root; targets are the enabled buttons in
-   each group, in DOM order. The grid's existing `role="row"` elements get the
+   `data-scan-group` inside the board root; targets are the enabled, visible
+   buttons in each group, in DOM order. The grid's existing `role="row"` elements get the
    attribute, as do the message bar, the `NavigationButtons` root, and the
    Backspace button. The row that holds the navigation buttons also holds the
    suggestion bar, so the attribute goes on those children, not on the row.
@@ -342,9 +342,10 @@ composed by the app's settings drawer, like `TileSettings`.
    It ignores modified keys, `event.repeat`, presses within the repeat-press
    delay, and editable targets (which covers the board selector's text field).
    It is suspended while an overlay is open, detected as the board root having
-   an `aria-hidden="true"` ancestor: MUI's modal manager hides the app root
-   that way for every `Drawer`, `Dialog`, `Menu`, and `Select` popup.
-   `aria-modal` would miss menus and select popups, which don't set it.
+   an `aria-hidden="true"` or `inert` ancestor: MUI's modal manager hides the
+   app root with `aria-hidden` for every `Drawer`, `Dialog`, `Menu`, and
+   `Select` popup. `aria-modal` would miss menus and select popups, which
+   don't set it.
    Repeated presses are timed per switch, so the delay filters a second press
    of the same switch without dropping a Select that quickly follows Next.
    When scanning is off no scanner exists and nothing is registered.

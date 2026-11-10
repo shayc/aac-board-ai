@@ -94,7 +94,7 @@
   "scanningMethod": "Scan-Methode",
   "scanningMethodAuto": "Automatischer Scan",
   "scanningMethodStep": "Schritt-Scan",
-  "scanningMethodAutoHint": "Die Hervorhebung bewegt sich von selbst. Zum Auswählen die Leertaste oder die Eingabetaste drücken.",
+  "scanningMethodAutoHint": "Leertaste oder Eingabetaste drücken, um den Scan zu starten und auszuwählen. Die Hervorhebung bewegt sich von selbst.",
   "scanningMethodStepHint": "Mit der Leertaste die Hervorhebung bewegen, mit der Eingabetaste auswählen.",
   "scanningPattern": "Scan-Muster",
   "scanningPatternRowColumn": "Zeile–Spalte",

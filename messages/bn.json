@@ -94,7 +94,7 @@
   "scanningMethod": "স্ক্যান পদ্ধতি",
   "scanningMethodAuto": "স্বয়ংক্রিয় স্ক্যান",
   "scanningMethodStep": "ধাপে ধাপে স্ক্যান",
-  "scanningMethodAutoHint": "হাইলাইট নিজে থেকেই সরে। বেছে নিতে Space বা Enter চাপুন।",
+  "scanningMethodAutoHint": "স্ক্যানিং শুরু করতে এবং বেছে নিতে Space বা Enter চাপুন। হাইলাইট নিজে থেকেই সরে।",
   "scanningMethodStepHint": "হাইলাইট সরাতে Space এবং বেছে নিতে Enter চাপুন।",
   "scanningPattern": "স্ক্যান প্যাটার্ন",
   "scanningPatternRowColumn": "সারি-কলাম",

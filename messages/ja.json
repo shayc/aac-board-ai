@@ -94,7 +94,7 @@
   "scanningMethod": "スキャン方式",
   "scanningMethodAuto": "オートスキャン",
   "scanningMethodStep": "ステップスキャン",
-  "scanningMethodAutoHint": "ハイライトが自動で移動します。スペースキーまたは Enter キーで選択します。",
+  "scanningMethodAutoHint": "スペースキーまたは Enter キーでスキャンの開始と選択ができます。ハイライトは自動で移動します。",
   "scanningMethodStepHint": "スペースキーでハイライトを移動し、Enter キーで選択します。",
   "scanningPattern": "スキャンパターン",
   "scanningPatternRowColumn": "行・列",
