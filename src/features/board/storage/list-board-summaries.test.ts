@@ -10,7 +10,7 @@ beforeEach(async () => {
 
 afterEach(closeBoardsDB);
 
-test("maps stored boards to summaries with normalized translation locales", async () => {
+test("maps stored boards to summaries with their names by language", async () => {
   await insertBoardSet(
     makeBoardSetInput({
       rootBoardId: "a",
@@ -30,7 +30,7 @@ test("maps stored boards to summaries with normalized translation locales", asyn
     {
       id: "a",
       name: "Food",
-      translationsByLocale: new Map([["es-MX", new Map([["Food", "Comida"]])]]),
+      translatedNames: { es: "Comida" },
     },
   ]);
 });

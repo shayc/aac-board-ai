@@ -29,13 +29,23 @@ export function getBoardLanguage({ locale }: { locale?: string }): string {
   return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
+interface TranslatedName {
+  readonly name: string;
+  readonly translatedNames?: Readonly<Record<string, string>>;
+}
+
+export function nameInLanguage(
+  { name, translatedNames }: TranslatedName,
+  language: string,
+): string {
+  return translatedNames?.[language] || name;
+}
+
 export function boardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
 ): BoardSetRecord {
-  const name = boardSet.translatedNames?.[language];
-
-  return name ? { ...boardSet, name } : boardSet;
+  return { ...boardSet, name: nameInLanguage(boardSet, language) };
 }
 
 export function findStringTranslations(
