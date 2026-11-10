@@ -91,7 +91,7 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
         open={state.open}
         onClose={handleClose}
         autoHideDuration={
-          state.current?.durationMs ?? DEFAULT_SNACKBAR_DURATION_MS
+          state.current?.durationMs ?? defaultDurationMs(severity)
         }
         anchorOrigin={{
           vertical: isSmallScreen ? "bottom" : "top",
@@ -127,6 +127,10 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
 
 function isUrgent(severity: SnackbarSeverity) {
   return severity === "error" || severity === "warning";
+}
+
+function defaultDurationMs(severity: SnackbarSeverity): number | null {
+  return isUrgent(severity) ? null : DEFAULT_SNACKBAR_DURATION_MS;
 }
 
 function snackbarReducer(

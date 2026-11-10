@@ -57,7 +57,7 @@ describe("RouteErrorBoundary", () => {
     });
 
     await expect
-      .element(screen.getByText("Something went wrong"))
+      .element(screen.getByText("Couldn't load this page"))
       .toBeVisible();
     await expect
       .element(screen.getByRole("link", { name: "Go home" }))

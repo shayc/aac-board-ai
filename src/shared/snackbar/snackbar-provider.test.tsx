@@ -2,7 +2,7 @@ import { m } from "@paraglide/messages.js";
 import { setStoredLanguage } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
-import { describe, expect, test, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render } from "vitest-browser-react";
 import type { SnackbarOptions } from "./snackbar-context";
 import { useSnackbar } from "./use-snackbar";
@@ -99,11 +99,7 @@ describe("SnackbarProvider", () => {
 
   test("announces errors assertively and other messages politely", async () => {
     const screen = await renderSnackbars({
-      "show-error": {
-        message: "failed",
-        severity: "error",
-        durationMs: LONG_DURATION_MS,
-      },
+      "show-error": { message: "failed", severity: "error" },
       "show-success": {
         message: "done",
         severity: "success",
@@ -116,6 +112,52 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-success" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("done");
+  });
+
+  describe("default duration", () => {
+    const PAST_DEFAULT_DURATION_MS = 10_000;
+
+    beforeEach(() => {
+      vi.useFakeTimers();
+    });
+
+    afterEach(() => {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+    });
+
+    test("hides an informational message on its own", async () => {
+      const screen = await renderSnackbars({ "show-saved": "Saved" });
+
+      await screen.getByRole("button", { name: "show-saved" }).click();
+      await expect
+        .element(screen.getByRole("status"))
+        .toHaveTextContent("Saved");
+
+      await vi.advanceTimersByTimeAsync(PAST_DEFAULT_DURATION_MS);
+
+      await expect.element(screen.getByRole("status")).not.toBeInTheDocument();
+    });
+
+    test("keeps an error visible until it is closed", async () => {
+      const screen = await renderSnackbars({
+        "show-error": { message: "failed", severity: "error" },
+      });
+
+      await screen.getByRole("button", { name: "show-error" }).click();
+      await expect
+        .element(screen.getByRole("alert"))
+        .toHaveTextContent("failed");
+
+      await vi.advanceTimersByTimeAsync(PAST_DEFAULT_DURATION_MS);
+
+      await expect.element(screen.getByRole("alert")).toBeVisible();
+
+      await screen.getByRole("button", { name: "Close" }).click();
+      await vi.advanceTimersByTimeAsync(PAST_DEFAULT_DURATION_MS);
+
+      await expect.element(screen.getByRole("alert")).not.toBeInTheDocument();
+    });
   });
 
   test("retranslates a visible localized message when the locale changes", async () => {
