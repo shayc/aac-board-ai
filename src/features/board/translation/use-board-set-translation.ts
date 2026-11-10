@@ -72,12 +72,14 @@ export function useBoardSetTranslation(): void {
     }
 
     run.queue = run.queue.then(async () => {
-      await translate(run.signal);
-
-      // An aborted run already cleared the status, and the next run may have
-      // set it again.
-      if (!run.signal.aborted) {
-        setIsTranslatingBoards(false);
+      try {
+        await translate(run.signal);
+      } finally {
+        // An aborted run already cleared the status, and the next run may
+        // have set it again.
+        if (!run.signal.aborted) {
+          setIsTranslatingBoards(false);
+        }
       }
     });
   }, [language, boardSetIdsKey, isLoading]);

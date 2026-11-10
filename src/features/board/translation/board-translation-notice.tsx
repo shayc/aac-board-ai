@@ -32,11 +32,10 @@ export function BoardTranslationNotice() {
       <TranslationStatusAlert
         icon={<DownloadingIcon fontSize="inherit" />}
         title={t(m.languageDownloading)}
-      >
-        {t(m.languageDownloadProgress, {
+        description={t(m.languageDownloadProgress, {
           progress: Math.round(progress * 100),
         })}
-      </TranslationStatusAlert>
+      />
     );
   }
 
@@ -55,18 +54,19 @@ export function BoardTranslationNotice() {
 interface TranslationStatusAlertProps {
   icon: ReactNode;
   title: string;
-  children?: ReactNode;
+  description?: string;
 }
 
 function TranslationStatusAlert({
   icon,
   title,
-  children,
+  description,
 }: TranslationStatusAlertProps) {
+  // A polite status, so progress updates don't interrupt screen reader speech.
   return (
-    <Alert severity="info" variant="outlined" icon={icon}>
+    <Alert role="status" severity="info" variant="outlined" icon={icon}>
       <AlertTitle>{title}</AlertTitle>
-      {children && <Typography>{children}</Typography>}
+      {description !== undefined && <Typography>{description}</Typography>}
     </Alert>
   );
 }

@@ -34,7 +34,7 @@ async function runTranslation(
   language: string,
   signal = new AbortController().signal,
 ) {
-  const onTranslating = vi.fn<(boardSetId: string) => void>();
+  const onTranslating = vi.fn<() => void>();
   const onTranslated = vi.fn<(boardSetId: string) => void>();
   await translateBoardSets(await listBoardSetRecords(), language, {
     signal,
@@ -69,7 +69,7 @@ describe("translateBoardSets", () => {
     expect((await getBoardSetRecord("food"))?.translatedNames).toEqual({
       es: "[es] Food",
     });
-    expect(onTranslating.mock.calls).toEqual([["food"]]);
+    expect(onTranslating).toHaveBeenCalledOnce();
     expect(onTranslated.mock.calls).toEqual([["food"]]);
     expect(create).toHaveBeenCalledOnce();
     expect(create.mock.calls.at(0)?.at(0)).toMatchObject({
@@ -217,10 +217,11 @@ describe("translateBoardSets", () => {
     const { availability, translate } = stubTranslator();
     availability.mockResolvedValue("unavailable");
 
-    const { onTranslated } = await runTranslation("es");
+    const { onTranslating, onTranslated } = await runTranslation("es");
 
     expect(translate).not.toHaveBeenCalled();
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
+    expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
@@ -283,11 +284,12 @@ describe("translateBoardSets", () => {
       },
     ]);
 
-    const { onTranslated } = await runTranslation("es");
+    const { onTranslating, onTranslated } = await runTranslation("es");
 
     expect((await getBoardSetRecord("shipped"))?.translatedNames).toEqual({
       es: "Inicio",
     });
+    expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated.mock.calls).toEqual([["shipped"]]);
   });
 

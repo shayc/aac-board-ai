@@ -12,9 +12,12 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
-interface TranslateBoardSetsOptions {
+interface TranslationOptions {
   signal: AbortSignal;
-  onTranslating: (boardSetId: string) => void;
+  onTranslating: () => void;
+}
+
+interface TranslateBoardSetsOptions extends TranslationOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
@@ -39,9 +42,8 @@ export async function translateBoardSets(
       continue;
     }
 
-    onTranslating(boardSet.id);
     try {
-      await translateBoardSet(boardSet, language, signal);
+      await translateBoardSet(boardSet, language, { signal, onTranslating });
       onTranslated(boardSet.id);
     } catch {
       // Translation is optional; the next language change or app start retries.
@@ -63,7 +65,7 @@ function isBoardSetInLanguage(
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
-  signal: AbortSignal,
+  { signal, onTranslating }: TranslationOptions,
 ): Promise<void> {
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
@@ -85,7 +87,7 @@ async function translateBoardSet(
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
-    signal,
+    { signal, onTranslating },
   );
 
   signal.throwIfAborted();
@@ -167,8 +169,12 @@ function addStrings(
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
   targetLanguage: string,
-  signal: AbortSignal,
+  { signal, onTranslating }: TranslationOptions,
 ): Promise<Map<string, StringTranslations>> {
+  if (stringsBySourceLanguage.size === 0) {
+    return new Map();
+  }
+
   const translators = new Map<string, OpenTranslator>();
 
   try {
@@ -182,6 +188,10 @@ async function translateBySourceLanguage(
       });
       translators.set(sourceLanguage, translator);
     }
+
+    // Reported only now, so a model download shows as downloading rather
+    // than as translating.
+    onTranslating();
 
     const entries = await Promise.all(
       Array.from(translators, async ([sourceLanguage, translator]) => {
