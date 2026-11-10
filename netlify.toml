@@ -10,12 +10,14 @@ status = 200
 # from imported board assets. Images, media, and fetches stay open to any https
 # host because boards reference remote symbols and sounds, ?board= links import
 # from any host, and the service worker fetches remote images to cache them.
+# Workers also allow blob: because unzipping a board set inflates its large
+# entries in workers built from blob: URLs; without it those sets fail to import.
 # Styles allow inline because Emotion injects <style> tags at runtime and a
 # static host cannot issue nonces.
 [[headers]]
 for = "/*"
 [headers.values]
-Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
+Content-Security-Policy = "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data: https:; media-src 'self' blob: data: https:; connect-src 'self' https:; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
 Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 X-Content-Type-Options = "nosniff"
 Referrer-Policy = "no-referrer"
