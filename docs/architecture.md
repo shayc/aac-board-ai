@@ -138,14 +138,19 @@ Route loaders only read; they never translate or wait on a model:
 
 [`useBoardSetTranslation`](../src/features/board/translation/use-board-set-translation.ts)
 runs in the app shell on start, on a language change, and when sets are added
-or removed. It starts with the set on screen, so that set never waits behind
-the rest. For each set not yet in the communication language, it translates
-the set name and every board missing that language, then saves them in one
-transaction. The set name comes from the root board's own translations when the
+or removed. Only a language change aborts the pass in progress; an added or
+removed set queues another pass behind it, so a model download started by the
+language change's user gesture is never cancelled. Each pass starts with the
+set on screen, so that set never waits behind the rest.
+
+For each set not yet in the communication language, it translates the set name
+and every board missing that language, then saves them in one transaction.
+Boards are checked one by one, because a set's language is only its root
+board's. The set name comes from the root board's own translations when the
 board file has them, so a set whose file ships every translation is named even
 without the Translator API. A saved set name therefore marks the whole set as
-translated, so later runs skip it without reading its boards. A set deleted mid-translation is
-not written back.
+translated, so later runs skip it without reading its boards. A set deleted
+mid-translation is not written back.
 
 After each saved set, it syncs the library and, when that set is on screen or
 being navigated to, revalidates the routes (board and board list), so
