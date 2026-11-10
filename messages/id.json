@@ -81,8 +81,6 @@
   "languageDownloading": "Mengunduh model terjemahan…",
   "languageDownloadProgress": "{progress}% selesai",
   "languageTranslating": "Menerjemahkan papan…",
-  "languageDownloadNeeded": "Penerjemahan papan memerlukan unduhan model.",
-  "languageDownloadModel": "Unduh model terjemahan",
   "speechVoice": "Suara",
   "speechRate": "Kecepatan",
   "speechPitch": "Nada",

@@ -81,8 +81,6 @@
   "languageDownloading": "மொழிபெயர்ப்பு மாதிரி பதிவிறக்கப்படுகிறது…",
   "languageDownloadProgress": "{progress}% முடிந்தது",
   "languageTranslating": "பலகைகள் மொழிபெயர்க்கப்படுகின்றன…",
-  "languageDownloadNeeded": "பலகை மொழிபெயர்ப்புக்கு ஒரு மாதிரியைப் பதிவிறக்க வேண்டும்.",
-  "languageDownloadModel": "மொழிபெயர்ப்பு மாதிரியைப் பதிவிறக்கு",
   "speechVoice": "குரல்",
   "speechRate": "வேகம்",
   "speechPitch": "சுருதி",

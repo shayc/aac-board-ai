@@ -81,8 +81,6 @@
   "languageDownloading": "Übersetzungsmodell wird heruntergeladen…",
   "languageDownloadProgress": "{progress}% abgeschlossen",
   "languageTranslating": "Tafeln werden übersetzt…",
-  "languageDownloadNeeded": "Für die Tafelübersetzung muss ein Modell heruntergeladen werden.",
-  "languageDownloadModel": "Übersetzungsmodell herunterladen",
   "speechVoice": "Stimme",
   "speechRate": "Geschwindigkeit",
   "speechPitch": "Tonhöhe",

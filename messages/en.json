@@ -81,8 +81,6 @@
   "languageDownloading": "Downloading translation model…",
   "languageDownloadProgress": "{progress}% complete",
   "languageTranslating": "Translating boards…",
-  "languageDownloadNeeded": "Board translation needs a model download.",
-  "languageDownloadModel": "Download translation model",
   "speechVoice": "Voice",
   "speechRate": "Speed",
   "speechPitch": "Pitch",

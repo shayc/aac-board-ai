@@ -81,8 +81,6 @@
   "languageDownloading": "Download del modello di traduzione…",
   "languageDownloadProgress": "{progress}% completato",
   "languageTranslating": "Traduzione delle tabelle…",
-  "languageDownloadNeeded": "La traduzione delle tabelle richiede il download di un modello.",
-  "languageDownloadModel": "Scarica il modello di traduzione",
   "speechVoice": "Voce",
   "speechRate": "Velocità",
   "speechPitch": "Tono",

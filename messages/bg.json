@@ -81,8 +81,6 @@
   "languageDownloading": "Изтегляне на модел за превод…",
   "languageDownloadProgress": "{progress}% завършено",
   "languageTranslating": "Превеждане на дъските…",
-  "languageDownloadNeeded": "Преводът на дъските изисква изтегляне на модел.",
-  "languageDownloadModel": "Изтегляне на модела за превод",
   "speechVoice": "Глас",
   "speechRate": "Скорост",
   "speechPitch": "Височина",

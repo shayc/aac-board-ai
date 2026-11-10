@@ -81,8 +81,6 @@
   "languageDownloading": "Загрузка модели перевода…",
   "languageDownloadProgress": "{progress}% завершено",
   "languageTranslating": "Перевод досок…",
-  "languageDownloadNeeded": "Для перевода досок нужно загрузить модель.",
-  "languageDownloadModel": "Загрузить модель перевода",
   "speechVoice": "Голос",
   "speechRate": "Скорость",
   "speechPitch": "Высота тона",

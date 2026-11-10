@@ -81,8 +81,6 @@
   "languageDownloading": "अनुवाद मॉडल डाउनलोड हो रहा है…",
   "languageDownloadProgress": "{progress}% पूर्ण",
   "languageTranslating": "बोर्ड का अनुवाद हो रहा है…",
-  "languageDownloadNeeded": "बोर्ड के अनुवाद के लिए मॉडल डाउनलोड करना ज़रूरी है।",
-  "languageDownloadModel": "अनुवाद मॉडल डाउनलोड करें",
   "speechVoice": "आवाज़",
   "speechRate": "गति",
   "speechPitch": "पिच",

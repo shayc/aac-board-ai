@@ -81,8 +81,6 @@
   "languageDownloading": "Baixando modelo de tradução…",
   "languageDownloadProgress": "{progress}% concluído",
   "languageTranslating": "Traduzindo pranchas…",
-  "languageDownloadNeeded": "A tradução de pranchas requer o download de um modelo.",
-  "languageDownloadModel": "Baixar modelo de tradução",
   "speechVoice": "Voz",
   "speechRate": "Velocidade",
   "speechPitch": "Tom",

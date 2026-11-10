@@ -81,8 +81,6 @@
   "languageDownloading": "ಅನುವಾದ ಮಾದರಿ ಡೌನ್‌ಲೋಡ್ ಆಗುತ್ತಿದೆ…",
   "languageDownloadProgress": "{progress}% ಪೂರ್ಣಗೊಂಡಿದೆ",
   "languageTranslating": "ಬೋರ್ಡ್‌ಗಳನ್ನು ಅನುವಾದಿಸಲಾಗುತ್ತಿದೆ…",
-  "languageDownloadNeeded": "ಬೋರ್ಡ್ ಅನುವಾದಕ್ಕೆ ಮಾದರಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಬೇಕಾಗುತ್ತದೆ.",
-  "languageDownloadModel": "ಅನುವಾದ ಮಾದರಿಯನ್ನು ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
   "speechVoice": "ಧ್ವನಿ",
   "speechRate": "ವೇಗ",
   "speechPitch": "ಪಿಚ್",

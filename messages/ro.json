@@ -81,8 +81,6 @@
   "languageDownloading": "Se descarcă modelul de traducere…",
   "languageDownloadProgress": "{progress}% finalizat",
   "languageTranslating": "Se traduc tablele…",
-  "languageDownloadNeeded": "Traducerea tablelor necesită descărcarea unui model.",
-  "languageDownloadModel": "Descarcă modelul de traducere",
   "speechVoice": "Voce",
   "speechRate": "Viteză",
   "speechPitch": "Înălțime",

@@ -81,8 +81,6 @@
   "languageDownloading": "অনুবাদ মডেল ডাউনলোড হচ্ছে…",
   "languageDownloadProgress": "{progress}% সম্পন্ন",
   "languageTranslating": "বোর্ড অনুবাদ হচ্ছে…",
-  "languageDownloadNeeded": "বোর্ড অনুবাদের জন্য একটি মডেল ডাউনলোড করা প্রয়োজন।",
-  "languageDownloadModel": "অনুবাদ মডেল ডাউনলোড করুন",
   "speechVoice": "কণ্ঠস্বর",
   "speechRate": "গতি",
   "speechPitch": "পিচ",

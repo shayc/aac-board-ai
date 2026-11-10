@@ -81,8 +81,6 @@
   "languageDownloading": "Λήψη μοντέλου μετάφρασης…",
   "languageDownloadProgress": "Ολοκληρώθηκε {progress}%",
   "languageTranslating": "Μετάφραση πινάκων…",
-  "languageDownloadNeeded": "Η μετάφραση πινάκων απαιτεί λήψη μοντέλου.",
-  "languageDownloadModel": "Λήψη μοντέλου μετάφρασης",
   "speechVoice": "Φωνή",
   "speechRate": "Ταχύτητα",
   "speechPitch": "Τόνος",

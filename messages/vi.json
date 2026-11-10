@@ -81,8 +81,6 @@
   "languageDownloading": "Đang tải xuống mô hình dịch…",
   "languageDownloadProgress": "Hoàn thành {progress}%",
   "languageTranslating": "Đang dịch bảng…",
-  "languageDownloadNeeded": "Cần tải xuống một mô hình để dịch bảng.",
-  "languageDownloadModel": "Tải xuống mô hình dịch",
   "speechVoice": "Giọng nói",
   "speechRate": "Tốc độ",
   "speechPitch": "Cao độ",

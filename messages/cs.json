@@ -81,8 +81,6 @@
   "languageDownloading": "Stahování překladového modelu…",
   "languageDownloadProgress": "{progress} % dokončeno",
   "languageTranslating": "Překládání tabulek…",
-  "languageDownloadNeeded": "Překlad tabulek vyžaduje stažení modelu.",
-  "languageDownloadModel": "Stáhnout překladový model",
   "speechVoice": "Hlas",
   "speechRate": "Rychlost",
   "speechPitch": "Výška",

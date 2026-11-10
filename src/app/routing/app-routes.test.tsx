@@ -9,12 +9,8 @@ import {
   setStoredLanguage,
 } from "@shared/language/language-store";
 import { AppProviders } from "@shared/providers/app-providers";
-import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubAudio } from "@shared/testing/stub-audio";
-import {
-  stubTranslator,
-  stubUserActivation,
-} from "@shared/testing/stub-built-in-ai";
+import { stubTranslator } from "@shared/testing/stub-built-in-ai";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import { createMemoryRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
@@ -607,43 +603,6 @@ describe("app flow", () => {
 
     translation.resolve();
     await expect.element(notice).not.toBeInTheDocument();
-  });
-
-  test("a model download refused without a user gesture starts from the Download button", async () => {
-    await seedTwoBoardSet();
-    const translator = stubTranslator((input) => `[es] ${input}`);
-    translator.availability.mockResolvedValue("downloadable");
-    const userActivation = stubUserActivation(false);
-
-    const { screen } = await renderApp("/sets/food/boards/home");
-
-    await screen.getByRole("button", { name: "Continue" }).click();
-    setStoredLanguage("es");
-    await screen.getByRole("button", { name: "Abrir ajustes" }).click();
-    const notice = screen.getByRole("status");
-    const downloadButton = notice.getByRole("button", {
-      name: "Descargar modelo de traducción",
-    });
-
-    await expect
-      .element(notice)
-      .toHaveTextContent(
-        "La traducción de tableros requiere descargar un modelo.Descargar modelo de traducción",
-      );
-    await expect.element(downloadButton).toBeVisible();
-    expect(translator.create).not.toHaveBeenCalled();
-    await expectNoA11yViolations(notice.element());
-
-    // From here the click is the only source of user activation.
-    userActivation.mockRestore();
-    downloadButton.element().focus();
-    await userEvent.keyboard("{Enter}");
-
-    await expect.element(notice).not.toBeInTheDocument();
-    await screen.getByRole("button", { name: "Cerrar ajustes" }).click();
-    await expect
-      .element(screen.getByRole("grid", { name: "[es] Home" }))
-      .toBeVisible();
   });
 
   test("changing language mid-translation clears the board translation status", async () => {

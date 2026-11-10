@@ -81,8 +81,6 @@
   "languageDownloading": "翻訳モデルをダウンロードしています…",
   "languageDownloadProgress": "{progress}% 完了",
   "languageTranslating": "ボードを翻訳しています…",
-  "languageDownloadNeeded": "ボードの翻訳にはモデルのダウンロードが必要です。",
-  "languageDownloadModel": "翻訳モデルをダウンロード",
   "speechVoice": "音声",
   "speechRate": "速度",
   "speechPitch": "ピッチ",

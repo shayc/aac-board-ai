@@ -81,8 +81,6 @@
   "languageDownloading": "جارٍ تنزيل نموذج الترجمة…",
   "languageDownloadProgress": "اكتمل {progress}%",
   "languageTranslating": "جارٍ ترجمة اللوحات…",
-  "languageDownloadNeeded": "تتطلب ترجمة اللوحات تنزيل نموذج.",
-  "languageDownloadModel": "تنزيل نموذج الترجمة",
   "speechVoice": "الصوت",
   "speechRate": "السرعة",
   "speechPitch": "حدّة الصوت",

@@ -76,11 +76,3 @@ export function stubTranslator(
 
   return { translate: action, ...spies };
 }
-
-// A model download only starts during a transient user activation, which
-// lingers for seconds after any earlier click in the same test page.
-export function stubUserActivation(isActive: boolean): Mock<() => boolean> {
-  return vi
-    .spyOn(UserActivation.prototype, "isActive", "get")
-    .mockReturnValue(isActive);
-}

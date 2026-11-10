@@ -81,8 +81,6 @@
   "languageDownloading": "Laddar ner översättningsmodell…",
   "languageDownloadProgress": "{progress}% klart",
   "languageTranslating": "Översätter tavlor…",
-  "languageDownloadNeeded": "Översättning av tavlor kräver att en modell laddas ner.",
-  "languageDownloadModel": "Ladda ner översättningsmodell",
   "speechVoice": "Röst",
   "speechRate": "Hastighet",
   "speechPitch": "Tonhöjd",

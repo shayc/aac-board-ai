@@ -160,26 +160,20 @@ After each saved set, it syncs the library and, when that set is on screen or
 being navigated to, revalidates the routes (board and board list), so
 everything on screen updates without a reload. Other sets are not revalidated:
 that would re-run a `?board=` link import still in flight. A set that
-fails stays in its source language until the next run, and the pass moves on to
-the next set.
+fails, for example because a model download needs a user gesture, stays in its
+source language until the next run.
 
 The hook hands each pass to the
 [board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status: idle, downloading (with the download's fraction), translating, or needs
-download. A pass reports a set's model download as it progresses and its
-translation once the set's translation models are open. It also reports a model
-download refused for lack of a user gesture, the one failure the user can act
-on. When the pass ends, the status becomes needs download if it reported one,
-or idle. A language change clears the status, and a pass it aborted never
-touches the status again.
-
-The
+status: idle, downloading (with the download's fraction), or translating. A
+pass reports a set's model download as it progresses and its translation once
+the set's translation models are open. The status returns to idle when the pass
+ends or the language changes, and a pass aborted by a language change never
+touches it again. The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
-renders from that status alone. A needed download shows a Download button whose
-click queues the last pass again, so the download starts from that click's user
-gesture. The button, the download, and the translation share one polite status
-alert, so a screen reader hears each change.
+renders from that status alone: the download first and the translation after
+it, in one alert that carries both states.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for

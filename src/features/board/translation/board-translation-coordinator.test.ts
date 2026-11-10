@@ -2,7 +2,6 @@ import { afterEach, describe, expect, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
   queueBoardTranslationPass,
-  retryBoardTranslation,
   stopBoardTranslation,
   useBoardTranslationStatus,
 } from "./board-translation-coordinator";
@@ -69,48 +68,6 @@ describe("board translation coordinator", () => {
     await expect.poll(() => result.current).toEqual(TRANSLATING);
   });
 
-  test("ends a pass that was refused a model download needing one, and translates on retry", async () => {
-    const { result } = await renderHook(() => useBoardTranslationStatus());
-    const passes: TranslationOptions[] = [];
-    queueBoardTranslationPass("es", (options) => {
-      passes.push(options);
-      if (passes.length === 1) {
-        options.onDownloadNeeded();
-      }
-
-      return Promise.resolve();
-    });
-
-    await expect.poll(() => result.current).toEqual({ kind: "needs-download" });
-
-    retryBoardTranslation();
-
-    await expect.poll(() => result.current).toEqual(IDLE);
-    expect(passes).toHaveLength(2);
-    expect(passes.at(1)?.signal.aborted).toBe(false);
-  });
-
-  test("keeps reporting the translation until a pass that needs a download ends", async () => {
-    const { result } = await renderHook(() => useBoardTranslationStatus());
-    const first = await startPass("es");
-
-    first.options().onTranslating();
-    first.options().onDownloadNeeded();
-    await expect.poll(() => result.current).toEqual(TRANSLATING);
-
-    first.finish();
-
-    await expect.poll(() => result.current).toEqual({ kind: "needs-download" });
-  });
-
-  test("retrying with no pass queued does nothing", async () => {
-    const { result } = await renderHook(() => useBoardTranslationStatus());
-
-    retryBoardTranslation();
-
-    expect(result.current).toEqual(IDLE);
-  });
-
   test("reports translating from a pass's first progress until it ends", async () => {
     const { result } = await renderHook(() => useBoardTranslationStatus());
     const first = await startPass("es");
@@ -161,7 +118,6 @@ describe("board translation coordinator", () => {
     const current = await startPass("fr");
 
     replaced.options().onTranslating();
-    replaced.options().onDownloadNeeded();
     expect(result.current).toEqual(IDLE);
 
     current.options().onTranslating();

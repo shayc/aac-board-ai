@@ -81,8 +81,6 @@
   "languageDownloading": "Fordítási modell letöltése…",
   "languageDownloadProgress": "{progress}% kész",
   "languageTranslating": "Táblák fordítása…",
-  "languageDownloadNeeded": "A táblák fordításához le kell tölteni egy modellt.",
-  "languageDownloadModel": "Fordítási modell letöltése",
   "speechVoice": "Hang",
   "speechRate": "Sebesség",
   "speechPitch": "Hangmagasság",

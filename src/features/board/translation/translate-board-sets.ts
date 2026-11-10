@@ -1,7 +1,4 @@
-import {
-  createTranslator,
-  MissingUserActivationError,
-} from "@shayc/react-built-in-ai";
+import { createTranslator } from "@shayc/react-built-in-ai";
 import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
@@ -19,27 +16,23 @@ export interface TranslationOptions {
   signal: AbortSignal;
   onDownloadProgress: (progress: number) => void;
   onTranslating: () => void;
-  onDownloadNeeded: () => void;
 }
 
 interface TranslateBoardSetsOptions extends TranslationOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
-type TranslatorProgressOptions = Omit<TranslationOptions, "onDownloadNeeded">;
-
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
 /**
  * Translates every board set not yet in `language` and saves the result.
  * Never rejects: a set that fails stays in its source language until the next
- * run, and an abort stops between sets. A set whose model download was
- * refused for lack of a user gesture is reported through `onDownloadNeeded`.
+ * run, and an abort stops between sets.
  */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { onTranslated, onDownloadNeeded, ...options }: TranslateBoardSetsOptions,
+  { onTranslated, ...options }: TranslateBoardSetsOptions,
 ): Promise<void> {
   const { signal } = options;
 
@@ -55,11 +48,8 @@ export async function translateBoardSets(
     try {
       await translateBoardSet(boardSet, language, options);
       onTranslated(boardSet.id);
-    } catch (error) {
+    } catch {
       // Translation is optional; the next language change or app start retries.
-      if (error instanceof MissingUserActivationError) {
-        onDownloadNeeded();
-      }
     }
   }
 }
@@ -78,7 +68,7 @@ function isBoardSetInLanguage(
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
-  options: TranslatorProgressOptions,
+  options: TranslationOptions,
 ): Promise<void> {
   const { signal } = options;
   const boards = await listBoards(boardSet.id);
@@ -202,7 +192,7 @@ function addStrings(
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
   targetLanguage: string,
-  { signal, onDownloadProgress, onTranslating }: TranslatorProgressOptions,
+  { signal, onDownloadProgress, onTranslating }: TranslationOptions,
 ): Promise<Map<string, StringTranslations>> {
   if (stringsBySourceLanguage.size === 0) {
     return new Map();

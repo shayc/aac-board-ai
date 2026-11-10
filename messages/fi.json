@@ -81,8 +81,6 @@
   "languageDownloading": "Ladataan käännösmallia…",
   "languageDownloadProgress": "{progress} % valmis",
   "languageTranslating": "Käännetään tauluja…",
-  "languageDownloadNeeded": "Taulujen kääntäminen edellyttää mallin lataamista.",
-  "languageDownloadModel": "Lataa käännösmalli",
   "speechVoice": "Ääni",
   "speechRate": "Nopeus",
   "speechPitch": "Korkeus",

@@ -81,8 +81,6 @@
   "languageDownloading": "กำลังดาวน์โหลดโมเดลแปลภาษา…",
   "languageDownloadProgress": "เสร็จสิ้น {progress}%",
   "languageTranslating": "กำลังแปลบอร์ด…",
-  "languageDownloadNeeded": "การแปลบอร์ดต้องดาวน์โหลดโมเดลก่อน",
-  "languageDownloadModel": "ดาวน์โหลดโมเดลแปลภาษา",
   "speechVoice": "เสียง",
   "speechRate": "ความเร็ว",
   "speechPitch": "ระดับเสียงสูงต่ำ",

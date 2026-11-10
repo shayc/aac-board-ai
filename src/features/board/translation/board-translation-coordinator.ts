@@ -9,20 +9,15 @@ type TranslationPass = (options: TranslationOptions) => Promise<void>;
 export type BoardTranslationStatus =
   | { kind: "idle" }
   | { kind: "downloading"; progress: number }
-  | { kind: "translating" }
-  | { kind: "needs-download" };
+  | { kind: "translating" };
 
 interface TranslationRun {
   readonly language: string;
   readonly abortController: AbortController;
   queue: Promise<void>;
-  lastPass?: TranslationPass;
 }
 
 const IDLE_STATUS: BoardTranslationStatus = { kind: "idle" };
-const NEEDS_DOWNLOAD_STATUS: BoardTranslationStatus = {
-  kind: "needs-download",
-};
 
 const statusStore = createExternalStore<BoardTranslationStatus>(IDLE_STATUS);
 let currentRun: TranslationRun | undefined;
@@ -39,35 +34,19 @@ export function queueBoardTranslationPass(
 ): void {
   const run =
     currentRun?.language === language ? currentRun : startRun(language);
-  run.lastPass = pass;
 
   run.queue = run.queue.then(async () => {
-    let endStatus = IDLE_STATUS;
-
     try {
       await pass({
         signal: run.abortController.signal,
         onDownloadProgress: (progress) =>
           setStatus(run, { kind: "downloading", progress }),
         onTranslating: () => setStatus(run, { kind: "translating" }),
-        onDownloadNeeded: () => {
-          endStatus = NEEDS_DOWNLOAD_STATUS;
-        },
       });
     } finally {
-      setStatus(run, endStatus);
+      setStatus(run, IDLE_STATUS);
     }
   });
-}
-
-/**
- * Queues the last pass again. Called from a click, its user gesture lets the
- * pass start the model download an earlier pass was refused.
- */
-export function retryBoardTranslation(): void {
-  if (currentRun?.lastPass) {
-    queueBoardTranslationPass(currentRun.language, currentRun.lastPass);
-  }
 }
 
 export function stopBoardTranslation(): void {

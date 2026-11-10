@@ -81,8 +81,6 @@
   "languageDownloading": "Downloader oversættelsesmodel…",
   "languageDownloadProgress": "{progress}% færdig",
   "languageTranslating": "Oversætter tavler…",
-  "languageDownloadNeeded": "Oversættelse af tavler kræver, at en model downloades.",
-  "languageDownloadModel": "Download oversættelsesmodel",
   "speechVoice": "Stemme",
   "speechRate": "Hastighed",
   "speechPitch": "Tonehøjde",

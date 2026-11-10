@@ -81,8 +81,6 @@
   "languageDownloading": "Preuzimanje modela za prijevod…",
   "languageDownloadProgress": "{progress} % dovršeno",
   "languageTranslating": "Prevođenje ploča…",
-  "languageDownloadNeeded": "Za prijevod ploča potrebno je preuzeti model.",
-  "languageDownloadModel": "Preuzmi model za prijevod",
   "speechVoice": "Glas",
   "speechRate": "Brzina",
   "speechPitch": "Visina",

@@ -81,8 +81,6 @@
   "languageDownloading": "Çeviri modeli indiriliyor…",
   "languageDownloadProgress": "%{progress} tamamlandı",
   "languageTranslating": "Panolar çevriliyor…",
-  "languageDownloadNeeded": "Pano çevirisi için bir model indirilmesi gerekiyor.",
-  "languageDownloadModel": "Çeviri modelini indir",
   "speechVoice": "Ses",
   "speechRate": "Hız",
   "speechPitch": "Perde",

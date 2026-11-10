@@ -81,8 +81,6 @@
   "languageDownloading": "Vertaalmodel downloaden…",
   "languageDownloadProgress": "{progress}% voltooid",
   "languageTranslating": "Borden vertalen…",
-  "languageDownloadNeeded": "Voor bordvertaling moet een model worden gedownload.",
-  "languageDownloadModel": "Vertaalmodel downloaden",
   "speechVoice": "Stem",
   "speechRate": "Snelheid",
   "speechPitch": "Toonhoogte",
