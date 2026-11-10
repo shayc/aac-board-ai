@@ -19,13 +19,17 @@ export const gridCellSx = {
   flex: 1,
   minWidth: GRID_CELL_WIDTH,
   minHeight: GRID_CELL_HEIGHT,
-  scrollSnapAlign: "start",
+  scrollSnapAlign: "none start",
 } as const;
 
+// Rows snap on the block axis and cells on the inline axis. A cell that snapped
+// on both would count as snapped through its row alone, and Safari re-snaps to
+// a snapped area that gains focus, dragging the board to the focused column.
 export const gridRowSx = {
   flex: 1,
   minHeight: GRID_CELL_HEIGHT,
   gap: GRID_GAP,
+  scrollSnapAlign: "start none",
 } as const;
 
 export function createGridViewportSx(theme: Theme) {

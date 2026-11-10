@@ -187,11 +187,10 @@ describe("useGridFocus", () => {
         />,
       );
 
-      await press(screen.getByRole("button", { name: "Item 1" }), "ArrowRight");
       const focusedButton = screen
         .getByRole("button", { name: "Item 2" })
         .element();
-      expect(document.activeElement).toBe(focusedButton);
+      focusedButton.focus();
 
       await screen.rerender(
         <Grid
@@ -208,68 +207,36 @@ describe("useGridFocus", () => {
         .toHaveFocus();
     });
 
-    test("returns lost focus when a key press follows a pointer press", async () => {
+    test("keeps the scroll position when lost focus returns to a tile in another column", async () => {
       const screen = await render(
-        <div style={{ width: 400, height: 400 }}>
+        <div style={{ width: 375, height: 400 }}>
           <Grid
             rows={2}
-            columns={2}
-            items={makeItems(1, 2, 3, 4)}
+            columns={6}
+            items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
             renderItem={renderButton}
           />
         </div>,
       );
-
-      await userEvent.click(screen.getByRole("button", { name: "Item 1" }));
-      await userEvent.keyboard("{ArrowRight}");
-      await expect
-        .element(screen.getByRole("button", { name: "Item 2" }))
-        .toHaveFocus();
-
-      await screen.rerender(
-        <div style={{ width: 400, height: 400 }}>
-          <Grid
-            rows={2}
-            columns={2}
-            items={makeItems(5, 6, 7, 8)}
-            renderItem={renderButton}
-          />
-        </div>,
-      );
-
-      await expect
-        .element(screen.getByRole("button", { name: "Item 6" }))
-        .toHaveFocus();
-    });
-
-    test("leaves focus alone after a pointer press when the grid changes", async () => {
-      const screen = await render(
-        <div style={{ width: 400, height: 400 }}>
-          <Grid
-            rows={2}
-            columns={2}
-            items={makeItems(1, 2, 3, 4)}
-            renderItem={renderButton}
-          />
-        </div>,
-      );
+      const scroller = screen.getByRole("grid").element().parentElement;
 
       await userEvent.click(screen.getByRole("button", { name: "Item 2" }));
       await screen.rerender(
-        <div style={{ width: 400, height: 400 }}>
+        <div style={{ width: 375, height: 400 }}>
           <Grid
             rows={2}
-            columns={2}
-            items={makeItems(5, 6, 7, 8)}
+            columns={6}
+            items={makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
             renderItem={renderButton}
           />
         </div>,
       );
 
       await expect
-        .element(screen.getByRole("button", { name: "Item 6" }))
-        .not.toHaveFocus();
-      expect(document.activeElement).toBe(document.body);
+        .element(screen.getByRole("button", { name: "Item 14" }))
+        .toHaveFocus();
+      expect(scroller?.scrollWidth).toBeGreaterThan(scroller?.clientWidth ?? 0);
+      expect(scroller?.scrollLeft).toBe(0);
     });
   });
 

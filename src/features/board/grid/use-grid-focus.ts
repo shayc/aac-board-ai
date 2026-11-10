@@ -22,7 +22,6 @@ export function useGridFocus(
   const [rememberedPosition, setRememberedPosition] = useState<GridPosition>(
     () => findFirstOccupiedPosition(grid),
   );
-  const hadKeyboardFocusRef = useRef(false);
 
   const { keyboardProps } = useKeyboard({
     onKeyDown: (event) => {
@@ -41,8 +40,6 @@ export function useGridFocus(
   });
 
   function handleFocus(event: FocusEvent<HTMLElement>) {
-    hadKeyboardFocusRef.current = event.target.matches(":focus-visible");
-
     const position = findGridPosition(event.target);
     if (position) {
       setRememberedPosition(position);
@@ -50,13 +47,6 @@ export function useGridFocus(
   }
 
   const restoreLostFocus = useEffectEvent(() => {
-    // Only keyboard users need focus back. Moving focus after a tap makes
-    // Safari re-snap the grid to the newly focused tile, shifting the board
-    // under the user's finger and breaking motor planning.
-    if (!hadKeyboardFocusRef.current) {
-      return;
-    }
-
     if (document.activeElement !== document.body) {
       return;
     }
