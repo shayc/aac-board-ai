@@ -6,6 +6,8 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { render, type RenderResult } from "vitest-browser-react";
 import { listBoardSetRecords } from "../storage/board-set-storage";
 import { closeBoardsDB, getBoardsDB } from "../storage/boards-db";
+import { starterBoardSet } from "./board-set-catalog";
+import { cancelBoardSetDownload } from "./board-set-downloads";
 import { BoardSetLibrary } from "./board-set-library";
 import { refreshBoardSets } from "./board-sets-store";
 
@@ -175,6 +177,12 @@ describe("BoardSetLibrary", () => {
   });
 
   describe("downloading", () => {
+    // Downloads outlive the component, so one left pending by a failed
+    // assertion would block every later download of the same board set.
+    afterEach(() => {
+      cancelBoardSetDownload(starterBoardSet.url);
+    });
+
     test("downloads a catalog board set and focuses its new library entry", async () => {
       const screen = await renderBoardSetLibrary();
 
@@ -239,7 +247,7 @@ describe("BoardSetLibrary", () => {
         .toBeInTheDocument();
     });
 
-    test("describes a download of unknown size as in progress", async () => {
+    test("describes a download of unknown size as in progress without a percentage", async () => {
       const download = stubStreamingDownload();
 
       const screen = await renderBoardSetLibrary();
@@ -254,8 +262,37 @@ describe("BoardSetLibrary", () => {
       await expect
         .element(cancelButton)
         .toHaveAccessibleDescription("Downloading…");
+      await expect
+        .element(screen.getByRole("progressbar", { includeHidden: true }))
+        .not.toHaveAttribute("aria-valuenow");
 
       await cancelButton.click();
+      await expect
+        .element(screen.getByRole("button", { name: "Download First Words" }))
+        .toBeInTheDocument();
+    });
+
+    test("shows an empty progress ring while the download has not responded yet", async () => {
+      vi.spyOn(globalThis, "fetch").mockImplementation(
+        (_input, init) =>
+          new Promise((_resolve, reject) => {
+            const signal = init?.signal;
+            signal?.addEventListener("abort", () => reject(signal.reason));
+          }),
+      );
+
+      const screen = await renderBoardSetLibrary();
+      await screen
+        .getByRole("button", { name: "Download First Words" })
+        .click();
+
+      await expect
+        .element(screen.getByRole("progressbar", { includeHidden: true }))
+        .toHaveAttribute("aria-valuenow", "0");
+
+      await screen
+        .getByRole("button", { name: "Cancel downloading First Words" })
+        .click();
       await expect
         .element(screen.getByRole("button", { name: "Download First Words" }))
         .toBeInTheDocument();

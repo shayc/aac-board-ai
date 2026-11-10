@@ -9,6 +9,7 @@ import {
 } from "../import/import-from-url";
 
 export type BoardSetDownloadPhase =
+  | { kind: "connecting" }
   | ({ kind: "downloading" } & DownloadProgress)
   | { kind: "importing" };
 
@@ -104,7 +105,7 @@ export function downloadBoardSet(
   const controller = new AbortController();
   const promise = runDownload(url, controller.signal);
   pendingDownloadsByURL.set(url, { promise, controller });
-  setDownloadPhase(url, { kind: "downloading", loaded: 0 });
+  setDownloadPhase(url, { kind: "connecting" });
 
   return promise;
 }
@@ -120,7 +121,8 @@ export function subscribeCompletedDownloads(
 }
 
 export function cancelBoardSetDownload(url: string) {
-  if (downloadPhasesStore.getSnapshot().get(url)?.kind !== "downloading") {
+  // Once local importing starts, its atomic write is left to finish.
+  if (downloadPhasesStore.getSnapshot().get(url)?.kind === "importing") {
     return;
   }
 
