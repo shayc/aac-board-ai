@@ -8,7 +8,11 @@ import {
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { installPagePerf } from "./page-perf.ts";
-import { ACTION_TIMEOUT_MS, BASE_BUILD_URL } from "./playwright.config.ts";
+import {
+  ACTION_TIMEOUT_MS,
+  BASE_BUILD_URL,
+  SAMPLE_COUNT,
+} from "./playwright.config.ts";
 import {
   RAW_RESULTS_DIR,
   type BuildName,
@@ -17,12 +21,11 @@ import {
 } from "./results.ts";
 import { median } from "./stats.ts";
 
-const SAMPLE_COUNT = Number(process.env.PERF_SAMPLES ?? 10);
 const CPU_SLOWDOWN = 4;
 const TAP_RESULT = "tap-result";
 const BUILD_NAMES: BuildName[] = ["base", "current"];
 
-export interface Interval {
+export interface TimeSpan {
   start: number;
   end: number;
 }
@@ -42,7 +45,7 @@ export class PageProbe {
    * is visible. The interval starts at the pointerdown, so it covers
    * everything the page does from the press to that frame.
    */
-  async tap(target: Locator, result: string): Promise<Interval> {
+  async tap(target: Locator, result: string): Promise<TimeSpan> {
     await this.page.evaluate(
       ([name, selector]) => {
         window.__perf.watch(name, selector);
@@ -97,7 +100,7 @@ export class JourneySample {
     return new PageProbe(page, await this.#context.newCDPSession(page));
   }
 
-  record(name: string, { start, end }: Interval): void {
+  record(name: string, { start, end }: TimeSpan): void {
     if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
       throw new Error(`Could not measure ${name}: from ${start} to ${end}.`);
     }

@@ -6,7 +6,7 @@ import {
   signedRankP,
   smallestSignedRankP,
   typicalDifference,
-  type Interval,
+  type ConfidenceInterval,
 } from "./stats.ts";
 
 export const SIGNIFICANCE_LEVEL = 0.05;
@@ -20,7 +20,7 @@ export interface TimingComparison {
   medians: Record<BuildName, number>;
   difference: number;
   differencePercent: number;
-  differenceInterval: Interval | undefined;
+  differenceInterval: ConfidenceInterval | undefined;
   p: number;
   verdict: Verdict;
 }

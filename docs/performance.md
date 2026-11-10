@@ -21,16 +21,19 @@ npm run perf -- --base HEAD~3
 Compares with another commit, branch or tag instead of `main`.
 
 ```bash
-npm run perf -- --samples 3
+npm run perf -- --samples 2
 ```
 
-Runs 3 rounds instead of 10, for a quick check that the journeys still work.
-That is too few to flag a change, and the output says so.
+Runs 2 rounds instead of 10, for a quick check that the journeys still work.
+That is too few to flag a change, and the output says so. The number has to be
+even, so each build goes first in half the rounds.
 
 The base ref is checked out into a temporary git worktree, gets its own
 `npm ci`, and is built there. That takes a few minutes the first time; the
 build is kept in `perf-results/base/` and reused until the ref points at
-another commit. Everything under `perf-results/` is generated and gitignored.
+another commit. Delete `perf-results/base/` to rebuild it anyway, for instance
+after changing Node versions. Everything under `perf-results/` is generated and
+gitignored.
 
 ## Journeys
 
@@ -119,6 +122,9 @@ with Node's built-in test runner.
 - A frame counts as rendered when the main thread has finished its style,
   layout and paint. Compositing and display happen after that and are not
   measured.
+- A grid counts as shown once it is laid out with its tiles. Symbol images
+  that load after that frame are not measured, so a change that only slows
+  symbol loading goes unnoticed.
 - Other load on the machine cancels out between the builds but widens the
   confidence intervals, so small changes go unflagged. A machine that sleeps
   mid-run stalls the browser and fails the journey.

@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync } from "node:fs";
+import { existsSync, rmSync } from "node:fs";
 import { mkdtemp, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -36,12 +36,12 @@ const { values: flags } = parseArgs({
 });
 
 // Without a listener, Ctrl-C ends this process while a command is still
-// running. With one, the interrupted command fails like any other, so the
-// base build's worktree is removed on the way out.
-let isInterrupted = false;
+// running and skips buildBase's cleanup. A listener only runs once the
+// interrupted command has failed and that cleanup, which is synchronous, is
+// done.
 for (const signal of ["SIGINT", "SIGTERM"] as const) {
   process.on(signal, () => {
-    isInterrupted = true;
+    process.exit(128 + os.constants.signals[signal]);
   });
 }
 
@@ -53,8 +53,9 @@ try {
 }
 
 async function compare(baseRef: string, samples: string): Promise<void> {
-  if (!/^[1-9]\d*$/.test(samples)) {
-    throw new Error(`--samples takes a whole number above 0, not ${samples}.`);
+  // An even number of rounds lets each build go first equally often.
+  if (!/^[1-9]\d*$/.test(samples) || Number(samples) % 2 !== 0) {
+    throw new Error(`--samples takes an even number above 0, not ${samples}.`);
   }
 
   // Read before building, so the report names what was built even if the
@@ -97,7 +98,7 @@ async function buildBase(commit: string): Promise<void> {
     const built = JSON.parse(await readFile(BASE_BUILD_FILE, "utf8")) as {
       commit: string;
     };
-    if (built.commit === commit) {
+    if (built.commit === commit && existsSync(DIST_DIRS.base)) {
       return;
     }
   }
@@ -112,7 +113,7 @@ async function buildBase(commit: string): Promise<void> {
   } finally {
     // Neither step may throw: a failure here would hide the one that led here.
     git(["worktree", "remove", "--force", sourceDir]);
-    await rm(sourceDir, { recursive: true, force: true });
+    rmSync(sourceDir, { recursive: true, force: true });
   }
 
   await writeFile(BASE_BUILD_FILE, JSON.stringify({ commit }));
@@ -253,10 +254,6 @@ function run(
   cwd: string,
   env: Record<string, string> = {},
 ): void {
-  if (isInterrupted) {
-    throw new Error("Interrupted.");
-  }
-
   const { status } = spawnSync(command, args, {
     cwd,
     stdio: "inherit",

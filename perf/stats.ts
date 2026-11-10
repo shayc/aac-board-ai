@@ -1,4 +1,4 @@
-export interface Interval {
+export interface ConfidenceInterval {
   low: number;
   high: number;
 }
@@ -56,7 +56,7 @@ export function typicalDifference(differences: number[]): number {
 export function differenceInterval(
   differences: number[],
   confidence: number,
-): Interval | undefined {
+): ConfidenceInterval | undefined {
   const averages = pairAverages(differences).toSorted((a, b) => a - b);
   const ranks = differences.map((_, index) => index + 1);
   const tail = (1 - confidence) / 2;
