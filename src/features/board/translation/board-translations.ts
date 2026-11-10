@@ -29,7 +29,7 @@ export function getBoardLanguage({ locale }: { locale?: string }): string {
   return locale ? getLanguageCode(locale) : DEFAULT_BOARD_LANGUAGE;
 }
 
-export function localizeBoardSetName(
+export function boardSetInLanguage(
   boardSet: BoardSetRecord,
   language: string,
 ): BoardSetRecord {
