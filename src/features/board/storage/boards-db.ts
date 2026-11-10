@@ -110,6 +110,9 @@ export async function closeBoardsDB(): Promise<void> {
  * throws synchronously (e.g. a non-cloneable value) would otherwise leave the
  * transaction open to commit the earlier writes. idb creates tx.done eagerly,
  * so it is awaited either way, or its rejection goes unhandled.
+ *
+ * `write` must await each request before issuing the next. Requests left
+ * running when a later one throws would reject after the abort, unhandled.
  */
 export async function runTransaction(
   tx: { readonly done: Promise<void>; abort: () => void },

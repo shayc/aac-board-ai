@@ -92,7 +92,7 @@ async function translateBoardSet(
 
   signal.throwIfAborted();
 
-  function translate(source: { locale?: string }, text: string): string {
+  function findTranslation(source: { locale?: string }, text: string): string {
     const translations = translationsBySourceLanguage.get(
       getBoardLanguage(source),
     );
@@ -101,24 +101,24 @@ async function translateBoardSet(
   }
 
   await saveBoardSetTranslations(boardSet.id, language, {
-    name: nameInLanguage ?? translate(boardSet, boardSet.name),
+    name: nameInLanguage ?? findTranslation(boardSet, boardSet.name),
     stringsByBoardId: new Map(
       boardsMissingLanguage.map((board) => [
         board.id,
-        translateBoardStrings(board, translate),
+        pickBoardTranslations(board, findTranslation),
       ]),
     ),
   });
 }
 
-function translateBoardStrings(
+function pickBoardTranslations(
   board: Board,
-  translate: (board: Board, text: string) => string,
+  findTranslation: (board: Board, text: string) => string,
 ): StringTranslations {
   return new Map(
     Array.from(collectBoardStrings(board), (text) => [
       text,
-      translate(board, text),
+      findTranslation(board, text),
     ]),
   );
 }
