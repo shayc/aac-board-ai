@@ -1,4 +1,3 @@
-import { rmSync } from "node:fs";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -10,6 +9,7 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
+import { WEBKIT_PROFILE_DIR } from "./vitest.webkit-profile.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
@@ -19,15 +19,6 @@ const themeColorHtmlPlugin: Plugin = {
       .replaceAll("__BACKGROUND_LIGHT__", BACKGROUND_LIGHT)
       .replaceAll("__BACKGROUND_DARK__", BACKGROUND_DARK),
 };
-
-const WEBKIT_PROFILE_DIR = "node_modules/.cache/vitest-webkit-profile";
-
-// Each test run starts from an empty WebKit profile. A reused profile keeps an
-// HTTP cache of Vite's pre-bundled dependencies, and once Vite re-bundles them
-// the stale entries stop the test page from ever connecting.
-if (process.env.VITEST) {
-  rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
-}
 
 export default defineConfig({
   plugins: [
@@ -148,6 +139,7 @@ export default defineConfig({
           provider: playwright({
             persistentContext: WEBKIT_PROFILE_DIR,
           }),
+          globalSetup: "./vitest.webkit-profile.ts",
           fileParallelism: false,
         },
       ],
