@@ -1,3 +1,4 @@
+import { rmSync } from "node:fs";
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
@@ -18,6 +19,15 @@ const themeColorHtmlPlugin: Plugin = {
       .replaceAll("__BACKGROUND_LIGHT__", BACKGROUND_LIGHT)
       .replaceAll("__BACKGROUND_DARK__", BACKGROUND_DARK),
 };
+
+const WEBKIT_PROFILE_DIR = "node_modules/.cache/vitest-webkit-profile";
+
+// Each test run starts from an empty WebKit profile. A reused profile keeps an
+// HTTP cache of Vite's pre-bundled dependencies, and once Vite re-bundles them
+// the stale entries stop the test page from ever connecting.
+if (process.env.VITEST) {
+  rmSync(WEBKIT_PROFILE_DIR, { recursive: true, force: true });
+}
 
 export default defineConfig({
   plugins: [
@@ -136,7 +146,7 @@ export default defineConfig({
           // matches a normal Safari profile but cannot be shared across
           // parallel files.
           provider: playwright({
-            persistentContext: "node_modules/.cache/vitest-webkit-profile",
+            persistentContext: WEBKIT_PROFILE_DIR,
           }),
           fileParallelism: false,
         },
