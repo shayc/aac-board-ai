@@ -16,6 +16,8 @@ import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
+import { scanGroupProps } from "./scanning/scan-targets";
+import { ScanningScope } from "./scanning/scanning-scope";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
@@ -95,63 +97,67 @@ export function CommunicationBoard({
   );
 
   return (
-    <Stack
-      {...shortcuts.rootProps}
-      direction="column"
-      sx={{
-        height: "100%",
-        pl: { sm: safeAreaInset("left") },
-        pr: { sm: safeAreaInset("right") },
-      }}
-    >
-      <PlaybackMessageBar parts={message.parts} playback={playback} />
-
+    <ScanningScope>
       <Stack
-        direction="row"
-        spacing={2}
-        sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
+        {...shortcuts.rootProps}
+        direction="column"
+        sx={{
+          height: "100%",
+          pl: { sm: safeAreaInset("left") },
+          pr: { sm: safeAreaInset("right") },
+        }}
       >
-        <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
-          {!isSmallScreen && navigationButtons}
+        <PlaybackMessageBar parts={message.parts} playback={playback} />
 
-          {suggestions.isSupported && (
-            <SuggestionBar
-              status={suggestions.status}
-              phrases={suggestions.phrases}
-              onEnable={suggestions.enable}
-              onPhraseSelect={message.replaceWithText}
-            />
-          )}
+        <Stack
+          {...scanGroupProps}
+          direction="row"
+          spacing={2}
+          sx={{ justifyContent: "space-between", px: { xs: 2, sm: 3 } }}
+        >
+          <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>
+            {!isSmallScreen && navigationButtons}
+
+            {suggestions.isSupported && (
+              <SuggestionBar
+                status={suggestions.status}
+                phrases={suggestions.phrases}
+                onEnable={suggestions.enable}
+                onPhraseSelect={message.replaceWithText}
+              />
+            )}
+          </Stack>
+
+          {!isSmallScreen && backspaceButton}
         </Stack>
 
-        {!isSmallScreen && backspaceButton}
+        <Box sx={{ flex: 1, minHeight: 0 }}>
+          <Grid<BoardButton>
+            ref={gridViewportRef}
+            ariaLabel={board.name || t(m.boardGridLabel)}
+            items={board.buttons}
+            rows={board.grid.rows}
+            columns={board.grid.columns}
+            order={board.grid.order}
+            renderItem={renderTile}
+          />
+        </Box>
+
+        {isSmallScreen && (
+          <Toolbar
+            {...scanGroupProps}
+            sx={{
+              alignItems: "flex-end",
+              justifyContent: "space-between",
+              gap: 2,
+              pb: safeAreaInset("bottom"),
+            }}
+          >
+            {navigationButtons}
+            {backspaceButton}
+          </Toolbar>
+        )}
       </Stack>
-
-      <Box sx={{ flex: 1, minHeight: 0 }}>
-        <Grid<BoardButton>
-          ref={gridViewportRef}
-          ariaLabel={board.name || t(m.boardGridLabel)}
-          items={board.buttons}
-          rows={board.grid.rows}
-          columns={board.grid.columns}
-          order={board.grid.order}
-          renderItem={renderTile}
-        />
-      </Box>
-
-      {isSmallScreen && (
-        <Toolbar
-          sx={{
-            alignItems: "flex-end",
-            justifyContent: "space-between",
-            gap: 2,
-            pb: safeAreaInset("bottom"),
-          }}
-        >
-          {navigationButtons}
-          {backspaceButton}
-        </Toolbar>
-      )}
-    </Stack>
+    </ScanningScope>
   );
 }

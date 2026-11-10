@@ -1,6 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { useEffect, useRef } from "react";
 import { AACSymbol } from "../aac-symbol/aac-symbol";
+import { scanGroupProps } from "../scanning/scan-targets";
 import type { MessagePart } from "./message-types";
 import { PlayButton } from "./play-button";
 
@@ -47,7 +48,11 @@ export function MessageBar({
   }, [activePartId, parts]);
 
   return (
-    <Stack direction="row" sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}>
+    <Stack
+      {...scanGroupProps}
+      direction="row"
+      sx={{ p: { xs: 2, sm: 3 }, userSelect: "text" }}
+    >
       <Stack
         direction="row"
         sx={[

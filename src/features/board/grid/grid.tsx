@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import type { ReactNode, Ref } from "react";
+import { scanGroupProps } from "../scanning/scan-targets";
 import {
   createGridContentSx,
   createGridViewportSx,
@@ -80,7 +81,7 @@ function GridRow<TItem extends { id: string }>({
   renderItem,
 }: GridRowProps<TItem>) {
   return (
-    <Stack role="row" direction="row" sx={gridRowSx}>
+    <Stack {...scanGroupProps} role="row" direction="row" sx={gridRowSx}>
       {items.map((item, columnIndex) => (
         <GridCell
           key={columnIndex}

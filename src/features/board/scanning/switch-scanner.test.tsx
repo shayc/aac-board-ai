@@ -1,0 +1,338 @@
+import { expectNoA11yViolations } from "@shared/testing/axe";
+import { stubSpeech } from "@shared/testing/stub-speech";
+import type { OBFBoard } from "@shayc/open-board-format";
+import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
+import { renderCommunicationBoard } from "../testing/render-communication-board";
+import {
+  setScanIntervalMs,
+  setScanMethod,
+  setScanningEnabled,
+} from "./scanning-preferences-store";
+
+const SCAN_INTERVAL_MS = 1000;
+
+const TWO_ROW_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "two-row-board",
+  locale: "en",
+  buttons: [
+    { id: "yes", label: "yes" },
+    { id: "no", label: "no" },
+    { id: "more", label: "more" },
+    { id: "stop", label: "stop" },
+  ],
+  grid: {
+    rows: 2,
+    columns: 2,
+    order: [
+      ["yes", "no"],
+      ["more", "stop"],
+    ],
+  },
+};
+
+function highlightedNames(): string[] {
+  return Array.from(
+    document.querySelectorAll("[data-scan-highlighted]"),
+    (target) => target.getAttribute("aria-label") ?? target.textContent,
+  );
+}
+
+async function pressSwitch(key: "Space" | "Enter" = "Space") {
+  await userEvent.keyboard(`{${key}}`);
+}
+
+// One interval at a time: the next interval starts only once React has
+// committed the move, so assert each move before advancing again.
+async function waitScanInterval() {
+  await vi.advanceTimersByTimeAsync(SCAN_INTERVAL_MS);
+}
+
+describe("switch scanning", () => {
+  let speech: ReturnType<typeof stubSpeech>;
+
+  beforeEach(() => {
+    speech = stubSpeech();
+    setScanIntervalMs(SCAN_INTERVAL_MS);
+  });
+
+  test("leaves the board alone while scanning is off", async () => {
+    const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+    const no = screen.getByRole("button", { name: "no" });
+
+    no.element().focus();
+    await pressSwitch();
+
+    await vi.waitFor(() => {
+      expect(speech.spokenTexts()).toEqual(["no"]);
+    });
+    expect(highlightedNames()).toEqual([]);
+  });
+
+  describe("automatic scan", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      setScanningEnabled(true);
+    });
+
+    afterEach(() => {
+      vi.clearAllTimers();
+      vi.useRealTimers();
+    });
+
+    test("waits for a switch press, then highlights the first row", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await vi.advanceTimersByTimeAsync(3 * SCAN_INTERVAL_MS);
+      expect(highlightedNames()).toEqual([]);
+
+      await pressSwitch();
+
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+    });
+
+    test("outlines the highlighted tiles", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      const yes = screen.getByRole("button", { name: "yes" }).element();
+      const more = screen.getByRole("button", { name: "more" }).element();
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      expect(getComputedStyle(yes).outlineStyle).toBe("solid");
+      expect(getComputedStyle(more).outlineStyle).not.toBe("solid");
+    });
+
+    test("moves to the next row after each scan interval", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+    });
+
+    test("pauses after two passes without a selection, until the next press", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual([]);
+
+      await pressSwitch("Enter");
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+    });
+
+    test("scans the tiles of the selected row and speaks the selected tile", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["more"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["stop"]);
+
+      await pressSwitch();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["stop"]);
+      });
+    });
+
+    test("returns to the rows after two passes over a row's tiles", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+    });
+
+    test("restarts at the play button once the message has content", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["yes"]);
+      });
+
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+    });
+
+    test("activates a highlighted control that is the only one in its group", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+
+      await pressSwitch();
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["yes", "yes"]);
+      });
+    });
+
+    test("reaches the board controls in document order", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await pressSwitch();
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["Play message"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["Backspace"]);
+
+      await pressSwitch();
+
+      // Backspace removes the last character of a text-only message part.
+      await expect
+        .element(screen.getByText("ye", { exact: true }))
+        .toBeVisible();
+    });
+
+    test("counts a held switch as one press", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      document.body.dispatchEvent(
+        new KeyboardEvent("keydown", { key: " ", repeat: true, bubbles: true }),
+      );
+
+      await waitScanInterval();
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+    });
+
+    test("keeps the switch from activating the focused tile", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+      const no = screen.getByRole("button", { name: "no" });
+
+      no.element().focus();
+      await pressSwitch();
+      await pressSwitch("Enter");
+
+      await expect.poll(highlightedNames).toEqual(["yes"]);
+      expect(speech.spokenTexts()).toEqual([]);
+    });
+
+    test("leaves switch keys to controls outside the board", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+      const onClick = vi.fn();
+      const outsideButton = document.createElement("button");
+      outsideButton.addEventListener("click", onClick);
+      document.body.append(outsideButton);
+
+      try {
+        outsideButton.focus();
+        await pressSwitch();
+
+        expect(onClick).toHaveBeenCalledTimes(1);
+        expect(highlightedNames()).toEqual([]);
+      } finally {
+        outsideButton.remove();
+      }
+    });
+
+    test("removes the highlight when scanning is turned off", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      setScanningEnabled(false);
+
+      await expect.poll(highlightedNames).toEqual([]);
+    });
+  });
+
+  describe("two-switch step scan", () => {
+    beforeEach(() => {
+      setScanningEnabled(true);
+      setScanMethod("step");
+    });
+
+    test("moves with Space and selects with Enter", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["more", "stop"]);
+
+      await pressSwitch("Enter");
+      await expect.poll(highlightedNames).toEqual(["more"]);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["stop"]);
+
+      await pressSwitch("Enter");
+
+      await vi.waitFor(() => {
+        expect(speech.spokenTexts()).toEqual(["stop"]);
+      });
+    });
+
+    test("keeps cycling through the rows without pausing", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      for (let press = 0; press < 5; press++) {
+        await pressSwitch("Space");
+      }
+
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+    });
+
+    test("has no accessibility violations while a row is highlighted", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch();
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await expectNoA11yViolations(screen.container);
+    });
+  });
+});
