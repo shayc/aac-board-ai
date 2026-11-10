@@ -201,15 +201,9 @@ by touch for caregivers; scanning pauses while a dialog, drawer, or menu is
 open.
 
 While scanning is on, unmodified Space and Enter are switches everywhere in
-the app, with three exceptions where they keep their usual meaning: text
-fields, open overlays, and a control outside the board that the user reached
-with Tab. A switch never sends Tab, so Tab-moved focus means someone is using
-the keyboard as a keyboard; without this, a keyboard-only user could not open
-the settings to turn scanning off. Focus that lands outside the board any
-other way, such as a closing drawer returning focus to the button that opened
-it, still scans, so a switch user cannot reopen settings by accident. Tab,
-arrow keys, and the modified shortcuts (Cmd/Ctrl+Enter, Cmd/Ctrl+Backspace)
-keep working. Tiles are scanned even when tabbed to.
+the app except in text fields and open overlays, so they no longer activate a
+keyboard-focused button. Tab, arrow keys, and the modified shortcuts
+(Cmd/Ctrl+Enter, Cmd/Ctrl+Backspace) keep working.
 
 ### Default values
 
@@ -293,7 +287,6 @@ src/features/board/scanning/
   scanning-preferences-store.ts # createPersistedStore + parse
   scanning-settings.tsx         # settings controls, exported from index.ts
   switch-scanner.ts             # timer, key handling, highlight, selection
-  tab-focus.ts                  # whether focus was last moved with Tab
   use-switch-scanning.ts        # runs the scanner while the preference is on
 ```
 
@@ -351,12 +344,10 @@ composed by the app's settings drawer, like `TileSettings`.
    It is suspended while an overlay is open, detected as the board root having
    an `aria-hidden="true"` ancestor: MUI's modal manager hides the app root
    that way for every `Drawer`, `Dialog`, `Menu`, and `Select` popup.
-   `aria-modal` would miss menus and select popups, which don't set it. It
-   also leaves the keys to a control outside the board that was reached with
-   Tab (`tab-focus.ts`). Repeated presses are timed per switch, so the delay
-   filters a second press of the same switch without dropping a Select that
-   quickly follows Next. When scanning is off no scanner exists and nothing is
-   registered.
+   `aria-modal` would miss menus and select popups, which don't set it.
+   Repeated presses are timed per switch, so the delay filters a second press
+   of the same switch without dropping a Select that quickly follows Next.
+   When scanning is off no scanner exists and nothing is registered.
 
 6. **Targets are read fresh on every step, and the scan follows the
    highlighted element.** The scanner re-queries groups and targets before

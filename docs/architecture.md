@@ -224,12 +224,9 @@ is on:
 - A highlight moves over the board's scan groups (Play, the navigation
   buttons, Backspace, and each board row) in DOM order. It is not keyboard
   focus and does not move it.
-- Unmodified Space and Enter are the switches everywhere except in text
-  fields, while a dialog, drawer, or menu is open, and on a control outside
-  the board that was reached with Tab. That last exception keeps the settings
-  reachable by keyboard; focus that arrives there any other way still scans.
-  Selecting clicks the highlighted button, so scanning adds no activation
-  path of its own.
+- Unmodified Space and Enter are the switches everywhere except in text fields
+  and while a dialog, drawer, or menu is open. Selecting clicks the
+  highlighted button, so scanning adds no activation path of its own.
 - Auto scan pauses after the set number of scans; the next press resumes it.
 
 See [switch-scanning.md](switch-scanning.md) for the research, vocabulary,

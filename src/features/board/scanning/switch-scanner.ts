@@ -13,7 +13,6 @@ import {
   relocateScanState,
 } from "./scan-targets";
 import type { ScanningPreferences } from "./scanning-preferences-store";
-import { trackTabFocus } from "./tab-focus";
 
 export const SCAN_HIGHLIGHT_ATTRIBUTE = "data-scan-highlight";
 
@@ -39,7 +38,6 @@ export function startSwitchScanner(
   let highlighted: HTMLElement | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const lastPressTimes = new Map<string, number>();
-  const tabFocus = trackTabFocus();
 
   function readGroups() {
     return findScanGroups(root, preferences.pattern);
@@ -104,7 +102,7 @@ export function startSwitchScanner(
   }
 
   function handleKeyDown(event: KeyboardEvent) {
-    if (!isSwitchPress(event)) {
+    if (!isSwitchPress(event, root)) {
       return;
     }
 
@@ -119,30 +117,9 @@ export function startSwitchScanner(
 
   function handleKeyUp(event: KeyboardEvent) {
     // Buttons activate on Space at keyup, so the release is claimed as well.
-    if (isSwitchPress(event)) {
+    if (isSwitchPress(event, root)) {
       claim(event);
     }
-  }
-
-  function isSwitchPress(event: KeyboardEvent): boolean {
-    if (!SWITCH_KEYS.includes(event.key) || hasModifier(event)) {
-      return false;
-    }
-
-    return (
-      !isEditable(event.target) &&
-      !isBehindOverlay(root) &&
-      !isKeyboardUse(event.target)
-    );
-  }
-
-  // Someone who tabbed to a control outside the board is using the keyboard
-  // as a keyboard, and must be able to press that control: it is the only
-  // keyboard way to the settings that turn scanning off.
-  function isKeyboardUse(target: EventTarget | null): boolean {
-    const isOutsideBoard = target instanceof Node && !root.contains(target);
-
-    return isOutsideBoard && tabFocus.isTabFocused(target);
   }
 
   // Timed per switch: the delay filters an accidental second press of the
@@ -172,10 +149,17 @@ export function startSwitchScanner(
     stop() {
       document.removeEventListener("keydown", handleKeyDown, { capture: true });
       document.removeEventListener("keyup", handleKeyUp, { capture: true });
-      tabFocus.stop();
       show(PAUSED_SCAN);
     },
   };
+}
+
+function isSwitchPress(event: KeyboardEvent, root: HTMLElement): boolean {
+  if (!SWITCH_KEYS.includes(event.key) || hasModifier(event)) {
+    return false;
+  }
+
+  return !isEditable(event.target) && !isBehindOverlay(root);
 }
 
 function hasModifier(event: KeyboardEvent): boolean {

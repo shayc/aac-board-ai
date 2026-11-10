@@ -207,26 +207,11 @@ describe("switch scanning", () => {
       await expect.element(tile("hello")).toHaveAttribute(HIGHLIGHT);
     });
 
-    test("leaves the keys to a control outside the board that was reached with Tab", async () => {
-      const outside = addOutsideButton();
-      const { screen } = await renderBoard();
-
-      const before = addOutsideButton();
-
-      before.element.focus();
-      await userEvent.tab();
-      expect(document.activeElement).toBe(outside.element);
-      await userEvent.keyboard("{Enter}{Space}");
-
-      expect(outside.onClick).toHaveBeenCalledTimes(2);
-      expect(findHighlighted(screen.container)).toBeNull();
-    });
-
-    test("scans when focus reached a control outside the board without Tab", async () => {
+    test("scans when focus rests on a control outside the board", async () => {
       const outside = addOutsideButton();
       const { row } = await renderBoard();
 
-      // As when a closing drawer returns focus to the button that opened it.
+      // A closing drawer returns focus to the button that opened it.
       outside.element.focus();
       await userEvent.keyboard("{Enter}");
 
