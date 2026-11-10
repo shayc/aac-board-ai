@@ -23,6 +23,7 @@ import type {
   JourneyResult,
   RunResults,
 } from "./results.ts";
+import { parseRoundCount } from "./settings.ts";
 
 /** Where a build's code comes from: a label for the report and a commit. */
 interface BuildSource {
@@ -33,7 +34,7 @@ interface BuildSource {
 const { values: flags } = parseArgs({
   options: {
     base: { type: "string", default: "main" },
-    rounds: { type: "string", default: "10" },
+    rounds: { type: "string" },
   },
 });
 
@@ -54,11 +55,12 @@ try {
   process.exitCode = 1;
 }
 
-async function compare(baseRef: string, rounds: string): Promise<void> {
-  // An even number of rounds lets each build go first equally often.
-  if (!/^[1-9]\d*$/.test(rounds) || Number(rounds) % 2 !== 0) {
-    throw new Error(`--rounds takes an even number above 0, not ${rounds}.`);
-  }
+async function compare(
+  baseRef: string,
+  rounds: string | undefined,
+): Promise<void> {
+  // Checked before the builds, which take minutes.
+  const roundCount = parseRoundCount(rounds);
 
   // Read before building, so the report names what was built even if the
   // repository moves on during the run.
@@ -74,7 +76,7 @@ async function compare(baseRef: string, rounds: string): Promise<void> {
     "npx",
     ["playwright", "test", "--config", "perf/playwright.config.ts"],
     ROOT_DIR,
-    { PERF_ROUNDS: rounds },
+    { PERF_ROUNDS: String(roundCount) },
   );
 
   const results = await collectResults(builds);

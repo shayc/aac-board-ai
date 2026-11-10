@@ -8,13 +8,9 @@ import {
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { installPagePerf } from "./page-perf.ts";
-import {
-  ACTION_TIMEOUT_MS,
-  BASE_BUILD_URL,
-  ROUND_COUNT,
-} from "./playwright.config.ts";
 import { RAW_RESULTS_DIR } from "./paths.ts";
 import type { BuildName, JourneyResult, TimingSamples } from "./results.ts";
+import { ACTION_TIMEOUT_MS, BASE_BUILD_URL, ROUND_COUNT } from "./settings.ts";
 import { median } from "./stats.ts";
 
 const CPU_SLOWDOWN = 4;
