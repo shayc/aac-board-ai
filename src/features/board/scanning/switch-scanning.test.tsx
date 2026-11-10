@@ -56,6 +56,19 @@ async function renderBoard() {
   };
 }
 
+/** Stands in for an app header control, which lives outside the board. */
+function addOutsideButton() {
+  const element = document.createElement("button");
+  const onClick = vi.fn();
+
+  element.textContent = "Outside";
+  element.addEventListener("click", onClick);
+  document.body.prepend(element);
+  onTestFinished(() => element.remove());
+
+  return { element, onClick };
+}
+
 function findHighlighted(container: Element) {
   return container.querySelector(`[${HIGHLIGHT}]`);
 }
@@ -183,6 +196,42 @@ describe("switch scanning", () => {
       await userEvent.keyboard("{Space}{Space}");
 
       await expect.element(row(0)).toHaveAttribute(HIGHLIGHT);
+    });
+
+    test("times repeated presses per switch, so Select can follow Next at once", async () => {
+      setRepeatPressDelay(2);
+      const { tile } = await renderBoard();
+
+      await userEvent.keyboard("{Space}{Enter}");
+
+      await expect.element(tile("hello")).toHaveAttribute(HIGHLIGHT);
+    });
+
+    test("leaves the keys to a control outside the board that was reached with Tab", async () => {
+      const outside = addOutsideButton();
+      const { screen } = await renderBoard();
+
+      const before = addOutsideButton();
+
+      before.element.focus();
+      await userEvent.tab();
+      expect(document.activeElement).toBe(outside.element);
+      await userEvent.keyboard("{Enter}{Space}");
+
+      expect(outside.onClick).toHaveBeenCalledTimes(2);
+      expect(findHighlighted(screen.container)).toBeNull();
+    });
+
+    test("scans when focus reached a control outside the board without Tab", async () => {
+      const outside = addOutsideButton();
+      const { row } = await renderBoard();
+
+      // As when a closing drawer returns focus to the button that opened it.
+      outside.element.focus();
+      await userEvent.keyboard("{Enter}");
+
+      await expect.element(row(0)).toHaveAttribute(HIGHLIGHT);
+      expect(outside.onClick).not.toHaveBeenCalled();
     });
 
     test("leaves the keys alone while an overlay hides the board", async () => {
