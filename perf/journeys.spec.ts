@@ -7,12 +7,25 @@ import {
 } from "./harness.ts";
 import { LARGE_ROOT_BOARD, writeLargeBoardSet } from "./large-board-set.ts";
 
-const STARTER_BOARD = "Quick Core 24";
-const LINKED_BOARD = "Core 24 - eat";
+const STARTER_BOARD = "First Words";
+const CORE_BOARD = "Quick Core 60";
+const LINKED_BOARD = "Core 60 - eat";
 const NAVIGATION_LOOP_COUNT = 10;
 
-function gridSelector(boardName: string): string {
+// The message bar has no role or name of its own; its parts sit in the element
+// just before the play button.
+const MESSAGE_PARTS = ':has(+ [aria-label="Play message"]) > *';
+
+// A grid behind an open dialog or drawer is rendered but hidden from assistive
+// technology, so it does not count as usable yet.
+const BEHIND_MODAL = '[aria-hidden="true"] *, [inert] *';
+
+function renderedGridSelector(boardName: string): string {
   return `[role="grid"][aria-label="${boardName}"]`;
+}
+
+function gridSelector(boardName: string): string {
+  return `${renderedGridSelector(boardName)}:not(${BEHIND_MODAL})`;
 }
 
 function tile(page: Page, label: string): Locator {
@@ -20,12 +33,6 @@ function tile(page: Page, label: string): Locator {
     name: label,
     exact: true,
   });
-}
-
-function messageParts(page: Page): Locator {
-  return page
-    .getByRole("button", { name: "Play message" })
-    .locator("xpath=preceding-sibling::*[1]/*");
 }
 
 async function waitForServiceWorkerControl(page: Page): Promise<void> {
@@ -46,6 +53,17 @@ async function openStarterBoard(page: Page): Promise<void> {
   await waitForServiceWorkerControl(page);
 }
 
+// The starter board has 12 tiles and no symbols, so tile journeys run on the
+// largest bundled board set instead.
+async function openCoreBoard(page: Page): Promise<void> {
+  await openStarterBoard(page);
+  await page.getByRole("button", { name: "Open library" }).click();
+  await page.getByRole("button", { name: `Download ${CORE_BOARD}` }).click();
+  await page.getByRole("link", { name: CORE_BOARD }).click({ timeout: 60_000 });
+  await page.getByRole("button", { name: "Close library" }).click();
+  await expect(page.getByRole("grid", { name: CORE_BOARD })).toBeVisible();
+}
+
 async function tapToGrid(
   sample: JourneySample,
   probe: PageProbe,
@@ -53,7 +71,7 @@ async function tapToGrid(
   boardName: string,
   metric: TimingMetric,
 ): Promise<void> {
-  const tap = await probe.tap(target, { until: gridSelector(boardName) });
+  const tap = await probe.tap(target, gridSelector(boardName));
   await expect(probe.page.getByRole("grid", { name: boardName })).toBeVisible();
 
   await sample.recordInterval({
@@ -80,7 +98,7 @@ async function goBack(
   phase: string,
 ): Promise<void> {
   const back = probe.page.getByRole("button", { name: "Go back" });
-  await tapToGrid(sample, probe, back, STARTER_BOARD, {
+  await tapToGrid(sample, probe, back, CORE_BOARD, {
     name: `${phase}.backToGrid`,
     description: "Back tap → previous board grid rendered.",
   });
@@ -90,7 +108,6 @@ test("startup", async ({ browser }) => {
   await measureJourney(browser, "startup", async (sample) => {
     const firstLaunch = await sample.openPage({
       onboarding: '[role="dialog"]',
-      grid: gridSelector(STARTER_BOARD),
     });
     const { page } = firstLaunch;
 
@@ -98,6 +115,7 @@ test("startup", async ({ browser }) => {
       await page.goto("/");
       const continueTap = await firstLaunch.tap(
         page.getByRole("button", { name: "Continue" }),
+        gridSelector(STARTER_BOARD),
       );
       await expect(
         page.getByRole("grid", { name: STARTER_BOARD }),
@@ -114,7 +132,7 @@ test("startup", async ({ browser }) => {
         description:
           "Continue tap → starter board grid rendered and exposed to assistive technology.",
         start: continueTap.start,
-        end: await firstLaunch.visibleAt("grid"),
+        end: continueTap.visibleAt,
       });
       await sample.recordPaints(firstLaunch, "firstLaunch");
     });
@@ -148,22 +166,25 @@ test("tileInteraction", async ({ browser }) => {
   await measureJourney(browser, "tileInteraction", async (sample) => {
     const probe = await sample.openPage();
     const { page } = probe;
-    await openStarterBoard(page);
+    await openCoreBoard(page);
 
     await sample.measure(probe, "taps", async () => {
       const message: string[] = [];
 
       async function tapWord(word: string): Promise<void> {
-        await sample.recordTap(
-          {
-            name: "taps.wordTap",
-            description:
-              "Event Timing duration of a word tile tap: input delay + processing + next paint, in 8 ms steps, never below 16 ms.",
-          },
-          await probe.tap(tile(page, word)),
-        );
         message.push(word);
-        await expect(messageParts(page)).toHaveText(message);
+        const tap = await probe.tap(
+          tile(page, word),
+          `${MESSAGE_PARTS}:nth-child(${message.length})`,
+        );
+        await expect(page.locator(MESSAGE_PARTS)).toHaveText(message);
+
+        await sample.recordInterval({
+          name: "taps.wordTap",
+          description: "Tap on a word tile → the word rendered in the message.",
+          start: tap.start,
+          end: tap.visibleAt,
+        });
       }
 
       await tapWord("I");
@@ -219,9 +240,16 @@ test("largeImport", async ({ browser }) => {
         end: await probe.visibleAt("listed"),
       });
 
-      await tapToGrid(sample, probe, importedSet, LARGE_ROOT_BOARD.name, {
+      // The library stays open, so the grid renders behind it.
+      const renderedGrid = renderedGridSelector(LARGE_ROOT_BOARD.name);
+      const openTap = await probe.tap(importedSet, renderedGrid);
+      await expect(page.locator(renderedGrid)).toBeVisible();
+      await sample.recordInterval({
         name: "import.openImportedToGrid",
-        description: "Tap on the imported board set → its grid rendered.",
+        description:
+          "Tap on the imported board set → its grid rendered behind the library.",
+        start: openTap.start,
+        end: openTap.visibleAt,
       });
     });
   });

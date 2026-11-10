@@ -1,13 +1,13 @@
 # Performance lab
 
-A local harness that runs real user journeys against the production build and
-writes a report that compares them with a saved baseline. It runs on your
-machine only: no telemetry, uploads, accounts or hosted dashboards.
+A local harness that runs real user journeys against two production builds,
+the working tree and a git ref, and writes a report of how they differ. It runs
+on your machine only: no telemetry, uploads, accounts or hosted dashboards.
 
 - [Run it](#run-it)
 - [Journeys](#journeys)
 - [Read the report](#read-the-report)
-- [How runs are compared](#how-runs-are-compared)
+- [How builds are compared](#how-builds-are-compared)
 - [Find out why](#find-out-why)
 - [Method](#method)
 - [Limits](#limits)
@@ -18,62 +18,51 @@ machine only: no telemetry, uploads, accounts or hosted dashboards.
 npm run perf
 ```
 
-Builds the app, runs every journey, writes `perf-results/results.json` and
-`perf-results/report.html`, compares with the baseline if there is one, prints a
-summary and opens the report. A full run takes about 3 minutes; keep the
-machine otherwise idle while it runs.
+Builds the working tree and `main`, runs every journey on both, writes
+`perf-results/results.json` and `perf-results/report.html`, prints a summary
+and opens the report. Keep the machine otherwise idle while it runs.
 
 ```bash
-npm run perf -- --save-baseline
+npm run perf -- --base HEAD~3
 ```
 
-Does the same, then saves the run as the baseline that later runs compare
-against.
+Compares with another commit, branch or tag instead of `main`.
+
+The base ref is checked out into a temporary git worktree, gets its own
+`npm ci`, and is built there. That takes a few minutes the first time; the
+build is kept in `perf-results/base/` and reused until the ref points at
+another commit.
 
 ```bash
 npm run perf -- --profile tileInteraction
 ```
 
-Runs one journey once, without timing samples, and writes a Chrome trace plus
-heap snapshots before and after each measured phase to
-`perf-results/profiles/<journey>/`. It prints the functions that took the most
-main-thread time in each phase, by source file and line, and the report lists
-them next to links to the files. Journeys: `startup`, `tileInteraction`,
+Runs one journey once on the working tree's build, without timing samples, and
+writes a Chrome trace plus heap snapshots before and after each measured phase
+to `perf-results/profiles/<journey>/`. It prints the functions that took the
+most main-thread time in each phase, by source file and line, and the report
+lists them next to links to the files. Journeys: `startup`, `tileInteraction`,
 `largeImport`.
 
 ```bash
 npm run perf -- --samples 3
 ```
 
-Takes 3 samples per journey instead of 10, for a quick check that the journeys
-still run. The report warns that the sample count differs from the baseline,
-and the run never updates the noise floor.
+Takes 3 samples per build instead of 10, for a quick check that the journeys
+still run. That is too few to flag a change, and the report says so.
 
-A typical loop:
-
-1. On `main`, run `npm run perf -- --save-baseline`.
-2. Run `npm run perf` again, twice, without changing anything. Because the
-   build is identical, the harness records each run's difference from the
-   baseline in the noise floor (`perf-results/noise-floor.json`), keeping the
-   largest difference per metric.
-3. Make your change and run `npm run perf`.
-4. If something regressed, run `npm run perf -- --profile <journey>` and open
-   the trace.
-
-Everything under `perf-results/` is generated and gitignored, including the
-baseline.
+Everything under `perf-results/` is generated and gitignored.
 
 ## Journeys
 
-Every journey uses the bundled Quick Core 24 board set (except large import)
-and asserts what the user would see, so a broken journey fails the run instead
-of reporting fast numbers.
+Every journey asserts what the user would see, so a broken journey fails the
+run instead of reporting fast numbers.
 
 | Journey           | Phase            | What happens                                                                                                                                                                                           |
 | ----------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `startup`         | `firstLaunch`    | Empty storage → onboarding → tap Continue → Quick Core 24 grid.                                                                                                                                        |
+| `startup`         | `firstLaunch`    | Empty storage → onboarding → tap Continue → First Words grid.                                                                                                                                          |
 |                   | `returnVisit`    | Same context once the service worker controls the page and IndexedDB holds the board set: open `/` in a new page → grid.                                                                               |
-| `tileInteraction` | `taps`           | Tap I, want, to (checking the message bar after each), open the linked “eat” board, tap drink, go back.                                                                                                |
+| `tileInteraction` | `taps`           | On Quick Core 60, downloaded from the library beforehand: tap I, want, to (checking the message bar after each), open the linked “eat” board, tap drink, go back.                                      |
 |                   | `navigationLoop` | Open “eat” and go back 10 times; JS heap, DOM nodes and listeners are read after forced garbage collection before and after the loop.                                                                  |
 | `largeImport`     | `import`         | Import a generated board set (80 boards, 6,400 tiles, 400 small PNGs) through the file chooser, wait for it in the library, open it → its grid. The OBZ is rebuilt on every run with the same content. |
 
@@ -81,44 +70,50 @@ The journeys live in [perf/journeys.spec.ts](../perf/journeys.spec.ts). The
 harness that measures them is [perf/harness.ts](../perf/harness.ts); the part
 that runs inside the page is [perf/page-perf.ts](../perf/page-perf.ts).
 
+The same journeys drive both builds, so they have to work on both. If a change
+renames a button a journey taps, the run fails on the base build; compare
+against a ref that already has the new name.
+
 ## Read the report
 
-The header warns when a setting differs from the baseline, since a change may
-then not be the code. The status also lists metrics the baseline has but this
-run did not measure: save a new baseline if one was renamed or removed on
-purpose. The memory warning appears only when a metric grew in significantly
-more samples than it shrank. Rows whose samples are all zero in both runs are
-hidden.
+The header names both builds. Timings come first in each journey and are the
+only metrics with a verdict; CPU, long-frame, network and memory rows help
+explain a timing that moved. The memory warning appears only when a metric
+grew in significantly more samples than it shrank in the current build. Rows
+whose samples are all zero in both builds are hidden.
 
-In each row's sample strip, the baseline is on top and this run below. Each
-sample comes from a fresh browser context; a metric measured several times in
-one sample, such as word taps, contributes that sample's median.
+In each row's sample strip, the base build is on top and the current build
+below. Each sample comes from a fresh browser context; a metric measured
+several times in one sample, such as word taps, contributes that sample's
+median.
 
-## How runs are compared
+The difference column is the typical per-round difference (the Hodges–Lehmann
+estimate) with its 95% confidence interval underneath. It is not the difference
+between the two medians, although the two are usually close.
 
-For each metric, the harness compares the baseline samples with this run's
-samples using a two-sided Mann–Whitney U test (normal approximation with tie
-and continuity corrections; it matches SciPy's asymptotic method). A change is
-flagged as a regression or improvement only when all of these hold:
+## How builds are compared
 
-- p < 0.05;
-- the median changed by more than that metric's noise floor, measured by
-  running the same build twice, or by 10% before the noise floor exists, and
-  by at least 5% either way, because runs of one build drifted by up to 6%
-  with p < 0.001 on a laptop;
-- the median changed by at least 8 ms, one request or count, or 1 kB, so
-  Event Timing rounding alone never counts.
+A run is a series of rounds. Each round runs a journey once on each build, back
+to back, and the builds take turns going first. Whatever the machine is doing
+during a round (other load, heat, power state) slows both samples alike, so the
+difference within a round is the builds' difference. Nothing is compared across
+time: there is no saved baseline, and a slow afternoon cannot look like a
+regression.
 
-A significant change that fails either size check is labeled “within noise”.
+For each timing, the harness takes the per-round differences and tests them
+with a two-sided exact Wilcoxon signed-rank test. The p-values are then
+adjusted with Holm's method for the number of timings. A timing is flagged as a
+regression or an improvement when its adjusted p is below 0.05; the size of the
+change is for you to judge from the difference and its interval.
 
-"The same build" means the same hash of `dist/`, leaving out source maps, which
-change with comments even when the code does not. Vite fingerprints its output,
-so identical source produces an identical hash. Each same-build run can only
-raise the floor, because a single pair of runs often understates the noise. A
-same-build run whose settings or machine speed differ from the baseline leaves
-the floor alone. Saving a baseline whose browser, CPU slowdown, sample count,
-viewport, OS or CPU differ from the previous baseline clears the floor, so
-measure it again after updating the browser or moving to another machine.
+The correction is what makes a flag trustworthy: when two builds perform
+alike, a run flags anything at all less than 5% of the time. When both builds
+are byte-identical the report says so, which makes `--base HEAD` on a clean
+tree a check of the lab itself.
+
+With 10 samples the smallest possible p is 0.002, enough to flag a change
+among up to 25 timings. With fewer samples, or many more timings, nothing can
+be flagged, and the report warns about it.
 
 ## Find out why
 
@@ -142,27 +137,33 @@ contribute timing samples.
 
 ## Method
 
-- The app is built with Vite's `build()` and `sourcemap: "hidden"`, skipping
-  the typecheck in `npm run build`: the app's chunks are byte-identical to
-  `npm run build`, and the `.map` files sit next to them in
-  `dist/` without being referenced or precached. The harness reads them to
-  name source files; the service worker and Workbox runtime only gain a source
-  map comment. Chrome DevTools does not apply these maps to the traces.
-- The production build is served with `vite preview` on 127.0.0.1:4173,
-  reusing the `webServer` from [playwright.config.ts](../playwright.config.ts).
-  [perf/playwright.config.ts](../perf/playwright.config.ts) extends it, so
-  `npm run test:pwa` never runs the journeys.
+- Both builds come from `vite build --sourcemap hidden`, skipping the
+  typecheck in `npm run build`: the app's chunks are byte-identical to
+  `npm run build`, and the `.map` files sit next to them without being
+  referenced or precached. The harness reads them to name source files; the
+  service worker and Workbox runtime only gain a source map comment. Chrome
+  DevTools does not apply these maps to the traces.
+- Each build is served with `vite preview` on its own 127.0.0.1 port: the
+  working tree's on 4173, reusing the `webServer` from
+  [playwright.config.ts](../playwright.config.ts), and the base ref's on 4174.
+  [perf/playwright.config.ts](../perf/playwright.config.ts) extends that
+  config, so `npm run test:pwa` never runs the journeys.
 - Browser: Playwright's bundled Chromium in new headless mode
   (`channel: "chromium"`), Desktop Chrome device settings (1280×720), en-US.
-- The CPU is slowed 4× with `Emulation.setCPUThrottlingRate`.
+- The CPU is slowed 4× with `Emulation.setCPUThrottlingRate` during the
+  measured phases. Setup between them, such as downloading a board set, runs
+  at full speed.
 - One journey at a time, one worker, a fresh browser context per sample, one
-  discarded warm-up sample, then 10 samples. The report shows medians and
-  spread, never a single sample.
+  discarded warm-up sample per build, then 10 rounds. The report shows medians
+  and spread, never a single sample.
+- A tap is timed from its `pointerdown` to the first rendered frame that shows
+  its result, read with `performance.now()`. Nothing is rounded, and a result
+  that never appears fails the journey instead of recording a number.
 - No sleeps: the harness waits for real conditions (elements, service worker
-  control, and Event Timing and paint entries, which reach the page a few
-  frames after the paint they describe). A watched element that is not
-  visible within 15 seconds fails the journey with its selector, and an
-  interval with no start or end fails it with the metric name.
+  control, and paint entries, which reach the page a few frames after the
+  paint they describe). A watched element that is not visible within 15
+  seconds fails the journey with its selector, and an interval with no start
+  or end fails it with the metric name.
 - LCP is recorded only for phases without a tap, because the browser stops
   reporting it at the first input, so first launch has FCP but no LCP.
 - `speechSynthesis` is stubbed in the page to end on a microtask, mirroring
@@ -170,6 +171,8 @@ contribute timing samples.
   Vitest. Built-in AI is unavailable in this Chromium.
 - Host resolution fails for every host except 127.0.0.1, so any other request
   fails and is counted.
+- The message bar has no role or accessible name, so the journeys find its
+  parts by position: the children of the element before the play button.
 - The app code has no performance marks; everything is observed from outside
   through browser APIs and the Chrome DevTools Protocol.
 
@@ -179,14 +182,18 @@ with Node's built-in test runner.
 ## Limits
 
 - Numbers come from Chromium on the developer's machine with a simulated CPU
-  slowdown. They catch regressions against a baseline; they do not predict
-  speed on a real iPad or Android tablet.
+  slowdown. They show how two builds differ; they do not predict speed on a
+  real iPad or Android tablet.
 - CPU throttling slows the page's main thread. It does not slow the GPU,
   compositor, network or IndexedDB work that happens outside the page's main
   thread, so I/O-heavy flows look faster than on a slow device.
 - Headless rendering differs from a headed browser with a GPU.
-- Baselines are only comparable on the same machine, browser build and
-  settings. The report warns when they differ.
-- Other load on the machine shows up as noise. Close heavy apps before
+- A frame counts as rendered when the main thread has finished its style,
+  layout and paint. Compositing and display happen after that and are not
+  measured.
+- Other load on the machine cancels out between the builds but widens the
+  confidence intervals, so small changes go unflagged. Close heavy apps before
   measuring.
+- A change that renames what a journey taps cannot be compared with a ref
+  from before the rename.
 - Not covered: WebKit/Safari, built-in AI, real speech, remote media, CI.

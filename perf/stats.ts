@@ -4,6 +4,11 @@ export interface Spread {
   p75: number;
 }
 
+export interface Interval {
+  low: number;
+  high: number;
+}
+
 export function median(values: number[]): number {
   return quantile(
     values.toSorted((a, b) => a - b),
@@ -34,60 +39,93 @@ function quantile(sorted: number[], fraction: number): number {
 }
 
 /**
- * Two-sided Mann–Whitney U test using the normal approximation with tie and
- * continuity corrections. Event Timing rounds to 8 ms, so ties are common.
+ * Two-sided exact Wilcoxon signed-rank test of paired differences. Zero
+ * differences are left out and tied sizes share their average rank. The p-value
+ * counts every way of assigning signs to the observed ranks, so it stays exact
+ * with ties and with few samples.
  */
-export function mannWhitneyP(baseline: number[], current: number[]): number {
-  const baselineCount = baseline.length;
-  const currentCount = current.length;
-  if (baselineCount === 0 || currentCount === 0) {
-    return Number.NaN;
-  }
-
-  const { ranks, tieCorrection } = rank([...baseline, ...current]);
-  const baselineRankSum = ranks
-    .slice(0, baselineCount)
-    .reduce((total, value) => total + value, 0);
-  const u = baselineRankSum - (baselineCount * (baselineCount + 1)) / 2;
-
-  const total = baselineCount + currentCount;
-  const variance =
-    ((baselineCount * currentCount) / 12) *
-    (total + 1 - tieCorrection / (total * (total - 1)));
-  if (variance <= 0) {
+export function signedRankP(differences: number[]): number {
+  const changed = differences.filter((difference) => difference !== 0);
+  if (changed.length === 0) {
     return 1;
   }
 
-  const distance = Math.abs(u - (baselineCount * currentCount) / 2) - 0.5;
-  const z = Math.max(distance, 0) / Math.sqrt(variance);
+  // Average ranks can end in .5, so ranks are doubled to index by integers.
+  const doubledRanks = rank(changed.map(Math.abs)).map((value) => value * 2);
+  const doubledTotal = doubledRanks.reduce((total, value) => total + value, 0);
+  const doubledPositiveSum = doubledRanks
+    .filter((_, index) => (changed[index] ?? 0) > 0)
+    .reduce((total, value) => total + value, 0);
 
-  return Math.min(1, 2 * (1 - normalCDF(z)));
+  const distance = Math.abs(2 * doubledPositiveSum - doubledTotal);
+
+  return rankSumDistribution(doubledRanks).reduce(
+    (p, probability, doubledSum) =>
+      Math.abs(2 * doubledSum - doubledTotal) >= distance ? p + probability : p,
+    0,
+  );
 }
 
-function rank(values: number[]): { ranks: number[]; tieCorrection: number } {
-  const order = values
-    .map((value, index) => ({ value, index }))
-    .toSorted((a, b) => a.value - b.value);
-  const ranks = Array.from({ length: values.length }, () => 0);
-  let tieCorrection = 0;
+/**
+ * The Hodges–Lehmann estimate of a typical paired difference: the median of
+ * the averages of every pair of differences.
+ */
+export function typicalDifference(differences: number[]): number {
+  return median(pairAverages(differences));
+}
 
-  for (let start = 0; start < order.length;) {
-    let end = start;
-    while (order[end + 1]?.value === order[start]?.value) {
-      end += 1;
+/**
+ * The confidence interval that goes with the signed-rank test: the differences
+ * the test would not reject. Undefined when there are too few samples for any
+ * interval to reach the confidence level.
+ */
+export function differenceInterval(
+  differences: number[],
+  confidence: number,
+): Interval | undefined {
+  const averages = pairAverages(differences).toSorted((a, b) => a - b);
+  const ranks = differences.map((_, index) => index + 1);
+  const tail = (1 - confidence) / 2;
+
+  let excluded = 0;
+  let cumulative = 0;
+  for (const probability of rankSumDistribution(ranks)) {
+    cumulative += probability;
+    if (cumulative > tail) {
+      break;
     }
-
-    const tieSize = end - start + 1;
-    const averageRank = (start + end) / 2 + 1;
-    for (let position = start; position <= end; position += 1) {
-      ranks[order[position]?.index ?? 0] = averageRank;
-    }
-
-    tieCorrection += tieSize ** 3 - tieSize;
-    start = end + 1;
+    excluded += 1;
   }
 
-  return { ranks, tieCorrection };
+  const low = averages[excluded - 1];
+  const high = averages[averages.length - excluded];
+
+  return low === undefined || high === undefined ? undefined : { low, high };
+}
+
+/**
+ * Holm's correction for testing several metrics at once. Comparing the
+ * adjusted p-values with a significance level keeps the chance of flagging
+ * anything at all, when nothing changed, below that level.
+ */
+export function holmAdjust(pValues: number[]): number[] {
+  const ascending = pValues
+    .map((p, index) => ({ p, index }))
+    .toSorted((a, b) => a.p - b.p);
+  const adjusted = Array.from({ length: pValues.length }, () => 1);
+
+  let largest = 0;
+  ascending.forEach(({ p, index }, position) => {
+    largest = Math.max(largest, Math.min(1, p * (pValues.length - position)));
+    adjusted[index] = largest;
+  });
+
+  return adjusted;
+}
+
+/** The smallest p the signed-rank test can report for this many samples. */
+export function smallestSignedRankP(sampleCount: number): number {
+  return 2 / 2 ** sampleCount;
 }
 
 /**
@@ -115,17 +153,54 @@ function binomial(total: number, chosen: number): number {
   return result;
 }
 
-// Abramowitz & Stegun 7.1.26; accurate to about 1e-7, far below what a
-// 0.05 significance cut needs.
-function normalCDF(z: number): number {
-  const t = 1 / (1 + 0.3275911 * (Math.abs(z) / Math.SQRT2));
-  const polynomial =
-    t *
-    (0.254829592 +
-      t *
-        (-0.284496736 +
-          t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))));
-  const erf = 1 - polynomial * Math.exp(-((z / Math.SQRT2) ** 2));
+function rank(values: number[]): number[] {
+  const order = values
+    .map((value, index) => ({ value, index }))
+    .toSorted((a, b) => a.value - b.value);
+  const ranks = Array.from({ length: values.length }, () => 0);
 
-  return z >= 0 ? (1 + erf) / 2 : (1 - erf) / 2;
+  for (let start = 0; start < order.length;) {
+    let end = start;
+    while (order[end + 1]?.value === order[start]?.value) {
+      end += 1;
+    }
+
+    const averageRank = (start + end) / 2 + 1;
+    for (let position = start; position <= end; position += 1) {
+      ranks[order[position]?.index ?? 0] = averageRank;
+    }
+
+    start = end + 1;
+  }
+
+  return ranks;
+}
+
+/**
+ * The probability of each sum of the positive ranks when every rank is
+ * positive or negative with equal chance, indexed by that sum.
+ */
+function rankSumDistribution(integerRanks: number[]): number[] {
+  let distribution = [1];
+
+  for (const integerRank of integerRanks) {
+    const next = Array.from(
+      { length: distribution.length + integerRank },
+      () => 0,
+    );
+    distribution.forEach((probability, sum) => {
+      next[sum] = (next[sum] ?? 0) + probability / 2;
+      next[sum + integerRank] =
+        (next[sum + integerRank] ?? 0) + probability / 2;
+    });
+    distribution = next;
+  }
+
+  return distribution;
+}
+
+function pairAverages(values: number[]): number[] {
+  return values.flatMap((first, index) =>
+    values.slice(index).map((second) => (first + second) / 2),
+  );
 }

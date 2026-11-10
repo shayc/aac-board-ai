@@ -11,12 +11,14 @@ import {
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { installPagePerf, type LongFrame } from "./page-perf.ts";
-import { ACTION_TIMEOUT_MS } from "./playwright.config.ts";
+import { ACTION_TIMEOUT_MS, BASE_BUILD_URL } from "./playwright.config.ts";
 import {
+  IS_PROFILING,
   PROFILES_DIR,
   RAW_RESULTS_DIR,
   TRACE_SUFFIX,
   writeJSON,
+  type BuildName,
   type JourneyResult,
   type MetricKind,
   type MetricSamples,
@@ -26,20 +28,12 @@ import { median } from "./stats.ts";
 
 const SAMPLE_COUNT = Number(process.env.PERF_SAMPLES ?? 10);
 const CPU_THROTTLE_RATE = 4;
-const IS_PROFILING = process.env.PERF_PROFILE === "1";
-
-// Chromium never reports Event Timing entries shorter than this.
-const EVENT_TIMING_THRESHOLD_MS = 16;
-const MAX_FRAMES_TO_WAIT_FOR_ENTRIES = 120;
+const MAX_FRAMES_TO_WAIT_FOR_PAINT_ENTRIES = 120;
+const TAP_RESULT = "tap-result";
 
 export interface Tap {
   start: number;
-  duration: number;
   visibleAt: number;
-}
-
-interface TapOptions {
-  until?: string;
 }
 
 export interface TimingMetric {
@@ -80,49 +74,26 @@ export class PageProbe {
     this.#cdp = cdp;
   }
 
-  async tap(target: Locator, { until }: TapOptions = {}): Promise<Tap> {
-    if (until) {
-      await this.watch("tap-target", until);
-    }
-
-    const reportedCount = await this.page.evaluate(
-      () => window.__perf.interactionDurations.length,
-    );
+  /**
+   * Clicks `target` and waits for the first rendered frame in which `result`
+   * is visible. The tap starts at its pointerdown, so it covers everything the
+   * page does from the press to that frame.
+   */
+  async tap(target: Locator, result: string): Promise<Tap> {
+    await this.watch(TAP_RESULT, result);
     await target.click();
 
     return this.page.evaluate(
-      async ({
-        reportedCount,
-        hasTarget,
-        maxFrames,
-        threshold,
-        visibilityTimeout,
-      }) => {
-        const perf = window.__perf;
-
-        for (let frame = 0; frame < maxFrames; frame += 1) {
-          if (perf.interactionDurations.length > reportedCount) {
-            break;
-          }
-          await new Promise(requestAnimationFrame);
-        }
-
-        const duration =
-          perf.interactionDurations.at(reportedCount) ?? threshold;
-        const visibleAt = hasTarget
-          ? await perf.visibleAt("tap-target", visibilityTimeout)
-          : Number.NaN;
-
-        return { start: perf.lastPointerDown, duration, visibleAt };
-      },
-      {
-        reportedCount,
-        hasTarget: until !== undefined,
-        maxFrames: MAX_FRAMES_TO_WAIT_FOR_ENTRIES,
-        threshold: EVENT_TIMING_THRESHOLD_MS,
-        visibilityTimeout: ACTION_TIMEOUT_MS,
-      },
+      async ([name, timeout]) => ({
+        start: window.__perf.lastPointerDown,
+        visibleAt: await window.__perf.visibleAt(name, timeout),
+      }),
+      [TAP_RESULT, ACTION_TIMEOUT_MS] as const,
     );
+  }
+
+  async setCPUSlowdown(rate: number): Promise<void> {
+    await this.#cdp.send("Emulation.setCPUThrottlingRate", { rate });
   }
 
   async watch(name: string, selector: string): Promise<void> {
@@ -182,7 +153,7 @@ export class PageProbe {
         fcp: firstPaint(),
         lcp: hasLargestPaint ? perf.largestPaint : undefined,
       };
-    }, MAX_FRAMES_TO_WAIT_FOR_ENTRIES);
+    }, MAX_FRAMES_TO_WAIT_FOR_PAINT_ENTRIES);
   }
 
   async readMemory(): Promise<Memory> {
@@ -190,9 +161,9 @@ export class PageProbe {
     const metrics = await this.#readCDPMetrics();
 
     return {
-      heap: metrics.JSHeapUsedSize,
-      nodes: metrics.Nodes,
-      listeners: metrics.JSEventListeners,
+      heap: metrics.JSHeapUsedSize ?? Number.NaN,
+      nodes: metrics.Nodes ?? Number.NaN,
+      listeners: metrics.JSEventListeners ?? Number.NaN,
     };
   }
 
@@ -297,6 +268,11 @@ interface MetricDefinition {
   description: string;
 }
 
+interface RecordedMetric extends MetricDefinition {
+  kind: MetricKind;
+  values: number[];
+}
+
 const CPU_METRICS = {
   "cpu.task": {
     unit: "ms",
@@ -360,8 +336,7 @@ const MEMORY_METRICS = {
 /** One run of a journey in a fresh browser context, and what it recorded. */
 export class JourneySample {
   readonly journey: string;
-  readonly metrics = new Map<string, MetricSamples>();
-  cpuBenchmarkMs = Number.NaN;
+  readonly metrics = new Map<string, RecordedMetric>();
   readonly #context: BrowserContext;
   readonly #requests: RequestCounter;
   #tracedProbe: PageProbe | undefined;
@@ -374,34 +349,39 @@ export class JourneySample {
 
   async openPage(watches: Record<string, string> = {}): Promise<PageProbe> {
     const page = await this.#context.newPage();
-    await page.addInitScript(installPagePerf, {
-      watches,
-      eventTimingThreshold: EVENT_TIMING_THRESHOLD_MS,
-    });
+    await page.addInitScript(installPagePerf, { watches });
 
     const cdp = await this.#context.newCDPSession(page);
     await cdp.send("Performance.enable");
-    await cdp.send("Emulation.setCPUThrottlingRate", {
-      rate: CPU_THROTTLE_RATE,
-    });
 
     return new PageProbe(page, cdp);
   }
 
   /**
-   * Wraps one measured stretch of a journey. Timing runs record CPU, long
-   * animation frame and network deltas for it; profile runs trace it instead.
+   * Wraps one measured stretch of a journey and slows the CPU for it; the
+   * steps around it run at full speed. Timing runs record CPU, long animation
+   * frame and network deltas for the stretch; profile runs trace it instead.
    */
   async measure(
     probe: PageProbe,
     phase: string,
     steps: () => Promise<void>,
   ): Promise<void> {
-    if (IS_PROFILING) {
-      await this.#trace(probe, phase, steps);
-      return;
+    await probe.setCPUSlowdown(CPU_THROTTLE_RATE);
+    try {
+      await (IS_PROFILING
+        ? this.#trace(probe, phase, steps)
+        : this.#recordUsage(probe, phase, steps));
+    } finally {
+      await probe.setCPUSlowdown(1);
     }
+  }
 
+  async #recordUsage(
+    probe: PageProbe,
+    phase: string,
+    steps: () => Promise<void>,
+  ): Promise<void> {
     const before = await this.#readUsage(probe);
     await steps();
     const after = await this.#readUsage(probe);
@@ -440,14 +420,6 @@ export class JourneySample {
 
     this.#push(name, { kind: "timing", unit: "ms", description }, end - start);
     await this.#tracedProbe?.markInterval(interval);
-  }
-
-  async recordTap(metric: TimingMetric, tap: Tap): Promise<void> {
-    await this.recordInterval({
-      ...metric,
-      start: tap.start,
-      end: tap.start + tap.duration,
-    });
   }
 
   async recordPaints(probe: PageProbe, phase: string): Promise<void> {
@@ -516,7 +488,7 @@ export class JourneySample {
 
   #push(
     name: string,
-    definition: Omit<MetricSamples, "values">,
+    definition: Omit<RecordedMetric, "values">,
     value: number,
   ): void {
     const metric = this.metrics.get(name) ?? { ...definition, values: [] };
@@ -525,10 +497,14 @@ export class JourneySample {
   }
 }
 
+const BUILD_NAMES: BuildName[] = ["base", "current"];
+
 /**
- * Runs one discarded warm-up and then SAMPLE_COUNT samples of a journey, each
- * in a fresh browser context, and writes the per-sample values. A profile run
- * traces a single sample instead.
+ * Measures a journey on both builds in SAMPLE_COUNT rounds. A round runs the
+ * journey once per build, back to back, so whatever the machine is doing at
+ * that moment slows both alike. Each sample gets a fresh browser context, and
+ * one warm-up sample per build is discarded. A profile run traces a single
+ * sample of the working tree's build instead.
  */
 export async function measureJourney(
   browser: Browser,
@@ -541,30 +517,43 @@ export async function measureJourney(
       force: true,
     });
     await mkdir(path.join(PROFILES_DIR, journey), { recursive: true });
-    await runSample(browser, journey, runJourney);
+    await runSample(browser, journey, "current", runJourney);
     return;
   }
 
-  await runSample(browser, journey, runJourney);
+  for (const build of BUILD_NAMES) {
+    await runSample(browser, journey, build, runJourney);
+  }
 
-  const samples: JourneySample[] = [];
-  for (let index = 0; index < SAMPLE_COUNT; index += 1) {
-    samples.push(await runSample(browser, journey, runJourney));
+  const samples: Record<BuildName, JourneySample[]> = { base: [], current: [] };
+  for (let round = 0; round < SAMPLE_COUNT; round += 1) {
+    for (const build of buildOrder(round)) {
+      samples[build].push(await runSample(browser, journey, build, runJourney));
+    }
   }
 
   await writeJourneyResult(browser, journey, samples);
 }
 
+// Whichever build runs second in a round finds caches warmer, so the builds
+// take turns going first.
+function buildOrder(round: number): BuildName[] {
+  return round % 2 === 0 ? BUILD_NAMES : BUILD_NAMES.toReversed();
+}
+
 async function runSample(
   browser: Browser,
   journey: string,
+  build: BuildName,
   runJourney: (sample: JourneySample) => Promise<void>,
 ): Promise<JourneySample> {
-  const context = await browser.newContext();
+  // The working tree's build is served at the configured baseURL.
+  const context = await browser.newContext(
+    build === "base" ? { baseURL: BASE_BUILD_URL } : {},
+  );
 
   try {
     const sample = new JourneySample(journey, context);
-    sample.cpuBenchmarkMs = await benchmarkCPU(context);
     await runJourney(sample);
     return sample;
   } finally {
@@ -572,42 +561,20 @@ async function runSample(
   }
 }
 
-/**
- * Times a fixed amount of throttled JavaScript. Code changes cannot move it,
- * so a different result means the machine itself runs faster or slower than
- * before (load, power or thermal state).
- */
-async function benchmarkCPU(context: BrowserContext): Promise<number> {
-  const page = await context.newPage();
-  const cdp = await context.newCDPSession(page);
-  await cdp.send("Emulation.setCPUThrottlingRate", { rate: CPU_THROTTLE_RATE });
-
-  const duration = await page.evaluate(() => {
-    const start = performance.now();
-    let total = 0;
-    for (let index = 0; index < 2_000_000; index += 1) {
-      total += Math.sqrt(index);
-    }
-
-    return total > 0 ? performance.now() - start : Number.NaN;
-  });
-
-  await page.close();
-  return duration;
-}
-
 async function writeJourneyResult(
   browser: Browser,
   journey: string,
-  samples: JourneySample[],
+  samples: Record<BuildName, JourneySample[]>,
 ): Promise<void> {
   // A metric recorded several times in one sample (one per tap) contributes
   // its median, so every sample weighs the same in the comparison.
   const metrics: Record<string, MetricSamples> = {};
-  for (const sample of samples) {
-    for (const [name, { values, ...definition }] of sample.metrics) {
-      metrics[name] ??= { ...definition, values: [] };
-      metrics[name].values.push(median(values));
+  for (const build of BUILD_NAMES) {
+    for (const sample of samples[build]) {
+      for (const [name, { values, ...definition }] of sample.metrics) {
+        metrics[name] ??= { ...definition, base: [], current: [] };
+        metrics[name][build].push(median(values));
+      }
     }
   }
 
@@ -617,8 +584,7 @@ async function writeJourneyResult(
     settings: {
       browserVersion: browser.version(),
       cpuThrottleRate: CPU_THROTTLE_RATE,
-      cpuBenchmarkMs: median(samples.map((sample) => sample.cpuBenchmarkMs)),
-      sampleCount: samples.length,
+      sampleCount: SAMPLE_COUNT,
       viewport: viewport ? `${viewport.width}×${viewport.height}` : "none",
     },
     metrics,

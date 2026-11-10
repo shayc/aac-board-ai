@@ -1,17 +1,14 @@
 import {
-  DEFAULT_NOISE_FLOOR_PERCENT,
-  MIN_MEANINGFUL_CHANGE,
-  MIN_NOISE_FLOOR_PERCENT,
+  CONFIDENCE_LEVEL,
   SIGNIFICANCE_LEVEL,
   type Comparison,
   type MemoryGrowth,
   type MetricComparison,
-  type MissingMetric,
 } from "./comparison.ts";
 import type {
+  BuildInfo,
   MetricKind,
   MetricUnit,
-  NoiseFloor,
   ProfileListing,
   RunMeta,
   RunResults,
@@ -19,8 +16,6 @@ import type {
 
 export interface ReportInput {
   results: RunResults;
-  baselineMeta: RunMeta | undefined;
-  noiseFloor: NoiseFloor | undefined;
   comparison: Comparison;
   profiles: ProfileListing[];
 }
@@ -35,8 +30,6 @@ const KIND_TITLES: Record<MetricKind, string> = {
 
 export function renderReport({
   results,
-  baselineMeta,
-  noiseFloor,
   comparison,
   profiles,
 }: ReportInput): string {
@@ -54,7 +47,7 @@ export function renderReport({
 <main>
 <h1>Performance report</h1>
 <p class="muted">${escapeHTML(describeRun(meta))}</p>
-${renderStatus(comparison, baselineMeta, noiseFloor)}
+${renderStatus(comparison, meta)}
 ${renderMemoryGrowth(comparison.memory)}
 ${results.journeys
   .map(({ journey }) =>
@@ -68,7 +61,7 @@ ${results.journeys
     ),
   )
   .join("\n")}
-<p class="muted">Chromium with simulated CPU slowdown on this machine. These numbers catch regressions against a baseline; they do not predict speed on a real tablet. See docs/performance.md.</p>
+<p class="muted">Chromium with simulated CPU slowdown on this machine. These numbers compare two builds; they do not predict speed on a real tablet. See docs/performance.md.</p>
 </main>
 </body>
 </html>
@@ -77,60 +70,35 @@ ${results.journeys
 
 function describeRun(meta: RunMeta): string {
   return [
-    `commit ${meta.commit}${meta.isDirty ? " (uncommitted changes)" : ""}`,
-    `build ${meta.buildHash}`,
     meta.date,
     `Chromium ${meta.browserVersion}`,
     `CPU ${meta.cpuThrottleRate}× slowdown`,
-    `CPU benchmark ${meta.cpuBenchmarkMs.toFixed(1)} ms`,
-    `${meta.sampleCount} samples`,
+    `${meta.sampleCount} samples per build`,
     meta.viewport,
     meta.os,
     meta.cpu,
   ].join(" · ");
 }
 
-function renderStatus(
-  comparison: Comparison,
-  baselineMeta: RunMeta | undefined,
-  noiseFloor: NoiseFloor | undefined,
-): string {
-  if (!baselineMeta) {
-    return `<p class="note">No baseline yet. Save this run with <code>npm run perf -- --save-baseline</code>, then compare later runs against it.</p>`;
-  }
-
-  const regressions = comparison.metrics.filter(
-    ({ verdict }) => verdict === "regression",
-  );
-  const improvements = comparison.metrics.filter(
-    ({ verdict }) => verdict === "improvement",
-  );
-  const noiseFloorText = noiseFloor
-    ? `Noise floor: the largest change per metric across ${noiseFloor.comparisonCount} same-build comparisons, latest ${noiseFloor.latestDate}.`
-    : `Noise floor not measured yet, so changes must exceed ${DEFAULT_NOISE_FLOOR_PERCENT}%. Run the same build twice to measure it.`;
-  const settingWarnings = comparison.settingDifferences.map(
-    ({ setting, baseline, current }) =>
-      `<li>${escapeHTML(setting)}: baseline ${escapeHTML(baseline)}, now ${escapeHTML(current)}</li>`,
-  );
-
-  return `<p>Compared with baseline commit ${escapeHTML(baselineMeta.commit)}, build ${escapeHTML(baselineMeta.buildHash)} (${escapeHTML(baselineMeta.date)}): <strong>${regressions.length} regressions, ${improvements.length} improvements.</strong> A change counts when it is significant (Mann–Whitney p &lt; ${SIGNIFICANCE_LEVEL}), larger than the noise floor (and at least ${MIN_NOISE_FLOOR_PERCENT}%), and at least one ${MIN_MEANINGFUL_CHANGE.ms} ms Event Timing step.</p>
-<p class="muted">${escapeHTML(noiseFloorText)}</p>
-${settingWarnings.length > 0 ? `<div class="warning"><strong>Settings differ from the baseline, so changes may not be the code:</strong><ul>${settingWarnings.join("")}</ul></div>` : ""}
-${renderMissingMetrics(comparison.missingMetrics)}
-${regressions.length > 0 ? renderTable(regressions, true) : ""}`;
+function describeBuild({ source, commit, buildHash }: BuildInfo): string {
+  return `${source} (commit ${commit}, build ${buildHash})`;
 }
 
-function renderMissingMetrics(missingMetrics: MissingMetric[]): string {
-  if (missingMetrics.length === 0) {
-    return "";
-  }
-
-  const items = missingMetrics.map(
-    ({ journey, metric }) =>
-      `<li>${escapeHTML(journey)} › ${escapeHTML(metric)}</li>`,
+function renderStatus(comparison: Comparison, { builds }: RunMeta): string {
+  const tested = comparison.metrics.filter(({ test }) => test !== undefined);
+  const regressions = tested.filter(
+    ({ test }) => test?.verdict === "regression",
   );
+  const improvements = tested.filter(
+    ({ test }) => test?.verdict === "improvement",
+  );
+  const percent = (fraction: number) => `${Math.round(fraction * 100)}%`;
 
-  return `<div class="warning"><strong>Measured in the baseline but not in this run:</strong><ul>${items.join("")}</ul>If a metric was renamed or removed on purpose, save a new baseline. Otherwise the journey stopped measuring it.</div>`;
+  return `<p>Base: ${escapeHTML(describeBuild(builds.base))}<br>Current: ${escapeHTML(describeBuild(builds.current))}</p>
+<p><strong>${regressions.length} regressions, ${improvements.length} improvements</strong> in ${tested.length} timings. Each round ran both builds back to back. A timing is flagged when its per-round differences are significant (exact Wilcoxon signed-rank test, Holm-adjusted p &lt; ${SIGNIFICANCE_LEVEL}), so two builds that perform alike get any flag at all in fewer than ${percent(SIGNIFICANCE_LEVEL)} of runs. Differences show the typical per-round difference with its ${percent(CONFIDENCE_LEVEL)} confidence interval.</p>
+${builds.base.buildHash === builds.current.buildHash ? `<p class="note">Both builds are identical, so any flag below is a false positive.</p>` : ""}
+${comparison.canFlagChanges ? "" : `<p class="warning">Too few samples to flag a change in ${tested.length} timings. This run only shows that the journeys work.</p>`}
+${regressions.length > 0 ? renderTable(regressions, true) : ""}`;
 }
 
 function renderMemoryGrowth(memory: MemoryGrowth[]): string {
@@ -144,14 +112,11 @@ function renderMemoryGrowth(memory: MemoryGrowth[]): string {
       `<li>${escapeHTML(journey)} ${escapeHTML(metric)}: median +${formatValue(medianGrowth, unit)}, grew in ${grewCount} of ${sampleCount} samples (sign test p = ${p.toPrecision(2)}).</li>`,
   );
 
-  return `<div class="warning"><strong>Memory grows with repeated use</strong><ul>${items.join("")}</ul>Profile the journey and compare the before and after heap snapshots.</div>`;
+  return `<div class="warning"><strong>Memory grows with repeated use in the current build</strong><ul>${items.join("")}</ul>Profile the journey and compare the before and after heap snapshots.</div>`;
 }
 
-function isAlwaysZero({
-  currentValues,
-  baselineValues = [],
-}: MetricComparison): boolean {
-  return [...currentValues, ...baselineValues].every((value) => value === 0);
+function isAlwaysZero({ samples }: MetricComparison): boolean {
+  return [...samples.base, ...samples.current].every((value) => value === 0);
 }
 
 function renderJourney(
@@ -176,47 +141,40 @@ ${renderProfile(journey, profile, meta)}
 }
 
 function renderTable(rows: MetricComparison[], showJourney: boolean): string {
+  const isTested = rows.some(({ test }) => test !== undefined);
   const body = rows.map((row) => {
     const name = showJourney ? `${row.journey} › ${row.metric}` : row.metric;
+    const { base, current } = row.spreads;
 
-    return `<tr class="${row.verdict.replace(" ", "-")}">
+    return `<tr class="${row.test?.verdict ?? ""}">
 <th scope="row"><span>${escapeHTML(name)}</span><small>${escapeHTML(row.description)}</small></th>
-<td>${row.baseline ? formatValue(row.baseline.median, row.unit) : "—"}</td>
-<td><strong>${formatValue(row.current.median, row.unit)}</strong><small>${formatValue(row.current.p25, row.unit)}–${formatValue(row.current.p75, row.unit)}</small></td>
-<td>${formatChange(row)}</td>
-<td>${row.p === undefined ? "—" : row.p.toPrecision(2)}</td>
+<td>${formatValue(base.median, row.unit)}</td>
+<td><strong>${formatValue(current.median, row.unit)}</strong><small>${formatValue(current.p25, row.unit)}–${formatValue(current.p75, row.unit)}</small></td>
+<td>${renderDifference(row)}</td>
 <td>${renderStrip(row)}</td>
-<td>${row.verdict}${renderNoiseFloor(row)}</td>
+${row.test ? `<td>${row.test.p.toPrecision(2)}</td><td>${row.test.verdict}</td>` : ""}
 </tr>`;
   });
 
   return `<div class="table"><table>
-<thead><tr><th scope="col">Metric</th><th scope="col">Baseline median</th><th scope="col">Median (p25–p75)</th><th scope="col">Change</th><th scope="col">p</th><th scope="col">Samples</th><th scope="col">Verdict</th></tr></thead>
+<thead><tr><th scope="col">Metric</th><th scope="col">Base median</th><th scope="col">Current median (p25–p75)</th><th scope="col">Difference</th><th scope="col">Samples</th>${isTested ? `<th scope="col">Adjusted p</th><th scope="col">Verdict</th>` : ""}</tr></thead>
 <tbody>${body.join("")}</tbody>
 </table></div>`;
 }
 
-function renderNoiseFloor({
-  baseline,
-  noiseFloorPercent,
-  isNoiseFloorMeasured,
-}: MetricComparison): string {
-  if (!baseline) {
-    return "";
-  }
+function renderDifference(row: MetricComparison): string {
+  const { difference, differenceInterval: interval, unit } = row;
+  const range = interval
+    ? `${formatSigned(interval.low, unit)} to ${formatSigned(interval.high, unit)}`
+    : "too few samples for an interval";
 
-  const source = isNoiseFloorMeasured ? "" : ", default";
-
-  return `<small>floor ${noiseFloorPercent.toFixed(1)}%${source}</small>`;
+  return `${formatSigned(difference, unit)} ${formatPercent(row.differencePercent)}<small>${range}</small>`;
 }
 
-// Baseline samples on the top row, this run's on the bottom row, both on one
-// shared scale from the smallest to the largest sample.
-function renderStrip({
-  currentValues,
-  baselineValues = [],
-}: MetricComparison): string {
-  const values = [...baselineValues, ...currentValues];
+// Base samples on the top row, the current build's on the bottom row, both on
+// one shared scale from the smallest to the largest sample.
+function renderStrip({ samples }: MetricComparison): string {
+  const values = [...samples.base, ...samples.current];
   const min = Math.min(...values);
   const max = Math.max(...values);
   const toX = (value: number) =>
@@ -229,7 +187,7 @@ function renderStrip({
       )
       .join("");
 
-  return `<svg class="strip" viewBox="0 0 120 20" width="120" height="20" aria-hidden="true">${dots(baselineValues, 6, "baseline")}${dots(currentValues, 14, "current")}</svg>`;
+  return `<svg class="strip" viewBox="0 0 120 20" width="120" height="20" aria-hidden="true">${dots(samples.base, 6, "base")}${dots(samples.current, 14, "current")}</svg>`;
 }
 
 function renderProfile(
@@ -246,9 +204,9 @@ function renderProfile(
       `<li><a href="profiles/${encodeURIComponent(journey)}/${encodeURIComponent(file)}">${escapeHTML(file)}</a></li>`,
   );
   const staleWarning =
-    profile.buildHash === meta.buildHash
+    profile.buildHash === meta.builds.current.buildHash
       ? ""
-      : `<p class="warning">This profile is from build ${escapeHTML(profile.buildHash)}, not the build measured above.</p>`;
+      : `<p class="warning">This profile is from build ${escapeHTML(profile.buildHash)}, not the current build measured above.</p>`;
 
   return `<h3>Profile</h3>
 <p class="muted">Commit ${escapeHTML(profile.commit)}, ${escapeHTML(profile.date)}. Load a <code>.trace.json</code> in Chrome DevTools → Performance; the harness's measured intervals are in the Timings track. Load both <code>.heapsnapshot</code> files in DevTools → Memory and use the Comparison view.</p>
@@ -301,26 +259,21 @@ function formatBytes(value: number): string {
   return `${Math.round(value)} B`;
 }
 
-function formatChange({
-  change,
-  changePercent,
-  unit,
-}: MetricComparison): string {
-  if (change === undefined || changePercent === undefined) {
-    return "—";
-  }
-
-  const sign = change > 0 ? "+" : "";
-
-  return `${sign}${formatValue(change, unit)}<small>${formatPercent(changePercent)}</small>`;
+/** A one-line difference for the terminal summary. */
+export function formatDifference(row: MetricComparison): string {
+  return `${formatSigned(row.difference, row.unit)} ${formatPercent(row.differencePercent)}`;
 }
 
-export function formatPercent(changePercent: number): string {
-  if (!Number.isFinite(changePercent)) {
-    return "from 0";
+function formatSigned(value: number, unit: MetricUnit): string {
+  return `${value > 0 ? "+" : ""}${formatValue(value, unit)}`;
+}
+
+function formatPercent(percent: number): string {
+  if (!Number.isFinite(percent)) {
+    return "(from 0)";
   }
 
-  return `${changePercent > 0 ? "+" : ""}${changePercent.toFixed(1)}%`;
+  return `(${percent > 0 ? "+" : ""}${percent.toFixed(1)}%)`;
 }
 
 function escapeHTML(text: string): string {
@@ -332,8 +285,8 @@ function escapeHTML(text: string): string {
 }
 
 const STYLES = `
-:root { color-scheme: light dark; --text: #1d2327; --muted: #5c666e; --line: #d9dee2; --surface: #ffffff; --page: #f5f7f8; --bad: #b3261e; --bad-bg: #fbe9e7; --good: #1e6b3a; --good-bg: #e6f4ea; --dot-baseline: #9aa5ad; --dot-current: #00696d; }
-@media (prefers-color-scheme: dark) { :root { --text: #e3e7ea; --muted: #a3adb4; --line: #3a4248; --surface: #1d2226; --page: #121618; --bad: #ffb4ab; --bad-bg: #3d1b18; --good: #8fd6a4; --good-bg: #16301f; --dot-baseline: #6b767e; --dot-current: #6fd8d8; } }
+:root { color-scheme: light dark; --text: #1d2327; --muted: #5c666e; --line: #d9dee2; --surface: #ffffff; --page: #f5f7f8; --bad: #b3261e; --bad-bg: #fbe9e7; --good: #1e6b3a; --good-bg: #e6f4ea; --dot-base: #9aa5ad; --dot-current: #00696d; }
+@media (prefers-color-scheme: dark) { :root { --text: #e3e7ea; --muted: #a3adb4; --line: #3a4248; --surface: #1d2226; --page: #121618; --bad: #ffb4ab; --bad-bg: #3d1b18; --good: #8fd6a4; --good-bg: #16301f; --dot-base: #6b767e; --dot-current: #6fd8d8; } }
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--text); background: var(--page); font: 15px/1.5 system-ui, sans-serif; }
 main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 48px; }
@@ -344,7 +297,7 @@ h4 { margin: 12px 0 4px; font-size: 14px; }
 .muted, small { color: var(--muted); }
 small { display: block; font-size: 12px; font-weight: normal; }
 code { font: 13px ui-monospace, monospace; overflow-wrap: anywhere; }
-.note, .warning { padding: 10px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
+.note, .warning { margin: 12px 0; padding: 10px 14px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); }
 .warning { border-color: var(--bad); }
 .table { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--line); }
@@ -353,7 +306,7 @@ td { white-space: nowrap; font-variant-numeric: tabular-nums; }
 thead th { font-size: 12px; color: var(--muted); }
 tr.regression td:last-child { color: var(--bad); background: var(--bad-bg); font-weight: 600; }
 tr.improvement td:last-child { color: var(--good); background: var(--good-bg); font-weight: 600; }
-.strip circle.baseline { fill: var(--dot-baseline); }
+.strip circle.base { fill: var(--dot-base); }
 .strip circle.current { fill: var(--dot-current); }
 ol, ul { margin: 4px 0; padding-inline-start: 22px; }
 `;

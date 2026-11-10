@@ -4,7 +4,6 @@ export interface LongFrame {
 }
 
 export interface PagePerf {
-  interactionDurations: number[];
   lastPointerDown: number;
   longFrames: LongFrame[];
   largestPaint: number;
@@ -20,27 +19,19 @@ declare global {
 
 export interface PagePerfOptions {
   watches: Record<string, string>;
-  eventTimingThreshold: number;
 }
 
 /**
  * Runs in the page before any app script. Kept self-contained because
  * Playwright serializes it into the page.
  */
-export function installPagePerf({
-  watches,
-  eventTimingThreshold,
-}: PagePerfOptions): void {
-  const durationsByInteraction = new Map<number, number>();
+export function installPagePerf({ watches }: PagePerfOptions): void {
   const watched = new Map<
     string,
     { selector: string; visibleAt: Promise<number> }
   >();
 
   const perf: PagePerf = {
-    get interactionDurations() {
-      return [...durationsByInteraction.values()];
-    },
     lastPointerDown: Number.NaN,
     longFrames: [],
     largestPaint: Number.NaN,
@@ -71,29 +62,6 @@ export function installPagePerf({
   };
   window.__perf = perf;
   performance.setResourceTimingBufferSize(10_000);
-
-  new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      const { interactionId } = entry as PerformanceEntry & {
-        interactionId: number;
-      };
-      if (!interactionId) {
-        continue;
-      }
-
-      durationsByInteraction.set(
-        interactionId,
-        Math.max(
-          durationsByInteraction.get(interactionId) ?? 0,
-          entry.duration,
-        ),
-      );
-    }
-  }).observe({
-    type: "event",
-    durationThreshold: eventTimingThreshold,
-    buffered: true,
-  } as PerformanceObserverInit & { durationThreshold: number });
 
   new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) {
@@ -129,20 +97,16 @@ export function installPagePerf({
   }
 
   // Resolves once the main thread has rendered the first frame in which the
-  // element is laid out and exposed to assistive technology. A user-blocking
-  // task posted from requestAnimationFrame runs right after that frame's
-  // style, layout and paint, ahead of the normal-priority tasks (image loads,
-  // React effects) already queued, whose order varies between runs.
+  // element is laid out. A user-blocking task posted from requestAnimationFrame
+  // runs right after that frame's style, layout and paint, ahead of the
+  // normal-priority tasks (image loads, React effects) already queued, whose
+  // order varies between runs.
   function firstVisibleFrame(selector: string): Promise<number> {
     return new Promise((resolve) => {
       function isVisible(): boolean {
         const element = document.querySelector(selector);
 
-        return (
-          element !== null &&
-          element.checkVisibility({ visibilityProperty: true }) &&
-          element.closest('[aria-hidden="true"], [inert]') === null
-        );
+        return element?.checkVisibility({ visibilityProperty: true }) ?? false;
       }
 
       let isFrameScheduled = true;
