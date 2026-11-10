@@ -159,9 +159,10 @@ mid-translation is not written back.
 After each saved set, it syncs the library and, when that set is on screen or
 being navigated to, revalidates the routes (board and board list), so
 everything on screen updates without a reload. Other sets are not revalidated:
-that would re-run a `?board=` link import still in flight. A set that
-fails, for example because a model download needs a user gesture, stays in its
-source language until the next run.
+that would re-run a `?board=` link import still in flight. A set the
+translator fails on, for example because a model download needs a user
+gesture, stays in its source language until the next run. A storage or other
+error ends the pass and is reported, and passes queued behind it still run.
 
 The hook hands each pass to the
 [board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),

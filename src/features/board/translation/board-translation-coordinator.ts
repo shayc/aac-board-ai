@@ -34,6 +34,9 @@ export function queueBoardTranslationPass(
         signal: run.abortController.signal,
         onTranslating: () => setIsTranslating(run, true),
       });
+    } catch (error) {
+      // A failed pass must not stall the passes queued behind it.
+      reportError(error);
     } finally {
       setIsTranslating(run, false);
     }

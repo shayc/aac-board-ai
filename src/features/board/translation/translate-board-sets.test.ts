@@ -1,11 +1,16 @@
 import { stubTranslator } from "@shared/testing/stub-built-in-ai";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, onTestFinished, test, vi } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
 import {
   getBoardSetRecord,
   listBoardSetRecords,
 } from "../storage/board-set-storage";
-import { makeOBFBoard, resetBoardsDB, seedBoardSets } from "../testing";
+import {
+  makeBoardsDBUnreadable,
+  makeOBFBoard,
+  resetBoardsDB,
+  seedBoardSets,
+} from "../testing";
 import { translateBoardSets } from "./translate-board-sets";
 
 function seedFoodSet() {
@@ -194,6 +199,21 @@ describe("translateBoardSets", () => {
       es: "[es] Zoo",
     });
     expect(onTranslated).toHaveBeenCalledOnce();
+  });
+
+  test("rejects when storage fails instead of leaving the set as if no model were available", async () => {
+    await seedFoodSet();
+    const boardSets = await listBoardSetRecords();
+    stubTranslator((input) => `[es] ${input}`);
+    onTestFinished(await makeBoardsDBUnreadable());
+
+    await expect(
+      translateBoardSets(boardSets, "es", {
+        signal: new AbortController().signal,
+        onTranslating: vi.fn<() => void>(),
+        onTranslated: vi.fn<(boardSetId: string) => void>(),
+      }),
+    ).rejects.toThrow();
   });
 
   test("saves nothing when aborted mid-translation", async () => {
