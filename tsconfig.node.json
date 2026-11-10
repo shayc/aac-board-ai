@@ -21,5 +21,11 @@
     "noUncheckedIndexedAccess": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["oxfmt.config.ts", "oxlint.config.ts", "vite.config.ts"]
+  "include": [
+    "lint-staged.config.ts",
+    "oxfmt.config.ts",
+    "oxlint.config.ts",
+    "project.inlang/paraglide.config.ts",
+    "vite.config.ts"
+  ]
 }
