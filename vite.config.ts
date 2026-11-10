@@ -1,9 +1,9 @@
 import { paraglideVitePlugin } from "@inlang/paraglide-js";
 import react from "@vitejs/plugin-react";
 import { playwright } from "@vitest/browser-playwright";
-import { defineConfig, type Plugin } from "vite";
+import type { Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
-import { coverageConfigDefaults } from "vitest/config";
+import { coverageConfigDefaults, defineConfig } from "vitest/config";
 import { BOARD_FILE_EXTENSIONS_BY_MIME_TYPE } from "./src/features/board/import/board-file-formats.ts";
 import {
   BACKGROUND_DARK,
