@@ -3,13 +3,13 @@ import baseConfig from "../playwright.config.ts";
 import { DIST_DIRS } from "./results.ts";
 
 export const ACTION_TIMEOUT_MS = 15_000;
+export const BASE_BUILD_URL = "http://127.0.0.1:4174";
 export const SAMPLE_COUNT = Number(process.env.PERF_SAMPLES ?? 10);
 
 // A journey test runs one warm-up and SAMPLE_COUNT samples per build. A sample
 // takes a few seconds; the budget leaves room for a slow board set download.
 const SAMPLE_TIMEOUT_MS = 90_000;
 const BUILD_COUNT = 2;
-export const BASE_BUILD_URL = "http://127.0.0.1:4174";
 
 export default defineConfig(baseConfig, {
   testDir: ".",
