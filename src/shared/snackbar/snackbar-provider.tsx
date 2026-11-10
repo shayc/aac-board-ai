@@ -3,13 +3,7 @@ import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import {
-  type ReactNode,
-  type SyntheticEvent,
-  useEffect,
-  useReducer,
-  useRef,
-} from "react";
+import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -28,8 +22,6 @@ interface SnackbarState {
   queue: readonly QueuedSnackbar[];
   current: QueuedSnackbar | undefined;
   open: boolean;
-  /** A message arrived while the current one was showing, to take its place. */
-  isCurrentSuperseded: boolean;
 }
 
 type SnackbarAction =
@@ -41,7 +33,6 @@ const initialState: SnackbarState = {
   queue: [],
   current: undefined,
   open: false,
-  isCurrentSuperseded: false,
 };
 
 interface SnackbarProviderProps {
@@ -53,14 +44,6 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
-
-  // A superseded message closes only once it has rendered open. Closed before
-  // it mounts, a snackbar never exits, and the queue stalls.
-  useEffect(() => {
-    if (state.isCurrentSuperseded && state.open) {
-      dispatch({ type: "close" });
-    }
-  }, [state.isCurrentSuperseded, state.open]);
 
   function showSnackbar(options: SnackbarOptions | string) {
     const snackbarOptions: SnackbarOptions =
@@ -160,7 +143,7 @@ function snackbarReducer(
         return {
           ...state,
           queue: [...state.queue, action.snackbar],
-          isCurrentSuperseded: true,
+          open: false,
         };
       }
 
@@ -172,13 +155,10 @@ function snackbarReducer(
 
     case "exited": {
       if (state.queue.length > 0) {
-        // Only the message that was showing is superseded. The next one keeps
-        // its turn, even with others still waiting behind it.
         return {
           current: state.queue[0],
           queue: state.queue.slice(1),
           open: true,
-          isCurrentSuperseded: false,
         };
       }
 

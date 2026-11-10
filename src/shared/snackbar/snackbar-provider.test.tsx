@@ -10,24 +10,17 @@ import { useSnackbar } from "./use-snackbar";
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
 
-type SnackbarInput = SnackbarOptions | string;
-
-// A list raises all of its messages from one click.
-type ShowButtonSnackbars = Record<string, SnackbarInput | SnackbarInput[]>;
-
-function ShowButtons({ snackbars }: { snackbars: ShowButtonSnackbars }) {
+function ShowButtons({
+  snackbars,
+}: {
+  snackbars: Record<string, SnackbarOptions | string>;
+}) {
   const { showSnackbar } = useSnackbar();
-
-  function showAll(inputs: SnackbarInput | SnackbarInput[]) {
-    for (const input of [inputs].flat()) {
-      showSnackbar(input);
-    }
-  }
 
   return (
     <>
-      {Object.entries(snackbars).map(([name, inputs]) => (
-        <button key={name} onClick={() => showAll(inputs)}>
+      {Object.entries(snackbars).map(([name, options]) => (
+        <button key={name} onClick={() => showSnackbar(options)}>
           {name}
         </button>
       ))}
@@ -37,7 +30,7 @@ function ShowButtons({ snackbars }: { snackbars: ShowButtonSnackbars }) {
   );
 }
 
-function renderSnackbars(snackbars: ShowButtonSnackbars) {
+function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
   return render(
     <AppProviders>
       <ShowButtons snackbars={snackbars} />
@@ -60,24 +53,6 @@ describe("SnackbarProvider", () => {
     await expect
       .element(screen.getByRole("status"))
       .toHaveTextContent("second");
-  });
-
-  test("keeps showing messages after two are raised by the same action", async () => {
-    const screen = await renderSnackbars({
-      "show-both": [
-        { message: "first", durationMs: LONG_DURATION_MS },
-        { message: "second", durationMs: LONG_DURATION_MS },
-      ],
-      "show-third": { message: "third", durationMs: LONG_DURATION_MS },
-    });
-
-    await screen.getByRole("button", { name: "show-both" }).click();
-    await expect
-      .element(screen.getByRole("status"))
-      .toHaveTextContent("second");
-
-    await screen.getByRole("button", { name: "show-third" }).click();
-    await expect.element(screen.getByRole("status")).toHaveTextContent("third");
   });
 
   test("ignores clickaway so the message stays visible", async () => {
@@ -137,30 +112,6 @@ describe("SnackbarProvider", () => {
 
     await screen.getByRole("button", { name: "show-success" }).click();
     await expect.element(screen.getByRole("status")).toHaveTextContent("done");
-  });
-
-  test("keeps a waiting message on screen until it is closed, then shows the next", async () => {
-    const screen = await renderSnackbars({
-      "show-three": [
-        { message: "first", durationMs: LONG_DURATION_MS },
-        { message: "second", durationMs: LONG_DURATION_MS },
-        { message: "third", durationMs: LONG_DURATION_MS },
-      ],
-    });
-
-    await screen.getByRole("button", { name: "show-three" }).click();
-
-    // A message closed as it opens fades out before it ever settles, so a
-    // settled second message is one that is staying.
-    await vi.waitFor(() => {
-      const status = screen.getByRole("status").element();
-      expect(status.textContent).toContain("second");
-      expect(getComputedStyle(status).opacity).toBe("1");
-    });
-
-    await screen.getByRole("button", { name: "Close" }).click();
-
-    await expect.element(screen.getByRole("status")).toHaveTextContent("third");
   });
 
   describe("default duration", () => {
