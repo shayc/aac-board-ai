@@ -26,7 +26,7 @@ export function SuggestionSettings() {
       <Alert role="note" severity="info" variant="outlined">
         {t(unsupportedMessage)}{" "}
         <ExternalLink
-          href="https://github.com/shayc/aac-board-ai#enable-ai-features"
+          href="https://github.com/shayc/aac-board-ai#enable-ai-suggestions"
           sx={{ whiteSpace: "normal" }}
         >
           {t(m.suggestionsEnableHelp)}

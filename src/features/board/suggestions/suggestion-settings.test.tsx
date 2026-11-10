@@ -39,9 +39,9 @@ describe("SuggestionSettings", () => {
       .element(helpLink)
       .toHaveAttribute(
         "href",
-        "https://github.com/shayc/aac-board-ai#enable-ai-features",
+        "https://github.com/shayc/aac-board-ai#enable-ai-suggestions",
       );
-    expect(readme).toMatch(/^## Enable AI features$/m);
+    expect(readme).toMatch(/^## Enable AI suggestions$/m);
 
     await expect
       .element(screen.getByRole("textbox", { name: "Custom instructions" }))

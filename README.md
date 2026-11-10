@@ -43,7 +43,7 @@ No accounts, backend, or tracking. Boards and settings are stored on the device.
 
 Boards can be imported and stored, but not edited, exported, or synced across devices. To use custom boards, create them in any AAC tool that exports [Open Board Format](https://www.openboardformat.org) (`.obf` or `.obz`), then import them on each device.
 
-## Enable AI features
+## Enable AI suggestions
 
 To use AI suggestions on desktop, enable the following experimental flags for your browser:
 
