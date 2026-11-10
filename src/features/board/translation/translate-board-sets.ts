@@ -12,12 +12,9 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
-interface TranslationOptions {
+interface TranslateBoardSetsOptions {
   signal: AbortSignal;
   onTranslating: () => void;
-}
-
-interface TranslateBoardSetsOptions extends TranslationOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
@@ -42,8 +39,12 @@ export async function translateBoardSets(
       continue;
     }
 
+    // Reported before the translation model opens, so the status is already
+    // set when a model download ends and nothing reports in between.
+    onTranslating();
+
     try {
-      await translateBoardSet(boardSet, language, { signal, onTranslating });
+      await translateBoardSet(boardSet, language, signal);
       onTranslated(boardSet.id);
     } catch {
       // Translation is optional; the next language change or app start retries.
@@ -65,7 +66,7 @@ function isBoardSetInLanguage(
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
-  { signal, onTranslating }: TranslationOptions,
+  signal: AbortSignal,
 ): Promise<void> {
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
@@ -87,7 +88,7 @@ async function translateBoardSet(
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
-    { signal, onTranslating },
+    signal,
   );
 
   signal.throwIfAborted();
@@ -169,12 +170,8 @@ function addStrings(
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
   targetLanguage: string,
-  { signal, onTranslating }: TranslationOptions,
+  signal: AbortSignal,
 ): Promise<Map<string, StringTranslations>> {
-  if (stringsBySourceLanguage.size === 0) {
-    return new Map();
-  }
-
   const translators = new Map<string, OpenTranslator>();
 
   try {
@@ -188,10 +185,6 @@ async function translateBySourceLanguage(
       });
       translators.set(sourceLanguage, translator);
     }
-
-    // Reported only now, so a model download shows as downloading rather
-    // than as translating.
-    onTranslating();
 
     const entries = await Promise.all(
       Array.from(translators, async ([sourceLanguage, translator]) => {

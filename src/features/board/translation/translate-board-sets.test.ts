@@ -217,11 +217,10 @@ describe("translateBoardSets", () => {
     const { availability, translate } = stubTranslator();
     availability.mockResolvedValue("unavailable");
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslated } = await runTranslation("es");
 
     expect(translate).not.toHaveBeenCalled();
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
-    expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 
@@ -284,12 +283,11 @@ describe("translateBoardSets", () => {
       },
     ]);
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslated } = await runTranslation("es");
 
     expect((await getBoardSetRecord("shipped"))?.translatedNames).toEqual({
       es: "Inicio",
     });
-    expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated.mock.calls).toEqual([["shipped"]]);
   });
 
