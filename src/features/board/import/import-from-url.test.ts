@@ -9,6 +9,18 @@ import {
 const SAMPLE_BOARDS_DIR = "/src/features/board/testing/sample-boards";
 const OBZ_FIXTURE = "lots-of-stuff.obz";
 
+// A constructed Response can't follow a redirect, so set where the fetch
+// ended up the way the network would.
+function redirectedResponse(body: BodyInit, finalURL: string): Response {
+  const response = new Response(body);
+  Object.defineProperties(response, {
+    redirected: { value: true },
+    url: { value: finalURL },
+  });
+
+  return response;
+}
+
 describe("importBoardFileFromURL", () => {
   beforeEach(async () => {
     await resetBoardsDB();
@@ -79,6 +91,34 @@ describe("importBoardFileFromURL", () => {
     await expect(
       importBoardFileFromURL("https://example.com/missing.obz"),
     ).rejects.toThrow("Failed to fetch board: HTTP 404");
+  });
+
+  test("rejects a download redirected to another host without importing", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      redirectedResponse(fixtureFile, "https://elsewhere.example/core.obz"),
+    );
+
+    await expect(
+      importBoardFileFromURL("https://trusted.example/go?to=core.obz"),
+    ).rejects.toMatchObject({
+      name: "BoardURLError",
+      code: "cross-host-redirect",
+    });
+    expect(await listBoardSetRecords()).toEqual([]);
+  });
+
+  test("follows a redirect that stays on the same host", async () => {
+    const fixtureFile = await loadFixtureFile(OBZ_FIXTURE);
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      redirectedResponse(fixtureFile, "https://trusted.example/v2/core.obz"),
+    );
+
+    const result = await importBoardFileFromURL(
+      "http://trusted.example/core.obz",
+    );
+
+    expect(result.id).toBe("core");
   });
 
   test("rejects a non-http(s) URL before fetching", async () => {

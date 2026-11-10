@@ -12,7 +12,10 @@ import {
  */
 export const MAX_BOARD_DOWNLOAD_BYTES = 150 * 1024 * 1024;
 
-type BoardURLErrorCode = "unsupported-scheme" | "download-too-large";
+type BoardURLErrorCode =
+  | "unsupported-scheme"
+  | "cross-host-redirect"
+  | "download-too-large";
 
 class BoardURLError extends Error {
   readonly code: BoardURLErrorCode;
@@ -86,6 +89,19 @@ function expectedDownloadBytes(headers: Headers): number | undefined {
   return Number.isSafeInteger(total) && total > 0 ? total : undefined;
 }
 
+function assertSameHost(requestedURL: URL, response: Response): void {
+  const servedHost = new URL(response.url).host;
+  if (servedHost === requestedURL.host) {
+    return;
+  }
+
+  void response.body?.cancel();
+  throw new BoardURLError(
+    "cross-host-redirect",
+    `Board URL redirected from ${requestedURL.host} to ${servedHost}`,
+  );
+}
+
 async function downloadBoard(
   url: URL,
   {
@@ -97,6 +113,13 @@ async function downloadBoard(
 
   if (!response.ok) {
     throw new Error(`Failed to fetch board: HTTP ${response.status}`);
+  }
+
+  // A ?board= link is confirmed by its host, so an open redirect on a trusted
+  // host must not hand the import to another one. Same-host redirects, such as
+  // http to https or a moved path, still follow.
+  if (response.redirected) {
+    assertSameHost(url, response);
   }
 
   // A null body has no payload to exceed the download cap.
