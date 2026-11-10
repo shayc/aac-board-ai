@@ -121,14 +121,14 @@ describe("useMessageSuggestions", () => {
     });
   });
 
-  test("reports unavailable when all suggestion engines fail", async () => {
+  test("reports failed when all suggestion engines fail", async () => {
     stubProofreader(() => Promise.reject(new Error("proofread down")));
     stubRewriter(() => Promise.reject(new Error("rewrite down")));
 
     const { result } = await renderMessageSuggestions("want eat");
 
     await vi.waitFor(() => {
-      expect(result.current.status).toEqual({ kind: "unavailable" });
+      expect(result.current.status).toEqual({ kind: "failed" });
     });
     expect(result.current.phrases).toEqual([]);
   });

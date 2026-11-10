@@ -56,7 +56,7 @@ describe("SuggestionBar", () => {
     );
 
     await expect
-      .element(screen.getByText("Downloading AI model… 43%"))
+      .element(screen.getByText("Downloading AI model… 43% complete"))
       .toBeVisible();
   });
 
@@ -72,13 +72,23 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("shows that suggestions are unavailable with no accessibility violations", async () => {
+  test("shows that suggestions are unavailable on the device", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );
 
     await expect
-      .element(screen.getByText("Suggestions unavailable"))
+      .element(screen.getByText("Suggestions unavailable on this device"))
+      .toBeVisible();
+  });
+
+  test("shows that suggestions failed with no accessibility violations", async () => {
+    const screen = await renderWithProviders(
+      <SuggestionBar {...makeProps({ status: { kind: "failed" } })} />,
+    );
+
+    await expect
+      .element(screen.getByText("Couldn't get suggestions"))
       .toBeVisible();
 
     await expectNoA11yViolations(screen.container);
