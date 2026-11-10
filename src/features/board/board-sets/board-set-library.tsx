@@ -16,7 +16,7 @@ import { useMatch, useNavigate } from "react-router";
 import { useImportBoardFiles } from "../import/use-import-board-files";
 import { BOARD_SET_SEGMENT } from "../navigation/board-paths";
 import type { BoardSetRecord } from "../storage/board-set-storage";
-import { localizeBoardSetName } from "../translation/board-translations";
+import { boardSetInLanguage } from "../translation/board-translations";
 import { listDownloadableBoardSets } from "./board-set-catalog";
 import { BoardSetDeleteDialog } from "./board-set-delete-dialog";
 import { BoardSetInfoDialog } from "./board-set-info-dialog";
@@ -32,7 +32,7 @@ export function BoardSetLibrary() {
   const { language } = useLanguage();
   const { boardSets: storedBoardSets, isLoading, error } = useBoardSets();
   const boardSets = storedBoardSets.map((boardSet) =>
-    localizeBoardSetName(boardSet, language),
+    boardSetInLanguage(boardSet, language),
   );
   const { pickAndImport } = useImportBoardFiles();
   const { showSnackbar } = useSnackbar();
