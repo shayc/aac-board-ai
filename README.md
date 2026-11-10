@@ -41,7 +41,7 @@ No accounts, backend, or tracking. Boards and settings are stored on the device.
 
 ## Limitations
 
-Boards can be imported and stored, but not edited, exported, or synced across devices. Create custom boards in an Open Board Format-compatible tool, then import them on each device.
+Boards can be imported and stored, but not edited, exported, or synced across devices. Create custom boards with an external tool such as [Cbuilder](https://www.cbuilder.io), an AI-assisted AAC board builder. Export boards in Open Board Format (`.obf` or `.obz`), then import them on each device.
 
 ## Enable suggestions
 
