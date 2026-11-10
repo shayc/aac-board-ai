@@ -104,7 +104,7 @@
   "suggestionsEnable": "Ενεργοποίηση προτάσεων",
   "suggestionsDownloading": "Λήψη μοντέλου AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Λήψη μοντέλου AI…",
-  "suggestionsUnavailable": "Δεν ήταν δυνατή η δημιουργία προτάσεων",
+  "suggestionsUnavailable": "Οι προτάσεις δεν είναι διαθέσιμες",
   "navBack": "Πίσω",
   "navHome": "Μετάβαση στην αρχική",
   "messageBackspace": "Διαγραφή",

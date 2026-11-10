@@ -104,7 +104,7 @@
   "suggestionsEnable": "제안 켜기",
   "suggestionsDownloading": "AI 모델 다운로드 중… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI 모델 다운로드 중…",
-  "suggestionsUnavailable": "제안을 만들 수 없습니다",
+  "suggestionsUnavailable": "제안을 사용할 수 없음",
   "navBack": "뒤로",
   "navHome": "홈으로",
   "messageBackspace": "지우기",

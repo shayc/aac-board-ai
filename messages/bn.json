@@ -104,7 +104,7 @@
   "suggestionsEnable": "পরামর্শ চালু করুন",
   "suggestionsDownloading": "AI মডেল ডাউনলোড হচ্ছে… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI মডেল ডাউনলোড হচ্ছে…",
-  "suggestionsUnavailable": "পরামর্শ তৈরি করা যায়নি",
+  "suggestionsUnavailable": "পরামর্শ উপলব্ধ নয়",
   "navBack": "ফিরে যান",
   "navHome": "হোমে যান",
   "messageBackspace": "মুছুন",

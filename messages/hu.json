@@ -104,7 +104,7 @@
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése… {progress}%",
   "suggestionsDownloadingIndeterminate": "MI-modell letöltése…",
-  "suggestionsUnavailable": "Nem sikerült javaslatokat készíteni",
+  "suggestionsUnavailable": "A javaslatok nem érhetők el",
   "navBack": "Vissza",
   "navHome": "Ugrás a kezdőlapra",
   "messageBackspace": "Törlés",

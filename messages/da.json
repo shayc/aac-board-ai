@@ -104,7 +104,7 @@
   "suggestionsEnable": "Slå forslag til",
   "suggestionsDownloading": "Downloader AI-model… {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloader AI-model…",
-  "suggestionsUnavailable": "Forslagene kunne ikke oprettes",
+  "suggestionsUnavailable": "Forslag er ikke tilgængelige",
   "navBack": "Tilbage",
   "navHome": "Gå til start",
   "messageBackspace": "Slet",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "Zapnúť návrhy",
   "suggestionsDownloading": "Sťahovanie modelu AI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Sťahovanie modelu AI…",
-  "suggestionsUnavailable": "Návrhy sa nepodarilo vytvoriť",
+  "suggestionsUnavailable": "Návrhy nie sú k dispozícii",
   "navBack": "Späť",
   "navHome": "Prejsť domov",
   "messageBackspace": "Vymazať",

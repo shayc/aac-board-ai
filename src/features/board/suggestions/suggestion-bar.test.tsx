@@ -72,13 +72,13 @@ describe("SuggestionBar", () => {
       .toBeVisible();
   });
 
-  test("shows that suggestions could not be created with no accessibility violations", async () => {
+  test("shows that suggestions are unavailable with no accessibility violations", async () => {
     const screen = await renderWithProviders(
       <SuggestionBar {...makeProps({ status: { kind: "unavailable" } })} />,
     );
 
     await expect
-      .element(screen.getByText("Couldn't create suggestions"))
+      .element(screen.getByText("Suggestions unavailable"))
       .toBeVisible();
 
     await expectNoA11yViolations(screen.container);

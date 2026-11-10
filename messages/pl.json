@@ -104,7 +104,7 @@
   "suggestionsEnable": "Włącz sugestie",
   "suggestionsDownloading": "Pobieranie modelu AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Pobieranie modelu AI…",
-  "suggestionsUnavailable": "Nie udało się utworzyć sugestii",
+  "suggestionsUnavailable": "Sugestie są niedostępne",
   "navBack": "Wstecz",
   "navHome": "Przejdź do strony głównej",
   "messageBackspace": "Usuń",

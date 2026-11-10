@@ -104,7 +104,7 @@
   "suggestionsEnable": "Bật gợi ý",
   "suggestionsDownloading": "Đang tải mô hình AI xuống… {progress}%",
   "suggestionsDownloadingIndeterminate": "Đang tải mô hình AI xuống…",
-  "suggestionsUnavailable": "Không thể tạo gợi ý",
+  "suggestionsUnavailable": "Gợi ý không khả dụng",
   "navBack": "Quay lại",
   "navHome": "Về trang chủ",
   "messageBackspace": "Xóa",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "Vklopi predloge",
   "suggestionsDownloading": "Prenašanje modela UI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Prenašanje modela UI…",
-  "suggestionsUnavailable": "Predlogov ni bilo mogoče ustvariti",
+  "suggestionsUnavailable": "Predlogi niso na voljo",
   "navBack": "Nazaj",
   "navHome": "Pojdi domov",
   "messageBackspace": "Briši",

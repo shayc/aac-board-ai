@@ -104,7 +104,7 @@
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia… {progress} %",
   "suggestionsDownloadingIndeterminate": "Ladataan tekoälymallia…",
-  "suggestionsUnavailable": "Ehdotuksia ei voitu luoda",
+  "suggestionsUnavailable": "Ehdotukset eivät ole saatavilla",
   "navBack": "Takaisin",
   "navHome": "Siirry etusivulle",
   "messageBackspace": "Poista",

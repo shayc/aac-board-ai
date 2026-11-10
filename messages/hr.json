@@ -104,7 +104,7 @@
   "suggestionsEnable": "Uključi prijedloge",
   "suggestionsDownloading": "Preuzimanje AI modela… {progress} %",
   "suggestionsDownloadingIndeterminate": "Preuzimanje AI modela…",
-  "suggestionsUnavailable": "Nije moguće izraditi prijedloge",
+  "suggestionsUnavailable": "Prijedlozi nisu dostupni",
   "navBack": "Natrag",
   "navHome": "Idi na početnu",
   "messageBackspace": "Obriši",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "启用建议",
   "suggestionsDownloading": "正在下载 AI 模型… {progress}%",
   "suggestionsDownloadingIndeterminate": "正在下载 AI 模型…",
-  "suggestionsUnavailable": "无法生成建议",
+  "suggestionsUnavailable": "建议不可用",
   "navBack": "返回",
   "navHome": "返回主页",
   "messageBackspace": "删除",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "กำลังดาวน์โหลดโมเดล AI…",
-  "suggestionsUnavailable": "ไม่สามารถสร้างคำแนะนำได้",
+  "suggestionsUnavailable": "คำแนะนำไม่พร้อมใช้งาน",
   "navBack": "กลับ",
   "navHome": "ไปที่หน้าแรก",
   "messageBackspace": "ลบ",

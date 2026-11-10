@@ -104,7 +104,7 @@
   "suggestionsEnable": "Activează sugestiile",
   "suggestionsDownloading": "Se descarcă modelul AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "Se descarcă modelul AI…",
-  "suggestionsUnavailable": "Sugestiile nu au putut fi create",
+  "suggestionsUnavailable": "Sugestiile nu sunt disponibile",
   "navBack": "Înapoi",
   "navHome": "Mergi la pagina principală",
   "messageBackspace": "Șterge",

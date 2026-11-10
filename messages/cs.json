@@ -104,7 +104,7 @@
   "suggestionsEnable": "Zapnout návrhy",
   "suggestionsDownloading": "Stahování modelu AI… {progress} %",
   "suggestionsDownloadingIndeterminate": "Stahování modelu AI…",
-  "suggestionsUnavailable": "Návrhy se nepodařilo vytvořit",
+  "suggestionsUnavailable": "Návrhy nejsou k dispozici",
   "navBack": "Zpět",
   "navHome": "Přejít domů",
   "messageBackspace": "Smazat",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model… {progress}%",
   "suggestionsDownloadingIndeterminate": "Downloading AI model…",
-  "suggestionsUnavailable": "Couldn't create suggestions",
+  "suggestionsUnavailable": "Suggestions unavailable",
   "navBack": "Go back",
   "navHome": "Go home",
   "messageBackspace": "Backspace",

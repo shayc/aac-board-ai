@@ -104,7 +104,7 @@
   "suggestionsEnable": "הפעלת הצעות",
   "suggestionsDownloading": "הורדת מודל ה-AI… {progress}%",
   "suggestionsDownloadingIndeterminate": "הורדת מודל ה-AI…",
-  "suggestionsUnavailable": "לא ניתן ליצור הצעות",
+  "suggestionsUnavailable": "ההצעות אינן זמינות",
   "navBack": "חזרה",
   "navHome": "לעמוד הבית",
   "messageBackspace": "מחיקה לאחור",

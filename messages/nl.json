@@ -104,7 +104,7 @@
   "suggestionsEnable": "Suggesties inschakelen",
   "suggestionsDownloading": "AI-model downloaden… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI-model downloaden…",
-  "suggestionsUnavailable": "Kan geen suggesties maken",
+  "suggestionsUnavailable": "Suggesties niet beschikbaar",
   "navBack": "Terug",
   "navHome": "Naar start",
   "messageBackspace": "Wissen",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "பரிந்துரைகளை இயக்கு",
   "suggestionsDownloading": "AI மாடல் பதிவிறக்கப்படுகிறது… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI மாடல் பதிவிறக்கப்படுகிறது…",
-  "suggestionsUnavailable": "பரிந்துரைகளை உருவாக்க முடியவில்லை",
+  "suggestionsUnavailable": "பரிந்துரைகள் கிடைக்கவில்லை",
   "navBack": "பின்செல்",
   "navHome": "முகப்புக்குச் செல்",
   "messageBackspace": "அழி",

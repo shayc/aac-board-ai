@@ -104,7 +104,7 @@
   "suggestionsEnable": "Включить предложения",
   "suggestionsDownloading": "Загрузка модели ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Загрузка модели ИИ…",
-  "suggestionsUnavailable": "Не удалось создать предложения",
+  "suggestionsUnavailable": "Предложения недоступны",
   "navBack": "Назад",
   "navHome": "На главную",
   "messageBackspace": "Стереть",

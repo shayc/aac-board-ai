@@ -104,7 +104,7 @@
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor… %{progress}",
   "suggestionsDownloadingIndeterminate": "Yapay zeka modeli indiriliyor…",
-  "suggestionsUnavailable": "Öneriler oluşturulamadı",
+  "suggestionsUnavailable": "Öneriler kullanılamıyor",
   "navBack": "Geri",
   "navHome": "Ana sayfaya git",
   "messageBackspace": "Geri sil",

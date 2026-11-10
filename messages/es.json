@@ -104,7 +104,7 @@
   "suggestionsEnable": "Activar sugerencias",
   "suggestionsDownloading": "Descargando modelo de IA… {progress}%",
   "suggestionsDownloadingIndeterminate": "Descargando modelo de IA…",
-  "suggestionsUnavailable": "No se pudieron crear sugerencias",
+  "suggestionsUnavailable": "Sugerencias no disponibles",
   "navBack": "Volver",
   "navHome": "Ir al inicio",
   "messageBackspace": "Borrar",

@@ -104,7 +104,7 @@
   "suggestionsEnable": "Включване на предложенията",
   "suggestionsDownloading": "Изтегляне на модела на ИИ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Изтегляне на модела на ИИ…",
-  "suggestionsUnavailable": "Предложенията не можаха да се създадат",
+  "suggestionsUnavailable": "Предложенията не са налични",
   "navBack": "Назад",
   "navHome": "Към началото",
   "messageBackspace": "Изтриване",

@@ -99,11 +99,7 @@ describe("SnackbarProvider", () => {
 
   test("announces errors assertively and other messages politely", async () => {
     const screen = await renderSnackbars({
-      "show-error": {
-        message: "failed",
-        severity: "error",
-        durationMs: LONG_DURATION_MS,
-      },
+      "show-error": { message: "failed", severity: "error" },
       "show-success": {
         message: "done",
         severity: "success",

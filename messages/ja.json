@@ -104,7 +104,7 @@
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中… {progress}%",
   "suggestionsDownloadingIndeterminate": "AI モデルをダウンロード中…",
-  "suggestionsUnavailable": "提案を作成できませんでした",
+  "suggestionsUnavailable": "提案は利用できません",
   "navBack": "戻る",
   "navHome": "ホームに戻る",
   "messageBackspace": "消去",

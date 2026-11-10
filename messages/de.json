@@ -104,7 +104,7 @@
   "suggestionsEnable": "Vorschläge aktivieren",
   "suggestionsDownloading": "KI-Modell wird heruntergeladen… {progress}%",
   "suggestionsDownloadingIndeterminate": "KI-Modell wird heruntergeladen…",
-  "suggestionsUnavailable": "Vorschläge konnten nicht erstellt werden",
+  "suggestionsUnavailable": "Vorschläge nicht verfügbar",
   "navBack": "Zurück",
   "navHome": "Zur Startseite",
   "messageBackspace": "Löschen",

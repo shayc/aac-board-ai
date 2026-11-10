@@ -104,7 +104,7 @@
   "suggestionsEnable": "Увімкнути пропозиції",
   "suggestionsDownloading": "Завантаження моделі ШІ… {progress}%",
   "suggestionsDownloadingIndeterminate": "Завантаження моделі ШІ…",
-  "suggestionsUnavailable": "Не вдалося створити пропозиції",
+  "suggestionsUnavailable": "Пропозиції недоступні",
   "navBack": "Назад",
   "navHome": "На головну",
   "messageBackspace": "Стерти",

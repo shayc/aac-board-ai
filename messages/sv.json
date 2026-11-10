@@ -104,7 +104,7 @@
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell… {progress}%",
   "suggestionsDownloadingIndeterminate": "Laddar ner AI-modell…",
-  "suggestionsUnavailable": "Det gick inte att skapa förslag",
+  "suggestionsUnavailable": "Förslag är inte tillgängliga",
   "navBack": "Tillbaka",
   "navHome": "Till startsidan",
   "messageBackspace": "Radera",

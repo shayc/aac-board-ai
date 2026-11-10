@@ -104,7 +104,7 @@
   "suggestionsEnable": "تفعيل الاقتراحات",
   "suggestionsDownloading": "جارٍ تنزيل نموذج الذكاء الاصطناعي… {progress}%",
   "suggestionsDownloadingIndeterminate": "جارٍ تنزيل نموذج الذكاء الاصطناعي…",
-  "suggestionsUnavailable": "تعذّر إنشاء الاقتراحات",
+  "suggestionsUnavailable": "الاقتراحات غير متاحة",
   "navBack": "رجوع",
   "navHome": "الانتقال إلى الرئيسية",
   "messageBackspace": "مسح",
