@@ -161,9 +161,9 @@ source language until the next run.
 
 While a pass is translating a set, the hook publishes a
 [board translation status](../src/features/board/translation/board-translation-status.ts).
-The status is set when the first set that needs translating starts, before its
-translation model opens, and cleared when the pass ends. A pass aborted by a
-language change leaves the status to the pass that replaces it. The
+The status is set once a set's translation models are open, so a model download
+shows as a download, and cleared when the pass ends or the language changes. A
+pass aborted by a language change never touches the status again. The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
 shows a model download first and the translation after it, in one alert.
 

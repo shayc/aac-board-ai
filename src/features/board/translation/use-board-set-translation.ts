@@ -59,7 +59,10 @@ export function useBoardSetTranslation(): void {
     const controller = new AbortController();
     runRef.current = { signal: controller.signal, queue: Promise.resolve() };
 
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      setIsTranslatingBoards(false);
+    };
   }, [language]);
 
   useEffect(() => {
@@ -72,8 +75,8 @@ export function useBoardSetTranslation(): void {
       try {
         await translate(run.signal);
       } finally {
-        // After a language change the status belongs to the new run, which
-        // may have set it already and clears it when its own pass ends.
+        // An aborted run already cleared the status, and the next run may
+        // have set it again.
         if (!run.signal.aborted) {
           setIsTranslatingBoards(false);
         }
