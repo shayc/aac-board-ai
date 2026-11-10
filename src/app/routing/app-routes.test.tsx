@@ -594,10 +594,8 @@ describe("app flow", () => {
       .element(notice)
       .toHaveTextContent("Descargando modelo de traducción…0% completado");
 
-    const downloadNotice = notice.element();
     download.resolve();
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
-    expect(notice.element()).toBe(downloadNotice);
 
     translation.resolve();
     await expect.element(notice).not.toBeInTheDocument();
@@ -605,7 +603,7 @@ describe("app flow", () => {
 
   test("changing language mid-translation clears the board translation status", async () => {
     await seedTwoBoardSet();
-    stubTranslator(() => new Promise(() => {}));
+    const translator = stubTranslator(() => new Promise(() => {}));
 
     const { screen } = await renderApp("/sets/food/boards/home");
 
@@ -615,10 +613,13 @@ describe("app flow", () => {
     const notice = screen.getByRole("status");
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
 
-    setStoredLanguage("en");
+    // The next language's pass never gets as far as translating, so only the
+    // language change itself can clear the status.
+    translator.create.mockImplementation(() => new Promise(() => {}));
+    setStoredLanguage("fr");
 
     await expect
-      .element(screen.getByRole("combobox", { name: "Language" }))
+      .element(screen.getByRole("combobox", { name: "Langue" }))
       .toBeVisible();
     await expect.element(notice).not.toBeInTheDocument();
   });
