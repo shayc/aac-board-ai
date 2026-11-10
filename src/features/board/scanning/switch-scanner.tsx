@@ -95,14 +95,31 @@ export function SwitchScanner({
   }, [method, position, intervalMs]);
 
   useEffect(() => {
-    if (!position) {
+    const scope = scopeRef.current;
+    if (!scope || !position) {
       return;
     }
 
-    return highlightScanTargets(
-      position.item ? [position.item] : listScanItems(position.group),
-    );
-  }, [position]);
+    const targets = position.item
+      ? [position.item]
+      : listScanItems(position.group);
+    const removeHighlight = highlightScanTargets(targets);
+
+    // The board can replace highlighted controls at any time, such as when a
+    // folder tile opens another board into the same rows. Restarting shows
+    // the new controls from the first group, with a full interval.
+    const observer = new MutationObserver(() => {
+      if (targets.some((target) => !target.isConnected)) {
+        setPosition(startScan(readScanGroups(scope)));
+      }
+    });
+    observer.observe(scope, { childList: true, subtree: true });
+
+    return () => {
+      observer.disconnect();
+      removeHighlight();
+    };
+  }, [scopeRef, position]);
 
   return null;
 }

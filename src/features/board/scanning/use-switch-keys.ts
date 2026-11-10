@@ -2,8 +2,10 @@ import { useEffect, useEffectEvent, type RefObject } from "react";
 
 /**
  * Reports presses of the switch keys in `keyActions`. A switch key counts
- * while keyboard focus is inside the scope or nowhere, so switches work
- * without focusing the board first, and keys typed in dialogs are left alone.
+ * wherever keyboard focus is, because focus often rests outside the scope,
+ * such as on the button that opened a drawer that has since closed. Keys
+ * typed into a text field are left alone, and so are keys pressed while a
+ * dialog, drawer, or menu covers the scope.
  */
 export function useSwitchKeys<Action>(
   scopeRef: RefObject<HTMLElement | null>,
@@ -15,7 +17,8 @@ export function useSwitchKeys<Action>(
   useEffect(() => {
     function findAction(event: KeyboardEvent): Action | undefined {
       const hasModifier = event.ctrlKey || event.metaKey || event.altKey;
-      if (hasModifier || !isInScope(event.target, scopeRef.current)) {
+      const scope = scopeRef.current;
+      if (hasModifier || !scope || isCovered(scope) || isTextEntry(event)) {
         return undefined;
       }
 
@@ -54,13 +57,17 @@ export function useSwitchKeys<Action>(
   }, [scopeRef, keyActions]);
 }
 
-function isInScope(
-  target: EventTarget | null,
-  scope: HTMLElement | null,
-): boolean {
+// Modal surfaces hide everything behind them from assistive technology.
+function isCovered(scope: HTMLElement): boolean {
+  return scope.closest("[aria-hidden='true'], [inert]") !== null;
+}
+
+function isTextEntry(event: KeyboardEvent): boolean {
+  const { target } = event;
+
   return (
-    target === document.body ||
-    (target instanceof Node && scope !== null && scope.contains(target))
+    target instanceof HTMLElement &&
+    (target.isContentEditable || target.matches("input, textarea, select"))
   );
 }
 

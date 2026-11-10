@@ -242,8 +242,13 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
 - Automatic scanning moves on a timer and either switch selects. It starts on
   the first press and pauses after two passes over the groups. Two-switch step
   scanning moves with Space and selects with Enter.
-- Switch keys count while focus is inside the board or nowhere, and are kept
-  from the focused control. Keys pressed in dialogs and drawers are left alone.
+- Switch keys count wherever focus is, including on a header button, and are
+  kept from the focused control. Keys typed into a text field are left alone,
+  and so are keys pressed while a dialog, drawer, or menu covers the board.
+  While scanning is on, Space and Enter therefore do not activate focused
+  controls outside dialogs.
+- When highlighted controls leave the page, such as when a folder tile opens
+  another board, the scan restarts at the first group.
 
 The app header, drawers, and dialogs are not scanned; they are for the person
 setting up the device.

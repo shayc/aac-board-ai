@@ -16,12 +16,12 @@ export const TWO_BUTTON_BOARD: OBFBoard = {
   grid: { rows: 1, columns: 2, order: [["btn-1", "btn-2"]] },
 };
 
-export function renderCommunicationBoard(
+export function communicationBoardTree(
   obfBoard: OBFBoard,
   initialEntries: InitialEntry[] = ["/"],
   rootBoardId?: string,
 ) {
-  return render(
+  return (
     <MemoryRouter initialEntries={initialEntries}>
       <AppProviders>
         <div style={{ height: "100vh" }}>
@@ -31,6 +31,14 @@ export function renderCommunicationBoard(
           />
         </div>
       </AppProviders>
-    </MemoryRouter>,
+    </MemoryRouter>
   );
+}
+
+export function renderCommunicationBoard(
+  obfBoard: OBFBoard,
+  initialEntries: InitialEntry[] = ["/"],
+  rootBoardId?: string,
+) {
+  return render(communicationBoardTree(obfBoard, initialEntries, rootBoardId));
 }

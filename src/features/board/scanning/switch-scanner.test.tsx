@@ -1,9 +1,14 @@
+import Dialog from "@mui/material/Dialog";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
-import { renderCommunicationBoard } from "../testing/render-communication-board";
+import { render } from "vitest-browser-react";
+import {
+  communicationBoardTree,
+  renderCommunicationBoard,
+} from "../testing/render-communication-board";
 import {
   setScanIntervalMs,
   setScanMethod,
@@ -32,6 +37,38 @@ const TWO_ROW_BOARD: OBFBoard = {
   },
 };
 
+const OTHER_TWO_ROW_BOARD: OBFBoard = {
+  format: "open-board-0.1",
+  id: "other-two-row-board",
+  locale: "en",
+  buttons: [
+    { id: "eat", label: "eat" },
+    { id: "drink", label: "drink" },
+    { id: "play", label: "play" },
+    { id: "sleep", label: "sleep" },
+  ],
+  grid: {
+    rows: 2,
+    columns: 2,
+    order: [
+      ["eat", "drink"],
+      ["play", "sleep"],
+    ],
+  },
+};
+
+const appendedElements: HTMLElement[] = [];
+
+function appendToBody<TagName extends keyof HTMLElementTagNameMap>(
+  tagName: TagName,
+): HTMLElementTagNameMap[TagName] {
+  const element = document.createElement(tagName);
+  document.body.append(element);
+  appendedElements.push(element);
+
+  return element;
+}
+
 function highlightedNames(): string[] {
   return Array.from(
     document.querySelectorAll("[data-scan-highlighted]"),
@@ -55,6 +92,12 @@ describe("switch scanning", () => {
   beforeEach(() => {
     speech = stubSpeech();
     setScanIntervalMs(SCAN_INTERVAL_MS);
+  });
+
+  afterEach(() => {
+    for (const element of appendedElements.splice(0)) {
+      element.remove();
+    }
   });
 
   test("leaves the board alone while scanning is off", async () => {
@@ -258,22 +301,46 @@ describe("switch scanning", () => {
       expect(speech.spokenTexts()).toEqual([]);
     });
 
-    test("leaves switch keys to controls outside the board", async () => {
+    test("scans when focus rests on a control outside the board", async () => {
       await renderCommunicationBoard(TWO_ROW_BOARD);
       const onClick = vi.fn();
-      const outsideButton = document.createElement("button");
+      const outsideButton = appendToBody("button");
       outsideButton.addEventListener("click", onClick);
-      document.body.append(outsideButton);
 
-      try {
-        outsideButton.focus();
-        await pressSwitch();
+      outsideButton.focus();
+      await pressSwitch();
 
-        expect(onClick).toHaveBeenCalledTimes(1);
-        expect(highlightedNames()).toEqual([]);
-      } finally {
-        outsideButton.remove();
-      }
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+      expect(onClick).not.toHaveBeenCalled();
+    });
+
+    test("leaves keys typed into a text field alone", async () => {
+      await renderCommunicationBoard(TWO_ROW_BOARD);
+      const textField = appendToBody("input");
+
+      textField.focus();
+      await userEvent.keyboard("a{Space}b");
+
+      expect(textField.value).toBe("a b");
+      expect(highlightedNames()).toEqual([]);
+    });
+
+    test("leaves switch keys to a dialog that covers the board", async () => {
+      const onClose = vi.fn();
+      const screen = await render(
+        <>
+          {communicationBoardTree(TWO_ROW_BOARD)}
+          <Dialog open>
+            <button onClick={onClose}>Close</button>
+          </Dialog>
+        </>,
+      );
+
+      screen.getByRole("button", { name: "Close" }).element().focus();
+      await pressSwitch();
+
+      expect(onClose).toHaveBeenCalledTimes(1);
+      expect(highlightedNames()).toEqual([]);
     });
 
     test("removes the highlight when scanning is turned off", async () => {
@@ -314,6 +381,19 @@ describe("switch scanning", () => {
       await vi.waitFor(() => {
         expect(speech.spokenTexts()).toEqual(["stop"]);
       });
+    });
+
+    test("restarts at the first row when another board replaces the tiles", async () => {
+      const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["yes", "no"]);
+
+      await screen.rerender(communicationBoardTree(OTHER_TWO_ROW_BOARD));
+      await expect.poll(highlightedNames).toEqual(["eat", "drink"]);
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["play", "sleep"]);
     });
 
     test("keeps cycling through the rows without pausing", async () => {
