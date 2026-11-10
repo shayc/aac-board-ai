@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, onTestFinished, test } from "vitest";
 import { renderHook } from "vitest-browser-react";
 import {
   queueBoardTranslationPass,
@@ -108,6 +108,24 @@ describe("board translation coordinator", () => {
     await expect.poll(queuedBehindReplaced.hasStarted).toBe(true);
 
     expect(result.current).toBe(true);
+  });
+
+  test("reports a failed pass and still runs the pass queued behind it", async () => {
+    const reportedErrors: unknown[] = [];
+    const recordError = (event: ErrorEvent) => {
+      event.preventDefault();
+      reportedErrors.push(event.error);
+    };
+    window.addEventListener("error", recordError);
+    onTestFinished(() => window.removeEventListener("error", recordError));
+    const failure = new Error("storage failure");
+    const next = holdPass();
+
+    queueBoardTranslationPass("es", () => Promise.reject(failure));
+    queueBoardTranslationPass("es", next.pass);
+
+    await expect.poll(next.hasStarted).toBe(true);
+    expect(reportedErrors).toEqual([failure]);
   });
 
   test("aborts the pass in progress and clears the status when stopped", async () => {

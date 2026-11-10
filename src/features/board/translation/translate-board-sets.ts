@@ -25,8 +25,9 @@ type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
 /**
  * Translates every board set not yet in `language` and saves the result.
- * Never rejects: a set that fails stays in its source language until the next
- * run, and an abort stops between sets.
+ * A set the translator fails on stays in its source language until the next
+ * run, and an abort stops between sets. Storage and other errors reject, so
+ * they surface instead of passing for a missing translation model.
  */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
@@ -42,11 +43,12 @@ export async function translateBoardSets(
       continue;
     }
 
-    try {
-      await translateBoardSet(boardSet, language, { signal, onTranslating });
+    const isTranslated = await translateBoardSet(boardSet, language, {
+      signal,
+      onTranslating,
+    });
+    if (isTranslated) {
       onTranslated(boardSet.id);
-    } catch {
-      // Translation is optional; the next language change or app start retries.
     }
   }
 }
@@ -66,7 +68,7 @@ async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
   { signal, onTranslating }: TranslationOptions,
-): Promise<void> {
+): Promise<boolean> {
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
   const boardsMissingLanguage = boards.filter(
@@ -82,23 +84,22 @@ async function translateBoardSet(
     ]);
   }
 
-  // Without the Translator API, createTranslator rejects, so only a set whose
-  // file ships every translation is saved.
+  // Translation is optional, so a refused model, a failed request, or an
+  // abort leaves the set as it is; the next language change or app start
+  // retries. Without the Translator API, createTranslator rejects, so only a
+  // set whose file ships every translation is saved.
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
     { signal, onTranslating },
-  );
-
-  signal.throwIfAborted();
-
-  function findTranslation(source: { locale?: string }, text: string): string {
-    const translations = translationsBySourceLanguage.get(
-      getBoardLanguage(source),
-    );
-
-    return translations?.get(text) ?? text;
+  ).catch(() => undefined);
+  if (!translationsBySourceLanguage || signal.aborted) {
+    return false;
   }
+
+  const findTranslation = (source: { locale?: string }, text: string) =>
+    translationsBySourceLanguage.get(getBoardLanguage(source))?.get(text) ??
+    text;
 
   await saveBoardSetTranslations(boardSet.id, language, {
     name: nameInLanguage ?? findTranslation(boardSet, boardSet.name),
@@ -109,6 +110,8 @@ async function translateBoardSet(
       ]),
     ),
   });
+
+  return true;
 }
 
 function pickBoardTranslations(
