@@ -3,7 +3,13 @@ import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import { type ReactNode, type SyntheticEvent, useReducer, useRef } from "react";
+import {
+  type ReactNode,
+  type SyntheticEvent,
+  useEffect,
+  useReducer,
+  useRef,
+} from "react";
 import {
   SnackbarContext,
   type SnackbarContextValue,
@@ -44,6 +50,15 @@ export function SnackbarProvider({ children }: SnackbarProviderProps) {
   const [state, dispatch] = useReducer(snackbarReducer, initialState);
   const nextKeyRef = useRef(0);
   const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down("sm"));
+
+  // A waiting message closes the current one only once it has rendered open.
+  // Closed before it mounts, a snackbar never exits, and the queue stalls.
+  const hasQueuedSnackbar = state.queue.length > 0;
+  useEffect(() => {
+    if (hasQueuedSnackbar && state.open) {
+      dispatch({ type: "close" });
+    }
+  }, [hasQueuedSnackbar, state.open]);
 
   function showSnackbar(options: SnackbarOptions | string) {
     const snackbarOptions: SnackbarOptions =
@@ -140,11 +155,7 @@ function snackbarReducer(
   switch (action.type) {
     case "show": {
       if (state.current) {
-        return {
-          ...state,
-          queue: [...state.queue, action.snackbar],
-          open: false,
-        };
+        return { ...state, queue: [...state.queue, action.snackbar] };
       }
 
       return { ...state, current: action.snackbar, open: true };

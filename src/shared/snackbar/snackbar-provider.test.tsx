@@ -10,17 +10,24 @@ import { useSnackbar } from "./use-snackbar";
 // Keeps queued messages from auto-hiding mid-assertion on real timers.
 const LONG_DURATION_MS = 60_000;
 
-function ShowButtons({
-  snackbars,
-}: {
-  snackbars: Record<string, SnackbarOptions | string>;
-}) {
+type SnackbarInput = SnackbarOptions | string;
+
+// A list raises all of its messages from one click.
+type ShowButtonSnackbars = Record<string, SnackbarInput | SnackbarInput[]>;
+
+function ShowButtons({ snackbars }: { snackbars: ShowButtonSnackbars }) {
   const { showSnackbar } = useSnackbar();
+
+  function showAll(inputs: SnackbarInput | SnackbarInput[]) {
+    for (const input of [inputs].flat()) {
+      showSnackbar(input);
+    }
+  }
 
   return (
     <>
-      {Object.entries(snackbars).map(([name, options]) => (
-        <button key={name} onClick={() => showSnackbar(options)}>
+      {Object.entries(snackbars).map(([name, inputs]) => (
+        <button key={name} onClick={() => showAll(inputs)}>
           {name}
         </button>
       ))}
@@ -30,7 +37,7 @@ function ShowButtons({
   );
 }
 
-function renderSnackbars(snackbars: Record<string, SnackbarOptions | string>) {
+function renderSnackbars(snackbars: ShowButtonSnackbars) {
   return render(
     <AppProviders>
       <ShowButtons snackbars={snackbars} />
@@ -53,6 +60,24 @@ describe("SnackbarProvider", () => {
     await expect
       .element(screen.getByRole("status"))
       .toHaveTextContent("second");
+  });
+
+  test("keeps showing messages after two are raised by the same action", async () => {
+    const screen = await renderSnackbars({
+      "show-both": [
+        { message: "first", durationMs: LONG_DURATION_MS },
+        { message: "second", durationMs: LONG_DURATION_MS },
+      ],
+      "show-third": { message: "third", durationMs: LONG_DURATION_MS },
+    });
+
+    await screen.getByRole("button", { name: "show-both" }).click();
+    await expect
+      .element(screen.getByRole("status"))
+      .toHaveTextContent("second");
+
+    await screen.getByRole("button", { name: "show-third" }).click();
+    await expect.element(screen.getByRole("status")).toHaveTextContent("third");
   });
 
   test("ignores clickaway so the message stays visible", async () => {

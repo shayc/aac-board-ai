@@ -41,10 +41,15 @@ export function CommunicationBoard({
   const navigation = useBoardNavigation(rootBoardId);
   const gridViewportRef = useRef<HTMLDivElement>(null);
 
+  // Only the callbacks it calls: the hook results change identity with the
+  // message, which would rebuild the activator and re-render every tile.
   const activateButton = createButtonActivator({
-    message,
-    playback,
-    navigation,
+    message: { getParts: message.getParts, setParts: message.setParts },
+    playback: {
+      playMessage: playback.playMessage,
+      playPart: playback.playPart,
+    },
+    navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
   });
   const shortcuts = useBoardShortcuts({ message, playback });
 
