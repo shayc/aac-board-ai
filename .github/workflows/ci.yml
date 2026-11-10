@@ -45,7 +45,7 @@ jobs:
 
       # V8 coverage is Chromium-only, so WebKit runs the suite without it.
       - name: Run tests with coverage in Chromium
-        run: npm run test:coverage -- --project chromium
+        run: npm run test:coverage
 
       - name: Run tests in WebKit
         run: npm test -- --project webkit

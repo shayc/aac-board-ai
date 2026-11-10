@@ -14,7 +14,7 @@
     "paraglide:compile": "paraglide-js compile",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage --project chromium",
     "test:pwa": "npm run build && playwright test",
     "perf": "node perf/cli.ts",
     "test:perf": "node --test \"perf/**/*.test.ts\"",

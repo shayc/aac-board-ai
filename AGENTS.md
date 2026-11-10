@@ -15,7 +15,7 @@
 - Format: `npm run format`
 - Check formatting: `npm run format:check`
 - Test: `npm test`
-- Test with coverage: `npm run test:coverage`
+- Test with coverage: `npm run test:coverage` (Chromium only; V8 coverage does not run in WebKit)
 - PWA offline test: `npm run test:pwa`
 - Local performance lab: `npm run perf` (see [docs/performance.md](docs/performance.md))
 - Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`

@@ -70,9 +70,7 @@ describe("TileSettings", () => {
         </AppProviders>,
       );
 
-      // WebKit's default Tab order skips radios, as Safari's does, so focus the
-      // first one directly after a key press that puts focus in keyboard mode.
-      await userEvent.keyboard("{Shift}");
+      // WebKit's default Tab order skips radios, as Safari's does.
       screen.getByRole("radio", { name: "Top" }).element().focus();
 
       for (const name of ["Top", "Bottom", "Hidden"]) {
