@@ -16,6 +16,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:pwa": "npm run build && playwright test",
+    "perf": "node perf/cli.ts",
+    "test:perf": "node --test \"perf/**/*.test.ts\"",
     "prepare": "husky && npm run paraglide:compile"
   },
   "dependencies": {
