@@ -11,6 +11,14 @@ import { LoadingState } from "@shared/ui/loading-state";
 import { useId, useState } from "react";
 import { useLoaderData, useNavigate, useSubmit } from "react-router";
 
+// The host is the one thing the user judges trust by, so it must read exactly
+// as typed. In an RTL sentence a digit-led host (123.example.com) would
+// otherwise reorder to example.com.123. FSI…PDI is the plain-text form of
+// <bdi>, which a translated string can't contain.
+function isolateBidi(text: string): string {
+  return `⁨${text}⁩`;
+}
+
 export function BoardLinkPage() {
   const { boardHost } = useLoaderData<typeof rootIndexLoader>();
   const submit = useSubmit();
@@ -47,7 +55,9 @@ export function BoardLinkPage() {
             id={descriptionId}
             sx={{ overflowWrap: "anywhere" }}
           >
-            {t(m.boardLinkImportDescription, { host: boardHost })}
+            {t(m.boardLinkImportDescription, {
+              host: isolateBidi(boardHost),
+            })}
           </DialogContentText>
         </DialogContent>
 

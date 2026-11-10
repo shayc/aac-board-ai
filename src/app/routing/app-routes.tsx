@@ -4,10 +4,11 @@ import { BoardLinkPage } from "@pages/board-link-page";
 import { BoardPage } from "@pages/board-page";
 import { LoadingState } from "@shared/ui/loading-state";
 import type { RouteObject } from "react-router";
+import { rootIndexAction } from "./actions/root-index-action";
 import { boardLoader } from "./loaders/board-loader";
 import { BOARD_SET_ROUTE_ID, boardSetLoader } from "./loaders/board-set-loader";
 import { boardSetIndexLoader } from "./loaders/board-set-index-loader";
-import { rootIndexAction, rootIndexLoader } from "./loaders/root-index-loader";
+import { rootIndexLoader } from "./loaders/root-index-loader";
 import { NotFound } from "./not-found";
 import { RouteErrorBoundary } from "./route-error-boundary";
 

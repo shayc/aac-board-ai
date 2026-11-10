@@ -5,20 +5,8 @@ import {
   parseBoardURL,
   starterBoardSet,
 } from "@features/board";
-import {
-  redirect,
-  type ActionFunctionArgs,
-  type LoaderFunctionArgs,
-} from "react-router";
+import { redirect, type LoaderFunctionArgs } from "react-router";
 import { routeErrorCodes, routeErrorResponse } from "../route-error";
-
-// The ?board= param is attacker-controlled, and `/` opens the newest board
-// set, so a link alone must never import. The loader only validates the URL
-// for the confirmation dialog; the import runs in the action once the user
-// confirms.
-function boardURLFromRequest(request: Request): string | null {
-  return new URL(request.url).searchParams.get("board");
-}
 
 function boardLinkHost(boardURL: string): string {
   try {
@@ -31,8 +19,12 @@ function boardLinkHost(boardURL: string): string {
 export async function rootIndexLoader({
   request,
 }: LoaderFunctionArgs): Promise<Response | { boardHost: string }> {
-  const boardURL = boardURLFromRequest(request);
+  const boardURL = new URL(request.url).searchParams.get("board");
 
+  // The ?board= param is attacker-controlled, and `/` opens the newest board
+  // set, so a link alone must never import. Only validate it here and name its
+  // host for the confirmation dialog; rootIndexAction imports once the user
+  // confirms.
   if (boardURL) {
     return { boardHost: boardLinkHost(boardURL) };
   }
@@ -47,25 +39,4 @@ export async function rootIndexLoader({
   });
 
   return redirect(rootBoardPath(importedBoardSet));
-}
-
-export async function rootIndexAction({
-  request,
-}: ActionFunctionArgs): Promise<Response> {
-  const boardURL = boardURLFromRequest(request);
-
-  if (!boardURL) {
-    return redirect("/");
-  }
-
-  try {
-    const importedBoardSet = await importBoardFileFromURL(boardURL, {
-      signal: request.signal,
-    });
-
-    return redirect(rootBoardPath(importedBoardSet));
-  } catch {
-    request.signal.throwIfAborted();
-    throw routeErrorResponse(routeErrorCodes.boardURLImportFailed);
-  }
 }
