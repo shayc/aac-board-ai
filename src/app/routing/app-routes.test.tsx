@@ -46,6 +46,22 @@ async function renderApp(initialEntry = "/") {
   return { router, screen };
 }
 
+// Where a substring is painted, which can differ from its order in the DOM
+// once the bidi algorithm reorders runs.
+function textLeft(element: Element, substring: string): number {
+  const node = element.firstChild;
+  assert(node instanceof Text);
+
+  const start = node.data.indexOf(substring);
+  assert(start !== -1);
+
+  const range = document.createRange();
+  range.setStart(node, start);
+  range.setEnd(node, start + substring.length);
+
+  return range.getBoundingClientRect().left;
+}
+
 function seedRecordedAudioSet() {
   const soundPath = "sounds/hello.wav";
 
@@ -247,7 +263,7 @@ describe("app flow", () => {
     await expect
       .element(dialog)
       .toHaveAccessibleDescription(
-        "This link imports a board file from boards.example. Import it only if you trust whoever sent the link.",
+        "This link imports a board file from ⁨boards.example⁩. Import it only if you trust whoever sent the link.",
       );
     expect(await listBoardSetRecords()).toEqual([]);
   });
@@ -290,6 +306,19 @@ describe("app flow", () => {
 
     const element = description.element();
     expect(element.scrollWidth).toBeLessThanOrEqual(element.clientWidth);
+  });
+
+  test("a digit-led ?board= link host keeps its order in a right-to-left language", async () => {
+    setStoredLanguage("he");
+    const { screen } = await renderApp(
+      `/?board=${encodeURIComponent("https://123.example.com/core.obz")}`,
+    );
+
+    const description = screen.getByText("123.example.com", { exact: false });
+    await expect.element(description).toBeVisible();
+
+    const text = description.element();
+    expect(textLeft(text, "123")).toBeLessThan(textLeft(text, "example"));
   });
 
   test("cancelling a ?board= link opens the existing board set without importing", async () => {
