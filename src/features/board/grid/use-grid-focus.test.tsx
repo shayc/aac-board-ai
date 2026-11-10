@@ -206,6 +206,38 @@ describe("useGridFocus", () => {
         .element(screen.getByRole("button", { name: "Item 6" }))
         .toHaveFocus();
     });
+
+    test("keeps the scroll position when lost focus returns to a tile in another column", async () => {
+      const screen = await render(
+        <div style={{ width: 375, height: 400 }}>
+          <Grid
+            rows={2}
+            columns={6}
+            items={makeItems(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
+            renderItem={renderButton}
+          />
+        </div>,
+      );
+      const scroller = screen.getByRole("grid").element().parentElement;
+
+      await userEvent.click(screen.getByRole("button", { name: "Item 2" }));
+      await screen.rerender(
+        <div style={{ width: 375, height: 400 }}>
+          <Grid
+            rows={2}
+            columns={6}
+            items={makeItems(13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
+            renderItem={renderButton}
+          />
+        </div>,
+      );
+
+      await expect
+        .element(screen.getByRole("button", { name: "Item 14" }))
+        .toHaveFocus();
+      expect(scroller?.scrollWidth).toBeGreaterThan(scroller?.clientWidth ?? 0);
+      expect(scroller?.scrollLeft).toBe(0);
+    });
   });
 
   describe("arrow navigation", () => {
