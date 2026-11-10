@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { assertNever } from "@shared/utils/assert-never";
+import type { ReactNode } from "react";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { PendingDot } from "./pending-dot";
 
@@ -39,18 +40,24 @@ export function SuggestionStatusNotice({
         t(m.modelDownloadProgress, { progress: status.percent });
 
       return (
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+        <StatusText>
           {t(m.suggestionsDownloading)} {progress}
-        </Typography>
+        </StatusText>
       );
     }
+    case "failed":
+      return <StatusText>{t(m.suggestionsFailed)}</StatusText>;
     case "unavailable":
-      return (
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {t(m.suggestionsFailed)}
-        </Typography>
-      );
+      return <StatusText>{t(m.suggestionsUnavailable)}</StatusText>;
     default:
       return assertNever(status);
   }
+}
+
+function StatusText({ children }: { children: ReactNode }) {
+  return (
+    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+      {children}
+    </Typography>
+  );
 }

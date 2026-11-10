@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "Öneriler nasıl etkinleştirilir",
   "suggestionsEnable": "Önerileri aç",
   "suggestionsDownloading": "Yapay zeka modeli indiriliyor…",
+  "suggestionsUnavailable": "Öneriler bu cihazda kullanılamıyor",
   "suggestionsFailed": "Öneriler alınamadı",
   "navBack": "Geri",
   "navHome": "Ana sayfaya git",

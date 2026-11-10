@@ -102,7 +102,7 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("returns unavailable only when there is text, every engine is down, and nothing was suggested", () => {
+  test("returns unavailable only when there is text, no engine can run on the device, and nothing was suggested", () => {
     const allEnginesDown = makeInput({
       sources: makeSources("unavailable", "unavailable"),
       hasText: true,
@@ -119,7 +119,19 @@ describe("deriveSuggestionStatus", () => {
     ).toEqual({ kind: "idle" });
   });
 
-  test("returns unavailable when a failed request leaves no working engine", () => {
+  test("returns failed when every engine's request fails", () => {
+    const input = makeInput({
+      sources: [
+        makeSource({ hasRequestFailed: true }),
+        makeSource({ hasRequestFailed: true }),
+      ],
+      hasText: true,
+    });
+
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "failed" });
+  });
+
+  test("returns failed when a failed request leaves no working engine", () => {
     const input = makeInput({
       sources: [
         makeSource({ hasRequestFailed: true }),
@@ -128,7 +140,7 @@ describe("deriveSuggestionStatus", () => {
       hasText: true,
     });
 
-    expect(deriveSuggestionStatus(input)).toEqual({ kind: "unavailable" });
+    expect(deriveSuggestionStatus(input)).toEqual({ kind: "failed" });
   });
 
   test("returns idle after a failed request while another engine still works", () => {

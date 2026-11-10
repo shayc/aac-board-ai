@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "Ehdotusten ottaminen käyttöön",
   "suggestionsEnable": "Ota ehdotukset käyttöön",
   "suggestionsDownloading": "Ladataan tekoälymallia…",
+  "suggestionsUnavailable": "Ehdotukset eivät ole käytettävissä tällä laitteella",
   "suggestionsFailed": "Ehdotuksia ei voitu hakea",
   "navBack": "Takaisin",
   "navHome": "Siirry etusivulle",

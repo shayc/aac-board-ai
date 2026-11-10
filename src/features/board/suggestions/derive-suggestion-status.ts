@@ -6,6 +6,7 @@ export type SuggestionStatus =
   | { kind: "not-enabled" }
   | { kind: "downloading"; percent: number | null }
   | { kind: "pending" }
+  | { kind: "failed" }
   | { kind: "unavailable" };
 
 export interface SuggestionStatusInput {
@@ -54,7 +55,13 @@ export function deriveSuggestionStatus({
       engineStatus !== "unavailable" && !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingSource) {
-    return { kind: "unavailable" };
+    // An `unavailable` engine can't run on this device, so retrying won't help;
+    // a failed request might succeed on the next message.
+    const isEveryEngineUnavailable = supportedSources.every(
+      ({ engineStatus }) => engineStatus === "unavailable",
+    );
+
+    return { kind: isEveryEngineUnavailable ? "unavailable" : "failed" };
   }
 
   return { kind: "idle" };

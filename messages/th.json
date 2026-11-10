@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "วิธีเปิดใช้คำแนะนำ",
   "suggestionsEnable": "เปิดใช้คำแนะนำ",
   "suggestionsDownloading": "กำลังดาวน์โหลดโมเดล AI…",
+  "suggestionsUnavailable": "อุปกรณ์นี้ไม่รองรับคำแนะนำ",
   "suggestionsFailed": "ไม่สามารถรับคำแนะนำได้",
   "navBack": "กลับ",
   "navHome": "ไปที่หน้าแรก",

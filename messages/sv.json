@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "Så aktiverar du förslag",
   "suggestionsEnable": "Aktivera förslag",
   "suggestionsDownloading": "Laddar ner AI-modell…",
+  "suggestionsUnavailable": "Förslag är inte tillgängliga på den här enheten",
   "suggestionsFailed": "Det gick inte att hämta förslag",
   "navBack": "Tillbaka",
   "navHome": "Till startsidan",

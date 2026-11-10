@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "提案を有効にする方法",
   "suggestionsEnable": "提案を有効にする",
   "suggestionsDownloading": "AI モデルをダウンロード中…",
+  "suggestionsUnavailable": "この端末では提案を利用できません",
   "suggestionsFailed": "提案を取得できませんでした",
   "navBack": "戻る",
   "navHome": "ホームに戻る",

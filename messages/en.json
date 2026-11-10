@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "How to enable suggestions",
   "suggestionsEnable": "Enable suggestions",
   "suggestionsDownloading": "Downloading AI model…",
+  "suggestionsUnavailable": "Suggestions unavailable on this device",
   "suggestionsFailed": "Couldn't get suggestions",
   "navBack": "Go back",
   "navHome": "Go home",

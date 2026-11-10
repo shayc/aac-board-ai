@@ -104,6 +104,7 @@
   "suggestionsEnableHelp": "A javaslatok bekapcsolása",
   "suggestionsEnable": "Javaslatok bekapcsolása",
   "suggestionsDownloading": "MI-modell letöltése…",
+  "suggestionsUnavailable": "A javaslatok nem érhetők el ezen az eszközön",
   "suggestionsFailed": "Nem sikerült lekérni a javaslatokat",
   "navBack": "Vissza",
   "navHome": "Ugrás a kezdőlapra",
