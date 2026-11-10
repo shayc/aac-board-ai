@@ -99,6 +99,9 @@ export default defineConfig({
       output: {
         codeSplitting: {
           groups: [
+            // Messages are over half of the app code and change rarely, so an
+            // app-only release leaves them in the service worker's precache.
+            { name: "messages", test: /src\/paraglide\//, priority: 40 },
             {
               name: "react",
               test: /node_modules\/(react|react-dom|scheduler)\//,
