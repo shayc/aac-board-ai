@@ -9,7 +9,6 @@ import {
   BACKGROUND_DARK,
   BACKGROUND_LIGHT,
 } from "./src/shared/theme/theme-colors.ts";
-import { WEBKIT_PROFILE_DIR } from "./vitest.global-setup.ts";
 
 // Share theme-colors.ts with index.html's static styles instead of duplicating hex.
 const themeColorHtmlPlugin: Plugin = {
@@ -128,21 +127,7 @@ export default defineConfig({
       enabled: true,
       headless: true,
       provider: playwright(),
-      instances: [
-        { browser: "chromium" },
-        {
-          browser: "webkit",
-          // Playwright's default WebKit context is ephemeral, like private
-          // browsing, and rejects Blobs in IndexedDB. A persistent context
-          // matches a normal Safari profile but cannot be shared across
-          // parallel files.
-          provider: playwright({
-            persistentContext: WEBKIT_PROFILE_DIR,
-          }),
-          globalSetup: "./vitest.global-setup.ts",
-          fileParallelism: false,
-        },
-      ],
+      instances: [{ browser: "chromium" }],
     },
     coverage: {
       include: ["src/**/*.{ts,tsx}"],

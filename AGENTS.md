@@ -15,7 +15,7 @@
 - Format: `npm run format`
 - Check formatting: `npm run format:check`
 - Test: `npm test`
-- Test with coverage: `npm run test:coverage` (Chromium only; V8 coverage does not run in WebKit)
+- Test with coverage: `npm run test:coverage`
 - PWA offline test: `npm run test:pwa`
 - Local performance lab: `npm run perf` (see [docs/performance.md](docs/performance.md))
 - Performance lab unit tests (Node's test runner, no browser): `npm run test:perf`
@@ -23,7 +23,7 @@
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage (Chromium) → test (WebKit) → build → PWA offline test (Chromium and WebKit). CI enforces coverage floors in Chromium only, because V8 coverage is Chromium-only; `npm test` runs the suite in both engines without them.
+- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
 - Pre-commit: `lint-staged` runs Oxlint `--fix` + Oxfmt on staged files.
 
 ## Project Structure
@@ -38,10 +38,10 @@
 ## Testing Instructions
 
 - **Structure:** Colocate tests as `*.test.ts(x)`.
-- **Runner:** `npm test` runs Vitest browser mode via Playwright in real Chromium and WebKit. Run one engine with `npm test -- --project chromium` (or `webkit`).
+- **Runner:** `npm test` runs Vitest browser mode via Playwright (real Chromium).
 - **Utilities:** Use `vitest-browser-react` for components and interactions.
 - **Determinism:** No sleeps; prefer real timers — use `vi.useFakeTimers()` only when advancing time deterministically.
-- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use the browser's real web APIs except for the allowed stubs below. Assert behavior that holds in both engines, not one engine's computed values or `Intl` data.
+- **Mocking:** Render the full tree. Do not mock internals (child components, hooks, contexts, providers, utilities). Use Chromium's real web APIs except for the allowed stubs below.
   - _Allowed stubs (closed list):_ network (`fetch`, WebSocket), non-determinism (`Date.now`, `Math.random`), device output (`speechSynthesis`, `HTMLAudioElement.play`), and browser capabilities unavailable in the test runtime (only at the platform boundary).
   - _Method:_ Prefer `vi.spyOn` over `vi.mock`.
 - **Scope:**

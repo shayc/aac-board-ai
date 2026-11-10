@@ -76,7 +76,7 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-To run tests in Chromium and WebKit, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
+To run tests in Chromium, install Playwright with `npx playwright install --with-deps`, then run `npm test`.
 
 To measure performance locally, run `npm run perf`; see [docs/performance.md](docs/performance.md).
 
@@ -85,7 +85,7 @@ To measure performance locally, run `npm run perf`; see [docs/performance.md](do
 Built with React 19, TypeScript, Vite, and MUI.
 
 - IndexedDB stores boards and assets; a service worker caches the app shell for offline use
-- Behavior and accessibility tests run in Chromium and WebKit with Vitest and axe-core; Playwright verifies offline board loading in both engines in CI
+- Behavior and accessibility tests run in Chromium with Vitest and axe-core; Playwright verifies offline board loading in CI
 
 The app uses [@shayc/open-board-format](https://github.com/shayc/open-board-format) to parse OBF/OBZ files and [@shayc/react-built-in-ai](https://github.com/shayc/react-built-in-ai) to manage browser AI availability and sessions.
 

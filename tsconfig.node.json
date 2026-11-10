@@ -26,7 +26,6 @@
     "oxfmt.config.ts",
     "oxlint.config.ts",
     "project.inlang/paraglide.config.ts",
-    "vite.config.ts",
-    "vitest.global-setup.ts"
+    "vite.config.ts"
   ]
 }
