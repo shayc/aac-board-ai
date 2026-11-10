@@ -594,8 +594,10 @@ describe("app flow", () => {
       .element(notice)
       .toHaveTextContent("Descargando modelo de traducción…0% completado");
 
+    const downloadNotice = notice.element();
     download.resolve();
     await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
+    expect(notice.element()).toBe(downloadNotice);
 
     translation.resolve();
     await expect.element(notice).not.toBeInTheDocument();

@@ -76,15 +76,15 @@ support from User-Agent strings.
 
 State has distinct owners and lifetimes:
 
-| State                 | Owner                                 | Contents                                                                        |
-| --------------------- | ------------------------------------- | ------------------------------------------------------------------------------- |
-| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                         |
-| Active board          | React Router loaders                  | Stored `Board` and its set's board list for the current route                   |
-| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close    |
-| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                      |
-| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, voice catalog, and playback progress    |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding |
-| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                             |
+| State                 | Owner                                 | Contents                                                                                               |
+| --------------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| Durable board data    | IndexedDB through board storage       | Board-set metadata, source OBF records, and asset blobs                                                |
+| Active board          | React Router loaders                  | Stored `Board` and its set's board list for the current route                                          |
+| Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
+| Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
+| Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding                        |
+| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding resolved board links and translations saved on
@@ -161,6 +161,14 @@ everything on screen updates without a reload. Other sets are not revalidated:
 that would re-run a `?board=` link import still in flight. A set that
 fails, for example because a model download needs a user gesture, stays in its
 source language until the next run.
+
+While a pass is translating a set, the hook publishes a
+[board translation status](../src/features/board/translation/board-translation-status.ts).
+The status is set when the first set that needs translating starts, before its
+translation model opens, and cleared when the pass ends. A pass aborted by a
+language change leaves the status to the pass that replaces it. The
+[board translation notice](../src/features/board/translation/board-translation-notice.tsx)
+shows a model download first and the translation after it, in one alert.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for
@@ -251,7 +259,7 @@ drawer behavior; features own controls, capability checks, and persisted
 preferences. App-wide language, theme, and speech settings live in `app/settings/`;
 language settings render the feature's
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
-instead of checking Translator support themselves. Reusable field controls live in
+instead of checking Translator support or translation progress themselves. Reusable field controls live in
 `shared/ui/` so features do not depend on the app layer.
 
 Closing or unmounting settings does not delete preferences. Removing a feature
