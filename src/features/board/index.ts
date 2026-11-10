@@ -15,6 +15,7 @@ export {
   rootBoardPath,
 } from "./navigation/board-paths";
 export { BoardSelector } from "./navigation/board-selector";
+export { ScanningSettings } from "./scanning/scanning-settings";
 export { BoardNotFoundError } from "./storage/board-content-storage";
 export { listBoardSummaries } from "./storage/list-board-summaries";
 export { loadStoredBoard } from "./storage/load-stored-board";
