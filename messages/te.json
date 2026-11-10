@@ -80,6 +80,7 @@
   "languageLabel": "భాష",
   "languageDownloading": "అనువాద నమూనా డౌన్‌లోడ్ అవుతోంది…",
   "languageDownloadProgress": "{progress}% పూర్తయింది",
+  "languageTranslating": "బోర్డులు అనువదించబడుతున్నాయి…",
   "speechVoice": "వాయిస్",
   "speechRate": "వేగం",
   "speechPitch": "పిచ్",

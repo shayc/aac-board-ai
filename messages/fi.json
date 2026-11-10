@@ -80,6 +80,7 @@
   "languageLabel": "Kieli",
   "languageDownloading": "Ladataan käännösmallia…",
   "languageDownloadProgress": "{progress} % valmis",
+  "languageTranslating": "Käännetään tauluja…",
   "speechVoice": "Ääni",
   "speechRate": "Nopeus",
   "speechPitch": "Korkeus",

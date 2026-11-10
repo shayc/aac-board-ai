@@ -80,6 +80,7 @@
   "languageTranslationUnavailable": "Automatic board translation is unavailable on this device.",
   "languageDownloading": "Downloading translation model…",
   "languageDownloadProgress": "{progress}% complete",
+  "languageTranslating": "Translating boards…",
   "speechVoice": "Voice",
   "speechRate": "Speed",
   "speechPitch": "Pitch",

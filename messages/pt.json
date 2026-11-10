@@ -80,6 +80,7 @@
   "languageLabel": "Idioma",
   "languageDownloading": "Baixando modelo de tradução…",
   "languageDownloadProgress": "{progress}% concluído",
+  "languageTranslating": "Traduzindo pranchas…",
   "speechVoice": "Voz",
   "speechRate": "Velocidade",
   "speechPitch": "Tom",

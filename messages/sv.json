@@ -80,6 +80,7 @@
   "languageLabel": "Språk",
   "languageDownloading": "Laddar ner översättningsmodell…",
   "languageDownloadProgress": "{progress}% klart",
+  "languageTranslating": "Översätter tavlor…",
   "speechVoice": "Röst",
   "speechRate": "Hastighet",
   "speechPitch": "Tonhöjd",

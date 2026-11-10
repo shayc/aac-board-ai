@@ -80,6 +80,7 @@
   "languageLabel": "اللغة",
   "languageDownloading": "جارٍ تنزيل نموذج الترجمة…",
   "languageDownloadProgress": "اكتمل {progress}%",
+  "languageTranslating": "جارٍ ترجمة اللوحات…",
   "speechVoice": "الصوت",
   "speechRate": "السرعة",
   "speechPitch": "حدّة الصوت",

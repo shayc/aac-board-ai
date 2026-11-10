@@ -14,6 +14,7 @@ import {
 
 interface TranslateBoardSetsOptions {
   signal: AbortSignal;
+  onTranslating: (boardSetId: string) => void;
   onTranslated: (boardSetId: string) => void;
 }
 
@@ -27,7 +28,7 @@ type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { signal, onTranslated }: TranslateBoardSetsOptions,
+  { signal, onTranslating, onTranslated }: TranslateBoardSetsOptions,
 ): Promise<void> {
   for (const boardSet of boardSets) {
     if (signal.aborted) {
@@ -38,6 +39,7 @@ export async function translateBoardSets(
       continue;
     }
 
+    onTranslating(boardSet.id);
     try {
       await translateBoardSet(boardSet, language, signal);
       onTranslated(boardSet.id);

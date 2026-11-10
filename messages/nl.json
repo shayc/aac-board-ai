@@ -80,6 +80,7 @@
   "languageLabel": "Taal",
   "languageDownloading": "Vertaalmodel downloaden…",
   "languageDownloadProgress": "{progress}% voltooid",
+  "languageTranslating": "Borden vertalen…",
   "speechVoice": "Stem",
   "speechRate": "Snelheid",
   "speechPitch": "Toonhoogte",

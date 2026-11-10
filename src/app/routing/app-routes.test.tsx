@@ -565,6 +565,42 @@ describe("app flow", () => {
       .toBeVisible();
   });
 
+  test("the language settings report the model download, then the board translation", async () => {
+    await seedTwoBoardSet();
+    const translator = stubTranslator();
+    const download = Promise.withResolvers<void>();
+    const translation = Promise.withResolvers<void>();
+    const createInstance = translator.create.getMockImplementation();
+    translator.availability.mockResolvedValue("downloading");
+    translator.create.mockImplementation(async (options) => {
+      await download.promise;
+
+      return createInstance?.(options);
+    });
+    translator.translate.mockImplementation(async (input) => {
+      await translation.promise;
+
+      return `[es] ${input}`;
+    });
+
+    const { screen } = await renderApp("/sets/food/boards/home");
+
+    await screen.getByRole("button", { name: "Continue" }).click();
+    setStoredLanguage("es");
+    await screen.getByRole("button", { name: "Abrir ajustes" }).click();
+    const notice = screen.getByRole("alert");
+
+    await expect
+      .element(notice)
+      .toHaveTextContent("Descargando modelo de traducción…0% completado");
+
+    download.resolve();
+    await expect.element(notice).toHaveTextContent("Traduciendo tableros…");
+
+    translation.resolve();
+    await expect.element(notice).not.toBeInTheDocument();
+  });
+
   test("client navigation from a board sets the localized not-found title", async () => {
     const { router, screen } = await renderApp();
 

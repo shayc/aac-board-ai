@@ -80,6 +80,7 @@
   "languageLabel": "Jezik",
   "languageDownloading": "Preuzimanje modela za prijevod…",
   "languageDownloadProgress": "{progress} % dovršeno",
+  "languageTranslating": "Prevođenje ploča…",
   "speechVoice": "Glas",
   "speechRate": "Brzina",
   "speechPitch": "Visina",

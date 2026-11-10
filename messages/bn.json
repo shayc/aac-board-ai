@@ -80,6 +80,7 @@
   "languageLabel": "ভাষা",
   "languageDownloading": "অনুবাদ মডেল ডাউনলোড হচ্ছে…",
   "languageDownloadProgress": "{progress}% সম্পন্ন",
+  "languageTranslating": "বোর্ড অনুবাদ হচ্ছে…",
   "speechVoice": "কণ্ঠস্বর",
   "speechRate": "গতি",
   "speechPitch": "পিচ",

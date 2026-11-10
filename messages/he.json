@@ -80,6 +80,7 @@
   "languageLabel": "שפה",
   "languageDownloading": "הורדת מודל תרגום…",
   "languageDownloadProgress": "הושלמו {progress}%",
+  "languageTranslating": "תרגום לוחות…",
   "speechVoice": "קול",
   "speechRate": "קצב",
   "speechPitch": "גובה הקול",
