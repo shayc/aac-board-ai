@@ -120,7 +120,7 @@ export default defineConfig({
   },
   test: {
     dir: "src",
-    setupFiles: ["./src/shared/testing/global-setup.ts"],
+    setupFiles: ["./src/shared/testing/setup.ts"],
     restoreMocks: true,
     unstubGlobals: true,
     unstubEnvs: true,
