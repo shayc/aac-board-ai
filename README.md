@@ -10,7 +10,7 @@
 
 </div>
 
-**AAC Board AI** is an augmentative and alternative communication (AAC) app for people who cannot rely on speech. Users select symbols to build messages and have them spoken aloud.
+**AAC Board AI** is a free augmentative and alternative communication (AAC) app for people who cannot rely on speech, such as some autistic people and people with cerebral palsy, ALS, or aphasia. Users select symbols to build messages and have them spoken aloud. It runs in the browser, works offline, and needs no account.
 
 On supported desktop browsers, **Built-in AI** uses the browser’s on-device models to proofread messages, suggest more complete phrasing, and translate board content. No API key or cloud AI service is required, and core communication works without Built-in AI.
 
@@ -28,6 +28,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 ## Core features
 
+- Optional on-device AI suggestions and board translation
 - First Words starter board set for first-time AAC users
 - Touch, keyboard navigation, and switch scanning with one or two switches
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
