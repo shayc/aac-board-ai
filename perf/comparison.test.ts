@@ -4,13 +4,13 @@ import { compareBuilds } from "./comparison.ts";
 import type { RunResults, TimingSamples } from "./results.ts";
 
 const TIMING = "openBoardToGrid";
-const SAMPLE_COUNT = 10;
+const ROUND_COUNT = 10;
 
 function run(timings: Record<string, TimingSamples>): RunResults {
   const settings = {
     browserVersion: "158.0.8127.18",
     cpuSlowdown: 4,
-    sampleCount: timings[TIMING]?.base.length ?? SAMPLE_COUNT,
+    roundCount: timings[TIMING]?.base.length ?? ROUND_COUNT,
   };
   const build = {
     source: "main",
@@ -29,7 +29,7 @@ function run(timings: Record<string, TimingSamples>): RunResults {
 // Each round is slower than the last, the way a warming laptop drifts.
 function driftingRounds(shift: number): TimingSamples {
   const base = Array.from(
-    { length: SAMPLE_COUNT },
+    { length: ROUND_COUNT },
     (_, round) => 100 + round * 5,
   );
 
@@ -43,7 +43,7 @@ await test("compareBuilds flags a slowdown that every round shows", () => {
   const [timing] = compareBuilds(run({ [TIMING]: driftingRounds(3) })).timings;
 
   assert.equal(timing?.verdict, "regression");
-  assert.equal(timing.p, 2 / 2 ** SAMPLE_COUNT);
+  assert.equal(timing.p, 2 / 2 ** ROUND_COUNT);
 });
 
 await test("compareBuilds flags a speedup that every round shows", () => {
@@ -96,7 +96,7 @@ await test("compareBuilds corrects for the number of timings", () => {
   assert.equal(amongOthers.timings[0]?.verdict, "unchanged");
 });
 
-await test("compareBuilds says when the samples are too few to flag anything", () => {
+await test("compareBuilds says when the rounds are too few to flag anything", () => {
   const threeRounds = { base: [100, 101, 102], current: [110, 111, 112] };
   const comparison = compareBuilds(run({ [TIMING]: threeRounds }));
 

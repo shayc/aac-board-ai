@@ -17,17 +17,17 @@ declare global {
 export function installPagePerf(watches: Record<string, string>): void {
   const watched = new Map<
     string,
-    { selector: string; visibleAt: Promise<number> }
+    { selector: string; firstFrame: Promise<number> }
   >();
 
   const perf: PagePerf = {
     lastPointerDown: Number.NaN,
     watch(name, selector) {
-      watched.set(name, { selector, visibleAt: firstVisibleFrame(selector) });
+      watched.set(name, { selector, firstFrame: firstVisibleFrame(selector) });
     },
     visibleAt(name, timeoutMs) {
-      const watch = watched.get(name);
-      if (!watch) {
+      const target = watched.get(name);
+      if (!target) {
         return Promise.reject(new Error(`Nothing is watched as "${name}".`));
       }
 
@@ -36,13 +36,13 @@ export function installPagePerf(watches: Record<string, string>): void {
         timer = window.setTimeout(() => {
           reject(
             new Error(
-              `${watch.selector} did not become visible within ${timeoutMs} ms.`,
+              `${target.selector} did not become visible within ${timeoutMs} ms.`,
             ),
           );
         }, timeoutMs);
       });
 
-      return Promise.race([watch.visibleAt, timeout]).finally(() => {
+      return Promise.race([target.firstFrame, timeout]).finally(() => {
         clearTimeout(timer);
       });
     },

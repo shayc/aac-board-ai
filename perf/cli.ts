@@ -16,10 +16,12 @@ import {
   RAW_RESULTS_DIR,
   RESULTS_FILE,
   ROOT_DIR,
-  type BuildInfo,
-  type BuildName,
-  type JourneyResult,
-  type RunResults,
+} from "./paths.ts";
+import type {
+  BuildInfo,
+  BuildName,
+  JourneyResult,
+  RunResults,
 } from "./results.ts";
 
 /** Where a build's code comes from: a label for the report and a commit. */
@@ -31,7 +33,7 @@ interface BuildSource {
 const { values: flags } = parseArgs({
   options: {
     base: { type: "string", default: "main" },
-    samples: { type: "string", default: "10" },
+    rounds: { type: "string", default: "10" },
   },
 });
 
@@ -46,36 +48,36 @@ for (const signal of ["SIGINT", "SIGTERM"] as const) {
 }
 
 try {
-  await compare(flags.base, flags.samples);
+  await compare(flags.base, flags.rounds);
 } catch (error) {
   console.error(`\n${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 }
 
-async function compare(baseRef: string, samples: string): Promise<void> {
+async function compare(baseRef: string, rounds: string): Promise<void> {
   // An even number of rounds lets each build go first equally often.
-  if (!/^[1-9]\d*$/.test(samples) || Number(samples) % 2 !== 0) {
-    throw new Error(`--samples takes an even number above 0, not ${samples}.`);
+  if (!/^[1-9]\d*$/.test(rounds) || Number(rounds) % 2 !== 0) {
+    throw new Error(`--rounds takes an even number above 0, not ${rounds}.`);
   }
 
   // Read before building, so the report names what was built even if the
   // repository moves on during the run.
-  const sources: Record<BuildName, BuildSource> = {
+  const builds: Record<BuildName, BuildSource> = {
     base: { source: baseRef, commit: resolveCommit(baseRef) },
-    current: describeWorkingTree(),
+    current: readWorkingTreeSource(),
   };
   buildApp(ROOT_DIR, DIST_DIRS.current);
-  await buildBase(sources.base.commit);
+  await buildBase(builds.base.commit);
 
   await rm(RAW_RESULTS_DIR, { recursive: true, force: true });
   run(
     "npx",
     ["playwright", "test", "--config", "perf/playwright.config.ts"],
     ROOT_DIR,
-    { PERF_SAMPLES: samples },
+    { PERF_ROUNDS: rounds },
   );
 
-  const results = await collectResults(sources);
+  const results = await collectResults(builds);
   await writeFile(RESULTS_FILE, JSON.stringify(results, null, 2));
   printReport(results, compareBuilds(results));
 }
@@ -120,7 +122,7 @@ async function buildBase(commit: string): Promise<void> {
 }
 
 async function collectResults(
-  sources: Record<BuildName, BuildSource>,
+  builds: Record<BuildName, BuildSource>,
 ): Promise<RunResults> {
   const files = (await readdir(RAW_RESULTS_DIR)).toSorted();
   const journeys = await Promise.all(
@@ -140,14 +142,14 @@ async function collectResults(
     date: new Date().toISOString(),
     settings: first.settings,
     builds: {
-      base: await describeBuild("base", sources.base),
-      current: await describeBuild("current", sources.current),
+      base: await describeBuild("base", builds.base),
+      current: await describeBuild("current", builds.current),
     },
     journeys,
   };
 }
 
-function describeWorkingTree(): BuildSource {
+function readWorkingTreeSource(): BuildSource {
   const isDirty = git(["status", "--porcelain"]) !== "";
 
   return {
@@ -189,13 +191,11 @@ async function hashBuild(distDir: string): Promise<string> {
 
 function printReport(results: RunResults, comparison: Comparison): void {
   const { builds, settings } = results;
-  const describe = ({ source, commit, buildHash }: BuildInfo) =>
-    `${source} (commit ${commit}, build ${buildHash})`;
 
-  console.log(`\nBase:    ${describe(builds.base)}`);
-  console.log(`Current: ${describe(builds.current)}`);
+  console.log(`\nBase:    ${formatBuild(builds.base)}`);
+  console.log(`Current: ${formatBuild(builds.current)}`);
   console.log(
-    `Chromium ${settings.browserVersion}, CPU ${settings.cpuSlowdown}× slowdown, ${settings.sampleCount} rounds`,
+    `Chromium ${settings.browserVersion}, CPU ${settings.cpuSlowdown}× slowdown, ${settings.roundCount} rounds`,
   );
 
   for (const { journey } of results.journeys) {
@@ -214,11 +214,15 @@ function printReport(results: RunResults, comparison: Comparison): void {
   }
   if (!comparison.canFlagChanges) {
     console.log(
-      `\n${settings.sampleCount} rounds are too few to flag a change in ${comparison.timings.length} timings; this run only shows that the journeys work.`,
+      `\n${settings.roundCount} rounds are too few to flag a change in ${comparison.timings.length} timings; this run only shows that the journeys work.`,
     );
   }
 
   console.log(`\nSamples: ${RESULTS_FILE}`);
+}
+
+function formatBuild({ source, commit, buildHash }: BuildInfo): string {
+  return `${source} (commit ${commit}, build ${buildHash})`;
 }
 
 function formatTiming(timing: TimingComparison): string {

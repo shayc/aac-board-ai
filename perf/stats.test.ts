@@ -55,7 +55,7 @@ await test("differenceInterval spans the differences the test would not reject",
   });
 });
 
-await test("differenceInterval is undefined with too few samples", () => {
+await test("differenceInterval is undefined with too few differences", () => {
   assert.equal(differenceInterval([1, 2, 3], 0.95), undefined);
 });
 

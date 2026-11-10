@@ -16,7 +16,7 @@ export function median(values: number[]): number {
  * Two-sided exact Wilcoxon signed-rank test of paired differences. Zero
  * differences are left out and tied sizes share their average rank. The p-value
  * counts every way of assigning signs to the observed ranks, so it stays exact
- * with ties and with few samples.
+ * with ties and with few differences.
  */
 export function signedRankP(differences: number[]): number {
   const changed = differences.filter((difference) => difference !== 0);
@@ -50,7 +50,7 @@ export function typicalDifference(differences: number[]): number {
 
 /**
  * The confidence interval that goes with the signed-rank test: the differences
- * the test would not reject. Undefined when there are too few samples for any
+ * the test would not reject. Undefined when there are too few differences for any
  * interval to reach the confidence level.
  */
 export function differenceInterval(
@@ -97,9 +97,9 @@ export function holmAdjust(pValues: number[]): number[] {
   return adjusted;
 }
 
-/** The smallest p the signed-rank test can report for this many samples. */
-export function smallestSignedRankP(sampleCount: number): number {
-  return 2 / 2 ** sampleCount;
+/** The smallest p the signed-rank test can report for this many differences. */
+export function smallestSignedRankP(differenceCount: number): number {
+  return 2 / 2 ** differenceCount;
 }
 
 function rank(values: number[]): number[] {

@@ -68,7 +68,7 @@ test("startup", async ({ browser }) => {
     });
     const { page } = firstLaunch;
 
-    await firstLaunch.measure(async () => {
+    await firstLaunch.slowCPUDuring(async () => {
       await page.goto("/");
       sample.record("firstLaunch.toOnboarding", {
         start: 0,
@@ -90,7 +90,7 @@ test("startup", async ({ browser }) => {
       grid: gridSelector(STARTER_BOARD),
     });
 
-    await returnVisit.measure(async () => {
+    await returnVisit.slowCPUDuring(async () => {
       await returnVisit.page.goto("/");
       sample.record("returnVisit.toGrid", {
         start: 0,
@@ -109,7 +109,7 @@ test("tileInteraction", async ({ browser }) => {
     const { page } = probe;
     await openCoreBoard(page);
 
-    await probe.measure(async () => {
+    await probe.slowCPUDuring(async () => {
       const message: string[] = [];
 
       async function tapWord(word: string): Promise<void> {

@@ -68,7 +68,7 @@ export function compareBuilds(results: RunResults): Comparison {
       },
     ),
     canFlagChanges:
-      smallestSignedRankP(results.settings.sampleCount) * measured.length <=
+      smallestSignedRankP(results.settings.roundCount) * measured.length <=
       SIGNIFICANCE_LEVEL,
   };
 }

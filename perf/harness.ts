@@ -11,14 +11,10 @@ import { installPagePerf } from "./page-perf.ts";
 import {
   ACTION_TIMEOUT_MS,
   BASE_BUILD_URL,
-  SAMPLE_COUNT,
+  ROUND_COUNT,
 } from "./playwright.config.ts";
-import {
-  RAW_RESULTS_DIR,
-  type BuildName,
-  type JourneyResult,
-  type TimingSamples,
-} from "./results.ts";
+import { RAW_RESULTS_DIR } from "./paths.ts";
+import type { BuildName, JourneyResult, TimingSamples } from "./results.ts";
 import { median } from "./stats.ts";
 
 const CPU_SLOWDOWN = 4;
@@ -69,7 +65,7 @@ export class PageProbe {
   }
 
   /** Slows the CPU for `steps`; whatever surrounds them runs at full speed. */
-  async measure(steps: () => Promise<void>): Promise<void> {
+  async slowCPUDuring(steps: () => Promise<void>): Promise<void> {
     await this.#setCPUSlowdown(CPU_SLOWDOWN);
     try {
       await steps();
@@ -110,7 +106,7 @@ export class JourneySample {
 }
 
 /**
- * Measures a journey on both builds in SAMPLE_COUNT rounds. A round runs the
+ * Measures a journey on both builds in ROUND_COUNT rounds. A round runs the
  * journey once per build, back to back, so whatever the machine is doing at
  * that moment slows both alike. Each sample gets a fresh browser context, and
  * one warm-up sample per build is discarded.
@@ -125,7 +121,7 @@ export async function measureJourney(
   }
 
   const samples: Record<BuildName, JourneySample[]> = { base: [], current: [] };
-  for (let round = 0; round < SAMPLE_COUNT; round += 1) {
+  for (let round = 0; round < ROUND_COUNT; round += 1) {
     for (const build of buildOrder(round)) {
       samples[build].push(await runSample(browser, build, runJourney));
     }
@@ -181,7 +177,7 @@ async function writeJourneyResult(
     settings: {
       browserVersion: browser.version(),
       cpuSlowdown: CPU_SLOWDOWN,
-      sampleCount: SAMPLE_COUNT,
+      roundCount: ROUND_COUNT,
     },
     timings,
   };

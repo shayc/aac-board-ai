@@ -21,7 +21,7 @@ npm run perf -- --base HEAD~3
 Compares with another commit, branch or tag instead of `main`.
 
 ```bash
-npm run perf -- --samples 2
+npm run perf -- --rounds 2
 ```
 
 Runs 2 rounds instead of 10, for a quick check that the journeys still work.
