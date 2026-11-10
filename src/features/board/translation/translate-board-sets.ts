@@ -1,4 +1,8 @@
-import { createTranslator } from "@shayc/react-built-in-ai";
+import {
+  createTranslator,
+  MissingUserActivationError,
+  UnavailableError,
+} from "@shayc/react-built-in-ai";
 import type { Board, StringTranslations } from "../board-types";
 import { obfToBoard } from "../obf/obf-to-board";
 import { listBoardRecords } from "../storage/board-content-storage";
@@ -12,27 +16,37 @@ import {
   getBoardLanguage,
 } from "./board-translations";
 
+/** Why a set could not be translated, when the user can be told something. */
+export type TranslationBlocker = "needs-download" | "unavailable";
+
 export interface TranslationOptions {
   signal: AbortSignal;
+  onDownloadProgress: (progress: number) => void;
   onTranslating: () => void;
+  onBlocked: (blocker: TranslationBlocker) => void;
 }
 
 interface TranslateBoardSetsOptions extends TranslationOptions {
   onTranslated: (boardSetId: string) => void;
 }
 
+type TranslatorProgressOptions = Omit<TranslationOptions, "onBlocked">;
+
 type OpenTranslator = Awaited<ReturnType<typeof createTranslator>>;
 
 /**
  * Translates every board set not yet in `language` and saves the result.
  * Never rejects: a set that fails stays in its source language until the next
- * run, and an abort stops between sets.
+ * run, and an abort stops between sets. A set stopped by a missing model
+ * download or an unsupported language pair is reported through `onBlocked`.
  */
 export async function translateBoardSets(
   boardSets: readonly BoardSetRecord[],
   language: string,
-  { signal, onTranslating, onTranslated }: TranslateBoardSetsOptions,
+  { onTranslated, onBlocked, ...options }: TranslateBoardSetsOptions,
 ): Promise<void> {
+  const { signal } = options;
+
   for (const boardSet of boardSets) {
     if (signal.aborted) {
       return;
@@ -43,12 +57,30 @@ export async function translateBoardSets(
     }
 
     try {
-      await translateBoardSet(boardSet, language, { signal, onTranslating });
+      await translateBoardSet(boardSet, language, options);
       onTranslated(boardSet.id);
-    } catch {
+    } catch (error) {
       // Translation is optional; the next language change or app start retries.
+      const blocker = findTranslationBlocker(error);
+      if (blocker) {
+        onBlocked(blocker);
+      }
     }
   }
+}
+
+function findTranslationBlocker(
+  error: unknown,
+): TranslationBlocker | undefined {
+  if (error instanceof MissingUserActivationError) {
+    return "needs-download";
+  }
+
+  if (error instanceof UnavailableError) {
+    return "unavailable";
+  }
+
+  return undefined;
 }
 
 // The set name is saved in the same transaction as its boards' translations,
@@ -65,8 +97,9 @@ function isBoardSetInLanguage(
 async function translateBoardSet(
   boardSet: BoardSetRecord,
   language: string,
-  { signal, onTranslating }: TranslationOptions,
+  options: TranslatorProgressOptions,
 ): Promise<void> {
+  const { signal } = options;
   const boards = await listBoards(boardSet.id);
   const nameInLanguage = findNameInLanguage(boardSet, boards, language);
   const boardsMissingLanguage = boards.filter(
@@ -87,7 +120,7 @@ async function translateBoardSet(
   const translationsBySourceLanguage = await translateBySourceLanguage(
     stringsBySourceLanguage,
     language,
-    { signal, onTranslating },
+    options,
   );
 
   signal.throwIfAborted();
@@ -188,7 +221,7 @@ function addStrings(
 async function translateBySourceLanguage(
   stringsBySourceLanguage: ReadonlyMap<string, Set<string>>,
   targetLanguage: string,
-  { signal, onTranslating }: TranslationOptions,
+  { signal, onDownloadProgress, onTranslating }: TranslatorProgressOptions,
 ): Promise<Map<string, StringTranslations>> {
   if (stringsBySourceLanguage.size === 0) {
     return new Map();
@@ -204,9 +237,7 @@ async function translateBySourceLanguage(
         sourceLanguage,
         targetLanguage,
         signal,
-        // Also reported while a model downloads: the notice shows the
-        // download first, and the status is already set when it ends.
-        onDownloadProgress: onTranslating,
+        onDownloadProgress,
       });
       translators.set(sourceLanguage, translator);
     }

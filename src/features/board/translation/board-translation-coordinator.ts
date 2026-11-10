@@ -2,17 +2,29 @@ import {
   createExternalStore,
   useExternalStore,
 } from "@shared/state/external-store";
-import type { TranslationOptions } from "./translate-board-sets";
+import type {
+  TranslationBlocker,
+  TranslationOptions,
+} from "./translate-board-sets";
 
 type TranslationPass = (options: TranslationOptions) => Promise<void>;
+
+export type BoardTranslationStatus =
+  | { kind: "idle" }
+  | { kind: "downloading"; progress: number }
+  | { kind: "translating" }
+  | { kind: TranslationBlocker };
 
 interface TranslationRun {
   readonly language: string;
   readonly abortController: AbortController;
   queue: Promise<void>;
+  lastPass?: TranslationPass;
 }
 
-const isTranslatingStore = createExternalStore(false);
+const IDLE_STATUS: BoardTranslationStatus = { kind: "idle" };
+
+const statusStore = createExternalStore<BoardTranslationStatus>(IDLE_STATUS);
 let currentRun: TranslationRun | undefined;
 
 /**
@@ -27,28 +39,46 @@ export function queueBoardTranslationPass(
 ): void {
   const run =
     currentRun?.language === language ? currentRun : startRun(language);
+  run.lastPass = pass;
 
   run.queue = run.queue.then(async () => {
+    let blocker: TranslationBlocker | undefined;
+
     try {
       await pass({
         signal: run.abortController.signal,
-        onTranslating: () => setIsTranslating(run, true),
+        onDownloadProgress: (progress) =>
+          setStatus(run, { kind: "downloading", progress }),
+        onTranslating: () => setStatus(run, { kind: "translating" }),
+        onBlocked: (reported) => {
+          blocker = pickBlockerToShow(blocker, reported);
+        },
       });
     } finally {
-      setIsTranslating(run, false);
+      setStatus(run, blocker ? { kind: blocker } : IDLE_STATUS);
     }
   });
+}
+
+/**
+ * Queues the last pass again. Called from a click, its user gesture lets the
+ * pass start the model download an earlier pass was refused.
+ */
+export function retryBoardTranslation(): void {
+  if (currentRun?.lastPass) {
+    queueBoardTranslationPass(currentRun.language, currentRun.lastPass);
+  }
 }
 
 export function stopBoardTranslation(): void {
   const run = currentRun;
   currentRun = undefined;
   run?.abortController.abort();
-  isTranslatingStore.setState(false);
+  statusStore.setState(IDLE_STATUS);
 }
 
-export function useIsTranslatingBoards(): boolean {
-  return useExternalStore(isTranslatingStore);
+export function useBoardTranslationStatus(): BoardTranslationStatus {
+  return useExternalStore(statusStore);
 }
 
 function startRun(language: string): TranslationRun {
@@ -63,10 +93,19 @@ function startRun(language: string): TranslationRun {
   return currentRun;
 }
 
+// A missing download is the one the user can act on, and the pass its
+// download unblocks reports again whatever is still unavailable.
+function pickBlockerToShow(
+  current: TranslationBlocker | undefined,
+  reported: TranslationBlocker,
+): TranslationBlocker {
+  return current === "needs-download" ? current : reported;
+}
+
 // A run replaced by a language change keeps settling in the background, and
 // must not touch the status its successor now owns.
-function setIsTranslating(run: TranslationRun, isTranslating: boolean) {
+function setStatus(run: TranslationRun, status: BoardTranslationStatus) {
   if (currentRun === run) {
-    isTranslatingStore.setState(isTranslating);
+    statusStore.setState(status);
   }
 }

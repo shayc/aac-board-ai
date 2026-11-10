@@ -160,18 +160,29 @@ After each saved set, it syncs the library and, when that set is on screen or
 being navigated to, revalidates the routes (board and board list), so
 everything on screen updates without a reload. Other sets are not revalidated:
 that would re-run a `?board=` link import still in flight. A set that
-fails, for example because a model download needs a user gesture, stays in its
-source language until the next run.
+fails stays in its source language until the next run, and the pass moves on to
+the next set.
 
 The hook hands each pass to the
 [board translation coordinator](../src/features/board/translation/board-translation-coordinator.ts),
 which owns the queue, the abort on a language change, and the board translation
-status published while a pass is translating a set. The status is set when a set's model download starts or, with no download, once
-its translation models are open, and cleared when the pass ends or the language
-changes. A pass aborted by a language change never touches the status again. The
+status: idle, downloading (with the download's fraction), translating, needs
+download, or unavailable. A pass reports a set's model download as it
+progresses and its translation once the set's translation models are open. It
+also reports the two failures the user can be told about: a model download
+refused for lack of a user gesture, and a language pair the device can't
+translate. When the pass ends, the status becomes the failure it reported, with
+a needed download taking precedence because the user can act on it, or idle. A
+language change clears the status, and a pass it aborted never touches the
+status again.
+
+The
 [board translation notice](../src/features/board/translation/board-translation-notice.tsx)
-shows a model download first and the translation after it. The status is already
-set when the download ends, so one alert carries both states.
+renders from that status alone. A needed download shows a Download button whose
+click queues the last pass again, so the download starts from that click's user
+gesture. The button, the download, and the translation share one polite status
+alert, so a screen reader hears each change. An unavailable language pair shows
+a note.
 
 Stored assets are immutable, so
 [each asset has one object URL](../src/features/board/storage/asset-urls.ts) for

@@ -1,4 +1,7 @@
-import { stubTranslator } from "@shared/testing/stub-built-in-ai";
+import {
+  stubTranslator,
+  stubUserActivation,
+} from "@shared/testing/stub-built-in-ai";
 import { beforeEach, describe, expect, test, vi } from "vitest";
 import { getBoardRecord } from "../storage/board-content-storage";
 import {
@@ -6,7 +9,10 @@ import {
   listBoardSetRecords,
 } from "../storage/board-set-storage";
 import { makeOBFBoard, resetBoardsDB, seedBoardSets } from "../testing";
-import { translateBoardSets } from "./translate-board-sets";
+import {
+  translateBoardSets,
+  type TranslationBlocker,
+} from "./translate-board-sets";
 
 function seedFoodSet() {
   return seedBoardSets([
@@ -34,15 +40,19 @@ async function runTranslation(
   language: string,
   signal = new AbortController().signal,
 ) {
+  const onDownloadProgress = vi.fn<(progress: number) => void>();
   const onTranslating = vi.fn<() => void>();
+  const onBlocked = vi.fn<(blocker: TranslationBlocker) => void>();
   const onTranslated = vi.fn<(boardSetId: string) => void>();
   await translateBoardSets(await listBoardSetRecords(), language, {
     signal,
+    onDownloadProgress,
     onTranslating,
+    onBlocked,
     onTranslated,
   });
 
-  return { onTranslating, onTranslated };
+  return { onDownloadProgress, onTranslating, onBlocked, onTranslated };
 }
 
 async function readStrings(boardSetId: string, boardId: string) {
@@ -58,11 +68,14 @@ describe("translateBoardSets", () => {
     await seedFoodSet();
     const { create } = stubTranslator((input) => `[es] ${input}`);
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onDownloadProgress, onTranslating, onBlocked, onTranslated } =
+      await runTranslation("es");
 
     expect(await readStrings("food", "home")).toEqual({
       es: { Home: "[es] Home", eat: "[es] eat", "eat now": "[es] eat now" },
     });
+    expect(onDownloadProgress).not.toHaveBeenCalled();
+    expect(onBlocked).not.toHaveBeenCalled();
     expect(await readStrings("food", "fruit")).toEqual({
       es: { Fruit: "[es] Fruit", apple: "[es] apple" },
     });
@@ -186,7 +199,7 @@ describe("translateBoardSets", () => {
         : `[es] ${input}`,
     );
 
-    const { onTranslated } = await runTranslation("es");
+    const { onBlocked, onTranslated } = await runTranslation("es");
 
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
     expect(await readStrings("food", "home")).toBeUndefined();
@@ -194,6 +207,63 @@ describe("translateBoardSets", () => {
       es: "[es] Zoo",
     });
     expect(onTranslated).toHaveBeenCalledOnce();
+    expect(onBlocked).not.toHaveBeenCalled();
+  });
+
+  test("reports a set whose model download needs a user gesture and translates the rest", async () => {
+    await seedFoodSet();
+    await seedBoardSets([
+      {
+        id: "zoo",
+        rootBoardId: "home",
+        boards: [makeOBFBoard({ id: "home", name: "Accueil", locale: "fr" })],
+      },
+    ]);
+    stubUserActivation(false);
+    const { availability, create } = stubTranslator((input) => `[es] ${input}`);
+    availability.mockImplementation((options) =>
+      Promise.resolve(
+        options?.sourceLanguage === "en" ? "downloadable" : "available",
+      ),
+    );
+
+    const { onDownloadProgress, onBlocked, onTranslated } =
+      await runTranslation("es");
+
+    expect(onBlocked.mock.calls).toEqual([["needs-download"]]);
+    expect(onDownloadProgress).not.toHaveBeenCalled();
+    expect(create.mock.calls.map((call) => call.at(0)?.sourceLanguage)).toEqual(
+      ["fr"],
+    );
+    expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
+    expect(onTranslated.mock.calls).toEqual([["zoo"]]);
+  });
+
+  test("reports each fraction of a model download before translating", async () => {
+    await seedFoodSet();
+    stubUserActivation(true);
+    const { availability, create } = stubTranslator((input) => `[es] ${input}`);
+    const createInstance = create.getMockImplementation();
+    availability.mockResolvedValue("downloadable");
+    create.mockImplementation((options) => {
+      const monitor = new EventTarget();
+      const watchDownload = options?.monitor as (monitor: EventTarget) => void;
+      watchDownload(monitor);
+      for (const loaded of [0.5, 1]) {
+        monitor.dispatchEvent(
+          new ProgressEvent("downloadprogress", { loaded, total: 1 }),
+        );
+      }
+
+      return createInstance?.(options) ?? Promise.reject(new Error("No stub"));
+    });
+
+    const { onDownloadProgress, onTranslating, onTranslated } =
+      await runTranslation("es");
+
+    expect(onDownloadProgress.mock.calls).toEqual([[0], [0.5], [1]]);
+    expect(onTranslating).toHaveBeenCalledOnce();
+    expect(onTranslated.mock.calls).toEqual([["food"]]);
   });
 
   test("saves nothing when aborted mid-translation", async () => {
@@ -217,10 +287,12 @@ describe("translateBoardSets", () => {
     const { availability, translate } = stubTranslator();
     availability.mockResolvedValue("unavailable");
 
-    const { onTranslating, onTranslated } = await runTranslation("es");
+    const { onTranslating, onBlocked, onTranslated } =
+      await runTranslation("es");
 
     expect(translate).not.toHaveBeenCalled();
     expect((await getBoardSetRecord("food"))?.translatedNames).toBeUndefined();
+    expect(onBlocked.mock.calls).toEqual([["unavailable"]]);
     expect(onTranslating).not.toHaveBeenCalled();
     expect(onTranslated).not.toHaveBeenCalled();
   });
@@ -310,11 +382,12 @@ describe("translateBoardSets", () => {
       },
     ]);
 
-    const { onTranslated } = await runTranslation("es");
+    const { onBlocked, onTranslated } = await runTranslation("es");
 
     expect(
       (await getBoardSetRecord("partial"))?.translatedNames,
     ).toBeUndefined();
+    expect(onBlocked).not.toHaveBeenCalled();
     expect(onTranslated).not.toHaveBeenCalled();
   });
 });

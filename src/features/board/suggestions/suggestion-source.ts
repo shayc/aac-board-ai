@@ -16,9 +16,8 @@ export function toSuggestionSource(
   function enable() {
     // Enabling is best-effort: the engine's status is the user-facing feedback,
     // so a rejection here (e.g. the gesture expired) has nothing useful to add.
-    if (engine.status === "downloadable") {
-      void engine.prepare().catch(() => undefined);
-    }
+    // From `error`, preparing is the retry; in any other state it is harmless.
+    void engine.prepare().catch(() => undefined);
   }
 
   return {

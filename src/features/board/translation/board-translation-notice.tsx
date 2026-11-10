@@ -1,72 +1,106 @@
+import DownloadIcon from "@mui/icons-material/Download";
 import DownloadingIcon from "@mui/icons-material/Downloading";
 import TranslateIcon from "@mui/icons-material/Translate";
 import Alert from "@mui/material/Alert";
 import AlertTitle from "@mui/material/AlertTitle";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
-import {
-  isSupported,
-  useGlobalDownloadProgress,
-} from "@shayc/react-built-in-ai";
+import { assertNever } from "@shared/utils/assert-never";
+import { isSupported } from "@shayc/react-built-in-ai";
 import type { ReactNode } from "react";
-import { useIsTranslatingBoards } from "./board-translation-coordinator";
+import {
+  retryBoardTranslation,
+  useBoardTranslationStatus,
+} from "./board-translation-coordinator";
 
 export function BoardTranslationNotice() {
   const t = useTranslate();
-  const progress = useGlobalDownloadProgress("Translator");
-  const isTranslating = useIsTranslatingBoards();
+  const status = useBoardTranslationStatus();
 
   if (!isSupported("Translator")) {
     return (
-      <Typography variant="body2" sx={{ color: "text.secondary" }}>
-        {t(m.languageTranslationUnavailable)}
-      </Typography>
+      <TranslationNote>{t(m.languageTranslationUnavailable)}</TranslationNote>
     );
   }
 
-  // The first translation into a language downloads its model, so both states
-  // render the same alert, and its text moves from the download to the boards.
-  if (progress !== null) {
-    return (
-      <TranslationStatusAlert
-        icon={<DownloadingIcon fontSize="inherit" />}
-        title={t(m.languageDownloading)}
-        description={t(m.languageDownloadProgress, {
-          progress: Math.round(progress * 100),
-        })}
-      />
-    );
+  // A refused download, the download, and the translation follow one another,
+  // so they render the same alert and only its content changes.
+  switch (status.kind) {
+    case "idle":
+      return null;
+    case "needs-download":
+      return (
+        <TranslationStatusAlert
+          icon={<DownloadIcon fontSize="inherit" />}
+          title={t(m.languageDownloadNeeded)}
+        >
+          <Button
+            variant="outlined"
+            color="inherit"
+            size="small"
+            onClick={retryBoardTranslation}
+          >
+            {t(m.languageDownloadModel)}
+          </Button>
+        </TranslationStatusAlert>
+      );
+    case "downloading":
+      return (
+        <TranslationStatusAlert
+          icon={<DownloadingIcon fontSize="inherit" />}
+          title={t(m.languageDownloading)}
+        >
+          <Typography>
+            {t(m.languageDownloadProgress, {
+              progress: Math.round(status.progress * 100),
+            })}
+          </Typography>
+        </TranslationStatusAlert>
+      );
+    case "translating":
+      return (
+        <TranslationStatusAlert
+          icon={<TranslateIcon fontSize="inherit" />}
+          title={t(m.languageTranslating)}
+        />
+      );
+    case "unavailable":
+      return (
+        <TranslationNote>
+          {t(m.languageTranslationUnavailableForBoards)}
+        </TranslationNote>
+      );
+    default:
+      return assertNever(status);
   }
+}
 
-  if (isTranslating) {
-    return (
-      <TranslationStatusAlert
-        icon={<TranslateIcon fontSize="inherit" />}
-        title={t(m.languageTranslating)}
-      />
-    );
-  }
-
-  return null;
+function TranslationNote({ children }: { children: ReactNode }) {
+  return (
+    <Typography variant="body2" sx={{ color: "text.secondary" }}>
+      {children}
+    </Typography>
+  );
 }
 
 interface TranslationStatusAlertProps {
   icon: ReactNode;
   title: string;
-  description?: string;
+  children?: ReactNode;
 }
 
 function TranslationStatusAlert({
   icon,
   title,
-  description,
+  children,
 }: TranslationStatusAlertProps) {
   // A polite status, so progress updates don't interrupt screen reader speech.
   return (
     <Alert role="status" severity="info" variant="outlined" icon={icon}>
       <AlertTitle>{title}</AlertTitle>
-      {description !== undefined && <Typography>{description}</Typography>}
+      {children}
     </Alert>
   );
 }
