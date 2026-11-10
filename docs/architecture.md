@@ -84,7 +84,7 @@ State has distinct owners and lifetimes:
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
 | Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding                        |
-| Interaction state     | Component-local state                 | In-progress message parts and remembered grid focus                                                    |
+| Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
 imported fields while adding resolved board links and translations saved on
