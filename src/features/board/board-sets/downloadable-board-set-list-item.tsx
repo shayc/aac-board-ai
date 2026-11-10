@@ -13,6 +13,7 @@ import { useUILocale } from "@shared/language/language-store";
 import { useTranslate, type Translate } from "@shared/language/use-translate";
 import { useEndSide } from "@shared/theme/rtl";
 import { useId } from "react";
+import type { DownloadProgress } from "../import/import-from-url";
 import type { BoardSetDownloadPhase } from "./board-set-downloads";
 import { useBoardSetDownload } from "./use-board-set-download";
 
@@ -88,7 +89,6 @@ function DownloadButtonIcon({
   }
 
   const isImporting = phase.kind === "importing";
-  const percent = ringPercent(phase);
 
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
@@ -96,9 +96,8 @@ function DownloadButtonIcon({
         aria-hidden
         color="inherit"
         size={PROGRESS_RING_SIZE}
-        variant={percent === undefined ? "indeterminate" : "determinate"}
-        value={percent}
         enableTrackSlot
+        {...ringProgress(phase)}
         sx={{
           // Progress arrives faster than the default 300ms easing can draw it,
           // so an eased arc trails the download and then jumps to catch up.
@@ -126,22 +125,29 @@ function tooltipMessage(phase: BoardSetDownloadPhase | undefined) {
   return m.libraryCancelDownload;
 }
 
-function ringPercent(phase: BoardSetDownloadPhase): number | undefined {
+type RingProgress =
+  | { variant: "determinate"; value: number }
+  | { variant: "indeterminate" };
+
+function ringProgress(phase: BoardSetDownloadPhase): RingProgress {
   // The size arrives with the response, so spinning until then would flash a
   // spinner before every download.
   if (phase.kind === "connecting") {
-    return 0;
+    return { variant: "determinate", value: 0 };
   }
 
   if (phase.kind === "importing") {
-    return 100;
+    return { variant: "determinate", value: 100 };
   }
 
   if (phase.total === undefined) {
-    return undefined;
+    return { variant: "indeterminate" };
   }
 
-  return Math.min(100, (phase.loaded / phase.total) * 100);
+  return {
+    variant: "determinate",
+    value: Math.min(100, (phase.loaded / phase.total) * 100),
+  };
 }
 
 function describeDownloadPhase(
@@ -149,11 +155,22 @@ function describeDownloadPhase(
   t: Translate,
   locale: string,
 ): string {
-  if (phase.kind === "importing") {
-    return t(m.libraryImportingStatus);
+  switch (phase.kind) {
+    case "connecting":
+      return t(m.libraryDownloadingStatus);
+    case "downloading":
+      return describeDownloadProgress(phase, t, locale);
+    case "importing":
+      return t(m.libraryImportingStatus);
   }
+}
 
-  if (phase.kind === "connecting" || phase.total === undefined) {
+function describeDownloadProgress(
+  { loaded, total }: DownloadProgress,
+  t: Translate,
+  locale: string,
+): string {
+  if (total === undefined) {
     return t(m.libraryDownloadingStatus);
   }
 
@@ -167,7 +184,7 @@ function describeDownloadPhase(
   });
 
   return t(m.libraryDownloadProgress, {
-    loaded: megabytes.format(phase.loaded / BYTES_PER_MEGABYTE),
-    total: megabytesWithUnit.format(phase.total / BYTES_PER_MEGABYTE),
+    loaded: megabytes.format(loaded / BYTES_PER_MEGABYTE),
+    total: megabytesWithUnit.format(total / BYTES_PER_MEGABYTE),
   });
 }
