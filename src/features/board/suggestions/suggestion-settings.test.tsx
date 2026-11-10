@@ -18,9 +18,7 @@ function renderSuggestionsSettings() {
 }
 
 describe("SuggestionSettings", () => {
-  test("shows an unsupported message instead of controls when the rewriter is unsupported", async () => {
-    stubProofreader();
-
+  test("shows an unsupported message instead of controls when no suggestion engine is supported", async () => {
     const screen = await renderSuggestionsSettings();
 
     await expect
@@ -47,6 +45,31 @@ describe("SuggestionSettings", () => {
       .not.toBeInTheDocument();
 
     await expectNoA11yViolations(screen.container);
+  });
+
+  test("says only custom instructions are unavailable when the proofreader still suggests", async () => {
+    stubProofreader();
+
+    const screen = await renderSuggestionsSettings();
+
+    await expect
+      .element(
+        screen.getByText(
+          "Custom instructions are unavailable in this browser.",
+          { exact: false },
+        ),
+      )
+      .toBeVisible();
+    await expect
+      .element(screen.getByText(/Suggestions are unavailable/))
+      .not.toBeInTheDocument();
+    await expect
+      .element(
+        screen.getByRole("link", {
+          name: "How to enable suggestions (opens in new tab)",
+        }),
+      )
+      .toBeVisible();
   });
 
   test("shows custom instructions when the rewriter is supported with no accessibility violations", async () => {

@@ -49,7 +49,7 @@ export default defineConfig({
         name: "AAC Board AI",
         short_name: "AAC Board",
         description:
-          "AAC Board AI helps people who cannot rely on speech communicate naturally with Built-in AI — proofreading, rephrasing, and translating safely on their device.",
+          "A free communication board for people who cannot rely on speech. Tap symbols to build a message and hear it spoken aloud, with optional on-device AI suggestions.",
         start_url: "/",
         display: "standalone",
         file_handlers: [

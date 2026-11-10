@@ -7,16 +7,24 @@ import {
   setSuggestionCustomInstructions,
   useSuggestionPreferences,
 } from "./suggestion-preferences-store";
-import { areCustomInstructionsSupported } from "./suggestion-support";
+import {
+  areCustomInstructionsSupported,
+  areSuggestionsSupported,
+} from "./suggestion-support";
 
 export function SuggestionSettings() {
   const t = useTranslate();
   const { customInstructions } = useSuggestionPreferences();
 
   if (!areCustomInstructionsSupported()) {
+    // The Proofreader alone still produces suggestions; only instructions need the Rewriter.
+    const unsupportedMessage = areSuggestionsSupported()
+      ? m.suggestionsCustomInstructionsUnsupported
+      : m.suggestionsUnsupported;
+
     return (
       <Alert role="note" severity="info" variant="outlined">
-        {t(m.suggestionsUnsupported)}{" "}
+        {t(unsupportedMessage)}{" "}
         <ExternalLink
           href="https://github.com/shayc/aac-board-ai#enable-suggestions"
           sx={{ whiteSpace: "normal" }}

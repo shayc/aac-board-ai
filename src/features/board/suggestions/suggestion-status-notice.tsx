@@ -33,18 +33,21 @@ export function SuggestionStatusNotice({
           onClick={onEnable}
         />
       );
-    case "downloading":
+    case "downloading": {
+      const progress =
+        status.percent !== null &&
+        t(m.modelDownloadProgress, { progress: status.percent });
+
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {status.percent === null
-            ? t(m.suggestionsDownloadingIndeterminate)
-            : t(m.suggestionsDownloading, { progress: status.percent })}
+          {t(m.suggestionsDownloading)} {progress}
         </Typography>
       );
+    }
     case "unavailable":
       return (
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          {t(m.suggestionsUnavailable)}
+          {t(m.suggestionsFailed)}
         </Typography>
       );
     default:

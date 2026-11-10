@@ -32,7 +32,7 @@ export function BoardTranslationNotice() {
       <TranslationStatusAlert
         icon={<DownloadingIcon fontSize="inherit" />}
         title={t(m.languageDownloading)}
-        description={t(m.languageDownloadProgress, {
+        description={t(m.modelDownloadProgress, {
           progress: Math.round(progress * 100),
         })}
       />
