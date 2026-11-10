@@ -19,8 +19,9 @@ test-results
 .DS_Store
 *.sw?
 
-# Paraglide compiler output
+# Paraglide compiler output and inlang plugin cache
 src/paraglide/
+project.inlang/cache/
 
 # Claude Code worktrees
 .claude/worktrees/
