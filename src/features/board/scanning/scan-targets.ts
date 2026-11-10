@@ -8,7 +8,10 @@ const ITEM_SELECTOR =
 /** Spread on an element to scan the enabled buttons inside it as one group. */
 export const scanGroupProps = { [GROUP_ATTRIBUTE]: "" } as const;
 
-export const SCAN_HIGHLIGHT_SELECTOR = `[${HIGHLIGHT_ATTRIBUTE}]`;
+// A highlighted item, or an item inside a highlighted group. Matching the
+// group's items in CSS keeps the highlight on whichever buttons the group has
+// now, as they are enabled, disabled, added, or replaced.
+export const SCAN_HIGHLIGHTED_ITEM_SELECTOR = `${ITEM_SELECTOR}:is([${HIGHLIGHT_ATTRIBUTE}], [${HIGHLIGHT_ATTRIBUTE}] *)`;
 
 export function readScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   const groups: ScanGroup<HTMLElement>[] = [];
@@ -25,7 +28,7 @@ export function readScanGroups(root: HTMLElement): ScanGroup<HTMLElement>[] {
   return groups;
 }
 
-export function listScanItems(container: HTMLElement): HTMLElement[] {
+function listScanItems(container: HTMLElement): HTMLElement[] {
   return Array.from(
     container.querySelectorAll<HTMLElement>(ITEM_SELECTOR),
   ).filter((item) => item.checkVisibility({ visibilityProperty: true }));
@@ -37,18 +40,12 @@ export function isScanScopeCovered(scope: HTMLElement): boolean {
   return scope.closest("[aria-hidden='true'], [inert]") !== null;
 }
 
-export function highlightScanTargets(
-  targets: readonly HTMLElement[],
-): () => void {
-  for (const target of targets) {
-    target.setAttribute(HIGHLIGHT_ATTRIBUTE, "");
-  }
+/** Highlights an item, or every item of a group when given its container. */
+export function highlightScanTarget(target: HTMLElement): () => void {
+  target.setAttribute(HIGHLIGHT_ATTRIBUTE, "");
 
-  targets[0]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  const firstItem = target.querySelector(ITEM_SELECTOR) ?? target;
+  firstItem.scrollIntoView({ block: "nearest", inline: "nearest" });
 
-  return () => {
-    for (const target of targets) {
-      target.removeAttribute(HIGHLIGHT_ATTRIBUTE);
-    }
-  };
+  return () => target.removeAttribute(HIGHLIGHT_ATTRIBUTE);
 }

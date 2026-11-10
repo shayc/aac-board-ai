@@ -229,8 +229,8 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   enabled buttons inside it. The board marks the message bar, the board
   controls, and each grid row. The
   [scanner](../src/features/board/scanning/switch-scanner.tsx) reads the groups
-  from the DOM at every step, in document order, highlights the current targets
-  with an attribute, and clicks the selected one. Scanned controls therefore
+  from the DOM at every step, in document order, highlights the current group
+  or item with an attribute, and clicks the selected one. Scanned controls therefore
   need no scanning code, and disabled controls and empty groups drop out by
   themselves.
 - [`scan-sequence.ts`](../src/features/board/scanning/scan-sequence.ts) is the
@@ -247,9 +247,11 @@ arrive as the Space and Enter keys. Scanning is off until turned on in settings.
   and so are keys pressed while a dialog, drawer, or menu covers the board.
   While scanning is on, Space and Enter therefore do not activate focused
   controls outside dialogs.
-- When highlighted controls leave the page, such as when a folder tile opens
-  another board, the scan restarts at the first group. The scan pauses while
-  a dialog, drawer, or menu covers the board.
+- A highlighted group outlines the enabled buttons it has now, so the outline
+  follows buttons that are enabled, added, or replaced, such as when a folder
+  tile opens another board into the same rows. When the highlighted group or
+  item leaves the page, the scan restarts at the first group. The scan pauses
+  while a dialog, drawer, or menu covers the board.
 - Buttons that are disabled or not visible are not scanned. While a scan
   highlight shows, other controls hide their keyboard focus ring so only one
   control looks selected.

@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { buttonBaseClasses } from "@mui/material/ButtonBase";
 import type { Theme } from "@mui/material/styles";
 import { useRef, type ReactNode } from "react";
-import { SCAN_HIGHLIGHT_SELECTOR } from "./scan-targets";
+import { SCAN_HIGHLIGHTED_ITEM_SELECTOR } from "./scan-targets";
 import { useScanningPreferences } from "./scanning-preferences-store";
 import { SwitchScanner } from "./switch-scanner";
 
@@ -10,12 +10,12 @@ function scopeSx(theme: Theme) {
   return {
     display: "contents",
     // Doubled so the highlight also wins on a control that has keyboard focus.
-    [`&& ${SCAN_HIGHLIGHT_SELECTOR}`]: {
+    [`&& ${SCAN_HIGHLIGHTED_ITEM_SELECTOR}`]: {
       outline: `4px solid ${theme.vars.palette.primary.main}`,
       outlineOffset: 2,
     },
     // Two outlined controls would leave it unclear which one a switch selects.
-    [`&:has(${SCAN_HIGHLIGHT_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHT_SELECTOR})`]:
+    [`&:has(${SCAN_HIGHLIGHTED_ITEM_SELECTOR}) .${buttonBaseClasses.focusVisible}:not(${SCAN_HIGHLIGHTED_ITEM_SELECTOR})`]:
       {
         outline: "none",
       },

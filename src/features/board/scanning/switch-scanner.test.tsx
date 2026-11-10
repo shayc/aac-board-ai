@@ -1,4 +1,5 @@
 import Dialog from "@mui/material/Dialog";
+import { AppProviders } from "@shared/providers/app-providers";
 import { expectNoA11yViolations } from "@shared/testing/axe";
 import { stubSpeech } from "@shared/testing/stub-speech";
 import type { OBFBoard } from "@shayc/open-board-format";
@@ -9,11 +10,13 @@ import {
   communicationBoardTree,
   renderCommunicationBoard,
 } from "../testing/render-communication-board";
+import { SCAN_HIGHLIGHTED_ITEM_SELECTOR, scanGroupProps } from "./scan-targets";
 import {
   setScanIntervalMs,
   setScanMethod,
   setScanningEnabled,
 } from "./scanning-preferences-store";
+import { ScanningScope } from "./scanning-scope";
 
 const SCAN_INTERVAL_MS = 1000;
 
@@ -57,6 +60,22 @@ const OTHER_TWO_ROW_BOARD: OBFBoard = {
   },
 };
 
+function navigationGroupTree(canGoBack: boolean) {
+  return (
+    <AppProviders>
+      <ScanningScope>
+        <div {...scanGroupProps}>
+          <button disabled={!canGoBack}>back</button>
+          <button>home</button>
+        </div>
+        <div {...scanGroupProps}>
+          <button>yes</button>
+        </div>
+      </ScanningScope>
+    </AppProviders>
+  );
+}
+
 const appendedElements: HTMLElement[] = [];
 
 function appendToBody<TagName extends keyof HTMLElementTagNameMap>(
@@ -71,7 +90,7 @@ function appendToBody<TagName extends keyof HTMLElementTagNameMap>(
 
 function highlightedNames(): string[] {
   return Array.from(
-    document.querySelectorAll("[data-scan-highlighted]"),
+    document.querySelectorAll(SCAN_HIGHLIGHTED_ITEM_SELECTOR),
     (target) => target.getAttribute("aria-label") ?? target.textContent,
   );
 }
@@ -402,7 +421,20 @@ describe("switch scanning", () => {
       });
     });
 
-    test("restarts at the first row when another board replaces the tiles", async () => {
+    test("highlights a button that becomes enabled in the highlighted group", async () => {
+      const screen = await render(navigationGroupTree(false));
+      const back = screen.getByRole("button", { name: "back" }).element();
+
+      await pressSwitch("Space");
+      await expect.poll(highlightedNames).toEqual(["home"]);
+
+      await screen.rerender(navigationGroupTree(true));
+
+      await expect.poll(highlightedNames).toEqual(["back", "home"]);
+      expect(getComputedStyle(back).outlineStyle).toBe("solid");
+    });
+
+    test("keeps the first row highlighted when another board replaces its tiles", async () => {
       const screen = await renderCommunicationBoard(TWO_ROW_BOARD);
 
       await pressSwitch("Space");

@@ -7,9 +7,8 @@ import {
   type ScanPosition,
 } from "./scan-sequence";
 import {
-  highlightScanTargets,
+  highlightScanTarget,
   isScanScopeCovered,
-  listScanItems,
   readScanGroups,
 } from "./scan-targets";
 import type { ScanMethod } from "./scanning-preferences-store";
@@ -108,16 +107,14 @@ export function SwitchScanner({
       return;
     }
 
-    const targets = position.item
-      ? [position.item]
-      : listScanItems(position.group);
-    const removeHighlight = highlightScanTargets(targets);
+    const target = position.item ?? position.group;
+    const removeHighlight = highlightScanTarget(target);
 
-    // The board can replace highlighted controls at any time, such as when a
-    // folder tile opens another board into the same rows. Restarting shows
-    // the new controls from the first group, with a full interval.
+    // The board can remove the highlighted control or group at any time, such
+    // as when another board has fewer rows. Restarting shows the scan again
+    // from the first group, with a full interval.
     const observer = new MutationObserver(() => {
-      if (targets.some((target) => !target.isConnected)) {
+      if (!target.isConnected) {
         setPosition(startScan(readScanGroups(scope)));
       }
     });
