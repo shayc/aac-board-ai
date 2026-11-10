@@ -1,7 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   advanceScan,
-  selectScanTarget,
+  selectScan,
   startScan,
   type ScanGroup,
   type ScanPosition,
@@ -15,23 +15,23 @@ const GROUPS: ScanGroup<string>[] = [
 
 const NO_PAUSE = Infinity;
 
-function atGroup(group: string, completedPasses = 0): ScanPosition<string> {
-  return { level: "groups", container: group, completedPasses };
+function atGroup(container: string, completedPasses = 0): ScanPosition<string> {
+  return { level: "groups", container, completedPasses };
 }
 
 function atItem(
-  group: string,
+  container: string,
   item: string,
   completedPasses = 0,
 ): ScanPosition<string> {
-  return { level: "items", container: group, item, completedPasses };
+  return { level: "items", container, item, completedPasses };
 }
 
-function atExit(group: string, completedPasses = 0): ScanPosition<string> {
-  return { level: "exit", container: group, completedPasses };
+function atExit(container: string, completedPasses = 0): ScanPosition<string> {
+  return { level: "exit", container, completedPasses };
 }
 
-function advanceRepeatedly(
+function advanceTimes(
   position: ScanPosition<string> | null,
   times: number,
   maxPasses = NO_PAUSE,
@@ -60,12 +60,12 @@ describe("advanceScan", () => {
   });
 
   test("moves through the groups in order", () => {
-    expect(advanceRepeatedly(atGroup("row 1"), 1)).toEqual(atGroup("play"));
-    expect(advanceRepeatedly(atGroup("row 1"), 2)).toEqual(atGroup("row 2"));
+    expect(advanceTimes(atGroup("row 1"), 1)).toEqual(atGroup("play"));
+    expect(advanceTimes(atGroup("row 1"), 2)).toEqual(atGroup("row 2"));
   });
 
   test("returns to the first group after the last, counting the pass", () => {
-    expect(advanceRepeatedly(atGroup("row 2"), 1)).toEqual(atGroup("row 1", 1));
+    expect(advanceTimes(atGroup("row 2"), 1)).toEqual(atGroup("row 1", 1));
   });
 
   test("pauses once the groups were passed the maximum number of times", () => {
@@ -73,30 +73,28 @@ describe("advanceScan", () => {
     const stepsPerPass = GROUPS.length;
 
     expect(
-      advanceRepeatedly(atGroup("row 1"), 2 * stepsPerPass - 1, maxPasses),
+      advanceTimes(atGroup("row 1"), 2 * stepsPerPass - 1, maxPasses),
     ).toEqual(atGroup("row 2", 1));
     expect(
-      advanceRepeatedly(atGroup("row 1"), 2 * stepsPerPass, maxPasses),
+      advanceTimes(atGroup("row 1"), 2 * stepsPerPass, maxPasses),
     ).toBeNull();
   });
 
   test("moves through the items of an entered group", () => {
-    expect(advanceRepeatedly(atItem("row 2", "more"), 1)).toEqual(
+    expect(advanceTimes(atItem("row 2", "more"), 1)).toEqual(
       atItem("row 2", "stop"),
     );
-    expect(advanceRepeatedly(atItem("row 2", "more"), 2)).toEqual(
+    expect(advanceTimes(atItem("row 2", "more"), 2)).toEqual(
       atItem("row 2", "help"),
     );
   });
 
   test("offers an exit step after the last item", () => {
-    expect(advanceRepeatedly(atItem("row 2", "help"), 1)).toEqual(
-      atExit("row 2"),
-    );
+    expect(advanceTimes(atItem("row 2", "help"), 1)).toEqual(atExit("row 2"));
   });
 
   test("returns to the first item after the exit step, counting the pass", () => {
-    expect(advanceRepeatedly(atExit("row 2"), 1)).toEqual(
+    expect(advanceTimes(atExit("row 2"), 1)).toEqual(
       atItem("row 2", "more", 1),
     );
   });
@@ -104,28 +102,26 @@ describe("advanceScan", () => {
   test("moves on to the next group once the items were passed the maximum number of times", () => {
     const maxPasses = 2;
 
-    expect(advanceRepeatedly(atExit("row 1"), 1, maxPasses)).toEqual(
+    expect(advanceTimes(atExit("row 1"), 1, maxPasses)).toEqual(
       atItem("row 1", "yes", 1),
     );
-    expect(advanceRepeatedly(atExit("row 1", 1), 1, maxPasses)).toEqual(
+    expect(advanceTimes(atExit("row 1", 1), 1, maxPasses)).toEqual(
       atGroup("play"),
     );
   });
 
   test("restarts at the first group when the current group is gone", () => {
-    expect(advanceRepeatedly(atGroup("removed row", 1), 1)).toEqual(
+    expect(advanceTimes(atGroup("removed row", 1), 1)).toEqual(
       atGroup("row 1"),
     );
-    expect(advanceRepeatedly(atItem("removed row", "yes"), 1)).toEqual(
+    expect(advanceTimes(atItem("removed row", "yes"), 1)).toEqual(
       atGroup("row 1"),
     );
-    expect(advanceRepeatedly(atExit("removed row"), 1)).toEqual(
-      atGroup("row 1"),
-    );
+    expect(advanceTimes(atExit("removed row"), 1)).toEqual(atGroup("row 1"));
   });
 
   test("continues at the first item when the current item is gone", () => {
-    expect(advanceRepeatedly(atItem("row 2", "removed tile"), 1)).toEqual(
+    expect(advanceTimes(atItem("row 2", "removed tile"), 1)).toEqual(
       atItem("row 2", "more"),
     );
   });
@@ -136,53 +132,51 @@ describe("advanceScan", () => {
   });
 });
 
-describe("selectScanTarget", () => {
+describe("selectScan", () => {
   test("starts a paused scan instead of selecting", () => {
-    expect(selectScanTarget(GROUPS, null)).toEqual({
+    expect(selectScan(GROUPS, null)).toEqual({
       kind: "moved",
       position: atGroup("row 1"),
     });
   });
 
   test("enters a group at its first item", () => {
-    expect(selectScanTarget(GROUPS, atGroup("row 2", 1))).toEqual({
+    expect(selectScan(GROUPS, atGroup("row 2", 1))).toEqual({
       kind: "moved",
       position: atItem("row 2", "more"),
     });
   });
 
   test("activates the only item of a single-item group", () => {
-    expect(selectScanTarget(GROUPS, atGroup("play"))).toEqual({
+    expect(selectScan(GROUPS, atGroup("play"))).toEqual({
       kind: "activated",
       target: "play button",
     });
   });
 
   test("activates the current item", () => {
-    expect(selectScanTarget(GROUPS, atItem("row 2", "stop"))).toEqual({
+    expect(selectScan(GROUPS, atItem("row 2", "stop"))).toEqual({
       kind: "activated",
       target: "stop",
     });
   });
 
   test("returns to the groups when the exit step is selected", () => {
-    expect(selectScanTarget(GROUPS, atExit("row 2", 1))).toEqual({
+    expect(selectScan(GROUPS, atExit("row 2", 1))).toEqual({
       kind: "moved",
       position: atGroup("row 2"),
     });
   });
 
   test("restarts instead of selecting when the current group is gone", () => {
-    expect(selectScanTarget(GROUPS, atItem("removed row", "yes"))).toEqual({
+    expect(selectScan(GROUPS, atItem("removed row", "yes"))).toEqual({
       kind: "moved",
       position: atGroup("row 1"),
     });
   });
 
   test("returns to the first item instead of activating an item that is gone", () => {
-    expect(
-      selectScanTarget(GROUPS, atItem("row 2", "removed tile", 1)),
-    ).toEqual({
+    expect(selectScan(GROUPS, atItem("row 2", "removed tile", 1))).toEqual({
       kind: "moved",
       position: atItem("row 2", "more"),
     });

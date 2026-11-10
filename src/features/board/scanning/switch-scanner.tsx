@@ -2,7 +2,7 @@ import { useEffect, useEffectEvent, useState, type RefObject } from "react";
 import { flushSync } from "react-dom";
 import {
   advanceScan,
-  selectScanTarget,
+  selectScan,
   startScan,
   type ScanPosition,
 } from "./scan-sequence";
@@ -78,7 +78,7 @@ export function SwitchScanner({
       return;
     }
 
-    const selection = selectScanTarget(groups, position);
+    const selection = selectScan(groups, position);
     if (selection.kind === "moved") {
       setPosition(selection.position);
 

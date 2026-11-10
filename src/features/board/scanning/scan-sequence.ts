@@ -77,7 +77,7 @@ export function advanceScan<Target>(
   return nextGroupPosition(groups, groupIndex, 0, maxPasses);
 }
 
-export function selectScanTarget<Target>(
+export function selectScan<Target>(
   groups: readonly ScanGroup<Target>[],
   position: ScanPosition<Target> | null,
 ): ScanSelection<Target> {
