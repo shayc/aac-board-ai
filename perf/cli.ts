@@ -22,12 +22,28 @@ import {
   type RunResults,
 } from "./results.ts";
 
+/** Where a build's code comes from: a label for the report and a commit. */
+interface BuildSource {
+  source: string;
+  commit: string;
+}
+
 const { values: flags } = parseArgs({
   options: {
     base: { type: "string", default: "main" },
     samples: { type: "string", default: "10" },
   },
 });
+
+// Without a listener, Ctrl-C ends this process while a command is still
+// running. With one, the interrupted command fails like any other, so the
+// base build's worktree is removed on the way out.
+let isInterrupted = false;
+for (const signal of ["SIGINT", "SIGTERM"] as const) {
+  process.on(signal, () => {
+    isInterrupted = true;
+  });
+}
 
 try {
   await compare(flags.base, flags.samples);
@@ -41,9 +57,14 @@ async function compare(baseRef: string, samples: string): Promise<void> {
     throw new Error(`--samples takes a whole number above 0, not ${samples}.`);
   }
 
-  const baseCommit = resolveCommit(baseRef);
+  // Read before building, so the report names what was built even if the
+  // repository moves on during the run.
+  const sources: Record<BuildName, BuildSource> = {
+    base: { source: baseRef, commit: resolveCommit(baseRef) },
+    current: describeWorkingTree(),
+  };
   buildApp(ROOT_DIR, DIST_DIRS.current);
-  await buildBase(baseCommit);
+  await buildBase(sources.base.commit);
 
   await rm(RAW_RESULTS_DIR, { recursive: true, force: true });
   run(
@@ -53,7 +74,7 @@ async function compare(baseRef: string, samples: string): Promise<void> {
     { PERF_SAMPLES: samples },
   );
 
-  const results = await collectResults(baseRef, baseCommit);
+  const results = await collectResults(sources);
   await writeFile(RESULTS_FILE, JSON.stringify(results, null, 2));
   printReport(results, compareBuilds(results));
 }
@@ -83,21 +104,22 @@ async function buildBase(commit: string): Promise<void> {
 
   await rm(BASE_BUILD_FILE, { force: true });
   const sourceDir = await mkdtemp(path.join(os.tmpdir(), "perf-base-"));
-  run("git", ["worktree", "add", "--detach", sourceDir, commit], ROOT_DIR);
 
   try {
+    run("git", ["worktree", "add", "--detach", sourceDir, commit], ROOT_DIR);
     run("npm", ["ci"], sourceDir, { HUSKY: "0" });
     buildApp(sourceDir, DIST_DIRS.base);
   } finally {
-    run("git", ["worktree", "remove", "--force", sourceDir], ROOT_DIR);
+    // Neither step may throw: a failure here would hide the one that led here.
+    git(["worktree", "remove", "--force", sourceDir]);
+    await rm(sourceDir, { recursive: true, force: true });
   }
 
   await writeFile(BASE_BUILD_FILE, JSON.stringify({ commit }));
 }
 
 async function collectResults(
-  baseRef: string,
-  baseCommit: string,
+  sources: Record<BuildName, BuildSource>,
 ): Promise<RunResults> {
   const files = (await readdir(RAW_RESULTS_DIR)).toSorted();
   const journeys = await Promise.all(
@@ -113,27 +135,29 @@ async function collectResults(
     throw new Error("The journeys wrote no results.");
   }
 
-  const isDirty = git(["status", "--porcelain"]) !== "";
-
   return {
     date: new Date().toISOString(),
     settings: first.settings,
     builds: {
-      base: await describeBuild("base", baseRef, baseCommit),
-      current: await describeBuild(
-        "current",
-        isDirty ? "working tree with uncommitted changes" : "working tree",
-        "HEAD",
-      ),
+      base: await describeBuild("base", sources.base),
+      current: await describeBuild("current", sources.current),
     },
     journeys,
   };
 }
 
+function describeWorkingTree(): BuildSource {
+  const isDirty = git(["status", "--porcelain"]) !== "";
+
+  return {
+    source: isDirty ? "working tree with uncommitted changes" : "working tree",
+    commit: resolveCommit("HEAD"),
+  };
+}
+
 async function describeBuild(
   build: BuildName,
-  source: string,
-  commit: string,
+  { source, commit }: BuildSource,
 ): Promise<BuildInfo> {
   return {
     source,
@@ -229,6 +253,10 @@ function run(
   cwd: string,
   env: Record<string, string> = {},
 ): void {
+  if (isInterrupted) {
+    throw new Error("Interrupted.");
+  }
+
   const { status } = spawnSync(command, args, {
     cwd,
     stdio: "inherit",
@@ -243,7 +271,7 @@ function run(
 function resolveCommit(ref: string): string {
   const commit = git(["rev-parse", "--verify", "--quiet", `${ref}^{commit}`]);
   if (commit === "") {
-    throw new Error(`--base ${ref} is not a commit in this repository.`);
+    throw new Error(`${ref} is not a commit in this repository.`);
   }
 
   return commit;

@@ -23,7 +23,7 @@
 - Lint specific files: `npm run lint -- <files>`
 - Build (includes typecheck): `npm run build`
 - Playwright browsers (required for `npm test` / CI): `npx playwright install --with-deps`
-- CI (Node 24) runs install → Playwright install → format check → lint → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
+- CI (Node 24) runs install → Playwright install → format check → lint → test:perf → test:coverage → build → PWA offline test (CI enforces coverage floors; `npm test` runs the same suite without them).
 - Pre-commit: `lint-staged` runs Oxlint `--fix` + Oxfmt on staged files.
 
 ## Project Structure

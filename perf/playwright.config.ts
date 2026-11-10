@@ -23,9 +23,10 @@ export default defineConfig(baseConfig, {
     },
   },
   // The inherited web server serves the working tree's build at the inherited
-  // baseURL; this one serves the build of the ref it is compared with.
+  // baseURL; this one serves the build of the ref it is compared with. It runs
+  // the same npm script, so both servers load the same Vite config.
   webServer: {
-    command: `npx vite preview --outDir "${DIST_DIRS.base}" --host 127.0.0.1 --port 4174 --strictPort`,
+    command: `npm run preview -- --outDir "${DIST_DIRS.base}" --host 127.0.0.1 --port 4174 --strictPort`,
     url: BASE_BUILD_URL,
     reuseExistingServer: false,
   },
