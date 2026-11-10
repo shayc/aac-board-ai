@@ -91,7 +91,8 @@ warns about it.
   127.0.0.1 port: the working tree's on 4173, reusing the `webServer` from
   [playwright.config.ts](../playwright.config.ts), and the base ref's on 4174.
   [perf/playwright.config.ts](../perf/playwright.config.ts) extends that
-  config, so `npm run test:pwa` never runs the journeys.
+  config, so `npm run test:pwa` never runs the journeys, and replaces its
+  browser projects with Chromium alone.
 - Browser: Playwright's bundled Chromium in new headless mode, Desktop Chrome
   device settings (1280×720), en-US, service worker on.
 - A timing runs from its start (navigation, or a tap's `pointerdown`) to the
