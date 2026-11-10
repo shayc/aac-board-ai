@@ -16,6 +16,8 @@ import { NavigationButtons } from "./navigation/navigation-buttons";
 import { useBoardNavigation } from "./navigation/use-board-navigation";
 import { PlaybackMessageBar } from "./playback/playback-message-bar";
 import { useBoardPlayback } from "./playback/use-board-playback";
+import { scanHighlightSx } from "./scanning/scan-highlight";
+import { useSwitchScanning } from "./scanning/use-switch-scanning";
 import { SuggestionBar } from "./suggestions/suggestion-bar";
 import { useMessageSuggestions } from "./suggestions/use-message-suggestions";
 import { Tile } from "./tile/tile";
@@ -53,6 +55,9 @@ export function CommunicationBoard({
     navigation: { goToBoard: navigation.goToBoard, goHome: navigation.goHome },
   });
   const shortcuts = useBoardShortcuts({ message, playback });
+
+  const rootRef = useRef<HTMLDivElement>(null);
+  useSwitchScanning(rootRef, board.id);
 
   const hasMessage = message.parts.length > 0;
 
@@ -97,12 +102,16 @@ export function CommunicationBoard({
   return (
     <Stack
       {...shortcuts.rootProps}
+      ref={rootRef}
       direction="column"
-      sx={{
-        height: "100%",
-        pl: { sm: safeAreaInset("left") },
-        pr: { sm: safeAreaInset("right") },
-      }}
+      sx={[
+        {
+          height: "100%",
+          pl: { sm: safeAreaInset("left") },
+          pr: { sm: safeAreaInset("right") },
+        },
+        scanHighlightSx,
+      ]}
     >
       <PlaybackMessageBar parts={message.parts} playback={playback} />
 

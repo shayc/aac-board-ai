@@ -83,7 +83,7 @@ State has distinct owners and lifetimes:
 | Asset URLs            | Board storage                         | One object URL per loaded asset, kept until board set deletion or page close                           |
 | Navigation history    | React Router                          | Browser history with a flag allowing board Back navigation                                             |
 | Reactive shared state | `createExternalStore`                 | Board-set library, board-set downloads, board translation status, voice catalog, and playback progress |
-| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, suggestion instructions, onboarding                        |
+| Persisted preferences | `createPersistedStore` + localStorage | Language, speech, tile and message display, switch scanning, suggestion instructions, onboarding       |
 | Interaction state     | Local React state                     | In-progress message parts and remembered grid focus                                                    |
 
 Stored boards retain their OBF structure for AAC compatibility, preserving
@@ -216,6 +216,22 @@ these rules:
 - When grid content changes, focus returns to the remembered cell or first
   focusable tile only if no other control holds focus.
 
+[Switch scanning](../src/features/board/scanning/switch-scanner.ts) is an
+optional input method for people who use one or two switches. It is off by
+default, so operating-system switch scanning keeps working unchanged. While it
+is on:
+
+- A highlight moves over the board's scan groups (Play, the navigation
+  buttons, Backspace, and each board row) in DOM order. It is not keyboard
+  focus and does not move it.
+- Unmodified Space and Enter are the switches everywhere except in text fields
+  and while a dialog, drawer, or menu is open. Selecting clicks the
+  highlighted button, so scanning adds no activation path of its own.
+- Auto scan pauses after the set number of scans; the next press resumes it.
+
+See [switch-scanning.md](switch-scanning.md) for the research, vocabulary,
+and roadmap behind it.
+
 Behavior tests and axe-core accessibility checks run in real Chromium and
 WebKit through Playwright-backed Vitest.
 
@@ -256,7 +272,8 @@ relative imports; they are not separate feature boundaries.
 
 The [settings drawer](../src/app/settings/settings-drawer.tsx) composes
 [tile settings](../src/features/board/tile/tile-settings.tsx),
-[message settings](../src/features/board/message/message-settings.tsx), and
+[message settings](../src/features/board/message/message-settings.tsx),
+[scanning settings](../src/features/board/scanning/scanning-settings.tsx), and
 [suggestion settings](../src/features/board/suggestions/suggestion-settings.tsx)
 through feature public entry points. The app owns headings, order, layout, and
 drawer behavior; features own controls, capability checks, and persisted
@@ -282,6 +299,7 @@ are relative to `src/features/board/`.
 | Board persistence      | [storage/](../src/features/board/storage/)                                                             | Own all production IndexedDB access.                                            |
 | Board-set library      | [board-sets/](../src/features/board/board-sets/)                                                       | Maintain the reactive library and coordinate board-set creation and deletion.   |
 | Board playback         | [playback/](../src/features/board/playback/)                                                           | Plan board playback and highlighting; delegate device output to shared code.    |
+| Switch scanning        | [scanning/](../src/features/board/scanning/)                                                           | Scan the board with one or two switches: model, targets, settings, and scanner. |
 | Optional language help | [suggestions/](../src/features/board/suggestions/), [translation/](../src/features/board/translation/) | Enable suggestion models, apply rewrite instructions, and translate board text. |
 
 ### App and shared code
@@ -345,6 +363,15 @@ AI availability, provisioning, and session lifecycle to
   speak.
 - **Message part** — one item in the message, with its own label and any
   vocalization, image, or sound.
+- **Switch** — a physical button for people who cannot use touch; a switch
+  interface delivers its presses as key presses.
+- **Switch scanning** — selecting by waiting for, or stepping to, a moving
+  highlight and pressing a switch. **Auto scan** moves the highlight on a
+  timer; **step scan** moves it with a second switch.
+- **Highlight** — the indicator on the current scan target. Distinct from
+  keyboard focus.
+- **Scan group** — targets scanned as one step, such as a board row; selecting
+  it scans its targets.
 - **Built-in AI** — browser-provided on-device Proofreader, Rewriter, and
   Translator APIs used for grammar, tone, and translation.
 - **TTS** — text-to-speech through the browser's Web Speech API.

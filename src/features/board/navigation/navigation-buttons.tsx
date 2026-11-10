@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
+import { scanGroupProps } from "../scanning/scan-targets";
 
 interface NavigationButtonsProps {
   canGoBack: boolean;
@@ -22,7 +23,7 @@ export function NavigationButtons({
   const t = useTranslate();
 
   return (
-    <Box sx={{ display: "flex", gap: 1 }}>
+    <Box {...scanGroupProps} sx={{ display: "flex", gap: 1 }}>
       <Button
         aria-label={t(m.navBack)}
         disabled={!canGoBack}

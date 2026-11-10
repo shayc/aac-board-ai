@@ -4,6 +4,7 @@ import { m } from "@paraglide/messages.js";
 import { useTranslate } from "@shared/language/use-translate";
 import { flipForRTL } from "@shared/theme/rtl";
 import { mergeProps, useLongPress, usePress } from "react-aria";
+import { scanGroupProps } from "../scanning/scan-targets";
 
 const LONG_PRESS_THRESHOLD_MS = 600;
 
@@ -30,6 +31,7 @@ export function BackspaceButton({
   return (
     <Button
       {...mergeProps(pressProps, longPressProps)}
+      {...scanGroupProps}
       aria-label={t(m.messageBackspace)}
       disabled={disabled}
       size="large"

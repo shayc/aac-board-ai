@@ -8,6 +8,7 @@ import {
   gridRowSx,
 } from "./grid-layout";
 import { buildGrid, type GridOrder } from "./grid-model";
+import { scanGroupProps } from "../scanning/scan-targets";
 import { useGridFocus } from "./use-grid-focus";
 
 export interface GridItemProps {
@@ -80,7 +81,7 @@ function GridRow<TItem extends { id: string }>({
   renderItem,
 }: GridRowProps<TItem>) {
   return (
-    <Stack role="row" direction="row" sx={gridRowSx}>
+    <Stack {...scanGroupProps} role="row" direction="row" sx={gridRowSx}>
       {items.map((item, columnIndex) => (
         <GridCell
           key={columnIndex}

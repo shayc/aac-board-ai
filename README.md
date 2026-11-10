@@ -30,6 +30,7 @@ Suggestions are optional and replace the original message only when accepted.
 
 - First Words starter board set for first-time AAC users
 - Touch and keyboard navigation
+- Switch scanning with one or two switches (auto scan and step scan); a keyboard's Space and Enter keys work as test switches
 - Import [Open Board Format](https://www.openboardformat.org) files (`.obf` and `.obz`) from your device or a URL
 - 35 interface languages, including right-to-left layouts
 - Installable PWA with offline communication

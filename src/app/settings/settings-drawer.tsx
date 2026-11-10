@@ -2,6 +2,7 @@ import { AppDrawer } from "@app/shell/app-drawer";
 import {
   TileSettings,
   MessageSettings,
+  ScanningSettings,
   SuggestionSettings,
 } from "@features/board";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -50,6 +51,10 @@ export function SettingsDrawer({ open, onClose }: SettingsDrawerProps) {
 
         <SettingsSection title={t(m.settingsSectionMessage)}>
           <MessageSettings />
+        </SettingsSection>
+
+        <SettingsSection title={t(m.settingsSectionScanning)}>
+          <ScanningSettings />
         </SettingsSection>
 
         <SettingsSection title={t(m.settingsSectionSuggestions)}>

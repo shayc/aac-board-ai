@@ -22,6 +22,7 @@ export {
   getBoardSetRecord,
   listBoardSetRecords,
 } from "./storage/board-set-storage";
+export { ScanningSettings } from "./scanning/scanning-settings";
 export { SuggestionSettings } from "./suggestions/suggestion-settings";
 export { areSuggestionsSupported } from "./suggestions/suggestion-support";
 export { TileSettings } from "./tile/tile-settings";
