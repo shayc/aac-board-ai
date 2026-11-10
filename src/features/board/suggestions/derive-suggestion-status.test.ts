@@ -57,16 +57,6 @@ describe("deriveSuggestionStatus", () => {
     });
   });
 
-  test("returns not-enabled while any engine is in error, so enabling retries it", () => {
-    const input = makeInput({
-      sources: makeSources("error", "ready"),
-      hasText: true,
-      phraseCount: 1,
-    });
-
-    expect(deriveSuggestionStatus(input)).toEqual({ kind: "not-enabled" });
-  });
-
   test("returns downloading with the percent while a model downloads", () => {
     const input = makeInput({ downloadProgress: 0.43 });
 
@@ -104,7 +94,7 @@ describe("deriveSuggestionStatus", () => {
 
   test("returns unavailable only when there is text, every engine is down, and nothing was suggested", () => {
     const allEnginesDown = makeInput({
-      sources: makeSources("unavailable", "unavailable"),
+      sources: makeSources("unavailable", "error"),
       hasText: true,
     });
 

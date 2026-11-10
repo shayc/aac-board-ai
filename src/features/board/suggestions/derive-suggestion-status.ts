@@ -1,4 +1,3 @@
-import type { Status } from "@shayc/react-built-in-ai";
 import type { SuggestionSource } from "./suggestion-source";
 
 export type SuggestionStatus =
@@ -31,10 +30,8 @@ export function deriveSuggestionStatus({
     return { kind: "idle" };
   }
 
-  // An engine in `error` never recovers on its own, so enabling doubles as
-  // its retry.
   if (
-    supportedSources.some(({ engineStatus }) => needsEnabling(engineStatus))
+    supportedSources.some(({ engineStatus }) => engineStatus === "downloadable")
   ) {
     return { kind: "not-enabled" };
   }
@@ -51,15 +48,13 @@ export function deriveSuggestionStatus({
   // A working source that merely had nothing to suggest keeps the bar quiet.
   const hasWorkingSource = supportedSources.some(
     ({ engineStatus, hasRequestFailed }) =>
-      engineStatus !== "unavailable" && !hasRequestFailed,
+      engineStatus !== "unavailable" &&
+      engineStatus !== "error" &&
+      !hasRequestFailed,
   );
   if (hasText && phraseCount === 0 && !hasWorkingSource) {
     return { kind: "unavailable" };
   }
 
   return { kind: "idle" };
-}
-
-function needsEnabling(engineStatus: Status): boolean {
-  return engineStatus === "downloadable" || engineStatus === "error";
 }
