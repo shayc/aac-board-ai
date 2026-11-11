@@ -115,12 +115,11 @@ export function CommunicationBoard({
           sx={{
             justifyContent: "space-between",
             px: { xs: 2, sm: 3 },
-            // On a wide screen the row holds buttons as tall as itself, and the
-            // grid scrolls right under them: the padding keeps scrolled tiles
-            // from touching the buttons, and matching it above keeps the gaps
-            // around the row equal. A small screen shows only suggestions here,
-            // which are shorter than the row and bring their own room.
-            py: { xs: 0, sm: 0.5 },
+            // The message bar above keeps its own distance. Below, the grid
+            // pads itself by 16px at every width, so the row only adds what is
+            // missing to reach the page margin; on a wide screen that also
+            // keeps scrolled tiles from touching the buttons.
+            pb: { xs: 0, sm: 1 },
           }}
         >
           <Stack direction="row" spacing={2} sx={{ flex: 1, minWidth: 0 }}>

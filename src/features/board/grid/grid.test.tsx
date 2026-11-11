@@ -11,7 +11,8 @@ import { Grid } from "./grid";
 
 const cssVariableTheme = createTheme({ cssVariables: true });
 
-// The test viewport is below "sm", where the grid uses compact padding.
+// The test viewport is below "sm", where the grid's side padding matches its
+// top and bottom padding.
 const PADDING_PX = 16;
 const MIN_CELL_SIZES_PX = { columns: 88, rows: 96 };
 

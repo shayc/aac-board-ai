@@ -5,9 +5,16 @@ import type { Theme } from "@mui/material/styles";
 const GRID_MIN_CELL_WIDTH_PX = 88;
 const GRID_MIN_CELL_HEIGHT_PX = 96;
 const GRID_GAP_UNIT_PX = 8;
-const GRID_COMPACT_PADDING_PX = 16;
-const GRID_REGULAR_PADDING_PX = 24;
-const GRID_PADDING = "var(--grid-padding)";
+// The side padding follows the page margin, so tiles line up with the bars
+// around the grid. The top and bottom padding stays compact at every width:
+// the bars above and below already keep their own distance, and stacking a
+// page margin on top of it would leave more space around the grid than
+// anywhere else on the page.
+const GRID_COMPACT_INLINE_PADDING_PX = 16;
+const GRID_REGULAR_INLINE_PADDING_PX = 24;
+const GRID_BLOCK_PADDING_PX = 16;
+const GRID_INLINE_PADDING = "var(--grid-inline-padding)";
+const GRID_BLOCK_PADDING = `${GRID_BLOCK_PADDING_PX}px`;
 const GRID_GAP = "var(--grid-gap)";
 const GRID_CELL_WIDTH = "var(--grid-cell-width)";
 const GRID_CELL_HEIGHT = "var(--grid-cell-height)";
@@ -37,14 +44,14 @@ export const gridRowSx = {
 
 export function createGridViewportSx(theme: Theme) {
   return {
-    "--grid-padding": formatPx(GRID_REGULAR_PADDING_PX),
+    "--grid-inline-padding": formatPx(GRID_REGULAR_INLINE_PADDING_PX),
     containerType: "size",
     height: "100%",
     overflow: "auto",
     scrollSnapType: "both proximity",
-    scrollPadding: GRID_PADDING,
+    scrollPadding: `${GRID_BLOCK_PADDING} ${GRID_INLINE_PADDING}`,
     [theme.breakpoints.down("sm")]: {
-      "--grid-padding": formatPx(GRID_COMPACT_PADDING_PX),
+      "--grid-inline-padding": formatPx(GRID_COMPACT_INLINE_PADDING_PX),
     },
   };
 }
@@ -63,59 +70,65 @@ export function createGridContentSx(
       "100cqi",
       "var(--grid-visible-columns)",
       GRID_MIN_CELL_WIDTH_PX,
+      GRID_INLINE_PADDING,
     ),
     "--grid-cell-height": createCellSizeExpression(
       "100cqb",
       "var(--grid-visible-rows)",
       GRID_MIN_CELL_HEIGHT_PX,
+      GRID_BLOCK_PADDING,
     ),
-    minWidth: createGridExtentExpression(GRID_CELL_WIDTH, columns),
+    minWidth: createGridExtentExpression(
+      GRID_CELL_WIDTH,
+      columns,
+      GRID_INLINE_PADDING,
+    ),
     // A definite height, not a minimum: rows share it equally, so a row is
     // always the fitted cell height. With only a minimum the height would be
     // indefinite, rows would size to their content, and a tile taller than the
     // fitted height would push the next row's overflow hint out of view.
-    height: createGridExtentExpression(GRID_CELL_HEIGHT, rows),
+    height: createGridExtentExpression(
+      GRID_CELL_HEIGHT,
+      rows,
+      GRID_BLOCK_PADDING,
+    ),
     gap: GRID_GAP,
-    p: GRID_PADDING,
-    [theme.breakpoints.down("sm")]: createVisibleTrackQueries(
-      rows,
-      columns,
-      gapPx,
-      GRID_COMPACT_PADDING_PX,
-    ),
-    [theme.breakpoints.up("sm")]: createVisibleTrackQueries(
-      rows,
-      columns,
-      gapPx,
-      GRID_REGULAR_PADDING_PX,
-    ),
-  };
-}
-
-function createVisibleTrackQueries(
-  rows: number,
-  columns: number,
-  gapPx: number,
-  paddingPx: number,
-): Record<string, Record<string, number>> {
-  return {
-    ...createTrackAxisQueries(
-      "min-width",
-      "--grid-visible-columns",
-      columns,
-      GRID_MIN_CELL_WIDTH_PX,
-      gapPx,
-      paddingPx,
-    ),
+    px: GRID_INLINE_PADDING,
+    py: GRID_BLOCK_PADDING,
     ...createTrackAxisQueries(
       "min-height",
       "--grid-visible-rows",
       rows,
       GRID_MIN_CELL_HEIGHT_PX,
       gapPx,
-      paddingPx,
+      GRID_BLOCK_PADDING_PX,
+    ),
+    [theme.breakpoints.down("sm")]: createVisibleColumnQueries(
+      columns,
+      gapPx,
+      GRID_COMPACT_INLINE_PADDING_PX,
+    ),
+    [theme.breakpoints.up("sm")]: createVisibleColumnQueries(
+      columns,
+      gapPx,
+      GRID_REGULAR_INLINE_PADDING_PX,
     ),
   };
+}
+
+function createVisibleColumnQueries(
+  columns: number,
+  gapPx: number,
+  paddingPx: number,
+): Record<string, Record<string, number>> {
+  return createTrackAxisQueries(
+    "min-width",
+    "--grid-visible-columns",
+    columns,
+    GRID_MIN_CELL_WIDTH_PX,
+    gapPx,
+    paddingPx,
+  );
 }
 
 function createTrackAxisQueries(
@@ -157,14 +170,19 @@ function createCellSizeExpression(
   viewportSize: string,
   visibleTracks: string,
   minCellSizePx: number,
+  padding: string,
 ): string {
-  const availableSize = `${viewportSize} - 2 * ${GRID_PADDING} - (${visibleTracks} - 1) * ${GRID_GAP}`;
+  const availableSize = `${viewportSize} - 2 * ${padding} - (${visibleTracks} - 1) * ${GRID_GAP}`;
 
   return `max(${formatPx(minCellSizePx)}, calc((${availableSize}) / ${visibleTracks}))`;
 }
 
-function createGridExtentExpression(cellSize: string, count: number): string {
-  return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * ${GRID_PADDING})`;
+function createGridExtentExpression(
+  cellSize: string,
+  count: number,
+  padding: string,
+): string {
+  return `calc(${count} * ${cellSize} + ${count - 1} * ${GRID_GAP} + 2 * ${padding})`;
 }
 
 function gapUnitsToPx(gap: number): number {
