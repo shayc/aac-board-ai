@@ -34,7 +34,7 @@ describe("TileSettings", () => {
     await expect
       .element(brightnessSlider)
       .toHaveAttribute("aria-valuetext", "100%");
-    expect(screen.getByText("100%").all()).toHaveLength(2);
+    await expect.element(screen.getByText("100%")).not.toBeInTheDocument();
 
     await expect.element(bordersSwitch).not.toBeChecked();
     await expect
@@ -137,7 +137,9 @@ describe("TileSettings", () => {
       saturationSlider.element().getAttribute("aria-valuenow"),
     );
     expect(valueNow).toBe(0.9);
-    await expect.element(screen.getByText("90%")).toBeVisible();
+    await expect
+      .element(saturationSlider)
+      .toHaveAttribute("aria-valuetext", "90%");
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("tile-preferences");
@@ -163,8 +165,7 @@ describe("TileSettings", () => {
 
     await expect
       .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "90%");
-    await expect.element(screen.getByText("90%")).toBeVisible();
+      .toHaveAttribute("aria-valuetext", "97%");
 
     await vi.waitFor(() => {
       const stored = localStorage.getItem("tile-preferences");
@@ -172,25 +173,28 @@ describe("TileSettings", () => {
       const preferences = JSON.parse(stored ?? "{}") as {
         brightness: number;
       };
-      expect(preferences.brightness).toBe(0.9);
+      expect(preferences.brightness).toBe(0.97);
     });
   });
 
-  test("stops lowering brightness at its floor", async () => {
+  test.each([
+    { name: "Brightness", lowest: "70%" },
+    { name: "Color intensity", lowest: "0%" },
+  ])("lowers $name to $lowest in ten steps", async ({ name, lowest }) => {
     const screen = await render(
       <AppProviders>
         <TileSettings />
       </AppProviders>,
     );
 
-    const brightnessSlider = screen.getByRole("slider", { name: "Brightness" });
+    const slider = screen.getByRole("slider", { name });
 
-    brightnessSlider.element().focus();
-    await userEvent.keyboard("{Home}");
+    slider.element().focus();
+    await userEvent.keyboard("{ArrowLeft>9/}");
+    await expect.element(slider).not.toHaveAttribute("aria-valuetext", lowest);
 
-    await expect
-      .element(brightnessSlider)
-      .toHaveAttribute("aria-valuetext", "70%");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect.element(slider).toHaveAttribute("aria-valuetext", lowest);
   });
 
   test("keeps repeated label position controls synchronized and persists the choice", async () => {

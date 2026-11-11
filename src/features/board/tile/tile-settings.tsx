@@ -20,6 +20,10 @@ import {
 } from "./tile-preferences-store";
 import { LabelPlacementPreview } from "./label-placement-preview";
 
+// Ten steps each, so the two sliders feel alike though their ranges differ.
+const BRIGHTNESS_STEP = 0.03;
+const SATURATION_STEP = 0.1;
+
 interface LabelPlacementOptionProps {
   label: string;
   placement: TileLabelPlacement;
@@ -89,7 +93,8 @@ export function TileSettings() {
         onChange={setTileBrightness}
         min={TILE_BRIGHTNESS.min}
         max={TILE_BRIGHTNESS.max}
-        step={0.1}
+        step={BRIGHTNESS_STEP}
+        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
 
@@ -99,7 +104,8 @@ export function TileSettings() {
         onChange={setTileSaturation}
         min={TILE_SATURATION.min}
         max={TILE_SATURATION.max}
-        step={0.1}
+        step={SATURATION_STEP}
+        isValueHidden
         formatValue={(value) => percentFormat.format(value)}
       />
     </Stack>
