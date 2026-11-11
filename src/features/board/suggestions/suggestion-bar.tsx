@@ -1,6 +1,8 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
+import { m } from "@paraglide/messages.js";
+import { useTranslate } from "@shared/language/use-translate";
 import type { SuggestionStatus } from "./derive-suggestion-status";
 import { SuggestionStatusNotice } from "./suggestion-status-notice";
 
@@ -17,6 +19,9 @@ export function SuggestionBar({
   onEnable,
   onPhraseSelect,
 }: SuggestionBarProps) {
+  const t = useTranslate();
+  const hasPhrases = phrases.length > 0;
+
   return (
     <Stack
       direction="row"
@@ -31,6 +36,9 @@ export function SuggestionBar({
       <SuggestionStatusNotice status={status} onEnable={onEnable} />
 
       <Box
+        // No live region: it would talk over the tile being spoken.
+        role={hasPhrases ? "group" : undefined}
+        aria-label={hasPhrases ? t(m.suggestionsLabel) : undefined}
         sx={{
           display: "flex",
           alignItems: "center",
