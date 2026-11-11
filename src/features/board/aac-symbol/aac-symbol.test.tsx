@@ -1,7 +1,11 @@
+// Types the CDP session that emulates forced-colors mode.
+/// <reference types="@vitest/browser-playwright" />
 import { assertDefined } from "@shared/testing/assert-defined";
 import type { ComponentProps } from "react";
 import { describe, expect, test } from "vitest";
 import { render } from "vitest-browser-react";
+import { cdp } from "vitest/browser";
+import { AppProviders } from "@shared/providers/app-providers";
 import { TEST_IMAGE_SRC } from "../testing";
 import { AACSymbol } from "./aac-symbol";
 
@@ -79,6 +83,46 @@ describe("AACSymbol", () => {
     expect(
       screen.getByText("Hello").element().getBoundingClientRect().width,
     ).toBeGreaterThan(1);
+  });
+
+  test("backs the image with a light surface in forced-colors mode", async () => {
+    const session = cdp();
+    await session.send("Emulation.setEmulatedMedia", {
+      features: [
+        { name: "forced-colors", value: "active" },
+        { name: "prefers-color-scheme", value: "dark" },
+      ],
+    });
+
+    try {
+      const screen = await render(
+        <AppProviders>
+          <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" />
+        </AppProviders>,
+      );
+      const image = screen.container.querySelector("img");
+      assertDefined(image?.parentElement);
+
+      expect(getComputedStyle(image.parentElement).backgroundColor).toBe(
+        "rgb(255, 255, 255)",
+      );
+    } finally {
+      await session.send("Emulation.setEmulatedMedia", { features: [] });
+    }
+  });
+
+  test("leaves the image without a backing outside forced-colors mode", async () => {
+    const screen = await render(
+      <AppProviders>
+        <AACSymbol imageSrc={TEST_IMAGE_SRC} label="Hello" />
+      </AppProviders>,
+    );
+    const image = screen.container.querySelector("img");
+    assertDefined(image?.parentElement);
+
+    expect(getComputedStyle(image.parentElement).backgroundColor).toBe(
+      "rgba(0, 0, 0, 0)",
+    );
   });
 
   test("shows only the label when the image is hidden", async () => {

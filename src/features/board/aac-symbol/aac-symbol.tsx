@@ -45,6 +45,13 @@ export function AACSymbol({
             flexGrow: 1,
             height: "54px",
             aspectRatio: "1 / 1",
+            // Symbols are drawn for light backgrounds. A dark contrast theme
+            // forces the tile behind them to black, so the symbol keeps a
+            // light backing of its own there.
+            "@media (forced-colors: active)": {
+              backgroundColor: "#fff",
+              forcedColorAdjust: "none",
+            },
           }}
         >
           <Box
